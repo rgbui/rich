@@ -6,6 +6,7 @@ import { Avatar } from "../../../component/view/avator/face";
 import { Icon } from "../../../component/view/icon";
 import { ChevronDownSvg } from "../../../component/svgs";
 import { UserBasic } from "../../../types/user";
+import { lst } from "../../../i18n/store";
 
 export class DefinePageNavBar extends React.Component<{
     ws: LinkWs,
@@ -59,7 +60,7 @@ export class DefinePageNavBar extends React.Component<{
                             href={href} onClick={eg => mousedown(eg, e)}
                             className={"flex  round min-w-120 item-hover  padding-w-10 padding-h-5  " + (false ? "dashed" : 'border-t')} >
                             {e.icon && <span className="flex-fixed size-20 flex-center"><Icon size={18} icon={e.icon}></Icon></span>}
-                            <span className="flex-auto text-overflow">{e.text || '菜单项'}</span>
+                            <span className="flex-auto text-overflow">{e.text || lst('菜单项')}</span>
                             <span className="flex-fixed">
                                 {Array.isArray(e.childs) && e.childs.length > 0 && <Icon size={16} icon={ChevronDownSvg}></Icon>}
                             </span>

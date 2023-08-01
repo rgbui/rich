@@ -5,6 +5,7 @@ import { EventsComponent } from "../../../component/lib/events.component";
 import { Button } from "../../../component/view/button";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
+import { S } from "../../../i18n/view";
 
 class TableImportView extends EventsComponent {
     schema: TableSchema;
@@ -39,7 +40,7 @@ class TableImportView extends EventsComponent {
     }
     render(): ReactNode {
         return <div className="shy-data-grid-import-box">
-            <Button onClick={(e, b) => this.importCSV(b)}>导入CSV</Button>
+            <Button onClick={(e, b) => this.importCSV(b)}><S>导入CSV</S></Button>
         </div>
     }
 }

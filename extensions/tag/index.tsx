@@ -9,6 +9,8 @@ import { BlockUrlConstant } from "../../src/block/constant";
 import { popoverLayer } from "../../component/lib/zindex";
 import { util } from "../../util/util";
 import { channel } from "../../net/channel";
+import { lst } from "../../i18n/store";
+import { S } from "../../i18n/view";
 
 /**
  * 用户输入#触发
@@ -37,7 +39,7 @@ class TagSelector extends InputTextPopSelector<{ id: string, tag: string }> {
             <a className={"h-30 gap-l-10 text item-hover cursor round padding-w-10 flex" + (0 == this.selectIndex ? " item-hover-focus" : "")} onMouseDown={e => this.onSelect({ name: 'create' })}>
                 <span className="flex flex-inline size-24 item-hover round"> <Icon size={18} icon={TopicSvg}></Icon></span>
                 <span className="f-14 flex-auto flex">
-                    创建<b className="bold gap-l-5">{this.text || '标签'}</b>
+                    <S>创建</S><b className="bold gap-l-5">{this.text || lst('标签')}</b>
                 </span>
                 <span className="flex-fixed flex flex-inline size-24 item-hover round">
                     <Icon size={18} icon={PlusSvg}></Icon>
@@ -48,9 +50,9 @@ class TagSelector extends InputTextPopSelector<{ id: string, tag: string }> {
             {!this.loading && this.list.map((link, i) => {
                 return <a onMouseDown={e => this.onSelect(link)} className={"h-30 gap-l-10 text  item-hover cursor round padding-w-10 flex" + ((i + 1) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
                     <span className="flex flex-inline size-24 item-hover round"><Icon size={18} icon={TopicSvg}></Icon></span>
-                    <span className="f-14">{link.tag || '标签'}</span></a>
+                    <span className="f-14">{link.tag || lst('标签')}</span></a>
             })}
-            {this.loading && this.list.length == 0 && this.searchWord && <div className="remark flex-center gap-h-10 f-14">没有搜索到</div>}
+            {this.loading && this.list.length == 0 && this.searchWord && <div className="remark flex-center gap-h-10 f-14"><S>没有搜索到</S></div>}
         </div>
     }
     render() {
@@ -93,7 +95,7 @@ class TagSelector extends InputTextPopSelector<{ id: string, tag: string }> {
                 blockData: {
                     url: BlockUrlConstant.Tag,
                     isLine: true,
-                    link: { name: 'create', text: this.text || '标签' }
+                    link: { name: 'create', text: this.text || lst('标签') }
                 }
             }
         }

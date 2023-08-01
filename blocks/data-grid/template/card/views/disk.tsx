@@ -11,24 +11,25 @@ import { CardView } from "../view";
 import { useSelectMenuItem } from "../../../../../component/view/menu";
 import { Rect } from "../../../../../src/common/vector/point";
 import { MenuItem, MenuItemType } from "../../../../../component/view/menu/declare";
+import { lst } from "../../../../../i18n/store";
 
 
 CardModel({
     url: '/list/disk',
-    title: '网盘',
-    remark: '适用于管理文件',
+    title:lst( '网盘'),
+    remark:lst('适用于管理文件') ,
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridList],
     props: [
-        { name: 'file', text: '文件', types: [FieldType.file], required: true },
-        { name: 'title', text: '标题', types: [FieldType.title, FieldType.text] },
-        { name: 'remark', text: '描述', types: [FieldType.plain, FieldType.text] },
-        { name: 'createDate', text: "创建日期", types: [FieldType.createDate] }
+        { name: 'file', text: lst('文件'), types: [FieldType.file], required: true },
+        { name: 'title', text: lst('标题'), types: [FieldType.title, FieldType.text] },
+        { name: 'remark', text: lst('描述'), types: [FieldType.plain, FieldType.text] },
+        { name: 'createDate', text: lst("创建日期"), types: [FieldType.createDate] }
     ],
     views: [
-        { url: BlockUrlConstant.DataGridTable, text: '文件', },
-        { autoCreate: true, url: BlockUrlConstant.DataGridList, text: '文件列表', },
-        { url: BlockUrlConstant.RecordPageView, text: '文件详情', }
+        { url: BlockUrlConstant.DataGridTable, text:lst('文件') , },
+        { autoCreate: true, url: BlockUrlConstant.DataGridList, text: lst('文件列表'), },
+        { url: BlockUrlConstant.RecordPageView, text: lst('文件详情'), }
     ],
     dataList: [
         { file: [{ size: 50, filename: 'kankan.png', ext: '.png', url: 'https://api-w1.shy.live/ws/img?id=1e1a07d5c333421c9cc885775b0ff17c' }], title: '花', remark: '' },
@@ -57,14 +58,14 @@ export class CardPin extends CardView {
         async function openProperty(e: React.MouseEvent) {
             e.stopPropagation();
             var rs: MenuItem<string>[] = [
-                { name: 'download', text: '下载', icon: DownloadSvg },
-                { name: 'edit', text: '编辑', disabled: self.isCanEdit ? false : true, icon: Edit1Svg },
+                { name: 'download', text:lst( '下载'), icon: DownloadSvg },
+                { name: 'edit', text:lst('编辑') , disabled: self.isCanEdit ? false : true, icon: Edit1Svg },
                 { type: MenuItemType.divide },
-                { name: 'delete', text: '删除', disabled: self.isCanEdit ? false : true, icon: TrashSvg }
+                { name: 'delete', text:lst( '删除'), disabled: self.isCanEdit ? false : true, icon: TrashSvg }
             ]
             if (!self.isCanEdit) {
                 rs = [
-                    { name: 'download', text: '下载', icon: DownloadSvg },
+                    { name: 'download', text:lst('下载') , icon: DownloadSvg },
                 ]
             }
             var r = await useSelectMenuItem(

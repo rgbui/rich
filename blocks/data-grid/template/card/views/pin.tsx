@@ -18,24 +18,26 @@ import { CardView } from "../view";
 import * as Card1 from "../../../../../src/assert/img/card/card8.jpg"
 import { BlockUrlConstant } from "../../../../../src/block/constant";
 import { autoImageUrl } from "../../../../../net/element.type";
+import { lst } from "../../../../../i18n/store";
+import { S } from "../../../../../i18n/view";
 
 CardModel({
     url: '/card/pinterest',
-    title: '瀑布流图片',
-    remark: '适用于摄影等图像展示',
+    title:lst('瀑布流图片') ,
+    remark: lst('适用于摄影等图像展示'),
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridGallery],
     props: [
-        { name: 'pic', text: '封面图', types: [FieldType.image, FieldType.video], required: true },
-        { name: 'author', text: '作者', types: [FieldType.creater] },
-        { name: 'title', text: '标题', types: [FieldType.title, FieldType.text] },
-        { name: 'remark', text: '描述', types: [FieldType.text] },
-        { name: 'like', text: '喜欢', types: [FieldType.like] }
+        { name: 'pic', text:lst( '封面图'), types: [FieldType.image, FieldType.video], required: true },
+        { name: 'author', text: lst('作者'), types: [FieldType.creater] },
+        { name: 'title', text:lst( '标题'), types: [FieldType.title, FieldType.text] },
+        { name: 'remark', text: lst('描述'), types: [FieldType.text] },
+        { name: 'like', text: lst('喜欢'), types: [FieldType.like] }
     ],
     views: [
-        { url: BlockUrlConstant.DataGridTable, text: '列表', },
-        { autoCreate: true, url: BlockUrlConstant.DataGridGallery, text: '相册', },
-        { url: BlockUrlConstant.RecordPageView, text: '图片详情', }
+        { url: BlockUrlConstant.DataGridTable, text: lst('列表'), },
+        { autoCreate: true, url: BlockUrlConstant.DataGridGallery, text: lst('相册'), },
+        { url: BlockUrlConstant.RecordPageView, text: lst('图片详情'), }
     ],
     dataList: [
         { pic: [{ url: 'https://api-w1.shy.live/ws/img?id=1e1a07d5c333421c9cc885775b0ff17c' }], title: '花', remark: '' },
@@ -62,9 +64,9 @@ export class CardPin extends CardView {
             event.stopPropagation();
             var rect = Rect.fromEvent(event);
             var r = await useSelectMenuItem({ roundArea: rect }, [
-                { name: 'replace', icon: UploadSvg, text: '替换' },
+                { name: 'replace', icon: UploadSvg, text: lst('替换') },
                 { type: MenuItemType.divide },
-                { name: 'close', icon: TrashSvg, text: '删除' }
+                { name: 'close', icon: TrashSvg, text:lst( '删除') }
             ]);
             if (r) {
                 if (r.item.name == 'replace') {
@@ -82,7 +84,7 @@ export class CardPin extends CardView {
                 {!hasPic && <div className="pos-center z-4 visible">
                     <span onMouseDown={e => this.uploadImage('pic', e, 'title')} className="padding-w-10 padding-h-3 bg-white item-white-hover round-8 cursor flex">
                         <span className="size-24 flex-center flex-inline"><Icon icon={UploadSvg}></Icon></span>
-                        <span className="f-14 text-1">上传图片</span>
+                        <span className="f-14 text-1"><S>上传图片</S></span>
                     </span>
                 </div>}
                 <div className="mask-1 visible pos-inset z-1  round-16"></div>

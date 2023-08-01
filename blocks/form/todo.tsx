@@ -12,7 +12,7 @@ import { Icon } from "../../component/view/icon";
 import { BlockChildKey } from "../../src/block/constant";
 import { dom } from "../../src/common/dom";
 import { DropDirection } from "../../src/kit/handle/direction";
-import { ls } from "../../i18n/store";
+import { ls, lst } from "../../i18n/store";
 
 @url('/todo')
 export class ToDo extends Block {
@@ -119,7 +119,7 @@ export class ToDoView extends BlockView<ToDo>{
                                 <Icon size={this.block.checked ? (this.props.block.page.fontSize - 2) : this.props.block.page.fontSize} icon={this.block.checked ? CheckSvg : CheckboxSquareSvg} ></Icon>
                             </div>
                         </div>
-                        <span className='sy-block-todo-text'><TextArea block={this.block} placeholder={ls.t('待办事项')}
+                        <span className='sy-block-todo-text'><TextArea block={this.block} placeholder={lst('待办事项')}
                             prop='content'
                         ></TextArea>
                         </span>

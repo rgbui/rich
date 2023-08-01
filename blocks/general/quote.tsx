@@ -10,6 +10,7 @@ import { BlockChildKey } from "../../src/block/constant";
 import lodash from "lodash";
 import { Point, Rect } from "../../src/common/vector/point";
 import { dom } from "../../src/common/dom";
+import { lst } from "../../i18n/store";
 
 @url('/quote')
 export class Quote extends TextSpan {
@@ -94,7 +95,7 @@ export class QuoteView extends BlockView<Quote>{
                 <div className='sy-block-quote-content'>
                     <div data-block-content>
                         {this.block.childs.length > 0 && <TextLineChilds childs={this.block.childs} rf={e => this.block.childsEl = e}></TextLineChilds>}
-                        {this.block.childs.length == 0 && <TextArea block={this.block} prop='content' placeholder={'引用'}></TextArea>}
+                        {this.block.childs.length == 0 && <TextArea block={this.block} prop='content' placeholder={lst('引用')}></TextArea>}
                     </div>
                     <div>
                         <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>

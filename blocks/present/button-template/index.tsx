@@ -22,6 +22,8 @@ import { channel } from "../../../net/channel";
 import { PageBlockUtil } from "../../../src/page/common/util";
 import { getPageText } from "../../../src/page/declare";
 import { Rect } from "../../../src/common/vector/point";
+import { lst } from "../../../i18n/store";
+import { S } from "../../../i18n/view";
 
 @url('/button/template')
 export class ButtonTemplate extends Block {
@@ -147,7 +149,7 @@ export class ButtonTemplate extends Block {
         }
     }
     async initButtonTemplate() {
-        this.blocks.childs.push(await BlockFactory.createBlock('/todo', this.page, { content: '待办' }, this));
+        this.blocks.childs.push(await BlockFactory.createBlock('/todo', this.page, { content: lst('待办') }, this));
     }
     getVisiblePanelBound() {
         if (this.expand && (this.view as any).templatePanel) {
@@ -165,16 +167,16 @@ export class ButtonTemplateView extends BlockView<ButtonTemplate>{
         if (this.block.expand != true) return <></>;
         return <div className="sy-button-template-box">
             <div className="sy-button-template-box-head">
-                <span>编辑模板按钮</span>
-                <Button onClick={e => this.block.onSave()}>保存</Button>
+                <span><S>编辑模板按钮</S></span>
+                <Button onClick={e => this.block.onSave()}><S>保存</S></Button>
             </div>
             <Divider></Divider>
-            <div className="sy-button-template-box-label">模板名称</div>
+            <div className="sy-button-template-box-label"><S>模板名称</S></div>
             <div className="sy-button-template-box-title" onMouseDown={e => e.stopPropagation()}>
-                <Input value={this.block.content || '添加待办事项'} placeholder={'添加待办事项'} onChange={e => this.block.onLazyUpdateProps({ content: e }, { range: BlockRenderRange.self })}></Input>
+                <Input value={this.block.content || lst('添加待办事项')} placeholder={lst('添加待办事项')} onChange={e => this.block.onLazyUpdateProps({ content: e }, { range: BlockRenderRange.self })}></Input>
             </div>
             <Divider></Divider>
-            <div className="sy-button-template-box-label">模板内容</div>
+            <div className="sy-button-template-box-label"><S>模板内容</S></div>
             <div ref={e => this.templatePanel = e} className="sy-button-template-box-content min-h-30">
                 <ChildsArea childs={this.block.blocks.childs}></ChildsArea>
             </div>
@@ -183,7 +185,7 @@ export class ButtonTemplateView extends BlockView<ButtonTemplate>{
     render() {
         return <div style={this.block.visibleStyle}><div className='sy-button-template' >
             <div className='sy-button-template-wrapper' onMouseDown={e => e.stopPropagation()} >
-                <a className="sy-button-template-btn flex" onMouseDown={e => { this.block.addTemplateInstance(e) }}><Icon size={18} icon={PlusSvg}></Icon><span>{this.block.content || '添加待办事项'}</span></a>
+                <a className="sy-button-template-btn flex" onMouseDown={e => { this.block.addTemplateInstance(e) }}><Icon size={18} icon={PlusSvg}></Icon><span>{this.block.content || lst('添加待办事项')}</span></a>
                 {this.block.isCanEdit() && <div className='sy-button-template-operator size-24 flex-center item-hover round cursor'><Icon size={16} onMousedown={e => this.block.openSettings()} icon={SettingsSvg}></Icon></div>}
             </div>
             {this.block.expand == true && this.renderTemplate()}

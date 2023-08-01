@@ -15,9 +15,11 @@ import { SearchListType } from "../../component/types";
 import { util } from "../../util/util";
 import { SwitchText } from "../../component/view/switch";
 import { SelectBox } from "../../component/view/select/box";
-import { ToolTip } from "../../component/view/tooltip";
 import { useAISearchBox } from "./ai";
 import { isMobileOnly } from "react-device-detect";
+import { Tip } from "../../component/view/tooltip/tip";
+import { lst } from "../../i18n/store";
+import { S } from "../../i18n/view";
 
 export class SearchBox extends EventsComponent {
     render() {
@@ -31,17 +33,17 @@ export class SearchBox extends EventsComponent {
                         </span>}
                         size='larger'
                         onClear={() => { this.searchList.word = ''; this.onForceSearch() }}
-                        placeholder={`在 ${ws?.text || '空间'} 中搜索`}
+                        placeholder={lst('在 {text} 中搜索', { text: ws?.text || lst('空间') })}
                         value={this.searchList.word}
                         onEnter={e => { this.searchList.word = e; this.onForceSearch() }}
                         onChange={e => { this.searchList.word = e; this.onSearch() }} ></Input>
                 </div>
                 <div className="flex-fixed text-1">
-                    <ToolTip overlay={'AI语义搜索'}>
+                    <Tip text={'AI语义搜索'}>
                         <span onMouseDown={e => this.openAi(e)} className="flex flex-center size-24 cursor item-hover round">
                             <Icon size={18} icon={AiStartSvg}></Icon>
                         </span>
-                    </ToolTip>
+                    </Tip>
                 </div>
             </div>
             {this.searchList.word && <><Divider></Divider>
@@ -49,10 +51,10 @@ export class SearchBox extends EventsComponent {
                     <SwitchText className={'flex-fixed'} checked={this.searchList.isOnlySearchTitle} onChange={e => {
                         this.searchList.isOnlySearchTitle = e;
                         this.onForceSearch()
-                    }}>仅区配标题</SwitchText>
+                    }}><S>仅区配标题</S></SwitchText>
                     <span className="flex-auto flex-end">
-                        <span className="gap-r-5">编辑时间</span>
-                        <SelectBox inline value={this.searchList.editDate} onChange={e => { this.searchList.editDate = e; this.onForceSearch() }} options={[{ text: '降序', value: -1 }, { text: '升序', value: 1 }]}></SelectBox>
+                        <span className="gap-r-5"><S>编辑时间</S></span>
+                        <SelectBox inline value={this.searchList.editDate} onChange={e => { this.searchList.editDate = e; this.onForceSearch() }} options={[{ text: lst('降序'), value: -1 }, { text:lst('升序') , value: 1 }]}></SelectBox>
                     </span>
                 </div>
                 <div className="padding-h-10 overflow-y max-h-300 min-h-120">
@@ -63,7 +65,7 @@ export class SearchBox extends EventsComponent {
         </div>
     }
     renderList() {
-        if (this.searchList.list.length == 0 && this.searchList.pages.length == 0) return <div className="h-30 flex-center remark">没有搜到相关的内容</div>
+        if (this.searchList.list.length == 0 && this.searchList.pages.length == 0) return <div className="h-30 flex-center remark"><S>没有搜到相关的内容</S></div>
         if (this.searchList.pages?.length > 0 && this.searchList.list.length == 0) {
             return this.searchList.pages.map(r => {
                 return <div key={r.id} className="padding-10 item-hover round cursor" onMouseDown={e => this.onSelect(r)}>
@@ -88,12 +90,12 @@ export class SearchBox extends EventsComponent {
     el: HTMLElement;
     isNav: boolean = false;
     ws
-    async open(options?: {ws?:any, word?: string, isNav?: boolean }) {
+    async open(options?: { ws?: any, word?: string, isNav?: boolean }) {
         if (options?.word) this.searchList.word = options?.word;
         else this.searchList.word = '';
         if (options?.isNav) this.isNav = true;
         else this.isNav = false;
-        this.ws=options.ws;
+        this.ws = options.ws;
         if (this.searchList.word) {
             await this.onForceSearch()
         }
@@ -113,7 +115,7 @@ export class SearchBox extends EventsComponent {
             try {
                 var r = await channel.get('/ws/search', {
                     word: this.searchList.word,
-                    ws:this.ws,
+                    ws: this.ws,
                     editDate: this.searchList.editDate,
                     isOnlySearchTitle: this.searchList.isOnlySearchTitle
                 });
@@ -138,11 +140,11 @@ export class SearchBox extends EventsComponent {
     async openAi(e: React.MouseEvent) {
         this.emit('close');
         await channel.act('/cache/set', { key: 'search-mode', value: 'ai' })
-        useAISearchBox({ws:this.ws})
+        useAISearchBox({ ws: this.ws })
     }
 }
 
-export async function useSearchBox(options: {ws:any, word?: string, isNav?: boolean }) {
+export async function useSearchBox(options: { ws: any, word?: string, isNav?: boolean }) {
     var pos: PopoverPosition = { center: true, centerTop: 100 };
     let popover = await PopoverSingleton(SearchBox, { mask: true, frame: true, shadow: true, });
     let fv = await popover.open(pos);

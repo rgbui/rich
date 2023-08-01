@@ -10,6 +10,7 @@ import lodash from "lodash";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { MenuView } from "../../../component/view/menu/menu";
 import { util } from "../../../util/util";
+import { lst } from "../../../i18n/store";
 
 
 export class DataGridSelectorView extends EventsComponent {
@@ -28,7 +29,7 @@ export class DataGridSelectorView extends EventsComponent {
             var btns = undefined
             var cs: MenuItem[] = [];
             if (Array.isArray(rd.views) && rd.views.length > 0) {
-                cs.push({ type: MenuItemType.text, text: '视图' })
+                cs.push({ type: MenuItemType.text, text:lst('视图')  })
                 var srs = getSchemaViews();
                 cs.push(...rd.views.findAll(g => srs.some(s => s.url == g.url)).map(rv => {
                     return {
@@ -55,19 +56,19 @@ export class DataGridSelectorView extends EventsComponent {
             })
         })
         if (list.length > 0) {
-            items.push({ text: '选择已创建的表格', type: MenuItemType.text })
+            items.push({ text: lst('选择已创建的表格') , type: MenuItemType.text })
             items.push(itemPanel);
             items.push({ type: MenuItemType.divide })
         }
         items.push({
             type: MenuItemType.input,
             name: "table",
-            text: '输入表格名称',
+            text:lst('输入表格名称') ,
         })
         items.push({ type: MenuItemType.gap })
         items.push({
             type: MenuItemType.button,
-            text: '创建表格',
+            text: lst('创建表格') ,
             name: 'createTable',
             buttonClick: 'click'
         })

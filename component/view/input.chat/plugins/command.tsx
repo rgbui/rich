@@ -7,6 +7,8 @@ import { SpinBox } from "../../spin";
 import lodash from "lodash";
 import { Avatar } from "../../avator/face";
 import { Line } from "../../grid";
+import { S } from "../../../../i18n/view";
+import { lst } from "../../../../i18n/store";
 
 export class ChatCommandInput extends React.Component<{
     cp: ChatInput,
@@ -111,7 +113,7 @@ export class ChatCommandInput extends React.Component<{
                     </div>
                 })}
             </div>}
-            {this.robots.length == 0 && this.loading == false && <div className="remark f-12">没有搜到机器人</div>}
+            {this.robots.length == 0 && this.loading == false && <div className="remark f-12"><S>没有搜到机器人</S></div>}
         </div>, this.panel)
     }
     getRobot(task: RobotTask) {
@@ -137,7 +139,7 @@ export class ChatCommandInput extends React.Component<{
             this.robots = [
                 {
                     id: '1',
-                    name: '机器人1',
+                    name: lst('机器人1'),
                     sn: 1,
                     role: 'robot',
                     avatar: { name: 'none', url: 'https://img.yzcdn.cn/vant/cat.jpeg' } as any,

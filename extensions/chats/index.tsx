@@ -20,6 +20,8 @@ import { ChannelTextType } from "./declare";
 import "./style.less";
 import { ChatInput } from "../../component/view/input.chat/chat";
 import { ToolTip } from "../../component/view/tooltip";
+import { S } from "../../i18n/view";
+import { lst } from "../../i18n/store";
 
 export class ViewChats extends React.Component<{
     readonly?: boolean,
@@ -62,7 +64,7 @@ export class ViewChats extends React.Component<{
         var jsList: JSX.Element[] = [];
         if (d.content) jsList.push(<div key={d.id + "c"} className='shy-user-channel-chat-content'>
             <span dangerouslySetInnerHTML={{ __html: d.content }}></span>
-            {d.isEdited && <span className="sy-channel-text-edited-tip">(已编辑)</span>}
+            {d.isEdited && <span className="sy-channel-text-edited-tip">(<S>已编辑</S>)</span>}
         </div>)
         for (let i = 0; i < files.length; i++) {
             var f = files[i];
@@ -100,8 +102,8 @@ export class ViewChats extends React.Component<{
         }
         else if (now.diff(day, 'day') < 7) {
             var d = day.day();
-            var w = ['日', '一', '二', '三', '四', '五', '六'][d];
-            dateStr = `周${w}${day.format(' HH:mm')}`
+            var w = [lst('周日'), lst('周一'), lst('周二'), lst('周三'), lst('周四'), lst('周五'), lst('周六')][d];
+            dateStr = `${w}${day.format(' HH:mm')}`
         }
         else dateStr = day.format('YYYY-MM-DD HH:mm')
         return <div key={date.getTime()} className="sy-channel-text-item-tip-date">
@@ -112,9 +114,9 @@ export class ViewChats extends React.Component<{
     renderItem(d: ChannelTextType, noUser: boolean) {
         if (d.isDeleted) {
             if (d.userid == this.currentUser.id) {
-                return <div key={d.id} className="sy-channel-text-item-deleted remark f-12">你撤回了一条消息<a onClick={e => this.redit(d)}>重新编辑</a></div>
+                return <div key={d.id} className="sy-channel-text-item-deleted remark f-12"><S>你撤回了一条消息</S><a onClick={e => this.redit(d)}><S>重新编辑</S></a></div>
             }
-            else return <div key={d.id} className="sy-channel-text-item-deleted remark f-12"><UserBox userid={d.userid}>{us => <span>"{us.name}"</span>}</UserBox>撤回了一条消息</div>
+            else return <div key={d.id} className="sy-channel-text-item-deleted remark f-12"><UserBox userid={d.userid}>{us => <span>"{us.name}"</span>}</UserBox><S>撤回了一条消息</S></div>
         }
         return <div data-channel-text-id={d.id} className={"sy-channel-text-item" + (noUser ? " no-user" : "")} key={d.id}>
             {d.reply && <div className="sy-channel-text-item-reply">
@@ -133,7 +135,7 @@ export class ViewChats extends React.Component<{
                                 <div className="sy-channel-text-item-head">
                                     <a>{us.name}</a>
                                     {us?.role == 'robot' && <span className='bg-p-1 text-white round flex-center flex-inline padding-w-3  h-16 gap-w-2' style={{ display: 'inline-flex', color: '#fff', backgroundColor: 'rgb(88,101,242)' }}>
-                                        <Icon icon={CheckSvg} size={12}></Icon><span className='gap-l-2 f-12' style={{ lineHeight: '12px', color: '#fff' }}>机器人</span>
+                                        <Icon icon={CheckSvg} size={12}></Icon><span className='gap-l-2 f-12' style={{ lineHeight: '12px', color: '#fff' }}><S>机器人</S></span>
                                     </span>}
                                     <span>{util.showTime(d.createDate)}</span>
                                 </div>
@@ -141,7 +143,7 @@ export class ViewChats extends React.Component<{
                                     <ChatInput
                                         ref={e => this.chatInput = e}
                                         value={d.content}
-                                        placeholder="回车提交"
+                                        placeholder={lst("回车提交")}
                                         onEnter={e => this.edit(d, { content: e })}
                                         searchUser={this.props.searchUser}
                                     >
@@ -149,7 +151,7 @@ export class ViewChats extends React.Component<{
                                 </div>
                             </div>
                         </div>
-                        <div className="sy-channel-text-item-edited-tip">ESC键<a onClick={e => this.closeEdit()}>取消</a>•回车键<a onMouseDown={e => this.chatInput.onEnter()}>保存</a></div>
+                        <div className="sy-channel-text-item-edited-tip"><S>ESC键</S><a onClick={e => this.closeEdit()}><S>取消</S></a>•<S>回车键</S><a onMouseDown={e => this.chatInput.onEnter()}><S>保存</S></a></div>
                     </>
                 }}</UserBox>
             </div>
@@ -161,7 +163,7 @@ export class ViewChats extends React.Component<{
                         <div className="sy-channel-text-item-head">
                             <a>{us.name}</a>
                             {us?.role == 'robot' && <span className='bg-p-1 text-white round flex-center flex-inline padding-w-3  h-16 gap-w-2' style={{ display: 'inline-flex', color: '#fff', backgroundColor: 'rgb(88,101,242)' }}>
-                                <Icon icon={CheckSvg} size={12}></Icon><span className='gap-l-2 f-12' style={{ lineHeight: '12px', color: '#fff' }}>机器人</span>
+                                <Icon icon={CheckSvg} size={12}></Icon><span className='gap-l-2 f-12' style={{ lineHeight: '12px', color: '#fff' }}><S>机器人</S></span>
                             </span>}
                             <span>{util.showTime(d.createDate)}</span></div>
                         <div className="sy-channel-text-item-content">{this.renderContent(d)}</div>
@@ -181,9 +183,9 @@ export class ViewChats extends React.Component<{
                 </a>
             })}</div>}
             {!(d.id == this.editChannelText?.id) && this.props.readonly !== true && <div className="sy-channel-text-item-operators">
-                <ToolTip overlay={'添加表情'}><span onMouseDown={e => this.addEmoji(d, e)}><Icon size={16} icon={EmojiSvg}></Icon></span></ToolTip>
-                {d.userid == this.currentUser.id && <ToolTip overlay={'编辑'}><span onMouseDown={e => this.openEdit(d)}><Icon size={16} icon={Edit1Svg}></Icon></span></ToolTip>}
-                {d.userid != this.currentUser.id && <ToolTip overlay={'回复'}><span onMouseDown={e => this.reply(d)}><Icon size={16} icon={ReplySvg}></Icon></span></ToolTip>}
+                <ToolTip overlay={lst('添加表情')}><span onMouseDown={e => this.addEmoji(d, e)}><Icon size={16} icon={EmojiSvg}></Icon></span></ToolTip>
+                {d.userid == this.currentUser.id && <ToolTip overlay={lst('编辑')}><span onMouseDown={e => this.openEdit(d)}><Icon size={16} icon={Edit1Svg}></Icon></span></ToolTip>}
+                {d.userid != this.currentUser.id && <ToolTip overlay={lst('回复')}><span onMouseDown={e => this.reply(d)}><Icon size={16} icon={ReplySvg}></Icon></span></ToolTip>}
                 <span onMouseDown={e => this.openProperty(d, e)}><Icon size={16} icon={DotsSvg}></Icon></span>
             </div>}
         </div>
@@ -306,12 +308,12 @@ export class ViewChats extends React.Component<{
         var op = this.getOp(d);
         var items: MenuItem<string>[] = [];
         if (d.userid == this.currentUser.id) {
-            items.push({ name: 'edit', text: '编辑', icon: EditSvg });
-            items.push({ name: 'delete', text: '删除', icon: TrashSvg });
+            items.push({ name: 'edit', text:lst('编辑') , icon: EditSvg });
+            items.push({ name: 'delete', text:lst( '删除'), icon: TrashSvg });
         }
         else {
-            items.push({ name: 'reply', text: '回复', icon: ReplySvg });
-            items.push({ name: 'report', disabled: true, text: '举报', icon: ReportSvg });
+            items.push({ name: 'reply', text:lst( '回复'), icon: ReplySvg });
+            items.push({ name: 'report', disabled: true, text: lst('举报'), icon: ReportSvg });
         }
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) },
             items

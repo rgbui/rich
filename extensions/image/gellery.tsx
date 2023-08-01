@@ -1,9 +1,10 @@
 import React from "react";
 import { OuterPic } from "./declare";
+import { lst } from "../../i18n/store";
 
 export var GalleryPics = [
     {
-        group: "诗云",
+        group: lst("诗云"),
         childs: [
             {
                 title: '',
@@ -49,7 +50,7 @@ export var GalleryPics = [
         ]
     },
     {
-        group: '水彩',
+        group: lst('水彩'),
         childs: [
             {
                 title: '',
@@ -74,7 +75,7 @@ export var GalleryPics = [
         ]
     },
     {
-        "group": "台湾省故宫博物院",
+        "group": lst("台湾省故宫博物院"),
         "childs": [
             {
                 "title": "",
@@ -199,7 +200,7 @@ export var GalleryPics = [
         ]
     },
     {
-        "group": "油画",
+        "group": lst("油画"),
         "childs": [
             {
                 "title": "",
@@ -304,7 +305,7 @@ export var GalleryPics = [
         ]
     },
     {
-        "group": "NASA & SpaceX",
+        "group": lst("NASA & SpaceX"),
         "childs": [
             {
                 "title": "",
@@ -457,7 +458,7 @@ export var GalleryPics = [
         ]
     },
     {
-        "group": "图案",
+        "group": lst("图案"),
         "childs": [{
             title: '',
             url: 'https://resources.shy.live/gallery/shy_10.jpg',

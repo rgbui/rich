@@ -6,6 +6,7 @@ import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { SchemaFilter } from "../../schema/declare";
 import { OriginFilterField, OriginFilterFieldView } from "./origin.field";
+import { lst } from "../../../../i18n/store";
 
 @url('/field/filter/number')
 export class FilterFieldNumber extends OriginFilterField {
@@ -44,7 +45,7 @@ export class FilterFieldNumberView extends BlockView<FilterFieldNumber>{
             <input
                 style={{ width: 60 }}
                 type='text'
-                placeholder="起始值"
+                placeholder={lst("起始值")}
                 onInput={e => this.block.numberChange((e.target as HTMLInputElement).value, 'min')}
                 defaultValue={typeof this.block.min == 'number' ? this.block.min.toString() : ''}
             />
@@ -52,7 +53,7 @@ export class FilterFieldNumberView extends BlockView<FilterFieldNumber>{
             <input
                 style={{ width: 60 }}
                 type='text'
-                placeholder="结束值"
+                placeholder={lst("结束值")}
                 onInput={e => this.block.numberChange((e.target as HTMLInputElement).value, 'max')}
                 defaultValue={typeof this.block.max == 'number' ? this.block.max.toString() : ''}
             />

@@ -5,6 +5,7 @@ import { Button } from "../view/button";
 import "./style.less";
 import { Space } from "../view/grid";
 import { tipLayer } from "./zindex";
+import { S } from "../../i18n/view";
 class SyConfirm extends EventsComponent {
     private msg: string;
     private description: string;
@@ -36,8 +37,8 @@ class SyConfirm extends EventsComponent {
                 {this.description && <div className='syh-confirm-description'>{this.description}</div>}
                 <div className='syh-confirm-buttons' style={{ marginTop: 20 }}>
                     <Space align="center">
-                        <Button onClick={e => this.onConfirm()}>确定</Button>
-                        <Button onClick={e => this.onCancel()} ghost>取消</Button>
+                        <Button onClick={e => this.onConfirm()}><S>确定</S></Button>
+                        <Button onClick={e => this.onCancel()} ghost><S>取消</S></Button>
                     </Space>
                 </div>
             </div>

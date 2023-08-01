@@ -6,6 +6,7 @@ import { useImagePicker } from "../../../extensions/image/picker";
 import { autoImageUrl } from "../../../net/element.type";
 import { MouseDragger } from "../../common/dragger";
 import { Rect } from "../../common/vector/point";
+import { S } from "../../../i18n/view";
 export class PageCover extends React.Component<{ page: Page }>{
     private startPos: boolean = false;
     private loadThumb: boolean = false;
@@ -82,7 +83,7 @@ export class PageCover extends React.Component<{ page: Page }>{
                     visibility: self.loadThumb ? "hidden" : 'visible',
                     objectPosition: 'center' + (typeof pd?.cover?.top == 'number' ? pd.cover.top : 50) + '%'
                 }} onDragStart={e => false} draggable={false} src={autoImageUrl(pd.cover.thumb)} />}
-                {self.startPos && <div className="shy-page-view-cover-drag-tip">拖动图片调整位置</div>}
+                {self.startPos && <div className="shy-page-view-cover-drag-tip"><S>拖动图片调整位置</S></div>}
                 <div className="shy-page-view-cover-nav">
                     <div style={page.getScreenStyle()}>
                         <div style={{ position: 'relative', height: 24 }}>
@@ -91,13 +92,13 @@ export class PageCover extends React.Component<{ page: Page }>{
                             </div>}
                             {page.isCanEdit && <div className="shy-page-view-cover-operators">
                                 {self.startPos && <>
-                                    <a onMouseDown={e => savePostion()}>保存</a>
-                                    <a onMouseDown={e => endPostion()}>取消</a>
+                                    <a onMouseDown={e => savePostion()}><S>保存</S></a>
+                                    <a onMouseDown={e => endPostion()}><S>取消</S></a>
                                 </>}
                                 {!self.startPos && <>
-                                    <a onMouseDown={e => changeCover(e)}>更换</a>
-                                    <a onMouseDown={e => startPosition(e)}>调整</a>
-                                    <a onMouseDown={e => page.onAddCover()}>移除</a>
+                                    <a onMouseDown={e => changeCover(e)}><S>更换</S></a>
+                                    <a onMouseDown={e => startPosition(e)}><S>调整</S></a>
+                                    <a onMouseDown={e => page.onAddCover()}><S>移除</S></a>
                                 </>}
                             </div>}
                         </div>

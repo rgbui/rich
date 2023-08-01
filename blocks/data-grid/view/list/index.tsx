@@ -11,6 +11,7 @@ import { DataGridTool } from "../components/tool";
 import { TableStoreListItem } from "./row";
 import "./style.less";
 import { CardConfig } from "../item/service";
+import { S } from "../../../../i18n/view";
 
 @url('/data-grid/list')
 export class TableStoreList extends DataGridView {
@@ -41,7 +42,7 @@ export class TableStoreListView extends BlockView<TableStoreList>{
     renderCreateTable() {
         return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
             <span className="size-24 flex-center remark"><Icon size={16} icon={CollectTableSvg}></Icon></span>
-            <span className="remark">创建数据表格</span>
+            <span className="remark"><S>创建数据表格</S></span>
         </div>
     }
     render() {
@@ -55,7 +56,7 @@ export class TableStoreListView extends BlockView<TableStoreList>{
                 onMouseDown={e => { e.stopPropagation(); this.block.onSyncAddRow({}, undefined, 'after') }}
                 className="flex cursor item-hover round padding-5 f-14 remark">
                 <Icon icon={PlusSvg}></Icon>
-                <span>新增</span>
+                <span><S>新增</S></span>
             </div>}
             {this.renderCreateTable()}
         </div>

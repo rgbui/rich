@@ -4,6 +4,7 @@ import { Block } from "../../../src/block";
 import { url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
 import { TextSpanArea } from "../../../src/block/view/appear";
+import { lst } from "../../../i18n/store";
 
 @url('/tab/item')
 export class TabItem extends Block {
@@ -36,7 +37,7 @@ export class TabItemView extends BlockView<TabItem>{
             className={'sy-block-tab-item' + (this.block.at == this.block.myTab.tabIndex ? " hover" : "")}
             style={this.block.visibleStyle}>
             <div className="sy-block-tab-item-content">
-                <TextSpanArea placeholderEmptyVisible placeholder="标签项" block={this.block}></TextSpanArea>
+                <TextSpanArea placeholderEmptyVisible placeholder={lst("标签项")} block={this.block}></TextSpanArea>
             </div>
         </div>
     }

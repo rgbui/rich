@@ -10,6 +10,8 @@ import { Rect } from "../../src/common/vector/point";
 import { useOpenEmoji } from "../emoji";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
+import { lst } from "../../i18n/store";
+import { S } from "../../i18n/view";
 
 class UserComments extends EventsComponent {
     open(options: UserComments['options']) {
@@ -60,7 +62,7 @@ class UserComments extends EventsComponent {
                             padding: 0,
                             height: 50
                         }}
-                        placeholder={this.options.placeholder || "评论千万条，友善第一条"}
+                        placeholder={this.options.placeholder || lst("评论千万条，友善第一条")}
                         ref={e => this.textarea = e}></textarea>
                     <><Divider></Divider>
                         <div className="flex">
@@ -68,7 +70,7 @@ class UserComments extends EventsComponent {
                                 <span onMouseDown={e => this.onOpenEmjoji(e)} className="size-24 flex-center round item-hover"><Icon size={18} icon={EmojiSvg}></Icon></span>
                             </div>
                             <span className="flex-fixed flex">
-                                <Button size="small" onMouseDown={e => this.addComment(e)}>发布</Button>
+                                <Button size="small" onMouseDown={e => this.addComment(e)}><S>发布</S></Button>
                             </span>
                         </div></>
                 </div>

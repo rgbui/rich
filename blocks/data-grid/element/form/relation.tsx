@@ -12,6 +12,7 @@ import { PageLayoutType, getPageIcon } from "../../../../src/page/declare";
 import { TableSchema } from "../../schema/meta";
 import { FieldType } from "../../schema/type";
 import { FieldView, OriginFormField } from "./origin.field";
+import { S } from "../../../../i18n/view";
 
 @url('/form/relation')
 class FormFieldRelation extends OriginFormField {
@@ -83,7 +84,7 @@ class FormFieldRelationView extends BlockView<FormFieldRelation>{
             </a>
         })}
             {(this.block.field.config.isMultiple || (!(this.block.relationList.length > 0))) && this.block.isCanEdit() && <div>
-                <Button onMouseDown={e => { this.block.onCellMousedown(e) }} ghost>选择{this.block.relationSchema?.text}</Button>
+                <Button onMouseDown={e => { this.block.onCellMousedown(e) }} ghost><S>选择</S>{this.block.relationSchema?.text}</Button>
             </div>}
         </div>
     }

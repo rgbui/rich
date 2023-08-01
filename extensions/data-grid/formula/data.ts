@@ -1,4 +1,5 @@
 import { FieldType } from "../../../blocks/data-grid/schema/type";
+import { lst } from "../../../i18n/store";
 
 
 export var constLangs = [
@@ -53,7 +54,7 @@ export var funLangs = [
 
 export var formulaLangs = [
     {
-        text: '文本',
+        text: lst('文本'),
         types: [FieldType.text, FieldType.title],
         spread: false,
         childs: [
@@ -80,7 +81,7 @@ export var formulaLangs = [
         ]
     },
     {
-        text: '日期',
+        text:lst('日期') ,
         types: [FieldType.date, FieldType.createDate, FieldType.modifyDate],
         spread: false,
         childs: [

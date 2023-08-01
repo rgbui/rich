@@ -14,6 +14,7 @@ import { CssSelectorType } from '../pattern/type';
 import { MouseDragger } from '../../common/dragger';
 import { forceCloseBoardEditTool } from '../../../extensions/board.edit.tool';
 import { openBoardEditTool } from '../../kit/operator/board/edit';
+import { lst } from '../../../i18n/store';
 
 @url("/textspan")
 export class TextSpan extends Block {
@@ -252,7 +253,7 @@ export class TextSpanView extends BlockView<TextSpan>{
         if (this.block.align == 'center') style.textAlign = 'center';
         return <div className='sy-block-text-span' style={this.block.visibleStyle}>
             <div style={style}>
-                <TextSpanArea placeholder={this.block.isFreeBlock ? "键入文本" : undefined} block={this.block}></TextSpanArea>
+                <TextSpanArea placeholder={this.block.isFreeBlock ? lst("输入文本") : undefined} block={this.block}></TextSpanArea>
             </div>
         </div>
     }

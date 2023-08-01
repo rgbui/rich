@@ -4,6 +4,7 @@ import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { TableSchema } from "../../schema/meta";
 import { DataGridTurns } from "../../turn";
+import { S } from "../../../../i18n/view";
 
 @url('/data-grid/statistic/value')
 export class TableStatisticValue extends Block {
@@ -47,7 +48,7 @@ export class TableStatisticValue extends Block {
 export class TableStatisticValueView extends BlockView<TableStatisticValue>{
     render() {
         return <div className="sy-dg-statistic-value">
-            <div style={{ fontSize: 40 }}>统计值  {this.block.statisticValue}</div>
+            <div style={{ fontSize: 40 }}><S>统计值</S>  {this.block.statisticValue}</div>
         </div>
     }
 }

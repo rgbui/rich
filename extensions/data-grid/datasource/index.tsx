@@ -12,6 +12,7 @@ import { util } from "../../../util/util";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
 import { channel } from "../../../net/channel";
+import { lst } from "../../../i18n/store";
 
 export class DataSourceView extends EventsComponent {
     render(): ReactNode {
@@ -41,7 +42,7 @@ export class DataSourceView extends EventsComponent {
                 self.emit('save', item.value);
             }
             else if (item?.name == 'deleteTable') {
-                if (await Confirm('确认要删除表格吗')) {
+                if (await Confirm(lst('确认要删除表格吗'))) {
                     await TableSchema.deleteTableSchema(item.value);
                     channel.air('/page/remove', { item: { id: item.value } })
                     self.forceUpdate()
@@ -52,7 +53,7 @@ export class DataSourceView extends EventsComponent {
 
         }
         var items: MenuItem[] = [];
-        items.push({ type: MenuItemType.text, text: '选择表格视图' })
+        items.push({ type: MenuItemType.text, text: lst('选择表格视图') })
         var list = Array.from(TableSchema.schemas.values());
         list = lodash.sortBy(list, g => 0 - g.createDate.getTime())
         list.forEach((rd) => {
@@ -61,7 +62,7 @@ export class DataSourceView extends EventsComponent {
             if (this.selectView) {
                 var cs: MenuItem[] = [];
                 if (Array.isArray(rd.views) && rd.views.length > 0) {
-                    cs.push({ type: MenuItemType.text, text: '视图' })
+                    cs.push({ type: MenuItemType.text, text:lst('视图')  })
                     var srs = getSchemaViews();
                     cs.push(...rd.views.findAll(g => srs.some(s => s.url == g.url)).map(rv => {
                         return {
@@ -84,7 +85,7 @@ export class DataSourceView extends EventsComponent {
                             name: 'name',
                             type: MenuItemType.input,
                             value: rd.text,
-                            text: '编辑表名',
+                            text: lst('编辑表名'),
                             data: rd,
                         },
                         { type: MenuItemType.divide }
@@ -94,20 +95,20 @@ export class DataSourceView extends EventsComponent {
                     name: 'name',
                     type: MenuItemType.input,
                     value: rd.text,
-                    text: '编辑表名',
+                    text: lst('编辑表名'),
                     data: rd,
                 })
                 if (cs.length > 0 && cs.last().type != MenuItemType.divide) {
                     cs.push({ type: MenuItemType.divide });
                     cs.push({
-                        text: '删除表格',
+                        text: lst('删除表格'),
                         name: 'deleteTable',
                         icon: TrashSvg,
                         value: rd.id
                     })
                 }
                 else cs.push({
-                    text: '删除表格',
+                    text:lst('删除表格') ,
                     name: 'deleteTable',
                     icon: TrashSvg,
                     value: rd.id

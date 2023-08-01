@@ -3,6 +3,7 @@ import { BoardEditTool } from ".";
 import { NoneSvg, TransparentSvg } from "../../component/svgs";
 import { MeasureView } from "../../component/view/progress";
 import { ColorType } from "../note";
+import { S } from "../../i18n/view";
 
 var colors: ColorType[] = [
     { color: 'transparent' },
@@ -41,11 +42,11 @@ export function ShapeStroke(props: {
         {props.tool.isShowDrop('stroke') && <div className="shy-shape-stroke-drops text-1">
             <div className="shy-shape-stroke-opacity">
                 <MeasureView ratio={0.1} min={1} max={10} showValue={false} value={props.strokeOpacity} onChange={e => { props.change('strokeOpacity', e) }}></MeasureView>
-                <div className="shy-measure-view-label"><label className="remark f-12">透明度</label><span style={{ float: 'right' }}>{Math.round(props.strokeOpacity * 10)}</span></div>
+                <div className="shy-measure-view-label"><label className="remark f-12"><S>透明度</S></label><span style={{ float: 'right' }}>{Math.round(props.strokeOpacity * 10)}</span></div>
             </div>
             <div className="shy-shape-stroke-width">
                 <MeasureView min={1} max={30} showValue={false} value={props.strokeWidth} onChange={e => { props.change('strokeWidth', e) }}></MeasureView>
-                <div className="shy-measure-view-label"><label className="remark f-12">边框</label><span >{Math.round(props.strokeWidth)}px</span></div>
+                <div className="shy-measure-view-label"><label className="remark f-12"><S>边框</S></label><span >{Math.round(props.strokeWidth)}px</span></div>
             </div>
             <div className="flex r-gap-w-5 gap-h-10 r-size-24 r-flex-center r-item-hover r-cursor r-round">
 
@@ -127,12 +128,12 @@ export function BorderBoxStyle(props: {
 
             <div className="shy-shape-stroke-width">
                 <MeasureView min={1} max={30} showValue={false} value={props.borderRadius} onChange={e => { props.change('borderRadius', e) }}></MeasureView>
-                <div className="shy-measure-view-label"><label className="remark f-12">圆角</label><span >{Math.round(props.borderRadius)}px</span></div>
+                <div className="shy-measure-view-label"><label className="remark f-12"><S>圆角</S></label><span >{Math.round(props.borderRadius)}px</span></div>
             </div>
 
             <div className="shy-shape-stroke-width">
                 <MeasureView min={1} max={30} showValue={false} value={props.borderWidth} onChange={e => { props.change('borderWidth', e) }}></MeasureView>
-                <div className="shy-measure-view-label"><label className="remark f-12">边宽</label><span >{Math.round(props.borderWidth)}px</span></div>
+                <div className="shy-measure-view-label"><label className="remark f-12"><S>边宽</S></label><span >{Math.round(props.borderWidth)}px</span></div>
             </div>
 
             <div className="shy-shape-stroke-colors">{colors.map(c => {

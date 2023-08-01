@@ -9,12 +9,12 @@ import "./style.less";
 import { BoxTip } from "../../component/view/tooltip/box";
 import { DragHandleSvg, EditSvg, TrashSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
-import { ToolTip } from "../../component/view/tooltip";
 import { DragBlockLine } from "../../src/kit/handle/line";
 import { useUserPicker } from "../../extensions/at/picker";
 import { Rect } from "../../src/common/vector/point";
 import { BlockUrlConstant } from "../../src/block/constant";
 import { useUserCard } from "../../component/view/avator/card";
+import { Tip } from "../../component/view/tooltip/tip";
 
 @url('/user/mention')
 export class ShyMention extends Block {
@@ -53,9 +53,9 @@ export class ShyMentionView extends BlockView<ShyMention>{
     render() {
         return <span onMouseDown={e => this.openUserCard(e)} >
             <BoxTip ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center">
-                <ToolTip overlay={'拖动'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></a></ToolTip>
-                <ToolTip overlay={'打开'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.openUserCard(e)}><Icon size={16} icon={TrashSvg}></Icon></a></ToolTip>
-                <ToolTip overlay={'编辑'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.openUser(e)}><Icon size={16} icon={EditSvg}></Icon></a></ToolTip>
+                <Tip text={'拖动'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></a></Tip>
+                <Tip text={'打开'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.openUserCard(e)}><Icon size={16} icon={TrashSvg}></Icon></a></Tip>
+                <Tip text={'编辑'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.openUser(e)}><Icon size={16} icon={EditSvg}></Icon></a></Tip>
             </div>}><SolidArea block={this.block} prop={'userid'} >{this.block.userid == 'all' && <span className='sy-block-mention'>@所有人</span>}{this.block.userid != 'all' && <UserBox userid={this.block.userid}>{(user) => {
                 this.username = user.name;
                 return <span className='sy-block-mention' >@<span>{user.name}</span></span>

@@ -5,6 +5,7 @@ import { PopoverPosition } from "../../popover/position";
 import { getSchemaViewIcon, getSchemaViews } from "../../../blocks/data-grid/schema/util";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { MenuView } from "../../../component/view/menu/menu";
+import { lst } from "../../../i18n/store";
 
 export class DataGridCreateTable extends EventsComponent {
     url: string = '/data-grid/table';
@@ -14,7 +15,7 @@ export class DataGridCreateTable extends EventsComponent {
         items.push({
             type: MenuItemType.input,
             name: "table",
-            text: '输入表格名称',
+            text: lst('输入表格名称'),
         })
         items.push({ type: MenuItemType.gap })
         var views = getSchemaViews();
@@ -29,7 +30,7 @@ export class DataGridCreateTable extends EventsComponent {
         })
         items.push({
             type: MenuItemType.button,
-            text: '创建表格',
+            text: lst('创建表格'),
             name: 'createTable',
             buttonClick: 'click'
         })

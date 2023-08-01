@@ -12,6 +12,7 @@ import { AudioSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { util } from "../../util/util";
 import { Remark } from "../../component/view/text";
+import { lst } from "../../i18n/store";
 
 /*
  * https://howlerjs.com/
@@ -67,7 +68,7 @@ export class Audio extends Block {
         }
     }
     async getMd() {
-        return `[${this.src?.filename || '音频'}](${this.src?.url})`;
+        return `[${this.src?.filename || lst('音频')}](${this.src?.url})`;
     }
 }
 @view('/audio')

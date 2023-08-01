@@ -4,6 +4,7 @@ import { CloseSvg } from "../../svgs";
 import { Icon } from "../icon";
 import { useUploadPicker } from "../../../extensions/file/file.picker";
 import { Rect } from "../../../src/common/vector/point";
+import { lst } from "../../../i18n/store";
 
 export class FileInput extends React.Component<{
     style?: CSSProperties,
@@ -21,15 +22,15 @@ export class FileInput extends React.Component<{
                 self.props.onChange(r);
             }
         }
-        var text = '上传文件'
+        var text = lst('上传文件')
         if (this.props.mime == 'image') {
-            text = '上传图片'
+            text = lst('上传图片')
         }
         else if (this.props.mime == 'audio') {
-            text = '上传音频'
+            text = lst('上传音频')
         }
         else if (this.props.mime == 'video') {
-            text = '上传视频'
+            text =lst('上传视频') 
         }
         return <div className="flex">
             {this.props.value && this.props.mime == 'image' && <span onMouseDown={e => uploadFile(e)} className="flex flex-inline item-hover round padding-w-5 padding-h-2 relative">

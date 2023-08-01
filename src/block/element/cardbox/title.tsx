@@ -3,6 +3,7 @@ import { Block } from "../..";
 import { prop, url, view } from "../../factory/observable";
 import { BlockView } from "../../view";
 import { TextSpanArea } from "../../view/appear";
+import { lst } from "../../../../i18n/store";
 
 @url('/card/box/title')
 export class CardBoxTitle extends Block {
@@ -26,7 +27,7 @@ export class ViewComponent extends BlockView<CardBoxTitle>{
         if (this.block.align == 'center') style.textAlign = 'center';
         return <div className='sy-card-box-title' style={this.block.visibleStyle}>
             <div style={style} className='sy-card-box-title-content'>
-                <TextSpanArea placeholder={"键入卡片标题"} block={this.block}></TextSpanArea>
+                <TextSpanArea placeholder={lst("键入卡片标题")} block={this.block}></TextSpanArea>
             </div>
         </div>
     }

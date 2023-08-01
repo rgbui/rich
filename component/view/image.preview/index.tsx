@@ -7,6 +7,7 @@ import { getImageSize } from "../../file";
 import { EventsComponent } from "../../lib/events.component";
 import lodash from "lodash";
 import { ToolTip } from "../tooltip";
+import { lst } from "../../../i18n/store";
 
 export class ImageViewer extends EventsComponent {
     pics: ResourceArguments[] = [];
@@ -33,10 +34,10 @@ export class ImageViewer extends EventsComponent {
                     <span className="size-24 cursor flex-center " onClick={e => this.onOperator('zoom-in')}><Icon icon={{ name: 'bytedance-icon', code: 'zoom-out' }}></Icon></span>
                     <span className="gap-w-5">{(this.zoom * 100).toFixed(0)}%</span>
                     <span className="size-24 cursor flex-center " onClick={e => this.onOperator('zoom-out')}><Icon icon={{ name: 'bytedance-icon', code: 'zoom-in' }}></Icon></span>
-                    {this.zoom != 1 && <ToolTip overlay={'原图大小'}><span className="size-24 cursor flex-center " onClick={e => this.onOperator('one-to-one')}><Icon icon={{ name: 'bytedance-icon', code: 'one-to-one' }}></Icon></span></ToolTip>}
-                    {this.zoom == 1 && <ToolTip overlay={'自适应'}><span className="size-24 cursor flex-center " onClick={e => this.onOperator('auto')}><Icon icon={{ name: 'bytedance-icon', code: 'fullwidth' }}></Icon></span></ToolTip>}
+                    {this.zoom != 1 && <ToolTip overlay={lst('原图大小')}><span className="size-24 cursor flex-center " onClick={e => this.onOperator('one-to-one')}><Icon icon={{ name: 'bytedance-icon', code: 'one-to-one' }}></Icon></span></ToolTip>}
+                    {this.zoom == 1 && <ToolTip overlay={lst('自适应')}><span className="size-24 cursor flex-center " onClick={e => this.onOperator('auto')}><Icon icon={{ name: 'bytedance-icon', code: 'fullwidth' }}></Icon></span></ToolTip>}
                 </span>
-                <ToolTip overlay={'旋转90°'}><span className="padding-w-5 size-24 cursor flex-center " onClick={e => this.onOperator('rotate')}><Icon icon={{ name: 'bytedance-icon', code: 'rotate' }}></Icon></span></ToolTip>
+                <ToolTip overlay={lst('旋转90°')}><span className="padding-w-5 size-24 cursor flex-center " onClick={e => this.onOperator('rotate')}><Icon icon={{ name: 'bytedance-icon', code: 'rotate' }}></Icon></span></ToolTip>
             </div>
         </div >
     }

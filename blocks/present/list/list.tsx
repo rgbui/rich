@@ -15,6 +15,7 @@ import { util } from "../../../util/util";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { MenuItemView } from "../../../component/view/menu/item";
 import "./style.less";
+import { lst } from "../../../i18n/store";
 
 export enum ListType {
     circle = 0,
@@ -141,7 +142,7 @@ export class List extends Block {
     }
     async onGetContextMenus() {
         var items = await super.onGetContextMenus();
-        var at = items.findIndex(g => g.text == '颜色');
+        var at = items.findIndex(g => g.text == lst('颜色'));
         if (this.listType == ListType.circle || this.listType == ListType.number) {
             var rc = (item: MenuItem<string>, view?: MenuItemView) => {
                 if (this.listType == ListType.circle) {
@@ -164,17 +165,17 @@ export class List extends Block {
             var newItems: MenuItem<string>[] = [
                 {
                     icon: this.listType == ListType.circle ? ListSvg : NumberListSvg,
-                    text: (this.listType == ListType.number ? "数字" : "") + '列表符号',
+                    text: (this.listType == ListType.number ? lst("数字") : "") + lst('列表符号'),
                     childs: this.listType == ListType.circle ? [
-                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.none, text: '实心园', value: ListTypeView.none },
-                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.circleEmpty, text: '空心园', value: ListTypeView.circleEmpty },
-                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.solidRhombus, text: '实心菱形', value: ListTypeView.solidRhombus },
-                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.rhombus, text: '空心菱形', value: ListTypeView.rhombus },
+                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.none, text: lst('实心园'), value: ListTypeView.none },
+                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.circleEmpty, text: lst('空心园'), value: ListTypeView.circleEmpty },
+                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.solidRhombus, text: lst('实心菱形'), value: ListTypeView.solidRhombus },
+                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.rhombus, text: lst('空心菱形'), value: ListTypeView.rhombus },
                     ] : [
-                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.none, text: '数字', value: ListTypeView.none },
-                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.alphabet, text: '小写字母', value: ListTypeView.alphabet },
-                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.capitalLetter, text: '大写字母', value: ListTypeView.capitalLetter },
-                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.roman, text: '罗马', value: ListTypeView.roman }
+                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.none, text: lst('数字'), value: ListTypeView.none },
+                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.alphabet, text:lst( '小写字母'), value: ListTypeView.alphabet },
+                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.capitalLetter, text: lst('大写字母'), value: ListTypeView.capitalLetter },
+                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.roman, text:lst( '罗马'), value: ListTypeView.roman }
                     ]
                 }, { type: MenuItemType.divide }]
             items.splice(at, 0, ...newItems)
@@ -257,8 +258,8 @@ export class ListView extends BlockView<List>{
         }
     }
     renderText() {
-        var text = this.block.listType == ListType.circle ? "列表" : "数字列表";
-        if (this.block.listType == ListType.toggle) text = '折叠列表';
+        var text = this.block.listType == ListType.circle ? lst("列表") : lst("数字列表");
+        if (this.block.listType == ListType.toggle) text = lst('折叠列表');
         if (this.block.childs.length > 0) return <TextLineChilds childs={this.block.childs}></TextLineChilds>
         else return <TextArea block={this.block} placeholderEmptyVisible prop='content' placeholder={text}></TextArea>
     }

@@ -10,10 +10,11 @@ import { channel } from "../../net/channel";
 import { BoxTip } from "../../component/view/tooltip/box";
 import { DragHandleSvg, DuplicateSvg, EditSvg, TopicSvg, TrashSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
-import { ToolTip } from "../../component/view/tooltip";
 import { CopyAlert } from "../../component/copy";
 import { DragBlockLine } from "../../src/kit/handle/line";
 import { BlockUrlConstant } from "../../src/block/constant";
+import { lst } from "../../i18n/store";
+import { Tip } from "../../component/view/tooltip/tip";
 
 @url('/tag')
 export class ShyTag extends Block {
@@ -61,7 +62,7 @@ export class ShyTag extends Block {
 export class ShyMentionView extends BlockView<ShyTag>{
     boxTip: BoxTip;
     copyLink(url: string) {
-        CopyAlert(url, '复制成功')
+        CopyAlert(url, lst('复制成功'))
     }
     async onClearLink() {
         if (this.boxTip) this.boxTip.close();
@@ -78,10 +79,10 @@ export class ShyMentionView extends BlockView<ShyTag>{
         var ref = Array.isArray(this.block.refLinks) ? this.block.refLinks[0] : undefined;
         return <span className="sy-block-tag" onMouseDown={e => this.block.openTag(e)}>
             <BoxTip ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center  padding-5 r-flex-center r-size-24 r-round r-item-hover r-cursor text">
-                <ToolTip overlay={'拖动'}><span onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></ToolTip>
-                {/* <ToolTip overlay={'复制网址'}><span onMouseDown={e => this.copyLink(url)} ><Icon size={16} icon={DuplicateSvg}></Icon></span></ToolTip> */}
-                <ToolTip overlay={'打开'}><span onMouseDown={e => this.block.openTag(e)}><Icon size={16} icon={TopicSvg}></Icon></span></ToolTip>
-                <ToolTip overlay={'取消'}><span onMouseDown={e => this.onClearLink()}><Icon size={16} icon={TrashSvg}></Icon></span></ToolTip>
+                <Tip text={'拖动'}><span onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>
+                {/* <Tip overlay={'复制网址'}><span onMouseDown={e => this.copyLink(url)} ><Icon size={16} icon={DuplicateSvg}></Icon></span></Tip> */}
+                <Tip text={'打开'}><span onMouseDown={e => this.block.openTag(e)}><Icon size={16} icon={TopicSvg}></Icon></span></Tip>
+                <Tip text={'取消'}><span onMouseDown={e => this.onClearLink()}><Icon size={16} icon={TrashSvg}></Icon></span></Tip>
             </div>}>
                 <SolidArea block={this.block} prop={'userid'} >#{ref?.tagText}</SolidArea>
             </BoxTip>

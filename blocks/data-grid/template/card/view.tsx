@@ -11,6 +11,7 @@ import { FieldType } from "../../schema/type";
 import { TableStoreList } from "../../view/list";
 import lodash from "lodash";
 import { ShyAlert } from "../../../../component/lib/alert";
+import { lst } from "../../../../i18n/store";
 
 export class CardView extends React.Component<{ item: DataGridItemRecord | TableStoreItem, dataGrid: DataGridView | DataGridItemRecord }> {
     cardConfig() {
@@ -132,7 +133,7 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
     async onUpdateCellInteractive(event: React.MouseEvent, name: string) {
         event.stopPropagation()
         if(!this.props.dataGrid.page.isSign) {
-            ShyAlert('请先登录')
+            ShyAlert(lst('请先登录'))
             return
         }
         var field: Field = this.getField(name);

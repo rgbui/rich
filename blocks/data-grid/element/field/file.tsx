@@ -9,6 +9,7 @@ import { OriginField } from "./origin.field";
 import { DownloadSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import { ToolTip } from "../../../../component/view/tooltip";
+import { Tip } from "../../../../component/view/tooltip/tip";
 
 @url('/field/file')
 export class FieldFile extends OriginField {
@@ -41,7 +42,7 @@ export class FieldFileView extends BlockView<FieldFile>{
         return images.map((img, i) => {
             return <div className="min-h-30 flex" key={i}>
                 <a className="round l-18 padding-w-2 item-hover-focus cursor text-1 text-overflow" >{img.filename}</a>
-                <ToolTip overlay={'下载文件'}><span onMouseDown={e => { this.down(img, e) }} className="gap-l-5 size-18 visible flex-center item-hover round cursor"><Icon size={18} icon={DownloadSvg}></Icon></span></ToolTip>
+                <Tip text={'下载文件'}><span onMouseDown={e => { this.down(img, e) }} className="gap-l-5 size-18 visible flex-center item-hover round cursor"><Icon size={18} icon={DownloadSvg}></Icon></span></Tip>
             </div>
         })
     }

@@ -10,14 +10,17 @@ import { channel } from "../../../net/channel";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
 import "./style.less";
+import { S } from "../../../i18n/view";
+import { lst } from "../../../i18n/store";
+import { LinkWs } from "../../../src/page/declare";
 
 export class RollupView extends EventsComponent {
     render(): ReactNode {
         return <div className="shy-rollup-view">
-            {this.notExistsRelationTable && <div>没有关联表，无法进行关联统计</div>}
+            {this.notExistsRelationTable && <div><S>没有关联表，无法进行关联统计</S></div>}
             {this.notExistsRelationTable == false && this.relationDatas && <div>
                 <Row>
-                    <Col><Remark>关联表格:</Remark></Col>
+                    <Col><Remark><S>关联表格</S>:</Remark></Col>
                     <Col><Select
                         value={this.config.rollupTableId}
                         options={this.relationDatas.map(r => { return { text: r.text, value: r.id } })}
@@ -28,7 +31,7 @@ export class RollupView extends EventsComponent {
                     </Col>
                 </Row >
                 {this.rollFields && <><Row>
-                    <Col><Remark>统计表格列:</Remark></Col>
+                    <Col><Remark><S>统计表格列</S>:</Remark></Col>
                     <Col><Select value={this.config.rollupFieldId} options={this.rollFields.map(c => {
                         return { text: c.text, value: c.id }
                     })}
@@ -37,7 +40,7 @@ export class RollupView extends EventsComponent {
                     </Col>
                 </Row >
                     {this.config.rollupFieldId && <Row>
-                        <Col><Remark>对数据进行统计:</Remark></Col>
+                        <Col><Remark><S>对数据进行统计</S>:</Remark></Col>
                         <Col><Select onChange={e => this.config.rollupStatistic = e} value={this.config.rollupStatistic} options={this.rollupStatisticOptions} style={{ width: '100%' }}> </Select>
                         </Col>
                     </Row>}
@@ -51,14 +54,17 @@ export class RollupView extends EventsComponent {
     config: FieldConfig = {};
     schema: TableSchema;
     private notExistsRelationTable: boolean = false;
+    ws?:LinkWs
     async open(option: {
         schema: TableSchema,
-        config?: Record<string, any>
+        config?: Record<string, any>,
+        ws?:LinkWs,
     }) {
         this.isChange = false;
         this.schema = option.schema;
         this.config = option.config || {};
         this.relationDatas = null;
+        this.ws=option.ws;
         await this.loadTypeDatas();
         this.forceUpdate();
     }
@@ -69,7 +75,8 @@ export class RollupView extends EventsComponent {
             if (ids.length > 0) {
                 this.notExistsRelationTable = false;
                 var r = await channel.get('/schema/ids/list', {
-                    ids: ids
+                    ids: ids,
+                    ws:this.ws
                 });
                 if (r.ok) {
                     this.relationDatas = r.data.list as TableSchema[];
@@ -95,13 +102,13 @@ export class RollupView extends EventsComponent {
                 var rf = rfs.find(g => g.id == this.config.rollupFieldId);
                 if (rf.type == FieldType.number) {
                     return [
-                        { text: '最小', value: '$min' },
-                        { text: '最大', value: '$max' },
-                        { text: '平均', value: '$agv' },
-                        { text: '求和', value: '$sum' },
+                        { text: lst('最小'), value: '$min' },
+                        { text: lst('最大'), value: '$max' },
+                        { text: lst('平均'), value: '$agv' },
+                        { text: lst('求和'), value: '$sum' },
                     ]
                 }
-                else return [{ text: '数量', value: '$count' }]
+                else return [{ text: lst('数量'), value: '$count' }]
             }
         }
         return [];
@@ -115,7 +122,8 @@ export class RollupView extends EventsComponent {
 export async function useRollupView(pos: PopoverPosition,
     option: {
         schema: TableSchema,
-        config?: Record<string, any>
+        config?: Record<string, any>,
+        ws?:LinkWs
     }) {
     let popover = await PopoverSingleton(RollupView, { mask: true });
     let fv = await popover.open(pos);

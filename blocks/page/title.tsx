@@ -10,6 +10,8 @@ import { EmojiSvg, PicSvg } from "../../component/svgs";
 import lodash from "lodash";
 import { Spin } from "../../component/view/spin";
 import { LinkPageItem, getPageText } from "../../src/page/declare";
+import { S } from "../../i18n/view";
+import { lst } from "../../i18n/store";
 
 @url('/title')
 export class Title extends Block {
@@ -89,8 +91,8 @@ export class TitleView extends BlockView<Title>{
                 <Icon size={72} icon={pd?.icon}></Icon>
             </div></div>}
             {isAdd && (!pd?.icon || !pd.cover?.abled) && <div className='flex h-24 visible r-item-hover f-14 r-cursor r-gap-r-10 r-padding-w-6 r-padding-h-3 r-round remark r-flex-center gap-b-10' >
-                {!pd?.icon && <a className="remark" onMouseDown={e => { this.block.page.onAddIcon(); this.forceUpdate() }}><Icon size={16} icon={EmojiSvg}></Icon><span className="gap-l-5">添加图标</span></a>}
-                {!pd.cover?.abled && <a className="remark" onMouseDown={e => this.block.page.onAddCover()}><Icon size={16} icon={PicSvg}></Icon><span className="gap-l-5">添加封面</span></a>}
+                {!pd?.icon && <a className="remark" onMouseDown={e => { this.block.page.onAddIcon(); this.forceUpdate() }}><Icon size={16} icon={EmojiSvg}></Icon><span className="gap-l-5"><S>添加图标</S></span></a>}
+                {!pd.cover?.abled && <a className="remark" onMouseDown={e => this.block.page.onAddCover()}><Icon size={16} icon={PicSvg}></Icon><span className="gap-l-5"><S>添加封面</S></span></a>}
             </div>}
             {!pd && <div className='sy-block-page-info-loading'>
                 <Spin></Spin>
@@ -98,7 +100,7 @@ export class TitleView extends BlockView<Title>{
             {pd && <div className='sy-block-page-info-head'>
                 <span className='sy-block-page-info-head-title'><TextArea
                     block={this.block}
-                    placeholder='输入标题'
+                    placeholder={lst('输入标题')}
                     prop='pageInfo.text'
                     className={'shy-text-empty-font-inherit'}
                     placeholderEmptyVisible

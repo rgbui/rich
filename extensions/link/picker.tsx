@@ -17,7 +17,8 @@ import { KeyboardCode } from "../../src/common/keys";
 import { util } from "../../util/util";
 import { Block } from "../../src/block";
 import { SearchListType } from "../../component/types";
-import { ls } from "../../i18n/store";
+import { ls, lst } from "../../i18n/store";
+import { S } from "../../i18n/view";
 
 /**
  * 
@@ -130,7 +131,7 @@ class LinkPicker extends EventsComponent {
             <div className="gap-h-5">
                 <Input size='small'
                     onKeydown={this.keydown}
-                    placeholder={ls.t('请输入网址或搜索页面')}
+                    placeholder={lst('请输入网址或搜索页面')}
                     onChange={e => this.onInput(e)}
                     onEnter={(e, g) => { g.preventDefault(); g.stopPropagation(); this.onEnter(e); }}
                     value={this.url}></Input>
@@ -141,7 +142,7 @@ class LinkPicker extends EventsComponent {
                 <span>{this.url}</span>
             </div>}
             {this.name == 'page' && this.url && <><div onClick={e => this.onCreate()} className={'h-30  cursor  item-hover round padding-w-5 flex' + (this.selectIndex == 0 ? " item-hover-focus" : "")}>
-                <span className="flex-auto">创建<em className="bold">{this.url}</em></span>
+                <span className="flex-auto"><S>创建</S><em className="bold">{this.url}</em></span>
                 <span className="flex-fixed size-20 item-hover cursor round">
                     <Icon icon={PlusSvg} size={20}></Icon>
                 </span>
@@ -154,7 +155,7 @@ class LinkPicker extends EventsComponent {
                         <span className="flex-auto text-overflow">{getPageText(link)}</span>
                     </div>
                 })}
-                {!this.loading && this.links.length == 0 && this.isSearch && <span className="remark f-12 flex-center">没有搜索到</span>}
+                {!this.loading && this.links.length == 0 && this.isSearch && <span className="remark f-12 flex-center"><S>没有搜索到</S></span>}
             </div>}
         </div>
     }

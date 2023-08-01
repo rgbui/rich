@@ -23,6 +23,8 @@ import { Field } from "../../../../blocks/data-grid/schema/field";
 import { ViewField } from "../../../../blocks/data-grid/schema/view";
 import { useSelectMenuItem } from "../../../../component/view/menu";
 import { CardFactory } from "../../../../blocks/data-grid/template/card/factory/factory";
+import { lst } from "../../../../i18n/store";
+import { S } from "../../../../i18n/view";
 
 export class DataGridFields extends EventsComponent {
     get schema() {
@@ -60,8 +62,8 @@ export class DataGridFields extends EventsComponent {
                 var items = [
                     { name: 'name', type: MenuItemType.input, value: gr.text },
                     { type: MenuItemType.divide },
-                    { name: 'delete', icon: TrashSvg, text: '删除' },
-                    { name: 'clone', icon: DuplicateSvg, text: '复制' }
+                    { name: 'delete', icon: TrashSvg, text: lst('删除') },
+                    { name: 'clone', icon: DuplicateSvg, text: lst('复制') }
                 ];
                 var na = items[0];
                 var r = await useSelectMenuItem(
@@ -87,7 +89,7 @@ export class DataGridFields extends EventsComponent {
         return <div>
             <div className="max-h-200 overflow-y">
                 <div className="flex h-30 padding-w-14" >
-                    <span className="remark flex-auto f-12">显示的字段</span>
+                    <span className="remark flex-auto f-12"><S>显示的字段</S></span>
                     <span onClick={e => onHideAll()} className="size-24 flex-center round ">
                         <Icon size={14} icon={EyeSvg}></Icon>
                     </span>
@@ -103,7 +105,7 @@ export class DataGridFields extends EventsComponent {
                 })}</DragList>
                 {fs.length > 0 && <>
                     <div className="flex h-30 padding-w-14" >
-                        <span className="remark flex-auto f-12">未显示的字段</span>
+                        <span className="remark flex-auto f-12"><S>未显示的字段</S></span>
                         <span onClick={e => onShowAll()} className="size-24 flex-center round item-hover ">
                             <Icon size={14} icon={EyeHideSvg}></Icon>
                         </span>
@@ -122,7 +124,7 @@ export class DataGridFields extends EventsComponent {
                     <span className="size-24 round flex-center flex-fix cursor">
                         <Icon size={18} icon={PlusSvg}></Icon>
                     </span>
-                    <span className="flex-auto">添加字段</span>
+                    <span className="flex-auto"><S>添加字段</S></span>
                 </div>
             </div>
         </div>
@@ -167,43 +169,43 @@ export class DataGridFields extends EventsComponent {
                 return [
                     {
                         name: 'cardConfig.showMode',
-                        text: "显示",
+                        text: lst("显示"),
                         type: MenuItemType.select,
                         value: (this.block as TableStoreGallery).cardConfig?.showMode || 'default',
                         options: [
-                            { text: "默认", value: 'default' },
-                            { text: '自定义数据模板', value: 'define' }
+                            { text: lst("默认"), value: 'default' },
+                            { text: lst('自定义数据模板'), value: 'define' }
                         ]
                     }
                 ]
             var baseItems: MenuItem[] = [
                 {
                     name: 'cardConfig.showMode',
-                    text: "显示",
+                    text: lst("显示"),
                     type: MenuItemType.select,
                     value: (this.block as TableStoreGallery).cardConfig?.showMode || 'default',
                     options: [
-                        { text: "默认", value: 'default' },
-                        { text: '自定义数据模板', value: 'define' }
+                        { text: lst("默认"), value: 'default' },
+                        { text: lst('自定义数据模板'), value: 'define' }
                     ]
                 },
-                { text: '卡片视图', type: MenuItemType.text },
+                { text: lst('卡片视图'), type: MenuItemType.text },
                 {
                     name: 'cardConfig.auto',
-                    text: "高度自适应",
+                    text: lst("高度自适应"),
                     type: MenuItemType.switch,
                     checked: (this.block as TableStoreGallery).cardConfig?.auto,
                 },
                 {
                     name: 'cardConfig.showCover',
-                    text: "显示封面",
+                    text: lst("显示封面"),
                     type: MenuItemType.switch,
                     updateMenuPanel: true,
                     checked: (this.block as TableStoreGallery).cardConfig?.showCover,
                 },
                 {
                     name: 'cardConfig.coverAuto',
-                    text: "封面高度",
+                    text: lst("封面高度"),
                     visible: (items) => {
                         var item = items.find(g => g.name == 'cardConfig.showCover');
                         if (item.checked) return true;
@@ -213,7 +215,7 @@ export class DataGridFields extends EventsComponent {
                     checked: (this.block as TableStoreGallery).cardConfig?.coverAuto,
                 },
                 {
-                    text: '封面字段',
+                    text: lst('封面字段'),
                     value: (this.block as TableStoreGallery).cardConfig?.coverFieldId,
                     name: 'cardConfig.coverFieldId',
                     type: MenuItemType.select,
@@ -247,7 +249,7 @@ export class DataGridFields extends EventsComponent {
                 <span className="size-24 round flex-center flex-fix cursor">
                     <Icon size={18} icon={PlusSvg}></Icon>
                 </span>
-                <span className="flex-auto">添加字段</span>
+                <span className="flex-auto"><S>添加字段</S></span>
             </div>
         </div >
     }
@@ -294,10 +296,10 @@ export class DataGridFields extends EventsComponent {
         if (card) return <div>
             <div className="flex remark f-12 padding-w-14 gap-h-10">
                 <span className="flex-auto text-over">{card.title}</span>
-                <div className="flex-fix "><Button onClick={e => openSelect(e)} ghost>重新选择数据模板</Button></div>
+                <div className="flex-fix "><Button onClick={e => openSelect(e)} ghost><S>重新选择数据模板</S></Button></div>
             </div>
             <div className="flex remark f-12 gap-h-5 padding-w-14">
-                <span>数据模板字段</span>
+                <span><S>数据模板字段</S></span>
             </div>
             <div>
                 {card.props.map(pro => {
@@ -331,7 +333,7 @@ export class DataGridFields extends EventsComponent {
             </div>
         </div>
         else return <div className="flex-center gap-14">
-            <span><Button onClick={e => openSelect(e)} >选择数据模板</Button></span>
+            <span><Button onClick={e => openSelect(e)} ><S>选择数据模板</S></Button></span>
         </div>
     }
     onStoreViewText = lodash.debounce((value) => {

@@ -11,6 +11,7 @@ import { Icon } from "../../../../component/view/icon";
 import { ToolTip } from "../../../../component/view/tooltip";
 import { BoxTip } from "../../../../component/view/tooltip/box";
 import { DragBlockLine } from "../../../../src/kit/handle/line";
+import { Tip } from "../../../../component/view/tooltip/tip";
 
 export class OriginFilterField extends Block {
     @prop()
@@ -53,8 +54,8 @@ export class OriginFilterFieldView extends React.Component<{
         return this.props.filterField.refBlock && <BoxTip
             ref={e => this.boxTip = e}
             overlay={<div className="flex h-30 round padding-w-5">
-                <ToolTip overlay={'拖动'}><a className="flex-center size-24 round item-hover gap-r-5 cursor text" onMouseDown={e => this.props.filterField.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></a></ToolTip>
-                <ToolTip overlay={'删除'}><span className="flex-center text-1  item-hover size-24 round cursor" onMouseDown={e => this.props.filterField.onDelete()}><Icon size={16} icon={TrashSvg}></Icon></span></ToolTip>
+                <Tip text={'拖动'}><a className="flex-center size-24 round item-hover gap-r-5 cursor text" onMouseDown={e => this.props.filterField.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></a></Tip>
+                <Tip text={'删除'}><span className="flex-center text-1  item-hover size-24 round cursor" onMouseDown={e => this.props.filterField.onDelete()}><Icon size={16} icon={TrashSvg}></Icon></span></Tip>
             </div>}><SolidArea gap line block={this.props.filterField} prop='field'>
                 <div className="inline" style={this.props.style || {}}>
                     {this.props.filterField.showFieldText && <label className="inline-block text-1 gap-r-5">{this.props.filterField.fieldText}:</label>}

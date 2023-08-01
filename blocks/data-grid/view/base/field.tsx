@@ -18,6 +18,7 @@ import { util } from "../../../../util/util";
 import { DataGridOptionType } from "../../schema/field";
 import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
+import { lst } from "../../../../i18n/store";
 
 export class DataGridViewField {
     private getFieldMenuItems(this: DataGridView, viewField: ViewField) {
@@ -28,34 +29,34 @@ export class DataGridViewField {
                     name: 'name',
                     type: MenuItemType.input,
                     value: viewField?.text,
-                    text: '编辑列名',
+                    text: lst('编辑列名'),
                 },
                 { type: MenuItemType.divide },
-                { name: 'leftInsert', icon: ArrowLeftSvg, text: '左侧插入' },
-                { name: 'rightInsert', icon: ArrowRightSvg, text: '右侧插入' },
+                { name: 'leftInsert', icon: ArrowLeftSvg, text:lst( '左侧插入') },
+                { name: 'rightInsert', icon: ArrowRightSvg, text: lst('右侧插入' )},
                 { type: MenuItemType.divide },
                 {
                     name: 'hide',
                     icon: HideSvg,
-                    text: '隐藏列'
+                    text:lst( '隐藏列')
                 }
             ]);
             if (viewField?.field?.type == FieldType.autoIncrement) {
                 items.addRange(4, [
-                    { name: 'sortDesc', icon: ArrowDownSvg, text: '降序' },
-                    { name: 'sortAsc', icon: ArrowUpSvg, text: '升序' },
-                    { name: 'filter', icon: FilterSvg, text: '过滤' },
+                    { name: 'sortDesc', icon: ArrowDownSvg, text: lst('降序' )},
+                    { name: 'sortAsc', icon: ArrowUpSvg, text:lst( '升序' )},
+                    { name: 'filter', icon: FilterSvg, text: lst('过滤' )},
                 ])
                 items.push(...[
                     {
                         name: 'clone',
                         icon: DuplicateSvg,
-                        text: '复制列'
+                        text:lst( '复制列')
                     },
                     {
                         name: 'deleteProperty',
                         icon: TrashSvg,
-                        text: '删除字段'
+                        text: lst('删除字段')
                     }
                 ])
             }
@@ -66,33 +67,33 @@ export class DataGridViewField {
                     name: 'name',
                     type: MenuItemType.input,
                     value: viewField.field?.text,
-                    text: '编辑列名',
+                    text: lst('编辑列名'),
                 },
                 { type: MenuItemType.divide },
                 {
                     name: 'editProperty',
                     disabled: viewField.field.type == FieldType.title ? true : false,
                     icon: OptionsSvg,
-                    text: '编辑字段'
+                    text:lst( '编辑字段')
                 },
                 { type: MenuItemType.divide },
-                { name: 'leftInsert', icon: ArrowLeftSvg, text: '左侧插入' },
-                { name: 'rightInsert', icon: ArrowRightSvg, text: '右侧插入' },
-                { name: 'sortDesc', icon: ArrowDownSvg, text: '降序' },
-                { name: 'sortAsc', icon: ArrowUpSvg, text: '升序' },
-                { name: 'filter', icon: FilterSvg, text: '过滤' },
+                { name: 'leftInsert', icon: ArrowLeftSvg, text:lst( '左侧插入') },
+                { name: 'rightInsert', icon: ArrowRightSvg, text: lst('右侧插入') },
+                { name: 'sortDesc', icon: ArrowDownSvg, text:lst( '降序' )},
+                { name: 'sortAsc', icon: ArrowUpSvg, text:lst( '升序') },
+                { name: 'filter', icon: FilterSvg, text: lst('过滤' )},
                 { type: MenuItemType.divide },
                 {
                     name: 'hide',
                     icon: HideSvg,
-                    text: '隐藏列'
+                    text: lst('隐藏列')
                 },
                 {
                     name: 'clone',
                     icon: DuplicateSvg,
-                    text: '复制列'
+                    text: lst('复制列')
                 },
-                { name: 'deleteProperty', icon: TrashSvg, text: '删除字段' },
+                { name: 'deleteProperty', icon: TrashSvg, text: lst('删除字段') },
             ]);
             if (viewField.field?.type == FieldType.date) {
                 var dateItems: MenuItem<BlockDirective | string>[] = [];
@@ -101,48 +102,48 @@ export class DataGridViewField {
                     {
                         name: 'dateCustomFormat',
                         type: MenuItemType.input,
-                        value: viewField?.field?.config?.dateFormat || 'YYYY年MM月DD日',
-                        text: '编辑日期格式',
+                        value: viewField?.field?.config?.dateFormat || lst('YYYY年MM月DD日'),
+                        text: lst('编辑日期格式'),
                     },
                     { type: MenuItemType.divide },
                     {
                         name: 'dateFormat',
-                        text: '年月日',
-                        value: 'YYYY年MM月DD日',
-                        label: day.format('YYYY年MM月DD日')
+                        text: lst('年月日'),
+                        value: lst('YYYY年MM月DD日'),
+                        label: day.format(lst('YYYY年MM月DD日'))
                     },
                     {
                         name: 'dateFormat',
-                        text: '年月',
-                        value: 'YYYY年MM月',
-                        label: day.format('YYYY年MM月')
+                        text: lst('年月'),
+                        value: lst('YYYY年MM月'),
+                        label: day.format(lst('YYYY年MM月'))
                     },
                     {
                         name: 'dateFormat',
-                        text: '月日',
-                        value: 'MM月DD日',
-                        label: day.format('MM月DD日')
+                        text: lst('月日'),
+                        value:lst( 'MM月DD日'),
+                        label: day.format(lst('MM月DD日'))
                     },
                     {
                         name: 'dateFormat',
-                        text: '日期时间',
-                        value: 'YYYY/MM/DD HH:mm',
-                        label: day.format('YYYY/MM/DD HH:mm')
+                        text: lst('日期时间'),
+                        value: lst('YYYY/MM/DD HH:mm'),
+                        label: day.format(lst('YYYY/MM/DD HH:mm'))
                     },
                     {
                         name: 'dateFormat',
-                        text: '时间',
+                        text: lst('时间'),
                         value: 'HH:mm',
                         label: day.format('HH:mm')
                     }
                 ]);
                 items.insertAt(3, { type: MenuItemType.divide });
                 items.insertAt(4, {
-                    text: '日期格式',
+                    text: lst('日期格式'),
                     childs: dateItems
                 });
                 items.insertAt(5, {
-                    text: '包括时间',
+                    text:lst( '包括时间'),
                     type: MenuItemType.switch,
                     name: 'includeTime',
                     checked: viewField?.field?.config?.includeTime ? true : false
@@ -151,29 +152,29 @@ export class DataGridViewField {
             else if (viewField.field?.type == FieldType.number) {
                 var dateItems: MenuItem<BlockDirective | string>[] = [];
                 dateItems.push(...[
-                    { name: 'numberFormat', text: '数字', value: 'number', checkLabel: viewField.field.config?.numberFormat == 'number' },
-                    { name: 'numberFormat', text: '整数', value: 'int', checkLabel: viewField.field.config?.numberFormat == 'int' },
-                    { name: 'numberFormat', text: '千分位', value: '1000', checkLabel: viewField.field.config?.numberFormat == '1000' },
-                    { name: 'numberFormat', text: '两位小数', value: '0.00', checkLabel: viewField.field.config?.numberFormat == '0.00' },
-                    { name: 'numberFormat', text: '百分比', value: '%', checkLabel: viewField.field.config?.numberFormat == '%' },
+                    { name: 'numberFormat', text: lst('数字'), value: 'number', checkLabel: viewField.field.config?.numberFormat == 'number' },
+                    { name: 'numberFormat', text:lst( '整数'), value: 'int', checkLabel: viewField.field.config?.numberFormat == 'int' },
+                    { name: 'numberFormat', text: lst('千分位'), value: '1000', checkLabel: viewField.field.config?.numberFormat == '1000' },
+                    { name: 'numberFormat', text: lst('两位小数'), value: '0.00', checkLabel: viewField.field.config?.numberFormat == '0.00' },
+                    { name: 'numberFormat', text: lst('百分比'), value: '%', checkLabel: viewField.field.config?.numberFormat == '%' },
                     //{ name: 'numberFormat', type: MenuItemType.divide },
                     //{ name: 'numberFormat', text: '进度条', value: 'progress', checkLabel: viewField.field.config?.numberFormat == 'progress' },
                     // { text: '评分', value: 'score' },
                     { type: MenuItemType.divide },
-                    { name: 'numberFormat', text: '人民币', value: '￥', checkLabel: viewField.field.config?.numberFormat == '￥' },
-                    { name: 'numberFormat', text: '美元', value: '$', checkLabel: viewField.field.config?.numberFormat == '$' },
-                    { name: 'numberFormat', text: '欧元', value: '€', checkLabel: viewField.field.config?.numberFormat == '€' },
-                    { name: 'numberFormat', text: '日元', value: 'JP¥', checkLabel: viewField.field.config?.numberFormat == 'JP¥' },
-                    { name: 'numberFormat', text: '港元', value: 'HK$', checkLabel: viewField.field.config?.numberFormat == 'HK$' },
+                    { name: 'numberFormat', text:lst( '人民币'), value: '￥', checkLabel: viewField.field.config?.numberFormat == '￥' },
+                    { name: 'numberFormat', text:lst( '美元'), value: '$', checkLabel: viewField.field.config?.numberFormat == '$' },
+                    { name: 'numberFormat', text:lst( '欧元'), value: '€', checkLabel: viewField.field.config?.numberFormat == '€' },
+                    { name: 'numberFormat', text:lst( '日元'), value: 'JP¥', checkLabel: viewField.field.config?.numberFormat == 'JP¥' },
+                    { name: 'numberFormat', text: lst('港元'), value: 'HK$', checkLabel: viewField.field.config?.numberFormat == 'HK$' },
                     { type: MenuItemType.divide },
                     {
-                        text: '自定义格式',
+                        text:lst( '自定义格式'),
                         childs: [
                             {
                                 name: 'numberUnitCustom',
                                 type: MenuItemType.input,
                                 value: viewField.field.config?.numberFormat?.indexOf('{value}') > -1 ? viewField.field.config?.numberFormat : '',
-                                text: '输入数字格式',
+                                text:lst( '输入数字格式'),
                             },
                             { type: MenuItemType.divide },
                             { name: 'numberUnit', text: 'm/s', value: '{value}m/s', checkLabel: viewField.field.config?.numberFormat == 'number' },
@@ -189,7 +190,7 @@ export class DataGridViewField {
                 ]);
                 items.insertAt(3, { type: MenuItemType.divide });
                 items.insertAt(4, {
-                    text: '数字格式',
+                    text:lst( '数字格式'),
                     childs: dateItems,
                     icon: SettingsSvg
                 });
@@ -197,40 +198,40 @@ export class DataGridViewField {
             else if (viewField.field?.type == FieldType.bool) {
                 var dateItems: MenuItem<BlockDirective | string>[] = [];
                 dateItems.push(...[
-                    { text: '勾选框', value: '' },
-                    { text: '开关', value: '' },
+                    { text: lst('勾选框'), value: '' },
+                    { text:lst( '开关'), value: '' },
                     {
-                        text: '自定义',
+                        text: lst('自定义'),
                         childs: [
                             {
                                 name: 'dateCustomFormat',
                                 type: MenuItemType.input,
                                 value: '',
-                                text: '编辑日期格式',
+                                text: lst('编辑日期格式'),
                             },
-                            { text: '是否', value: '' },
+                            { text: lst('是否'), value: '' },
                         ]
                     }
                 ]);
                 items.insertAt(3, { type: MenuItemType.divide });
                 items.insertAt(4, {
-                    text: '显示格式',
+                    text: lst('显示格式'),
                     childs: dateItems,
                     icon: SettingsSvg
                 });
             }
             else if (viewField.field.type == FieldType.image) {
                 items.insertAt(4, {
-                    text: '图片展示',
+                    text:lst( '图片展示'),
                     type: MenuItemType.select,
                     name: 'config.imageFormat.display',
                     value: viewField.field.config?.imageFormat?.display || "thumb",
                     options: [
-                        { text: '略缩图', value: 'thumb' },
-                        { text: '自适应', value: 'auto' }
+                        { text: lst('略缩图'), value: 'thumb' },
+                        { text:lst( '自适应'), value: 'auto' }
                     ],
                     buttonClick: 'select'
-                }); text = '允许多张图片';
+                }); text = lst('允许多张图片');
                 items.insertAt(5, {
                     text: text,
                     type: MenuItemType.switch,
@@ -239,7 +240,7 @@ export class DataGridViewField {
                     checked: viewField?.field?.config?.isMultiple ? true : false
                 });
                 items.insertAt(6, {
-                    text: '多张图片展示',
+                    text: lst('多张图片展示'),
                     visible: (items) => {
                         var mp = items.find(g => g.name == 'isMultiple');
                         if (mp?.checked) return true
@@ -249,8 +250,8 @@ export class DataGridViewField {
                     name: 'config.imageFormat.multipleDisplay',
                     value: viewField.field.config?.imageFormat?.multipleDisplay || "tile",
                     options: [
-                        { text: '平铺', value: 'tile' },
-                        { text: '轮播', value: 'carousel' }
+                        { text:lst( '平铺'), value: 'tile' },
+                        { text: lst('轮播'), value: 'carousel' }
                     ],
                     buttonClick: 'select'
                 });
@@ -259,9 +260,9 @@ export class DataGridViewField {
                 FieldType.file,
                 FieldType.user
             ].includes(viewField.field?.type)) {
-                var text = '允许多文件';
+                var text =lst( '允许多文件');
                 if (viewField.field.type == FieldType.user)
-                    text = '允许多用用户';
+                    text = lst('允许多用用户');
                 items.insertAt(5, {
                     text: text,
                     type: MenuItemType.switch,
@@ -272,7 +273,7 @@ export class DataGridViewField {
             }
             else if (viewField.field?.type == FieldType.formula) {
                 items.insertAt(4, {
-                    text: '编辑公式',
+                    text: lst('编辑公式'),
                     name: 'formula',
                     icon: EditSvg
                 });
@@ -280,12 +281,12 @@ export class DataGridViewField {
             }
             else if (viewField.field?.type == FieldType.relation) {
                 items.insertAt(4, {
-                    text: '打开关联表',
+                    text:lst( '打开关联表'),
                     name: 'openRelation',
                     icon: MaximizeSvg
                 });
                 items.insertAt(5, {
-                    text: '允许关联一对多',
+                    text:lst( '允许关联一对多'),
                     type: MenuItemType.switch,
                     name: 'isMultiple',
                     checked: viewField?.field?.config?.isMultiple ? true : false
@@ -293,7 +294,7 @@ export class DataGridViewField {
             }
             else if (viewField.field?.type == FieldType.emoji) {
                 items.insertAt(4, {
-                    text: '更换表情',
+                    text:lst( '更换表情'),
                     name: 'emoji',
                     icon: EmojiSvg
                 });
@@ -301,7 +302,7 @@ export class DataGridViewField {
             else if (viewField.field?.type == FieldType.option || viewField.field.type == FieldType.options) {
                 items.insertAt(3, { type: MenuItemType.divide });
                 items.insertAt(4, {
-                    text: '选项',
+                    text: lst('选项'),
                     icon: TypesSelectSvg,
                     childs: [
                         {
@@ -322,7 +323,7 @@ export class DataGridViewField {
                         ...((viewField.field.config?.options || []).length > 0 ? [{ type: MenuItemType.divide }] : []),
                         {
                             type: MenuItemType.button,
-                            text: '添加选项',
+                            text: lst('添加选项'),
                             icon: PlusSvg,
                             buttonClick: 'click',
                             name: 'addOption'
@@ -336,11 +337,11 @@ export class DataGridViewField {
     async onOpenFieldOptions(options: DataGridOptionType[], option: DataGridOptionType, event: React.MouseEvent) {
         event.stopPropagation();
         var menus = [
-            { text: '标签', name: 'name', value: option.text, type: MenuItemType.input },
+            { text: lst('标签'), name: 'name', value: option.text, type: MenuItemType.input },
             { type: MenuItemType.divide },
-            { name: 'delete', icon: TrashSvg, text: '删除' },
+            { name: 'delete', icon: TrashSvg, text:lst( '删除' )},
             { type: MenuItemType.divide },
-            { type: MenuItemType.text, text: '颜色' },
+            { type: MenuItemType.text, text:lst( '颜色') },
             ...OptionBackgroundColorList.map(b => {
                 return {
                     name: 'color',
@@ -374,7 +375,7 @@ export class DataGridViewField {
         var name = menus[0].value;
         if (name && name != option.text) {
             if (options.some(s => s.text == name && s !== option)) {
-                ShyAlert('当前标签项已存在。');
+                ShyAlert(lst('当前标签项已存在。'));
             }
             else {
                 option.text = name;

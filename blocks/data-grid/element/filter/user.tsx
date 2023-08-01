@@ -6,6 +6,7 @@ import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/vector/point";
 import { OriginFilterField, OriginFilterFieldView } from "./origin.field";
+import { S } from "../../../../i18n/view";
 
 @url('/field/filter/user')
 export class SearchUser extends OriginFilterField {
@@ -40,7 +41,7 @@ export class SearchTextView extends BlockView<SearchUser>{
             filterField={this.block}
         >
             <div onMouseDown={e => this.mousedown(e)}>
-                {!(this.block.selectUsers?.length > 0) && <em className="remark f-14">所有人</em>}
+                {!(this.block.selectUsers?.length > 0) && <em className="remark f-14"><S>所有人</S></em>}
                 <UserAvatars size={30} users={this.block.selectUsers}></UserAvatars>
             </div>
         </OriginFilterFieldView ></div>

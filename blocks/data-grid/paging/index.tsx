@@ -9,6 +9,8 @@ import { url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
 import { Rect } from "../../../src/common/vector/point";
 import { DataGridView } from "../view/base";
+import { lst } from "../../../i18n/store";
+import { S, Sp } from "../../../i18n/view";
 
 
 @url('/data-grid/paging')
@@ -33,16 +35,16 @@ export class Paging extends Block {
 export class PagingView extends BlockView<Paging>{
     async onDropSize(event: React.MouseEvent) {
         var items: MenuItem[] = [
-            { text: '选择每页的条数', type: MenuItemType.text },
-            { text: '20条/页', value: 20 },
-            { text: '50条/页', value: 50 },
-            { text: '80条/页', value: 80 },
-            { text: '100条/页', value: 100 },
-            { text: '150条/页', value: 150 },
-            { text: '200条/页', value: 200 },
+            { text: lst('选择每页的条数'), type: MenuItemType.text },
+            { text: '20'+lst('条/页'), value: 20 },
+            { text: '50'+lst('条/页'), value: 50 },
+            { text: '80'+lst('条/页'), value: 80 },
+            { text: '100'+lst('条/页'), value: 100 },
+            { text: '150'+lst('条/页'), value: 150 },
+            { text: '200'+lst('条/页'), value: 200 },
             { type: MenuItemType.divide },
-            { text: '5条/页', value: 5 },
-            { text: '10条/页', value: 10 },
+            { text: '5'+lst('条/页'), value: 5 },
+            { text: '10'+lst('条/页'), value: 10 },
         ];
         var r = await useSelectMenuItem({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, items);
         if (r) {
@@ -84,13 +86,13 @@ export class PagingView extends BlockView<Paging>{
         return <div style={this.block.visibleStyle}>
             <div style={this.block.contentStyle} className='flex min-h-24 f-14'>
                 {this.block.refBlock && <>
-                    <span className="text gap-r-10">共{this.block.refBlock.total}条</span>
+                    <span className="text gap-r-10"><Sp key={'共{total}条'} data={{total:this.block.refBlock.total}}>共{this.block.refBlock.total}条</Sp></span>
                     <span onMouseDown={e => this.block.onChangeIndex(this.block.refBlock.pageIndex - 1)} className={"border flex-center size-24 round" + (this.block.refBlock.pageIndex == 1 ? " remark" : " cursor")}><Icon size={18} icon={ChevronLeftSvg}></Icon></span>
                     {this.getPages().map((pa, index) => {
                         return <span key={index} className={pa.classList.join(" ")} onMouseDown={e => this.block.onChangeIndex(pa.index)}>{pa.text}</span>
                     })}
                     <span onMouseDown={e => this.block.onChangeIndex(this.block.refBlock.pageIndex + 1)} className={"border flex-center  size-24 round" + (this.block.refBlock.pageIndex == totalPage ? " remark" : " cursor")}><Icon size={18} icon={ChevronRightSvg}></Icon></span>
-                    <span onMouseDown={e => this.onDropSize(e)} className="gap-l-10 border h-24 padding-w-10 round flex-center">{this.block.refBlock.size}条/页<Icon size={16} icon={ChevronDownSvg}></Icon></span>
+                    <span onMouseDown={e => this.onDropSize(e)} className="gap-l-10 border h-24 padding-w-10 round flex-center">{this.block.refBlock.size}<S>条/页</S><Icon size={16} icon={ChevronDownSvg}></Icon></span>
                 </>}
                 {!this.block.refBlock && <div></div>}
             </div></div>

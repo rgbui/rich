@@ -19,7 +19,8 @@ import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { MenuItemView } from "../../component/view/menu/item";
 import { useImageViewer } from "../../component/view/image.preview";
 import { BlockUrlConstant } from "../../src/block/constant";
-import { ls } from "../../i18n/store";
+import { ls, lst } from "../../i18n/store";
+import { S } from "../../i18n/view";
 
 @url('/image')
 export class Image extends Block {
@@ -117,7 +118,7 @@ export class Image extends Block {
         return this.el;
     }
     async getMd() {
-        return `![${this.caption || '图片'}](${this.src?.url})`;
+        return `![${this.caption || lst('图片')}](${this.src?.url})`;
     }
     async onGetContextMenus() {
         if (this.isFreeBlock) {
@@ -129,7 +130,7 @@ export class Image extends Block {
         var items: MenuItem<BlockDirective | string>[] = [];
         items.push({
             name: BlockDirective.copy,
-            text: '拷贝副本',
+            text: lst('拷贝副本'),
             label: "Ctrl+D",
             icon: DuplicateSvg
         });
@@ -138,7 +139,7 @@ export class Image extends Block {
         });
         items.push({
             name: BlockDirective.link,
-            text: '复制块链接',
+            text: lst('复制块链接'),
             icon: LinkSvg
         });
         items.push({
@@ -146,42 +147,42 @@ export class Image extends Block {
         });
         items.push({
             name: 'preview',
-            text: '查看',
+            text: lst('查看'),
             icon: PicSvg
         })
         items.push({
             name: 'replace',
-            text: '替换',
+            text: lst('替换'),
             icon: RefreshSvg
         });
         items.push({
             name: 'origin',
-            text: '原图',
+            text: lst('原图'),
             icon: { name: 'bytedance-icon', code: 'arrow-right-up' }
         });
         items.push({
             name: 'download',
-            text: '下载',
+            text: lst('下载'),
             icon: DownloadSvg
         });
         items.push({
             type: MenuItemType.divide
         });
         items.push({
-            text: '对齐',
+            text: lst('对齐'),
             icon: { name: 'bytedance-icon', code: 'align-text-both' },
             childs: [
                 {
                     name: 'align',
                     icon: { name: 'bytedance-icon', code: 'align-text-left' },
-                    text: '居左',
+                    text: lst('居左'),
                     value: 'left',
                     checkLabel: this.align == 'left'
                 },
                 {
                     name: 'align',
                     icon: { name: 'bytedance-icon', code: 'align-text-center' },
-                    text: '居中', value: 'center', checkLabel: this.align == 'center'
+                    text: lst('居中'), value: 'center', checkLabel: this.align == 'center'
                 },
                 {
                     name: 'align',
@@ -189,14 +190,14 @@ export class Image extends Block {
                         name: 'bytedance-icon',
                         code: 'align-text-right'
                     },
-                    text: '居右',
+                    text: lst('居右'),
                     value: 'right',
                     checkLabel: this.align == 'right'
                 }
             ]
         });
         items.push({
-            text: '蒙板',
+            text: lst('蒙板'),
             icon: { name: 'bytedance-icon', code: 'mask-two' },
             childs: [
                 {
@@ -205,14 +206,14 @@ export class Image extends Block {
                         name: 'bytedance-icon',
                         code: 'rectangle'
                     },
-                    text: '无',
+                    text: lst('无'),
                     value: 'rect',
                     checkLabel: this.mask == 'rect'
                 },
                 {
                     name: 'mask',
                     renderIcon: rc,
-                    text: '圆角',
+                    text:  lst('圆角'),
                     value: 'radius',
                     checkLabel: this.mask == 'radius'
                 },
@@ -222,45 +223,45 @@ export class Image extends Block {
                         name: 'bytedance-icon',
                         code: 'oval-one'
                     },
-                    text: '圆',
+                    text: lst( '圆'),
                     value: 'circle',
                     checkLabel: this.mask == 'circle'
                 },
                 {
                     name: 'mask',
                     icon: { name: 'bytedance-icon', code: 'diamond-three' },
-                    text: '菱形',
+                    text:  lst('菱形'),
                     value: 'rhombus',
                     checkLabel: this.mask == 'rhombus'
                 },
                 {
                     name: 'mask',
                     icon: { name: 'bytedance-icon', code: 'pentagon-one' },
-                    text: '五边形',
+                    text:  lst('五边形'),
                     value: 'pentagon',
                     checkLabel: this.mask == 'pentagon'
                 },
                 {
                     name: 'mask',
                     icon: { name: 'bytedance-icon', code: 'star' },
-                    text: '星形',
+                    text:  lst('星形'),
                     value: 'star',
                     checkLabel: this.mask == 'star'
                 }
             ]
         });
         items.push({
-            text: '尺寸',
+            text:  lst('尺寸'),
             icon: { name: 'bytedance-icon', code: 'full-screen' },
             childs: [
                 {
                     name: 'resetSize',
-                    text: '原图大小',
+                    text:  lst('原图大小'),
                     icon: { name: 'bytedance-icon', code: 'equal-ratio' },
                 },
                 {
                     name: 'autoSize',
-                    text: '自适应',
+                    text: lst( '自适应'),
                     icon: { name: 'bytedance-icon', code: 'auto-width-one' },
                 }
             ]
@@ -270,7 +271,7 @@ export class Image extends Block {
         });
         items.push({
             name: 'allowCaption',
-            text: '添加文字说明',
+            text:  lst('添加文字说明'),
             icon: { name: 'bytedance-icon', code: 'doc-detail' },
             type: MenuItemType.switch,
             checked: this.allowCaption
@@ -281,7 +282,7 @@ export class Image extends Block {
         items.push({
             name: BlockDirective.delete,
             icon: TrashSvg,
-            text:ls.t('删除'),
+            text: ls.t('删除'),
             label: "Del"
         });
         return items;
@@ -379,12 +380,12 @@ export class ImageView extends BlockView<Image>{
         if (this.block.speed) {
             return <div className="sy-block-image-empty flex f-14">
                 <Spin size={16}></Spin>
-                <span>上传中:{this.block.speed}</span>
+                <span><S>上传中</S>:{this.block.speed}</span>
             </div>
         }
         return <div className='sy-block-image-empty' onMouseDown={e => this.block.onOpenUploadImage(e)}>
             <Icon size={24} icon={PicSvg}></Icon>
-            <span>添加图片</span>
+            <span><S>添加图片</S></span>
         </div>
     }
     renderImage() {
@@ -418,8 +419,8 @@ export class ImageView extends BlockView<Image>{
         else if (this.block.mask == 'rect') imageMaskStyle.borderRadius = '0%';
         return <>{this.isLoadError && <div className='sy-block-image-error flex r-gap-r-10 text-1'>
             <Icon icon={ImageErrorSvg}></Icon>
-            <span className="f-14">图片{this.errorUrl}加载失败</span>
-            <span className="f-14 link cursor" onMouseDown={e => this.block.onOpenUploadImage(e)}>重新添加图片</span>
+            <span className="f-14"><S>图片</S>{this.errorUrl}<S>加载失败</S></span>
+            <span className="f-14 link cursor" onMouseDown={e => this.block.onOpenUploadImage(e)}><S>重新添加图片</S></span>
         </div>}
             {!this.isLoadError && <div className='sy-block-image-content-view flex-center' style={style}>
                 <div className='sy-block-image-content-view-wrapper visible-hover' ref={e => this.imageWrapper = e} style={{ width: this.block.imageWidthPercent ? this.block.imageWidthPercent + "%" : undefined }}>

@@ -12,7 +12,8 @@ import { Input } from "../../component/view/input";
 import { Icon } from "../../component/view/icon";
 import { DiceSvg, RandomSvg } from "../../component/svgs";
 import { channel } from "../../net/channel";
-import { ls } from "../../i18n/store";
+import { ls, lst } from "../../i18n/store";
+import { S } from "../../i18n/view";
 const FONT_AWESOME_HISTORYS = '_fontAwesome_historys__';
 export class FontAwesomeView extends React.Component<{ loaded?: () => void, onChange: (data: { code: string, color?: string }) => void }> {
     shouldComponentUpdate(nextProps, nextStates) {
@@ -58,7 +59,7 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
         var els: JSX.Element[] = [];
         if (this.historyFontAwesomes.length > 0)
             els.push(<div className='shy-font-awesome-category' key={'icon.name'}>
-                <div className='shy-font-awesome-category-head'><span>最近</span></div>
+                <div className='shy-font-awesome-category-head'><span><S>最近</S></span></div>
                 <div className='shy-font-awesome-category-content'>
                     {this.historyFontAwesomes.map(ic => {
                         return <Tip overlay={ls.isCn ? ic.e.label : ic.e.name} key={ic.e.name}><a onMouseDown={e => this.onChange(ic.e)}>
@@ -99,7 +100,7 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
         </div>
     }
     renderSearch() {
-        if (this.searchEmojis.length == 0) return <div className="flex-center remark f-12">没有搜索图标</div>
+        if (this.searchEmojis.length == 0) return <div className="flex-center remark f-12"><S>没有搜索图标</S></div>
         return <div className='shy-font-awesome-category'><div className="shy-font-awesome-category-content">
             {this.searchEmojis.map(ic => {
                 return <Tip overlay={ls.isCn ? ic.label : ic.name} key={ic.name}><a onMouseDown={e => this.onChange(ic)}>
@@ -115,9 +116,9 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
     render() {
         return <div>
             <div className="flex padding-t-14 padding-w-14">
-                <div className="flex-auto"><Input clear placeholder="搜索..." value={this.word} onClear={() => this.loadSearch('')} onEnter={e => { this.word = e; this.loadSearch.flush() }} onChange={e => this.loadSearch(e)} ></Input></div>
+                <div className="flex-auto"><Input clear placeholder={lst("搜索...")} value={this.word} onClear={() => this.loadSearch('')} onEnter={e => { this.word = e; this.loadSearch.flush() }} onChange={e => this.loadSearch(e)} ></Input></div>
                 <div className="flex-fixed gap-l-20 gap-r-10 text-1">
-                    <Tip overlay={<>随机</>}><span onMouseDown={e => this.onRandomIcon()} className=" flex-center size-30 round item-hover cursor">
+                    <Tip overlay={<S>随机</S>}><span onMouseDown={e => this.onRandomIcon()} className=" flex-center size-30 round item-hover cursor">
                         <Icon size={24} icon={DiceSvg}></Icon>
                     </span></Tip>
                 </div>

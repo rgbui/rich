@@ -10,6 +10,7 @@ import { getEmoji } from "../../net/element.type";
 import { dom } from "../../src/common/dom";
 import { EmojiCode, emojiStore, EmojiType } from "./store";
 import "./style.less";
+import { S } from "../../i18n/view";
 const EMOJI_HISTORYS = '_emoji_historys__';
 export class EmojiView extends React.Component<{ loaded?: () => void, onChange: (emoji: EmojiCode) => void }>{
     loading: boolean = true;
@@ -59,7 +60,7 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
         var els: JSX.Element[] = [];
         if (this.historyEmojis.length > 0) {
             els.push(<div className='shy-emoji-view-category' key={'history'}>
-                <div className='shy-emoji-view-category-head'><span>最近</span></div>
+                <div className='shy-emoji-view-category-head'><span><S>最近</S></span></div>
                 <div className='shy-emoji-view-category-emojis'>{this.historyEmojis.map(emoji => {
                     return <Tip overlay={<>{emoji.e.name}</>} key={emoji.e.code}><span className="ef" onMouseDown={e => this.onChange(emoji.e)} dangerouslySetInnerHTML={{ __html: getEmoji(emoji.e.code) }}></span></Tip>
                 })}</div>

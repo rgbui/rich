@@ -11,6 +11,8 @@ import { BlockView } from "../../../../src/block/view";
 import { util } from "../../../../util/util";
 import { FieldType } from "../../schema/type";
 import { OriginFormField, FieldView } from "./origin.field";
+import { S } from "../../../../i18n/view";
+import { lst } from "../../../../i18n/store";
 
 @url('/form/file')
 class FormFieldFile extends OriginFormField {
@@ -58,9 +60,9 @@ class FormFieldFileView extends BlockView<FormFieldFile>{
         })
     }
     render() {
-        var text = '文件';
-        if (this.block.field?.type == FieldType.video) text = '视频'
-        else if (this.block.field?.type == FieldType.audio) text = '音频'
+        var text = lst('文件');
+        if (this.block.field?.type == FieldType.video) text = lst('视频')
+        else if (this.block.field?.type == FieldType.audio) text = lst('音频')
         var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);
         if (!this.block.field?.config?.isMultiple && vs.length > 1) vs = [vs.first()]
         return <FieldView block={this.block}>
@@ -68,7 +70,7 @@ class FormFieldFileView extends BlockView<FormFieldFile>{
                 {this.block.value && <div className="sy-field-files">
                     {this.renderFiles(vs)}
                 </div>}
-                {(vs.length == 0 || this.block.field?.config?.isMultiple) && this.block.isCanEdit() && <Button size={'small'} ghost onClick={e => this.block.uploadFile(e)}>上传{text}</Button>}
+                {(vs.length == 0 || this.block.field?.config?.isMultiple) && this.block.isCanEdit() && <Button size={'small'} ghost onClick={e => this.block.uploadFile(e)}><S>上传</S>{text}</Button>}
             </div>
         </FieldView>
     }

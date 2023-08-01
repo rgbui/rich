@@ -12,13 +12,15 @@ import { Divider } from "../../component/view/grid";
 import { Input } from "../../component/view/input";
 import { Spin } from "../../component/view/spin";
 import { LinkWs } from "../../src/page/declare";
+import { lst } from "../../i18n/store";
+import { S } from "../../i18n/view";
 
 
 export class UserPicker extends EventsComponent {
     render() {
         return <div className="padding-h-10 min-w-300" ref={e => this.el = e}>
             <div className="gap-w-14">
-                <Input value={this.text} placeholder={'搜索用户'}
+                <Input value={this.text} placeholder={lst('搜索用户')}
                     onEnter={e => this.onEnter()}
                     onKeydown={e => this.onKeydown(e)}
                     onChange={e => { this.text = e; this.syncSearch() }}
@@ -33,7 +35,7 @@ export class UserPicker extends EventsComponent {
                         <span className="gap-l-10">{link.name}</span>
                     </div>
                 })}
-                {this.links.length == 0 && <a className="remark f-12 padding-w-14 h-30 flex">没有搜索到</a>}
+                {this.links.length == 0 && <a className="remark f-12 padding-w-14 h-30 flex"><S>没有搜索到</S></a>}
             </div>
         </div>
     }
@@ -87,7 +89,7 @@ export class UserPicker extends EventsComponent {
                         id: c.userid
                     }
                 }) as any
-                if ('所有人'.startsWith(this.text)) {
+                if (lst('所有人').startsWith(this.text)) {
                     this.links.splice(0, 0, { id: 'all' } as any)
                 }
             }

@@ -22,7 +22,7 @@ import { OriginField } from "../../element/field/origin.field";
 import { DotsSvg, EditSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import "./style.less";
-import { ls } from "../../../../i18n/store";
+import { ls, lst } from "../../../../i18n/store";
 
 @url('/data-grid/item')
 export class TableStoreItem extends Block {
@@ -146,13 +146,13 @@ export class TableStoreItem extends Block {
         items.push({
             name: 'open',
             icon: EditSvg,
-            text: '编辑',
+            text: lst('编辑'),
         })
         items.push({ type: MenuItemType.divide })
         items.push({
             name: BlockDirective.delete,
             icon: trash,
-            text: ls.t('删除'),
+            text: lst('删除'),
             label: "Delete"
         });
         return items;

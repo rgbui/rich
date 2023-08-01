@@ -19,6 +19,8 @@ import { GetFieldTypeSvg } from "../../schema/util";
 import { DataGridView } from "../base";
 import { DataGridTool } from "../components/tool";
 import { GridMap } from "../../../../src/page/grid";
+import { lst } from "../../../../i18n/store";
+import { S } from "../../../../i18n/view";
 
 @url(BlockUrlConstant.FormView)
 export class DataGridForm extends DataGridView {
@@ -36,7 +38,7 @@ export class DataGridForm extends DataGridView {
     }
     async loadSchema() {
         if (this.schemaId && !this.schema) {
-            this.schema = await TableSchema.loadTableSchema(this.schemaId,this.page.ws);
+            this.schema = await TableSchema.loadTableSchema(this.schemaId, this.page.ws);
         }
     }
     async didMounted() {
@@ -113,10 +115,10 @@ export class DataGridForm extends DataGridView {
         var self = this;
         var rect = Rect.fromEvent(event);
         var menus = [
-            { text: '复制链接', icon: LinkSvg, name: 'copylink' },
+            { text: lst('复制链接'), icon: LinkSvg, name: 'copylink' },
             { type: MenuItemType.divide },
             {
-                text: '禁止多次提交',
+                text: lst('禁止多次提交'),
                 name: 'disabledUserMultiple',
                 checked: this.schemaView?.disabledUserMultiple ? true : false,
                 type: MenuItemType.switch,
@@ -187,7 +189,7 @@ export class DataGridForm extends DataGridView {
         var r = await useSelectMenuItem(
             { roundArea: Rect.fromEvent(event) },
             [
-                { text: '显示字段', type: MenuItemType.text },
+                { text: lst('显示字段'), type: MenuItemType.text },
                 ...this.schema.allowFormFields.toArray(uf => {
                     // if (this.formRowData && uf.type == FieldType.title) return
                     return {
@@ -243,13 +245,13 @@ export class DataGridFormView extends BlockView<DataGridForm>{
         if (this.block.isSubmit) {
             return <div>
                 <div className="flex-center f-14">
-                    数据已提交
+                    <S>数据已提交</S>
                 </div>
             </div>
         }
         return <div>
             <div className="flex-center f-14">
-                数据已提交，再<span className="link cursor" onClick={e => { this.block.saveTip = false; this.forceUpdate() }}>提交一份</span>
+                <S>数据已提交，再</S><span className="link cursor" onClick={e => { this.block.saveTip = false; this.forceUpdate() }}><S>提交一份</S></span>
             </div>
         </div>
 
@@ -266,21 +268,21 @@ export class DataGridFormView extends BlockView<DataGridForm>{
                         minHeight: '50px',
                         textAlign: 'center'
                     }}
-                        placeholder="添加表单标题"
+                        placeholder={lst("添加表单标题")}
                         defaultValue={this.block.schemaView?.text}
                         onInput={e => this.block.updateSchemaViewText((e.target as HTMLInputElement).value)}
                         className="noborder w100"></input></div>
                     <div className="remark"><input style={{
                         fontSize: 14,
                         textAlign: 'center'
-                    }} placeholder={'添加表单描述'} defaultValue={this.block.schemaView?.description} onInput={e => this.block.updateSchemaViewDescription((e.target as HTMLInputElement).value)} className="noborder w100"></input></div>
+                    }} placeholder={lst('添加表单描述')} defaultValue={this.block.schemaView?.description} onInput={e => this.block.updateSchemaViewDescription((e.target as HTMLInputElement).value)} className="noborder w100"></input></div>
                 </div>
                 {(this.block.saveTip || this.block.isSubmit) && this.renderSaveTip()}
                 <div style={{ display: this.block.saveTip || this.block.isSubmit ? 'none' : 'block' }}>
                     <ChildsArea childs={this.block.childs}></ChildsArea>
-                    {this.block.childs.length == 0 && <div onMouseDown={e => this.onStop(e)} className="remark flex-center padding-20">没有表单字段</div>}
+                    {this.block.childs.length == 0 && <div onMouseDown={e => this.onStop(e)} className="remark flex-center padding-20"><S>没有表单字段</S></div>}
                     <div className="flex-center gap-h-30">
-                        <Button>保&nbsp;存</Button>
+                        <Button><S>保 存</S></Button>
                     </div>
                 </div>
             </div>
@@ -293,7 +295,7 @@ export class DataGridFormView extends BlockView<DataGridForm>{
             <div className="padding-50 round-8 shadow">
                 <div onMouseDown={e => this.onStop(e)} >
                     <div className="gap-t-30"><input
-                        placeholder='添加表单标题'
+                        placeholder={lst('添加表单标题')}
                         style={{
                             fontSize: 40,
                             fontWeight: 'bold',
@@ -306,7 +308,7 @@ export class DataGridFormView extends BlockView<DataGridForm>{
                     <div className="remark gap-b-30 gap-t-10"><input style={{
                         fontSize: 14,
                         textAlign: 'center'
-                    }} placeholder={'添加表单描述'}
+                    }} placeholder={lst('添加表单描述')}
                         defaultValue={this.block.schemaView?.description}
                         onInput={e => this.block.updateSchemaViewDescription((e.target as HTMLInputElement).value)}
                         className="noborder w100"></input>
@@ -317,7 +319,7 @@ export class DataGridFormView extends BlockView<DataGridForm>{
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                     {this.block.childs.length == 0 && <div onMouseDown={e => this.onStop(e)} className="remark flex-center padding-20">没有表单字段</div>}
                     <div className="flex-center gap-h-30">
-                        <Button onMouseDown={(e, b) => this.block.onSave(e, b)}>保存</Button>
+                        <Button onMouseDown={(e, b) => this.block.onSave(e, b)}><S>保存</S></Button>
                     </div>
                 </div>
             </div>

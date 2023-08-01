@@ -17,6 +17,7 @@ import { BlockChildKey } from "../../../src/block/constant";
 import { MouseDragger } from "../../../src/common/dragger";
 import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
 import { openBoardEditTool } from "../../../src/kit/operator/board/edit";
+import { lst } from "../../../i18n/store";
 
 @url('/flow/mind')
 export class FlowMind extends Block {
@@ -521,7 +522,7 @@ export class FlowMindView extends BlockView<FlowMind>{
         return <div className='sy-flow-mind-text'
             style={this.block.contentStyle}
             ref={e => this.mindEl = e} >
-            <TextSpanArea placeholder={'输入'} block={this.block}></TextSpanArea>
+            <TextSpanArea placeholder={lst('输入') } block={this.block}></TextSpanArea>
         </div>
     }
     mindEl: HTMLElement;

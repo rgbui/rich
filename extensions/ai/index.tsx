@@ -37,6 +37,7 @@ import { BlockUrlConstant } from "../../src/block/constant";
 import { List, ListType } from "../../blocks/present/list/list";
 import { onMergeListBlocks } from "./util";
 import { CanSupportFeature, PayFeatureCheck } from "../../component/pay";
+import { lst } from "../../i18n/store";
 
 export type AIToolType = {
     block?: Block,
@@ -125,7 +126,7 @@ export class AITool extends EventsComponent {
                                 onInput={this.onInput}
                                 onEnter={this.onEnter}
                                 className='padding-h-10 min-h-20 l-20'
-                                placeholder="告诉AI写什么" ></DivInput>}
+                                placeholder={lst("告诉AI写什么")} ></DivInput>}
                         </div>
                         <span className="size-30  gap-h-5 flex-center flex-fixed gap-l-10">
                             <span onClick={e => this.onEnter()} className={"round size-24 flex-center cursor item-hover" + (this.ask ? " remark" : "")}>
@@ -164,7 +165,7 @@ export class AITool extends EventsComponent {
                             this.aiText({ prompt: propTemplate })
                         }
                         else {
-                            this.error = '没有上文内容，无法续写';
+                            this.error =lst( '没有上文内容，无法续写');
                             self.forceUpdate()
                         }
                         break;
@@ -390,28 +391,28 @@ export class AITool extends EventsComponent {
         var items: MenuItem[] = [];
         if ([AIAskStatus.willAsk].includes(this.status)) {
             items = [
-                { text: '用AI写作', type: MenuItemType.text },
-                { name: 'continue', text: '用AI续写...', icon: Edit1Svg },
+                { text: lst('用AI写作') , type: MenuItemType.text },
+                { name: 'continue', text: lst('用AI续写...'), icon: Edit1Svg },
                 { type: MenuItemType.divide },
-                { text: '基于页面生成', type: MenuItemType.text },
-                { name: 'pageSummary', text: '页面内容总结', icon: Edit1Svg },
+                { text: lst('基于页面生成'), type: MenuItemType.text },
+                { name: 'pageSummary', text: lst('页面内容总结'), icon: Edit1Svg },
                 {
-                    text: "翻译",
+                    text: lst("翻译"),
                     childsPos: { align: 'end' },
                     childs: [
-                        { text: '中文', name: 'pageTranslate', value: 'Chinese' },
-                        { text: '英文', name: 'pageTranslate', value: 'English' },
-                        { text: '日文', name: 'pageTranslate', value: 'Japanese' },
-                        { text: '韩文', name: 'pageTranslate', value: 'Korean' },
-                        { text: '德语', name: 'pageTranslate', value: 'German' },
-                        { text: '法语', name: 'pageTranslate', value: 'French' },
-                        { text: '俄语', name: 'pageTranslate', value: 'Russian' },
-                        { text: '意大利', name: 'pageTranslate', value: 'Italian' },
-                        { text: '葡萄牙', name: 'pageTranslate', value: 'Portuguese' },
-                        { text: '西班牙', name: 'pageTranslate', value: 'Spanish' },
-                        { text: '荷兰', name: 'pageTranslate', value: 'Dutch' },
-                        { text: '阿拉伯', name: 'pageTranslate', value: 'Arabic' },
-                        { text: '印度尼西亚', name: 'pageTranslate', value: 'Indonesian' }
+                        { text: lst('中文'), name: 'pageTranslate', value: 'Chinese' },
+                        { text: lst('英文'), name: 'pageTranslate', value: 'English' },
+                        { text: lst('日文'), name: 'pageTranslate', value: 'Japanese' },
+                        { text:lst( '韩文'), name: 'pageTranslate', value: 'Korean' },
+                        { text: lst('德语'), name: 'pageTranslate', value: 'German' },
+                        { text: lst('法语'), name: 'pageTranslate', value: 'French' },
+                        { text:lst( '俄语'), name: 'pageTranslate', value: 'Russian' },
+                        { text: lst('意大利'), name: 'pageTranslate', value: 'Italian' },
+                        { text: lst('葡萄牙'), name: 'pageTranslate', value: 'Portuguese' },
+                        { text:lst( '西班牙'), name: 'pageTranslate', value: 'Spanish' },
+                        { text: lst('荷兰'), name: 'pageTranslate', value: 'Dutch' },
+                        { text: lst('阿拉伯'), name: 'pageTranslate', value: 'Arabic' },
+                        { text: lst('印度尼西亚'), name: 'pageTranslate', value: 'Indonesian' }
                     ],
                     icon: Edit1Svg
                 }
@@ -419,74 +420,74 @@ export class AITool extends EventsComponent {
         }
         if ([AIAskStatus.asked].includes(this.status)) {
             items = [
-                { name: 'done', text: '完成', icon: CheckSvg },
-                { name: 'continue', text: '继续', icon: Edit1Svg },
+                { name: 'done', text: lst('完成'), icon: CheckSvg },
+                { name: 'continue', text: lst('继续'), icon: Edit1Svg },
                 // { name: 'makeLonger', text: '内容加长', icon: Edit1Svg },
                 // {name:'',text:'',icon:Edit1Svg},
                 { type: MenuItemType.divide },
-                { name: 'try', text: '重新尝试', icon: RefreshSvg },
-                { name: 'cancel', text: '取消', icon: CloseSvg }
+                { name: 'try', text: lst('重新尝试'), icon: RefreshSvg },
+                { name: 'cancel', text:lst( '取消'), icon: CloseSvg }
             ]
         }
         if ([AIAskStatus.selectionWillAsk].includes(this.status)) {
             items = [
-                { text: '编辑优化选择的内容', type: MenuItemType.text },
-                { name: 'improveWrite', text: '提升写作', icon: Edit1Svg },
-                { name: 'fix', text: '拼写及语法优化', icon: Edit1Svg },
-                { name: 'explain', text: '解释', icon: Edit1Svg },
-                { name: 'summary', text: '总结', icon: Edit1Svg },
-                { name: 'abstract', text: '摘要', icon: Edit1Svg },
+                { text: lst('编辑优化选择的内容'), type: MenuItemType.text },
+                { name: 'improveWrite', text: lst('提升写作'), icon: Edit1Svg },
+                { name: 'fix', text:lst( '拼写及语法优化'), icon: Edit1Svg },
+                { name: 'explain', text:lst( '解释'), icon: Edit1Svg },
+                { name: 'summary', text: lst('总结'), icon: Edit1Svg },
+                { name: 'abstract', text:lst( '摘要'), icon: Edit1Svg },
                 {
-                    text: "翻译",
+                    text:lst( "翻译"),
                     childsPos: { align: 'end' },
                     childs: [
-                        { text: '中文', name: 'translate', value: 'Chinese' },
-                        { text: '英文', name: 'translate', value: 'English' },
-                        { text: '日文', name: 'translate', value: 'Japanese' },
-                        { text: '韩文', name: 'translate', value: 'Korean' },
-                        { text: '德语', name: 'translate', value: 'German' },
-                        { text: '法语', name: 'translate', value: 'French' },
-                        { text: '俄语', name: 'translate', value: 'Russian' },
-                        { text: '意大利', name: 'translate', value: 'Italian' },
-                        { text: '葡萄牙', name: 'translate', value: 'Portuguese' },
-                        { text: '西班牙', name: 'translate', value: 'Spanish' },
-                        { text: '荷兰', name: 'translate', value: 'Dutch' },
-                        { text: '阿拉伯', name: 'translate', value: 'Arabic' },
-                        { text: '印度尼西亚', name: 'translate', value: 'Indonesian' },
+                        { text: lst('中文'), name: 'translate', value: 'Chinese' },
+                        { text:lst( '英文'), name: 'translate', value: 'English' },
+                        { text:lst( '日文'), name: 'translate', value: 'Japanese' },
+                        { text: lst('韩文'), name: 'translate', value: 'Korean' },
+                        { text: lst('德语'), name: 'translate', value: 'German' },
+                        { text:lst( '法语'), name: 'translate', value: 'French' },
+                        { text:lst( '俄语'), name: 'translate', value: 'Russian' },
+                        { text:lst( '意大利'), name: 'translate', value: 'Italian' },
+                        { text:lst( '葡萄牙'), name: 'translate', value: 'Portuguese' },
+                        { text: lst('西班牙'), name: 'translate', value: 'Spanish' },
+                        { text: lst('荷兰'), name: 'translate', value: 'Dutch' },
+                        { text: lst('阿拉伯'), name: 'translate', value: 'Arabic' },
+                        { text:lst( '印度尼西亚'), name: 'translate', value: 'Indonesian' },
                     ],
                     icon: Edit1Svg
                 },
                 { type: MenuItemType.divide },
-                { name: 'makeLonger', text: '变长一些', icon: Edit1Svg },
-                { name: 'makeSmaller', text: '简洁一些', icon: Edit1Svg },
+                { name: 'makeLonger', text: lst('变长一些'), icon: Edit1Svg },
+                { name: 'makeSmaller', text: lst('简洁一些'), icon: Edit1Svg },
                 {
                     text: '润色',
                     icon: Edit1Svg,
                     childs: [
-                        { name: 'polish', text: '更专业一些', icon: Edit1Svg },
-                        { name: 'polish', text: '更友好一些', icon: Edit1Svg },
-                        { name: 'polish', text: '更自信一些', icon: Edit1Svg },
-                        { name: 'polish', text: '更直接一些', icon: Edit1Svg },
-                        { name: 'polish', text: '更口语话一些', icon: Edit1Svg },
+                        { name: 'polish', text:lst( '更专业一些'), icon: Edit1Svg },
+                        { name: 'polish', text: lst('更友好一些'), icon: Edit1Svg },
+                        { name: 'polish', text: lst('更自信一些'), icon: Edit1Svg },
+                        { name: 'polish', text: lst('更直接一些'), icon: Edit1Svg },
+                        { name: 'polish', text: lst('更口语话一些'), icon: Edit1Svg },
                     ]
                 },
-                { name: 'insertImage', text: "生成插图", icon: PicSvg },
+                { name: 'insertImage', text: lst("生成插图"), icon: PicSvg },
             ];
         }
         if ([AIAskStatus.selectionAsked].includes(this.status)) {
             items = [
-                { name: 'replace', text: '替换', icon: CheckSvg },
-                { name: 'insertBelow', text: '插到下面', icon: Edit1Svg },
+                { name: 'replace', text:lst( '替换'), icon: CheckSvg },
+                { name: 'insertBelow', text:lst( '插到下面'), icon: Edit1Svg },
                 // { name: 'makeLonger', text: '内容加长', icon: Edit1Svg },
                 // {name:'',text:'',icon:Edit1Svg},
                 { type: MenuItemType.divide },
-                { name: 'try', text: '重新尝试', icon: RefreshSvg },
-                { name: 'cancel', text: '取消', icon: TrashSvg }
+                { name: 'try', text:lst( '重新尝试'), icon: RefreshSvg },
+                { name: 'cancel', text:lst('取消'), icon: TrashSvg }
             ]
         }
         if ([AIAskStatus.willAsking].includes(this.status)) {
             items = [
-                { name: 'image', text: '生成图片', icon: PicSvg },
+                { name: 'image', text: lst('生成图片'), icon: PicSvg },
             ]
         }
         return items;

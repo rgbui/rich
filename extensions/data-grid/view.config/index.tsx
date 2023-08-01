@@ -13,6 +13,7 @@ import { DataGridControl } from "./control";
 import { DataGridTrigger } from "./trigger";
 import { BlockUrlConstant } from "../../../src/block/constant";
 import { PageLayoutType } from "../../../src/page/declare";
+import { lst } from "../../../i18n/store";
 
 export class DataGridConfig extends EventsComponent {
     dataGrid: DataGridView
@@ -47,19 +48,19 @@ export class DataGridConfig extends EventsComponent {
         if (this.dataGrid?.page?.pageLayout?.type != PageLayoutType.db)
             return <div className='min-w-480 min-h-50 max-h-500 overflow-y' >
                 <Tab ref={e => this.tab = e} show="text" keeplive>
-                    <Tab.Page item={'视图'}>
+                    <Tab.Page item={lst('视图')}>
                         <DataGridViewConfig gc={this} ref={e => this.dataGridViewConfig = e} ></DataGridViewConfig>
                     </Tab.Page>
-                    <Tab.Page item={[BlockUrlConstant.DataGridBoard, BlockUrlConstant.DataGridGallery].includes(this.dataGrid?.url as any) ? '卡片' : "字段"}>
+                    <Tab.Page item={[BlockUrlConstant.DataGridBoard, BlockUrlConstant.DataGridGallery].includes(this.dataGrid?.url as any) ? lst('卡片') : lst("字段")}>
                         <DataGridFields ref={e => this.dataGridFields = e}></DataGridFields>
                     </Tab.Page>
-                    <Tab.Page item={'过滤'}>
+                    <Tab.Page item={lst('过滤')}>
                         <TableFilterView ref={e => this.tableFilterView = e}></TableFilterView>
                     </Tab.Page>
-                    <Tab.Page item={'排序'}>
+                    <Tab.Page item={lst('排序')}>
                         <TableSortView ref={e => this.tableSortView = e}></TableSortView>
                     </Tab.Page>
-                    <Tab.Page item={'触发器'}>
+                    <Tab.Page item={lst('触发器')}>
                         <DataGridControl ref={e => this.dataGridControl = e}></DataGridControl>
                     </Tab.Page>
                     {/*<Tab.Page item={'触发器'}>
@@ -69,16 +70,16 @@ export class DataGridConfig extends EventsComponent {
             </div>
         else return <div className='min-w-480 min-h-50 max-h-500 overflow-y' >
             <Tab ref={e => this.tab = e} show="text" keeplive>
-                <Tab.Page item={'视图'}>
+                <Tab.Page item={lst('视图')}>
                     <DataGridViewConfig gc={this} ref={e => this.dataGridViewConfig = e} ></DataGridViewConfig>
                 </Tab.Page>
-                <Tab.Page item={[BlockUrlConstant.DataGridBoard, BlockUrlConstant.DataGridGallery].includes(this.dataGrid?.url as any) ? '卡片' : "字段"}>
+                <Tab.Page item={[BlockUrlConstant.DataGridBoard, BlockUrlConstant.DataGridGallery].includes(this.dataGrid?.url as any) ? lst('卡片') : lst("字段")}>
                     <DataGridFields ref={e => this.dataGridFields = e}></DataGridFields>
                 </Tab.Page>
-                <Tab.Page item={'过滤'}>
+                <Tab.Page item={lst('过滤')}>
                     <TableFilterView ref={e => this.tableFilterView = e}></TableFilterView>
                 </Tab.Page>
-                <Tab.Page item={'排序'}>
+                <Tab.Page item={lst('排序')}>
                     <TableSortView ref={e => this.tableSortView = e}></TableSortView>
                 </Tab.Page>
                 {/*<Tab.Page item={'触发器'}>

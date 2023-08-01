@@ -15,6 +15,7 @@ import { SelectBox } from "../select/box";
 import "./style.less";
 import { FileInput } from "../input/file";
 import { MenuItem } from "../menu/declare";
+import { S } from "../../../i18n/view";
 
 export type FormDialougType = {
     head?: boolean,
@@ -49,8 +50,8 @@ class FormDialoug extends EventsComponent {
                 </Col>
                 <Col span={12} align={'end'}>
                     <Space>
-                        <Button onClick={e => this.onClose()} ghost>取消</Button>
-                        <Button onClick={e => this.onSave()} ref={e => this.button = e}>确定</Button>
+                        <Button onClick={e => this.onClose()} ghost><S>取消</S></Button>
+                        <Button onClick={e => this.onSave()} ref={e => this.button = e}><S>确定</S></Button>
                     </Space>
                 </Col>
             </Row> : undefined}

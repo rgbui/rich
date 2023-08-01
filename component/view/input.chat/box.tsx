@@ -15,6 +15,7 @@ import lodash from "lodash";
 import { MenuItem, MenuItemType } from "../menu/declare";
 import { Avatar } from "../avator/face";
 import { ToolTip } from "../tooltip";
+import { lst } from "../../../i18n/store";
 
 export type ChatInputType = {
     content?: string,
@@ -86,11 +87,11 @@ export class InputChatBox extends React.Component<{
             </div>}
             {this.reply && <div className="shy-rich-input-reply">
                 <span className="shy-rich-input-reply-content">{this.reply.text}</span>
-                <ToolTip overlay={'取消回复'}><span className="shy-rich-input-reply-operators" onMouseDown={e => this.clearReply()}><a><Icon size={12} icon={CloseSvg}></Icon></a></span></ToolTip>
+                <ToolTip overlay={lst('取消回复')}><span className="shy-rich-input-reply-operators" onMouseDown={e => this.clearReply()}><a><Icon size={12} icon={CloseSvg}></Icon></a></span></ToolTip>
             </div>}
             {this.errorTip && <div className="shy-rich-input-error">
                 <span className="shy-rich-input-error-content">{this.errorTip}</span>
-                <ToolTip overlay={'清理错误提示'}><span className="shy-rich-input-error-operators" onMouseDown={e => this.clearError()}><a><Icon size={12} icon={CloseSvg}></Icon></a></span></ToolTip>
+                <ToolTip overlay={lst('清理错误提示')}><span className="shy-rich-input-error-operators" onMouseDown={e => this.clearError()}><a><Icon size={12} icon={CloseSvg}></Icon></a></span></ToolTip>
             </div>}
             <div className="flex flex-top">
                 <span className="flex-fixed size-24 round flex-center cursor item-hover">
@@ -116,7 +117,7 @@ export class InputChatBox extends React.Component<{
                         searchRobots={this.props.searchRobots}
                     ></ChatInput>
                 </div>
-                <ToolTip overlay={'添加表情'}><span className="flex-fixed size-24 round flex-center cursor item-hover"><Icon size={18} onMousedown={e => this.openEmoji(e)} icon={EmojiSvg}></Icon></span></ToolTip>
+                <ToolTip overlay={lst('添加表情')}><span className="flex-fixed size-24 round flex-center cursor item-hover"><Icon size={18} onMousedown={e => this.openEmoji(e)} icon={EmojiSvg}></Icon></span></ToolTip>
             </div>
         </div>
     }
@@ -125,11 +126,11 @@ export class InputChatBox extends React.Component<{
         if (this.props.disabled) return;
         if (this.props.readonly) return;
         var menus: MenuItem<string>[] = [
-            { name: 'addFile', text: '上传附件', icon: UploadSvg }
+            { name: 'addFile', text: lst('上传附件'), icon: UploadSvg }
         ]
         if (typeof this.props.searchRobots == 'function') {
             menus.push({ type: MenuItemType.divide });
-            menus.push({ name: 'addRobot', text: '机器人指令', icon: AiSvg });
+            menus.push({ name: 'addRobot', text: lst('机器人指令'), icon: AiSvg });
         }
         var re = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, menus);
         if (re) {
@@ -138,7 +139,7 @@ export class InputChatBox extends React.Component<{
                 var size = 1024 * 1024 * 1024;
                 var rs = files.filter(g => g.size > size);
                 if (rs.length > 0) {
-                    this.openEror(`${rs.map(r => r.name + `(${util.byteToString(r.size)})`).join(",")}文件大于1G,暂不支持上传`)
+                    this.openEror(`${rs.map(r => r.name + `(${util.byteToString(r.size)})`).join(",")}${lst('文件大于1G,暂不支持上传')}`)
                 }
                 files = files.filter(g => g.size <= size);
                 if (files.length > 0) {
@@ -224,15 +225,15 @@ export class InputChatBox extends React.Component<{
                 }
             });
             if (d.ok) {
-                fr.speed = `${file.name}-上传完成`;
+                fr.speed = `${file.name}-`+lst('上传成功');
                 var g = lodash.cloneDeep(d.data.file) as any;
                 g.text = g.name;
                 delete g.name;
                 fr.file = { name: 'upload', ...g }
             }
             else {
-                fr.speed = `${file.name}-上传失败`;
-                this.openEror(`${file.name}-上传失败`)
+                fr.speed = `${file.name}-`+lst('上传失败');
+                this.openEror(`${file.name}-`+lst('上传失败'))
                 this.forceUpdate();
                 await util.delay(3e3);
             }

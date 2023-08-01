@@ -20,6 +20,8 @@ import { useOpenEmoji } from "../emoji";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 import { Page } from "../../src/page";
+import { lst } from "../../i18n/store";
+import { S, Sp } from "../../i18n/view";
 
 export class CommentListView extends React.Component<{
     page: Page,
@@ -43,7 +45,7 @@ export class CommentListView extends React.Component<{
 
         }
         else {
-            ShyAlert('请先登录')
+            ShyAlert(lst('请先登录'))
             return false;
         }
     }
@@ -70,7 +72,7 @@ export class CommentListView extends React.Component<{
     }
     async onReply(l, user, event: React.MouseEvent) {
         if (this.checkSign() == false) return;
-        var g = await useUserComments({ userid: this.userid, placeholder: '回复@' + user.name });
+        var g = await useUserComments({ userid: this.userid, placeholder: lst('回复') +'@'+ user.name });
         if (g) {
             var r = await channel.put('/ws/comment/send', {
                 elementUrl: this.elementUrl,
@@ -88,11 +90,11 @@ export class CommentListView extends React.Component<{
     async onProperty(l, event: React.MouseEvent) {
         if (this.checkSign() == false) return;
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, [
-            { name: 'del', visible: this.userid == l.creater, text: '删除', icon: TrashSvg },
+            { name: 'del', visible: this.userid == l.creater, text: lst('删除'), icon: TrashSvg },
             // { name: 'unlike', text: '踩评论', icon: OpposeSvg },
             { type: MenuItemType.divide },
-            { name: 'report', disabled: true, text: '举报', icon: ReportSvg },
-            { name: 'copy', text: '复制', icon: DuplicateSvg },
+            { name: 'report', disabled: true, text:lst('举报') , icon: ReportSvg },
+            { name: 'copy', text: lst('复制'), icon: DuplicateSvg },
         ]);
         if (r?.item) {
             if (r.item.name == 'del') {
@@ -109,7 +111,7 @@ export class CommentListView extends React.Component<{
             }
             else if (r.item.name == 'copy') {
                 CopyText(l.content);
-                ShyAlert('复制成功')
+                ShyAlert(lst('复制成功'))
             }
         }
     }
@@ -221,15 +223,14 @@ export class CommentListView extends React.Component<{
                                     <span className="h-24 padding-w-5  gap-r-10 item-hover flex-center round cursor remark f-12" onClick={e => this.unlikeComment(l)}><Icon size={16} icon={OpposeSvg}></Icon>{l.unlike?.count || ""}</span>
                                     <span className="h-24 gap-r-10 padding-w-5 item-hover flex-center round cursor remark f-12" onClick={e => this.onReply(l, user, e)}>
                                         {/* <Icon size={16} icon={CommentSvg}></Icon> */}
-                                        回复</span>
+                                        <S>回复</S></span>
                                 </div>
                                 <div className="flex-fixed flex-end">
-
                                 </div>
                             </div>
                         </div>
                         {l.replyCount > 0 && !l.replys && <div className="flex gap-t-10">
-                            <span className="link cursor f-12" onMouseDown={e => this.onExpends(l)}>展开回复{l.replyCount}条</span>
+                            <span className="link cursor f-12" onMouseDown={e => this.onExpends(l)}><Sp key={'展开回复{count}条'} data={{count:l.replyCount}}>展开回复{l.replyCount}条</Sp></span>
                         </div>}
                         {l.replys && <div className="gap-t-10">{this.renderComments(l.replys.list, deep + 1)}</div>}
                     </div></>}
@@ -250,17 +251,17 @@ export class CommentListView extends React.Component<{
     render() {
         return <div className={this.pop ? "w-600 padding-w-14" : ""}>
             <div className="flex gap-b-10 gap-t-5 ">
-                <span className="bold f-14 flex-fixed">{this.total == 0 ? "" : (this.total + "条")}评论</span>
+                <span className="bold f-14 flex-fixed">{this.total == 0 ? "" : lst('{total}条评论',{total:this.total})}</span>
                 <div className="flex-auto flex-end f-12">
-                    <em onMouseDown={e => this.onSet('default')} className={"h-24 flex-center cursor round padding-w-5" + (this.sort == 'default' ? " item-hover-focus" : "")}>默认</em>
-                    <em onMouseDown={e => this.onSet('date')} className={"h-24 flex-center cursor round padding-w-5" + (this.sort == 'date' ? " item-hover-focus" : "")}>最新</em>
+                    <em onMouseDown={e => this.onSet('default')} className={"h-24 flex-center cursor round padding-w-5" + (this.sort == 'default' ? " item-hover-focus" : "")}><S>默认</S></em>
+                    <em onMouseDown={e => this.onSet('date')} className={"h-24 flex-center cursor round padding-w-5" + (this.sort == 'date' ? " item-hover-focus" : "")}><S>最新</S></em>
                 </div>
             </div>
             <Divider></Divider>
             <div className="padding-h-10   round min-h-30 overflow-y">
                 <SpinBox spin={this.loading}> {this.renderComments(this.list)}
                     <Pagination size={this.size} total={this.total} index={this.index}></Pagination>
-                    {this.list.length == 0 && <div className="remark min-50 flex-center">暂无评论</div>}
+                    {this.list.length == 0 && <div className="remark min-50 flex-center"><S>暂无评论</S></div>}
                 </SpinBox>
             </div>
             <div className="gap-b-15">
@@ -283,7 +284,7 @@ export class CommentListView extends React.Component<{
                                 height: this.spread ? 50 : 24,
                                 resize: 'none'
                             }}
-                            placeholder="评论千万条，友善第一条"
+                            placeholder={lst("评论千万条，友善第一条")}
                             ref={e => this.textarea = e}></textarea>
                         {this.spread && <><Divider></Divider>
                             <div className="flex">
@@ -291,7 +292,7 @@ export class CommentListView extends React.Component<{
                                     <span onMouseDown={e => this.onOpenEmjoji(e)} className="size-24 flex-center round item-hover"><Icon size={18} icon={EmojiSvg}></Icon></span>
                                 </div>
                                 <span className="flex-fixed flex">
-                                    <Button size="small" onMouseDown={e => this.addComment(e)}>发布</Button>
+                                    <Button size="small" onMouseDown={e => this.addComment(e)}><S>发布</S></Button>
                                 </span>
                             </div></>}
                     </div>

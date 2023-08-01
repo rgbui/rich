@@ -14,6 +14,7 @@ import { BlockChildKey, BlockUrlConstant } from "../../src/block/constant";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import lodash from "lodash";
 import { DropDirection } from "../../src/kit/handle/direction";
+import { lst } from "../../i18n/store";
 
 @url('/head')
 export class Head extends Block {
@@ -98,9 +99,9 @@ export class Head extends Block {
         var at = rs.findIndex(g => g.name == 'text-center');
         if (this.toggle == true)
             lodash.remove(rs, g => g.name == 'text-center');
-        rs.splice(at,0,{
+        rs.splice(at, 0, {
             name: 'toggle',
-            text: '折叠标题',
+            text: lst('折叠标题'),
             icon: { name: 'bytedance-icon', code: 'handle-right' },
             type: MenuItemType.switch,
             checked: this.toggle
@@ -176,7 +177,7 @@ export class HeadView extends BlockView<Head>{
             style.lineHeight = '39px';
             style.marginTop = 32;
             style.marginBottom = '4px';
-            pt = '一级标题';
+            pt = lst('一级标题');
             ns = [undefined]
         }
         else if (this.block.level == 'h2') {
@@ -184,7 +185,7 @@ export class HeadView extends BlockView<Head>{
             style.lineHeight = '31.2px';
             style.marginTop = 22;
             style.marginBottom = '1px';
-            pt = '二级标题';
+            pt = lst('二级标题');
             ns = [undefined, undefined]
         }
         else if (this.block.level == 'h3') {
@@ -192,7 +193,7 @@ export class HeadView extends BlockView<Head>{
             style.lineHeight = '26px';
             style.marginTop = '1em';
             style.marginBottom = '1px';
-            pt = '三级标题';
+            pt = lst('三级标题');
             ns = [undefined, undefined, undefined]
         }
         else if (this.block.level == 'h4') {
@@ -200,7 +201,7 @@ export class HeadView extends BlockView<Head>{
             style.lineHeight = '26px';
             style.marginTop = '1em';
             style.marginBottom = '1px';
-            pt = '四级标题';
+            pt = lst('四级标题');
             ns = [undefined, undefined, undefined, undefined]
         }
         function renderHead() {

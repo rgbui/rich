@@ -13,6 +13,7 @@ import { DragBlockLine } from "../../../src/kit/handle/line";
 import { Icon } from "../../../component/view/icon";
 import { DragHandleSvg, EditSvg, TrashSvg } from "../../../component/svgs";
 import { BlockUrlConstant } from "../../../src/block/constant";
+import { lst } from "../../../i18n/store";
 
 @url('/katex/line')
 export class KatexLine extends Block {
@@ -66,9 +67,9 @@ export class KatexView extends BlockView<KatexLine>{
         return <span className={'sy-block-katex-line' + (this.block.opened ? " sy-block-katex-opened" : "")}
             onMouseDown={e => this.block.open(e)}>
             <BoxTip ref={e => this.boxTip = e} overlay={<div className="flex-center  padding-5 r-flex-center r-size-24 r-round r-item-hover r-cursor text">
-                <ToolTip overlay={'拖动'}><span onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></ToolTip>
-                <ToolTip overlay={'编辑'}><span onMouseDown={e => this.block.open(e)} ><Icon size={14} icon={EditSvg}></Icon></span></ToolTip>
-                <ToolTip overlay={'删除'}><span onMouseDown={e => this.block.onCrash(e)} ><Icon size={14} icon={TrashSvg}></Icon></span></ToolTip>
+                <ToolTip overlay={lst('拖动')}><span onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></ToolTip>
+                <ToolTip overlay={lst('编辑')}><span onMouseDown={e => this.block.open(e)} ><Icon size={14} icon={EditSvg}></Icon></span></ToolTip>
+                <ToolTip overlay={lst('删除')}><span onMouseDown={e => this.block.onCrash(e)} ><Icon size={14} icon={TrashSvg}></Icon></span></ToolTip>
             </div>}>
                 <SolidArea line prop='content' isHtml={true} block={this.block} ><span dangerouslySetInnerHTML={{ __html: this.block.katexContent }}></span></SolidArea>
             </BoxTip>

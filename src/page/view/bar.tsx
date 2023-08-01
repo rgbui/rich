@@ -32,6 +32,8 @@ import { Avatar } from "../../../component/view/avator/face";
 import { ToolTip } from "../../../component/view/tooltip";
 import { useWsSearch } from "../../../extensions/search";
 import { DefinePageNavBar } from "./common";
+import { S } from "../../../i18n/view";
+import { lst } from "../../../i18n/store";
 
 export class PageBar extends React.Component<{ page: Page }>{
     renderTitle() {
@@ -190,7 +192,7 @@ export class PageBar extends React.Component<{ page: Page }>{
             {!isCanEdit && ws.access == 0 && !ws.isMember && <span className="size-30 gap-r-30"><Avatar size={32} userid={user.id}></Avatar></span>}
         </div>
         else if (this.props.page.openSource == 'page') return <div className="flex r-flex-center  r-gap-r-10 ">
-            <Button size="small" onClick={e => this.toLogin()}>登录</Button>
+            <Button size="small" onClick={e => this.toLogin()}><S>登录</S></Button>
         </div>
         else return <></>
     }
@@ -212,7 +214,7 @@ export class PageBar extends React.Component<{ page: Page }>{
             {isMobileOnly && <span onClick={e => this.onSpreadMenu()} className="flex-fixed size-20 flex-center item-hover round cursor ">
                 <Icon icon={ChevronLeftSvg} size={18}></Icon>
             </span>}
-            {!isMobileOnly && this.props.page.openSource == 'page' && !this.props.page.isPubSiteDefineContent && <ToolTip placement="bottom" overlay={'折叠侧边栏'}><span onClick={e => this.onSpreadMenu()} className="flex-fixed size-20 flex-center item-hover round cursor ">
+            {!isMobileOnly && this.props.page.openSource == 'page' && !this.props.page.isPubSiteDefineContent && <ToolTip placement="bottom" overlay={lst('折叠侧边栏')}><span onClick={e => this.onSpreadMenu()} className="flex-fixed size-20 flex-center item-hover round cursor ">
                 <Icon icon={MenuSvg} size={14}></Icon>
             </span></ToolTip>}
             {this.renderTitle()}

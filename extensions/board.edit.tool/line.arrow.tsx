@@ -2,6 +2,7 @@ import React from "react";
 import { BoardEditTool } from ".";
 import { MeasureView } from "../../component/view/progress";
 import { ShapeType } from "../shapes/shapes";
+import { S } from "../../i18n/view";
 
 var lineSvg = `<svg viewBox="0 0 32 32"  xmlns="http://www.w3.org/2000/svg">
 <path d="M2 15 L30 15 L30 17 L2 17Z" fill="currentColor"></path>
@@ -205,7 +206,7 @@ export function LineTypes(props: {
                     onChange={e => {
                         props.change('strokeWidth', e);
                     }}></MeasureView>
-                <div className="shy-measure-view-label f-12 text-1"><label>线宽</label><span style={{ float: 'right' }}>{Math.round(props.strokeWidth)}px</span></div>
+                <div className="shy-measure-view-label f-12 text-1"><label><S>线宽</S></label><span style={{ float: 'right' }}>{Math.round(props.strokeWidth)}px</span></div>
             </div>
             <div className="shy-line-types-all  r-round-4 r-cursor r-item-hover">
                 <a className={'text-1 ' + (props.lineType == 'straight' ? "hover" : "")}

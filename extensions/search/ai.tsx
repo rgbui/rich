@@ -22,6 +22,8 @@ import { MenuItemType } from "../../component/view/menu/declare";
 import { ToolTip } from "../../component/view/tooltip";
 import { useSearchBox } from "./keyword";
 import { isMobileOnly } from "react-device-detect";
+import { lst } from "../../i18n/store";
+import { S, Sp } from "../../i18n/view";
 
 export class AISearchBox extends EventsComponent {
     renderMessages() {
@@ -54,9 +56,9 @@ export class AISearchBox extends EventsComponent {
         return <div className={"bg-white  round flex flex-col flex-full"+(isMobileOnly ? " vw100-20" : " w-800 ")}>
             <div className="padding-w-10 flex r-gap-r-10 padding-h-5">
                 {this.robotId && <Avatar size={30} userid={this.robotId}></Avatar>}
-                <span className="remark flex-auto text-overflow">{this.robot?.slogan || (this.robot?.remark || '').slice(0, 30) || '语义搜索'}</span>
+                <span className="remark flex-auto text-overflow">{this.robot?.slogan || (this.robot?.remark || '').slice(0, 30) || lst('语义搜索')}</span>
                 <span className="flex-fixed">
-                    <ToolTip overlay={'切换成关键词搜索'}>   <span
+                    <ToolTip overlay={lst('切换成关键词搜索')}>   <span
                         onMouseDown={e => this.openSearch(e)}
                         className="size-24 flex-center item-hover cursor round"><Icon
                             size={20}
@@ -67,7 +69,7 @@ export class AISearchBox extends EventsComponent {
             </div>
             <Divider></Divider>
             <div className="padding-w-10 min-h-120 overflow-y" ref={e => this.scrollEl = e}>
-                {!this.robotId && <div className="remark flex-center gap-h-30 ">无AI机器人,了解<a href='https://help.shy.live/page/1075' className="remark underline" target="_blank">如何训练自已的机器人</a></div>}
+                {!this.robotId && <div className="remark flex-center gap-h-30 "><Sp key={'无AI机器人,了解'}>无AI机器人,了解<a href='https://help.shy.live/page/1075' className="remark underline" target="_blank">如何训练自已的机器人</a></Sp></div>}
                 {this.renderMessages()}
             </div>
             <Divider></Divider>
@@ -77,7 +79,7 @@ export class AISearchBox extends EventsComponent {
                     <Icon className={'gap-l-5'} size={12} icon={DownSvg}></Icon>
                 </span>
                 <div className="flex-auto gap-w-10"><Textarea value={this.prompt} onChange={e => this.prompt = e} onEnter={e => this.send(e, this.button)} style={{ height: 60 }}></Textarea></div>
-                <Button ref={e => this.button = e} onClick={(e, b) => this.send(e, b)} className="flex-fixed">发送</Button>
+                <Button ref={e => this.button = e} onClick={(e, b) => this.send(e, b)} className="flex-fixed"><S>发送</S></Button>
             </div>
         </div>
     }

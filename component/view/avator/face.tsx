@@ -8,6 +8,8 @@ import "./style.less";
 import { CheckSvg } from '../../svgs';
 import { Icon } from '../icon';
 import lodash from 'lodash';
+import { lst } from '../../../i18n/store';
+import { S } from '../../../i18n/view';
 
 export class Avatar extends React.Component<{
     size?: number,
@@ -50,7 +52,7 @@ export class Avatar extends React.Component<{
                 return;
             }
             if (this.props.userid == 'all') {
-                this.user = { id: 'all', status: UserStatus.online, role: 'user', name: '所有人' };
+                this.user = { id: 'all', status: UserStatus.online, role: 'user', name: lst('所有人') };
                 this.forceUpdate();
             }
             else {
@@ -115,7 +117,7 @@ export class Avatar extends React.Component<{
                     <div className={'shy-avatar-say-content-head'}><div className='left flex' onMouseDown={e => this.mousedown(e)}>
                         <a className='shy-avatar-say-username' >{user?.name}</a>
                         {user?.role == 'robot' && <span className='bg-p-1 text-white round flex-center flex-inline padding-w-3  h-16 gap-w-2' style={{ color: '#fff', backgroundColor: 'rgb(88,101,242)' }}>
-                            <Icon icon={CheckSvg} size={12}></Icon><span className='gap-l-2 f-12' style={{ color: '#fff' }}>机器人</span>
+                            <Icon icon={CheckSvg} size={12}></Icon><span className='gap-l-2 f-12' style={{ color: '#fff' }}><S>机器人</S></span>
                         </span>}
                         {this.props.showSn === true && typeof user?.sn == 'number' && <span>#{user?.sn}</span>}
                     </div>

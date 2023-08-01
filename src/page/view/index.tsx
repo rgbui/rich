@@ -24,6 +24,8 @@ import { Block } from "../../block";
 import { PageDirective } from "../directive";
 import { PageBar } from "./bar";
 import { useAITool } from "../../../extensions/ai";
+import { lst } from "../../../i18n/store";
+import { S } from "../../../i18n/view";
 
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
@@ -166,7 +168,7 @@ export class PageView extends Component<{ page: Page }>{
                         useAITool({
                             block: newBlock,
                             isRun: true,
-                            ask: (title ? "以" + title + "为主题，" : "") + '拟一份草稿，不少于1000字'
+                            ask: (title ? lst('以{title}为主题', { title }) + "," : "") + lst('拟一份草稿，不少于1000字')
                         })
                 })
             });
@@ -177,19 +179,19 @@ export class PageView extends Component<{ page: Page }>{
     renderPageTemplate() {
         var ws = this.page.ws
         return <div className="shy-page-view-template-picker" style={this.page.getScreenStyle()}>
-            <div className="shy-page-view-template-picker-tip">回车开始编辑，或者从下方选择</div>
+            <div className="shy-page-view-template-picker-tip"><S>回车开始编辑，或者从下方选择</S></div>
             <div className="shy-page-view-template-picker-items">
-                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={20} icon={PageSvg} ></Icon><span>空白页面</span></a>
-                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc, { useAi: true })}><Icon size={20} icon={AiStartSvg}></Icon><span>用AI开始创作</span></a>
+                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={20} icon={PageSvg} ></Icon><span><S>空白页面</S></span></a>
+                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc, { useAi: true })}><Icon size={20} icon={AiStartSvg}></Icon><span><S>用AI开始创作</S></span></a>
             </div>
             <div className="shy-page-view-template-picker-items">
-                <div className="remark f-12">新增</div>
-                {(window.shyConfig.isDev || ws.sn <= 20) && <a onMouseDown={e => this.page.onOpenTemplate()}><Icon icon={CubesSvg}></Icon><span>选择模板创建</span></a>}
+                <div className="remark f-12"><S>新增</S></div>
+                {(window.shyConfig.isDev || ws.sn <= 20) && <a onMouseDown={e => this.page.onOpenTemplate()}><Icon icon={CubesSvg}></Icon><span><S>选择模板创建</S></span></a>}
                 {/*<a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={20} icon={PageSvg} ></Icon><span>页面</span></a> */}
-                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.db)}><Icon size={18} icon={CollectTableSvg} ></Icon><span>表格</span></a>
-                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.docCard)}><Icon size={20} icon={DocCardsSvg} ></Icon><span>宣传页</span></a>
-                {window.shyConfig.isDev && <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.board)}><Icon size={20} icon={{ name: 'bytedance-icon', code: 'enter-the-keyboard' }}></Icon><span>白板</span></a>}
-                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.textChannel)}><Icon size={20} icon={BoardToolFrameSvg}></Icon><span>频道</span></a>
+                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.db)}><Icon size={18} icon={CollectTableSvg} ></Icon><span><S>表格</S></span></a>
+                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.docCard)}><Icon size={20} icon={DocCardsSvg} ></Icon><span><S>宣传页</S></span></a>
+                {window.shyConfig.isDev && <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.board)}><Icon size={20} icon={{ name: 'bytedance-icon', code: 'enter-the-keyboard' }}></Icon><span><S>白板</S></span></a>}
+                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.textChannel)}><Icon size={20} icon={BoardToolFrameSvg}></Icon><span><S>频道</S></span></a>
             </div>
         </div>
     }

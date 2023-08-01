@@ -1,3 +1,4 @@
+import { lst } from "../i18n/store";
 import { channel } from "./channel";
 
 
@@ -116,7 +117,7 @@ class ChannelService {
                  * 这里一般只会有一个service，如果有多个是有错误的
                  */
 
-                channel.fire('/log', { type: 'warn', message: new Error('有多个service') });
+                channel.fire('/log', { type: 'warn', message: new Error(lst('有多个service')) });
             }
             try {
                 return await sm.instance[sm.method].apply(sm.instance, [args]);

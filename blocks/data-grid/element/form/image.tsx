@@ -8,6 +8,7 @@ import { channel } from "../../../../net/channel";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { FieldView, OriginFormField } from "./origin.field";
+import { S } from "../../../../i18n/view";
 
 @url('/form/image')
 class FormFieldImage extends OriginFormField {
@@ -62,7 +63,7 @@ class FormFieldImageView extends BlockView<FormFieldImage>{
                 {vs.length > 0 && <div className="flex">
                     {this.renderImages(vs)}
                 </div>}
-                {(vs.length < 2 || this.block.field?.config?.isMultiple)&&this.block.isCanEdit() && <Button size="small" ghost onClick={e => this.block.uploadFile(e)}>上传图片</Button>}
+                {(vs.length < 2 || this.block.field?.config?.isMultiple)&&this.block.isCanEdit() && <Button size="small" ghost onClick={e => this.block.uploadFile(e)}><S>上传图片</S></Button>}
             </div>
         </FieldView>
     }

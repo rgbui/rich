@@ -7,6 +7,7 @@ import { DataGridView } from ".";
 import { channel } from "../../../../net/channel";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
 import lodash from "lodash";
+import { lst } from "../../../../i18n/store";
 export class DataGridViewLife {
     async loadSchema(this: DataGridView) {
         if (this.schemaId && !this.schema) {
@@ -38,7 +39,7 @@ export class DataGridViewLife {
         }
         if (this.page.pageLayout.type == PageLayoutType.dbPickRecord) {
             if (!this.fields.some(s => s.type == 'check')) {
-                this.fields.insertAt(0, new ViewField({ type: 'check', text: '选择' }, this.schema))
+                this.fields.insertAt(0, new ViewField({ type: 'check', text:lst('选择')  }, this.schema))
             }
         }
     }

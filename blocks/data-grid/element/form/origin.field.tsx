@@ -11,6 +11,8 @@ import { DataGridForm } from "../../view/form";
 import "./style.less";
 import { GetFieldTypeSvg } from "../../schema/util";
 import { ShyAlert } from "../../../../component/lib/alert";
+import { lst } from "../../../../i18n/store";
+import { S } from "../../../../i18n/view";
 
 export class OriginFormField extends Block {
     display = BlockDisplay.block;
@@ -54,13 +56,13 @@ export class OriginFormField extends Block {
         var items: MenuItem<BlockDirective | string>[] = [];
         items.push({
             name: 'required',
-            text: '必填',
+            text: lst('必填'),
             type: MenuItemType.switch,
             checked: this.required
         });
         items.push({
             name: 'allowRemark',
-            text: '添加备注',
+            text: lst('添加备注'),
             type: MenuItemType.switch,
             checked: this.allowRemark
         });
@@ -70,7 +72,7 @@ export class OriginFormField extends Block {
         items.push({
             name: 'hide',
             icon: HideSvg,
-            text: '隐藏',
+            text: lst('隐藏'),
             label: "hide"
         });
         return items;
@@ -100,14 +102,14 @@ export class OriginFormField extends Block {
     }
     checkEdit() {
         if (!this.isCanEdit()) {
-            ShyAlert('请先登录')
+            ShyAlert(lst('请先登录'))
             return false;
         }
         return true;
     }
     checkSign() {
         if (!this.page.isSign) {
-            ShyAlert('请先登录')
+            ShyAlert(lst('请先登录'))
             return false;
         }
         return true;
@@ -133,16 +135,16 @@ export function FieldView(props: { block: OriginFormField, children?: JSX.Elemen
             <div className="flex">
                 {/* <Icon icon={GetFieldTypeSvg(block.field.type)} size={16}></Icon> */}
                 <label className="bold f-24">{block.field.text}</label>
-                {block.required && <em className="bg-primary text-white f-12 round-4 gap-l-5 op-5">必填</em>}
+                {block.required && <em className="bg-primary text-white f-12 round-4 gap-l-5 op-5"><S>必填</S></em>}
             </div>
             {block.allowRemark && <div className="sy-form-field-remark remark f-14 gap-h-5">
-                <TextSpanArea placeholderEmptyVisible={true} placeholder="请输入说明介绍" prop="fieldRemark" block={block} ></TextSpanArea>
+                <TextSpanArea placeholderEmptyVisible={true} placeholder={lst("请输入说明介绍")} prop="fieldRemark" block={block} ></TextSpanArea>
             </div>}
             <div className="sy-form-field-control">{props.children}</div>
         </div>}
         {!block.field && <div onClick={e => props.block.onDelete()} className="sy-form-field-tip round padding-w-10 min-h-30 f-14 item-hover-focus flex">
-            <span className="remark">表单字段不存在</span>
-            <a className="link flex cursor gap-l-10"><span className="size-24 flex-center"><Icon size={14} icon={TrashSvg}></Icon></span><span>移除</span></a>
+            <span className="remark"><S>表单字段不存在</S></span>
+            <a className="link flex cursor gap-l-10"><span className="size-24 flex-center"><Icon size={14} icon={TrashSvg}></Icon></span><span><S>移除</S></span></a>
         </div>}
         {block.fieldError && <div className="sy-form-field-error">{block.fieldError}</div>}
     </div>

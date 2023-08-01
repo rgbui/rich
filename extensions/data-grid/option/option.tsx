@@ -19,6 +19,8 @@ import { Confirm } from "../../../component/lib/confirm";
 import { ShyAlert } from "../../../component/lib/alert";
 import { DragList } from "../../../component/view/drag.list";
 import { DataGridOptionType } from "../../../blocks/data-grid/schema/field";
+import { lst } from "../../../i18n/store";
+import { S } from "../../../i18n/view";
 
 /**
  * 
@@ -26,17 +28,17 @@ import { DataGridOptionType } from "../../../blocks/data-grid/schema/field";
  * 
  */
 export var OptionBackgroundColorList = [
-    { color: 'rgba(247,214,183,0.5)', text: '幼杏' },
-    { color: 'rgba(255,193,153,0.5)', text: '鲜橘' },
-    { color: 'rgba(252,246,189,0.5)', text: '淡黄' },
-    { color: 'rgba(205,243,220,0.5)', text: '浅绿' },
-    { color: 'rgba(169,222,249,0.5)', text: '天蓝' },
-    { color: 'rgba(189,201,255,0.5)', text: '雾蓝' },
-    { color: 'rgba(239,218,251,0.5)', text: '轻紫' },
-    { color: 'rgba(234,202,220,0.5)', text: '熏粉' },
-    { color: 'rgba(237,233,235,0.5)', text: '白灰' },
-    { color: 'rgba(217,211,215,0.5)', text: '暗银' },
-    { color: 'rgba(253,198,200,0.5)', text: '将红' },
+    { color: 'rgba(247,214,183,0.5)', text: lst('幼杏') },
+    { color: 'rgba(255,193,153,0.5)', text: lst('鲜橘') },
+    { color: 'rgba(252,246,189,0.5)', text: lst('淡黄') },
+    { color: 'rgba(205,243,220,0.5)', text: lst('浅绿') },
+    { color: 'rgba(169,222,249,0.5)', text: lst('天蓝') },
+    { color: 'rgba(189,201,255,0.5)', text: lst('雾蓝') },
+    { color: 'rgba(239,218,251,0.5)', text: lst('轻紫') },
+    { color: 'rgba(234,202,220,0.5)', text: lst('熏粉') },
+    { color: 'rgba(237,233,235,0.5)', text: lst('白灰') },
+    { color: 'rgba(217,211,215,0.5)', text: lst('暗银') },
+    { color: 'rgba(253,198,200,0.5)', text: lst('将红') },
 ]
 
 export class TableStoreOption extends EventsComponent {
@@ -86,7 +88,7 @@ export class TableStoreOption extends EventsComponent {
                 <div className="shy-tablestore-option-selector-input-wrapper"><input ref={e => this.input = e} maxLength={this.value.length + 3} value={this.value} onInput={e => changeInput(e)} onKeyDown={e => keydown(e.nativeEvent)} /></div>
             </div>
             <div className="shy-tablestore-option-selector-drop overflow-y max-h-180">
-                <div className="remark" style={{ height: 20, margin: '8px 0px', padding: '0px 10px' }}>{this.filterOptions.length > 0 ? '选择或创建一个选项' : '暂无选项'}</div>
+                <div className="remark" style={{ height: 20, margin: '8px 0px', padding: '0px 10px' }}>{this.filterOptions.length > 0 ? lst('选择或创建一个选项') : lst('暂无选项')}</div>
                 <DragList onChange={change} isDragBar={e => e.closest('.shy-tablestore-option-item-icon') ? true : false}>
                     {this.filterOptions.map(op => {
                         return <div className="shy-tablestore-option-item" key={op.text} onClick={e => this.setOption(op)} >
@@ -96,7 +98,7 @@ export class TableStoreOption extends EventsComponent {
                         </div>
                     })}
                 </DragList>
-                {this.isNeedCreated && <div className="shy-tablestore-option-item-create box-border" onClick={e => this.onCreateOption()}><em>创建</em><span style={{ backgroundColor: this.optionColor }}>{this.value}</span></div>}
+                {this.isNeedCreated && <div className="shy-tablestore-option-item-create box-border" onClick={e => this.onCreateOption()}><em><S>创建</S></em><span style={{ backgroundColor: this.optionColor }}>{this.value}</span></div>}
             </div>
         </div>
     }
@@ -168,11 +170,11 @@ export class TableStoreOption extends EventsComponent {
     async configOption(option: DataGridOptionType, event: React.MouseEvent) {
         event.stopPropagation();
         var menus = [
-            { text: '标签', name: 'name', value: option.text, type: MenuItemType.input },
+            { text: lst('标签'), name: 'name', value: option.text, type: MenuItemType.input },
             { type: MenuItemType.divide },
-            { name: 'delete', icon: TrashSvg, text: '删除' },
+            { name: 'delete', icon: TrashSvg, text: lst('删除') },
             { type: MenuItemType.divide },
-            { type: MenuItemType.text, text: '颜色' },
+            { type: MenuItemType.text, text: lst('颜色') },
             ...OptionBackgroundColorList.map(b => {
                 return {
                     name: 'color',
@@ -199,7 +201,7 @@ export class TableStoreOption extends EventsComponent {
                 this.forceUpdate();
             }
             else if (um.item.name == 'delete') {
-                if (await Confirm('确认删除标签项吗?')) {
+                if (await Confirm(lst('确认删除标签项吗?'))) {
                     this.options.remove(o => o === option);
                     this.emit('changeOptions', lodash.cloneDeep(this.options));
                     this.forceUpdate();
@@ -209,7 +211,7 @@ export class TableStoreOption extends EventsComponent {
         var name = menus[0].value;
         if (name && name != option.text) {
             if (this.options.some(s => s.text == name && s !== option)) {
-                ShyAlert('当前标签项已存在。')
+                ShyAlert(lst('当前标签项已存在。'))
             }
             else {
                 option.text = name;

@@ -6,6 +6,7 @@ import { BlockView } from "../../../src/block/view";
 import { ChildsArea } from "../../../src/block/view/appear";
 import { GridMap } from "../../../src/page/grid";
 import "./style.less";
+import { lst } from "../../../i18n/store";
 
 @url('/card')
 export class PageCard extends Block {
@@ -17,12 +18,12 @@ export class PageCard extends Block {
     async initPageCard() {
         this.blocks.childs.push(await BlockFactory.createBlock('/head',
             this.page,
-            { type: 'level', content: '标题' },
+            { type: 'level', content:lst('标题' ) },
             this
         ));
         this.blocks.childs.push(await BlockFactory.createBlock('/textspan',
             this.page,
-            { content: '描述' },
+            { content: lst('描述') },
             this
         ));
         this.forceUpdate();

@@ -5,7 +5,7 @@ import { createClient } from 'pexels';
 import { Loading } from "../../component/view/loading";
 import { util } from "../../util/util";
 import { S, Sp } from "../../i18n/view";
-import { ls } from "../../i18n/store";
+import { ls, lst } from "../../i18n/store";
 export class ThirdGallery extends React.Component<{ type: GalleryType, onChange: (image: OuterPic) => void }>{
     word: string = '';
     error: string = '';
@@ -36,7 +36,7 @@ export class ThirdGallery extends React.Component<{ type: GalleryType, onChange:
                         title: g.description || '',
                         thumb: g.urls.thumb,
                         url: g.urls.full,
-                        name: g.user && g.user.name ? g.user.name : '未知',
+                        name: g.user && g.user.name ? g.user.name : lst('未知'),
                         link: `https://unsplash.com/@${g.user.username}?utm_source=wolai&utm_medium=referral`,
                     })
                 });
@@ -52,7 +52,7 @@ export class ThirdGallery extends React.Component<{ type: GalleryType, onChange:
                             title: '',
                             thumb: g.src.tiny,
                             url: g.src.original,
-                            name: g.photographer || '未知',
+                            name: g.photographer || lst('未知') ,
                             link: g.photographer_url,
                         })
                     })
@@ -62,7 +62,7 @@ export class ThirdGallery extends React.Component<{ type: GalleryType, onChange:
             this.loading = false;
         }
         catch (ex) {
-            this.error = '图片资源获取失败';
+            this.error = lst('图片资源获取失败');
             this.pics = [];
         }
         if (this.isM)
@@ -102,7 +102,7 @@ export class ThirdGallery extends React.Component<{ type: GalleryType, onChange:
             <div className='shy-third-gallery-content'>
                 {this.loading == true && <div className='shy-third-gallery-loading'><Loading></Loading></div>}
                 {this.loading == false && this.renderImages()}
-                {this.error && this.pics.length == 0 && <div className='shy-third-gallery-error'><span>图片资源获取失败</span><a onClick={e => this.onSearch(this.word)}>重新尝试</a></div>}
+                {this.error && this.pics.length == 0 && <div className='shy-third-gallery-error'><span><S>图片资源获取失败</S></span><a onClick={e => this.onSearch(this.word)}><S>重新尝试</S></a></div>}
             </div>
         </div>
     }

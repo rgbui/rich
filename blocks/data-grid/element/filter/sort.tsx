@@ -4,6 +4,7 @@ import { SelectBox } from "../../../../component/view/select/box";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { OriginFilterField, OriginFilterFieldView } from "./origin.field";
+import { lst } from "../../../../i18n/store";
 
 @url('/field/filter/sort')
 export class FilterSort extends OriginFilterField {
@@ -33,9 +34,9 @@ export class SearchTextView extends BlockView<FilterSort>{
                 value={this.block.sortRule}
                 onChange={e => this.block.onFilter(e as number)}
                 options={[
-                    { text: '无', value: 0, icon: NoneSvg },
-                    { text: "升序", value: 1, icon: ArrowUpSvg },
-                    { text: '降序', value: -1, icon: ArrowDownSvg }
+                    { text: lst('无'), value: 0, icon: NoneSvg },
+                    { text: lst("升序"), value: 1, icon: ArrowUpSvg },
+                    { text: lst('降序'), value: -1, icon: ArrowDownSvg }
                 ]}></SelectBox>
         </OriginFilterFieldView ></div>
     }

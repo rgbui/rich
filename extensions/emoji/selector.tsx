@@ -7,6 +7,7 @@ import { dom, domVisibleSeek } from "../../src/common/dom";
 import { getEmoji } from "../../net/element.type";
 import { Tip } from "../../component/view/tooltip/tip";
 import { Spin } from "../../component/view/spin";
+import { S } from "../../i18n/view";
 
 
 /**
@@ -60,7 +61,7 @@ class EmojiSelector extends InputTextPopSelector<EmojiCode> {
             {!this.loading && <div className="flex flex-wrap padding-10" >{this.list.map((emoji, i) => {
                 return <Tip overlay={<>{emoji.name}</>} key={emoji.code}><span data-code={emoji.code} className={'size-32 round cursor flex-center ef f-24 ' + (this.searchCode == emoji.code ? "item-hover-focus" : "")} onMouseDown={e => this.onSelect(emoji)} dangerouslySetInnerHTML={{ __html: getEmoji(emoji.code) }}></span></Tip>
             })}</div>}
-            {!this.loading && this.list.length == 0 && <div className="remark flex-center">没有搜索到</div>}
+            {!this.loading && this.list.length == 0 && <div className="remark flex-center"><S>没有搜索到</S></div>}
         </div>
     }
     render() {

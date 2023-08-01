@@ -27,6 +27,8 @@ import { BlockView } from "../../src/block/view";
 import { MouseDragger } from "../../src/common/dragger";
 import { Rect } from "../../src/common/vector/point";
 import { BlockRenderRange } from "../../src/block/enum";
+import { lst } from "../../i18n/store";
+import { S } from "../../i18n/view";
 
 @url('/embed')
 export class Embed extends Block {
@@ -59,7 +61,7 @@ export class Embed extends Block {
         return super.getVisibleContentBound();
     }
     async getMd() {
-        return `[${this.src?.filename || '嵌入'}](${this.src?.url})`;
+        return `[${this.src?.filename || lst('嵌入')}](${this.src?.url})`;
     }
 }
 
@@ -130,7 +132,7 @@ export class EmbedView extends BlockView<Embed>{
         return <div className='sy-block-embed' style={this.block.visibleStyle}>
             {this.block.src.name == 'none' && <div onMouseDown={e => this.block.addEmbed(e.nativeEvent)} className='sy-block-file-nofile'>
                 <Icon icon={CompassSvg}></Icon>
-                <span>添加内嵌网页(网易云音乐、B站)</span>
+                <span><S>添加内嵌网页(网易云音乐、B站)</S></span>
             </div>}
             {this.block.src.name != 'none' && <div className='sy-block-embed-wrapper' ref={e => this.imageWrapper = e} style={{ height, width: this.block.contentWidthPercent ? this.block.contentWidthPercent + "%" : undefined }}>
                 <div style={{ ...getIframeStyle(), pointerEvents: this.isResize ? "none" : 'auto' }}>

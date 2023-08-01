@@ -31,7 +31,7 @@ import { BlockUrlConstant } from "../constant";
 import { List } from "../../../blocks/present/list/list";
 import { BlockFactory } from "../factory/block.factory";
 import { util } from "../../../util/util";
-import { ls } from "../../../i18n/store";
+import { ls, lst } from "../../../i18n/store";
 
 export class Block$Event {
     /**
@@ -69,20 +69,20 @@ export class Block$Event {
             items.push({
                 name: 'askAi',
                 icon: AiStartSvg,
-                text: "诗云AI",
+                text: lst("诗云AI"),
             });
             items.push({ type: MenuItemType.divide });
         }
         items.push({
             name: BlockDirective.copy,
-            text: '拷贝副本',
+            text: lst('拷贝副本'),
             label: "Ctrl+D",
             icon: DuplicateSvg
         });
         var menus = await this.onGetTurnMenus();
         if (menus.length > 0) {
             items.push({
-                text: ls.t('切换'),
+                text: lst('切换'),
                 icon: LoopSvg,
                 childs: menus.map(m => {
                     return {
@@ -99,7 +99,7 @@ export class Block$Event {
         // });
         items.push({
             name: BlockDirective.link,
-            text: '复制块链接',
+            text: lst('复制块链接') ,
             icon: LinkSvg
         });
         // items.push({
@@ -119,17 +119,17 @@ export class Block$Event {
                 name: 'text-center',
                 type: MenuItemType.switch,
                 checked: (this as any).align == 'center',
-                text: '文字居中',
+                text: lst('文字居中'),
                 icon: AlignTextCenterSvg
             });
         }
 
         items.push({
-            text: '颜色',
+            text: lst('颜色'),
             icon: BlockcolorSvg,
             childs: [
                 {
-                    text: '文字颜色',
+                    text: lst('文字颜色'),
                     type: MenuItemType.text
                 },
                 {
@@ -148,7 +148,7 @@ export class Block$Event {
                     type: MenuItemType.divide
                 },
                 {
-                    text: '背景颜色',
+                    text:lst('背景颜色') ,
                     type: MenuItemType.text
                 },
                 {
@@ -170,7 +170,7 @@ export class Block$Event {
         items.push({
             name: BlockDirective.delete,
             icon: TrashSvg,
-            text: ls.t('删除'),
+            text: lst('删除'),
             label: "Del"
         });
         return items;
@@ -179,12 +179,12 @@ export class Block$Event {
         var items: MenuItem<BlockDirective | string>[] = [];
         items.push({
             name: BlockDirective.bringToFront,
-            text: '移到前面',
+            text: lst('移到前面'),
             icon: BoardMoveTopSvg,
         });
         items.push({
             name: BlockDirective.sendToBack,
-            text: '移到最下面',
+            text: lst('移到最下面'),
             icon: BoardMoveBottomSvg
         });
         items.push({
@@ -192,7 +192,7 @@ export class Block$Event {
         });
         items.push({
             name: this.locker?.lock == false ? BlockDirective.lock : BlockDirective.unlock,
-            text: this.locker?.lock == false ? '锁住' : '解锁',
+            text: this.locker?.lock == false ? lst('锁住') : lst('解锁'),
             icon: this.locker?.lock == false ? LockSvg : UnlockSvg
         });
         items.push({
@@ -200,7 +200,7 @@ export class Block$Event {
         });
         items.push({
             name: 'copy',
-            text: '复制',
+            text: lst('复制'),
             icon: DuplicateSvg,
             disabled: true
         });
@@ -210,7 +210,7 @@ export class Block$Event {
         items.push({
             name: BlockDirective.delete,
             icon: TrashSvg,
-            text: ls.t('删除'),
+            text: lst('删除'),
             label: "delete"
         });
         return items;
@@ -350,7 +350,7 @@ export class Block$Event {
     }
     async onCopyLink(this: Block) {
         CopyText(this.blockUrl);
-        ShyAlert('块的链接已复制')
+        ShyAlert(lst('块的链接已复制'))
     }
     async onUpdateProps(this: Block, props: Record<string, any>, options?: {
         range?: BlockRenderRange,

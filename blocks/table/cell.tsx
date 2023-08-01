@@ -14,6 +14,7 @@ import lodash from "lodash";
 import { ArrowDownSvg, ArrowLeftSvg, ArrowRightSvg, ArrowUpSvg, BlockcolorSvg, CloseTickSvg, TrashSvg } from "../../component/svgs";
 import { BackgroundColorList, FontColorList } from "../../extensions/color/data";
 import { GridMap } from "../../src/page/grid";
+import { lst } from "../../i18n/store";
 
 @url('/table/cell')
 export class TableCell extends Block {
@@ -74,7 +75,7 @@ export class TableCellView extends BlockView<TableCell>{
                 else name = name + '-'
                 return [
                     {
-                        text: '文字颜色',
+                        text: lst('文字颜色'),
                         type: MenuItemType.text
                     },
                     {
@@ -93,7 +94,7 @@ export class TableCellView extends BlockView<TableCell>{
                         type: MenuItemType.divide
                     },
                     {
-                        text: '背景颜色',
+                        text: lst('背景颜色'),
                         type: MenuItemType.text
                     },
                     {
@@ -110,13 +111,13 @@ export class TableCellView extends BlockView<TableCell>{
                 ]
             }
             var items = [
-                { icon: ArrowUpSvg, text: '在上方插入一行', name: 'up' },
-                { icon: ArrowDownSvg, text: '在下方插入一行', name: 'down' },
-                { icon: ArrowLeftSvg, text: '在左边插入一列', name: 'left' },
-                { icon: ArrowRightSvg, text: '在右侧插入一列', name: 'right' },
+                { icon: ArrowUpSvg, text: lst('在上方插入一行'), name: 'up' },
+                { icon: ArrowDownSvg, text: lst('在下方插入一行'), name: 'down' },
+                { icon: ArrowLeftSvg, text: lst('在左边插入一列'), name: 'left' },
+                { icon: ArrowRightSvg, text: lst('在右侧插入一列'), name: 'right' },
                 { type: MenuItemType.divide },
                 {
-                    text: '所在行颜色',
+                    text: lst('所在行颜色'),
                     icon: BlockcolorSvg,
                     childs: getColors('row', {
                         font: this.block.parent?.pattern?.getFontStyle()?.color,
@@ -124,7 +125,7 @@ export class TableCellView extends BlockView<TableCell>{
                     })
                 },
                 {
-                    text: '所在列颜色',
+                    text: lst('所在列颜色'),
                     icon: BlockcolorSvg,
                     childs: getColors('col', {
                         font: this.block?.pattern?.getFontStyle()?.color,
@@ -132,12 +133,12 @@ export class TableCellView extends BlockView<TableCell>{
                     })
                 },
                 { type: MenuItemType.divide },
-                { name: 'delRow', text: '删除所在行', },
-                { name: 'delCol', text: '删除所在列' },
+                { name: 'delRow', text: lst('删除所在行'), },
+                { name: 'delCol', text: lst('删除所在列') },
                 { type: MenuItemType.divide },
-                { icon: TrashSvg, text: '清空单元格', name: 'clear' },
+                { icon: TrashSvg, text: lst('清空单元格'), name: 'clear' },
                 {
-                    text: '单元格颜色',
+                    text: lst('单元格颜色'),
                     icon: BlockcolorSvg,
                     childs: getColors(undefined, {
                         font: this.block.pattern?.getFontStyle()?.color,

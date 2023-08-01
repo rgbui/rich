@@ -19,6 +19,7 @@ import { ResourceArguments } from "../../icon/declare";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
 import { util } from "../../../util/util";
+import { lst } from "../../../i18n/store";
 
 export class DataGridFileViewer extends EventsComponent {
     mime: 'file' | 'image' | 'video' | 'audio' | 'user' = 'file';
@@ -48,7 +49,7 @@ export class DataGridFileViewer extends EventsComponent {
         event.stopPropagation();
         var re = await useSelectMenuItem(
             { roundArea: Rect.fromEvent(event) },
-            [{ name: 'delete', text: '删除', icon: TrashSvg }]);
+            [{ name: 'delete', text: lst('删除'), icon: TrashSvg }]);
         if (re?.item) {
             lodash.remove(this.resources, g => g === resource);
             this.forceUpdate()
@@ -106,13 +107,13 @@ export class DataGridFileViewer extends EventsComponent {
         }
         function getButtonText() {
             var text = '';
-            if (self.mime == 'file') text = '上传文件'
-            else if (self.mime == 'user') text = '添加用户'
-            else if (self.mime == 'image') text = '上传图片'
-            else if (self.mime == 'audio') text = '上传音频'
-            else if (self.mime == 'video') text = '上传视频'
-            else text = '上传文件'
-            if (self.isMultiple != true && self.resources.length > 0) text = text.replace('上传', '更换').replace('添加', '更换')
+            if (self.mime == 'file') text = lst('上传文件')
+            else if (self.mime == 'user') text = lst('添加用户')
+            else if (self.mime == 'image') text = lst('上传图片')
+            else if (self.mime == 'audio') text = lst('上传音频')
+            else if (self.mime == 'video') text = lst('上传视频')
+            else text = lst('上传文件')
+            if (self.isMultiple != true && self.resources.length > 0) text = text.replace(lst('上传'), lst('更换')).replace(lst('添加'), lst('更换'))
             return text;
         }
         return <div className={"gap-h-14" + (this.mime == 'user' ? " w-180" : " w-300")}>

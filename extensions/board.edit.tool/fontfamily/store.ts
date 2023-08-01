@@ -1,5 +1,6 @@
 import lodash from "lodash";
 import { MergeSock } from "../../../component/lib/merge.sock";
+import { lst } from "../../../i18n/store";
 
 export type FontFamilyStyle = {
     name: string,
@@ -8,7 +9,7 @@ export type FontFamilyStyle = {
 }
 
 export var FontStores: FontFamilyStyle[] = [
-    { name: '', text: '默认' },
+    { name: '', text: lst('默认') },
     { url: 'https://resources.shy.live/fonts/SourceHanSansSC-Normal-2.otf', name: 'SourceHanSansSC', text: '思源黑体' },
     { url: 'https://resources.shy.live/fonts/SiYuanSongTiRegular/SourceHanSerifCN-Regular-1.otf', name: 'SourceHanSerifCN-Regular', text: '思源宋体' },
     { url: 'https://resources.shy.live/fonts/SmileySans-Oblique-2.ttf', name: 'SmileySans-Oblique', text: '得意黑' },

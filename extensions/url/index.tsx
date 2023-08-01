@@ -12,27 +12,28 @@ import { Icon } from "../../component/view/icon";
 import { IconArguments } from "../icon/declare";
 import B from "../../src/assert/img/bilibili.ico";
 import M from "../../src/assert/img/163.music.ico";
+import { lst } from "../../i18n/store";
 class InputUrlSelector extends InputTextPopSelector {
     onClose(): void {
         this.close();
     }
     private url: string;
     async open(round: Rect, text: string, callback: (...args: any[]) => void): Promise<boolean> {
-        if(this.url) { this.close(); return false; }
+        if (this.url) { this.close(); return false; }
         this.urlTexts = [
-            { icon: LinkSvg, text: '网址', name: 'url', url: '/text', isLine: true },
-            { icon: BookSvg, text: '书签', name: 'bookmark', url: '/bookmark' },
-            { icon: EmbedSvg, text: '嵌入', name: 'embed', url: '/embed' }
+            { icon: LinkSvg, text: lst('网址'), name: 'url', url: '/text', isLine: true },
+            { icon: BookSvg, text: lst('书签'), name: 'bookmark', url: '/bookmark' },
+            { icon: EmbedSvg, text: lst('嵌入'), name: 'embed', url: '/embed' }
         ];
         this.url = text;
         var cr = ConvertEmbed(this.url);
         if (cr?.embedType) {
             this.urlTexts = [
-                { icon: LinkSvg, text: '网址', name: 'url', url: '/text', isLine: true },
-                { icon: BookSvg, text: '书签', name: 'bookmark', url: '/bookmark' },
+                { icon: LinkSvg, text: lst('网址'), name: 'url', url: '/text', isLine: true },
+                { icon: BookSvg, text: lst('书签'), name: 'bookmark', url: '/bookmark' },
                 {
                     icon: { name: 'image', url: cr?.embedType == 'music.163' ? M : B },
-                    text: cr?.embedType == 'music.163' ? "嵌入网易云音乐" : '嵌入B站',
+                    text: cr?.embedType == 'music.163' ? lst("嵌入网易云音乐") : lst('嵌入B站'),
                     name: 'embed',
                     url: '/embed'
                 }
@@ -47,8 +48,8 @@ class InputUrlSelector extends InputTextPopSelector {
                     var ts = await TableSchema.getTableSchema(pe.id);
                     var sv = ts.views.find(c => c.id == pe.id1);
                     this.urlTexts = [
-                        { icon: TableSvg, text: '引用数据表格', name: 'data-grid', url: sv.url, data: { schemaId: ts.id, syncBlockId: pe.id1 } },
-                        { icon: LinkSvg, text: '保持网址', name: 'url', url: '/text', isLine: true },
+                        { icon: TableSvg, text: lst('引用数据表格'), name: 'data-grid', url: sv.url, data: { schemaId: ts.id, syncBlockId: pe.id1 } },
+                        { icon: LinkSvg, text: lst('保持网址'), name: 'url', url: '/text', isLine: true },
                     ]
                 }
             }
@@ -104,8 +105,7 @@ class InputUrlSelector extends InputTextPopSelector {
             this.close();
         }
     }
-    onKeydown(event: KeyboardEvent)
-    {
+    onKeydown(event: KeyboardEvent) {
         if (this.visible == true) {
             switch (event.key) {
                 case KeyboardCode.ArrowDown:

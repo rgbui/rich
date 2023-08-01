@@ -3,6 +3,7 @@ import { Page } from "..";
 import { OnlineUsers } from "../../../extensions/at/users";
 import { PageLayoutType } from "../declare";
 import { ElementType } from "../../../net/element.type";
+import { S } from "../../../i18n/view";
 
 export class PageLayoutView extends React.Component<{
     page: Page,
@@ -20,7 +21,7 @@ export class PageLayoutView extends React.Component<{
             var style: CSSProperties = { minHeight: mh, width: '100%' };
             return <div className='shy-page-layout shy-page-layout-doc' style={style}>
                 {props.page.isSchemaRecordViewTemplate && <div className="pos-center-top t-20 w-200 h-30 bg flex-center round f-12">
-                    编辑模板<span>[{props.page.schema.views.find(c => c.id == props.page.pe.id1)?.text}]</span>
+                    <S>编辑模板</S><span>[{props.page.schema.views.find(c => c.id == props.page.pe.id1)?.text}]</span>
                 </div>}
                 {props.children}
             </div>
@@ -41,7 +42,7 @@ export class PageLayoutView extends React.Component<{
             var style: CSSProperties = { minHeight: mh, width: '100%' };
             return <div className={"shy-page-layout shy-page-layout-db-form"} style={style}>
                 {props.page.isSchemaRecordViewTemplate && <div className="pos-center-top  t-20  w-200 h-30 bg flex-center round f-12">
-                    编辑模板<span>[{props.page.schema.views.find(c => c.id == props.page.pe.id1)?.text}]</span>
+                    <S>编辑模板</S><span>[{props.page.schema.views.find(c => c.id == props.page.pe.id1)?.text}]</span>
                 </div>}
                 {props.children}
             </div>
@@ -80,7 +81,7 @@ export class PageLayoutView extends React.Component<{
         }
         else {
             return <div className="flex-center padding-40">
-                <span>页面出错了</span>
+                <span><S>页面出错了</S></span>
             </div>
         }
     }
@@ -89,13 +90,13 @@ export class PageLayoutView extends React.Component<{
         if (this.error) {
             return <div>
                 <div className="flex-center padding-40">
-                    <span>页面出错了</span>
+                    <span><S>页面出错了</S></span>
                 </div>
                 <div className="flex-center remark">
                     {this.error}
                 </div>
                 <div className="flex-center remark">
-                    <span><a className="cursor" onClick={e => location.reload()}>刷新</a>或通过<a className="cursor" onClick={e => this.props.page.onOpenHistory()}>历史记录</a>找回</span>
+                    <span><a className="cursor" onClick={e => location.reload()}><S>刷新</S></a><S>或通过</S><a className="cursor" onClick={e => this.props.page.onOpenHistory()}><S>历史记录</S></a><S>找回</S></span>
                 </div>
             </div>
         }
@@ -103,15 +104,15 @@ export class PageLayoutView extends React.Component<{
     renderNotDataSource() {
         return <div>
             <div className="flex-center padding-40">
-                <span>缺少数据源</span>
+                <span><S>缺少数据源</S></span>
             </div>
             <div className="flex-center remark">
-                没有查到数据表格，请确认是否存在网络问题，还是已经删除了
+                <S>没有查到数据表格，请确认是否存在网络问题，还是已经删除了</S>
             </div>
             <div className="flex-center remark">
-                <span><a className="cursor" onClick={e => location.reload()}>刷新</a>或<a className="cursor" onClick={async e => {
+                <span><a className="cursor" onClick={e => location.reload()}><S>刷新</S></a><S>或</S><a className="cursor" onClick={async e => {
                     this.props.page.onPageRemove()
-                }}>删除页面</a></span>
+                }}><S>删除页面</S></a></span>
             </div>
         </div>
     }

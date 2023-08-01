@@ -14,6 +14,8 @@ import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
 import { constLangs, formulaLangs, funLangs, logcLangs } from "./data";
 import { Field } from "../../../blocks/data-grid/schema/field";
+import { S } from "../../../i18n/view";
+import { lst } from "../../../i18n/store";
 
 class FormulaSelector extends EventsComponent {
     schema: TableSchema;
@@ -71,7 +73,7 @@ class FormulaSelector extends EventsComponent {
             <div className="flex-full h-300">
                 <div className="overflow-y w-150 bg-light  padding-b-100 flex-fixed">
                     <div className="gap-h-10">
-                        <div className="remark font-12 padding-l-10">属性</div>
+                        <div className="remark font-12 padding-l-10"><S>属性</S></div>
                         {this.schema && this.getFields().map(f => {
                             return <div
                                 onMouseEnter={e => {
@@ -89,7 +91,7 @@ class FormulaSelector extends EventsComponent {
                         })}
                     </div>
                     <div className="gap-h-10">
-                        <div className="remark font-12 padding-l-10">常量</div>
+                        <div className="remark font-12 padding-l-10"><S>常量</S></div>
                         {constLangs.map((fl, k) => {
                             return <div onMouseEnter={e => this.openData(fl)} key={k} className="padding-w-10 item-hover round cursor flex h-30">
                                 <span className="flex-fixed flex-center size-24"><Icon size={16} icon={TypesNumberSvg}></Icon></span>
@@ -98,7 +100,7 @@ class FormulaSelector extends EventsComponent {
                         })}
                     </div>
                     <div className="gap-h-10">
-                        <div className="remark font-12 padding-l-10">运算符</div>
+                        <div className="remark font-12 padding-l-10"><S>运算符</S></div>
                         {logcLangs.map((fl, k) => {
                             return <div key={k}
                                 onMouseEnter={e => this.openData(fl)}
@@ -108,7 +110,7 @@ class FormulaSelector extends EventsComponent {
                         })}
                     </div>
                     <div className="gap-h-10">
-                        <div className="remark font-12 padding-l-10">函数</div>
+                        <div className="remark font-12 padding-l-10"><S>函数</S></div>
                         {funLangs.map((fl, k) => {
                             return <div key={k}
                                 onMouseEnter={e => this.openData(fl)}
@@ -119,7 +121,7 @@ class FormulaSelector extends EventsComponent {
                         })}
                     </div>
                     <div className="gap-h-10">
-                        <div className="remark font-12 padding-l-10">类型</div>
+                        <div className="remark font-12 padding-l-10"><S>类型</S></div>
                         {formulaLangs.map((fl, k) => {
                             return <div className="gap-h-10" key={k}>
                                 <div onClick={e => { fl.spread = fl.spread ? false : true; this.forceUpdate() }}
@@ -195,7 +197,7 @@ class FormulaSelector extends EventsComponent {
             }
         }
         catch (ex) {
-            this.error = '语法不合法'
+            this.error = lst('语法不合法')
         }
         this.forceUpdate()
     }, 700)

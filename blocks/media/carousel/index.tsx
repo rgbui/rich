@@ -21,7 +21,8 @@ import "slick-carousel/slick/slick-theme.css";
  */
 import Slider from "react-slick";
 import "./style.less";
-import { ls } from "../../../i18n/store";
+import { ls, lst } from "../../../i18n/store";
+import { S } from "../../../i18n/view";
 
 @url('/carousel/image')
 export class Carousel extends Block {
@@ -70,14 +71,14 @@ export class Carousel extends Block {
         });
         items.push({
             name: BlockDirective.link,
-            text: ls.t('拷贝块链接'),
+            text: lst('拷贝块链接'),
             icon: LinkSvg
         });
         items.push({
             type: MenuItemType.divide
         });
         items.push({
-            text: "图片列表",
+            text:lst("图片列表") ,
             icon: { name: 'bytedance-icon', code: 'multi-picture-carousel' },
             childs: [
                 ...(this.srcs.length > 0 ? [
@@ -109,7 +110,7 @@ export class Carousel extends Block {
                 {
                     name: 'append',
                     type: MenuItemType.button,
-                    text: '上传图片',
+                    text:lst('上传图片') ,
                     icon: UploadSvg
                 }
             ]
@@ -119,32 +120,32 @@ export class Carousel extends Block {
         });
         items.push({
             name: 'origin',
-            text: '原图',
+            text: lst('原图'),
             icon: { name: 'bytedance-icon', code: 'arrow-right-up' }
         });
         items.push({
             name: 'download',
-            text: '下载',
+            text: lst('下载'),
             icon: DownloadSvg
         });
         items.push({
             type: MenuItemType.divide
         });
         items.push({
-            text: '对齐',
+            text:lst('对齐') ,
             icon: { name: 'bytedance-icon', code: 'align-text-both' },
             childs: [
                 {
                     name: 'align',
                     icon: { name: 'bytedance-icon', code: 'align-text-left' },
-                    text: '居左',
+                    text: lst('居左'),
                     value: 'left',
                     checkLabel: this.align == 'left'
                 },
                 {
                     name: 'align',
                     icon: { name: 'bytedance-icon', code: 'align-text-center' },
-                    text: '居中', value: 'center', checkLabel: this.align == 'center'
+                    text: lst('居中'), value: 'center', checkLabel: this.align == 'center'
                 },
                 {
                     name: 'align',
@@ -152,7 +153,7 @@ export class Carousel extends Block {
                         name: 'bytedance-icon',
                         code: 'align-text-right'
                     },
-                    text: '居右',
+                    text: lst('居右'),
                     value: 'right',
                     checkLabel: this.align == 'right'
                 }
@@ -164,7 +165,7 @@ export class Carousel extends Block {
         items.push({
             name: BlockDirective.delete,
             icon: TrashSvg,
-            text: ls.t('删除'),
+            text: lst('删除'),
             label: "Del"
         });
         return items;
@@ -206,7 +207,7 @@ export class Carousel extends Block {
             var rg = await useSelectMenuItem(
                 { roundArea: Rect.fromEvent(event) },
                 [
-                    { name: 'delete', icon: TrashSvg, text: '删除' }
+                    { name: 'delete', icon: TrashSvg, text: lst('删除') }
                 ],
                 { nickName: 'second' }
             );
@@ -302,7 +303,7 @@ export class CarouselView extends BlockView<Carousel>{
         return <div className='sy-block-embed' style={this.block.visibleStyle}>
             {this.block.srcs.length == 0 && <div onMouseDown={e => this.block.addImage(e.nativeEvent)} className='sy-block-file-nofile'>
                 <Icon size={24} icon={PicSvg}></Icon>
-                <span>添加图片</span>
+                <span><S>添加图片</S></span>
             </div>}
             {this.block.srcs.length > 0 && <div className="flex flex-center" style={style}><div className='visible-hover sy-block-embed-wrapper'
                 ref={e => this.imageWrapper = e}

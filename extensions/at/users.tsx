@@ -4,6 +4,7 @@ import { UserBasic } from "../../types/user"
 import { channel } from "../../net/channel";
 import { Spin } from "../../component/view/spin";
 import { LinkWs } from "../../src/page/declare";
+import { S } from "../../i18n/view";
 
 export class OnlineUsers extends React.Component<{ ws: LinkWs }> {
     componentDidMount(): void {
@@ -33,7 +34,7 @@ export class OnlineUsers extends React.Component<{ ws: LinkWs }> {
     }
     render(): React.ReactNode {
         return <div className="h100 overflow-y padding-bottom-100">
-            <div className="remark f-12 padding-w-14 bold gap-t-14">在线</div>
+            <div className="remark f-12 padding-w-14 bold gap-t-14"><S>在线</S></div>
             {this.searchQuery.list.map(user => {
                 return <div className="padding-w-14 margin-h-10 cursor round item-hover padding-h-5"
                     key={(user as any).userid}><Avatar

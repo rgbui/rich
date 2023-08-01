@@ -11,6 +11,7 @@ import "./style.less";
 import { CollectTableSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import { isMobileOnly } from "react-device-detect";
+import { S } from "../../../../i18n/view";
 
 @url('/data-grid/gallery')
 export class TableStoreGallery extends DataGridView {
@@ -84,7 +85,7 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery>{
     renderCreateTable() {
         return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
             <span className="size-24 flex-center remark"><Icon size={16} icon={CollectTableSvg}></Icon></span>
-            <span className="remark">创建数据表格</span>
+            <span className="remark"><S>创建数据表格</S></span>
         </div>
     }
     render() {

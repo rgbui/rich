@@ -7,6 +7,8 @@ import { BlockUrlConstant } from "../../../../../src/block/constant";
 import { Avatar } from "../../../../../component/view/avator/face";
 import { UserBox } from "../../../../../component/view/avator/user";
 import { util } from "../../../../../util/util";
+import { lst } from "../../../../../i18n/store";
+import { S } from "../../../../../i18n/view";
 
 /**
  * 
@@ -15,29 +17,29 @@ import { util } from "../../../../../util/util";
  */
 CardModel({ abled:false,
     url: '/questions',
-    title: '问题',
-    remark: '问答',
+    title: lst('问题'),
+    remark: lst('问答'),
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridList],
     props: [
         {
             name: 'title',
-            text: '标题',
+            text: lst('标题'),
             types: [FieldType.title, FieldType.text],
             required: true
         },
-        { name: 'remark', text: '描述', types: [FieldType.plain, FieldType.text] },
-        { name: 'author', text: '作者', types: [FieldType.creater] },
-        { name: 'tags', text: '分类', types: [FieldType.option, FieldType.options] },
-        { name: 'date', text: '日期', types: [FieldType.createDate, FieldType.date] },
-        { name: 'comment', text: '评论', types: [FieldType.comment] },
-        { name: 'browse', text: '浏览', types: [FieldType.browse] },
-        { name: 'like', text: '点赞', types: [FieldType.like] },
+        { name: 'remark', text:lst( '描述'), types: [FieldType.plain, FieldType.text] },
+        { name: 'author', text:lst( '作者'), types: [FieldType.creater] },
+        { name: 'tags', text:lst( '分类'), types: [FieldType.option, FieldType.options] },
+        { name: 'date', text:lst( '日期'), types: [FieldType.createDate, FieldType.date] },
+        { name: 'comment', text: lst('评论'), types: [FieldType.comment] },
+        { name: 'browse', text:lst( '浏览'), types: [FieldType.browse] },
+        { name: 'like', text: lst('点赞'), types: [FieldType.like] },
     ],
     views: [
-        { url: BlockUrlConstant.DataGridTable, text: '问题', },
-        { autoCreate: true, url: BlockUrlConstant.DataGridList, text: '列表', },
-        { url: BlockUrlConstant.RecordPageView, text: '问题详情', }
+        { url: BlockUrlConstant.DataGridTable, text: lst('问题'), },
+        { autoCreate: true, url: BlockUrlConstant.DataGridList, text: lst('列表'), },
+        { url: BlockUrlConstant.RecordPageView, text: lst('问题详情'), }
     ],
     dataList: [
         { title: '评论里面的点赞数量统计不对', remark: '' },
@@ -65,7 +67,7 @@ export class CardPin extends CardView {
                 <div className="flex-fixed flex f-14 r-gap-r-10">
                     <div className="flex flex-col flex-center remark size-50 round border">
                         <span>{like.count}</span>
-                        <span>点赞</span>
+                        <span><S>点赞</S></span>
                     </div>
                     {/*<div className="flex flex-col flex-center  remark size-50  round border">
                         <span>{browse.count}</span>

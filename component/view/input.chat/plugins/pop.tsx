@@ -9,6 +9,8 @@ import { util } from "../../../../util/util";
 import { Divider } from "../../grid";
 import { ChatInput } from "../chat";
 import { Avatar } from "../../avator/face";
+import { lst } from "../../../../i18n/store";
+import { S } from "../../../../i18n/view";
 
 
 /**
@@ -56,7 +58,7 @@ export class ChatInputPop extends React.Component<{
     }
     keydown(key: string) {
         if (key == 'enter') {
-            if (this.selectIndex == 0 && '所有人'.startsWith(this.word)) this.select({ name: '所有人', id: 'all' } as any)
+            if (this.selectIndex == 0 && lst('所有人').startsWith(this.word)) this.select({ name: lst('所有人'), id: 'all' } as any)
             else {
                 var g = this.users[this.selectIndex - 1];
                 this.select(g);
@@ -172,8 +174,8 @@ export class ChatInputPop extends React.Component<{
             ref={e => this.el = e}
             className="bg-white pos border shadow w-220   round  max-h-250 overflow-y" style={style}>
             <div>
-                {(!this.word || this.word && '所有人'.startsWith(this.word)) && <>
-                    <div onClick={e => this.select({ name: '所有人', id: 'all' } as any)} className={"h-30 item-hover round  padding-w-10 cursor flex" + (this.selectIndex == 0 ? " item-hover-focus" : "")}>@所有人</div>
+                {(!this.word || this.word && lst('所有人').startsWith(this.word)) && <>
+                    <div onClick={e => this.select({ name: lst('所有人'), id: 'all' } as any)} className={"h-30 item-hover round  padding-w-10 cursor flex" + (this.selectIndex == 0 ? " item-hover-focus" : "")}><S>@所有人</S></div>
                     <Divider></Divider>
                 </>}
                 {this.users.map((u, index) => {
@@ -186,7 +188,7 @@ export class ChatInputPop extends React.Component<{
                 })}
             </div>
             <SpinBox spin={this.loading}></SpinBox>
-            {this.users.length == 0 && this.loading == false && <div className="remark f-12 gap-10">没有搜到用户</div>}
+            {this.users.length == 0 && this.loading == false && <div className="remark f-12 gap-10"><S>没有搜到用户</S></div>}
         </div>, this.panel)
     }
     private _panel: HTMLElement;

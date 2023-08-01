@@ -2,6 +2,7 @@
 import dayjs from 'dayjs';
 import lodash from 'lodash';
 import { channel } from '../net/channel';
+import { lst } from '../i18n/store';
 
 export var util = {
     guid() {
@@ -33,26 +34,26 @@ export var util = {
         if (dayjs(now).isSame(dayjs(date), 'day')) {
             var hour = date.getHours();
             if (hour >= 0 && hour < 6) {
-                return '今天' + dayjs(date).format('HH:mm')
+                return lst('今天') + dayjs(date).format('HH:mm')
             }
             else if (hour >= 6 && hour < 11) {
-                return '上午' + dayjs(date).format('HH:mm')
+                return lst('上午') + dayjs(date).format('HH:mm')
             }
             else if (hour >= 11 && hour < 13) {
-                return '中午' + dayjs(date).format('HH:mm')
+                return lst('中午') + dayjs(date).format('HH:mm')
             }
             else if (hour >= 13 && hour < 18) {
-                return '下午' + dayjs(date).format('HH:mm')
+                return lst('下午') + dayjs(date).format('HH:mm')
             }
             else if (hour >= 18 && hour <= 23) {
-                return '晚上' + dayjs(date).format('HH:mm')
+                return lst('晚上') + dayjs(date).format('HH:mm')
             }
         }
         else if (dayjs(now).isSame(dayjs(date).add(1, 'day'), 'day')) {
-            return '昨天' + dayjs(date).format('HH:mm')
+            return lst('昨天') + dayjs(date).format('HH:mm')
         }
         else if (dayjs(now).isSame(dayjs(date).add(2, 'day'), 'day')) {
-            return '前天' + dayjs(date).format('HH:mm')
+            return lst('前天') + dayjs(date).format('HH:mm')
         }
         else {
             return dayjs(date).format('YYYY/MM/DD');
@@ -74,19 +75,19 @@ export var util = {
         var t = time;
         var ps: string[] = [];
         if (t > 1000 * 60 * 60 * 24) {
-            ps.push(Math.floor(t / (1000 * 60 * 60 * 24)) + '天');
+            ps.push(Math.floor(t / (1000 * 60 * 60 * 24)) + lst('天'));
             t = t % (1000 * 60 * 60 * 24)
         }
         if (t > 1000 * 60 * 60) {
-            ps.push(Math.floor(t / (1000 * 60 * 60)) + '时');
+            ps.push(Math.floor(t / (1000 * 60 * 60)) + lst('时'));
             t = t % (1000 * 60 * 60)
         }
         if (t > 1000 * 60) {
-            ps.push(Math.floor(t / (1000 * 60)) + '分');
+            ps.push(Math.floor(t / (1000 * 60)) + lst('分'));
             t = t % (1000 * 60)
         }
         if (t >= 1000) {
-            ps.push(Math.floor(t / 1000) + '秒');
+            ps.push(Math.floor(t / 1000) + lst('秒'));
             t = t % 1000
         }
         if (t >= 0 && ps.length == 0) {

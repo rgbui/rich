@@ -3,6 +3,7 @@ import { CheckBox } from "../../../../component/view/checkbox";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { OriginFilterField, OriginFilterFieldView } from "./origin.field";
+import { lst } from "../../../../i18n/store";
 
 /**
  * 判断字段是否有值，无值
@@ -34,7 +35,7 @@ export class SearchTextView extends BlockView<FieldFilterNull>{
             <CheckBox checked={this.block.isNull}
                 onChange={e => {
                     this.block.onFilter(e)
-                }}>{this.block.isNull ? "空" : "有"}</CheckBox>
+                }}>{this.block.isNull ? lst("空") : lst("有")}</CheckBox>
         </OriginFilterFieldView ></div>
     }
 }

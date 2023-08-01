@@ -20,6 +20,7 @@ import { useDataSourceView } from "../../../../extensions/data-grid/datasource";
 import { SnapshootDataGridViewPos } from "../../../../src/history/snapshoot";
 import { useTableExport } from "../../../../extensions/data-grid/export";
 import { Block } from "../../../../src/block";
+import { lst } from "../../../../i18n/store";
 
 export class DataGridViewOperator {
 
@@ -54,7 +55,7 @@ export class DataGridViewOperator {
     }
     async onCloneViewField(this: DataGridView, viewField: ViewField) {
         var result = {
-            text: viewField.field.text + '副本',
+            text: viewField.field.text +lst('副本') ,
             type: viewField.field.type,
             config: lodash.cloneDeep(viewField.field.config)
         };
@@ -144,7 +145,7 @@ export class DataGridViewOperator {
         });
     }
     async onDeleteViewField(this: DataGridView, viewField: ViewField, force?: boolean) {
-        if (force == true || await Confirm('确定要删除该列吗')) {
+        if (force == true || await Confirm(lst('确定要删除该列吗'))) {
             var field = viewField.field;
             this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
                 this.page.addBlockChange(this);
@@ -158,7 +159,7 @@ export class DataGridViewOperator {
         }
     }
     async onDeleteField(this: DataGridView, field: Field, force?: boolean) {
-        if (force == true || await Confirm('确定要删除该列吗')) {
+        if (force == true || await Confirm(lst('确定要删除该列吗'))) {
             this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
                 this.page.addBlockChange(this);
                 var r = await this.schema.fieldRemove(field.id);
@@ -393,7 +394,7 @@ export class DataGridViewOperator {
     async onSchemaViewCreate(this: DataGridView, text: string, url: string) {
         var actions: any[] = [{ name: 'createSchemaView', text: text, url: url }];
         if (url == '/data-grid/board' && !this.schema.fields.some(f => f.type == FieldType.option || f.type == FieldType.options)) {
-            actions.push({ name: 'addField', field: { text: '状态', type: FieldType.option } })
+            actions.push({ name: 'addField', field: { text: lst('状态'), type: FieldType.option } })
         }
         var result = await this.schema.onSchemaOperate(actions)
         var oneAction = result.data.actions.first();
@@ -403,7 +404,7 @@ export class DataGridViewOperator {
             f.load({
                 id: action.id,
                 name: action.name,
-                text: '状态',
+                text: lst('状态'),
                 type: FieldType.option
             });
             this.schema.fields.push(f);
@@ -460,7 +461,7 @@ export class DataGridViewOperator {
         }
         this.page.onAction(ActionDirective.onDataGridShowRowNum, async () => {
             this.page.addBlockChange(this);
-            if (visible == true) await this.arrayPush({ prop: 'fields', data: new ViewField({ type: 'rowNum', text: '序号' }, this.schema), at: 0 })
+            if (visible == true) await this.arrayPush({ prop: 'fields', data: new ViewField({ type: 'rowNum', text:lst( '序号') }, this.schema), at: 0 })
             else await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.type == 'rowNum' });
             this.updateProps({ showRowNum: visible });
             await this.createItem();
@@ -474,7 +475,7 @@ export class DataGridViewOperator {
         this.page.onAction(ActionDirective.onDataGridShowCheck, async () => {
             this.page.addBlockChange(this);
             this.updateProps({ checkRow: value });
-            if (value == 'checkbox') await this.arrayPush({ prop: 'fields', at: 0, data: new ViewField({ type: 'check', text: '选择' }, this.schema) })
+            if (value == 'checkbox') await this.arrayPush({ prop: 'fields', at: 0, data: new ViewField({ type: 'check', text:lst('选择') }, this.schema) })
             else await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.type == 'check' })
             await this.createItem();
             this.forceUpdate();
@@ -540,7 +541,7 @@ export class DataGridViewOperator {
     onCopyViewLink(this: DataGridView) {
         var url = this.page.ws.resolve({ elementUrl: getElementUrl(ElementType.SchemaView, this.schema.id, this.schemaView.id) })
         CopyText(url);
-        ShyAlert('视图链接已复制')
+        ShyAlert(lst('视图链接已复制'))
     }
     async onExtendControlBlock(this: DataGridView, url: BlockUrlConstant, props: Record<string, any>, visible: boolean) {
         await this.page.onAction('onExtendControlBlock', async () => {
@@ -698,13 +699,13 @@ export class DataGridViewOperator {
     async onBatchDelete(this: DataGridView, ids?: string[]) {
         if (typeof ids == 'undefined') ids = this.checkItems.map(c => c.id);
         if (ids.length > 0) {
-            if (await Confirm(`确定删除这些数据吗`)) {
+            if (await Confirm(lst(`确定删除这些数据吗`))) {
                 await this.schema.rowRemoves(ids);
                 this.onReloadData()
-                ShyAlert('删除成功')
+                ShyAlert(lst('删除成功'))
             }
         }
-        else ShyAlert('请选择删除项')
+        else ShyAlert(lst('请选择删除项'))
     }
     async onBatchEdit(this: DataGridView, viewId?: string) {
 

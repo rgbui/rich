@@ -13,6 +13,7 @@ import { util } from "../../util/util";
 import { Spin } from "../../component/view/spin";
 import { getPageIcon, getPageText } from "../../src/page/declare";
 import { BlockRefPage } from "../../extensions/tag/ref.declare";
+import { S } from "../../i18n/view";
 
 @url('/ref/links')
 export class RefLinks extends Block {
@@ -59,7 +60,7 @@ export class RefLinksView extends BlockView<RefLinks>{
     }
     renderRefBlocks() {
         if (this.block.list.length == 0) {
-            return <div className="flex-center remark f-12"> 没有引用</div>
+            return <div className="flex-center remark f-12"><S>没有引用</S></div>
         }
         return this.block.list.map(pa => {
             return <div key={pa.id} className='gap-h-10'>
@@ -89,7 +90,7 @@ export class RefLinksView extends BlockView<RefLinks>{
                     style={{ transform: this.block.expand ? 'rotateZ(180deg)' : 'rotateZ(90deg)' }}>
                     <Icon size={10} icon={TriangleSvg}></Icon>
                 </span>
-                <span className="flex-auto remark f-12">引用页面</span>
+                <span className="flex-auto remark f-12"><S>引用页面</S></span>
                 <span onClick={e => this.block.loadList()} className="visible flex-fixed flex-center size-20 round item-hover cursor">
                     <Icon size={12} icon={RefreshSvg}></Icon>
                 </span>

@@ -12,6 +12,7 @@ import { IconArguments } from "../../extensions/icon/declare";
 import { useIconPicker } from "../../extensions/icon";
 import { Rect } from "../../src/common/vector/point";
 import lodash from "lodash";
+import { lst } from "../../i18n/store";
 
 @url('/callout')
 export class Callout extends TextSpan {
@@ -99,7 +100,7 @@ export class CalloutView extends BlockView<Callout>{
             <div className='flex-auto'>
                 <div data-block-content>{this.block.childs.length > 0 &&
                     <TextLineChilds rf={e => this.block.childsEl = e} childs={this.block.childs}></TextLineChilds>
-                }{this.block.childs.length == 0 && <span className='sy-appear-text-line' style={this.block.visibleStyle}><TextArea block={this.block} prop='content' placeholder={'首重'}></TextArea></span>}</div>
+                }{this.block.childs.length == 0 && <span className='sy-appear-text-line' style={this.block.visibleStyle}><TextArea block={this.block} prop='content' placeholder={lst('着重')}></TextArea></span>}</div>
                 <div>
                     <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>
                 </div>

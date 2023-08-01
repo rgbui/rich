@@ -14,6 +14,8 @@ import { GalleryPics } from "../../image/gellery";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
 import { BoxFillType, BoxStyle } from "../declare";
+import { lst } from "../../../i18n/store";
+import { S } from "../../../i18n/view";
 
 export class CardBoxStyle extends EventsComponent {
     options: {
@@ -33,12 +35,12 @@ export class CardBoxStyle extends EventsComponent {
     renderBackground() {
         var self = this;
         var items: MenuItem<string>[] = [
-            { icon: NoneSvg, name: 'none', value: "none", text: '无', checkLabel: self.options?.fill?.mode == 'none' },
+            { icon: NoneSvg, name: 'none', value: "none", text: lst('无'), checkLabel: self.options?.fill?.mode == 'none' },
             { type: MenuItemType.divide },
-            { icon: PicSvg, name: 'image', text: '选择图片', value: 'image', checkLabel: self.options?.fill?.mode == 'image' },
-            { icon: UploadSvg, name: 'uploadImage', text: '上传图片', value: 'uploadImage', checkLabel: self.options?.fill?.mode == 'uploadImage' },
+            { icon: PicSvg, name: 'image', text: lst('选择图片'), value: 'image', checkLabel: self.options?.fill?.mode == 'image' },
+            { icon: UploadSvg, name: 'uploadImage', text: lst('上传图片'), value: 'uploadImage', checkLabel: self.options?.fill?.mode == 'uploadImage' },
             { type: MenuItemType.divide },
-            { icon: BlockcolorSvg, name: 'color', text: '颜色', value: 'color', checkLabel: self.options?.fill?.mode == 'color' }
+            { icon: BlockcolorSvg, name: 'color', text: lst('颜色'), value: 'color', checkLabel: self.options?.fill?.mode == 'color' }
         ]
         async function openMenu(event: React.MouseEvent) {
             var r = await useSelectMenuItem(
@@ -63,7 +65,7 @@ export class CardBoxStyle extends EventsComponent {
             </div>
             <div className="h-400 padding-h-10 overflow-y">
                 {this.options.fill.mode == 'none' && <div className=" padding-w-15 remark flex-center min-h-30">
-                    无背景
+                    <S>无背景</S>
                 </div>}
                 {this.options.fill.mode == 'image' && <div>
                     {GalleryPics.map(gp => {
@@ -90,17 +92,17 @@ export class CardBoxStyle extends EventsComponent {
 
                 {this.options.fill.mode == 'uploadImage' && <div className="padding-w-15">
                     {this.options.fill.src && <div ><img className="obj-center w100" src={this.options.fill.src} /></div>}
-                    <div><Button onClick={e => onPickerImage(e)}>上传图片</Button></div>
+                    <div><Button onClick={e => onPickerImage(e)}><S>上传图片</S></Button></div>
                 </div>}
 
                 {this.options.fill.mode == 'color' && <div className="padding-w-15">
-                    <div className="remark f-14 gap-b-5">背景色</div>
+                    <div className="remark f-14 gap-b-5"><S>背景色</S></div>
                     <div className="gap-b-10">
                         <ColorInput color={this.options?.fill.color} onChange={e => {
                             this.setProps({ 'fill.mode': 'color', 'fill.color': e })
                         }}></ColorInput>
                     </div>
-                    <div className="remark f-14 gap-b-5">选择主题色</div>
+                    <div className="remark f-14 gap-b-5"><S>选择主题色</S></div>
                     {BackgroundColorList.map(bg => {
                         return <div key={bg.color}
                             onMouseDown={e => {
@@ -135,7 +137,7 @@ export class CardBoxStyle extends EventsComponent {
 
         return <div className="h-400 padding-h-10 overflow-y f-14">
             <div className="remark gap-w-15 gap-h-10 f-12">
-                透明性
+                <S>透明性</S>
             </div>
             <div className="flex flex-wrap text-1">
 
@@ -145,7 +147,7 @@ export class CardBoxStyle extends EventsComponent {
                         <div className={"h-10 w-100 round gap-h-10" + (this.options.cardStyle.color == 'light' ? " bg-black" : " bg-white")}></div>
                         <div className={"h-10 w-80 round gap-h-10" + (this.options.cardStyle.color == 'light' ? " bg-black" : " bg-white")}></div>
                     </div>
-                    <div className="flex gap-h-10">{this.options.cardStyle.transparency == 'solid' && <span className="size-20"><Icon size={16} icon={CheckSvg}></Icon></span>}<span>无透明</span></div>
+                    <div className="flex gap-h-10">{this.options.cardStyle.transparency == 'solid' && <span className="size-20"><Icon size={16} icon={CheckSvg}></Icon></span>}<span><S>无透明</S></span></div>
                 </div>
 
                 <div className="flex-auto gap-l-15" onClick={e => this.setValue('cardStyle.transparency', 'frosted')}>
@@ -154,7 +156,7 @@ export class CardBoxStyle extends EventsComponent {
                         <div className={"h-10 w-100 round gap-h-10" + (this.options.cardStyle.color == 'light' ? " bg-black" : " bg-white")}></div>
                         <div className={"h-10 w-80 round gap-h-10" + (this.options.cardStyle.color == 'light' ? " bg-black" : " bg-white")}></div>
                     </div>
-                    <div className="flex gap-h-10">{this.options.cardStyle.transparency == 'frosted' && <span className="size-20"><Icon size={16} icon={CheckSvg}></Icon></span>}<span>毛玻璃</span></div>
+                    <div className="flex gap-h-10">{this.options.cardStyle.transparency == 'frosted' && <span className="size-20"><Icon size={16} icon={CheckSvg}></Icon></span>}<span><S>毛玻璃</S></span></div>
                 </div>
                 <div className="flex-auto gap-l-15 " onClick={e => this.setValue('cardStyle.transparency', 'faded')}>
                     <div className={"cursor h-80  box-border padding-w-10  border round-8" + (this.options.cardStyle.color == 'light' ? " bg-white" : " bg-black")} style={{ width: (300 - 45) / 2 }}>
@@ -162,7 +164,7 @@ export class CardBoxStyle extends EventsComponent {
                         <div className={"h-10 w-100 round gap-h-10" + (this.options.cardStyle.color == 'light' ? " bg-black" : " bg-white")}></div>
                         <div className={"h-10 w-80 round gap-h-10" + (this.options.cardStyle.color == 'light' ? " bg-black" : " bg-white")}></div>
                     </div>
-                    <div className="flex gap-h-10">{this.options.cardStyle.transparency == 'faded' && <span className="size-20"><Icon size={16} icon={CheckSvg}></Icon></span>}<span>渐近</span></div>
+                    <div className="flex gap-h-10">{this.options.cardStyle.transparency == 'faded' && <span className="size-20"><Icon size={16} icon={CheckSvg}></Icon></span>}<span><S>渐近</S></span></div>
                 </div>
                 <div className="flex-auto gap-l-15" onClick={e => this.setValue('cardStyle.transparency', 'noborder')}>
                     <div className={"cursor h-80  box-border padding-w-10  border round-8" + (this.options.cardStyle.color == 'light' ? " bg-white" : " bg-black")} style={{ width: (300 - 45) / 2 }}>
@@ -170,11 +172,11 @@ export class CardBoxStyle extends EventsComponent {
                         <div className={"h-10 w-100 round gap-h-10" + (this.options.cardStyle.color == 'light' ? " bg-black" : " bg-white")}></div>
                         <div className={"h-10 w-80 round gap-h-10" + (this.options.cardStyle.color == 'light' ? " bg-black" : " bg-white")}></div>
                     </div>
-                    <div className="flex gap-h-10">{this.options.cardStyle.transparency == 'noborder' && <span className="size-20"><Icon size={16} icon={CheckSvg}></Icon></span>}<span>无边框</span></div>
+                    <div className="flex gap-h-10">{this.options.cardStyle.transparency == 'noborder' && <span className="size-20"><Icon size={16} icon={CheckSvg}></Icon></span>}<span><S>无边框</S></span></div>
                 </div>
             </div>
             <div className="remark gap-w-15 gap-h-10 f-12">
-                颜色
+                <S>颜色</S>
             </div>
             <div className="flex flex-wrap text-1">
                 <div className="flex-auto gap-l-15 " onClick={e => this.setValue('cardStyle.color', 'light')}>
@@ -183,7 +185,7 @@ export class CardBoxStyle extends EventsComponent {
                         <div className="bg-black h-10 w-100 round gap-h-10"></div>
                         <div className="bg-black h-10 w-80 round gap-h-10"></div>
                     </div>
-                    <div className="flex gap-h-10">{this.options.cardStyle.color == 'light' && <span className="size-20"><Icon size={16} icon={CheckSvg}></Icon></span>}<span>明亮</span></div>
+                    <div className="flex gap-h-10">{this.options.cardStyle.color == 'light' && <span className="size-20"><Icon size={16} icon={CheckSvg}></Icon></span>}<span><S>明亮</S></span></div>
                 </div>
                 <div className="flex-auto gap-l-15" onClick={e => this.setValue('cardStyle.color', 'dark')}>
                     <div className="h-80 box-border padding-w-10  border round-8 bg-black" style={{ width: (300 - 45) / 2 }}>
@@ -191,7 +193,7 @@ export class CardBoxStyle extends EventsComponent {
                         <div className="bg-white h-10 w-100 round gap-h-10"></div>
                         <div className="bg-white h-10 w-80 round gap-h-10"></div>
                     </div>
-                    <div className="flex gap-h-10">{this.options.cardStyle.color == 'dark' && <span className="size-20"><Icon size={16} icon={CheckSvg}></Icon></span>}<span>暗黑</span></div>
+                    <div className="flex gap-h-10">{this.options.cardStyle.color == 'dark' && <span className="size-20"><Icon size={16} icon={CheckSvg}></Icon></span>}<span><S>暗黑</S></span></div>
                 </div>
             </div>
         </div>
@@ -199,22 +201,22 @@ export class CardBoxStyle extends EventsComponent {
     render() {
         return <div className="padding-h-15 bg-white round w-300">
             <div className="h4 flex padding-w-15">
-                <span className="flex-auto">{this.options.open == 'onlyBg' ? "背景主题" : "卡片样式"}</span>
+                <span className="flex-auto">{this.options.open == 'onlyBg' ? lst("背景主题") : lst("卡片样式")}</span>
                 <span onClick={e => this.emit('close')} className="size-30 flex-center flex-fixed text-1 item-hover cursor round">
                     <Icon size={18} icon={CloseSvg}></Icon>
                 </span>
             </div>
             {this.options.open != 'onlyBg' && <div className="flex gap-b-10  padding-w-15">
-                <a onClick={e => { this.options.open = 'background'; this.forceUpdate() }} className={"cursor gap-r-10 flex-auto padding-w-10 flex-center h-30 round-8 " + (this.options.open == 'background' ? " bg-primary text-white" : "")}><span className="flex-center size-20"><Icon size={18} icon={CardBackgroundFillSvg}></Icon></span><span>背景</span></a>
-                <a onClick={e => { this.options.open = 'style'; this.forceUpdate() }} className={"cursor gap-l-10 flex-auto  padding-w-10 flex-center h-30 round-8 " + (this.options.open == 'style' ? " bg-primary text-white" : "")}><span className="flex-center size-20"><Icon size={18} icon={CardBrushSvg}></Icon></span><span>样式</span></a>
+                <a onClick={e => { this.options.open = 'background'; this.forceUpdate() }} className={"cursor gap-r-10 flex-auto padding-w-10 flex-center h-30 round-8 " + (this.options.open == 'background' ? " bg-primary text-white" : "")}><span className="flex-center size-20"><Icon size={18} icon={CardBackgroundFillSvg}></Icon></span><span><S>背景</S></span></a>
+                <a onClick={e => { this.options.open = 'style'; this.forceUpdate() }} className={"cursor gap-l-10 flex-auto  padding-w-10 flex-center h-30 round-8 " + (this.options.open == 'style' ? " bg-primary text-white" : "")}><span className="flex-center size-20"><Icon size={18} icon={CardBrushSvg}></Icon></span><span><S>样式</S></span></a>
             </div>}
             <div >
                 {(this.options.open == 'background' || this.options.open == 'onlyBg') && this.renderBackground()}
                 {this.options.open == 'style' && this.renderStyle()}
             </div>
             <div className="flex-center gap-h-20 padding-w-15">
-                <Button className="gap-r-10" onClick={e => this.emit('save', this.options)}>保存</Button>
-                <Button onClick={e => this.open(this.oldOptions)} ghost>重置</Button>
+                <Button className="gap-r-10" onClick={e => this.emit('save', this.options)}><S>保存</S></Button>
+                <Button onClick={e => this.open(this.oldOptions)} ghost><S>重置</S></Button>
             </div>
         </div>
     }

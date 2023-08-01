@@ -5,13 +5,13 @@ import { Block } from "../../src/block";
 import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { SolidArea } from "../../src/block/view/appear";
 import { BoxTip } from "../../component/view/tooltip/box";
-import { ToolTip } from "../../component/view/tooltip";
 import { DragHandleSvg, EditSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { useIconPicker } from "../../extensions/icon";
 import { Rect } from "../../src/common/vector/point";
 import { IconArguments } from "../../extensions/icon/declare";
 import { DragBlockLine } from "../../src/kit/handle/line";
+import { Tip } from "../../component/view/tooltip/tip";
 
 @url('/emoji')
 export class Emoji extends Block {
@@ -49,8 +49,8 @@ export class EmojiView extends BlockView<Emoji>{
         }
         return <span>
             <BoxTip ref={e => this.boxTip = e} overlay={<div className="flex-center  padding-5 r-flex-center r-size-24 r-round r-item-hover r-cursor text">
-                <ToolTip overlay={'拖动'}><span onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></ToolTip>
-                <ToolTip overlay={'编辑'}><span onMouseDown={e => this.openEdit(e)} ><Icon size={14} icon={EditSvg}></Icon></span></ToolTip>
+                <Tip text={'拖动'}><span onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>
+                <Tip text={'编辑'}><span onMouseDown={e => this.openEdit(e)} ><Icon size={14} icon={EditSvg}></Icon></span></Tip>
             </div>}><SolidArea line block={this.block} prop='src'><Icon icon={icon} size={16}></Icon></SolidArea>
             </BoxTip>
         </span>

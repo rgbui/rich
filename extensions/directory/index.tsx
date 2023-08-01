@@ -8,6 +8,8 @@ import { ChevronDownSvg, DotSvg } from "../../component/svgs";
 import { Input } from "../../component/view/input";
 import { SearchListType } from "../../component/types";
 import lodash from "lodash";
+import { lst } from "../../i18n/store";
+import { S } from "../../i18n/view";
 
 /**
  * 目录树
@@ -118,7 +120,7 @@ export class DirectoryTreeView extends React.Component<{
     render() {
         return <div>
             <div className="gap-h-10">
-                <Input placeholder="搜索..."
+                <Input placeholder={lst("搜索...")}
                     clear
                     value={this.search.word}
                     onChange={e => {
@@ -156,7 +158,7 @@ export class DirectoryTreeView extends React.Component<{
                     </div>
                 })}
                 {this.search.list.length == 0 && <div className="flex flex-center remark f-12 gap-h-10">
-                    没有搜索到任何页面
+                    <S>没有搜索到任何页面</S>
                 </div>}
             </div>
         }

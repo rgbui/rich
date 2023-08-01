@@ -8,6 +8,7 @@ import { ShySvg } from "../../../src/block/svg";
 import { BlockView } from "../../../src/block/view";
 import { TextSpanArea } from "../../../src/block/view/appear";
 import "./style.less";
+import { lst } from "../../../i18n/store";
 
 @url('/shape')
 export class Shape extends Block {
@@ -116,7 +117,7 @@ export class ShapeView extends BlockView<Shape>{
         return <div className="sy-block-shape" style={style}>
             {sb.render({ marginLeft: 0 - w / 2, marginTop: 0 - w / 2, width: sb.viewBox.width, height: sb.viewBox.height })}
             <div className="sy-block-shape-content">
-                <TextSpanArea placeholder={this.block.isFreeBlock ? "键入文本" : undefined} block={this.block}></TextSpanArea>
+                <TextSpanArea placeholder={this.block.isFreeBlock ? lst("键入文本")  : undefined} block={this.block}></TextSpanArea>
             </div>
         </div>
     }

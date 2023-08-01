@@ -4,6 +4,7 @@ import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/vector/point";
 import { OriginField } from "./origin.field";
+import { S } from "../../../../i18n/view";
 
 @url('/field/audio')
 export class FieldAudio extends OriginField {
@@ -49,7 +50,7 @@ export class FieldVideoView extends BlockView<FieldAudio>{
                     <source src={img.url} type="audio/ogg" />
                     <source src={img.url} type="audio/mpeg" />
                     <source src={img.url} type="audio/wav" />
-                    您的浏览器不支持 audio 元素。
+                    <S>您的浏览器不支持 audio 元素。</S>
                 </audio>
             </div>
         })

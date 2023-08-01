@@ -11,7 +11,6 @@ import { useSelectMenuItem } from "../../component/view/menu";
 import { MenuItemType } from "../../component/view/menu/declare";
 import { SelectBox } from "../../component/view/select/box";
 import { Switch } from "../../component/view/switch";
-import { channel } from "../../net/channel";
 import { Point } from "../../src/common/vector/point";
 import { Page } from "../../src/page";
 import {
@@ -23,6 +22,8 @@ import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 import { getPageText } from "../../src/page/declare";
 import { UserBox } from "../../component/view/avator/user";
+import { S } from "../../i18n/view";
+import { lst } from "../../i18n/store";
 
 
 class PagePublish extends EventsComponent {
@@ -36,7 +37,7 @@ class PagePublish extends EventsComponent {
     page: Page;
     copyLink() {
         CopyText(this.page.pageUrl);
-        ShyAlert('页面访问链接已复制');
+        ShyAlert(lst('页面访问链接已复制'));
     }
     render() {
         var pr = this.page ? this.page?.getPermissions() : undefined;
@@ -63,11 +64,11 @@ class PagePublish extends EventsComponent {
             var r = await useSelectMenuItem({ roundPoint: Point.from(event) },
                 [
                     {
-                        text: '添加角色',
+                        text: lst('添加角色'),
                         type: MenuItemType.text
                     },
                     {
-                        text: '所有人',
+                        text: lst('所有人'),
                         name: "addRole",
                         value: 'all',
                         disabled: (pr?.memberPermissions || []).some(s => s.roleId == 'all')
@@ -107,7 +108,7 @@ class PagePublish extends EventsComponent {
             await setGlobalShare({ 'memberPermissions': ps });
         }
         function getRoles(roleId) {
-            if (roleId == 'all') return '所有人'
+            if (roleId == 'all') return lst('所有人') 
             return self.page.ws.roles.find(g => g.id == roleId)?.text
         }
         if (!pr) return <div className='w-300 min-h-60'></div>
@@ -122,9 +123,9 @@ class PagePublish extends EventsComponent {
                             <div className="flex-auto">
                                 <div>{user.name}</div>
                                 <span className="gap remark f-12">
-                                    {cp.item && <span className="flex-inline flex-center">权限继承<span className="item-hover-focus padding-w-5 round cursor padding-h-2">{getPageText(cp.item)}</span></span>}
-                                    {cp.isOwner && <span>权限继承空间管理员</span>}
-                                    {cp.isWs && <span>权限继承所有人</span>}
+                                    {cp.item && <span className="flex-inline flex-center"><S>权限继承</S><span className="item-hover-focus padding-w-5 round cursor padding-h-2">{getPageText(cp.item)}</span></span>}
+                                    {cp.isOwner && <span><S>权限继承空间管理员</S></span>}
+                                    {cp.isWs && <span><S>权限继承所有人</S></span>}
                                 </span>
                             </div>
                         </div>
@@ -149,7 +150,7 @@ class PagePublish extends EventsComponent {
                 this.page.isCanManage && <>
                     <Divider></Divider>
                     <div className="flex  padding-w-14">
-                        <span className="flex-auto f-14">空间成员</span>
+                        <span className="flex-auto f-14"><S>空间成员</S></span>
                         {this.page.isCanManage && <span onMouseDown={e => addPermission(e)} className="flex-fixed flex-center size-24 item-hover round cursor"><Icon icon={PlusSvg}></Icon></span>}
                     </div>
                     <div>
@@ -193,7 +194,7 @@ class PagePublish extends EventsComponent {
                     <div className="item-hover h-30 flex padding-w-14">
                         <span className="flex-auto flex">
                             <Icon size={18} icon={GlobalLinkSvg}></Icon>
-                            <span className="gap-l-5">公开至互联网</span>
+                            <span className="gap-l-5"><S>公开至互联网</S></span>
                         </span>
                         <span className="flex-fixed">
                             <Switch checked={pr?.share == 'net' ? true : false} onChange={e => setGlobalShare({ share: e ? "net" : 'nas' })}></Switch>
@@ -202,7 +203,7 @@ class PagePublish extends EventsComponent {
                     {pr.share == 'net' && <>
                         <div className="flex item-hover h-30 flex padding-w-14">
                             <div className="flex-auto text-overflow">
-                                页面公开访问权限
+                                <S>页面公开访问权限</S>
                             </div>
                             <div className="flex-fixed">
                                 <SelectBox
@@ -224,7 +225,7 @@ class PagePublish extends EventsComponent {
             <Divider></Divider>
             <div className="item-hover h-30  cursor  padding-w-14 flex"
                 onClick={e => this.copyLink()}>
-                <Icon size={18} icon={LinkSvg}></Icon><span className="gap-l-5">复制页面访问链接</span>
+                <Icon size={18} icon={LinkSvg}></Icon><span className="gap-l-5"><S>复制页面访问链接</S></span>
             </div>
         </div>
     }

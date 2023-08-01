@@ -10,6 +10,8 @@ import './style.less';
 import { DataGridTool } from "../components/tool";
 import { CollectTableSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
+import { lst } from "../../../../i18n/store";
+import { S } from "../../../../i18n/view";
 
 @url('/data-grid/board')
 export class TableStoreBoard extends DataGridView {
@@ -77,7 +79,7 @@ export class TableStoreBoardView extends BlockView<TableStoreBoard>{
     renderGroup(dg: ArrayOf<TableStoreBoard['dataGroups']>, index: number) {
         var cs = this.block.childs.findAll(g => g.mark == dg.group);
         return <div className="sy-data-grid-board-group" key={index}>
-            <div className="sy-data-grid-board-group-head"><span style={{ backgroundColor: dg.color || undefined }}>{dg.group || '未定义'}</span><label>{dg.count}</label></div>
+            <div className="sy-data-grid-board-group-head"><span style={{ backgroundColor: dg.color || undefined }}>{dg.group || lst('未定义')}</span><label>{dg.count}</label></div>
             <div className="sy-data-grid-board-group-childs">
                 <ChildsArea childs={cs}></ChildsArea>
             </div>
@@ -86,7 +88,7 @@ export class TableStoreBoardView extends BlockView<TableStoreBoard>{
     renderCreateTable() {
         return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
             <span className="size-24 flex-center remark"><Icon size={16} icon={CollectTableSvg}></Icon></span>
-            <span className="remark">创建数据表格</span>
+            <span className="remark"><S>创建数据表格</S></span>
         </div>
     }
     render() {

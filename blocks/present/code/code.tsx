@@ -16,6 +16,7 @@ import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { ToolTip } from "../../../component/view/tooltip";
 import { ShyAlert } from "../../../component/lib/alert";
 import { CopyText } from "../../../component/copy";
+import { lst } from "../../../i18n/store";
 const CODEMIRROR_MODE = 'CODE_MIRROR_MODE';
 
 /**
@@ -92,14 +93,14 @@ export class TextCode extends Block {
         var rs = await super.onGetContextMenus();
         rs = rs.splice(2);
         lodash.remove(rs, g => g.name == 'text-align');
-        var at = rs.findIndex(g => g.text == '颜色');
+        var at = rs.findIndex(g => g.text == lst('颜色'));
         var ns: MenuItem<string | BlockDirective>[] = [];
         // ns.push({ type: MenuItemType.divide });
-        ns.push({ name: 'lineNumbers', type: MenuItemType.switch, text: '行号', checked: this.lineNumbers, icon: { name: 'bytedance-icon', code: 'list-numbers' } });
-        ns.push({ name: 'lineWrapping', type: MenuItemType.switch, text: '自动换号', checked: this.lineWrapping, icon: { name: 'bytedance-icon', code: 'corner-down-left' } });
+        ns.push({ name: 'lineNumbers', type: MenuItemType.switch, text:lst('行号') , checked: this.lineNumbers, icon: { name: 'bytedance-icon', code: 'list-numbers' } });
+        ns.push({ name: 'lineWrapping', type: MenuItemType.switch, text: lst('自动换号'), checked: this.lineWrapping, icon: { name: 'bytedance-icon', code: 'corner-down-left' } });
         ns.push({ type: MenuItemType.divide });
         rs.splice(at, 0, ...ns)
-        lodash.remove(rs, g => g.text == '颜色')
+        lodash.remove(rs, g => g.text ==lst('颜色') )
         return rs;
     }
     async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent): Promise<void> {
@@ -147,7 +148,7 @@ export class TextCodeView extends BlockView<TextCode>{
                 type: MenuItemType.container,
                 containerHeight: 200,
                 childs: [
-                    { text: '纯文本', name: 'plain', value: 'plain' },
+                    { text: lst('纯文本'), name: 'plain', value: 'plain' },
                     ...CodeMirrorModes.filter(g => g.abled).map(l => {
                         return {
                             text: l.label,
@@ -171,7 +172,7 @@ export class TextCodeView extends BlockView<TextCode>{
     }
     async onCopy() {
         CopyText(this.block.content)
-        ShyAlert('复制成功')
+        ShyAlert(lst('复制成功'))
     }
     render() {
         var label = CodeMirrorModes.filter(g => g.abled).find(g => g.mode == this.block.language)?.label || '纯文本';
@@ -191,10 +192,10 @@ export class TextCodeView extends BlockView<TextCode>{
                         <span>{label}</span>
                         <Icon size={14} icon={ChevronDownSvg}></Icon>
                     </div>}
-                    <ToolTip overlay={'复制'}><div onMouseDown={e => this.onCopy()} className="size-24 flex-center cursor item-hover round">
+                    <ToolTip overlay={lst('复制')}><div onMouseDown={e => this.onCopy()} className="size-24 flex-center cursor item-hover round">
                         <Icon size={18} icon={DuplicateSvg}></Icon>
                     </div></ToolTip>
-                    {this.props.block.isCanEdit() && <ToolTip overlay={'菜单'}><div onMouseDown={e => {
+                    {this.props.block.isCanEdit() && <ToolTip overlay={lst('菜单')}><div onMouseDown={e => {
                         e.stopPropagation();
                         this.block.onContextmenu(e.nativeEvent);
                     }} className="size-24 flex-center cursor item-hover round">

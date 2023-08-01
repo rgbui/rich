@@ -11,13 +11,15 @@ import lodash from "lodash";
 import { BoxTip } from "../../../component/view/tooltip/box";
 import { DragHandleSvg, DuplicateSvg, EditSvg, TrashSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
-import { ToolTip } from "../../../component/view/tooltip";
 import { useLinkPicker } from "../../../extensions/link/picker";
 import { Rect } from "../../common/vector/point";
 import { DragBlockLine } from "../../kit/handle/line";
 import { CopyAlert } from "../../../component/copy";
 import { BlockUrlConstant } from "../constant";
 import { util } from "../../../util/util";
+import { S } from "../../../i18n/view";
+import { Tip } from "../../../component/view/tooltip/tip";
+import { lst } from "../../../i18n/store";
 
 /***
  * 文字型的block，
@@ -133,7 +135,7 @@ export class TextContentView extends BlockView<TextContent>{
         }
     }
     copyLink(url: string) {
-        CopyAlert(url, '复制成功')
+        CopyAlert(url, lst('复制成功'))
     }
     async openCreatePage(e: React.MouseEvent) {
         e.stopPropagation();
@@ -191,27 +193,27 @@ export class TextContentView extends BlockView<TextContent>{
             if (this.block.link?.name == 'create') {
                 if (this.block.isCanEdit())
                     ta = <BoxTip ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center padding-5 r-flex-center r-size-24 r-round r-item-hover r-cursor text">
-                        <ToolTip overlay={'拖动'}><span onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></ToolTip>
-                        <ToolTip overlay={'取消'}><span onMouseDown={e => this.onClearLink()}><Icon size={14} icon={TrashSvg}></Icon></span></ToolTip>
-                    </div>}><a className="sy-block-text-content-link">{ta}<i onMouseDown={e => this.openCreatePage(e)}>(创建)</i></a>
+                        <Tip text={'拖动'}><span onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>
+                        <Tip text={'取消'}><span onMouseDown={e => this.onClearLink()}><Icon size={14} icon={TrashSvg}></Icon></span></Tip>
+                    </div>}><a className="sy-block-text-content-link">{ta}<i onMouseDown={e => this.openCreatePage(e)}>(<S>创建</S>)</i></a>
                     </BoxTip>
             }
             else if (this.block.link?.pageId || this.block.refLinks?.length > 0) {
                 var pageId = this.block.link?.pageId || this.block.refLinks[0].pageId;
                 var url = (this.block.page.ws?.url || "") + "/page/" + pageId;
                 ta = <BoxTip ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center  padding-5 r-flex-center r-size-24 r-round r-item-hover r-cursor text">
-                    <ToolTip overlay={'拖动'}><span onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></ToolTip>
-                    <ToolTip overlay={'复制网址'}><span onMouseDown={e => this.copyLink(url)} ><Icon size={16} icon={DuplicateSvg}></Icon></span></ToolTip>
-                    <ToolTip overlay={'编辑'}><span onMouseDown={e => this.openLink(e)}><Icon size={16} icon={EditSvg}></Icon></span></ToolTip>
-                    <ToolTip overlay={'取消'}><span onMouseDown={e => this.onClearLink()}><Icon size={16} icon={TrashSvg}></Icon></span></ToolTip>
+                    <Tip text={'拖动'}><span onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>
+                    <Tip text={'复制网址'}><span onMouseDown={e => this.copyLink(url)} ><Icon size={16} icon={DuplicateSvg}></Icon></span></Tip>
+                    <Tip text={'编辑'}><span onMouseDown={e => this.openLink(e)}><Icon size={16} icon={EditSvg}></Icon></span></Tip>
+                    <Tip text={'取消'}><span onMouseDown={e => this.onClearLink()}><Icon size={16} icon={TrashSvg}></Icon></span></Tip>
                 </div>}><a className="sy-block-text-content-link" onClick={e => this.openPage(e)} href={url}>{ta}</a></BoxTip>
             }
             else if (this.block.link?.url) {
                 ta = <BoxTip ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center  padding-5  r-flex-center r-size-24 r-round r-item-hover r-cursor text">
-                    <ToolTip overlay={'拖动'}><span onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></ToolTip>
-                    <ToolTip overlay={'复制网址'}><span onMouseDown={e => this.copyLink(this.block.link?.url)} ><Icon size={16} icon={DuplicateSvg}></Icon></span></ToolTip>
-                    <ToolTip overlay={'编辑'}><span onMouseDown={e => this.openLink(e)}><Icon size={16} icon={EditSvg}></Icon></span></ToolTip>
-                    <ToolTip overlay={'取消'}><span onMouseDown={e => this.onClearLink()}><Icon size={16} icon={TrashSvg}></Icon></span></ToolTip>
+                    <Tip text={'拖动'}><span onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>
+                    <Tip text={'复制网址'}><span onMouseDown={e => this.copyLink(this.block.link?.url)} ><Icon size={16} icon={DuplicateSvg}></Icon></span></Tip>
+                    <Tip text={'编辑'}><span onMouseDown={e => this.openLink(e)}><Icon size={16} icon={EditSvg}></Icon></span></Tip>
+                    <Tip text={'取消'}><span onMouseDown={e => this.onClearLink()}><Icon size={16} icon={TrashSvg}></Icon></span></Tip>
                 </div>}><a className="sy-block-text-content-link" target='_blank' href={this.block.link.url}>{ta}</a></BoxTip>
             }
         }

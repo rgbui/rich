@@ -5,6 +5,8 @@ import { url, prop, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/vector/point";
 import { OriginFilterField, OriginFilterFieldView } from "./origin.field";
+import { lst } from "../../../../i18n/store";
+import { S } from "../../../../i18n/view";
 
 @url('/field/filter/option')
 export class FilterFieldOption extends OriginFilterField {
@@ -44,8 +46,8 @@ export class FilterFieldOptionView extends BlockView<FilterFieldOption>{
         if (this.block.format == 'select') {
             async function select(event: React.MouseEvent) {
                 var rs = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, [
-                    { text: '选择选项', type: MenuItemType.text },
-                    { text: '全部', name: 'all', checkLabel: self.block.values.length == 0 ? true : false },
+                    { text: lst('选择选项'), type: MenuItemType.text },
+                    { text: lst('全部'), name: 'all', checkLabel: self.block.values.length == 0 ? true : false },
                     ...self.block.field.config.options.map(op => {
                         return {
                             text: op.text,
@@ -60,13 +62,13 @@ export class FilterFieldOptionView extends BlockView<FilterFieldOption>{
                 }
             }
             var ops = this.block.field.config.options.findAll(g => this.block.values.includes(g.value));
-            if (ops.length == 0) return <span onMouseDown={e => select(e)}>全部</span>
+            if (ops.length == 0) return <span onMouseDown={e => select(e)}><S>全部</S></span>
             else return <div onMouseDown={e => select(e)}>{ops.map(op => { return <span key={op.value}>{op.text}</span> })}</div>
         }
         else return <div className="inline">
             <span className={"gap-r-10 padding-w-5 padding-h-2  round cursor " + (!this.block.values.some(s => this.block.field?.config.options.some(c => c.value == s)) ? " text-white bg-primary" : "")} onClick={e => {
                 this.block.onFilter([], true)
-            }}>全部</span>
+            }}><S>全部</S></span>
             {this.block.field?.config.options.map(g => {
                 return <span className={"gap-r-10 padding-w-5 padding-h-2  round cursor " + (this.block.values.includes(g.value) ? " text-white bg-primary" : "")} key={g.value} onClick={e => {
                     this.block.onFilter(g.value);

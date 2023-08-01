@@ -13,10 +13,12 @@ import { channel } from "../../../net/channel";
 import { autoImageUrl } from "../../../net/element.type";
 import { ActionDirective } from "../../../src/history/declare";
 import { Spin } from "../../../component/view/spin";
-import { ToolTip } from "../../../component/view/tooltip";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import lodash from "lodash";
 import { CopyAlert } from "../../../component/copy";
+import { lst } from "../../../i18n/store";
+import { S } from "../../../i18n/view";
+import { Tip } from "../../../component/view/tooltip/tip";
 
 
 @url('/bookmark')
@@ -98,15 +100,15 @@ export class Bookmark extends Block {
         var rs = await super.onGetContextMenus();
         rs = rs.splice(2);
         lodash.remove(rs, g => g.name == 'text-align');
-        var at = rs.findIndex(g => g.text == '颜色');
+        var at = rs.findIndex(g => g.text ==lst( '颜色'));
         var ns: MenuItem<string | BlockDirective>[] = [];
         rs.splice(0, 0,
-            { name: 'open', text: '打开书签网址', icon: { name: 'bytedance-icon', code: 'arrow-right-up' } },
+            { name: 'open', text:lst('打开书签网址') , icon: { name: 'bytedance-icon', code: 'arrow-right-up' } },
             { type: MenuItemType.divide }
         )
         ns.push({ type: MenuItemType.divide });
-        ns.push({ name: 'reload', text: '重新生成书签', icon: RefreshSvg });
-        ns.push({ name: 'copyLink', text: '复制书签网址', icon: DuplicateSvg });
+        ns.push({ name: 'reload', text: lst('重新生成书签'), icon: RefreshSvg });
+        ns.push({ name: 'copyLink', text:lst('复制书签网址') , icon: DuplicateSvg });
         ns.push({ type: MenuItemType.divide });
         rs.splice(at, 0, ...ns)
         return rs;
@@ -117,7 +119,7 @@ export class Bookmark extends Block {
             return;
         }
         if (item.name == 'copyLink') {
-            CopyAlert(this.bookmarkUrl, '已复制书签网址')
+            CopyAlert(this.bookmarkUrl,lst('已复制书签网址') )
             return;
         }
         if (item.name == 'open') {
@@ -140,20 +142,20 @@ export class BookmarkView extends BlockView<Bookmark>{
             else if (this.block.bookmarkUrl) {
                 return <a className='sy-block-bookmark-link flex visible-hover' href={this.block.bookmarkUrl} target='_blank' >
                     <span className="remark flex-auto">{this.block.bookmarkUrl}</span>
-                    <ToolTip overlay={'重新生成书签'}><span onMouseDown={e => {
+                    <Tip text={'重新生成书签'}><span onMouseDown={e => {
                         e.stopPropagation();
                         e.preventDefault();
                     }} className="flex-fixed size-24 flex-center cursor visible" onClick={e => {
                         e.stopPropagation();
                         e.preventDefault();
                         this.block.onLoadBookmarkByUrl(this.block.bookmarkUrl)
-                    }}><Icon size={18} icon={RefreshSvg}></Icon></span></ToolTip>
+                    }}><Icon size={18} icon={RefreshSvg}></Icon></span></Tip>
                 </a>
             }
             else {
                 return <div className="sy-block-bookmark-empty" onMouseDown={e => this.block.openInputBookmark(e)}>
                     <Icon icon={BookSvg}></Icon>
-                    <span>添加书签</span>
+                    <span><S>添加书签</S></span>
                 </div>
             }
         }

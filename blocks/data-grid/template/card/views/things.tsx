@@ -14,6 +14,7 @@ import { CardView } from "../view";
 import * as Card1 from "../../../../../src/assert/img/card/card1.png"
 import { BlockUrlConstant } from "../../../../../src/block/constant";
 import { Divider } from "../../../../../component/view/grid";
+import { lst } from "../../../../../i18n/store";
 
 /**
  * 
@@ -22,22 +23,22 @@ import { Divider } from "../../../../../component/view/grid";
  */
 CardModel({
     url: '/things',
-    title: '需求发布',
-    remark: '适用于需求发布',
+    title: lst('需求发布'),
+    remark:lst( '适用于需求发布'),
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridList],
     props: [
-        { name: 'title', text: '标题', types: [FieldType.title, FieldType.text], required: true },
-        { name: 'author', text: '作者', types: [FieldType.creater] },
-        { name: 'tags', text: '分类', types: [FieldType.option, FieldType.options] },
-        { name: 'date', text: '日期', types: [FieldType.createDate, FieldType.date] },
-        { name: 'comment', text: '评论', types: [FieldType.comment] },
-        { name: 'like', text: '点赞', types: [FieldType.like] },
+        { name: 'title', text:lst( '标题'), types: [FieldType.title, FieldType.text], required: true },
+        { name: 'author', text: lst('作者'), types: [FieldType.creater] },
+        { name: 'tags', text: lst('分类'), types: [FieldType.option, FieldType.options] },
+        { name: 'date', text: lst('日期'), types: [FieldType.createDate, FieldType.date] },
+        { name: 'comment', text: lst('评论'), types: [FieldType.comment] },
+        { name: 'like', text: lst('点赞'), types: [FieldType.like] },
     ],
     views: [
-        { url: BlockUrlConstant.DataGridTable, text: '问题', },
-        { autoCreate: true, url: BlockUrlConstant.DataGridList, text: '列表', },
-        { url: BlockUrlConstant.RecordPageView, text: '问题详情', }
+        { url: BlockUrlConstant.DataGridTable, text: lst('问题'), },
+        { autoCreate: true, url: BlockUrlConstant.DataGridList, text: lst('列表'), },
+        { url: BlockUrlConstant.RecordPageView, text:lst( '问题详情'), }
     ],
     dataList: [
         { title: '评论里面的点赞数量统计不对' },

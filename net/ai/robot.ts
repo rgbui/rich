@@ -5,6 +5,7 @@ import { util } from "../../util/util";
 import { channel } from "../channel";
 import { AskTemplate, getTemplateInstance } from "../../extensions/ai/prompt";
 import { marked } from "marked"
+import { lst } from "../../i18n/store";
 
 export async function RobotRquest(robot: RobotInfo,
     task: RobotTask,
@@ -43,7 +44,7 @@ export async function RobotRquest(robot: RobotInfo,
             });
         }
         catch (ex) {
-            text += `<p class='error'>回答出错</p>`
+            text += `<p class='error'>${lst('回答出错')}</p>`
             console.error(ex)
             callback(text, true)
         }
@@ -102,11 +103,11 @@ export async function RobotRquest(robot: RobotInfo,
             catch (ex) {
                 console.error(ex);
                 if (task.replys[0]?.mime == 'image') {
-                    text += `<p class='error'>响应出错</p>`
+                    text += `<p class='error'>${lst('响应出错')}</p>`
                     callback(text, true)
                 }
                 else {
-                    text += `<p class='error'>响应出错</p>`
+                    text += `<p class='error'>${lst('响应出错')}</p>`
                     callback(text, true)
                 }
             }
@@ -171,7 +172,7 @@ export async function getWsRobotTasks() {
                             args: [
                                 {
                                     id: util.guid(),
-                                    text: "问题",
+                                    text: lst("问题"),
                                     name: 'ask', type: 'string'
                                 }
                             ]

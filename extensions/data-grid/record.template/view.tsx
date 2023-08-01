@@ -25,6 +25,8 @@ import { Page } from "../../../src/page";
 import { DataGridView } from "../../../blocks/data-grid/view/base";
 import { BlockUrlConstant } from "../../../src/block/constant";
 import { Icon } from "../../../component/view/icon";
+import { lst } from "../../../i18n/store";
+import { S } from "../../../i18n/view";
 
 class TabelSchemaFormDrop extends EventsComponent {
     block: DataGridView;
@@ -45,11 +47,11 @@ class TabelSchemaFormDrop extends EventsComponent {
     }
     async onAdd(event: React.MouseEvent, url: string) {
         var menus = [
-            { text: '数据模板名', name: 'name', value: '', type: MenuItemType.input },
+            { text: lst('数据模板名'), name: 'name', value: '', type: MenuItemType.input },
             { type: MenuItemType.divide },
             {
                 type: MenuItemType.button,
-                text: '创建数据模板',
+                text: lst('创建数据模板'),
                 name: 'create'
             }
         ]
@@ -90,17 +92,17 @@ class TabelSchemaFormDrop extends EventsComponent {
         var menus = [
             {
                 type: MenuItemType.input,
-                text: '重命名模板',
+                text: lst('重命名模板'),
                 value: view.text,
                 name: 'rename'
             },
             { type: MenuItemType.divide },
-            { text: '编辑', name: 'edit', icon: EditSvg },
+            { text: lst('编辑'), name: 'edit', icon: EditSvg },
             { type: MenuItemType.divide },
-            { text: '默认收集单', name: 'defaultCollect', checkLabel: this.schema.defaultCollectFormId == view.id ? true : false, icon: OrderSvg },
-            { text: '默认编辑单', name: 'defaultEdit', checkLabel: this.schema.defaultEditFormId == view.id ? true : false, icon: DetailSvg },
+            { text: lst('默认收集单'), name: 'defaultCollect', checkLabel: this.schema.defaultCollectFormId == view.id ? true : false, icon: OrderSvg },
+            { text: lst('默认编辑单'), name: 'defaultEdit', checkLabel: this.schema.defaultEditFormId == view.id ? true : false, icon: DetailSvg },
             { type: MenuItemType.divide },
-            { text: '删除', name: 'delete', icon: TrashSvg }
+            { text: lst('删除'), name: 'delete', icon: TrashSvg }
         ]
         var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
         if (um) {
@@ -140,7 +142,7 @@ class TabelSchemaFormDrop extends EventsComponent {
         var views = this.schema.views.filter(g => [BlockUrlConstant.FormView, BlockUrlConstant.RecordPageView].includes(g.url as any));
         if (!Array.isArray(views)) views = [];
         return <div className="shadow w-250 padding-h-10">
-            <div className="bold padding-w-10 ">模板列表</div>
+            <div className="bold padding-w-10 "><S>模板列表</S></div>
             {views.length > 0 && <Divider></Divider>}
             {views.map(v => {
                 return <div className="item-hover padding-w-10 h-30 round flex cursor text-1 f-14" key={v.id} onClick={e => this.onChange(v)}>
@@ -157,7 +159,7 @@ class TabelSchemaFormDrop extends EventsComponent {
             <Divider></Divider>
             <div className="item-hover padding-w-10  h-30 round flex item-hover cursor  text-1 f-14" onClick={e => this.onAdd(e, BlockUrlConstant.RecordPageView)}>
                 <span className="size-24 flex-center "><Icon size={16} icon={DetailSvg}></Icon></span>
-                <span className="flex-auto">新增数据模板</span>
+                <span className="flex-auto"><S>新增数据模板</S></span>
                 <span className="size-24 flex-center round item-hover "><Icon size={16} icon={PlusSvg}></Icon></span>
             </div>
             {/* <div className="item-hover padding-w-10  h-30 round flex item-hover cursor  text-1 f-14" onClick={e => this.onAdd(e, BlockUrlConstant.FormView)}>

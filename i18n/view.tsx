@@ -4,13 +4,13 @@ import lodash from "lodash";
 
 export class S extends React.Component<{ key?: string, data?: Record<string, any>, children: React.ReactText }>{
     render(): React.ReactNode {
-        var text = this.props.children.toString();
+        var text = this.props.children.toString().trim();
         if (this.props.key) {
-            var text = lst(this.props.key, this.props.data || text || undefined);
+            text = lst(this.props.key, this.props.data || text || undefined);
             if (text) return text;
             else return this.props.children
         }
-        var text = this.props.children.toString();
+        text = this.props.children.toString().trim();
         var r = lst(text, this.props.data || undefined);
         if (r) return r;
         else return this.props.children;

@@ -23,17 +23,19 @@ import { DataGridView } from "../../../blocks/data-grid/view/base";
 import lodash from "lodash";
 import { useDataSourceView } from "../datasource";
 import { MenuItemType } from "../../../component/view/menu/declare";
+import { lst } from "../../../i18n/store";
+import { S } from "../../../i18n/view";
 
 export class TableFieldView extends EventsComponent {
     onSave() {
         var self = this;
         self.error = '';
         if (!self.text) {
-            self.error = '字段名不能为空';
+            self.error = lst('字段名不能为空');
             return self.forceUpdate();
         }
         if (self.dataGrid.fields.some(s => s.text == self.text && s.field.type == self.type && !this.fieldId || this.fieldId && this.fieldId != s.fieldId && this.text == s.field.text)) {
-            self.error = '字段名有重复';
+            self.error = lst('字段名有重复');
             return self.forceUpdate();
         }
         self.forceUpdate();
@@ -47,7 +49,7 @@ export class TableFieldView extends EventsComponent {
             FieldType.image
         ].includes(this.type)) {
             return <div className="flex gap-h-10 padding-w-14 ">
-                <span className="flex-auto remark f-12">是否允许多个:</span>
+                <span className="flex-auto remark f-12"><S>是否允许多个</S>:</span>
                 <div className="flex-fix flxe-end"><Switch onChange={e => this.onChangeConfig({ isMultiple: e })} checked={this.config?.isMultiple ? true : false}></Switch></div>
             </div>
         }
@@ -58,13 +60,13 @@ export class TableFieldView extends EventsComponent {
         var rt = this.relationDatas.find(g => g.id == this.config.relationTableId)
         return <>
             <div className="gap-h-10 padding-w-14">
-                <div className="flex gap-b-5 remark f-12">关联表格:</div>
+                <div className="flex gap-b-5 remark f-12"><S>关联表格</S>:</div>
                 <div className="flex h-30 padding-w-5 round item-hover cursor" onClick={e => this.openSelectRelationTable(e)}>
                     {rt?.text}
                 </div>
             </div>
             <div className="flex gap-h-10 padding-w-14 ">
-                <span className="flex-auto remark f-12">是否一对多:</span>
+                <span className="flex-auto remark f-12"><S>是否一对多</S>:</span>
                 <div className="flex-fix flxe-end"><Switch onChange={e => this.onChangeConfig({ isMultiple: e })} checked={this.config?.isMultiple ? true : false}></Switch></div>
             </div>
         </>
@@ -83,7 +85,7 @@ export class TableFieldView extends EventsComponent {
         var ts = this.relationDatas.findAll(g => rs.some(r => r.config.relationTableId == g.id));
         if (ts.length == 0) return <>
             <div className="flex-center gap-h-10 remark">
-                没有关联的表，无法聚合统计
+                <S>没有关联的表，无法聚合统计</S>
             </div>
         </>
         async function selectRelationTable(event: React.MouseEvent) {
@@ -115,18 +117,18 @@ export class TableFieldView extends EventsComponent {
         }
         async function selectS(event: React.MouseEvent) {
             var menus = [
-                { text: '数量', value: '$count' },
-                { text: '聚合', type: MenuItemType.text },
-                { text: '平均值', value: '$agv' },
-                { text: '求和', value: '$sum' },
-                { text: '最小值', value: '$min' },
-                { text: '最大值', value: '$max' },
+                { text: lst('数量'), value: '$count' },
+                { text: lst('聚合'), type: MenuItemType.text },
+                { text: lst('平均值'), value: '$agv' },
+                { text: lst('求和'), value: '$sum' },
+                { text: lst('最小值'), value: '$min' },
+                { text: lst('最大值'), value: '$max' },
             ];
             var f = self.rollTableSchema.visibleFields.find(g => g.id == self.config.rollupFieldId);
             if (f) {
                 if (![FieldType.number, FieldType.autoIncrement].includes(f.type)) {
                     menus = [
-                        { text: '数量', value: '$count' }
+                        { text: lst('数量'), value: '$count' }
                     ];
                 }
             }
@@ -145,28 +147,28 @@ export class TableFieldView extends EventsComponent {
         }
         return <>
             <div className="gap-h-10 padding-w-14">
-                <div className="flex gap-b-5 remark f-12">关联表格:</div>
+                <div className="flex gap-b-5 remark f-12"><S>关联表格</S>:</div>
                 <div onClick={e => selectRelationTable(e)} className="flex h-30 padding-w-5 round item-hover cursor">
                     {ts.find(g => g.id == this.config.rollupTableId)?.text}
                 </div>
             </div>
             {self.rollTableSchema?.visibleFields && <>
                 <div className="gap-h-10 padding-w-14">
-                    <label className="flex gap-b-5 remark f-12">统计表格列:</label>
+                    <label className="flex gap-b-5 remark f-12"><S>统计表格列</S>:</label>
                     <div onClick={e => selectField(e)} className="flex h-30 padding-w-5 round item-hover cursor">
                         <Icon icon={GetFieldTypeSvg(self.rollTableSchema.visibleFields.find(g => g.id == this.config.rollupFieldId)?.type)}></Icon>
                         {self.rollTableSchema.visibleFields.find(g => g.id == this.config.rollupFieldId)?.text}
                     </div>
                 </div>
                 {this.config.rollupFieldId && <div className="gap-h-10 padding-w-14">
-                    <label className="flex gap-b-5 remark f-12">对数据进行统计:</label>
+                    <label className="flex gap-b-5 remark f-12"><S>对数据进行统计</S>:</label>
                     <div onClick={e => selectS(e)} className="flex h-30 padding-w-5 round item-hover cursor">
                         {[
-                            { text: '平均值', value: '$agv' },
-                            { text: '求和', value: '$sum' },
-                            { text: '最小值', value: '$min' },
-                            { text: '最大值', value: '$max' },
-                            { text: '数量', value: '$count' }
+                            { text: lst('平均值'), value: '$agv' },
+                            { text: lst('求和'), value: '$sum' },
+                            { text: lst('最小值'), value: '$min' },
+                            { text: lst('最大值'), value: '$max' },
+                            { text: lst('数量'), value: '$count' }
                         ].find(g => g.value == this.config.rollupStatistic)?.text}
                     </div>
                 </div>}
@@ -177,7 +179,7 @@ export class TableFieldView extends EventsComponent {
     renderFormula() {
         if (this.type != FieldType.formula) return <></>
         return <div className="gap-h-10 padding-w-14">
-            <div className="flex gap-b-5 remark f-12">公式:</div>
+            <div className="flex gap-b-5 remark f-12"><S>公式</S>:</div>
             <div className="flex">
                 <Textarea value={this.config?.formula?.formula || ''} onEnter={e => this.config.formula = e}></Textarea>
             </div>
@@ -186,10 +188,10 @@ export class TableFieldView extends EventsComponent {
     renderEmoji() {
         if ([FieldType.emoji].includes(this.type)) {
             return <div className="gap-h-10 padding-w-14">
-                <div className="flex gap-b-5 remark f-12">表情:</div>
+                <div className="flex gap-b-5 remark f-12"><S>表情</S>:</div>
                 <div className="flex padding-w-5">
                     {this.config?.emoji?.code && <span className="gap-r-5 f-20 l-20 size-20" onClick={e => this.onSetEmoji(e)} dangerouslySetInnerHTML={{ __html: getEmoji(this.config?.emoji?.code) }}></span>}
-                    <Button onClick={e => this.onSetEmoji(e)} ghost >{this.config?.emoji?.code ? "更换表情" : "添加表情"}</Button>
+                    <Button onClick={e => this.onSetEmoji(e)} ghost >{this.config?.emoji?.code ? lst("更换表情") : lst("添加表情")}</Button>
                 </div>
             </div>
         }
@@ -210,18 +212,18 @@ export class TableFieldView extends EventsComponent {
         var tm = ms.find(g => g.value == this.type);
         return <div className="w-300 f-14 text">
             <div className="flex  h-30 padding-w-14">
-                <span>{this.fieldId ? "编辑字段" : "新增字段"}</span>
+                <span>{this.fieldId ? lst("编辑字段") : lst("新增字段")}</span>
             </div>
             <Divider></Divider>
             <div className="max-h-250 overflow-y">
                 <div className="gap-h-10 padding-w-14">
-                    <div className="flex gap-b-5 remark f-12">字段名:</div>
+                    <div className="flex gap-b-5 remark f-12"><S>字段名</S>:</div>
                     <div>
                         <Input ref={e => this.input = e} onChange={e => this.text = e} value={this.text}></Input>
                     </div>
                 </div>
                 <div className="gap-h-10 padding-w-14">
-                    <div className="flex gap-b-5 remark f-12">字段类型:</div>
+                    <div className="flex gap-b-5 remark f-12"><S>字段类型</S>:</div>
                     <div className="flex h-30 round item-hover cursor" onClick={e => this.openSelectType(e)}>
                         <span className="flex-center  size-24  flex-fix cursor item-hover round "><Icon size={14} icon={GetFieldTypeSvg(this.type)}></Icon></span>
                         <span className="flex-auto ">{tm?.text}</span>
@@ -240,8 +242,8 @@ export class TableFieldView extends EventsComponent {
             <div className="flex padding-w-14 gap-h-10">
                 <span className="flex-auto error">{this.error}</span>
                 <div className="flex-fix flex-end">
-                    <Button className="gap-r-10" ghost onClick={e => this.emit('close')}>取消</Button>
-                    <Button onClick={e => self.onSave()}>确定</Button>
+                    <Button className="gap-r-10" ghost onClick={e => this.emit('close')}><S>取消</S></Button>
+                    <Button onClick={e => self.onSave()}><S>确定</S></Button>
                 </div>
             </div>
         </div>

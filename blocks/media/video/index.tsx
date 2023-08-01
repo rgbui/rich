@@ -19,7 +19,7 @@ import ZH from 'xgplayer/es/lang/zh-cn'
 import { getVideoSize } from "../../../component/file";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { MenuItemView } from "../../../component/view/menu/item";
-import { ls } from "../../../i18n/store";
+import { ls, lst } from "../../../i18n/store";
 // 启用中文
 I18N.use(ZH)
 /**
@@ -102,7 +102,7 @@ export class Video extends Block {
         return super.getVisibleContentBound();
     }
     async getMd() {
-        return `[${this.src?.filename || '视频'}](${this.src?.url})`;
+        return `[${this.src?.filename || lst('视频')}](${this.src?.url})`;
     }
     async getVideoSize() {
         if (this.originSize) return this.originSize;
@@ -137,7 +137,7 @@ export class Video extends Block {
         var items: MenuItem<BlockDirective | string>[] = [];
         items.push({
             name: BlockDirective.copy,
-            text: '拷贝副本',
+            text: lst('拷贝副本'),
             label: "Ctrl+D",
             icon: DuplicateSvg
         });
@@ -146,7 +146,7 @@ export class Video extends Block {
         });
         items.push({
             name: BlockDirective.link,
-            text: ls.t('拷贝块链接'),
+            text: lst('拷贝块链接'),
             icon: LinkSvg
         });
         items.push({
@@ -154,17 +154,17 @@ export class Video extends Block {
         });
         items.push({
             name: 'replace',
-            text: '替换',
+            text: lst('替换'),
             icon: RefreshSvg
         });
         items.push({
             name: 'origin',
-            text: '原图',
+            text: lst('原图'),
             icon: { name: 'bytedance-icon', code: 'arrow-right-up' }
         });
         items.push({
             name: 'download',
-            text: '下载',
+            text:lst('下载'),
             icon: DownloadSvg
         });
         items.push({
@@ -172,26 +172,26 @@ export class Video extends Block {
         });
         items.push({
             name: 'autoplayMuted',
-            text: '自动播放',
+            text: lst('自动播放'),
             type: MenuItemType.switch,
             icon: { name: 'bytedance-icon', code: 'play' },
             checked: this.autoplayMuted
         });
         items.push({
-            text: '对齐',
+            text:lst('对齐'),
             icon: { name: 'bytedance-icon', code: 'align-text-both' },
             childs: [
                 {
                     name: 'align',
                     icon: { name: 'bytedance-icon', code: 'align-text-left' },
-                    text: '居左',
+                    text:lst('居左'),
                     value: 'left',
                     checkLabel: this.align == 'left'
                 },
                 {
                     name: 'align',
                     icon: { name: 'bytedance-icon', code: 'align-text-center' },
-                    text: '居中', value: 'center', checkLabel: this.align == 'center'
+                    text: lst('居中'), value: 'center', checkLabel: this.align == 'center'
                 },
                 {
                     name: 'align',
@@ -199,14 +199,14 @@ export class Video extends Block {
                         name: 'bytedance-icon',
                         code: 'align-text-right'
                     },
-                    text: '居右',
+                    text: lst('居右'),
                     value: 'right',
                     checkLabel: this.align == 'right'
                 }
             ]
         });
         items.push({
-            text: '蒙板',
+            text:lst('蒙板') ,
             icon: { name: 'bytedance-icon', code: 'mask-two' },
             childs: [
                 {
@@ -215,14 +215,14 @@ export class Video extends Block {
                         name: 'bytedance-icon',
                         code: 'rectangle'
                     },
-                    text: '无',
+                    text: lst('无'),
                     value: 'rect',
                     checkLabel: this.mask == 'rect'
                 },
                 {
                     name: 'mask',
                     renderIcon: rc,
-                    text: '圆角',
+                    text: lst('圆角'),
                     value: 'radius',
                     checkLabel: this.mask == 'radius'
                 },
@@ -232,28 +232,28 @@ export class Video extends Block {
                         name: 'bytedance-icon',
                         code: 'oval-one'
                     },
-                    text: '圆',
+                    text: lst('圆'),
                     value: 'circle',
                     checkLabel: this.mask == 'circle'
                 },
                 {
                     name: 'mask',
                     icon: { name: 'bytedance-icon', code: 'diamond-three' },
-                    text: '菱形',
+                    text: lst('菱形'),
                     value: 'rhombus',
                     checkLabel: this.mask == 'rhombus'
                 },
                 {
                     name: 'mask',
                     icon: { name: 'bytedance-icon', code: 'pentagon-one' },
-                    text: '五边形',
+                    text:lst('五边形') ,
                     value: 'pentagon',
                     checkLabel: this.mask == 'pentagon'
                 },
                 {
                     name: 'mask',
                     icon: { name: 'bytedance-icon', code: 'star' },
-                    text: '星形',
+                    text: lst('星形'),
                     value: 'star',
                     checkLabel: this.mask == 'star'
                 }
@@ -265,7 +265,7 @@ export class Video extends Block {
         items.push({
             name: BlockDirective.delete,
             icon: TrashSvg,
-            text: ls.t('删除'),
+            text: lst('删除'),
             label: "Del"
         });
         return items;

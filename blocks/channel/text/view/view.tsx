@@ -17,6 +17,8 @@ import { RenderChats } from "./chats";
 import { ChatInputType, InputChatBox } from "../../../../component/view/input.chat/box";
 import { RobotRquest, getWsRobotTasks } from "../../../../net/ai/robot";
 import { RobotApply, RobotInfo } from "../../../../types/user";
+import { lst } from "../../../../i18n/store";
+import { S, Sp } from "../../../../i18n/view";
 
 
 @view('/channel/text')
@@ -24,16 +26,16 @@ export class ChannelTextView extends BlockView<ChannelText>{
     contentEl: HTMLElement;
     async openEdit(event: React.MouseEvent) {
         var pd = this.block.page.getPageDataInfo();
-        var model = { text: pd?.text || '新页面', description: pd?.description }
+        var model = { text: pd?.text || lst('新页面'), description: pd?.description }
         var f = await useForm({
             head: false,
-            fields: [{ name: 'text', text: '频道名称', type: 'input' }, { name: 'description', text: '频道描述', type: 'textarea' }],
-            title: '编辑讨论话题',
+            fields: [{ name: 'text', text: lst('频道名称'), type: 'input' }, { name: 'description', text: lst('频道描述'), type: 'textarea' }],
+            title: lst('编辑讨论话题'),
             remark: '',
             footer: false,
             model: lodash.cloneDeep(model),
             checkModel: async (model) => {
-                if (!model.text) return '标题不能为空';
+                if (!model.text) return lst('标题不能为空');
             }
         });
         if (f && !lodash.isEqual(f, model)) {
@@ -48,7 +50,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
                     e.stopPropagation();
                     this.block.page.onChangeIcon(e)
                 }} size={72} icon={pd?.icon || TopicSvg}></Icon>
-                <div className="h1 flex"><span>{pd?.text || '新页面'}</span>{this.block.page.isCanManage && <span className="flex-center round gap-l-5 cursor item-hover flex-line size-24 visible"><Icon onClick={e => this.openEdit(e)} size={18} icon={Edit1Svg}></Icon></span>}</div>
+                <div className="h1 flex"><span>{pd?.text || lst('新页面')}</span>{this.block.page.isCanManage && <span className="flex-center round gap-l-5 cursor item-hover flex-line size-24 visible"><Icon onClick={e => this.openEdit(e)} size={18} icon={Edit1Svg}></Icon></span>}</div>
                 {pd?.description && <div className="text-1 f-14">
                     <Markdown md={pd?.description}></Markdown>
                 </div>}
@@ -75,7 +77,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
     async reply(d: ChannelTextType) {
         var use = await channel.get('/user/basic', { userid: d.userid });
         var c = TextEle.filterHtml(d.content);
-        this.inputChatBox.openReply({ text: `回复${use.data.user.name}:${c}`, replyId: d.id })
+        this.inputChatBox.openReply({ text: lst('回复') + `${use.data.user.name}:${c}`, replyId: d.id })
     }
     inputChatBox: InputChatBox;
     uploadFiles: { id: string, speed: string }[] = [];
@@ -236,8 +238,8 @@ export class ChannelTextView extends BlockView<ChannelText>{
                 className="overflow-y border-box">
                 <div className="sy-channel-text-head">
                     {this.block.unreadTip && <div className="sy-channel-text-unread-tip" >
-                        <span>自{util.showTime(new Date(this.block.unreadTip.date))}来有{this.block.unreadTip.count}条消息未读</span>
-                        <a onMouseDown={e => this.block.onClearUnread()}>标记为已读<Icon size={14} icon={UnreadTextSvg}></Icon></a>
+                        <span><Sp key="自{date}来有{count}条消息未读" data={{ count: this.block.unreadTip.count, date: util.showTime(new Date(this.block.unreadTip.date)) }}>自{util.showTime(new Date(this.block.unreadTip.date))}来有{this.block.unreadTip.count}条消息未读</Sp></span>
+                        <a onMouseDown={e => this.block.onClearUnread()}><S>标记为已读</S><Icon size={14} icon={UnreadTextSvg}></Icon></a>
                     </div>}
                 </div>
                 <div className="sy-channel-text-content  padding-b-150 ">
@@ -254,7 +256,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
                 <div className="sy-channel-text-input-wrapper">
                     <InputChatBox
                         disabled={this.block.abledSend && this.block.page.user?.id ? false : true}
-                        placeholder={this.block.abledSend && this.block.page.user?.id ? "回车提交" : (this.block.page.user?.id ? "您不能发言" : "请登录发言")}
+                        placeholder={this.block.abledSend && this.block.page.user?.id ? lst("回车提交") : (this.block.page.user?.id ? lst("您不能发言") : lst("请登录发言"))}
                         ref={e => this.inputChatBox = e}
                         onChange={e => this.onInput(e)}
                         searchUser={this.searchUser}
@@ -265,7 +267,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
         </div>
     }
     searchUser = async (text: string) => {
-        var r = await channel.get('/ws/member/word/query', { word: text,ws:this.block.page.ws });
+        var r = await channel.get('/ws/member/word/query', { word: text, ws: this.block.page.ws });
         if (r.ok) {
             return r.data.list.map(c => {
                 return {

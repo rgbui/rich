@@ -10,6 +10,8 @@ import { SelectBox } from "../../../../component/view/select/box";
 import { GetFieldTypeSvg } from "../../../../blocks/data-grid/schema/util";
 import { DragList } from "../../../../component/view/drag.list";
 import { util } from "../../../../util/util";
+import { lst } from "../../../../i18n/store";
+import { S } from "../../../../i18n/view";
 
 export class TableSortView extends EventsComponent {
     get schema() {
@@ -77,19 +79,19 @@ export class TableSortView extends EventsComponent {
                             </span>
                             <SelectBox small className={'gap-r-10 min-w-80'} border value={so.field} options={this.getFields()} onChange={e => { so.field = e; self.onForceStore(); }}></SelectBox>
                             <SelectBox small className={'gap-r-10'} border value={so.sort} options={[
-                                { text: '降序', value: -1 },
-                                { text: '升序', value: 1 }
+                                { text: lst('降序'), value: -1 },
+                                { text:lst( '升序'), value: 1 }
                             ]} onChange={e => { so.sort = e; self.onForceStore(); }}>
                             </SelectBox>
                         </div>
                         <span className="flex-fixed flex-center size-24 round item-hover cursor btn-icon"><Icon size={12} onMousedown={e => removeSort(i)} icon={CloseSvg} ></Icon></span>
                     </div>
                 })}</DragList>}
-                {!hasSorts && <div className="remark padding-w-14 f-12 h-30 flex">还没有添加排序</div>}
+                {!hasSorts && <div className="remark padding-w-14 f-12 h-30 flex"><S>还没有添加排序</S></div>}
             </div>
             <Divider></Divider>
             <div onClick={e => addSort()} className="h-30  flex cursor item-hover padding-w-14">
-                <Icon size={18} style={{ marginRight: 5 }} icon={PlusSvg}></Icon>添加排序
+                <Icon size={18} style={{ marginRight: 5 }} icon={PlusSvg}></Icon><S>添加排序</S>
             </div>
         </div>
     }

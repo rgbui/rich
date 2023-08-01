@@ -13,6 +13,8 @@ import "./style.less";
 import { PopoverPosition } from "../popover/position";
 import { PopoverSingleton } from "../popover/popover";
 import { Divider } from "../../component/view/grid";
+import { lst } from "../../i18n/store";
+import { S } from "../../i18n/view";
 dayjs.extend(customParseFormat);
 export class DatePicker extends EventsComponent {
     date: Date = new Date();
@@ -46,7 +48,7 @@ export class DatePicker extends EventsComponent {
             }
             i += 1;
         }
-        var weeks: string[] = ['一', '二', '三', '四', '五', '六', '日'];
+        var weeks: string[] = [lst('一'), lst('二'), lst('三'), lst('四'),lst('五') , lst('六'), lst('日')];
         return <div className='shy-date-picker-days'>
             <div className='shy-date-picker-days-week'>
                 {weeks.map(we => {
@@ -116,7 +118,7 @@ export class DatePicker extends EventsComponent {
         var v = dayjs(value, "YYYY/MM/DD");
         this.error = '';
         if (!v.isValid() || (v.month() >= 12 || v.month() < 0 || v.date() > 31 || v.date() <= 0)) {
-            this.error = '解析日期错误';
+            this.error = lst('解析日期错误');
             this.forceUpdate();
         }
         else {
@@ -133,7 +135,7 @@ export class DatePicker extends EventsComponent {
         var v = dayjs('2008/09/01 ' + value, "YYYY/MM/DD HH:mm");
         this.error = '';
         if (!v.isValid() || (v.hour() < 0 || v.hour() > 23 || v.minute() < 0 || v.minute() > 59)) {
-            this.error = '解析日期错误';
+            this.error =lst('解析日期错误') ;
             this.forceUpdate();
         }
         else {
@@ -164,9 +166,9 @@ export class DatePicker extends EventsComponent {
             </div>
             <div className='shy-date-picker-head'>
                 <div className='shy-date-picker-head-title'>
-                    <span style={{ cursor: 'pointer' }}>{dj.year()}年</span>
-                    <span style={{ cursor: 'pointer' }}>{dj.month() + 1}月</span>
-                    <span>{dj.date()}日</span>
+                    <span style={{ cursor: 'pointer' }}>{dj.year()}<S>年</S></span>
+                    <span style={{ cursor: 'pointer' }}>{dj.month() + 1}<S>月</S></span>
+                    <span>{dj.date()}<S>日</S></span>
                 </div>
                 <div className='shy-date-picker-head-operators'>
                     <a><Icon size={14} onClick={e => this.onReduce(e)} icon={chevronLeft}></Icon></a>
@@ -176,7 +178,7 @@ export class DatePicker extends EventsComponent {
             {this.renderDays()}
             <Divider></Divider>
             <div className="shy-date-picker-clear" onClick={e => this.onClear()}>
-                清理
+                <S>清理</S>
             </div>
         </div>
     }

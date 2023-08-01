@@ -31,6 +31,7 @@ import { LineArrow, LineTypes } from "./line.arrow";
 import { TurnShapes } from "./shapes";
 import { BorderBoxStyle, ShapeStroke } from "./stroke";
 import "./style.less";
+import { lst } from "../../i18n/store";
 
 export class BoardEditTool extends EventsComponent {
     render(): ReactNode {
@@ -82,7 +83,7 @@ export class BoardEditTool extends EventsComponent {
                     <FrameScale></FrameScale>
                 </div>
             </Tip>}
-            {is('lineStart') && <><Tip overlay={'开始箭头'}>
+            {is('lineStart') && <><Tip text={'开始箭头'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <LineArrow tool={this}
                         lineStart={getValue('lineStart')}
@@ -95,13 +96,13 @@ export class BoardEditTool extends EventsComponent {
                         lineEnd: getValue('lineStart')
                     });
                 }}> <Icon size={14} icon={BoardRefreshSvg}></Icon></div>
-                <Tip overlay={'结束箭头'}>
+                <Tip text={'结束箭头'}>
                     <div className={'shy-board-edit-tool-item'}>
                         <LineArrow tool={this} lineEnd={getValue('lineEnd')}
                             change={(name, e) => this.onChange(name, e)}></LineArrow>
                     </div>
                 </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
-            {is('lineType') && <Tip overlay={'线形'}>
+            {is('lineType') && <Tip text={'线形'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <LineTypes tool={this}
                         lineType={getValue('lineType')}
@@ -110,19 +111,19 @@ export class BoardEditTool extends EventsComponent {
                         change={(name, e) => this.onChange(name, e)}></LineTypes>
                 </div>
             </Tip>}
-            {is('turnShapes') && <Tip overlay={'形状'}>
+            {is('turnShapes') && <Tip text={'形状'}>
                 <div className={'shy-board-edit-tool-item'} >
                     <TurnShapes tool={this} change={(e) => this.onChange('turnShapes', e)} turnShapes={getValue('turnShapes')}></TurnShapes>
                 </div>
             </Tip>}
-            {is('fontFamily') && <><Tip overlay={'字体'}>
+            {is('fontFamily') && <><Tip text={'字体'}>
                 <div className={'shy-board-edit-tool-item'} >
                     <FontFamily tool={this}
                         value={getValue('fontFamily')}
                         change={(name) => this.onChange('fontFamily', name)}></FontFamily>
                 </div>
             </Tip></>}
-            {is('fontSize') && <><Tip overlay={'字体大小'}>
+            {is('fontSize') && <><Tip text={'字体大小'}>
                 <div className={'shy-board-edit-tool-item'} >
                     <Select value={getValue('fontSize')}
                         onChange={e => this.onChange('fontSize', e)}
@@ -142,12 +143,12 @@ export class BoardEditTool extends EventsComponent {
                         ]}>{getValue('fontSize')}</Select>
                 </div>
             </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
-            {is('stickerSize') && <><Tip overlay='便利贴'>
+            {is('stickerSize') && <><Tip text='便利贴'>
                 <div className={'shy-board-edit-tool-item'} >
                     <Select dropAlign='center' value={getValue('stickerSize')} onChange={e => this.onChange('stickerSize', e)} options={[
-                        { text: '小', value: 'small' },
-                        { text: '中', value: 'medium' },
-                        { text: '大', value: 'big' }]}></Select>
+                        { text: lst('小'), value: 'small' },
+                        { text: lst('中'), value: 'medium' },
+                        { text: lst('大'), value: 'big' }]}></Select>
                 </div>
             </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
             {is('fontWeight') && <Tip text='加粗'>
@@ -178,22 +179,22 @@ export class BoardEditTool extends EventsComponent {
                 ><Icon size={14} icon={UnderlineSvg}></Icon>
                 </div>
             </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
-            {is('fontColor') && <Tip overlay={'字体颜色'}>
+            {is('fontColor') && <Tip text={'字体颜色'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <FontColor tool={this} value={getValue('fontColor')} change={e => { this.onChange('fontColor', e) }}></FontColor>
                 </div>
             </Tip>}
-            {is('backgroundColor') && <Tip overlay={'背景'}>
+            {is('backgroundColor') && <Tip text={'背景'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <BackgroundColor tool={this} value={getValue('backgroundColor')} change={e => { this.onChange('backgroundColor', e) }}></BackgroundColor>
                 </div>
             </Tip>}
-            {is('backgroundNoTransparentColor') && <Tip overlay={'背景'}>
+            {is('backgroundNoTransparentColor') && <Tip text={'背景'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <BackgroundColor noTransparent tool={this} value={getValue('backgroundNoTransparentColor')} change={e => { this.onChange('backgroundNoTransparentColor', e) }}></BackgroundColor>
                 </div>
             </Tip>}
-            {is('borderWidth') && <Tip overlay={'边框'}>
+            {is('borderWidth') && <Tip text={'边框'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <BorderBoxStyle
                         tool={this}
@@ -204,7 +205,7 @@ export class BoardEditTool extends EventsComponent {
                         change={(name, e) => this.onChange(name, e)}></BorderBoxStyle>
                 </div>
             </Tip>}
-            {is('stroke') && <Tip overlay={'边框'}>
+            {is('stroke') && <Tip text={'边框'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <ShapeStroke
                         tool={this}
@@ -215,7 +216,7 @@ export class BoardEditTool extends EventsComponent {
                         change={(name, e) => this.onChange(name, e)}></ShapeStroke>
                 </div>
             </Tip>}
-            {is('fillColor') && is('fillOpacity') && <Tip overlay={'填充'}>
+            {is('fillColor') && is('fillOpacity') && <Tip text={'填充'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <ShapeFill
                         tool={this}
@@ -226,7 +227,7 @@ export class BoardEditTool extends EventsComponent {
                 </div>
             </Tip>}
             <div className={'shy-board-edit-tool-devide'}></div>
-            <Tip overlay={'属性'}>
+            <Tip text={'属性'}>
                 <div onMouseDown={e => this.onProperty(e)} className={'shy-board-edit-tool-item'}>
                     <Icon size={16} icon={DotsSvg}></Icon>
                 </div>

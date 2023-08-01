@@ -13,6 +13,8 @@ import { ToolTip } from "../../component/view/tooltip";
 import { TrashSvg } from "../../component/svgs";
 import { Divider } from "../../component/view/grid";
 import { util } from "../../util/util";
+import { lst } from "../../i18n/store";
+import { S } from "../../i18n/view";
 
 export class TrashBox extends EventsComponent {
     render() {
@@ -20,7 +22,7 @@ export class TrashBox extends EventsComponent {
             <div className="gap-w-14 padding-h-10">
                 <div >
                     <Input
-                        placeholder={`搜索${this.ws?.text}中被删除的页面`}
+                        placeholder={lst('搜索{text}中被删除的页面',{text:this.ws?.text})}
                         clear
                         onClear={() => {
                             this.forceSearch();
@@ -38,9 +40,9 @@ export class TrashBox extends EventsComponent {
             <div>
                 <Divider></Divider>
                 <div className="flex padding-w-14">
-                    <span className="f-12 remark">已删除页面</span>
+                    <span className="f-12 remark"><S>已删除页面</S></span>
                 </div>
-                {this.search.loading && <Spin block>搜索中...</Spin>}
+                {this.search.loading && <Spin block><S>搜索中...</S></Spin>}
                 {this.search.list.map(pa => {
                     return <div key={pa.id} className="flex item-hover round padding-h-3  padding-w-14 ">
                         <span className="flex-fixed flex-center size-24 item-hover  round "><Icon size={20} icon={getPageIcon(pa)}></Icon></span>
@@ -49,12 +51,12 @@ export class TrashBox extends EventsComponent {
                             {util.showTime(pa.deletedDate)}
                         </span>
                         <span className="flex-auto flex-end r-size-24 r-flex-center r-item-hover r-round r-cursor r-gap-l-10">
-                            <ToolTip overlay={'恢复'}><span onMouseDown={e => this.onRecover(pa)}><Icon size={18} icon={{ name: 'bytedance-icon', code: 'undo' }}></Icon></span></ToolTip>
-                            <ToolTip overlay={'彻底删除'}><span onMouseDown={e => this.onDel(pa)}><Icon size={18} icon={TrashSvg}></Icon></span></ToolTip>
+                            <ToolTip overlay={lst('恢复')}><span onMouseDown={e => this.onRecover(pa)}><Icon size={18} icon={{ name: 'bytedance-icon', code: 'undo' }}></Icon></span></ToolTip>
+                            <ToolTip overlay={lst('彻底删除')}><span onMouseDown={e => this.onDel(pa)}><Icon size={18} icon={TrashSvg}></Icon></span></ToolTip>
                         </span>
                     </div>
                 })}
-                {this.search.total == 0 && !this.search.loading && <div className="flex-center gap-h-10 f-12 remark">无删除记录</div>}
+                {this.search.total == 0 && !this.search.loading && <div className="flex-center gap-h-10 f-12 remark"><S>无删除记录</S></div>}
             </div>
         </div>
     }

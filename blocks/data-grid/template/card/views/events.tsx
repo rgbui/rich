@@ -8,6 +8,8 @@ import { CardView } from "../view";
 import * as Card1 from "../../../../../src/assert/img/card/card1.png"
 import { BlockUrlConstant } from "../../../../../src/block/constant";
 import dayjs from "dayjs";
+import { lst } from "../../../../../i18n/store";
+import { S } from "../../../../../i18n/view";
 
 /**
  * 
@@ -16,14 +18,14 @@ import dayjs from "dayjs";
  */
 CardModel({
     url: '/events',
-    title: '活动',
-    remark: '适用于活动举办发布',
+    title:lst('活动') ,
+    remark:lst( '适用于活动举办发布'),
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridGallery],
     props: [
         {
             name: 'pic',
-            text: '封面图',
+            text: lst('封面图'),
             types: [
                 FieldType.image,
                 FieldType.cover,
@@ -31,16 +33,16 @@ CardModel({
             ],
             required: true
         },
-        { name: 'title', text: '标题', types: [FieldType.title, FieldType.text] },
-        { name: 'date', text: '报名时间', types: [FieldType.date] },
-        { name: 'types', text: '类别', types: [FieldType.option, FieldType.options] },
-        { name: 'address', text: '地址', types: [FieldType.text] },
-        { name: 'users', text: '报名用户', types: [FieldType.user] }
+        { name: 'title', text: lst( '标题'), types: [FieldType.title, FieldType.text] },
+        { name: 'date', text: lst( '报名时间'), types: [FieldType.date] },
+        { name: 'types', text:  lst('类别'), types: [FieldType.option, FieldType.options] },
+        { name: 'address', text: lst( '地址'), types: [FieldType.text] },
+        { name: 'users', text:  lst('报名用户'), types: [FieldType.user] }
     ],
     views: [
-        { url: BlockUrlConstant.DataGridTable, text: '活动', },
-        { autoCreate: true, url: BlockUrlConstant.DataGridGallery, text: '活动列表', },
-        { url: BlockUrlConstant.RecordPageView, text: '活动详情', }
+        { url: BlockUrlConstant.DataGridTable, text:lst('活动') , },
+        { autoCreate: true, url: BlockUrlConstant.DataGridGallery, text:lst('活动列表') , },
+        { url: BlockUrlConstant.RecordPageView, text:lst('活动详情') , }
     ],
     dataList: [
         {
@@ -94,7 +96,7 @@ export class CardPin extends CardView {
             <div className="flex-fixed h-150 relative">
                 {hasPic && <img className="w100 h100 block  object-center" src={pics[0].url} />}
                 {date.getTime() > Date.now() && <div className="pos-bottom-full flex flex-end">
-                    <span className="bg-green f-14 padding-w-5  round-16 gap-10 cursor text-white">报名中</span>
+                    <span className="bg-green f-14 padding-w-5  round-16 gap-10 cursor text-white"><S>报名中</S></span>
                 </div>}
             </div>
             <div className="bold h-30 flex flex-auto text-overflow padding-w-14">{title}</div>

@@ -9,11 +9,12 @@ import { PopoverPosition } from "../../../../../extensions/popover/position";
 import { CardPropsType } from "../declare";
 import { CardFactory } from "../factory/factory";
 import { TableSchema } from "../../../schema/meta";
+import { S } from "../../../../../i18n/view";
 
 export class CardSelector extends EventsComponent {
     render(): ReactNode {
         return <div className="w-500 round ">
-            <div className="h4 gap-14">数据模板</div>
+            <div className="h4 gap-14"><S>数据模板</S></div>
             <div className="flex h-400 overflow-y flex-wrap">
                 {this.getStores().map(cs => {
                     return <div
@@ -28,8 +29,8 @@ export class CardSelector extends EventsComponent {
             </div>
             <Divider></Divider>
             <div className="padding-w-14 flex-end  min-h-40">
-                <Button onMouseDown={e => this.onSave()} className="gap-r-10">确定</Button>
-                <Button ghost onMouseDown={e => this.onClose()}>取消</Button>
+                <Button onMouseDown={e => this.onSave()} className="gap-r-10"><S>确定</S></Button>
+                <Button ghost onMouseDown={e => this.onClose()}><S>取消</S></Button>
             </div>
         </div>
     }

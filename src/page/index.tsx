@@ -32,7 +32,6 @@ import { ElementType, parseElementUrl } from '../../net/element.type';
 import { BlockUrlConstant } from '../block/constant';
 import lodash from 'lodash';
 import { ActionDirective } from '../history/declare';
-import { PageLayout } from '../../extensions/layout';
 import { isMobileOnly } from "react-device-detect";
 import { BoxFillType, BoxStyle } from '../../extensions/doc.card/declare';
 import { dom } from '../common/dom';
@@ -80,7 +79,7 @@ export class Page extends Events<PageDirective>{
     }
     kit: Kit = new Kit(this);
     snapshoot = new HistorySnapshoot(this)
-    pageLayout: { layout?: PageLayout, type: PageLayoutType };
+    pageLayout: {  type: PageLayoutType };
     views: View[] = [];
     view: PageView;
     keyboardPlate: KeyboardPlate = new KeyboardPlate();

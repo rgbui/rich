@@ -4,14 +4,15 @@ import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 import { MindSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
+import { S } from "../../i18n/view";
 
 class ImportFile extends EventsComponent {
     render() {
         return <div>
-            <div className="h4">导入</div>
+            <div className="h4"><S>导入</S></div>
             <div className="flex flex-wrap  r-w-120">
                 <div className="card">
-                    <Icon icon={MindSvg}></Icon><span>Markdown文件</span>
+                    <Icon icon={MindSvg}></Icon><span><S>Markdown文件</S></span>
                 </div>
                 <div className="card">
                     <Icon icon={MindSvg}></Icon><span>CSV</span>

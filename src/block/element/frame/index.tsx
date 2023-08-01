@@ -9,6 +9,7 @@ import { BoardPointType, BoardBlockSelector } from '../../partial/board';
 import { BlockCssName } from '../../pattern/css';
 import { Rect, RectUtility, PointArrow } from '../../../common/vector/point';
 import { Polygon } from '../../../common/vector/polygon';
+import { lst } from '../../../../i18n/store';
 
 /**
  * 可以将相邻的block变成一个整体去操作，
@@ -33,7 +34,7 @@ export class Frame extends Block {
         return true;
     }
     @prop()
-    content: string = '框';
+    content: string = lst('框');
     @prop()
     fixedWidth: number = 800;
     @prop()
@@ -112,7 +113,7 @@ export class FrameView extends BlockView<Frame>{
         }, this.block.visibleStyle);
         return <div className='sy-block-frame' style={style} >
             <div className='sy-block-frame-head' style={{ height: h, lineHeight: h + 'px', fontSize: h20 / 1.2 }}>
-                <TextArea block={this.block} placeholder='框' prop='content' ></TextArea>
+                <TextArea block={this.block} placeholder={lst('框')} prop='content' ></TextArea>
             </div>
             <ChildsArea childs={this.block.childs}></ChildsArea>
             <div className='sy-block-frame-content' style={{ top: h, ...this.block.contentStyle }}>

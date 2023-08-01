@@ -16,7 +16,6 @@ import { PopoverPosition } from "../popover/position";
 import { FixedViewScroll } from "../../src/common/scroll";
 import { blockStore } from "../block/store";
 import { AiStartSvg, BoldSvg, CodeSvg, DeleteLineSvg, DoubleLinkSvg, EquationSvg, FontStyleSvg, ItalicSvg, LinkSvg, MagicSvg, SearchSvg, UnderlineSvg } from "../../component/svgs";
-import { ToolTip } from "../../component/view/tooltip";
 import { dom } from "../../src/common/dom";
 import { util } from "../../util/util";
 import { useSearchBox } from "../search/keyword";

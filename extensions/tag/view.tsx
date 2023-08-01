@@ -14,6 +14,7 @@ import { TriangleSvg } from "../../component/svgs";
 import { Spin } from "../../component/view/spin";
 import { ElementType, getElementUrl, parseElementUrl } from "../../net/element.type";
 import { Page } from "../../src/page";
+import { S } from "../../i18n/view";
 
 export class TagsView extends EventsComponent {
     constructor(props) {
@@ -35,7 +36,7 @@ export class TagsView extends EventsComponent {
     }
     renderRefs() {
         if (this.search.refs.length == 0) {
-            return <div className="flex-center remark f-12"> 没有标签内容</div>
+            return <div className="flex-center remark f-12"><S>没有标签内容</S></div>
         }
         return this.search.refs.map(pa => {
             return <div key={pa.id} className='gap-h-10'>

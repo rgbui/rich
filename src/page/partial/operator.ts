@@ -18,6 +18,7 @@ import { storeCopyBlocks } from "../common/copy";
 import { LinkPageItem, PageLayoutType } from "../declare";
 import { PageDirective } from "../directive";
 import { useTemplateView } from "../../../extensions/template";
+import { lst } from "../../../i18n/store";
 
 export class Page$Operator {
     /**
@@ -269,7 +270,7 @@ export class Page$Operator {
                 break;
             case BlockDirective.link:
                 CopyText(blocks[0].blockUrl);
-                ShyAlert('块的链接已复制')
+                ShyAlert(lst('块的链接已复制'))
                 break;
             case BlockDirective.trun:
                 this.onBatchTurn(blocks, item.url);
@@ -409,7 +410,7 @@ export class Page$Operator {
     async onOpenTemplate(this: Page) {
         var ut = await useTemplateView();
         if (ut) {
-            ShyAlert('正在创建中...', 'warn', 1000 * 60 * 10);
+            ShyAlert(lst('正在创建中...'), 'warn', 1000 * 60 * 10);
             try {
                 var rr = await channel.post('/import/page', {
                     templateUrl: ut.file?.url,

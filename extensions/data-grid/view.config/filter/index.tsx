@@ -19,6 +19,8 @@ import { useDatePicker } from "../../../date";
 import { useUserPicker } from "../../../at/picker";
 import { Avatar } from "../../../../component/view/avator/face";
 import { MenuItemType } from "../../../../component/view/menu/declare";
+import { lst } from "../../../../i18n/store";
+import { S } from "../../../../i18n/view";
 
 export class TableFilterView extends EventsComponent {
     get schema() {
@@ -45,49 +47,49 @@ export class TableFilterView extends EventsComponent {
         var field = this.block.schema.fields.find(g => g.id == fieldId);
         if ([FieldType.image, FieldType.video, FieldType.video, FieldType.file].includes(field.type)) {
             return [
-                { text: '为空', value: '$isNull' },
-                { text: '不为空', value: '$isNotNull' },
+                { text: lst('为空'), value: '$isNull' },
+                { text: lst('不为空'), value: '$isNotNull' },
             ]
         }
         else if ([FieldType.number].includes(field.type)) {
             return [
-                { text: '等于', value: '$eq' },
-                { text: '不等于', value: '$ne' },
-                { text: '小于', value: '$lt' },
-                { text: '大于', value: '$gt' },
-                { text: '小于等于', value: '$lte' },
-                { text: '大于等于', value: '$gte' },
-                { text: '为空', value: '$isNull' },
-                { text: '不为空', value: '$isNotNull' },
+                { text: lst('等于'), value: '$eq' },
+                { text: lst('不等于'), value: '$ne' },
+                { text: lst('小于'), value: '$lt' },
+                { text: lst('大于'), value: '$gt' },
+                { text: lst('小于等于'), value: '$lte' },
+                { text: lst('大于等于'), value: '$gte' },
+                { text: lst('为空'), value: '$isNull' },
+                { text: lst('不为空'), value: '$isNotNull' },
             ]
         }
         else if ([FieldType.option, FieldType.options].includes(field.type)) {
             return [
-                { text: '等于', value: '$eq' },
-                { text: '不等于', value: '$ne' },
-                { text: '为空', value: '$isNull' },
-                { text: '不为空', value: '$isNotNull' },
+                { text: lst('等于'), value: '$eq' },
+                { text: lst('不等于'), value: '$ne' },
+                { text: lst('为空'), value: '$isNull' },
+                { text: lst('不为空'), value: '$isNotNull' },
             ]
         }
         else if ([FieldType.user, FieldType.creater, FieldType.modifyer].includes(field.type)) {
             return [
-                { text: '是', value: '$eq' },
-                { text: '不是', value: '$ne' },
-                { text: '为空', value: '$isNull' },
-                { text: '不为空', value: '$isNotNull' },
+                { text: lst('是'), value: '$eq' },
+                { text: lst('不是'), value: '$ne' },
+                { text: lst('为空'), value: '$isNull' },
+                { text: lst('不为空'), value: '$isNotNull' },
             ]
         }
         else if ([FieldType.date, FieldType.createDate, FieldType.modifyDate].includes(field.type)) {
             return [
-                { text: '等于', value: '$eq' },
-                { text: '不等于', value: '$ne' },
-                { text: '早于', value: '$gt' },
-                { text: '晚于', value: '$lt' },
-                { text: '早于等于', value: '$gte' },
-                { text: '晚于等于', value: '$lte' },
-                { text: '位于', value: '$in' },
-                { text: '为空', value: '$isNull' },
-                { text: '不为空', value: '$isNotNull' },
+                { text: lst('等于'), value: '$eq' }, 
+                { text: lst('不等于'), value: '$ne' },
+                { text: lst('早于'), value: '$gt' },
+                { text: lst('晚于'), value: '$lt' },
+                { text: lst('早于等于'), value: '$gte' },
+                { text: lst('晚于等于'), value: '$lte' },
+                { text: lst('位于'), value: '$in' },
+                { text: lst('为空'), value: '$isNull' },
+                { text: lst('不为空'), value: '$isNotNull' },
             ]
         }
         else if ([FieldType.text,
@@ -97,19 +99,19 @@ export class TableFilterView extends EventsComponent {
         FieldType.phone,
         FieldType.email].includes(field.type)) {
             return [
-                { text: '等于', value: '$eq' },
-                { text: '不等于', value: '$ne' },
-                { text: '包含', value: '$contain' },
-                { text: '不包含', value: '$notContain' },
-                { text: '开头为', value: '$startWith' },
-                { text: '结尾为', value: '$endWith' },
-                { text: '为空', value: '$isNull' },
-                { text: '不为空', value: '$isNotNull' },
+                { text: lst('等于'), value: '$eq' },
+                { text: lst('不等于'), value: '$ne' },
+                { text: lst('包含'), value: '$contain' },
+                { text: lst('不包含'), value: '$notContain' },
+                { text: lst('开头为'), value: '$startWith' },
+                { text: lst('结尾为'), value: '$endWith' },
+                { text: lst('为空'), value: '$isNull' },
+                { text: lst('不为空'), value: '$isNotNull' },
             ]
         }
         return [
-            { text: '为空', value: '$isNull' },
-            { text: '不为空', value: '$isNotNull' },
+            { text: lst('为空'), value: '$isNull' },
+            { text: lst('不为空'), value: '$isNotNull' },
         ]
     }
     onStore = lodash.debounce(async () => {
@@ -128,35 +130,35 @@ export class TableFilterView extends EventsComponent {
         var options = [];
         if (item.operator == '$in') {
             options = [
-                { text: '具体时间', value: null },
-                { text: '今天', value: '0D' },
-                { text: '最近3天', value: '-3D' },
-                { text: '未来3天', value: '3D' },
-                { text: '最近一周', value: '-7D' },
-                { text: '未来一周', value: '7D' },
-                { text: '最近半月', value: '-0.5M' },
-                { text: '最近一月', value: '-1M' },
-                { text: '本周', value: 'C0W' },
-                { text: '下周', value: 'C1W' },
-                { text: '上周', value: 'C-1W' },
-                { text: '本月', value: 'C0M' },
-                { text: '下月', value: 'C1M' },
-                { text: '上月', value: 'C-1M' },
-                { text: '今年', value: 'C0Y' },
-                { text: '明年', value: 'C1Y' },
-                { text: '去年', value: 'C-1Y' },
+                { text: lst('具体时间'), value: null },
+                { text: lst('今天'), value: '0D' },
+                { text: lst('最近3天'), value: '-3D' },
+                { text: lst('未来3天'), value: '3D' },
+                { text: lst('最近一周'), value: '-7D' },
+                { text: lst('未来一周'), value: '7D' },
+                { text: lst('最近半月'), value: '-0.5M' },
+                { text: lst('最近一月'), value: '-1M' },
+                { text: lst('下周'), value: 'C1W' },
+                { text: lst('本周'), value: 'C0W' },
+                { text: lst('上周'), value: 'C-1W' },
+                { text: lst('本月'), value: 'C0M' },
+                { text: lst('下月'), value: 'C1M' },
+                { text: lst('上月'), value: 'C-1M' },
+                { text: lst('今年'), value: 'C0Y' },
+                { text: lst('明年'), value: 'C1Y' },
+                { text: lst('去年'), value: 'C-1Y' },
             ]
         }
         else
             options = [
-                { text: '具体时间', value: null },
-                { text: '今天', value: '0D' },
-                { text: '昨天', value: '-1D' },
-                { text: '明天', value: '1D' },
-                { text: '一周前', value: '-7D' },
-                { text: '一周后', value: '7D' },
-                { text: '一月前', value: '-30D' },
-                { text: '一月后', value: '30D' },
+                { text: lst('具体时间'), value: null },
+                { text: lst('今天'), value: '0D' },
+                { text: lst('昨天'), value: '-1D' },
+                { text: lst('明天'), value: '1D' },
+                { text: lst('一周前'), value: '-7D' },
+                { text: lst('一周后'), value: '7D' },
+                { text: lst('一月前'), value: '-30D' },
+                { text: lst('一月后'), value: '30D' },
             ]
         var op = options.find(g => g.value == item.value);
         async function mousedown(item: SchemaFilter, event: React.MouseEvent) {
@@ -224,7 +226,7 @@ export class TableFilterView extends EventsComponent {
             </div>
         }
         return <div onClick={e => mousedown(item, e)} className="border box-border round h-26 padding-w-14 flex-center gap-r-10">
-            {op?.text || dateString || '请选择日期'}
+            {op?.text || dateString || lst('请选择日期')}
         </div>
     }
     renderOptionInput(item: SchemaFilter) {
@@ -257,7 +259,7 @@ export class TableFilterView extends EventsComponent {
         }
         return <div onMouseDown={e => mousedown(item, e)} className="border box-border round h-26 padding-w-14 flex-center gap-r-10">
             {op?.color && <span className="circle size-20 gap-r-5" style={{ background: op?.color ? op.color : undefined }}></span>}
-            <span>{op?.text || '请选择一项'}</span>
+            <span>{op?.text || lst('请选择一项')}</span>
         </div>
     }
     renderUserInput(item: SchemaFilter) {
@@ -271,7 +273,7 @@ export class TableFilterView extends EventsComponent {
         }
         return <div onMouseDown={e => mousedown(e)} className="border box-border round h-26 padding-w-14 flex-center gap-r-10">
             {item.value && <Avatar size={20} userid={item.value}></Avatar>}
-            {!item.value && <span>选择用户</span>}
+            {!item.value && <span><S>选择用户</S></span>}
         </div>
     }
     render(): ReactNode {
@@ -292,13 +294,13 @@ export class TableFilterView extends EventsComponent {
         }
         return <div className="f-14">
             <div className="h-30 flex padding-w-14 gap-t-10">
-                筛选符合下方<em className="gap-w-5"><SelectBox small value={self.block.filter.logic} border options={[
-                    { text: '任意', value: 'or' },
-                    { text: '所有', value: 'and' }
+                <S>筛选符合下方</S><em className="gap-w-5"><SelectBox small value={self.block.filter.logic} border options={[
+                    { text: lst('任意'), value: 'or' },
+                    { text: lst('所有'), value: 'and' }
                 ]} onChange={e => {
                     self.block.filter.logic = e;
                     self.onForceStore();
-                }}></SelectBox></em>条件的数据
+                }}></SelectBox></em><S>条件的数据</S>
             </div>
             <div className="max-h-300 overflow-y">{self.block.filter.items.map((item, index) => {
                 var fe = self.block.schema.fields.find(g => g.id == item.field);
@@ -318,8 +320,8 @@ export class TableFilterView extends EventsComponent {
                                 FieldType.email].includes(fe.type) && ['$ne', '$eq'].includes(item.operator))
                             )
                             &&
-                            <Input className={'gap-r-10'} style={{ width: 120 }} placeholder={'值'} value={item.value} onChange={e => { item.value = e; self.onStore(); }}></Input>}
-                        {[FieldType.number, FieldType.autoIncrement].includes(fe.type) && !['$isNull', '$isNotNull'].includes(item.operator) && <Input className={'gap-r-10'} type='number' style={{ width: 120 }} placeholder={'值'} value={item.value} onChange={e => { item.value = e; self.onStore(); }}></Input>}
+                            <Input className={'gap-r-10'} style={{ width: 120 }} placeholder={lst('值')} value={item.value} onChange={e => { item.value = e; self.onStore(); }}></Input>}
+                        {[FieldType.number, FieldType.autoIncrement].includes(fe.type) && !['$isNull', '$isNotNull'].includes(item.operator) && <Input className={'gap-r-10'} type='number' style={{ width: 120 }} placeholder={lst('值')} value={item.value} onChange={e => { item.value = e; self.onStore(); }}></Input>}
                         {[FieldType.date, FieldType.createDate].includes(fe.type) && !['$isNull', '$isNotNull'].includes(item.operator) && self.renderDateInput(item)}
                         {[FieldType.option, FieldType.options].includes(fe.type) && !['$isNull', '$isNotNull'].includes(item.operator) && self.renderOptionInput(item)}
                         {[FieldType.bool].includes(fe.type) && !['$isNull', '$isNotNull'].includes(item.operator) && <Switch className={'gap-r-10'} checked={item.value ? true : false} onChange={e => { item.value = e; self.onForceStore() }}></Switch>}
@@ -328,10 +330,10 @@ export class TableFilterView extends EventsComponent {
                     <span className="flex-fixed visible flex-center size-24 round item-hover cursor"><Icon size={12} onMousedown={e => removeFilter(e, item)} icon={CloseSvg} ></Icon></span>
                 </div>
             })}
-                {self.block.filter.items.length == 0 && <div className="remark padding-w-14 f-12 h-30 flex">还没有添加筛选条件</div>}</div>
+                {self.block.filter.items.length == 0 && <div className="remark padding-w-14 f-12 h-30 flex"><S>还没有添加筛选条件</S></div>}</div>
             <Divider></Divider>
             <div onClick={e => addFilter()} className="h-30  flex cursor item-hover padding-w-14">
-                <Icon size={18} style={{ marginRight: 5 }} icon={PlusSvg}></Icon>添加筛选条件
+                <Icon size={18} style={{ marginRight: 5 }} icon={PlusSvg}></Icon><S>添加筛选条件</S>
             </div>
         </div>
     }

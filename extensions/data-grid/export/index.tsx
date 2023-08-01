@@ -18,6 +18,8 @@ import { exportMarkdownDb } from "../../../src/import-export/markdown/db.export"
 import { util } from "../../../util/util";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
+import { lst } from "../../../i18n/store";
+import { S, Sp } from "../../../i18n/view";
 
 class TableExportView extends EventsComponent {
     get schema() {
@@ -114,7 +116,7 @@ class TableExportView extends EventsComponent {
     }
     async onExport() {
         this.exporting = true;
-        this.exportTip = '导出' + this.config.format;
+        this.exportTip = lst('导出') + this.config.format;
         this.exportError = '';
         this.forceUpdate();
         try {
@@ -128,7 +130,7 @@ class TableExportView extends EventsComponent {
         }
         catch (ex) {
             console.error(ex);
-            this.exportError = '导出出错';
+            this.exportError = lst('导出出错');
             this.exporting = false;
             this.exportTip = '';
         }
@@ -152,7 +154,7 @@ class TableExportView extends EventsComponent {
                 title: f.text
             }
         }), this.list, this.schema.text);
-        this.exportTip = '生成markdown成功';
+        this.exportTip = lst('生成markdown成功');
         this.forceUpdate();
     }
     async exportHtml() {
@@ -163,7 +165,7 @@ class TableExportView extends EventsComponent {
                 title: f.text
             }
         }), this.list, this.schema.text);
-        this.exportTip = '生成html成功';
+        this.exportTip = lst('生成html成功');
         this.forceUpdate();
     }
     async exportCSV() {
@@ -174,7 +176,7 @@ class TableExportView extends EventsComponent {
                 title: f.text
             }
         }), this.list, this.schema.text);
-        this.exportTip = '生成csv成功';
+        this.exportTip = lst('生成csv成功');
         this.forceUpdate();
     }
     async exportExcel() {
@@ -185,7 +187,7 @@ class TableExportView extends EventsComponent {
                 title: f.text
             }
         }), this.list, this.schema.text);
-        this.exportTip = '生成excel成功';
+        this.exportTip = lst('生成excel成功');
         this.forceUpdate();
     }
     render(): ReactNode {
@@ -193,30 +195,30 @@ class TableExportView extends EventsComponent {
             {
                 !this.exporting && <div className="padding-14 min-w-200">
                     <div className="flex gap-h-10">
-                        <label className="flex-auto">格式</label><div className="flex-fixed"><SelectBox
+                        <label className="flex-auto"><S>格式</S></label><div className="flex-fixed"><SelectBox
                             value={this.config.format}
                             onChange={e => { this.config.format = e; this.forceUpdate() }}
                             options={[{ text: 'CSV', value: 'csv' }, { text: 'Excel', value: 'excel' }, { text: 'Markdown', value: 'markdown' }, { text: 'Html', value: 'html' }]}
                         ></SelectBox></div>
                     </div>
                     <div className="flex gap-h-10">
-                        <label className="flex-auto">数据</label>
+                        <label className="flex-auto"><S>数据</S></label>
                         <div className="flex-fixed">
-                            <SelectBox value={this.config.datasource} onChange={e => { this.config.datasource = e; this.forceUpdate() }} options={[{ text: '当前视图', value: 'currentView' }, { text: '所有数据', value: 'database' }]}></SelectBox>
+                            <SelectBox value={this.config.datasource} onChange={e => { this.config.datasource = e; this.forceUpdate() }} options={[{ text: lst('当前视图'), value: 'currentView' }, { text: lst('所有数据'), value: 'database' }]}></SelectBox>
                         </div>
                     </div>
                     <div className="flex gap-h-10">
-                        <label className="flex-auto">内容</label><div className="flex-fixed"><SelectBox value={this.config.content} onChange={e => { this.config.content = e; this.forceUpdate() }} options={[{ text: '所有', value: 'all' }, { text: '无文件或图片', value: 'no-file' }]}></SelectBox></div>
+                        <label className="flex-auto"><S>内容</S></label><div className="flex-fixed"><SelectBox value={this.config.content} onChange={e => { this.config.content = e; this.forceUpdate() }} options={[{ text:lst('所有') , value: 'all' }, { text: lst('无文件或图片'), value: 'no-file' }]}></SelectBox></div>
                     </div>
                     <div className="flex-end gap-h-10 gap-t-20">
-                        <Button ghost className="gap-r-10" onClick={e => this.onCancel()}>取消</Button> <Button onClick={e => this.onExport()}>导出</Button>
+                        <Button ghost className="gap-r-10" onClick={e => this.onCancel()}><S>取消</S></Button> <Button onClick={e => this.onExport()}><S>导出</S></Button>
                     </div>
 
                 </div>
             }
             {
                 this.exporting && <div className="padding-14 min-w-250">
-                    <div className="flex gap-h-5">共{this.total}条</div>
+                    <div className="flex gap-h-5"><Sp key={'共{total}条'} data={{total:this.total}}>共{this.total}条</Sp></div>
                     <div className="flex">
                         <div className="flex-fixed gap-r-5"><Spin size={16}></Spin></div>
                         <div className="flex-auto border h-10 round">

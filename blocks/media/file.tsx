@@ -10,6 +10,8 @@ import { channel } from "../../net/channel";
 import { DownloadSvg, FileSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { util } from "../../util/util";
+import { lst } from "../../i18n/store";
+import { S } from "../../i18n/view";
 
 @url('/file')
 export class File extends Block {
@@ -75,7 +77,7 @@ export class File extends Block {
         return this.src?.filename || ''
     }
     async getMd() {
-        return `[${this.src?.filename || '文件'}](${this.src?.url})`;
+        return `[${this.src?.filename || lst('文件')}](${this.src?.url})`;
     }
 }
 @view('/file')
@@ -87,7 +89,7 @@ export class FileView extends BlockView<File>{
         return <div className='sy-block-file' style={this.block.visibleStyle}>
             {this.block.src.name == 'none' && <div onMouseDown={e => this.block.addFile(e)} className='sy-block-file-nofile'>
                 <Icon className={'text-1'} icon={FileSvg}></Icon>
-                {!this.block.speed && <span>添加附件</span>}
+                {!this.block.speed && <span><S>添加附件</S></span>}
                 {this.block.speed && <div className="remark gap-l-10">{this.block.speed}</div>}
             </div>}
             {this.block.src.name != 'none' && <div className='sy-block-file-content' >

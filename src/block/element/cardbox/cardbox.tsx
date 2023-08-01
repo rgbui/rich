@@ -26,6 +26,7 @@ import "./style.less";
 import { ToolTip } from "../../../../component/view/tooltip";
 import { BoxFillType, BoxStyle } from "../../../../extensions/doc.card/declare";
 import { DropDirection } from "../../../kit/handle/direction";
+import { lst } from "../../../../i18n/store";
 
 @url('/card/box')
 export class CardBox extends Block {
@@ -39,35 +40,35 @@ export class CardBox extends Block {
                 {
                     name: 'copylink',
                     icon: LinkSvg,
-                    text: "复制链接"
+                    text: lst("复制链接")
                 },
                 {
                     name: 'cloneCard',
                     icon: DuplicateSvg,
-                    text: "复制卡片"
+                    text: lst("复制卡片")
                 },
                 { type: MenuItemType.divide },
                 {
                     name: 'background',
                     icon: CardBackgroundFillSvg,
-                    text: "更换背景"
+                    text: lst("更换背景")
                 },
                 {
                     name: 'style',
                     icon: CardBrushSvg,
-                    text: "卡片样式"
+                    text: lst("卡片样式")
                 },
                 {
                     name: 'merge',
                     disabled: this.prev && this.prev instanceof CardBox ? false : true,
                     icon: ArrowUpSvg,
-                    text: "合并内容到上一个"
+                    text: lst("合并内容到上一个")
                 },
                 { type: MenuItemType.divide },
                 {
                     name: 'delete',
                     icon: TrashSvg,
-                    text: "删除卡片"
+                    text: lst("删除卡片")
                 }
             ]
         );
@@ -245,7 +246,7 @@ export class ViewComponent extends BlockView<CardBox>{
                         <div><ChildsArea childs={this.block.childs}></ChildsArea></div>
                     </div>
                     <div className="visible flex-center gap-t-20">
-                        {this.block.isCanEdit() && <ToolTip overlay={'添加卡片'}>
+                        {this.block.isCanEdit() && <ToolTip overlay={lst('添加卡片')}>
                             <div onMouseDown={e => this.block.onAddCardBox(e)} className="size-30 bg-white shadow flex-center cursor border circle text-1 link-hover"> <Icon size={18} icon={PlusSvg}></Icon></div>
                         </ToolTip>}
                     </div>
