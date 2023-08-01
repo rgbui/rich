@@ -49,7 +49,7 @@ export class PayTip extends EventsComponent {
     owner: string = '';
     render(): ReactNode {
         return <div className="round padding-14">
-            <div className="warn-bg gap-h-10"><S key={'需充值才能使用'}>需充值才能使用(该功能为第三方收费接口，诗云无法免费）</S></div>
+            <div className="warn-bg gap-h-10"><S text={'需充值才能使用'}>需充值才能使用(该功能为第三方收费接口，诗云无法免费）</S></div>
             {this.userid != this.owner && <div className="gap-h-10">
                 <div className="flex-center gap-h-10"><S>联系空间拥有者</S><Avatar showCard userid={this.owner}></Avatar>,<S>让TA充值</S></div>
                 <div className="flex-center gap-h-10"><Button ghost onClick={e => this.openPay()}><S>自已充钱体验</S></Button></div>

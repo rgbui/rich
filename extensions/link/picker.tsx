@@ -4,7 +4,7 @@ import { EventsComponent } from "../../component/lib/events.component";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 import { PageLink } from "./declare";
-import { GlobalLinkSvg, PlusSvg } from "../../component/svgs";
+import { GlobalLinkSvg, PlusSvg, TrashSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import lodash from "lodash";
 import { channel } from "../../net/channel";
@@ -19,6 +19,7 @@ import { Block } from "../../src/block";
 import { SearchListType } from "../../component/types";
 import { ls, lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
+import { Tip } from "../../component/view/tooltip/tip";
 
 /**
  * 
@@ -128,13 +129,18 @@ class LinkPicker extends EventsComponent {
     selectIndex = 0;
     render() {
         return <div ref={e => this.el = e} style={{ zIndex: popoverLayer.zoom(this) }} className='pos-fixed bg-white w-250 max-h-300 overlay-y padding-10 round shadow'>
-            <div className="gap-h-5">
-                <Input size='small'
-                    onKeydown={this.keydown}
-                    placeholder={lst('请输入网址或搜索页面')}
-                    onChange={e => this.onInput(e)}
-                    onEnter={(e, g) => { g.preventDefault(); g.stopPropagation(); this.onEnter(e); }}
-                    value={this.url}></Input>
+            <div className="gap-h-5 flex">
+                <div className="flex-auto">
+                    <Input size='small'
+                        onKeydown={this.keydown}
+                        placeholder={lst('请输入网址或搜索页面')}
+                        onChange={e => this.onInput(e)}
+                        onEnter={(e, g) => { g.preventDefault(); g.stopPropagation(); this.onEnter(e); }}
+                        value={this.url}></Input>
+                </div>
+                <Tip text='清空链接'><div onMouseDown={e => this.onClear()} className="flex-fixed size-24 item-hover round">
+                    <Icon icon={TrashSvg}></Icon>
+                </div></Tip>
             </div>
             {this.name == 'outside' && this.url && <div className={'h-30 cursor item-hover round padding-w-5 flex' + (this.selectIndex == 0 ? " item-hover-focus" : "")}
                 onClick={e => this.onEnter(this.url)}
@@ -201,6 +207,9 @@ class LinkPicker extends EventsComponent {
             this.forceUpdate();
         }
     }
+    onClear() {
+        this.emit('clear');
+    }
 }
 
 export async function useLinkPicker(pos: PopoverPosition, link?: PageLink) {
@@ -212,6 +221,10 @@ export async function useLinkPicker(pos: PopoverPosition, link?: PageLink) {
             resolve(link);
             popover.close();
         })
-        popover.on('close', () => resolve(null))
+        picker.on('clear', () => {
+            resolve(null)
+            popover.close();
+        })
+        popover.on('close', () => resolve(undefined))
     })
 }

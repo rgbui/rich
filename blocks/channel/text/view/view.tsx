@@ -238,7 +238,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
                 className="overflow-y border-box">
                 <div className="sy-channel-text-head">
                     {this.block.unreadTip && <div className="sy-channel-text-unread-tip" >
-                        <span><Sp key="自{date}来有{count}条消息未读" data={{ count: this.block.unreadTip.count, date: util.showTime(new Date(this.block.unreadTip.date)) }}>自{util.showTime(new Date(this.block.unreadTip.date))}来有{this.block.unreadTip.count}条消息未读</Sp></span>
+                        <span><Sp text="自{date}来有{count}条消息未读" data={{ count: this.block.unreadTip.count, date: util.showTime(new Date(this.block.unreadTip.date)) }}>自{util.showTime(new Date(this.block.unreadTip.date))}来有{this.block.unreadTip.count}条消息未读</Sp></span>
                         <a onMouseDown={e => this.block.onClearUnread()}><S>标记为已读</S><Icon size={14} icon={UnreadTextSvg}></Icon></a>
                     </div>}
                 </div>

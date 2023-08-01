@@ -8,6 +8,7 @@ import { BlockView } from "../../../src/block/view";
 import { TextSpanArea } from "../../../src/block/view/appear";
 import { Rect, PointArrow } from "../../../src/common/vector/point";
 import "./style.less";
+import { lst } from "../../../i18n/store";
 
 @url('/note')
 export class Note extends Block {
@@ -125,7 +126,7 @@ export class NoteView extends BlockView<Note>{
                 width: this.block.fixedSize.width,
                 height: this.block.fixedSize.height
             }}>
-                <TextSpanArea placeholder={this.block.isFreeBlock ? "键入文本" : undefined} block={this.block}></TextSpanArea>
+                <TextSpanArea placeholder={this.block.isFreeBlock ? lst("输入文本")  : undefined} block={this.block}></TextSpanArea>
             </div>
         </div>
     }

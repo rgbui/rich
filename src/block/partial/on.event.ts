@@ -135,7 +135,7 @@ export class Block$Event {
                 {
                     name: 'fontColor',
                     type: MenuItemType.color,
-                    options: FontColorList.map(f => {
+                    options: FontColorList().map(f => {
                         return {
                             text: f.text,
                             overlay: f.text,
@@ -154,7 +154,7 @@ export class Block$Event {
                 {
                     type: MenuItemType.color,
                     name: 'fillColor',
-                    options: BackgroundColorList.map(f => {
+                    options: BackgroundColorList().map(f => {
                         return {
                             text: f.text,
                             value: f.color,

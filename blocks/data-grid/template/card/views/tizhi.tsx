@@ -17,23 +17,23 @@ import { S } from "../../../../../i18n/view";
 
 CardModel({
     url: '/list/tizhi',
-    title: lst('贴子'),
-    remark: lst('适用于发贴讨论'),
+    title: ('贴子'),
+    remark: ('适用于发贴讨论'),
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridList],
     props: [
-        { name: 'pic', text: lst('缩略图'), types: [FieldType.thumb, FieldType.image, FieldType.video], required: true },
-        { name: 'author', text: lst('作者'), types: [FieldType.creater] },
-        { name: 'title', text: lst('标题'), types: [FieldType.title, FieldType.text] },
-        { name: 'remark', text: lst('描述'), types: [FieldType.plain, FieldType.text] },
-        { name: 'like', text: lst('喜欢'), types: [FieldType.like] },
-        { name: 'comment', text: lst('评论'), types: [FieldType.comment] },
-        { name: 'createDate', text: lst("创建日期"), types: [FieldType.createDate] }
+        { name: 'pic', text: ('缩略图'), types: [FieldType.thumb, FieldType.image, FieldType.video], required: true },
+        { name: 'author', text: ('作者'), types: [FieldType.creater] },
+        { name: 'title', text: ('标题'), types: [FieldType.title, FieldType.text] },
+        { name: 'remark', text: ('描述'), types: [FieldType.plain, FieldType.text] },
+        { name: 'like', text: ('喜欢'), types: [FieldType.like] },
+        { name: 'comment', text: ('评论'), types: [FieldType.comment] },
+        { name: 'createDate', text: ("创建日期"), types: [FieldType.createDate] }
     ],
     views: [
-        { url: BlockUrlConstant.DataGridTable, text: lst('贴子表格'), },
-        { autoCreate: true, url: BlockUrlConstant.DataGridList, text: lst('贴子'), },
-        { url: BlockUrlConstant.RecordPageView, text: lst('贴子详情'), }
+        { url: BlockUrlConstant.DataGridTable, text: ('贴子表格'), },
+        { autoCreate: true, url: BlockUrlConstant.DataGridList, text: ('贴子'), },
+        { url: BlockUrlConstant.RecordPageView, text: ('贴子详情'), }
     ],
     async createDataList() {
         return [
@@ -119,7 +119,7 @@ export class CardTiZhi extends CardView {
                 <span className="remark gap-l-10">{util.showTime(createDate)}&nbsp;<S>发表了贴子</S></span>
             </div>
             <div className="gap-h-10 f-14">
-                {remark || lst('还没有发表内容')}
+                {remark || ('还没有发表内容')}
             </div>
             <div className="flex">
                 {pics.slice(0, 6).map(pic => {

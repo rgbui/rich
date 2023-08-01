@@ -230,7 +230,7 @@ export class CommentListView extends React.Component<{
                             </div>
                         </div>
                         {l.replyCount > 0 && !l.replys && <div className="flex gap-t-10">
-                            <span className="link cursor f-12" onMouseDown={e => this.onExpends(l)}><Sp key={'展开回复{count}条'} data={{count:l.replyCount}}>展开回复{l.replyCount}条</Sp></span>
+                            <span className="link cursor f-12" onMouseDown={e => this.onExpends(l)}><Sp text={'展开回复{count}条'} data={{count:l.replyCount}}>展开回复{l.replyCount}条</Sp></span>
                         </div>}
                         {l.replys && <div className="gap-t-10">{this.renderComments(l.replys.list, deep + 1)}</div>}
                     </div></>}

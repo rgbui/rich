@@ -165,7 +165,7 @@ export class List extends Block {
             var newItems: MenuItem<string>[] = [
                 {
                     icon: this.listType == ListType.circle ? ListSvg : NumberListSvg,
-                    text: (this.listType == ListType.number ? lst("数字") : "") + lst('列表符号'),
+                    text: this.listType == ListType.number ? lst("数字列表符号") : lst('列表符号'),
                     childs: this.listType == ListType.circle ? [
                         { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.none, text: lst('实心园'), value: ListTypeView.none },
                         { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.circleEmpty, text: lst('空心园'), value: ListTypeView.circleEmpty },
@@ -173,9 +173,9 @@ export class List extends Block {
                         { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.rhombus, text: lst('空心菱形'), value: ListTypeView.rhombus },
                     ] : [
                         { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.none, text: lst('数字'), value: ListTypeView.none },
-                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.alphabet, text:lst( '小写字母'), value: ListTypeView.alphabet },
+                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.alphabet, text: lst('小写字母'), value: ListTypeView.alphabet },
                         { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.capitalLetter, text: lst('大写字母'), value: ListTypeView.capitalLetter },
-                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.roman, text:lst( '罗马'), value: ListTypeView.roman }
+                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.roman, text: lst('罗马'), value: ListTypeView.roman }
                     ]
                 }, { type: MenuItemType.divide }]
             items.splice(at, 0, ...newItems)

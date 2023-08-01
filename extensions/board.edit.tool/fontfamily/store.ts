@@ -8,7 +8,7 @@ export type FontFamilyStyle = {
     text: string
 }
 
-export var FontStores: FontFamilyStyle[] = [
+export var FontStores: () => FontFamilyStyle[] = () => [
     { name: '', text: lst('默认') },
     { url: 'https://resources.shy.live/fonts/SourceHanSansSC-Normal-2.otf', name: 'SourceHanSansSC', text: '思源黑体' },
     { url: 'https://resources.shy.live/fonts/SiYuanSongTiRegular/SourceHanSerifCN-Regular-1.otf', name: 'SourceHanSerifCN-Regular', text: '思源宋体' },
@@ -36,14 +36,14 @@ async function handle(batchs: {
     lodash.remove(batchs, g => loadFonts.includes(g.id));
     for (let i = 0; i < batchs.length; i++) {
         var batch = batchs[i];
-        var bn = FontStores.find(c => c.name == batch.id)
+        var bn = FontStores().find(c => c.name == batch.id)
         var nf = new FontFace(bn.name, `url(${bn.url})`);
         await nf.load();
         loadFonts.push(bn.name);
     }
     if (batchs.length > 0) {
         let code = batchs.reduce((accumulator, currentValue) => {
-            var f = FontStores.find(c => c.name == currentValue.id);
+            var f = FontStores().find(c => c.name == currentValue.id);
             return accumulator + `@font-face { font-family: ${f.name};src: url('${f.url}'); }`;
         }, "");
         var style = document.createElement("style") as any;

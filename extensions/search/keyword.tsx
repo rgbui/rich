@@ -33,7 +33,7 @@ export class SearchBox extends EventsComponent {
                         </span>}
                         size='larger'
                         onClear={() => { this.searchList.word = ''; this.onForceSearch() }}
-                        placeholder={lst('在 {text} 中搜索', { text: ws?.text || lst('空间') })}
+                        placeholder={lst('在{text}中搜索', { text: ws?.text || lst('空间') })}
                         value={this.searchList.word}
                         onEnter={e => { this.searchList.word = e; this.onForceSearch() }}
                         onChange={e => { this.searchList.word = e; this.onSearch() }} ></Input>

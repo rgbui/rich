@@ -24,34 +24,34 @@ import { lst } from "../../../../../i18n/store";
  */
 CardModel({
     url: '/article',
-    title: lst('文章'),
-    remark: lst('适用于强调图文'),
+    title: ('文章'),
+    remark: ('适用于强调图文'),
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridList],
     props: [
         {
             name: 'pic',
-            text: lst('封面图'),
+            text: ('封面图'),
             types: [FieldType.thumb, FieldType.image, FieldType.cover, FieldType.video],
             required: true
         },
         {
             name: 'title',
-            text: lst('标题'),
+            text: ('标题'),
             types: [FieldType.title, FieldType.text],
             required: true
         },
-        { name: 'remark', text: lst('描述'), types: [FieldType.plain, FieldType.text] },
-        { name: 'like', text: lst('喜欢'), types: [FieldType.like] },
-        { name: 'author', text: lst('作者'), types: [FieldType.creater] },
-        { name: 'types', text: lst('分类'), types: [FieldType.option, FieldType.options] },
-        { name: 'date', text: lst('日期'), types: [FieldType.createDate, FieldType.date] },
-        { name: 'comment', text: lst('评论'), types: [FieldType.comment] },
+        { name: 'remark', text: ('描述'), types: [FieldType.plain, FieldType.text] },
+        { name: 'like', text: ('喜欢'), types: [FieldType.like] },
+        { name: 'author', text: ('作者'), types: [FieldType.creater] },
+        { name: 'types', text: ('分类'), types: [FieldType.option, FieldType.options] },
+        { name: 'date', text: ('日期'), types: [FieldType.createDate, FieldType.date] },
+        { name: 'comment', text: ('评论'), types: [FieldType.comment] },
     ],
     views: [
-        { url: BlockUrlConstant.DataGridTable, text: lst('文章'), },
-        { autoCreate: true, url: BlockUrlConstant.DataGridList, text: lst('列表'), },
-        { url: BlockUrlConstant.RecordPageView, text: lst('文章详情'), }
+        { url: BlockUrlConstant.DataGridTable, text: ('文章'), },
+        { autoCreate: true, url: BlockUrlConstant.DataGridList, text: ('列表'), },
+        { url: BlockUrlConstant.RecordPageView, text: ('文章详情'), }
     ],
     async createDataList() {
         return [
@@ -165,34 +165,34 @@ export class CardPin extends CardView {
  */
 CardModel({
     url: '/article/content',
-    title: lst('文章'),
-    remark:lst( '适用于文章列表'),
+    title: ('文章'),
+    remark:( '适用于文章列表'),
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridList],
     props: [
         {
             name: 'pic',
-            text:lst( '封面图'),
+            text:( '封面图'),
             types: [FieldType.thumb, FieldType.image, FieldType.cover, FieldType.video],
             required: true
         },
         {
             name: 'title',
-            text: lst('标题'),
+            text: ('标题'),
             types: [FieldType.title, FieldType.text],
             required: true
         },
-        { name: 'remark', text: lst('描述'), types: [FieldType.plain, FieldType.text] },
-        { name: 'like', text:lst( '喜欢'), types: [FieldType.like] },
-        { name: 'author', text: lst('作者'), types: [FieldType.creater] },
-        { name: 'types', text:lst( '分类'), types: [FieldType.option, FieldType.options] },
-        { name: 'date', text:lst( '日期'), types: [FieldType.createDate, FieldType.date] },
-        { name: 'comment', text: lst('评论'), types: [FieldType.comment] },
+        { name: 'remark', text: ('描述'), types: [FieldType.plain, FieldType.text] },
+        { name: 'like', text:( '喜欢'), types: [FieldType.like] },
+        { name: 'author', text: ('作者'), types: [FieldType.creater] },
+        { name: 'types', text:( '分类'), types: [FieldType.option, FieldType.options] },
+        { name: 'date', text:( '日期'), types: [FieldType.createDate, FieldType.date] },
+        { name: 'comment', text: ('评论'), types: [FieldType.comment] },
     ],
     views: [
-        { url: BlockUrlConstant.DataGridTable, text:lst( '文章'), },
-        { autoCreate: true, url: BlockUrlConstant.DataGridList, text: lst('列表'), },
-        { url: BlockUrlConstant.RecordPageView, text: lst('文章详情'), }
+        { url: BlockUrlConstant.DataGridTable, text:( '文章'), },
+        { autoCreate: true, url: BlockUrlConstant.DataGridList, text: ('列表'), },
+        { url: BlockUrlConstant.RecordPageView, text: ('文章详情'), }
     ],
     async createDataList() {
         return [

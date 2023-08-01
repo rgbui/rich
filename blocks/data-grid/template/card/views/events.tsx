@@ -18,14 +18,14 @@ import { S } from "../../../../../i18n/view";
  */
 CardModel({
     url: '/events',
-    title:lst('活动') ,
-    remark:lst( '适用于活动举办发布'),
+    title:('活动') ,
+    remark:( '适用于活动举办发布'),
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridGallery],
     props: [
         {
             name: 'pic',
-            text: lst('封面图'),
+            text: ('封面图'),
             types: [
                 FieldType.image,
                 FieldType.cover,
@@ -33,16 +33,16 @@ CardModel({
             ],
             required: true
         },
-        { name: 'title', text: lst( '标题'), types: [FieldType.title, FieldType.text] },
-        { name: 'date', text: lst( '报名时间'), types: [FieldType.date] },
-        { name: 'types', text:  lst('类别'), types: [FieldType.option, FieldType.options] },
-        { name: 'address', text: lst( '地址'), types: [FieldType.text] },
-        { name: 'users', text:  lst('报名用户'), types: [FieldType.user] }
+        { name: 'title', text: ( '标题'), types: [FieldType.title, FieldType.text] },
+        { name: 'date', text: ( '报名时间'), types: [FieldType.date] },
+        { name: 'types', text:  ('类别'), types: [FieldType.option, FieldType.options] },
+        { name: 'address', text: ( '地址'), types: [FieldType.text] },
+        { name: 'users', text:  ('报名用户'), types: [FieldType.user] }
     ],
     views: [
-        { url: BlockUrlConstant.DataGridTable, text:lst('活动') , },
-        { autoCreate: true, url: BlockUrlConstant.DataGridGallery, text:lst('活动列表') , },
-        { url: BlockUrlConstant.RecordPageView, text:lst('活动详情') , }
+        { url: BlockUrlConstant.DataGridTable, text:('活动') , },
+        { autoCreate: true, url: BlockUrlConstant.DataGridGallery, text:('活动列表') , },
+        { url: BlockUrlConstant.RecordPageView, text:('活动详情') , }
     ],
     dataList: [
         {

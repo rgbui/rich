@@ -25,7 +25,7 @@ export class PageHistoryStore extends EventsComponent {
         return <div className="shy-page-history">
             <div className="shy-page-history-body">
                 <div className="shy-page-history-list">
-                    <div className="shy-page-history-list-record"><span><Sp key={'{total}条历史记录'} data={{total:this.total}}>{this.total}条历史记录</Sp></span></div>
+                    <div className="shy-page-history-list-record"><span><Sp text={'{total}条历史记录'} data={{total:this.total}}>{this.total}条历史记录</Sp></span></div>
                     {this.loadList && <Loading></Loading>}
                     {this.list.map(r => {
                         return <a className={r.id == this.currentId ? "hover" : ""} onMouseDown={e => this.loadPageContent(r.id)} key={r.id}>
@@ -40,7 +40,7 @@ export class PageHistoryStore extends EventsComponent {
                 </div>
             </div>
             <div className="shy-page-history-footer flex">
-                <div className="remark flex-fixed"><Sp key={'诗云将自动保留60天的历史记录'}>诗云将自动保留60天的历史记录<br />被重命名的版本,诗云将不在自动清理,需要手动清理</Sp></div>
+                <div className="remark flex-fixed"><Sp text={'诗云将自动保留60天的历史记录'}>诗云将自动保留60天的历史记录<br />被重命名的版本,诗云将不在自动清理,需要手动清理</Sp></div>
                 <div className="flex-auto flex-end"><Button ref={e => this.button = e} onClick={e => this.onBake()} disabled={this.currentId ? false : true}><S>恢复</S></Button></div>
 
             </div>

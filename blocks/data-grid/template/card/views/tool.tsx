@@ -6,7 +6,6 @@ import { FieldType } from "../../../schema/type";
 import { CardView } from "../view";
 import { BlockUrlConstant } from "../../../../../src/block/constant";
 import { autoImageUrl } from "../../../../../net/element.type";
-import { lst } from "../../../../../i18n/store";
 
 /**
  * 
@@ -16,29 +15,29 @@ import { lst } from "../../../../../i18n/store";
  */
 CardModel({
     url: '/tool',
-    title: lst('app工具'),
-    remark: lst('app工具'),
+    title: ('app工具'),
+    remark: ('app工具'),
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridGallery],
     props: [
         {
             name: 'title',
-            text: lst('标题'),
+            text: ('标题'),
             types: [FieldType.title, FieldType.text],
             required: true
         },
         {
             name: 'pic',
-            text: lst('插图'),
+            text: ('插图'),
             types: [FieldType.image, FieldType.cover, FieldType.video],
             required: true
         },
-        { name: 'remark', text:lst( '描述'), types: [FieldType.plain] },
+        { name: 'remark', text:( '描述'), types: [FieldType.plain] },
     ],
     views: [
-        { url: BlockUrlConstant.DataGridTable, text: lst('app工具'), },
-        { autoCreate: true, url: BlockUrlConstant.DataGridGallery, text:lst( 'app工具列表'), },
-        { url: BlockUrlConstant.RecordPageView, text:lst( 'app工具详情'), }
+        { url: BlockUrlConstant.DataGridTable, text: ('app工具'), },
+        { autoCreate: true, url: BlockUrlConstant.DataGridGallery, text:( 'app工具列表'), },
+        { url: BlockUrlConstant.RecordPageView, text:( 'app工具详情'), }
     ],
     dataList: [
         { pic: [{ url: 'https://api-w2.shy.live/ws/img?id=1fcdc66fd4fd47e1a5d375cad8241c1a' }], title: 'Midjourney', remark: 'Midjourney是一个文本生成图像的AI工具' },

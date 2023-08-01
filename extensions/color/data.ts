@@ -4,7 +4,7 @@ import { lst } from "../../i18n/store";
 /**
  * 文字颜色
  */
-export var FontColorList = [
+export var FontColorList = () => [
     { color: 'inherit', text: lst('默认') },
     { color: 'rgba(55,53,47,0.6)', text: lst('灰色') },
     { color: 'rgb(100,71,58)', text: lst('棕色') },
@@ -19,7 +19,7 @@ export var FontColorList = [
 /**
  * 背景色
  */
-export var BackgroundColorList = [
+export var BackgroundColorList = ()=>[
     { color: 'rgba(255,255,255,0)', text: lst('默认') },
     { color: 'rgba(237,233,235,0.5)', text: lst('白灰') },
     { color: 'rgba(217,211,215,0.5)', text: lst('暗银') },

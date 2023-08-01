@@ -1,16 +1,15 @@
 
 import { Events } from "../../util/events";
+import { getBlockSelectData } from "./data";
 import { BlockGroup, BlockSelectorItem } from "./delcare";
 class BlockStore extends Events {
     constructor() {
         super();
-        this.import();
     }
     private _blockGroups: BlockGroup[];
-    async import() {
-        if (!Array.isArray(this._blockGroups)) {
-            var r = await import("./data");
-            this._blockGroups = r.BlockSelectorData;
+    async import(force?: boolean) {
+        if (!Array.isArray(this._blockGroups) || force == true) {
+            this._blockGroups = getBlockSelectData();
         }
     }
     find(predict: (data: Record<string, any>) => boolean) {
@@ -31,7 +30,7 @@ class BlockStore extends Events {
         var bs = this._blockGroups.map(b => {
             return {
                 ...b,
-                childs: b.childs.findAll(g =>!label||label&& g.text && ('/' + g.text).startsWith(label) || g.label.startsWith(label) || Array.isArray(g.labels) && g.labels.exists(c => c.startsWith(label)))
+                childs: b.childs.findAll(g => !label || label && g.text && ('/' + g.text).startsWith(label) || g.label.startsWith(label) || Array.isArray(g.labels) && g.labels.exists(c => c.startsWith(label)))
             }
         });
         bs.removeAll(g => g.childs.length == 0);

@@ -71,7 +71,7 @@ export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audi
         else if (this.props.mine == 'video') exts = ['video/*'];
         return <div className='shy-upload'>
             <div className='shy-upload-remark'>
-                <Sp key={'请勿上传色情、涉政涉恐涉暴、侵权内容'}>请勿上传色情、涉政涉恐涉暴、侵权内容或<a target='_blank' className="link-red" href='https://shy.live/service_protocol'>服务条款</a>
+                <Sp text={'请勿上传色情'}>请勿上传色情、涉政涉恐涉暴、侵权内容或<a target='_blank' className="link-red" href='https://shy.live/service_protocol'>服务条款</a>
                     中禁止上传的其它内容</Sp>
             </div>
             <FileView exts={exts} onChange={e => { this.onUpload(e[0]) }}>

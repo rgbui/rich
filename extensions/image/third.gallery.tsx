@@ -96,7 +96,7 @@ export class ThirdGallery extends React.Component<{ type: GalleryType, onChange:
         return <div className='shy-third-gallery'>
             <div className="shy-third-gallery-search"><Input value={this.word} onChange={e => this.word = e} onEnter={e => this.onSearch(e)} clear placeholder={ls.t('搜索图片')}></Input></div>
             <div className='shy-third-gallery-origin'>
-                <Sp key={'请勿上传色情、涉政涉恐涉暴、侵权内容'}>请勿上传色情、涉政涉恐涉暴、侵权内容或<a target='_blank' className="link-red" href='https://shy.live/service_protocol'>服务条款</a>
+                <Sp text={'请勿上传色情'}>请勿上传色情、涉政涉恐涉暴、侵权内容或<a target='_blank' className="link-red" href='https://shy.live/service_protocol'>服务条款</a>
                     中禁止上传的其它内容</Sp>
             </div>
             <div className='shy-third-gallery-content'>

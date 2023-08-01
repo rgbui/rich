@@ -122,7 +122,7 @@ class FormulaSelector extends EventsComponent {
                     </div>
                     <div className="gap-h-10">
                         <div className="remark font-12 padding-l-10"><S>类型</S></div>
-                        {formulaLangs.map((fl, k) => {
+                        {formulaLangs().map((fl, k) => {
                             return <div className="gap-h-10" key={k}>
                                 <div onClick={e => { fl.spread = fl.spread ? false : true; this.forceUpdate() }}
                                     className="flex text-1 font-14 padding-l-10">

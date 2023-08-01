@@ -27,7 +27,7 @@ import { S } from "../../../i18n/view";
  * 背景色
  * 
  */
-export var OptionBackgroundColorList = [
+export var OptionBackgroundColorList =()=> [
     { color: 'rgba(247,214,183,0.5)', text: lst('幼杏') },
     { color: 'rgba(255,193,153,0.5)', text: lst('鲜橘') },
     { color: 'rgba(252,246,189,0.5)', text: lst('淡黄') },
@@ -106,10 +106,10 @@ export class TableStoreOption extends EventsComponent {
         return this.value && !(this.options.length > 0 && this.options.some(s => s.text == this.value)) ? true : false;
     }
     get optionColor() {
-        var oc = OptionBackgroundColorList.findAll(g => !this.options.some(o => o.color == g.color)).randomOf()?.color;
+        var oc = OptionBackgroundColorList().findAll(g => !this.options.some(o => o.color == g.color)).randomOf()?.color;
         if (oc) return oc;
         else {
-            return OptionBackgroundColorList.randomOf()?.color;
+            return OptionBackgroundColorList().randomOf()?.color;
         }
     }
     get filterOptions() {
@@ -175,7 +175,7 @@ export class TableStoreOption extends EventsComponent {
             { name: 'delete', icon: TrashSvg, text: lst('删除') },
             { type: MenuItemType.divide },
             { type: MenuItemType.text, text: lst('颜色') },
-            ...OptionBackgroundColorList.map(b => {
+            ...OptionBackgroundColorList().map(b => {
                 return {
                     name: 'color',
                     value: b.color,

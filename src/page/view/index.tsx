@@ -179,7 +179,7 @@ export class PageView extends Component<{ page: Page }>{
     renderPageTemplate() {
         var ws = this.page.ws
         return <div className="shy-page-view-template-picker" style={this.page.getScreenStyle()}>
-            <div className="shy-page-view-template-picker-tip"><S>回车开始编辑，或者从下方选择</S></div>
+            <div className="shy-page-view-template-picker-tip"><S text='回车开始编辑'>回车开始编辑，或者从下方选择</S></div>
             <div className="shy-page-view-template-picker-items">
                 <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={20} icon={PageSvg} ></Icon><span><S>空白页面</S></span></a>
                 <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc, { useAi: true })}><Icon size={20} icon={AiStartSvg}></Icon><span><S>用AI开始创作</S></span></a>

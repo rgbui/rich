@@ -69,7 +69,7 @@ export class AISearchBox extends EventsComponent {
             </div>
             <Divider></Divider>
             <div className="padding-w-10 min-h-120 overflow-y" ref={e => this.scrollEl = e}>
-                {!this.robotId && <div className="remark flex-center gap-h-30 "><Sp key={'无AI机器人,了解'}>无AI机器人,了解<a href='https://help.shy.live/page/1075' className="remark underline" target="_blank">如何训练自已的机器人</a></Sp></div>}
+                {!this.robotId && <div className="remark flex-center gap-h-30 "><Sp text={'无AI机器人了解'}>无AI机器人,了解<a href='https://help.shy.live/page/1075' className="remark underline" target="_blank">如何训练自已的机器人</a></Sp></div>}
                 {this.renderMessages()}
             </div>
             <Divider></Divider>

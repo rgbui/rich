@@ -52,7 +52,7 @@ export var funLangs = [
 
 
 
-export var formulaLangs = [
+export var formulaLangs =()=> [
     {
         text: lst('文本'),
         types: [FieldType.text, FieldType.title],

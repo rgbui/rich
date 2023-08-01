@@ -86,7 +86,7 @@ export class PagingView extends BlockView<Paging>{
         return <div style={this.block.visibleStyle}>
             <div style={this.block.contentStyle} className='flex min-h-24 f-14'>
                 {this.block.refBlock && <>
-                    <span className="text gap-r-10"><Sp key={'共{total}条'} data={{total:this.block.refBlock.total}}>共{this.block.refBlock.total}条</Sp></span>
+                    <span className="text gap-r-10"><Sp text={'共{total}条'} data={{total:this.block.refBlock.total}}>共{this.block.refBlock.total}条</Sp></span>
                     <span onMouseDown={e => this.block.onChangeIndex(this.block.refBlock.pageIndex - 1)} className={"border flex-center size-24 round" + (this.block.refBlock.pageIndex == 1 ? " remark" : " cursor")}><Icon size={18} icon={ChevronLeftSvg}></Icon></span>
                     {this.getPages().map((pa, index) => {
                         return <span key={index} className={pa.classList.join(" ")} onMouseDown={e => this.block.onChangeIndex(pa.index)}>{pa.text}</span>

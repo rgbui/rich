@@ -218,7 +218,7 @@ class TableExportView extends EventsComponent {
             }
             {
                 this.exporting && <div className="padding-14 min-w-250">
-                    <div className="flex gap-h-5"><Sp key={'共{total}条'} data={{total:this.total}}>共{this.total}条</Sp></div>
+                    <div className="flex gap-h-5"><Sp text={'共{total}条'} data={{total:this.total}}>共{this.total}条</Sp></div>
                     <div className="flex">
                         <div className="flex-fixed gap-r-5"><Spin size={16}></Spin></div>
                         <div className="flex-auto border h-10 round">

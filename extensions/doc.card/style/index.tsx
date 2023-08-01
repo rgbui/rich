@@ -68,7 +68,7 @@ export class CardBoxStyle extends EventsComponent {
                     <S>无背景</S>
                 </div>}
                 {this.options.fill.mode == 'image' && <div>
-                    {GalleryPics.map(gp => {
+                    {GalleryPics().map(gp => {
                         return <div className="gap-b-15" key={gp.group}>
                             <div className="remark padding-w-15">{gp.group}</div>
                             <div className="flex flex-wrap">
@@ -103,7 +103,7 @@ export class CardBoxStyle extends EventsComponent {
                         }}></ColorInput>
                     </div>
                     <div className="remark f-14 gap-b-5"><S>选择主题色</S></div>
-                    {BackgroundColorList.map(bg => {
+                    {BackgroundColorList().map(bg => {
                         return <div key={bg.color}
                             onMouseDown={e => {
                                 this.setProps({ 'fill.mode': 'color', 'fill.color': bg.color })

@@ -94,7 +94,7 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
     }
     renderFontColors() {
         return <div className='shy-font-awesome-colors'>
-            {FontColorList.map(c => {
+            {FontColorList().map(c => {
                 return <ToolTip overlay={c.text} key={c.color} ><a className={this.color == c.color ? "hover" : ""} onMouseDown={e => this.onSetFont(c)} style={{ backgroundColor: c.color == 'inherit' ? "var(--text-color)" : c.color }}></a></ToolTip>
             })}
         </div>

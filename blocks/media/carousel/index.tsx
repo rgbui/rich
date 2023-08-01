@@ -78,7 +78,7 @@ export class Carousel extends Block {
             type: MenuItemType.divide
         });
         items.push({
-            text:lst("图片列表") ,
+            text: lst("图片列表"),
             icon: { name: 'bytedance-icon', code: 'multi-picture-carousel' },
             childs: [
                 ...(this.srcs.length > 0 ? [
@@ -110,7 +110,7 @@ export class Carousel extends Block {
                 {
                     name: 'append',
                     type: MenuItemType.button,
-                    text:lst('上传图片') ,
+                    text: lst('上传图片'),
                     icon: UploadSvg
                 }
             ]
@@ -132,7 +132,7 @@ export class Carousel extends Block {
             type: MenuItemType.divide
         });
         items.push({
-            text:lst('对齐') ,
+            text: lst('对齐'),
             icon: { name: 'bytedance-icon', code: 'align-text-both' },
             childs: [
                 {
@@ -202,7 +202,6 @@ export class Carousel extends Block {
         super.onContextMenuInput(item)
     }
     async onContextMenuClick(item: MenuItem<string | BlockDirective>, event: React.MouseEvent<Element, MouseEvent>, clickName: string, mp: MenuPanel<any>) {
-        console.log(item, event, clickName, mp);
         if (item.name == 'srcItem') {
             var rg = await useSelectMenuItem(
                 { roundArea: Rect.fromEvent(event) },

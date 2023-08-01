@@ -16,18 +16,18 @@ import { lst } from "../../../../../i18n/store";
  */
 CardModel({ abled:false,
     url: '/rank',
-    title:lst('排行榜') ,
-    remark:lst( '排行榜'),
+    title:('排行榜') ,
+    remark:( '排行榜'),
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridList],
     props: [
-        { name: 'user', text: lst('用户'), types: [FieldType.user] },
-        { name: 'score', text:lst( '得分'), types: [FieldType.number] },
+        { name: 'user', text: ('用户'), types: [FieldType.user] },
+        { name: 'score', text:( '得分'), types: [FieldType.number] },
     ],
     views: [
-        { url: BlockUrlConstant.DataGridTable, text: lst('排行'), },
-        { autoCreate: true, url: BlockUrlConstant.DataGridList, text: lst('排行榜'), },
-        { url: BlockUrlConstant.RecordPageView, text:lst( '排行详情'), }
+        { url: BlockUrlConstant.DataGridTable, text: ('排行'), },
+        { autoCreate: true, url: BlockUrlConstant.DataGridList, text: ('排行榜'), },
+        { url: BlockUrlConstant.RecordPageView, text:( '排行详情'), }
     ],
     dataList: [
         { score: 20 },

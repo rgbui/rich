@@ -189,7 +189,7 @@ export class MenuItemView extends React.Component<{
                         </span>}
                         {!(item.name && item.name.indexOf('font') > -1) && <span className="size-20 circle   border" style={{ backgroundColor: t.value }}>
                         </span>}
-                        <span className="f-12 text-1">{t.text}</span>
+                        <span className="f-12 text-1 inline-block text-overflow max-w-24">{t.text}</span>
                     </a></ToolTip>
                 })}
             </div>}

@@ -285,7 +285,7 @@ export class PageEvent {
                 this.onUpdatePageCover({ 'cover.abled': true }, true);
             }
             else {
-                var g = GalleryPics.randomOf().childs.randomOf();
+                var g = GalleryPics().randomOf().childs.randomOf();
                 this.onUpdatePageCover({
                     cover: {
                         abled: true,

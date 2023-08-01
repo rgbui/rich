@@ -81,7 +81,7 @@ export class TableCellView extends BlockView<TableCell>{
                     {
                         name: name + 'fontColor',
                         type: MenuItemType.color,
-                        options: FontColorList.map(f => {
+                        options: FontColorList().map(f => {
                             return {
                                 text: f.text,
                                 overlay: f.text,
@@ -100,7 +100,7 @@ export class TableCellView extends BlockView<TableCell>{
                     {
                         type: MenuItemType.color,
                         name: name + 'fillColor',
-                        options: BackgroundColorList.map(f => {
+                        options: BackgroundColorList().map(f => {
                             return {
                                 text: f.text,
                                 value: f.color,

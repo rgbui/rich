@@ -13,7 +13,7 @@ import { getImageSize } from "../../component/file";
 import { channel } from "../../net/channel";
 import { autoImageUrl } from "../../net/element.type";
 import { util } from "../../util/util";
-import { DotsSvg, DownloadSvg, DuplicateSvg, ImageErrorSvg, LinkSvg, PicSvg, RefreshSvg, TrashSvg } from "../../component/svgs";
+import { DotsSvg, DownloadSvg, DuplicateSvg, EditSvg, GlobalLinkSvg, ImageErrorSvg, LinkSvg, PicSvg, PlusSvg, RefreshSvg, TrashSvg } from "../../component/svgs";
 import { Spin } from "../../component/view/spin";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { MenuItemView } from "../../component/view/menu/item";
@@ -21,6 +21,10 @@ import { useImageViewer } from "../../component/view/image.preview";
 import { BlockUrlConstant } from "../../src/block/constant";
 import { ls, lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
+import { PageLink } from "../../extensions/link/declare";
+import { LinkPageItem, getPageIcon } from "../../src/page/declare";
+import { useLinkPicker } from "../../extensions/link/picker";
+import { MenuPanel } from "../../component/view/menu";
 
 @url('/image')
 export class Image extends Block {
@@ -33,6 +37,8 @@ export class Image extends Block {
     @prop()
     allowCaption: boolean = false;
     @prop()
+    captionAlign: 'left' | 'center' = 'center';
+    @prop()
     originSize: { width: number, height: number } = null;
     @prop()
     align: 'left' | 'right' | 'center' = 'center';
@@ -40,6 +46,8 @@ export class Image extends Block {
     mask: 'rect' | 'circle' | 'radius' | 'rhombus' | 'pentagon' | "star" = 'rect';
     display = BlockDisplay.block;
     speed = '';
+    @prop()
+    link: PageLink = null;
     async onOpenUploadImage(event: React.MouseEvent) {
         var r = await useImagePicker({ roundArea: Rect.fromEvent(event) });
         if (r) {
@@ -213,7 +221,7 @@ export class Image extends Block {
                 {
                     name: 'mask',
                     renderIcon: rc,
-                    text:  lst('圆角'),
+                    text: lst('圆角'),
                     value: 'radius',
                     checkLabel: this.mask == 'radius'
                 },
@@ -223,45 +231,45 @@ export class Image extends Block {
                         name: 'bytedance-icon',
                         code: 'oval-one'
                     },
-                    text: lst( '圆'),
+                    text: lst('圆'),
                     value: 'circle',
                     checkLabel: this.mask == 'circle'
                 },
                 {
                     name: 'mask',
                     icon: { name: 'bytedance-icon', code: 'diamond-three' },
-                    text:  lst('菱形'),
+                    text: lst('菱形'),
                     value: 'rhombus',
                     checkLabel: this.mask == 'rhombus'
                 },
                 {
                     name: 'mask',
                     icon: { name: 'bytedance-icon', code: 'pentagon-one' },
-                    text:  lst('五边形'),
+                    text: lst('五边形'),
                     value: 'pentagon',
                     checkLabel: this.mask == 'pentagon'
                 },
                 {
                     name: 'mask',
                     icon: { name: 'bytedance-icon', code: 'star' },
-                    text:  lst('星形'),
+                    text: lst('星形'),
                     value: 'star',
                     checkLabel: this.mask == 'star'
                 }
             ]
         });
         items.push({
-            text:  lst('尺寸'),
+            text: lst('尺寸'),
             icon: { name: 'bytedance-icon', code: 'full-screen' },
             childs: [
                 {
                     name: 'resetSize',
-                    text:  lst('原图大小'),
+                    text: lst('原图大小'),
                     icon: { name: 'bytedance-icon', code: 'equal-ratio' },
                 },
                 {
                     name: 'autoSize',
-                    text: lst( '自适应'),
+                    text: lst('自适应'),
                     icon: { name: 'bytedance-icon', code: 'auto-width-one' },
                 }
             ]
@@ -271,11 +279,44 @@ export class Image extends Block {
         });
         items.push({
             name: 'allowCaption',
-            text:  lst('添加文字说明'),
+            text: lst('添加文字说明'),
             icon: { name: 'bytedance-icon', code: 'doc-detail' },
             type: MenuItemType.switch,
             checked: this.allowCaption
+        });
+        items.push({
+            name: 'captionAlign',
+            text: lst('文字说明居中'),
+            type: MenuItemType.switch,
+            checked: this.captionAlign == 'center'
         })
+        items.push({
+            type: MenuItemType.divide
+        });
+        var pageLink: LinkPageItem;
+        if (this.link?.pageId) {
+            var pa = await channel.get('/page/item', { id: this.link.pageId });
+            if (pa?.ok) { pageLink = pa.data.item; }
+        }
+        items.push({
+            text: lst('关联网址'),
+            icon: { name: 'bytedance-icon', code: 'doc-detail' },
+            childs: this.link ? [
+                {
+                    name: 'imageLink',
+                    text: pageLink?.text || this.link?.url,
+                    value: pageLink,
+                    icon: pageLink ? getPageIcon(pageLink) : GlobalLinkSvg,
+                    btns: [{ icon: EditSvg, name: 'editImageLink' }]
+                }
+            ] : [
+                {
+                    name: 'imageLink',
+                    icon: PlusSvg,
+                    text: '添加网址'
+                }
+            ]
+        });
         items.push({
             type: MenuItemType.divide
         });
@@ -326,6 +367,16 @@ export class Image extends Block {
                 var pics = this.page.findAll(g => g.url == BlockUrlConstant.Image).map(g => (g as Image).src)
                 var rg = await useImageViewer(this.src, pics);
                 return;
+            case 'imageLink':
+                var rgc = await useLinkPicker({ roundArea: Rect.fromEvent(event) }, {
+                    // url: this.link?.url,
+                    // pageId: this.link?.pageId,
+                    // text: (item?.value as PageLink).text
+                });
+                if (rgc) {
+                    await this.onUpdateProps({ link: rgc }, { range: BlockRenderRange.self });
+                }
+                return;
         }
         await super.onClickContextMenu(item, event);
     }
@@ -336,7 +387,22 @@ export class Image extends Block {
             this.page.kit.anchorCursor.onFocusBlockAnchor(this, { last: true, merge: true });
             return;
         }
+        else if (item.name == 'captionAlign') {
+            await this.onUpdateProps({ captionAlign: item.checked ? 'center' : 'left' }, { range: BlockRenderRange.self });
+        }
         return super.onContextMenuInput(item);
+    }
+    async onContextMenuClick(item: MenuItem<string | BlockDirective>, event: React.MouseEvent<Element, MouseEvent>, clickName: string, mp: MenuPanel<any>) {
+        if (item.name == 'imageLink') {
+            var r = await useLinkPicker({ roundArea: Rect.fromEvent(event) }, {
+                url: this.link?.url,
+                pageId: this.link?.pageId,
+                text: (item?.value as PageLink).text
+            });
+            if (typeof r != 'undefined') {
+                await this.onUpdateProps({ link: r }, { range: BlockRenderRange.self });
+            }
+        }
     }
 }
 @view('/image')
@@ -394,6 +460,11 @@ export class ImageView extends BlockView<Image>{
         }
         if (this.block.align == 'left') style.justifyContent = 'flex-start'
         else if (this.block.align == 'right') style.justifyContent = 'flex-end'
+        var captionStyle: CSSProperties = {
+            justifyContent: 'center'
+        }
+        if (this.block.captionAlign == 'left') captionStyle.justifyContent = 'flex-start'
+
         var imageMaskStyle: CSSProperties = {}
         if (this.block.mask == 'radius') imageMaskStyle.borderRadius = '10%';
         else if (this.block.mask == 'circle') {
@@ -435,7 +506,7 @@ export class ImageView extends BlockView<Image>{
                             <Icon size={18} icon={DotsSvg}></Icon>
                         </div>
                     </>}
-                    {this.block.allowCaption && <div className='sy-block-image-caption'>
+                    {this.block.allowCaption && <div className='sy-block-image-caption flex' style={captionStyle}>
                         {<TextArea block={this.block} prop='content' placeholderEmptyVisible placeholder={'图片描述'}></TextArea>}
                     </div>}
                 </div>

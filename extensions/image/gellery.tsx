@@ -2,7 +2,7 @@ import React from "react";
 import { OuterPic } from "./declare";
 import { lst } from "../../i18n/store";
 
-export var GalleryPics = [
+export var GalleryPics = () => [
     {
         group: lst("诗云"),
         childs: [
@@ -16,12 +16,12 @@ export var GalleryPics = [
                 url: 'https://resources.shy.live/gallery/shy_13.jpg',
                 thumb: 'https://resources.shy.live/gallery/shy_13_thumb.jpg'
             },
-           {
+            {
                 title: '',
                 url: 'https://resources.shy.live/gallery/shy_9.jpg',
                 thumb: 'https://resources.shy.live/gallery/shy_9_thumb.jpg'
             },
-          
+
             {
                 title: '',
                 url: 'https://resources.shy.live/gallery/shy_4.jpg',
@@ -31,7 +31,7 @@ export var GalleryPics = [
                 title: '',
                 url: 'https://resources.shy.live/gallery/shy_6.jpg',
                 thumb: 'https://resources.shy.live/gallery/shy_6_thumb.jpg'
-            }, 
+            },
             {
                 title: '',
                 url: 'https://resources.shy.live/gallery/shy_17.jpg',
@@ -509,7 +509,7 @@ export class GalleryView extends React.Component<{ onChange: (image: OuterPic) =
     }
     render() {
         return <div className='shy-gallery'>
-            {GalleryPics.map(gp => {
+            {GalleryPics().map(gp => {
                 return <div className="shy-gallery-group" key={gp.group}>
                     <h3>{gp.group}</h3>
                     {this.renderImages(gp.childs)}
