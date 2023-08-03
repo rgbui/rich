@@ -2,21 +2,42 @@ import { Block } from "../../src/block";
 import { BlockView } from "../../src/block/view";
 import React from 'react';
 import { prop, url, view } from "../../src/block/factory/observable";
-import { BlockDisplay } from "../../src/block/enum";
+import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import "./style.less";
 import { MouseDragger } from "../../src/common/dragger";
 import { Rect } from "../../src/common/vector/point";
+import { lst } from "../../i18n/store";
+import { MenuItem } from "../../component/view/menu/declare";
 
 @url('/measure')
 export class Measure extends Block {
     @prop()
     value: number = 80;
     display = BlockDisplay.block;
+    @prop()
+    hideValue: boolean = false;
     async getHtml() {
         return `<progress value='${this.value}'></progress>`
     }
     async getMd() {
         return `-----------${this.value}%`
+    }
+    async onGetContextMenus() {
+        var items = await super.onGetContextMenus();
+        var at = items.findIndex(g => g.name == BlockDirective.copy);
+        items.splice(at + 2, 0, {
+            icon: { name: 'bytedance-icon', code: 'percentage' },
+            name: 'hideValue',
+            checked: this.hideValue,
+            text: lst('隐藏数值')
+        })
+        return items;
+    }
+    async onContextMenuInput(this: Block, item: MenuItem<string | BlockDirective>): Promise<void> {
+        if (item.name == 'hideValue') {
+            this.onUpdateProps({ hideValue: item.checked }, { range: BlockRenderRange.self });
+        }
+        else await super.onContextMenuInput(item);
     }
 }
 
@@ -50,9 +71,9 @@ export class MeasureView extends BlockView<Measure>{
     }
     render() {
         var style = this.block.contentStyle;
-        var bg = style.backgroundColor?.replace(/ /g, '')
-        if (bg == 'rgba(255,255,255,0)' || bg == 'rgb(255,255,255,0)') style.backgroundColor = 'var(--text-p-color)';
-        else style.backgroundColor = bg.replace(/\,[\s]*[\d\.]+[\s]*\)[\s]*$/, ',1)');
+        var bg = (style.backgroundColor || '')?.replace(/ /g, '')
+        if (!bg || bg == 'rgba(255,255,255,0)' || bg == 'rgb(255,255,255,0)') style.backgroundColor = 'var(--text-p-color)';
+        else if (bg) style.backgroundColor = bg.replace(/\,[\s]*[\d\.]+[\s]*\)[\s]*$/, ',1)');
         return <div className='sy-block-measure' onMouseDown={e => e.stopPropagation()} style={this.block.visibleStyle}>
             <div className='sy-block-measure-progress' onMouseDown={e => this.setProgress(e)}>
                 <div className='sy-block-measure-progress-bar' style={{
@@ -60,9 +81,9 @@ export class MeasureView extends BlockView<Measure>{
                     backgroundColor: style.backgroundColor
                 }}></div>
             </div>
-            <div className='sy-block-measure-value' style={
+            {this.block.hideValue !== true && <div className='sy-block-measure-value' style={
                 { color: style.color }
-            }>{this.block.value}%</div>
+            }>{this.block.value}%</div>}
         </div>
     }
 }
