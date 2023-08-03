@@ -15,9 +15,6 @@ export class MenuBox extends React.Component<{
     select: (item: MenuItem, event?: MouseEvent) => void,
     click: (item: MenuItem, event?: React.MouseEvent, name?: string, mv?: MenuItemView) => void
 }>{
-
-
-
     render() {
         var isVisible = this.props.style?.overflow == 'visible' || this.props.items.exists(g => g.childs && g.childs.length > 0)
         return <div className='shy-menu-box' ref={e => this.el = e} style={{
@@ -45,9 +42,8 @@ export class MenuBox extends React.Component<{
         this.style = style || {};
         if (pos.fixPoint) this.point = pos.fixPoint;
         else this.point = pos.roundArea ? pos.roundArea.leftTop : pos.roundPoint;
-        if (pos.fixPoint) {
-            this.forceUpdate()
-        }
+        if (pos.fixPoint) this.forceUpdate()
+
         else this.forceUpdate(() => {
             if (this.el) {
                 var b = Rect.from(this.el.getBoundingClientRect());

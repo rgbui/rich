@@ -1,14 +1,17 @@
 .shy-color-selector {
     width      : 200px;
     user-select: none;
+
     .shy-color-selector-box {
         padding: 10px;
+
         &-head {
             span {
                 color    : rgba(55, 53, 47, 0.6);
                 font-size: 12px;
             }
         }
+
         &-content {
             display        : flex;
             align-items    : flex-start;
@@ -44,11 +47,30 @@
                     line-height    : 20px;
                     color          : rgb(55, 53, 47);
                 }
-                &:hover{
-                    background-color: rgba(55, 53, 47, 0.06);
-                }
-                &.hover {
-                    background-color: rgba(55, 53, 47, 0.08);
+
+                // &:hover {
+                //     background-color: rgba(55, 53, 47, 0.06);
+                // }
+
+                // &.hover {
+                //     background-color: rgba(55, 53, 47, 0.08);
+                // }
+            }
+
+            &.lang-en {
+                display: block;
+
+                .shy-color-selector-item {
+                    display        : flex;
+                    width          : auto;
+                    flex-direction : row;
+                    height         : auto;
+                    justify-content: flex-start;
+                    align-items: center;
+
+                    a {
+                        margin-right: 5px;
+                    }
                 }
             }
         }

@@ -134,7 +134,7 @@ export class MenuItemView extends React.Component<{
                 onMouseDown={e => this.select(item, e.nativeEvent)}>
                 {item.icon && <i className="flex-center flex-line size-20 text-1 "><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
                 {item.renderIcon && item.renderIcon(item, this)}
-                <span className='shy-menu-box-item-option-text'>{item.text}{item.remark && <i className="remark padding-l-5">{item.remark}</i>}</span>
+                <span className='shy-menu-box-item-option-text text-overflow'>{item.text}{item.remark && <i className="remark padding-l-5">{item.remark}</i>}</span>
                 {item.checkLabel && <Icon className={'shy-menu-box-item-option-label-icon'} size={16} icon={CheckSvg}></Icon>}
                 {item.label && <label>{item.label}</label>}
                 {Array.isArray(item.btns) && item.btns.map(btn => {
@@ -180,21 +180,31 @@ export class MenuItemView extends React.Component<{
                     return <ToolTip key={btn.name} overlay={btn.overlay} placement={btn.placement || 'top'} ><em className="btn" onMouseDown={e => { e.stopPropagation(); this.click(item, e, btn.name) }}><Icon size={14} icon={btn.icon}></Icon></em></ToolTip>
                 })}
             </div></ToolTip>}
-            {item.type == MenuItemType.color && <div className="shy-menu-box-item-colors flex-top flex-wrap gap-h-10">
+            {item.type == MenuItemType.color && <div className={"shy-menu-box-item-colors  gap-h-10" + (item.block ? "" : " flex-top flex-wrap")}>
                 {item.options.map(t => {
-                    return <ToolTip key={t.value} overlay={t.overlay} ><a className={"flex-center flex-col cursor padding-5 gap-w-5 round item-hover " + (t.checked ? "item-hover-focus" : "")}
+                    if (item.block) {
+                        return <a key={t.value} className={"flex  cursor padding-w-10 padding-h-3 round item-hover " + (t.checked ? "item-hover-focus" : "")}
+                            onMouseDown={e => { e.stopPropagation(); item.value = t.value; this.select(item, e.nativeEvent) }}>
+                            {item.name && item.name.indexOf('font') > -1 && <span className="size-24 flex-center circle  border" style={{ color: t.value }}>
+                                A
+                            </span>}
+                            {!(item.name && item.name.indexOf('font') > -1) && <span className="size-20 circle   border" style={{ backgroundColor: t.value }}>
+                            </span>}
+                            <span className="gap-l-10 f-12 text-1 inline-block ">{t.text}</span>
+                        </a>
+                    }
+                    return <a key={t.value} className={"flex-center flex-col cursor padding-5 gap-w-5 round item-hover " + (t.checked ? "item-hover-focus" : "")}
                         onMouseDown={e => { e.stopPropagation(); item.value = t.value; this.select(item, e.nativeEvent) }}>
                         {item.name && item.name.indexOf('font') > -1 && <span className="size-24 flex-center circle  border" style={{ color: t.value }}>
                             A
                         </span>}
                         {!(item.name && item.name.indexOf('font') > -1) && <span className="size-20 circle   border" style={{ backgroundColor: t.value }}>
                         </span>}
-                        <span className="f-12 text-1 inline-block text-overflow max-w-24">{t.text}</span>
-                    </a></ToolTip>
+                        <span className="f-12 text-1 inline-block ">{t.text}</span>
+                    </a>
                 })}
             </div>}
             {item?.childs?.length > 0 && this.hover && <MenuBox parent={this.props.parent} select={this.props.select} click={this.props.click} input={this.props.input} items={item.childs} ref={e => this.menubox = e} deep={this.props.deep}></MenuBox>}
-
         </div>
     }
 }

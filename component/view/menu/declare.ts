@@ -20,6 +20,7 @@ export type MenuItem<T = string> = {
     childs?: MenuItem<T>[],
     childsPos?: PopoverPosition,
     options?: MenuItem<T>[],
+    block?: boolean,
     value?: any,
     checked?: boolean,
     disabled?: boolean,
