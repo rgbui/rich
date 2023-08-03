@@ -7,7 +7,10 @@ var sc = new SyncLoad<any>()
 export async function loadCodeMirror() {
     return await sc.create((c) => {
         (async () => {
-            var r = await import('../../../src/assert/codemirror/lib/codemirror.js');
+            var r = await import(
+                /* webpackChunkName: 'codemirror' */
+                '../../../src/assert/codemirror/lib/codemirror.js'
+            );
             var CodeMirror = r.default;
             (window as any).CodeMirror = CodeMirror;
             c(CodeMirror);
