@@ -6,7 +6,7 @@ import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../../src/blo
 import { ResourceArguments } from "../../../extensions/icon/declare";
 import { useOutSideUrlInput } from "../../../extensions/link/outsite.input";
 import { Rect } from "../../../src/common/vector/point";
-import { BookSvg, DotsSvg, DuplicateSvg, RefreshSvg } from "../../../component/svgs";
+import { BookSvg, DotsSvg, DuplicateSvg, LinkSvg, RefreshSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import "./style.less";
 import { channel } from "../../../net/channel";
@@ -100,15 +100,15 @@ export class Bookmark extends Block {
         var rs = await super.onGetContextMenus();
         rs = rs.splice(2);
         lodash.remove(rs, g => g.name == 'text-align');
-        var at = rs.findIndex(g => g.text ==lst( '颜色'));
+        var at = rs.findIndex(g => g.text == lst('颜色'));
         var ns: MenuItem<string | BlockDirective>[] = [];
         rs.splice(0, 0,
-            { name: 'open', text:lst('打开书签网址') , icon: { name: 'bytedance-icon', code: 'arrow-right-up' } },
+            { name: 'open', text: lst('打开书签网址'), icon: { name: 'bytedance-icon', code: 'arrow-right-up' } },
             { type: MenuItemType.divide }
         )
         ns.push({ type: MenuItemType.divide });
         ns.push({ name: 'reload', text: lst('重新生成书签'), icon: RefreshSvg });
-        ns.push({ name: 'copyLink', text:lst('复制书签网址') , icon: DuplicateSvg });
+        ns.push({ name: 'copyLink', text: lst('复制书签网址'), icon: BookSvg });
         ns.push({ type: MenuItemType.divide });
         rs.splice(at, 0, ...ns)
         return rs;
@@ -119,7 +119,7 @@ export class Bookmark extends Block {
             return;
         }
         if (item.name == 'copyLink') {
-            CopyAlert(this.bookmarkUrl,lst('已复制书签网址') )
+            CopyAlert(this.bookmarkUrl, lst('已复制书签网址'))
             return;
         }
         if (item.name == 'open') {

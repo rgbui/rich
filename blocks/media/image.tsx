@@ -13,7 +13,7 @@ import { getImageSize } from "../../component/file";
 import { channel } from "../../net/channel";
 import { autoImageUrl } from "../../net/element.type";
 import { util } from "../../util/util";
-import { DotsSvg, DownloadSvg, DuplicateSvg, EditSvg, GlobalLinkSvg, ImageErrorSvg, LinkSvg, PicSvg, PlusSvg, RefreshSvg, TrashSvg } from "../../component/svgs";
+import { AlignTextCenterSvg, DotsSvg, DownloadSvg, DuplicateSvg, Edit1Svg, EditSvg, GlobalLinkSvg, ImageErrorSvg, LinkSvg, PicSvg, PlusSvg, RefreshSvg, TrashSvg } from "../../component/svgs";
 import { Spin } from "../../component/view/spin";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { MenuItemView } from "../../component/view/menu/item";
@@ -156,7 +156,7 @@ export class Image extends Block {
         items.push({
             name: 'preview',
             text: lst('查看'),
-            icon: PicSvg
+            icon: { name: 'bytedance-icon', code: "zoom-in" }
         })
         items.push({
             name: 'replace',
@@ -279,14 +279,15 @@ export class Image extends Block {
         });
         items.push({
             name: 'allowCaption',
-            text: lst('添加文字说明'),
+            text: lst('添加说明文字'),
             icon: { name: 'bytedance-icon', code: 'doc-detail' },
             type: MenuItemType.switch,
             checked: this.allowCaption
         });
         items.push({
             name: 'captionAlign',
-            text: lst('文字说明居中'),
+            icon: AlignTextCenterSvg,
+            text: lst('说明文字居中'),
             type: MenuItemType.switch,
             checked: this.captionAlign == 'center'
         })
@@ -300,20 +301,20 @@ export class Image extends Block {
         }
         items.push({
             text: lst('关联网址'),
-            icon: { name: 'bytedance-icon', code: 'doc-detail' },
+            icon: { name: 'bytedance-icon', code: 'link-out' },
             childs: this.link ? [
                 {
                     name: 'imageLink',
                     text: pageLink?.text || this.link?.url,
                     value: pageLink,
                     icon: pageLink ? getPageIcon(pageLink) : GlobalLinkSvg,
-                    btns: [{ icon: EditSvg, name: 'editImageLink' }]
+                    btns: [{ icon: Edit1Svg, name: 'editImageLink' }]
                 }
             ] : [
                 {
                     name: 'imageLink',
                     icon: PlusSvg,
-                    text: '添加网址'
+                    text: lst('添加网址')
                 }
             ]
         });
@@ -365,16 +366,17 @@ export class Image extends Block {
                 return;
             case 'preview':
                 var pics = this.page.findAll(g => g.url == BlockUrlConstant.Image).map(g => (g as Image).src)
-                var rg = await useImageViewer(this.src, pics);
+                await useImageViewer(this.src, pics);
                 return;
             case 'imageLink':
-                var rgc = await useLinkPicker({ roundArea: Rect.fromEvent(event) }, {
+                var rgc = await useLinkPicker({ roundArea: Rect.fromEle(this.el) }, {
                     // url: this.link?.url,
                     // pageId: this.link?.pageId,
                     // text: (item?.value as PageLink).text
-                });
+                }, { allowCreate: false });
                 if (rgc) {
-                    await this.onUpdateProps({ link: rgc }, { range: BlockRenderRange.self });
+                    var link = Array.isArray(rgc.refLinks) ? rgc.refLinks[0] : rgc.link;
+                    await this.onUpdateProps({ link: link }, { range: BlockRenderRange.self });
                 }
                 return;
         }
@@ -397,10 +399,12 @@ export class Image extends Block {
             var r = await useLinkPicker({ roundArea: Rect.fromEvent(event) }, {
                 url: this.link?.url,
                 pageId: this.link?.pageId,
-                text: (item?.value as PageLink).text
-            });
-            if (typeof r != 'undefined') {
-                await this.onUpdateProps({ link: r }, { range: BlockRenderRange.self });
+                text: (item?.value as PageLink)?.text
+            }, { allowCreate: false });
+            if (r) {
+                var link = Array.isArray(r.refLinks) ? r.refLinks[0] : r.link;
+                await this.onUpdateProps({ link: link }, { range: BlockRenderRange.self });
+                mp.updateItems(await this.onGetContextMenus())
             }
         }
     }
@@ -441,6 +445,18 @@ export class ImageView extends BlockView<Image>{
             }
         })
     }
+    mousedown(event: React.MouseEvent) {
+        if (this.block.link) {
+            if (this.block.link.url) {
+                window.open(this.block.link.url)
+                event.stopPropagation();
+            }
+            else if (this.block.link.pageId) {
+                event.stopPropagation();
+                channel.air('/page/open', { item: this.block.link.pageId })
+            }
+        }
+    }
     imageWrapper: HTMLDivElement;
     renderEmptyImage() {
         if (this.block.speed) {
@@ -449,7 +465,7 @@ export class ImageView extends BlockView<Image>{
                 <span><S>上传中</S>:{this.block.speed}</span>
             </div>
         }
-        return <div className='sy-block-image-empty' onMouseDown={e => this.block.onOpenUploadImage(e)}>
+        return <div className='sy-block-image-empty item-hover cursor' onMouseDown={e => this.block.onOpenUploadImage(e)}>
             <Icon size={24} icon={PicSvg}></Icon>
             <span><S>添加图片</S></span>
         </div>
@@ -495,7 +511,7 @@ export class ImageView extends BlockView<Image>{
         </div>}
             {!this.isLoadError && <div className='sy-block-image-content-view flex-center' style={style}>
                 <div className='sy-block-image-content-view-wrapper visible-hover' ref={e => this.imageWrapper = e} style={{ width: this.block.imageWidthPercent ? this.block.imageWidthPercent + "%" : undefined }}>
-                    {this.block.src.name != 'none' && <img style={imageMaskStyle} onError={e => this.onError(e)} src={autoImageUrl(this.block?.src?.url)} />}
+                    {this.block.src.name != 'none' && <img onMouseDown={e => { this.mousedown(e) }} style={imageMaskStyle} onError={e => this.onError(e)} src={autoImageUrl(this.block?.src?.url)} />}
                     {this.block.isCanEdit() && <>
                         <div className='sy-block-image-left-resize' onMouseDown={e => this.onMousedown(e, 'left')}></div>
                         <div className='sy-block-image-right-resize' onMouseDown={e => this.onMousedown(e, 'right')}></div>

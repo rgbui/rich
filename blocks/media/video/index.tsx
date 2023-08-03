@@ -159,12 +159,12 @@ export class Video extends Block {
         });
         items.push({
             name: 'origin',
-            text: lst('原图'),
+            text: lst('原视频'),
             icon: { name: 'bytedance-icon', code: 'arrow-right-up' }
         });
         items.push({
             name: 'download',
-            text:lst('下载'),
+            text: lst('下载'),
             icon: DownloadSvg
         });
         items.push({
@@ -178,13 +178,13 @@ export class Video extends Block {
             checked: this.autoplayMuted
         });
         items.push({
-            text:lst('对齐'),
+            text: lst('对齐'),
             icon: { name: 'bytedance-icon', code: 'align-text-both' },
             childs: [
                 {
                     name: 'align',
                     icon: { name: 'bytedance-icon', code: 'align-text-left' },
-                    text:lst('居左'),
+                    text: lst('居左'),
                     value: 'left',
                     checkLabel: this.align == 'left'
                 },
@@ -206,7 +206,7 @@ export class Video extends Block {
             ]
         });
         items.push({
-            text:lst('蒙板') ,
+            text: lst('蒙板'),
             icon: { name: 'bytedance-icon', code: 'mask-two' },
             childs: [
                 {
@@ -246,7 +246,7 @@ export class Video extends Block {
                 {
                     name: 'mask',
                     icon: { name: 'bytedance-icon', code: 'pentagon-one' },
-                    text:lst('五边形') ,
+                    text: lst('五边形'),
                     value: 'pentagon',
                     checkLabel: this.mask == 'pentagon'
                 },

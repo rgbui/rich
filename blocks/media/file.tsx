@@ -12,6 +12,7 @@ import { Icon } from "../../component/view/icon";
 import { util } from "../../util/util";
 import { lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
+import { Tip } from "../../component/view/tooltip/tip";
 
 @url('/file')
 export class File extends Block {
@@ -87,19 +88,19 @@ export class FileView extends BlockView<File>{
             util.downloadFile(url, fileName);
         }
         return <div className='sy-block-file' style={this.block.visibleStyle}>
-            {this.block.src.name == 'none' && <div onMouseDown={e => this.block.addFile(e)} className='sy-block-file-nofile'>
+            {this.block.src.name == 'none' && <div onMouseDown={e => this.block.addFile(e)} className='sy-block-file-nofile item-hover'>
                 <Icon className={'text-1'} icon={FileSvg}></Icon>
                 {!this.block.speed && <span><S>添加附件</S></span>}
                 {this.block.speed && <div className="remark gap-l-10">{this.block.speed}</div>}
             </div>}
-            {this.block.src.name != 'none' && <div className='sy-block-file-content' >
-                <Icon icon={FileSvg} size={18} className='text-1 sy-block-file-content-icon'></Icon>
-                <span className='sy-block-file-content-title'>{this.block.src?.filename}</span>
-                <span className='sy-block-file-content-bytes'>{util.byteToString(this.block.src.size)}</span>
-                <a className='sy-block-file-content-link' onMouseDown={e => {
+            {this.block.src.name != 'none' && <div className='flex padding-w-3 padding-h-5 round cursor item-hover' >
+                <span className="size-20 flex-center round item-hover"><Icon icon={FileSvg} size={18} className='text-1 '></Icon></span>
+                <span className='flex-fixed max-w-200 text-overflow'>{this.block.src?.filename}</span>
+                <span className='remark gap-l-5 f-12 flex-auto'>{util.byteToString(this.block.src.size)}</span>
+                <Tip text='下载到本地'><a className='flex-fixed' onMouseDown={e => {
                     e.preventDefault();
                     download(this.block.src?.url, this.block.src?.filename);
-                }} download={this.block.src?.filename} href={this.block.src.url}><Icon size={30} icon={DownloadSvg}></Icon></a>
+                }} download={this.block.src?.filename} href={this.block.src.url}><Icon size={20} icon={DownloadSvg}></Icon></a></Tip>
             </div>}
         </div>
     }
