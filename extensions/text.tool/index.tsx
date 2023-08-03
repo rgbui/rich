@@ -20,6 +20,7 @@ import { dom } from "../../src/common/dom";
 import { util } from "../../util/util";
 import { useSearchBox } from "../search/keyword";
 import { Page } from "../../src/page";
+import { lst } from "../../i18n/store";
 
 export type TextToolStyle = {
     link: string,
@@ -103,7 +104,7 @@ class TextTool extends EventsComponent {
             }
             {this.visible == true && <div className='shy-tool-text-menu' ref={e => this.boxEl = e} style={style}>
 
-                <Tip text={'让诗云AI帮你写作、润色、生成内容'}>
+                <Tip overlay={lst('让诗云AI帮你写作','让诗云AI帮你写作、润色、生成内容')} >
                     <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onExcute(TextCommand.askAI, e)}>
                         <Icon icon={AiStartSvg}></Icon><span>AI</span>
                     </div>
