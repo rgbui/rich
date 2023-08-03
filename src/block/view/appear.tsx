@@ -2,6 +2,7 @@ import lodash from 'lodash';
 import React, { CSSProperties } from 'react';
 import { Block } from '..';
 import { BlockAppear } from '../appear';
+import { lst } from '../../../i18n/store';
 export function TextArea(props: {
     block: Block,
     placeholderEmptyVisible?: boolean,
@@ -106,16 +107,11 @@ export function SolidArea(props: {
         onCompositionUpdate: (e) => props.block.elementAppearEvent(props.prop, 'compositionupdate', e)
     }
     var line = typeof props.line == 'undefined' ? props.block.isLine : props.line;
-    if (line) return <span className='shy-appear-solid'  {...ps} >
-        {props.block.isCanEdit() && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}
-        <span className='shy-appear-solid-content'>{props.children}</span>
-        {props.block.isCanEdit() && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}
-    </span>
+    if (line) return <span className='shy-appear-solid'  {...ps} >{props.block.isCanEdit() &&<span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}<span className='shy-appear-solid-content'>{props.children}</span>{props.block.isCanEdit() &&<span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}</span>
     return <div className='shy-appear-solid flex'  {...ps} >
-        {props.block.isCanEdit() && <span className='w-1 shy-appear-solid-cursor flex-fixed' suppressContentEditableWarning {...editProps}></span>}
+        {props.block.isCanEdit() &&<span className='w-1 shy-appear-solid-cursor flex-fixed' suppressContentEditableWarning {...editProps}></span>}
         <div className='shy-appear-solid-content flex-auto'>{props.children}</div>
-        {props.block.isCanEdit() && <span className='w-1 shy-appear-solid-cursor flex-fixed' suppressContentEditableWarning {...editProps}></span>}
-    </div>
+        {props.block.isCanEdit() &&<span className='w-1 shy-appear-solid-cursor flex-fixed' suppressContentEditableWarning {...editProps}></span>}</div>
 }
 
 export function ChildsArea(props: { childs: Block[] }) {
@@ -144,6 +140,6 @@ export function TextSpanArea(props: { block: Block, className?: string | string[
     if (props.block.childs.length > 0)
         return <TextLineChilds className={props.className} childs={props.block.childs}></TextLineChilds>
     else
-        return <TextArea className={props.className} placeholderEmptyVisible={props.placeholderEmptyVisible} block={props.block} prop={props.prop || 'content'} placeholder={props.placeholder || '空格唤起AI或"/"选择'}></TextArea>
+        return <TextArea className={props.className} placeholderEmptyVisible={props.placeholderEmptyVisible} block={props.block} prop={props.prop || 'content'} placeholder={props.placeholder || lst('空格唤起AI或选择')}></TextArea>
 }
 
