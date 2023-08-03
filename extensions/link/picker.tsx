@@ -38,7 +38,8 @@ class LinkPicker extends EventsComponent {
             this.emit('change', { link: { url: url, name: 'outside' } });
         }
         else if (this.selectIndex == 0 && url) {
-            await this.onCreate();
+            if (this.allowCreate)
+                await this.onCreate();
         }
         else if (this.selectIndex > 0) {
             var d = this.links[this.selectIndex - 1];
@@ -138,8 +139,8 @@ class LinkPicker extends EventsComponent {
                         onEnter={(e, g) => { g.preventDefault(); g.stopPropagation(); this.onEnter(e); }}
                         value={this.url}></Input>
                 </div>
-                <Tip text='清空链接'><div onMouseDown={e => this.onClear()} className="flex-fixed size-24 item-hover round">
-                    <Icon icon={TrashSvg}></Icon>
+                <Tip text='清空链接'><div onMouseDown={e => this.onClear()} className="cursor gap-l-5 flex-fixed size-24 item-hover round flex-center">
+                    <Icon size={18} icon={TrashSvg}></Icon>
                 </div></Tip>
             </div>
             {this.name == 'outside' && this.url && <div className={'h-30 cursor item-hover round padding-w-5 flex' + (this.selectIndex == 0 ? " item-hover-focus" : "")}
@@ -147,7 +148,7 @@ class LinkPicker extends EventsComponent {
             ><span className="size-24 flex-center item-hover"> <Icon size={16} icon={GlobalLinkSvg}></Icon></span>
                 <span>{this.url}</span>
             </div>}
-            {this.name == 'page' && this.url && <><div onClick={e => this.onCreate()} className={'h-30  cursor  item-hover round padding-w-5 flex' + (this.selectIndex == 0 ? " item-hover-focus" : "")}>
+            {this.name == 'page' && this.url && this.allowCreate && <><div onClick={e => this.onCreate()} className={'h-30  cursor  item-hover round padding-w-5 flex' + (this.selectIndex == 0 ? " item-hover-focus" : "")}>
                 <span className="flex-auto"><S>创建</S><em className="bold">{this.url}</em></span>
                 <span className="flex-fixed size-20 item-hover cursor round">
                     <Icon icon={PlusSvg} size={20}></Icon>
@@ -180,8 +181,11 @@ class LinkPicker extends EventsComponent {
             refLinks: [{ type: 'page', id: util.guid(), pageId: r.id }],
         })
     }
-    async onOpen(link: PageLink) {
+    allowCreate = true
+    async onOpen(link: PageLink, options?: { allowCreate?: boolean }) {
         this.selectIndex = 0;
+        if (options?.allowCreate === false) this.allowCreate = false;
+        else this.allowCreate = true;
         await this.searchAll();
         if (link) {
             if (link.url) {
@@ -212,17 +216,17 @@ class LinkPicker extends EventsComponent {
     }
 }
 
-export async function useLinkPicker(pos: PopoverPosition, link?: PageLink) {
+export async function useLinkPicker(pos: PopoverPosition, link?: PageLink, options?: { allowCreate?: boolean }) {
     var popover = await PopoverSingleton(LinkPicker, { mask: true }, { link: link });
     var picker = await popover.open(pos);
-    await picker.onOpen(link);
-    return new Promise((resolve: (g: { link: PageLink } & { refLinks: Block['refLinks'] }) => void, reject) => {
-        picker.on('change', (link: { link: PageLink } & { refLinks: Block['refLinks'] }) => {
+    await picker.onOpen(link, options);
+    return new Promise((resolve: (g: { link: PageLink } & { refLinks?: Block['refLinks'] }) => void, reject) => {
+        picker.on('change', (link: { link: PageLink } & { refLinks?: Block['refLinks'] }) => {
             resolve(link);
             popover.close();
         })
         picker.on('clear', () => {
-            resolve(null)
+            resolve({ link: null })
             popover.close();
         })
         popover.on('close', () => resolve(undefined))
