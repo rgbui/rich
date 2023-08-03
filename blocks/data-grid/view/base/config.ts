@@ -34,8 +34,7 @@ import { BlockUrlConstant } from "../../../../src/block/constant";
 import { lst } from "../../../../i18n/store";
 
 export class DataGridViewConfig {
-    async onOpenViewSettings(this: DataGridView, rect: Rect)
-    {
+    async onOpenViewSettings(this: DataGridView, rect: Rect) {
         var self = this;
         var view = self.schemaView;
         self.dataGridTool.isOpenTool = true;
@@ -72,19 +71,19 @@ export class DataGridViewConfig {
                                     }
                                 }),
                                 { type: MenuItemType.divide },
-                                { name: 'addView', type: MenuItemType.button, text:lst( '创建视图') }
+                                { name: 'addView', type: MenuItemType.button, text: lst('创建视图') }
                             ]
                         }
                     ]
                 },
-                { text: '配置设图', name: 'viewConfig', icon: SettingsSvg },
+                { text: lst('配置视图'), name: 'viewConfig', icon: SettingsSvg },
                 { type: MenuItemType.divide },
-                { text: '数据源', name: 'datasource', icon: DatasourceSvg },
+                { text: lst('数据源'), name: 'datasource', icon: DatasourceSvg },
                 { type: MenuItemType.divide },
-                { name: 'link', icon: LinkSvg, text:lst( '复制视图链接') },
+                { name: 'link', icon: LinkSvg, text: lst('复制视图链接') },
                 { type: MenuItemType.divide },
-                { name: 'clone', icon: DuplicateSvg, text: lst('复制视图' )},
-                { name: 'delete', icon: TrashSvg, text: lst('移除视图' )},
+                { name: 'clone', icon: DuplicateSvg, text: lst('复制视图') },
+                { name: 'delete', icon: TrashSvg, text: lst('移除视图') },
             ]);
             if (self.page.pe.type == ElementType.Schema) {
                 items.splice(-7, 2);
@@ -102,7 +101,7 @@ export class DataGridViewConfig {
                         var rs: MenuItem<BlockDirective | string>[] = [];
                         if (item.value == view?.id) {
                             rs.push(...[
-                                { name: 'duplicate', icon: DuplicateSvg, text:lst( '复制' )}
+                                { name: 'duplicate', icon: DuplicateSvg, text: lst('复制') }
                             ])
                         }
                         else
@@ -111,10 +110,10 @@ export class DataGridViewConfig {
                                     name: 'name',
                                     type: MenuItemType.input,
                                     value: item.text,
-                                    text:lst( '编辑视图名'),
+                                    text: lst('编辑视图名'),
                                 },
                                 { type: MenuItemType.divide },
-                                { name: 'delete', disabled: item.value == view?.id, icon: TrashSvg, text:lst( '删除') }
+                                { name: 'delete', disabled: item.value == view?.id, icon: TrashSvg, text: lst('删除') }
                             ])
                         var rg = await useSelectMenuItem({ roundArea: Rect.fromEvent(ev) },
                             rs,
@@ -196,15 +195,15 @@ export class DataGridViewConfig {
         this.dataGridTool.isOpenTool = true;
         var self = this;
         var menus = [
-            { text:lst( '复制视图链接'), icon: LinkSvg, name: 'copylink' },
+            { text: lst('复制视图链接'), icon: LinkSvg, name: 'copylink' },
             { type: MenuItemType.divide },
-            { text:lst( '视图设置...'), icon: TemplatesSvg, name: 'view' },
-            { text:lst( '字段设置...'), icon: PropertysSvg, name: 'propertys' },
+            { text: lst('视图设置...'), icon: TemplatesSvg, name: 'view' },
+            { text: lst('字段设置...'), icon: PropertysSvg, name: 'propertys' },
             { text: lst('过滤设置...'), icon: FilterSvg, name: 'filter' },
             { text: lst('排序设置...'), icon: SortSvg, name: 'sort' },
             { type: MenuItemType.divide },
             {
-                text:lst( '锁定数据表格'),
+                text: lst('锁定数据表格'),
                 name: 'lock',
                 checked: this.schema.locker?.lock ? true : false,
                 type: MenuItemType.switch,
@@ -212,7 +211,7 @@ export class DataGridViewConfig {
             },
             { type: MenuItemType.divide },
             // { text: '导入', disabled: true, icon: ImportSvg, name: 'import' },
-            { text:lst( '导出'), icon: FileSvg, name: 'export' },
+            { text: lst('导出'), icon: FileSvg, name: 'export' },
         ]
         var um = await useSelectMenuItem({ roundArea: rect }, menus, {
             async input(item) {

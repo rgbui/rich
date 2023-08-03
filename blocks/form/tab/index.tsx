@@ -13,7 +13,6 @@ import { MouseDragger } from "../../../src/common/dragger";
 import { Rect } from "../../../src/common/vector/point";
 import { ActionDirective } from "../../../src/history/declare";
 import "./style.less";
-import { ToolTip } from "../../../component/view/tooltip";
 import { BlockDirective } from "../../../src/block/enum";
 import { lst } from "../../../i18n/store";
 import { Tip } from "../../../component/view/tooltip/tip";
@@ -39,13 +38,13 @@ export class Tab extends Block {
     async createInitTabItems() {
         this.blocks.childs = [];
         this.blocks.otherChilds = [];
-        this.blocks.childs.push(await BlockFactory.createBlock('/tab/item', this.page, { content:lst('标签1')  }, this));
+        this.blocks.childs.push(await BlockFactory.createBlock('/tab/item', this.page, { content: lst('标签1') }, this));
         this.blocks.otherChilds.push(await BlockFactory.createBlock('/tab/page', this.page, { blocks: { childs: [{ url: BlockUrlConstant.TextSpan, content: '' }] } }, this));
 
-        this.blocks.childs.push(await BlockFactory.createBlock('/tab/item', this.page, { content:lst('标签2' ) }, this));
+        this.blocks.childs.push(await BlockFactory.createBlock('/tab/item', this.page, { content: lst('标签2') }, this));
         this.blocks.otherChilds.push(await BlockFactory.createBlock('/tab/page', this.page, { blocks: { childs: [{ url: BlockUrlConstant.TextSpan, content: '' }] } }, this));
 
-        this.blocks.childs.push(await BlockFactory.createBlock('/tab/item', this.page, { content:lst('标签3')  }, this));
+        this.blocks.childs.push(await BlockFactory.createBlock('/tab/item', this.page, { content: lst('标签3') }, this));
         this.blocks.otherChilds.push(await BlockFactory.createBlock('/tab/page', this.page, { blocks: { childs: [{ url: BlockUrlConstant.TextSpan, content: '' }] } }, this));
 
     }
@@ -196,13 +195,13 @@ export class Tab extends Block {
             var ns: MenuItem<string | BlockDirective>[] = [];
             ns.push({ type: MenuItemType.divide });
             ns.push({
-                text:lst( '当前标签项'),
+                text: lst('当前标签项'),
                 icon: { name: 'bytedance-icon', code: 'top-bar' },
                 childs: [
-                    { name: 'prevItem', text:lst( '前移'), disabled: at == 0 ? true : false, icon: ArrowLeftSvg },
+                    { name: 'prevItem', text: lst('前移'), disabled: at == 0 ? true : false, icon: ArrowLeftSvg },
                     { name: 'afterItem', text: lst('后移'), disabled: at == this.childs.length - 1 ? true : false, icon: ArrowRightSvg },
                     { type: MenuItemType.divide },
-                    { name: 'deleteItem', text:lst( '删除'), disabled: this.childs.length == 1 ? true : false, icon: TrashSvg },
+                    { name: 'deleteItem', text: lst('删除'), disabled: this.childs.length == 1 ? true : false, icon: TrashSvg },
                 ]
             });
             ns.push({ type: MenuItemType.divide });
@@ -279,9 +278,14 @@ export class TabView extends BlockView<Tab>{
         if (this.props.block.align == 'center') {
             itemStyle.justifyContent = 'center'
         }
+        var innerStyle: CSSProperties = {
+            backgroundColor: this.block.contentStyle.backgroundColor,
+        }
+        var contentStyle = this.block.contentStyle;
+        delete contentStyle.backgroundColor;
         return <div className='sy-block-tab visible-hover'
             style={this.block.visibleStyle}>
-            <div style={this.block.contentStyle}>
+            <div style={contentStyle}>
                 <div className="sy-block-tab-items relative" style={itemStyle}>
                     <ChildsArea childs={this.block.blocks.childs}></ChildsArea>
                     {this.block.isCanEdit() && <><Tip text={'添加标签页'}><div className="visible flex-center round size-24  cursor item-hover" onMouseDown={e => this.block.onAddTabItem()}><Icon size={18} icon={PlusSvg}></Icon></div></Tip>
@@ -290,7 +294,7 @@ export class TabView extends BlockView<Tab>{
                                 <Icon size={18} icon={DotsSvg}></Icon></div></Tip>
                         </div></>}
                 </div>
-                <div ref={e => this.tabPages = e} className="sy-block-tab-pages" style={{ height: this.block.contentHeight }}>
+                <div ref={e => this.tabPages = e} className="sy-block-tab-pages" style={{ ...innerStyle, height: this.block.contentHeight }}>
                     <ChildsArea childs={this.block.blocks.otherChilds}></ChildsArea>
                 </div>
                 {this.block.isCanEdit() && <Tip text={'拖动标签页高度'}><div className="sy-block-tab-resize visible" onMouseDown={e => this.onResize(e)}></div></Tip>}

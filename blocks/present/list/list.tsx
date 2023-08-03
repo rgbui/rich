@@ -252,7 +252,7 @@ export class ListView extends BlockView<List>{
             return <span style={{
                 fontStyle: 'normal',
                 textDecoration: 'none',
-                color: 'var(--text-color)',
+                //color: 'var(--text-color)',
                 fontWeight: 'normal'
             }} className='sy-block-list-text-type'>{str}.</span>
         }
