@@ -33,7 +33,7 @@ export class LangStore {
         var rc = await channel.query('/cache/get', { key: `__shy_lang_data_${this.lang}` });
         var rs: Record<string, any>;
         if (rc) {
-            if (rc.version == window.shyConfig.version && window.shyConfig.isPro) {
+            if (false && rc.version == window.shyConfig.version && window.shyConfig.isPro) {
                 rs = rc.langs;
             }
         }
@@ -61,7 +61,7 @@ export class LangStore {
         if (typeof d == 'undefined') {
             if (typeof content == 'string') uns[key] = content || '';
             else uns[key] = key;
-            console.log(key,content);
+            console.log(key, content);
         }
         if (typeof d != 'undefined') {
             if (lodash.isObject(content) && !lodash.isNull(content)) return this.format(d, content)

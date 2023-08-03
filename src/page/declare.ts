@@ -1,6 +1,7 @@
 import { PageSvg, TopicSvg, CollectTableSvg, DocCardsSvg } from "../../component/svgs";
 import { IconValueType } from "../../component/view/icon";
 import { IconArguments, ResourceArguments } from "../../extensions/icon/declare";
+import { lst } from "../../i18n/store";
 import { AtomPermission } from "./permission";
 
 export enum PageLayoutType {
@@ -219,18 +220,21 @@ export function getPageText(item: LinkPageItem) {
     if (item?.text) return item.text;
     if (!item) return '';
     if (item.pageType == PageLayoutType.doc) {
-        return '新页面'
+        return lst('新页面')
+    }
+    else if (item.pageType == PageLayoutType.docCard) {
+        return lst('宣传页')
     }
     else if (item.pageType == PageLayoutType.board) {
-        return '白板'
+        return lst('白板')
     }
     else if (item.pageType == PageLayoutType.textChannel) {
-        return '频道'
+        return lst('频道')
     }
     else if (item.pageType == PageLayoutType.db) {
-        return '表格'
+        return lst('表格')
     }
-    return '新页面'
+    return lst('新页面')
 }
 export var PageTemplateTypeGroups: { icon: IconValueType, visible?: boolean, spread: boolean, text: string, childs: { text: string, visible?: boolean }[] }[] = [
     {

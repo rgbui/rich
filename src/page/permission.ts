@@ -1,5 +1,6 @@
 import lodash from "lodash";
 import { PageLayoutType } from "./declare";
+import { lst } from "../../i18n/store";
 
 /**
  * 基本的权限点列表
@@ -135,32 +136,32 @@ export function getAtomPermissionComputedChanges(pageType: PageLayoutType, vs: A
 export function getAtomPermissionOptions(pageType: PageLayoutType) {
     if ([PageLayoutType.board, PageLayoutType.doc, PageLayoutType.docCard].includes(pageType)) {
         return [
-            { text: '所有权限', value: AtomPermission.all },
-            { text: '可编辑', value: AtomPermission.docEdit },
-            { text: '可编辑行', value: AtomPermission.dbEditRow },
-            { text: '可添加行', value: AtomPermission.dbAddRow },
-            { text: '可评论', value: AtomPermission.docComment },
-            { text: '可查看', value: AtomPermission.docView },
-            { text: '无权限', value: AtomPermission.docNotAllow },
+            { text: lst('所有权限'), value: AtomPermission.all },
+            { text: lst('可编辑'), value: AtomPermission.docEdit },
+            { text: lst('可编辑行'), value: AtomPermission.dbEditRow },
+            { text: lst('可添加行'), value: AtomPermission.dbAddRow },
+            { text: lst('可评论'), value: AtomPermission.docComment },
+            { text: lst('可查看'), value: AtomPermission.docView },
+            { text: lst('无权限'), value: AtomPermission.docNotAllow },
         ]
     }
     else if ([PageLayoutType.textChannel].includes(pageType)) {
         return [
-            { text: '所有权限', value: AtomPermission.all },
-            { text: '可编辑', value: AtomPermission.channelEdit },
-            { text: '可发言', value: AtomPermission.channelSpeak },
-            { text: '可查看', value: AtomPermission.channelView },
-            { text: '无权限', value: AtomPermission.channelNotAllow },
+            { text: lst('所有权限'), value: AtomPermission.all },
+            { text: lst('可编辑'), value: AtomPermission.channelEdit },
+            { text: lst('可发言'), value: AtomPermission.channelSpeak },
+            { text: lst('可查看'), value: AtomPermission.channelView },
+            { text: lst('无权限'), value: AtomPermission.channelNotAllow },
         ]
     }
     else if ([PageLayoutType.db]) {
         return [
-            { text: '所有权限', value: AtomPermission.all },
-            { text: '可编辑', value: AtomPermission.dbEdit },
-            { text: '可编辑行', value: AtomPermission.dbEditRow },
-            { text: '可添加行', value: AtomPermission.dbAddRow },
-            { text: '可查看', value: AtomPermission.dbView },
-            { text: '无权限', value: AtomPermission.dbNotAllow },
+            { text: lst('所有权限'), value: AtomPermission.all },
+            { text: lst('可编辑'), value: AtomPermission.dbEdit },
+            { text: lst('可编辑行'), value: AtomPermission.dbEditRow },
+            { text: lst('可添加行'), value: AtomPermission.dbAddRow },
+            { text: lst('可查看'), value: AtomPermission.dbView },
+            { text: lst('无权限'), value: AtomPermission.dbNotAllow },
         ]
     }
 }
