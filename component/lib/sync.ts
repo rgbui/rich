@@ -1,3 +1,9 @@
+
+/**
+ * 同步加载
+ * 多个请求过来，请求单个资源，只会加载一次
+ * 避免多次请求
+ */
 export class SyncLoad<T>{
     private cs: {
         obj: T,
@@ -9,7 +15,7 @@ export class SyncLoad<T>{
         var self = this;
         if (this.cs.obj) return this.cs.obj as any;
         else {
-            return new Promise((resolve, reject)=>{
+            return new Promise((resolve, reject) => {
                 self.cs.events.push({
                     callback: (c) => {
                         resolve(c);

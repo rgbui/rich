@@ -2,6 +2,13 @@ import lodash from "lodash";
 import { util } from "../../util/util";
 
 
+/***
+ * 
+ * 
+ * 排队执行
+ * 将一系列的异步操作排队执行，每次只执行一个，执行完毕后执行下一个
+ */
+
 export class QueueHandle {
     acts: { id: string, notify: (data, err?) => void, action: () => Promise<any> }[] = [];
     async create(action: () => Promise<any>, timeOut?: number) {

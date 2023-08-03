@@ -10,16 +10,19 @@ export function ShyAlert(msg: string, level?: 'success' | 'info' | 'fail' | 'war
         document.body.appendChild(alertEle);
     }
     alertEle.style.display = 'block';
+    alertEle.classList.add('shy-alert-' + (level || 'info'));
     alertEle.querySelector('.shy-alert-msg').innerHTML = msg;
     if (!time) { clearTimeout(time); time = null; }
     time = setTimeout(() => {
         alertEle.style.display = 'none';
-    }, ti || 3e3);
+        alertEle.setAttribute('class', 'shy-alert')
+    },ti || 3e3);
 }
 
 export function CloseShyAlert() {
     if (!time) { clearTimeout(time); time = null; }
     alertEle.style.display = 'none';
+    alertEle.setAttribute('class', 'shy-alert')
 }
 
 

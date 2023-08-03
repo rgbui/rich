@@ -2,6 +2,11 @@
 
 
 
+/**
+ * 合并请求
+ * 将多次的请求合并为一次请求，间隔5毫秒内的请求合并为一次请求
+ * 最大合并请求数为30个
+ */
 
 export class MergeSock {
     private wait: number = 5;
