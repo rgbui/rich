@@ -99,7 +99,7 @@ export class Block$Event {
         // });
         items.push({
             name: BlockDirective.link,
-            text: lst('复制块链接') ,
+            text: lst('复制块链接'),
             icon: LinkSvg
         });
         // items.push({
@@ -135,6 +135,7 @@ export class Block$Event {
                 {
                     name: 'fontColor',
                     type: MenuItemType.color,
+                    block: ls.isCn ? false : true,
                     options: FontColorList().map(f => {
                         return {
                             text: f.text,
@@ -148,12 +149,13 @@ export class Block$Event {
                     type: MenuItemType.divide
                 },
                 {
-                    text:lst('背景颜色') ,
+                    text: lst('背景颜色'),
                     type: MenuItemType.text
                 },
                 {
                     type: MenuItemType.color,
                     name: 'fillColor',
+                    block: ls.isCn ? false : true,
                     options: BackgroundColorList().map(f => {
                         return {
                             text: f.text,

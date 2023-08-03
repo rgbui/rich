@@ -91,13 +91,28 @@
         display              : inline;
         text-decoration      : none !important;
         text-decoration-color: transparent !important;
+
         &::after {
             content              : '\20';
             text-decoration      : none !important;
             text-decoration-color: transparent !important;
         }
     }
+
     &-content {
         user-select: text;
+
+        >.shy-icon-inner-svg {
+            position     : relative;
+            padding-left : 8px;
+            padding-right: 8px;
+            display      : inline !important;
+            svg {
+                position : absolute;
+                top      : 50%;
+                left     : 50%;
+                transform: translate(-50%, -50%);
+            }
+        }
     }
 }

@@ -4,7 +4,6 @@ import { IconArguments } from '../../extensions/icon/declare';
 import { getEmoji } from '../../net/element.type';
 import { PageSvg } from '../svgs';
 import { ByteIcons } from '../../extensions/byte-dance.icons/byte-dance.icons';
-import { byteDanceStore } from '../../extensions/byte-dance.icons/store';
 
 export type IconValueType = string | SvgrComponent | JSX.Element | IconArguments
 
@@ -66,6 +65,7 @@ export function Icon(props: {
             </div>
         }
         else {
+            classList.push('shy-icon-inner-svg')
             return <props.icon className={classList.join(" ")}
                 onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
                 onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }}
@@ -101,13 +101,14 @@ export function Icon(props: {
                 if (color == 'inherit') color = 'currentColor';
                 var iconSvg = ByteIcons.get(pc.code)({
                     id: pc.name as any,
-                    width: props.size == 'none' ? undefined : (props.size) || 20,
-                    height: props.size == 'none' ? undefined : (props.size) || 20,
+                    width: props.size == 'none' ? undefined : (props.size || 20),
+                    height: props.size == 'none' ? undefined : (props.size || 20),
                     strokeWidth: 3,
                     strokeLinejoin: 'round',
                     strokeLinecap: 'round',
                     colors: [color, 'none', color, color, color, color, color, color]
                 })
+                classList.push('shy-icon-inner-svg')
                 return <span className={classList.join(" ")}
                     style={style}
                     onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
@@ -136,6 +137,7 @@ export function Icon(props: {
                     height: props.size == 'none' ? undefined : (props.size) || 20
                     , ...(props.style || {})
                 });
+                classList.push('shy-icon-inner-img')
                 return <img onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
                     onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }} src={pc.url} className={classList.join(" ")} style={style} />
             case 'none':
@@ -144,6 +146,7 @@ export function Icon(props: {
                     height: props.size == 'none' ? undefined : (props.size) || 20
                     , ...(props.style || {})
                 });
+                classList.push('shy-icon-inner-svg')
                 return <PageSvg style={style}></PageSvg>
         }
     }

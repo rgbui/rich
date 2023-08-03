@@ -292,7 +292,7 @@ export interface ChannelGetMapUrls {
 	"/ws/robots":{args:{},returnType:Promise<SockResponse<{list:{userid:string,name:string}[]}>>},
 	"/robots/info":{args:{ids:string[]},returnType:Promise<SockResponse<{list:any[]}>>},
 	"/get/workspace/template":{args:{wsId: string, pageId?: string},returnType:Promise<SockResponse<{template:Record<string,any>}>>},
-	"/page/items":{args:{ws:LinkWs,wsId?:string,ids:string[],sock?:any},returnType:Promise<SockResponse<{ list:any[] }>>},
+	"/page/items":{args:{ws:LinkWs,wsId?:string,ids:string[],sock?:any},returnType:Promise<SockResponse<{ list:any[],favs:any[]}>>},
 	"/page/item/subs":{args:{ws:LinkWs,wsId?:string,id:string},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/parent/ids":{args:{ws:LinkWs,wsId?:string,id:string},returnType:Promise<SockResponse<{ parentIds:string[],exists:boolean }>>},
 	"/page/parent/subs":{args:{ws:LinkWs,wsId?:string,parentIds:string[]},returnType:Promise<SockResponse<{ list:any[] }>>},
@@ -319,7 +319,8 @@ export interface ChannelQueryMapUrls {
 	"/get/view/onlines":{args:{viewUrl:string},returnType:{users:Set<string>}},
 	"/amap/key_pair":{args:any,returnType:{key:string,pair:string}},
 	"/ws/current/pages":{args:{},returnType:LinkPageItem[]},
-	"/guid":{args:any,returnType:string}
+	"/guid":{args:any,returnType:string},
+	"/query/my/wss":{args:{},returnType:{wss:any[]}}
 }
 export interface ChannelActMapUrls {
     "/page/create/by_text":{args:{word:string},returnType:SockResponse<LinkPageItem>},
