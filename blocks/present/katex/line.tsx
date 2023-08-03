@@ -1,11 +1,11 @@
 import { Block } from "../../../src/block";
 import { BlockDisplay } from "../../../src/block/enum";
 import { url, view } from "../../../src/block/factory/observable";
-import { listenKatexInput } from "../../../extensions/katex";
+import { useKatexInput } from "../../../extensions/katex";
 import React from "react";
 import { BlockView } from "../../../src/block/view";
 import { Rect } from "../../../src/common/vector/point";
-import { loadKatex } from "./load";
+import { loadKatex } from "../../../component/view/katex/load";
 import { SolidArea } from "../../../src/block/view/appear";
 import { BoxTip } from "../../../component/view/tooltip/box";
 import { ToolTip } from "../../../component/view/tooltip";
@@ -32,7 +32,7 @@ export class KatexLine extends Block {
         this.opened = true;
         var old = this.content;
         this.forceUpdate();
-        var newValue = await listenKatexInput({ direction: "bottom", align: 'center', roundArea: Rect.fromEle(this.el) }, this.content, (data) => {
+        var newValue = await useKatexInput({ direction: "bottom", align: 'center', roundArea: Rect.fromEle(this.el) }, this.content, (data) => {
             this.content = data;
             this.forceUpdate()
         });

@@ -1,17 +1,18 @@
 .sy-block-katex {
-    // padding: 4px 8px;
-    border-radius   : 4px;
-    background-color: rgb(251, 251, 250);
+    border-radius      : 4px;
+    // background-color: rgb(251, 251, 250);
+    padding            : 0px 10px;
+    text-align         : center;
 
     &-content {
-        display       : block;
-        padding-top   : 1em;
-        padding-bottom: 1em;
-        text-align    : center;
+        display      : block;
+        text-align   : inherit;
+        margin-top   : 1em;
+        margin-bottom: 1em;
 
         .katex {
             display    : block;
-            text-align : center;
+            text-align : inherit;
             white-space: nowrap;
         }
     }
