@@ -210,7 +210,7 @@ export class CardBox extends Block {
 @view('/card/box')
 export class ViewComponent extends BlockView<CardBox>{
     contentEl: HTMLElement;
-    render() {
+    renderView() {
         var style: CSSProperties = {};
         if (this.block.page?.pageLayout?.type == PageLayoutType.docCard) {
             style.display = 'block';

@@ -292,7 +292,7 @@ export class CarouselView extends BlockView<Carousel>{
             return <div key={i} ><img className="round" src={img.src?.url} style={style} /></div>
         })}</Slider></div>
     }
-    render() {
+    renderView()  {
         var style: CSSProperties = {
             justifyContent: 'center'
         }

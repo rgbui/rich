@@ -671,7 +671,7 @@ export class TableView extends BlockView<Table>{
     topDrag: HTMLElement;
     leftDrag: HTMLElement;
     private isMoveLine: boolean = false;
-    render() {
+    renderView() {
         return <div style={this.block.visibleStyle}><div className='sy-block-table'
             style={this.block.contentStyle}
             onMouseMove={e => this.mousemove(e.nativeEvent)} onMouseLeave={e => this.onMouseleave()}>

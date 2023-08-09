@@ -65,5 +65,6 @@ export enum MenuItemType {
     container = 10,
     color = 11,
     gap = 12,
-    user = 13
+    user = 13,
+    help=14
 }

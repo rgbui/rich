@@ -15,7 +15,7 @@ export class Group extends Block {
 }
 @view('/group')
 export class GroupView extends BlockView<Group>{
-    render() {
+    renderView() {
         return <div className='sy-block-group' >{this.block.childs.map(x =>
             <x.viewComponent key={x.id} block={x}></x.viewComponent>
         )}</div>

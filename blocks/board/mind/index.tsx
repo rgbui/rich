@@ -533,7 +533,7 @@ export class FlowMindView extends BlockView<FlowMind>{
         </>
     }
     flowMindLine: FlowMindLine;
-    render() {
+    renderView() {
         var style = this.block.visibleStyle;
         style.padding = 0;
         return <div className='sy-flow-mind' style={style}>

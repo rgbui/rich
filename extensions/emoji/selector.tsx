@@ -35,7 +35,6 @@ class EmojiSelector extends InputTextPopSelector<EmojiCode> {
         if (!list.some(s => s.code == this.searchCode)) {
             this.searchCode = list.first()?.code;
         }
-        console.log(list);
         return list;
     }
     renderEmojis() {
@@ -97,16 +96,6 @@ class EmojiSelector extends InputTextPopSelector<EmojiCode> {
     close() {
         this.searchCode = '';
         super.close();
-        // this.continuousSearchEmpty = false;
-        // this.loading = false;
-        // this.text = '';
-        // this.searchWord = '';
-        // this.selectIndex = 0;
-        // if (this.visible == true) {
-        //     this.visible = false;
-        // }
-        // console.log(this.visible, 'sss');
-        // this.forceUpdate();
     }
     /**
      * 向下选择内容

@@ -129,7 +129,7 @@ export class TableStoreCalendarView extends BlockView<TableStoreCalendar>{
             <span className="remark"><S>创建数据表格</S></span>
         </div>
     }
-    render() {
+    renderView()  {
         var now = dayjs();
         var day = dayjs(this.block.date);
         return <div className='sy-data-grid-calendar' onMouseEnter={e => this.block.onOver(true)}

@@ -9,6 +9,10 @@ export var TextTurns = {
         '/head?{level:"h2"}',
         '/head?{level:"h3"}',
         '/head?{level:"h4"}',
+        '/head?{toggle:true}',
+        '/head?{level:"h2",toggle:true}',
+        '/head?{level:"h3",toggle:true}',
+        '/head?{level:"h4",toggle:true}',
         '/list?{listType:1}',
         '/list?{listType:0}',
         '/list?{listType:2}',
@@ -23,6 +27,10 @@ export var TextTurns = {
             case '/head?{level:"h2"}':
             case '/head?{level:"h3"}':
             case '/head?{level:"h4"}':
+            case '/head?{toggle:true}':
+            case '/head?{level:"h2",toggle:true}':
+            case '/head?{level:"h3",toggle:true}':
+            case '/head?{level:"h4",toggle:true}':
             case '/list?{listType:1}':
             case '/list?{listType:0}':
             case '/list?{listType:2}':

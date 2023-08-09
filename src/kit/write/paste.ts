@@ -1,3 +1,4 @@
+import { marked } from "marked";
 import { Kit } from "..";
 import { TextCode } from "../../../blocks/present/code/code";
 import { getImageSize } from "../../../component/file";
@@ -28,7 +29,8 @@ export async function onPasteBlank(kit: Kit, event: ClipboardEvent) {
         var fra: Block = kit.page.getPageFrame();
         var gm = fra.globalWindowMatrix;
         var re = gm.inverseTransform(Point.from(point));
-        if (!html && text || text && html && html.endsWith(text)) {
+        if (!html && text || text && html && html.endsWith(text))
+        {
             await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
                 var url = BlockUrlConstant.TextSpan;
                 var data = { content: text } as any;
@@ -40,7 +42,6 @@ export async function onPasteBlank(kit: Kit, event: ClipboardEvent) {
                 newBlock.mounted(() => {
                     kit.picker.onPicker([newBlock]);
                     kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
-
                 })
             });
         }
@@ -123,8 +124,28 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
             if (URL_RGEX.test(text)) {
                 await onPasteUrl(kit, aa, text);
             }
-            else await onPasteInsertText(kit, aa, text);
-            return;
+            else {
+                if (!html && text.indexOf('\n') > -1) {
+                    try {
+                        html = marked.parse(text);
+                        if (html == text) {
+                            await onPasteInsertText(kit, aa, text);
+                            return;
+                        }
+                    }
+                    catch (ex) {
+                        aa.block.page.onError(ex);
+                        console.error(ex);
+                        await onPasteInsertText(kit, aa, text);
+                        return;
+                    }
+                }
+                else {
+                    await onPasteInsertText(kit, aa, text);
+                    return;
+                }
+            }
+
         }
         if (files.length > 0) {
             event.preventDefault();
@@ -163,6 +184,7 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
                     return '\\' + $
                 })
                 if (html.match(new RegExp('([\\s]*<[^>]+>[\\s]*)?<[^>]+>' + regexText + '</[^>]+>'))) {
+
                     /**
                      * 这里表示当前的文本就仅仅在外面包一层html，没有多个块
                      * 列如:
@@ -335,8 +357,7 @@ async function onPasteInsertPlainText(kit: Kit, aa: AppearAnchor, text: string) 
         })
     }
 }
-async function onPasteUrl(kit: Kit,aa: AppearAnchor,url: string)
-{
+async function onPasteUrl(kit: Kit, aa: AppearAnchor, url: string) {
     if (aa.isSolid) {
         await this.kit.page.onActionAsync(ActionDirective.onSolidBlockInputTextContent, async () => {
             var text = aa.solidContentEl.innerText;
@@ -362,7 +383,7 @@ async function onPasteUrl(kit: Kit,aa: AppearAnchor,url: string)
                 };
                 await kit.writer.inputPop.selector.open(rect, url, (...data) => {
                     kit.writer.onInputPopCreateBlock(...data);
-                },kit.page);
+                }, kit.page);
             });
         });
     }
@@ -382,7 +403,7 @@ async function onPasteUrl(kit: Kit,aa: AppearAnchor,url: string)
         };
         await kit.writer.inputPop.selector.open(rect, url, (...data) => {
             kit.writer.onInputPopCreateBlock(...data);
-        },kit.page);
+        }, kit.page);
     }
 }
 

@@ -243,8 +243,7 @@ export class Line extends Block {
 }
 @view('/line')
 export class LineView extends BlockView<Line>{
-    render(): ReactNode {
-        if (this.isViewError) return <div style={this.block.visibleStyle}></div>
+    renderView() {
         var w = this.block.pattern.getSvgStyle()?.strokeWidth || 1;
         var segs = this.block.segments
         if (segs.length == 0) return <div style={this.block.visibleStyle}></div>

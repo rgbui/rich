@@ -358,7 +358,7 @@ export class VideoView extends BlockView<Video>{
         })
     }
     contentWrapper: HTMLDivElement;
-    render() {
+    renderView()  {
         var style: CSSProperties = {
             justifyContent: 'center'
         }

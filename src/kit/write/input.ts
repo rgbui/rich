@@ -109,20 +109,53 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
     if (aa.block.url == BlockUrlConstant.Title || aa.block.closest(x => x.isOnlyBlock)?.url == BlockUrlConstant.Title) return false;
     var sel = window.getSelection();
     var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
-    var current = aa.textContent.slice(0, offset);
+    var current = aa.textContent.slice(0,offset);
     var rest = aa.textContent.slice(offset);
-    var mr = InputDetector(current, { rowStart: aa.isRowStart });
+    var mr = InputDetector(current, { rowStart: aa.isRowStart, rowEnd: aa.isRowEnd && (rest ? false : true) });
     if (mr) {
         var rule = mr.rule;
         switch (rule.operator) {
-            case DetectorOperator.firstLetterCreateBlock:
-                var newOffset = offset + (mr.value.length - current.length);
-                aa.setContent(mr.value + rest);
-                aa.collapse(newOffset);
+            case DetectorOperator.lastLetterCreateBlock:
+                var nv = current.slice(0, 0 - mr.value.length);
+                aa.setContent(nv);
+                aa.collapse(nv.length);
                 await InputForceStore(aa, async () => {
                     var row = aa.block.closest(x => !x.isLine);
-                    var newBlock = await row.visibleUpCreateBlock(rule.url, { createSource: 'InputBlockSelector' });
-                    newBlock.mounted(() => {
+                    var newBlock: Block;
+                    if (row.isContentEmpty) {
+                        await row.visibleUpCreateBlock(rule.url, {
+                            createSource: 'InputBlockSelector'
+                        });
+                        write.kit.page.addUpdateEvent(async () => {
+                            write.kit.anchorCursor.onFocusBlockAnchor(row, {
+                                render: true,
+                                merge: true
+                            });
+                        })
+                    }
+                    else {
+                        var nbs = await row.parent.appendArrayBlockData([{ url: rule.url, createSource: 'InputBlockSelector' }, { url: BlockUrlConstant.TextSpan }], row.at + 1, row.parentKey)
+                        newBlock = nbs.last();
+                        console.log('neeee', nbs);
+                        newBlock.mounted(() => {
+                            write.kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true })
+                        });
+                    }
+                });
+                break;
+            case DetectorOperator.firstLetterCreateBlock:
+                var newOffset = offset + (mr.value.length - current.length);
+                aa.setContent(rest);
+                aa.collapse(offset);
+                await InputForceStore(aa, async () => {
+                    var row = aa.block.closest(x => !x.isLine);
+                    var newBlock: Block;
+                    newBlock = await row.visibleUpCreateBlock(rule.url, { createSource: 'InputBlockSelector' });
+                    if (row.isContentEmpty) write.kit.anchorCursor.onFocusBlockAnchor(row, {
+                        render: true,
+                        merge: true
+                    });
+                    else newBlock.mounted(() => {
                         var b = row.nextFind(g => g.appearAnchors.some(s => s.isText));
                         if (b) write.kit.anchorCursor.onFocusBlockAnchor(b, { render: true, merge: true })
                     });
@@ -161,7 +194,8 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                     var rowBlock = block.closest(x => !x.isLine);
                     var pattern = await block.pattern.cloneData();
                     if (rowBlock === block) {
-                        await rowBlock.appendBlock({ url: BlockUrlConstant.Text, pattern, content: rowBlock.content });
+                        if (rowBlock.content)
+                            await rowBlock.appendBlock({ url: BlockUrlConstant.Text, pattern, content: rowBlock.content });
                         await rowBlock.updateProps({ content: '' });
                     }
                     var newBlock = await rowBlock.appendBlock({ url: BlockUrlConstant.Text, content: mr.matchValue });
@@ -551,8 +585,7 @@ export async function onSpaceInputUrl(write: PageWrite, aa: AppearAnchor, event:
         var rowBlock = aa.block.closest(x => x.isBlock);
         if (rowBlock.url == BlockUrlConstant.Title) return;
         var content = aa.textContent;
-        if (URL_END_REGEX.test(content))
-        {
+        if (URL_END_REGEX.test(content)) {
             var ma = content.match(URL_END_REGEX);
             var url = ma[0];
             event.preventDefault();

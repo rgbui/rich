@@ -18,7 +18,7 @@ export class TableStoreCustom extends DataGridView {
 }
 @view('/data-grid/table/custom')
 export class TableStoreCustomView extends BlockView<TableStoreCustom>{
-    render() {
+    renderView()  {
         var ViewC = DataStoreViewFactory.getDataStoreView(this.block.dataViewUrl);
         return <div>
             <ViewC block={this.block}></ViewC>

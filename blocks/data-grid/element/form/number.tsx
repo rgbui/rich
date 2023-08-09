@@ -9,7 +9,7 @@ class FieldText extends OriginFormField {
 }
 @view('/form/number')
 class FieldTextView extends BlockView<FieldText>{
-    render() {
+    renderView() {
         var self = this;
         return <FieldView block={this.block}>
             <InputNumber

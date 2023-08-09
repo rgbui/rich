@@ -248,7 +248,7 @@ export class TextSpan extends Block {
 }
 @view("/textspan")
 export class TextSpanView extends BlockView<TextSpan>{
-    render() {
+    renderView() {
         var style = this.block.contentStyle;
         if (this.block.align == 'center') style.textAlign = 'center';
         return <div className='sy-block-text-span' style={this.block.visibleStyle}>

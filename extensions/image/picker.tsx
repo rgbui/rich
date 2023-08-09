@@ -29,6 +29,7 @@ class ImagePicker extends EventsComponent {
             if (this.showGallery) this.tab.onFocus(0)
             else this.tab.onFocus(1)
         }
+        this.forceUpdate();
     }
     tab: Tab;
     render() {
@@ -40,7 +41,7 @@ class ImagePicker extends EventsComponent {
                 <Tab.Page item={<Tip placement='bottom' text={'上传图片'}><Icon size={20} icon={Upload}></Icon></Tip>}>
                     <UploadView mine='image' change={e => this.onChange(e)}></UploadView>
                 </Tab.Page>
-                <Tab.Page item={<Tip placement='bottom' text={'图片网址'}><Icon size={20} icon={Link}></Icon></Tip>}>
+                <Tab.Page item={<Tip placement='bottom' text={'图片网址'}><Icon size={18} icon={Link}></Icon></Tip>}>
                     <OutsideUrl change={e => this.onChange({ url: e })}></OutsideUrl>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' overlay={'Pexels'}><Icon size={20} icon={Pexels}></Icon></Tip>}>

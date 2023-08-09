@@ -64,7 +64,7 @@ export class KatexBlock extends Block {
 }
 @view('/katex')
 export class KatexView extends BlockView<KatexBlock>{
-    render() {
+    renderView() {
         var style = this.block.contentStyle;
         if (this.block.align == 'left') style.textAlign = 'left';
         return <div style={this.block.visibleStyle}><div

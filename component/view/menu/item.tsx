@@ -13,6 +13,7 @@ import { MenuBox } from "./box";
 import { MenuItem, MenuItemType } from "./declare";
 import { MenuView } from "./menu";
 import { Avatar } from "../avator/face";
+import { HelpText } from "../text";
 
 export class MenuItemView extends React.Component<{
     item: MenuItem,
@@ -155,6 +156,9 @@ export class MenuItemView extends React.Component<{
                 {item.renderIcon && item.renderIcon(item, this)}
                 <span className="shy-menu-box-item-switch-text">{item.text}</span>
                 <Switch size='small' onChange={e => this.checked(e, item)} checked={item.checked ? item.checked : false}></Switch>
+            </div>}
+            {item.type == MenuItemType.help && <div className="shy-menu-box-item-help">
+                <HelpText url={item.url}>{item.text}</HelpText>
             </div>}
             {item.type == MenuItemType.input && <div className="shy-menu-box-item-input"><Input size={'small'} value={item.value} onEnter={e => { item.value = e; this.select(item) }} onChange={e => { item.value = e; this.input(e, item) }} placeholder={item.placeholder || item.text}></Input></div>}
             {item.type == MenuItemType.button && <div className="shy-menu-box-item-button"><Button icon={item.icon} disabled={item.disabled} block onClick={e => item.buttonClick != 'click' ? this.select(item, e.nativeEvent) : this.click(item, e)}>{item.text}</Button></div>}

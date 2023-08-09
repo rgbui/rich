@@ -131,6 +131,7 @@ async function openOverlay(el: HTMLElement,
 }
 
 export class BoxTip extends React.Component<{
+    disabled?: boolean,
     overlay?: React.ReactNode,
     children?: React.ReactNode,
     /**0.1s */
@@ -142,6 +143,7 @@ export class BoxTip extends React.Component<{
     el: HTMLElement;
     componentDidMount() {
         if (!this.props.overlay) return;
+        if (this.props.disabled) return;
         this.el = ReactDOM.findDOMNode(this) as HTMLElement;
         this.el.addEventListener('mouseenter', this.mouseenter);
         this.el.addEventListener('mouseleave', this.mouseleave);
@@ -150,6 +152,7 @@ export class BoxTip extends React.Component<{
     }
     componentWillUnmount() {
         if (!this.props.overlay) return;
+        if (this.props.disabled) return;
         if (this.el) {
             this.el.removeEventListener('mouseenter', this.mouseenter);
             this.el.removeEventListener('mouseleave', this.mouseleave);
@@ -163,6 +166,7 @@ export class BoxTip extends React.Component<{
     enterTime;
     mouseenter = (event: MouseEvent) => {
         if (!this.props.overlay) return;
+        if (this.props.disabled) return;
         if (this.enterTime) {
             clearTimeout(this.enterTime);
             this.enterTime = null;
@@ -175,6 +179,7 @@ export class BoxTip extends React.Component<{
     }
     mouseleave = async (event: MouseEvent) => {
         if (!this.props.overlay) return;
+        if (this.props.disabled) return;
         if (this.enterTime) {
             clearTimeout(this.enterTime);
             this.enterTime = null;
@@ -185,6 +190,7 @@ export class BoxTip extends React.Component<{
     }
     close() {
         if (!this.props.overlay) return;
+        if (this.props.disabled) return;
         if (this.enterTime) {
             clearTimeout(this.enterTime);
             this.enterTime = null;

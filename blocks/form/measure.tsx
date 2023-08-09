@@ -7,7 +7,7 @@ import "./style.less";
 import { MouseDragger } from "../../src/common/dragger";
 import { Rect } from "../../src/common/vector/point";
 import { lst } from "../../i18n/store";
-import { MenuItem } from "../../component/view/menu/declare";
+import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 
 @url('/measure')
 export class Measure extends Block {
@@ -29,7 +29,8 @@ export class Measure extends Block {
             icon: { name: 'bytedance-icon', code: 'percentage' },
             name: 'hideValue',
             checked: this.hideValue,
-            text: lst('隐藏数值')
+            text: lst('隐藏数值'),
+            type:MenuItemType.switch
         })
         return items;
     }
@@ -69,7 +70,7 @@ export class MeasureView extends BlockView<Measure>{
             }
         })
     }
-    render() {
+    renderView()  {
         var style = this.block.contentStyle;
         var bg = (style.backgroundColor || '')?.replace(/ /g, '')
         if (!bg || bg == 'rgba(255,255,255,0)' || bg == 'rgb(255,255,255,0)') style.backgroundColor = 'var(--text-p-color)';

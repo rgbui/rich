@@ -88,7 +88,7 @@ export class Callout extends TextSpan {
 }
 @view('/callout')
 export class CalloutView extends BlockView<Callout>{
-    render() {
+    renderView()  {
         var style = this.block.contentStyle;
         var bg = style.backgroundColor?.replace(/ /g, '')
         if (bg == 'rgba(255,255,255,0)' || bg == 'rgb(255,255,255,0)') style.border = '1px solid rgb(233, 231, 231)';

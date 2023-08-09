@@ -2,20 +2,28 @@ import React from "react";
 import { Component, ErrorInfo } from "react";
 import ReactDOM from 'react-dom';
 import { Block } from "..";
+import { S } from "../../../i18n/view";
 export abstract class BlockView<T extends Block> extends Component<{ block: T }> {
     constructor(props) {
         super(props);
         this.block.view = this;
     }
+    render(): React.ReactNode {
+        if (this.viewError) {
+            return this.renderViewError();
+        }
+        return this.renderView();
+    }
+    abstract renderView(): React.ReactNode
     renderViewError() {
-        if (this.isViewError) {
-            return <div className="sy-block-error" style={this.block.visibleStyle}>块显示出错<span onMouseDown={e => { e.stopPropagation(); this.block.onDelete() }}>删除</span></div>
+        if (this.viewError) {
+            return <div className="sy-block-error" style={this.block.visibleStyle}><S>块显示出错</S><span onMouseDown={e => { e.stopPropagation(); this.block.onDelete() }}><S>删除</S></span></div>
         }
     }
-    isViewError: boolean = false;
+    viewError: { error: Error, errorInfo: ErrorInfo } = null
     componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+        this.viewError = { error, errorInfo };
         this.block.page.onError(error);
-        this.isViewError = true;
         this.forceUpdate();
     }
     UNSAFE_componentWillMount(): void {

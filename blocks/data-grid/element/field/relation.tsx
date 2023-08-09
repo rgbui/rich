@@ -96,7 +96,7 @@ export class FieldRollup extends OriginField {
 }
 @view('/field/rollup')
 export class FieldRollupView extends BlockView<FieldRollup>{
-    render() {
+    renderView()  {
         var str: string = '';
         var list = this.block.relationList;
         var field = this.block.relationSchema?.fields?.find(g => g.id == this.block.field.config?.rollupFieldId);

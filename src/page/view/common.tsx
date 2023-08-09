@@ -7,6 +7,7 @@ import { Icon } from "../../../component/view/icon";
 import { ChevronDownSvg } from "../../../component/svgs";
 import { UserBasic } from "../../../types/user";
 import { lst } from "../../../i18n/store";
+import lodash from "lodash";
 
 export class DefinePageNavBar extends React.Component<{
     ws: LinkWs,
@@ -18,8 +19,10 @@ export class DefinePageNavBar extends React.Component<{
     }
     render() {
         var self = this;
-        var props = this.props; var h = props.ws.publishConfig.contentTheme == 'default' ? 48 : 48;
+        var props = this.props;
+        var h = props.ws.publishConfig.contentTheme == 'default' ? 48 : 48;
         function mousedown(e: React.MouseEvent, item: WorkspaceNavMenuItem) {
+            e.preventDefault();
             if (item.urlType == 'url') {
                 location.href = item.url;
             }
@@ -48,15 +51,14 @@ export class DefinePageNavBar extends React.Component<{
                     }
                     return <div onMouseEnter={eg => {
                         e.spread = true;
-                        //self.forceUpdate();
+                        self.forceUpdate();
                     }}
                         onMouseLeave={eg => {
                             e.spread = false;
-                            // self.forceUpdate();
+                            self.forceUpdate();
                         }} className="relative"
                         key={e.id}>
-                        <a
-                            style={{ color: 'inherit' }}
+                        <a style={{ color: 'inherit' }}
                             href={href} onClick={eg => mousedown(eg, e)}
                             className={"flex  round min-w-120 item-hover  padding-w-10 padding-h-5  " + (false ? "dashed" : 'border-t')} >
                             {e.icon && <span className="flex-fixed size-20 flex-center"><Icon size={18} icon={e.icon}></Icon></span>}
@@ -75,11 +77,11 @@ export class DefinePageNavBar extends React.Component<{
             else location.href = 'https://shy.live/sign/in?back=' + encodeURIComponent(back);
         }
         var style: CSSProperties = Object.assign({}, this.props.style || {});
-
+        var ns = this.getNavMenus();
         return <div className="shy-page-bar " >
             <div className="flex" style={style}>
                 <div className="flex-auto flex r-gap-r-10">
-                    {props.ws.publishConfig.navMenus.map((e, i) => {
+                    {ns.map((e, i) => {
                         var href = e.urlType == 'url' ? e.url : undefined;
                         if (e.urlType == 'page') {
                             href = props.ws.resolve({ pageId: e.pageId });
@@ -124,5 +126,12 @@ export class DefinePageNavBar extends React.Component<{
                 </div>
             </div>
         </div>
+    }
+    getNavMenus() {
+        var ns = lodash.cloneDeep(this.props.ws.publishConfig.navMenus);
+        ns.arrayJsonEach('childs', g => {
+            g.spread = false;
+        })
+        return ns;
     }
 }

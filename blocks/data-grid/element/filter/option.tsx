@@ -75,7 +75,7 @@ export class FilterFieldOptionView extends BlockView<FilterFieldOption>{
                 }}>{g.text}</span>
             })}</div>
     }
-    render() {
+    renderView()  {
         return <div style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle} filterField={this.block}>
             {this.renderOptions()}
         </OriginFilterFieldView></div>

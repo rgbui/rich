@@ -95,7 +95,7 @@ export class TableStoreCalendarView extends BlockView<TableStoreCalendar>{
             </div>
         </div>
     }
-    render() {
+    renderView()  {
         return <div className='sy-data-grid-timeline'>
             <div className='sy-data-grid-timelines'>{this.block.dataGroups.map((dg, i) => {
                 return this.renderGroup(dg, i)

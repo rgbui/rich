@@ -103,7 +103,7 @@ export class RefLinksView extends BlockView<RefLinks>{
         e.stopPropagation();
         this.block.onUpdateProps({ expand: this.block.expand ? false : true }, { range: BlockRenderRange.self })
     }
-    render() {
+    renderView()  {
         return <div style={this.block.visibleStyle}>
             <div className="flex h-24 visible-hover">
                 <span onMouseDown={e => this.onToggle(e)} className="flex-fixed remark ts-transform flex-center size-16 cursor  round"

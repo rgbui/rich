@@ -35,7 +35,7 @@ export class Pen extends Block {
 }
 @view('/pen')
 export class PenView extends BlockView<Pen>{
-    render():ReactNode {
+    renderView() {
         var vb;
         if (this.block.viewBox) {
             var vs = this.block.viewBox.split(/ /g);

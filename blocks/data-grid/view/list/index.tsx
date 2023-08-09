@@ -45,7 +45,7 @@ export class TableStoreListView extends BlockView<TableStoreList>{
             <span className="remark"><S>创建数据表格</S></span>
         </div>
     }
-    render() {
+    renderView()  {
         return <div className='sy-data-grid-list'
             onMouseEnter={e => this.block.onOver(true)}
             onMouseLeave={e => this.block.onOver(false)}

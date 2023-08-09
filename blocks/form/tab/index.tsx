@@ -271,7 +271,7 @@ export class TabView extends BlockView<Tab>{
         })
     }
     tabPages: HTMLElement;
-    render() {
+    renderView() {
         var itemStyle: CSSProperties = {
             justifyContent: 'flex-start'
         }

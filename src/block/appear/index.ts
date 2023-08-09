@@ -274,6 +274,17 @@ export class AppearAnchor {
         }
         return false;
     }
+    get isRowEnd() {
+        var row = this.block.closest(x => !x.isLine);
+        if (row == this.block) {
+            if (row.appearAnchors.last() === this) return true;
+        }
+        else {
+            var r = row.findReverse(g => g.appearAnchors.length > 0);
+            if (r && r.appearAnchors.last() === this) return true;
+        }
+        return false;
+    }
     isBefore(anchor: AppearAnchor) {
         var pos = this.el.compareDocumentPosition(anchor.el);
         if (pos == 4 || pos == 20) {

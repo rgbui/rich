@@ -18,7 +18,7 @@ export class Comment extends Block {
 
 @view('/comments')
 export class CommentView extends BlockView<Comment>{
-    render() {
+    renderView()  {
         return <div
             style={this.block.visibleStyle}
             onMouseDown={e => e.stopPropagation()}>

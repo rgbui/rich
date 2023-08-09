@@ -9,7 +9,7 @@ class FieldText extends OriginFormField {
 }
 @view('/form/text')
 class FieldTextView extends BlockView<FieldText>{
-    render() {
+    renderView()  {
         var self = this;
         function keydown(event: React.KeyboardEvent<HTMLInputElement>) {
             if (event.key == 'Enter') {

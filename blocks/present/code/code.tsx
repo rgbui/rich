@@ -174,7 +174,7 @@ export class TextCodeView extends BlockView<TextCode>{
         CopyText(this.block.content)
         ShyAlert(lst('复制成功'))
     }
-    render() {
+    renderView() {
         var label = CodeMirrorModes.filter(g => g.abled).find(g => g.mode == this.block.language)?.label || '纯文本';
         var s = {
             '--code-mirror-font-size': this.block.page.fontSize + 'px',

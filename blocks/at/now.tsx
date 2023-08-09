@@ -32,7 +32,7 @@ export class ShyNowDate extends Block {
 }
 @view('/now/date')
 export class ShyNowDateView extends BlockView<ShyNowDate>{
-    render() {
+    renderView() {
         return <span >{dayjs().format('YYYY-MM-DDTHH:ss:ss')}</span>
     }
 }

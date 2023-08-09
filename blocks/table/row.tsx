@@ -40,7 +40,7 @@ export class TableRow extends Block {
 }
 @view('/table/row')
 export class TableRowView extends BlockView<TableRow>{
-    render() {
+    renderView() {
         var style = this.block.pattern.style;
         return <tr style={style}>{this.block.childs.map(x => <x.viewComponent key={x.id} block={x}></x.viewComponent>)}</tr>
     }

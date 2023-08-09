@@ -42,7 +42,7 @@ export class FilterRelationView extends BlockView<FilterRelation>{
             return { id: c.id, title: c.title }
         })
     }
-    render() {
+    renderView()  {
         return <div style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle}
             filterField={this.block}>
             <span onMouseDown={e => this.mousedown(e)} >{this.block.selectDataIds.map(s => { return <em id={s.id}>{s.title}</em> })}</span>

@@ -40,7 +40,7 @@ export class FilterFieldNumber extends OriginFilterField {
 
 @view('/field/filter/number')
 export class FilterFieldNumberView extends BlockView<FilterFieldNumber>{
-    render() {
+    renderView()  {
         return <div className="flex-line flex-center round" style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle} filterField={this.block}>
             <input
                 style={{ width: 60 }}

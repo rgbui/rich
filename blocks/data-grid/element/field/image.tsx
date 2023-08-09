@@ -59,7 +59,7 @@ export class FieldImageView extends BlockView<FieldImage>{
             </div>
         })
     }
-    render() {
+    renderView()  {
         var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);
         if (!this.block.field?.config?.isMultiple && vs.length > 1) vs = [vs.first()]
         return <div className='sy-field-image'>

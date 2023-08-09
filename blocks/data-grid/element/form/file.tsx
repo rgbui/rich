@@ -59,7 +59,7 @@ class FormFieldFileView extends BlockView<FormFieldFile>{
             </div>
         })
     }
-    render() {
+    renderView()  {
         var text = lst('文件');
         if (this.block.field?.type == FieldType.video) text = lst('视频')
         else if (this.block.field?.type == FieldType.audio) text = lst('音频')

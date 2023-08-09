@@ -11,9 +11,11 @@ import { BoxTip } from "../../../component/view/tooltip/box";
 import { ToolTip } from "../../../component/view/tooltip";
 import { DragBlockLine } from "../../../src/kit/handle/line";
 import { Icon } from "../../../component/view/icon";
-import { DragHandleSvg, EditSvg, TrashSvg } from "../../../component/svgs";
+import { DragHandleSvg, DuplicateSvg, Edit1Svg, EditSvg, TrashSvg } from "../../../component/svgs";
 import { BlockUrlConstant } from "../../../src/block/constant";
 import { lst } from "../../../i18n/store";
+import { Tip } from "../../../component/view/tooltip/tip";
+import { CopyAlert } from "../../../component/copy";
 
 @url('/katex/line')
 export class KatexLine extends Block {
@@ -54,7 +56,7 @@ export class KatexLine extends Block {
         return `<span class='sy-block-katex'>${this.content}</span>`
     }
     async getMd() {
-        return ` ${this.content} `
+        return ` ${this.content}`
     }
 }
 @view('/katex/line')
@@ -63,13 +65,14 @@ export class KatexView extends BlockView<KatexLine>{
         DragBlockLine(this.block, event);
     }
     boxTip: BoxTip;
-    render() {
-        return <span className={'sy-block-katex-line' + (this.block.opened ? " sy-block-katex-opened" : "")}
+    renderView()  {
+        return <span className={'sy-block-katex-line cursor ' + (this.block.opened ? " sy-block-katex-opened" : "")}
             onMouseDown={e => this.block.open(e)}>
             <BoxTip ref={e => this.boxTip = e} overlay={<div className="flex-center  padding-5 r-flex-center r-size-24 r-round r-item-hover r-cursor text">
-                <ToolTip overlay={lst('拖动')}><span onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></ToolTip>
-                <ToolTip overlay={lst('编辑')}><span onMouseDown={e => this.block.open(e)} ><Icon size={14} icon={EditSvg}></Icon></span></ToolTip>
-                <ToolTip overlay={lst('删除')}><span onMouseDown={e => this.block.onCrash(e)} ><Icon size={14} icon={TrashSvg}></Icon></span></ToolTip>
+                {this.block.isCanEdit() && <><ToolTip overlay={lst('拖动')}><span onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></ToolTip>
+                    <ToolTip overlay={lst('编辑')}><span onMouseDown={e => this.block.open(e)} ><Icon size={14} icon={Edit1Svg}></Icon></span></ToolTip>
+                    <ToolTip overlay={lst('删除')}><span onMouseDown={e => this.block.onCrash(e)} ><Icon size={14} icon={TrashSvg}></Icon></span></ToolTip></>}
+                {!this.block.isCanEdit() && <Tip text='复制'><span onMouseDown={e => { e.stopPropagation(); CopyAlert(this.block.content, lst('公式已复制')) }}><Icon size={14} icon={DuplicateSvg}></Icon></span></Tip>}
             </div>}>
                 <SolidArea line prop='content' isHtml={true} block={this.block} ><span dangerouslySetInnerHTML={{ __html: this.block.katexContent }}></span></SolidArea>
             </BoxTip>

@@ -78,7 +78,7 @@ export class TitleView extends BlockView<Title>{
     willUnmount() {
         channel.off('/page/update/info', this.updatePageInfo);
     }
-    render() {
+    renderView()  {
         var isAdd: boolean = this.block.page.isSupportCover;
         if (!this.block.page.isCanEdit) isAdd = false;
         var pd = this.block.page.getPageDataInfo();

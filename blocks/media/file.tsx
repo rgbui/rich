@@ -83,7 +83,7 @@ export class File extends Block {
 }
 @view('/file')
 export class FileView extends BlockView<File>{
-    render() {
+    renderView()  {
         function download(url: string, fileName: string) {
             util.downloadFile(url, fileName);
         }

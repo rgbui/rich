@@ -11,7 +11,7 @@ export class FieldFormula extends OriginField {
 }
 @view('/field/formula')
 export class FieldFormulaView extends BlockView<FieldFormula>{
-    render() {
+    renderView()  {
         return <div className="sy-field-formula">
             {cacFormulaValue(this.block.dataGrid.schema, this.block.field, this.block.item.dataRow)}
         </div>

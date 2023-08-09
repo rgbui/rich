@@ -92,7 +92,7 @@ export class FieldNumber extends OriginField {
 @view('/field/number')
 export class FieldTextView extends BlockView<FieldNumber>{
     isCom: boolean = false;
-    render() {
+    renderView()  {
         var self = this;
         var save = lodash.debounce<(value: number) => void>((value) => {
             self.block.onUpdateCellValue(value);

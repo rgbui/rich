@@ -11,7 +11,7 @@ export class FieldEmail extends OriginField {
 }
 @view('/field/email')
 export class FieldEmailView extends BlockView<FieldEmail>{
-    render() {
+    renderView()  {
         return <div className='sy-field-email f-14'>
             <TextArea plain block={this.block} prop='value' placeholder={lst("输入邮箱")} ></TextArea>
         </div>

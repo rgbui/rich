@@ -15,7 +15,7 @@ export class PageCard extends Block {
 
 @view('/board/card')
 export class PageCardView extends BlockView<PageCard>{
-    render() {
+    renderView() {
         return <div style={this.block.visibleStyle}>
             <div className='sy-block-card' >
                 <ChildsArea childs={this.block.childs}></ChildsArea>

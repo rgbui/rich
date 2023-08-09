@@ -13,7 +13,7 @@ export class FieldCheck extends OriginField {
 }
 @view('/field/check')
 export class FieldCheckView extends BlockView<FieldCheck>{
-    render() {
+    renderView() {
         return <div className='sy-field-text' onMouseDown={e => e.stopPropagation()}>
             <input type='checkbox' checked={this.block.value||false} onChange={e => this.block.changeValue(e)} />
         </div>

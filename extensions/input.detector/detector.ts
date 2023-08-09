@@ -13,9 +13,14 @@ import { DetectorOperator, DetectorRule, rules } from "./rules";
  * 
  */
 
-export function InputDetector(value: string,options: { rowStart?: boolean }): { rule: DetectorRule, value: string, matchValue?: string } {
-    var rs = rules;
+export function InputDetector(value: string, options: { rowStart?: boolean, rowEnd?: boolean }): { rule: DetectorRule, value: string, matchValue?: string } {
+    var rs = rules.map(r => r);
     if (!options.rowStart) rs = rs.findAll(x => x.operator != DetectorOperator.firstLetterCreateBlock && x.operator != DetectorOperator.firstLetterTurnBlock);
+    if (options.rowEnd) {
+        if (!rs.some(x => x.operator == DetectorOperator.lastLetterCreateBlock))
+            rs.push(rules.find(x => x.operator == DetectorOperator.lastLetterCreateBlock))
+    }
+    else rs = rs.findAll(x => x.operator != DetectorOperator.lastLetterCreateBlock)
     var ru: DetectorRule;
     for (let i = 0; i < rs.length; i++) {
         var rule = rs[i];
@@ -35,11 +40,11 @@ export function InputDetector(value: string,options: { rowStart?: boolean }): { 
     if (ru) {
         var matchValue: string;
         switch (ru.operator) {
-            case DetectorOperator.firstLetterCreateBlock:
-                value = '';
+            case DetectorOperator.lastLetterCreateBlock:
+                value = '---';
                 break;
             case DetectorOperator.firstLetterTurnBlock:
-                value = '';
+                value = '---';
                 break;
             case DetectorOperator.inputCharReplace:
                 if (typeof ru.handle == 'function')

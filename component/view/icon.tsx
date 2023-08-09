@@ -30,7 +30,7 @@ export function Icon(props: {
     if (Array.isArray(props.className)) {
         classList.addRange(props.className);
     }
-    else if (typeof props.className == 'string') classList.push(props.className)
+    else if (typeof props.className == 'string') classList.addRange(props.className.split(/ /g))
     var style: CSSProperties = {};
     if (typeof props.rotate == 'number') {
         style.transform = `rotate(${props.rotate}deg)`

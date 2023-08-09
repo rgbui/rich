@@ -268,7 +268,7 @@ export class TableStoreItemView extends BlockView<TableStoreItem>{
             </div>
         }
     }
-    render() {
+    renderView() {
         if (!this.block.dataGrid) return <></>
         if (this.block.dataGrid?.url == BlockUrlConstant.DataGridGallery) return this.renderCards()
         else return this.renderItems();

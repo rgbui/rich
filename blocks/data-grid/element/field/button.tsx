@@ -19,7 +19,7 @@ export class FieldCheck extends OriginField {
 }
 @view('/field/button')
 export class FieldCheckView extends BlockView<FieldCheck>{
-    render() {
+    renderView() {
         return <div className='sy-field-button' onMouseDown={e => e.stopPropagation()}>
             <div className="flex">
                 <a className="text-1 f-14 cursor padding-w-5 padding-h-3 round item-hover flex-center " onMouseDown={e => this.block.onRowEdit(e)}><span className="size-20 flex-center"><Icon size={16} icon={EditSvg}></Icon></span><span><S>编辑</S></span></a>

@@ -22,7 +22,7 @@ export class CardBoxTitle extends Block {
  */
 @view('/card/box/title')
 export class ViewComponent extends BlockView<CardBoxTitle>{
-    render() {
+    renderView(){
         var style = this.block.contentStyle;
         if (this.block.align == 'center') style.textAlign = 'center';
         return <div className='sy-card-box-title' style={this.block.visibleStyle}>

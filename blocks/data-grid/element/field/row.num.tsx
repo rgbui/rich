@@ -8,7 +8,7 @@ export class FieldRowNum extends OriginField {
 }
 @view('/field/row/num')
 export class FieldRowNumView extends BlockView<FieldRowNum>{
-    render() {
+    renderView() {
         return <div className='sy-field-row-num'>
             {this.block.item.dataIndex + 1}
         </div>

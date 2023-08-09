@@ -34,7 +34,7 @@ export class Page$Cycle {
         PageHistory(this, this.snapshoot);
         PageKeys(this, this.keyboardPlate);
         this.emit(PageDirective.init);
-       await ls.import()
+        await ls.import()
     }
     async onLoadContentOperates(this: Page, itemId: string, content: any, operates?: any) {
         await this.clear();
@@ -410,6 +410,7 @@ export class Page$Cycle {
                         ref: lodash.cloneDeep(c),
                     })
                 })
+                console.log(JSON.stringify(ops), 'ops');
                 if (ops.length > 0)
                     await channel.post('/row/block/sync/refs', {
                         pageId: this.pageInfo.id,

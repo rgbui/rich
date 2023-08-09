@@ -94,7 +94,7 @@ export class ToDo extends Block {
 }
 @view('/todo')
 export class ToDoView extends BlockView<ToDo>{
-    render() {
+    renderView()  {
         if (this.block.childs.length > 0) {
             return <div style={this.block.visibleStyle}>
                 <div className='sy-block-todo' data-block-content style={this.block.contentStyle}>

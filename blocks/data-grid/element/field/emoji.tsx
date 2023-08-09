@@ -13,7 +13,7 @@ export class FieldEmoji extends OriginField {
 }
 @view('/field/emoji')
 export class FieldEmailView extends BlockView<FieldEmoji>{
-    render() {
+    renderView()  {
         var self = this;
         async function mousedown(event: React.MouseEvent) {
             if (self.block.checkSign() === false) return;

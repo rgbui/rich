@@ -27,7 +27,7 @@ export class FilterFieldCheck extends OriginFilterField {
 }
 @view('/field/filter/check')
 export class FilterFieldCheckView extends BlockView<FilterFieldCheck>{
-    render() {
+    renderView()  {
         return <div style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle} filterField={this.block}>
             {this.block.format == 'checkbox' && <CheckBox checked={this.block.checked}
                 onChange={e => {

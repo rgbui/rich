@@ -93,7 +93,7 @@ export class RowView extends BlockView<Row>{
         }
         return ps;
     }
-    render() {
+    renderView() {
         return <div className='sy-block-row' ref={e => this.block.childsEl = e}>
             {this.renderBlocks()}
         </div>

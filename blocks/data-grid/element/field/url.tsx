@@ -38,7 +38,7 @@ export class FieldUrlView extends BlockView<FieldUrl>{
     keydown(e: React.KeyboardEvent) {
         this.move()
     }
-    render() {
+    renderView()  {
         return <div className={'flex l-20 text-1  flex-top sy-field-title f-14 '} onKeyDown={e => this.keydown(e)} onMouseMove={e => this.move(e)}>
             <TextArea plain block={this.block} prop='value' placeholder={lst("网址")} ></TextArea>
             <Tip text={'打开网址'}><a ref={e => this.span = e} href={this.block.value} target="_blank" className="pos-t-r item-hover visible flex-center size-24 text-1 border  round  cursor bg-hover">

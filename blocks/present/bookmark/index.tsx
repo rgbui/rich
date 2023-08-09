@@ -19,6 +19,7 @@ import { CopyAlert } from "../../../component/copy";
 import { lst } from "../../../i18n/store";
 import { S } from "../../../i18n/view";
 import { Tip } from "../../../component/view/tooltip/tip";
+import { ShyAlert } from "../../../component/lib/alert";
 
 
 @url('/bookmark')
@@ -60,6 +61,9 @@ export class Bookmark extends Block {
         this.forceUpdate();
         try {
             var r = await channel.put('/bookmark/url', { url });
+            if (!r.ok) {
+                ShyAlert(lst('无法获取书签信息'))
+            }
             await this.page.onAction(ActionDirective.onBookMark, async () => {
                 if (isInit) this.page.snapshoot.merge();
                 await this.updateProps({ bookmarkUrl: url })
@@ -160,7 +164,7 @@ export class BookmarkView extends BlockView<Bookmark>{
             }
         }
     }
-    render() {
+    renderView()  {
         return <div style={this.block.visibleStyle}><div className='sy-block-bookmark' style={this.block.contentStyle} >
             {this.block.bookmarkInfo && <a className='sy-block-bookmark-link visible-hover' href={this.block.bookmarkUrl} target='_blank' >
                 <div className="sy-block-bookmark-content" style={{ marginRight: this.block.imageWidth > 180 && this.block.imageWidth < 250 ? this.block.imageWidth : 0 }}>

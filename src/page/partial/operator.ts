@@ -124,7 +124,7 @@ export class Page$Operator {
         if (!Array.isArray(blockData)) blockData = [blockData];
         await this.onAction(ActionDirective.onReplace, async () => {
             if (blockData[0] instanceof Block) await await block.replace(blockData as Block[]);
-            else await block.replaceData(blockData as Record<string, any>[]);
+            else await block.replaceDatas(blockData as Record<string, any>[]);
         });
     }
     async onBatchTurn(this: Page, blocks: Block[], url: string) {

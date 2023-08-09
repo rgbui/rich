@@ -115,7 +115,7 @@ export class PageOutLineView extends BlockView<PageOutLine>{
         this.forceUpdate()
     }
     height: number = null;
-    render() {
+    renderView() {
         var style: CSSProperties = { ...this.block.visibleStyle };
         if (typeof this.height == 'number')
             style.height = this.height;

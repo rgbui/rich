@@ -263,6 +263,11 @@ export class Image extends Block {
             icon: { name: 'bytedance-icon', code: 'full-screen' },
             childs: [
                 {
+                    name: 'resetSize50',
+                    text: '50%',
+                    icon: { name: 'bytedance-icon', code: 'equal-ratio' },
+                },
+                {
                     name: 'resetSize',
                     text: lst('原图大小'),
                     icon: { name: 'bytedance-icon', code: 'equal-ratio' },
@@ -359,6 +364,16 @@ export class Image extends Block {
                     originSize: imgSize,
                 }, { range: BlockRenderRange.self });
                 return;
+            case 'resetSize50':
+                var imgSize = this.originSize || (await getImageSize(this.src?.url));
+                var width = this.el.getBoundingClientRect().width;
+                var per = Math.min(100, parseInt((imgSize.width * 50 / width).toString()));
+                per = Math.max(5, per);
+                await this.onUpdateProps({
+                    imageWidthPercent: per,
+                    originSize: imgSize,
+                }, { range: BlockRenderRange.self });
+                break;
             case 'autoSize':
                 await this.onUpdateProps({
                     imageWidthPercent: 70
@@ -529,8 +544,7 @@ export class ImageView extends BlockView<Image>{
             </div>}
         </>
     }
-    render() {
-        if (this.isViewError) return this.renderViewError();
+    renderView()  {
         return <div className='sy-block-image' style={this.block.visibleStyle} >
             <div className='sy-block-image-content' >
                 {!this.block?.src && this.block.isCanEdit() && this.renderEmptyImage()}

@@ -34,7 +34,7 @@ export class FieldUser extends OriginField {
 
 @view('/field/user')
 export class FieldTextView extends BlockView<FieldUser>{
-    render() {
+    renderView()  {
         if (this.block.field.type == FieldType.creater || this.block.field.type == FieldType.modifyer)
             return <div className='sy-field-text'>
                 {this.block.value && <Avatar size={30} userid={this.block.value}></Avatar>}

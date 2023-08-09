@@ -104,7 +104,7 @@ export class Frame extends Block {
 }
 @view('/frame')
 export class FrameView extends BlockView<Frame>{
-    render() {
+    renderView() {
         var h = 30;
         var h20 = 20;
         var style = Object.assign({

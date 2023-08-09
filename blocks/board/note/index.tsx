@@ -116,7 +116,7 @@ export class NoteView extends BlockView<Note>{
             </g>
         </svg>
     }
-    render(): ReactNode {
+    renderView() {
         var dx = this.block.realPx(10);
         return <div className="sy-block-note" style={this.block.visibleStyle}>
             {this.renderBg()}

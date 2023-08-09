@@ -259,7 +259,8 @@ export class TableCellView extends BlockView<TableCell>{
             this.block.page.onError(ex);
         }
     }
-    render() {
+    renderView()  {
+        
         var style = this.block.pattern.style;
         return <td style={style}
             onMouseDown={e => this.mousedown(e)}

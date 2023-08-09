@@ -73,7 +73,9 @@ export class Block$Operator {
             await this.updateProps(pb.data.listType ? Object.assign(pb.data, da || {}) : { listType: 0, ...(da || {}) }, BlockRenderRange.self);
             return this;
         }
+    console.log(url,da,'t');
         var data = await this.getWillTurnData(url);
+        console.log('parrr',data);
         if (da) Object.assign(data, da);
         var newBlock = await BlockFactory.createBlock(url, this.page, data, this.parent);
         var bs = this.parent.blocks[this.parentKey];
@@ -95,11 +97,12 @@ export class Block$Operator {
         await this.parent.appendArray(newBlock, at, pk);
         await this.delete()
     }
-    async replaceData(this: Block, blockData: Record<string, any>[]) {
+    async replaceDatas(this: Block, blockData: Record<string, any>[]) {
         var at = this.at;
         var pk = this.parentKey;
-        await this.parent.appendArrayBlockData(blockData, at, pk);
-        await this.delete()
+        var newBlocks = await this.parent.appendArrayBlockData(blockData, at, pk);
+        await this.delete();
+        return newBlocks;
     }
     async clearEmptyBlock(this: Block) {
         var c = this.closest(x => x.isBlock);

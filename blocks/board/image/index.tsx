@@ -22,7 +22,7 @@ export class Image extends Block {
 }
 @view('/board/image')
 export class ImageView extends BlockView<Image>{
-    render() {
+    renderView() {
         var style = this.block.visibleStyle;
         var size = this.block.fixedSize;
         style.width = size.width;

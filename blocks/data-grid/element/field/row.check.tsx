@@ -12,7 +12,7 @@ export class FieldRowCheck extends OriginField {
 }
 @view('/field/row/check')
 export class FieldRowCheckView extends BlockView<FieldRowCheck>{
-    render() {
+    renderView()  {
         var checked = this.block.dataGrid.checkItems.some(s => s.id == this.block.item.dataRow.id);
         return <div className='sy-field-row-check'>
             <input type='checkbox'

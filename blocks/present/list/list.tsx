@@ -263,7 +263,7 @@ export class ListView extends BlockView<List>{
         if (this.block.childs.length > 0) return <TextLineChilds childs={this.block.childs}></TextLineChilds>
         else return <TextArea block={this.block} placeholderEmptyVisible prop='content' placeholder={text}></TextArea>
     }
-    render() {
+    renderView()  {
         return <div className='sy-block-list'>
             <div style={this.block.visibleStyle}>
                 <div className='sy-block-list-text' data-block-content style={this.block.contentStyle}> {this.renderListType()}

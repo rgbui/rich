@@ -87,7 +87,7 @@ export class Quote extends TextSpan {
 }
 @view('/quote')
 export class QuoteView extends BlockView<Quote>{
-    render() {
+    renderView() {
         return <div style={this.block.visibleStyle}><div className='sy-block-quote'
             style={{ ...this.block.contentStyle }}
         ><div className="gap-h-5 relative">

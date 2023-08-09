@@ -1,7 +1,9 @@
+import { BlockUrlConstant } from "../../src/block/constant";
 import { BlockCssName } from "../../src/block/pattern/css";
 
 export enum DetectorOperator {
     firstLetterCreateBlock,
+    lastLetterCreateBlock,
     letterReplaceCreateBlock,
     firstLetterTurnBlock,
     inputCharReplace
@@ -12,13 +14,18 @@ export type DetectorRule = {
     matchFn?: (value: string) => boolean,
     url?: string,
     style?: Record<any, Record<string, any>>,
-    props?:Record<string,any>,
+    props?: Record<string, any>,
     handle?: (value: string) => string;
 }
 export var rules: DetectorRule[] = [
     {
         operator: DetectorOperator.firstLetterCreateBlock,
         match: ['---'],
+        url: '/divider'
+    },
+    {
+        operator: DetectorOperator.lastLetterCreateBlock,
+        match: [/\-\-\-$/],
         url: '/divider'
     },
     {
@@ -40,6 +47,31 @@ export var rules: DetectorRule[] = [
         operator: DetectorOperator.firstLetterTurnBlock,
         match: ['#### '],
         url: '/head?{level:"h4"}'
+    },
+    {
+        operator: DetectorOperator.firstLetterTurnBlock,
+        match: ['+# '],
+        url: '/head?{toggle:true}'
+    },
+    {
+        operator: DetectorOperator.firstLetterTurnBlock,
+        match: ['+## '],
+        url: '/head?{level:"h2",toggle:true}'
+    },
+    {
+        operator: DetectorOperator.firstLetterTurnBlock,
+        match: ['+### '],
+        url: '/head?{level:"h3",toggle:true}'
+    },
+    {
+        operator: DetectorOperator.firstLetterTurnBlock,
+        match: ['+#### '],
+        url: '/head?{level:"h4",toggle:true}'
+    },
+    {
+        operator: DetectorOperator.firstLetterTurnBlock,
+        match: ['``` '],
+        url: BlockUrlConstant.Code
     },
     {
         operator: DetectorOperator.firstLetterTurnBlock,
@@ -97,7 +129,7 @@ export var rules: DetectorRule[] = [
         operator: DetectorOperator.letterReplaceCreateBlock,
         match: [/`([^`]+)`$/],
         url: '/text',
-        props:{code:true}
+        props: { code: true }
     },
     {
         operator: DetectorOperator.inputCharReplace,

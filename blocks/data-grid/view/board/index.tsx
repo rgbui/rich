@@ -91,7 +91,7 @@ export class TableStoreBoardView extends BlockView<TableStoreBoard>{
             <span className="remark"><S>创建数据表格</S></span>
         </div>
     }
-    render() {
+    renderView()  {
         return <div className='sy-data-grid-board' onMouseEnter={e => this.block.onOver(true)}
             onMouseLeave={e => this.block.onOver(false)}>
             <DataGridTool block={this.block}></DataGridTool>

@@ -57,7 +57,7 @@ export class TabPageView extends BlockView<TabPage>{
             });
         }
     }
-    render() {
+    renderView()  {
         return <div className='sy-block-tab-page'
             style={this.block.visibleStyle}
             onMouseDown={e => this.mousedown(e)}

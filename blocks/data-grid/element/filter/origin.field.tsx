@@ -52,6 +52,7 @@ export class OriginFilterFieldView extends React.Component<{
     render(): React.ReactNode {
         if (!this.props.filterField.refBlock) return <Spin block></Spin>
         return this.props.filterField.refBlock && <BoxTip
+            disabled={this.props.filterField.isCanEdit() ? false : true}
             ref={e => this.boxTip = e}
             overlay={<div className="flex h-30 round padding-w-5">
                 <Tip text={'拖动'}><a className="flex-center size-24 round item-hover gap-r-5 cursor text" onMouseDown={e => this.props.filterField.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></a></Tip>

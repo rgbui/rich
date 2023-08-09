@@ -11,7 +11,7 @@ export class FieldBrowse extends OriginField {
 }
 @view('/field/browse')
 export class FieldBrowseView extends BlockView<FieldBrowse>{
-    render() {
+    renderView() {
         var v = this.block.value;
         if (typeof v == 'object' && typeof v?.count == 'number') v = v.count;
         if (lodash.isNull(v) || lodash.isUndefined(v)) v = 0;

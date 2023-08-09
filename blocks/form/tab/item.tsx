@@ -29,7 +29,7 @@ export class TabItem extends Block {
 }
 @view('/tab/item')
 export class TabItemView extends BlockView<TabItem>{
-    render() {
+    renderView()  {
         return <div
             onContextMenu={e => this.block.myTab.onTabeItemContextmenu(e, this.block.at)}
             onClick={e => this.block.myTab.changeTabIndex(this.block.at)}

@@ -17,7 +17,7 @@ export class Col extends Block {
 
 @view('/col')
 export class ColView extends BlockView<Col>{
-    render() {
+    renderView() {
         if (!this.block.parent) return <div>error</div>;
         var p = this.block.parent.childs.length;
         var style = {

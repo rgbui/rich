@@ -258,7 +258,7 @@ export class BlockButtonView extends BlockView<BlockButton>{
     dragBlock(event: React.MouseEvent) {
         DragBlockLine(this.block, event);
     }
-    render() {
+    renderView()  {
         return <span>
             <BoxTip
                 ref={e => this.boxTip = e}

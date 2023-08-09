@@ -29,7 +29,7 @@ class FieldTextView extends BlockView<FieldText>{
             this.block.onChange(pickDate);
         }
     }
-    render() {
+    renderView()  {
         return <FieldView block={this.block}>
             <div className="sy-form-field-date-value" onMouseDown={e => this.mousedown(e)}>{this.block.dateString}</div>
         </FieldView>

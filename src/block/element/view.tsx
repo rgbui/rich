@@ -19,7 +19,7 @@ export class View extends Block {
  */
 @view('/view')
 export class ViewComponent extends BlockView<View>{
-    render() {
+     renderView() {
         if (this.block.page.isSupportScreen) {
             var isFirst = this.block.page.views[0] == this.props.block;
             var hasGap: boolean = true;

@@ -35,7 +35,7 @@ class FieldTextView extends BlockView<FieldText>{
             this.block.onChange(op);
         }
     }
-    render() {
+    renderView()  {
         var op = this.block.field?.config?.options?.find(g => g.value == this.block.value);
         return <FieldView block={this.block}>
             <div className="sy-form-field-option-value" onMouseDown={e => this.mousedown(e)}>{op?.text}</div>

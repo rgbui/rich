@@ -82,7 +82,7 @@ export class DataGridChart extends Block {
 }
 @view('/data-grid/charts')
 export class DataGridChartView extends BlockView<DataGridChart>{
-    render() {
+    renderView()  {
         return <div className='sy-dg-charts'>
             <div className="sy-dg-echarts-view" style={{ width: 300, height: 200 }}></div>
         </div>

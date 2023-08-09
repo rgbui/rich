@@ -73,7 +73,7 @@ export class Audio extends Block {
 }
 @view('/audio')
 export class AudioView extends BlockView<Audio>{
-    render() {
+    renderView()  {
         return <div className='sy-block-audio' style={this.block.visibleStyle}>
             {this.block.src.name == 'none' && <div onMouseDown={e => this.block.addAudio(e)} className='sy-block-audio-nofile'>
                 <Icon icon={AudioSvg}></Icon>

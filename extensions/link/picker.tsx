@@ -139,25 +139,25 @@ class LinkPicker extends EventsComponent {
                         onEnter={(e, g) => { g.preventDefault(); g.stopPropagation(); this.onEnter(e); }}
                         value={this.url}></Input>
                 </div>
-                <Tip text='清空链接'><div onMouseDown={e => this.onClear()} className="cursor gap-l-5 flex-fixed size-24 item-hover round flex-center">
+                <Tip text='清空链接'><div onMouseDown={e => this.onClear()} className="cursor gap-w-5 flex-fixed size-24 item-hover round flex-center">
                     <Icon size={18} icon={TrashSvg}></Icon>
                 </div></Tip>
             </div>
             {this.name == 'outside' && this.url && <div className={'h-30 cursor item-hover round padding-w-5 flex' + (this.selectIndex == 0 ? " item-hover-focus" : "")}
                 onClick={e => this.onEnter(this.url)}
-            ><span className="size-24 flex-center item-hover"> <Icon size={16} icon={GlobalLinkSvg}></Icon></span>
-                <span>{this.url}</span>
+            ><span className="size-24 flex-center item-hover flex-fixed"><Icon size={16} icon={GlobalLinkSvg}></Icon></span>
+                <span className="text-overflow flex-auto">{this.url}</span>
             </div>}
             {this.name == 'page' && this.url && this.allowCreate && <><div onClick={e => this.onCreate()} className={'h-30  cursor  item-hover round padding-w-5 flex' + (this.selectIndex == 0 ? " item-hover-focus" : "")}>
                 <span className="flex-auto"><S>创建</S><em className="bold">{this.url}</em></span>
-                <span className="flex-fixed size-20 item-hover cursor round">
+                <Tip text='创建新页面'><span className="flex-fixed size-24 flex-center item-hover cursor round">
                     <Icon icon={PlusSvg} size={20}></Icon>
-                </span>
+                </span></Tip>
             </div><Divider></Divider></>}
             {this.name == 'page' && <div>
                 {this.loading && <Spin></Spin>}
                 {!this.loading && this.links.map((link, i) => {
-                    return <div onClick={e => this.onSelect(link)} className={"h-30 item-hover round padding-w-5 flex" + (this.selectIndex == (i + 1) ? " item-hover-focus" : "")} key={link.id}>
+                    return <div onClick={e => this.onSelect(link)} className={"h-30 cursor item-hover round padding-w-5 flex" + (this.selectIndex == (i + 1) ? " item-hover-focus" : "")} key={link.id}>
                         <span className="size-20 flex-fixed flex-center item-hover round"><Icon icon={getPageIcon(link)}></Icon></span>
                         <span className="flex-auto text-overflow">{getPageText(link)}</span>
                     </div>
@@ -222,7 +222,7 @@ export async function useLinkPicker(pos: PopoverPosition, link?: PageLink, optio
     await picker.onOpen(link, options);
     return new Promise((resolve: (g: { link: PageLink } & { refLinks?: Block['refLinks'] }) => void, reject) => {
         picker.on('change', (link: { link: PageLink } & { refLinks?: Block['refLinks'] }) => {
-            resolve(link);
+            resolve(lodash.cloneDeep(link));
             popover.close();
         })
         picker.on('clear', () => {

@@ -163,7 +163,7 @@ export class Head extends Block {
 }
 @view("/head")
 export class HeadView extends BlockView<Head>{
-    render() {
+    renderView()  {
         var style: Record<string, any> = { fontWeight: 600 };
         if (this.block.toggle !== true) {
             if (this.props.block.align == 'center') style.textAlign = 'center';

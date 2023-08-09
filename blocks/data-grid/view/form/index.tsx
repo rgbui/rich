@@ -256,7 +256,7 @@ export class DataGridFormView extends BlockView<DataGridForm>{
         </div>
 
     }
-    render() {
+    renderView()  {
 
         if (this.block.page.pageLayout.type == PageLayoutType.formView) {
             return <div>

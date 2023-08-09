@@ -29,7 +29,7 @@ export class FieldFilterNull extends OriginFilterField {
 
 @view('/field/filter/null')
 export class SearchTextView extends BlockView<FieldFilterNull>{
-    render() {
+    renderView() {
         return <div style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle}
             filterField={this.block}>
             <CheckBox checked={this.block.isNull}

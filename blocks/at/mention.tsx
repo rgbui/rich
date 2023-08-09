@@ -34,7 +34,7 @@ export class ShyMentionView extends BlockView<ShyMention>{
         DragBlockLine(this.block, event);
     }
     async openUser(event: React.MouseEvent) {
-        var r = await useUserPicker({ roundArea: Rect.fromEvent(event) },this.block.page?.ws);
+        var r = await useUserPicker({ roundArea: Rect.fromEvent(event) }, this.block.page?.ws);
         if (r) {
             this.block.onUpdateProps({ userid: r.id })
         }
@@ -50,9 +50,9 @@ export class ShyMentionView extends BlockView<ShyMention>{
     }
     boxTip: BoxTip;
     username: string = '';
-    render() {
+    renderView() {
         return <span onMouseDown={e => this.openUserCard(e)} >
-            <BoxTip ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center">
+            <BoxTip disabled={this.block.isCanEdit() ? false : true} ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center">
                 <Tip text={'拖动'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></a></Tip>
                 <Tip text={'打开'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.openUserCard(e)}><Icon size={16} icon={TrashSvg}></Icon></a></Tip>
                 <Tip text={'编辑'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.openUser(e)}><Icon size={16} icon={EditSvg}></Icon></a></Tip>

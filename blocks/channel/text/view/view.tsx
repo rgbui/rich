@@ -285,7 +285,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
     get isPageLayoutTextChannel() {
         return this.block.page.pageLayout.type == PageLayoutType.textChannel;
     }
-    render() {
+    renderView() {
         var style: CSSProperties = this.block.visibleStyle;
         var classList: string[] = ['sy-channel-text'];
         if (this.isPageLayoutTextChannel) {

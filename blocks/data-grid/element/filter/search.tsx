@@ -25,7 +25,7 @@ export class SearchText extends OriginFilterField {
 
 @view('/field/filter/search')
 export class SearchTextView extends BlockView<SearchText>{
-    render() {
+    renderView()  {
         var self = this;
         return <div style={this.block.visibleStyle}>
             <OriginFilterFieldView

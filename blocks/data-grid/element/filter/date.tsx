@@ -80,7 +80,7 @@ export class FilterFieldDate extends OriginFilterField {
 }
 @view('/field/filter/date')
 export class FilterFieldDateView extends BlockView<FilterFieldDate>{
-    render() {
+    renderView()  {
         return <div style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle} filterField={this.block}>
             <div className="flex-line flex-center round">
                 <span className="cursor" onMouseDown={e => this.block.openDatePicker('startDate', e)}>{this.block.startDate ? dayjs(this.block.startDate).format(this.block.format) : <em className="remark f-14"><S>起始日期</S></em>}</span>

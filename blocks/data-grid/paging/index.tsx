@@ -80,7 +80,7 @@ export class PagingView extends BlockView<Paging>{
         return []
     }
 
-    render() {
+    renderView()  {
         var totalPage = -1;
         if (this.block.refBlock) totalPage = Math.ceil(this.block.refBlock.total / this.block.refBlock.size);
         return <div style={this.block.visibleStyle}>

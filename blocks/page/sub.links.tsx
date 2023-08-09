@@ -8,7 +8,7 @@ export class SubLinks extends Block {
 }
 @view('/sub/links')
 export class SubLinksView extends BlockView<SubLinks>{
-    render() {
+    renderView()  {
         return <div className="sy-block-sub-links">
 
         </div>

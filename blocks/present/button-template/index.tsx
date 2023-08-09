@@ -182,7 +182,7 @@ export class ButtonTemplateView extends BlockView<ButtonTemplate>{
             </div>
         </div>
     }
-    render() {
+    renderView()  {
         return <div style={this.block.visibleStyle}><div className='sy-button-template' >
             <div className='sy-button-template-wrapper' onMouseDown={e => e.stopPropagation()} >
                 <a className="sy-button-template-btn flex" onMouseDown={e => { this.block.addTemplateInstance(e) }}><Icon size={18} icon={PlusSvg}></Icon><span>{this.block.content || lst('添加待办事项')}</span></a>

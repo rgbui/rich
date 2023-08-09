@@ -169,7 +169,7 @@ export class DataGridItemRecordView extends BlockView<DataGridItemRecord>{
         }
         return <div className='sy-data-grid-item'><ChildsArea childs={this.block.childs}></ChildsArea> </div>
     }
-    render() {
+    renderView() {
         return this.renderItem();
     }
 }

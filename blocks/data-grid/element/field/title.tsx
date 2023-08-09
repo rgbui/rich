@@ -38,7 +38,7 @@ export class FieldTextView extends BlockView<FieldText>{
     keydown(e: React.KeyboardEvent) {
         this.move()
     }
-    render() {
+    renderView()  {
         return <div className='flex l-20 flex-top sy-field-title f-14' onKeyDown={e => this.keydown(e)} onMouseMove={e => this.move(e)}>
             <span className="size-20 flex-center inline-flex text-1 gap-r-3"><Icon size={20} icon={getPageIcon({
                 pageType: PageLayoutType.doc,

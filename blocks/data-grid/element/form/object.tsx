@@ -9,7 +9,7 @@ class FieldObject extends OriginFormField {
 }
 @view('/form/object')
 class FieldObjectView extends BlockView<FieldObject>{
-    render() {
+    renderView()  {
         var self = this;
         function keydown(event: React.KeyboardEvent<HTMLInputElement>) {
             if (event.key == 'Enter') {

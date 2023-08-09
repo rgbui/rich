@@ -11,7 +11,7 @@ class FieldText extends OriginFormField {
 }
 @view('/form/check')
 class FieldTextView extends BlockView<FieldText>{
-    render() {
+    renderView()  {
         var self = this;
         return <FieldView block={this.block}>
             <Switch

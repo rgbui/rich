@@ -62,7 +62,7 @@ export class LinkView extends BlockView<Link>{
     willUnmount() {
         channel.off('/page/update/info', this.updatePageInfo);
     }
-    render() {
+    renderView() {
 
         return <div style={this.block.visibleStyle}><div className='sy-block-link'>
             {this.block.pageInfo &&

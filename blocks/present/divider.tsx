@@ -26,7 +26,7 @@ export class Divider extends Block {
 }
 @view('/divider')
 export class DividerView extends BlockView<Divider>{
-    render() {
+    renderView()  {
         return <div className='sy-block-divider' style={this.block.visibleStyle}>
             <div className='sy-block-divider-line'></div>
         </div>

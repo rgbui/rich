@@ -39,7 +39,7 @@ export class TableStoreListItemView extends BlockView<TableStoreListItem>{
         if (CV) return <CV item={this.block} dataGrid={this.block.tableStoreList}></CV>
         else return this.renderRows()
     }
-    render() {
+    renderView() {
         if (this.block.tableStoreList.cardConfig.showMode == 'define' && this.block.tableStoreList.cardConfig.templateProps.url)
             return this.renderDefine()
         else return this.renderRows()

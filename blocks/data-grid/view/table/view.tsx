@@ -228,7 +228,7 @@ export class TableStoreView extends BlockView<TableStore>{
             <span className="remark"><S>创建数据表格</S></span>
         </div>
     }
-    render() {
+    renderView() {
         var self = this;
 
         return <div className={"sy-dg-table" +

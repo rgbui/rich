@@ -88,7 +88,7 @@ class FormFieldRelationView extends BlockView<FormFieldRelation>{
             </div>}
         </div>
     }
-    render() {
+    renderView() {
         return <FieldView block={this.block}>
             <div>
                 {this.renderList()}

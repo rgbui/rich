@@ -105,7 +105,7 @@ export class Shape extends Block {
 }
 @view('/shape')
 export class ShapeView extends BlockView<Shape>{
-    render(): ReactNode {
+    renderView() {
         var fs = this.block.fixedSize;
         var sb = this.block.svg.clone();
         var w = this.block.pattern.getSvgStyle()?.strokeWidth || 1

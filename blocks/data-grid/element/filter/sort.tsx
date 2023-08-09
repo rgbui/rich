@@ -23,7 +23,7 @@ export class FilterSort extends OriginFilterField {
 }
 @view('/field/filter/sort')
 export class SearchTextView extends BlockView<FilterSort>{
-    render() {
+    renderView()  {
         return <div style={this.block.visibleStyle}><OriginFilterFieldView
             style={this.block.contentStyle}
             filterField={this.block}>

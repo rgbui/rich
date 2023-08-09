@@ -13,7 +13,7 @@ export class DataGridTableItem extends TableStoreItem {
 }
 @view('/data-grid/table/row')
 export class DataGridTableItemView extends BlockView<DataGridTableItem>{
-    render() {
+    renderView() {
         var totalWidth = (this.block.parent as TableStore).sumWidth;
         var rowStyle: CSSProperties = {
             width: totalWidth

@@ -8,7 +8,7 @@ export class TableStoreBoard extends Block {
 }
 @view('/data-grid/map')
 export class TableStoreBoardView extends BlockView<TableStoreBoard>{
-    render() {
+    renderView()  {
         return <div className='sy-data-grid-board'>
 
         </div>

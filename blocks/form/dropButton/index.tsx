@@ -17,7 +17,7 @@ export class DropButtons extends Block {
 
 @view('/button/drops')
 export class DropButtonsView extends BlockView<DropButtons>{
-    render(): ReactNode {
+    renderView()  {
         return <div className="relative">
             <div className="flex"><span></span><span><Icon size={18} icon={ChevronDownSvg}></Icon></span></div>
             <div className="pos">{this.block.drops.map((drop, index) => {

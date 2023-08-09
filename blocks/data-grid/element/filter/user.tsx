@@ -36,7 +36,7 @@ export class SearchTextView extends BlockView<SearchUser>{
             this.block.onFilter(r.id)
         }
     }
-    render() {
+    renderView() {
         return <div style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle}
             filterField={this.block}
         >

@@ -114,7 +114,7 @@ export class EmbedView extends BlockView<Embed>{
         })
     }
     imageWrapper: HTMLDivElement;
-    render() {
+    renderView()  {
         var self = this;
         var isAllowResizeHeight = self.block.embedType == 'music.163' ? false : true;
         var height = self.block.embedType == 'music.163' ? 90 : self.block.contentHeight;
