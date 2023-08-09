@@ -11,7 +11,7 @@ import { Point } from "../../src/common/vector/point";
 import { TableRow } from "./row";
 import { MenuItemType } from "../../component/view/menu/declare";
 import lodash from "lodash";
-import { ArrowDownSvg, ArrowLeftSvg, ArrowRightSvg, ArrowUpSvg, BlockcolorSvg, CloseTickSvg, TrashSvg } from "../../component/svgs";
+import { ArrowDownSvg, ArrowLeftSvg, ArrowRightSvg, ArrowUpSvg, BlockcolorSvg, ClearCellSvg, CloseTickSvg, DeleteColSvg, DeleteRowSvg, TrashSvg } from "../../component/svgs";
 import { BackgroundColorList, FontColorList } from "../../extensions/color/data";
 import { GridMap } from "../../src/page/grid";
 import { lst } from "../../i18n/store";
@@ -133,10 +133,10 @@ export class TableCellView extends BlockView<TableCell>{
                     })
                 },
                 { type: MenuItemType.divide },
-                { name: 'delRow', text: lst('删除所在行'), },
-                { name: 'delCol', text: lst('删除所在列') },
+                { name: 'delRow', icon: DeleteRowSvg, text: lst('删除所在行'), },
+                { name: 'delCol', icon: DeleteColSvg, text: lst('删除所在列') },
                 { type: MenuItemType.divide },
-                { icon: TrashSvg, text: lst('清空单元格'), name: 'clear' },
+                { icon: ClearCellSvg, text: lst('清空单元格'), name: 'clear' },
                 {
                     text: lst('单元格颜色'),
                     icon: BlockcolorSvg,
@@ -259,8 +259,8 @@ export class TableCellView extends BlockView<TableCell>{
             this.block.page.onError(ex);
         }
     }
-    renderView()  {
-        
+    renderView() {
+
         var style = this.block.pattern.style;
         return <td style={style}
             onMouseDown={e => this.mousedown(e)}
