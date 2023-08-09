@@ -8,7 +8,8 @@ import { FileView } from "../../component/view/input/file.view";
 import { lst } from "../../i18n/store";
 
 export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audio' | 'video', change: (file: ResourceArguments) => void }> {
-    async onUpload(file: File) {
+    async onUpload(file: File)
+    {
         if (!file) return;
         var isUpload: boolean = true;
         if (this.props.mine == 'image' && file.size > 1024 * 1024 * 20) {
@@ -75,7 +76,7 @@ export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audi
                     中禁止上传的其它内容</Sp>
             </div>
             <FileView exts={exts} onChange={e => { this.onUpload(e[0]) }}>
-                <div className="dashed gap-h-10 round flex-center min-h-80" tabIndex={1} onPaste={this.onPaste} onDrop={this.onDrop}>
+                <div className="dashed gap-h-10 round flex-center min-h-80" tabIndex={1} onPaste={this.onPaste}  onDragOverCapture={e=>{e.preventDefault()}} onDrop={this.onDrop}>
                     <span className="remark"><S>拖动</S>{text}<S>或粘贴</S>{text.replace(lst('上传'), '')}</span>
                 </div>
                 <Button ref={e => this.button = e} block>{text}</Button>
