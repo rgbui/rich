@@ -53,13 +53,19 @@ export class Button extends React.Component<{
         if (props.ghost) classList.push('shy-button-ghost')
         if (this.props.size) classList.push('shy-button-' + this.props.size)
         if (props.danger) classList.push('shy-button-danger')
-        var btn = <button style={this.props.style || {}}
+        if (props.disabled || this._disabled) classList.push('shy-button-disabled')
+        var style = this.props.style || {};
+        style.display = 'inline-block';
+        if (props.block) {
+            style.display = 'flex';
+            classList.push('flex-center');
+        }
+        var btn = <span style={style}
             className={classList.join(' ')}
-            disabled={props.disabled || this._disabled ? props.disabled : false}
             onClick={e => props.onClick && !(this._loading || props.loading) ? props.onClick(e, this) : undefined}
             onMouseDown={e => props.onMouseDown && !(this._loading || props.loading) ? props.onMouseDown(e, this) : undefined}
-        >{renderLoading()}{props.children}</button>;
-        if (props.block) return <div style={this.props.style || {}} className='shy-button-block'>{btn}</div>
+        >{renderLoading()}{props.children}</span>;
+        if (props.block) return <div className='shy-button-block'>{btn}</div>
         else return btn
     }
 }
