@@ -36,7 +36,7 @@ export class FieldRelation extends OriginField {
             relationDatas: this.relationList,
             isMultiple: this.viewField.field.config.isMultiple,
             relationSchema: this.relationSchema,
-            page:this.page
+            page: this.page
         });
         if (r) {
             var ids = r.map(r => r.id);
@@ -64,7 +64,7 @@ export class FieldRelationView extends BlockView<FieldRelation>{
         })}
         </div>
     }
-    render() {
+    renderView() {
         return <div className='sy-field-relation' onMouseDown={e => this.block.onCellMousedown(e)}>
             {this.renderList()}
         </div>
@@ -94,9 +94,10 @@ export class FieldRollup extends OriginField {
 
     }
 }
+
 @view('/field/rollup')
 export class FieldRollupView extends BlockView<FieldRollup>{
-    renderView()  {
+    renderView() {
         var str: string = '';
         var list = this.block.relationList;
         var field = this.block.relationSchema?.fields?.find(g => g.id == this.block.field.config?.rollupFieldId);
