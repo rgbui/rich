@@ -3,6 +3,12 @@ import { Component, ErrorInfo } from "react";
 import ReactDOM from 'react-dom';
 import { Block } from "..";
 import { S } from "../../../i18n/view";
+import { RefreshSvg, TrashSvg } from "../../../component/svgs";
+import { Icon } from "../../../component/view/icon";
+import { Tip } from "../../../component/view/tooltip/tip";
+import { util } from "../../../util/util";
+import { Spin } from "../../../component/view/spin";
+
 export abstract class BlockView<T extends Block> extends Component<{ block: T }> {
     constructor(props) {
         super(props);
@@ -15,12 +21,27 @@ export abstract class BlockView<T extends Block> extends Component<{ block: T }>
         return this.renderView();
     }
     abstract renderView(): React.ReactNode
+    errorRefreshTip: Tip;
+    viewError: { error: Error, errorInfo: ErrorInfo } = null
+    errorLoading: boolean = false;
     renderViewError() {
         if (this.viewError) {
-            return <div className="sy-block-error" style={this.block.visibleStyle}><S>块显示出错</S><span onMouseDown={e => { e.stopPropagation(); this.block.onDelete() }}><S>删除</S></span></div>
+            return <div className="sy-block-error border-red  bg-error round" style={this.block.visibleStyle}>
+                <div className="f-14 remark flex" style={this.block.contentStyle}>
+                    {this.errorLoading && <Spin></Spin>}
+                    {!this.errorLoading && <><span className="gap-l-20 error"><S>显示出错了</S></span><Tip text='刷新' ref={e => this.errorRefreshTip = e}><span className="cursor link-red size-20" onMouseDown={async e => {
+                        if (this.errorRefreshTip) this.errorRefreshTip.close()
+                        this.errorLoading = true;
+                        this.forceUpdate()
+                        await util.delay(200);
+                        this.errorLoading = false;
+                        this.forceUpdate()
+                    }}><Icon size={16} icon={RefreshSvg}></Icon></span></Tip><Tip text='删除当前块'><span className="cursor link-red size-20" onMouseDown={e => { e.stopPropagation(); this.block.onDelete() }}><Icon size={16} icon={TrashSvg}></Icon></span></Tip></>}
+                </div>
+            </div>
         }
     }
-    viewError: { error: Error, errorInfo: ErrorInfo } = null
+    
     componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
         this.viewError = { error, errorInfo };
         this.block.page.onError(error);
