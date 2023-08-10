@@ -33,6 +33,8 @@ export class Image extends Block {
     @prop()
     imageWidthPercent: number = 70;
     @prop()
+    imageSizeMode: "none" | '100%' | '50%' | '150%' = 'none'
+    @prop()
     caption: string = '';
     @prop()
     allowCaption: boolean = false;
@@ -67,6 +69,7 @@ export class Image extends Block {
         await this.onUpdateProps({
             imageWidthPercent: per,
             originSize: imgSize,
+            imageSizeMode: 'none',
             src: { ...d }
         }, { range: BlockRenderRange.self, merge });
     }
@@ -265,12 +268,23 @@ export class Image extends Block {
                 {
                     name: 'resetSize50',
                     text: '50%',
-                    icon: { name: 'bytedance-icon', code: 'equal-ratio' },
+                    value: '50%',
+                    icon: { name: 'bytedance-icon', code: 'zoom-out' },
+                    checkLabel: this.imageSizeMode == '50%'
                 },
                 {
                     name: 'resetSize',
                     text: lst('原图大小'),
                     icon: { name: 'bytedance-icon', code: 'equal-ratio' },
+                    value: '100%',
+                    checkLabel: this.imageSizeMode == '100%'
+                },
+                {
+                    name: 'resetSize50',
+                    text: '150%',
+                    value: '150%',
+                    icon: { name: 'bytedance-icon', code: 'zoom-in' },
+                    checkLabel: this.imageSizeMode == '150%'
                 },
                 {
                     name: 'autoSize',
@@ -362,21 +376,25 @@ export class Image extends Block {
                 await this.onUpdateProps({
                     imageWidthPercent: per,
                     originSize: imgSize,
+                    imageSizeMode: item.value,
                 }, { range: BlockRenderRange.self });
                 return;
             case 'resetSize50':
                 var imgSize = this.originSize || (await getImageSize(this.src?.url));
                 var width = this.el.getBoundingClientRect().width;
-                var per = Math.min(100, parseInt((imgSize.width * 50 / width).toString()));
+                var n = item.vaue == '150%' ? 150 : 50;
+                var per = Math.min(100, parseInt((imgSize.width * n / width).toString()));
                 per = Math.max(5, per);
                 await this.onUpdateProps({
                     imageWidthPercent: per,
                     originSize: imgSize,
+                    imageSizeMode: item.value,
                 }, { range: BlockRenderRange.self });
                 break;
             case 'autoSize':
                 await this.onUpdateProps({
-                    imageWidthPercent: 70
+                    imageWidthPercent: 70,
+                    imageSizeMode: 'none'
                 }, { range: BlockRenderRange.self });
                 return;
             case 'preview':
@@ -385,9 +403,6 @@ export class Image extends Block {
                 return;
             case 'imageLink':
                 var rgc = await useLinkPicker({ roundArea: Rect.fromEle(this.el) }, {
-                    // url: this.link?.url,
-                    // pageId: this.link?.pageId,
-                    // text: (item?.value as PageLink).text
                 }, { allowCreate: false });
                 if (rgc) {
                     var link = Array.isArray(rgc.refLinks) ? rgc.refLinks[0] : rgc.link;
@@ -455,7 +470,7 @@ export class ImageView extends BlockView<Image>{
                 if (isEnd) {
                     var rw = width * 100 / bound.width;
                     rw = Math.ceil(rw);
-                    self.block.onUpdateProps({ imageWidthPercent: rw });
+                    self.block.onUpdateProps({ imageWidthPercent: rw, imageSizeMode: 'none' });
                 }
             }
         })
@@ -519,13 +534,22 @@ export class ImageView extends BlockView<Image>{
             6.7% 25%,
             35.57% 25%)`
         else if (this.block.mask == 'rect') imageMaskStyle.borderRadius = '0%';
+        var wStyle = {
+            width: this.block.imageWidthPercent ? this.block.imageWidthPercent + "%" : undefined
+        }
+        if (this.block.imageSizeMode != 'none') {
+            if (this.block.originSize?.width) {
+                var n = parseFloat(this.block.imageSizeMode.replace('%', '')) * this.block.originSize.width / 100;
+                wStyle.width = n + 'px';
+            }
+        }
         return <>{this.isLoadError && <div className='sy-block-image-error flex r-gap-r-10 text-1'>
             <Icon icon={ImageErrorSvg}></Icon>
             <span className="f-14"><S>图片</S>{this.errorUrl}<S>加载失败</S></span>
             <span className="f-14 link cursor" onMouseDown={e => this.block.onOpenUploadImage(e)}><S>重新添加图片</S></span>
         </div>}
             {!this.isLoadError && <div className='sy-block-image-content-view flex-center' style={style}>
-                <div className='sy-block-image-content-view-wrapper visible-hover' ref={e => this.imageWrapper = e} style={{ width: this.block.imageWidthPercent ? this.block.imageWidthPercent + "%" : undefined }}>
+                <div className='sy-block-image-content-view-wrapper visible-hover' ref={e => this.imageWrapper = e} style={wStyle}>
                     {this.block.src.name != 'none' && <img onMouseDown={e => { this.mousedown(e) }} style={imageMaskStyle} onError={e => this.onError(e)} src={autoImageUrl(this.block?.src?.url)} />}
                     {this.block.isCanEdit() && <>
                         <div className='sy-block-image-left-resize' onMouseDown={e => this.onMousedown(e, 'left')}></div>
@@ -544,7 +568,7 @@ export class ImageView extends BlockView<Image>{
             </div>}
         </>
     }
-    renderView()  {
+    renderView() {
         return <div className='sy-block-image' style={this.block.visibleStyle} >
             <div className='sy-block-image-content' >
                 {!this.block?.src && this.block.isCanEdit() && this.renderEmptyImage()}
