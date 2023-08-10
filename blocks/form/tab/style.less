@@ -1,28 +1,39 @@
 .sy-block-tab {
+
+    .sy-block-tab-items-panel {
+        display: inline-flex;
+    }
+
     &-items {
-        height         : 30px;
+        height         : 34px;
         display        : flex;
         justify-content: flex-start;
         align-items    : center;
+        flex-wrap      : wrap;
+        overflow       : hidden;
+
         .sy-block-tab-item {
-            border-bottom: 2px solid transparent;
+            border: 2px solid transparent;
+
             &-content {
                 transition   : background 20ms ease-in 0s;
                 cursor       : pointer;
                 white-space  : nowrap;
-                height       : 28px;
+                height       : 26px;
                 border-radius: 3px;
                 min-width    : 0px;
                 padding-left : 12px;
                 padding-right: 12px;
                 max-width    : 220px;
             }
+
             &.hover {
                 border-bottom: 2px solid var(--text-p-color);
                 color        : var(--text-p-color)
             }
         }
     }
+
     &-pages {
         border       : 1px solid rgba(0, 0, 0, .12);
         min-height   : 150px;
@@ -30,11 +41,69 @@
         overflow-y   : auto;
         box-sizing   : border-box;
         border-radius: 4px;
+
         .sy-block-tab-page {
             min-height: 100%;
             box-sizing: border-box;
         }
     }
+
+    &.sy-block-tab-top-line {
+        .sy-block-tab-pages {
+            border-left-color  : transparent;
+            border-right-color : transparent;
+            border-bottom-color: transparent;
+            border-radius      : 0px;
+        }
+
+        &.visible-hover:hover {
+            .sy-block-tab-pages {
+                border-radius      : 4px;
+                border-left-color  : rgba(0, 0, 0, .12);
+                border-right-color : rgba(0, 0, 0, .12);
+                border-bottom-color: rgba(0, 0, 0, .12);
+            }
+        }
+    }
+
+    &.sy-block-tab-button {
+        .sy-block-tab-pages {
+            border-color : transparent;
+            border-radius: 0px;
+        }
+
+        &.visible-hover:hover {
+            .sy-block-tab-pages {
+                border-radius: 4px;
+                border-color : rgba(0, 0, 0, .12);
+            }
+        }
+
+        .sy-block-tab-items-panel {
+            background-color: rgba(55, 53, 47, 0.06);
+            border-radius   : 16px;
+        }
+
+        .sy-block-tab-item {
+            border-color : transparent;
+            border-radius: 0px;
+
+            &:last-child {
+                border-radius: 0px 16px 16px 0px;
+            }
+
+            &:first-child {
+                border-radius: 16px 0px 0px 16px;
+            }
+
+            &.hover {
+                background-color: var(--text-p-color);
+                color           : #fff;
+                border-radius   : 16px;
+            }
+        }
+    }
+
     &-resize {
         height          : 10px;
         background-color: rgba(55, 53, 47, 0.06);

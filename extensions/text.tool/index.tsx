@@ -116,7 +116,7 @@ class TextTool extends EventsComponent {
                 <Tip text='链接'>
                     <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenLink(e)}>
                         <Icon size={16} icon={LinkSvg}></Icon>
-                        <Icon className={'remark'} size={16} icon={ChevronDownSvg}></Icon>
+                        <Icon className={'remark'} size={12} icon={ChevronDownSvg}></Icon>
                     </div>
                 </Tip>
                 {/*<Tip text='评论'>
@@ -146,7 +146,7 @@ class TextTool extends EventsComponent {
                 </Tip>
                 <Tip text='行内代码'>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.code == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.code == true ? TextCommand.cancelCode : TextCommand.code, e)}>
-                        <Icon size={16} icon={CodeSvg}></Icon>
+                        <Icon size={18} icon={CodeSvg}></Icon>
                     </div>
                 </Tip>
                 <Tip text='行内公式'>
@@ -156,8 +156,8 @@ class TextTool extends EventsComponent {
                 </Tip>
                 <Tip text='颜色'>
                     <div className='shy-tool-text-menu-item' onMouseDown={e => this.onOpenFontColor(e)}>
-                        <Icon size={16} icon={FontStyleSvg}></Icon>
-                        <Icon className={'remark'} size={16} icon={ChevronDownSvg}></Icon>
+                        <Icon size={18} icon={FontStyleSvg}></Icon>
+                        <Icon className={'remark'} size={12} icon={ChevronDownSvg}></Icon>
                     </div>
                 </Tip>
                 <Tip text={'双链'} >

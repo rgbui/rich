@@ -1,5 +1,5 @@
 import React, { CSSProperties } from "react";
-import { ArrowLeftSvg, ArrowRightSvg, DotsSvg, PlusSvg, TrashSvg } from "../../../component/svgs";
+import { ArrowLeftSvg, ArrowRightSvg, BrowserSvg, DotsSvg, PlusSvg, TrashSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
@@ -13,7 +13,7 @@ import { MouseDragger } from "../../../src/common/dragger";
 import { Rect } from "../../../src/common/vector/point";
 import { ActionDirective } from "../../../src/history/declare";
 import "./style.less";
-import { BlockDirective } from "../../../src/block/enum";
+import { BlockDirective, BlockRenderRange } from "../../../src/block/enum";
 import { lst } from "../../../i18n/store";
 import { Tip } from "../../../component/view/tooltip/tip";
 
@@ -29,6 +29,8 @@ export class Tab extends Block {
     showIcon: boolean = false;
     @prop()
     contentHeight: number = 200;
+    @prop()
+    displayMode: 'border' | 'top-line' | 'button' = 'border';
     async didMounted(): Promise<void> {
         if (this.childs.length == 0) {
             await this.createInitTabItems();
@@ -193,7 +195,6 @@ export class Tab extends Block {
             var pos = rs.findIndex(g => g == rg);
             var at = this.tabIndex;
             var ns: MenuItem<string | BlockDirective>[] = [];
-            ns.push({ type: MenuItemType.divide });
             ns.push({
                 text: lst('当前标签项'),
                 icon: { name: 'bytedance-icon', code: 'top-bar' },
@@ -205,6 +206,15 @@ export class Tab extends Block {
                 ]
             });
             ns.push({ type: MenuItemType.divide });
+            ns.push({
+                text: lst('显示'),
+                icon: BrowserSvg,
+                childs: [
+                    { name: 'displayMode', text: lst('卡片'), value: 'border', checkLabel: this.displayMode == 'border' },
+                    { name: 'displayMode', text: lst('线型'), value: 'top-line', checkLabel: this.displayMode == 'top-line' },
+                    { name: 'displayMode', text: lst('按钮'), value: 'button', checkLabel: this.displayMode == 'button' }
+                ]
+            })
             rs.splice(pos + 1, 0, ...ns)
         }
         return rs;
@@ -245,6 +255,9 @@ export class Tab extends Block {
                     })
                 })
                 return;
+            case 'displayMode':
+                await this.onUpdateProps({ displayMode: item.value }, { range: BlockRenderRange.self })
+                return;
         }
         return await super.onClickContextMenu(item, e);
     }
@@ -283,11 +296,14 @@ export class TabView extends BlockView<Tab>{
         }
         var contentStyle = this.block.contentStyle;
         delete contentStyle.backgroundColor;
-        return <div className='sy-block-tab visible-hover'
+        var classList: string[] = ['sy-block-tab'];
+        if (this.block.isCanEdit()) classList.push('visible-hover');
+        classList.push('sy-block-tab-' + this.block.displayMode)
+        return <div className={classList.join(' ')}
             style={this.block.visibleStyle}>
             <div style={contentStyle}>
                 <div className="sy-block-tab-items relative" style={itemStyle}>
-                    <ChildsArea childs={this.block.blocks.childs}></ChildsArea>
+                    <div className="sy-block-tab-items-panel" > <ChildsArea childs={this.block.blocks.childs}></ChildsArea></div>
                     {this.block.isCanEdit() && <><Tip text={'添加标签页'}><div className="visible flex-center round size-24  cursor item-hover" onMouseDown={e => this.block.onAddTabItem()}><Icon size={18} icon={PlusSvg}></Icon></div></Tip>
                         <div className="pos-right-full">
                             <Tip text={'标签页菜单'}><div className="visible flex-center round size-24  cursor item-hover" onMouseDown={e => { e.stopPropagation(); this.block.onContextmenu(e.nativeEvent) }}>
