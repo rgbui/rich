@@ -10,11 +10,12 @@ import lodash from "lodash";
 import { SpinBox } from "../../component/view/spin";
 import { Input } from "../../component/view/input";
 import { Icon } from "../../component/view/icon";
-import { DiceSvg, RandomSvg } from "../../component/svgs";
+import { DiceSvg } from "../../component/svgs";
 import { channel } from "../../net/channel";
 import { ls, lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
 const FONT_AWESOME_HISTORYS = '_fontAwesome_historys__';
+
 export class FontAwesomeView extends React.Component<{ loaded?: () => void, onChange: (data: { code: string, color?: string }) => void }> {
     shouldComponentUpdate(nextProps, nextStates) {
         return false;
@@ -166,5 +167,10 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
             this.searching = false;
             this.forceUpdate()
         }
-    }, 800)
+    },800)
+    onClear() {
+        if (this.word) {
+            this.loadSearch('')
+        }
+    }
 }

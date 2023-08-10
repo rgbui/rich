@@ -140,4 +140,9 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
             })
         }
     }
+    onClear(){
+        if(this.word){
+            this.loadSearch('')
+        }
+    }
 }

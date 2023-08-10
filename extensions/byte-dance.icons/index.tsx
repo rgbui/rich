@@ -161,14 +161,17 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
         this.forceUpdate()
         if (this.word) {
             this.icons.forEach(c => {
-                // icon.icons.forEach(c => {
                 if (c.name.indexOf(this.word) > -1 || Array.isArray(c.tag) && c.tag.some(s => s.indexOf(this.word) > -1)) {
                     this.searchEmojis.push(c)
                 }
-                // })
             })
             this.searching = false;
             this.forceUpdate()
         }
     }, 800)
+    onClear(){
+        if(this.word){
+            this.loadSearch('')
+        }
+    }
 }

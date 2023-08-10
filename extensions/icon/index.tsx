@@ -33,9 +33,9 @@ class IconPicker extends EventsComponent {
     onClearIcon() {
         this.emit('change', null);
     }
-
     fav: FontAwesomeView;
     byte: ByteDanceIconView;
+    ev: EmojiView;
     render() {
         return <div className='shy-icon-picker' >
             <Tab keeplive rightBtns={<>
@@ -44,7 +44,7 @@ class IconPicker extends EventsComponent {
                 </ToolTip>
             </>}>
                 <Tab.Page item={<Tip placement='bottom' text='表情'><Icon icon={EmojiSvg} size={18}></Icon></Tip>}>
-                    <EmojiView onChange={e => this.onChange({ name: "emoji", code: e.code })}></EmojiView>
+                    <EmojiView ref={e => this.ev = e} onChange={e => this.onChange({ name: "emoji", code: e.code })}></EmojiView>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' text='SVG图标'><Icon icon={{ name: 'bytedance-icon', code: 'oval-love' }} size={18}></Icon></Tip>}>
                     <ByteDanceIconView ref={e => this.byte = e} onChange={e => this.onChange({ name: "bytedance-icon", ...e })}></ByteDanceIconView>
@@ -65,6 +65,9 @@ class IconPicker extends EventsComponent {
         if (d && d.name == 'font-awesome') {
             if (this.fav) this.fav.open(d)
         }
+        if (this.fav) this.fav.onClear()
+        if (this.ev) this.ev.onClear()
+        if (this.byte) this.byte.onClear()
     }
 }
 interface IconPicker {
