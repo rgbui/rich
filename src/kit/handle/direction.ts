@@ -190,7 +190,6 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
          * 所以
          * 
          */
-        console.log(dropBlock.isCell, dropBlock, dropBlock.isEmptyCell, 'isEmptyCell');
         if (dropBlock.isCell) {
             if (dropBlock.isEmptyCell) {
                 return { direction: DropDirection.inner, dropBlock };

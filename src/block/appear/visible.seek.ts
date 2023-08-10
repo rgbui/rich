@@ -4,15 +4,21 @@ import { dom } from "../../common/dom";
 import { TextEle } from "../../common/text.ele";
 import { Point, Rect } from "../../common/vector/point";
 const GAP = 10;
-export function findBlockAppear(el) {
+export function findBlockAppear(el, predict?: (block: Block) => AppearAnchor) {
     if (el) {
         if (el instanceof Text) el = el.parentNode;
         var r = el.closest('.shy-appear-text');
         if (!r) r = el.closest('.shy-appear-solid');
         if (r) {
-            var blockEl = dom(r).closest(x => (x as any).block);
+            var blockEl = dom(r).closest(x => (x as any)?.block ? true : false);
             if (blockEl) {
                 return ((blockEl as any).block as Block).appearAnchors.find(g => g.el == r);
+            }
+        }
+        else {
+            var blockEl = dom(el).closest(x => (x as any)?.block ? true : false);
+            if (blockEl && predict) {
+                return predict(((blockEl as any).block as Block))
             }
         }
     }
@@ -21,7 +27,15 @@ function findXBlockAppear(appear: AppearAnchor, start: number, top: number, boun
     if (direction == 'left') {
         for (var i = start - GAP; i >= bound.x; i = i - GAP) {
             var el = document.elementFromPoint(i, top) as HTMLElement;
-            var fa = findBlockAppear(el);
+            var fa = findBlockAppear(el, b => {
+                var aa: AppearAnchor;
+                for (let i = b.appearAnchors.length - 1; i >= 0; i--) {
+                    var be = b.appearAnchors[i];
+                    var rb = Rect.fromEle(be.el);
+                    if (rb.containY(top)) return be;
+                }
+                return aa;
+            });
             if (fa && fa !== appear) return fa;
             else if (el) {
                 var rg = el.querySelector('.shy-appear-text');
@@ -36,7 +50,15 @@ function findXBlockAppear(appear: AppearAnchor, start: number, top: number, boun
     else if (direction == 'right') {
         for (var i = start + GAP; i <= bound.x + bound.width; i = i + GAP) {
             var el = document.elementFromPoint(i, top) as HTMLElement;
-            var fa = findBlockAppear(el);
+            var fa = findBlockAppear(el, b => {
+                var aa: AppearAnchor;
+                for (let i = 0; i < b.appearAnchors.length; i++) {
+                    var be = b.appearAnchors[i];
+                    var rb = Rect.fromEle(be.el);
+                    if (rb.containY(top)) return be;
+                }
+                return aa;
+            });
             if (fa && fa !== appear) return fa;
             else if (el) {
                 var rg = el.querySelector('.shy-appear-text');
@@ -65,6 +87,7 @@ export function AppearVisibleSeek(appear: AppearAnchor, options: {
     var cs = TextEle.getBounds(el);
     var lineHeight = TextEle.getLineHeight(el);
     var aa: AppearAnchor;
+
     if (options.arrow == 'left') {
         eb = cs.first();
         /**

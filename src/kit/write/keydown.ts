@@ -208,7 +208,7 @@ export async function onKeyTab(write: PageWrite, aa: AppearAnchor, event: React.
             var prev = rowBlock.prev;
             if (prev) {
                 if (prev.url == BlockUrlConstant.List && (prev as any).expand == false) {
-                   await prev.updateProps({ expand: true });
+                    await prev.updateProps({ expand: true });
                 }
                 if (prev.url == BlockUrlConstant.List && rowBlock.url == BlockUrlConstant.List) {
                     if ((prev as any).listType == (rowBlock as any).listType) {

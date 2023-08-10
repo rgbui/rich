@@ -129,6 +129,7 @@ export class AppearAnchor {
         if (node instanceof Text) {
             if (node == this.el.childNodes[0]) return true;
         }
+        if (node === this.el) return true;
         return false;
     }
     isEnd(node: Node, offset: number) {
@@ -139,6 +140,7 @@ export class AppearAnchor {
                 if (offset == text.length) return true;
             }
         }
+        if (node === this.el) return true;
         return false;
     }
     /**
