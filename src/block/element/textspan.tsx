@@ -15,6 +15,7 @@ import { MouseDragger } from '../../common/dragger';
 import { forceCloseBoardEditTool } from '../../../extensions/board.edit.tool';
 import { openBoardEditTool } from '../../kit/operator/board/edit';
 import { lst } from '../../../i18n/store';
+import { BlockUrlConstant } from '../constant';
 
 @url("/textspan")
 export class TextSpan extends Block {
@@ -251,9 +252,10 @@ export class TextSpanView extends BlockView<TextSpan>{
     renderView() {
         var style = this.block.contentStyle;
         if (this.block.align == 'center') style.textAlign = 'center';
+        var pa = this.block.parent
         return <div className='sy-block-text-span' style={this.block.visibleStyle}>
             <div style={style}>
-                <TextSpanArea placeholder={this.block.isFreeBlock ? lst("输入文本") : undefined} block={this.block}></TextSpanArea>
+                <TextSpanArea placeholder={this.block.isFreeBlock || pa?.url == BlockUrlConstant.Cell ? lst("输入文本") : undefined} block={this.block}></TextSpanArea>
             </div>
         </div>
     }

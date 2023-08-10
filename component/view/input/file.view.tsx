@@ -16,7 +16,6 @@ export function FileView(props: {
         <input
             id={id}
             onChange={e => {
-                console.log('ggg', e)
                 var files = Array.from(e.target.files || []);
                 props.onChange(files || [])
             }}

@@ -74,23 +74,20 @@
 
 .shy-appear-texts {
     display              : inline;
-    // display           : block;
     white-space          : pre-wrap;
     word-break           : break-all;
     font-size            : inherit;
     font-weight          : inherit;
     font-style           : inherit;
-    // text-decoration: inherit;
 }
 
 .shy-appear-solid {
     &-cursor {
-        outline              : none;
-        user-select          : text;
-        display              : inline-block;
-        display              : inline;
-        text-decoration      : none !important;
-        text-decoration-color: transparent !important;
+        outline                 : none;
+        user-select             : text;
+        display                 : inline-block;
+        text-decoration         : none !important;
+        text-decoration-color   : transparent !important;
 
         &::after {
             content              : '\20';
@@ -107,6 +104,7 @@
             padding-left : 8px;
             padding-right: 8px;
             display      : inline !important;
+
             svg {
                 position : absolute;
                 top      : 50%;
