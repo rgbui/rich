@@ -15,7 +15,7 @@ import { BlockDirective } from "../../src/block/enum";
 import { PopoverPosition } from "../popover/position";
 import { FixedViewScroll } from "../../src/common/scroll";
 import { blockStore } from "../block/store";
-import { AiStartSvg, BoldSvg, CodeSvg, DeleteLineSvg, DoubleLinkSvg, EquationSvg, FontStyleSvg, ItalicSvg, LinkSvg, MagicSvg, SearchSvg, UnderlineSvg } from "../../component/svgs";
+import { AiStartSvg, BoldSvg, ChevronDownSvg, CodeSvg, CommentSvg, DeleteLineSvg, DoubleLinkSvg, EquationSvg, FontStyleSvg, ItalicSvg, LinkSvg, MagicSvg, SearchSvg, UnderlineSvg } from "../../component/svgs";
 import { dom } from "../../src/common/dom";
 import { util } from "../../util/util";
 import { useSearchBox } from "../search/keyword";
@@ -103,29 +103,27 @@ class TextTool extends EventsComponent {
                 })
             }
             {this.visible == true && <div className='shy-tool-text-menu' ref={e => this.boxEl = e} style={style}>
-
-                <Tip overlay={lst('让诗云AI帮你写作','让诗云AI帮你写作、润色、生成内容')} >
+                <Tip overlay={lst('让诗云AI帮你写作', '让诗云AI帮你写作、润色、生成内容')} >
                     <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onExcute(TextCommand.askAI, e)}>
                         <Icon icon={AiStartSvg}></Icon><span>AI</span>
                     </div>
                 </Tip>
-
                 {this.turnBlock && this.turnText && <Tip text='切换块'>
                     <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenBlockSelector(e)}>
-                        <span>{this.turnText}</span><Icon icon='arrow-down:sy'></Icon>
+                        <span>{this.turnText}</span><Icon className={'remark'} size={16} icon={ChevronDownSvg}></Icon>
                     </div>
                 </Tip>}
                 <Tip text='链接'>
                     <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenLink(e)}>
                         <Icon size={16} icon={LinkSvg}></Icon>
-                        <Icon icon='arrow-down:sy'></Icon>
+                        <Icon className={'remark'} size={16} icon={ChevronDownSvg}></Icon>
                     </div>
                 </Tip>
-                {/* <Tip id={LangID.textToolComment}>
-                        <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenComment(e)}>
-                            <Icon icon='comment:sy'></Icon>
-                        </div>
-                    </Tip> */}
+                {/*<Tip text='评论'>
+                    <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenComment(e)}>
+                        <Icon size={16} icon={CommentSvg}></Icon>
+                    </div>
+                </Tip>*/}
                 <Tip text='加粗'>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.bold == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.bold == true ? TextCommand.cancelBold : TextCommand.bold, e)}>
                         <Icon size={16} icon={BoldSvg}></Icon>
@@ -159,7 +157,7 @@ class TextTool extends EventsComponent {
                 <Tip text='颜色'>
                     <div className='shy-tool-text-menu-item' onMouseDown={e => this.onOpenFontColor(e)}>
                         <Icon size={16} icon={FontStyleSvg}></Icon>
-                        <Icon size={16} icon='arrow-down:sy'></Icon>
+                        <Icon className={'remark'} size={16} icon={ChevronDownSvg}></Icon>
                     </div>
                 </Tip>
                 <Tip text={'双链'} >
@@ -267,7 +265,14 @@ class TextTool extends EventsComponent {
         event.stopPropagation();
         this.blocked = true;
         var sel = window.getSelection();
-        var range = sel.getRangeAt(0);
+        var range: Range;
+        try {
+            range = sel.getRangeAt(0);
+        }
+        catch (ex) {
+            console.error(ex);
+        }
+        range = sel.getRangeAt(0);
         var text = '';
         if (range) {
             var lineHeight = dom(sel.focusNode.parentNode).lineHeight(20);
@@ -280,8 +285,9 @@ class TextTool extends EventsComponent {
             this.forceUpdate();
         }
         if (text.indexOf('\n') > -1) {
-            text = text.split(/\n/)[0];
+            text = text.split(/\n/g)[0];
         }
+        if (text.length > 10) text = text.slice(0, 10);
         var pageLink = await useLinkPicker({ roundArea: Rect.fromEvent(event) }, { text: text });
         this.selection.rects = [];
         this.blocked = false;
