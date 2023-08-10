@@ -55,9 +55,12 @@ export class Button extends React.Component<{
         if (props.danger) classList.push('shy-button-danger')
         if (props.disabled || this._disabled) classList.push('shy-button-disabled')
         var style = this.props.style || {};
-        style.display = 'inline-block';
         if (props.block) {
             style.display = 'flex';
+            classList.push('flex-center');
+        }
+        else {
+            style.display = 'inline-flex';
             classList.push('flex-center');
         }
         var btn = <span style={style}
