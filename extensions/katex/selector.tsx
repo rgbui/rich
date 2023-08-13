@@ -13,7 +13,7 @@ function sp(s) {
     return list;
 }
 
-var katexMaps = {
+var katexMaps =()=>({
     'ab':
         [
             "alpha",
@@ -145,13 +145,13 @@ var katexMaps = {
         "\\ce{v}",
         "\\ce{->[{text above}][{text below}]}"
     ]
-}
+})
 class KatexSelector extends EventsComponent {
     type: string;
     katexs: (string | { text: string, katexs: string[] })[] = [];
     async open(type: string) {
         this.type = type;
-        this.katexs = katexMaps[type];
+        this.katexs = katexMaps()[type];
         this.forceUpdate(async () => {
             await util.delay(50);
             this.emit('update')
