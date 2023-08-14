@@ -21,7 +21,8 @@ export class SelectBox<T = any> extends React.Component<{
     border?: boolean,
     dropWidth?: number,
     small?: boolean,
-    multiple?: boolean
+    multiple?: boolean,
+    prefix?:JSX.Element | string | React.ReactNode
 }>{
     render() {
         var self = this;
@@ -40,10 +41,12 @@ export class SelectBox<T = any> extends React.Component<{
                 var op = ms.arrayJsonFind('childs', g => g.value == self.props.value);
                 if (op) op.checkLabel = true;
             }
+            var rect = Rect.fromEle(event.currentTarget as HTMLElement)
             var r = await useSelectMenuItem(
-                { roundArea: Rect.fromEle(event.currentTarget as HTMLElement) },
+                { roundArea: rect },
                 ms,
                 {
+                  
                     width: self.props.dropWidth || 160,
                     nickName: 'selectBox'
                 });
@@ -81,6 +84,7 @@ export class SelectBox<T = any> extends React.Component<{
             onMouseDown={e => mousedown(e)}>
             {this.props.children && <>{this.props.children}<Icon className={'gap-l-3'} size={16} icon={ChevronDownSvg}></Icon></>}
             {!this.props.children && <div style={{ width: '100%' }} className="flex">
+                {this.props.prefix}
                 {this.props.multiple != true && <span className="flex-auto">{op?.icon && <Icon size={14} icon={op.icon}></Icon>}{op?.text}</span>}
                 {this.props.multiple == true && <span className="flex-auto"><span>{ops.map((op, i) => {
                     return <span className={'padding-w-5 round padding-h-2 ' + (i == ops.length - 1 ? "" : "gap-r-3")} key={op.value}><span>{op?.icon && <Icon size={14} icon={op.icon}></Icon>}{op?.text}</span></span>
