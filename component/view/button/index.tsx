@@ -15,7 +15,8 @@ export class Button extends React.Component<{
     style?: CSSProperties,
     loading?: boolean,
     size?: 'normal' | 'medium' | 'larger' | 'small',
-    className?: string
+    className?: string,
+    tag?: 'button'
 }>{
     private _loading: boolean;
     set loading(loading: boolean) {
@@ -65,9 +66,14 @@ export class Button extends React.Component<{
         }
         var btn = <span style={style}
             className={classList.join(' ')}
-            onClick={e => props.onClick && !(this._loading || props.loading) ? props.onClick(e, this) : undefined}
-            onMouseDown={e => props.onMouseDown && !(this._loading || props.loading) ? props.onMouseDown(e, this) : undefined}
+            onClick={e => props.onClick && props.disabled !== true && !(this._loading || props.loading) ? props.onClick(e, this) : undefined}
+            onMouseDown={e => props.onMouseDown && props.disabled !== true && !(this._loading || props.loading) ? props.onMouseDown(e, this) : undefined}
         >{renderLoading()}{props.children}</span>;
+        if (props.tag == 'button') btn = <button style={style}
+            className={classList.join(' ')}
+            onClick={e => props.onClick && props.disabled !== true && !(this._loading || props.loading) ? props.onClick(e, this) : undefined}
+            onMouseDown={e => props.onMouseDown && props.disabled !== true && !(this._loading || props.loading) ? props.onMouseDown(e, this) : undefined}
+        >{renderLoading()}{props.children}</button>;
         if (props.block) return <div className='shy-button-block'>{btn}</div>
         else return btn
     }
