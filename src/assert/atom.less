@@ -1,17 +1,17 @@
 //屏幕自适应宽度
 .screen-width {
-    margin-left : 100px;
-    margin-right: 100px;
+    margin-left : 10rem;
+    margin-right: 10rem;
     display     : block;
 }
 
 .screen-content-1200 {
-    width : 1200px;
+    width : 120rem;
     margin: 0 auto;
 }
 
 .screen-content-1000 {
-    width : 1000px;
+    width : 100rem;
     margin: 0 auto;
 }
 
@@ -164,10 +164,10 @@ position的布局
 .pos-inset,
 .pos-all {
     position: absolute;
-    top     : 0px;
-    left    : 0px;
-    right   : 0px;
-    bottom  : 0px;
+    top     : 0rem;
+    left    : 0rem;
+    right   : 0rem;
+    bottom  : 0rem;
 }
 
 .pos-center {
@@ -180,98 +180,98 @@ position的布局
 .pos-center-right {
     position : absolute;
     top      : 50%;
-    right    : 0px;
+    right    : 0rem;
     transform: translate(0%, -50%);
 }
 
 .pos-center-left {
     position : absolute;
     top      : 50%;
-    left     : 0px;
+    left     : 0rem;
     transform: translate(0%, -50%);
 }
 
 .pos-center-top {
     position : absolute;
     left     : 50%;
-    top      : 0px;
-    transform: translate(-50%, 0px);
+    top      : 0rem;
+    transform: translate(-50%, 0rem);
 }
 
 .pos-top-right,
 .pos-t-r {
     position: absolute;
-    top     : 0px;
-    right   : 0px;
+    top     : 0rem;
+    right   : 0rem;
 }
 
 .pos-top-left,
 .pos-t-l {
     position: absolute;
-    top     : 0px;
-    left    : 0px;
+    top     : 0rem;
+    left    : 0rem;
 }
 
 .pos-top,
 .pos-t {
-    top     : 0px;
+    top     : 0rem;
     position: absolute;
 }
 
 .pos-top-full,
 .pos-t-f {
-    top     : 0px;
+    top     : 0rem;
     position: absolute;
-    left    : 0px;
-    right   : 0px;
+    left    : 0rem;
+    right   : 0rem;
 }
 
 .pos-right-full,
 .pos-r-f {
-    top     : 0px;
+    top     : 0rem;
     position: absolute;
-    bottom  : 0px;
-    right   : 0px;
+    bottom  : 0rem;
+    right   : 0rem;
 }
 
 .pos-left-full,
 .pos-l-f {
-    top     : 0px;
+    top     : 0rem;
     position: absolute;
-    bottom  : 0px;
-    left    : 0px;
+    bottom  : 0rem;
+    left    : 0rem;
 }
 
 .pos-left,
 .pos-l {
-    left    : 0px;
+    left    : 0rem;
     position: absolute;
 }
 
 .pos-right,
 .pos-r {
-    right   : 0px;
+    right   : 0rem;
     position: absolute;
 }
 
 .pos-bottom,
 .pos-b {
-    bottom  : 0px;
+    bottom  : 0rem;
     position: absolute;
 }
 
 .pos-bottom-full,
 .pos-b-f {
-    bottom  : 0px;
+    bottom  : 0rem;
     position: absolute;
-    left    : 0px;
-    right   : 0px;
+    left    : 0rem;
+    right   : 0rem;
 }
 
 .pos-full {
     position: absolute;
-    top     : 0px;
-    left    : 0px;
+    top     : 0rem;
+    left    : 0rem;
     width   : 100vw;
     height  : 100vh;
     overflow: hidden;
@@ -282,10 +282,15 @@ position的布局
     position: fixed;
 }
 
+.pos-fix,
+.pos-fixed {
+    position: fixed !important;
+}
+
 .fixed-full {
     position: fixed;
-    top     : 0px;
-    left    : 0px;
+    top     : 0rem;
+    left    : 0rem;
     width   : 100vw;
     height  : 100vh;
     overflow: hidden;
@@ -311,117 +316,94 @@ position的布局
 .col-4-20 4栏间隔20
 .col-full 列不换行且等高
 ***/
-.col-2 {
-    display        : flex;
-    justify-content: flex-start;
-    flex-wrap      : wrap;
 
-    >* {
-        &:first-child {
-            width       : calc(50% - 5px);
-            margin-right: 5px;
+@cols: 2, 3, 4;
+
+each(@cols, {
+        .col-@{value}, .col-@{value}-c5 {
+            display        : flex;
+            justify-content: flex-start;
+            flex-wrap      : wrap;
+
+            >* {
+                width       : calc((100/@value+0%) - 0.5rem);
+                margin-right: 0.5rem;
+
+                &:last-child {
+                    margin-right: 0rem;
+                }
+            }
         }
 
-        &:last-child {
-            margin-left: 5px;
-            width      : calc(50% - 5px)
-        }
-    }
-}
+        .col-@{value}-c10 {
+            display        : flex;
+            justify-content: flex-start;
+            flex-wrap      : wrap;
 
-.col-2-20 {
-    display        : flex;
-    justify-content: flex-start;
-    flex-wrap      : wrap;
+            >* {
+                width       : calc((100/@value+0%) - 1rem);
+                margin-right: 1rem;
 
-    >* {
-        &:first-child {
-            width       : calc(50% - 10px);
-            margin-right: 10px;
+                &:last-child {
+                    margin-right:1rem;
+                }
+            }
         }
 
-        &:last-child {
-            margin-left: 10px;
-            width      : calc(50% - 10px)
+        .col-@{value}-c20 {
+            display        : flex;
+            justify-content: flex-start;
+            flex-wrap      : wrap;
+
+            >* {
+                width       : calc((100/@value+0%) - 2rem);
+                margin-right: 2rem;
+
+                &:last-child {
+                    margin-right:2rem;
+                }
+            }
         }
-    }
-}
 
-.col-3 {
-    display        : flex;
-    justify-content: flex-start;
-    flex-wrap      : wrap;
 
-    >* {
-        width       : calc(33.3% - 5px);
-        margin-right: 5px;
+        .col-@{value}-c30 {
+            display        : flex;
+            justify-content: flex-start;
+            flex-wrap      : wrap;
 
-        &:last-child {
-            margin-right: 0px;
-            margin-left : 5px;
-            width       : calc(33.3% - 5px)
+            >* {
+                width       : calc((100/@value+0%) - 3rem);
+                margin-right: 3rem;
+
+                &:last-child {
+                    margin-right:3rem;
+                }
+            }
         }
-    }
-}
 
-.col-3-20 {
-    display        : flex;
-    justify-content: flex-start;
-    flex-wrap      : wrap;
+        .col-@{value}-c40 {
+            display        : flex;
+            justify-content: flex-start;
+            flex-wrap      : wrap;
 
-    >* {
-        width      : calc(33.3% - 10px);
-        margin-left: 10px;
+            >* {
+                width       : calc((100/@value+0%) - 4rem);
+                margin-right: 4rem;
 
-        &:last-child {
-            margin-right: 0px;
-            margin-left : 10px;
-            width       : calc(33.3% - 10px)
-        }
-    }
-}
-
-.col-4 {
-    display        : flex;
-    justify-content: flex-start;
-    flex-wrap      : wrap;
-
-    >* {
-        width       : calc(25% - 5px);
-        margin-right: 5px;
-
-        &:last-child {
-            margin-left : 5px;
-            margin-right: 0px;
-            width       : calc(25% - 5px)
+                &:last-child {
+                    margin-right:4rem;
+                }
+            }
         }
     }
-}
 
-.col-4-20 {
-    display        : flex;
-    justify-content: flex-start;
-    flex-wrap      : wrap;
-
-    >* {
-        width       : calc(25% - 10px);
-        margin-right: 10px;
-
-        &:last-child {
-            margin-right: 0px;
-            margin-left : 10px;
-            width       : calc(25% - 10px)
-        }
-    }
-}
-
-.col-full {
+) .col-full {
     align-items: stretch;
     flex-wrap  : nowrap;
 }
 
 /**
-多个子元素的间距是10px
+多个子元素的间距是10rem
 ***/
 .space {
     display        : inline-flex;
@@ -429,10 +411,10 @@ position的布局
     align-items    : center;
 
     >* {
-        margin-right: 10px;
+        margin-right: 1rem;
 
         &:last-child {
-            margin-right: 0px;
+            margin-right: 0rem;
         }
     }
 }
@@ -443,19 +425,19 @@ position的布局
 ***/
 .card {
     box-sizing   : border-box;
-    padding      : 15px;
-    border-radius: 16px;
+    padding      : 1.5rem;
+    border-radius: 1.6rem;
     background   : white;
-    box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+    box-shadow   : rgba(15, 15, 15, 0.05) 0rem 0rem 0rem 1px, rgba(15, 15, 15, 0.1) 0rem 3px 6px, rgba(15, 15, 15, 0.2) 0rem 9px 24px;
 }
 
 .card-menu {
-    width              : 220px;
+    width              : 22rem;
     box-sizing         : border-box;
-    padding            : 10px 0px;
-    border-radius      : 16px;
+    padding            : 1rem 0rem;
+    border-radius      : 1.6rem;
     background         : white;
-    box-shadow         : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+    box-shadow         : rgba(15, 15, 15, 0.05) 0rem 0rem 0rem 1px, rgba(15, 15, 15, 0.1) 0rem 3px 6px, rgba(15, 15, 15, 0.2) 0rem 9px 24px;
     max-height         : 80vh;
     overflow-y         : auto;
     overscroll-behavior: contain;
@@ -469,35 +451,20 @@ item-hover-light:行移去的效果
 item-hover-light-focus:行处于的效果，偏轻
 item-selected:选中的效果
 ***/
-.r-item-hover {
-    >* {
-        &:hover {
-            background-color: rgba(55, 53, 47, 0.08);
-        }
-    }
-}
 
-.item-hover {
+.item-hover,
+.r-item-hover>* {
     &:hover {
         background-color: rgba(55, 53, 47, 0.08);
     }
 }
 
-.item-hover-border {
-    border: 1px solid transparent;
+.item-hover-border,
+.r-item-hover-border>* {
+    border: 0.1rem solid transparent;
 
     &:hover {
-        border: 1px solid rgba(55, 53, 47, 0.16);
-    }
-}
-
-.r-item-hover-border {
-    >* {
-        border: 1px solid transparent;
-
-        &:hover {
-            border: 1px solid rgba(55, 53, 47, 0.16);
-        }
+        border: 0.1rem solid rgba(55, 53, 47, 0.16);
     }
 }
 
@@ -557,37 +524,37 @@ item-selected:选中的效果
 字的大小、精细
 ***/
 .h1 {
-    margin-top   : 0px;
-    margin-bottom: 0.5em;
+    margin-top   : 0rem;
+    margin-bottom: 1.5rem;
     color        : rgba(55, 53, 47);
     font-weight  : 600;
-    font-size    : 30px;
+    font-size    : 3rem;
     line-height  : 1.35;
 }
 
 .h2 {
-    margin-top   : 0px;
-    margin-bottom: 0.5em;
+    margin-top   : 0rem;
+    margin-bottom: 1.2rem;
     color        : rgba(55, 53, 47);
     font-weight  : 600;
-    font-size    : 24px;
+    font-size    : 2.4rem;
     line-height  : 1.35;
 }
 
 .h3 {
-    margin-top   : 0px;
-    margin-bottom: 0.5em;
+    margin-top   : 0rem;
+    margin-bottom: 1rem;
     color        : rgba(55, 53, 47);
     font-weight  : 600;
-    font-size    : 20px;
+    font-size    : 2rem;
     line-height  : 1.4;
 }
 
 .h4 {
-    margin-bottom: 0.5em;
+    margin-bottom: 0.8rem;
     color        : rgba(55, 53, 47);
     font-weight  : 600;
-    font-size    : 16px;
+    font-size    : 1.6rem;
     line-height  : 1.5;
 }
 
@@ -688,20 +655,20 @@ body {
 
 .code {
     display      : inline-block;
-    margin       : 0 1px;
-    padding      : 0.2em 0.4em;
+    margin       : 0 0.1rem;
+    padding      : 0.2rem 0.4rem;
     background   : #f2f4f5;
-    border       : 1px solid rgba(0, 0, 0, .06);
-    border-radius: 3px;
+    border       : 0.1rem solid rgba(0, 0, 0, .06);
+    border-radius: 0.3rem
 }
 
 .code-block {
     display      : block;
-    margin       : 0 1px;
-    padding      : 20px;
+    margin       : 0 0.1rem;
+    padding      : 2rem;
     background   : #f2f4f5;
-    border       : 1px solid rgba(0, 0, 0, .06);
-    border-radius: 8px;
+    border       : 0.1rem solid rgba(0, 0, 0, .06);
+    border-radius: 0.8rem;
 }
 
 .pre {
@@ -889,39 +856,39 @@ cursor鼠标
 
 each(@selectors, {
         .w-@{value}, .r-w-@{value}>* {
-            width: @value+0px;
+            width: unit(@value*0.1, rem);
         }
 
         .top-@{value}, .t-@{value} {
-            top: @value+0px;
+            top: unit(@value*0.1, rem);
         }
 
         .right-@{value} {
-            right: @value+0px;
+            right: unit(@value*0.1, rem);
         }
 
         .min-w-@{value}, .r-min-w-@{value}>* {
-            min-width: @value+0px;
+            min-width: unit(@value*0.1, rem);
         }
 
         .max-w-@{value}, .r-max-w-@{value}>* {
-            max-width: @value+0px;
+            max-width: unit(@value*0.1, rem);
         }
 
         .h-@{value}, .r-h-@{value}>* {
-            height:@value+0px;
+            height:unit(@value*0.1, rem);
         }
 
         .min-h-@{value}, .r-min-h-@{value}>* {
-            min-height: @value+0px;
+            min-height:unit(@value*0.1, rem);
         }
 
         .max-h-@{value}, .r-max-h-@{value}>* {
-            max-height: @value+0px;
+            max-height: unit(@value*0.1, rem);
         }
 
         .w-c-@{value} {
-            @w   : @value+0px;
+            @w   : unit(@value*0.1, rem);
             width:calc(100% - @w);
         }
 
@@ -930,7 +897,7 @@ each(@selectors, {
 );
 
 
-@pers: 10, 20, 25, 30, 33,35, 40, 50, 60,65, 70,75, 80, 90, 100;
+@pers: 10, 20, 25, 30, 33, 35, 40, 50, 60, 65, 70, 75, 80, 90, 100;
 
 each(@pers, {
 
@@ -946,22 +913,24 @@ each(@pers, {
 
         .w@{value}-c10,
         .r-w@{value}-c10>* {
-            width:calc((@value+0%) - 10px);
+            width:calc((@value+0%) - 1rem);
         }
 
         .w@{value}-c20,
         .r-w@{value}-c20>* {
-            width:calc((@value+0%) - 20px);
+            width:calc((@value+0%) - 2rem);
         }
 
         .w@{value}-c30,
         .r-w@{value}-c30>* {
-            width:calc((@value+0%) - 30px);
+            width:calc((@value+0%) - 3rem);
         }
+
         .max-w@{value},
         .r-max-w@{value}>* {
             max-width: @value+0%;
         }
+
         .min-w@{value},
         .r-min-w@{value}>* {
             min-width: @value+0%;
@@ -969,142 +938,46 @@ each(@pers, {
 
         .vh@{value},
         .r-vh@{value}>* {
-            height: @value+0vh;
+            height:unit(@value, vh);
         }
 
         .vw@{value},
         .r-vw@{value}>* {
-            width: @value+0vw;
+            width: unit(@value, vw);
         }
 
         .vw@{value}-c10,
         .r-vw@{value}-c10>* {
-            width:calc((@value+0vw) - 10px);
+            width:calc(unit(@value, vw) - 1rem);
         }
 
         .vw@{value}-c20,
         .r-vw@{value}-c20>* {
-            width:calc((@value+0vw) - 20px);
+            width:calc(unit(@value, vw) - 2rem);
         }
 
         .vw@{value}-c30,
         .r-vw@{value}-c30>* {
-            width:calc((@value+0vw) - 30px);
+            width:calc(unit(@value, vw) - 3rem);
+        }
+
+        .vw@{value}-c40,
+        .r-vw@{value}-c40>* {
+            width:calc(unit(@value, vw) - 4rem);
         }
 
         .max-vw@{value},
         .r-max-vw@{value}>* {
-            max-width: @value+0vw;
+            max-width: unit(@value, vw);
         }
+
         .min-vw@{value},
         .r-min-vw@{value}>* {
-            min-width: @value+0vw;
+            min-width: unit(@value, vw);
         }
-
     }
+
 );
-
-// .h100,
-// .r-h100>* {
-//     height: 100%;
-// }
-
-// .w100,
-// .r-w100>* {
-//     width: 100%;
-// }
-
-
-//.w100-10,
-// .r-w100-10>* {
-//     width: calc(100% - 10px);
-// }
-
-// .w100-20,
-// .r-w100-20>* {
-//     width: calc(100% - 20px);
-// }
-
-// .w100-40,
-// .r-w100-40>* {
-//     width: calc(100% - 40px);
-// }
-
-// .w50,
-// .r-w50>* {
-//     width: 50%;
-// }
-
-
-
-// .w33,
-// .r-w33>* {
-//     width: 33.33333333%;
-// }
-
-// .w33-10,
-// .r-w33-10>* {
-//     width: calc(33.33333333% - 10px);
-// }
-
-// .w33-20,
-// .r-w33-20>* {
-//     width: calc(33.33333333% - 20px);
-// }
-
-// .w25,
-// .r-w25>* {
-//     width: 25%;
-// }
-
-
-// .vw100 {
-//     width: 100vw;
-// }
-
-// .vw100-10 {
-//     width: calc(100vw - 10px);
-// }
-
-// .vw100-20 {
-//     width: calc(100vw - 20px);
-// }
-
-// .vw100-40 {
-//     width: calc(100vw - 40px);
-// }
-
-// .vw50 {
-//     width: 50vw;
-// }
-
-// .vw80 {
-//     width: 80vw;
-// }
-
-// .vw80-max {
-//     max-width: 80vw;
-// }
-
-// .vw70 {
-//     width: 70vw;
-// }
-
-// .vw70-max {
-//     max-width: 70vw;
-// }
-
-// .vh50 {
-//     height: 50vh;
-// }
-
-// .vh800 {
-//     height: 80vh;
-// }
-
-// .vh100 {
-//     height: 100vh;
-// }
 
 @ops: 1, 0, 2, 4, 5, 6, 8, 9, 7;
 
@@ -1218,8 +1091,8 @@ each(@ops, {
 
 
 .outline-none {
-    outline       : 2px solid transparent;
-    outline-offset: 2px;
+    outline       : 0.2rem solid transparent;
+    outline-offset: 0.2rem;
 }
 
 .table-auto {
@@ -1442,111 +1315,111 @@ each(@ops, {
 }
 
 .shadow {
-    box-shadow: rgba(15, 15, 15, 0.016) 0px 0px 0px 1px, rgba(15, 15, 15, 0.03) 0px 3px 6px, rgba(15, 15, 15, 0.06) 0px 9px 24px
+    box-shadow: rgba(15, 15, 15, 0.016) 0rem 0rem 0rem 1px, rgba(15, 15, 15, 0.03) 0rem 3px 6px, rgba(15, 15, 15, 0.06) 0rem 9px 24px
 }
 
 .shadow-1 {
-    box-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px
+    box-shadow: rgba(15, 15, 15, 0.05) 0rem 0rem 0rem 1px, rgba(15, 15, 15, 0.1) 0rem 3px 6px, rgba(15, 15, 15, 0.2) 0rem 9px 24px
 }
 
 .r-shadow {
     >* {
-        box-shadow: rgba(15, 15, 15, 0.016) 0px 0px 0px 1px, rgba(15, 15, 15, 0.03) 0px 3px 6px, rgba(15, 15, 15, 0.06) 0px 9px 24px
+        box-shadow: rgba(15, 15, 15, 0.016) 0rem 0rem 0rem 1px, rgba(15, 15, 15, 0.03) 0rem 3px 6px, rgba(15, 15, 15, 0.06) 0rem 9px 24px
     }
 }
 
 .border {
-    border: 1px solid rgba(55, 53, 47, 0.16);
+    border: 0.1rem solid rgba(55, 53, 47, 0.16);
 }
 
 .border-red {
-    border: 1px solid var(--text-p-color);
+    border: 0.1rem solid var(--text-p-color);
 }
 
 .dashed {
-    border: 1px dashed rgba(55, 53, 47, 0.16);
+    border: 0.1rem dashed rgba(55, 53, 47, 0.16);
 }
 
 .r-border {
     >* {
-        border: 1px solid rgba(55, 53, 47, 0.16);
+        border: 0.1rem solid rgba(55, 53, 47, 0.16);
     }
 }
 
 .border-left {
-    border-left: 1px solid rgba(55, 53, 47, 0.16);
+    border-left: 0.1rem solid rgba(55, 53, 47, 0.16);
 }
 
 .border-right {
-    border-right: 1px solid rgba(55, 53, 47, 0.16);
+    border-right: 0.1rem solid rgba(55, 53, 47, 0.16);
 }
 
 .border-light-right,
 .border-right-light {
-    border-right: 1px solid rgba(55, 53, 47, 0.08);
+    border-right: 0.1rem solid rgba(55, 53, 47, 0.08);
 }
 
 .border-light-left,
 .border-left-light {
-    border-left: 1px solid rgba(55, 53, 47, 0.08);
+    border-left: 0.1rem solid rgba(55, 53, 47, 0.08);
 }
 
 .border-primary,
 .border-p {
-    border: 1px solid rgb(225, 98, 89);
+    border: 0.1rem solid rgb(225, 98, 89);
 }
 
 .border-bottom,
 .border-b {
-    border-bottom: 1px solid rgba(55, 53, 47, 0.16);
+    border-bottom: 0.1rem solid rgba(55, 53, 47, 0.16);
 }
 
 .border-top,
 .border-t {
-    border-top: 1px solid rgba(55, 53, 47, 0.16);
+    border-top: 0.1rem solid rgba(55, 53, 47, 0.16);
 }
 
 .r-border-bottom,
 .r-border-b {
     >* {
-        border-bottom: 1px solid rgba(55, 53, 47, 0.16);
+        border-bottom: 0.1rem solid rgba(55, 53, 47, 0.16);
     }
 }
 
 .border-bottom-primary,
 .border-b-p {
-    border-bottom: 1px solid rgb(225, 98, 89);
+    border-bottom: 0.1rem solid rgb(225, 98, 89);
 }
 
 .r-border-bottom-primary,
 .r-border-b-p {
     >* {
-        border-bottom: 1px solid rgb(225, 98, 89);
+        border-bottom: 0.1rem solid rgb(225, 98, 89);
     }
 }
 
 .border-light {
-    border: 1px solid rgba(55, 53, 47, 0.08);
+    border: 0.1rem solid rgba(55, 53, 47, 0.08);
 }
 
 .r-border-light {
     >* {
-        border: 1px solid rgba(55, 53, 47, 0.08);
+        border: 0.1rem solid rgba(55, 53, 47, 0.08);
     }
 }
 
 .border-light-bottom,
 .border-light-b {
-    border-bottom: 1px solid rgba(55, 53, 47, 0.08);
+    border-bottom: 0.1rem solid rgba(55, 53, 47, 0.08);
 }
 
 .border-light-top,
 .border-light-t {
-    border-top: 1px solid rgba(55, 53, 47, 0.08);
+    border-top: 0.1rem solid rgba(55, 53, 47, 0.08);
 }
 
 .border-t {
-    border: 1px solid transparent;
+    border: 0.1rem solid transparent;
 }
 
 .no-border,
@@ -1577,7 +1450,7 @@ each(@ops, {
 }
 
 .text-indent {
-    text-indent: 10px;
+    text-indent: 1rem;
 }
 
 .uppercase {
@@ -1594,28 +1467,277 @@ each(@ops, {
 size-24:图标大小
 **/
 
-@sizes: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20, 24, 30, 32, 40, 48, 50, 70, 80, 90, 100, 120, 150, 200, 240, 300;
+@sizes: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 38, 40, 42, 45, 46, 48, 50, 55, 60, 64, 65, 68, 70, 72, 80, 90, 96, 100, 120, 140, 150, 160, 180, 200, 240, 250, 300, 0;
 
 each(@sizes, {
         .r-size-@{value} {
             >* {
-                width  :@value+0px;
-                height :@value+0px;
+                width  :unit(@value*0.1, rem);
+                height :unit(@value*0.1, rem);
             }
         }
 
         .size-@{value} {
-            width  :@value+0px;
-            height :@value+0px;
+            width  :unit(@value*0.1, rem);
+            height :unit(@value*0.1, rem);
         }
 
         .f-@{value} {
-            font-size:@value+0px;
+            font-size:unit(@value*0.1, rem);
         }
 
         .l-@{value} {
-            line-height:@value+0px;
+            line-height:unit(@value*0.1, rem);
         }
+
+
+        .r-padding-@{value} {
+            >* {
+                padding-top   :unit(@value*0.1, rem);
+                padding-left  :unit(@value*0.1, rem);
+                padding-bottom:unit(@value*0.1, rem);
+                padding-right :unit(@value*0.1, rem);
+            }
+        }
+
+        .r-padding-w-@{value} {
+            >* {
+                padding-left :unit(@value*0.1, rem);
+                padding-right:unit(@value*0.1, rem);
+            }
+        }
+
+        .r-padding-h-@{value} {
+            >* {
+                padding-top   :unit(@value*0.1, rem);
+                padding-bottom:unit(@value*0.1, rem);
+            }
+        }
+
+        .r-padding-t-@{value} {
+            >* {
+                padding-top:unit(@value*0.1, rem);
+            }
+        }
+
+        .r-padding-l-@{value} {
+            >* {
+                padding-left:unit(@value*0.1, rem);
+            }
+        }
+
+        .r-padding-r-@{value} {
+            >* {
+                padding-right:unit(@value*0.1, rem);
+            }
+        }
+
+        .r-padding-b-@{value} {
+            >* {
+                padding-bottom:unit(@value*0.1, rem);
+            }
+        }
+
+
+        .padding-@{value} {
+            padding-top   :unit(@value*0.1, rem);
+            padding-left  :unit(@value*0.1, rem);
+            padding-bottom:unit(@value*0.1, rem);
+            padding-right :unit(@value*0.1, rem);
+        }
+
+        .padding-w-@{value} {
+            padding-left :unit(@value*0.1, rem);
+            padding-right:unit(@value*0.1, rem);
+        }
+
+        .padding-h-@{value} {
+            padding-top   :unit(@value*0.1, rem);
+            padding-bottom:unit(@value*0.1, rem);
+        }
+
+        .padding-t-@{value} {
+            padding-top:unit(@value*0.1, rem);
+        }
+
+        .padding-l-@{value} {
+            padding-left:unit(@value*0.1, rem);
+        }
+
+        .padding-r-@{value} {
+            padding-right:unit(@value*0.1, rem);
+        }
+
+        .padding-b-@{value} {
+            padding-bottom:unit(@value*0.1, rem);
+        }
+
+        .r-gap-@{value} {
+            >* {
+                margin-top   :unit(@value*0.1, rem);
+                margin-left  :unit(@value*0.1, rem);
+                margin-bottom:unit(@value*0.1, rem);
+                margin-right :unit(@value*0.1, rem);
+            }
+        }
+
+        .r-gap-w-@{value} {
+            >* {
+                margin-left :unit(@value*0.1, rem);
+                margin-right:unit(@value*0.1, rem);
+            }
+        }
+
+        .r-gap-h-@{value} {
+            >* {
+                margin-top   :unit(@value*0.1, rem);
+                margin-bottom:unit(@value*0.1, rem);
+            }
+
+        }
+
+        .r-gap-t-@{value} {
+            >* {
+                margin-top:unit(@value*0.1, rem);
+            }
+
+        }
+
+        .r-gap-l-@{value} {
+            >* {
+                margin-left:unit(@value*0.1, rem);
+            }
+
+        }
+
+        .r-gap-r-@{value} {
+            >* {
+                margin-right:unit(@value*0.1, rem);
+            }
+
+        }
+
+        .r-gap-b-@{value} {
+            >* {
+                margin-bottom:unit(@value*0.1, rem);
+            }
+        }
+
+        .gap-@{value} {
+            margin-top   :unit(@value*0.1, rem);
+            margin-left  :unit(@value*0.1, rem);
+            margin-bottom:unit(@value*0.1, rem);
+            margin-right :unit(@value*0.1, rem);
+        }
+
+        .gap-w-@{value} {
+            margin-left :unit(@value*0.1, rem);
+            margin-right:unit(@value*0.1, rem);
+        }
+
+        .gap-h-@{value} {
+            margin-top   :unit(@value*0.1, rem);
+            margin-bottom:unit(@value*0.1, rem);
+        }
+
+        .gap-t-@{value} {
+            margin-top:unit(@value*0.1, rem);
+        }
+
+        .gap-l-@{value} {
+            margin-left:unit(@value*0.1, rem);
+        }
+
+        .gap-r-@{value} {
+            margin-right:unit(@value*0.1, rem);
+        }
+
+        .gap-b-@{value} {
+            margin-bottom:unit(@value*0.1, rem);
+        }
+
+        .pos-t-@{value} {
+            top:unit(@value*0.1, rem);
+        }
+
+        .pos-l-@{value} {
+            left:unit(@value*0.1, rem);
+        }
+
+        .pos-r-@{value} {
+            right:unit(@value*0.1, rem);
+        }
+
+        .pos-b-@{value} {
+            bottom:unit(@value*0.1, rem);
+        }
+
+        .pos-f-@{value} {
+            top   :unit(@value*0.1, rem);
+            left  :unit(@value*0.1, rem);
+            right :unit(@value*0.1, rem);
+            bottom:unit(@value*0.1, rem);
+        }
+
+        .r-round-@{value} {
+            >* {
+                border-radius: unit(@value*0.1, rem);
+            }
+        }
+
+        .r-round-top-@{value}, .r-round-t-@{value} {
+            >* {
+                border-top-left-radius : unit(@value*0.1, rem);
+                border-top-right-radius: unit(@value*0.1, rem);
+            }
+        }
+
+        .r-round-bottom-@{value}, .r-round-b-@{value} {
+            >* {
+                border-bottom-left-radius : unit(@value*0.1, rem);
+                border-bottom-right-radius: unit(@value*0.1, rem);
+            }
+        }
+
+        .r-round-left-@{value}, .r-round-l-@{value} {
+            >* {
+                border-top-left-radius    :unit(@value*0.1, rem);
+                border-bottom-left-radius : unit(@value*0.1, rem);
+            }
+        }
+
+        .r-round-right-@{value}, .r-round-r-@{value} {
+            >* {
+                border-top-right-radius   : unit(@value*0.1, rem);
+                border-bottom-right-radius: unit(@value*0.1, rem);
+            }
+        }
+
+
+        .round-@{value} {
+            border-radius:unit(@value*0.1, rem);
+        }
+
+        .round-top-@{value}, .round-t-@{value} {
+            border-top-left-radius : unit(@value*0.1, rem);
+            border-top-right-radius: unit(@value*0.1, rem);
+        }
+
+        .round-bottom-@{value}, .round-b-@{value} {
+            border-bottom-left-radius :unit(@value*0.1, rem);
+            border-bottom-right-radius: unit(@value*0.1, rem);
+        }
+
+        .round-left-@{value}, .round-l-@{value} {
+            border-top-left-radius    :unit(@value*0.1, rem);
+            border-bottom-left-radius : unit(@value*0.1, rem);
+        }
+
+        .round-right-@{value}, .round-r-@{value} {
+            border-top-right-radius   :unit(@value*0.1, rem);
+            border-bottom-right-radius: unit(@value*0.1, rem);
+        }
+
     }
 
 )
@@ -1647,192 +1769,24 @@ circle:圆
 
 .r-round {
     >* {
-        border-radius: 4px;
+        border-radius: 0.4rem;
     }
 }
 
 .round {
-    border-radius: 4px;
+    border-radius: 0.4rem;
 }
 
 
 .round-top {
-    border-radius: 4px 4px 0px 0px;
+    border-radius: 0.4rem 0.4rem 0rem 0rem;
 }
 
-
-
-@ras: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 20, 24, 30, 32, 48, 50, 60, 80, 100, 0;
-
-each(@ras, {
-        .r-round-@{value} {
-            >* {
-                border-radius: @value+0px;
-            }
-        }
-
-        .r-round-top-@{value}, .r-round-t-@{value} {
-            >* {
-                border-top-left-radius : @value+0px;
-                border-top-right-radius: @value+0px;
-            }
-        }
-
-        .r-round-bottom-@{value}, .r-round-b-@{value} {
-            >* {
-                border-bottom-left-radius : @value+0px;
-                border-bottom-right-radius: @value+0px;
-            }
-        }
-
-        .r-round-left-@{value}, .r-round-l-@{value} {
-            >* {
-                border-top-left-radius    : @value+0px;
-                border-bottom-left-radius : @value+0px;
-            }
-        }
-
-        .r-round-right-@{value}, .r-round-r-@{value} {
-            >* {
-                border-top-right-radius   : @value+0px;
-                border-bottom-right-radius: @value+0px;
-            }
-        }
-
-
-        .round-@{value} {
-            border-radius: @value+0px;
-        }
-
-        .round-top-@{value}, .round-t-@{value} {
-            border-top-left-radius : @value+0px;
-            border-top-right-radius: @value+0px;
-        }
-
-        .round-bottom-@{value}, .round-b-@{value} {
-            border-bottom-left-radius : @value+0px;
-            border-bottom-right-radius: @value+0px;
-        }
-
-        .round-left-@{value}, .round-l-@{value} {
-            border-top-left-radius    : @value+0px;
-            border-bottom-left-radius : @value+0px;
-        }
-
-        .round-right-@{value}, .round-r-@{value} {
-            border-top-right-radius   : @value+0px;
-            border-bottom-right-radius: @value+0px;
-        }
-    }
-
-)
-/***
-间距
-gap-5：相邻的行内元素间距，适用于符号（如文字与图标符合的组合）
-gap-l-5:相邻的行内元素左间距
-gap-r-5:相邻的行内元素右间距
-gap-10:一般指两个图标的间隔
-gap-l-10
-gap-r-10
-gap-b-20:指模块间距（有明显的块与块之间的间距），大标题内容与另外的大标题内容，垂直的两张卡片
-**/
 
 .gap-auto {
     margin: 0 auto;
 }
 
-@gaps: 0, 1, 2, 3, 4, 5, 8, 10, 12, 14, 15, 18, 20, 25, 24, 30, 36, 40, 48, 50, 60, 80, 100;
-
-each(@gaps, {
-
-        .r-gap-@{value} {
-            >* {
-                margin-top   :@value+0px;
-                margin-left  :@value+0px;
-                margin-bottom:@value+0px;
-                margin-right :@value+0px;
-            }
-        }
-
-        .r-gap-w-@{value} {
-            >* {
-                margin-left :@value+0px;
-                margin-right:@value+0px;
-            }
-        }
-
-        .r-gap-h-@{value} {
-            >* {
-                margin-top   :@value+0px;
-                margin-bottom:@value+0px;
-            }
-
-        }
-
-        .r-gap-t-@{value} {
-            >* {
-                margin-top:@value+0px;
-            }
-
-        }
-
-        .r-gap-l-@{value} {
-            >* {
-                margin-left:@value+0px;
-            }
-
-        }
-
-        .r-gap-r-@{value} {
-            >* {
-                margin-right:@value+0px;
-            }
-
-        }
-
-        .r-gap-b-@{value} {
-            >* {
-                margin-bottom:@value+0px;
-            }
-        }
-
-        .gap-@{value} {
-            margin-top   :@value+0px;
-            margin-left  :@value+0px;
-            margin-bottom:@value+0px;
-            margin-right :@value+0px;
-        }
-
-        .gap-w-@{value} {
-            margin-left :@value+0px;
-            margin-right:@value+0px;
-        }
-
-        .gap-h-@{value} {
-            margin-top   :@value+0px;
-            margin-bottom:@value+0px;
-        }
-
-        .gap-t-@{value} {
-            margin-top:@value+0px;
-        }
-
-        .gap-l-@{value} {
-            margin-left:@value+0px;
-        }
-
-        .gap-r-@{value} {
-            margin-right:@value+0px;
-        }
-
-        .gap-b-@{value} {
-            margin-bottom:@value+0px;
-        }
-
-
-    }
-
-)
 /**
 z-index
 ****/
@@ -1841,100 +1795,6 @@ z-index
 each(@zs, {
         .z-@{value} {
             z-index:@value;
-        }
-    }
-
-)
-/***
-内间距
-.pad-10：一般指段落的水平内补白（优先选择）
-.pad-15: 一般指段落的水平内补白
-.pad-20: 一般指卡片或对话框的全补白
-***/
-
-@pads: 0, 2, 3, 4, 5, 6, 8, 10, 14, 15, 20, 25, 24, 30, 40, 48, 50, 60, 70, 80, 100, 120, 150, 180;
-
-each(@pads, {
-
-        .r-padding-@{value} {
-            >* {
-                padding-top   :@value+0px;
-                padding-left  :@value+0px;
-                padding-bottom:@value+0px;
-                padding-right :@value+0px;
-            }
-        }
-
-        .r-padding-w-@{value} {
-            >* {
-                padding-left :@value+0px;
-                padding-right:@value+0px;
-            }
-        }
-
-        .r-padding-h-@{value} {
-            >* {
-                padding-top   :@value+0px;
-                padding-bottom:@value+0px;
-            }
-        }
-
-        .r-padding-t-@{value} {
-            >* {
-                padding-top:@value+0px;
-            }
-        }
-
-        .r-padding-l-@{value} {
-            >* {
-                padding-left:@value+0px;
-            }
-        }
-
-        .r-padding-r-@{value} {
-            >* {
-                padding-right:@value+0px;
-            }
-        }
-
-        .r-padding-b-@{value} {
-            >* {
-                padding-bottom:@value+0px;
-            }
-        }
-
-
-        .padding-@{value} {
-            padding-top   :@value+0px;
-            padding-left  :@value+0px;
-            padding-bottom:@value+0px;
-            padding-right :@value+0px;
-        }
-
-        .padding-w-@{value} {
-            padding-left :@value+0px;
-            padding-right:@value+0px;
-        }
-
-        .padding-h-@{value} {
-            padding-top   :@value+0px;
-            padding-bottom:@value+0px;
-        }
-
-        .padding-t-@{value} {
-            padding-top:@value+0px;
-        }
-
-        .padding-l-@{value} {
-            padding-left:@value+0px;
-        }
-
-        .padding-r-@{value} {
-            padding-right:@value+0px;
-        }
-
-        .padding-b-@{value} {
-            padding-bottom:@value+0px;
         }
     }
 
@@ -1966,10 +1826,9 @@ each(@pads, {
     overflow    : hidden;
     border-right: .15em solid orange;
     white-space : nowrap;
-    animation   :
-        typing 1s steps(20, end) forwards;
-    font-size: 1.2rem;
-    width    : 0;
+    animation   : typing 1s steps(20, end) forwards;
+    font-size   : 1.2rem;
+    width       : 0;
 }
 
 @keyframes typing {
