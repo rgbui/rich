@@ -216,8 +216,7 @@ export class Collaboration extends React.Component<{ kit: Kit }>{
     el: HTMLElement;
     render() {
         return <div className="shy-collaboration" ref={e => this.el = e} >
-            {this.userOperates.map(u => {
-                //var rect = u.rects[0];
+            {this.userOperates.map(u =>{
                 var top = u.point.y + (this.offset.y - u.offset.y);
                 var left = u.point.x + (this.offset.x - u.offset.x);
                 return <div key={u.id} className="shy-collaboration-user" style={{
