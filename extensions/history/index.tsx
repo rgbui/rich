@@ -18,14 +18,14 @@ import { PopoverPosition } from "../popover/position";
 import { createFormPage } from "./page";
 import "./style.less";
 import { S, Sp } from "../../i18n/view";
-import {  lst } from "../../i18n/store";
+import { lst } from "../../i18n/store";
 
 export class PageHistoryStore extends EventsComponent {
     render() {
         return <div className="shy-page-history">
             <div className="shy-page-history-body">
                 <div className="shy-page-history-list">
-                    <div className="shy-page-history-list-record"><span><Sp text={'{total}条历史记录'} data={{total:this.total}}>{this.total}条历史记录</Sp></span></div>
+                    <div className="shy-page-history-list-record"><span><Sp text={'{total}条历史记录'} data={{ total: this.total }}>{this.total}条历史记录</Sp></span></div>
                     {this.loadList && <Loading></Loading>}
                     {this.list.map(r => {
                         return <a className={r.id == this.currentId ? "hover" : ""} onMouseDown={e => this.loadPageContent(r.id)} key={r.id}>
@@ -53,7 +53,7 @@ export class PageHistoryStore extends EventsComponent {
         e.stopPropagation();
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(e) },
             [
-                { name: 'delete', icon: TrashSvg, text: lst('删除' )},
+                { name: 'delete', icon: TrashSvg, text: lst('删除') },
                 { name: 'rename', icon: RenameSvg, text: lst('备份重命名') },
                 { type: MenuItemType.divide },
                 { name: 'export', icon: ImportSvg, text: lst('导出'), disabled: true }
@@ -74,7 +74,7 @@ export class PageHistoryStore extends EventsComponent {
                 var d = await useForm({
                     title: lst('重命版本'),
                     model: { name: data.bakeTitle || '' },
-                    remark:lst('被重命名的版本,系统将不在自动清理') ,
+                    remark: lst('被重命名的版本,系统将不在自动清理'),
                     fields: [{ name: 'name', text: lst('版本名称'), type: 'input' }],
                     checkModel: async (d) => {
                         if (!d.name) return lst('名称不能为空');
@@ -139,11 +139,12 @@ export class PageHistoryStore extends EventsComponent {
         this.forceUpdate();
         var d = await useForm({
             title: '历史版本恢复',
-            model: { name: dayjs().format('YYYY-MM-DD HH:mm版本恢复') },
-            remark: '将创建一个新的版本',
-            fields: [{ name: 'name', text: '恢复版本名称', type: 'input' }],
+            head: false,
+            model: { name: dayjs().format('YYYY-MM-DD HH:mm') + lst('版本恢复') },
+            remark: lst('将创建一个新的版本'),
+            fields: [{ name: 'name', text: lst('恢复版本名称'), type: 'input' }],
             checkModel: async (d) => {
-                if (!d.name) return '恢复版本名称';
+                if (!d.name) return lst('恢复版本名称');
             },
             maskCloseNotSave: true
         });

@@ -4,8 +4,8 @@ import { NoneSvg, TransparentSvg } from "../../component/svgs";
 import { MeasureView } from "../../component/view/progress";
 import { ColorType } from "../note";
 import { S } from "../../i18n/view";
-var colors: ColorType[] = [
 
+var colors: ColorType[] = [
     { color: 'transparent' },
     { color: 'rgb(254,244,69)' },
     { color: 'rgb(250,199,16)' },
@@ -22,7 +22,6 @@ var colors: ColorType[] = [
     { color: 'rgb(45,155,240)' },
     { color: 'rgb(101,44,179)' },
     { color: 'rgb(255,249,177)' }
-
 ];
 export function ShapeFill(props: { tool: BoardEditTool, fillColor: string, fillOpacity: number, change: (name: string, value: any) => void }) {
     function renderSvg() {
