@@ -81,7 +81,12 @@ export class Page$Cycle {
                     this.views.push(dc as View);
                 }
             }
-            if (typeof this.pageLayout == 'undefined') this.pageLayout = Object.assign(this.pageLayout || {}, { type: PageLayoutType.doc });
+            if (typeof this.pageLayout == 'undefined') {
+                if (this.pe.type == ElementType.Room) {
+                    this.pageLayout = Object.assign(this.pageLayout || {}, { type: PageLayoutType.textChannel });
+                }
+                else this.pageLayout = Object.assign(this.pageLayout || {}, { type: PageLayoutType.doc });
+            }
             if ([
                 PageLayoutType.formView,
                 PageLayoutType.dbPickRecord,
