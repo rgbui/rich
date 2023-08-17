@@ -57,7 +57,14 @@ export class LangStore {
         for (let sp of this.sps) sp.forceUpdate()
     }
     t(key: string, content?: string | Record<string, any>) {
-        var d = this.dicts.get(key);
+        var d;
+        if (typeof window.shyConfig.isUS) {
+            var rg = this.dicts.get('us.' + key);
+            if (rg) d = rg;
+            else d = this.dicts.get(key)
+        }
+        else d = this.dicts.get(key);
+
         if (typeof d == 'undefined') {
             if (typeof content == 'string') uns[key] = content || '';
             else uns[key] = key;
