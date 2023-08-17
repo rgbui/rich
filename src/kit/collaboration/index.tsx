@@ -12,17 +12,22 @@ import "./style.less";
 import { Avatar } from "../../../component/view/avator/face";
 
 var colors = [
-    'rgba(237,233,235)',
-    'rgba(217,211,215)',
-    'rgba(247,214,183)',
-    'rgba(255,193,153)',
-    'rgba(252,246,189)',
-    'rgba(205,243,220)',
-    'rgba(169,222,249)',
-    'rgba(189,201,255)',
-    'rgba(239,218,251)',
-    'rgba(234,202,220)',
-    'rgba(253,198,200)'
+    '#55efc4',
+    '#81ecec',
+    '#74b9ff',
+    '#a29bfe',
+    '#00b894',
+    '#00cec9',
+    '#0984e3',
+    '#6c5ce7',
+    '#ffeaa7',
+    '#fab1a0',
+    '#ff7675',
+    '#fd79a8',
+    '#fdcb6e',
+    '#e17055',
+    '#d63031',
+    '#e84393'
 ]
 
 const dure = 1000 * 60 * 3;
@@ -139,96 +144,87 @@ export class Collaboration extends React.Component<{ kit: Kit }>{
             endOffset: number
         }) {
         this.clearUser(userid);
-        var self = this;
-        var rects: Rect[] = [];
-        var eles: HTMLElement[] = [];
-        var c = Collaboration.getUserColor(userid)
-        var cursor = false;
-        if (selecton.startAnchor.isEqual(selecton.endAnchor) && selecton.startOffset === selecton.endOffset) {
-            //光标
-            if (selecton.startAnchor.isText) {
-                var cursorPos = TextEle.getLineByAt(selecton.startAnchor.el, selecton.startOffset);
-                rects.push(cursorPos.point.toRect(1, cursorPos.lineheight));
-                cursor = true;
-                eles.push(selecton.startAnchor.el);
-                selecton.startAnchor.el.classList.add('shy-appear-text-user-selected');
-                selecton.startAnchor.el.style.setProperty('--user-selected-color', c);
-            }
-            else {
+        if (selecton) {
+            var self = this;
+            var rects: Rect[] = [];
+            var eles: HTMLElement[] = [];
+            var c = Collaboration.getUserColor(userid)
+            var cursor = false;
+            if (selecton.startAnchor && selecton.startAnchor.isEqual(selecton.endAnchor) && selecton.startOffset === selecton.endOffset) {
                 eles.push(selecton.startAnchor.el);
                 selecton.startAnchor.el.classList.add('shy-appear-text-user-selected');
                 selecton.startAnchor.el.style.setProperty('--user-selected-color', c);
                 rects.push(Rect.fromEle(selecton.startAnchor.el));
                 cursor = true;
             }
-        }
-        else {
-            if (selecton.endAnchor === selecton.startAnchor && selecton.endOffset < selecton.startOffset || TextEle.isBefore(selecton.endAnchor.el, selecton.startAnchor.el)) {
-                [selecton.startAnchor, selecton.endAnchor] = [selecton.endAnchor, selecton.startAnchor];
-                [selecton.startOffset, selecton.endOffset] = [selecton.endOffset, selecton.startOffset];
+            else {
+                if (selecton.endAnchor && selecton.endAnchor === selecton.startAnchor && selecton.endOffset < selecton.startOffset || TextEle.isBefore(selecton.endAnchor.el, selecton.startAnchor.el)) {
+                    [selecton.startAnchor, selecton.endAnchor] = [selecton.endAnchor, selecton.startAnchor];
+                    [selecton.startOffset, selecton.endOffset] = [selecton.endOffset, selecton.startOffset];
+                }
+                var appears = findBlocksBetweenAppears(selecton.startAnchor.el, selecton.endAnchor.el);
+                appears.forEach(appear => {
+                    eles.push(appear.el);
+                    rects.push(Rect.fromEle(appear.el));
+                    appear.el.classList.add('shy-appear-text-user-selected');
+                    appear.el.style.setProperty('--user-selected-color', c);
+                })
             }
-            var appears = findBlocksBetweenAppears(selecton.startAnchor.el, selecton.endAnchor.el);
-            appears.forEach(appear => {
-                eles.push(appear.el);
-                rects.push(Rect.fromEle(appear.el));
-                appear.el.classList.add('shy-appear-text-user-selected');
-                appear.el.style.setProperty('--user-selected-color', c);
-            })
+            var id = util.guid();
+            var bound = Rect.getRectFromRects(rects);
+            var us: Partial<ArrayOf<Collaboration['userOperates']>> = {
+                id,
+                userid,
+                eles,
+                rects,
+                cursor,
+                color: c,
+                point: bound.leftTop,
+                offset: this.offset.clone(),
+                clear: (force?: boolean) => {
+                    var se = self.userOperates.find(g => g.id == id);
+                    if (se) {
+                        if (Array.isArray(se.eles))
+                            se.eles.forEach(e => {
+                                try {
+                                    e.classList.remove('shy-appear-text-user-selected');
+                                    e.style.removeProperty('--user-selected-color');
+                                }
+                                catch (ex) {
+                                    console.error(ex);
+                                }
+                            })
+                        self.userOperates.remove(g => g.id == id);
+                        if (force) self.forceUpdate();
+                    }
+                },
+                timeOut: setTimeout(() => {
+                    var se = self.userOperates.find(g => g.id == id);
+                    if (se) {
+                        se.clear(true);
+                    }
+                }, dure)
+            };
+            this.userOperates.push(us as any);
         }
-        var id = util.guid();
-        var bound = Rect.getRectFromRects(rects);
-        var us: Partial<ArrayOf<Collaboration['userOperates']>> = {
-            id,
-            userid,
-            eles,
-            rects,
-            cursor,
-            color: c,
-            point: bound.leftTop,
-            offset: this.offset.clone(),
-            clear: (force?: boolean) => {
-                var se = self.userOperates.find(g => g.id == id);
-                if (se) {
-                    if (Array.isArray(se.eles))
-                        se.eles.forEach(e => {
-                            try {
-                                e.classList.remove('shy-appear-text-user-selected');
-                                e.style.removeProperty('--user-selected-color');
-                            }
-                            catch (ex) {
-                                console.error(ex);
-                            }
-                        })
-                    self.userOperates.remove(g => g.id == id);
-                    if (force) self.forceUpdate();
-                }
-            },
-            timeOut: setTimeout(() => {
-                var se = self.userOperates.find(g => g.id == id);
-                if (se) {
-                    se.clear(true);
-                }
-            }, dure)
-        };
-        this.userOperates.push(us as any);
         this.forceUpdate();
     }
     el: HTMLElement;
     render() {
         return <div className="shy-collaboration" ref={e => this.el = e} >
-            {this.userOperates.map(u =>{
+            {this.userOperates.map(u => {
                 var top = u.point.y + (this.offset.y - u.offset.y);
                 var left = u.point.x + (this.offset.x - u.offset.x);
                 return <div key={u.id} className="shy-collaboration-user" style={{
                     top: top,
                     left: left,
-                    marginTop: -20,
-                    marginLeft: 0
+                    marginTop: -27,
+                    marginLeft: -3
                 }}>
                     <UserBox userid={u.userid}>{(user) => {
-                        return <div style={{ backgroundColor: u.color, height: 20 }} className="flex flex-center round padding-w-2">
-                            <Avatar user={user} size={20}></Avatar>
-                            <span className="gap-l-5">{user.name}</span>
+                        return <div style={{ backgroundColor: u.color, height: 24 }} className="flex flex-center round padding-w-2">
+                            <Avatar className="flex-center" user={user} size={20}></Avatar>
+                            <span className="gap-l-5 text-white">{user.name}</span>
                         </div>
                     }}</UserBox>
                 </div>
