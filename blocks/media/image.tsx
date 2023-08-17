@@ -19,7 +19,7 @@ import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { MenuItemView } from "../../component/view/menu/item";
 import { useImageViewer } from "../../component/view/image.preview";
 import { BlockUrlConstant } from "../../src/block/constant";
-import { ls, lst } from "../../i18n/store";
+import { lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
 import { PageLink } from "../../extensions/link/declare";
 import { LinkPageItem, getPageIcon } from "../../src/page/declare";
@@ -66,12 +66,17 @@ export class Image extends Block {
         var per = Math.min(70, parseInt((imgSize.width * 100 / width).toString()));
         per = Math.max(30, per);
         this.speed = '';
+        if (((this.view as any) as ImageView)) {
+            ((this.view as any) as ImageView).isLoadError = false;
+            ((this.view as any) as ImageView).errorUrl = ''
+        }
         await this.onUpdateProps({
             imageWidthPercent: per,
             originSize: imgSize,
             imageSizeMode: 'none',
             src: { ...d }
         }, { range: BlockRenderRange.self, merge });
+
     }
     async didMounted() {
         try {
@@ -343,7 +348,7 @@ export class Image extends Block {
         items.push({
             name: BlockDirective.delete,
             icon: TrashSvg,
-            text: ls.t('删除'),
+            text: lst('删除'),
             label: "Del"
         });
         return items;
@@ -439,6 +444,7 @@ export class Image extends Block {
         }
     }
 }
+
 @view('/image')
 export class ImageView extends BlockView<Image>{
     errorUrl: string;
@@ -546,7 +552,7 @@ export class ImageView extends BlockView<Image>{
         return <>{this.isLoadError && <div className='sy-block-image-error flex r-gap-r-10 text-1'>
             <Icon icon={ImageErrorSvg}></Icon>
             <span className="f-14"><S>图片</S>{this.errorUrl}<S>加载失败</S></span>
-            <span className="f-14 link cursor" onMouseDown={e => this.block.onOpenUploadImage(e)}><S>重新添加图片</S></span>
+            {this.block.isCanEdit() && <span className="f-14 link cursor" onMouseDown={e => this.block.onOpenUploadImage(e)}><S>重新添加图片</S></span>}
         </div>}
             {!this.isLoadError && <div className='sy-block-image-content-view flex-center' style={style}>
                 <div className='sy-block-image-content-view-wrapper visible-hover' ref={e => this.imageWrapper = e} style={wStyle}>
