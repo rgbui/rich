@@ -22,6 +22,7 @@ import { ChatInput } from "../../component/view/input.chat/chat";
 import { ToolTip } from "../../component/view/tooltip";
 import { S } from "../../i18n/view";
 import { lst } from "../../i18n/store";
+import { useImageViewer } from "../../component/view/image.preview";
 
 export class ViewChats extends React.Component<{
     readonly?: boolean,
@@ -58,6 +59,9 @@ export class ViewChats extends React.Component<{
     get currentUser(): UserBasic {
         return this.props.user
     }
+    openPic(f) {
+        useImageViewer(f, [f])
+    }
     renderContent(d: ChannelTextType) {
         var files = d.file ? [d.file] : d.files;
         if (!Array.isArray(files)) files = [];
@@ -70,7 +74,7 @@ export class ViewChats extends React.Component<{
             var f = files[i];
             if (f.mime == 'image') {
                 jsList.push(<div key={i} className='shy-user-channel-chat-image' >
-                    <img src={autoImageUrl(f.url, 500)} />
+                    <img onMouseDown={e => this.openPic(f)} src={autoImageUrl(f.url, 500)} />
                 </div>)
             }
             else if (f.mime == 'video') {
@@ -308,11 +312,11 @@ export class ViewChats extends React.Component<{
         var op = this.getOp(d);
         var items: MenuItem<string>[] = [];
         if (d.userid == this.currentUser.id) {
-            items.push({ name: 'edit', text:lst('编辑') , icon: EditSvg });
-            items.push({ name: 'delete', text:lst( '删除'), icon: TrashSvg });
+            items.push({ name: 'edit', text: lst('编辑'), icon: EditSvg });
+            items.push({ name: 'delete', text: lst('删除'), icon: TrashSvg });
         }
         else {
-            items.push({ name: 'reply', text:lst( '回复'), icon: ReplySvg });
+            items.push({ name: 'reply', text: lst('回复'), icon: ReplySvg });
             items.push({ name: 'report', disabled: true, text: lst('举报'), icon: ReportSvg });
         }
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) },
