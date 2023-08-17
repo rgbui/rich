@@ -394,7 +394,6 @@ export class Page$Operator {
     }
     async onPageScroll(this: Page, block: Block) {
         try {
-
             var panelEl = this.getScrollDiv();
             var offset = panelEl.scrollTop;
             var blockRect = block.getVisibleBound();
