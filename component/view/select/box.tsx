@@ -22,7 +22,7 @@ export class SelectBox<T = any> extends React.Component<{
     dropWidth?: number,
     small?: boolean,
     multiple?: boolean,
-    prefix?:JSX.Element | string | React.ReactNode
+    prefix?: JSX.Element | string | React.ReactNode
 }>{
     render() {
         var self = this;
@@ -46,7 +46,7 @@ export class SelectBox<T = any> extends React.Component<{
                 { roundArea: rect },
                 ms,
                 {
-                  
+
                     width: self.props.dropWidth || 160,
                     nickName: 'selectBox'
                 });
@@ -82,14 +82,14 @@ export class SelectBox<T = any> extends React.Component<{
         return <div style={style}
             className={classList.join(" ")}
             onMouseDown={e => mousedown(e)}>
-            {this.props.children && <>{this.props.children}<Icon className={'gap-l-3'} size={16} icon={ChevronDownSvg}></Icon></>}
+            {this.props.children && <>{this.props.children}<Icon className={'gap-l-3'} size={14} icon={ChevronDownSvg}></Icon></>}
             {!this.props.children && <div style={{ width: '100%' }} className="flex">
                 {this.props.prefix}
                 {this.props.multiple != true && <span className="flex-auto">{op?.icon && <Icon size={14} icon={op.icon}></Icon>}{op?.text}</span>}
                 {this.props.multiple == true && <span className="flex-auto"><span>{ops.map((op, i) => {
-                    return <span className={'padding-w-5 round padding-h-2 ' + (i == ops.length - 1 ? "" : "gap-r-3")} key={op.value}><span>{op?.icon && <Icon size={14} icon={op.icon}></Icon>}{op?.text}</span></span>
+                    return <span className={'padding-l-5 round padding-h-2 ' + (i == ops.length - 1 ? "" : "gap-r-3")} key={op.value}><span>{op?.icon && <Icon size={14} icon={op.icon}></Icon>}{op?.text}</span></span>
                 })}</span></span>}
-                <Icon className={'flex-fixed gap-l-3'} size={16} icon={ChevronDownSvg}></Icon></div>}
+                <Icon className={'flex-fixed gap-l-3'} size={14} icon={ChevronDownSvg}></Icon></div>}
         </div>
     }
 }

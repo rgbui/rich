@@ -127,15 +127,24 @@ export class PageView extends Component<{ page: Page }>{
     }
     observeScroll() {
         this.scrollDiv = this.page.getScrollDiv();
-        if (this.scrollDiv) this.scrollDiv.addEventListener('scroll', this.scroll);
+        if (this.scrollDiv) {
+            this.scrollDiv.removeEventListener('scroll', this.scroll)
+            this.scrollDiv.addEventListener('scroll', this.scroll);
+            if (typeof this.scrollTop == 'number')
+                setTimeout(() => {
+                    this.scrollDiv.scrollTop = this.scrollTop
+                },300);
+        }
     }
     scroll = (e) => {
         var outLineBlock = this.page.find(g => g.url == BlockUrlConstant.Outline);
         if (outLineBlock) {
             (outLineBlock as PageOutLine).updateOutlinesHover()
         }
+        this.scrollTop = this.scrollDiv.scrollTop;
     }
     scrollDiv: HTMLElement;
+    scrollTop: number;
     componentWillUnmount() {
         channel.off('/page/update/info', this.updatePageInfo);
         this.el.removeEventListener('keydown', this._keydown, true);

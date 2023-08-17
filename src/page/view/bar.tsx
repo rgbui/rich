@@ -153,7 +153,7 @@ export class PageBar extends React.Component<{ page: Page }>{
                 <span onClick={e => this.toHome()} className="size-30 gap-r-30"><Avatar size={32} userid={user.id}></Avatar></span>
             </div>
             else if (this.props.page.openSource == 'page') return <div className="flex r-flex-center  r-gap-r-10 ">
-                <Button size="small" onClick={e => this.toLogin()}>登录</Button>
+                <Button size="small" onClick={e => this.toLogin()}><S>登录</S></Button>
             </div>
             else return <></>
         }

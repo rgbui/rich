@@ -4,6 +4,7 @@ import { OnlineUsers } from "../../../extensions/at/users";
 import { PageLayoutType } from "../declare";
 import { ElementType } from "../../../net/element.type";
 import { S } from "../../../i18n/view";
+import { ls } from "../../../i18n/store";
 
 export class PageLayoutView extends React.Component<{
     page: Page,
@@ -107,10 +108,10 @@ export class PageLayoutView extends React.Component<{
                 <span><S>缺少数据源</S></span>
             </div>
             <div className="flex-center remark">
-                <S>没有查到数据表格，请确认是否存在网络问题，还是已经删除了</S>
+                <S text='没有查到数据表格请确认是否存在网络问题'>没有查到数据表格，请确认是否存在网络问题，还是已经删除了</S>
             </div>
             <div className="flex-center remark">
-                <span><a className="cursor" onClick={e => location.reload()}><S>刷新</S></a><S>或</S><a className="cursor" onClick={async e => {
+                <span><a className="cursor" onClick={e => location.reload()}><S>刷新</S></a><span className={ls.isCn?"":"gap-w-5"}><S>或</S></span><a className="cursor" onClick={async e => {
                     this.props.page.onPageRemove()
                 }}><S>删除页面</S></a></span>
             </div>

@@ -13,6 +13,7 @@ import { SelectBox } from "../../component/view/select/box";
 import { Switch } from "../../component/view/switch";
 import { Point } from "../../src/common/vector/point";
 import { Page } from "../../src/page";
+
 import {
     AtomPermission,
     getAtomPermissionComputedChanges,
@@ -24,7 +25,7 @@ import { getPageText } from "../../src/page/declare";
 import { UserBox } from "../../component/view/avator/user";
 import { S } from "../../i18n/view";
 import { lst } from "../../i18n/store";
-
+import { Tip } from "../../component/view/tooltip/tip";
 
 class PagePublish extends EventsComponent {
     constructor(props) {
@@ -60,7 +61,7 @@ class PagePublish extends EventsComponent {
             self.forceUpdate()
         }
         async function addPermission(event: React.MouseEvent) {
-            var rs =self.page.ws;
+            var rs = self.page.ws;
             var r = await useSelectMenuItem({ roundPoint: Point.from(event) },
                 [
                     {
@@ -108,7 +109,7 @@ class PagePublish extends EventsComponent {
             await setGlobalShare({ 'memberPermissions': ps });
         }
         function getRoles(roleId) {
-            if (roleId == 'all') return lst('所有人') 
+            if (roleId == 'all') return lst('所有人')
             return self.page.ws.roles.find(g => g.id == roleId)?.text
         }
         if (!pr) return <div className='w-300 min-h-60'></div>
@@ -131,9 +132,9 @@ class PagePublish extends EventsComponent {
                         </div>
                     }}</UserBox>
                 </div>
-                <div className="flex-fixed f-14 remark">
-                    {cp.isOwner && <span className="item-hover-focus round padding-w-3 padding-h-2 cursor">{"所有权"}</span>}
-                    {cp.isWs && <span className="item-hover-focus round padding-w-3 padding-h-2  cursor">{cp.permissions.map(p => {
+                <div className="flex-fixed f-12 remark">
+                    {cp.isOwner && <span className="item-hover-focus round padding-w-3 padding-h-2 cursor ">{"所有权"}</span>}
+                    {cp.isWs && <span className="item-hover-focus round padding-w-3 padding-h-2  cursor ">{cp.permissions.map(p => {
                         return as.find(a => a.value == p)?.text
                     }).filter(g => g ? true : false).join(",")}</span>}
                     {Array.isArray(cp.netPermissions) && cp.netPermissions.length > 0 && <span className="item-hover-focus round padding-w-3  padding-h-2  cursor">{cp.netPermissions.map(p => {
@@ -150,8 +151,8 @@ class PagePublish extends EventsComponent {
                 this.page.isCanManage && <>
                     <Divider></Divider>
                     <div className="flex  padding-w-14">
-                        <span className="flex-auto f-14"><S>空间成员</S></span>
-                        {this.page.isCanManage && <span onMouseDown={e => addPermission(e)} className="flex-fixed flex-center size-24 item-hover round cursor"><Icon icon={PlusSvg}></Icon></span>}
+                        <span className="flex-auto f-14 flex"><Icon size={16} className={'gap-r-5'} icon={{ name: 'bytedance-icon', code: 'user' }}></Icon><S>空间成员</S></span>
+                        {this.page.isCanManage && <Tip text='添加成员权限'><span onMouseDown={e => addPermission(e)} className="flex-fixed flex-center size-20 item-hover round cursor"><Icon size={16} icon={PlusSvg}></Icon></span></Tip>}
                     </div>
                     <div>
                         {ps.map((mp, id) => {
@@ -161,7 +162,7 @@ class PagePublish extends EventsComponent {
                                     {mp.roleId && <span>{getRoles(mp.roleId)}</span>}
                                 </div>
                                 <div className="flex-auto flex flex-end">
-                                    <div className="flex-fixed gap-r-5 flex-end">
+                                    <div className="flex-fixed gap-r-5 flex-end f-12">
                                         <SelectBox
                                             small
                                             dropWidth={120}
@@ -193,7 +194,7 @@ class PagePublish extends EventsComponent {
                     <Divider></Divider>
                     <div className="item-hover h-30 flex padding-w-14">
                         <span className="flex-auto flex">
-                            <Icon size={18} icon={GlobalLinkSvg}></Icon>
+                            <Icon size={16} icon={GlobalLinkSvg}></Icon>
                             <span className="gap-l-5"><S>公开至互联网</S></span>
                         </span>
                         <span className="flex-fixed">
@@ -205,7 +206,7 @@ class PagePublish extends EventsComponent {
                             <div className="flex-auto text-overflow">
                                 <S>页面公开访问权限</S>
                             </div>
-                            <div className="flex-fixed">
+                            <div className="flex-fixed f-12">
                                 <SelectBox
                                     small
                                     // border

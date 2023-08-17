@@ -137,10 +137,8 @@ export async function useForm(options: FormDialougType) {
             resolve(d);
         })
         popover.only('close', () => {
-            if (options?.maskCloseNotSave)
-                resolve(null)
-            else
-                resolve(fv.model);
+            if (options?.maskCloseNotSave) resolve(null)
+            else resolve(fv.model);
         });
     })
 }

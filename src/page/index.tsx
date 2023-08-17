@@ -51,7 +51,6 @@ export class Page extends Events<PageDirective>{
     constructor(options?: {
         id?: string,
         readonly?: boolean
-
     }) {
         super();
         this.version = PageVersion.v1;
@@ -79,7 +78,7 @@ export class Page extends Events<PageDirective>{
     }
     kit: Kit = new Kit(this);
     snapshoot = new HistorySnapshoot(this)
-    pageLayout: {  type: PageLayoutType };
+    pageLayout: { type: PageLayoutType };
     views: View[] = [];
     view: PageView;
     keyboardPlate: KeyboardPlate = new KeyboardPlate();
@@ -413,14 +412,19 @@ export class Page extends Events<PageDirective>{
     get elementUrl() {
         if (this.customElementUrl) return this.customElementUrl;
     }
-    onLazyAction = lodash.debounce(
-        async (directive: ActionDirective | string,
-            fn: () => Promise<void>,
-            options?: { block?: Block, disabledStore?: boolean }
-        ) => {
-            return this.onAction(directive, fn, options);
-        }, 700)
+    onLazyAction = lodash.debounce(async (directive: ActionDirective | string,
+        fn: () => Promise<void>,
+        options?: { block?: Block, disabledStore?: boolean }
+    ) => {
+        return this.onAction(directive, fn, options);
+    }, 700)
     getScrollDiv(el?: HTMLElement) {
+        if (this.pageLayout?.type == PageLayoutType.textChannel) {
+            var tc = this.find(g => g.url == BlockUrlConstant.TextChannel);
+            if (tc) {
+                return (tc.view as any).contentEl;
+            }
+        }
         if (!el) el = this.root.querySelector('.shy-page-view-box') as HTMLElement
         return dom(el).getOverflowPanel()
     }

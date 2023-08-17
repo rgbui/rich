@@ -8,6 +8,7 @@ import { ChevronDownSvg } from "../../../component/svgs";
 import { UserBasic } from "../../../types/user";
 import { lst } from "../../../i18n/store";
 import lodash from "lodash";
+import { S } from "../../../i18n/view";
 
 export class DefinePageNavBar extends React.Component<{
     ws: LinkWs,
@@ -74,7 +75,7 @@ export class DefinePageNavBar extends React.Component<{
         function toLogin() {
             var back = location.href;
             if (window.shyConfig?.isDev) location.href = '/sign/in'
-            else location.href = 'https://shy.live/sign/in?back=' + encodeURIComponent(back);
+            else location.href = (window.shyConfig.isUS ? "https://shy.red/sign/in?back=" : 'https://shy.live/sign/in?back=') + encodeURIComponent(back);
         }
         var style: CSSProperties = Object.assign({}, this.props.style || {});
         var ns = this.getNavMenus();
@@ -99,12 +100,11 @@ export class DefinePageNavBar extends React.Component<{
                                 self.forceUpdate();
                             }}
                             key={e.id}>
-                            <a
-                                href={href} onClick={eg => mousedown(eg, e)}
+                            <a href={href} onClick={eg => mousedown(eg, e)}
                                 style={{ height: h, color: 'inherit' }} className={"flex round padding-w-10  " + (false ? "dashed" : 'border-t')}>
                                 {e.type == 'logo' && e.pic && <img className="obj-center " style={{ height: 40 }} src={e.pic?.url} />}
                                 {e.icon && <span className="flex-fixed size-20 flex-center"><Icon size={18} icon={e.icon}></Icon></span>}
-                                <span className={"flex-auto" + (e.text ? (e.type == 'logo' ? " bold f-18 " : " bold f-16 ") : " remark")}>{e.text || '菜单项'}</span>
+                                <span className={"flex-auto" + (e.text ? (e.type == 'logo' ? " bold f-18 " : " bold f-16 ") : " remark")}>{e.text || lst('菜单项')}</span>
                                 <span className="flex-fixed flex-center">
                                     {Array.isArray(e.childs) && e.childs.length > 0 && <Icon size={16} icon={ChevronDownSvg}></Icon>}
                                 </span>
@@ -114,10 +114,11 @@ export class DefinePageNavBar extends React.Component<{
                     })}
                 </div>
                 <div className="flex-fixed flex-end">
-                    {!props.user && <Button size="small" onClick={e => toLogin()}>登录</Button>}
+                    {!props.user && <Button size="small" onClick={e => toLogin()}><S>登录</S></Button>}
                     {props.user && <Avatar onMousedown={e => {
                         if (window.shyConfig?.isPro) {
-                            location.href = 'https://shy.live/home'
+                            if (window.shyConfig.isUS) location.href = 'https://shy.red/home'
+                            else location.href = 'https://shy.live/home'
                         }
                         else {
                             location.href = '/home'

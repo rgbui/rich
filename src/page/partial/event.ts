@@ -17,6 +17,7 @@ import { BlockUrlConstant } from "../../block/constant";
 import { ElementType } from "../../../net/element.type";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import lodash from "lodash";
+import { lst } from "../../../i18n/store";
 
 export class PageEvent {
     /**
@@ -144,7 +145,7 @@ export class PageEvent {
                 this.pageLayout.type = layoutType;
                 var view = this.views[0];
                 var schema = await TableSchema.onCreate({
-                    text: this.pageInfo?.text || '表格',
+                    text: this.pageInfo?.text || lst('表格'),
                     url: BlockUrlConstant.DataGridTable
                 });
                 await this.createBlock('/data-grid/table', {

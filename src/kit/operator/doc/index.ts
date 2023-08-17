@@ -79,11 +79,17 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                         }
                     }
                     else {
-                        var sb = block.findReverse(g => g.appearAnchors.length > 0);
-                        if (sb) {
-                            kit.anchorCursor.onFocusBlockAnchor(sb, { last: true, render: true })
+                        var sc = block.find(c => {
+                            if (c.appearAnchors.length > 0) {
+                                var b = c.getVisibleBound();
+                                if (b.containY(ev.clientY)) return true;
+                            }
+                        })
+                        if (!sc)
+                            sc = block.findReverse(g => g.appearAnchors.length > 0);
+                        if (sc) {
+                            kit.anchorCursor.onFocusBlockAnchor(sc, { last: true, render: true })
                         }
-                        console.log('mousedown', block);
                     }
                 }
                 else {

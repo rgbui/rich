@@ -40,7 +40,7 @@ export class ChannelText extends Block {
                 roomId: this.roomId,
                 page: this.pageIndex,
                 seq: localSeq?.seq || undefined,
-                ws:this.page.ws
+                ws: this.page.ws
             }
         );
         if (r.ok) {
@@ -68,7 +68,7 @@ export class ChannelText extends Block {
             this.abledSend = false;
         }
         if (this.page.pageInfo?.speak == 'only') {
-            var r = await channel.get('/ws/channel/abled/send', {ws:this.page.ws, roomId: this.roomId, pageId: this.page.pageInfo.id });
+            var r = await channel.get('/ws/channel/abled/send', { ws: this.page.ws, roomId: this.roomId, pageId: this.page.pageInfo.id });
             if (r.ok) {
                 this.abledSend = r.data.abled;
             }

@@ -7,6 +7,7 @@ import { autoImageUrl } from "../../../net/element.type";
 import { MouseDragger } from "../../common/dragger";
 import { Rect } from "../../common/vector/point";
 import { S } from "../../../i18n/view";
+
 export class PageCover extends React.Component<{ page: Page }>{
     private startPos: boolean = false;
     private loadThumb: boolean = false;
