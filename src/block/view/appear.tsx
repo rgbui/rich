@@ -21,17 +21,18 @@ export function TextArea(props: {
     if (typeof prop == 'undefined') prop = 'content';
     var ps: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> = {
         style: props.style,
-        placeholder: props.placeholder
+        placeholder: props.placeholder,
+        ref:(e) => props.block.elementAppear({
+            el: e,
+            prop: props.prop,
+            appear: BlockAppear.text,
+            plain: props.plain,
+            defaultValue: props.default
+        }),
     };
     if (props.block.isCanEdit()) {
         ps = {
-            ref: (e) => props.block.elementAppear({
-                el: e,
-                prop: props.prop,
-                appear: BlockAppear.text,
-                plain: props.plain,
-                defaultValue: props.default
-            }),
+            ref: ps.ref,
             suppressContentEditableWarning: true,
             style: props.style,
             placeholder: props.placeholder,
@@ -107,11 +108,11 @@ export function SolidArea(props: {
         onCompositionUpdate: (e) => props.block.elementAppearEvent(props.prop, 'compositionupdate', e)
     }
     var line = typeof props.line == 'undefined' ? props.block.isLine : props.line;
-    if (line) return <span className='shy-appear-solid'  {...ps} >{props.block.isCanEdit() &&<span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}<span className='shy-appear-solid-content'>{props.children}</span>{props.block.isCanEdit() &&<span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}</span>
+    if (line) return <span className='shy-appear-solid'  {...ps} >{props.block.isCanEdit() && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}<span className='shy-appear-solid-content'>{props.children}</span>{props.block.isCanEdit() && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}</span>
     return <div className='shy-appear-solid flex'  {...ps} >
-        {props.block.isCanEdit() &&<span className='w-1 shy-appear-solid-cursor flex-fixed' suppressContentEditableWarning {...editProps}></span>}
+        {props.block.isCanEdit() && <span className='w-1 shy-appear-solid-cursor flex-fixed' suppressContentEditableWarning {...editProps}></span>}
         <div className='shy-appear-solid-content flex-auto'>{props.children}</div>
-        {props.block.isCanEdit() &&<span className='w-1 shy-appear-solid-cursor flex-fixed' suppressContentEditableWarning {...editProps}></span>}</div>
+        {props.block.isCanEdit() && <span className='w-1 shy-appear-solid-cursor flex-fixed' suppressContentEditableWarning {...editProps}></span>}</div>
 }
 
 export function ChildsArea(props: { childs: Block[] }) {
