@@ -99,6 +99,7 @@ export class LangStore {
 export var langOptions = [
     { lang: 'Chinese', text: '中文', load: async () => await import('./lang/Chinese.json') },
     { lang: 'English', text: 'English', load: async () => await import('./lang/English.json') },
+    { lang: 'ChineseTraditional', text: '繁体', load: async () => await import('./lang/ChineseTraditional.json') },
     { lang: 'Japanese', text: '日本語', load: async () => await import('./lang/Japanese.json') },
     { lang: 'Korean', text: '한국어', load: async () => await import('./lang/Korean.json') },
     { lang: 'German', text: 'Deutsch', load: async () => await import('./lang/German.json') },
