@@ -130,21 +130,19 @@ export class PageContextmenu {
                 { type: MenuItemType.divide },
                 { name: 'nav', text: lst('目录'), icon: OutlineSvg, type: MenuItemType.switch, checked: this.nav },
                 {
+                    icon: { name: 'bytedance-icon', code: 'top-bar' },
+                    text: lst('版式'),
+                    name: 'isPageContent',
+                    type: MenuItemType.switch,
+                    checked: this.isPageContent ? true : false
+                },
+                {
                     text: lst('小部件'),
                     icon: FieldsSvg,
                     childs: [
                         { name: 'onlyDisplayContent', text: lst('标题'), type: MenuItemType.switch, checked: this.onlyDisplayContent ? false : true, icon: HSvg },
                         { name: 'refPages', text: lst("引用"), visible: [ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type) ? false : true, icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
                         { name: 'showComment', text: lst("评论"), icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
-                    ]
-                },
-                {
-                    name: 'theme',
-                    text: lst('主题'),
-                    icon: ThemeSvg,
-                    childs: [
-                        { icon: GlobalLinkSvg, name: 'isWeb', text: lst('网页'), checkLabel: this.isPageContent ? false : true },
-                        { icon: NoteSvg, name: 'isContent', text: lst('内容'), checkLabel: this.isPageContent ? true : false }
                     ]
                 },
                 { type: MenuItemType.divide },
@@ -166,7 +164,7 @@ export class PageContextmenu {
                 },
                 { name: 'favourite', visible: false, icon: 'favorite:sy', text: lst('添加至收藏'), disabled: true },
                 { name: 'history', icon: VersionHistorySvg, text: lst('页面历史') },
-                { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? lst("除消编辑保护" ) : lst("编辑保护" ), icon: this.locker?.lock ? LockSvg : UnlockSvg },
+                { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? lst("除消编辑保护") : lst("编辑保护"), icon: this.locker?.lock ? LockSvg : UnlockSvg },
                 { name: 'undo', text: lst('撤消'), icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
                 { name: 'redo', text: lst('重做'), icon: RedoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
                 { type: MenuItemType.divide },
@@ -219,7 +217,7 @@ export class PageContextmenu {
                     icon: PlatteSvg
                 },
                 { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? lst("除消编辑保护") : lst("编辑保护"), icon: this.locker?.lock ? LockSvg : UnlockSvg },
-                { name: 'history', icon: VersionHistorySvg, text: lst('页面历史' ) },
+                { name: 'history', icon: VersionHistorySvg, text: lst('页面历史') },
                 { type: MenuItemType.divide },
                 { name: 'undo', text: lst('撤消'), icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
                 { name: 'redo', text: lst('重做'), icon: RedoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
@@ -262,6 +260,9 @@ export class PageContextmenu {
                 }
                 else if (item.name == 'fullWidth') {
                     this.onUpdateProps({ isFullWidth: item.checked }, true);
+                }
+                else if (item.name == 'isPageContent') {
+                    this.onUpdateProps({ isPageContent: item.checked }, true);
                 }
                 else if (item.name == 'onlyDisplayContent') {
                     this.onAction('onlyDisplayContent', async () => {
@@ -313,9 +314,6 @@ export class PageContextmenu {
             }
             else if (r.item.name == 'bg') {
                 this.onOpenBackground()
-            }
-            else if (r.item.name == 'isWeb' || r.item.name == 'isContent') {
-                this.onUpdateProps({ isPageContent: r.item.name == 'isWeb' ? false : true }, true)
             }
             else if (r.item.name == 'ai-sync-turn') {
                 this.onSyncAi(r.item.value, true);

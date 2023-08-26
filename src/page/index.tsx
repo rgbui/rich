@@ -385,16 +385,16 @@ export class Page extends Events<PageDirective>{
         if (this.isPubSite) {
             sf = this.ws.publishConfig.smallFont;
         }
-        if (this.pageLayout?.type == PageLayoutType.docCard) return sf ? 16 : 18
-        return sf ? 14 : 16
+        if (this.pageLayout?.type == PageLayoutType.docCard) return sf ? '1.6rem' : '1.8rem'
+        return sf ? '1.4rem' : '1.6rem'
     }
     get lineHeight() {
         var sf = this.smallFont;
         if (this.isPubSite) {
             sf = this.ws.publishConfig.smallFont;
         }
-        if (this.pageLayout?.type == PageLayoutType.docCard) return sf ? 26 : 30
-        return sf ? 22 : 26
+        if (this.pageLayout?.type == PageLayoutType.docCard) return sf ? '2.6rem' : '3.0rem'
+        return sf ? '2.2rem' : '2.6rem'
     }
     private _pe: {
         type: ElementType;
