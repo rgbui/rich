@@ -32,6 +32,6 @@ export class FieldDate extends OriginField {
 @view('/field/date')
 export class FieldTextView extends BlockView<FieldDate>{
     renderView()  {
-        return <div className='sy-field-date f-14 flex' style={{ width: '100%' }} onMouseDown={e => this.block.onCellMousedown(e)}>{this.block.dateString}</div>
+        return <div className='sy-field-date  flex  f-14' style={{ width: '100%'}} onMouseDown={e => this.block.onCellMousedown(e)}>{this.block.dateString}</div>
     }
 }

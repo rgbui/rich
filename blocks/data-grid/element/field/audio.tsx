@@ -32,30 +32,20 @@ export class FieldAudio extends OriginField {
 export class FieldVideoView extends BlockView<FieldAudio>{
     renderImages(images: { url: string }[]) {
         var style: CSSProperties = {};
-        // if (this.block.field?.config.imageFormat?.display == 'auto') {
-        //     style.width = '100%';
-        //     style.maxHeight = 300;
-        //     style.objectFit = 'cover';
-        //     style.objectPosition = '50% 50%';
-        // }
-        // else {
         style.width = '100%';
         style.height = 30;
-        // style.objectFit = 'cover';
-        // style.objectPosition = '50% 50%';
-        // }
         return images.map((img, i) => {
             return <div className="sy-field-image-item" key={i}>
                 <audio className="round" controls src={img.url} style={style}  >
                     <source src={img.url} type="audio/ogg" />
                     <source src={img.url} type="audio/mpeg" />
                     <source src={img.url} type="audio/wav" />
-                    <S>您的浏览器不支持 audio 元素。</S>
+                    <S text='您的浏览器不支持audio元素'>您的浏览器不支持 audio 元素。</S>
                 </audio>
             </div>
         })
     }
-    renderView()  {
+    renderView() {
         var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);
         if (!this.block.field?.config?.isMultiple && vs.length > 1) vs = [vs.first()]
         return <div className='sy-field-image'>

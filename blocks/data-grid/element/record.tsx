@@ -33,6 +33,7 @@ export class DataGridItemRecord extends Block {
         coverFieldId: "",
         coverAuto: false,
         showMode: 'default',
+        showField: 'none',
         templateProps: {}
     }
     schema: TableSchema;
@@ -76,7 +77,7 @@ export class DataGridItemRecord extends Block {
     }
     async loadSchema() {
         if (this.schemaId && !this.schema) {
-            this.schema = await TableSchema.loadTableSchema(this.schemaId,this.page.ws);
+            this.schema = await TableSchema.loadTableSchema(this.schemaId, this.page.ws);
         }
     }
     async loadViewFields() {
@@ -105,7 +106,7 @@ export class DataGridItemRecord extends Block {
             }
         });
         if (tableIds.length > 0) {
-            this.relationSchemas = await TableSchema.loadListSchema(tableIds,this.page);
+            this.relationSchemas = await TableSchema.loadListSchema(tableIds, this.page);
         }
     }
     async loadRelationDatas() {
@@ -132,7 +133,7 @@ export class DataGridItemRecord extends Block {
                 var v = vr.ids;
                 var sea = this.relationSchemas.find(g => g.id == key);
                 if (sea) {
-                    var rd = await sea.all({ page: 1, filter: { id: { $in: v } } },this.page);
+                    var rd = await sea.all({ page: 1, filter: { id: { $in: v } } }, this.page.ws);
                     if (rd.ok) {
                         this.relationDatas.set(key, rd.data.list);
                     }

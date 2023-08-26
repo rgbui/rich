@@ -153,8 +153,8 @@ export class FieldTextView extends BlockView<FieldNumber>{
             self.forceUpdate();
         }
         if (this.block.field.type == FieldType.autoIncrement)
-            return <div className='sy-field-number'>{this.block.value}</div>
-        else return <div className='sy-field-number' >
+            return <div className='sy-field-number  f-14'  >{this.block.value}</div>
+        else return <div className='sy-field-number f-14' >
             {this.block.isFocus && <input type='text'
                 placeholder="输入数字"
                 defaultValue={this.block.value}
@@ -168,7 +168,7 @@ export class FieldTextView extends BlockView<FieldNumber>{
                 onCompositionEnd={end}
                 onPaste={paste}
             />}
-            {!this.block.isFocus && <span className="f-14 text">{this.block.formatValue(this.block.value)}</span>}
+            {!this.block.isFocus && <span className="text" >{this.block.formatValue(this.block.value)}</span>}
         </div>
     }
 }

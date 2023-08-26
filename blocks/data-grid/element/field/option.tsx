@@ -15,7 +15,7 @@ export class FieldOption extends OriginField {
     async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
         event.stopPropagation();
         if (this.checkEdit() === false) return;
-        var fc: FieldConfig = this.field.config;
+        var fc: FieldConfig = this.field.config || {};
         var op = await useTableStoreOption({
             roundArea: Rect.fromEle(event.currentTarget as HTMLElement)
         }, this.value,
@@ -35,12 +35,12 @@ export class FieldOption extends OriginField {
 }
 @view('/field/option')
 export class FieldTextView extends BlockView<FieldOption>{
-    renderView()  {
+    renderView() {
         var fc: FieldConfig = this.block.field.config;
         var vs = util.covertToArray(this.block.value);
         var ops = fc?.options ? fc.options.filter(g => vs.includes(g.value)) : undefined;
         if (!Array.isArray(ops)) ops = [];
-        return <div className='sy-field-option flex' onMouseDown={e => this.block.onCellMousedown(e)}  >
+        return <div className='sy-field-option flex  f-14' onMouseDown={e => this.block.onCellMousedown(e)}  >
             {ops.map(op => {
                 return <span key={op.value} className="text-overflow" style={{ backgroundColor: op?.color }}>{op?.text || <i>&nbsp;</i>}</span>
             })}

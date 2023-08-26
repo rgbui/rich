@@ -47,7 +47,7 @@ export class FieldEmailView extends BlockView<FieldEmoji>{
                 <em className={'gap-r-3 ef'} >{this.block.viewField.field.type == FieldType.emoji && this.block.viewField?.field.config?.emoji?.code}</em>
                 {countStr}</span>
         }
-        return <div onMouseDown={e => mousedown(e)}>
+        return <div onMouseDown={e => mousedown(e)}  >
             {sp}
         </div>
     }

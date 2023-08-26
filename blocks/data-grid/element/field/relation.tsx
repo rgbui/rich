@@ -56,8 +56,8 @@ export class FieldRelationView extends BlockView<FieldRelation>{
         return <div className='sy-field-relation-items'>{this.block.relationList?.map(r => {
             var url = getElementUrl(ElementType.SchemaData, rs.id, r.id);
             return <div key={r.id}><a className="item-hover round padding-w-3 padding-h-2 flex" href={url} onClick={e => e.preventDefault()}>
-                <span className="size-24 flex-center flex-inline">
-                    <Icon size={16} icon={getPageIcon({ pageType: PageLayoutType.doc, icon: r[icon.name] })}></Icon>
+                <span className="size-24 remark flex-center flex-inline">
+                    <Icon size={18} icon={getPageIcon({ pageType: PageLayoutType.doc, icon: r[icon.name] })}></Icon>
                 </span>
                 <span style={{ maxWidth: Math.max(this.block.viewField.colWidth - 50, 60) }} className="flex-auto  text-overflow">{r[f?.name]}</span>
             </a></div>
@@ -65,7 +65,7 @@ export class FieldRelationView extends BlockView<FieldRelation>{
         </div>
     }
     renderView() {
-        return <div className='sy-field-relation' onMouseDown={e => this.block.onCellMousedown(e)}>
+        return <div className='sy-field-relation  f-14' onMouseDown={e => this.block.onCellMousedown(e)}>
             {this.renderList()}
         </div>
     }
@@ -116,7 +116,7 @@ export class FieldRollupView extends BlockView<FieldRollup>{
             if (typeof va != 'undefined') str = va.toString()
         }
 
-        return <div className='sy-field-relation' onMouseDown={e => this.block.onCellMousedown(e)}>
+        return <div className='sy-field-relation f-14' onMouseDown={e => this.block.onCellMousedown(e)}>
             {str}
         </div>
     }

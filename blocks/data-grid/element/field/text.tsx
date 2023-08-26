@@ -4,6 +4,7 @@ import { TextArea } from "../../../../src/block/view/appear";
 import { BlockView } from "../../../../src/block/view";
 import { OriginField } from "./origin.field";
 import { lst } from "../../../../i18n/store";
+
 @url('/field/text')
 export class FieldText extends OriginField {
 
@@ -11,6 +12,6 @@ export class FieldText extends OriginField {
 @view('/field/text')
 export class FieldTextView extends BlockView<FieldText>{
     renderView()  {
-        return <div className='sy-field-text f-14'><TextArea plain block={this.block} placeholder={lst( "输入文本")} prop='value' ></TextArea></div>
+        return <div className='sy-field-text  f-14' ><TextArea plain block={this.block} placeholder={lst( "输入文本")} prop='value' ></TextArea></div>
     }
 }

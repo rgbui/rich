@@ -12,7 +12,7 @@ export class FieldFormula extends OriginField {
 @view('/field/formula')
 export class FieldFormulaView extends BlockView<FieldFormula>{
     renderView()  {
-        return <div className="sy-field-formula">
+        return <div className="sy-field-formula f-14"  >
             {cacFormulaValue(this.block.dataGrid.schema, this.block.field, this.block.item.dataRow)}
         </div>
     }

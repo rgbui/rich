@@ -8,7 +8,6 @@ import { util } from "../../../../util/util";
 import { OriginField } from "./origin.field";
 import { DownloadSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
-import { ToolTip } from "../../../../component/view/tooltip";
 import { Tip } from "../../../../component/view/tooltip/tip";
 
 @url('/field/file')
