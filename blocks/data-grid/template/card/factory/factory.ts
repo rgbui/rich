@@ -1,3 +1,4 @@
+import { TableSchema } from "../../../schema/meta";
 import { CardPropsType } from "../declare";
 import { CardView } from "../view";
 export class CardFactory {
@@ -18,6 +19,20 @@ export class CardFactory {
     }
     static getCardView(url: string) {
         return this.CardModels.get(url)?.view;
+    }
+    static getCardModels(schema?: TableSchema) {
+        var cms = Array.from(CardFactory.CardModels.values());
+        if (schema) {
+            cms = cms.filter(c => {
+                var pros = c.props.findAll(g => g.required ? true : false);
+                return pros.every(p => p.types.some(ty => schema.fields.some(f => f.type == ty)));
+            })
+        }
+        return cms.map(c => {
+            return {
+                ...c
+            }
+        })
     }
 }
 

@@ -81,7 +81,7 @@ export class DataGridViewLife {
                 var v = vr.ids;
                 var sea = this.relationSchemas.find(g => g.id == key);
                 if (sea) {
-                    var rd = await sea.all({ page: 1, filter: { id: { $in: v } } },this.page);
+                    var rd = await sea.all({ page: 1, filter: { id: { $in: v } } },this.page.ws);
                     if (rd.ok) {
                         this.relationDatas.set(key, rd.data.list);
                     }
@@ -97,7 +97,7 @@ export class DataGridViewLife {
                 size: this.size,
                 filter: this.getSearchFilter(),
                 sorts: this.getSearchSorts()
-            },this.page);
+            },this.page.ws);
             if (r.data) {
                 this.data = Array.isArray(r.data.list) ? r.data.list : [];
                 this.total = r.data?.total || 0;

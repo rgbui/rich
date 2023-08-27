@@ -14,7 +14,6 @@ import { CardView } from "../view";
 import { BlockUrlConstant } from "../../../../../src/block/constant";
 import { buildPageData } from "../../../../../src/page/common/create";
 import { Divider } from "../../../../../component/view/grid";
-import { lst } from "../../../../../i18n/store";
 
 /**
  * 
@@ -166,13 +165,13 @@ export class CardPin extends CardView {
 CardModel({
     url: '/article/content',
     title: ('文章'),
-    remark:( '适用于文章列表'),
+    remark: ('适用于文章列表'),
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridList],
     props: [
         {
             name: 'pic',
-            text:( '封面图'),
+            text: ('封面图'),
             types: [FieldType.thumb, FieldType.image, FieldType.cover, FieldType.video],
             required: true
         },
@@ -183,14 +182,14 @@ CardModel({
             required: true
         },
         { name: 'remark', text: ('描述'), types: [FieldType.plain, FieldType.text] },
-        { name: 'like', text:( '喜欢'), types: [FieldType.like] },
+        { name: 'like', text: ('喜欢'), types: [FieldType.like] },
         { name: 'author', text: ('作者'), types: [FieldType.creater] },
-        { name: 'types', text:( '分类'), types: [FieldType.option, FieldType.options] },
-        { name: 'date', text:( '日期'), types: [FieldType.createDate, FieldType.date] },
+        { name: 'types', text: ('分类'), types: [FieldType.option, FieldType.options] },
+        { name: 'date', text: ('日期'), types: [FieldType.createDate, FieldType.date] },
         { name: 'comment', text: ('评论'), types: [FieldType.comment] },
     ],
     views: [
-        { url: BlockUrlConstant.DataGridTable, text:( '文章'), },
+        { url: BlockUrlConstant.DataGridTable, text: ('文章'), },
         { autoCreate: true, url: BlockUrlConstant.DataGridList, text: ('列表'), },
         { url: BlockUrlConstant.RecordPageView, text: ('文章详情'), }
     ],

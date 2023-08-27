@@ -12,6 +12,7 @@ import { CollectTableSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import { isMobileOnly } from "react-device-detect";
 import { S } from "../../../../i18n/view";
+import { Spin } from "../../../../component/view/spin";
 
 @url('/data-grid/gallery')
 export class TableStoreGallery extends DataGridView {
@@ -22,10 +23,16 @@ export class TableStoreGallery extends DataGridView {
         auto: false,
         showCover: false,
         coverFieldId: "",
+        showField: 'none',
         coverAuto: false,
         showMode: 'default',
         templateProps: {}
     };
+    getCardUrl() {
+        if (this.cardConfig?.showMode == 'define') {
+            return this.cardConfig.templateProps.url;
+        }
+    }
     get isCardAuto() {
         return this.cardConfig?.auto || this.cardConfig.showMode == 'define'
     }
@@ -84,11 +91,12 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery>{
     }
     renderCreateTable() {
         return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
+            {this.block.willCreateSchema && <Spin></Spin>}
             <span className="size-24 flex-center remark"><Icon size={16} icon={CollectTableSvg}></Icon></span>
             <span className="remark"><S>创建数据表格</S></span>
         </div>
     }
-    renderView()  {
+    renderView() {
         return <div className='sy-data-grid-gallery'
             onMouseEnter={e => this.block.onOver(true)}
             onMouseLeave={e => this.block.onOver(false)}>

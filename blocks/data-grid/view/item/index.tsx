@@ -19,10 +19,10 @@ import { channel } from "../../../../net/channel";
 import { FieldType } from "../../schema/type";
 import lodash from "lodash";
 import { OriginField } from "../../element/field/origin.field";
-import { DotsSvg, EditSvg } from "../../../../component/svgs";
+import { DotsSvg, Edit1Svg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import "./style.less";
-import { ls, lst } from "../../../../i18n/store";
+import { lst } from "../../../../i18n/store";
 
 @url('/data-grid/item')
 export class TableStoreItem extends Block {
@@ -145,7 +145,7 @@ export class TableStoreItem extends Block {
         var items: MenuItem<BlockDirective | string>[] = [];
         items.push({
             name: 'open',
-            icon: EditSvg,
+            icon: Edit1Svg,
             text: lst('编辑'),
         })
         items.push({ type: MenuItemType.divide })

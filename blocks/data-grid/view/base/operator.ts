@@ -10,7 +10,7 @@ import { Field } from "../../schema/field";
 import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
 import { DataGridView } from ".";
-import { ElementType, getElementUrl} from "../../../../net/element.type";
+import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { CopyText } from "../../../../component/copy";
 import { ShyAlert } from "../../../../component/lib/alert";
 import lodash from "lodash";
@@ -21,6 +21,8 @@ import { SnapshootDataGridViewPos } from "../../../../src/history/snapshoot";
 import { useTableExport } from "../../../../extensions/data-grid/export";
 import { Block } from "../../../../src/block";
 import { lst } from "../../../../i18n/store";
+import { IconValueType } from "../../../../component/view/icon";
+import { CardFactory } from "../../template/card/factory/factory";
 
 export class DataGridViewOperator {
 
@@ -55,7 +57,7 @@ export class DataGridViewOperator {
     }
     async onCloneViewField(this: DataGridView, viewField: ViewField) {
         var result = {
-            text: viewField.field.text +lst('副本') ,
+            text: viewField.field.text + lst('副本'),
             type: viewField.field.type,
             config: lodash.cloneDeep(viewField.field.config)
         };
@@ -250,7 +252,39 @@ export class DataGridViewOperator {
             await this.dataGridChangeView(url);
         })
     }
-    async dataGridChangeView(this: DataGridView, url: string) {
+    async onDataGridChangeViewByTemplate(this: DataGridView, url: string) {
+        await this.page.onAction('onDataGridChangeView', async () => {
+
+            var cm = CardFactory.CardModels.get(url);
+            var viewUrl = cm.forUrls[0];
+            var ps = cm.props.toArray(pro => {
+                var f = this.schema.fields.find(x => x.text == pro.text && x.type == pro.types[0]);
+                if (f) {
+                    return {
+                        name: pro.name,
+                        visible: true,
+                        bindFieldId: f.id
+                    }
+                }
+            })
+            var viewProps = ({
+                openRecordSource: 'page',
+                cardConfig: {
+                    auto: false,
+                    showCover: false,
+                    coverFieldId: "",
+                    coverAuto: false,
+                    showMode: 'define',
+                    templateProps: {
+                        url: url,
+                        props: ps
+                    }
+                }
+            });
+            await this.dataGridChangeView(viewUrl, viewProps);
+        })
+    }
+    async dataGridChangeView(this: DataGridView, url: string, viewProps?: Record<string, any>) {
         var view = this.schema.views.find(g => g.id == this.syncBlockId);
         var oldViewUrl = view.url;
         var actions: any[] = [{ name: 'changeSchemaView', id: this.syncBlockId, data: { url } }];
@@ -267,6 +301,9 @@ export class DataGridViewOperator {
             pa,
             at
         );
+        if (viewProps && Object.keys(viewProps).length > 0) {
+            await newBlock.updateProps(viewProps);
+        }
         this.page.addBlockUpdate(newBlock.parent);
         this.page.addUpdateEvent(async () => {
             newBlock.url = url;
@@ -285,14 +322,14 @@ export class DataGridViewOperator {
      * @param viewId 
      * @param schemaId 
      */
-    async onDataGridTurnView(this: DataGridView, viewId: string, schemaId?: string) {
+    async onDataGridTurnView(this: DataGridView, viewId: string, viewProps?: Record<string, any>) {
         if (this.syncBlockId != viewId) {
             await this.page.onAction(ActionDirective.onDataGridTurnView, async () => {
-                await this.dataGridTrunView(viewId, schemaId);
+                await this.dataGridTrunView(viewId, viewProps);
             })
         }
     }
-    async dataGridTrunView(this: DataGridView, viewId: string, schemaId?: string) {
+    async dataGridTrunView(this: DataGridView, viewId: string, viewProps?: Record<string, any>) {
         var oldViewId = this.syncBlockId;
         if (!this.schema) {
             await this.loadSchema();
@@ -311,6 +348,9 @@ export class DataGridViewOperator {
             pa,
             at
         );
+        if (viewProps && Object.keys(viewProps).length > 0) {
+            await newBlock.updateProps(viewProps);
+        }
         this.page.addBlockUpdate(newBlock.parent);
         this.page.addUpdateEvent(async () => {
             newBlock.id = id;
@@ -391,10 +431,19 @@ export class DataGridViewOperator {
             data: { from, to }
         }]);
     }
-    async onSchemaViewCreate(this: DataGridView, text: string, url: string) {
+    async onSchemaViewCreate(this: DataGridView, text: string, url: string, viewProps?: Record<string, any>) {
         var actions: any[] = [{ name: 'createSchemaView', text: text, url: url }];
         if (url == '/data-grid/board' && !this.schema.fields.some(f => f.type == FieldType.option || f.type == FieldType.options)) {
-            actions.push({ name: 'addField', field: { text: lst('状态'), type: FieldType.option } })
+            actions.push({
+                name: 'addField',
+                field: {
+                    text: lst('状态'),
+                    type: FieldType.option,
+                    config: {
+                        options: []
+                    }
+                }
+            })
         }
         var result = await this.schema.onSchemaOperate(actions)
         var oneAction = result.data.actions.first();
@@ -405,19 +454,51 @@ export class DataGridViewOperator {
                 id: action.id,
                 name: action.name,
                 text: lst('状态'),
-                type: FieldType.option
+                type: FieldType.option,
+                config: {
+                    options: []
+                }
             });
             this.schema.fields.push(f);
         }
-        await this.onDataGridTurnView(oneAction.id);
+        await this.onDataGridTurnView(oneAction.id, viewProps);
     }
-    async onSchemaViewRename(this: DataGridView, viewId: string, text: string) {
+    async onSchemaViewCreateByTemplate(this: DataGridView, text: string, url: string) {
+        var cm = CardFactory.CardModels.get(url);
+        var viewUrl = cm.forUrls[0];
+        var ps = cm.props.toArray(pro => {
+            var f = this.schema.fields.find(x => x.text == pro.text && x.type == pro.types[0]);
+            if (f) {
+                return {
+                    name: pro.name,
+                    visible: true,
+                    bindFieldId: f.id
+                }
+            }
+        })
+        var viewProps = ({
+            openRecordSource: 'page',
+            cardConfig: {
+                auto: false,
+                showCover: false,
+                coverFieldId: "",
+                coverAuto: false,
+                showMode: 'define',
+                templateProps: {
+                    url: url,
+                    props: ps
+                }
+            }
+        });
+        await this.onSchemaViewCreate(text, viewUrl, viewProps);
+    }
+    async onSchemaViewUpdate(this: DataGridView, viewId: string, data: { text?: string, icon?: IconValueType }) {
         var self = this;
         self.schema.onSchemaOperate([
             {
                 name: 'updateSchemaView',
                 id: viewId,
-                data: { text: text }
+                data: data
             }
         ]);
         self.forceUpdate()
@@ -461,7 +542,7 @@ export class DataGridViewOperator {
         }
         this.page.onAction(ActionDirective.onDataGridShowRowNum, async () => {
             this.page.addBlockChange(this);
-            if (visible == true) await this.arrayPush({ prop: 'fields', data: new ViewField({ type: 'rowNum', text:lst( '序号') }, this.schema), at: 0 })
+            if (visible == true) await this.arrayPush({ prop: 'fields', data: new ViewField({ type: 'rowNum', text: lst('序号') }, this.schema), at: 0 })
             else await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.type == 'rowNum' });
             this.updateProps({ showRowNum: visible });
             await this.createItem();
@@ -475,7 +556,7 @@ export class DataGridViewOperator {
         this.page.onAction(ActionDirective.onDataGridShowCheck, async () => {
             this.page.addBlockChange(this);
             this.updateProps({ checkRow: value });
-            if (value == 'checkbox') await this.arrayPush({ prop: 'fields', at: 0, data: new ViewField({ type: 'check', text:lst('选择') }, this.schema) })
+            if (value == 'checkbox') await this.arrayPush({ prop: 'fields', at: 0, data: new ViewField({ type: 'check', text: lst('选择') }, this.schema) })
             else await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.type == 'check' })
             await this.createItem();
             this.forceUpdate();
@@ -543,11 +624,23 @@ export class DataGridViewOperator {
         CopyText(url);
         ShyAlert(lst('视图链接已复制'))
     }
-    async onExtendControlBlock(this: DataGridView, url: BlockUrlConstant, props: Record<string, any>, visible: boolean) {
+    hasPagerBlock(this: DataGridView) {
+        return this.page.exists(c => c.url == BlockUrlConstant.DataGridPage && c.refBlockId == this.id)
+    }
+    async onExtendControlBlock(this: DataGridView, url: BlockUrlConstant, props: Record<string, any>, visible?: boolean) {
         await this.page.onAction('onExtendControlBlock', async () => {
             if (url == BlockUrlConstant.DataGridPage) {
-                var newBlock = await this.page.createBlock(url, { refBlockId: this.id, ...props }, this.parent, this.at + 1, this.parentKey);
-                this.registerReferenceBlocker(newBlock);
+                if (typeof visible != 'boolean') visible = this.hasPagerBlock() ? false : true;
+                if (visible) {
+                    var newBlock = await this.page.createBlock(url, { refBlockId: this.id, ...props }, this.parent, this.at + 1, this.parentKey);
+                    this.registerReferenceBlocker(newBlock);
+                }
+                else {
+                    var r = this.page.find(g => g.url == BlockUrlConstant.DataGridPage && g.refBlockId == this.id);
+                    if (r) {
+                        await r.delete()
+                    }
+                }
             }
             else if (url == BlockUrlConstant.Button) {
                 var pre = this.prev;

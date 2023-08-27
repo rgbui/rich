@@ -187,10 +187,10 @@ export class TableStoreView extends BlockView<TableStore>{
                         flexShrink: 1
                     }
                 }
-                return <div className="sy-dg-table-head-th f-14 text-1" onMouseDown={e => this.onDragMouseField(e, f)}
+                return <div className="sy-dg-table-head-th  remark f-14" onMouseDown={e => this.onDragMouseField(e, f)}
                     style={style}
                     key={f?.field?.id || i}>
-                    <div className={'sy-dg-table-head-th-icon flex-fix size-24 flex-center text-1'} >
+                    <div className={'sy-dg-table-head-th-icon flex-fix size-16 flex-center gap-r-5 '} >
                         <Icon icon={icon} size={16}></Icon>
                     </div>
                     <label>{f.field?.text || f.text}</label>
@@ -215,7 +215,7 @@ export class TableStoreView extends BlockView<TableStore>{
                     className="sy-dg-table-add">
                     <ToolTip overlay={lst('添加新行')}><span className="flex flex-inline cursor item-hover round padding-w-5">
                         <span className="size-24 round flex-center "><Icon size={18} icon={PlusSvg}></Icon></span>
-                        <span className="f-12"><S>新增</S></span>
+                        <span className="f-14"><S>新增</S></span>
                     </span></ToolTip>
                 </div>}
             </div></SpinBox>
@@ -224,13 +224,13 @@ export class TableStoreView extends BlockView<TableStore>{
     }
     renderCreateTable() {
         return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
+            {this.block.willCreateSchema && <Spin></Spin>}
             <span className="size-24 flex-center remark"><Icon size={16} icon={CollectTableSvg}></Icon></span>
             <span className="remark"><S>创建数据表格</S></span>
         </div>
     }
     renderView() {
         var self = this;
-
         return <div className={"sy-dg-table" +
             (this.block.noBorder ? " sy-dg-table-no-border" : "") +
             (this.block.noHead ? " sy-dg-table-no-header" : "")

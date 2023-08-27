@@ -4,13 +4,14 @@ import { Icon } from "../../../component/view/icon";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { Block } from "../../../src/block";
-import { BlockDisplay } from "../../../src/block/enum";
-import { url, view } from "../../../src/block/factory/observable";
+import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
+import { prop, url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
 import { Rect } from "../../../src/common/vector/point";
 import { DataGridView } from "../view/base";
 import { lst } from "../../../i18n/store";
 import { S, Sp } from "../../../i18n/view";
+import lodash from "lodash";
 
 
 @url('/data-grid/paging')
@@ -30,21 +31,68 @@ export class Paging extends Block {
     async onSyncReferenceBlock() {
         this.view.forceUpdate();
     }
+    @prop()
+    align: 'left' | 'right' | 'center' = 'left';
+    async onGetContextMenus() {
+        var rs = await super.onGetContextMenus();
+        var ta = rs.find(g => g.name == 'text-center');
+        if (ta) {
+            ta.text = lst('对齐');
+            if (ta) {
+                ta.type = undefined;
+                ta.name == undefined;
+                ta.icon = { name: 'bytedance-icon', code: 'align-text-both' }
+                ta.childs = [
+                    {
+                        name: 'align',
+                        icon: { name: 'bytedance-icon', code: 'align-text-left' },
+                        text: lst('居左'),
+                        value: 'left',
+                        checkLabel: this.align == 'left'
+                    },
+                    {
+                        name: 'align',
+                        icon: { name: 'bytedance-icon', code: 'align-text-center' },
+                        text: lst('居中'), value: 'center', checkLabel: this.align == 'center'
+                    },
+                    {
+                        name: 'align',
+                        icon: {
+                            name: 'bytedance-icon',
+                            code: 'align-text-right'
+                        },
+                        text: lst('居右'),
+                        value: 'right',
+                        checkLabel: this.align == 'right'
+                    }
+                ]
+            }
+        }
+        lodash.remove(rs, g => g.name == 'color');
+        return rs;
+    }
+    async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent): Promise<void> {
+        if (item.name == 'align') {
+            await this.onUpdateProps({ align: item.value }, { range: BlockRenderRange.self })
+            return;
+        }
+        return await super.onClickContextMenu(item, event);
+    }
 }
 @view('/data-grid/paging')
 export class PagingView extends BlockView<Paging>{
     async onDropSize(event: React.MouseEvent) {
         var items: MenuItem[] = [
             { text: lst('选择每页的条数'), type: MenuItemType.text },
-            { text: '20'+lst('条/页'), value: 20 },
-            { text: '50'+lst('条/页'), value: 50 },
-            { text: '80'+lst('条/页'), value: 80 },
-            { text: '100'+lst('条/页'), value: 100 },
-            { text: '150'+lst('条/页'), value: 150 },
-            { text: '200'+lst('条/页'), value: 200 },
+            { text: '20' + lst('条/页'), value: 20 },
+            { text: '50' + lst('条/页'), value: 50 },
+            { text: '80' + lst('条/页'), value: 80 },
+            { text: '100' + lst('条/页'), value: 100 },
+            { text: '150' + lst('条/页'), value: 150 },
+            { text: '200' + lst('条/页'), value: 200 },
             { type: MenuItemType.divide },
-            { text: '5'+lst('条/页'), value: 5 },
-            { text: '10'+lst('条/页'), value: 10 },
+            { text: '5' + lst('条/页'), value: 5 },
+            { text: '10' + lst('条/页'), value: 10 },
         ];
         var r = await useSelectMenuItem({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, items);
         if (r) {
@@ -79,14 +127,17 @@ export class PagingView extends BlockView<Paging>{
         }
         return []
     }
-
-    renderView()  {
+    renderView() {
         var totalPage = -1;
         if (this.block.refBlock) totalPage = Math.ceil(this.block.refBlock.total / this.block.refBlock.size);
+        var classList: string[] = ['min-h-24 f-14'];
+        if (this.block.align == 'left') classList.push('flex')
+        else if (this.block.align == 'right') classList.push('flex-end')
+        else classList.push('flex-center')
         return <div style={this.block.visibleStyle}>
-            <div style={this.block.contentStyle} className='flex min-h-24 f-14'>
+            <div style={this.block.contentStyle} className={classList.join(" ")}>
                 {this.block.refBlock && <>
-                    <span className="text gap-r-10"><Sp text={'共{total}条'} data={{total:this.block.refBlock.total}}>共{this.block.refBlock.total}条</Sp></span>
+                    <span className="text gap-r-10"><Sp text={'共{total}条'} data={{ total: this.block.refBlock.total }}>共{this.block.refBlock.total}条</Sp></span>
                     <span onMouseDown={e => this.block.onChangeIndex(this.block.refBlock.pageIndex - 1)} className={"border flex-center size-24 round" + (this.block.refBlock.pageIndex == 1 ? " remark" : " cursor")}><Icon size={18} icon={ChevronLeftSvg}></Icon></span>
                     {this.getPages().map((pa, index) => {
                         return <span key={index} className={pa.classList.join(" ")} onMouseDown={e => this.block.onChangeIndex(pa.index)}>{pa.text}</span>

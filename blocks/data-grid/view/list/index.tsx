@@ -31,10 +31,16 @@ export class TableStoreList extends DataGridView {
         coverFieldId: "",
         coverAuto: false,
         showMode: 'default',
+        showField: 'none',
         templateProps: {}
     };
     get isCardAuto() {
         return this.cardConfig?.auto || this.cardConfig.showMode == 'define'
+    }
+    getCardUrl() {
+        if (this.cardConfig?.showMode == 'define') {
+            return this.cardConfig.templateProps.url;
+        }
     }
 }
 @view('/data-grid/list')
@@ -45,7 +51,7 @@ export class TableStoreListView extends BlockView<TableStoreList>{
             <span className="remark"><S>创建数据表格</S></span>
         </div>
     }
-    renderView()  {
+    renderView() {
         return <div className='sy-data-grid-list'
             onMouseEnter={e => this.block.onOver(true)}
             onMouseLeave={e => this.block.onOver(false)}

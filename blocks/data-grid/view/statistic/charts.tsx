@@ -5,7 +5,7 @@ import { BlockView } from "../../../../src/block/view";
 import { TableSchema } from "../../schema/meta";
 import { FieldType } from "../../schema/type";
 import { DataGridTurns } from "../../turn";
-// import { loadEchart } from "./load";
+
 
 @url('/data-grid/charts')
 export class DataGridChart extends Block {
@@ -42,7 +42,7 @@ export class DataGridChart extends Block {
                     if (f) return f.name
                 }),
                 aggregate: this.aggregate
-            }, this.page)
+            }, this.page.ws)
             if (r.ok) {
                 this.data = r.data.list;
                 console.log(r.data, 'rd');

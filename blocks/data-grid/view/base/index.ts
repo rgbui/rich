@@ -157,7 +157,7 @@ export class DataGridView extends Block {
     async loadSyncBlock(this: DataGridView): Promise<void> {
         if (this.syncBlockId) {
             if (this.url == BlockUrlConstant.FormView) return await super.loadSyncBlock();
-            var r = await channel.get('/view/snap/query', {ws:this.page.ws, elementUrl: this.elementUrl });
+            var r = await channel.get('/view/snap/query', { ws: this.page.ws, elementUrl: this.elementUrl });
             if (r.ok) {
                 var data;
                 try {
@@ -246,30 +246,11 @@ export class DataGridView extends Block {
     async createdDidMounted(): Promise<void> {
         if (this.createSource == 'InputBlockSelector' || this.createSource == 'pageTurnLayout') {
             if (!this.schemaId) {
-                var dg = await useDataGridSelectView({ roundArea: Rect.fromEle(this.el) }, { selectView: this.createSource == 'InputBlockSelector' ? false : true });
-                if (dg) {
-                    if (dg.schemaId) {
-                        await this.page.onAction('SelectTableSchema', async () => {
-                            this.updateProps({
-                                schemaId: dg.schemaId,
-                                syncBlockId: dg.syncBlockId
-                            })
-                        })
-                    }
-                    else {
-                        this.schema = await TableSchema.onCreate({ text: dg.text, url: this.url });
-                        await this.page.onAction(ActionDirective.onCreateTableSchema, async () => {
-                            this.updateProps({
-                                schemaId: this.schema.id,
-                                syncBlockId: this.schema.views.first().id
-                            })
-                        });
-                    }
-                }
+                await this.onCreateTableSchema();
             }
         }
     }
-    async didMounted() {
+    async didMounted(force: boolean = true) {
         await this.loadSchema();
         if (this.schema) {
             await this.loadViewFields();
@@ -279,32 +260,69 @@ export class DataGridView extends Block {
             await this.loadDataInteraction();
             await this.createItem();
             await this.onNotifyReferenceBlocks();
-            if (this.view) this.view.forceUpdate();
+            if (this.view && force) this.view.forceUpdate();
         }
     }
     async onAddCreateTableView() {
+        var r = Rect.fromEle(this.el);
+        var newRect = new Rect(r.left, r.top - (this.noTitle ? 40 : 0), r.width, 40);
         var dg = await useCreateDataGrid(
-            { roundArea: Rect.fromEle(this.el) },
-            { selectView: true }
+            { roundArea: newRect },
+            { selectView: true, schema: this.schema }
         );
         if (dg) {
-            await this.onSchemaViewCreate(dg.text, dg.url);
+            if (dg.source == 'dataView')
+                await this.onSchemaViewCreateByTemplate(dg.text, dg.url)
+            else
+                await this.onSchemaViewCreate(dg.text, dg.url);
         }
     }
+    willCreateSchema: boolean = false;
     async onCreateTableSchema() {
         if (!this.schemaId) {
-            var dg = await useDataGridSelectView({ roundArea: Rect.fromEle(this.el) });
+            var dg = await useDataGridSelectView({ roundArea: Rect.fromEle(this.el) }, { selectView: this.createSource == 'InputBlockSelector' ? false : true });
             if (dg) {
-                await this.page.onAction(ActionDirective.onCreateTableSchema, async () => {
-                    if (dg.schemaId) this.schema = await TableSchema.loadTableSchema(dg.schemaId,this.page.ws)
-                    else this.schema = await TableSchema.onCreate({ text: dg.text, url: this.url });
-                    this.updateProps({
-                        schemaId: this.schema.id,
-                        syncBlockId: dg.syncBlockId || this.schema.views.first().id
+                this.willCreateSchema = true;
+                if (this.view) this.view.forceUpdate();
+                if (dg.schemaId) {
+                    await this.page.onAction('SelectTableSchema', async () => {
+                        this.updateProps({
+                            schemaId: dg.schemaId,
+                            syncBlockId: dg.syncBlockId
+                        })
                     })
-                });
+                }
+                else {
+                    this.schema = await TableSchema.onCreate({ text: dg.text, url: this.url });
+                    await this.page.onAction(ActionDirective.onCreateTableSchema, async () => {
+                        this.updateProps({
+                            schemaId: this.schema.id,
+                            syncBlockId: this.schema.views.first().id
+                        })
+                    });
+                }
                 await this.didMounted();
+                this.willCreateSchema = false;
+                if (this.view) this.view.forceUpdate();
             }
+
+
+
+
+            // var dg = await useDataGridSelectView({ roundArea: Rect.fromEle(this.el) });
+            // if (dg) {
+            //     this.willCreateSchema = true;
+            //     this.forceUpdate();
+            //     await this.page.onAction(ActionDirective.onCreateTableSchema, async () => {
+            //         if (dg.schemaId) this.schema = await TableSchema.loadTableSchema(dg.schemaId, this.page.ws)
+            //         else this.schema = await TableSchema.onCreate({ text: dg.text, url: this.url });
+            //         this.updateProps({
+            //             schemaId: this.schema.id,
+            //             syncBlockId: dg.syncBlockId || this.schema.views.first().id
+            //         })
+            //     });
+            //     await this.didMounted();
+            // }
         }
     }
     dataGridTool: DataGridTool;
@@ -326,6 +344,9 @@ export class DataGridView extends Block {
     }
     get elementUrl() {
         return getElementUrl(ElementType.SchemaView, this.schemaId, this.syncBlockId);
+    }
+    getCardUrl() {
+        return undefined;
     }
     isCanLocker() {
         if (this.schema?.locker?.lock == true) return true;
@@ -352,6 +373,9 @@ export class DataGridView extends Block {
     onSyncAddRow = lodash.debounce(async (data, id?: string, arrow: 'before' | 'after' = 'after', dialogPage: Page = null) => {
         await this.onAddRow(data, id, arrow, dialogPage)
     }, 1000)
+
+
+    
 }
 
 export interface DataGridView extends DataGridViewLife { }

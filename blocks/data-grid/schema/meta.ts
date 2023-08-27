@@ -184,6 +184,9 @@ export class TableSchema {
     rowAdd(args: { data: Record<string, any>, pos?: { id: string, pos: 'before' | 'after' } }) {
         return channel.put('/datastore/add', Object.assign({ schemaId: this.id }, args));
     }
+    rowUpdateAll(args:{data:Record<string,any>,filter:Record<string,any>},ws: LinkWs){
+        return channel.patch('/datastore/row/update',{schemaId:this.id,...args,ws})
+    }
     rowRank(args: { id: string, pos: { id: string, pos: 'before' | 'after' } }) {
         return channel.put('/datastore/rank', Object.assign({ schemaId: this.id }, args));
     }
@@ -217,17 +220,18 @@ export class TableSchema {
         page: number,
         size?: number,
         filter?: Record<string, any>,
+        directFilter?: Record<string, any>,
         sorts?: Record<string, -1 | 1>
-    }, page: Page) {
-        return channel.get('/datastore/query/list', Object.assign({ schemaId: this.id, ws: page.ws }, options));
+    },ws: LinkWs) {
+        return channel.get('/datastore/query/list', Object.assign({ schemaId: this.id, ws: ws }, options));
     }
     all(options: {
         page: number,
         size?: number,
         filter?: Record<string, any>,
         sorts?: Record<string, -1 | 1>
-    }, page: Page) {
-        return channel.get('/datastore/query/all', Object.assign({ schemaId: this.id, ws: page.ws }, options));
+    }, ws: LinkWs) {
+        return channel.get('/datastore/query/all', Object.assign({ schemaId: this.id, ws: ws }, options));
     }
     group(
         options: {
@@ -235,8 +239,8 @@ export class TableSchema {
             size?: number,
             sorts?: Record<string, 1 | -1>,
             group: string
-        }, page: Page) {
-        return channel.get('/datastore/group', Object.assign({ schemaId: this.id, ws: page.ws }, options));
+        }, ws: LinkWs) {
+        return channel.get('/datastore/group', Object.assign({ schemaId: this.id, ws: ws }, options));
     }
     statistics(options: {
         page?: number,
@@ -246,11 +250,11 @@ export class TableSchema {
         sorts?: Record<string, 1 | -1>,
         groups: string[],
         aggregate?: Record<string, any>
-    }, page: Page) {
-        return channel.get('/datastore/statistics', Object.assign({ schemaId: this.id, ws: page.ws }, options));
+    }, ws: LinkWs) {
+        return channel.get('/datastore/statistics', Object.assign({ schemaId: this.id, ws: ws }, options));
     }
-    statisticValue(options: { filter?: Record<string, any>, indicator: string; }, page: Page) {
-        return channel.get('/datastore/statistics/value', Object.assign({ schemaId: this.id, ws: page.ws }, options));
+    statisticValue(options: { filter?: Record<string, any>, indicator: string; }, ws: LinkWs) {
+        return channel.get('/datastore/statistics/value', Object.assign({ schemaId: this.id, ws:ws }, options));
     }
     fieldAdd(field: { text: string, type: FieldType, config?: Record<string, any> }) {
         return this.onSchemaOperate([{ name: 'addField', field }])

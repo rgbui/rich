@@ -180,6 +180,7 @@ export interface CardConfig {
     showCover: boolean,
     coverFieldId: string,
     coverAuto: boolean,
+    showField: 'none' | 'nowrap' | 'wrap',
     showMode: 'default' | 'define',
     templateProps: {
         url?: string,

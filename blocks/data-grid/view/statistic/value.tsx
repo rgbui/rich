@@ -32,7 +32,7 @@ export class TableStatisticValue extends Block {
             var r = await this.schema.statisticValue({
                 filter: this.filter,
                 indicator: this.indicator
-            }, this.page);
+            }, this.page.ws);
             if (r.ok) {
                 this.statisticValue = r.data.value;
             }

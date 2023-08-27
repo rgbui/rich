@@ -16,7 +16,8 @@ import {
     UnlockSvg,
     PlusSvg,
     DatasourceSvg,
-    DocEditSvg
+    DocEditSvg,
+    CollectTableSvg
 } from "../../../../component/svgs";
 
 import { useSelectMenuItem } from "../../../../component/view/menu";
@@ -32,6 +33,7 @@ import { TableSchema } from "../../schema/meta";
 import { useTabelSchemaFormDrop } from "../../../../extensions/data-grid/record.template/view";
 import { BlockUrlConstant } from "../../../../src/block/constant";
 import { lst } from "../../../../i18n/store";
+import lodash from "lodash";
 
 export class DataGridViewConfig {
     async onOpenViewSettings(this: DataGridView, rect: Rect) {
@@ -43,8 +45,9 @@ export class DataGridViewConfig {
             items.push(...[
                 {
                     name: 'name',
-                    type: MenuItemType.input,
+                    type: MenuItemType.inputTitleAndIcon,
                     value: self.schemaView?.text,
+                    icon: self.schemaView.icon || getSchemaViewIcon(self.schemaView?.url),
                     text: lst('编辑视图名'),
                 },
                 { type: MenuItemType.divide },
@@ -63,7 +66,7 @@ export class DataGridViewConfig {
                                         text: v.text,
                                         type: MenuItemType.drag,
                                         value: v.id,
-                                        icon: getSchemaViewIcon(v.url),
+                                        icon: v.icon || getSchemaViewIcon(v.url),
                                         checkLabel: v.id == self.schemaView?.id,
                                         btns: [
                                             { icon: DotsSvg, name: 'property' }
@@ -108,7 +111,8 @@ export class DataGridViewConfig {
                             rs.push(...[
                                 {
                                     name: 'name',
-                                    type: MenuItemType.input,
+                                    type: MenuItemType.inputTitleAndIcon,
+                                    icon: item.icon || getSchemaViewIcon(item.url),
                                     value: item.text,
                                     text: lst('编辑视图名'),
                                 },
@@ -132,6 +136,13 @@ export class DataGridViewConfig {
                                 { name: 'updateSchemaView', id: item.value, data: { text: rn.value } }
                             ]);
                             item.text = rn.value;
+                            mp.updateItems(items);
+                        }
+                        if (!lodash.isEqual(rn.icon, item.icon)) {
+                            self.schema.onSchemaOperate([
+                                { name: 'updateSchemaView', id: item.value, data: { icon: rn.icon } }
+                            ]);
+                            item.icon = rn.icon;
                             mp.updateItems(items);
                         }
                     }
@@ -174,7 +185,10 @@ export class DataGridViewConfig {
             }
         }
         if (rname.value != self.schemaView.text && rname.value) {
-            self.onSchemaViewRename(view?.id, rname.value);
+            self.onSchemaViewUpdate(view?.id, { text: rname.value });
+        }
+        if (!lodash.isEqual(rname.icon, self.schemaView.icon)) {
+            self.onSchemaViewUpdate(view?.id, { icon: rname.icon });
         }
         self.onOver(self.getVisibleContentBound().contain(Point.from(self.page.kit.operator.moveEvent)))
         self.dataGridTool.isOpenTool = false;

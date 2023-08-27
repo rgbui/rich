@@ -10,6 +10,7 @@ import { DataGridTool } from "../components/tool";
 import { ChevronLeftSvg, ChevronRightSvg, CollectTableSvg, PlusSvg } from "../../../../component/svgs";
 import { S } from "../../../../i18n/view";
 import { lst } from "../../../../i18n/store";
+import { Spin } from "../../../../component/view/spin";
 
 @url('/data-grid/calendar')
 export class TableStoreCalendar extends DataGridView {
@@ -42,7 +43,7 @@ export class TableStoreCalendar extends DataGridView {
                         $lte: end
                     }
                 }
-            },this.page);
+            }, this.page.ws);
             if (r.data) {
                 this.data = Array.isArray(r.data.list) ? r.data.list : [];
                 this.total = r.data?.total || 0;
@@ -67,7 +68,7 @@ export class TableStoreCalendar extends DataGridView {
         this.forceUpdate();
     }
     async onAddCalendar(day) {
-        await this.onOpenAddForm(undefined,undefined,undefined, { [this.dateField.name]: day.toDate() });
+        await this.onOpenAddForm(undefined, undefined, undefined, { [this.dateField.name]: day.toDate() });
     }
 }
 @view('/data-grid/calendar')
@@ -97,7 +98,7 @@ export class TableStoreCalendarView extends BlockView<TableStoreCalendar>{
             }
             i += 1;
         }
-        var weeks: string[] = [lst('一'),lst( '二'),lst( '三'), lst('四'),lst( '五'),lst( '六'), lst('日')];
+        var weeks: string[] = [lst('一'), lst('二'), lst('三'), lst('四'), lst('五'), lst('六'), lst('日')];
         return <>
             <div className="sy-data-grid-calendar-cells-head">{weeks.map(w => <div key={w} className="sy-data-grid-calendar-cells-head-label"><S>周</S>{w}</div>)}
             </div>
@@ -125,11 +126,12 @@ export class TableStoreCalendarView extends BlockView<TableStoreCalendar>{
     }
     renderCreateTable() {
         return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
+            {this.block.willCreateSchema && <Spin></Spin>}
             <span className="size-24 flex-center remark"><Icon size={16} icon={CollectTableSvg}></Icon></span>
             <span className="remark"><S>创建数据表格</S></span>
         </div>
     }
-    renderView()  {
+    renderView() {
         var now = dayjs();
         var day = dayjs(this.block.date);
         return <div className='sy-data-grid-calendar' onMouseEnter={e => this.block.onOver(true)}

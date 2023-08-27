@@ -12,6 +12,7 @@ import { CollectTableSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import { lst } from "../../../../i18n/store";
 import { S } from "../../../../i18n/view";
+import { Spin } from "../../../../component/view/spin";
 
 @url('/data-grid/board')
 export class TableStoreBoard extends DataGridView {
@@ -28,10 +29,10 @@ export class TableStoreBoard extends DataGridView {
         if (this.groupField) {
             if (this.schema) {
                 var name = this.groupField.name;
-                var r = await this.schema.group({ group: name },this.page);
+                var r = await this.schema.group({ group: name },this.page.ws);
                 if (r.data) {
                     var keys = r.data.list.map(l => l[name]);
-                    var rl = await this.schema.all({ page: 1, filter: { [name]: { $in: keys } } },this.page);
+                    var rl = await this.schema.all({ page: 1, filter: { [name]: { $in: keys } } },this.page.ws);
                     this.data = rl.data.list;
                     if (this.groupField.type == FieldType.options || this.groupField.type == FieldType.option) {
                         var ops = this.groupField.config.options || [];
@@ -87,6 +88,7 @@ export class TableStoreBoardView extends BlockView<TableStoreBoard>{
     }
     renderCreateTable() {
         return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
+            {this.block.willCreateSchema && <Spin></Spin>}
             <span className="size-24 flex-center remark"><Icon size={16} icon={CollectTableSvg}></Icon></span>
             <span className="remark"><S>创建数据表格</S></span>
         </div>
