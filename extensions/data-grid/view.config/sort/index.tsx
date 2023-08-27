@@ -72,7 +72,7 @@ export class TableSortView extends EventsComponent {
         return <div className="f-14">
             <div className="max-h-300 overflow-y">
                 {hasSorts && <DragList onChange={change} isDragBar={e => e.closest('.shy-table-sorts-view-item') && !e.closest('.btn-icon') ? true : false}>{self.block.sorts.map((so, i) => {
-                    return <div className="shy-table-sorts-view-item flex max-h-30 padding-w-14 gap-h-10" key={i}>
+                    return <div className="shy-table-sorts-view-item flex max-h-30 padding-w-10 gap-h-10" key={i}>
                         <div className="flex-auto flex">
                             <span className="cursor size-24 drag gap-r-5 text-1 round flex-center flex-fixed item-hover">
                                 <Icon size={14} icon={DragHandleSvg}></Icon>
@@ -80,18 +80,24 @@ export class TableSortView extends EventsComponent {
                             <SelectBox small className={'gap-r-10 min-w-80'} border value={so.field} options={this.getFields()} onChange={e => { so.field = e; self.onForceStore(); }}></SelectBox>
                             <SelectBox small className={'gap-r-10'} border value={so.sort} options={[
                                 { text: lst('降序'), value: -1 },
-                                { text:lst( '升序'), value: 1 }
-                            ]} onChange={e => { so.sort = e; self.onForceStore(); }}>
+                                { text: lst('升序'), value: 1 }
+                            ]} onChange={e => {
+                                so.sort = e;
+                                self.onForceStore();
+                            }}>
                             </SelectBox>
                         </div>
                         <span className="flex-fixed flex-center size-24 round item-hover cursor btn-icon"><Icon size={12} onMousedown={e => removeSort(i)} icon={CloseSvg} ></Icon></span>
                     </div>
                 })}</DragList>}
-                {!hasSorts && <div className="remark padding-w-14 f-12 h-30 flex"><S>还没有添加排序</S></div>}
+                {/* {!hasSorts && <div className="remark padding-w-14 f-12 h-30 flex-center"><S>还没有添加排序</S></div>} */}
             </div>
-            <Divider></Divider>
-            <div onClick={e => addSort()} className="h-30  flex cursor item-hover padding-w-14">
-                <Icon size={18} style={{ marginRight: 5 }} icon={PlusSvg}></Icon><S>添加排序</S>
+            <Divider style={{ visibility: hasSorts ? "visible" : 'hidden' }}></Divider>
+            <div onClick={e => addSort()} className="h-30  flex cursor item-hover  gap-b-5  padding-w-5 gap-w-5 round">
+                <span className="size-24 round flex-center flex-fixed cursor">
+                    <Icon size={20} icon={PlusSvg}></Icon>
+                </span>
+                <span className="flex-auto"><S>添加排序</S></span>
             </div>
         </div>
     }

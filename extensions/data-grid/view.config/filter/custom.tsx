@@ -1,38 +1,30 @@
-import React from "react";
-import { ReactNode } from "react";
-import { FieldType } from "../../../../blocks/data-grid/schema/type";
-import { DataGridView } from "../../../../blocks/data-grid/view/base";
-import { EventsComponent } from "../../../../component/lib/events.component";
-import { Divider } from "../../../../component/view/grid";
-import { Icon } from "../../../../component/view/icon";
-import { Input } from "../../../../component/view/input";
-import { ArrowRightSvg, CheckSvg, CloseSvg, PlusSvg } from "../../../../component/svgs";
-import lodash from "lodash";
+import React, { ReactNode } from "react";
 import { SchemaFilter } from "../../../../blocks/data-grid/schema/declare";
-import { SelectBox } from "../../../../component/view/select/box";
-import { GetFieldTypeSvg } from "../../../../blocks/data-grid/schema/util";
-import { Switch } from "../../../../component/view/switch";
-import { useSelectMenuItem } from "../../../../component/view/menu";
-import { Rect } from "../../../../src/common/vector/point";
+import { TableSchema } from "../../../../blocks/data-grid/schema/meta";
 import dayjs from "dayjs";
-import { useDatePicker } from "../../../date";
-import { useUserPicker } from "../../../at/picker";
+import lodash from "lodash";
+import { FieldType } from "../../../../blocks/data-grid/schema/type";
+import { GetFieldTypeSvg } from "../../../../blocks/data-grid/schema/util";
+import { ArrowRightSvg, CheckSvg, CloseSvg, PlusSvg } from "../../../../component/svgs";
 import { Avatar } from "../../../../component/view/avator/face";
+import { Divider } from "../../../../component/view/grid";
+import { Input } from "../../../../component/view/input";
+import { useSelectMenuItem } from "../../../../component/view/menu";
 import { MenuItemType } from "../../../../component/view/menu/declare";
+import { SelectBox } from "../../../../component/view/select/box";
 import { lst } from "../../../../i18n/store";
 import { S } from "../../../../i18n/view";
+import { Rect } from "../../../../src/common/vector/point";
+import { useUserPicker } from "../../../at/picker";
+import { useDatePicker } from "../../../date";
+import { Icon } from "../../../../component/view/icon";
+import { Switch } from "../../../../component/view/switch";
+import { LinkWs } from "../../../../src/page/declare";
+import { PopoverSingleton } from "../../../popover/popover";
+import { PopoverPosition } from "../../../popover/position";
+import { EventsComponent } from "../../../../component/lib/events.component";
 
-export class TableFilterView extends EventsComponent {
-    get schema() {
-        return this.block?.schema;
-    }
-    block: DataGridView;
-    oldFilters: SchemaFilter;
-    onOpen(block: DataGridView) {
-        this.block = block;
-        this.oldFilters = lodash.cloneDeep(this.block.filter);
-        this.forceUpdate();
-    }
+export class CustomTableFilterView extends EventsComponent {
     getFields() {
         var fs = this.schema.initUserFields.findAll(g => g.text && ![FieldType.formula].includes(g.type)).map(fe => {
             return {
@@ -44,7 +36,7 @@ export class TableFilterView extends EventsComponent {
         return fs;
     }
     getComputedFields(fieldId: string) {
-        var field = this.block.schema.fields.find(g => g.id == fieldId);
+        var field = this.schema.fields.find(g => g.id == fieldId);
         if ([FieldType.image, FieldType.video, FieldType.video, FieldType.file].includes(field.type)) {
             return [
                 { text: lst('为空'), value: '$isNull' },
@@ -115,14 +107,10 @@ export class TableFilterView extends EventsComponent {
         ]
     }
     onStore = lodash.debounce(async () => {
-        await this.block.onManualUpdateProps({ filter: this.oldFilters }, { filter: this.block.filter }, {});
-        await this.block.onReloadData();
-        this.oldFilters = lodash.cloneDeep(this.block.filter);
+        this.emit('change', lodash.cloneDeep(this.filter))
     }, 800);
     onForceStore = async () => {
-        await this.block.onManualUpdateProps({ filter: this.oldFilters }, { filter: this.block.filter }, {});
-        await this.block.onReloadData();
-        this.oldFilters = lodash.cloneDeep(this.block.filter);
+        this.emit('change', lodash.cloneDeep(this.filter))
         this.forceUpdate();
     }
     renderDateInput(item: SchemaFilter) {
@@ -231,7 +219,7 @@ export class TableFilterView extends EventsComponent {
     }
     renderOptionInput(item: SchemaFilter) {
         var self = this;
-        var fe = self.block.schema.fields.find(g => g.id == item.field);
+        var fe = self.schema.fields.find(g => g.id == item.field);
         var options = fe.config?.options || [];
         var op = options.find(g => g.value == item.value);
         async function mousedown(item: SchemaFilter, event: React.MouseEvent) {
@@ -242,7 +230,7 @@ export class TableFilterView extends EventsComponent {
                     checkLabel: item.value == op.value,
                     type: MenuItemType.custom,
                     render(it) {
-                        return <div className="flex padding-w-14 h-30 item-hover round cursor">
+                        return <div className="flex padding-w-10 gap-w-5  h-30 item-hover round cursor">
                             <span className="flex-fixed size-20 round gap-r-10 border" style={{ backgroundColor: op.color }}></span>
                             <span className="flex-auto text f-14">{op.text}</span>
                             {it.value == item.value && <span className="flex-fixed size-24 flex-center"><Icon size={16} icon={CheckSvg}></Icon></span>}
@@ -266,7 +254,7 @@ export class TableFilterView extends EventsComponent {
             var r = await useUserPicker({
                 roundArea: Rect.fromEvent(event)
             },
-                self.block?.page?.ws,
+                self?.ws,
                 { ignoreUserAll: true }
             );
             if (r?.id) {
@@ -280,34 +268,34 @@ export class TableFilterView extends EventsComponent {
         </div>
     }
     render(): ReactNode {
-        if (!this.block) return <></>;
-        if (!Array.isArray(this.block.filter?.items)) {
-            this.block.filter = { logic: 'and', items: [] };
+        if (!this.schema) return <></>;
+        if (!Array.isArray(this.filter?.items)) {
+            this.filter = { logic: 'and', items: [] };
         }
         var self = this;
         var nameField = this.schema.fields.find(g => g.type == FieldType.title);
         if (!nameField) nameField = this.schema.fields.find(g => g.text ? true : false);
         function addFilter() {
-            self.block.filter.items.push({ field: nameField.id, operator: '$eq', value: '' });
+            self.filter.items.push({ field: nameField.id, operator: '$eq', value: '' });
             self.onForceStore();
         }
         async function removeFilter(event: React.MouseEvent, filter: SchemaFilter) {
-            self.block.filter.items.remove(g => g === filter);
+            self.filter.items.remove(g => g === filter);
             self.onForceStore();
         }
-        return <div className="f-14">
-            <div className="h-30 flex padding-w-10 gap-w-5 gap-t-10">
-                <S>筛选符合下方</S><em className="gap-w-5"><SelectBox small value={self.block.filter.logic} border options={[
+        return <div className="f-14 w-400 min-h-30">
+            <div className="h-30 flex padding-w-14 gap-t-10">
+                <S>筛选符合下方</S><em className="gap-w-5"><SelectBox small value={self.filter.logic} border options={[
                     { text: lst('任意'), value: 'or' },
                     { text: lst('所有'), value: 'and' }
                 ]} onChange={e => {
-                    self.block.filter.logic = e;
+                    self.filter.logic = e;
                     self.onForceStore();
                 }}></SelectBox></em><S>条件的数据</S>
             </div>
-            <div className="max-h-300 overflow-y">{self.block.filter.items.map((item, index) => {
-                var fe = self.block.schema.fields.find(g => g.id == item.field);
-                return <div className="flex visible-hover max-h-30 padding-w-10 gap-w-5 gap-h-10" key={index}>
+            <div className="max-h-300 overflow-y">{self.filter.items.map((item, index) => {
+                var fe = self.schema.fields.find(g => g.id == item.field);
+                return <div className="flex visible-hover max-h-30 padding-w-14 gap-h-10" key={index}>
                     <div className="flex-auto flex">
                         <SelectBox small className={'gap-r-10'} border options={self.getFields()} value={item.field} onChange={e => {
                             item.field = e;
@@ -325,7 +313,8 @@ export class TableFilterView extends EventsComponent {
                                     FieldType.title,
                                     FieldType.link,
                                     FieldType.phone,
-                                    FieldType.email].includes(fe.type) && ['$ne', '$eq'].includes(item.operator))
+                                    FieldType.email
+                                ].includes(fe.type) && ['$ne', '$eq'].includes(item.operator))
                             )
                             &&
                             <Input className={'gap-r-10'} style={{ width: 120 }} placeholder={lst('值')} value={item.value} onChange={e => { item.value = e; self.onStore(); }}></Input>}
@@ -338,13 +327,48 @@ export class TableFilterView extends EventsComponent {
                     <span className="flex-fixed visible flex-center size-24 round item-hover cursor"><Icon size={12} onMousedown={e => removeFilter(e, item)} icon={CloseSvg} ></Icon></span>
                 </div>
             })}
-                {/* {self.block.filter.items.length == 0 && <div className="remark padding-w-14 f-12 h-30 flex"><S>还没有添加筛选条件</S></div>} */}
             </div>
-            {self.block.filter.items.length > 0 && <Divider></Divider>}
-            <div onClick={e => addFilter()} className="h-30  flex cursor item-hover gap-b-5 padding-w-5 gap-w-5 round">
-                <span className="size-20 round flex-center flex-fixed cursor"><Icon size={20} icon={PlusSvg}></Icon></span>
+            <Divider></Divider>
+            <div onClick={e => addFilter()} className="h-30  flex cursor item-hover padding-w-14">
+                <span className="size-24 round flex-center flex-fixed cursor"><Icon size={20} icon={PlusSvg}></Icon></span>
                 <span className="flex-auto"><S>添加筛选条件</S></span>
             </div>
         </div>
     }
+    open(options: {
+        schema: TableSchema,
+        filter: SchemaFilter,
+        ws: LinkWs,
+    }) {
+        Object.assign(this, options);
+        this.forceUpdate();
+    }
+    schema: TableSchema
+    filter: SchemaFilter;
+    ws: LinkWs
+}
+
+
+export async function useCustomTableFilter(pos: PopoverPosition,
+    option: {
+        schema: TableSchema,
+        filter: SchemaFilter,
+        ws: LinkWs,
+        onChange(filter: SchemaFilter): void
+    }) {
+    let popover = await PopoverSingleton(CustomTableFilterView, { mask: true });
+    let fv = await popover.open(pos);
+    fv.open(option);
+    return new Promise((resolve: (data: string | { tableId: string, viewId: string, type: 'view' | 'form', viewUrl?: string }) => void, reject) => {
+        fv.only('close', () => {
+            popover.close();
+            resolve(undefined);
+        })
+        fv.only('change', (g) => {
+            if (typeof option.onChange == 'function') option.onChange(g);
+        })
+        popover.only('close', () => {
+            resolve(undefined);
+        })
+    })
 }

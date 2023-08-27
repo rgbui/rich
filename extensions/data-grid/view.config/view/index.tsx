@@ -14,10 +14,12 @@ import { TableStoreBoard } from "../../../../blocks/data-grid/view/board";
 import { MenuView } from "../../../../component/view/menu/menu";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import lodash from "lodash";
-import { DatasourceSvg, LockSvg, LoopSvg, UnlockSvg } from "../../../../component/svgs";
+import { CheckSvg, DatasourceSvg, LockSvg, LoopSvg, UnlockSvg } from "../../../../component/svgs";
 import { Rect } from "../../../../src/common/vector/point";
 import { DataGridConfig } from "..";
 import { lst } from "../../../../i18n/store";
+import { CardFactory } from "../../../../blocks/data-grid/template/card/factory/factory";
+import { Icon } from "../../../../component/view/icon";
 
 export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> {
     get schema() {
@@ -29,28 +31,59 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
         this.forceUpdate();
     }
     getItems(): MenuItem[] {
+        var self = this;
+        var cms = CardFactory.getCardModels(this.schema);
         var baseItems: MenuItem[] = [
             {
                 value: this.block.schemaView.text,
                 name: 'viewText',
-                type: MenuItemType.input,
+                type: MenuItemType.inputTitleAndIcon,
+                icon: this.block.schemaView.icon || getSchemaViewIcon(this.block.schemaView.url),
             },
             { type: MenuItemType.divide },
             {
                 text: lst('视图'),
                 icon: LoopSvg,
-                childs: getSchemaViews().map(v => {
-                    return {
-                        name: "toggleView",
-                        value: v.url,
-                        text: v.text,
-                        icon: getSchemaViewIcon(v.url),
-                        checkLabel: this.block.url == v.url
+                childs: [
+                    ...getSchemaViews().map(v => {
+                        return {
+                            name: "toggleView",
+                            value: v.url,
+                            text: v.text,
+                            icon: getSchemaViewIcon(v.url),
+                            checkLabel: !this.block.getCardUrl() && this.block.url == v.url
+                        }
+                    }),
+                    {
+                        text: lst('数据视图'),
+                        icon: { name: 'bytedance-icon', code: 'application-two' },
+                        childsStyle: { width: 300 },
+                        childs: cms.map(c => {
+                            return {
+                                type: MenuItemType.custom,
+                                name: 'dataView',
+                                value: c.url,
+                                render(item, view) {
+                                    return <div className="flex-full relative item-hover round padding-w-14 padding-h-10">
+                                        <div className="flex-fixed">
+                                            <img src={c.image} className="obj-center h-60 w-120" />
+                                        </div>
+                                        <div className="flex-auto gap-l-10">
+                                            <div>{c.title}</div>
+                                            <div className="remark">{c.remark}</div>
+                                        </div>
+                                        {self.block.getCardUrl() == c.url && <div className="pos pos-right pos-t-5 pos-r-5 size-20 cursor round">
+                                            <Icon size={16} icon={CheckSvg}></Icon>
+                                        </div>}
+                                    </div>
+                                }
+                            }
+                        })
                     }
-                })
+                ]
             },
             { type: MenuItemType.divide },
-            { text: lst('标题'), name: 'noTitle', type: MenuItemType.switch, checked: (this.block as TableStore).noTitle ? false : true },
+            { text: lst('表格标题'), name: 'noTitle', type: MenuItemType.switch, checked: (this.block as TableStore).noTitle ? false : true },
             {
                 text: lst('每页加载的数量'),
                 value: this.block.size,
@@ -66,7 +99,14 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 ]
             },
             {
-                text: lst('打开记录方式'),
+                text: lst('分页'),
+                type: MenuItemType.switch,
+                checked: (this.block as TableStore).hasPagerBlock(),
+                name: 'showPager'
+            },
+            { type: MenuItemType.divide },
+            {
+                text: lst('打开记录'),
                 value: this.block.openRecordSource,
                 name: 'openRecordSource',
                 type: MenuItemType.select,
@@ -77,7 +117,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 ]
             },
             {
-                text: lst('创建记录方式'),
+                text: lst('创建记录'),
                 value: this.block.createRecordSource,
                 name: 'createRecordSource',
                 type: MenuItemType.select,
@@ -86,52 +126,42 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                     { text: lst('对话框居中'), value: 'dialog' },
                     { text: lst('侧栏右侧'), value: 'slide' },
                 ]
-            },
-            { type: MenuItemType.divide },
-            {
-                text: lst('选中方式'),
-                value: this.block.checkRow,
-                name: 'checkRow',
-                type: MenuItemType.select,
-                options: [
-                    { text: lst('无'), value: 'none' },
-                    { text: lst('复选框'), value: 'checkbox' },
-                    // { text: '高亮', value: 'selected' },
-                ]
             }
         ]
         if (this.block.url == BlockUrlConstant.DataGridTable) {
             baseItems.splice(baseItems.length, 0, ...[
+                { type: MenuItemType.divide },
                 { text: lst('行号'), type: MenuItemType.switch, checked: (this.block as TableStore).showRowNum, name: 'showRowNum' },
-                { text: lst('显示表头'), name: 'noHead', type: MenuItemType.switch, checked: (this.block as TableStore).noHead ? false : true },
+                // { text: lst('显示表头'), name: 'noHead', type: MenuItemType.switch, checked: (this.block as TableStore).noHead ? false : true },
             ])
         }
         else if (this.block.url == BlockUrlConstant.DataGridList) {
-            baseItems.splice(baseItems.length, 0, ...[
-                { text: lst('行号'), type: MenuItemType.switch, checked: (this.block as TableStore).showRowNum, name: 'showRowNum' },
+            baseItems.splice(baseItems.length, 0, ...[{ type: MenuItemType.divide },
+            { text: lst('行号'), type: MenuItemType.switch, checked: (this.block as TableStore).showRowNum, name: 'showRowNum' },
             ])
         }
         else if (this.block.url == BlockUrlConstant.DataGridGallery) {
-            baseItems.splice(baseItems.length, 0, ...[
-                {
-                    text: lst('卡片列数'),
-                    value: (this.block as TableStoreGallery).gallerySize,
-                    name: 'gallerySize',
-                    type: MenuItemType.select,
-                    options: [
-                        { text: lst('自适应'), value: -1 },
-                        { text: '1' + lst('列'), value: 1 },
-                        { text: '2' + lst('列'), value: 2 },
-                        { text: '3' + lst('列'), value: 3 },
-                        { text: '4' + lst('列'), value: 4 },
-                        { text: '5' + lst('列'), value: 5 },
-                        { text: '6' + lst('列'), value: 6 }
-                    ]
-                },
+            baseItems.splice(baseItems.length, 0, ...[{ type: MenuItemType.divide },
+            {
+                text: lst('卡片列数'),
+                value: (this.block as TableStoreGallery).gallerySize,
+                name: 'gallerySize',
+                type: MenuItemType.select,
+                options: [
+                    { text: lst('自适应'), value: -1 },
+                    { text: '1' + lst('列'), value: 1 },
+                    { text: '2' + lst('列'), value: 2 },
+                    { text: '3' + lst('列'), value: 3 },
+                    { text: '4' + lst('列'), value: 4 },
+                    { text: '5' + lst('列'), value: 5 },
+                    { text: '6' + lst('列'), value: 6 }
+                ]
+            },
             ])
         }
         else if (this.block.url == BlockUrlConstant.DataGridBoard) {
             baseItems.splice(baseItems.length, 0, ...[
+                { type: MenuItemType.divide },
                 {
                     text: lst('看板分类字段'),
                     value: (this.block as TableStoreBoard).groupFieldId,
@@ -175,7 +205,10 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
             else if (item.name == 'createRecordSource') self.block.onUpdateProps({ createRecordSource: item.value }, {})
             else if (item.name == 'showRowNum') self.block.onShowRowNum(item.checked);
             else if (item.name == 'checkRow') {
-                await self.block.onShowCheck(item.value);
+                await self.block.onShowCheck(item.checked ? "checkbox" : 'none');
+            }
+            else if (item.name == 'showPager') {
+                await self.block.onExtendControlBlock(BlockUrlConstant.DataGridPage, {})
             }
             else if (item.name == 'noHead') {
                 await self.block.onUpdateProps({ noHead: !item.checked }, { range: BlockRenderRange.self });
@@ -183,14 +216,11 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
             else if (['gallerySize', 'dateFieldId', 'groupFieldId'].includes(item.name)) {
                 await self.block.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self });
             }
-            // else if (['cardConfig.auto', 'cardConfig.showCover', 'cardConfig.coverAuto'].includes(item.name)) {
-            //     await self.block.onUpdateProps({ [item.name]: item.checked }, { syncBlock: self.block, range: BlockRenderRange.self });
-            // }
-            // else if (item.name == 'cardConfig.coverFieldId' && item.value) {
-            //     await self.block.onUpdateProps({ [item.name]: item.value }, { syncBlock: self.block, range: BlockRenderRange.self });
-            // }
             else if (item.name == 'viewText') {
-                self.onStoreViewText(item.value);
+                if (self.block.schemaView.text != item.value)
+                    self.onStoreViewText(item.value);
+                else if (!lodash.isEqual(self.block.schemaView.icon, item.icon))
+                    self.block.onSchemaViewUpdate(self.block.syncBlockId, { icon: item.icon });
             }
             else if (item.name == 'lock') {
                 self.block.onTableSchemaLock(item.checked);
@@ -204,6 +234,10 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 self.block.onDataGridChangeView(item.value);
                 if (self.props.gc) self.props.gc.onClose();
             }
+            else if (item?.name == 'dataView') {
+                self.block.onDataGridChangeViewByTemplate(item.value);
+                if (self.props.gc) self.props.gc.onClose();
+            }
         }
         function click(item) {
 
@@ -211,13 +245,13 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
         return <MenuView input={input} select={select} click={click} style={{
             maxHeight: 300,
             paddingTop: 10,
-            paddingBottom: 10,
+            paddingBottom: 5,
             overflowY: 'auto'
         }} items={this.getItems()}></MenuView>
     }
     onStoreViewText = lodash.debounce((value) => {
         var self = this;
-        self.block.onSchemaViewRename(self.block.syncBlockId, value);
+        self.block.onSchemaViewUpdate(self.block.syncBlockId, { text: value });
     }, 700)
     render(): ReactNode {
         if (!this.block) return <div></div>;
