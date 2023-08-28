@@ -1,7 +1,7 @@
 .shy-menu-panel {
     .shy-menu-mask {
         position      : absolute;
-        position: fixed;
+        position      : fixed;
         top           : 0px;
         left          : 0px;
         width         : 100vw;
@@ -14,7 +14,7 @@
     width              : 220px;
     pointer-events     : visible;
     position           : absolute;
-    position: fixed;
+    position           : fixed;
     border-radius      : 3px;
     background         : white;
     z-index            : 2;
@@ -37,15 +37,14 @@
         line-height    : 28px;
         font-size      : 14px;
         color          : rgba(55, 53, 47);
-        padding        : 0px 14px;
-        cursor         : pointer;
+        padding        : 0px 10px;
+        margin         : 0px 5px;
+        border-radius  : 4px;
+
+        cursor: pointer;
 
         .shy-icon {
-            // display            : block;
-            // color              : rgba(55, 53, 47);
-            // overflow           : hidden;
-            // flex-shrink        : 0;
-            // backface-visibility: hidden;
+
             img {
                 width: 17px
             }
@@ -79,15 +78,7 @@
             line-height : 28px;
         }
 
-        .shy-menu-box-item-option-label-icon {
-            // position    : absolute;
-            // top         : 0px;
-            // right       : 0px;
-            // bottom      : 0px;
-            // margin-right: 14px;
-            // min-height  : 28px;
-            // line-height : 28px;
-        }
+        .shy-menu-box-item-option-label-icon {}
 
         &.disabled {
             cursor: default;
@@ -112,15 +103,27 @@
     }
 
     &-colors {
-        padding: 0px 14px;
+        padding      : 0px 10px;
+        margin       : 0px 5px;
+        border-radius: 4px;
     }
 
     &-button {
-        padding: 0px 14px;
+        padding      : 0px 10px;
+        margin       : 0px 5px;
+        border-radius: 4px;
     }
 
     &-input {
-        padding: 0px 14px;
+        padding      : 0px 10px;
+        margin       : 0px 5px;
+        border-radius: 4px;
+    }
+
+    &-input-icon {
+        padding      : 0px 10px;
+        margin       : 0px 5px;
+        border-radius: 4px;
     }
 
     &-divide {
@@ -132,18 +135,22 @@
     }
 
     &-text {
-        display    : block;
-        padding    : 0px 14px;
-        font-size  : 12px;
-        line-height: 16px;
-        color      : rgba(55, 53, 47, 0.4);
+        display      : block;
+        padding      : 0px 10px;
+        margin       : 0px 5px;
+        border-radius: 4px;
+        font-size    : 12px;
+        line-height  : 16px;
+        color        : rgba(55, 53, 47, 0.4);
     }
 
     &-user {
-        display    : block;
-        padding    : 5px 14px;
-        font-size  : 12px;
-        line-height: 16px;
+        display      : block;
+        padding      : 5px 10px;
+        margin       : 0px 5px;
+        border-radius: 4px;
+        font-size    : 12px;
+        line-height  : 16px;
 
         &:hover {
             background-color: rgba(55, 53, 47, 0.08);
@@ -151,13 +158,16 @@
     }
 
     &-switch {
-        padding        : 0px 14px;
+        padding        : 0px 10px;
+        margin         : 0px 5px;
+        border-radius  : 4px;
         display        : flex;
         justify-content: flex-start;
         align-items    : center;
         min-height     : 28px;
         cursor         : pointer;
-        color      : rgb(55, 53, 47);
+        color          : rgb(55, 53, 47);
+
         &:hover {
             background-color: rgba(55, 53, 47, 0.08);
         }
@@ -166,11 +176,11 @@
             flex-shrink: 1;
             flex-grow  : 1;
             font-size  : 14px;
-            
+            margin-left: 3px;
         }
 
         .shy-switch {
-            // width      : 30px;
+
             flex-shrink: 0;
             flex-grow  : 0;
         }
@@ -186,7 +196,9 @@
         line-height    : 28px;
         font-size      : 14px;
         color          : rgba(55, 53, 47);
-        padding        : 0px 14px;
+        padding        : 0px 10px;
+        margin         : 0px 5px;
+        border-radius  : 4px;
         cursor         : pointer;
 
         &:hover {
@@ -204,20 +216,15 @@
             cursor         : grab;
             border-radius  : 4px;
 
-            // .shy-icon {
-            //     color: rgba(55, 53, 47, 0.4);
-            // }
-
             &:hover {
                 background-color: rgba(55, 53, 47, 0.08);
             }
         }
 
         &-text {
-            display        : inline-flex;
-            // margin-left : 8px;
-            margin-right   : 14px;
-            flex-grow      : 1.0;
+            display     : inline-flex;
+            margin-right: 14px;
+            flex-grow   : 1.0;
         }
 
         &-label-icon {
@@ -229,7 +236,6 @@
             justify-content: center;
             align-items    : center;
             border-radius  : 4px;
-
         }
 
         .btn {
@@ -242,11 +248,6 @@
             justify-content: center;
             align-items    : center;
             border-radius  : 4px;
-
-            // .shy-icon {
-            //     color: rgba(55, 53, 47, 0.4);
-            //     fill : currentColor
-            // }
 
             &:hover {
                 background-color: rgba(55, 53, 47, 0.08);
@@ -264,18 +265,12 @@
         line-height    : 28px;
         font-size      : 14px;
         color          : rgba(55, 53, 47);
-        padding        : 0px 14px;
+        padding        : 0px 10px;
+        margin         : 0px 5px;
+        border-radius  : 4px;
         cursor         : pointer;
 
         .shy-icon {
-            width              : 17px;
-            height             : 17px;
-            display            : block;
-            color              : rgba(55, 53, 47);
-            overflow           : hidden;
-            flex-shrink        : 0;
-            backface-visibility: hidden;
-
             img {
                 width: 17px
             }
@@ -285,6 +280,7 @@
             display     : inline-flex;
             margin-right: 14px;
             flex-grow   : 1.0;
+            margin-left : 3px;
         }
 
         .shy-menu-box-item-select-value {
@@ -294,9 +290,9 @@
             align-items    : center;
 
             em {
-                font-style  : normal;
-                display     : inline-block;
-                margin-right: 5px;
+                font-style: normal;
+                display   : inline-block;
+
             }
         }
 
@@ -309,7 +305,6 @@
 
             .shy-icon {
                 color: rgba(55, 53, 47, 0.6);
-                fill : rgba(55, 53, 47, 0.6);
             }
 
             .shy-menu-box-item-option-text {

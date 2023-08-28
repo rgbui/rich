@@ -14,6 +14,7 @@ import { MenuItem, MenuItemType } from "./declare";
 import { MenuView } from "./menu";
 import { Avatar } from "../avator/face";
 import { HelpText } from "../text";
+import { useIconPicker } from "../../../extensions/icon";
 
 export class MenuItemView extends React.Component<{
     item: MenuItem,
@@ -96,6 +97,18 @@ export class MenuItemView extends React.Component<{
                 this.props?.input(item);
         }
     }
+    async changeIcon(item: MenuItem, event: React.MouseEvent) {
+        if (item.disabled) return;
+        var r = await useIconPicker({
+            roundArea: Rect.fromEle(event.currentTarget as HTMLElement)
+        });
+        if (r) {
+            item.icon = r;
+            if (item.updateMenuPanel) this.props.parent.forceUpdate()
+            else this.forceUpdate();
+            this.props?.input(item);
+        }
+    }
     dragChange(to: number, from: number) {
         this.props.item.value = [from, to];
         this.props?.input(this.props.item);
@@ -161,14 +174,30 @@ export class MenuItemView extends React.Component<{
                 <HelpText url={item.url}>{item.text}</HelpText>
             </div>}
             {item.type == MenuItemType.input && <div className="shy-menu-box-item-input"><Input size={'small'} value={item.value} onEnter={e => { item.value = e; this.select(item) }} onChange={e => { item.value = e; this.input(e, item) }} placeholder={item.placeholder || item.text}></Input></div>}
+            {item.type == MenuItemType.inputTitleAndIcon && <div className="shy-menu-box-item-input-icon flex">
+                <div onMouseDown={e => this.changeIcon(item, e)} className="cursor flex-fixed size-20 flex-center gap-r-10 round item-hover border">
+                    <Icon icon={item.icon} size={item.iconSize || 18}></Icon>
+                </div>
+                <div className="flex-auto"><Input size={'small'}
+                    value={item.value}
+                    onEnter={e => {
+                        item.value = e;
+                        this.select(item)
+                    }}
+                    onChange={e => {
+                        item.value = e;
+                        this.input(e, item)
+                    }}
+                    placeholder={item.placeholder || item.text}></Input></div>
+            </div>}
             {item.type == MenuItemType.button && <div className="shy-menu-box-item-button"><Button icon={item.icon} disabled={item.disabled} block onClick={e => item.buttonClick != 'click' ? this.select(item, e.nativeEvent) : this.click(item, e)}>{item.text}</Button></div>}
             {item.type == MenuItemType.select && <div className="shy-menu-box-item-select">
-                {item.icon && <i className="flex-center flex-inline size-20 flex-fix text-1"><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
+                {item.icon && <i className="flex-center flex-inline size-20 flex-fixed text-1"><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
                 {item.renderIcon && item.renderIcon(item, this)}
                 <span className='shy-menu-box-item-option-text flex-auto'>{item.text}</span>
-                <span className="shy-menu-box-item-select-value flex  flex-fix" onMouseDown={e => this.openSelectMenu(item, e)}>
+                <span className="shy-menu-box-item-select-value flex  flex-fixed" onMouseDown={e => this.openSelectMenu(item, e)}>
                     <em className="text-over flex-auto max-w-100">{item?.options?.find(g => g.value == item.value)?.text}</em>
-                    <Icon className={'flex-fix'} size={16} icon={ChevronDownSvg}></Icon>
+                    <Icon className={'flex-fixed'} size={16} icon={ChevronDownSvg}></Icon>
                 </span>
             </div>}
             {item.type == MenuItemType.drag && <ToolTip overlay={item.overlay} placement={item.placement || 'right'} ><div data-drag={item.drag}
@@ -208,7 +237,7 @@ export class MenuItemView extends React.Component<{
                     </a>
                 })}
             </div>}
-            {item?.childs?.length > 0 && this.hover && <MenuBox parent={this.props.parent} select={this.props.select} click={this.props.click} input={this.props.input} items={item.childs} ref={e => this.menubox = e} deep={this.props.deep}></MenuBox>}
+            {item?.childs?.length > 0 && this.hover && <MenuBox style={this.props.item.childsStyle || {}} parent={this.props.parent} select={this.props.select} click={this.props.click} input={this.props.input} items={item.childs} ref={e => this.menubox = e} deep={this.props.deep}></MenuBox>}
         </div>
     }
 }

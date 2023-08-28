@@ -1,3 +1,4 @@
+import { CSSProperties } from "react"
 import { PopoverPosition } from "../../../extensions/popover/position"
 import { IconValueType } from "../icon"
 import { OverlayPlacement } from "../tooltip"
@@ -19,9 +20,11 @@ export type MenuItem<T = string> = {
     forceHasChilds?: boolean,
     childs?: MenuItem<T>[],
     childsPos?: PopoverPosition,
+    childsStyle?:CSSProperties,
     options?: MenuItem<T>[],
     block?: boolean,
     value?: any,
+    iconName?: string,
     checked?: boolean,
     disabled?: boolean,
     /**
@@ -58,6 +61,7 @@ export enum MenuItemType {
     item = 3,
     switch = 4,
     input = 5,
+    inputTitleAndIcon = 15,
     button = 6,
     select = 7,
     drag = 8,
@@ -66,5 +70,5 @@ export enum MenuItemType {
     color = 11,
     gap = 12,
     user = 13,
-    help=14
+    help = 14
 }
