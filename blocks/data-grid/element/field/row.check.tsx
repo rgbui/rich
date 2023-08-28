@@ -1,7 +1,6 @@
 import React from "react";
 import { url, view } from "../../../../src/block/factory/observable";
-import { BlockView } from "../../../../src/block/view";
-import { OriginField } from "./origin.field";
+import { OriginField, OriginFileView } from "./origin.field";
 
 @url('/field/row/check')
 export class FieldRowCheck extends OriginField {
@@ -11,8 +10,8 @@ export class FieldRowCheck extends OriginField {
     }
 }
 @view('/field/row/check')
-export class FieldRowCheckView extends BlockView<FieldRowCheck>{
-    renderView()  {
+export class FieldRowCheckView extends OriginFileView<FieldRowCheck>{
+    renderFieldValue()  {
         var checked = this.block.dataGrid.checkItems.some(s => s.id == this.block.item.dataRow.id);
         return <div className='sy-field-row-check'>
             <input type='checkbox'

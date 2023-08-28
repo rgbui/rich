@@ -124,6 +124,7 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
         return this.props.dataGrid.isCanEdit();
     }
     isEmoji(name: string) {
+        if (!this.props.item.dataRow) return false;
         var field: Field = this.getField(name);
         if ((this.props.dataGrid instanceof TableStoreGallery || this.props.dataGrid instanceof TableStoreList) && field) {
             var r = this.props.dataGrid.isEmoji(field, this.props.item.dataRow.id);
@@ -132,7 +133,7 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
     }
     async onUpdateCellInteractive(event: React.MouseEvent, name: string) {
         event.stopPropagation()
-        if(!this.props.dataGrid.page.isSign) {
+        if (!this.props.dataGrid.page.isSign) {
             ShyAlert(lst('请先登录'))
             return
         }

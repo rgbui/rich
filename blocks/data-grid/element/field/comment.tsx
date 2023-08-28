@@ -3,8 +3,8 @@ import React from "react";
 import { useCommentListView } from "../../../../extensions/comment/list";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { url, view } from "../../../../src/block/factory/observable";
-import { BlockView } from "../../../../src/block/view";
-import { OriginField } from "./origin.field";
+
+import { OriginField, OriginFileView } from "./origin.field";
 import lodash from "lodash";
 import { S } from "../../../../i18n/view";
 
@@ -32,8 +32,8 @@ export class FieldComment extends OriginField {
 
 }
 @view('/field/comment')
-export class FieldCommentView extends BlockView<FieldComment>{
-    renderView()  {
+export class FieldCommentView extends OriginFileView<FieldComment>{
+  renderFieldValue()  {
         var v = this.block.value;
         if (typeof v == 'object' && typeof v?.count == 'number') v = v.count;
         if (lodash.isNull(v) || lodash.isUndefined(v)) v = 0;

@@ -3,10 +3,9 @@ import { Avatar } from "../../../../component/view/avator/face";
 import { UserAvatars } from "../../../../component/view/avator/users";
 import { useDataGridFileViewer } from "../../../../extensions/data-grid/filer";
 import { url, view } from "../../../../src/block/factory/observable";
-import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/vector/point";
 import { FieldType } from "../../schema/type";
-import { OriginField } from "./origin.field";
+import { OriginField, OriginFileView } from "./origin.field";
 
 @url('/field/user')
 export class FieldUser extends OriginField {
@@ -33,8 +32,8 @@ export class FieldUser extends OriginField {
 }
 
 @view('/field/user')
-export class FieldTextView extends BlockView<FieldUser>{
-    renderView()  {
+export class FieldTextView extends OriginFileView<FieldUser>{
+    renderFieldValue()  {
         if (this.block.field.type == FieldType.creater || this.block.field.type == FieldType.modifyer)
             return <div className='sy-field-text'>
                 {this.block.value && <Avatar size={30} userid={this.block.value}></Avatar>}

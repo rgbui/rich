@@ -4,11 +4,10 @@ import { Icon } from "../../../../component/view/icon";
 import { useRelationPickData } from "../../../../extensions/data-grid/relation.picker";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { url, view } from "../../../../src/block/factory/observable";
-import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/vector/point";
 import { PageLayoutType, getPageIcon } from "../../../../src/page/declare";
 import { FieldType } from "../../schema/type";
-import { OriginField } from "./origin.field";
+import { OriginField, OriginFileView } from "./origin.field";
 
 @url('/field/relation')
 export class FieldRelation extends OriginField {
@@ -47,7 +46,7 @@ export class FieldRelation extends OriginField {
     }
 }
 @view('/field/relation')
-export class FieldRelationView extends BlockView<FieldRelation>{
+export class FieldRelationView extends OriginFileView<FieldRelation>{
     renderList() {
         var rs = this.block.relationSchema;
         var f = rs?.fields?.find(g => g.type == FieldType.title);
@@ -64,7 +63,7 @@ export class FieldRelationView extends BlockView<FieldRelation>{
         })}
         </div>
     }
-    renderView() {
+    renderFieldValue() {
         return <div className='sy-field-relation  f-14' onMouseDown={e => this.block.onCellMousedown(e)}>
             {this.renderList()}
         </div>
@@ -96,8 +95,8 @@ export class FieldRollup extends OriginField {
 }
 
 @view('/field/rollup')
-export class FieldRollupView extends BlockView<FieldRollup>{
-    renderView() {
+export class FieldRollupView extends OriginFileView<FieldRollup>{
+    renderFieldValue() {
         var str: string = '';
         var list = this.block.relationList;
         var field = this.block.relationSchema?.fields?.find(g => g.id == this.block.field.config?.rollupFieldId);

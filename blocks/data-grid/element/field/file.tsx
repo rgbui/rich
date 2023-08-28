@@ -2,10 +2,10 @@ import React from "react";
 import { useDataGridFileViewer } from "../../../../extensions/data-grid/filer";
 import { ResourceArguments } from "../../../../extensions/icon/declare";
 import { url, view } from "../../../../src/block/factory/observable";
-import { BlockView } from "../../../../src/block/view";
+
 import { Rect } from "../../../../src/common/vector/point";
 import { util } from "../../../../util/util";
-import { OriginField } from "./origin.field";
+import { OriginField, OriginFileView } from "./origin.field";
 import { DownloadSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import { Tip } from "../../../../component/view/tooltip/tip";
@@ -32,7 +32,7 @@ export class FieldFile extends OriginField {
     }
 }
 @view('/field/file')
-export class FieldFileView extends BlockView<FieldFile>{
+export class FieldFileView extends OriginFileView<FieldFile>{
     down(img: ResourceArguments, e: React.MouseEvent) {
         e.stopPropagation();
         util.downloadFile(img.url, img.filename)
@@ -45,7 +45,7 @@ export class FieldFileView extends BlockView<FieldFile>{
             </div>
         })
     }
-    renderView()  {
+    renderFieldValue()  {
         var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);
         if (!this.block.field?.config?.isMultiple && vs.length > 1) vs = [vs.first()]
         return <div className='sy-field-file  visible-hover'>

@@ -2,10 +2,9 @@ import React from "react";
 import { useTableStoreOption } from "../../../../extensions/data-grid/option/option";
 import { BlockRenderRange } from "../../../../src/block/enum";
 import { url, view } from "../../../../src/block/factory/observable";
-import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/vector/point";
 import { FieldConfig } from "../../schema/field";
-import { OriginField } from "./origin.field";
+import { OriginField, OriginFileView } from "./origin.field";
 import "./style.less";
 import { FieldType } from "../../schema/type";
 import { util } from "../../../../util/util";
@@ -34,8 +33,8 @@ export class FieldOption extends OriginField {
     }
 }
 @view('/field/option')
-export class FieldTextView extends BlockView<FieldOption>{
-    renderView() {
+export class FieldTextView extends OriginFileView<FieldOption>{
+    renderFieldValue() {
         var fc: FieldConfig = this.block.field.config;
         var vs = util.covertToArray(this.block.value);
         var ops = fc?.options ? fc.options.filter(g => vs.includes(g.value)) : undefined;

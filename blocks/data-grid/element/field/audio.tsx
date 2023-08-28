@@ -1,9 +1,9 @@
 import React, { CSSProperties } from "react";
 import { useDataGridFileViewer } from "../../../../extensions/data-grid/filer";
 import { url, view } from "../../../../src/block/factory/observable";
-import { BlockView } from "../../../../src/block/view";
+
 import { Rect } from "../../../../src/common/vector/point";
-import { OriginField } from "./origin.field";
+import { OriginField, OriginFileView } from "./origin.field";
 import { S } from "../../../../i18n/view";
 
 @url('/field/audio')
@@ -29,7 +29,7 @@ export class FieldAudio extends OriginField {
 }
 
 @view('/field/audio')
-export class FieldVideoView extends BlockView<FieldAudio>{
+export class FieldVideoView extends OriginFileView<FieldAudio>{
     renderImages(images: { url: string }[]) {
         var style: CSSProperties = {};
         style.width = '100%';
@@ -45,7 +45,7 @@ export class FieldVideoView extends BlockView<FieldAudio>{
             </div>
         })
     }
-    renderView() {
+    renderFieldValue() {
         var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);
         if (!this.block.field?.config?.isMultiple && vs.length > 1) vs = [vs.first()]
         return <div className='sy-field-image'>

@@ -1,11 +1,11 @@
 import React from "react";
 import { url, view } from "../../../../src/block/factory/observable";
-import { BlockView } from "../../../../src/block/view";
 import { FieldType } from "../../schema/type";
-import { OriginField } from "./origin.field";
+import { OriginField, OriginFileView } from "./origin.field";
 import lodash from "lodash";
 import { KeyboardCode } from "../../../../src/common/keys";
 import { util } from "../../../../util/util";
+import { BlockUrlConstant } from "../../../../src/block/constant";
 
 // 数字转为千分位，并保留两个小数位
 function numberFilter(oldNum, isFixed) {
@@ -74,6 +74,7 @@ export class FieldNumber extends OriginField {
     onCellMousedown(event: React.MouseEvent) {
         event.stopPropagation();
         if (this.field.type == FieldType.autoIncrement) return;
+        if (!this.isCanEdit()) return;
         if (this.isFocus == false) {
             this.isFocus = true;
             this.view.forceUpdate(async () => {
@@ -90,9 +91,9 @@ export class FieldNumber extends OriginField {
     }
 }
 @view('/field/number')
-export class FieldTextView extends BlockView<FieldNumber>{
+export class FieldTextView extends OriginFileView<FieldNumber>{
     isCom: boolean = false;
-    renderView()  {
+    renderFieldValue() {
         var self = this;
         var save = lodash.debounce<(value: number) => void>((value) => {
             self.block.onUpdateCellValue(value);
@@ -152,9 +153,10 @@ export class FieldTextView extends BlockView<FieldNumber>{
             self.block.isFocus = false;
             self.forceUpdate();
         }
+        var isTable = this.block.dataGrid.url == BlockUrlConstant.DataGridTable;
         if (this.block.field.type == FieldType.autoIncrement)
-            return <div className='sy-field-number  f-14'  >{this.block.value}</div>
-        else return <div className='sy-field-number f-14' >
+            return <div className={'sy-field-number  f-14 min-h-20' + (isTable ? "text-right" : "")}  >{this.block.value}</div>
+        else return <div className={'sy-field-number f-14' + (isTable ? "text-right" : "")}>
             {this.block.isFocus && <input type='text'
                 placeholder="输入数字"
                 defaultValue={this.block.value}
@@ -162,13 +164,13 @@ export class FieldTextView extends BlockView<FieldNumber>{
                 onInput={input}
                 onKeyUp={keyup}
                 onBlur={blur}
-                readOnly={this.block.isCanEdit()}
                 onCompositionStart={start}
                 onCompositionUpdate={start}
                 onCompositionEnd={end}
                 onPaste={paste}
+                style={{ textIndent: isTable ? 10 : 0 }}
             />}
-            {!this.block.isFocus && <span className="text" >{this.block.formatValue(this.block.value)}</span>}
+            {!this.block.isFocus && <span className="text l-22 " >{this.block.formatValue(this.block.value)}</span>}
         </div>
     }
 }

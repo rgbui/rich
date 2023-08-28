@@ -7,6 +7,11 @@ import { ViewField } from "../../schema/view";
 import { TableStoreItem } from "../../view/item";
 import { ShyAlert } from "../../../../component/lib/alert";
 import { lst } from "../../../../i18n/store";
+import { BlockView } from "../../../../src/block/view";
+import { BlockUrlConstant } from "../../../../src/block/constant";
+import { TableStoreGallery } from "../../view/gallery";
+import { GetFieldTypeSvg } from "../../schema/util";
+import { Icon } from "../../../../component/view/icon";
 
 export class OriginField extends Block {
     display = BlockDisplay.block;
@@ -73,5 +78,44 @@ export class OriginField extends Block {
             return false;
         }
         return true;
+    }
+}
+
+export class OriginFileView<T extends OriginField> extends BlockView<T>{
+    renderFieldValue() {
+        return <></>
+    }
+    renderView(): React.ReactNode {
+        var isCard = [
+            BlockUrlConstant.DataGridBoard,
+            BlockUrlConstant.DataGridGallery].includes(this.block.dataGrid.url as any);
+        if (isCard) {
+            var card = (this.block.dataGrid as TableStoreGallery).cardConfig;
+            var isTitle = this.block.url == BlockUrlConstant.FieldTitle;
+            if (card?.showField == 'wrap' && !isTitle) {
+                return <div onMouseDown={e => {
+                    e.stopPropagation();
+                    this.block.onCellMousedown(e)
+                }}>
+                    <div className="remark f-12 gap-h-5 flex">
+                        <Icon size={12} icon={GetFieldTypeSvg(this.block.viewField.field?.type)}></Icon>
+                        <span>{this.block.viewField?.text}</span>
+                    </div>
+                    <div>{this.renderFieldValue()}</div>
+                </div>
+            }
+            else if (card?.showField == 'nowrap' && !isTitle) {
+                return <div onMouseDown={e => {
+                    e.stopPropagation();
+                    this.block.onCellMousedown(e)
+                }} className="flex flex-top">
+                    <div className="flex-fixed w-60 text-overflow  remark f-12 ">{this.block.viewField?.text}</div>
+                    <div className="flex-auto">
+                        {this.renderFieldValue()}
+                    </div>
+                </div>
+            }
+        }
+        return this.renderFieldValue();
     }
 }

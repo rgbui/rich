@@ -1,8 +1,8 @@
 import React from "react";
 import { url, view } from "../../../../src/block/factory/observable";
-import { BlockView } from "../../../../src/block/view";
+
 import { Rect } from "../../../../src/common/vector/point";
-import { OriginField } from "./origin.field";
+import { OriginField, OriginFileView } from "./origin.field";
 import dayjs from "dayjs";
 import { BlockRenderRange } from "../../../../src/block/enum";
 import { useDatePicker } from "../../../../extensions/date";
@@ -30,8 +30,8 @@ export class FieldDate extends OriginField {
     }
 }
 @view('/field/date')
-export class FieldTextView extends BlockView<FieldDate>{
-    renderView()  {
+export class FieldTextView extends OriginFileView<FieldDate>{
+   renderFieldValue()  {
         return <div className='sy-field-date  flex  f-14' style={{ width: '100%'}} onMouseDown={e => this.block.onCellMousedown(e)}>{this.block.dateString}</div>
     }
 }

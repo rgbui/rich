@@ -2,9 +2,8 @@ import React, { CSSProperties } from "react";
 import { Slick } from "../../../../component/view/slick";
 import { useDataGridFileViewer } from "../../../../extensions/data-grid/filer";
 import { url, view } from "../../../../src/block/factory/observable";
-import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/vector/point";
-import { OriginField } from "./origin.field";
+import { OriginField, OriginFileView } from "./origin.field";
 
 @url('/field/image')
 export class FieldImage extends OriginField {
@@ -28,7 +27,7 @@ export class FieldImage extends OriginField {
     }
 }
 @view('/field/image')
-export class FieldImageView extends BlockView<FieldImage>{
+export class FieldImageView extends OriginFileView<FieldImage>{
     renderImages(images: { url: string,src:string }[]) {
         var style: CSSProperties = {};
         if (this.block.field?.config?.imageFormat?.display == 'auto') {
@@ -59,7 +58,7 @@ export class FieldImageView extends BlockView<FieldImage>{
             </div>
         })
     }
-    renderView()  {
+    renderFieldValue()  {
         var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);
         if (!this.block.field?.config?.isMultiple && vs.length > 1) vs = [vs.first()]
         return <div className='sy-field-image'>
