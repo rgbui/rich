@@ -282,9 +282,14 @@ export var util = {
             }
         })
         return data.findAll(g => !rs.exists(r => r == g));
-    },firstToUpper(word: string) {
+    },
+    firstToUpper(word: string) {
         const firstLetter = word.charAt(0);
         const capitalizedWord = firstLetter.toUpperCase() + word.slice(1);
         return capitalizedWord
     },
+    remToPx(rem: string) {
+        var r = parseFloat(rem.replace('rem', ''));
+        return r * 10
+    }
 }
