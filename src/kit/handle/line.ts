@@ -52,7 +52,6 @@ export function DragBlockLine(block: Block, event: React.MouseEvent) {
                             }
                             else {
                                 var cs = await appear.split([pos.offset]);
-                                console.log('gggg', cs, appear, appear.block, pos.offset);
                                 if (cs.length > 0) {
                                     var first = cs[0];
                                     var at = first.at;

@@ -1,4 +1,3 @@
-import { ExceptionType, Warn } from "../error/exception";
 import { Page } from "../page";
 import { Events } from "../../util/events";
 import { UserAction, UserOperator } from "./action";
@@ -10,7 +9,7 @@ import { BlockAppear } from "../block/appear";
 import { BlockRenderRange } from "../block/enum";
 import lodash from "lodash";
 import { PageLayoutType } from "../page/declare";
-
+import { lst } from "../../i18n/store";
 
 /**
  * 
@@ -163,7 +162,7 @@ export class HistorySnapshoot extends Events {
                     if (command) {
                         await command.redo(op, 'redo', action);
                     }
-                    else this.emit("warn", new Warn(ExceptionType.notRegisterActionDirectiveInHistorySnapshoot))
+                    else this.emit("warn", new Error(lst('没在注册动作指令在历史记快照中')))
                 }
                 this.emit('redo', action)
             }
@@ -178,7 +177,7 @@ export class HistorySnapshoot extends Events {
                     if (command) {
                         await command.undo(op);
                     }
-                    else this.emit("warn", new Warn(ExceptionType.notRegisterActionDirectiveInHistorySnapshoot))
+                    else this.emit("warn", new Error(lst('没在注册动作指令在历史记快照中')))
                 }
                 this.emit('undo', action)
             }
@@ -190,7 +189,7 @@ export class HistorySnapshoot extends Events {
                 let op = action.operators[i];
                 var command = this.ops.get(op.directive);
                 if (command) await command.redo(op, source, action);
-                else this.emit("warn", new Warn(ExceptionType.notRegisterActionDirectiveInHistorySnapshoot))
+                else this.emit("warn", new Error(lst('没在注册动作指令在历史记快照中')))
             }
         }
     }

@@ -21,9 +21,9 @@ export class PageLayoutView extends React.Component<{
         if (type == PageLayoutType.doc || type == PageLayoutType.recordView) {
             var style: CSSProperties = { minHeight: mh, width: '100%' };
             return <div className='shy-page-layout shy-page-layout-doc' style={style}>
-                {props.page.isSchemaRecordViewTemplate && <div className="pos-center-top t-20 w-200 h-30 bg flex-center round f-12">
+                {/* {props.page.isSchemaRecordViewTemplate && <div className="pos-center-top t-20 w-200 h-30 bg flex-center round f-12">
                     <S>编辑模板</S><span>[{props.page.schema.views.find(c => c.id == props.page.pe.id1)?.text}]</span>
-                </div>}
+                </div>} */}
                 {props.children}
             </div>
         }

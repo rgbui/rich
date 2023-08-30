@@ -202,7 +202,7 @@ export class Line extends Block {
                 }
             }
         }
-        this.manualUpdateProps(oldData, { from, to });
+        await   this.manualUpdateProps(oldData, { from, to });
     }
     @prop()
     lineStart: string | number = 'none';

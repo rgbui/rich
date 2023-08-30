@@ -472,7 +472,7 @@ export class FlowMind extends Block {
                 if (isEnd) {
                     block.page.onAction(ActionDirective.onResizeBlock, async () => {
                         if (!matrix.equals(block.matrix)) block.updateMatrix(matrix, block.matrix);
-                        block.manualUpdateProps(
+                        await     block.manualUpdateProps(
                             { fixedWidth: w, fixedHeight: h },
                             { fixedWidth: block.fixedWidth, fixedHeight: block.fixedHeight }
                         )
