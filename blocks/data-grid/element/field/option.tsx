@@ -14,22 +14,27 @@ export class FieldOption extends OriginField {
     async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
         event.stopPropagation();
         if (this.checkEdit() === false) return;
-        var fc: FieldConfig = this.field.config || {};
-        var op = await useTableStoreOption({
-            roundArea: Rect.fromEle(event.currentTarget as HTMLElement)
-        }, this.value,
-            {
-                multiple: this.field.type == FieldType.options || fc.isMultiple ? true : false,
-                options: fc?.options || [],
-                changeOptions: async (ops) => {
-                    await this.onUpdateCellFieldSchema({ config: { options: ops } })
-                    this.dataGrid.forceUpdate()
+        var fn = async () => {
+            var fc: FieldConfig = this.field.config || {};
+            var op = await useTableStoreOption({
+                roundArea: Rect.fromEle(event.currentTarget as HTMLElement)
+            }, this.value,
+                {
+                    isEdit: this.isCanEdit(),
+                    multiple: this.field.type == FieldType.options || fc.isMultiple ? true : false,
+                    options: fc?.options || [],
+                    changeOptions: async (ops) => {
+                        await this.onUpdateCellFieldSchema({ config: { options: ops } })
+                        this.dataGrid.forceUpdate()
+                    }
                 }
+            );
+            if (op != null && typeof op != 'undefined') {
+                this.onUpdateProps({ value: op.map(o => o.value) }, { range: BlockRenderRange.self });
             }
-        );
-        if (op != null && typeof op != 'undefined') {
-            this.onUpdateProps({ value: op.map(o => o.value) }, { range: BlockRenderRange.self });
         }
+        if (this.dataGrid) await this.dataGrid.onDataGridTool(fn)
+        else await fn()
     }
 }
 @view('/field/option')

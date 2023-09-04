@@ -12,28 +12,31 @@ import { S } from "../../../../i18n/view";
 export class FieldComment extends OriginField {
     async onOpenComment(event: React.MouseEvent) {
         if (this.checkSign() === false) return;
-        var r = await useCommentListView({
-            userid: this.page.user.id,
-            elementUrl: getElementUrl(ElementType.SchemaData,
-                this.dataGrid.schema.id,
-                this.item.dataRow.id),
-            sort: 'default'
-        });
-        if (r != 0 && typeof r == 'number') {
-            var v = this.value;
-            if (typeof v == 'object' && typeof v.count == 'number') {
-                v.count = v.count + r;
+        var fn = async () => {
+            var r = await useCommentListView({
+                userid: this.page.user.id,
+                elementUrl: getElementUrl(ElementType.SchemaData,
+                    this.dataGrid.schema.id,
+                    this.item.dataRow.id),
+                sort: 'default'
+            });
+            if (r != 0 && typeof r == 'number') {
+                var v = this.value;
+                if (typeof v == 'object' && typeof v.count == 'number') {
+                    v.count = v.count + r;
+                }
+                else v = { count: r, users: [this.page.user] };
+                this.value = v;
+                this.forceUpdate();
             }
-            else v = { count: r, users: [this.page.user] };
-            this.value = v;
-            this.forceUpdate();
         }
+        if (this.dataGrid) await this.dataGrid.onDataGridTool(fn)
+        else await fn()
     }
-
 }
 @view('/field/comment')
 export class FieldCommentView extends OriginFileView<FieldComment>{
-  renderFieldValue()  {
+    renderFieldValue() {
         var v = this.block.value;
         if (typeof v == 'object' && typeof v?.count == 'number') v = v.count;
         if (lodash.isNull(v) || lodash.isUndefined(v)) v = 0;

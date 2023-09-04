@@ -15,16 +15,20 @@ export class FieldAudio extends OriginField {
         if (!this.field?.config?.isMultiple) {
             vs = vs.slice(0, 1);
         }
-        var rs = await useDataGridFileViewer({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
-            mime: 'audio',
-            resources: vs,
-            isMultiple: this.field?.config?.isMultiple ? true : false
-        });
-        if (Array.isArray(rs)) {
-            this.value = rs;
-            this.onUpdateCellValue(this.value);
-            this.forceUpdate();
+        var fn = async () => {
+            var rs = await useDataGridFileViewer({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
+                mime: 'audio',
+                resources: vs,
+                isMultiple: this.field?.config?.isMultiple ? true : false
+            });
+            if (Array.isArray(rs)) {
+                this.value = rs;
+                this.onUpdateCellValue(this.value);
+                this.forceUpdate();
+            }
         }
+        if (this.dataGrid) await this.dataGrid.onDataGridTool(fn)
+        else await fn()
     }
 }
 

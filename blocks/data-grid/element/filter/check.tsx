@@ -5,8 +5,6 @@ import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { OriginFilterField, OriginFilterFieldView } from "./origin.field";
 
-
-
 @url('/field/filter/check')
 export class FilterFieldCheck extends OriginFilterField {
     checked: boolean = false;
@@ -27,7 +25,7 @@ export class FilterFieldCheck extends OriginFilterField {
 }
 @view('/field/filter/check')
 export class FilterFieldCheckView extends BlockView<FilterFieldCheck>{
-    renderView()  {
+    renderView() {
         return <div style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle} filterField={this.block}>
             {this.block.format == 'checkbox' && <CheckBox checked={this.block.checked}
                 onChange={e => {

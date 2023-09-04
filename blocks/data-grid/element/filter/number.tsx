@@ -40,23 +40,34 @@ export class FilterFieldNumber extends OriginFilterField {
 
 @view('/field/filter/number')
 export class FilterFieldNumberView extends BlockView<FilterFieldNumber>{
-    renderView()  {
-        return <div className="flex-line flex-center round" style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle} filterField={this.block}>
-            <input
-                style={{ width: 60 }}
-                type='text'
-                placeholder={lst("起始值")}
-                onInput={e => this.block.numberChange((e.target as HTMLInputElement).value, 'min')}
-                defaultValue={typeof this.block.min == 'number' ? this.block.min.toString() : ''}
-            />
-            <span className="remark gap-w-5 flex-center h-20"><Icon size={16} rotate={90} icon={NsArowSvg} ></Icon></span>
-            <input
-                style={{ width: 60 }}
-                type='text'
-                placeholder={lst("结束值")}
-                onInput={e => this.block.numberChange((e.target as HTMLInputElement).value, 'max')}
-                defaultValue={typeof this.block.max == 'number' ? this.block.max.toString() : ''}
-            />
+    renderView() {
+        return <div style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle} filterField={this.block}>
+            <div className="flex-line flex round" style={{
+                height: 28,
+                width: '100%',
+                boxShadow: 'rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset',
+                background: 'rgba(242, 241, 238, 0.6)',
+                borderRadius: 4,
+                lineHeight: '26px'
+            }}>
+                <input
+                    className="noborder gap-l-10 no-bg  text-center"
+                    style={{ width: 40 }}
+                    type='text'
+                    placeholder={lst("起始值")}
+                    onInput={e => this.block.numberChange((e.target as HTMLInputElement).value, 'min')}
+                    defaultValue={typeof this.block.min == 'number' ? this.block.min.toString() : ''}
+                />
+                <span className="remark gap-w-5 flex-center h-20"><Icon size={16} rotate={90} icon={NsArowSvg} ></Icon></span>
+                <input
+                    className="noborder no-bg text-center"
+                    style={{ width: 40 }}
+                    type='text'
+                    placeholder={lst("结束值")}
+                    onInput={e => this.block.numberChange((e.target as HTMLInputElement).value, 'max')}
+                    defaultValue={typeof this.block.max == 'number' ? this.block.max.toString() : ''}
+                />
+            </div>
         </OriginFilterFieldView></div>
     }
 }

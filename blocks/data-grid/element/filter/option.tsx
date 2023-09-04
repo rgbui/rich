@@ -1,12 +1,14 @@
 import React from "react";
 import { useSelectMenuItem } from "../../../../component/view/menu";
-import { MenuItemType } from "../../../../component/view/menu/declare";
+import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import { url, prop, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/vector/point";
 import { OriginFilterField, OriginFilterFieldView } from "./origin.field";
 import { lst } from "../../../../i18n/store";
 import { S } from "../../../../i18n/view";
+import { Block } from "../../../../src/block";
+import { BlockDirective, BlockRenderRange } from "../../../../src/block/enum";
 
 @url('/field/filter/option')
 export class FilterFieldOption extends OriginFilterField {
@@ -38,6 +40,38 @@ export class FilterFieldOption extends OriginFilterField {
             value: this.values
         }]
     }
+    async onGetContextMenus() {
+        var rs = await super.onGetContextMenus();
+        var pos = rs.findIndex(g => g.name == 'showFieldText');
+        if (pos > -1) {
+            var ns: MenuItem<string | BlockDirective>[] = [];
+            ns.push({
+                name: 'isMultiple',
+                text: lst('多选'),
+                icon: { name: 'bytedance-icon', code: 'more-three' },
+                checked: this.isMultiple,
+                type: MenuItemType.switch,
+            })
+            rs.splice(pos + 1, 0, ...ns)
+        }
+        return rs;
+    }
+    async onContextMenuInput(item: MenuItem<string | BlockDirective>) {
+        switch (item.name) {
+            case 'isMultiple':
+                this.onUpdateProps({ [item.name]: item.checked }, { range: BlockRenderRange.self })
+                return;
+        }
+        super.onContextMenuInput(item)
+    }
+    async onClickContextMenu(item: MenuItem<string | BlockDirective>, e) {
+        // switch (item.name) {
+        //     case 'text-center':
+        //         await this.onUpdateProps({ align: item.value }, { range: BlockRenderRange.self })
+        //         return
+        // }
+        return await super.onClickContextMenu(item, e);
+    }
 }
 @view('/field/filter/option')
 export class FilterFieldOptionView extends BlockView<FilterFieldOption>{
@@ -66,16 +100,16 @@ export class FilterFieldOptionView extends BlockView<FilterFieldOption>{
             else return <div onMouseDown={e => select(e)}>{ops.map(op => { return <span key={op.value}>{op.text}</span> })}</div>
         }
         else return <div className="inline">
-            <span className={"gap-r-10 padding-w-5 padding-h-2  round cursor " + (!this.block.values.some(s => this.block.field?.config.options.some(c => c.value == s)) ? " text-white bg-primary" : "")} onClick={e => {
+            <span className={"gap-r-10 padding-w-5 padding-h-3  round cursor " + (!this.block.values.some(s => this.block.field?.config.options.some(c => c.value == s)) ? " text-white bg-primary" : "")} onClick={e => {
                 this.block.onFilter([], true)
             }}><S>全部</S></span>
             {this.block.field?.config.options.map(g => {
-                return <span className={"gap-r-10 padding-w-5 padding-h-2  round cursor " + (this.block.values.includes(g.value) ? " text-white bg-primary" : "")} key={g.value} onClick={e => {
+                return <span className={"gap-r-10 padding-w-5 padding-h-3  round cursor " + (this.block.values.includes(g.value) ? " text-white bg-primary" : "")} key={g.value} onClick={e => {
                     this.block.onFilter(g.value);
                 }}>{g.text}</span>
             })}</div>
     }
-    renderView()  {
+    renderView() {
         return <div style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle} filterField={this.block}>
             {this.renderOptions()}
         </OriginFilterFieldView></div>

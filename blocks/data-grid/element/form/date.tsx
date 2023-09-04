@@ -22,16 +22,16 @@ class FieldText extends OriginFormField {
 class FieldTextView extends BlockView<FieldText>{
     async mousedown(event: React.MouseEvent) {
         event.stopPropagation();
-        if(this.block.checkEdit() === false) return;
+        if (this.block.checkEdit() === false) return;
         var el = event.target as HTMLElement;
         var pickDate = await useDatePicker({ roundArea: Rect.from(el.getBoundingClientRect()) }, this.block.value);
         if (pickDate) {
             this.block.onChange(pickDate);
         }
     }
-    renderView()  {
+    renderView() {
         return <FieldView block={this.block}>
-            <div className="sy-form-field-date-value" onMouseDown={e => this.mousedown(e)}>{this.block.dateString}</div>
+            <div className="sy-form-field-date-value flex text" onMouseDown={e => this.mousedown(e)}>{this.block.dateString}</div>
         </FieldView>
     }
 }

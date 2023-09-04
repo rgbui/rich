@@ -14,21 +14,25 @@ export class FieldImage extends OriginField {
         if (!this.field?.config?.isMultiple) {
             vs = vs.slice(0, 1);
         }
-        var rs = await useDataGridFileViewer({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement)}, {
-            mime: 'image',
-            resources: vs,
-            isMultiple: this.field?.config?.isMultiple ? true : false
-        });
-        if (Array.isArray(rs)) {
-            this.value = rs;
-            this.onUpdateCellValue(this.value);
-            this.forceUpdate();
+        var fn = async () => {
+            var rs = await useDataGridFileViewer({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
+                mime: 'image',
+                resources: vs,
+                isMultiple: this.field?.config?.isMultiple ? true : false
+            });
+            if (Array.isArray(rs)) {
+                this.value = rs;
+                this.onUpdateCellValue(this.value);
+                this.forceUpdate();
+            }
         }
+        if (this.dataGrid) await this.dataGrid.onDataGridTool(fn)
+        else await fn()
     }
 }
 @view('/field/image')
 export class FieldImageView extends OriginFileView<FieldImage>{
-    renderImages(images: { url: string,src:string }[]) {
+    renderImages(images: { url: string, src: string }[]) {
         var style: CSSProperties = {};
         if (this.block.field?.config?.imageFormat?.display == 'auto') {
             style.width = '100%';
@@ -49,16 +53,16 @@ export class FieldImageView extends OriginFileView<FieldImage>{
                 renderCenterRightControls: () => <></>
             };
             return <div onMouseDown={e => { e.stopPropagation() }}><Slick {...settings}>{images.map((img, i) => {
-                return <img key={i} className="round" src={img.url||img.src} style={style} />
+                return <img key={i} className="round" src={img.url || img.src} style={style} />
             })}</Slick></div>
         }
         return images.map((img, i) => {
             return <div className="sy-field-image-item" key={i}>
-                <img className="round" src={img.url||img.src} style={style} />
+                <img className="round" src={img.url || img.src} style={style} />
             </div>
         })
     }
-    renderFieldValue()  {
+    renderFieldValue() {
         var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);
         if (!this.block.field?.config?.isMultiple && vs.length > 1) vs = [vs.first()]
         return <div className='sy-field-image'>

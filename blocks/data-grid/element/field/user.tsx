@@ -16,24 +16,27 @@ export class FieldUser extends OriginField {
             if (!this.field?.config?.isMultiple) {
                 vs = vs.slice(0, 1);
             }
-            var rs = await useDataGridFileViewer({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
-                mime: 'user',
-                resources: vs,
-                isMultiple: this.field?.config?.isMultiple ? true : false
-            });
-            if (Array.isArray(rs))
-            {
-                this.value = rs;
-                this.onUpdateCellValue(this.value);
-                this.forceUpdate();
+            var fn = async () => {
+                var rs = await useDataGridFileViewer({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
+                    mime: 'user',
+                    resources: vs,
+                    isMultiple: this.field?.config?.isMultiple ? true : false
+                });
+                if (Array.isArray(rs)) {
+                    this.value = rs;
+                    this.onUpdateCellValue(this.value);
+                    this.forceUpdate();
+                }
             }
+            if (this.dataGrid) await this.dataGrid.onDataGridTool(fn)
+            else await fn()
         }
     }
 }
 
 @view('/field/user')
 export class FieldTextView extends OriginFileView<FieldUser>{
-    renderFieldValue()  {
+    renderFieldValue() {
         if (this.block.field.type == FieldType.creater || this.block.field.type == FieldType.modifyer)
             return <div className='sy-field-text'>
                 {this.block.value && <Avatar size={30} userid={this.block.value}></Avatar>}

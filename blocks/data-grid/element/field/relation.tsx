@@ -30,19 +30,23 @@ export class FieldRelation extends OriginField {
     }
     async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
         if (this.checkEdit() === false) return;
-        var r = await useRelationPickData({ roundArea: Rect.fromEvent(event) }, {
-            field: this.viewField.field,
-            relationDatas: this.relationList,
-            isMultiple: this.viewField.field.config.isMultiple,
-            relationSchema: this.relationSchema,
-            page: this.page
-        });
-        if (r) {
-            var ids = r.map(r => r.id);
-            await this.onUpdateCellValue(ids);
-            await this.dataGrid.loadRelationDatas();
-            this.forceUpdate();
+        var fn = async () => {
+            var r = await useRelationPickData({ roundArea: Rect.fromEvent(event) }, {
+                field: this.viewField.field,
+                relationDatas: this.relationList,
+                isMultiple: this.viewField.field.config.isMultiple,
+                relationSchema: this.relationSchema,
+                page: this.page
+            });
+            if (r) {
+                var ids = r.map(r => r.id);
+                await this.onUpdateCellValue(ids);
+                await this.dataGrid.loadRelationDatas();
+                this.forceUpdate();
+            }
         }
+        if (this.dataGrid) await this.dataGrid.onDataGridTool(fn)
+        else await fn()
     }
 }
 @view('/field/relation')

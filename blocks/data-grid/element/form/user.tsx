@@ -29,7 +29,7 @@ export class FieldUser extends OriginFormField {
 
 @view('/form/user')
 export class FieldTextView extends BlockView<FieldUser>{
-    renderView()  {
+    renderView() {
         var vs = this.block.value;
         if (!Array.isArray(vs) && vs) vs = [vs];
         if (!Array.isArray(vs)) vs = [];

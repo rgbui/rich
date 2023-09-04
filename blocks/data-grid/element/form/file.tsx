@@ -49,7 +49,7 @@ class FormFieldFileView extends BlockView<FormFieldFile>{
     }
     renderFiles(images: { filename: string, size: number, url: string }[]) {
         return images.map((img, i) => {
-            return <div className="sy-field-file-item min-h-30 padding-w-10 cursor flex item-hover-focus round visible-hover" key={i}>
+            return <div className="sy-field-file-item padding-h-3 padding-w-10 cursor flex item-hover-focus round visible-hover" key={i}>
                 <a className="link f-14 flex-auto flex" download={img.url} href={img.url}>
                     <span className="flex-fixed item-hover round size-24 remark flex-center"><Icon size={18} icon={FileSvg}></Icon></span>
                     <span className="flex-fixed text-overflow gap-w-5">{img.filename}</span>
@@ -59,7 +59,7 @@ class FormFieldFileView extends BlockView<FormFieldFile>{
             </div>
         })
     }
-    renderView()  {
+    renderView() {
         var text = lst('文件');
         if (this.block.field?.type == FieldType.video) text = lst('视频')
         else if (this.block.field?.type == FieldType.audio) text = lst('音频')
@@ -70,7 +70,7 @@ class FormFieldFileView extends BlockView<FormFieldFile>{
                 {this.block.value && <div className="sy-field-files">
                     {this.renderFiles(vs)}
                 </div>}
-                {(vs.length == 0 || this.block.field?.config?.isMultiple) && this.block.isCanEdit() && <Button size={'small'} ghost onClick={e => this.block.uploadFile(e)}><S>上传</S>{text}</Button>}
+                {(vs.length == 0 || this.block.field?.config?.isMultiple) && this.block.isCanEdit() && <div className={vs.length > 0 ? "gap-t-30" : ""}><Button size={'small'} ghost onClick={e => this.block.uploadFile(e)}><S>上传</S>{text}</Button></div>}
             </div>
         </FieldView>
     }

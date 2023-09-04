@@ -17,11 +17,15 @@ export class FieldEmailView extends OriginFileView<FieldEmoji>{
         var self = this;
         async function mousedown(event: React.MouseEvent) {
             if (self.block.checkSign() === false) return;
-            var r = await self.block.item.onUpdateCellInteractive(self.block.viewField.field)
-            if (r) {
-                self.block.value = r;
-                self.forceUpdate()
+            var fn = async () => {
+                var r = await self.block.item.onUpdateCellInteractive(self.block.viewField.field)
+                if (r) {
+                    self.block.value = r;
+                    self.forceUpdate()
+                }
             }
+            if (self.block.dataGrid) await self.block.dataGrid.onDataGridTool(fn)
+            else await fn()
         }
         var svg = GetFieldTypeSvg(this.block.viewField.field.type);
         var v = this.block.value;

@@ -13,6 +13,7 @@ import { TableSchema } from "../../schema/meta";
 import { FieldType } from "../../schema/type";
 import { FieldView, OriginFormField } from "./origin.field";
 import { S } from "../../../../i18n/view";
+import { Tip } from "../../../../component/view/tooltip/tip";
 
 @url('/form/relation')
 class FormFieldRelation extends OriginFormField {
@@ -59,6 +60,7 @@ class FormFieldRelation extends OriginFormField {
         this.forceUpdate()
     }
 }
+
 @view('/form/relation')
 class FormFieldRelationView extends BlockView<FormFieldRelation>{
     renderList() {
@@ -69,23 +71,23 @@ class FormFieldRelationView extends BlockView<FormFieldRelation>{
         if (!f) f = rs?.fields.find(g => g.type == FieldType.text);
         return <div>{this.block.relationList?.map(r => {
             var url = getElementUrl(ElementType.SchemaData, rs.id, r.id);
-            return <a className="flex no-underline text-1 min-h-30 flex-block round item-hover visible-hover"
-                href={url}
+            return <a className="flex no-underline text-1 padding-h-3 gap-t-10 flex-block round item-hover visible-hover"
+                // href={url}
                 onClick={e => e.preventDefault()}
                 key={r.id}
             >
-                <span className="flex-fixed size-24 flex-center flex-inline">
+                <span className="flex-fixed size-20 gap-l-5 flex-center flex-inline cursor">
                     <Icon size={18} icon={getPageIcon({ pageType: PageLayoutType.doc, icon: r[icon.name] })}></Icon>
                 </span>
                 <span className="flex-auto text-overflow">{r[f?.name]}</span>
-                {this.block.isCanEdit() && <span onClick={e => this.block.onDeleteData(e, r.id)} className="flex-fixed size-24 item-hover flex-center visible round">
-                    <Icon size={16} icon={CloseSvg}></Icon>
-                </span>}
+                {this.block.isCanEdit() && <Tip text='移除'><span onClick={e => this.block.onDeleteData(e, r.id)} className="flex-fixed size-20 gap-w-5 item-hover  flex-center visible round">
+                    <Icon size={12} icon={CloseSvg}></Icon>
+                </span></Tip>}
             </a>
         })}
-            {(this.block.field.config.isMultiple || (!(this.block.relationList.length > 0))) && this.block.isCanEdit() && <div>
-                <Button onMouseDown={e => { this.block.onCellMousedown(e) }} ghost><S>选择</S>{this.block.relationSchema?.text}</Button>
-            </div>}
+            {(this.block.field.config.isMultiple || (!(this.block.relationList.length > 0))) && this.block.isCanEdit() && <div
+                className={this.block.relationList.length > 0 ? "gap-h-10" : ""}
+            ><Button size="small" onMouseDown={e => { this.block.onCellMousedown(e) }} ghost><S>添加关联记录</S></Button></div>}
         </div>
     }
     renderView() {

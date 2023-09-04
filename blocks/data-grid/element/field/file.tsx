@@ -19,16 +19,20 @@ export class FieldFile extends OriginField {
         if (!this.field?.config?.isMultiple) {
             vs = vs.slice(0, 1);
         }
-        var rs = await useDataGridFileViewer({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
-            mime: 'file',
-            resources: vs,
-            isMultiple: this.field?.config?.isMultiple ? true : false
-        });
-        if (Array.isArray(rs)) {
-            this.value = rs;
-            this.onUpdateCellValue(this.value);
-            this.forceUpdate();
+        var fn = async () => {
+            var rs = await useDataGridFileViewer({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
+                mime: 'file',
+                resources: vs,
+                isMultiple: this.field?.config?.isMultiple ? true : false
+            });
+            if (Array.isArray(rs)) {
+                this.value = rs;
+                this.onUpdateCellValue(this.value);
+                this.forceUpdate();
+            }
         }
+        if (this.dataGrid) await this.dataGrid.onDataGridTool(fn)
+        else await fn()
     }
 }
 @view('/field/file')
@@ -45,7 +49,7 @@ export class FieldFileView extends OriginFileView<FieldFile>{
             </div>
         })
     }
-    renderFieldValue()  {
+    renderFieldValue() {
         var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);
         if (!this.block.field?.config?.isMultiple && vs.length > 1) vs = [vs.first()]
         return <div className='sy-field-file  visible-hover'>

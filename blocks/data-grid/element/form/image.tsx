@@ -9,6 +9,7 @@ import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { FieldView, OriginFormField } from "./origin.field";
 import { S } from "../../../../i18n/view";
+import { Tip } from "../../../../component/view/tooltip/tip";
 
 @url('/form/image')
 class FormFieldImage extends OriginFormField {
@@ -44,18 +45,18 @@ class FormFieldImageView extends BlockView<FormFieldImage>{
     renderImages(images: { url: string }[]) {
         return images.map((img, i) => {
             return <div
-                className="border round flex-center relative gap-r-10 gap-b-10 visible-hover size-120 round"
+                className="border round flex-center relative gap-r-10 gap-b-10 visible-hover size-80 round"
                 key={i}>
-                {this.block.isCanEdit() && <span onClick={e => this.deleteImage(img, e)} className="pos-top-right flex-center size-24 item-hover-focus circle cursor visible">
-                    <Icon size={16} icon={CloseSvg}></Icon>
-                </span>}
-                <img src={img.url}
-                    style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "cover", objectPosition: 'center center' }}
-                />
+                {this.block.isCanEdit() && <Tip text='移除图片'><span
+                    onClick={e => this.deleteImage(img, e)}
+                    className="pos-top-right flex-center size-16  bg-dark-1 text-white circle cursor visible">
+                    <Icon size={8} icon={CloseSvg}></Icon>
+                </span></Tip>}
+                <img src={img.url} className="max-w100 max-h100 obj-center" />
             </div>
         })
     }
-    renderView()  {
+    renderView() {
         var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);
         if (!this.block.field?.config?.isMultiple && vs.length > 1) vs = [vs.first()]
         return <FieldView block={this.block}>
@@ -63,7 +64,7 @@ class FormFieldImageView extends BlockView<FormFieldImage>{
                 {vs.length > 0 && <div className="flex">
                     {this.renderImages(vs)}
                 </div>}
-                {(vs.length < 2 || this.block.field?.config?.isMultiple)&&this.block.isCanEdit() && <Button size="small" ghost onClick={e => this.block.uploadFile(e)}><S>上传图片</S></Button>}
+                {(vs.length < 2 || this.block.field?.config?.isMultiple) && this.block.isCanEdit() && <Button size="small" ghost onClick={e => this.block.uploadFile(e)}><S>上传图片</S></Button>}
             </div>
         </FieldView>
     }
