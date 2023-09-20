@@ -13,24 +13,29 @@ import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
 import { channel } from "../../../net/channel";
 import { lst } from "../../../i18n/store";
+import { IconValueType } from "../../../component/view/icon";
 
 export class DataSourceView extends EventsComponent {
     render(): ReactNode {
         var self = this;
-        var saveTable = lodash.debounce(async (schema: TableSchema, text: string) => {
-            if (text) {
+        var saveTable = lodash.debounce(async (schema: TableSchema, options?: { text?: string, icon?: IconValueType }) => {
+            if (options) {
                 var it = self.mv.props.items.find(g => g.value == schema.id);
                 if (it) {
-                    it.text = text;
+                    Object.assign(it, options);
                     self.mv.forceUpdate()
                 }
-                await schema.update({ text })
-                channel.air('/page/update/info', { id: schema.id, pageInfo: { text } })
+                await schema.update(options)
+                channel.air('/page/update/info', { id: schema.id, pageInfo: options as any })
             }
         }, 800)
         async function input(item) {
             if (item.name == 'name') {
-                saveTable(item.data, item.value);
+                var dr: Record<string, any> = {};
+                if (item.text != item.data.text) dr.text = item.text;
+                if (!lodash.isEqual(item.icon, item.data.icon)) dr.icon = item.icon;
+                if (Object.keys(dr).length > 0)
+                    saveTable(item.data, dr);
             }
         }
         async function select(item) {
@@ -49,11 +54,8 @@ export class DataSourceView extends EventsComponent {
                 }
             }
         }
-        function click(item) {
-
-        }
         var items: MenuItem[] = [];
-        items.push({ type: MenuItemType.text, text: lst('选择表格视图') })
+        items.push({ type: MenuItemType.text, text: this.selectView ? lst('选择表格视图') : lst('选择表格') })
         var list = Array.from(TableSchema.schemas.values());
         list = lodash.sortBy(list, g => 0 - g.createDate.getTime())
         list.forEach((rd) => {
@@ -62,7 +64,7 @@ export class DataSourceView extends EventsComponent {
             if (this.selectView) {
                 var cs: MenuItem[] = [];
                 if (Array.isArray(rd.views) && rd.views.length > 0) {
-                    cs.push({ type: MenuItemType.text, text:lst('视图')  })
+                    cs.push({ type: MenuItemType.text, text: lst('视图') })
                     var srs = getSchemaViews();
                     cs.push(...rd.views.findAll(g => srs.some(s => s.url == g.url)).map(rv => {
                         return {
@@ -75,7 +77,7 @@ export class DataSourceView extends EventsComponent {
                             },
                             name: 'view',
                             checkLabel: rv.id == self.currentViewId,
-                            icon: getSchemaViewIcon(rv.url),
+                            icon: rv.icon || getSchemaViewIcon(rv.url),
                         }
                     }))
                 }
@@ -83,8 +85,9 @@ export class DataSourceView extends EventsComponent {
                     cs.splice(0, 0, ...[
                         {
                             name: 'name',
-                            type: MenuItemType.input,
+                            type: MenuItemType.inputTitleAndIcon,
                             value: rd.text,
+                            icon: lodash.cloneDeep(rd.icon) || CollectTableSvg,
                             text: lst('编辑表名'),
                             data: rd,
                         },
@@ -93,8 +96,9 @@ export class DataSourceView extends EventsComponent {
                 }
                 else cs.push({
                     name: 'name',
-                    type: MenuItemType.input,
+                    type: MenuItemType.inputTitleAndIcon,
                     value: rd.text,
+                    icon: lodash.cloneDeep(rd.icon) || CollectTableSvg,
                     text: lst('编辑表名'),
                     data: rd,
                 })
@@ -108,7 +112,7 @@ export class DataSourceView extends EventsComponent {
                     })
                 }
                 else cs.push({
-                    text:lst('删除表格') ,
+                    text: lst('删除表格'),
                     name: 'deleteTable',
                     icon: TrashSvg,
                     value: rd.id
@@ -128,7 +132,7 @@ export class DataSourceView extends EventsComponent {
                     name: 'table',
                     text: rd.text,
                     value: rd.id,
-                    label: util.showTime(rd.createDate),
+                    // label: util.showTime(rd.createDate),
                     icon: (rd as any).icon || CollectTableSvg,
                     checkLabel: rd.id == this.currentTableId,
                 })
@@ -137,7 +141,7 @@ export class DataSourceView extends EventsComponent {
 
         return <MenuView ref={e => this.mv = e} input={input}
             select={select}
-            click={click} style={{
+            style={{
                 width: 300,
                 maxHeight: 300,
                 paddingTop: 10,

@@ -17,7 +17,6 @@ import { exportHtmlDb } from "../../../src/import-export/html/db.export";
 import { exportMarkdownDb } from "../../../src/import-export/markdown/db.export";
 import { util } from "../../../util/util";
 import { PopoverSingleton } from "../../popover/popover";
-import { PopoverPosition } from "../../popover/position";
 import { lst } from "../../../i18n/store";
 import { S, Sp } from "../../../i18n/view";
 
@@ -100,12 +99,12 @@ class TableExportView extends EventsComponent {
     }
     async loadData() {
         var rs: any[] = [];
-        var r = await this.schema.list({ page: 1, size: this.size }, this.dataGridView.page);
+        var r = await this.schema.list({ page: 1, size: this.size }, this.dataGridView.page.ws);
         this.total = r.data.total;
         var pages = Math.ceil(r.data.total / this.size);
         rs.push(... await (this.handleList(r.data.list, this.getFields())));
         for (let i = 2; i <= pages; i++) {
-            var rg = await this.schema.list({ page: i, size: this.size }, this.dataGridView.page);
+            var rg = await this.schema.list({ page: i, size: this.size }, this.dataGridView.page.ws);
             this.page = i;
             await util.delay(10);
             this.forceUpdate();

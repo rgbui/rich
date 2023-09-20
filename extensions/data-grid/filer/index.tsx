@@ -107,20 +107,27 @@ export class DataGridFileViewer extends EventsComponent {
         }
         function getButtonText() {
             var text = '';
-            if (self.mime == 'file') text = lst('上传文件')
+            if (self.mime == 'file') text = lst('添加文件')
             else if (self.mime == 'user') text = lst('添加用户')
-            else if (self.mime == 'image') text = lst('上传图片')
-            else if (self.mime == 'audio') text = lst('上传音频')
-            else if (self.mime == 'video') text = lst('上传视频')
-            else text = lst('上传文件')
-            if (self.isMultiple != true && self.resources.length > 0) text = text.replace(lst('上传'), lst('更换')).replace(lst('添加'), lst('更换'))
+            else if (self.mime == 'image') text = lst('添加图片')
+            else if (self.mime == 'audio') text = lst('添加音频')
+            else if (self.mime == 'video') text = lst('添加视频')
+            else text = lst('添加文件')
+            if (self.isMultiple != true && self.resources.length > 0) {
+                if (self.mime == 'file') text = lst('更换文件')
+                else if (self.mime == 'user') text = lst('更换用户')
+                else if (self.mime == 'image') text = lst('更换图片')
+                else if (self.mime == 'audio') text = lst('更换音频')
+                else if (self.mime == 'video') text = lst('更换视频')
+                else text = lst('更换文件')
+            }
             return text;
         }
         return <div className={"gap-h-14" + (this.mime == 'user' ? " w-180" : " w-300")}>
             <div className="max-h-300 overflow-y padding-h-5">
                 <DragList onChange={(e, c) => this.dragChange(e, c)}
                     isDragBar={e => e.closest('.drag') ? true : false}>
-                    {this.resources.map((re, i) => {
+                    {this.resources.map((re,i) => {
                         return <div className="flex cursor min-h-30 padding-w-14 text-1 item-hover round" key={i}>
                             <span className="round flex-fixed drag size-24 remark flex-center cursor item-hover">
                                 <Icon icon={DragHandleSvg} size={14}></Icon>

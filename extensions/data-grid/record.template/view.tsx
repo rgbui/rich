@@ -9,24 +9,22 @@ import { PopoverPosition } from "../../popover/position";
 import { Divider } from "../../../component/view/grid";
 import {
     DetailSvg,
-    DocAddSvg,
-    DocEditSvg,
     DotsSvg,
     DragHandleSvg,
-    EditSvg,
-    NoteSvg,
+    Edit1Svg,
     OrderSvg,
-    PageSvg,
     PlusSvg,
     TrashSvg
 } from "../../../component/svgs";
 import { getElementUrl, ElementType } from "../../../net/element.type";
-import { Page } from "../../../src/page";
+
 import { DataGridView } from "../../../blocks/data-grid/view/base";
 import { BlockUrlConstant } from "../../../src/block/constant";
-import { Icon } from "../../../component/view/icon";
+import { Icon, IconValueType } from "../../../component/view/icon";
 import { lst } from "../../../i18n/store";
 import { S } from "../../../i18n/view";
+import { TableSchemaView } from "../../../blocks/data-grid/schema/meta";
+import lodash from "lodash";
 
 class TabelSchemaFormDrop extends EventsComponent {
     block: DataGridView;
@@ -64,45 +62,30 @@ class TabelSchemaFormDrop extends EventsComponent {
             }
         }
     }
-    async onChange(view, isTemplate: boolean = false) {
+    async onOpenTemplate(view, isTemplate: boolean = false) {
         this.emit('save', view);
-        var dialougPage: Page = await channel.air('/page/dialog',
-            {
-                elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, view.id),
-                config: isTemplate ? { isTemplate: true } : {}
-            })
-        if (dialougPage) {
-            if (isTemplate !== true) {
-                await dialougPage.onSave();
-                var newRow = await dialougPage.getSchemaRow();
-                if (newRow) {
-                    try {
-                        await this.block.onAddRow(newRow, undefined, 'after', dialougPage);
-                    }
-                    catch (ex) {
-                        console.error(ex);
-                    }
-                }
-            }
-        }
-        await channel.air('/page/dialog', { elementUrl: '' });
+        await channel.air('/page/dialog', {
+            elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, view.id),
+            config: isTemplate ? { isTemplate: true, force: true } : { force: true }
+        })
     }
-    async onProperty(view, event: React.MouseEvent) {
+    async onProperty(view: TableSchemaView, event: React.MouseEvent) {
         event.stopPropagation();
         var menus = [
             {
-                type: MenuItemType.input,
+                type: MenuItemType.inputTitleAndIcon,
                 text: lst('重命名模板'),
                 value: view.text,
+                icon: view.icon,
                 name: 'rename'
             },
             { type: MenuItemType.divide },
-            { text: lst('编辑'), name: 'edit', icon: EditSvg },
+            { text: lst('编辑'), name: 'edit', icon: Edit1Svg },
             { type: MenuItemType.divide },
-            { text: lst('默认收集单'), name: 'defaultCollect', checkLabel: this.schema.defaultCollectFormId == view.id ? true : false, icon: OrderSvg },
-            { text: lst('默认编辑单'), name: 'defaultEdit', checkLabel: this.schema.defaultEditFormId == view.id ? true : false, icon: DetailSvg },
+            { text: lst('默认新增时打开'), name: 'defaultCollect', checkLabel: this.schema.defaultCollectFormId == view.id ? true : false, icon: OrderSvg },
+            { text: lst('默认编辑时打开'), name: 'defaultEdit', checkLabel: this.schema.defaultEditFormId == view.id ? true : false, icon: DetailSvg },
             { type: MenuItemType.divide },
-            { text: lst('删除'), name: 'delete', icon: TrashSvg }
+            { text: lst('删除'), name: 'delete', icon: TrashSvg, disabled: this.schema.views.findAll(g => [BlockUrlConstant.FormView, BlockUrlConstant.RecordPageView].includes(g.url as any)).length == 1 ? true : false }
         ]
         var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
         if (um) {
@@ -112,7 +95,7 @@ class TabelSchemaFormDrop extends EventsComponent {
                 return;
             }
             else if (um.item.name == 'edit') {
-                this.onChange(view, true);
+                this.onOpenTemplate(view, true);
                 /**
                  * 这里打开表单，进行编辑
                  */
@@ -125,17 +108,25 @@ class TabelSchemaFormDrop extends EventsComponent {
                 this.schema.update({ defaultEditFormId: view.id })
             }
         }
-        var it = menus.find(g => g.name == 'rename') as { value: string };
+        var it = menus.find(g => g.name == 'rename') as { value: string, icon: IconValueType };
+        var data = {};
         if (it.value != view.text && it.value) {
+            data['text'] = it.value;
+        }
+        if (!lodash.isEqual(it.icon, view.icon) && it.icon) {
+            data['icon'] = it.icon;
+        }
+        if (Object.keys(data).length > 0) {
             this.schema.onSchemaOperate([{
                 name: 'updateSchemaView',
                 id: view.id,
-                data: { text: it.value }
+                data: data
             }])
-            view.text = it.value;
+            Object.assign(view, data);
             this.forceUpdate();
             return;
         }
+
     }
     render(): ReactNode {
         if (!this.schema) return <div></div>
@@ -145,7 +136,7 @@ class TabelSchemaFormDrop extends EventsComponent {
             <div className="bold padding-w-10 "><S>模板列表</S></div>
             {views.length > 0 && <Divider></Divider>}
             {views.map(v => {
-                return <div className="item-hover padding-w-10 h-30 round flex cursor text-1 f-14" key={v.id} onClick={e => this.onChange(v)}>
+                return <div className="item-hover padding-w-5 gap-w-5 h-30 round flex cursor text-1 f-14" key={v.id} onClick={e => this.onOpenTemplate(v)}>
                     <span className="size-24 flex-center flex-fixed round item-hover"><Icon size={12} className={'drag'} icon={DragHandleSvg}></Icon></span>
                     <span className="flex-fixed size-24 flex-center item-hover round">
                         <Icon size={16} icon={v.icon || (v.url == BlockUrlConstant.FormView ? OrderSvg : DetailSvg)}></Icon>
@@ -157,16 +148,11 @@ class TabelSchemaFormDrop extends EventsComponent {
                 </div>
             })}
             <Divider></Divider>
-            <div className="item-hover padding-w-10  h-30 round flex item-hover cursor  text-1 f-14" onClick={e => this.onAdd(e, BlockUrlConstant.RecordPageView)}>
+            <div className="item-hover padding-w-5 gap-w-5  h-30 round flex item-hover cursor  text-1 f-14" onClick={e => this.onAdd(e, BlockUrlConstant.RecordPageView)}>
                 <span className="size-24 flex-center "><Icon size={16} icon={DetailSvg}></Icon></span>
                 <span className="flex-auto"><S>新增数据模板</S></span>
                 <span className="size-24 flex-center round item-hover "><Icon size={16} icon={PlusSvg}></Icon></span>
             </div>
-            {/* <div className="item-hover padding-w-10  h-30 round flex item-hover cursor  text-1 f-14" onClick={e => this.onAdd(e, BlockUrlConstant.FormView)}>
-                <span className="size-24 flex-center "><Icon size={16} icon={OrderSvg}></Icon></span>
-                <span className="flex-auto">新增表单模板</span>
-                <span className="size-24 flex-center round item-hover "><Icon size={16} icon={PlusSvg}></Icon></span>
-            </div> */}
         </div>
     }
 }

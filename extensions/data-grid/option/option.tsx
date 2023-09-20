@@ -1,11 +1,10 @@
 import lodash from "lodash";
 import React from "react";
-import { FieldType } from "../../../blocks/data-grid/schema/type";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
 import CloseTick from "../../../src/assert/svg/closeTick.svg";
-import './style.less';
+
 import DragHandle from "../../../src/assert/svg/dragHandle.svg";
 import Dots from "../../../src/assert/svg/dots.svg";
 import { MenuItemType } from "../../../component/view/menu/declare";
@@ -21,13 +20,14 @@ import { DragList } from "../../../component/view/drag.list";
 import { DataGridOptionType } from "../../../blocks/data-grid/schema/field";
 import { lst } from "../../../i18n/store";
 import { S } from "../../../i18n/view";
+import './style.less';
 
 /**
  * 
  * 背景色
  * 
  */
-export var OptionBackgroundColorList =()=> [
+export var OptionBackgroundColorList = () => [
     { color: 'rgba(247,214,183,0.5)', text: lst('幼杏') },
     { color: 'rgba(255,193,153,0.5)', text: lst('鲜橘') },
     { color: 'rgba(252,246,189,0.5)', text: lst('淡黄') },
@@ -46,7 +46,8 @@ export class TableStoreOption extends EventsComponent {
         var self = this;
         function keydown(event: KeyboardEvent) {
             if (event.key == 'Enter') {
-                self.onCreateOption();
+                if (self.isEdit)
+                    self.onCreateOption();
             }
             else if (event.key.toLowerCase() == 'backspace') {
                 if (!self.value) {
@@ -88,17 +89,17 @@ export class TableStoreOption extends EventsComponent {
                 <div className="shy-tablestore-option-selector-input-wrapper"><input ref={e => this.input = e} maxLength={this.value.length + 3} value={this.value} onInput={e => changeInput(e)} onKeyDown={e => keydown(e.nativeEvent)} /></div>
             </div>
             <div className="shy-tablestore-option-selector-drop overflow-y max-h-180">
-                <div className="remark" style={{ height: 20, margin: '8px 0px', padding: '0px 10px' }}>{this.filterOptions.length > 0 ? lst('选择或创建一个选项') : lst('暂无选项')}</div>
+                <div className="remark gap-h-8 padding-w-10 h-20 f-12">{this.filterOptions.length > 0 ? lst('选择或创建一个选项') : lst('暂无选项')}</div>
                 <DragList onChange={change} isDragBar={e => e.closest('.shy-tablestore-option-item-icon') ? true : false}>
                     {this.filterOptions.map(op => {
                         return <div className="shy-tablestore-option-item" key={op.text} onClick={e => this.setOption(op)} >
-                            <span className="shy-tablestore-option-item-icon"><DragHandle></DragHandle></span>
+                            {this.isEdit && <span className="shy-tablestore-option-item-icon"><DragHandle></DragHandle></span>}
                             <span className="shy-tablestore-option-item-text text-overflow"><em style={{ backgroundColor: op.color }}>{op.text}</em></span>
-                            <span className="shy-tablestore-option-item-property" onClick={e => this.configOption(op, e)}><Dots></Dots></span>
+                            {this.isEdit && <span className="shy-tablestore-option-item-property" onClick={e => this.configOption(op, e)}><Dots></Dots></span>}
                         </div>
                     })}
                 </DragList>
-                {this.isNeedCreated && <div className="shy-tablestore-option-item-create box-border" onClick={e => this.onCreateOption()}><em><S>创建</S></em><span style={{ backgroundColor: this.optionColor }}>{this.value}</span></div>}
+                {this.isNeedCreated && self.isEdit && <div className="shy-tablestore-option-item-create box-border" onClick={e => this.onCreateOption()}><em><S>创建</S></em><span style={{ backgroundColor: this.optionColor }}>{this.value}</span></div>}
             </div>
         </div>
     }
@@ -152,7 +153,8 @@ export class TableStoreOption extends EventsComponent {
     ovs: DataGridOptionType[] = [];
     input: HTMLInputElement;
     multiple: boolean = false;
-    open(value, data: { multiple: boolean, options: DataGridOptionType[] }) {
+    isEdit: boolean = false;
+    open(value, data: { isEdit: boolean, multiple: boolean, options: DataGridOptionType[] }) {
         this.multiple = data.multiple ? true : false;
         if (this.multiple) {
             var v = util.covertToArray(value);
@@ -160,6 +162,7 @@ export class TableStoreOption extends EventsComponent {
         }
         else this.ovs = data.options.filter(g => g.value == value);
         this.options = data.options;
+        this.isEdit = data.isEdit || false;
         this.value = '';
         this.forceUpdate(async () => {
             await util.delay(10);
@@ -223,7 +226,9 @@ export class TableStoreOption extends EventsComponent {
 }
 
 export async function useTableStoreOption(pos: PopoverPosition,
-    value: any, options: {
+    value: any,
+    options: {
+        isEdit: boolean,
         multiple: boolean,
         options: DataGridOptionType[],
         changeOptions: (options: DataGridOptionType[]) => void,

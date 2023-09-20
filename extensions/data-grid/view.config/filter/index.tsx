@@ -28,7 +28,7 @@ export class TableFilterView extends EventsComponent {
     }
     block: DataGridView;
     oldFilters: SchemaFilter;
-    onOpen(block: DataGridView) {
+    onOpen(block: DataGridView): void {
         this.block = block;
         this.oldFilters = lodash.cloneDeep(this.block.filter);
         this.forceUpdate();
@@ -341,7 +341,7 @@ export class TableFilterView extends EventsComponent {
                 {/* {self.block.filter.items.length == 0 && <div className="remark padding-w-14 f-12 h-30 flex"><S>还没有添加筛选条件</S></div>} */}
             </div>
             {self.block.filter.items.length > 0 && <Divider></Divider>}
-            <div onClick={e => addFilter()} className="h-30  flex cursor item-hover gap-b-5 padding-w-5 gap-w-5 round">
+            <div onClick={e => addFilter()} className="h-30  flex cursor item-hover gap-b-5 padding-w-7 gap-w-5 round">
                 <span className="size-20 round flex-center flex-fixed cursor"><Icon size={20} icon={PlusSvg}></Icon></span>
                 <span className="flex-auto"><S>添加筛选条件</S></span>
             </div>

@@ -14,7 +14,7 @@ import { TableStoreBoard } from "../../../../blocks/data-grid/view/board";
 import { MenuView } from "../../../../component/view/menu/menu";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import lodash from "lodash";
-import { CheckSvg, DatasourceSvg, LockSvg, LoopSvg, UnlockSvg } from "../../../../component/svgs";
+import { CheckSvg, LoopSvg } from "../../../../component/svgs";
 import { Rect } from "../../../../src/common/vector/point";
 import { DataGridConfig } from "..";
 import { lst } from "../../../../i18n/store";
@@ -58,27 +58,30 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                         text: lst('数据视图'),
                         icon: { name: 'bytedance-icon', code: 'application-two' },
                         childsStyle: { width: 300 },
-                        childs: cms.map(c => {
-                            return {
-                                type: MenuItemType.custom,
-                                name: 'dataView',
-                                value: c.url,
-                                render(item, view) {
-                                    return <div className="flex-full relative item-hover round padding-w-14 padding-h-10">
-                                        <div className="flex-fixed">
-                                            <img src={c.image} className="obj-center h-60 w-120" />
+                        childs: [
+                            { text: lst('选择数据视图'), type: MenuItemType.text },
+                            ...cms.map(c => {
+                                return {
+                                    type: MenuItemType.custom,
+                                    name: 'dataView',
+                                    value: c.url,
+                                    render(item, view) {
+                                        return <div className="flex-full relative item-hover round padding-w-14 padding-h-10">
+                                            <div className="flex-fixed">
+                                                <img src={c.image} className="obj-center h-60 w-120" />
+                                            </div>
+                                            <div className="flex-auto gap-l-10">
+                                                <div>{c.title}</div>
+                                                <div className="remark">{c.remark}</div>
+                                            </div>
+                                            {self.block.getCardUrl() == c.url && <div className="pos pos-right pos-t-5 pos-r-5 size-20 cursor round">
+                                                <Icon size={16} icon={CheckSvg}></Icon>
+                                            </div>}
                                         </div>
-                                        <div className="flex-auto gap-l-10">
-                                            <div>{c.title}</div>
-                                            <div className="remark">{c.remark}</div>
-                                        </div>
-                                        {self.block.getCardUrl() == c.url && <div className="pos pos-right pos-t-5 pos-r-5 size-20 cursor round">
-                                            <Icon size={16} icon={CheckSvg}></Icon>
-                                        </div>}
-                                    </div>
+                                    }
                                 }
-                            }
-                        })
+                            })
+                        ]
                     }
                 ]
             },
@@ -141,27 +144,51 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
             ])
         }
         else if (this.block.url == BlockUrlConstant.DataGridGallery) {
-            baseItems.splice(baseItems.length, 0, ...[{ type: MenuItemType.divide },
-            {
-                text: lst('卡片列数'),
-                value: (this.block as TableStoreGallery).gallerySize,
-                name: 'gallerySize',
-                type: MenuItemType.select,
-                options: [
-                    { text: lst('自适应'), value: -1 },
-                    { text: '1' + lst('列'), value: 1 },
-                    { text: '2' + lst('列'), value: 2 },
-                    { text: '3' + lst('列'), value: 3 },
-                    { text: '4' + lst('列'), value: 4 },
-                    { text: '5' + lst('列'), value: 5 },
-                    { text: '6' + lst('列'), value: 6 }
-                ]
-            },
-            ])
+            baseItems.splice(baseItems.length, 0, ...[
+                { type: MenuItemType.divide },
+                {
+                    text: lst('字段属性'),
+                    value: (this.block as TableStoreGallery).cardConfig?.showField || 'none',
+                    name: 'cardConfig.showField',
+                    type: MenuItemType.select,
+                    visible: (this.block as TableStoreGallery).getCardUrl() ? false : true,
+                    options: [
+                        { text: lst('隐藏'), value: 'none' },
+                        { text: lst('显示'), value: 'nowrap' },
+                        { text: lst('换行显示'), value: 'wrap' },
+                    ]
+                },
+                {
+                    text: lst('卡片列数'),
+                    value: (this.block as TableStoreGallery).gallerySize,
+                    name: 'gallerySize',
+                    type: MenuItemType.select,
+                    options: [
+                        { text: lst('自适应'), value: -1 },
+                        { text: '1' + lst('列'), value: 1 },
+                        { text: '2' + lst('列'), value: 2 },
+                        { text: '3' + lst('列'), value: 3 },
+                        { text: '4' + lst('列'), value: 4 },
+                        { text: '5' + lst('列'), value: 5 },
+                        { text: '6' + lst('列'), value: 6 }
+                    ]
+                }])
         }
         else if (this.block.url == BlockUrlConstant.DataGridBoard) {
             baseItems.splice(baseItems.length, 0, ...[
                 { type: MenuItemType.divide },
+                {
+                    text: lst('字段属性'),
+                    value: (this.block as TableStoreGallery).cardConfig?.showField || 'none',
+                    name: 'cardConfig.showField',
+                    type: MenuItemType.select,
+                    visible: (this.block as TableStoreGallery).getCardUrl() ? false : true,
+                    options: [
+                        { text: lst('隐藏'), value: 'none' },
+                        { text: lst('显示'), value: 'nowrap' },
+                        { text: lst('换行显示'), value: 'wrap' },
+                    ]
+                },
                 {
                     text: lst('看板分类字段'),
                     value: (this.block as TableStoreBoard).groupFieldId,
@@ -213,7 +240,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
             else if (item.name == 'noHead') {
                 await self.block.onUpdateProps({ noHead: !item.checked }, { range: BlockRenderRange.self });
             }
-            else if (['gallerySize', 'dateFieldId', 'groupFieldId'].includes(item.name)) {
+            else if (['gallerySize', 'cardConfig.showField', 'dateFieldId', 'groupFieldId'].includes(item.name)) {
                 await self.block.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self });
             }
             else if (item.name == 'viewText') {
