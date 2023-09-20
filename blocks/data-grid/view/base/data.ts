@@ -6,9 +6,8 @@ import { TableStoreItem } from "../item";
 import { DataGridView } from ".";
 import { channel } from "../../../../net/channel";
 import { getElementUrl, ElementType } from "../../../../net/element.type";
-import { Page } from "../../../../src/page";
 import lodash from "lodash";
-import { Point } from "../../../../src/common/vector/point";
+import { FieldType } from "../../schema/type";
 
 export class DataGridViewData {
     async onRemoveRow(this: DataGridView, id: string) {
@@ -27,8 +26,6 @@ export class DataGridViewData {
         var vid = viewId || this.schema.defaultAddForm?.id;
         if (vid && !this.schema.recordViews.some(s => s.id == vid)) vid = undefined;
         if (!vid) vid = this.schema.recordViews[0]?.id;
-        if (isOver)
-            this.dataGridTool.isOpenTool = true;
         var url: '/page/open' | '/page/dialog' | '/page/slide' = '/page/dialog';
         if (this.createRecordSource == 'page') {
             url = '/page/open';
@@ -37,24 +34,17 @@ export class DataGridViewData {
             url = '/page/slide';
         }
         if (forceUrl) url = forceUrl;
-        var dialougPage: Page = await channel.air(url, {
-            elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, vid),
-            config: {
-                force: true,
-                isCanEdit:true,
-                initData
-            }
+        await this.onDataGridTool(async () => {
+            await channel.air(url, {
+                elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, vid),
+                config: {
+                    force: true,
+                    isCanEdit: true,
+                    initData
+                }
+            })
+            await this.didMounted();
         })
-        if (dialougPage) {
-            dialougPage.onSave();
-            var newRow = await dialougPage.getSchemaRow();
-            if (newRow) await this.onAddRow(newRow, undefined, 'after', dialougPage)
-        }
-        if (url != '/page/open') await channel.air(url, { elementUrl: null });
-        if (isOver) {
-            this.dataGridTool.isOpenTool = false;
-            this.onOver(this.getVisibleContentBound().contain(Point.from(this.page.kit.operator.moveEvent)))
-        }
     }
     async onOpenEditForm(this: DataGridView, id: string, forceUrl?: '/page/open' | '/page/dialog' | '/page/slide') {
         var url: '/page/open' | '/page/dialog' | '/page/slide' = '/page/dialog';
@@ -65,22 +55,18 @@ export class DataGridViewData {
             else if (this.openRecordSource == 'slide')
                 url = '/page/slide';
         }
-        var dialougPage: Page = await channel.air(url, {
-            elementUrl: getElementUrl(ElementType.SchemaData, this.schema.id, id),
-            config: {
-                force: true,
-                isCanEdit:true
-            }
+        await this.onDataGridTool(async () => {
+            await channel.air(url, {
+                elementUrl: getElementUrl(ElementType.SchemaData, this.schema.id, id),
+                config: {
+                    force: true,
+                    isCanEdit: true
+                }
+            })
+            await this.didMounted();
         })
-        var newRow;
-        if (dialougPage) {
-            dialougPage.onSave();
-            newRow = await dialougPage.getSchemaRow()
-        }
-        if (url == '/page/dialog' || url == '/page/slide') await channel.air(url, { elementUrl: null })
-        if (newRow && this.isCanEdit()) await this.onRowUpdate(id, newRow);
     }
-    async onAddRow(this: DataGridView, data, id?: string, arrow: 'before' | 'after' = 'after', dialogPage: Page = null) {
+    async onAddRow(this: DataGridView, data, id?: string, arrow: 'before' | 'after' = 'after') {
         if (typeof id == 'undefined') {
             id = this.data.last()?.id
         }
@@ -88,20 +74,6 @@ export class DataGridViewData {
         var r = await this.schema.rowAdd({ data, pos: { id: id, pos: arrow } });
         if (r.ok) {
             newRow = r.data.data;
-            if (dialogPage) {
-                await channel.act('/view/snap/store',
-                    {
-                        elementUrl: getElementUrl(ElementType.SchemaData,
-                            this.schema.id,
-                            newRow.id
-                        ),
-                        seq: 0,
-                        plain: await dialogPage.getPlain(),
-                        thumb: await dialogPage.getThumb(),
-                        content: await dialogPage.getString(),
-                        text: newRow.title,
-                    })
-            }
             var at = this.data.findIndex(g => g.id == id);
             if (arrow == 'after') at += 1;
             this.data.insertAt(at, newRow);
@@ -125,6 +97,31 @@ export class DataGridViewData {
                 await this.createItem();
                 this.forceUpdate();
             }
+        }
+    }
+    async onCloneRow(this: DataGridView, data) {
+        var dr = lodash.cloneDeep(data);
+        dr.id = util.guid();
+        this.schema.fields.forEach(f => {
+            if ([
+                FieldType.autoIncrement,
+                FieldType.sort,
+                FieldType.createDate,
+                FieldType.creater,
+                FieldType.modifyDate,
+                FieldType.modifyer
+            ].includes(f.type)) {
+                dr[f.name] = undefined;
+            }
+        })
+        var r = await this.schema.rowAdd({ data: dr, pos: { id: data.id, pos: 'after' } });
+        if (r) {
+            var at = this.data.findIndex(g => g.id == data.id);
+            this.data.insertAt(at, dr);
+            this.total += 1;
+            await this.onNotifyPageReferenceBlocks();
+            await this.createItem();
+            this.forceUpdate();
         }
     }
 }

@@ -52,7 +52,7 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                 right: 0,
                 zIndex: 3000
             }}><div className="flex-fixed">
-                    <label className="cursor flex round h-30 item-hover padding-r-5 text f-14" onMouseDown={e => {
+                    <label className="cursor flex round  item-hover padding-r-5 text f-14" onMouseDown={e => {
                         if (!props.block.page.isSign) return;
                         e.stopPropagation();
                         props.block.onOpenViewSettings(Rect.fromEvent(e))
@@ -70,7 +70,7 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
         </div>
         else return <div className="sy-dg-tool">
             <div className="flex-fixed">
-                <label className="cursor flex round h-30 item-hover padding-r-5  text f-14"
+                <label className="cursor flex round  item-hover padding-r-5  text f-14"
                     onMouseDown={e => {
                         if (!props.block.page.isSign) return;
                         e.stopPropagation();

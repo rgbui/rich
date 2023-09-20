@@ -19,7 +19,7 @@ import { channel } from "../../../../net/channel";
 import { FieldType } from "../../schema/type";
 import lodash from "lodash";
 import { OriginField } from "../../element/field/origin.field";
-import { DotsSvg, Edit1Svg } from "../../../../component/svgs";
+import { DotsSvg, DuplicateSvg, Edit1Svg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import "./style.less";
 import { lst } from "../../../../i18n/store";
@@ -28,8 +28,7 @@ import { lst } from "../../../../i18n/store";
 export class TableStoreItem extends Block {
     dataId: string;
     get dataRow() {
-        if (Array.isArray(this.dataGrid.data))
-            return this.dataGrid.data.find(g => g.id == this.dataId);
+        if (Array.isArray(this.dataGrid.data)) return this.dataGrid.data.find(g => g.id == this.dataId);
         else return null;
     }
     get dataIndex() {
@@ -141,12 +140,18 @@ export class TableStoreItem extends Block {
             this.dataGrid.onNotifyReferenceBlocks()
         }
     }
-    async onGetContextMenus(): Promise<MenuItem<string | BlockDirective>[]> {
+    async onGetContextMenus() {
         var items: MenuItem<BlockDirective | string>[] = [];
         items.push({
             name: 'open',
             icon: Edit1Svg,
             text: lst('编辑'),
+        })
+        items.push({ type: MenuItemType.divide })
+        items.push({
+            name: 'duplicate',
+            icon: DuplicateSvg,
+            text: lst('复制'),
         })
         items.push({ type: MenuItemType.divide })
         items.push({
@@ -160,10 +165,13 @@ export class TableStoreItem extends Block {
     async onClickContextMenu(item: MenuItem<BlockDirective | string>, event: MouseEvent) {
         switch (item.name) {
             case BlockDirective.delete:
-                this.dataGrid.onRemoveRow(this.dataRow.id);
+                await this.dataGrid.onRemoveRow(this.dataRow.id);
                 break;
             case 'open':
-                this.dataGrid.onOpenEditForm(this.dataRow.id);
+                await this.dataGrid.onOpenEditForm(this.dataRow.id);
+                break;
+            case 'duplicate':
+                await this.dataGrid.onCloneRow(this.dataRow);
                 break;
         }
     }
@@ -225,6 +233,11 @@ export class TableStoreItem extends Block {
     get isShowHandleBlock(): boolean {
         return false;
     }
+    async onOpenMenu(event: React.MouseEvent) {
+        this.dataGrid.onDataGridTool(async () => {
+            await this.page.onOpenMenu([this], event.nativeEvent);
+        })
+    }
 }
 @view('/data-grid/item')
 export class TableStoreItemView extends BlockView<TableStoreItem>{
@@ -233,7 +246,7 @@ export class TableStoreItemView extends BlockView<TableStoreItem>{
             <div className="r-gap-b-10">
                 <ChildsArea childs={this.block.childs}></ChildsArea>
             </div>
-            <div onMouseDown={e => this.block.page.onOpenMenu([this.props.block], e.nativeEvent)} className="pos visible top-5 right-5 flex-center  size-24 round item-hover bg-white cursor">
+            <div onMouseDown={e => this.block.onOpenMenu(e)} className="pos visible top-5 right-5 flex-center  size-24 round item-hover bg-white cursor">
                 <Icon size={20} icon={DotsSvg}></Icon>
             </div>
         </div>
@@ -252,7 +265,7 @@ export class TableStoreItemView extends BlockView<TableStoreItem>{
                 <div className="sy-data-grid-card-items r-gap-b-10">
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                 </div>
-                <div onMouseDown={e => this.block.page.onOpenMenu([this.props.block], e.nativeEvent)} className="pos visible top-5 right-5 flex-center size-24 round item-hover bg-white cursor">
+                <div onMouseDown={e => this.block.onOpenMenu(e)} className="pos visible top-5 right-5 flex-center size-24 round item-hover bg-white cursor">
                     <Icon size={20} icon={DotsSvg}></Icon>
                 </div>
             </div>
@@ -262,7 +275,7 @@ export class TableStoreItemView extends BlockView<TableStoreItem>{
                 <div className="r-gap-b-10">
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                 </div>
-                <div onMouseDown={e => this.block.page.onOpenMenu([this.props.block], e.nativeEvent)} className="pos visible top-5 right-5 flex-center size-24 visible round item-hover bg-white cursor">
+                <div onMouseDown={e => this.block.onOpenMenu(e)} className="pos visible top-5 right-5 flex-center size-24 visible round item-hover bg-white cursor">
                     <Icon size={20} icon={DotsSvg}></Icon>
                 </div>
             </div>
@@ -270,7 +283,7 @@ export class TableStoreItemView extends BlockView<TableStoreItem>{
     }
     renderView() {
         if (!this.block.dataGrid) return <></>
-        if (this.block.dataGrid?.url == BlockUrlConstant.DataGridGallery) return this.renderCards()
+        if ([BlockUrlConstant.DataGridGallery, BlockUrlConstant.DataGridBoard].includes(this.block.dataGrid?.url as any)) return this.renderCards()
         else return this.renderItems();
     }
 }

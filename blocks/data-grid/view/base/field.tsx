@@ -406,8 +406,7 @@ export class DataGridViewField {
     }
     async onOpenFieldConfig(this: DataGridView,
         event: React.MouseEvent | MouseEvent,
-        viewField: ViewField)
-    {
+        viewField: ViewField) {
         event.stopPropagation();
         var self = this;
         self.dataGridTool.isOpenTool = true;

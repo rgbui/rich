@@ -68,8 +68,7 @@ export class DataGridView extends Block {
         return await DataGridTurns.turn(this, url);
     }
     get schemaView() {
-        if (this.schema)
-            return this.schema.views.find(g => g.id == this.syncBlockId);
+        if (this.schema) return this.schema.views.find(g => g.id == this.syncBlockId);
     }
     data: Record<string, any>[] = [];
     userEmojis: Record<string, string[]> = {};
@@ -110,7 +109,7 @@ export class DataGridView extends Block {
             else if (n == 'blocks') {
                 this.blocks = { childs: [] };
             }
-            else this.setPropData(n, data[n]);
+            else await this.setPropData(n, data[n]);
         }
         if (this.syncBlockId) {
             // await this.loadSyncBlock();
@@ -130,9 +129,9 @@ export class DataGridView extends Block {
         json.blocks = {};
         if (Array.isArray(this.__props)) {
             var ss = super.__props;
-            this.__props.each(pro => {
+            await this.__props.eachAsync(async pro => {
                 if (ss.includes(pro) || pro == 'size')
-                    json[pro] = this.clonePropData(pro, this[pro]);
+                    json[pro] = await this.clonePropData(pro, this[pro]);
             })
         }
         return json;
@@ -143,9 +142,9 @@ export class DataGridView extends Block {
             json.pattern = await this.pattern.get();
         json.blocks = {};
         if (Array.isArray(this.__props)) {
-            this.__props.each(pro => {
+            await this.__props.eachAsync(async pro => {
                 if (pro !== 'size')
-                    json[pro] = this.clonePropData(pro, this[pro]);
+                    json[pro] = await this.clonePropData(pro, this[pro]);
             })
         }
         return json;
@@ -177,10 +176,10 @@ export class DataGridView extends Block {
                     else if (n == 'blocks') {
                         this.blocks = { childs: [] };
                     }
-                    else this.setPropData(n, data[n]);
+                    else await this.setPropData(n, data[n]);
                 }
                 if (Array.isArray(r.data.operates) && r.data.operates.length > 0)
-                    this.page.onSyncUserActions(r.data.operates, 'loadSyncBlock');
+                    await this.page.onSyncUserActions(r.data.operates, 'loadSyncBlock');
             }
         }
         else await super.loadSyncBlock();
@@ -271,10 +270,8 @@ export class DataGridView extends Block {
             { selectView: true, schema: this.schema }
         );
         if (dg) {
-            if (dg.source == 'dataView')
-                await this.onSchemaViewCreateByTemplate(dg.text, dg.url)
-            else
-                await this.onSchemaViewCreate(dg.text, dg.url);
+            if (dg.source == 'dataView') await this.onSchemaViewCreateByTemplate(dg.text, dg.url)
+            else await this.onSchemaViewCreate(dg.text, dg.url);
         }
     }
     willCreateSchema: boolean = false;
@@ -305,24 +302,6 @@ export class DataGridView extends Block {
                 this.willCreateSchema = false;
                 if (this.view) this.view.forceUpdate();
             }
-
-
-
-
-            // var dg = await useDataGridSelectView({ roundArea: Rect.fromEle(this.el) });
-            // if (dg) {
-            //     this.willCreateSchema = true;
-            //     this.forceUpdate();
-            //     await this.page.onAction(ActionDirective.onCreateTableSchema, async () => {
-            //         if (dg.schemaId) this.schema = await TableSchema.loadTableSchema(dg.schemaId, this.page.ws)
-            //         else this.schema = await TableSchema.onCreate({ text: dg.text, url: this.url });
-            //         this.updateProps({
-            //             schemaId: this.schema.id,
-            //             syncBlockId: dg.syncBlockId || this.schema.views.first().id
-            //         })
-            //     });
-            //     await this.didMounted();
-            // }
         }
     }
     dataGridTool: DataGridTool;
@@ -370,12 +349,9 @@ export class DataGridView extends Block {
         var ws = this.page.ws;
         return `[${this.schemaView?.text}](${ws.url + '/resource?elementUrl=' + window.encodeURIComponent(this.elementUrl)})`
     }
-    onSyncAddRow = lodash.debounce(async (data, id?: string, arrow: 'before' | 'after' = 'after', dialogPage: Page = null) => {
-        await this.onAddRow(data, id, arrow, dialogPage)
+    onSyncAddRow = lodash.debounce(async (data, id?: string, arrow: 'before' | 'after' = 'after') => {
+        await this.onAddRow(data, id, arrow)
     }, 1000)
-
-
-    
 }
 
 export interface DataGridView extends DataGridViewLife { }

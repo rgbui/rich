@@ -48,6 +48,10 @@ import { Field } from "./field";
 import dayjs from "dayjs";
 import lodash from "lodash";
 import { lst } from "../../../i18n/store";
+import { IconValueType } from "../../../component/view/icon";
+import * as BarBackground from "../../../src/assert/img/bar-background.webp";
+import * as Line from "../../../src/assert/img/line-simple.webp";
+import * as Pie from "../../../src/assert/img/pie-simple.webp";
 
 export function GetFieldTypeSvg(type: FieldType) {
     switch (type) {
@@ -122,7 +126,7 @@ export function GetFieldTypeSvg(type: FieldType) {
     }
 }
 
-export function getSchemaViewIcon(url: string) {
+export function getSchemaViewIcon(url: string): IconValueType {
     switch (url) {
         case '/data-grid/table':
             return CollectTableSvg
@@ -139,10 +143,47 @@ export function getSchemaViewIcon(url: string) {
         case '/data-grid/calendar':
             return CollectionCalendarSvg
             break;
+        case '/data-grid/charts':
+        case '/data-grid/statistic/value':
+            return { name: 'bytedance-icon', code: 'chart-pie-one' }
+            break;
         case BlockUrlConstant.FormView:
             return OrderSvg;
             break;
     }
+}
+export function getChartViews() {
+    var menus = [
+        {
+            title: '折线图',
+            url: '/data-grid/charts?{"chart_type":"line"}',
+            remark: '',
+            name: 'line',
+            image: Line.default
+        },
+        {
+            title: '柱状图',
+            url: '/data-grid/charts?{"chart_type":"bar"}',
+            remark: 'bar',
+            name: 'bar',
+            image: BarBackground.default
+        },
+        {
+            title: '饼图',
+            url: '/data-grid/charts?{"chart_type":"pie"}',
+            remark: '',
+            name: 'pie',
+            image: Pie.default
+        },
+        // {
+        //     title: '散点图',
+        //     url: '/data-grid/charts?{"chart_type":"scatter"}',
+        //     remark: '',
+        //     name: 'scatter',
+        //     image: Scatter.default
+        // }
+    ]
+    return menus;
 }
 
 export function getSchemaViews() {

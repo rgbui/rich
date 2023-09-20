@@ -146,9 +146,20 @@ export class TableSchema {
             FieldType.formula,
             FieldType.rollup,
             FieldType.comment,
-            FieldType.blog
-            // FieldType.emoji,
+            FieldType.blog,
+            FieldType.emoji,
+            FieldType.like,
+            FieldType.love,
+            FieldType.approve,
+            FieldType.oppose
         ].includes(g.type))
+    }
+    isType(fieldId: string, ...types: FieldType[]) {
+        var f = this.fields.find(c => c.id == fieldId);
+        if (f) {
+            return types.includes(f.type)
+        }
+        return false;
     }
     views: TableSchemaView[] = [];
     get recordViews() {
@@ -184,8 +195,8 @@ export class TableSchema {
     rowAdd(args: { data: Record<string, any>, pos?: { id: string, pos: 'before' | 'after' } }) {
         return channel.put('/datastore/add', Object.assign({ schemaId: this.id }, args));
     }
-    rowUpdateAll(args:{data:Record<string,any>,filter:Record<string,any>},ws: LinkWs){
-        return channel.patch('/datastore/row/update',{schemaId:this.id,...args,ws})
+    rowUpdateAll(args: { data: Record<string, any>, filter: Record<string, any> }, ws: LinkWs) {
+        return channel.patch('/datastore/row/update', { schemaId: this.id, ...args, ws })
     }
     rowRank(args: { id: string, pos: { id: string, pos: 'before' | 'after' } }) {
         return channel.put('/datastore/rank', Object.assign({ schemaId: this.id }, args));
@@ -195,6 +206,12 @@ export class TableSchema {
     }
     rowRemoves(ids: string[]) {
         return channel.del('/datastore/remove/ids', Object.assign({ schemaId: this.id }, { ids }));
+    }
+    rowRemovesByFilter(filter: Record<string, any>) {
+        return channel.del('/datastore/remove/filter', Object.assign({ schemaId: this.id }, { filter }));
+    }
+    async rowGetPrevAndNext(id: string, ws: LinkWs) {
+        return await channel.get('/datastore/query/pre_next', { ws, schemaId: this.id, id })
     }
     async rowGet(id: string) {
         return await this.batchRowGet.get<Record<string, any>>(id, [this.id])
@@ -222,7 +239,7 @@ export class TableSchema {
         filter?: Record<string, any>,
         directFilter?: Record<string, any>,
         sorts?: Record<string, -1 | 1>
-    },ws: LinkWs) {
+    }, ws: LinkWs) {
         return channel.get('/datastore/query/list', Object.assign({ schemaId: this.id, ws: ws }, options));
     }
     all(options: {
@@ -253,8 +270,8 @@ export class TableSchema {
     }, ws: LinkWs) {
         return channel.get('/datastore/statistics', Object.assign({ schemaId: this.id, ws: ws }, options));
     }
-    statisticValue(options: { filter?: Record<string, any>, indicator: string; }, ws: LinkWs) {
-        return channel.get('/datastore/statistics/value', Object.assign({ schemaId: this.id, ws:ws }, options));
+    statisticValue(options: { filter?: Record<string, any>, fieldName?: string, indicator: string; }, ws: LinkWs) {
+        return channel.get('/datastore/statistics/value', Object.assign({ schemaId: this.id, ws: ws }, options));
     }
     fieldAdd(field: { text: string, type: FieldType, config?: Record<string, any> }) {
         return this.onSchemaOperate([{ name: 'addField', field }])

@@ -59,7 +59,7 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery>{
                 rss[c].push(childs[i]);
             }
             eles = rss.map((rs, i) => {
-                return <div className='sy-data-grid-gallery-column' style={{ width: `calc(${w}% - ${gap}px)`, marginRight: gap, marginBottom: gap }} key={i}>
+                return <div className='sy-data-grid-gallery-column' style={{ width: `calc(${w}% - ${gap}px)`, marginRight: gap, marginBottom: undefined }} key={i}>
                     {rs.map(c => <div className="sy-data-grid-gallery-cell w100" key={c.id}>{this.renderItem(c)}</div>)}
                 </div>
             })
@@ -74,7 +74,7 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery>{
                 }
                 i += (size - 1);
                 eles.push(<div className='sy-data-grid-gallery-row' key={i}>
-                    {cs.map(c => <div className="sy-data-grid-gallery-cell" style={{ width: `calc(${w}% - ${gap}px)`, marginRight: gap, marginBottom: gap }}
+                    {cs.map(c => <div className="sy-data-grid-gallery-cell" style={{ width: `calc(${w}% - ${gap}px)`, marginRight: gap, marginBottom: undefined }}
                         key={c.id}>{this.renderItem(c)}
                     </div>)}
                 </div>)

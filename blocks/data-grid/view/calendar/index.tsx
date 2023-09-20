@@ -11,6 +11,7 @@ import { ChevronLeftSvg, ChevronRightSvg, CollectTableSvg, PlusSvg } from "../..
 import { S } from "../../../../i18n/view";
 import { lst } from "../../../../i18n/store";
 import { Spin } from "../../../../component/view/spin";
+import { Tip } from "../../../../component/view/tooltip/tip";
 
 @url('/data-grid/calendar')
 export class TableStoreCalendar extends DataGridView {
@@ -78,8 +79,15 @@ export class TableStoreCalendarView extends BlockView<TableStoreCalendar>{
         var rs = this.block.data.filter(g => typeof g[this.block.dateField.name] != 'undefined' && dayjs(g[this.block.dateField.name]).isSame(day, 'day'))
         var title = this.block.schema.fields.find(g => g.type == FieldType.title);
         if (!title) title = this.block.schema.fields.find(g => g.type == FieldType.text);
-        return <div className="sy-data-grid-calendar-items">
-            {rs.map(r => { return <a onMouseDown={e => this.block.onOpenEditForm(r.id)} className="sy-data-grid-calendar-item" key={r.id}><span>{r[title.name]}</span></a> })}
+        return <div className="sy-data-grid-calendar-items padding-w-10">
+            {rs.map(r => {
+                var d = dayjs(r[this.block.dateField.name])
+                return <div onMouseDown={e => this.block.onOpenEditForm(r.id)} className="sy-data-grid-calendar-item flex gap-h-5" key={r.id}>
+                    {r.icon && <Icon className={'gap-r-5'} icon={r.icon} size={16}></Icon>}
+                    <span className="bold flex-auto text-overflow ">{r[title.name]}</span>
+                    <span className="flex-fixed remark f-12">{d.format('HH:mm')}</span>
+                </div>
+            })}
         </div>
     }
     renderMonth() {
@@ -98,9 +106,10 @@ export class TableStoreCalendarView extends BlockView<TableStoreCalendar>{
             }
             i += 1;
         }
-        var weeks: string[] = [lst('一'), lst('二'), lst('三'), lst('四'), lst('五'), lst('六'), lst('日')];
+        var now = dayjs();
+        var weeks: string[] = [lst('周一'), lst('周二'), lst('周三'), lst('周四'), lst('周五'), lst('周六'), lst('周日')];
         return <>
-            <div className="sy-data-grid-calendar-cells-head">{weeks.map(w => <div key={w} className="sy-data-grid-calendar-cells-head-label"><S>周</S>{w}</div>)}
+            <div className="sy-data-grid-calendar-cells-head">{weeks.map(w => <div key={w} className="sy-data-grid-calendar-cells-head-label">{w}</div>)}
             </div>
             <div className="sy-data-grid-calendar-cells-days">
                 {days.map((day, i) => {
@@ -113,10 +122,10 @@ export class TableStoreCalendarView extends BlockView<TableStoreCalendar>{
                     }
                     return <div key={i} className={classList.join(" ")}
                     ><div className="sy-data-grid-calendar-cell-head">
-                            <Icon onClick={e => this.block.onAddCalendar(day)} icon={PlusSvg} size={14}></Icon>
-                            <label>{day.get('date')}</label>
+                            {this.block.isCanEdit() && <Tip text='添加记录'><Icon className={'remark'} onClick={e => this.block.onAddCalendar(day)} icon={PlusSvg} size={18}></Icon></Tip>}
+                            <label className={now.isSame(day, 'D') ? "now" : ""}>{day.get('date')}</label>
                         </div>
-                        <div className="sy-data-grid-calendar-cell-content">
+                        <div className="sy-data-grid-calendar-cell-content overflow-y">
                             {this.renderItems(day)}
                         </div>
                     </div>
@@ -139,7 +148,7 @@ export class TableStoreCalendarView extends BlockView<TableStoreCalendar>{
             <DataGridTool block={this.block}></DataGridTool>
             <div className="sy-data-grid-calendar-head" onMouseDown={e => e.stopPropagation()}>
                 <div className="sy-data-grid-calendar-head-date">
-                    <label>{day.format(lst('YYYY年MM月'))}</label>
+                    <label className="bold">{day.format(lst('YYYY年MM月'))}</label>
                 </div>
                 <div className="sy-data-grid-calendar-head-operator">
                     <span className="icon"><Icon size={14} onClick={e => this.block.onPrevMonth()} icon={ChevronLeftSvg}></Icon></span>
