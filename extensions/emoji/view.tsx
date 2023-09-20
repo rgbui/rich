@@ -13,6 +13,7 @@ import "./style.less";
 import { S } from "../../i18n/view";
 import { lst } from "../../i18n/store";
 const EMOJI_HISTORYS = '_emoji_historys__';
+
 export class EmojiView extends React.Component<{ loaded?: () => void, onChange: (emoji: EmojiCode) => void }>{
     loading: boolean = true;
     private scrollIndex = 0;
@@ -94,7 +95,7 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
         return <div>
             <div className="flex padding-h-14 padding-w-14">
                 <div className="flex-auto"><Input clear placeholder={lst("搜索...")} value={this.word} onClear={() => this.loadSearch('')} onEnter={e => { this.word = e; this.loadSearch.flush() }} onChange={e => this.loadSearch(e)} ></Input></div>
-                <div className="flex-fixed gap-l-20 gap-r-10 text-1">
+                <div className="flex-fixed gap-l-10 gap-r-10 text-1">
                     <Tip overlay={<S>随机</S>}><span onMouseDown={e => this.onRandomIcon()} className=" flex-center size-30 round item-hover cursor">
                         <Icon size={24} icon={DiceSvg}></Icon>
                     </span></Tip>
@@ -140,8 +141,8 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
             })
         }
     }
-    onClear(){
-        if(this.word){
+    onClear() {
+        if (this.word) {
             this.loadSearch('')
         }
     }
