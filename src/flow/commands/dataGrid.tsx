@@ -98,7 +98,7 @@ export class AddRecordsCommand extends FlowCommand {
                 }
             })
             if (dialougPage) {
-                dialougPage.onSave();
+                dialougPage.onPageSave();
                 var newRow = await dialougPage.getSchemaRow();
                 if (newRow) await this.schema.rowAdd({ data: newRow })
             }
@@ -117,8 +117,7 @@ export class AddRecordsCommand extends FlowCommand {
 }
 
 @flowView('/addRecords')
-export class AddRecordsCommandView extends FlowCommandView<AddRecordsCommand> {
-
+export class AddRecordsCommandView extends FlowCommandView<AddRecordsCommand>{
     componentDidMount(): void {
         this.command.loadSchema();
     }
@@ -407,7 +406,7 @@ export class EditRecordsCommand extends FlowCommand {
                 }
             })
             if (dialougPage) {
-                dialougPage.onSave();
+                dialougPage.onPageSave();
                 var newRow = await dialougPage.getSchemaRow();
                 if (newRow)
                     await this.schema.rowUpdateAll({ data: newRow, filter: this.filter }, this.flow.ws);
@@ -660,9 +659,6 @@ export class EditRecordsCommandView extends FlowCommandView<EditRecordsCommand> 
         </div>
     }
 }
-
-
-
 
 @flow('/batchEditRecords')
 export class BatchEditRecordsCommand extends FlowCommand {

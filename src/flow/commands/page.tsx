@@ -70,13 +70,13 @@ export class OpenPageCommandView extends FlowCommandView<OpenPageCommand> {
     }
     renderView() {
         return <div>
-            {this.renderHead(<Icon size={16} icon={{name:'bytedance-icon',code:'arrow-right-up'}}></Icon>,
-                <><S>打开页面</S><span onMouseDown={e => this.openSelectPage(e)} className="item-hover round ">{this.command.pageText || <S>选择页面</S>}</span>
+            {this.renderHead(<Icon size={16} icon={{ name: 'bytedance-icon', code: 'arrow-right-up' }}></Icon>,
+                <><S>打开页面</S><span onMouseDown={e => this.openSelectPage(e)} className="item-hover  remark  round ">{this.command.pageText || <S>选择页面</S>}</span>
                 </>)}
             <div>
                 <div className="flex">
                     <span className="flex-auto gap-l-10"><S>打开方式</S></span>
-                    <SelectBox className={'flex-fixed item-hover round padding-l-5'} onChange={e => this.command.onUpdateProps({ openSource: e })} value={this.command.openSource} options={[
+                    <SelectBox className={'flex-fixed item-hover remark round padding-l-5'} onChange={e => this.command.onUpdateProps({ openSource: e })} value={this.command.openSource} options={[
                         { text: lst('页面打开'), value: 'page' },
                         { text: lst('对话框打开'), value: 'dialog' },
                         { text: lst('侧边栏打开'), value: 'slide' }
