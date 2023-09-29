@@ -105,7 +105,6 @@ export class ButtonTemplate extends Block {
                 { names: [`%QUARTER%`, `%季度%`], value: Math.ceil((now.getMonth() + 1) / 3) },
                 { names: [`%NEXTQUARTER%`, `%下季度%`], value: (Math.ceil((now.getMonth()) / 3) + 1) > 4 ? 1 : (Math.ceil((now.getMonth()) / 3) + 1) },
                 { names: [`%ME%`, `%我%`], value: user.name },
-
             ]
             for (let i = 0; i < maps.length; i++) {
                 var mp = maps[i];
@@ -182,7 +181,7 @@ export class ButtonTemplateView extends BlockView<ButtonTemplate>{
             </div>
         </div>
     }
-    renderView()  {
+    renderView() {
         return <div style={this.block.visibleStyle}><div className='sy-button-template' >
             <div className='sy-button-template-wrapper' onMouseDown={e => e.stopPropagation()} >
                 <a className="sy-button-template-btn flex" onMouseDown={e => { this.block.addTemplateInstance(e) }}><Icon size={18} icon={PlusSvg}></Icon><span>{this.block.content || lst('添加待办事项')}</span></a>
