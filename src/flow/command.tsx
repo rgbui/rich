@@ -1,7 +1,7 @@
 import React from "react";
 import { util } from "../../util/util";
 import { Flow } from ".";
-import { DragHandleSvg, DotsSvg, DuplicateSvg, TrashSvg, ArrowUpSvg, ArrowDownSvg } from "../../component/svgs";
+import { DragHandleSvg, DotsSvg, DuplicateSvg, TrashSvg, ArrowUpSvg, ArrowDownSvg, PlusSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { Tip } from "../../component/view/tooltip/tip";
 import lodash from "lodash";
@@ -63,7 +63,7 @@ export class FlowCommand {
                 { icon: ArrowUpSvg, text: lst('移到上一步'), name: 'above' },
                 { icon: ArrowDownSvg, text: lst('移到下一步'), name: 'below' },
                 { type: MenuItemType.divide },
-                { name: 'add', icon: DuplicateSvg, text: lst('添加') },
+                { name: 'add', icon: PlusSvg, text: lst('添加下一步') },
                 { type: MenuItemType.divide },
                 { name: 'clone', icon: DuplicateSvg, text: lst('复制') },
                 { type: MenuItemType.divide },
@@ -97,8 +97,7 @@ export class FlowCommand {
                     var at = this.flow.commands.indexOf(this);
                     var nc = await FlowCommandFactory.createCommand(d.url, this.flow, d);
                     this.flow.commands.splice(at + 1, 0, nc);
-                    if (this.flow.view)
-                        this.flow.view.forceUpdate()
+                    if (this.flow.view) this.flow.view.forceUpdate()
                     await this.flow.saveFlow();
                     break;
                 case 'trash':
@@ -141,7 +140,7 @@ export abstract class FlowCommandView<T extends FlowCommand> extends React.Compo
         </div>
     }
     render(): React.ReactNode {
-        return <div className="bg-white round border padding-10 gap-b-20">
+        return <div className="bg-white round border padding-10 gap-b-10">
             {this.renderView()}
         </div>
     }
