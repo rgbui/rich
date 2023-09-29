@@ -1,6 +1,6 @@
 import { BlockView } from "../../src/block/view";
 import { prop, url, view } from "../../src/block/factory/observable";
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { ChildsArea, TextSpanArea } from "../../src/block/view/appear";
 import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { Block } from "../../src/block";
@@ -128,7 +128,7 @@ export class Head extends Block {
                     await this.updateProps({ expand: true });
                 }
                 else {
-                    await this.parent.appendArray(rs, this.at, this.parentKey);
+                    await this.parent.appendArray(rs, this.at + 1, this.parentKey);
                 }
                 await this.updateProps({ toggle })
             });
@@ -163,11 +163,11 @@ export class Head extends Block {
 }
 @view("/head")
 export class HeadView extends BlockView<Head>{
-    renderView()  {
+    renderView() {
         var style: Record<string, any> = { fontWeight: 600 };
-        if (this.block.toggle !== true) {
-            if (this.props.block.align == 'center') style.textAlign = 'center';
-        }
+        // if (this.block.toggle !== true) {
+        //     if (this.props.block.align == 'center') style.textAlign = 'center';
+        // }
         Object.assign(style, this.block.contentStyle);
         var pt: string = '';
         var ns: string[] = [];
@@ -204,10 +204,20 @@ export class HeadView extends BlockView<Head>{
             pt = lst('四级标题');
             ns = [undefined, undefined, undefined, undefined]
         }
+        var pa = this.block.parent;
+        if (pa.url == BlockUrlConstant.CardBox) {
+            style.fontSize = style.fontSize * 1.6;
+            if (this.block.at == 0)
+                style.marginTop = 0;
+        }
         function renderHead() {
+            var alignStyle: CSSProperties = {};
+            if (self.block.toggle != true) {
+                if (self.block.align == 'center') alignStyle.justifyContent = 'center';
+            }
             var content = <>
                 <div style={{ left: self.block.toggle ? 24 : 0 }} className="sy-block-text-head-tips pos flex-center h-10 visible r-size-3 r-gap-r-5 r-circle ">{ns.map((n, i) => <em key={i}></em>)}</div>
-                <div className="flex flex-top">
+                <div className="flex flex-top" style={{ ...alignStyle }}>
                     {self.block.toggle && <span
                         className='w-24 flex-center flex-inline'
                         style={{ height: style.lineHeight }}
@@ -230,13 +240,13 @@ export class HeadView extends BlockView<Head>{
                 return <h4 style={style} className="relative">{content}</h4>
             }
             if (self.block.level == 'h3') {
-                return <h4 style={style} className="relative">{content}</h4>
+                return <h3 style={style} className="relative">{content}</h3>
             }
             if (self.block.level == 'h2') {
-                return <h4 style={style} className="relative">{content}</h4>
+                return <h2 style={style} className="relative">{content}</h2>
             }
             if (self.block.level == 'h1') {
-                return <h4 style={style} className="relative">{content}</h4>
+                return <h1 style={style} className="relative">{content}</h1>
             }
         }
         return <div className='sy-block-text-head'>
