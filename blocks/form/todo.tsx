@@ -12,7 +12,7 @@ import { Icon } from "../../component/view/icon";
 import { BlockChildKey } from "../../src/block/constant";
 import { dom } from "../../src/common/dom";
 import { DropDirection } from "../../src/kit/handle/direction";
-import { ls, lst } from "../../i18n/store";
+import { lst } from "../../i18n/store";
 
 @url('/todo')
 export class ToDo extends Block {
@@ -94,16 +94,20 @@ export class ToDo extends Block {
 }
 @view('/todo')
 export class ToDoView extends BlockView<ToDo>{
-    renderView()  {
+    renderView() {
         if (this.block.childs.length > 0) {
             return <div style={this.block.visibleStyle}>
                 <div className='sy-block-todo' data-block-content style={this.block.contentStyle}>
                     <div className="sy-block-todo-checkbox-wrapper" style={{ height: this.block.page.lineHeight, width: this.block.page.lineHeight }}>
                         <div className={'sy-block-todo-checkbox' + (this.block.checked ? " checked" : "")} onMouseDown={e => this.block.onChange(!this.block.checked, e)}>
-                            <Icon size={this.block.checked ? (this.props.block.page.fontSize - 2) : this.props.block.page.fontSize} icon={this.block.checked ? CheckSvg : CheckboxSquareSvg} ></Icon>
+                            <Icon
+                                size={(this.block.page.smallFont ? 14 : 16) + (this.block.checked ? -2 : 0)}
+                                icon={this.block.checked ? CheckSvg : CheckboxSquareSvg} ></Icon>
                         </div>
                     </div>
-                    <TextLineChilds rf={e => this.block.childsEl = e} childs={this.block.childs}></TextLineChilds>
+                    <span style={{ lineHeight: this.block.page.lineHeight }}>
+                        <TextLineChilds rf={e => this.block.childsEl = e} childs={this.block.childs}></TextLineChilds>
+                    </span>
                 </div>
                 <div className='sy-block-todo-subs' style={{ paddingLeft: 20 }}>
                     <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>
@@ -116,10 +120,12 @@ export class ToDoView extends BlockView<ToDo>{
                     <div className='sy-block-todo' data-block-content style={this.block.contentStyle} >
                         <div className="sy-block-todo-checkbox-wrapper" style={{ height: this.block.page.lineHeight, width: this.block.page.lineHeight }}>
                             <div className={'sy-block-todo-checkbox' + (this.block.checked ? " checked" : "")} onMouseDown={e => this.block.onChange(!this.block.checked, e)}>
-                                <Icon size={this.block.checked ? (this.props.block.page.fontSize - 2) : this.props.block.page.fontSize} icon={this.block.checked ? CheckSvg : CheckboxSquareSvg} ></Icon>
+                                <Icon
+                                    size={(this.block.page.smallFont ? 14 : 16) + (this.block.checked ? -2 : 0)}
+                                    icon={this.block.checked ? CheckSvg : CheckboxSquareSvg} ></Icon>
                             </div>
                         </div>
-                        <span className='sy-block-todo-text'><TextArea block={this.block} placeholder={lst('待办事项')}
+                        <span className='sy-block-todo-text' style={{ lineHeight: this.block.page.lineHeight }} ><TextArea block={this.block} placeholder={lst('待办事项')}
                             prop='content'
                         ></TextArea>
                         </span>
