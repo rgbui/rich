@@ -56,7 +56,7 @@ export class LangStore {
         for (let s of this.svs) s.forceUpdate()
         for (let sp of this.sps) sp.forceUpdate()
     }
-    t(key: string, content?: string | Record<string, any>) {
+    t(key: string, content?: string | Record<string, any>, checkExists?: boolean) {
         var d;
         if (typeof window.shyConfig.isUS) {
             var rg = this.dicts.get('us.' + key);
@@ -76,6 +76,7 @@ export class LangStore {
         }
         else {
             if (typeof content == 'string') return content;
+            if (checkExists) return null;
             return key;
         }
     }
@@ -113,25 +114,9 @@ export var langOptions = [
     { lang: 'Indonesian', text: 'Bahasa Indonesia', load: async () => await import('./lang/Indonesian.json') }
 ]
 
-// [
-//     { "lang": "English", "translation": "English" },
-//    { "lang": "Japanese", "translation": "日本語" },
-//    { "lang": "Korean", "translation": "한국어" },
-//    { "lang": "German", "translation": "Deutsch" },
-//    { "lang": "French", "translation": "Français" },
-//    { "lang": "Russian", "translation": "Русский" },
-//    { "lang": "Italian", "translation": "Italiano" },
-//    { "lang": "Portuguese", "translation": "Português" },
-//    { "lang": "Spanish", "translation": "Español" },
-//    { "lang": "Dutch", "translation": "Nederlands" },
-//    { "lang": "Arabic", "translation": "العربية" },
-//    { "lang": "Indonesian", "translation": "Bahasa Indonesia" }
-// ]
-
-
 export var ls = new LangStore();
-export function lst(key: string, content?: string | Record<string, any>) {
-    return ls.t(key, content);
+export function lst(key: string, content?: string | Record<string, any>, checkExists?: boolean) {
+    return ls.t(key, content, checkExists);
 }
 (window as any).pg = () => {
     console.log(uns);
