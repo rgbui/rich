@@ -101,7 +101,7 @@
                     }
 
                     .at-user {
-                        line-height     : 24px;
+                        line-height     : 20px;
                         display         : inline-block;
                         color           : rgb(88, 101, 242);
                         background-color: rgba(88, 101, 242, 0.15);
@@ -121,11 +121,27 @@
                         }
                     }
 
+                    h1,
+                    h2,
+                    h3,
+                    h4,
+                    h5,
+                    h6 {
+                        font-size: inherit;
+                        margin   : 0px;
+                        padding  : 0px;
+                    }
+
                     ol,
                     li,
                     ul {
                         padding: 0px;
                         margin : 0px;
+                    }
+
+                    ol,
+                    ul {
+                        margin-left: 20px;
                     }
                 }
             }
@@ -306,6 +322,7 @@
                 color: #5865f2;
             }
         }
+
         &-edited {
 
 
@@ -348,6 +365,7 @@
             }
         }
     }
+
     .sy-channel-text-upload {
         margin-top     : 10px;
         padding-top    : 5px;
@@ -372,20 +390,24 @@
             background-color: rgba(55, 53, 47, .08);
         }
     }
-    .shy-user-channel-chat-content{
+
+    .shy-user-channel-chat-content {
         b {
             font-weight: bold;
         }
-        i{
+
+        i {
             font-style: italic;
         }
-        blockquote{
-            display: block;
-            margin:0px;
-            padding:0px;
+
+        blockquote {
+            display     : block;
+            margin      : 0px;
+            padding     : 0px;
             padding-left: 10px;
-            border-left: 3px solid #ddd;
+            border-left : 3px solid #ddd;
         }
+
         word-break: break-all;
     }
 }

@@ -1,12 +1,12 @@
 import dayjs from "dayjs";
 import lodash from "lodash";
 import React from "react";
-import { FileIconSvg, DownloadSvg, Emoji1Svg, Edit1Svg, ReplySvg, DotsSvg, EditSvg, TrashSvg, ReportSvg, CheckSvg, EmojiSvg } from "../../component/svgs";
+import { FileIconSvg, DownloadSvg, Emoji1Svg, Edit1Svg, ReplySvg, DotsSvg, EditSvg, TrashSvg, ReportSvg, CheckSvg, EmojiSvg, DuplicateSvg } from "../../component/svgs";
 import { Avatar } from "../../component/view/avator/face";
 import { UserBox } from "../../component/view/avator/user";
 import { Icon } from "../../component/view/icon";
 import { useSelectMenuItem } from "../../component/view/menu";
-import { MenuItem } from "../../component/view/menu/declare";
+import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { Remark } from "../../component/view/text";
 import { SockResponse } from "../../net/declare";
 import { autoImageUrl, getEmoji } from "../../net/element.type";
@@ -23,6 +23,7 @@ import { ToolTip } from "../../component/view/tooltip";
 import { S } from "../../i18n/view";
 import { lst } from "../../i18n/store";
 import { useImageViewer } from "../../component/view/image.preview";
+import { CopyAlert } from "../../component/copy";
 
 export class ViewChats extends React.Component<{
     readonly?: boolean,
@@ -240,17 +241,22 @@ export class ViewChats extends React.Component<{
             direction: 'top',
             align: 'end'
         });
-        var result = await this.emojiChat(d, re);
-        if (!Array.isArray(d.emojis)) {
-            d.emojis = [];
+        if (re) {
+            var result = await this.emojiChat(d, re);
+            if (!Array.isArray(d.emojis)) {
+                d.emojis = [];
+            }
+            if (result?.data?.emoji) {
+                var em = d.emojis.find(g => g.emojiId == result.data.emoji.emojiId);
+                if (em) {
+                    Object.assign(em, result.data.emoji)
+                }
+                else d.emojis.push(result.data.emoji);
+                op.classList.remove('operating');
+                this.forceUpdate();
+            }
         }
-        var em = d.emojis.find(g => g.emojiId == result.data.emoji.emojiId);
-        if (em) {
-            Object.assign(em, result.data.emoji)
-        }
-        else d.emojis.push(result.data.emoji);
-        op.classList.remove('operating');
-        this.forceUpdate();
+
     }
     editEmoji = lodash.throttle(async (
         d: ChannelTextType,
@@ -312,11 +318,15 @@ export class ViewChats extends React.Component<{
         var op = this.getOp(d);
         var items: MenuItem<string>[] = [];
         if (d.userid == this.currentUser.id) {
+            items.push({ name: 'copy', disabled: d.content ? false : true, text: lst('拷贝'), icon: DuplicateSvg });
             items.push({ name: 'edit', text: lst('编辑'), icon: EditSvg });
+            items.push({ type: MenuItemType.divide });
             items.push({ name: 'delete', text: lst('删除'), icon: TrashSvg });
         }
         else {
             items.push({ name: 'reply', text: lst('回复'), icon: ReplySvg });
+            items.push({ name: 'copy', disabled: d.content ? false : true, text: lst('拷贝'), icon: DuplicateSvg });
+            items.push({ type: MenuItemType.divide });
             items.push({ name: 'report', disabled: true, text: lst('举报'), icon: ReportSvg });
         }
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) },
@@ -334,6 +344,11 @@ export class ViewChats extends React.Component<{
             }
             else if (r.item.name == 'delete') {
                 await this.del(d);
+            }
+            else if (r.item.name == 'copy') {
+                if (d.content) {
+                    CopyAlert(d.content, lst('已拷贝'))
+                }
             }
         }
         op.classList.remove('operating');
