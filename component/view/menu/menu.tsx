@@ -18,6 +18,7 @@ export class MenuView extends React.Component<{
 }>{
     render() {
         var items = this.localItems || this.props.items;
+        console.log('render....',items.length,this.localItems,this.props.items);
         return <div className='shy-menu-view' style={{
             ...(this.props.style || {}),
         }}>{items.map((item, index) => {
