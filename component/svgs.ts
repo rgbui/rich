@@ -9,6 +9,7 @@ import ArrowDownSvg from "../src/assert/svg/arrowDown.svg";
 import ArrowLeftSvg from "../src/assert/svg/arrowLeft.svg";
 import ArrowRightSvg from "../src/assert/svg/arrowRight.svg";
 import ArrowUpSvg from "../src/assert/svg/arrowUp.svg";
+import ArrowZoomSvg from "../src/assert/svg/arrowZoom.svg";
 import AudioSvg from "../src/assert/svg/audio.svg";
 import BillingSvg from "../src/assert/svg/billing.svg";
 import BlockcolorSvg from "../src/assert/svg/blockcolor.svg";
@@ -255,6 +256,7 @@ ArrowDownSvg,
 ArrowLeftSvg,
 ArrowRightSvg,
 ArrowUpSvg,
+ArrowZoomSvg,
 AudioSvg,
 BillingSvg,
 BlockcolorSvg,

@@ -16,11 +16,12 @@ export enum PayFeatureCheck {
     dataGridRow = 'data-grid-row'
 }
 
-export async function CanSupportFeature(check: PayFeatureCheck,page:Page) {
+export async function CanSupportFeature(check: PayFeatureCheck, page: Page) {
+    if (window.shyConfig.isDev) return true;
     var r = await channel.get('/check/feature', { type: check });
     if (r.ok) {
         if (r.data.limit) {
-            await usePayTip({ check,page });
+            await usePayTip({ check, page });
             return false;
         }
         else if (r.data.warn) {
@@ -31,8 +32,8 @@ export async function CanSupportFeature(check: PayFeatureCheck,page:Page) {
 }
 
 export class PayTip extends EventsComponent {
-    open(props: { check: PayFeatureCheck,page:Page }) {
-        var ws =props.page.ws;
+    open(props: { check: PayFeatureCheck, page: Page }) {
+        var ws = props.page.ws;
         var user = channel.query('/query/current/user');
         this.userid = user.id;
         this.owner = ws.owner || ws.creater;
@@ -55,7 +56,7 @@ export class PayTip extends EventsComponent {
                 <div className="flex-center gap-h-10"><Button ghost onClick={e => this.openPay()}><S>自已充钱体验</S></Button></div>
             </div>}
             {this.userid == this.owner && <div>
-                <div className="flex-center gap-h-10"><S>您需要充值，才能继续使用该功能</S></div>
+                <div className="flex-center gap-h-10"><S text='您需要充值'>您需要充值，才能继续使用该功能</S></div>
                 <div className="flex-center gap-h-10"><Button onClick={e => this.openPay()}><S>充值</S></Button></div>
             </div>}
         </div>
@@ -63,7 +64,7 @@ export class PayTip extends EventsComponent {
 }
 
 
-export async function usePayTip(props: { check: PayFeatureCheck ,page:Page}) {
+export async function usePayTip(props: { check: PayFeatureCheck, page: Page }) {
     var pos: PopoverPosition = { center: true, centerTop: 100 };
     let popover = await PopoverSingleton(PayTip, { mask: true, shadow: true });
     let fv = await popover.open(pos);
