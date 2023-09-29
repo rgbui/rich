@@ -65,7 +65,9 @@ export class Input extends React.Component<{
                 {props.prefix}
             </div>}
             <div className="shy-input-wrapper flex-auto">
-                <input ref={e => this.inputEl = e} type={props.type || 'text'} defaultValue={props.value || ''}
+                <input
+                    ref={e => this.inputEl = e} type={props.type || 'text'}
+                    defaultValue={props.value || ''}
                     disabled={props.disabled ? true : false}
                     placeholder={props.placeholder}
                     onInput={e => onInput(e)}
@@ -73,6 +75,7 @@ export class Input extends React.Component<{
                     readOnly={props.readonly}
                     maxLength={props.maxLength || undefined}
                     name={props.name}
+                    style={{ textIndent: props.prefix ? 0 : 4 }}
                 ></input>
             </div>
             {props.clear && this.props.value && <div className="shy-input-clear flex-fixed" onClick={e => this.onClear()}>

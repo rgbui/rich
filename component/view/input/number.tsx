@@ -1,5 +1,5 @@
 import React, { CSSProperties } from "react";
-import {  DownSvg, UpSvg } from "../../svgs";
+import { DownSvg, UpSvg } from "../../svgs";
 import { Icon } from "../icon";
 
 export class InputNumber extends React.Component<{
@@ -34,7 +34,6 @@ export class InputNumber extends React.Component<{
                 props.onChange(v + increase);
                 self.inputEl.value = (v + increase).toString();
             }
-
         }
 
         function keydown(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -45,7 +44,7 @@ export class InputNumber extends React.Component<{
             }
         }
         var props = this.props;
-        var classList: string[] = ['shy-input'];
+        var classList: string[] = ['shy-input', 'relative', 'visible-hover'];
         if (Array.isArray(this.props.className)) this.props.className.each(c => { classList.push(c) })
         else if (this.props.className) classList.push(this.props.className)
         return <div className={classList.join(" ")} style={props.style || {}}>
@@ -58,7 +57,7 @@ export class InputNumber extends React.Component<{
                     readOnly={props.readonly}
                     name={props.name}
                 ></input>
-                <div className="pos pos-center-right size-24 flex flex-col">
+                <div className="pos pos-center-right size-24 flex flex-col visible">
                     <span className="size-12 flex-center item-hover round cursor" onMouseDown={e => onDeep(1)}><Icon size={12} icon={UpSvg}></Icon></span>
                     <span className="size-12 flex-center item-hover round cursor" onMouseDown={e => onDeep(-1)}><Icon size={12} icon={DownSvg}></Icon></span>
                 </div>
