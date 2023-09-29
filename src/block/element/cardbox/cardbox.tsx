@@ -13,12 +13,12 @@ import {
 } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import { useSelectMenuItem } from "../../../../component/view/menu";
-import { MenuItemType } from "../../../../component/view/menu/declare";
+import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import { useCardBoxStyle } from "../../../../extensions/doc.card/style";
 import { Point, Rect } from "../../../common/vector/point";
 import { PageLayoutType } from "../../../page/declare";
 import { GridMap } from "../../../page/grid";
-import { BlockRenderRange } from "../../enum";
+import { BlockDirective, BlockRenderRange } from "../../enum";
 import { prop, url, view } from "../../factory/observable";
 import { BlockView } from "../../view";
 import { ChildsArea } from "../../view/appear";
@@ -26,7 +26,8 @@ import "./style.less";
 import { ToolTip } from "../../../../component/view/tooltip";
 import { BoxFillType, BoxStyle } from "../../../../extensions/doc.card/declare";
 import { DropDirection } from "../../../kit/handle/direction";
-import { lst } from "../../../../i18n/store";
+import { lst } from "../../../../i18n/store"
+import { BlockUrlConstant } from "../../constant";
 
 @url('/card/box')
 export class CardBox extends Block {
@@ -100,17 +101,18 @@ export class CardBox extends Block {
     async onAddCardBox(event: React.MouseEvent) {
         this.page.onAction('onAddCardBox', async () => {
             var d = {
-                url: '/card/box',
+                url: BlockUrlConstant.CardBox,
                 blocks: {
                     childs: [
-                        { url: '/card/box/title' }
+                        { url: BlockUrlConstant.Head }
                     ]
                 }
             };
             var pa = this.parent;
             var nb = await pa.appendBlock(d, this.at + 1, this.parentKey);
             this.page.addUpdateEvent(async () => {
-                this.page.kit.anchorCursor.onFocusBlockAnchor(nb, { merge: true, render: true, last: true })
+                var head = nb.find(g => g.url == BlockUrlConstant.Head)
+                this.page.kit.anchorCursor.onFocusBlockAnchor(head, { merge: true, render: true, last: true })
             })
         });
     }
@@ -147,7 +149,6 @@ export class CardBox extends Block {
             }
         }
     }
-
     get isAllowDrop(): boolean {
         return true;
     }
@@ -173,35 +174,67 @@ export class CardBox extends Block {
             DropDirection.bottom
         ]
     }
-    // async drop(blocks: Block[], direction: DropDirection) {
-    //     var dragRow = blocks[0] as CardBox;
-    //     switch (direction) {
-    //         case DropDirection.bottom:
-    //         case DropDirection.top:
-    //             var result = await this.schema.rowRank({
-    //                 id: dragRow.dataRow.id,
-    //                 pos: {
-    //                     id: this.dataRow.id,
-    //                     pos: DropDirection.bottom == direction ? "after" : 'before'
-    //                 }
-    //             });
-    //             if (result.ok) {
-    //                 if (result.data?.isCacSort)
-    //                     this.page.addUpdateEvent(async () => {
-    //                         this.dataGrid.onReloadData()
-    //                     })
-    //                 else {
-    //                     dragRow.dataRow.sort = result.data.sort;
-    //                     this.page.addUpdateEvent(async () => {
-    //                         this.dataGrid.onSortRank()
-    //                     })
-    //                 }
-    //             }
-    //             break;
-    //     }
-    // }
-
-
+    async onGetContextMenus() {
+        var items = await super.onGetContextMenus();
+        var at = items.findIndex(g => g.name == BlockDirective.copy);
+        items.splice(at + 2, 0, ...[
+            { type: MenuItemType.divide },
+            {
+                name: 'cloneCard',
+                icon: DuplicateSvg,
+                text: lst("复制卡片")
+            },
+            { type: MenuItemType.divide },
+            {
+                name: 'background',
+                icon: CardBackgroundFillSvg,
+                text: lst("更换背景")
+            },
+            {
+                name: 'style',
+                icon: CardBrushSvg,
+                text: lst("卡片样式")
+            },
+            {
+                name: 'merge',
+                disabled: this.prev && this.prev instanceof CardBox ? false : true,
+                icon: ArrowUpSvg,
+                text: lst("合并内容到上一个")
+            }])
+        var at = items.findIndex(g => g.name == 'color');
+        items.splice(at, 2);
+        return items;
+    }
+    async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent): Promise<void> {
+        if (item.name == 'cloneCard') {
+            this.onClone()
+            return;
+        } else if (item.name == 'background') {
+            this.onOpenCardStyle(item.name)
+            return;
+        } else if (item.name == 'style') {
+            this.onOpenCardStyle()
+            return;
+        } else if (item.name == 'merge') {
+            var prev = this.prev as CardBox;
+            if (prev instanceof CardBox) {
+                var cs = this.childs;
+                await this.page.onAction('onCardMerge', async () => {
+                    await prev.appendArray(cs, prev.childs.length, prev.parentKey);
+                    await this.delete()
+                })
+            }
+            return;
+        }
+        return await super.onClickContextMenu(item, event);
+    }
+    getVisiblePanelBound(): Rect {
+        var r = Rect.fromEle(this.contentEl);
+        return r;
+    }
+    get contentEl() {
+        return (this.view as any)?.contentEl as HTMLElement;
+    }
 }
 /*** 在一个页面上，从视觉上有多个视图块，
  * 如每个页面都有一个初始的内容视图，不可拖动
