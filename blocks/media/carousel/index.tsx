@@ -230,7 +230,7 @@ export class Carousel extends Block {
 }
 @view('/carousel/image')
 export class CarouselView extends BlockView<Carousel>{
-    onMousedown(event: React.MouseEvent, operator: 'left' | "right" | 'height') {
+    onMousedown(event: React.MouseEvent, operator: 'bottom-left' | "bottom-right") {
         event.stopPropagation();
         var el = this.block.el;
         var bound = el.getBoundingClientRect();
@@ -248,6 +248,7 @@ export class CarouselView extends BlockView<Carousel>{
                 var height = data.realHeight + dy;
                 height = Math.max(40, height);
                 var dx = ev.clientX - data.event.clientX;
+                if (operator == 'bottom-left') dx = -dx;
                 var width: number;
                 width = data.realWidth + dx * 2;
                 width = Math.max(100, width);
@@ -292,7 +293,7 @@ export class CarouselView extends BlockView<Carousel>{
             return <div key={i} ><img className="round" src={img.src?.url} style={style} /></div>
         })}</Slider></div>
     }
-    renderView()  {
+    renderView() {
         var style: CSSProperties = {
             justifyContent: 'center'
         }
@@ -312,7 +313,8 @@ export class CarouselView extends BlockView<Carousel>{
                 }}>
                 {this.renderSlickImages()}
                 {this.block.isCanEdit() && <>
-                    <div className="sy-block-resize-bottom-right visible" onMouseDown={e => this.onMousedown(e, 'height')}></div>
+                    <div className="sy-block-resize-bottom-right visible" onMouseDown={e => this.onMousedown(e, 'bottom-right')}></div>
+                    <div className="sy-block-resize-bottom-left visible" onMouseDown={e => this.onMousedown(e, 'bottom-left')}></div>
                     <div onMouseDown={e => {
                         e.stopPropagation();
                         this.block.onContextmenu(e.nativeEvent)
