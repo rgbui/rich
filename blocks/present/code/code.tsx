@@ -93,14 +93,14 @@ export class TextCode extends Block {
         var rs = await super.onGetContextMenus();
         rs = rs.splice(2);
         lodash.remove(rs, g => g.name == 'text-align');
-        var at = rs.findIndex(g => g.text == lst('颜色'));
+        var at = rs.findIndex(g => g.name == 'color');
         var ns: MenuItem<string | BlockDirective>[] = [];
         // ns.push({ type: MenuItemType.divide });
-        ns.push({ name: 'lineNumbers', type: MenuItemType.switch, text:lst('行号') , checked: this.lineNumbers, icon: { name: 'bytedance-icon', code: 'list-numbers' } });
+        ns.push({ name: 'lineNumbers', type: MenuItemType.switch, text: lst('行号'), checked: this.lineNumbers, icon: { name: 'bytedance-icon', code: 'list-numbers' } });
         ns.push({ name: 'lineWrapping', type: MenuItemType.switch, text: lst('自动换号'), checked: this.lineWrapping, icon: { name: 'bytedance-icon', code: 'corner-down-left' } });
-        ns.push({ type: MenuItemType.divide });
+        //ns.push({ type: MenuItemType.divide });
         rs.splice(at, 0, ...ns)
-        lodash.remove(rs, g => g.text ==lst('颜色') )
+        lodash.remove(rs, g => g.name == 'color')
         return rs;
     }
     async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent): Promise<void> {
@@ -137,28 +137,29 @@ export class TextCodeView extends BlockView<TextCode>{
         var menuItem = await useSelectMenuItem({
             roundArea: Rect.fromEle(e.currentTarget as HTMLElement)
         },
-            [{
-                type: MenuItemType.input,
-                name: 'search_word',
-                updateMenuPanel: true,
-                value: '',
-            },
-            { type: MenuItemType.divide },
-            {
-                type: MenuItemType.container,
-                containerHeight: 200,
-                childs: [
-                    { text: lst('纯文本'), name: 'plain', value: 'plain' },
-                    ...CodeMirrorModes.filter(g => g.abled).map(l => {
-                        return {
-                            text: l.label,
-                            name: l.mode,
-                            visible: vfx as any,
-                            checkLabel: this.block.language == l.mode
-                        }
-                    })
-                ]
-            }]
+            [
+                {
+                    type: MenuItemType.input,
+                    name: 'search_word',
+                    updateMenuPanel: true,
+                    value: '',
+                },
+                { type: MenuItemType.divide },
+                {
+                    type: MenuItemType.container,
+                    containerHeight: 200,
+                    childs: [
+                        { text: lst('纯文本'), name: 'plain', value: 'plain' },
+                        ...CodeMirrorModes.filter(g => g.abled).map(l => {
+                            return {
+                                text: l.label,
+                                name: l.mode,
+                                visible: vfx as any,
+                                checkLabel: this.block.language == l.mode
+                            }
+                        })
+                    ]
+                }]
         );
         if (menuItem) {
             try {
