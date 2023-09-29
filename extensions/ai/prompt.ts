@@ -41,8 +41,9 @@ export const WritingAssistant = `As a writing improvement assistant, your task i
 export const ArticleContinue = `Continue writing an article in Chinese , begins with the following sentence: [{content}]`
 
 export const TranslateTemplate = `Translate the following text into {language}: [{content}]`
-
-
+export const SelectionPrompt = `待优化内容:\n\n [{selection}]----------------------------\n\n 请按下面的方式对待优化内容进行处理:\n\n [{prompt}]`
+export const SelectionRobotPrompt = `参考内容:\n\n [{context}]----------------------------\n\n待优化内容:\n\n [{selection}]----------------------------\n\n 请基于参考内容按下面的方式对待优化内容进行处理:\n\n [{prompt}]`
+export const PromptRobot=`参考内容:\n\n [{context}]----------------------------\n\n请基于参考内容按下面的要求进行回答:\n\n [{prompt}]`
 export const MakeSmall = `Respond in Chinese. Make the following text more concise and easier to read: [{content}]`
 export const MakeLonger = `Respond in Chinese. Make the following text longer and more detailed: [{content}]`
 /**
