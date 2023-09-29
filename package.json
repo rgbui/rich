@@ -31,6 +31,7 @@
     "bezier-js": "^6.1.0",
     "codemirror": "^6.0.1",
     "dayjs": "^1.10.6",
+    "echarts": "^5.4.3",
     "jszip": "^3.7.1",
     "katex": "^0.12.0",
     "loadsh": "0.0.4",
