@@ -50,10 +50,10 @@ export class AISearchBox extends EventsComponent {
     async openSearch(event: React.MouseEvent) {
         this.emit('close');
         await channel.act('/cache/set', { key: 'search-mode', value: 'keyword' })
-        useSearchBox({ws:this.ws});
+        useSearchBox({ ws: this.ws });
     }
     render() {
-        return <div className={"bg-white  round flex flex-col flex-full"+(isMobileOnly ? " vw100-20" : " w-800 ")}>
+        return <div className={"bg-white  round flex flex-col flex-full" + (isMobileOnly ? " vw100-20" : " w-800 ")}>
             <div className="padding-w-10 flex r-gap-r-10 padding-h-5">
                 {this.robotId && <Avatar size={30} userid={this.robotId}></Avatar>}
                 <span className="remark flex-auto text-overflow">{this.robot?.slogan || (this.robot?.remark || '').slice(0, 30) || lst('语义搜索')}</span>
@@ -64,7 +64,6 @@ export class AISearchBox extends EventsComponent {
                             size={20}
                             icon={SearchSvg}
                         ></Icon></span></ToolTip>
-
                 </span>
             </div>
             <Divider></Divider>
@@ -108,14 +107,18 @@ export class AISearchBox extends EventsComponent {
             var cb = { id: util.guid(), userid: this.robot.robotId, date: new Date(), content: '' };
             this.messages.push(cb);
             this.forceUpdate();
-            var g = await channel.get('/query/wiki/answer', { robotId: this.robot.robotId, ask: prompt });
-            if (g.data?.contents?.length > 0) {
+            var g = await channel.get('/query/wiki/answer', {
+                robotId: this.robot.robotId,
+                ask: prompt,
+                model: this.robot.model || (window.shyConfig.isUS ? "gpt" : 'baidu')
+            });
+            if (g.data?.docs?.length > 0) {
                 var pro = (this.robot?.prompts || []).find(g => g.apply == RobotApply.search);
                 var text = '';
                 cb.content = `<span class='typed-print'></span>`;
                 var content = getTemplateInstance(pro ? pro.prompt : AskTemplate, {
                     prompt: prompt,
-                    context: g.data.contents[0].content
+                    context: g.data.docs[0].ps.map(p => p.content).join("\n\n")
                 });
                 this.forceUpdate();
                 await channel.post('/text/ai/stream', {
@@ -156,16 +159,16 @@ export class AISearchBox extends EventsComponent {
     }
     messages: { id: string, userid: string, date: Date, content: string }[] = [];
     el: HTMLElement;
-    ws:any;
-    async open(options:{ws:any}) {
-        this.ws=options.ws;
+    ws: any;
+    async open(options: { ws: any }) {
+        this.ws = options.ws;
         this.robots = await getWsWikiRobots();
         this.robotId = this.robots[0]?.robotId;
         this.forceUpdate();
     }
 }
 
-export async function useAISearchBox(options:{ws:any}) {
+export async function useAISearchBox(options: { ws: any }) {
     var pos: PopoverPosition = { center: true, centerTop: 100 };
     let popover = await PopoverSingleton(AISearchBox, { mask: true, frame: true, shadow: true, });
     let fv = await popover.open(pos);

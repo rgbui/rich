@@ -103,11 +103,11 @@ class TextTool extends EventsComponent {
                 })
             }
             {this.visible == true && <div className='shy-tool-text-menu' ref={e => this.boxEl = e} style={style}>
-                <Tip overlay={lst('让诗云AI帮你写作', '让诗云AI帮你写作、润色、生成内容')} >
+                {!(this.page.ws.aiConfig.disabled == true) && <Tip overlay={lst('让诗云AI帮你写作', '让诗云AI帮你写作、润色、生成内容')} >
                     <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onExcute(TextCommand.askAI, e)}>
                         <Icon icon={AiStartSvg}></Icon><span>AI</span>
                     </div>
-                </Tip>
+                </Tip>}
                 {this.turnBlock && this.turnText && <Tip text='切换块'>
                     <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenBlockSelector(e)}>
                         <span>{this.turnText}</span><Icon className={'remark'} size={16} icon={ChevronDownSvg}></Icon>
