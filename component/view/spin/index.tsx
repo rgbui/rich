@@ -35,3 +35,32 @@ export function SpinBox(props: {
     </div>
 }
 
+
+export function Loading1() {
+    return <div className="loading1">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+}
+
+export function Loading2() {
+    return <div className="loading2">
+        <div></div>
+        <div></div>
+    </div>
+}
+
+export function Loading3() {
+    return <div className="loading3">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+
+}
