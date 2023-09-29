@@ -17,7 +17,6 @@ import { SwitchText } from "../../component/view/switch";
 import { SelectBox } from "../../component/view/select/box";
 import { useAISearchBox } from "./ai";
 import { isMobileOnly } from "react-device-detect";
-import { Tip } from "../../component/view/tooltip/tip";
 import { lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
 
@@ -38,30 +37,25 @@ export class SearchBox extends EventsComponent {
                         onEnter={e => { this.searchList.word = e; this.onForceSearch() }}
                         onChange={e => { this.searchList.word = e; this.onSearch() }} ></Input>
                 </div>
-                <div className="flex-fixed text-1">
-                    <Tip text={'AI语义搜索'}>
-                        <span onMouseDown={e => this.openAi(e)} className="flex flex-center size-24 cursor item-hover round">
-                            <Icon size={18} icon={AiStartSvg}></Icon>
-                        </span>
-                    </Tip>
-                </div>
             </div>
-            {this.searchList.word && <><Divider></Divider>
-                <div className="flex f-12 remark padding-w-10 padding-t-5">
-                    <SwitchText className={'flex-fixed'} checked={this.searchList.isOnlySearchTitle} onChange={e => {
-                        this.searchList.isOnlySearchTitle = e;
-                        this.onForceSearch()
-                    }}><S>仅区配标题</S></SwitchText>
-                    <span className="flex-auto flex-end">
-                        <span className="gap-r-5"><S>编辑时间</S></span>
-                        <SelectBox inline value={this.searchList.editDate} onChange={e => { this.searchList.editDate = e; this.onForceSearch() }} options={[{ text: lst('降序'), value: -1 }, { text:lst('升序') , value: 1 }]}></SelectBox>
-                    </span>
-                </div>
-                <div className="padding-h-10 overflow-y max-h-300 min-h-120">
-                    {this.searchList.loading && <Spin block></Spin>}
-                    {!this.searchList.loading && this.searchList.word && this.renderList()}
-                </div>
-            </>}
+            <Divider></Divider>
+            <div className="flex f-12 remark padding-w-10 padding-t-5">
+                <SwitchText className={'flex-fixed'} checked={this.searchList.isOnlySearchTitle} onChange={e => {
+                    this.searchList.isOnlySearchTitle = e;
+                    this.onForceSearch()
+                }}><S>仅区配标题</S></SwitchText>
+                <span className="flex-auto flex-end">
+                    <span className="gap-r-5"><S>编辑时间</S></span>
+                    <SelectBox inline value={this.searchList.editDate} onChange={e => { this.searchList.editDate = e; this.onForceSearch() }} options={[
+                        { text: lst('升序'), value: 1, icon: { name: 'bytedance-icon', code: 'sort-amount-up' } },
+                        { text: lst('降序'), value: -1, icon: { name: 'bytedance-icon', code: 'sort-amount-down' } },
+                    ]}></SelectBox>
+                </span>
+            </div>
+            <div className="padding-h-10 overflow-y max-h-300 min-h-120">
+                {this.searchList.loading && <Spin block></Spin>}
+                {!this.searchList.loading && this.renderList()}
+            </div>
         </div>
     }
     renderList() {
