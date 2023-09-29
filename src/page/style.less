@@ -102,6 +102,11 @@
             justify-content: center;
             align-items    : center;
 
+            &.center {
+                left     : 50%;
+                transform: translateX(-50%);
+            }
+
             &:hover {
                 background-color: rgba(43, 47, 45, .08);
             }
@@ -208,18 +213,19 @@
 
     &-items {
         a {
-            user-select  : none;
-            transition   : background 20ms ease-in 0s;
-            cursor       : pointer;
-            padding      : 3px 2px;
-            display      : flex;
-            align-items  : center;
-            flex-grow    : 1;
-            height       : 32px;
-            font-size    : 16px;
-            border-radius: 3px;
-            color        : rgba(55, 53, 47, 0.5);
-            cursor       : pointer;
+            user-select     : none;
+            transition      : background 20ms ease-in 0s;
+            cursor          : pointer;
+            padding         : 3px 5px;
+            display         : flex;
+            align-items     : center;
+            flex-grow       : 1;
+            margin          : 5px 0px;
+            // height       : 32px;
+            font-size       : 16px;
+            border-radius   : 4px;
+            color           : rgba(55, 53, 47, 0.5);
+            cursor          : pointer;
 
             .shy-icon {
                 // fill        : currentColor;

@@ -14,7 +14,9 @@ import {
     CommunicationSvg,
     ComponentsSvg,
     CustomizePageSvg,
+    Edit1Svg,
     EditSvg,
+    EyeHideSvg,
     FieldsSvg,
     FileSvg,
     FourLeavesSvg,
@@ -52,7 +54,7 @@ import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
 import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
 import { Field } from "../../../blocks/data-grid/schema/field";
 import { GetFieldFormBlockInfo } from "../../../blocks/data-grid/element/service";
-import { ElementType } from "../../../net/element.type";
+import { ElementType, getElementUrl } from "../../../net/element.type";
 import { FieldType } from "../../../blocks/data-grid/schema/type";
 import { getWsWikiRobots } from "../../../net/ai/robot";
 import { util } from "../../../util/util";
@@ -61,6 +63,10 @@ import { useExportFile } from "../../../extensions/export-file";
 import { DataGridView } from "../../../blocks/data-grid/view/base";
 import { useForm } from "../../../component/view/form/dialoug";
 import { lst } from "../../../i18n/store";
+import { Title } from "../../../blocks/page/title";
+import { BlockButton } from "../../../blocks/form/button";
+import { Block } from "../../block";
+import { RobotInfo } from "../../../types/user";
 
 export class PageContextmenu {
     async onGetContextMenus(this: Page) {
@@ -86,9 +92,6 @@ export class PageContextmenu {
     }
     async onClickContextMenu(this: Page, item: MenuItem<BlockDirective | string>, event: MouseEvent) {
         if (this.isBoard) return this.onClickBoardContextMenu(item, event);
-        switch (item.name) {
-
-        }
     }
     async onClickBoardContextMenu(this: Page, item: MenuItem<BlockDirective | string>, event: MouseEvent) {
         switch (item.name) {
@@ -149,18 +152,19 @@ export class PageContextmenu {
                 {
                     icon: AiStartSvg,
                     text: lst("AI语料库"),
-                    childs: [
-                        ...robots.map(robot => {
-                            return {
-                                type: MenuItemType.user,
-                                userid: robot.robotId,
-                                childs: [
-                                    { name: 'ai-sync', value: robot.robotId, icon: RefreshSvg, text: lst('同步') },
-                                    { name: 'ai-sync-turn', value: robot.robotId, icon: RefreshOneSvg, text: lst('同步且训练') },
-                                ]
-                            }
-                        })
-                    ]
+                    visible: robots.findAll(g => g.scene == 'wiki').length > 0 ? true : false,
+                    childs: robots.findAll(g => g.scene == 'wiki').map(robot => {
+                        return {
+                            type: MenuItemType.user,
+                            userid: robot.robotId,
+                            childs: [
+                                { name: 'ai-sync', value: robot, icon: RefreshSvg, text: lst('同步') },
+                                { name: 'ai-sync-turn', value: robot, icon: RefreshOneSvg, text: lst('同步且训练') },
+                                { type: MenuItemType.divide },
+                                { name: 'ai-open', value: robot, icon: { name: 'bytedance-icon', code: 'arrow-right-up' }, text: lst('打开') }
+                            ]
+                        }
+                    })
                 },
                 { name: 'favourite', visible: false, icon: 'favorite:sy', text: lst('添加至收藏'), disabled: true },
                 { name: 'history', icon: VersionHistorySvg, text: lst('页面历史') },
@@ -321,6 +325,9 @@ export class PageContextmenu {
             else if (r.item.name == 'ai-sync') {
                 this.onSyncAi(r.item.value, false);
             }
+            else if (r.item.name == 'ai-open') {
+                this.onOpenRobot(r.item.value);
+            }
             else if (r.item.name == 'export') {
                 this.onExport();
             }
@@ -329,7 +336,7 @@ export class PageContextmenu {
             }
         }
     }
-    async onOpenHistory(this: Page,) {
+    async onOpenHistory(this: Page) {
         var result = await usePageHistoryStore(this);
         if (result) {
             this.emit(PageDirective.rollup, result);
@@ -347,6 +354,24 @@ export class PageContextmenu {
         var r = await useSelectMenuItem(
             { roundArea: Rect.fromEvent(event) },
             [
+                {
+                    icon: { name: 'bytedance-icon', code: 'form-one' },
+                    name: 'form',
+                    text: lst('表单'),
+                    type: MenuItemType.switch,
+                    checked: this.isPageForm,
+                    visible: this.isSchemaRecordViewTemplate ? true : false
+                },
+                {
+                    name: 'editForm',
+                    icon: { name: 'bytedance-icon', code: 'arrow-right-up' },
+                    text: lst('编辑模板'),
+                    visible: this.isSchemaRecordViewTemplate || this.pe.type == ElementType.SchemaData ? false : true
+                },
+                {
+                    type: MenuItemType.gap,
+                    visible: this.isSchemaRecordViewTemplate ? true : false
+                },
                 { text: lst('显示字段'), type: MenuItemType.text },
                 ...this.schema.allowFormFields.findAll(g => (this.pe.type == ElementType.SchemaRecordView && !this.isSchemaRecordViewTemplate || this.pe.type == ElementType.SchemaData) && g.type == FieldType.title ? false : true).toArray(uf => {
                     if (this.pe.type == ElementType.SchemaData && uf.type == FieldType.title) return;
@@ -357,14 +382,59 @@ export class PageContextmenu {
                         type: MenuItemType.switch,
                         checked: this.exists(c => (c instanceof OriginFormField) && c.field.id == uf.id)
                     }
-                })
+                }),
+                { type: MenuItemType.divide },
+                {
+                    name: 'hideAllFields',
+                    icon: EyeHideSvg,
+                    text: lst('隐藏所有字段')
+                }
             ],
             {
-                input: (newItem) => {
-                    self.onToggleFieldView(this.schema.allowFormFields.find(g => g.id == newItem.name), newItem.checked)
+                input: async (newItem) => {
+                    if (newItem.name == 'form') {
+                        await self.onAction('onToggleForm', async () => {
+                            await self.updateProps({ isPageForm: newItem.checked })
+                            if (newItem.checked) {
+                                var title = self.find(g => g.url == BlockUrlConstant.Title) as Title;
+                                await title.updateProps({ align: 'center' })
+                                var button = self.find(g => g.url == BlockUrlConstant.Button && (g as BlockButton).isFormSubmit() == true) as BlockButton;
+                                if (!button) {
+                                    var last: Block = self.findReverse(g => (g instanceof OriginFormField));
+                                    if (!last) {
+                                        last = self.views[0].childs.last();
+                                    }
+                                    if (last) {
+                                        await last.visibleDownCreateBlock(BlockUrlConstant.Button, {
+                                            align: 'center',
+                                            buttonText: lst('提交') + this.getPageDataInfo()?.text,
+                                            flow: {
+                                                commands: [{ url: '/form/submit' }]
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                            self.addPageUpdate();
+                        })
+                    }
+                    else self.onToggleFieldView(this.schema.allowFormFields.find(g => g.id == newItem.name), newItem.checked)
                 }
             }
         )
+        if (r) {
+            if (r.item.name == 'editForm') {
+                self.onFormOpen('template');
+            }
+            else if (r.item.name == 'hideAllFields') {
+                var fs = self.findAll(c => (c instanceof OriginFormField));
+                self.onAction('hideAllFields', async () => {
+                    for (let f of fs) {
+                        await f.delete()
+                    }
+                })
+            }
+        }
     }
     async onToggleFieldView(this: Page, field: Field, checked: boolean) {
         await this.onAction('onToggleFieldView', async () => {
@@ -400,11 +470,14 @@ export class PageContextmenu {
     async onPageRemove(this: Page) {
         channel.air('/page/remove', { item: this.pageInfo.id });
     }
-    async onSyncAi(this: Page, robotId: string, isTurn?: boolean) {
+    async onOpenRobot(this: Page, robot: RobotInfo) {
+        await channel.air('/robot/open', { robot });
+    }
+    async onSyncAi(this: Page, robot: RobotInfo, isTurn?: boolean) {
         ShyAlert(lst('正在同步中...'), 'warn', isTurn ? 1000 * 60 * 10 : 1000 * 4);
         try {
             var r = await channel.put('/sync/wiki/doc', {
-                robotId,
+                robotId: robot.robotId,
                 elementUrl: this.customElementUrl,
                 pageText: this.getPageDataInfo()?.text,
                 contents: [{ id: util.guid(), content: await this.getMd() }]
@@ -412,7 +485,22 @@ export class PageContextmenu {
             if (isTurn) {
                 if (r.ok) {
                     ShyAlert(lst('正在微调中...'), 'warn', isTurn ? 1000 * 60 * 10 : 1000 * 60 * 2);
-                    await channel.post('/robot/doc/embedding', { id: r.data.doc.id })
+                    await new Promise((resolve, reject) => {
+                        channel.post('/fetch', {
+                            url: '/robot/doc/embedding/stream',
+                            data: {
+                                id: r.data.doc.id,
+                                model: robot.embeddingModel || (window.shyConfig.isUS ? "gpt" : "ERNIE-Bot-turbo")
+                            },
+                            method: 'post',
+                            callback: (str, done) => {
+                                if (done) {
+                                    resolve(done);
+                                }
+                            }
+                        })
+                    })
+
                 }
             }
         }
@@ -505,7 +593,6 @@ export class PageContextmenu {
         })
         ShyAlert(lst('正在申请中...'), 'warn', 1000 * 60 * 10);
         try {
-
             var g = await channel.post('/create/template', { config: { pageId: this.pageInfo?.id } })
             if (g.ok) {
                 var r = await channel.post('/download/file', { url: g.data.file.url });
@@ -535,3 +622,5 @@ export class PageContextmenu {
         }
     }
 }
+
+

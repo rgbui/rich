@@ -12,7 +12,7 @@ export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
     keyboardPlate.listener(kt => kt.isCtrl(KeyboardCode.S) || UA.isMacOs && kt.isMeta(KeyboardCode.S),
         (event, kt) => {
             event.preventDefault()
-            page.onSave();
+            page.onPageSave();
         }
     );
     keyboardPlate.listener(kt => {

@@ -7,6 +7,8 @@ import { autoImageUrl } from "../../../net/element.type";
 import { MouseDragger } from "../../common/dragger";
 import { Rect } from "../../common/vector/point";
 import { S } from "../../../i18n/view";
+import { BlockUrlConstant } from "../../block/constant";
+import { Title } from "../../../blocks/page/title";
 
 export class PageCover extends React.Component<{ page: Page }>{
     private startPos: boolean = false;
@@ -69,6 +71,7 @@ export class PageCover extends React.Component<{ page: Page }>{
                 self.loadThumb = true;
                 self.forceUpdate();
             }
+            var isCenter = (this.props.page.find(c => c.url == BlockUrlConstant.Title) as Title)?.align == 'center';
             return <div className="shy-page-view-cover" onMouseDown={e => dragStart(e)}>
                 <img ref={e => this.img = e}
                     onDragStart={e => false}
@@ -88,7 +91,7 @@ export class PageCover extends React.Component<{ page: Page }>{
                 <div className="shy-page-view-cover-nav">
                     <div style={page.getScreenStyle()}>
                         <div style={{ position: 'relative', height: 24 }}>
-                            {pd?.icon && <div onMouseDown={e => changeIcon(e)} className="shy-page-view-cover-icon">
+                            {pd?.icon && <div onMouseDown={e => changeIcon(e)} className={"shy-page-view-cover-icon" + (isCenter ? " center" : "")}>
                                 <Icon size={72} icon={pd?.icon}></Icon>
                             </div>}
                             {page.isCanEdit && <div className="shy-page-view-cover-operators">

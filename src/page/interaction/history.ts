@@ -9,8 +9,9 @@ import { PageDirective } from "../directive";
 import { UserAction } from "../../history/action";
 import { ElementType } from "../../../net/element.type";
 
-export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
-    snapshoot.on('history', (action) => {
+export function PageHistory(page: Page,snapshoot: HistorySnapshoot)
+{
+    snapshoot.on('history',(action)=>{
 
         /**
          * 如果是表单视图，且不是模板，那么就不应该保存快照 ，
@@ -162,12 +163,12 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     snapshoot.registerOperator(OperatorDirective.updateProp, async (operator, source) => {
         var block = page.find(x => x.id == operator.data.blockId);
         if (block) {
-            block.manualUpdateProps(operator.data.old, operator.data.new, BlockRenderRange.self);
+            await  block.manualUpdateProps(operator.data.old, operator.data.new, BlockRenderRange.self);
         }
     }, async (operator) => {
         var block = page.find(x => x.id == operator.data.blockId);
         if (block) {
-            block.manualUpdateProps(operator.data.new, operator.data.old, BlockRenderRange.self);
+            await  block.manualUpdateProps(operator.data.new, operator.data.old, BlockRenderRange.self);
         }
     });
     snapshoot.registerOperator(OperatorDirective.updatePropMatrix, async (operator, source) => {
@@ -268,13 +269,13 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         var dr: { pos: SnapshootBlockPropPos, old_value: any, new_value: any, render: BlockRenderRange } = operator.data as any;
         var block = page.find(x => x.id == dr.pos.blockId);
         if (block) {
-            block.manualUpdateProps(dr.old_value, dr.new_value, typeof dr.render != 'undefined' ? dr.render : BlockRenderRange.self);
+            await  block.manualUpdateProps(dr.old_value, dr.new_value, typeof dr.render != 'undefined' ? dr.render : BlockRenderRange.self);
         }
     }, async (operator) => {
         var dr: { pos: SnapshootBlockPropPos, old_value: any, new_value: any, render: BlockRenderRange } = operator.data as any;
         var block = page.find(x => x.id == dr.pos.blockId);
         if (block) {
-            block.manualUpdateProps(dr.new_value, dr.old_value, typeof dr.render != 'undefined' ? dr.render : BlockRenderRange.self);
+            await  block.manualUpdateProps(dr.new_value, dr.old_value, typeof dr.render != 'undefined' ? dr.render : BlockRenderRange.self);
         }
     });
     snapshoot.registerOperator(OperatorDirective.$change_cursor_offset, async (operator, source, action) => {
@@ -460,7 +461,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         var dr = operator.data;
         var block = page.find(x => x.id == dr.pos.blockId);
         if (block) {
-            await block.arrayPush({ prop: dr.pos.prop, data: block.createPropObject(dr.pos.prop, dr.data), at: dr.pos.arrayAt })
+            await block.arrayPush({ prop: dr.pos.prop, data:await  block.createPropObject(dr.pos.prop, dr.data), at: dr.pos.arrayAt })
         }
     });
     snapshoot.registerOperator(OperatorDirective.$array_move, async (operator, source) => {
@@ -480,7 +481,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         var dr = operator.data;
         var block = page.find(x => x.id == dr.pos.blockId);
         if (block) {
-            await block.arrayPush({ prop: dr.pos.prop, data: block.createPropObject(dr.pos.prop, dr.data), at: dr.pos.arrayAt })
+            await block.arrayPush({ prop: dr.pos.prop, data:await  block.createPropObject(dr.pos.prop, dr.data), at: dr.pos.arrayAt })
         }
     }, async (operator) => {
         var dr = operator.data;
@@ -502,32 +503,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             await block.turn(dr.from)
         }
     });
-    snapshoot.registerOperator(OperatorDirective.$data_grid_trun_view, async (operator) => {
-        var dr = operator.data;
-        var block: DataGridView = page.find(x => x.id == dr.pos.blockId) as any;
-        if (block) {
-            await block.dataGridTrunView(dr.from)
-        }
-    }, async (operator) => {
-        var dr = operator.data;
-        var block: DataGridView = page.find(x => x.id == dr.pos.blockId) as any;
-        if (block) {
-            await block.dataGridTrunView(dr.to)
-        }
-    });
-    snapshoot.registerOperator(OperatorDirective.$data_grid_trun_view_new, async (operator) => {
-        var dr = operator.data as { from: SnapshootDataGridViewPos };
-        var block: DataGridView = page.find(x => x.id == dr.from.blockId) as any;
-        if (block) {
-            await block.otherDataGridTrunView(dr.from.viewId, dr.from.type, dr.from.schemaId, dr.from.viewUrl)
-        }
-    }, async (operator) => {
-        var dr = operator.data as { to: SnapshootDataGridViewPos };
-        var block: DataGridView = page.find(x => x.id == dr.to.blockId) as any;
-        if (block) {
-            await block.otherDataGridTrunView(dr.to.viewId, dr.to.type, dr.to.schemaId, dr.to.viewUrl)
-        }
-    });
+  
     snapshoot.registerOperator(OperatorDirective.$data_grid_change_view_url, async (operator) => {
         var dr = operator.data;
         var block: DataGridView = page.find(x => x.id == dr.pos.blockId) as any;

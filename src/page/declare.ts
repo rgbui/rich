@@ -130,6 +130,12 @@ export interface LinkWs {
         checkJoinProtocol: boolean,
         joinProtocol: string
     }
+    aiConfig: {
+        text?: string,
+        image?: string,
+        embedding?: string,
+        disabled?: boolean
+    }
     /**
      * 创建文档时的初始配置
      */

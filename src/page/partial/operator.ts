@@ -28,7 +28,6 @@ export class Page$Operator {
     * @param parent 
     * @param at 
     * 
-    * 
     */
     async createBlock(this: Page, url: string, data: Record<string, any>, parent: Block, at?: number, childKey?: string) {
         var block = await BlockFactory.createBlock(url, this, data, parent);
@@ -229,7 +228,7 @@ export class Page$Operator {
         if (!(event instanceof Point))
             event.preventDefault();
         if (blocks.length == 1) {
-            return blocks[0].onContextmenu(event);
+            return await blocks[0].onContextmenu(event);
         }
         var re = await useSelectMenuItem(
             {
@@ -335,7 +334,10 @@ export class Page$Operator {
         await this.onAction('onOpenRefPages', async () => {
             this.updateProps({ autoRefPages: d.refPages });
             if (this.requireSelectLayout == true) {
-                this.updateProps({ requireSelectLayout: false, 'pageLayout.type': PageLayoutType.doc });
+                this.updateProps({
+                    requireSelectLayout: false,
+                    'pageLayout.type': PageLayoutType.doc
+                });
             }
             if (d.refPages == false) {
                 var r = this.find(g => g.url == BlockUrlConstant.RefLinks);

@@ -211,6 +211,7 @@ export class Page$Cycle {
         json.pageFill = lodash.cloneDeep(this.pageFill);
         json.pageStyle = lodash.cloneDeep(this.pageStyle);
         json.isPageContent = this.isPageContent;
+        json.isPageForm = this.isPageForm;
         json.locker = lodash.cloneDeep(this.locker);
         return json;
     }
@@ -283,38 +284,109 @@ export class Page$Cycle {
                 dr.autoRefSubPages = this.ws.createPageConfig.autoRefSubPages
             }
         }
-
         return dr;
     }
     async loadDefaultData(this: Page) {
         var data = await this.getDefaultData();
         await this.load(data);
     }
-    onSave(this: Page) {
+    onPageSave(this: Page) {
         this.emit(PageDirective.save);
     }
-    onClose(this: Page) {
+    onPageClose(this: Page) {
         this.emit(PageDirective.close);
     }
     async onBack(this: Page) {
+        if (ElementType.SchemaRecordView == this.pe.type) {
+            var url: '/page/open' | '/page/dialog' | '/page/slide' = '/page/dialog'
+            if (this.openSource == 'page') url = '/page/open'
+            else if (this.openSource == 'slide') url = '/page/slide'
+            await channel.air(url, {
+                elementUrl: this.elementUrl,
+                config: { wait: false, force: true }
+            })
+            return;
+        }
         if (this.openSource == 'page') {
             if (this.isCanEdit) {
-                if (!this.isSchemaRecordViewTemplate) {
-                    if (this.pe.type == ElementType.SchemaData) {
-                        this.onSave();
-                        var newRow = await this.getSchemaRow()
-                        await this.schema.rowUpdate({ dataId: this.pe.id1, data: newRow })
-                    }
-                    else if (this.pe.type == ElementType.SchemaRecordView) {
-                        this.onSave();
-                        var newRow = await this.getSchemaRow()
-                        await this.schema.rowAdd({ data: newRow })
-                    }
+                if ([ElementType.SchemaData, ElementType.SchemaRecordView].includes(this.pe.type)) {
+                    await this.onSubmitForm();
+                }
+                else {
+                    this.onPageSave();
                 }
             }
             this.emit(PageDirective.back);
         }
-        else this.onClose();
+        else this.onPageClose();
+    }
+    async onFormOpen(this: Page, source: Page['openSource'] | 'next' | 'prev' | 'template') {
+        if (source == 'page') {
+            await channel.air('/page/open', { elementUrl: this.elementUrl, config: { force: true, wait: false } });
+            this.onPageClose();
+        }
+        else if (source == 'template') {
+            var url: '/page/open' | '/page/dialog' | '/page/slide' = '/page/dialog'
+            if (this.openSource == 'page') url = '/page/open'
+            else if (this.openSource == 'slide') url = '/page/slide'
+            await channel.air(url, {
+                elementUrl: this.elementUrl,
+                config: { wait: false, force: true, isTemplate: true }
+            })
+        }
+        else {
+            var url: '/page/open' | '/page/dialog' | '/page/slide' = '/page/dialog'
+            if (this.openSource == 'page') url = '/page/open'
+            else if (this.openSource == 'slide') url = '/page/slide'
+            if (source == 'prev') {
+                if (this.formPreRow)
+                    await channel.air(url, { elementUrl: getElementUrl(ElementType.SchemaData, this.schema?.id, this.formPreRow.id), config: { wait: false, force: true } })
+            }
+            else if (source == 'next') {
+                if (this.formNextRow)
+                    await channel.air(url, { elementUrl: getElementUrl(ElementType.SchemaData, this.schema?.id, this.formNextRow.id), config: { wait: false, force: true } })
+            }
+        }
+    }
+    /**
+     * 
+     * @param this 
+     * @param options {
+     *   isClose:是否关闭页面
+     *   isFormBlank:是否清空表单
+     * }
+     */
+    async onSubmitForm(this: Page, options?: { isClose?: boolean, isFormMargin?: boolean }) {
+        if (this.pe.type == ElementType.SchemaData) {
+            this.onPageSave();
+            var newRow = await this.getSchemaRow()
+            if (this.isCanEdit && newRow) {
+                await this.schema.rowUpdate({ dataId: this.pe.id1, data: newRow })
+            }
+        }
+        else if (this.pe.type == ElementType.SchemaRecordView) {
+            var newRow = await this.getSchemaRow();
+            if (newRow) {
+                var r = await this.schema.rowAdd({ data: newRow, pos: { id: undefined, pos: 'after' } });
+                if (r.ok) {
+                    newRow = r.data.data;
+                    await channel.act('/view/snap/store',
+                        {
+                            elementUrl: getElementUrl(ElementType.SchemaData,
+                                this.schema.id,
+                                newRow.id
+                            ),
+                            seq: 0,
+                            plain: await this.getPlain(),
+                            thumb: await this.getThumb(),
+                            content: await this.getString(),
+                            text: newRow.title,
+                        })
+                }
+            }
+        }
+        if (options?.isClose)
+            this.onPageClose()
     }
     private willUpdateAll: boolean = false;
     private willUpdateBlocks: Block[];
@@ -364,7 +436,10 @@ export class Page$Cycle {
         var self = this;
         var fn = async function () {
             try {
-                if (self.willUpdateAll) { self.willUpdateAll = false; await self.forceUpdate(); }
+                if (self.willUpdateAll) {
+                    self.willUpdateAll = false;
+                    await self.forceUpdate();
+                }
                 else await ups.eachAsync(async (up) => {
                     await up.forceUpdate();
                 })
@@ -415,7 +490,6 @@ export class Page$Cycle {
                         ref: lodash.cloneDeep(c),
                     })
                 })
-                console.log(JSON.stringify(ops), 'ops');
                 if (ops.length > 0)
                     await channel.post('/row/block/sync/refs', {
                         pageId: this.pageInfo.id,
@@ -816,6 +890,8 @@ export class Page$Cycle {
         });
     }
     formRowData: Record<string, any>;
+    formPreRow: Record<string, any>;
+    formNextRow: Record<string, any>;
     async loadPageSchema(this: Page) {
         if (!this.schema) {
             this.schema = await TableSchema.loadTableSchema(this.pe.id, this.ws);
@@ -866,14 +942,16 @@ export class Page$Cycle {
                     }
                 }
                 if (this.pe.type == ElementType.SchemaData) {
-                    var row = await this.schema.rowGet(this.pe.id1);
-                    if (row) {
-                        this.formRowData = lodash.cloneDeep(row);
+                    var rg = await this.schema.rowGetPrevAndNext(this.pe.id1, this.ws);
+                    if (rg) {
+                        this.formRowData = lodash.cloneDeep(rg.data.data);
+                        this.formPreRow = lodash.cloneDeep(rg.data.prev);
+                        this.formNextRow = lodash.cloneDeep(rg.data.next);
                         this.each(g => {
                             if (g instanceof OriginFormField) {
                                 var f = g.field;
                                 if (f) {
-                                    g.value = g.field.getValue(row);
+                                    g.value = g.field.getValue(this.formRowData);
                                 }
                             }
                         })
@@ -892,9 +970,7 @@ export class Page$Cycle {
                     }
                 })
             }
-
         }
-
     }
     async getSchemaRow(this: Page) {
         var row: Record<string, any> = {};
@@ -925,7 +1001,8 @@ export class Page$Cycle {
             if (checked) {
                 var b = GetFieldFormBlockInfo(field);
                 if (b) {
-                    var newBlock = await this.createBlock(b.url, b, this.views[0]);
+                    var view = this.views[0];
+                    var newBlock = await this.createBlock(b.url, b, view, view.childs.length);
                     if (this.formRowData)
                         newBlock.updateProps({ value: field.getValue(this.formRowData) })
                 }

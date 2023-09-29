@@ -110,6 +110,7 @@ export class Page extends Events<PageDirective>{
      */
     onlyDisplayContent: boolean = false;
     isPageContent: boolean = false;
+    isPageForm:boolean=false;
     bar = true;
     get visiblePageBar() {
         if (this.isPubSite) {
