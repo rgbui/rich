@@ -1,3 +1,4 @@
+
 import lodash from "lodash";
 import React, { CSSProperties } from "react"
 import { Rect } from "../../../src/common/vector/point";
@@ -18,11 +19,15 @@ export class SelectBox<T = any> extends React.Component<{
     onChange?: (value: any, item?: MenuItem<string>) => void,
     style?: CSSProperties,
     dropHeight?: number,
+    dropAlign?: 'left' | 'right',
     border?: boolean,
     dropWidth?: number,
     small?: boolean,
     multiple?: boolean,
-    prefix?: JSX.Element | string | React.ReactNode
+    iconHidden?: boolean,
+    prefix?: JSX.Element | string | React.ReactNode,
+    textAlign?: 'left' | 'center' | 'right',
+    checkChange?: (value: any, item?: MenuItem<string>) => Promise<boolean>
 }>{
     render() {
         var self = this;
@@ -30,7 +35,7 @@ export class SelectBox<T = any> extends React.Component<{
             event.stopPropagation();
             if (self.props.disabled) return;
             var options = typeof self.props.computedOptions == 'function' ? await self.props.computedOptions() : self.props.options;
-            var ms = lodash.cloneDeep(options);
+            var ms = options.exists(g => g.render ? true : false) ? options : lodash.cloneDeep(options);
             if (self.props.multiple == true) {
                 var ops = ms.arrayJsonFindAll('childs', g => Array.isArray(self.props.value) && self.props.value.includes(g.value));
                 ops.forEach(op => {
@@ -43,7 +48,7 @@ export class SelectBox<T = any> extends React.Component<{
             }
             var rect = Rect.fromEle(event.currentTarget as HTMLElement)
             var r = await useSelectMenuItem(
-                { roundArea: rect },
+                { roundArea: rect, align: self.props.dropAlign == 'left' ? 'start' : 'end' },
                 ms,
                 {
 
@@ -51,6 +56,10 @@ export class SelectBox<T = any> extends React.Component<{
                     nickName: 'selectBox'
                 });
             if (r) {
+                if (typeof self.props.checkChange == 'function') {
+                    var cc = await self.props.checkChange(r.item.value, r.item);
+                    if (cc === false) return;
+                }
                 if (self.props.multiple) {
                     var vs = lodash.cloneDeep(self.props.value || []) as T[];
                     if (typeof self.props.computedChanges == 'function') {
@@ -85,7 +94,7 @@ export class SelectBox<T = any> extends React.Component<{
             {this.props.children && <>{this.props.children}<Icon className={'gap-l-3'} size={14} icon={ChevronDownSvg}></Icon></>}
             {!this.props.children && <div style={{ width: '100%' }} className="flex">
                 {this.props.prefix}
-                {this.props.multiple != true && <span className="flex-auto">{op?.icon && <Icon size={14} icon={op.icon}></Icon>}{op?.text}</span>}
+                {this.props.multiple != true && <span style={{ justifyContent: this.props.textAlign == 'right' ? "flex-end" : undefined }} className={"flex-auto "}>{op?.icon && this.props.iconHidden !== true && <Icon size={14} icon={op.icon}></Icon>}{op?.text}</span>}
                 {this.props.multiple == true && <span className="flex-auto"><span>{ops.map((op, i) => {
                     return <span className={'padding-l-5 round padding-h-2 ' + (i == ops.length - 1 ? "" : "gap-r-3")} key={op.value}><span>{op?.icon && <Icon size={14} icon={op.icon}></Icon>}{op?.text}</span></span>
                 })}</span></span>}
