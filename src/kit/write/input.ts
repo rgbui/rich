@@ -109,7 +109,7 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
     if (aa.block.url == BlockUrlConstant.Title || aa.block.closest(x => x.isOnlyBlock)?.url == BlockUrlConstant.Title) return false;
     var sel = window.getSelection();
     var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
-    var current = aa.textContent.slice(0,offset);
+    var current = aa.textContent.slice(0, offset);
     var rest = aa.textContent.slice(offset);
     var mr = InputDetector(current, { rowStart: aa.isRowStart, rowEnd: aa.isRowEnd && (rest ? false : true) });
     if (mr) {
