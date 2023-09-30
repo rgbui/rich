@@ -82,7 +82,7 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
     }
     render() {
         return <div className='shy-kit-picker'>
-            {this.picker.visible && <svg className="shy-kit-picker-svg" style={{ zIndex: 10000 }}>
+            {this.picker.visible && <svg className="shy-kit-picker-svg" style={{ zIndex: 100 }}>
                 {this.picker.blocks.map(block => {
                     return this.renderBlockRange(block);
                 })}
