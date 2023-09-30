@@ -8,6 +8,7 @@ export class UserBox extends React.Component<{
 }> {
     private user: UserBasic;
     async componentDidMount() {
+        this.willUnmount = false;
         if (!this.user) {
             if (!this.props.userid) {
                 return;
@@ -15,12 +16,17 @@ export class UserBox extends React.Component<{
             var r = await channel.get('/user/basic', { userid: this.props.userid });
             if (r.ok) {
                 this.user = r.data.user as any;
-               this.forceUpdate()
+                if (this.willUnmount == false)
+                    this.forceUpdate()
             }
         }
     }
+    willUnmount: boolean = false;
+    componentWillUnmount(): void {
+        this.willUnmount = true;
+    }
     render() {
-        if(!this.user)return <></>
+        if (!this.user) return <></>
         return this.user && this.props.children(this.user)
     }
 }
