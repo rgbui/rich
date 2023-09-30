@@ -6,14 +6,19 @@ import "./style.less";
 import { Space } from "../view/grid";
 import { tipLayer } from "./zindex";
 import { S } from "../../i18n/view";
+
 class SyConfirm extends EventsComponent {
     private msg: string;
     private description: string;
     private visible: boolean = false;
-    open(msg: string, description?: string) {
+    private continueButton: string = '';
+    private cancelButton: string = '';
+    open(msg: string, description?: string, continueButton?: string, cancelButton?: string) {
         this.msg = msg;
         this.description = description;
         this.visible = true;
+        this.continueButton = continueButton;
+        this.cancelButton = cancelButton;
         this.forceUpdate();
     }
     close() {
@@ -37,8 +42,8 @@ class SyConfirm extends EventsComponent {
                 {this.description && <div className='syh-confirm-description'>{this.description}</div>}
                 <div className='syh-confirm-buttons' style={{ marginTop: 20 }}>
                     <Space align="center">
-                        <Button onClick={e => this.onConfirm()}><S>确定</S></Button>
-                        <Button onClick={e => this.onCancel()} ghost><S>取消</S></Button>
+                        <Button onClick={e => this.onConfirm()}>{this.continueButton || <S>确定</S>}</Button>
+                        <Button onClick={e => this.onCancel()} ghost>{this.cancelButton || <S>取消</S>}</Button>
                     </Space>
                 </div>
             </div>
@@ -46,9 +51,9 @@ class SyConfirm extends EventsComponent {
     }
 }
 var syConfirm: SyConfirm;
-export async function Confirm(msg: string, description?: string) {
+export async function Confirm(msg: string, description?: string,continueButton?: string, cancelButton?: string) {
     syConfirm = await Singleton(SyConfirm);
-    syConfirm.open(msg, description);
+    syConfirm.open(msg, description,continueButton, cancelButton);
     return new Promise((resolve, reject) => {
         syConfirm.only('confirm', () => resolve(true))
         syConfirm.only('cancel', () => resolve(false))
