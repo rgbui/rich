@@ -7,6 +7,45 @@ import { AskTemplate, getTemplateInstance } from "../../extensions/ai/prompt";
 import { marked } from "marked"
 import { lst } from "../../i18n/store";
 
+/**
+ *  获取robot wikit基于ask的相关上下文参考资料
+ * @param robot 
+ * @param ask 
+ * @param prompt 
+ * @returns {
+ *    context:string,
+ *    notFound:boolean
+ * }|null
+ * 
+ */
+export async function getRobotWikiContext(robot: RobotInfo,
+    ask: string, prompt: string)
+    {
+    if (prompt.indexOf('{context}') > -1 && robot.disabledWiki !== true && ask) {
+        var g = await channel.get('/query/wiki/answer', {
+            model: robot.embeddingModel || (window.shyConfig.isUS ? "gpt" : "Baidu-Embedding-V1"),
+            robotId: robot.robotId,
+            ask,
+            contextSize: robot.wikiConfig?.fragmentContextSize || 10,
+            size: robot.wikiConfig?.fragmentSize || 5
+        });
+        if (g.data?.docs?.length > 0) {
+            var minLower = robot.wikiConfig?.minLowerRank || 0.3;
+            if (g.data.docs[0].ps.exists(g => g.rank > minLower)) {
+                var nps = g.data.docs.findAll(g => g.ps.exists(c => c.rank > minLower));
+                return {
+                    context: nps.map(np => np.ps.map(p => p.content).join("\n\n")).join('\n\n\n\n')
+                }
+            }
+            else return {
+                notFound: true
+            }
+        }
+    }
+    return null;
+}
+
+
 export async function RobotRquest(robot: RobotInfo,
     task: RobotTask,
     args: Record<string, any>, options: {
@@ -23,20 +62,23 @@ export async function RobotRquest(robot: RobotInfo,
         try {
             var template = options?.prompt?.prompt || AskTemplate;
             var content = '';
-            if (template.indexOf('{context}') > -1) {
-                var g = await channel.get('/query/wiki/answer', args as any);
-                if (g.data?.contents?.length > 0) {
-                    content = getTemplateInstance(template, {
-                        prompt: args.ask,
-                        context: g.data.contents[0].content
-                    });
-                }
-            }
-            else content = getTemplateInstance(template, {
+            var context = await getRobotWikiContext(robot, args.ask, template);
+            if (!context) content = getTemplateInstance(template, {
                 prompt: args.ask
             });
+            else if (context.notFound) {
+                callback(marked.parse(text + lst('未找到匹配的答案')), true, marked.parse(text + lst('未找到匹配的答案')))
+                return;
+            }
+            else {
+                content = getTemplateInstance(template, {
+                    prompt: args.ask,
+                    context: context.context
+                });
+            }
             await channel.post('/text/ai/stream', {
                 question: content,
+                model: robot.model || (window.shyConfig.isUS ? "gpt-3.5-turbo" : "ERNIE-Bot-turbo"),
                 callback(str, done) {
                     if (typeof str == 'string') text += str;
                     callback(marked.parse(text + (done ? "" : "<span class='typed-print'></span>")), done, marked.parse(text))
@@ -111,91 +153,58 @@ export async function RobotRquest(robot: RobotInfo,
                     callback(text, true)
                 }
             }
-
         }
     }
 }
-
-// export async function RobotWikiRequest(
-//     robot: RobotInfo,
-//     prompt: ArrayOf<RobotInfo['prompts']>,
-//     args: Record<string, any>,
-//     callback: (msg: string, done?: boolean, content?: string, files?: ResourceArguments[]) => Promise<void>) {
-//     var text = '';
-//     args.robotId = robot.robotId;
-//     await callback(text + "<span class='typed-print'></span>", false, text);
-//     try {
-//         var content = '';
-//         if (prompt.prompt.indexOf('{context}') > -1) {
-//             var g = await channel.get('/query/wiki/answer', args as any);
-//             if (g.data?.contents?.length > 0) {
-//                 content = getTemplateInstance(prompt.prompt, {
-//                     ...args.ask,
-//                     context: g.data.contents[0].content
-//                 });
-//             }
-//         }
-//         else content = getTemplateInstance(prompt.prompt, { ...args.ask });
-//         await channel.post('/text/ai/stream', {
-//             question: content,
-//             callback(str, done) {
-//                 if (typeof str == 'string') text += str;
-//                 callback(marked.parse(text + (done ? "" : "<span class='typed-print'></span>")), done, marked.parse(text))
-//             }
-//         });
-//     }
-//     catch (ex) {
-//         text += `<p class='error'>回答出错</p>`
-//         console.error(ex)
-//         callback(text, true)
-//     }
-// }
-
-
 
 
 var robots: RobotInfo[];
 var robotsDate: number;
-export async function getWsRobotTasks() {
-    if (robotsDate && robotsDate > Date.now() - 1000 * 60 * 5) return robots;
-    var gs = await channel.get('/ws/robots');
-    if (gs.ok) {
-        var rs = await channel.get('/robots/info', { ids: gs.data.list.map(g => g.userid) });
-        if (rs.ok) {
-            robots = rs.data.list;
-            robots.forEach(robot => {
-                if (robot.scene == 'wiki') {
-                    robot.tasks = [
-                        {
-                            id: util.guid(),
-                            name: '问题',
-                            args: [
-                                {
-                                    id: util.guid(),
-                                    text: lst("问题"),
-                                    name: 'ask', type: 'string'
-                                }
-                            ]
-                        }
-                    ]
-                }
-            })
+
+/**
+ * 获取空间内所有的机器人
+ * 包括空间内部创建的及空间添加别人的
+ * @returns 
+ */
+export async function getWsRobots() {
+    try {
+        if (Array.isArray(robots) && robotsDate && robotsDate > Date.now() - 1000 * 60 * 1) return robots;
+        var gs = await channel.get('/ws/robots');
+        if (gs.ok) {
+            var rs = await channel.get('/robots/info', { ids: gs.data.list.map(g => g.userid) });
+            if (rs.ok) {
+                robots = rs.data.list;
+                robotsDate = new Date().getTime();
+                robots.forEach(robot => {
+                    if (robot.scene == 'wiki') {
+                        robot.tasks = [
+                            {
+                                id: util.guid(),
+                                name: '问题',
+                                args: [
+                                    {
+                                        id: util.guid(),
+                                        text: lst("问题"),
+                                        name: 'ask', type: 'string'
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                })
+            }
         }
     }
-    robotsDate = Date.now();
-    return robots;
+    catch (ex) {
+        console.error(ex);
+    }
+    finally {
+        return robots || [];
+    }
 }
 
 
 export async function getWsWikiRobots() {
-    var robots: RobotInfo[];
-    var gs = await channel.get('/ws/robots');
-    if (gs.ok) {
-        var rs = await channel.get('/robots/info', { ids: gs.data.list.map(g => g.userid) });
-        if (rs.ok) {
-            robots = rs.data.list;
-            robots = robots.findAll(g => g.scene == 'wiki');
-        }
-    }
-    return robots;
+    var rs = await getWsRobots();
+    return rs.findAll(g => g.scene == 'wiki');
 }
