@@ -26,7 +26,8 @@ export enum KeyboardCode {
      * keyboardEvent 中的code
      */
     Slash = 'Slash',
-    Backslash = 'Backslash'
+    Backslash = 'Backslash',
+    R='R'
 }
 export class KeyboardPlate {
     private altKey: boolean = false;
