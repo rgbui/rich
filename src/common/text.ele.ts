@@ -1,4 +1,3 @@
-import { Exception, ExceptionType } from "../error/exception";
 import { dom } from "./dom";
 import { Point, Rect } from "./vector/point";
 let __g: CanvasRenderingContext2D;
@@ -22,7 +21,7 @@ export class TextEle {
                     fontStyle.lineHeight = dom(e as HTMLElement).style('lineHeight');
             }
             if (!/^[\d\.]+px$/.test(fontStyle.lineHeight)) {
-                throw new Exception(ExceptionType.fontStyleLineHeightIsNumber, 'the font lineHeight is not number' + fontStyle.lineHeight)
+                throw new Error('the font lineHeight is not number' + fontStyle.lineHeight)
             }
             fontStyle.lineHeight = parseInt(fontStyle.lineHeight.replace('px', ''));
             fontStyle.letterSpacing = parseInt(fontStyle.letterSpacing.replace('px', ''));
