@@ -240,7 +240,7 @@ export class AITool extends EventsComponent {
                     }
                     break;
                 case 'image':
-                    if (await CanSupportFeature(PayFeatureCheck.aiImage, self.page))
+                    if (await CanSupportFeature(PayFeatureCheck.aiImage, self.page.ws))
                         self.aiImage({ prompt: self.ask })
                     break;
                 case 'pageSummary':
@@ -341,7 +341,7 @@ export class AITool extends EventsComponent {
                     this.aiSelection({ prompt: propTemplate })
                     break;
                 case 'insertImage':
-                    if (await CanSupportFeature(PayFeatureCheck.aiImage, self.page)) {
+                    if (await CanSupportFeature(PayFeatureCheck.aiImage, self.page.ws)) {
                         var preContent = this.getPrevBlockContent();
                         this.aiImage({ prompt: preContent, genImageProp: true })
                     }
@@ -438,7 +438,7 @@ export class AITool extends EventsComponent {
         else if ([AIAskStatus.willAsking].includes(this.status)) {
             switch (item.name) {
                 case 'image':
-                    if (await CanSupportFeature(PayFeatureCheck.aiImage, self.page))
+                    if (await CanSupportFeature(PayFeatureCheck.aiImage, self.page.ws))
                         self.aiImage({ prompt: self.ask })
                     break;
                 case 'prompt':
