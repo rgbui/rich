@@ -22,7 +22,7 @@ export function TextArea(props: {
     var ps: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> = {
         style: props.style,
         placeholder: props.placeholder,
-        ref:(e) => props.block.elementAppear({
+        ref: (e) => props.block.elementAppear({
             el: e,
             prop: props.prop,
             appear: BlockAppear.text,
@@ -138,9 +138,10 @@ export function TextLineChilds(props: {
 }
 
 export function TextSpanArea(props: { block: Block, className?: string | string[], placeholderEmptyVisible?: boolean, prop?: string, placeholder?: string }) {
+    var isAi = props.block.page.ws.aiConfig?.disabled == true ? false : true;
     if (props.block.childs.length > 0)
         return <TextLineChilds className={props.className} childs={props.block.childs}></TextLineChilds>
     else
-        return <TextArea className={props.className} placeholderEmptyVisible={props.placeholderEmptyVisible} block={props.block} prop={props.prop || 'content'} placeholder={props.placeholder || lst('空格唤起AI或选择')}></TextArea>
+        return <TextArea className={props.className} placeholderEmptyVisible={props.placeholderEmptyVisible} block={props.block} prop={props.prop || 'content'} placeholder={props.placeholder || (!isAi ? lst('输入文本') : lst('空格唤起AI或选择'))}></TextArea>
 }
 

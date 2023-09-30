@@ -65,6 +65,9 @@ export class Block$Event {
         if (this.isPanel) {
             hasAi = false;
         }
+        if (this.page.ws.aiConfig?.disabled == true) {
+            hasAi = false;
+        }
         if (hasAi) {
             items.push({
                 name: 'askAi',
@@ -127,6 +130,7 @@ export class Block$Event {
         items.push({
             text: lst('颜色'),
             icon: BlockcolorSvg,
+            name: 'color',
             childs: [
                 {
                     text: lst('文字颜色'),
@@ -322,9 +326,9 @@ export class Block$Event {
     }) {
         var { appear, oldValue, newValue, action } = options;
         await this.page.onAction(ActionDirective.onInputText, async () => {
-            this.manualUpdateProps({ [appear.prop]: oldValue }, { [appear.prop]: newValue }, BlockRenderRange.none, true);
+            await this.manualUpdateProps({ [appear.prop]: oldValue }, { [appear.prop]: newValue }, BlockRenderRange.none, true);
             if (typeof action == 'function') await action();
-            this.changeAppear(appear);
+            await this.changeAppear(appear);
         })
     }
     async onDelete(this: Block) {
@@ -357,12 +361,12 @@ export class Block$Event {
     async onUpdateProps(this: Block, props: Record<string, any>, options?: {
         range?: BlockRenderRange,
         merge?: boolean
-    }) {
+    }, force?: boolean) {
         if (typeof options == 'undefined') options = { range: BlockRenderRange.none };
         if (typeof options.range == 'undefined') options.range = BlockRenderRange.none;
         await this.page.onAction(ActionDirective.onUpdateProps, async () => {
             if (options.merge) this.page.snapshoot.merge();
-            await this.updateProps(props, options.range);
+            await this.updateProps(props, options.range, force);
         })
     }
     async onManualUpdateProps(this: Block,
@@ -374,7 +378,7 @@ export class Block$Event {
         }
     ) {
         await this.page.onAction(ActionDirective.onUpdateProps, async () => {
-            this.manualUpdateProps(oldProps, newProps, options?.range, options?.isOnlyRecord);
+            await this.manualUpdateProps(oldProps, newProps, options?.range, options?.isOnlyRecord);
         })
     }
     async onLock(this: Block, locked: boolean) {
