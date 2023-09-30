@@ -1,17 +1,18 @@
 import React from "react";
 import { Block } from "../../src/block";
-import { BlockDisplay } from "../../src/block/enum";
-import { url, view } from "../../src/block/factory/observable";
+import { BlockDirective, BlockDisplay } from "../../src/block/enum";
+import { prop, url, view } from "../../src/block/factory/observable";
 import { TextArea } from "../../src/block/view/appear";
 import { BlockView } from "../../src/block/view";
 import { channel } from "../../net/channel";
 import { Icon } from "../../component/view/icon";
-import { EmojiSvg, PicSvg } from "../../component/svgs";
+import { AlignTextCenterSvg, EmojiSvg, HideSvg, PicSvg } from "../../component/svgs";
 import lodash from "lodash";
 import { Spin } from "../../component/view/spin";
 import { LinkPageItem, getPageText } from "../../src/page/declare";
 import { S } from "../../i18n/view";
 import { lst } from "../../i18n/store";
+import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 
 @url('/title')
 export class Title extends Block {
@@ -23,6 +24,8 @@ export class Title extends Block {
             this.pageInfo = lodash.cloneDeep(r);
         }
     }
+    @prop()
+    align: 'left' | 'center' = 'left';
     async changeAppear(appear) {
         if (appear.prop == 'pageInfo.text') {
             await this.page.onUpdatePageTitle(this.pageInfo.text);
@@ -39,14 +42,73 @@ export class Title extends Block {
             this.page.kit.anchorCursor.onFocusBlockAnchor(this, { store: false, render: true });
         }
     }
-    get handleBlock() {
-        return null;
-    }
+    // get handleBlock() {
+    //     return null;
+    // }
     get isCanEmptyDelete() {
         return false
     }
     async getMd() {
         return `# ${this.page.getPageDataInfo()?.text}`
+    }
+    async onGetContextMenus() {
+        var pd = this.page.getPageDataInfo();
+        var rs = await super.onGetContextMenus();
+        var rs: MenuItem<string | BlockDirective>[] = [];
+        rs.push({
+            name: 'addIcon',
+            text: lst('添加图标'),
+            type: MenuItemType.switch,
+            checked: pd?.icon.abled ? false : true,
+            icon: EmojiSvg
+        })
+        rs.push({
+            name: 'addCover',
+            text: lst('添加封面'),
+            type: MenuItemType.switch,
+            checked: pd?.cover?.abled ? false : true,
+            icon: PicSvg
+        })
+        rs.push({ type: MenuItemType.divide })
+        rs.push({
+            name: 'text-center',
+            type: MenuItemType.switch,
+            checked: (this as any).align == 'center',
+            text: lst('标题居中'),
+            icon: AlignTextCenterSvg
+        });
+        rs.push({
+            text: lst('隐藏'),
+            name: 'hidden',
+            icon: HideSvg
+        })
+        return rs;
+    }
+    async onContextMenuInput(item: MenuItem<BlockDirective | string>) {
+        if (item.name == 'addIcon') {
+            if (item.checked) this.page.onAddIcon()
+            else this.page.onUpdatePageData({ icon: null });
+            return;
+        }
+        else if (item.name == 'addCover') {
+            if (item.checked) this.page.onAddCover()
+            else this.page.onUpdatePageCover({ 'cover.abled': false }, true);
+            return;
+        }
+        else if (item.name == 'text-center') {
+            await this.onUpdateProps({ align: item.checked ? 'center' : 'left' })
+            await this.page.forceUpdate();
+            return;
+        }
+        await super.onContextMenuInput(item);
+    }
+    async onClickContextMenu(item: MenuItem<string | BlockDirective>, e) {
+        switch (item.name) {
+            case 'hidden':
+                this.page.onUpdateProps({ onlyDisplayContent: true }, true)
+                return;
+        }
+        return await super.onClickContextMenu(item, e);
     }
 }
 @view('/title')
@@ -78,7 +140,7 @@ export class TitleView extends BlockView<Title>{
     willUnmount() {
         channel.off('/page/update/info', this.updatePageInfo);
     }
-    renderView()  {
+    renderView() {
         var isAdd: boolean = this.block.page.isSupportCover;
         if (!this.block.page.isCanEdit) isAdd = false;
         var pd = this.block.page.getPageDataInfo();
@@ -86,7 +148,9 @@ export class TitleView extends BlockView<Title>{
             ...this.block.visibleStyle,
             display: 'none'
         }}></div>
-        return <div className='sy-block-page-info visible-hover' style={this.block.visibleStyle}>
+        var classList: string[] = ['sy-block-page-info visible-hover'];
+        if (this.block.align == 'center') classList.push('flex-center flex-col');
+        return <div className={classList.join(" ")} style={this.block.visibleStyle}>
             {pd?.icon && pd.cover?.abled !== true && <div className="min-h-72"> <div onMouseDown={e => this.block.page.onChangeIcon(e)} className="sy-block-page-info-icon">
                 <Icon size={72} icon={pd?.icon}></Icon>
             </div></div>}
