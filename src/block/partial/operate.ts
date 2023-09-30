@@ -73,9 +73,9 @@ export class Block$Operator {
             await this.updateProps(pb.data.listType ? Object.assign(pb.data, da || {}) : { listType: 0, ...(da || {}) }, BlockRenderRange.self);
             return this;
         }
-    console.log(url,da,'t');
+        console.log(url, da, 't');
         var data = await this.getWillTurnData(url);
-        console.log('parrr',data);
+        console.log('parrr', data);
         if (da) Object.assign(data, da);
         var newBlock = await BlockFactory.createBlock(url, this.page, data, this.parent);
         var bs = this.parent.blocks[this.parentKey];
@@ -472,8 +472,7 @@ export class Block$Operator {
                     var cs = p.childs.map(c => c);
                     bs = await p.appendArrayBlockData(blocks, undefined, BlockChildKey.childs);
                     await cs.eachAsync(async (c) => {
-                        if (c.isContentEmpty)
-                            await c.delete()
+                        if (c.isContentEmpty) await c.delete()
                     })
                 }
                 break;
@@ -496,24 +495,29 @@ export class Block$Operator {
     async changeAppear(this: Block, appear: AppearAnchor) {
 
     }
-    async updateProps(this: Block, props: Record<string, any>, range = BlockRenderRange.self) {
+    async updateProps(this: Block, props: Record<string, any>, range = BlockRenderRange.self, force?: boolean) {
         var oldValue: Record<string, any> = {};
         var newValue: Record<string, any> = {};
         if (typeof props['refLinks'] != 'undefined') {
             if (props['refLinks'] == null) {
-                this.page.monitorBlockOperator(this, 'delete');
+                await this.page.monitorBlockOperator(this, 'delete');
             }
         }
         for (let prop in props) {
-            if (!lodash.isEqual(lodash.get(this, prop), lodash.get(props, prop))) {
-                oldValue[prop] = this.clonePropData(prop);
-                newValue[prop] = this.clonePropData(prop, lodash.get(props, prop));
-                lodash.set(this, prop, this.cloneProp(prop, lodash.get(props, prop)));
+            if (!(force == true) && !lodash.isEqual(lodash.get(this, prop), lodash.get(props, prop))) {
+                oldValue[prop] = await this.clonePropData(prop);
+                newValue[prop] = await this.clonePropData(prop, lodash.get(props, prop));
+                await this.setPropData(prop, newValue[prop]);
+            }
+            else {
+                oldValue[prop] = await this.clonePropData(prop);
+                newValue[prop] = await this.clonePropData(prop, lodash.get(props, prop));
+                await this.setPropData(prop, newValue[prop]);
             }
         }
         if (Object.keys(oldValue).length > 0 || Object.keys(newValue).length > 0) {
             if (typeof newValue['content'] != 'undefined' || typeof newValue['refLinks'] != 'undefined') {
-                this.page.monitorBlockOperator(this, 'content');
+                await this.page.monitorBlockOperator(this, 'content');
             }
             await this.changeProps(oldValue, newValue);
             this.page.addBlockChange(this);
@@ -567,7 +571,7 @@ export class Block$Operator {
     async changeProps(oldProps: Record<string, any>, newProps: Record<string, any>) {
 
     }
-    manualUpdateProps(this: Block,
+    async manualUpdateProps(this: Block,
         oldProps: Record<string, any>,
         newProps: Record<string, any>,
         range = BlockRenderRange.self,
@@ -576,17 +580,17 @@ export class Block$Operator {
         var newValue: Record<string, any> = {};
         if (isOnlyRecord == true) {
             for (let prop in newProps) {
-                oldValue[prop] = this.clonePropData(prop, lodash.get(oldProps, prop));
-                newValue[prop] = this.clonePropData(prop, lodash.get(newProps, prop));
-                lodash.set(this, prop, this.cloneProp(prop, lodash.get(newProps, prop)))
+                oldValue[prop] = await this.clonePropData(prop, lodash.get(oldProps, prop));
+                newValue[prop] = await this.clonePropData(prop, lodash.get(newProps, prop));
+                await this.setPropData(prop, newValue[prop])
             }
         }
         else {
             for (let prop in newProps) {
                 if (!lodash.isEqual(lodash.get(oldProps, prop), lodash.get(newProps, prop))) {
-                    oldValue[prop] = this.clonePropData(prop, lodash.get(oldProps, prop));
-                    newValue[prop] = this.clonePropData(prop, lodash.get(newProps, prop));
-                    lodash.set(this, prop, this.cloneProp(prop, lodash.get(newProps, prop)));
+                    oldValue[prop] = await this.clonePropData(prop, lodash.get(oldProps, prop));
+                    newValue[prop] = await this.clonePropData(prop, lodash.get(newProps, prop));
+                    await this.setPropData(prop, newValue[prop])
                 }
             }
         }
