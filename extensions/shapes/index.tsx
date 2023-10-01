@@ -15,10 +15,11 @@ class ShapeSelector extends EventsComponent {
         if (this.visible != true) return <></>;
         var style: CSSProperties = {
             top: this.point?.y,
-            left: this.point?.x
+            left: this.point?.x,
+            width: 160
         };
-        return <div style={style} className="pos w-160 min-h-160 bg-white shadow border  round-4 border-box padding-5 z-10000">
-            <div className="flex flex-wrap r-cursor r-flex-center r-gap-5  r-size-30 r-round-4 r-item-hover">
+        return <div style={style} className="pos  min-h-160 bg-white shadow border  round-4  padding-5 z-10000">
+            <div className="w-160 flex flex-wrap r-cursor r-flex-center r-gap-5  r-size-30 r-round-4 r-item-hover">
                 {ShapesList.findAll(g => g.svg ? true : false).map((s, index) => {
                     return <span
                         className="r-size-24"
