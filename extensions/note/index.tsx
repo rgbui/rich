@@ -2,8 +2,6 @@ import React, { CSSProperties, ReactNode } from "react";
 import { EventsComponent } from "../../component/lib/events.component";
 import { Singleton } from "../../component/lib/Singleton";
 import { Point } from "../../src/common/vector/point";
-import "./style.less";
-
 export type ColorType = { color: string, text?: string };
 var colors: ColorType[] = [
     { color: 'rgb(245,246,248)' },
@@ -23,6 +21,7 @@ var colors: ColorType[] = [
     { color: 'rgb(123,146,255)' },
     { color: 'rgb(0,0,0)' },
 ];
+
 class NoteSelector extends EventsComponent {
     onMousedown(ct: ColorType, event: React.MouseEvent) {
         this.emit('selector', ct);
@@ -31,7 +30,7 @@ class NoteSelector extends EventsComponent {
     }
     renderNote(c: ColorType) {
         var color = c.color;
-        return <a key={color} onMouseDown={e => { this.onMousedown(c, e) }}><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+        return <a className="size-32 gap-r-10 gap-b-10" key={color} onMouseDown={e => { this.onMousedown(c, e) }}><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <filter x="-18.8%" y="-120%" width="137.5%" height="340%" filterUnits="objectBoundingBox" id="aeqa">
                     <feGaussianBlur stdDeviation="2" in="SourceGraphic"></feGaussianBlur>
@@ -45,16 +44,20 @@ class NoteSelector extends EventsComponent {
                 <path fill="#353535" opacity=".5" filter="url(#aeqb)" d="M8 39h32v5H8z"></path>
                 <path fill={color} d="M4 4h40v40H4z"></path>
             </g>
-        </svg></a>
+        </svg>
+        </a>
     }
     render(): ReactNode {
         if (this.visible != true) return <></>;
         var style: CSSProperties = {
             top: this.point?.y,
-            left: this.point?.x
+            left: this.point?.x,
+            width: (32 + 10) * 2
         };
-        return <div className="shy-note-list z-10000" style={style}>
-            {colors.map(c => { return this.renderNote(c); })}
+        return <div className="pos bg-white shadow flex flex-wrap padding-t-10 padding-l-10 round z-10000" style={style}>
+            {colors.map(c => {
+                return this.renderNote(c);
+            })}
         </div>
     }
     private point: Point;
@@ -65,6 +68,7 @@ class NoteSelector extends EventsComponent {
         this.forceUpdate()
     }
     close(): void {
+        this.visible = false;
         this.forceUpdate();
     }
 }
