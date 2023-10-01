@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { ShapesList } from "../../../extensions/shapes/shapes";
 import { Block } from "../../../src/block";
 import { BlockRenderRange } from "../../../src/block/enum";
@@ -17,9 +17,7 @@ export class Shape extends Block {
     @prop()
     fixedHeight: number = 200;
     async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
-
         var bold = this.pattern.css(BlockCssName.font)?.fontWeight;
-
         var cs: { name: string; value?: any; }[] = [];
         cs.push({ name: 'fontSize', value: Math.round(this.pattern.css(BlockCssName.font)?.fontSize || 14) });
         cs.push({ name: 'fontWeight', value: bold == 'bold' || bold == 500 ? true : false });
@@ -56,7 +54,7 @@ export class Shape extends Block {
         else if (name == 'turnShapes') {
             var r = ShapesList.find(g => g.name == value);
             if (r) {
-                this.updateProps(
+                await this.updateProps(
                     { svg: new ShySvg(r.svg), svgName: value },
                     BlockRenderRange.self
                 )
@@ -117,7 +115,7 @@ export class ShapeView extends BlockView<Shape>{
         return <div className="sy-block-shape" style={style}>
             {sb.render({ marginLeft: 0 - w / 2, marginTop: 0 - w / 2, width: sb.viewBox.width, height: sb.viewBox.height })}
             <div className="sy-block-shape-content">
-                <TextSpanArea placeholder={this.block.isFreeBlock ? lst("键入文本")  : undefined} block={this.block}></TextSpanArea>
+                <TextSpanArea placeholder={this.block.isFreeBlock ? lst("键入文本") : undefined} block={this.block}></TextSpanArea>
             </div>
         </div>
     }

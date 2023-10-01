@@ -1,5 +1,4 @@
 import React from "react";
-import { ReactNode } from "react";
 import { Block } from "../../../src/block";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { BoardPointType, BoardBlockSelector } from "../../../src/block/partial/board";
@@ -9,6 +8,7 @@ import { TextSpanArea } from "../../../src/block/view/appear";
 import { Rect, PointArrow } from "../../../src/common/vector/point";
 import "./style.less";
 import { lst } from "../../../i18n/store";
+import { BlockRenderRange } from "../../../src/block/enum";
 
 @url('/note')
 export class Note extends Block {
@@ -30,7 +30,7 @@ export class Note extends Block {
     getBlockBoardSelector(this: Block, types?: BoardPointType[]): BoardBlockSelector[] {
         var pickers = super.getBlockBoardSelector(...arguments);
         if (types.some(s => s == BoardPointType.pathConnectPort)) {
-            var gm = this.globalWindowMatrix;
+            var gm = this.globalMatrix;
             var { width, height } = this.fixedSize;
             var rect = new Rect(0, 0, width, height);
             rect = rect.extend(0 - 4);
@@ -71,13 +71,13 @@ export class Note extends Block {
     }
     async setBoardEditCommand(name: string, value: any) {
         if (name == 'backgroundNoTransparentColor')
-            this.updateProps({ color: value })
+            await this.updateProps({ color: value })
         else (await super.setBoardEditCommand(name, value) == false)
         {
             if (name == 'stickerSize') {
-                if (value == 'big') { this.updateProps({ fixedWidth: 400, fixedHeight: 400 }) }
-                else if (value == 'medium') { this.updateProps({ fixedWidth: 200, fixedHeight: 200 }) }
-                else if (value == 'small') { this.updateProps({ fixedWidth: 100, fixedHeight: 100 }) }
+                if (value == 'big') { await this.updateProps({ fixedWidth: 400, fixedHeight: 400 }), BlockRenderRange.self }
+                else if (value == 'medium') { await this.updateProps({ fixedWidth: 200, fixedHeight: 200 }), BlockRenderRange.self }
+                else if (value == 'small') { await this.updateProps({ fixedWidth: 100, fixedHeight: 100 }), BlockRenderRange.self }
             }
         }
     }
@@ -126,7 +126,7 @@ export class NoteView extends BlockView<Note>{
                 width: this.block.fixedSize.width,
                 height: this.block.fixedSize.height
             }}>
-                <TextSpanArea placeholder={this.block.isFreeBlock ? lst("输入文本")  : undefined} block={this.block}></TextSpanArea>
+                <TextSpanArea placeholder={this.block.isFreeBlock ? lst("输入文本") : undefined} block={this.block}></TextSpanArea>
             </div>
         </div>
     }

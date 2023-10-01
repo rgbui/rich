@@ -18,7 +18,7 @@ export function renderLine(line: Line) {
     var sd = Segment.getSegmentsPathString(segs);
 
     return <>
-        <path className="visible" d={sd}></path>
+        <path className="visible" strokeLinejoin="round" d={sd}></path>
         {s && s.el}
         {e && e.el}
         <path className="transparent" d={sd} stroke="transparent" strokeWidth={strokeWidth}></path>

@@ -15,7 +15,7 @@ import { util } from "../../../../util/util";
 import { ChannelTextType } from "../declare";
 import { RenderChats } from "./chats";
 import { ChatInputType, InputChatBox } from "../../../../component/view/input.chat/box";
-import { RobotRquest, getWsRobotTasks } from "../../../../net/ai/robot";
+import { RobotRquest, getWsRobots } from "../../../../net/ai/robot";
 import { RobotApply, RobotInfo } from "../../../../types/user";
 import { lst } from "../../../../i18n/store";
 import { S, Sp } from "../../../../i18n/view";
@@ -146,7 +146,6 @@ export class ChannelTextView extends BlockView<ChannelText>{
                     }
                 })
         })
-
     }
     async onInput(data: ChatInputType) {
         if (data.robot) {
@@ -179,7 +178,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
                 this.forceUpdate(() => this.updateScroll());
             }
             if (Array.isArray(data.mentions) && data.mentions.length > 0) {
-                var ws = await getWsRobotTasks();
+                var ws = await getWsRobots();
                 if (data.mentions.every(c => ws.some(w => w.robotId == c))) {
                     var message = data.content;
                     message = message.replace(/<a[\s]+class\="at-user"[^>]+>@[^@]+<\/a>/, '');
@@ -279,7 +278,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
         else return []
     }
     searchRobot = async () => {
-        var g = await getWsRobotTasks();
+        var g = await getWsRobots();
         return g;
     }
     get isPageLayoutTextChannel() {

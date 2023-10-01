@@ -80,7 +80,7 @@ export class FlowMind extends Block {
     }
     getBlockBoardSelector(types?: BoardPointType[]): BoardBlockSelector[] {
         var pickers: BoardBlockSelector[] = [];
-        var gm = this.globalWindowMatrix;
+        var gm = this.globalMatrix;
         var { width, height } = this.fixedSize;
         var rect = new Rect(0, 0, width, height);
         var s = gm.getScaling().x;
@@ -321,15 +321,15 @@ export class FlowMind extends Block {
     async setBoardEditCommand(name: string, value: any) {
         if (this.isMindRoot) {
             if (name == 'mindDirection') {
-                this.updateProps({ direction: value });
+              await this.updateProps({ direction: value });
                 await this.cacChildsFlowMind(true);
                 this.updateAllFlowLines();
             }
             else if (name == 'mindLineType') {
-                this.updateProps({ lineType: value }, BlockRenderRange.self);
+               await this.updateProps({ lineType: value }, BlockRenderRange.self);
             }
             else if (name == 'mindLineColor') {
-                this.updateProps({ lineColor: value }, BlockRenderRange.self);
+              await  this.updateProps({ lineColor: value }, BlockRenderRange.self);
             }
             else (await super.setBoardEditCommand(name, value) == false)
             {
@@ -342,16 +342,16 @@ export class FlowMind extends Block {
             this.pattern.setSvgStyle({ [key]: value })
         }
         if (name == 'borderWidth') {
-            this.updateProps({ 'minBoxStyle.width': value });
+            await this.updateProps({ 'minBoxStyle.width': value });
         }
         else if (name == 'borderType') {
-            this.updateProps({ 'minBoxStyle.type': value });
+            await this.updateProps({ 'minBoxStyle.type': value });
         }
         else if (name == 'borderColor') {
-            this.updateProps({ 'minBoxStyle.borderColor': value });
+            await this.updateProps({ 'minBoxStyle.borderColor': value });
         }
         else if (name == 'borderRadius') {
-            this.updateProps({ 'minBoxStyle.radius': value });
+            await this.updateProps({ 'minBoxStyle.radius': value });
         }
     }
     get contentStyle() {
@@ -472,7 +472,7 @@ export class FlowMind extends Block {
                 if (isEnd) {
                     block.page.onAction(ActionDirective.onResizeBlock, async () => {
                         if (!matrix.equals(block.matrix)) block.updateMatrix(matrix, block.matrix);
-                        await     block.manualUpdateProps(
+                        await block.manualUpdateProps(
                             { fixedWidth: w, fixedHeight: h },
                             { fixedWidth: block.fixedWidth, fixedHeight: block.fixedHeight }
                         )
@@ -522,7 +522,7 @@ export class FlowMindView extends BlockView<FlowMind>{
         return <div className='sy-flow-mind-text'
             style={this.block.contentStyle}
             ref={e => this.mindEl = e} >
-            <TextSpanArea placeholder={lst('输入') } block={this.block}></TextSpanArea>
+            <TextSpanArea placeholder={lst('输入')} block={this.block}></TextSpanArea>
         </div>
     }
     mindEl: HTMLElement;

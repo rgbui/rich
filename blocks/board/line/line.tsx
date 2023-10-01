@@ -28,7 +28,7 @@ export class Line extends Block {
     ]) {
         var pickers: BoardBlockSelector[] = [];
         try {
-            var gm = this.globalWindowMatrix;
+            var gm = this.globalMatrix;
             var segs = this.segments;
             segs.each((seg, i) => {
                 if (seg)
@@ -84,8 +84,8 @@ export class Line extends Block {
                                 /***
                                  * 计算 https://www.muzhuangnet.com/show/51297.html
                                  */
-                                var point = this.globalWindowMatrix.inverseTransform(pi.point);
-                                var handleOut: Point = pi.arrowPoint ? this.globalWindowMatrix.inverseTransform(pi.arrowPoint) : undefined;
+                                var point = this.globalMatrix.inverseTransform(pi.point);
+                                var handleOut: Point = pi.arrowPoint ? this.globalMatrix.inverseTransform(pi.arrowPoint) : undefined;
                                 var isFrom = pl == this.from;
                                 seg = Segment.create(new Point(point), !isFrom ? handleOut : undefined, isFrom ? handleOut : undefined)
                             }
@@ -147,8 +147,8 @@ export class Line extends Block {
             return seg;
         }
         catch (ex) {
-            this.page.onError(ex);
-            console.error(ex);
+            //this.page.onError(ex);
+            // console.error(ex);
             return undefined;
         }
     }
@@ -163,9 +163,8 @@ export class Line extends Block {
             return segs;
         }
         catch (ex) {
-            this.page.onError(ex);
+            //this.page.onError(ex);
             return [
-
             ]
         }
     }
@@ -202,7 +201,7 @@ export class Line extends Block {
                 }
             }
         }
-        await   this.manualUpdateProps(oldData, { from, to });
+        await this.manualUpdateProps(oldData, { from, to });
     }
     @prop()
     lineStart: string | number = 'none';
@@ -225,7 +224,7 @@ export class Line extends Block {
             this.pattern.setSvgStyle({ stroke: value })
         }
         else if (['lineStart', 'lineEnd', 'lineType'].includes(name)) {
-            this.updateProps({ [name]: value }, BlockRenderRange.self);
+            await this.updateProps({ [name]: value }, BlockRenderRange.self);
         }
         else if (['strokeWidth', 'strokeDasharray'].includes(name)) {
             this.pattern.setSvgStyle({ [name]: value });
@@ -252,7 +251,7 @@ export class LineView extends BlockView<Line>{
         var style = this.block.visibleStyle;
         style.padding = 0;
         return <div className="sy-block-line" style={style}>
-            <svg viewBox={`${re.x} ${re.y} ${re.width} ${re.height}`} style={{
+            <svg shapeRendering={'geometricPrecision'} viewBox={`${re.x} ${re.y} ${re.width} ${re.height}`} style={{
                 width: re.width,
                 height: re.height,
                 transform: `translate(${re.x}px,${re.y}px)`
