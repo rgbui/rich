@@ -10,22 +10,46 @@ import { Point } from "../../../common/vector/point";
 import { Polygon } from "../../../common/vector/polygon";
 import { ActionDirective } from "../../../history/declare";
 import { loadPaper } from "../../../paper";
+import { BlockCache } from "../../../page/common/cache";
 
 export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseEvent) {
-    if (kit.boardSelector.isSelector) {
+    if (kit.boardSelector.isSelector)
+    {
         var paper = await loadPaper();
         var fra: Block = block ? block.frameBlock : kit.page.getPageFrame();
         var gm = fra.globalWindowMatrix;
         var re = gm.inverseTransform(Point.from(event));
         var url = kit.boardSelector.currentSelector.url;
-        if (url == BlockUrlConstant.Note || url == BlockUrlConstant.Pen || url == BlockUrlConstant.Mind || url == BlockUrlConstant.TextSpan || url == BlockUrlConstant.Frame) {
+        if (url == BlockUrlConstant.Note || url == BlockUrlConstant.Mind || url == BlockUrlConstant.TextSpan || url == BlockUrlConstant.Frame) {
             await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
                 var data = kit.boardSelector.currentSelector.data || {};
                 var ma = new Matrix();
                 ma.translate(re.x, re.y);
                 data.matrix = ma.getValues();
                 var newBlock = await kit.page.createBlock(kit.boardSelector.currentSelector.url, data, fra);
-                kit.boardSelector.clearSelector();
+                if (url == BlockUrlConstant.Note && !data.color) {
+                    var c = await BlockCache.get('backgroundNoTransparentColor');
+                    if (c) {
+                        await newBlock.updateProps({ color: c });
+                    }
+                }
+                else if (url == BlockUrlConstant.Mind) {
+                    var f = await BlockCache.get('fillColor');
+                    if (f) {
+                        newBlock.pattern.setSvgStyle({ fill: f })
+                    }
+                    var bc = await BlockCache.get('borderColor');
+                    if (bc) {
+                        await newBlock.updateProps({ 'minBoxStyle.borderColor': bc });
+                    }
+                }
+                else if (url == BlockUrlConstant.Frame) {
+                    var bg = await BlockCache.get('backgroundColor');
+                    if (bg) {
+                        newBlock.pattern.setFillStyle({ color: bg, mode: 'color' });
+                    }
+                }
+
                 newBlock.mounted(() => {
                     if (url == BlockUrlConstant.Frame) {
                         kit.picker.onPicker([newBlock]);
@@ -43,8 +67,12 @@ export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseE
             await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
                 var data = kit.boardSelector.currentSelector.data || {};
                 data.from = { x: re.x, y: re.y };
-                data.to =lodash.cloneDeep(data.from);
+                data.to = lodash.cloneDeep(data.from);
                 newBlock = await kit.page.createBlock(kit.boardSelector.currentSelector.url, data, fra);
+                var bg = await BlockCache.get('backgroundColor');
+                if (bg) {
+                    newBlock.pattern.setSvgStyle({ stroke: bg })
+                }
                 newBlock.mounted(() => {
                     isMounted = true;
                 })
@@ -94,6 +122,14 @@ export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseE
                 ma.translate(re.x, re.y);
                 data.matrix = ma.getValues();
                 newBlock = await kit.page.createBlock(kit.boardSelector.currentSelector.url, data, fra);
+                var f = await BlockCache.get('fillColor');
+                if (f) {
+                    newBlock.pattern.setSvgStyle({ fill: f })
+                }
+                var s = await BlockCache.get('stroke');
+                if (s) {
+                    newBlock.pattern.setSvgStyle({ stroke: s })
+                }
                 newBlock.fixedWidth = 0;
                 newBlock.fixedHeight = 0;
                 kit.boardSelector.clearSelector();
@@ -138,6 +174,10 @@ export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseE
             await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
                 var data = kit.boardSelector.currentSelector.data || {};
                 newBlock = await kit.page.createBlock(kit.boardSelector.currentSelector.url, data, fra);
+                var bg = await BlockCache.get('backgroundColor');
+                if (bg) {
+                    newBlock.pattern.setSvgStyle({ stroke: bg })
+                }
                 points.push(re);
                 path = new paper.Path({ segments: [{ x: re.x, y: re.y }] });
                 newBlock.fixedWidth = 0;
@@ -198,6 +238,7 @@ export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseE
                 })
             });
         }
+        kit.boardSelector.clearSelector();
         return true;
     }
     return false;
