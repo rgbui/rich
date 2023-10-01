@@ -49,7 +49,7 @@ export class BoardEditTool extends EventsComponent {
             return self.commands.some(s => s.name == name);
         }
         return <div style={style} className="shy-board-edit-tool r-item-hover">
-            {is('mindDirection') && <Tip overlay='思维导图方向'>
+            {is('mindDirection') && <Tip placement="top" text='思维导图方向'>
                 <div className={'shy-board-edit-tool-item'}>
                     <Select value={getValue('mindDirection')}
                         onChange={e => this.onChange('mindDirection', e)}
@@ -61,7 +61,7 @@ export class BoardEditTool extends EventsComponent {
                         ]}></Select>
                 </div>
             </Tip>}
-            {is('mindLineType') && <><Tip overlay='线框类型'>
+            {is('mindLineType') && <><Tip placement="top" text='线框类型'>
                 <div className={'shy-board-edit-tool-item'} >
                     <Select value={getValue('mindLineType')}
                         onChange={e => this.onChange('mindLineType', e)}
@@ -78,12 +78,12 @@ export class BoardEditTool extends EventsComponent {
                     <BackgroundColor name={'minLineColor'} tool={this} value={getValue('mindLineColor')} change={e => { this.onChange('mindLineColor', e) }}></BackgroundColor>
                 </div>
             </Tip>}
-            {is('frameScale') && <Tip text={'加粗'}>
+            {is('frameScale') && <Tip placement="top" text={'加粗'}>
                 <div className={'shy-board-edit-tool-item'} >
                     <FrameScale></FrameScale>
                 </div>
             </Tip>}
-            {is('lineStart') && <><Tip text={'开始箭头'}>
+            {is('lineStart') && <><Tip placement="top" text={'开始箭头'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <LineArrow tool={this}
                         lineStart={getValue('lineStart')}
@@ -96,13 +96,13 @@ export class BoardEditTool extends EventsComponent {
                         lineEnd: getValue('lineStart')
                     });
                 }}> <Icon size={14} icon={BoardRefreshSvg}></Icon></div>
-                <Tip text={'结束箭头'}>
+                <Tip placement="top" text={'结束箭头'}>
                     <div className={'shy-board-edit-tool-item'}>
                         <LineArrow tool={this} lineEnd={getValue('lineEnd')}
                             change={(name, e) => this.onChange(name, e)}></LineArrow>
                     </div>
                 </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
-            {is('lineType') && <Tip text={'线形'}>
+            {is('lineType') && <Tip placement="top" text={'线形'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <LineTypes tool={this}
                         lineType={getValue('lineType')}
@@ -111,19 +111,19 @@ export class BoardEditTool extends EventsComponent {
                         change={(name, e) => this.onChange(name, e)}></LineTypes>
                 </div>
             </Tip>}
-            {is('turnShapes') && <Tip text={'形状'}>
+            {is('turnShapes') && <><Tip placement="top" text={'形状'}>
                 <div className={'shy-board-edit-tool-item'} >
                     <TurnShapes tool={this} change={(e) => this.onChange('turnShapes', e)} turnShapes={getValue('turnShapes')}></TurnShapes>
                 </div>
-            </Tip>}
-            {is('fontFamily') && <><Tip text={'字体'}>
+            </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
+            {is('fontFamily') && <><Tip placement="top" text={'字体'}>
                 <div className={'shy-board-edit-tool-item'} >
                     <FontFamily tool={this}
                         value={getValue('fontFamily')}
                         change={(name) => this.onChange('fontFamily', name)}></FontFamily>
                 </div>
-            </Tip></>}
-            {is('fontSize') && <><Tip text={'字体大小'}>
+            </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
+            {is('fontSize') && <><Tip placement="top" text={'字体大小'}>
                 <div className={'shy-board-edit-tool-item'} >
                     <Select value={getValue('fontSize')}
                         onChange={e => this.onChange('fontSize', e)}
@@ -143,7 +143,7 @@ export class BoardEditTool extends EventsComponent {
                         ]}>{getValue('fontSize')}</Select>
                 </div>
             </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
-            {is('stickerSize') && <><Tip text='便利贴'>
+            {is('stickerSize') && <><Tip placement="top" text='便利贴'>
                 <div className={'shy-board-edit-tool-item'} >
                     <Select dropAlign='center' value={getValue('stickerSize')} onChange={e => this.onChange('stickerSize', e)} options={[
                         { text: lst('小'), value: 'small' },
@@ -151,7 +151,7 @@ export class BoardEditTool extends EventsComponent {
                         { text: lst('大'), value: 'big' }]}></Select>
                 </div>
             </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
-            {is('fontWeight') && <Tip text='加粗'>
+            {is('fontWeight') && <Tip placement="top" text='加粗'>
                 <div className={'shy-board-edit-tool-item' + ((getValue('fontWeight') == 'bold' || getValue('fontWeight') > 500) ? " hover" : "")}
                     onMouseDown={e => this.onChange('fontWeight', (getValue('fontWeight') == 'bold' || getValue('fontWeight') > 500) ? "normal" : 'bold')}
                 ><Icon size={14} icon={BoldSvg}></Icon>
@@ -160,41 +160,41 @@ export class BoardEditTool extends EventsComponent {
             {is('tickness') && <><div style={{ width: 90 }} className={'shy-board-edit-tool-item'}>
                 <MeasureView min={1} max={40} showValue={false} value={getValue('tickness')} onChange={e => { this.onChange('tickness', e) }}></MeasureView>
             </div></>}
-            {is('itailc') && <Tip overlay='斜体'>
+            {is('itailc') && <Tip placement="top" text='斜体'>
                 <div className={'shy-board-edit-tool-item' + (getValue('itailc') == 'itailc' ? " hover" : "")}
                     onMouseDown={e => this.onChange('itailc', getValue('itailc') == 'itailc' ? false : true)}
                 ><Icon size={14} icon={ItalicSvg} ></Icon>
                 </div>
             </Tip>}
-            {is('textDecoration') && <Tip text={'删除线'}>
+            {is('textDecoration') && <Tip placement="top" text={'删除线'}>
                 <div className={'shy-board-edit-tool-item' + (getValue('textDecoration') == 'line-through' ? " hover" : "")}
                     onMouseDown={e => this.onChange('textDecoration', getValue('textDecoration') == 'line-through' ? "none" : "line-through")}
                 ><Icon size={14} icon={DeleteLineSvg}></Icon>
                 </div>
             </Tip>}
-            {is('textDecoration') && <><Tip text={'下划线'}>
+            {is('textDecoration') && <><Tip placement="top" text={'下划线'}>
                 <div
                     className={'shy-board-edit-tool-item' + (getValue('textDecoration') == 'underline' ? " hover" : "")}
                     onMouseDown={e => this.onChange('textDecoration', getValue('textDecoration') == 'underline' ? "none" : "underline")}
                 ><Icon size={14} icon={UnderlineSvg}></Icon>
                 </div>
             </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
-            {is('fontColor') && <Tip text={'字体颜色'}>
+            {is('fontColor') && <Tip placement="top" text={'字体颜色'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <FontColor tool={this} value={getValue('fontColor')} change={e => { this.onChange('fontColor', e) }}></FontColor>
                 </div>
             </Tip>}
-            {is('backgroundColor') && <Tip text={'背景'}>
+            {is('backgroundColor') && <Tip placement="top" text={'背景'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <BackgroundColor tool={this} value={getValue('backgroundColor')} change={e => { this.onChange('backgroundColor', e) }}></BackgroundColor>
                 </div>
             </Tip>}
-            {is('backgroundNoTransparentColor') && <Tip text={'背景'}>
+            {is('backgroundNoTransparentColor') && <Tip placement="top" text={'背景'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <BackgroundColor noTransparent tool={this} value={getValue('backgroundNoTransparentColor')} change={e => { this.onChange('backgroundNoTransparentColor', e) }}></BackgroundColor>
                 </div>
             </Tip>}
-            {is('borderWidth') && <Tip text={'边框'}>
+            {is('borderWidth') && <Tip placement="top" text={'边框'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <BorderBoxStyle
                         tool={this}
@@ -205,7 +205,7 @@ export class BoardEditTool extends EventsComponent {
                         change={(name, e) => this.onChange(name, e)}></BorderBoxStyle>
                 </div>
             </Tip>}
-            {is('stroke') && <Tip text={'边框'}>
+            {is('stroke') && <Tip placement="top" text={'边框'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <ShapeStroke
                         tool={this}
@@ -216,7 +216,7 @@ export class BoardEditTool extends EventsComponent {
                         change={(name, e) => this.onChange(name, e)}></ShapeStroke>
                 </div>
             </Tip>}
-            {is('fillColor') && is('fillOpacity') && <Tip text={'填充'}>
+            {is('fillColor') && is('fillOpacity') && <Tip placement="top" text={'填充'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <ShapeFill
                         tool={this}
@@ -227,7 +227,7 @@ export class BoardEditTool extends EventsComponent {
                 </div>
             </Tip>}
             <div className={'shy-board-edit-tool-devide'}></div>
-            <Tip text={'属性'}>
+            <Tip placement="top" text={'属性'}>
                 <div onMouseDown={e => this.onProperty(e)} className={'shy-board-edit-tool-item'}>
                     <Icon size={16} icon={DotsSvg}></Icon>
                 </div>
