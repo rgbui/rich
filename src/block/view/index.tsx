@@ -1,4 +1,4 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import { Component, ErrorInfo } from "react";
 import ReactDOM from 'react-dom';
 import { Block } from "..";
@@ -19,6 +19,12 @@ export abstract class BlockView<T extends Block> extends Component<{ block: T }>
             return this.renderViewError();
         }
         return this.renderView();
+    }
+    getFontStyle() {
+        var fontStyle: CSSProperties = {};
+        fontStyle.fontSize = this.block.page.fontSize;
+        fontStyle.lineHeight = this.block.page.lineHeight;
+        return fontStyle;
     }
     abstract renderView(): React.ReactNode
     errorRefreshTip: Tip;
@@ -41,7 +47,7 @@ export abstract class BlockView<T extends Block> extends Component<{ block: T }>
             </div>
         }
     }
-    
+
     componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
         this.viewError = { error, errorInfo };
         this.block.page.onError(error);
