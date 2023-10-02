@@ -103,22 +103,25 @@ class TextTool extends EventsComponent {
                 })
             }
             {this.visible == true && <div className='shy-tool-text-menu' ref={e => this.boxEl = e} style={style}>
-                {!(this.page.ws.aiConfig.disabled == true) && <Tip overlay={lst('让诗云AI帮你写作', '让诗云AI帮你写作、润色、生成内容')} >
-                    <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onExcute(TextCommand.askAI, e)}>
+                {!(this.page.ws.aiConfig.disabled == true) && <> <Tip overlay={lst('让诗云AI帮你写作', '让诗云AI帮你写作、润色、生成内容')} >
+                    <div className='shy-tool-text-menu-item' onMouseDown={e => this.onExcute(TextCommand.askAI, e)}>
                         <Icon icon={AiStartSvg}></Icon><span>AI</span>
                     </div>
-                </Tip>}
-                {this.turnBlock && this.turnText && <Tip text='切换块'>
-                    <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenBlockSelector(e)}>
+                </Tip><div className="shy-tool-text-menu-devide"></div></>}
+
+                {this.turnBlock && this.turnText && <><Tip text='切换块'>
+                    <div className='shy-tool-text-menu-item ' onMouseDown={e => this.onOpenBlockSelector(e)}>
                         <span>{this.turnText}</span><Icon className={'remark'} size={16} icon={ChevronDownSvg}></Icon>
                     </div>
-                </Tip>}
+                </Tip><div className="shy-tool-text-menu-devide"></div></>}
+
                 <Tip text='链接'>
-                    <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenLink(e)}>
+                    <div className='shy-tool-text-menu-item ' onMouseDown={e => this.onOpenLink(e)}>
                         <Icon size={16} icon={LinkSvg}></Icon>
                         <Icon className={'remark'} size={12} icon={ChevronDownSvg}></Icon>
                     </div>
                 </Tip>
+                <div className="shy-tool-text-menu-devide"></div>
                 {/*<Tip text='评论'>
                     <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenComment(e)}>
                         <Icon size={16} icon={CommentSvg}></Icon>
@@ -126,48 +129,55 @@ class TextTool extends EventsComponent {
                 </Tip>*/}
                 <Tip text='加粗'>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.bold == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.bold == true ? TextCommand.cancelBold : TextCommand.bold, e)}>
-                        <Icon size={16} icon={BoldSvg}></Icon>
+                        <span className="size-20 flex-center"><Icon size={16} icon={BoldSvg}></Icon></span>
                     </div>
                 </Tip>
                 <Tip text='斜体'>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.italic == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.italic == true ? TextCommand.cancelItalic : TextCommand.italic, e)}>
-                        <Icon size={16} icon={ItalicSvg}></Icon>
+                        <span className="size-20 flex-center"> <Icon size={16} icon={ItalicSvg}></Icon></span>
                     </div>
                 </Tip>
+
                 <Tip text='下划线'>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.underline == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.underline == true ? TextCommand.cancelLine : TextCommand.underline, e)}>
-                        <Icon size={16} icon={UnderlineSvg}></Icon>
+                        <span className="size-20 flex-center"><Icon size={16} icon={UnderlineSvg}></Icon></span>
                     </div>
                 </Tip>
+
                 <Tip text='删除线'>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.deleteLine == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.deleteLine == true ? TextCommand.cancelLine : TextCommand.deleteLine, e)}>
-                        <Icon size={16} icon={DeleteLineSvg}></Icon>
+                        <span className="size-20 flex-center">  <Icon size={16} icon={DeleteLineSvg}></Icon></span>
                     </div>
                 </Tip>
+
                 <Tip text='行内代码'>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.code == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.code == true ? TextCommand.cancelCode : TextCommand.code, e)}>
-                        <Icon size={18} icon={CodeSvg}></Icon>
+                        <span className="size-20 flex-center">  <Icon size={18} icon={CodeSvg}></Icon></span>
                     </div>
                 </Tip>
+
                 <Tip text='行内公式'>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.equation == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.equation == true ? TextCommand.cancelEquation : TextCommand.equation, e)}>
-                        <Icon size={16} icon={EquationSvg}></Icon>
+                        <span className="size-20 flex-center"> <Icon size={16} icon={EquationSvg}></Icon></span>
                     </div>
                 </Tip>
+
                 <Tip text='颜色'>
                     <div className='shy-tool-text-menu-item' onMouseDown={e => this.onOpenFontColor(e)}>
                         <Icon size={18} icon={FontStyleSvg}></Icon>
                         <Icon className={'remark'} size={12} icon={ChevronDownSvg}></Icon>
                     </div>
                 </Tip>
+
                 <Tip text={'双链'} >
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.page == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.page != true ? TextCommand.doubleLink : undefined, e)}>
-                        <Icon size={22} icon={DoubleLinkSvg}></Icon>
+                        <span className="size-20 flex-center">  <Icon size={22} icon={DoubleLinkSvg}></Icon></span>
                     </div>
                 </Tip>
+
                 <Tip text={'搜索'}>
                     <div className="shy-tool-text-menu-item" onMouseDown={e => this.onSearch(e)}>
-                        <Icon size={16} icon={SearchSvg}></Icon>
+                        <span className="size-20 flex-center"> <Icon size={16} icon={SearchSvg}></Icon></span>
                     </div>
                 </Tip>
             </div>}
