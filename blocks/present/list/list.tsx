@@ -16,6 +16,7 @@ import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { MenuItemView } from "../../../component/view/menu/item";
 import "./style.less";
 import { lst } from "../../../i18n/store";
+import { Point } from "../../../src/common/vector/point";
 
 export enum ListType {
     circle = 0,
@@ -200,6 +201,11 @@ export class List extends Block {
         }
         else await super.onClickContextMenu(item, event);
     }
+    getVisibleHandleCursorPoint(): Point {
+        var point = super.getVisibleHandleCursorPoint()
+        point = point.move(0, -3);
+        return point;
+    }
 }
 
 @view('/list')
@@ -263,7 +269,7 @@ export class ListView extends BlockView<List>{
         if (this.block.childs.length > 0) return <TextLineChilds childs={this.block.childs}></TextLineChilds>
         else return <TextArea block={this.block} placeholderEmptyVisible prop='content' placeholder={text}></TextArea>
     }
-    renderView()  {
+    renderView() {
         return <div className='sy-block-list'>
             <div style={this.block.visibleStyle}>
                 <div className='sy-block-list-text' data-block-content style={this.block.contentStyle}> {this.renderListType()}
