@@ -247,7 +247,7 @@ export class LineView extends BlockView<Line>{
         var segs = this.block.segments
         if (segs.length == 0) return <div style={this.block.visibleStyle}></div>
         var rect = Segment.getSegmentsBound(segs);
-        var re = rect.extend(Math.max(30, w + 5, 100));
+        var re = rect.extend(Math.max(30, w * 6, 100));
         var style = this.block.visibleStyle;
         style.padding = 0;
         return <div className="sy-block-line" style={style}>

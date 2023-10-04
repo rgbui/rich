@@ -5,12 +5,10 @@ import { Segment } from "../../../src/block/svg/segment";
 import { Matrix } from "../../../src/common/matrix";
 import { Point } from "../../../src/common/vector/point";
 import { Line } from "./line";
-
 export function renderLine(line: Line) {
     if (!line.page.viewEl) return <></>
     var strokeWidth = line.realPx(10);
     var segs = line.segments;
-
     var s = getStartPoints(line, segs);
     var e = getEndPoints(line, segs);
     if (s?.end && s.np !== true) segs[0].point = s.end;
@@ -39,7 +37,7 @@ function getArrowMatrix(start: Point, arrowPoint: Point, toStart: Point, toArrow
 
 }
 
-function getArrow(color, arrowType, toStart: Point, toArrowPoint: Point) {
+function getArrow(color, arrowType, toStart: Point, toArrowPoint: Point, strokeWidth: number) {
     if (typeof arrowType == 'string') arrowType = parseInt(arrowType);
     var data: {
         path: ShyPath,
@@ -54,7 +52,8 @@ function getArrow(color, arrowType, toStart: Point, toArrowPoint: Point) {
         path: new ShyPath(),
         arrows: [],
     } as any;
-    var d = 10;
+    var d = 6 * strokeWidth;
+    if (typeof arrowType == 'string') arrowType = parseInt(arrowType);
     if (arrowType == 0) {
         data.path.segments.push(Segment.fromXY(-d - d / 3, (0 - d) / 2))
         data.path.segments.push(Segment.fromXY(0, 0));
@@ -145,18 +144,20 @@ function getArrow(color, arrowType, toStart: Point, toArrowPoint: Point) {
 
 function getStartPoints(line: Line, segs: Segment[]) {
     if (line.lineStart == 'none') return;
+    var strokeWidth = line.pattern.getSvgStyle()?.strokeWidth || 1;
     var color = line.pattern.getSvgStyle()?.stroke || '#000';
     var s = segs[0];
     var s1 = segs[1];
     var se = s.handleOut || s1.handleIn || s1.point;
-    return getArrow(color, line.lineStart, s.point, se);
+    return getArrow(color, line.lineStart, s.point, se, strokeWidth);
 }
 
 function getEndPoints(line: Line, segs: Segment[]) {
     if (line.lineEnd == 'none') return;
+    var strokeWidth = line.pattern.getSvgStyle()?.strokeWidth || 1;
     var color = line.pattern.getSvgStyle()?.stroke || '#000';
     var s = segs.last();
     var s1 = segs[segs.length - 2]
     var se = s.handleIn || s1.handleOut || s1.point;
-    return getArrow(color, line.lineEnd, s.point, se);
+    return getArrow(color, line.lineEnd, s.point, se, strokeWidth);
 }
