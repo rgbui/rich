@@ -157,7 +157,7 @@ export class Table extends Block {
                     await this.page.createBlock('/table/row', { blocks: { childs: cs } }, this, m);
                 }
             };
-            this.manualUpdateProps({ cols: this.cols }, { cols }, BlockRenderRange.self);
+            await   this.manualUpdateProps({ cols: this.cols }, { cols }, BlockRenderRange.self);
         });
     }
     async onChangeRowIndex(rowIndx: number, newRowIndex: number) {
@@ -188,7 +188,7 @@ export class Table extends Block {
                 cs.remove(g => g === oc);
                 cs.push(oc);
             }
-            this.manualUpdateProps({ cols: this.cols }, { cols: cs }, BlockRenderRange.self)
+            await   this.manualUpdateProps({ cols: this.cols }, { cols: cs }, BlockRenderRange.self)
         });
     }
     async onRemoveColumn(columnIndex: number) {
@@ -200,7 +200,7 @@ export class Table extends Block {
                 if (row.childs[columnIndex])
                     await row.childs[columnIndex].delete()
             });
-            this.manualUpdateProps({ cols: this.cols }, { cols: cs }, BlockRenderRange.self)
+            await  this.manualUpdateProps({ cols: this.cols }, { cols: cs }, BlockRenderRange.self)
         })
     }
     async getHtml() {
