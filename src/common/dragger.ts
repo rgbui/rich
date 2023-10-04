@@ -16,7 +16,7 @@ export function MouseDragger<T = Record<string, any>>(options: {
     allowSelection?: boolean,
     moveStart?: (event: MouseEvent | React.MouseEvent, data: T, crossData?: { type: string, data: any }) => void,
     move?: (event: MouseEvent, data: T) => void,
-    moving?: (event: MouseEvent, data: T, isEnd?: boolean) => void,
+    moving?: (event: MouseEvent, data: T, isEnd?: boolean, isMove?: boolean) => void,
     moveEnd?: (event: MouseEvent, isMove: boolean, data: T) => void
 }) {
     if (typeof options.dis == 'undefined') options.dis = 5;
@@ -37,7 +37,7 @@ export function MouseDragger<T = Record<string, any>>(options: {
                 if (options.cursor) MouseCursor.show(options.cursor);
                 try {
                     if (typeof options.move == 'function') options.move(event, data)
-                    if (typeof options.moving == 'function') options.moving(event, data, false);
+                    if (typeof options.moving == 'function') options.moving(event, data, false, null);
                 }
                 catch (ex) {
                     console.error(ex);
@@ -69,7 +69,7 @@ export function MouseDragger<T = Record<string, any>>(options: {
         if (scope.isDown == true) {
             if (options.cursor) MouseCursor.hide();
             try {
-                if (scope.isMove && typeof options.moving == 'function') options.moving(event, data, true);
+                if (typeof options.moving == 'function') options.moving(event, data, true, scope.isMove);
                 if (typeof options.moveEnd == 'function') options.moveEnd(event, scope.isMove, data)
             }
             catch (ex) {
@@ -113,7 +113,7 @@ export function MouseDragger<T = Record<string, any>>(options: {
         document.addEventListener('mousemove', move, true);
     }
     else {
-       
+
         document.addEventListener('mouseup', up);
         document.addEventListener('mousemove', move);
     }
