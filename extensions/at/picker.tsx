@@ -1,7 +1,6 @@
 import React from "react";
 import lodash from "lodash";
 import { EventsComponent } from "../../component/lib/events.component";
-
 import { channel } from "../../net/channel";
 import { UserBasic } from "../../types/user";
 import { PopoverSingleton } from "../popover/popover";
@@ -15,7 +14,6 @@ import { LinkWs } from "../../src/page/declare";
 import { lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
 
-
 export class UserPicker extends EventsComponent {
     render() {
         return <div className="padding-h-10 min-w-300" ref={e => this.el = e}>
@@ -27,10 +25,10 @@ export class UserPicker extends EventsComponent {
                 ></Input>
             </div>
             <Divider></Divider>
-            <div className="max-h-300 padding-b-10 overflow-y">
+            <div className="max-h-300 overflow-y">
                 {this.loading && <Spin></Spin>}
                 {!this.loading && this.links.map((link, i) => {
-                    return <div onMouseDown={e => this.onSelect(link)} className={"h-40 padding-w-14 flex item-hover round cursor" + ((i) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
+                    return <div onMouseDown={e => this.onSelect(link)} className={"h-40 padding-w-14 flex item-hover round cursor" + ((i) == this.selectIndex ? " item-hover-light-focus" : "")} key={link.id}>
                         <Avatar size={30} showName userid={(link as any).id}></Avatar>
                         <span className="gap-l-10">{link.name}</span>
                     </div>
@@ -45,7 +43,6 @@ export class UserPicker extends EventsComponent {
     text: string = '';
     links: UserBasic[] = [];
     loading = false;
-
     onKeydown(event: React.KeyboardEvent) {
         if (event.code == KeyboardCode.ArrowDown) {
             event.stopPropagation();
@@ -82,14 +79,14 @@ export class UserPicker extends EventsComponent {
         this.loading = true;
         this.forceUpdate();
         if (this.text) {
-            var r = await channel.get('/ws/member/word/query', { word: this.text ,ws:this.ws});
+            var r = await channel.get('/ws/member/word/query', { word: this.text, ws: this.ws });
             if (r.ok) {
                 this.links = r.data.list.map(c => {
                     return {
                         id: c.userid
                     }
                 }) as any
-                if (lst('所有人').startsWith(this.text)) {
+                if (!(this.options?.ignoreUserAll === true) && lst('所有人').startsWith(this.text)) {
                     this.links.splice(0, 0, { id: 'all' } as any)
                 }
             }
@@ -101,8 +98,10 @@ export class UserPicker extends EventsComponent {
     }, 1000)
     defaultList: UserBasic[] = [];
     ws: LinkWs;
-    open(ws) {
+    options?: { ignoreUserAll?: boolean }
+    open(ws: LinkWs, options?: { ignoreUserAll?: boolean }) {
         this.ws = ws;
+        this.options = options;
         this.loading = true;
         this.text = '';
         if (this.inputEl) this.inputEl.updateValue('');
@@ -137,17 +136,18 @@ export class UserPicker extends EventsComponent {
                 return {
                     id: g.userid
                 }
-            }) as any
-            this.links.splice(0, 0, { id: 'all' } as any)
+            }) as any;
+            if (!(this.options?.ignoreUserAll === true))
+                this.links.splice(0, 0, { id: 'all' } as any)
             this.defaultList = lodash.cloneDeep(this.links)
         }
     }
 }
 
-export async function useUserPicker(pos: PopoverPosition, ws: LinkWs) {
+export async function useUserPicker(pos: PopoverPosition, ws: LinkWs, options?: { ignoreUserAll?: boolean }) {
     let popover = await PopoverSingleton(UserPicker, { mask: true });
     let fv = await popover.open(pos);
-    fv.open(ws);
+    fv.open(ws, options);
     return new Promise((resolve: (data: UserBasic) => void, reject) => {
         fv.only('change', (value) => {
             popover.close();
