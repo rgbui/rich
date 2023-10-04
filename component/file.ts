@@ -36,8 +36,8 @@ export async function OpenMultipleFileDialoug(options?: {
         if (lastSelectFile) upload_file.removeEventListener('change', lastSelectFile);
         upload_file.addEventListener('change', selectFile);
         lastSelectFile = selectFile;
-        upload_file.dispatchEvent(new MouseEvent('click'))
-        //upload_file.click();
+        //upload_file.dispatchEvent(new MouseEvent('click'))
+        upload_file.click();
     })
 }
 /**
