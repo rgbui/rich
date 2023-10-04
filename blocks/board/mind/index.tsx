@@ -5,8 +5,7 @@ import { prop, url, view } from "../../../src/block/factory/observable";
 import { Block } from "../../../src/block";
 import { ChildsArea, TextSpanArea } from "../../../src/block/view/appear";
 import { Point, PointArrow, Rect, RectUtility } from "../../../src/common/vector/point";
-import { FlowMindLine } from "./line";
-import './style.less';
+import { FlowMindLine, GetLineSvg } from "./line";
 import { BoardPointType, BoardBlockSelector } from "../../../src/block/partial/board";
 import { Polygon } from "../../../src/common/vector/polygon";
 import { ActionDirective } from "../../../src/history/declare";
@@ -18,6 +17,8 @@ import { MouseDragger } from "../../../src/common/dragger";
 import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
 import { openBoardEditTool } from "../../../src/kit/operator/board/edit";
 import { lst } from "../../../i18n/store";
+import './style.less';
+import { VR } from "../../../src/common/render";
 
 @url('/flow/mind')
 export class FlowMind extends Block {
@@ -51,11 +52,13 @@ export class FlowMind extends Block {
     @prop()
     fixedHeight: number = 30;
     @prop()
-    lineColor: string = 'rgb(138,138,138)';
+    lineColor: string = '';
+    @prop()
+    lineWidth: number = 2;
     @prop()
     minBoxStyle: {
         width: number,
-        type: 'solid' | 'dash',
+        type: 'solid' | 'dash' | 'none',
         borderColor: string,
         radius: number
     } = {
@@ -186,10 +189,11 @@ export class FlowMind extends Block {
                     undefined,
                     keys
                 );
-                await this.mindRoot.cacChildsFlowMind(true);
                 newBlock.mounted(async () => {
-                    this.mindRoot.updateAllFlowLines();
-                    self.page.kit.picker.onPicker([newBlock]);
+                    this.renderAllMinds();
+                    this.mindRoot.view.forceUpdate(() => {
+                        self.page.kit.picker.onPicker([newBlock]);
+                    })
                 })
             })
         }
@@ -208,89 +212,106 @@ export class FlowMind extends Block {
         var subRect = new Rect(point.x, point.y, s.width, s.height);
         return subRect;
     }
-    cacDirectionRange(arrow: 'top' | 'bottom' | 'left' | 'right') {
+    private cacDirectionRange(arrow: 'top' | 'bottom' | 'left' | 'right') {
         var gap = 30;
         if (arrow == 'left' || arrow == 'right') {
             var h = 0;
+            var w = 0;
             this.blocks[arrow == 'left' ? "subChilds" : "otherChilds"].forEach((child, i) => {
                 var s = child.fixedSize;
                 if (i != 0) h += gap;
                 var cs = (child as FlowMind).cacDirectionRange(arrow);
-                h += Math.max(cs, s.height);
+                h += Math.max(cs.h, s.height);
+                w = Math.max(w, s.width);
             });
-            return h;
+            return { w, h };
         }
         else {
             var h = 0;
+            var w = 0;
             this.blocks[arrow == 'top' ? "subChilds" : "otherChilds"].forEach((child, i) => {
                 var s = child.fixedSize;
-                if (i != 0) h += gap;
+                if (i != 0) w += gap;
                 var cs = (child as FlowMind).cacDirectionRange(arrow);
-                h += Math.max(cs, s.width);
+                w += Math.max(cs.w, s.width);
+                h = Math.max(h, s.height);
             });
-            return h;
+            return { w, h }
         }
     }
-    async cacChildsFlowMind(deep?: boolean) {
-        var fs = this.fixedSize
+    cacChildsFlowMind(deep?: boolean) {
+        var fs = this.fixedSize;
         var rect = new Rect(0, 0, fs.width, fs.height);
         var offset = 100;
         var gap = 30;
         if (this.mindRoot.direction == 'x') {
-            var leftStart = 0 - (this.cacDirectionRange('left') / 2 - rect.height / 2);
-            await this.blocks.subChilds.eachAsync(async (item: FlowMind, i: number) => {
-                if (deep) await item.cacChildsFlowMind(deep);
+            if (this.parent && this.parent instanceof FlowMind && !(this.parent as FlowMind).isMindRoot) {
+                var pa = this.parent as FlowMind;
+                var pr = pa.cacDirectionRange('left');
+                if (pr.w > fs.width) offset += pr.w - fs.width;
+            }
+            var topStart = 0 - (this.cacDirectionRange('left').h / 2 - rect.height / 2);
+            this.blocks.subChilds.each((item: FlowMind, i: number) => {
+                if (deep) item.cacChildsFlowMind(deep);
                 var rc = item.cacDirectionRange('left');
                 var fs = item.fixedSize;
                 var matrix = new Matrix();
-                var h = Math.max(rc, fs.height);
-                matrix.translate(0 - offset - fs.width, leftStart + (h - fs.height) / 2);
-                leftStart += h;
-                leftStart += gap;
-                await item.updateMatrix(item.matrix, matrix);
+                var h = Math.max(rc.h, fs.height);
+                matrix.translate(0 - offset - fs.width, topStart + (h - fs.height) / 2);
+                topStart += h;
+                topStart += gap;
+                item.onlyUpdateMatrix(matrix);
             });
-            var leftStart = 0 - (this.cacDirectionRange('right') / 2 - rect.height / 2);
-            await this.blocks.otherChilds.eachAsync(async (item: FlowMind, i: number) => {
-                if (deep) await item.cacChildsFlowMind(deep);
+            var topStart = 0 - (this.cacDirectionRange('right').h / 2 - rect.height / 2);
+            this.blocks.otherChilds.each((item: FlowMind, i: number) => {
+                if (deep) item.cacChildsFlowMind(deep);
                 var rc = item.cacDirectionRange('right');
                 var fs = item.fixedSize;
                 var matrix = new Matrix();
-                var h = Math.max(rc, fs.height);
-                matrix.translate(offset + rect.width, leftStart + (h - fs.height) / 2);
-                leftStart += h;
-                leftStart += gap;
-                await item.updateMatrix(item.matrix, matrix);
+                var h = Math.max(rc.h, fs.height);
+                matrix.translate(offset + rect.width, topStart + (h - fs.height) / 2);
+                topStart += h;
+                topStart += gap;
+                item.onlyUpdateMatrix(matrix);
             });
         }
         else if (this.mindRoot.direction == 'y') {
-            var leftStart = rect.width / 2 - this.cacDirectionRange('top') / 2;
-            await this.blocks.subChilds.eachAsync(async (item: FlowMind, i: number) => {
-                if (deep) await item.cacChildsFlowMind(deep);
+            if (this.parent && this.parent instanceof FlowMind && !(this.parent as FlowMind).isMindRoot) {
+                var pa = this.parent as FlowMind;
+                var pr = pa.cacDirectionRange('left');
+                if (pr.h > fs.height) offset += pr.h - fs.height;
+            }
+            var leftStart = rect.width / 2 - this.cacDirectionRange('top').w / 2;
+            this.blocks.subChilds.each((item: FlowMind, i: number) => {
+                if (deep) item.cacChildsFlowMind(deep);
                 var rc = item.cacDirectionRange('top');
                 var fs = item.fixedSize;
                 var matrix = new Matrix();
-                var w = Math.max(rc, fs.width);
+                var w = Math.max(rc.w, fs.width);
                 matrix.translate(leftStart + (w - fs.width) / 2, 0 - offset - fs.height);
                 leftStart += w;
                 leftStart += gap;
-                await item.updateMatrix(item.matrix, matrix);
+                item.onlyUpdateMatrix(matrix);
             });
-            var leftStart = rect.width / 2 - this.cacDirectionRange('bottom') / 2;
-            await this.blocks.otherChilds.eachAsync(async (item: FlowMind, i: number) => {
-                if (deep) await item.cacChildsFlowMind(deep);
+            var leftStart = rect.width / 2 - this.cacDirectionRange('bottom').w / 2;
+            this.blocks.otherChilds.each((item: FlowMind, i: number) => {
+                if (deep) item.cacChildsFlowMind(deep);
                 var rc = item.cacDirectionRange('bottom');
                 var fs = item.fixedSize;
                 var matrix = new Matrix();
-                var w = Math.max(rc, fs.width);
+                var w = Math.max(rc.w, fs.width);
                 matrix.translate(leftStart + (w - fs.width) / 2, offset + rect.height);
                 leftStart += w;
                 leftStart += gap;
-                await item.updateMatrix(item.matrix, matrix);
+                item.onlyUpdateMatrix(matrix);
             });
         }
     }
     updateAllFlowLines() {
         if (this.view) (this.view as any).updateFlowLine();
+        else {
+            console.log('not view', this);
+        }
         this.blocks.subChilds.forEach((c: FlowMind) => c.updateAllFlowLines());
         this.blocks.otherChilds.forEach((c: FlowMind) => c.updateAllFlowLines());
     }
@@ -321,15 +342,17 @@ export class FlowMind extends Block {
     async setBoardEditCommand(name: string, value: any) {
         if (this.isMindRoot) {
             if (name == 'mindDirection') {
-              await this.updateProps({ direction: value });
-                await this.cacChildsFlowMind(true);
-                this.updateAllFlowLines();
+                await this.updateProps({ direction: value }, BlockRenderRange.self);
+                this.page.addUpdateEvent(async () => {
+                    this.renderAllMinds();
+                    this.mindRoot.forceUpdate()
+                })
             }
             else if (name == 'mindLineType') {
-               await this.updateProps({ lineType: value }, BlockRenderRange.self);
+                await this.updateProps({ lineType: value }, BlockRenderRange.self);
             }
             else if (name == 'mindLineColor') {
-              await  this.updateProps({ lineColor: value }, BlockRenderRange.self);
+                await this.updateProps({ lineColor: value }, BlockRenderRange.self);
             }
             else (await super.setBoardEditCommand(name, value) == false)
             {
@@ -342,16 +365,16 @@ export class FlowMind extends Block {
             this.pattern.setSvgStyle({ [key]: value })
         }
         if (name == 'borderWidth') {
-            await this.updateProps({ 'minBoxStyle.width': value });
+            await this.updateProps({ 'minBoxStyle.width': value }, BlockRenderRange.self);
         }
         else if (name == 'borderType') {
-            await this.updateProps({ 'minBoxStyle.type': value });
+            await this.updateProps({ 'minBoxStyle.type': value }, BlockRenderRange.self);
         }
         else if (name == 'borderColor') {
-            await this.updateProps({ 'minBoxStyle.borderColor': value });
+            await this.updateProps({ 'minBoxStyle.borderColor': value }, BlockRenderRange.self);
         }
         else if (name == 'borderRadius') {
-            await this.updateProps({ 'minBoxStyle.radius': value });
+            await this.updateProps({ 'minBoxStyle.radius': value }, BlockRenderRange.self);
         }
     }
     get contentStyle() {
@@ -363,26 +386,204 @@ export class FlowMind extends Block {
         style.borderRadius = this.minBoxStyle.radius;
         style.borderWidth = this.minBoxStyle.width;
         style.borderStyle = this.minBoxStyle.type == 'solid' ? 'solid' : 'dashed';
+        if (this.minBoxStyle.type == 'none') style.borderStyle = 'none';
         style.borderColor = this.minBoxStyle.borderColor;
         return style;
     }
-    async renderAllMinds() {
-        await this.mindRoot.cacChildsFlowMind(true);
+    renderAllMinds() {
+        this.mindRoot.cacChildsFlowMind(true);
         this.mindRoot.updateAllFlowLines();
     }
-    boardMove(from: Point, to: Point) {
-        if (this.isMindRoot) { super.boardMove(from, to); return }
-        super.boardMove(from, to);
-        /**
-         * feel parent mind
-         */
-        this.mindRoot.eachSubMind((b) => {
-
-        }, true)
+    renderMinds() {
+        this.cacChildsFlowMind(true);
+        this.updateAllFlowLines();
     }
+    boardMoveStart(point: Point): void {
+        this.moveTo = null;
+    }
+    boardMove(from: Point, to: Point) {
+        super.boardMove(from, to);
+        if (this.isMindRoot) {
+            return
+        }
+        var crect = new Rect(0, 0, this.fixedWidth, this.fixedHeight);
+        crect = crect.transformToRect(this.globalWindowMatrix);
+        var rect = new Rect(to.x, to.y, 0, 0);
+        rect = rect.extend(this.realPx(100));
+        var gm = this.panelGridMap;
+        var bs: { dis: number, rect: Rect, x: number, y: number, block: FlowMind }[] = [];
+        gm.findBlocksByRect(rect, (block) => {
+            if (block instanceof FlowMind && block !== this) {
+                var { width, height } = block.fixedSize;
+                var rect = new Rect(0, 0, width, height);
+                var nrect = rect.transformToRect(block.globalWindowMatrix);
+                bs.push({
+                    rect: nrect,
+                    dis: nrect.middleCenter.dis(crect.middleCenter),
+                    x: nrect.middleCenter.x - crect.middleCenter.x,
+                    y: nrect.middleCenter.y - crect.middleCenter.y,
+                    block: block
+                })
+                return true
+            }
+            else return false;
+        })
+        if (bs.length > 0) {
+            var r = bs.findMin(g => g.dis)
+            if (r) {
+                if (r.block.mindRoot.mindDirection == 'x') {
+                    if (crect.left > r.rect.right && r.block.parentKey == 'otherChilds') {
+                        this.moveTo = {
+                            block: r.block,
+                            rect: r.rect,
+                            at: r.block.blocks[r.block.parentKey].length,
+                            childKey: r.block.parentKey,
+                            posBlock: r.block
+                        };
+                    }
+                    else if (crect.right < r.rect.left && r.block.parentKey == 'subChilds') {
+                        this.moveTo = {
+                            block: r.block, rect: r.rect,
+                            at: r.block.blocks[r.block.parentKey].length,
+                            childKey: r.block.parentKey,
+                            posBlock: r.block
+                        };
+                    }
+                    else if (crect.top < r.rect.top) {
+                        var { width, height } = (r.block.parent as FlowMind).fixedSize;
+                        var rect = new Rect(0, 0, width, height);
+                        var nrect = rect.transformToRect((r.block.parent as FlowMind).globalWindowMatrix);
+                        this.moveTo = {
+                            rect: nrect,
+                            block: r.block.parent as FlowMind,
+                            at: r.block.at,
+                            childKey: r.block.parentKey as any,
+                            posBlock: r.block
+                        };
+                    }
+                    else if (crect.top > r.rect.top) {
+                        var { width, height } = (r.block.parent as FlowMind).fixedSize;
+                        var rect = new Rect(0, 0, width, height);
+                        var nrect = rect.transformToRect((r.block.parent as FlowMind).globalWindowMatrix);
+                        this.moveTo = {
+                            rect: nrect,
+                            block: r.block.parent as FlowMind,
+                            at: r.block.at + 1,
+                            childKey: r.block.parentKey as any,
+                            posBlock: r.block
+                        };
+                    }
+                }
+                else {
+                    if (crect.top > r.rect.bottom && r.block.parentKey == 'otherChilds') {
+                        this.moveTo = {
+                            rect: r.rect,
+                            block: r.block,
+                            at: r.block.blocks[r.block.parentKey].length,
+                            childKey: r.block.parentKey,
+                            posBlock: r.block
+                        };
+                    }
+                    else if (crect.bottom > r.rect.top && r.block.parentKey == 'subChilds') {
+                        this.moveTo = {
+                            rect: r.rect,
+                            block: r.block,
+                            at: r.block.blocks[r.block.parentKey].length,
+                            childKey: r.block.parentKey,
+                            posBlock: r.block
+                        };
+                    }
+                    else if (crect.left < r.rect.left) {
+                        var { width, height } = (r.block.parent as FlowMind).fixedSize;
+                        var rect = new Rect(0, 0, width, height);
+                        var nrect = rect.transformToRect((r.block.parent as FlowMind).globalWindowMatrix);
+                        this.moveTo = {
+                            rect: nrect,
+                            block: r.block.parent as FlowMind,
+                            at: r.block.parent.at,
+                            childKey: r.block.parentKey as any,
+                            posBlock: r.block
+                        };
+                    }
+                    else if (crect.left > r.rect.left) {
+                        var { width, height } = (r.block.parent as FlowMind).fixedSize;
+                        var rect = new Rect(0, 0, width, height);
+                        var nrect = rect.transformToRect((r.block.parent as FlowMind).globalWindowMatrix);
+                        this.moveTo = {
+                            rect: nrect,
+                            block: r.block.parent as FlowMind,
+                            at: r.block.at + 1,
+                            childKey: r.block.parentKey as any,
+                            posBlock: r.block
+                        };
+                    }
+                }
+            }
+            else this.moveTo = null;
+        }
+        if (this.moveTo) {
+            var p = this.moveTo.rect.middleCenter;
+            var t = crect.middleCenter;
+            if (this.moveTo.block.mindRoot.mindDirection == 'x') {
+                p = this.moveTo.childKey == 'subChilds' ? this.moveTo.rect.leftMiddle : this.moveTo.rect.rightMiddle;
+                t = this.moveTo.childKey == 'subChilds' ? crect.rightMiddle : crect.leftMiddle;
+            }
+            else if (this.moveTo.block.mindRoot.mindDirection == 'y') {
+                p = this.moveTo.childKey == 'subChilds' ? this.moveTo.rect.topCenter : this.moveTo.rect.bottomCenter;
+                t = this.moveTo.childKey == 'subChilds' ? crect.bottomCenter : crect.topCenter;
+            }
+            var lineD = GetLineSvg(this.moveTo.block.mindRoot.lineType,
+                this.moveTo.block.mindRoot.mindDirection as any,
+                p,
+                t,
+                0.4);
+            var posRect = new Rect(0, 0, this.moveTo.posBlock.fixedSize.width, this.moveTo.posBlock.fixedSize.height);
+            posRect = posRect.transformToRect(this.moveTo.posBlock.globalWindowMatrix);
+            var rectPath = `M${posRect.left} ${posRect.top} L${posRect.right} ${posRect.top} L${posRect.right} ${posRect.bottom} L${posRect.left} ${posRect.bottom} L${posRect.left} ${posRect.top}`
+            console.log('rectPath', rectPath, lineD);
+            VR.renderSvg(`
+            <path fill='none' stroke='#ff0000' stroke-width='2' stroke-dasharray="2 2" d=\'${lineD}\'></path>
+            <path fill='none' stroke='#ff0000' stroke-width='2' stroke-dasharray="2 2" d=\'${rectPath}\'></path>
+            `);
+        }
+        else VR.unload();
+    }
+    moveTo: {
+        block: FlowMind,
+        childKey: 'subChilds' | 'otherChilds',
+        at: number,
+        rect: Rect,
+        posBlock: Block,
+    } = null;
     async boardMoveEnd(from: Point, to: Point) {
         if (this.isMindRoot) { await super.boardMoveEnd(from, to); return }
+        var oldMindRoot: FlowMind, currentMindRoot: FlowMind;
+        if (this.moveTo?.block) {
+            oldMindRoot = this.mindRoot;
+            await this.moveTo.block.append(this, this.moveTo.at, this.moveTo.childKey);
+            currentMindRoot = this.mindRoot;
+        }
+        this.moveTo = null;
+        VR.unload();
         this.moveMatrix = new Matrix();
+        if (oldMindRoot) {
+            this.page.addUpdateEvent(async () => {
+                this.page.onAction('onMindMoveNotify', async () => {
+                    oldMindRoot.renderAllMinds()
+                    await oldMindRoot.forceUpdate();
+                    if (currentMindRoot !== oldMindRoot) {
+                        currentMindRoot.renderAllMinds()
+                        await currentMindRoot.forceUpdate()
+                    }
+                    this.page.kit.picker.onPicker([this]);
+                })
+            })
+        }
+        else {
+            this.view.forceUpdate(() => {
+                this.updateRenderLines(true)
+            })
+        }
     }
     eachSubMind(predict: (block: FlowMind) => boolean | void, includeSelf?: boolean) {
         var isBreak: boolean;
@@ -416,7 +617,7 @@ export class FlowMind extends Block {
         return isBreak;
     }
     onResizeBoardSelector(arrows: PointArrow[], event: React.MouseEvent) {
-        var block = this;
+        var block: FlowMind = this;
         var matrix = block.matrix.clone();
         var gm = block.globalWindowMatrix.clone();
         var { width: w, height: h } = block.fixedSize;
@@ -466,16 +667,22 @@ export class FlowMind extends Block {
                 // block.fixedHeight = bh;
                 block.fixedWidth = bw;
                 block.updateRenderLines();
-                self.updateAllFlowLines()
-                block.forceUpdate();
+                block.view.forceUpdate();
                 block.page.kit.picker.view.forceUpdate();
                 if (isEnd) {
                     block.page.onAction(ActionDirective.onResizeBlock, async () => {
-                        if (!matrix.equals(block.matrix)) block.updateMatrix(matrix, block.matrix);
+                        if (!matrix.equals(block.matrix)) block.onlyUpdateMatrix(matrix);
                         await block.manualUpdateProps(
-                            { fixedWidth: w, fixedHeight: h },
+                            {
+                                fixedWidth: w,
+                                fixedHeight: h
+                            },
                             { fixedWidth: block.fixedWidth, fixedHeight: block.fixedHeight }
                         )
+                        block.page.addUpdateEvent(async () => {
+                            if (block.isMindRoot) block.renderAllMinds();
+                            else (block.parent as FlowMind).renderMinds();
+                        })
                     })
                 }
             },
@@ -487,14 +694,16 @@ export class FlowMind extends Block {
     get isCanEmptyDelete() {
         return false
     }
+    async didMounted() {
+        if (this.isMindRoot) {
+            this.renderAllMinds()
+        }
+    }
 }
 @view('/flow/mind')
 export class FlowMindView extends BlockView<FlowMind>{
-    didMount() {
-        this.updateFlowLine();
-    }
     updateFlowLine() {
-        if (this.flowMindLine && (this.block.blocks.subChilds.length > 0 || this.block.blocks.otherChilds.length > 0)) {
+        if (this.flowMindLine) {
             var { width, height } = this.block.fixedSize;
             var rect = new Rect(0, 0, width, height);
             var leftOrigin = this.block.mindDirection != 'y' ? rect.leftMiddle : rect.topCenter;
@@ -519,10 +728,13 @@ export class FlowMindView extends BlockView<FlowMind>{
         }
     }
     renderItem() {
+        var text = lst('中心主题');
+        if (this.block.deep == 1) text = lst('分支主题');
+        else text = lst('子主题')
         return <div className='sy-flow-mind-text'
             style={this.block.contentStyle}
             ref={e => this.mindEl = e} >
-            <TextSpanArea placeholder={lst('输入')} block={this.block}></TextSpanArea>
+            <TextSpanArea placeholder={text} block={this.block}></TextSpanArea>
         </div>
     }
     mindEl: HTMLElement;

@@ -1,6 +1,7 @@
 import React from "react";
 import { FlowMind } from ".";
 import { Point, RectUtility, Rect } from "../../../src/common/vector/point";
+
 export class FlowMindLine extends React.Component<{ mind: FlowMind }>{
     private leftOrigin: Point;
     private leftPoints: Point[] = [];
@@ -29,73 +30,20 @@ export class FlowMindLine extends React.Component<{ mind: FlowMind }>{
         this.forceUpdate();
     }
     renderLines() {
-        if (this.props.mind.mindRoot.lineType == 'brokenLine') {
-            var r = 0.66;
-            if (this.direction == 'x') {
-                return <>
-                    {this.leftPoints.map((point, index) => {
-                        var lx = (point.x - this.leftOrigin.x) * r;
-                        var px = (this.leftOrigin.x - point.x) * (1 - r);
-                        var dString = `M${this.leftOrigin.join(" ")}L${this.leftOrigin.move(lx, 0).join(" ")}L${point.move(px, 0).join(" ")}L${point.join(" ")}`;
-                        return <path key={index} d={dString}  ></path>
-                    })}
-                    {this.rightPoints.map((point, index) => {
-                        var lx = (point.x - this.rightOrigin.x) * r;
-                        var px = (this.rightOrigin.x - point.x) * (1 - r);
-                        var dString = `M${this.rightOrigin.join(" ")}L${this.rightOrigin.move(lx, 0).join(" ")}L${point.move(px, 0).join(" ")}L${point.join(" ")}`;
-                        return <path key={'right' + index} d={dString}></path>
-                    })}
-                </>
-            }
-            else {
-                return <>
-                    {this.leftPoints.map((point, index) => {
-                        var lx = (point.y - this.leftOrigin.y) * r;
-                        var px = (this.leftOrigin.y - point.y) * (1 - r);
-                        var dString = `M${this.leftOrigin.join(" ")}L${this.leftOrigin.move(0, lx).join(" ")}L${point.move(0, px).join(" ")}L${point.join(" ")}`;
-                        return <path key={index} d={dString} >
-                        </path>
-                    })}
-                    {this.rightPoints.map((point, index) => {
-                        var lx = (point.y - this.rightOrigin.y) * r;
-                        var px = (this.rightOrigin.y - point.y) * (1 - r);
-                        var dString = `M${this.rightOrigin.join(" ")}L${this.rightOrigin.move(0, lx).join(" ")}L${point.move(0, px).join(" ")}L${point.join(" ")}`;
-                        return <path key={'right' + index} d={dString} >
-                        </path>
-                    })}
-                </>
-            }
-        }
-        else {
-            var d = 40;
-            if (this.direction == 'x') {
-                return <>
-                    {this.leftPoints.map((point, index) => {
-                        return <path key={index} d={`M${this.leftOrigin.join(' ')} C ${this.leftOrigin.move(0 - d, 0).join(' ')}, ${point.move(d, 0).join(' ')}, ${point.join(' ')}`} >
-                        </path>
-                    })}
-                    {this.rightPoints.map((point, index) => {
-                        return <path key={'right' + index} d={`M${this.rightOrigin.join(' ')} C ${this.rightOrigin.move(d, 0).join(' ')}, ${point.move(0 - d, 0).join(' ')}, ${point.join(' ')}`} >
-                        </path>
-                    })}
-                </>
-            }
-            else {
-                return <>
-                    {this.leftPoints.map((point, index) => {
-                        return <path key={index} d={`M${this.leftOrigin.join(' ')} C ${this.leftOrigin.move(0, 0 - d).join(' ')}, ${point.move(0, d).join(' ')}, ${point.join(' ')}`} >
-                        </path>
-                    })}
-                    {this.rightPoints.map((point, index) => {
-                        return <path key={'right' + index} d={`M${this.rightOrigin.join(' ')} C ${this.rightOrigin.move(0, d).join(' ')}, ${point.move(0, 0 - d).join(' ')}, ${point.join(' ')}`} >
-                        </path>
-                    })}
-                </>
-            }
-        }
+        return <>
+            {this.leftPoints.map((point, index) => {
+                var dString = GetLineSvg(this.props.mind.mindRoot.lineType, this.direction as any, this.leftOrigin, point, 0.4)
+                return <path strokeWidth={this.props.mind.lineWidth} key={index} d={dString}  ></path>
+            })}
+            {this.rightPoints.map((point, index) => {
+                var dString = GetLineSvg(this.props.mind.mindRoot.lineType, this.direction as any, this.rightOrigin, point, 0.4)
+                return <path strokeWidth={this.props.mind.lineWidth} key={'right' + index} d={dString}  ></path>
+            })}
+        </>
     }
     render() {
         if (!this.leftOrigin) return <></>;
+        var g: FlowMind = this.props.mind.closest(g => (g as FlowMind).lineColor ? true : false) as FlowMind;
         return <svg
             className="sy-flow-mind-line"
             style={{
@@ -103,8 +51,27 @@ export class FlowMindLine extends React.Component<{ mind: FlowMind }>{
                 left: this.range.left,
                 width: this.range.width,
                 height: this.range.height,
-                stroke: this.props.mind.mindRoot.lineColor
+                stroke: g.lineColor || 'black'
             }}
             viewBox={`${this.range.left} ${this.range.top} ${this.range.width} ${this.range.height} `}>{this.renderLines()}</svg>
+    }
+}
+
+export function GetLineSvg(type: 'brokenLine' | 'cure',
+    direction: 'x' | 'y',
+    from: Point,
+    to: Point,
+    r: number) {
+    if (type == 'brokenLine') {
+        var dx = r > 1 ? (to.x > from.x ? r : (0 - r)) : (to.x - from.x) * r;
+        var dy = r > 1 ? (to.y > from.y ? r : (0 - r)) : (to.y - from.y) * r;
+        if (direction == 'x') return `M${from.join(" ")}L${from.move(dx, 0).join(" ")}L${to.move(0 - dx, 0).join(" ")}L${to.join(" ")}`;
+        else return `M${from.join(" ")}L${from.move(0, dy).join(" ")}L${to.move(0, 0 - dy).join(" ")}L${to.join(" ")}`;
+    }
+    else if (type == 'cure') {
+        var dx = r > 1 ? (to.x > from.x ? r : (0 - r)) : (to.x - from.x) * r;
+        var dy = r > 1 ? (to.y > from.y ? r : (0 - r)) : (to.y - from.y) * r;
+        if (direction == 'x') return `M${from.join(' ')} C ${from.move(dx, 0).join(' ')}, ${to.move(0 - dx, 0).join(' ')}, ${to.join(' ')}`
+        else return `M${from.join(' ')} C ${from.move(0, dy).join(' ')}, ${to.move(0, 0 - dy).join(' ')}, ${to.join(' ')}`
     }
 }
