@@ -33,8 +33,12 @@ export class Frame extends Block {
     get isDisabledInputLine() {
         return true;
     }
+    init() {
+        super.init();
+        this.content = lst('容器');
+    }
     @prop()
-    content: string = lst('框');
+    content: string = '';
     @prop()
     fixedWidth: number = 800;
     @prop()
@@ -44,7 +48,7 @@ export class Frame extends Block {
         var pickers: BoardBlockSelector[] = [];
         var { width, height } = this.fixedSize;
         var rect = new Rect(0, h, width, height - h);
-        var gm = this.globalWindowMatrix;
+        var gm = this.globalMatrix;
         // var gs = gm.resolveMatrixs();
         /**
          * 这里基本没有skew，只有scale,rotate,translate
@@ -113,7 +117,7 @@ export class FrameView extends BlockView<Frame>{
         }, this.block.visibleStyle);
         return <div className='sy-block-frame' style={style} >
             <div className='sy-block-frame-head' style={{ height: h, lineHeight: h + 'px', fontSize: h20 / 1.2 }}>
-                <TextArea block={this.block} placeholder={lst('框')} prop='content' ></TextArea>
+                <TextArea block={this.block} placeholder={lst('容器')} prop='content' ></TextArea>
             </div>
             <ChildsArea childs={this.block.childs}></ChildsArea>
             <div className='sy-block-frame-content' style={{ top: h, ...this.block.contentStyle }}>

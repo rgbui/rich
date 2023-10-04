@@ -105,7 +105,7 @@ export class TextSpan extends Block {
         var w = this.fixedWidth;
         var h = this.el.offsetHeight;
         var old_fs = this.fontScale;
-        var gm = this.globalWindowMatrix.clone();
+        var gm = this.globalMatrix.clone();
         var fp = gm.inverseTransform(Point.from(event));
         var s = gm.getScaling().x;
         var minW = 20 / s;
@@ -147,7 +147,7 @@ export class TextSpan extends Block {
                     if (isEnd) {
                         block.page.onAction(ActionDirective.onResizeBlock, async () => {
                             if (!matrix.equals(block.matrix)) block.updateMatrix(matrix, block.matrix);
-                            block.manualUpdateProps(
+                            await    block.manualUpdateProps(
                                 { fixedWidth: w },
                                 { fixedWidth: block.fixedWidth }
                             )
@@ -181,7 +181,7 @@ export class TextSpan extends Block {
                     if (isEnd) {
                         block.page.onAction(ActionDirective.onResizeBlock, async () => {
                             if (!matrix.equals(block.matrix)) block.updateMatrix(matrix, block.matrix);
-                            block.manualUpdateProps({ fontScale: old_fs }, { fontScale: block.fontScale })
+                            await  block.manualUpdateProps({ fontScale: old_fs }, { fontScale: block.fontScale })
                         })
                     }
                 }

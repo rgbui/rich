@@ -6,6 +6,9 @@ import { Block } from '..';
 import { ChildsArea } from '../view/appear';
 import { PageLayoutType } from '../../page/declare';
 import { isMobileOnly } from 'react-device-detect';
+import { GridMap } from '../../page/grid';
+import { ActionDirective } from '../../history/declare';
+import { BlockUrlConstant } from '../constant';
 
 @url('/view')
 export class View extends Block {
@@ -19,7 +22,7 @@ export class View extends Block {
  */
 @view('/view')
 export class ViewComponent extends BlockView<View>{
-     renderView() {
+    renderView() {
         if (this.block.page.isSupportScreen) {
             var isFirst = this.block.page.views[0] == this.props.block;
             var hasGap: boolean = true;
@@ -58,6 +61,38 @@ export class ViewComponent extends BlockView<View>{
                 style.width = '100%';
             }
             return <div className='sy-block-view' style={style} ><ChildsArea childs={this.block.childs}></ChildsArea></div>
+        }
+    }
+}
+
+@url('/template')
+export class Template extends Block {
+    blocks: { childs: Block[] } = { childs: [] };
+    init() {
+        this.gridMap = new GridMap(this)
+    }
+    get isPanel() {
+        return true;
+    }
+    get appearAnchors() {
+        return this.__appearAnchors;
+    }
+}
+@view('/template')
+export class TemplateComponent extends BlockView<Template>{
+    renderView() {
+        return <div className='sy-block-template padding-10' onMouseDown={e => this.mousedown(e)}><ChildsArea childs={this.block.childs}></ChildsArea></div>
+    }
+    async mousedown(event: React.MouseEvent) {
+        if (event.button == 2) return;
+        if (this.block.childs.length == 0) {
+            event.stopPropagation()
+            await this.block.page.onAction(ActionDirective.onCreateBlockByEnter, async () => {
+                var newBlock = await this.block.page.createBlock(BlockUrlConstant.TextSpan, {}, this.block);
+                newBlock.mounted(() => {
+                    this.block.page.kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
+                })
+            });
         }
     }
 }
