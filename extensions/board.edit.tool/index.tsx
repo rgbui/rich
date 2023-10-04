@@ -1,5 +1,4 @@
 import React, { CSSProperties } from "react";
-import { ReactNode } from "react";
 import { EventsComponent } from "../../component/lib/events.component";
 import { Singleton } from "../../component/lib/Singleton";
 import {
@@ -245,11 +244,13 @@ export class BoardEditTool extends EventsComponent {
         this.blocks = blocks;
         var poly = new Polygon(...this.blocks.map(b => b.getVisiblePolygon().points).flat());
         this.point = poly.bound.leftTop;
-        this.point.y -= 40;
+        this.point.y -= 50;
         var rs;
         await this.blocks.eachAsync(async block => {
             var cs = await block.getBoardEditCommand();
-            if (typeof rs == 'undefined') { rs = cs; }
+            if (typeof rs == 'undefined') {
+                rs = cs;
+            }
             else {
                 rs.removeAll(r => !cs.some(c => c.name == r.name))
             }
@@ -265,11 +266,11 @@ export class BoardEditTool extends EventsComponent {
         }
     }
     async onChange(name: string, value: any) {
-        BlockCache.set(name, value)
+        await BlockCache.set(name, value)
         this.emit('save', { name, value });
     }
     async onChangeObject(obj: Record<string, any>) {
-        BlockCache.set(obj);
+        await BlockCache.set(obj);
         this.emit('save', obj);
     }
     close() {
@@ -280,7 +281,6 @@ export class BoardEditTool extends EventsComponent {
             this.emit('close');
         }
     }
-
     private dropName: string;
     showDrop(dropName: string) {
         if (this.dropName == dropName) this.dropName = '';

@@ -4,7 +4,6 @@ import { NoneSvg, TransparentSvg } from "../../component/svgs";
 import { MeasureView } from "../../component/view/progress";
 import { ColorType } from "../note";
 import { S } from "../../i18n/view";
-
 var colors: ColorType[] = [
     { color: 'transparent' },
     { color: 'rgb(254,244,69)' },

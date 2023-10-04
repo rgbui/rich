@@ -35,7 +35,7 @@ export function ShapeStroke(props: {
     change: (name: string, value: any) => void
 }) {
     return <div className="shy-shape-stroke">
-        <div className="shy-shape-stroke-current" onMouseDown={e => props.tool.showDrop('stroke')}>
+        <div className="shy-shape-stroke-current flex-center" onMouseDown={e => props.tool.showDrop('stroke')}>
             {(props.stroke == 'transparent' || props.strokeOpacity == 0) && <TransparentSvg></TransparentSvg>}
             {props.stroke != 'transparent' && <a style={{ backgroundColor: props.stroke || '#000', opacity: props.strokeOpacity }}></a>}
         </div>
@@ -101,8 +101,8 @@ export function BorderBoxStyle(props: {
         borderRadius: props.borderRadius
     }
     return <div className="shy-shape-stroke">
-        <div className="shy-shape-stroke-current" style={{ width: 20, height: 20 }} onMouseDown={e => props.tool.showDrop('border')}>
-            <div className="box-border size-20" style={style}></div>
+        <div className="shy-shape-stroke-current flex-center" style={{ width: 20, height: 20 }} onMouseDown={e => props.tool.showDrop('border')}>
+            <div className="box-border size-18" style={style}></div>
         </div>
         {props.tool.isShowDrop('border') && <div className="shy-shape-stroke-drops text-1">
 

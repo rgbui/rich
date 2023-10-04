@@ -9,13 +9,13 @@ import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { Rect } from "../../../src/common/vector/point";
 import { BackgroundColorList } from "../../color/data";
-import { useImageFilePicker } from "../../file/image.picker";
 import { GalleryPics } from "../../image/gellery";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
 import { BoxFillType, BoxStyle } from "../declare";
 import { lst } from "../../../i18n/store";
 import { S } from "../../../i18n/view";
+import { UploadView } from "../../file/upload";
 
 export class CardBoxStyle extends EventsComponent {
     options: {
@@ -35,12 +35,12 @@ export class CardBoxStyle extends EventsComponent {
     renderBackground() {
         var self = this;
         var items: MenuItem<string>[] = [
-            { icon: NoneSvg, name: 'none', value: "none", text: lst('无'), checkLabel: self.options?.fill?.mode == 'none' },
+            { icon: { name: 'bytedance-icon', code: 'square' }, name: 'none', value: "none", text: lst('无背景'), checkLabel: self.options?.fill?.mode == 'none' },
             { type: MenuItemType.divide },
             { icon: PicSvg, name: 'image', text: lst('选择图片'), value: 'image', checkLabel: self.options?.fill?.mode == 'image' },
             { icon: UploadSvg, name: 'uploadImage', text: lst('上传图片'), value: 'uploadImage', checkLabel: self.options?.fill?.mode == 'uploadImage' },
             { type: MenuItemType.divide },
-            { icon: BlockcolorSvg, name: 'color', text: lst('颜色'), value: 'color', checkLabel: self.options?.fill?.mode == 'color' }
+            { icon: { name: 'bytedance-icon', code: 'color-filter' }, name: 'color', text: lst('颜色'), value: 'color', checkLabel: self.options?.fill?.mode == 'color' }
         ]
         async function openMenu(event: React.MouseEvent) {
             var r = await useSelectMenuItem(
@@ -52,15 +52,9 @@ export class CardBoxStyle extends EventsComponent {
                 self.forceUpdate()
             }
         }
-        async function onPickerImage(event: React.MouseEvent) {
-            var r = await useImageFilePicker({ roundArea: Rect.fromEvent(event) });
-            if (r) {
-                self.setProps({ 'fill.mode': 'uploadImage', 'fill.src': r.url })
-            }
-        }
         return <div>
             <div className="gap-w-15 flex border round cursor h-30 padding-w-10" onMouseDown={e => openMenu(e)}>
-                <span>{items.find(c => c.value == this.options.fill.mode)?.text}</span>
+                <span className="flex-auto">{items.find(c => c.value == this.options.fill.mode)?.text}</span>
                 <span className="flex-center size-16"><Icon size={14} icon={ChevronDownSvg}></Icon></span>
             </div>
             <div className="h-400 padding-h-10 overflow-y">
@@ -89,12 +83,15 @@ export class CardBoxStyle extends EventsComponent {
                         </div>
                     })}
                 </div>}
-
                 {this.options.fill.mode == 'uploadImage' && <div className="padding-w-15">
                     {this.options.fill.src && <div ><img className="obj-center w100" src={this.options.fill.src} /></div>}
-                    <div><Button onClick={e => onPickerImage(e)}><S>上传图片</S></Button></div>
+                    <UploadView mine='image' change={e => {
+                        self.setProps({
+                            'fill.mode': 'uploadImage',
+                            'fill.src': e.url
+                        })
+                    }}></UploadView>
                 </div>}
-
                 {this.options.fill.mode == 'color' && <div className="padding-w-15">
                     <div className="remark f-14 gap-b-5"><S>背景色</S></div>
                     <div className="gap-b-10">
