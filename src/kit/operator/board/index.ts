@@ -17,12 +17,12 @@ export async function BoardDrag(
      * 如果有使用，则根据工具栏来进行下一步操作
      */
     if (await CheckBoardTool(kit, block, event)) return;
-
     var downPoint = Point.from(event);
     var gm = block ? block.panelGridMap : kit.page.gridMap;
+
     if (block?.isLine) block = block.closest(x => !x.isLine);
     var beforeIsPicked = kit.picker.blocks.some(s => s == block);
-    
+
     var hasBlock: boolean = block ? true : false;
     if (kit.page.keyboardPlate.isShift() && block?.isFreeBlock) {
         //连选
@@ -37,13 +37,9 @@ export async function BoardDrag(
         event,
         dis: 5,
         moveStart(ev) {
-            if (hasBlock) {
-
-            }
-            else {
-                gm.start();
-                kit.anchorCursor.selector.setStart(Point.from(ev));
-            }
+            gm.start();
+            if (!hasBlock) kit.anchorCursor.selector.setStart(Point.from(ev));
+            kit.picker.onMoveStart(Point.from(event));
         },
         move(ev, data) {
             if (hasBlock) {

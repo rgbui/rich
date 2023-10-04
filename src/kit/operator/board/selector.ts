@@ -13,8 +13,7 @@ import { loadPaper } from "../../../paper";
 import { BlockCache } from "../../../page/common/cache";
 
 export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseEvent) {
-    if (kit.boardSelector.isSelector)
-    {
+    if (kit.boardSelector.isSelector) {
         var paper = await loadPaper();
         var fra: Block = block ? block.frameBlock : kit.page.getPageFrame();
         var gm = fra.globalWindowMatrix;
