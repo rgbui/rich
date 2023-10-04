@@ -68,4 +68,7 @@ export function getTemplateInstance(template: string, data: Record<string, any>)
     });
 }
 
+export const GenMind=`你是一个擅长思考的助手。我将为你提供一个主题，你的任务是围绕主题生成思维导图，请返回markdown格式，不要返回标题，结果不要使用\`\`\`\`\`\`进行包裹。主题为“{prompt}”`
+
+
 
