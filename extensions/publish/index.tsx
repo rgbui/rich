@@ -156,7 +156,7 @@ class PagePublish extends EventsComponent {
                     </div>
                     <div>
                         {ps.map((mp, id) => {
-                            return <div className="flex flex-top gap-h-10 padding-w-14 item-hover round" key={id}>
+                            return <div className="flex flex-top gap-h-10 padding-h-5 padding-w-14 item-hover round" key={id}>
                                 <div className="flex-fixed">
                                     {mp.userid && <Avatar size={30} userid={mp.userid}></Avatar>}
                                     {mp.roleId && <span>{getRoles(mp.roleId)}</span>}
