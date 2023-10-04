@@ -7,6 +7,8 @@ import { Block } from "../../block";
 import { BoardPointType } from "../../block/partial/board";
 import { PointArrow } from "../../common/vector/point";
 import "./style.less";
+import { Tip } from "../../../component/view/tooltip/tip";
+import { Sp } from "../../../i18n/view";
 
 export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
     constructor(props) {
@@ -58,7 +60,7 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
                             onMouseDown={e => this.picker.onRotateBlock(block, pi, e)}
                             x={pi.point.x}
                             y={pi.point.y}>
-                            <Icon icon={RotatingSvg} size={16}></Icon>
+                            <Tip overlay={<Sp text='拖动旋转点击重置'>拖动旋转<br />点击重置</Sp>}><Icon className={'cursor'} icon={RotatingSvg} size={16}></Icon></Tip>
                         </foreignObject>
                         break;
                     case BoardPointType.mindAdd:

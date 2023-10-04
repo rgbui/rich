@@ -4,7 +4,6 @@ import { Kit } from "..";
 import { Line, PortLocation } from "../../../blocks/board/line/line";
 import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
 import { useShapeSelector } from "../../../extensions/shapes/box";
-
 import { util } from "../../../util/util";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
@@ -17,6 +16,7 @@ import { Point, PointArrow } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
 import { openBoardEditTool } from "../operator/board/edit";
 import { BlockPickerView } from "./view";
+import { BlockCache } from "../../page/common/cache";
 
 export class BlockPicker {
     kit: Kit;
@@ -51,9 +51,15 @@ export class BlockPicker {
         this.blocks = [];
         if (this.view) this.view.forceUpdate();
     }
+    onMoveStart(point: Point) {
+        this.blocks.forEach(bl => {
+            bl.boardMoveStart(point);
+        });
+    }
     onMove(from: Point, to: Point) {
         this.blocks.forEach(bl => {
-            bl.boardMove(from, to);
+            if (bl.isBoardCanMove())
+                bl.boardMove(from, to);
         });
         this.view.forceUpdate();
     }
@@ -101,6 +107,10 @@ export class BlockPicker {
                     data.from = { x: arrows[1], y: arrows[0], blockId: block.id };
                     data.to = { x: re.x, y: re.y };
                     newBlock = await self.kit.page.createBlock(data.url, data, fra);
+                    var bg = await BlockCache.get('backgroundColor');
+                    if (bg) {
+                        newBlock.pattern.setSvgStyle({ stroke: bg })
+                    }
                     block.conectLine(newBlock);
                     newBlock.mounted(() => {
                         isMounted = true;
@@ -285,7 +295,7 @@ export class BlockPicker {
             moveStart() {
                 forceCloseBoardEditTool();
             },
-            moving(ev, data, isEnd) {
+            moving(ev, data, isEnd, isMove) {
                 var pos = gm.inverseTransform(Point.from(ev));
                 var toAngle = Math.atan2(pos.y - center.y, pos.x - center.x) * d + 180;
                 var r = toAngle - angle;
@@ -305,8 +315,14 @@ export class BlockPicker {
                     mc = ma.clone();
                     mc.rotate(r, center);
                 }
-
-
+                if (isEnd && isMove == false) {
+                    var cr = block.matrix.getRotation();
+                    if (Math.abs(cr) > 1) {
+                        mc = ma.clone();
+                        mc.rotate(0 - cr, center);
+                    }
+                    else mc = new Matrix();
+                }
                 block.moveMatrix = mc;
                 block.updateRenderLines();
                 block.view.forceUpdate();
@@ -342,10 +358,12 @@ export class BlockPicker {
         }
         this.kit.picker.onPicker([rowBlock]);
         var self = this;
+        var gm = rowBlock.panelGridMap;
         MouseDragger({
             event,
             dis: 5,
             moveStart() {
+                gm.start();
                 forceCloseBoardEditTool()
             },
             move(ev, data) {
@@ -353,6 +371,7 @@ export class BlockPicker {
             },
             moveEnd(ev, isMove, data) {
                 if (isMove) {
+                    gm.over()
                     self.onMoveEnd(Point.from(event), Point.from(ev));
                 }
             }
