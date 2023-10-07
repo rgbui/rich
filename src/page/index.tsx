@@ -38,6 +38,7 @@ import { dom } from '../common/dom';
 import { DataGridView } from '../../blocks/data-grid/view/base';
 import { Link } from '../../blocks/page/link';
 import { AtomPermission } from './permission';
+import { forceCloseBoardEditTool } from '../../extensions/board.edit.tool';
 
 export class Page extends Events<PageDirective>{
     root: HTMLElement;
@@ -110,7 +111,7 @@ export class Page extends Events<PageDirective>{
      */
     onlyDisplayContent: boolean = false;
     isPageContent: boolean = false;
-    isPageForm:boolean=false;
+    isPageForm: boolean = false;
     bar = true;
     get visiblePageBar() {
         if (this.isPubSite) {
@@ -160,6 +161,7 @@ export class Page extends Events<PageDirective>{
                 this.fragment.appendChild(this.root);
             this.isOff = true;
             this.kit.picker.onCancel();
+            forceCloseBoardEditTool();
         }
         catch (ex) {
             console.error(ex);
@@ -167,6 +169,7 @@ export class Page extends Events<PageDirective>{
     }
     destory() {
         this.kit.picker.onCancel();
+        forceCloseBoardEditTool();
         ReactDOM.unmountComponentAtNode(this.root);
         this.root.remove();
     }
@@ -233,6 +236,9 @@ export class Page extends Events<PageDirective>{
     }
     getRelativeRect(rect: Rect) {
         return new Rect(this.globalMatrix.transform(rect.leftTop), this.globalMatrix.transform(rect.rightBottom))
+    }
+    getInverseRect(rect:Rect){
+        return new Rect(this.globalMatrix.inverseTransform(rect.leftTop), this.globalMatrix.inverseTransform(rect.rightBottom))
     }
     get isBoard() {
         return this.pageLayout?.type == PageLayoutType.board;

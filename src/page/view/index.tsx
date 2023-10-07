@@ -178,7 +178,7 @@ export class PageView extends Component<{ page: Page }>{
                         useAITool({
                             block: newBlock,
                             isRun: true,
-                            ask: (title ? lst('以{title}为主题', { title }) + "," : "") + lst('拟一份草稿，不少于1000字')
+                            ask: (title ? lst('以{title}为主题', { title }) + "," : "") + lst('写一份文档，不少于1000字')
                         })
                 })
             });
@@ -203,7 +203,7 @@ export class PageView extends Component<{ page: Page }>{
                 {/*<a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={20} icon={PageSvg} ></Icon><span>页面</span></a> */}
                 <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.db)}><Icon size={18} icon={CollectTableSvg} ></Icon><span><S>表格</S></span></a>
                 <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.docCard)}><Icon size={20} icon={DocCardsSvg} ></Icon><span><S>宣传页</S></span></a>
-                {window.shyConfig.isDev && <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.board)}><Icon size={20} icon={{ name: 'bytedance-icon', code: 'enter-the-keyboard' }}></Icon><span><S>白板</S></span></a>}
+                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.board)}><Icon size={20} icon={{ name: 'bytedance-icon', code: 'enter-the-keyboard' }}></Icon><span><S>白板</S></span></a>
                 <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.textChannel)}><Icon size={20} icon={BoardToolFrameSvg}></Icon><span><S>频道</S></span></a>
             </div>
         </div>
@@ -230,7 +230,7 @@ export class PageView extends Component<{ page: Page }>{
         if (this.props.page.visiblePageBar === false) {
             pageStyle.top = 0;
         }
-        if (this.page.pageLayout?.type == PageLayoutType.textChannel) {
+        if (this.page.pageLayout?.type == PageLayoutType.textChannel || this.page.pageLayout?.type == PageLayoutType.board) {
             pageStyle.overflowY = 'hidden';
             pageStyle.overflowX = 'hidden';
         }
@@ -255,7 +255,8 @@ export class PageView extends Component<{ page: Page }>{
         }
         else if (this.props.page?.pageLayout?.type == PageLayoutType.docCard) {
             gap = 0
-        } else if (this.props.page?.pageLayout?.type == PageLayoutType.textChannel) {
+        }
+        else if (this.props.page?.pageLayout?.type == PageLayoutType.textChannel) {
             gap = 0
         }
         var pd = this.props.page.getPageDataInfo();

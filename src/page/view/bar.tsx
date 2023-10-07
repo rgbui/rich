@@ -1,5 +1,6 @@
 import React, { CSSProperties } from "react";
 import { Page } from "..";
+
 import {
     ArrowZoomSvg,
     ChevronLeftSvg,
@@ -14,6 +15,7 @@ import {
     PublishSvg,
     SearchSvg
 } from "../../../component/svgs";
+
 import { UserAvatars } from "../../../component/view/avator/users";
 import { Button } from "../../../component/view/button";
 import { Icon } from "../../../component/view/icon";
