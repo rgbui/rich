@@ -44,8 +44,9 @@ export function Loading1() {
     </div>
 }
 
-export function Loading2() {
-    return <div className="loading2">
+export function Loading2(props?: { size?: number }) {
+    var size = props?.size || 32;
+    return <div className="loading2" style={{ width: size, height: size }}>
         <div></div>
         <div></div>
     </div>
