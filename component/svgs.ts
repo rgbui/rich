@@ -100,7 +100,6 @@ import EyeHideSvg from "../src/assert/svg/eyeHide.svg";
 import FieldsSvg from "../src/assert/svg/fields.svg";
 import FileSvg from "../src/assert/svg/file.svg";
 import FilterSvg from "../src/assert/svg/filter.svg";
-import FitSvg from "../src/assert/svg/fit.svg";
 import FlagSvg from "../src/assert/svg/flag.svg";
 import FlashSvg from "../src/assert/svg/flash.svg";
 import FlashlampSvg from "../src/assert/svg/flashlamp.svg";
@@ -154,7 +153,6 @@ import MenuFolderSvg from "../src/assert/svg/menuFolder.svg";
 import MindDirectionXSvg from "../src/assert/svg/mind.direction.x.svg";
 import MindDirectionYSvg from "../src/assert/svg/mind.direction.y.svg";
 import MindSvg from "../src/assert/svg/mind.svg";
-import MinusSvg from "../src/assert/svg/minus.svg";
 import MoreFourSvg from "../src/assert/svg/moreFour.svg";
 import MoveToSvg from "../src/assert/svg/moveTo.svg";
 import NoneSvg from "../src/assert/svg/none.svg";
@@ -347,7 +345,6 @@ EyeHideSvg,
 FieldsSvg,
 FileSvg,
 FilterSvg,
-FitSvg,
 FlagSvg,
 FlashSvg,
 FlashlampSvg,
@@ -401,7 +398,6 @@ MenuFolderSvg,
 MindDirectionXSvg,
 MindDirectionYSvg,
 MindSvg,
-MinusSvg,
 MoreFourSvg,
 MoveToSvg,
 NoneSvg,
