@@ -386,7 +386,7 @@ export class BlockPicker {
                         var newMatrix = block.currentMatrix.clone();
                         newMatrix.append(block.moveMatrix);
                         newMatrix.append(block.selfMatrix.inverted());
-                        block.updateMatrix(block.matrix, newMatrix);
+                        await block.updateMatrix(block.matrix, newMatrix);
                         block.moveMatrix = new Matrix();
                     })
                 }

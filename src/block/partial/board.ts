@@ -192,7 +192,7 @@ export class Block$Board {
                 block.page.kit.picker.view.forceUpdate();
                 if (isEnd) {
                     block.page.onAction(ActionDirective.onResizeBlock, async () => {
-                        if (!matrix.equals(block.matrix)) block.updateMatrix(matrix, block.matrix);
+                        if (!matrix.equals(block.matrix))await block.updateMatrix(matrix, block.matrix);
                         await block.manualUpdateProps(
                             { fixedWidth: w, fixedHeight: h },
                             { fixedWidth: block.fixedWidth, fixedHeight: block.fixedHeight }
@@ -306,7 +306,7 @@ export class Block$Board {
         var newMatrix = this.currentMatrix.clone();
         newMatrix.append(moveMatrix);
         newMatrix.append(this.selfMatrix.inverted());
-        this.updateMatrix(this.matrix, newMatrix);
+        await this.updateMatrix(this.matrix, newMatrix);
         this.moveMatrix = new Matrix();
         if (!this.isFrame) {
             var rs = this.findFramesByIntersect();

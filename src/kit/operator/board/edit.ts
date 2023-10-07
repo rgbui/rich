@@ -56,7 +56,7 @@ export async function onGridAlign(kit: Kit, blocks: Block[], command: string, va
                 var newMatrix = block.currentMatrix.clone();
                 newMatrix.append(moveMatrix);
                 newMatrix.append(block.selfMatrix.inverted());
-                block.updateMatrix(block.matrix, newMatrix);
+                await block.updateMatrix(block.matrix, newMatrix);
                 block.moveMatrix = new Matrix();
             }
         }
@@ -85,7 +85,7 @@ export async function onGridAlign(kit: Kit, blocks: Block[], command: string, va
                 var newMatrix = block.currentMatrix.clone();
                 newMatrix.append(moveMatrix);
                 newMatrix.append(block.selfMatrix.inverted());
-                block.updateMatrix(block.matrix, newMatrix);
+                await block.updateMatrix(block.matrix, newMatrix);
                 block.moveMatrix = new Matrix();
             }
         }
@@ -110,7 +110,7 @@ export async function onGridAlign(kit: Kit, blocks: Block[], command: string, va
                     var newMatrix = block.currentMatrix.clone();
                     newMatrix.append(moveMatrix);
                     newMatrix.append(block.selfMatrix.inverted());
-                    block.updateMatrix(block.matrix, newMatrix);
+                    await block.updateMatrix(block.matrix, newMatrix);
                     block.moveMatrix = new Matrix();
                     h += d;
                     h += cb.height;
@@ -136,7 +136,7 @@ export async function onGridAlign(kit: Kit, blocks: Block[], command: string, va
                     var newMatrix = block.currentMatrix.clone();
                     newMatrix.append(moveMatrix);
                     newMatrix.append(block.selfMatrix.inverted());
-                    block.updateMatrix(block.matrix, newMatrix);
+                    await block.updateMatrix(block.matrix, newMatrix);
                     block.moveMatrix = new Matrix();
                     h += d;
                     h += cb.width;

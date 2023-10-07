@@ -40,7 +40,7 @@ export async function PageDrag(kit: Kit, event: React.MouseEvent) {
     if (kit.page.isBoard && !block || block?.isFreeBlock) {
         event.preventDefault()
         window.getSelection().collapse(kit.page.viewEl)
-        await BoardDrag(kit, block, event);
+        BoardDrag(kit, block, event);
     }
     else {
         kit.picker.onCancel();

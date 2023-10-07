@@ -146,8 +146,8 @@ export class TextSpan extends Block {
                     block.page.kit.picker.view.forceUpdate();
                     if (isEnd) {
                         block.page.onAction(ActionDirective.onResizeBlock, async () => {
-                            if (!matrix.equals(block.matrix)) block.updateMatrix(matrix, block.matrix);
-                            await    block.manualUpdateProps(
+                            if (!matrix.equals(block.matrix)) await block.updateMatrix(matrix, block.matrix);
+                            await block.manualUpdateProps(
                                 { fixedWidth: w },
                                 { fixedWidth: block.fixedWidth }
                             )
@@ -180,8 +180,8 @@ export class TextSpan extends Block {
                     block.page.kit.picker.view.forceUpdate();
                     if (isEnd) {
                         block.page.onAction(ActionDirective.onResizeBlock, async () => {
-                            if (!matrix.equals(block.matrix)) block.updateMatrix(matrix, block.matrix);
-                            await  block.manualUpdateProps({ fontScale: old_fs }, { fontScale: block.fontScale })
+                            if (!matrix.equals(block.matrix)) await block.updateMatrix(matrix, block.matrix);
+                            await block.manualUpdateProps({ fontScale: old_fs }, { fontScale: block.fontScale })
                         })
                     }
                 }
@@ -211,7 +211,7 @@ export class TextSpan extends Block {
         else if (name == 'fontColor')
             this.pattern.setFontStyle({ color: value });
         else if (name == 'fontSize') {
-            this.updateProps({ fontScale: value / 14 })
+            await this.updateProps({ fontScale: value / 14 })
             // this.pattern.setFontStyle({ fontSize: value, lineHeight: (value * 1.2) + 'px' });
         }
         else if (name == 'fontFamily') {
