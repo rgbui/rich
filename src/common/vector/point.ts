@@ -132,6 +132,9 @@ export class Point {
     dis(point: Point) {
         return Math.sqrt(Math.pow(point.x - this.x, 2) + Math.pow(point.y - this.y, 2));
     }
+    static distance(point: Point, p2: Point) {
+        return Math.sqrt(Math.pow(point.x - p2.x, 2) + Math.pow(point.y - p2.y, 2));
+    }
     setX(x: number) {
         this.x = x; return this;
     }
@@ -361,6 +364,14 @@ export class Rect {
     static getRectFromRects(rects: Rect[]) {
         var ps = rects.map(r => [r.leftTop, r.rightBottom]).flat();
         return new Polygon(...ps).bound;
+    }
+    transformToRect(matrix: Matrix) {
+        var t = this.leftTop;
+        var e = this.rightBottom;
+        return new Rect(matrix.transform(t), matrix.transform(e));
+    }
+    transformToPoints(matrix: Matrix) {
+        return this.points.map(t => matrix.transform(t));
     }
 }
 
