@@ -4,6 +4,7 @@ import { BlockStyleCss } from "./style";
 import { CssSelectorType } from "./type";
 import { BlockCss, BlockCssName, BorderCss, FillCss, FilterCss, FontCss, RadiusCss, ShadowCss, SvgCss, TransformCss } from "./css";
 import { OperatorDirective } from "../../history/declare";
+import lodash from "lodash";
 
 export class Pattern {
     block: Block;
@@ -127,6 +128,7 @@ export class Pattern {
         this.setStyle(BlockCssName.svg, style);
     }
     setStyles(styles: Record<BlockCssName, Record<string, any>>) {
+        if (!styles || lodash.isObject(styles) && Object.keys(styles).length == 0) return;
         for (var n in styles) {
             var name = typeof n == 'string' ? BlockCssName[n] : n;
             this.setStyle(name, styles[n]);
