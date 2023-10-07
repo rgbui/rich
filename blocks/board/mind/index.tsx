@@ -192,7 +192,7 @@ export class FlowMind extends Block {
                 newBlock.mounted(async () => {
                     this.renderAllMinds();
                     this.mindRoot.view.forceUpdate(() => {
-                        self.page.kit.picker.onPicker([newBlock]);
+                        self.page.kit.picker.onPicker([newBlock],true);
                     })
                 })
             })
@@ -321,8 +321,8 @@ export class FlowMind extends Block {
         if (this.isMindRoot) {
             cs.push({ name: 'mindDirection', value: this.direction });
             cs.push({ name: 'mindLineType', value: this.lineType });
-            cs.push({ name: 'mindLineColor', value: this.lineColor });
         }
+        cs.push({ name: 'mindLineColor', value: this.lineColor });
         cs.push({ name: 'fontSize', value: Math.round(this.pattern.css(BlockCssName.font)?.fontSize || 14) });
         cs.push({ name: 'fontWeight', value: bold == 'bold' || bold == 500 ? true : false });
         cs.push({ name: 'fontStyle', value: this.pattern.css(BlockCssName.font)?.fontStyle == 'italic' ? true : false });
@@ -698,6 +698,12 @@ export class FlowMind extends Block {
         if (this.isMindRoot) {
             this.renderAllMinds()
         }
+    }
+    getVisibleBound(): Rect {
+        var fs = this.fixedSize;
+        var rect = new Rect(0, 0, fs.width, fs.height);
+        rect = rect.transformToRect(this.globalWindowMatrix);
+        return rect;
     }
 }
 @view('/flow/mind')

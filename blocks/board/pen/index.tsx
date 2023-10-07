@@ -32,6 +32,12 @@ export class Pen extends Block {
             this.pattern.setSvgStyle({ stroke: value })
         }
     }
+    getVisibleBound(): Rect {
+        var fs = this.fixedSize;
+        var rect = new Rect(0, 0, fs.width, fs.height);
+        rect = rect.transformToRect(this.globalWindowMatrix);
+        return rect;
+    }
 }
 @view('/pen')
 export class PenView extends BlockView<Pen>{

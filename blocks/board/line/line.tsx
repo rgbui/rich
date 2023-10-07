@@ -239,13 +239,16 @@ export class Line extends Block {
         if (this.el)
             return Rect.fromEle(this.el.querySelector('.visible') as HTMLElement)
     }
+    async didMounted() {
+        this.view.forceUpdate();
+    }
 }
 @view('/line')
 export class LineView extends BlockView<Line>{
     renderView() {
         var w = this.block.pattern.getSvgStyle()?.strokeWidth || 1;
         var segs = this.block.segments
-        if (segs.length == 0) return <div style={this.block.visibleStyle}></div>
+        if (!(segs?.length > 0)) return <div style={this.block.visibleStyle}></div>
         var rect = Segment.getSegmentsBound(segs);
         var re = rect.extend(Math.max(30, w * 6, 100));
         var style = this.block.visibleStyle;

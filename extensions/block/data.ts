@@ -66,7 +66,7 @@ export function getBlockSelectData() {
                 { text: lst("数学公式"), icon: EquationSvg, url: "/katex", description: "", label: lst("/数学公式"), labels: ['/sxgs', lst('/公式'), '/shuxuegongshi', '/latex', '/math'] },
                 { text: lst('链接页面'), icon: LinkSvg, url: '/link', description: "", label: lst("/链接"), labels: ['/link', '/wz'] },
                 { text: lst('进度条'), icon: ProgressSvg, url: '/measure', description: "", label: lst("/进度条"), labels: ['/jdt', '/jindutiao', '/progressbar'] },
-                //{ text: '按钮', icon: ButtonSvg, isLine: true, url: '/button', description: '', label: '/按钮', labels: ['/button', '/al'] }
+                { text: '按钮', icon: ButtonSvg, isLine: true, url: '/button', description: '', label: '/按钮', labels: ['/button', '/al'] }
             ]
         },
         {
@@ -86,7 +86,7 @@ export function getBlockSelectData() {
                 // { text: '画板', pic: <img src={embed} />, url: '/board', label: '/画板', labels: ['/canvas', '/huaban', '/hb'] },
                 { text: lst('标签页'), icon: BrowserSvg, url: "/tab", label: lst('/标签页'), labels: ['/tab', '/bjy', '/bianqianye'] },
                 //  { text: '轮播', pic: <img src={embed} />, url: "/carousel", label: '/轮播', labels: ['/carousel', '/lb', '/lunbo'] },
-                { text: lst('模板按钮'), icon: ButtonTemplateSvg, url: '/button/template', label: lst('/模板按钮'), labels: ['/mban', '/mubananniu', '/template'] },
+                // { text: lst('模板按钮'), icon: ButtonTemplateSvg, url: '/button/template', label: lst('/模板按钮'), labels: ['/mban', '/mubananniu', '/template'] },
                 //{ text: '目录大纲', pic: <img src={embed} />, url: '/outline', label: '/目录', labels: ['/outline', '/note', '/mulu', '/dagang'] }
             ]
         },

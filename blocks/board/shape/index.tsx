@@ -9,6 +9,7 @@ import { BlockView } from "../../../src/block/view";
 import { TextSpanArea } from "../../../src/block/view/appear";
 import "./style.less";
 import { lst } from "../../../i18n/store";
+import { Rect } from "../../../src/common/vector/point";
 
 @url('/shape')
 export class Shape extends Block {
@@ -99,6 +100,12 @@ export class Shape extends Block {
     get isCanEmptyDelete() {
         if (this.isFreeBlock) return false;
         else return true;
+    }
+    getVisibleBound(): Rect {
+        var fs = this.fixedSize;
+        var rect = new Rect(0, 0, fs.width, fs.height);
+        rect = rect.transformToRect(this.globalWindowMatrix);
+        return rect;
     }
 }
 @view('/shape')

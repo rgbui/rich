@@ -3,6 +3,7 @@ import { ResourceArguments } from "../../../extensions/icon/declare";
 import { Block } from "../../../src/block";
 import { url, prop, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
+import { Rect } from "../../../src/common/vector/point";
 
 
 @url('/board/image')
@@ -18,6 +19,12 @@ export class Image extends Block {
         var width = this.originSize.width * r;
         var height = this.originSize.height * r;
         return { width, height };
+    }
+    getVisibleBound(): Rect {
+        var fs = this.fixedSize;
+        var rect = new Rect(0, 0, fs.width, fs.height);
+        rect = rect.transformToRect(this.globalWindowMatrix);
+        return rect;
     }
 }
 @view('/board/image')

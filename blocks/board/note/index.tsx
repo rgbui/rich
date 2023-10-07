@@ -88,6 +88,12 @@ export class Note extends Block {
         if (this.isFreeBlock) return false;
         else return true;
     }
+    getVisibleBound(): Rect {
+        var fs = this.fixedSize;
+        var rect = new Rect(0, 0, fs.width, fs.height);
+        rect = rect.transformToRect(this.globalWindowMatrix);
+        return rect;
+    }
 }
 @view('/note')
 export class NoteView extends BlockView<Note>{

@@ -17,8 +17,8 @@ export function renderLine(line: Line) {
 
     return <>
         <path className="visible" strokeLinejoin="round" d={sd}></path>
-        {s && s.el}
-        {e && e.el}
+        {s && <>{s.el}{s.te}</>}
+        {e && <>{e.el}{e.te}</>}
         <path className="transparent" d={sd} stroke="transparent" strokeWidth={strokeWidth}></path>
     </>
 }
@@ -42,6 +42,7 @@ function getArrow(color, arrowType, toStart: Point, toArrowPoint: Point, strokeW
     var data: {
         path: ShyPath,
         el?: JSX.Element,
+        te?: JSX.Element,
         fill?: boolean,
         line?: boolean,
         circle?: boolean,
@@ -126,17 +127,26 @@ function getArrow(color, arrowType, toStart: Point, toArrowPoint: Point, strokeW
     data.end = matrix.transform(data.end);
     data.path.applyMatrix(matrix);
     if (data.circle) {
-        if (data.fill)
+        if (data.fill) {
             data.el = <circle strokeDasharray={'none'} fill={color} stroke={'none'} r={data.start.dis(data.end) / 2}
                 cx={data.path.segments[0].point.x} cy={data.path.segments[0].point.y}></circle>
-        else data.el = <circle strokeDasharray={'none'} fill={'none'} stroke={color} r={data.start.dis(data.end) / 2}
-            cx={data.path.segments[0].point.x} cy={data.path.segments[0].point.y}></circle>
+            data.te = <circle className="transparent" strokeDasharray={'none'} fill={color} stroke={'none'} r={data.start.dis(data.end) / 2}
+                cx={data.path.segments[0].point.x} cy={data.path.segments[0].point.y}></circle>
+        }
+        else {
+            data.el = <circle strokeDasharray={'none'} fill={'none'} stroke={color} r={data.start.dis(data.end) / 2}
+                cx={data.path.segments[0].point.x} cy={data.path.segments[0].point.y}></circle>
+            data.te = <circle className="transparent" strokeDasharray={'none'} fill={'none'} stroke={color} r={data.start.dis(data.end) / 2}
+                cx={data.path.segments[0].point.x} cy={data.path.segments[0].point.y}></circle>
+        }
     }
     else if (data.fill) {
         data.el = <path strokeDasharray={'none'} fill={color} d={data.path.getPathStringBySegments(data.path.closed)} stroke={'none'}></path>
+        data.te = <path className="transparent" strokeDasharray={'none'} fill={color} d={data.path.getPathStringBySegments(data.path.closed)} stroke={'none'}></path>
     }
     else {
         data.el = <path strokeDasharray={'none'} fill={'none'} d={data.path.getPathStringBySegments(data.path.closed)} stroke={color}></path>
+        data.te = <path className="transparent" strokeDasharray={'none'} fill={'none'} d={data.path.getPathStringBySegments(data.path.closed)} stroke={color}></path>
     }
     return data;
 }

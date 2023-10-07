@@ -20,7 +20,7 @@ import "./form/tab/index";
 import "./form/tab/item";
 import "./form/tab/page";
 
-import "./board/mind/index";
+
 
 import "./present/katex/katex";
 import "./present/katex/line";
@@ -118,7 +118,8 @@ import "./board/pen/index";
 import "./board/shape/index";
 import "./board/board/index";
 import "./board/image/index";
-
+import "./board/mind/index";
+import "./board/page/index";
 
 import "./channel/text/index";
 import "./channel/text/view/view";

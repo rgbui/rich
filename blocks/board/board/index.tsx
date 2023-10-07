@@ -25,6 +25,7 @@ export class Board extends Block {
 }
 @view('/board')
 export class BoardView extends BlockView<Board>{
+    
     renderView() {
         var style: CSSProperties = { ...this.block.contentStyle };
         style.height = this.block.viewHeight;
