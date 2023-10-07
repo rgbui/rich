@@ -27,6 +27,7 @@ import { ElementType, getElementUrl } from "../../net/element.type";
 import { SnapshootBlockPos, SnapshootBlockPropPos } from "../history/snapshoot";
 import lodash from "lodash";
 import { AtomPermission } from "../page/permission";
+import { util } from "../../util/util";
 
 export abstract class Block extends Events {
     constructor(page: Page) {
@@ -209,8 +210,8 @@ export abstract class Block extends Events {
         else {
             if (this.isBlock) {
                 Object.assign(style, {
-                    paddingTop: 2,
-                    paddingBottom: 2,
+                    paddingTop: '0.2rem',
+                    paddingBottom: '0.2rem',
                 });
             }
             else if (this.isLine) {
@@ -235,8 +236,8 @@ export abstract class Block extends Events {
         else {
             if (this.isBlock) {
                 Object.assign(style, {
-                    paddingLeft: 2,
-                    paddingRight: 2,
+                    paddingLeft: '0.2rem',
+                    paddingRight: '0.2rem',
                 });
             }
         }
@@ -250,10 +251,10 @@ export abstract class Block extends Events {
     }
     get contentStyle() {
         var style: CSSProperties = {
-            paddingTop: 3,
-            paddingLeft: 2,
-            paddingRight: 2,
-            paddingBottom: 3
+            paddingTop: '0.3rem',
+            paddingLeft: '0.2rem',
+            paddingRight: '0.2rem',
+            paddingBottom: '0.3rem'
         };
         if (this.isLine) {
             style = {
@@ -409,7 +410,7 @@ export abstract class Block extends Events {
         var bound = this.getVisibleContentBound()
         if (bound) {
             var pos = Point.from(bound);
-            pos = pos.move(0, 3 + this.page.lineHeight / 2);
+            pos = pos.move(0, 3 + util.remToPx(this.page.lineHeight) / 2);
             return pos;
         }
     }
@@ -418,7 +419,7 @@ export abstract class Block extends Events {
         if (e) return Rect.fromEle(e);
         return this.getVisibleBound();
     }
-    getVisiblePanelBound(){
+    getVisiblePanelBound() {
         return this.getVisibleBound()
     }
     getVisiblePolygon() {
@@ -524,7 +525,7 @@ export abstract class Block extends Events {
      * @returns 
      */
     isCrossBlockVisibleArea(rect: Rect | Point) {
-        if (this.hasSubChilds) {
+        if (this.hasSubChilds && !this.isFreeBlock) {
             var bound = this.getVisibleBound();
             var contentEle = this.contentEl;
             var cb = Rect.fromEle(contentEle as HTMLElement);
@@ -630,10 +631,16 @@ export abstract class Block extends Events {
         }
         return null;
     }
+    /***
+     * 
+     * 判断是否为自由布局的block
+     */
     get isFreeBlock() {
         if (this.isPart) return false;
         if (this.isLine) return false;
         if (this.isBoardBlock) return false;
+        if (this.url == BlockUrlConstant.BoardPageCard) return true;
+        if (this.closest(g => g.url == BlockUrlConstant.BoardPageCard)) return false;
         if (this.page.pageLayout.type == PageLayoutType.board) return true;
         return this.closest(x => x.isFrame || x.isBoardBlock) ? true : false;
     }
@@ -779,6 +786,11 @@ export abstract class Block extends Events {
             return new Rect(this.globalMatrix.transform(rect.leftBottom), this.matrix.transform(rect.rightBottom))
         else if (this.el) return rect.relative(Rect.fromEle(this.el).leftTop)
     }
+    getInverseRect(rect: Rect): Rect {
+        if (this.page.isBoard || this.isFrame || this.isFreeBlock || this.isBoardBlock)
+            return new Rect(this.globalMatrix.inverseTransform(rect.leftBottom), this.matrix.inverseTransform(rect.rightBottom))
+        else if (this.el) { var n = rect.clone(); n.moveTo(Rect.fromEle(this.el).leftTop); return n; }
+    }
     get pos(): SnapshootBlockPos {
         return {
             blockId: this.id,
@@ -841,7 +853,7 @@ export abstract class Block extends Events {
      * @returns 
      */
     getInnerPanelBlock() {
-       return this as Block;
+        return this as Block;
     }
 }
 export interface Block extends Block$Seek { }

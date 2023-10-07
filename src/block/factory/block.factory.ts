@@ -2,7 +2,6 @@
 import { Page } from "../../page";
 import { Block } from "..";
 import { BlockView } from "../view";
-import { Exception, ExceptionType } from "../../error/exception";
 export class BlockFactory {
     private static blockMap: Map<string, { model: typeof Block, view: typeof BlockView }> = new Map();
     public static registerComponent(url: string, blockClass: typeof Block) {

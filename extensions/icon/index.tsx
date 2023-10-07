@@ -3,7 +3,6 @@ import React from "react";
 import { Tip } from "../../component/view/tooltip/tip";
 import { EventsComponent } from "../../component/lib/events.component";
 
-
 import { UploadView } from "../file/upload";
 import { EmojiView } from "../emoji/view";
 import { FontAwesomeView } from "../font-awesome";
@@ -39,7 +38,7 @@ class IconPicker extends EventsComponent {
     render() {
         return <div className='shy-icon-picker' >
             <Tab keeplive rightBtns={<>
-                <ToolTip overlay={'清理图标'}><span className="flex-center item-hover size-30 round cursor gap-r-10"><Icon size={16} onMousedown={e => this.onClearIcon()} icon={TrashSvg}></Icon>
+                <ToolTip overlay={'清理图标'}><span className="flex-center item-hover size-30 round cursor gap-l-10"><Icon size={16} onMousedown={e => this.onClearIcon()} icon={TrashSvg}></Icon>
                 </span>
                 </ToolTip>
             </>}>

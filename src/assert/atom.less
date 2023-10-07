@@ -518,7 +518,9 @@ item-selected:选中的效果
 .bg-error {
     background-color: fade(rgb(225, 98, 89), 30%);
 }
-
+.no-bg{
+    background: transparent !important;
+}
 /**
 文本显示
 字的大小、精细
@@ -559,15 +561,18 @@ item-selected:选中的效果
 }
 
 .bold,
-.bold-700 {
+.bold-700,
+.b-700 {
     font-weight: bold;
 }
 
-.bold-500 {
+.bold-500,
+.b-500 {
     font-weight: 500;
 }
 
-.bold-600 {
+.bold-600,
+.b-600 {
     font-weight: 600;
 }
 
@@ -936,6 +941,16 @@ each(@pers, {
             min-width: @value+0%;
         }
 
+        .max-h@{value},
+        .r-max-h@{value}>* {
+            max-height: @value+0%;
+        }
+
+        .min-h@{value},
+        .r-min-h@{value}>* {
+            min-height: @value+0%;
+        }
+
         .vh@{value},
         .r-vh@{value}>* {
             height:unit(@value, vh);
@@ -1241,6 +1256,10 @@ each(@ops, {
     background-color: rgba(0, 0, 0, .6)
 }
 
+.bg-dark-1,
+.r-bg-dark-1>* {
+    background-color: rgba(0, 0, 0, .3)
+}
 
 .bg-primary,
 .bg-p,
@@ -1886,4 +1905,25 @@ each(@zs, {
 .rotate-0,
 .angle-0 {
     transform: rotate(0deg);
+}
+
+.hover-toggle {
+    >*:first-child {
+        display: none;
+    }
+
+    >*:last-child {
+        display: flex;
+    }
+
+    &:hover {
+        >*:first-child {
+            display: flex;
+        }
+
+        >*:last-child {
+            display: none;
+
+        }
+    }
 }

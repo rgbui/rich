@@ -24,7 +24,16 @@ export class Block$LifeCycle {
      * @param this 
      */
     protected _init(this: Block) {
-        this.registerPropMeta('matrix', Matrix, false, (v) => new Matrix(v), (v) => v.getValues())
+        this.registerPropMeta('matrix', Matrix, false, (v) => {
+            try {
+                return new Matrix(v)
+            }
+            catch (ex) {
+                console.trace(v);
+                this.page.onError(ex);
+                return new Matrix(v);
+            }
+        }, (v) => v.getValues())
     }
     /**
      * 不能被继承
@@ -74,8 +83,8 @@ export class Block$LifeCycle {
             json.blocks[b] = await this.blocks[b].asyncMap(async x => await x.cloneData(options));
         }
         if (Array.isArray(this.__props)) {
-            this.__props.each(pro => {
-                json[pro] = this.clonePropData(pro, this[pro]);
+            await this.__props.eachAsync(async pro => {
+                json[pro] = await this.clonePropData(pro, this[pro]);
             })
         }
         return json;
@@ -91,7 +100,7 @@ export class Block$LifeCycle {
 
     }
     private propMetas: { key: string, meta?: Function, create?: (v: any) => any, get?: (v: any) => any, isArray: boolean }[] = [];
-    cloneProp(prop: string, value?: any) {
+    async cloneProp(prop: string, value?: any) {
         if (!this.propMetas.some(s => s.key == prop)) {
             return typeof value != 'undefined' ? lodash.cloneDeep(value) : lodash.cloneDeep(lodash.get(this, prop))
         }
@@ -99,21 +108,21 @@ export class Block$LifeCycle {
             var pm = this.propMetas.find(g => g.key == prop);
             var value = typeof value != 'undefined' ? value : lodash.get(this, prop);
             if (pm.isArray && Array.isArray(value)) {
-                value = value.map(v => {
-                    if (typeof pm.get == 'function') return pm.get(v);
-                    else if (typeof v.get == 'function') return v.get();
+                value = await value.asyncMap(async v => {
+                    if (typeof pm.get == 'function') return await pm.get(v);
+                    else if (typeof v.get == 'function') return await v.get();
                     else return lodash.cloneDeep(v);
                 });
             }
             else if (value) {
-                if (typeof pm.get == 'function') return pm.get(value);
-                else if (typeof value.get == 'function') value = value.get();
+                if (typeof pm.get == 'function') return await pm.get(value);
+                else if (typeof value.get == 'function') value = await value.get();
                 else value = lodash.cloneDeep(value);
             }
             if (pm.isArray) {
-                if (Array.isArray(value)) return value.map(v => {
+                if (Array.isArray(value)) return await value.asyncMap(async v => {
                     if (pm.create) {
-                        var g = pm.create(v);
+                        var g = await pm.create(v);
                         return g;
                     }
                     return new (pm.meta as any)(v);
@@ -121,7 +130,7 @@ export class Block$LifeCycle {
                 return []
             }
             else {
-                if (pm.create) return pm.create(value);
+                if (pm.create) return await pm.create(value);
                 return new (pm.meta as any)(value);
             }
         }
@@ -129,7 +138,7 @@ export class Block$LifeCycle {
     pm(prop: string) {
         return this.propMetas.find(g => g.key == prop);
     }
-    clonePropData(prop: string, value?: any) {
+    async clonePropData(prop: string, value?: any) {
         if (!this.propMetas.some(s => s.key == prop)) {
             return typeof value != 'undefined' ? lodash.cloneDeep(value) : lodash.cloneDeep(lodash.get(this, prop))
         }
@@ -137,15 +146,15 @@ export class Block$LifeCycle {
             var pm = this.propMetas.find(g => g.key == prop);
             var value = typeof value != 'undefined' ? value : lodash.get(this, prop);
             if (pm.isArray && Array.isArray(value)) {
-                value = value.map(v => {
-                    if (typeof pm.get == 'function') return pm.get(v);
-                    else if (typeof v.get == 'function') return v.get();
+                value = await value.asyncMap(async v => {
+                    if (typeof pm.get == 'function') return await pm.get(v);
+                    else if (typeof v.get == 'function') return await v.get();
                     else return lodash.cloneDeep(v);
                 });
             }
             else if (value) {
-                if (typeof pm.get == 'function') value = pm.get(value);
-                else if (typeof value.get == 'function') value = value.get();
+                if (typeof pm.get == 'function') value = await pm.get(value);
+                else if (typeof value.get == 'function') value = await value.get();
                 else value = lodash.cloneDeep(value);
             }
             if (pm.isArray) {
@@ -157,40 +166,40 @@ export class Block$LifeCycle {
             }
         }
     }
-    setPropData(prop: string, value: any) {
+    async setPropData(prop: string, value: any) {
         var pm = this.propMetas.find(g => g.key == prop);
         if (pm) {
             if (pm.isArray) {
                 this[prop] = [];
                 if (Array.isArray(value)) {
-                    value.forEach(d => {
-                        if (typeof pm.create == 'function') this[prop].push(pm.create(d))
+                    await value.eachAsync(async d => {
+                        if (typeof pm.create == 'function') this[prop].push(await pm.create(d))
                         else this[prop].push(new (pm.meta as any)(d));
                     })
                 }
             }
             else {
-                if (typeof pm.create == 'function') lodash.set(this, prop, pm.create(value))
+                if (typeof pm.create == 'function') lodash.set(this, prop, await pm.create(value))
                 else lodash.set(this, prop, new (pm.meta as any)(value))
             }
         }
         else lodash.set(this, prop, lodash.cloneDeep(value));
     }
-    createPropObject(prop: string, value: any) {
+    async createPropObject(prop: string, value: any) {
         var pm = this.propMetas.find(g => g.key == prop);
         if (pm) {
             if (pm.isArray && Array.isArray(value)) {
                 var vs = [];
                 if (Array.isArray(value)) {
-                    value.forEach(d => {
-                        if (typeof pm.create == 'function') vs.push(pm.create(d))
+                    await value.eachAsync(async d => {
+                        if (typeof pm.create == 'function') vs.push(await pm.create(d))
                         else vs.push(new (pm.meta as any)(d));
                     })
                 }
                 return vs;
             }
             else {
-                if (typeof pm.create == 'function') return pm.create(value)
+                if (typeof pm.create == 'function') return await pm.create(value)
                 else return new (pm.meta as any)(value)
             }
         }
@@ -206,7 +215,7 @@ export class Block$LifeCycle {
             for (var n in data) {
                 if (n == 'blocks') continue;
                 else if (n == 'pattern') await this.pattern.load(data[n]);
-                else this.setPropData(n, data[n]);
+                else await this.setPropData(n, data[n]);
             }
             if (this.syncBlockId) {
                 //await this.loadSyncBlock();
@@ -252,7 +261,7 @@ export class Block$LifeCycle {
                     for (var n in data) {
                         if (n == 'blocks') continue;
                         else if (n == 'pattern') await this.pattern.load(data[n]);
-                        else this.setPropData(n, data[n]);
+                        else await this.setPropData(n, data[n]);
                     }
                     if (typeof data.blocks == 'object') {
                         for (var n in data.blocks) {
@@ -295,8 +304,8 @@ export class Block$LifeCycle {
             }
         }
         if (Array.isArray(this.__props)) {
-            this.__props.each(pro => {
-                json[pro] = this.clonePropData(pro, this[pro]);
+            await this.__props.eachAsync(async pro => {
+                json[pro] = await this.clonePropData(pro, this[pro]);
             })
         }
         return json;

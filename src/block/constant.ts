@@ -8,6 +8,7 @@ export enum BlockUrlConstant {
     Row = '/row',
     Col = '/col',
     View = '/view',
+    Template = '/template',
     CardBox = '/card/box',
     Divider = '/divider',
     List = '/list',
@@ -44,7 +45,8 @@ export enum BlockUrlConstant {
     FormView = '/data-grid/form',
     RecordPageView = '/data-grid/page/record',
     Table = '/table',
-    Cell='/table/cell'
+    Cell = '/table/cell',
+    BoardPageCard='/board/page/card',
 }
 export enum BlockChildKey {
     childs = 'childs',

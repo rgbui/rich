@@ -496,6 +496,7 @@ export class Block$Operator {
 
     }
     async updateProps(this: Block, props: Record<string, any>, range = BlockRenderRange.self, force?: boolean) {
+        if (!props || lodash.isObject(props) && Object.keys(props).length == 0) return;
         var oldValue: Record<string, any> = {};
         var newValue: Record<string, any> = {};
         if (typeof props['refLinks'] != 'undefined') {
@@ -562,6 +563,9 @@ export class Block$Operator {
             new_value: { matrix: newMatrix.getValues() },
             range: BlockRenderRange.self
         }, this);
+    }
+    onlyUpdateMatrix(this: Block, newMatrix: Matrix) {
+        this.matrix = newMatrix;
     }
     /**
      * 子类继承实现
