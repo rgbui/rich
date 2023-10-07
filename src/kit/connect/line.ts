@@ -7,13 +7,18 @@ export class BoardLine {
     constructor(public kit: Kit) { }
     isConnectOther: boolean = false;
     line: Block;
-    onStartConnectOther() {
+    onStartConnectOther(line:Block) {
+        this.line=line;
         this.isConnectOther = true;
+        var gm = this.line.panelGridMap;
+        gm.start();
     }
     onEndConnectOther() {
         this.isConnectOther = false;
+        var gm = this.line.panelGridMap;
+        gm.over();
         delete this.line;
-        this.over=null;
+        this.over = null;
     }
-    over: { block: Block, selector: BoardBlockSelector,event:React.MouseEvent } = null;
+    over: { block: Block, selector: BoardBlockSelector, event: React.MouseEvent } = null;
 }

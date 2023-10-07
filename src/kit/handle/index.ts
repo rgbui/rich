@@ -45,6 +45,10 @@ export class Handle extends Events {
         var handleEl = this.view.handleEle;
         handleEl.style.display = 'none';
         if (!this.isDown) delete this.handleBlock;
+        if (this.kit.boardLine.isConnectOther && this.kit.boardLine.line) {
+            this.kit.boardBlockHover.block = null;
+            this.kit.boardBlockHover.forceUpdate();
+        }
     }
     containsEl(el: HTMLElement) {
         return this.view.handleEle.contains(el);

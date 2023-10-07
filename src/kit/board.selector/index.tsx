@@ -200,6 +200,8 @@ export class BoardSelector extends React.Component<{ kit: Kit }>{
                 case BoardToolOperator.mind:
                     sel.url = BlockUrlConstant.Mind;
                     break;
+                case BoardToolOperator.card:
+                    sel.url = BlockUrlConstant.BoardPageCard;
             }
             this.currentSelector = sel as any;
         }

@@ -60,13 +60,14 @@ export class Block$Board {
         var pickers: BoardBlockSelector[] = [];
         var { width, height } = this.fixedSize;
         var rect = new Rect(0, 0, width, height);
-        var gm = this.globalWindowMatrix;
+        var gm = this.globalMatrix;
+        gm = this.globalMatrix;
         var feelDist = this.realPx(width / 2);
         /**
          * 这里基本没有skew，只有scale,rotate,translate
          * scale 水平和垂直相等
          */
-        var extendRect = rect.extend(this.realPx(20));
+        var extendRect = rect.extend(this.realPx(15));
         var pathRects = RectUtility.getRectLineRects(rect, this.realPx(1));
         if (types.includes(BoardPointType.path))
             pickers.push(...pathRects.map((pr, i) => {
@@ -135,7 +136,7 @@ export class Block$Board {
         event: React.MouseEvent) {
         var block = this;
         var matrix = block.matrix.clone();
-        var gm = block.globalWindowMatrix.clone();
+        var gm = block.globalMatrix.clone();
         var { width: w, height: h } = block.fixedSize;
         var fp = gm.inverseTransform(Point.from(event));
         var s = gm.getScaling().x;
@@ -192,7 +193,7 @@ export class Block$Board {
                 if (isEnd) {
                     block.page.onAction(ActionDirective.onResizeBlock, async () => {
                         if (!matrix.equals(block.matrix)) block.updateMatrix(matrix, block.matrix);
-                        block.manualUpdateProps(
+                        await block.manualUpdateProps(
                             { fixedWidth: w, fixedHeight: h },
                             { fixedWidth: block.fixedWidth, fixedHeight: block.fixedHeight }
                         )
@@ -243,7 +244,7 @@ export class Block$Board {
         }
         else if (name == 'fontWeight') {
             this.pattern.setFontStyle({ fontWeight: value });
-        } else if(name=='fontFamily'){
+        } else if (name == 'fontFamily') {
             this.pattern.setFontStyle({ fontFamily: value })
         }
         else if (name == 'fontStyle') {
@@ -281,9 +282,17 @@ export class Block$Board {
         }
         if (isSelfUpdate) this.forceUpdate()
     }
+
+    isBoardCanMove(this: Block) {
+        return true;
+    }
+
+    boardMoveStart(this: Block, point: Point) {
+
+    }
     boardMove(this: Block, from: Point, to: Point) {
         var matrix = new Matrix();
-        matrix.translateMove(this.globalWindowMatrix.inverseTransform(from), this.globalWindowMatrix.inverseTransform(to))
+        matrix.translateMove(this.globalMatrix.inverseTransform(from), this.globalMatrix.inverseTransform(to))
         this.setBoardMoveMatrix(matrix);
     }
     setBoardMoveMatrix(this: Block, matrix: Matrix) {
@@ -293,7 +302,7 @@ export class Block$Board {
     }
     async boardMoveEnd(this: Block, from: Point, to: Point) {
         var moveMatrix = new Matrix();
-        moveMatrix.translateMove(this.globalWindowMatrix.inverseTransform(from), this.globalWindowMatrix.inverseTransform(to))
+        moveMatrix.translateMove(this.globalMatrix.inverseTransform(from), this.globalMatrix.inverseTransform(to))
         var newMatrix = this.currentMatrix.clone();
         newMatrix.append(moveMatrix);
         newMatrix.append(this.selfMatrix.inverted());
@@ -308,7 +317,7 @@ export class Block$Board {
                 var nm = new Matrix();
                 nm.translate(r);
                 nm.rotate(this.matrix.getRotation(), { x: 0, y: 0 });
-                this.updateMatrix(this.matrix, nm);
+                await this.updateMatrix(this.matrix, nm);
             }
             else if (rs.length == 0 && this.parent?.isFrame) {
                 var fra = this.parent;
@@ -317,7 +326,7 @@ export class Block$Board {
                 var nm = new Matrix();
                 nm.translate(r);
                 nm.rotate(this.matrix.getRotation(), { x: 0, y: 0 });
-                this.updateMatrix(this.matrix, nm);
+                await this.updateMatrix(this.matrix, nm);
             }
         }
     }
