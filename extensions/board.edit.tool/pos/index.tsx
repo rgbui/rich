@@ -3,10 +3,10 @@ import { BoardEditTool } from ".."
 import { Icon } from "../../../component/view/icon"
 
 export function PosView(props: { tool: BoardEditTool, align?: string, valign?: string, change?(name: string, value: string): void }) {
-
     return <div className="shy-board-edit-font-color" >
-        <div className="shy-board-edit-font-color-current" style={{ marginTop: 2 }} onMouseDown={e => props.tool.showDrop('pos')}>
-
+        <div className="shy-board-edit-font-color-current"
+            style={{ marginTop: 2 }}
+            onMouseDown={e => props.tool.showDrop('pos')}>
         </div>
         {props.tool.isShowDrop('pos') && <div className="w-160 shy-board-edit-font-color-drops">
             {props.align && <div className="flex">

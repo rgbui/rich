@@ -73,7 +73,7 @@ export class BoardEditTool extends EventsComponent {
                         ]}></Select>
                 </div>
             </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
-            {is('mindLineColor') && <Tip overlay=''>
+            {is('mindLineColor') && <Tip overlay='分支颜色'>
                 <div className={'shy-board-edit-tool-item'}>
                     <BackgroundColor name={'minLineColor'} tool={this} value={getValue('mindLineColor')} change={e => { this.onChange('mindLineColor', e) }}></BackgroundColor>
                 </div>
@@ -244,7 +244,7 @@ export class BoardEditTool extends EventsComponent {
         this.blocks = blocks;
         var poly = new Polygon(...this.blocks.map(b => b.getVisiblePolygon().points).flat());
         this.point = poly.bound.leftTop;
-        this.point.y -= 50;
+        this.point.y -= 100;
         var rs;
         await this.blocks.eachAsync(async block => {
             var cs = await block.getBoardEditCommand();

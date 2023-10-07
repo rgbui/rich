@@ -4,6 +4,7 @@ import { NoneSvg, TransparentSvg } from "../../component/svgs";
 import { MeasureView } from "../../component/view/progress";
 import { ColorType } from "../note";
 import { S } from "../../i18n/view";
+
 var colors: ColorType[] = [
     { color: 'transparent' },
     { color: 'rgb(254,244,69)' },
@@ -32,7 +33,7 @@ export function ShapeFill(props: { tool: BoardEditTool, fillColor: string, fillO
         {props.tool.isShowDrop('fill') && <div className="shy-shape-fill-drops">
             <div className="shy-shape-fill-opacity">
                 <MeasureView min={1} ratio={0.1} max={10} showValue={false} value={props.fillOpacity} onChange={e => { props.change('fillOpacity', e) }}></MeasureView>
-                <div className="shy-measure-view-label"><label><S>透明度</S></label><span style={{ float: 'right' }}>{Math.round(props.fillOpacity * 10)}</span></div>
+                <div className="shy-measure-view-label"><label><S>透明度</S></label><span style={{ float: 'right' }}>{Math.round(props.fillOpacity)}</span></div>
             </div>
             <div className="shy-shape-fill-colors">{colors.map(c => {
                 if (c.color == 'transparent') return <a className={'transparent ' + (c.color == props.fillColor ? "selected" : "")}
