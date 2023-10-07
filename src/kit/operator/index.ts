@@ -6,6 +6,7 @@ import { forceCloseTextTool } from "../../../extensions/text.tool";
 import { Block } from "../../block";
 import { onAutoScrollStop } from "../../common/scroll";
 import { PageDrag } from "./drag";
+import { Rect } from "../../common/vector/point";
 
 /****
  * 鼠标点击：
@@ -44,6 +45,21 @@ export class PageOperator {
         var block: Block;
         if (this.kit.page.root.contains(ele)) {
             block = this.kit.page.getBlockByMouseOrPoint(event);
+        }
+        if (!block && this.kit.boardLine.line) {
+            var gm = this.kit.boardLine.line.panelGridMap;
+            if (gm) {
+                var rect = new Rect(event.clientX, event.clientY, 0, 0);
+                rect = rect.extend(this.kit.boardLine.line.realPx(50));
+                var bs = gm.findBlocksByRect(rect);
+                bs = bs.findAll(g => g.isFreeBlock);
+                console.log('gggg', bs);
+                var b = bs.findMin(g => g.getVisibleBound().middleCenter.dis(rect.middleCenter));
+                if (b) {
+                    block = b;
+                    console.log(b);
+                }
+            }
         }
         this.kit.page.onHoverBlock(block);
     }
