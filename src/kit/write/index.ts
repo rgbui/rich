@@ -81,7 +81,8 @@ import { BlockRenderRange } from "../../block/enum";
 
 export class PageWrite {
     constructor(public kit: Kit) { }
-    async mousedown(aa: AppearAnchor, event: React.MouseEvent) {
+    async mousedown(aa: AppearAnchor,event: React.MouseEvent)
+    {
         this.isCompositionstart = false;
         var sel = window.getSelection();
         var rowBlock = aa.block.closest(x => x.isBlock);

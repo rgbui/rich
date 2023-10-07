@@ -29,8 +29,7 @@ export async function onPasteBlank(kit: Kit, event: ClipboardEvent) {
         var fra: Block = kit.page.getPageFrame();
         var gm = fra.globalWindowMatrix;
         var re = gm.inverseTransform(Point.from(point));
-        if (!html && text || text && html && html.endsWith(text))
-        {
+        if (!html && text || text && html && html.endsWith(text)) {
             await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
                 var url = BlockUrlConstant.TextSpan;
                 var data = { content: text } as any;
@@ -40,7 +39,7 @@ export async function onPasteBlank(kit: Kit, event: ClipboardEvent) {
                 var newBlock = await kit.page.createBlock(url, data, fra);
                 kit.boardSelector.clearSelector();
                 newBlock.mounted(() => {
-                    kit.picker.onPicker([newBlock]);
+                    kit.picker.onPicker([newBlock], true);
                     kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
                 })
             });
@@ -77,7 +76,7 @@ export async function onPasteBlank(kit: Kit, event: ClipboardEvent) {
                                 var newBlock = await kit.page.createBlock(url, data, fra);
                                 kit.boardSelector.clearSelector();
                                 newBlock.mounted(() => {
-                                    kit.picker.onPicker([newBlock]);
+                                    kit.picker.onPicker([newBlock], true);
                                     kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
                                 })
                             });
@@ -100,9 +99,8 @@ export async function onPasteBlank(kit: Kit, event: ClipboardEvent) {
                 var newBlock = await kit.page.createBlock(url, data, fra);
                 kit.boardSelector.clearSelector();
                 newBlock.mounted(() => {
-                    kit.picker.onPicker([newBlock]);
+                    kit.picker.onPicker([newBlock], true);
                     kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
-
                 })
             });
         }
