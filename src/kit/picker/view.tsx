@@ -35,7 +35,6 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
                             d={pi.poly.pathString()} key={i}></path>
                     case BoardPointType.lineSplitPort:
                         return <circle onMouseDown={e => this.picker.onSplitLinePort(block as Line, pi, e)} className="line-split-port" key={i} cx={pi.point.x} cy={pi.point.y} r={connectR}  ></circle>
-                        break;
                     case BoardPointType.lineMovePort:
                         return <circle onMouseDown={e => this.picker.onMovePortBlock(block as Line, pi, e)} className="move-port" key={i} cx={pi.point.x} cy={pi.point.y} r={r}   ></circle>
                     case BoardPointType.connectPort:

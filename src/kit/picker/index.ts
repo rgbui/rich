@@ -16,7 +16,7 @@ import { Point, PointArrow } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
 import { openBoardEditTool } from "../operator/board/edit";
 import { BlockPickerView } from "./view";
-import { BlockCache } from "../../page/common/cache";
+import { setBoardBlockCache } from "../../page/common/cache";
 
 export class BlockPicker {
     kit: Kit;
@@ -26,11 +26,14 @@ export class BlockPicker {
     }
     visible: boolean = false;
     blocks: Block[] = [];
-    onPicker(blocks: Block[]) {
+    onPicker(blocks: Block[], openEditTool = false) {
         this.blocks = blocks;
         this.visible = true;
         if (this.view)
             this.view.forceUpdate();
+        if (openEditTool == true) {
+            openBoardEditTool(this.kit);
+        }
     }
     onRePicker() {
         this.blocks.forEach(bl => {
@@ -50,6 +53,7 @@ export class BlockPicker {
         this.visible = false;
         this.blocks = [];
         if (this.view) this.view.forceUpdate();
+        forceCloseBoardEditTool();
     }
     onMoveStart(point: Point) {
         this.blocks.forEach(bl => {
@@ -95,30 +99,28 @@ export class BlockPicker {
     async onCreateBlockConnect(block: Block, arrows: PointArrow[], event: React.MouseEvent) {
         event.stopPropagation();
         var fra: Block = block ? block.frameBlock : this.kit.page.getPageFrame();
-        var newBlock: Block;
+        var lineBlock: Block;
         var isMounted: boolean = false;
         var gm = fra.globalWindowMatrix;
-        var re = gm.inverseTransform(Point.from(event));
+        var pe = Point.from(event)
+        var re = gm.inverseTransform(pe);
         var self = this;
-        fra.page.onAction(ActionDirective.onBoardToolCreateBlock, () => {
-            return new Promise((resolve: () => void, reject) => {
-                async function createConnectLine() {
-                    var data = { url: BlockUrlConstant.Line } as Record<string, any>;
-                    data.from = { x: arrows[1], y: arrows[0], blockId: block.id };
-                    data.to = { x: re.x, y: re.y };
-                    newBlock = await self.kit.page.createBlock(data.url, data, fra);
-                    var bg = await BlockCache.get('backgroundColor');
-                    if (bg) {
-                        newBlock.pattern.setSvgStyle({ stroke: bg })
-                    }
-                    block.conectLine(newBlock);
-                    newBlock.mounted(() => {
-                        isMounted = true;
-                    });
-                    self.kit.boardLine.onStartConnectOther();
-                    if (newBlock) self.kit.boardLine.line = newBlock;
-                    newBlock.parent.forceUpdate();
-                }
+        this.onCancel();
+        async function createConnectLine() {
+            var data = { url: BlockUrlConstant.Line } as Record<string, any>;
+            data.from = { x: arrows[1], y: arrows[0], blockId: block.id };
+            data.to = { x: re.x, y: re.y };
+            lineBlock = await self.kit.page.createBlock(data.url, data, fra);
+            await setBoardBlockCache(lineBlock);
+            block.conectLine(lineBlock);
+            lineBlock.mounted(() => {
+                isMounted = true;
+            });
+            self.kit.boardLine.onStartConnectOther(lineBlock);
+            lineBlock.parent.forceUpdate();
+        }
+        await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
+            await new Promise((resolve: (value: any) => void, reject) => {
                 MouseDragger({
                     event,
                     moveStart() {
@@ -126,54 +128,104 @@ export class BlockPicker {
                         createConnectLine();
                     },
                     move(ev, data) {
-                        if (newBlock) {
+                        if (lineBlock) {
                             var tr = gm.inverseTransform(Point.from(ev));
-                            (newBlock as any).to = { x: tr.x, y: tr.y };
-                            if (isMounted) newBlock.forceUpdate();
+                            (lineBlock as any).to = { x: tr.x, y: tr.y };
+                            if (isMounted) lineBlock.forceUpdate();
                         }
                     },
                     async moveEnd(ev, isMove, data) {
-                        if (newBlock) {
+                        var newBlock: Block;
+                        if (!lineBlock) {
+                            await createConnectLine();
+                        }
+                        if (isMove) {
                             if (self.kit.boardLine.over) {
-                                await newBlock.updateProps({
+                                await lineBlock.updateProps({
                                     to: {
                                         blockId: self.kit.boardLine.over.block.id,
                                         x: self.kit.boardLine.over.selector.arrows[1],
                                         y: self.kit.boardLine.over.selector.arrows[0]
                                     }
                                 });
-                                self.kit.boardLine.over.block.conectLine(newBlock);
+                                self.kit.boardLine.over.block.conectLine(lineBlock);
                             }
                             else {
-                                var s = await useShapeSelector({ roundPoint: Point.from(ev) });
-                                if (s) {
-                                    var da: Record<string, any> = { svg: s.svg, svgName: s.name };
-                                    var ma = new Matrix();
-                                    re = gm.inverseTransform(Point.from(ev));
-                                    ma.translate(re.x, re.y);
-                                    da.matrix = ma.getValues();
-                                    var shapeBlock = await fra.page.createBlock(BlockUrlConstant.Shape, da, fra);
-                                    var pickers = shapeBlock.getBlockBoardSelector([BoardPointType.pathConnectPort]);
-                                    await newBlock.updateProps({
-                                        to: {
-                                            blockId: shapeBlock.id,
-                                            x: pickers[0].arrows[1],
-                                            y: pickers[0].arrows[0]
-                                        }
-                                    });
-                                    shapeBlock.conectLine(newBlock);
+                                var s;
+                                if (block.url == BlockUrlConstant.Shape) {
+                                    s = await useShapeSelector({ roundPoint: Point.from(ev) });
+                                    if (s) {
+                                        var ma = new Matrix();
+                                        re = gm.inverseTransform(Point.from(ev));
+                                        ma.translate(re.x, re.y);
+                                        var cd = await block.cloneData();
+                                        cd.matrix = ma.getValues();
+                                        cd.svg = s.svg;
+                                        cd.svgName = s.name;
+                                        var shapeBlock = await fra.page.createBlock(BlockUrlConstant.Shape, cd, fra);
+                                        var pickers = shapeBlock.getBlockBoardSelector([BoardPointType.pathConnectPort]);
+                                        var otherArrow = arrows.includes(PointArrow.right) ? PointArrow.left : PointArrow.right
+                                        if (arrows.includes(PointArrow.top) || arrows.includes(PointArrow.bottom))
+                                            otherArrow = arrows.includes(PointArrow.top) ? PointArrow.bottom : PointArrow.top
+                                        var p2 = pickers.find(g => g.arrows.includes(otherArrow))
+                                        await lineBlock.updateProps({
+                                            to: {
+                                                blockId: shapeBlock.id,
+                                                x: p2.arrows[0],
+                                                y: p2.arrows[1]
+                                            }
+                                        });
+                                        shapeBlock.conectLine(lineBlock);
+                                        newBlock = shapeBlock;
+                                    }
                                 }
-                                else {
+                                if (!s) {
                                     var tr = gm.inverseTransform(Point.from(ev));
-                                    await newBlock.updateProps({
+                                    await lineBlock.updateProps({
                                         to: { x: tr.x, y: tr.y }
                                     });
                                 }
                             }
-                            if (isMounted) newBlock.forceUpdate();
                         }
+                        else {
+                            var ma = block.matrix.clone();
+                            if (arrows.includes(PointArrow.right)) {
+                                ma.translate(block.fixedWidth + 100, 0)
+                            }
+                            else if (arrows.includes(PointArrow.left)) {
+                                ma.translate(0 - (block.fixedWidth + 100), 0)
+                            }
+                            else if (arrows.includes(PointArrow.top)) {
+                                ma.translate(0, 0 - (block.fixedHeight + 100))
+                            }
+                            else if (arrows.includes(PointArrow.bottom)) {
+                                ma.translate(0, block.fixedHeight + 100)
+                            }
+                            var cloneData = await block.cloneData();
+                            cloneData.matrix = ma.getValues();
+                            var cloneBlock = await fra.page.createBlock(cloneData.url, cloneData, fra);
+                            var pickers = cloneBlock.getBlockBoardSelector([BoardPointType.pathConnectPort]);
+                            var otherArrow = arrows.includes(PointArrow.right) ? PointArrow.left : PointArrow.right
+                            if (arrows.includes(PointArrow.top) || arrows.includes(PointArrow.bottom))
+                                otherArrow = arrows.includes(PointArrow.top) ? PointArrow.bottom : PointArrow.top
+                            var p2 = pickers.find(g => g.arrows.includes(otherArrow))
+                            await lineBlock.updateProps({
+                                to: {
+                                    blockId: cloneBlock.id,
+                                    x: p2.arrows[0],
+                                    y: p2.arrows[1]
+                                }
+                            });
+                            cloneBlock.conectLine(lineBlock);
+                            newBlock = cloneBlock;
+                        }
+                        if (isMounted) lineBlock.forceUpdate()
                         self.kit.boardLine.onEndConnectOther();
-                        resolve();
+                        self.kit.page.addUpdateEvent(async () => {
+                            if (newBlock) self.kit.picker.onPicker([newBlock])
+                            else self.kit.picker.onPicker([lineBlock])
+                        })
+                        resolve(true);
                     }
                 });
             })
@@ -219,9 +271,11 @@ export class BlockPicker {
         var gm = block.globalWindowMatrix;
         var self = this;
         if (selector.data.at == 0 || selector.data.at == block.points.length + 1) {
-            var oldData = { from: util.clone(block.from), to: util.clone(block.to) };
-            this.kit.boardLine.onStartConnectOther();
-            this.kit.boardLine.line = block;
+            var oldData = {
+                from: util.clone(block.from),
+                to: util.clone(block.to)
+            };
+            this.kit.boardLine.onStartConnectOther(block);
             var key = selector.data.at == 0 ? "from" : "to";
             MouseDragger({
                 event,
