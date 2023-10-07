@@ -238,24 +238,39 @@ export class PageEvent {
         forceCloseBoardEditTool();
     }
     onFitZoom(this: Page) {
+        forceCloseBoardEditTool();
+        var matrix = new Matrix();
         this.gridMap.start();
         var bound = this.gridMap.gridRange();
-        var matrix = new Matrix();
-        var center = bound.middleCenter;
-        var point = bound.leftTop;
-        var from = center;
-        var rect = Rect.fromEle(this.root);
-        rect = this.getRelativeRect(rect);
-        var wr = Math.abs((point.x - from.x) * 2 / rect.width);
-        var hr = Math.abs((point.y - from.y) * 2 / rect.height);
-        var r = Math.min(wr, hr);
-        r = 1 / r;
-        var currentVisible = rect.middleCenter;
-        matrix.scale(r, r, { x: from.x, y: from.y });
-        var to = matrix.inverseTransform(currentVisible.x, currentVisible.y);
-        matrix.translate(to.x - from.x, to.y - from.y);
+        if (typeof bound != 'undefined') {
+            bound = bound.transformToRect(this.matrix.inverted());
+            bound = bound.transformToRect(this.windowMatrix.inverted());
+            bound = bound.extend(100);
+
+            var rect = Rect.fromEle(this.viewEl);
+            rect = rect.transformToRect(this.windowMatrix.inverted());
+            var visibleCenter = rect.middleCenter;
+            matrix.translate(visibleCenter.x - bound.middleCenter.x, visibleCenter.y - bound.middleCenter.y);
+
+            var wr = bound.width / rect.width;
+            var hr = bound.height / rect.height;
+            var r = Math.max(wr, hr);
+            console.log('gggg',r);
+            if (r > 1) {
+                r = 1 / r;
+            }
+            else if (r < 0.3) {
+                r = 0.7
+            }
+            else r = 1;
+            var p = matrix.inverseTransform(visibleCenter);
+            matrix.scale(r, r, p);
+
+        }
+        this.gridMap.over();
         this.matrix = matrix;
-        this.view.forceUpdate()
+        this.view.forceUpdate();
+
     }
     onMouseenter(this: Page, event: React.MouseEvent) {
         if (this.isBoard) {

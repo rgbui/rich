@@ -17,6 +17,20 @@ export class GridMap {
             return this.panel.getRelativeRect(rect);
         }
     }
+    private getInverseRect(rect: Rect): Rect {
+        if (this.relativePanelPoint) {
+            var r = rect.clone();
+            r.left += this.relativePanelPoint.x;
+            r.top += this.relativePanelPoint.y;
+            return r;
+        }
+        if (this.panel instanceof Page) {
+            return this.panel.getInverseRect(rect);
+        }
+        else if (this.panel instanceof Block) {
+            return this.panel.getInverseRect(rect);
+        }
+    }
     private getRelativePoint(point: Point) {
         if (this.relativePanelPoint) return point.relative(this.relativePanelPoint);
         if (this.panel instanceof Page) {
@@ -57,13 +71,12 @@ export class GridMap {
             block.grid = { min: [gxMin, gyMin], max: [gxMax, gyMax], rect };
         }
     }
-    public start() {
-        this.relativePanelPoint = this.getRelativeRect(new Rect(0, 0, 0, 0)).leftTop;
+    private eachBlock(predict: (block: Block) => void) {
         if (this.panel instanceof Page) {
             this.panel.each((b) => {
                 if (b.panelGridMap === this || b.gridMap && b.parent.panelGridMap === this) {
                     if (!b.isLine && !b.isLayout && !b.isPart)
-                        this.sync(b);
+                        predict(b);
                 }
             })
         }
@@ -71,10 +84,14 @@ export class GridMap {
             this.panel.each(b => {
                 if (b.panelGridMap === this || b.gridMap && b.parent.panelGridMap === this) {
                     if (!b.isLine && !b.isLayout && !b.isPart)
-                        this.sync(b);
+                        predict(b);
                 }
             });
         }
+    }
+    public start() {
+        this.relativePanelPoint = this.getRelativeRect(new Rect(0, 0, 0, 0)).leftTop;
+        this.eachBlock(b => this.sync(b));
     }
     public over() {
         delete this.relativePanelPoint;
@@ -94,24 +111,26 @@ export class GridMap {
     }
     public gridRange() {
         var minX, minY, maxX, maxY;
-        this.gridMap.forEach((value, key) => {
-            var ks = key.split(/\,/g);
-            var x = parseFloat(ks[0]);
-            var y = parseFloat(ks[1]);
+        this.eachBlock(b => {
+            var rect = b.getVisibleContentBound();
+            var newRect = rect;
             if (typeof minX == 'undefined') {
-                minX = x;
-                minY = y;
-                maxX = x;
-                maxY = y;
+                minX = newRect.left;
+                minY = newRect.top;
+                maxX = newRect.right;
+                maxY = newRect.bottom;
             }
             else {
-                minX = Math.min(minX, x);
-                minY = Math.min(minY, y);
-                maxX = Math.max(maxX, x);
-                maxY = Math.max(maxY, y);
+                minX = Math.min(minX, newRect.left);
+                minY = Math.min(minY, newRect.top);
+                maxX = Math.max(maxX, newRect.right);
+                maxY = Math.max(maxY, newRect.bottom);
             }
-        });
-        return new Rect(minX * this.cellSize, minY * this.cellSize, maxX * this.cellSize, maxY * this.cellSize);
+        })
+        if (typeof minX == 'number') {
+            var rect = new Rect(new Point(minX, minY), new Point(maxX, maxY));
+            return rect;
+        }
     }
     /**
      * 
