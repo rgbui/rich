@@ -1,6 +1,7 @@
 import React from "react";
 import { MouseDragger } from "../../src/common/dragger";
 import { Rect } from "../../src/common/vector/point";
+import { util } from "../../util/util";
 import "./style.less";
 
 export class MeasureView extends React.Component<{
@@ -9,18 +10,31 @@ export class MeasureView extends React.Component<{
     ratio?: number,
     value: number,
     showValue?: boolean,
+    inputting?: boolean,
     onChange: (value: number) => void,
     unit?: string,
     unitComputed?: (value: number) => number
 }>{
+    constructor(props) {
+        super(props);
+        this.currentValue = util.nf(this.props.value, 0);
+    }
+    currentValue: number;
+    componentDidUpdate(prevProps: Readonly<{ min?: number; max?: number; ratio?: number; value: number; showValue?: boolean; inputting?: boolean; onChange: (value: number) => void; unit?: string; unitComputed?: (value: number) => number; }>, prevState: Readonly<{}>, snapshot?: any): void {
+        if (this.props.value !== prevProps.value) {
+            this.currentValue = util.nf(this.props.value, 0);
+            this.forceUpdate()
+        }
+    }
     setProgress(e: React.MouseEvent) {
         var pe = this.el.querySelector('.shy-measure-progress') as HTMLElement;
         var bound = Rect.fromEle(pe);
         var self = this;
         var props = self.props;
-        let min = (props.min || 0) / (props.ratio || 1);
-        let max = (props.max || 10) / (props.ratio || 1);
-        var lastValue = props.value;
+        var r = util.nf(props.ratio, 1);
+        let min = util.nf(props.min, 0) / r;
+        let max = util.nf(props.max, 10) / r;
+        var lastValue = this.currentValue;
         function setValue(ev: MouseEvent, isEnd) {
             var dx = ev.clientX - bound.left;
             if (dx < 0) dx = 0;
@@ -30,30 +44,32 @@ export class MeasureView extends React.Component<{
             if (value > max) value = max;
             if (value < min) value = min;
             value = Math.round(value);
-            var pro = value * (props.ratio || 1);
+            var pro = value * r;
             pro = parseFloat(pro.toPrecision(12));
-            if (lastValue !== pro) {
-                self.props.onChange(pro);
+            if (lastValue !== pro || isEnd == true) {
+                self.currentValue = pro;
                 lastValue = pro;
+                self.forceUpdate();
+                if (self.props.inputting === false && isEnd == false) return;
+                self.props.onChange(pro);
             }
         }
         MouseDragger({
             event: e,
             dis: 0,
             moving(ev, data, isEnd) {
-                setValue(ev, false);
-            },
-            moveEnd(e, isMove, data) {
-                setValue(e, true);
+                console.log(ev, isEnd);
+                setValue(ev, isEnd);
             }
         })
     }
     el: HTMLElement;
     render() {
         var props = this.props;
-        var value = ((this.props.value || 0) / (props.ratio || 1));
-        let min = (props.min || 0) / (props.ratio || 1);
-        let max = (props.max || 10) / (props.ratio || 1);
+        var r = util.nf(props.ratio, 1);
+        var value = this.currentValue / r;
+        let min = util.nf(props.min, 0) / r;
+        let max = util.nf(props.max, 10) / r;
         if (value < min) value = min;
         else if (value > max) value = max;
         let pa = (value - min) / (max - min);
