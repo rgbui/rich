@@ -236,8 +236,11 @@ export class Line extends Block {
         return poly;
     }
     getVisibleBound(): Rect {
-        if (this.el)
-            return Rect.fromEle(this.el.querySelector('.visible') as HTMLElement)
+        if (this.el) {
+            var v = this.el.querySelector('.visible')
+            if (v) return Rect.fromEle(this.el.querySelector('.visible') as HTMLElement)
+            else Rect.fromEle(this.el);
+        }
     }
     async didMounted() {
         this.view.forceUpdate();

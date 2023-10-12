@@ -9,6 +9,7 @@ export function renderLine(line: Line) {
     if (!line.page.viewEl) return <></>
     var strokeWidth = line.realPx(10);
     var segs = line.segments;
+    if (segs.length < 2) return <></>
     var s = getStartPoints(line, segs);
     var e = getEndPoints(line, segs);
     if (s?.end && s.np !== true) segs[0].point = s.end;
