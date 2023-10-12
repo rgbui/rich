@@ -292,6 +292,11 @@ class Dom {
         var scrollDiv: HTMLElement = this.closest(predict) as any;
         return scrollDiv;
     }
+    findOverflowPanel() {
+        var predict = x => { return dom(x as HTMLElement).style('overflowY') == 'auto' || dom(x as HTMLElement).style('overflowX') == 'auto' || dom(x as HTMLElement).style('overflowY') == 'overlay' || dom(x as HTMLElement).style('overflowX') == 'overlay' }
+        var scrollDiv: HTMLElement = this.find(predict) as any;
+        return scrollDiv;
+    }
 }
 
 export var dom = function (el: Node) {
