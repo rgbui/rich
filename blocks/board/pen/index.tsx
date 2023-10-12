@@ -18,7 +18,7 @@ export class Pen extends Block {
     viewBox: string = '';
     @prop()
     pathString: string = '';
-    async getBoardEditCommand(this: Block): Promise<{ name: string; value?: any; }[]> {
+    async getBoardEditCommand(this: Block): Promise<{ name: string; value?: any; }[]>{
         var cs: { name: string; value?: any; }[] = [];
         cs.push({ name: 'tickness', value: this.pattern.getSvgStyle()?.strokeWidth || 2 });
         cs.push({ name: 'backgroundColor', value: this.pattern.getSvgStyle()?.stroke || '#000' });
@@ -39,6 +39,7 @@ export class Pen extends Block {
         return rect;
     }
 }
+
 @view('/pen')
 export class PenView extends BlockView<Pen>{
     renderView() {
@@ -51,7 +52,10 @@ export class PenView extends BlockView<Pen>{
             vb = `${rect.x} ${rect.y} ${rect.width} ${rect.height}`;
         }
         return <div className="sy-block-pen" style={this.block.visibleStyle}>
-            <svg viewBox={vb || undefined} preserveAspectRatio="xMinYMin" style={{ width: this.block.fixedWidth, height: this.block.fixedHeight }}>
+            <svg viewBox={vb || undefined} preserveAspectRatio="xMinYMin" style={{
+                width: this.block.fixedWidth,
+                height: this.block.fixedHeight
+            }}>
                 {this.block.pathString && <path d={this.block.pathString}></path>}
             </svg>
         </div>

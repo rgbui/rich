@@ -37,10 +37,10 @@ export class PageCard extends Block {
 
 @view('/board/page/card')
 export class PageCardView extends BlockView<PageCard>{
-    async mousedown(event: React.MouseEvent) {
+    mousedown(event: React.MouseEvent) {
         if (this.block.childs.length == 0) {
             event.stopPropagation()
-            await this.block.page.onAction(ActionDirective.onCreateBlockByEnter, async () => {
+            this.block.page.onAction(ActionDirective.onCreateBlockByEnter, async () => {
                 var newBlock = await this.block.page.createBlock(BlockUrlConstant.TextSpan, {}, this.block);
                 newBlock.mounted(() => {
                     this.block.page.kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
