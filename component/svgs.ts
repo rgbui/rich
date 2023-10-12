@@ -148,7 +148,6 @@ import MagicSvg from "../src/assert/svg/magic.svg";
 import MaximizeSvg from "../src/assert/svg/maximize.svg";
 import MemberSvg from "../src/assert/svg/member.svg";
 import MentionSvg from "../src/assert/svg/mention.svg";
-import MenuSvg from "../src/assert/svg/menu.svg";
 import MenuFolderSvg from "../src/assert/svg/menuFolder.svg";
 import MindDirectionXSvg from "../src/assert/svg/mind.direction.x.svg";
 import MindDirectionYSvg from "../src/assert/svg/mind.direction.y.svg";
@@ -393,7 +392,6 @@ MagicSvg,
 MaximizeSvg,
 MemberSvg,
 MentionSvg,
-MenuSvg,
 MenuFolderSvg,
 MindDirectionXSvg,
 MindDirectionYSvg,
