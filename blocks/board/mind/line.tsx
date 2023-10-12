@@ -66,8 +66,8 @@ export function GetLineSvg(type: 'brokenLine' | 'cure',
     if (type == 'brokenLine') {
         var dx = r > 1 ? (to.x > from.x ? r : (0 - r)) : (to.x - from.x) * r;
         var dy = r > 1 ? (to.y > from.y ? r : (0 - r)) : (to.y - from.y) * r;
-        if (direction == 'x') return `M${from.join(" ")}L${from.move(dx, 0).join(" ")}L${to.move(0 - dx, 0).join(" ")}L${to.join(" ")}`;
-        else return `M${from.join(" ")}L${from.move(0, dy).join(" ")}L${to.move(0, 0 - dy).join(" ")}L${to.join(" ")}`;
+        if (direction == 'x') return `M${from.join(" ")}L${from.move(dx, 0).join(" ")}L${new Point(from.move(dx, 0).x, to.y).join(" ")}L${to.join(" ")}`;
+        else return `M${from.join(" ")}L${from.move(0, dy).join(" ")}L${new Point(to.x, from.move(0, dy).y).join(" ")}L${to.join(" ")}`;
     }
     else if (type == 'cure') {
         var dx = r > 1 ? (to.x > from.x ? r : (0 - r)) : (to.x - from.x) * r;

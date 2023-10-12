@@ -15,7 +15,6 @@ import { BlockRenderRange } from "../../../src/block/enum";
 import { BlockChildKey } from "../../../src/block/constant";
 import { MouseDragger } from "../../../src/common/dragger";
 import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
-import { openBoardEditTool } from "../../../src/kit/operator/board/edit";
 import { lst } from "../../../i18n/store";
 import './style.less';
 import { VR } from "../../../src/common/render";
@@ -101,18 +100,6 @@ export class FlowMind extends Block {
                 poly: new Polygon(...pr.points.map(p => gm.transform(p)))
             }
         }))
-        if (Array.isArray(types) && types.includes(BoardPointType.resizePort)) pickers.push(...rect.points.toArray((p, i) => {
-            var arrows: PointArrow[] = [];
-            if (i == 0) return undefined;
-            else if (i == 1) arrows = [PointArrow.top, PointArrow.right];
-            else if (i == 2) arrows = [PointArrow.bottom, PointArrow.right]
-            else if (i == 3) return undefined;
-            return {
-                type: BoardPointType.resizePort,
-                arrows,
-                point: gm.transform(p)
-            }
-        }))
         pickers.push(...rect.centerPoints.map((pr, i) => {
             var arrows: PointArrow[] = [];
             if (i == 0) arrows = [PointArrow.top, PointArrow.center];
@@ -192,7 +179,7 @@ export class FlowMind extends Block {
                 newBlock.mounted(async () => {
                     this.renderAllMinds();
                     this.mindRoot.view.forceUpdate(() => {
-                        self.page.kit.picker.onPicker([newBlock],true);
+                        self.page.kit.picker.onPicker([newBlock], true);
                     })
                 })
             })
@@ -340,31 +327,26 @@ export class FlowMind extends Block {
         return cs;
     }
     async setBoardEditCommand(name: string, value: any) {
-        if (this.isMindRoot) {
-            if (name == 'mindDirection') {
-                await this.updateProps({ direction: value }, BlockRenderRange.self);
-                this.page.addUpdateEvent(async () => {
-                    this.renderAllMinds();
-                    this.mindRoot.forceUpdate()
-                })
-            }
-            else if (name == 'mindLineType') {
-                await this.updateProps({ lineType: value }, BlockRenderRange.self);
-            }
-            else if (name == 'mindLineColor') {
-                await this.updateProps({ lineColor: value }, BlockRenderRange.self);
-            }
-            else (await super.setBoardEditCommand(name, value) == false)
-            {
 
-            }
+        if (name == 'mindDirection') {
+            await this.updateProps({ direction: value }, BlockRenderRange.self);
+            this.page.addUpdateEvent(async () => {
+                this.renderAllMinds();
+                this.mindRoot.forceUpdate()
+            })
         }
-        if (['fillColor', 'fillOpacity',].includes(name)) {
+        else if (name == 'mindLineType') {
+            await this.updateProps({ lineType: value }, BlockRenderRange.self);
+        }
+        else if (name == 'mindLineColor') {
+            await this.updateProps({ lineColor: value }, BlockRenderRange.self);
+        }
+        else if (['fillColor', 'fillOpacity',].includes(name)) {
             var key = name;
             if (name == 'fillColor') key = 'fill';
             this.pattern.setSvgStyle({ [key]: value })
         }
-        if (name == 'borderWidth') {
+        else if (name == 'borderWidth') {
             await this.updateProps({ 'minBoxStyle.width': value }, BlockRenderRange.self);
         }
         else if (name == 'borderType') {
@@ -376,6 +358,7 @@ export class FlowMind extends Block {
         else if (name == 'borderRadius') {
             await this.updateProps({ 'minBoxStyle.radius': value }, BlockRenderRange.self);
         }
+        await super.setBoardEditCommand(name, value)
     }
     get contentStyle() {
         var style: CSSProperties = {
@@ -388,6 +371,13 @@ export class FlowMind extends Block {
         style.borderStyle = this.minBoxStyle.type == 'solid' ? 'solid' : 'dashed';
         if (this.minBoxStyle.type == 'none') style.borderStyle = 'none';
         style.borderColor = this.minBoxStyle.borderColor;
+        style.fontSize = s.fontSize;
+        if (typeof s.fontWeight != 'undefined')
+            style.fontWeight = s.fontWeight;
+        if (typeof s.fontStyle != 'undefined')
+            style.fontStyle = s.fontStyle;
+        if (typeof s.textDecoration != 'undefined')
+            style.textDecoration = s.textDecoration;
         return style;
     }
     renderAllMinds() {
@@ -677,17 +667,15 @@ export class FlowMind extends Block {
                                 fixedWidth: w,
                                 fixedHeight: h
                             },
-                            { fixedWidth: block.fixedWidth, fixedHeight: block.fixedHeight }
+                            { fixedWidth: block.fixedWidth, fixedHeight: block.fixedHeight }, BlockRenderRange.self
                         )
                         block.page.addUpdateEvent(async () => {
-                            if (block.isMindRoot) block.renderAllMinds();
-                            else (block.parent as FlowMind).renderMinds();
+                            if (block.isMindRoot) { block.renderAllMinds(); block.forceUpdate(); }
+                            else { (block.parent as FlowMind).renderMinds(); block.parent.forceUpdate(); }
+                            block.page.kit.picker.onPicker([block], true);
                         })
                     })
                 }
-            },
-            async moveEnd() {
-                await openBoardEditTool(self.page.kit);
             }
         });
     }
@@ -704,6 +692,9 @@ export class FlowMind extends Block {
         var rect = new Rect(0, 0, fs.width, fs.height);
         rect = rect.transformToRect(this.globalWindowMatrix);
         return rect;
+    }
+    async onInputed(): Promise<void> {
+        this.page.kit.picker.onRePicker();
     }
 }
 @view('/flow/mind')
