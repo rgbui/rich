@@ -146,6 +146,8 @@ export class PageContextmenu {
                         { name: 'onlyDisplayContent', text: lst('标题'), type: MenuItemType.switch, checked: this.onlyDisplayContent ? false : true, icon: HSvg },
                         { name: 'refPages', text: lst("引用"), visible: [ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type) ? false : true, icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
                         { name: 'showComment', text: lst("评论"), icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
+                        { name: 'showDiscuss', text: lst('讨论'), icon: { name: 'bytedance-icon', code: 'topic-discussion', }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
+                        { name: 'prevOrNext', text: lst('上下篇'), visible: [ElementType.SchemaData].includes(this.pe.type), icon: { name: 'bytedance-icon', code: 'transfer-data' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PagePreOrNext) }
                     ]
                 },
                 { type: MenuItemType.divide },
@@ -255,6 +257,22 @@ export class PageContextmenu {
                 { name: 'delete', icon: TrashSvg, text: lst('删除') },
             ];
         }
+        else if (this.pageLayout.type == PageLayoutType.board) {
+            items = [
+                { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? lst("除消编辑保护") : lst("编辑保护"), icon: this.locker?.lock ? LockSvg : UnlockSvg },
+                { name: 'history', icon: VersionHistorySvg, text: lst('页面历史') },
+                { type: MenuItemType.divide },
+                { name: 'undo', text: lst('撤消'), icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
+                { name: 'redo', text: lst('重做'), icon: RedoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
+                { type: MenuItemType.divide },
+                { name: 'export', disabled: true, iconSize: 16, text: lst('导出'), icon: FileSvg },
+                ...(window.shyConfig.isDev || window.shyConfig.isBeta || this.ws?.sn == 19 ? [
+                    { name: 'requireTemplate', icon: TemplatesSvg, text: lst('申请模板') },
+                ] : []),
+                { type: MenuItemType.divide },
+                { name: 'move', text: lst('移动'), icon: MoveToSvg, disabled: true },
+            ];
+        }
         if (items.length == 0) return;
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, items, {
             overflow: 'visible',
@@ -286,11 +304,18 @@ export class PageContextmenu {
                 }
                 else if (item.name == 'channel') {
                     this.onChangeTextChannel(item.value as any)
-                } else if (item.name == 'speak') {
+                }
+                else if (item.name == 'speak') {
                     this.onChangeTextChannelSpeak(item.value as any)
                 }
                 else if (item.name == 'showComment') {
                     this.onToggleComments(item.checked)
+                }
+                else if (item.name == 'showDiscuss') {
+                    this.onToggleDiscuss(item.checked)
+                }
+                else if (item.name == 'prevOrNext') {
+                    this.onTogglePrevOrNext(item.checked);
                 }
             }
         });
