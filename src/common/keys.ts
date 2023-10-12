@@ -1,13 +1,12 @@
 import lodash from "lodash";
 
-
 export enum KeyboardCode {
     ArrowDown = 'ArrowDown',
     ArrowLeft = 'ArrowLeft',
     ArrowRight = 'ArrowRight',
     ArrowUp = 'ArrowUp',
     Backspace = 'Backspace',
-    Space=' ',
+    Space = ' ',
     Delete = 'Delete',
     Enter = 'Enter',
     Tab = 'Tab',
@@ -27,7 +26,7 @@ export enum KeyboardCode {
      */
     Slash = 'Slash',
     Backslash = 'Backslash',
-    R='R'
+    R = 'R'
 }
 export class KeyboardPlate {
     private altKey: boolean = false;
