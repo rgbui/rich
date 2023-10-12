@@ -19,6 +19,7 @@ import { LinkPageItem, PageLayoutType } from "../declare";
 import { PageDirective } from "../directive";
 import { useTemplateView } from "../../../extensions/template";
 import { lst } from "../../../i18n/store";
+import { Matrix } from "../../common/matrix";
 
 export class Page$Operator {
     /**
@@ -369,6 +370,48 @@ export class Page$Operator {
             }
         })
     }
+    async onTogglePrevOrNext(this: Page, toggle: boolean) {
+        var cs = this.findAll(c => c.url == BlockUrlConstant.PagePreOrNext);
+        if (toggle == true && cs.length == 1) return;
+        if (toggle == false && cs.length == 0) return;
+        await this.onAction('onToggleComments', async () => {
+            if (toggle == true) {
+                if (cs.length == 0) {
+                    var view = this.views[0];
+                    await this.createBlock(BlockUrlConstant.PagePreOrNext, {}, view);
+                }
+                else if (cs.length > 1) {
+                    await cs.findAll((g, i) => i > 0).eachAsync(async c => c.delete());
+                }
+            }
+            else if (toggle == false) {
+                await cs.eachAsync(async c => c.delete())
+            }
+        })
+    }
+    async onToggleDiscuss(this: Page, toggle: boolean) {
+        var cs = this.findAll(c => c.url == BlockUrlConstant.Discuss);
+        if (toggle == true && cs.length == 1) return;
+        if (toggle == false && cs.length == 0) return;
+        await this.onAction('onToggleComments', async () => {
+            if (toggle == true) {
+                if (cs.length == 0) {
+                    var view = this.views[0];
+                    await this.createBlock(BlockUrlConstant.Discuss, {}, view);
+                }
+                else if (cs.length > 1) {
+                    await cs.findAll((g, i) => i > 0).eachAsync(async c => {
+                        c.delete();
+                    });
+                }
+            }
+            else if (toggle == false) {
+                await cs.eachAsync(async c => {
+                    c.delete()
+                })
+            }
+        })
+    }
     async onCopyBlocks(this: Page, blocks: Block[]) {
         await storeCopyBlocks(blocks);
     }
@@ -437,5 +480,121 @@ export class Page$Operator {
                 CloseShyAlert()
             }
         }
+    }
+    async onGridAlign(this: Page, blocks: Block[], command: string, value: string) {
+        await this.onAction('onGridAlign', async () => {
+            if (command == 'grid-align') {
+                var b = blocks.first().getVisibleBound();
+                for (let i = 1; i < blocks.length; i++) {
+                    var block = blocks[i]
+                    var cb = block.getVisibleBound();
+                    var gm = block.globalWindowMatrix;
+                    var from: Point;
+                    var to: Point;
+                    if (value == 'left') {
+                        from = gm.inverseTransform(cb.leftTop);
+                        to = gm.inverseTransform(b.leftTop.setY(cb.top));
+                    }
+                    else if (value == 'center') {
+                        from = gm.inverseTransform(cb.topCenter);
+                        to = gm.inverseTransform(b.topCenter.setY(cb.top));
+                    }
+                    else if (value == 'right') {
+                        from = gm.inverseTransform(cb.rightTop);
+                        to = gm.inverseTransform(b.rightTop.setY(cb.top));
+                    }
+                    var moveMatrix = new Matrix();
+                    moveMatrix.translateMove(from, to)
+                    var newMatrix = block.currentMatrix.clone();
+                    newMatrix.append(moveMatrix);
+                    newMatrix.append(block.selfMatrix.inverted());
+                    await block.updateMatrix(block.matrix, newMatrix);
+                    block.moveMatrix = new Matrix();
+                }
+            }
+            else if (command == 'grid-valign') {
+                var b = blocks.first().getVisibleBound();
+                for (let i = 1; i < blocks.length; i++) {
+                    var block = blocks[i]
+                    var cb = block.getVisibleBound();
+                    var gm = block.globalWindowMatrix;
+                    var from: Point;
+                    var to: Point;
+                    if (value == 'top') {
+                        from = gm.inverseTransform(cb.leftTop);
+                        to = gm.inverseTransform(b.leftTop.setX(cb.left));
+                    }
+                    else if (value == 'middle') {
+                        from = gm.inverseTransform(cb.topCenter);
+                        to = gm.inverseTransform(b.topCenter.setX(cb.left));
+                    }
+                    else if (value == 'bottom') {
+                        from = gm.inverseTransform(cb.leftBottom);
+                        to = gm.inverseTransform(b.leftBottom.setX(cb.left));
+                    }
+                    var moveMatrix = new Matrix();
+                    moveMatrix.translateMove(from, to)
+                    var newMatrix = block.currentMatrix.clone();
+                    newMatrix.append(moveMatrix);
+                    newMatrix.append(block.selfMatrix.inverted());
+                    await block.updateMatrix(block.matrix, newMatrix);
+                    block.moveMatrix = new Matrix();
+                }
+            }
+            else if (command == 'grid-distribute') {
+                if (value == 'y') {
+                    var first = blocks.first().getVisibleBound();
+                    var second = blocks[1].getVisibleBound();
+                    var d = second.top - first.bottom;
+                    var h = first.height + d + second.height;
+                    for (let i = 2; i < blocks.length; i++) {
+                        var block = blocks[i];
+                        var cb = block.getVisibleBound();
+                        var gm = block.globalWindowMatrix;
+                        var cb = block.getVisibleBound();
+                        var gm = block.globalWindowMatrix;
+                        var from: Point;
+                        var to: Point;
+                        from = gm.inverseTransform(cb.leftTop);
+                        to = gm.inverseTransform(cb.leftTop.setY(h + d));
+                        var moveMatrix = new Matrix();
+                        moveMatrix.translateMove(from, to)
+                        var newMatrix = block.currentMatrix.clone();
+                        newMatrix.append(moveMatrix);
+                        newMatrix.append(block.selfMatrix.inverted());
+                        await block.updateMatrix(block.matrix, newMatrix);
+                        block.moveMatrix = new Matrix();
+                        h += d;
+                        h += cb.height;
+                    }
+                }
+                else if (value == 'x') {
+                    var first = blocks.first().getVisibleBound();
+                    var second = blocks[1].getVisibleBound();
+                    var d = second.left - first.left;
+                    var h = first.width + d + second.width;
+                    for (let i = 2; i < blocks.length; i++) {
+                        var block = blocks[i];
+                        var cb = block.getVisibleBound();
+                        var gm = block.globalWindowMatrix;
+                        var cb = block.getVisibleBound();
+                        var gm = block.globalWindowMatrix;
+                        var from: Point;
+                        var to: Point;
+                        from = gm.inverseTransform(cb.leftTop);
+                        to = gm.inverseTransform(cb.leftTop.setX(h + d));
+                        var moveMatrix = new Matrix();
+                        moveMatrix.translateMove(from, to)
+                        var newMatrix = block.currentMatrix.clone();
+                        newMatrix.append(moveMatrix);
+                        newMatrix.append(block.selfMatrix.inverted());
+                        await block.updateMatrix(block.matrix, newMatrix);
+                        block.moveMatrix = new Matrix();
+                        h += d;
+                        h += cb.width;
+                    }
+                }
+            }
+        });
     }
 }
