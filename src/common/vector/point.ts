@@ -93,6 +93,10 @@ export class Point {
     move(x: number, y: number) {
         return new Point(this.x + x, this.y + y);
     }
+    moved(x:number,y:number){
+        this.x+=x;
+        this.y+=y;
+    }
     join(joinChar?: string) {
         return this.x + (joinChar || ',') + this.y
     }
@@ -252,6 +256,7 @@ export class Rect {
         return this.from(ele.getBoundingClientRect())
     }
     static fromEle(el: HTMLElement | Range) {
+        if(el)
         return this.from(el.getBoundingClientRect())
     }
     contain(point: Point) {
