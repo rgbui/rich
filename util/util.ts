@@ -291,5 +291,10 @@ export var util = {
     remToPx(rem: string) {
         var r = parseFloat(rem.replace('rem', ''));
         return r * 10
+    },
+    nf(number: any, def: number) {
+        if (lodash.isNull(number) || lodash.isUndefined(number)) return def;
+        else if (typeof number == 'number') return number;
+        else return def;
     }
 }
