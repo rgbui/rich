@@ -24,7 +24,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
     var downPoint = Point.from(event);
     var gm = block ? block.panelGridMap : kit.page.gridMap;
     var currentBlocks: Block[];
-    var scrollDiv = kit.page.getScrollDiv();
+    var scrollDiv = block?.panel ? block.panel.getScrollDiv() : kit.page.getScrollDiv();
     MouseDragger({
         event,
         dis: 5,
@@ -47,17 +47,18 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                 lodash.remove(currentBlocks, g => g.url == BlockUrlConstant.Title)
                 kit.anchorCursor.renderSelectBlocks(currentBlocks);
             };
-            onAutoScroll({
-                el: scrollDiv,
-                point: movePoint,
-                feelDis: 100,
-                interval: 50,
-                dis: 30,
-                callback(fir, dis) {
-                    if (fir) cacSelector(0)
-                    else if (fir == false && dis != 0) cacSelector(dis);
-                }
-            })
+            if (scrollDiv)
+                onAutoScroll({
+                    el: scrollDiv,
+                    point: movePoint,
+                    feelDis: 100,
+                    interval: 50,
+                    dis: 30,
+                    callback(fir, dis) {
+                        if (fir) cacSelector(0)
+                        else if (fir == false && dis != 0) cacSelector(dis);
+                    }
+                })
         },
         async moveEnd(ev, isMove, data) {
             gm.over();
