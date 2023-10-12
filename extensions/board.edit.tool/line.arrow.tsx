@@ -188,7 +188,7 @@ export function LineTypes(props: {
     lineType: string,
     strokeWidth: number,
     strokeDasharray: string,
-    change: (name: string, value: any) => void
+    change: (name: string, value: any, isLazy?: boolean) => void
 }) {
 
     return <div className="shy-line-types">
@@ -203,6 +203,7 @@ export function LineTypes(props: {
                     min={1}
                     max={30}
                     value={props.strokeWidth}
+                    inputting={false}
                     onChange={e => {
                         props.change('strokeWidth', e);
                     }}></MeasureView>

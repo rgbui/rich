@@ -19,7 +19,7 @@ import { MeasureView } from "../../component/view/progress";
 import { Select } from "../../component/view/select";
 import { Tip } from "../../component/view/tooltip/tip";
 import { Block } from "../../src/block";
-import { Point } from "../../src/common/vector/point";
+import { Point, Rect } from "../../src/common/vector/point";
 import { Polygon } from "../../src/common/vector/polygon";
 import { BlockCache } from "../../src/page/common/cache";
 import { BackgroundColor } from "./background";
@@ -32,8 +32,10 @@ import { TurnShapes } from "./shapes";
 import { BorderBoxStyle, ShapeStroke } from "./stroke";
 import "./style.less";
 import { lst } from "../../i18n/store";
+import lodash from "lodash";
 
 export class BoardEditTool extends EventsComponent {
+    el: HTMLElement;
     render() {
         if (this.visible != true) return <></>;
         var style: CSSProperties = {
@@ -48,7 +50,7 @@ export class BoardEditTool extends EventsComponent {
         function is(name: string) {
             return self.commands.some(s => s.name == name);
         }
-        return <div style={style} className="shy-board-edit-tool shadow border-light r-item-hover">
+        return <div ref={e => this.el = e} style={style} className="shy-board-edit-tool shadow border-light r-item-hover">
             {is('mindDirection') && <Tip placement="top" text='思维导图方向'>
                 <div className={'shy-board-edit-tool-item'}>
                     <Select value={getValue('mindDirection')}
@@ -110,7 +112,7 @@ export class BoardEditTool extends EventsComponent {
                         lineType={getValue('lineType')}
                         strokeWidth={getValue('strokeWidth')}
                         strokeDasharray={getValue('strokeDasharray')}
-                        change={(name, e) => this.onChange(name, e)}></LineTypes>
+                        change={(name, e, isLazy) => this.onChange(name, e, isLazy)}></LineTypes>
                 </div>
             </Tip>}
             {is('turnShapes') && <><Tip placement="top" text={'形状'}>
@@ -145,12 +147,13 @@ export class BoardEditTool extends EventsComponent {
                         ]}>{getValue('fontSize')}</Select>
                 </div>
             </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
-            {is('stickerSize') && <><Tip placement="top" text='便利贴'>
+            {is('stickerSize') && <><Tip placement="top" text='便利贴尺寸大小'>
                 <div className={'shy-board-edit-tool-item'} >
-                    <Select dropAlign='center' value={getValue('stickerSize')} onChange={e => this.onChange('stickerSize', e)} options={[
+                    <Select dropAlign='center' placeholder={lst('大小')} value={getValue('stickerSize')} onChange={e => this.onChange('stickerSize', e)} options={[
                         { text: lst('小'), value: 'small' },
                         { text: lst('中'), value: 'medium' },
-                        { text: lst('大'), value: 'big' }]}></Select>
+                        { text: lst('大'), value: 'big' }
+                    ]}></Select>
                 </div>
             </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
             {is('fontWeight') && <Tip placement="top" text='加粗'>
@@ -160,7 +163,7 @@ export class BoardEditTool extends EventsComponent {
                 </div>
             </Tip>}
             {is('tickness') && <><div style={{ width: 90 }} className={'shy-board-edit-tool-item'}>
-                <MeasureView min={1} max={40} showValue={false} value={getValue('tickness')} onChange={e => { this.onChange('tickness', e) }}></MeasureView>
+                <MeasureView min={1} max={40} showValue={false} value={getValue('tickness')} inputting={false} onChange={e => { this.onChange('tickness', e) }}></MeasureView>
             </div></>}
             {is('itailc') && <Tip placement="top" text='斜体'>
                 <div className={'shy-board-edit-tool-item' + (getValue('itailc') == 'itailc' ? " hover" : "")}
@@ -204,7 +207,7 @@ export class BoardEditTool extends EventsComponent {
                         borderType={getValue('borderType')}
                         borderColor={getValue('borderColor')}
                         borderRadius={getValue('borderRadius')}
-                        change={(name, e) => this.onChange(name, e)}></BorderBoxStyle>
+                        change={(name, e, isLazy?: boolean) => this.onChange(name, e, isLazy)}></BorderBoxStyle>
                 </div>
             </Tip>}
             {is('stroke') && <Tip placement="top" text={'边框'}>
@@ -215,7 +218,7 @@ export class BoardEditTool extends EventsComponent {
                         strokeWidth={getValue('strokeWidth')}
                         strokeDasharray={getValue('strokeDasharray')}
                         strokeOpacity={getValue('strokeOpacity')}
-                        change={(name, e) => this.onChange(name, e)}></ShapeStroke>
+                        change={(name, e, isLazy) => this.onChange(name, e, isLazy)}></ShapeStroke>
                 </div>
             </Tip>}
             {is('fillColor') && is('fillOpacity') && <Tip placement="top" text={'填充'}>
@@ -224,7 +227,7 @@ export class BoardEditTool extends EventsComponent {
                         tool={this}
                         fillColor={getValue('fillColor')}
                         fillOpacity={getValue('fillOpacity')}
-                        change={(name, e) => this.onChange(name, e)}
+                        change={(name, e, isLazy) => this.onChange(name, e, isLazy)}
                     ></ShapeFill>
                 </div>
             </Tip>}
@@ -240,11 +243,22 @@ export class BoardEditTool extends EventsComponent {
     visible: boolean = false;
     blocks: Block[] = [];
     commands: { name: string, value?: any }[] = [];
-    async open(blocks: Block[]) {
+    range: Rect;
+    async open(blocks: Block[], range: Rect) {
+        this.range = range;
         this.blocks = blocks;
         var poly = new Polygon(...this.blocks.map(b => b.getVisiblePolygon().points).flat());
         this.point = poly.bound.leftTop;
-        this.point.y -= 100;
+        var yoffset = 80;
+        var xoffset = 30;
+        if (this.point.y - yoffset < 100) {
+            this.point = poly.bound.leftBottom;
+            this.point.moved(0, yoffset);
+        }
+        else this.point = this.point.move(0, -yoffset)
+        if (this.point.x < this.range.left) {
+            this.point.x = this.range.left + xoffset;
+        }
         var rs;
         await this.blocks.eachAsync(async block => {
             var cs = await block.getBoardEditCommand();
@@ -258,21 +272,36 @@ export class BoardEditTool extends EventsComponent {
         this.commands = rs || [];
         if (this.commands.length > 0) {
             this.visible = true;
-            this.forceUpdate()
+            this.forceUpdate(() => {
+                var r = Rect.fromEle(this.el);
+                if (this.point.x + r.width > this.range.right) {
+                    var willX = this.range.right - r.width - xoffset;
+                    if (willX < this.range.left) {
+                        willX = this.range.left + xoffset;
+                    }
+                    this.point.x = willX;
+                    this.forceUpdate();
+                }
+            })
         }
         else {
             this.visible = true;
             this.close();
         }
     }
-    async onChange(name: string, value: any) {
-        await BlockCache.set(name, value)
-        this.emit('save', { name, value });
+    async onChange(name: string, value: any, isLazy?: boolean) {
+        await BlockCache.set(name, value);
+        if (isLazy) this.lazySave({ name, value })
+        else this.emit('save', { name, value });
     }
-    async onChangeObject(obj: Record<string, any>) {
+    async onChangeObject(obj: Record<string, any>, isLazy?: boolean) {
         await BlockCache.set(obj);
-        this.emit('save', obj);
+        if (isLazy) this.lazySave(obj)
+        else this.emit('save', obj);
     }
+    lazySave = lodash.debounce(async (data) => {
+        this.emit('save', data);
+    }, 1000)
     close() {
         if (this.visible == true) {
             this.dropName = '';
@@ -306,9 +335,9 @@ export interface BoardEditTool {
     only(name: 'close', fn: () => void);
 }
 var editTool: BoardEditTool;
-export async function useBoardEditTool(blocks: Block[]) {
+export async function useBoardEditTool(blocks: Block[], range: Rect) {
     editTool = await Singleton(BoardEditTool);
-    editTool.open(blocks);
+    editTool.open(blocks, range);
     return new Promise((resolve: (result: { name: string, value: any } | Record<string, any>) => void, reject) => {
         editTool.only('save', (data: { name: string, value: any } | Record<string, any>) => {
             resolve(data)

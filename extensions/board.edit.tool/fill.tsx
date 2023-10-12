@@ -4,6 +4,7 @@ import { NoneSvg, TransparentSvg } from "../../component/svgs";
 import { MeasureView } from "../../component/view/progress";
 import { ColorType } from "../note";
 import { S } from "../../i18n/view";
+import { Icon } from "../../component/view/icon";
 
 var colors: ColorType[] = [
     { color: 'transparent' },
@@ -23,23 +24,23 @@ var colors: ColorType[] = [
     { color: 'rgb(101,44,179)' },
     { color: 'rgb(255,249,177)' }
 ];
-export function ShapeFill(props: { tool: BoardEditTool, fillColor: string, fillOpacity: number, change: (name: string, value: any) => void }) {
+export function ShapeFill(props: { tool: BoardEditTool, fillColor: string, fillOpacity: number, change: (name: string, value: any, isLazy?: boolean) => void }) {
     function renderSvg() {
         if (props.fillColor == 'transparent') return <TransparentSvg></TransparentSvg>
         else return <a style={{ display: 'inline-block', borderRadius: '50%', opacity: props.fillOpacity, backgroundColor: props.fillColor }}></a>
     }
     return <div className="shy-shape-fill">
         <div className="shy-shape-fill-current" onMouseDown={e => props.tool.showDrop('fill')}>{renderSvg()}</div>
-        {props.tool.isShowDrop('fill') && <div className="shy-shape-fill-drops">
-            <div className="shy-shape-fill-opacity">
-                <MeasureView min={1} ratio={0.1} max={10} showValue={false} value={props.fillOpacity} onChange={e => { props.change('fillOpacity', e) }}></MeasureView>
-                <div className="shy-measure-view-label"><label><S>透明度</S></label><span style={{ float: 'right' }}>{Math.round(props.fillOpacity)}</span></div>
+        {props.tool.isShowDrop('fill') && <div className="shy-shape-fill-drops padding-w-10">
+            <div className="shy-shape-fill-opacity gap-h-10">
+                <MeasureView min={0} ratio={0.1} max={1} showValue={false} value={props.fillOpacity} inputting={false} onChange={e => { props.change('fillOpacity', e) }}></MeasureView>
+                <div className="shy-measure-view-label"><label className="f-12 remark"><S>透明度</S></label><span className="f-12 remark" style={{ float: 'right' }}>{props.fillOpacity}</span></div>
             </div>
-            <div className="shy-shape-fill-colors">{colors.map(c => {
+            <div className="shy-shape-fill-colors gap-h-10">{colors.map(c => {
                 if (c.color == 'transparent') return <a className={'transparent ' + (c.color == props.fillColor ? "selected" : "")}
                     onMouseDown={e => props.change('fillColor', c.color)} key={c.color}
-                    style={{ borderColor: 'transparent', backgroundColor: c.color }}>
-                    <NoneSvg></NoneSvg>
+                    style={{display:'inline-flex', borderColor: 'transparent', backgroundColor: c.color }}>
+                     <Icon size={30} icon={NoneSvg}></Icon>
                 </a>
                 return <a key={c.color} onMouseDown={e => props.change('fillColor', c.color)} className={c.color == props.fillColor ? "selected" : ""} style={{ backgroundColor: c.color }}></a>
             })}</div>

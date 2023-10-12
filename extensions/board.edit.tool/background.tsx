@@ -34,9 +34,9 @@ export function BackgroundColor(props: { name?: string, tool: BoardEditTool, noT
         {props.tool.isShowDrop(name) && <div className="w-160 shy-board-edit-background-color-drops">
             {cs.map(c => {
                 if (c.color == 'transparent') return <a
-                    className={'transparent ' + (c.color == props.value ? "selected" : "")}
+                    className={'transparent flex-center ' + (c.color == props.value ? "selected" : "")}
                     onMouseDown={e => props.change(c.color)} key={c.color}
-                    style={{ borderColor: 'transparent', backgroundColor: c.color }}>
+                    style={{display:'inline-flex', borderColor: 'transparent', backgroundColor: c.color }}>
                     <Icon size={30} icon={NoneSvg}></Icon>
                 </a>
                 return <a className={c.color == props.value ? "selected" : ""} onMouseDown={e => props.change(c.color)} key={c.color} style={{ backgroundColor: c.color }}></a>
