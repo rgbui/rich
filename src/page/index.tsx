@@ -127,6 +127,10 @@ export class Page extends Events<PageDirective>{
         matrix.translate(rect.left, rect.top);
         return matrix;
     }
+    get bound() {
+        var rect = Rect.fromEle(this.viewEl);
+        return rect;
+    }
     get globalMatrix() {
         return this.windowMatrix.appended(this.matrix);
     }
@@ -153,13 +157,16 @@ export class Page extends Events<PageDirective>{
         this.view.forceUpdate()
     }
     fragment: DocumentFragment;
-    isOff: boolean = false;
+    /**
+     * 判断是否页面处于失活状态
+     */
+    isPageOff: boolean = false;
     cacheFragment() {
         try {
             if (!this.fragment) this.fragment = document.createDocumentFragment();
             if (!this.fragment.contains(this.root))
                 this.fragment.appendChild(this.root);
-            this.isOff = true;
+            this.isPageOff = true;
             this.kit.picker.onCancel();
             forceCloseBoardEditTool();
         }
@@ -193,7 +200,7 @@ export class Page extends Events<PageDirective>{
                         if (this.isCanEdit) title.onEmptyTitleFocusAnchor();
                     }
                 }
-                this.isOff = true;
+                this.isPageOff = false;
                 this.each(c => {
                     if ([
                         BlockUrlConstant.DataGridBoard,
@@ -237,7 +244,7 @@ export class Page extends Events<PageDirective>{
     getRelativeRect(rect: Rect) {
         return new Rect(this.globalMatrix.transform(rect.leftTop), this.globalMatrix.transform(rect.rightBottom))
     }
-    getInverseRect(rect:Rect){
+    getInverseRect(rect: Rect) {
         return new Rect(this.globalMatrix.inverseTransform(rect.leftTop), this.globalMatrix.inverseTransform(rect.rightBottom))
     }
     get isBoard() {
@@ -424,7 +431,7 @@ export class Page extends Events<PageDirective>{
         options?: { block?: Block, disabledStore?: boolean }
     ) => {
         return this.onAction(directive, fn, options);
-    }, 700)
+    },700)
     getScrollDiv(el?: HTMLElement) {
         if (this.pageLayout?.type == PageLayoutType.textChannel) {
             var tc = this.find(g => g.url == BlockUrlConstant.TextChannel);
