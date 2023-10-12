@@ -10,7 +10,7 @@ import {
     DoubleRightSvg,
     LockSvg,
     MemberSvg,
-    MenuSvg,
+
     PageSvg,
     PublishSvg,
     SearchSvg
@@ -155,7 +155,7 @@ export class PageBar extends React.Component<{ page: Page }>{
             this.users.push(this.props.page.user?.id)
         }
         return <div className="gap-r-10">
-            {(this.users.length > 1 || this.users.length == 1 && this.props.page.user?.id && this.users[0] != this.props.page.user?.id) && <UserAvatars size={30} users={this.users}></UserAvatars>}
+            {(this.users.length > 1 || this.users.length == 1 && this.props.page.user?.id && this.users[0] != this.props.page.user?.id) && <UserAvatars limit={5} size={30} users={this.users}></UserAvatars>}
         </div>
     }
     toLogin() {
@@ -171,8 +171,8 @@ export class PageBar extends React.Component<{ page: Page }>{
         if (this.props.page.openSource == 'snap') return <></>
         var user = this.props.page.user;
         if (this.props.page.isPubSite) {
-            if (this.props.page.isSign) return <div className="flex r-flex-center r-size-24 r-item-hover r-round r-cursor r-gap-r-10 text-1 gap-r-10">
-                <span onClick={e => this.toHome()} className="size-30 gap-r-30"><Avatar size={32} userid={user.id}></Avatar></span>
+            if (this.props.page.isSign) return <div className="flex   gap-r-10">
+                <span onClick={e => this.toHome()} className="size-40 gap-r-30 flex-center cursor"><Avatar size={32} userid={user.id}></Avatar></span>
             </div>
             else if (this.props.page.openSource == 'page') return <div className="flex r-flex-center  r-gap-r-10 ">
                 <Button size="small" onClick={e => this.toLogin()}><S>登录</S></Button>
@@ -241,7 +241,7 @@ export class PageBar extends React.Component<{ page: Page }>{
                 <Icon icon={ChevronLeftSvg} size={18}></Icon>
             </span>}
             {!isMobileOnly && this.props.page.openSource == 'page' && !this.props.page.isPubSiteDefineContent && <ToolTip placement="bottom" overlay={lst('折叠侧边栏')}><span onClick={e => this.onSpreadMenu()} className="flex-fixed size-20 flex-center item-hover round cursor ">
-                <Icon icon={MenuSvg} size={14}></Icon>
+                <Icon icon={{ name: 'bytedance-icon', code: 'hamburger-button' }} size={14}></Icon>
             </span></ToolTip>}
             {this.renderTitle()}
             <div className="flex-fixed flex">{this.renderUsers()}{this.renderPropertys()}</div>
@@ -258,8 +258,14 @@ export class PageBar extends React.Component<{ page: Page }>{
         if (this.props.page.isPubSiteDefineContent) {
             style = this.props.page.getScreenStyle()
         }
+        if (isMobileOnly) {
+            style.marginLeft = 5;
+            style.marginRight = 5;
+        }
         return <DefinePageNavBar
             user={this.props.page.user}
-            ws={this.props.page.ws} style={style}></DefinePageNavBar>
+            ws={this.props.page.ws}
+            renderUser={this.renderUsers()}
+            style={style}></DefinePageNavBar>
     }
 }
