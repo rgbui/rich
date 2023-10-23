@@ -92,12 +92,14 @@ export class TableFilterView extends EventsComponent {
                 { text: lst('不为空'), value: '$isNotNull' },
             ]
         }
-        else if ([FieldType.text,
-        FieldType.textarea,
-        FieldType.title,
-        FieldType.link,
-        FieldType.phone,
-        FieldType.email].includes(field.type)) {
+        else if ([
+            FieldType.text,
+            FieldType.textarea,
+            FieldType.title,
+            FieldType.link,
+            FieldType.phone,
+            FieldType.email
+        ].includes(field.type)) {
             return [
                 { text: lst('等于'), value: '$eq' },
                 { text: lst('不等于'), value: '$ne' },
@@ -107,6 +109,14 @@ export class TableFilterView extends EventsComponent {
                 { text: lst('结尾为'), value: '$endWith' },
                 { text: lst('为空'), value: '$isNull' },
                 { text: lst('不为空'), value: '$isNotNull' }
+            ]
+        }
+        else if ([FieldType.bool].includes(field.type)) {
+            return [
+                { text: lst('等于'), value: '$eq' },
+                { text: lst('不等于'), value: '$ne' },
+                { text: lst('为空'), value: '$isNull' },
+                { text: lst('不为空'), value: '$isNotNull' },
             ]
         }
         return [

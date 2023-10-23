@@ -101,6 +101,14 @@ export class CustomTableFilterView extends EventsComponent {
                 { text: lst('不为空'), value: '$isNotNull' }
             ]
         }
+        else if ([FieldType.bool].includes(field.type)) {
+            return [
+                { text: lst('等于'), value: '$eq' },
+                { text: lst('不等于'), value: '$ne' },
+                { text: lst('为空'), value: '$isNull' },
+                { text: lst('不为空'), value: '$isNotNull' },
+            ]
+        }
         return [
             { text: lst('为空'), value: '$isNull' },
             { text: lst('不为空'), value: '$isNotNull' },
