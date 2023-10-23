@@ -63,6 +63,7 @@ class GhostView {
         document.body.style.overflow = this.bodyOverFlow;
     }
     containEl(e: HTMLElement) {
+        if (typeof this._el == 'undefined') var el = this.el;
         if (this._el === e) return true;
         if (this._el.contains(e)) return true;
         return false;
