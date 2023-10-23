@@ -215,7 +215,8 @@ export class MenuItemView extends React.Component<{
             </div></ToolTip>}
             {item.type == MenuItemType.color && <div className={"shy-menu-box-item-colors  gap-h-10" + (item.block ? "" : " flex-top flex-wrap")}>
                 {item.options.map(t => {
-                    if (item.block) {
+                    if (item.block)
+                    {
                         return <a key={t.value} className={"flex  cursor padding-w-10 padding-h-3 round item-hover " + (t.checked ? "item-hover-focus" : "")}
                             onMouseDown={e => { e.stopPropagation(); item.value = t.value; this.select(item, e.nativeEvent) }}>
                             {item.name && item.name.indexOf('font') > -1 && <span className="size-24 flex-center circle  border" style={{ color: t.value }}>

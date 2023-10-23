@@ -2,6 +2,7 @@ import React, { CSSProperties } from "react";
 import { MenuItem } from "./declare";
 import { MenuItemView } from "./item";
 import { Rect } from "../../../src/common/vector/point";
+
 export class MenuView extends React.Component<{
     items: MenuItem[],
     style?: CSSProperties,
@@ -18,7 +19,6 @@ export class MenuView extends React.Component<{
 }>{
     render() {
         var items = this.localItems || this.props.items;
-        console.log('render....',items.length,this.localItems,this.props.items);
         return <div className='shy-menu-view' style={{
             ...(this.props.style || {}),
         }}>{items.map((item, index) => {

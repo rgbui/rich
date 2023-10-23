@@ -2,7 +2,6 @@ import React, { CSSProperties } from "react";
 import { CloseSvg } from "../../svgs";
 import { Icon } from "../icon";
 import "./style.less";
-
 export class Input extends React.Component<{
     style?: CSSProperties,
     disabled?: boolean,
