@@ -17,6 +17,7 @@ import { BlockDirective, BlockRenderRange } from "../../../src/block/enum";
 import { lst } from "../../../i18n/store";
 import { Tip } from "../../../component/view/tooltip/tip";
 
+
 @url('/tab')
 export class Tab extends Block {
     blocks: { childs: Block[], otherChilds: Block[] } = { childs: [], otherChilds: [] };
@@ -260,6 +261,9 @@ export class Tab extends Block {
                 return;
         }
         return await super.onClickContextMenu(item, e);
+    }
+    get tabPages(){
+        return (this.view as any). tabPages as HTMLElement;
     }
 }
 @view('/tab')

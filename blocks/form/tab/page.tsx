@@ -43,6 +43,9 @@ export class TabPage extends Block {
         if (this.childs.length > 0) return tag + '' + (await (this.childs.asyncMap(async b => await b.getMd()))).join('  \n') + "  "
         else return tag + '' + this.content + "  "
     }
+    getScrollDiv(): HTMLElement {
+        return this.myTab.tabPages;
+    }
 }
 @view('/tab/page')
 export class TabPageView extends BlockView<TabPage>{
