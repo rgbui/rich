@@ -96,7 +96,8 @@ import "./data-grid/element/filter/search";
 import "./data-grid/element/filter/sort";
 import "./data-grid/element/filter/user";
 import "./data-grid/element/filter/option";
-import "./data-grid/paging/index";
+import "./data-grid/block/paging";
+import "./data-grid/block/preOrNext";
 import "./data-grid/view/form/index";
 
 import "./at/date";
@@ -110,6 +111,7 @@ import './page/ref.links';
 import './page/sub.links';
 import './page/comment/index';
 import "./page/tag";
+
 import "./map/amap";
 
 import './board/note/index';
