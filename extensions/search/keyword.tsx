@@ -23,7 +23,7 @@ import { S } from "../../i18n/view";
 export class SearchBox extends EventsComponent {
     render() {
         var ws = this.ws;
-        return <div className={"bg-white  round" + (isMobileOnly ? " vw100-20" : " w-800 ")}>
+        return <div className={"bg-white  round" + (isMobileOnly ? " vw100-c20" : " w-800 ")}>
             <div className="padding-10 flex">
                 <div className="flex-auto">
                     <Input clear noborder
