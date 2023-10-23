@@ -65,6 +65,11 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
                         var v = Array.isArray(value) ? value : [value];
                         return v as any;
                         break;
+                    case FieldType.user:
+                        if (lodash.isUndefined(value) || lodash.isNull(value)) return [] as any;
+                        var v = Array.isArray(value) ? value : [value];
+                        return v as any;
+                        break;
                 }
             }
             return value;
@@ -83,6 +88,8 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
                         return [] as any
                     case FieldType.image:
                     case FieldType.cover:
+                        return [] as any
+                    case FieldType.user:
                         return [] as any
                 }
             }

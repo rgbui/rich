@@ -14,6 +14,7 @@ import "./views/disk";
 import "./views/issue";
 import "./views/questions";
 import "./views/rank";
+import "./views/user.story";
 
 export type CardPropsType = {
     url: string,

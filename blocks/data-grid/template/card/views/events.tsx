@@ -18,8 +18,8 @@ import { S } from "../../../../../i18n/view";
  */
 CardModel({
     url: '/events',
-    title:('活动') ,
-    remark:( '适用于活动举办发布'),
+    title: ('活动'),
+    remark: ('适用于活动举办发布'),
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridGallery],
     props: [
@@ -33,16 +33,16 @@ CardModel({
             ],
             required: true
         },
-        { name: 'title', text: ( '标题'), types: [FieldType.title, FieldType.text] },
-        { name: 'date', text: ( '报名时间'), types: [FieldType.date] },
-        { name: 'types', text:  ('类别'), types: [FieldType.option, FieldType.options] },
-        { name: 'address', text: ( '地址'), types: [FieldType.text] },
-        { name: 'users', text:  ('报名用户'), types: [FieldType.user] }
+        { name: 'title', text: ('标题'), types: [FieldType.title, FieldType.text] },
+        { name: 'date', text: ('报名时间'), types: [FieldType.date] },
+        { name: 'types', text: ('类别'), types: [FieldType.option, FieldType.options] },
+        { name: 'address', text: ('地址'), types: [FieldType.text] },
+        { name: 'users', text: ('报名用户'), types: [FieldType.user] }
     ],
     views: [
-        { url: BlockUrlConstant.DataGridTable, text:('活动') , },
-        { autoCreate: true, url: BlockUrlConstant.DataGridGallery, text:('活动列表') , },
-        { url: BlockUrlConstant.RecordPageView, text:('活动详情') , }
+        { url: BlockUrlConstant.DataGridTable, text: ('活动'), },
+        { autoCreate: true, url: BlockUrlConstant.DataGridGallery, text: ('活动列表'), },
+        { url: BlockUrlConstant.RecordPageView, text: ('活动详情'), }
     ],
     dataList: [
         {
@@ -95,7 +95,7 @@ export class CardPin extends CardView {
         return <div onMouseDown={e => self.openEdit(e)} className="flex flex-col flex-full border round">
             <div className="flex-fixed h-150 relative">
                 {hasPic && <img className="w100 h100 block  object-center" src={pics[0].url} />}
-                {date.getTime() > Date.now() && <div className="pos-bottom-full flex flex-end">
+                {date && date.getTime() > Date.now() && <div className="pos-bottom-full flex flex-end">
                     <span className="bg-green f-14 padding-w-5  round-16 gap-10 cursor text-white"><S>报名中</S></span>
                 </div>}
             </div>

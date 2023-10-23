@@ -14,20 +14,21 @@ import { lst } from "../../../../../i18n/store";
  * 
  * 
  */
-CardModel({ abled:false,
+CardModel({
+    abled: false,
     url: '/rank',
-    title:('排行榜') ,
-    remark:( '排行榜'),
+    title: ('排行榜'),
+    remark: ('排行榜'),
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridList],
     props: [
         { name: 'user', text: ('用户'), types: [FieldType.user] },
-        { name: 'score', text:( '得分'), types: [FieldType.number] },
+        { name: 'score', text: ('得分'), types: [FieldType.number] },
     ],
     views: [
         { url: BlockUrlConstant.DataGridTable, text: ('排行'), },
         { autoCreate: true, url: BlockUrlConstant.DataGridList, text: ('排行榜'), },
-        { url: BlockUrlConstant.RecordPageView, text:( '排行详情'), }
+        { url: BlockUrlConstant.RecordPageView, text: ('排行详情'), }
     ],
     dataList: [
         { score: 20 },

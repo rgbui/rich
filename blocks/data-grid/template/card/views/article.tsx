@@ -120,6 +120,7 @@ export class CardPin extends CardView {
         var comment = this.getValue<{ count: number, users: string[] }>('comment', FieldType.comment);
         var like = this.getValue<{ count: number, users: string[] }>('like', FieldType.like);
         var isLike = this.isEmoji('like');
+
         function renderContent() {
             return <>
                 <div className="h4 flex-fixed">{title}</div>
@@ -144,7 +145,7 @@ export class CardPin extends CardView {
         return <div onMouseDown={e => self.openEdit(e)}>
             <div className="flex flex-full round border  gap-h-10">
                 {hasPic && <><div className="flex-fixed">
-                    <img className="w-300 max-h-300 block  object-center" src={pics[0].url} />
+                    <img className="w-300 max-h-250 block  object-center" src={pics[0].url} />
                 </div>
                     <div className="flex-auto padding-10 flex flex-col flex-full">{renderContent()}</div>
                 </>
@@ -263,10 +264,11 @@ export class CardContentPin extends CardView {
         var comment = this.getValue<{ count: number, users: string[] }>('comment', FieldType.comment);
         var like = this.getValue<{ count: number, users: string[] }>('like', FieldType.like);
         var isLike = this.isEmoji('like');
-        function renderContent() {
+        function renderContent()
+        {
             return <>
-                <div className="f-18 fold flex-fixed">{title}</div>
-                <div className="remark f-12 flex-auto">{remark}</div>
+                <div className="flex f-18 fold flex-fixed">{title}</div>
+                <div className="flex  remark f-12 flex-auto">{remark}</div>
                 <div className="flex flex-fixed">
                     <div className="flex-auto flex">
                         <UserBox userid={author}>{(user) => {
@@ -286,13 +288,12 @@ export class CardContentPin extends CardView {
         }
         return <div onMouseDown={e => self.openEdit(e)}>
             <div className="flex flex-full round border  gap-h-10">
-                <div className="flex-auto padding-10 flex flex-col ">{renderContent()}</div>
-                {hasPic && <><div className="flex-fixed">
+                {hasPic && <><div className="flex-auto padding-10 flex flex-col flex-full ">{renderContent()}</div><div className="flex-fixed">
                     <img className="w-150 max-h-80 block  object-center" src={pics[0].url} />
                 </div>
                 </>
                 }
-                {!hasPic && <div className="padding-10 flex flex-col ">{renderContent()}</div>}
+                {!hasPic && <div className="padding-10 flex flex-col  flex-full ">{renderContent()}</div>}
             </div>
             <Divider></Divider>
         </div>
