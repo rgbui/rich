@@ -68,25 +68,39 @@ export class HandleView extends React.Component<{ handle: Handle }>{
                 })
             }
             else {
+                var scrollDiv = self.handle.dragBlocks[0]?.panel?.getScrollDiv();
+                if (!scrollDiv) scrollDiv = self.handle.kit.page.getScrollDiv();
+                var isCanDrag = self.handle.dragBlocks.every(b => b.isCanDrag);
                 MouseDragger<{ item: HTMLElement }>({
                     event,
                     dis: 5,
                     moveStart(ev, data) {
-                        onAutoScrollStop();
-                        self.handle.isDrag = true;
-                        ghostView.load(self.handle.dragBlocks.map(b => b.contentEl), {
-                            background: '#fff',
-                            point: Point.from(ev)
-                        })
+                        if (isCanDrag) {
+                            onAutoScrollStop();
+                            self.handle.isDrag = true;
+                            ghostView.load(self.handle.dragBlocks.map(b => b.contentEl), {
+                                background: '#fff',
+                                point: Point.from(ev)
+                            })
+                        }
                     },
                     moving(ev, data, isend) {
-                        if (ghostView.containEl(ev.target as HTMLElement)) return;
-                        self.handle.onDropOverBlock(self.handle.kit.page.getBlockByMouseOrPoint(ev), ev);
-                        ghostView.move(Point.from(ev).move(10, 10));
-                        onAutoScroll({ el: self.handle.kit.page.contentEl, feelDis: 100, dis: 30, interval: 50, point: Point.from(ev) })
+                        if (!isend && isCanDrag) {
+                            if (ghostView.containEl(ev.target as HTMLElement)) return;
+                            self.handle.onDropOverBlock(self.handle.kit.page.getBlockByMouseOrPoint(ev), ev);
+                            ghostView.move(Point.from(ev).move(10, 10));
+                            onAutoScroll({
+                                el: scrollDiv,
+                                feelDis: 100,
+                                dis: 30,
+                                interval: 50,
+                                point: Point.from(ev)
+                            })
+                        }
                     },
                     async moveEnd(ev, isMove, data) {
-                        onAutoScrollStop();
+                        if (isCanDrag)
+                            onAutoScrollStop();
                         try {
                             if (self.handle.isDrag == true) await self.handle.onDropBlock()
                             else await self.handle.onClickBlock(ev);

@@ -259,8 +259,8 @@ export class AnchorCursor {
     /**
     * 这里指定将光标移到appearAnchor的最前面或者最后面
     */
-    onFocusAppearAnchor(aa: AppearAnchor, options?: { render?: boolean, merge?: boolean, at?: number, last?: boolean | number, left?: number, y?: number }) {
-        this.kit.page.onAction('onFocusAppearAnchor', async () => {
+    async onFocusAppearAnchor(aa: AppearAnchor, options?: { render?: boolean, merge?: boolean, at?: number, last?: boolean | number, left?: number, y?: number }) {
+        await this.kit.page.onAction('onFocusAppearAnchor', async () => {
             if (options?.merge) this.kit.page.snapshoot.merge();
             this.focusAppearAnchor(aa, options)
             if (options?.render) {
@@ -296,8 +296,8 @@ export class AnchorCursor {
    * 
    * 将光标移到block中的某个appearAnchor中
    */
-    onFocusBlockAnchor(block: Block, options?: { store?: boolean, merge?: boolean, render?: boolean, last?: boolean }) {
-        this.kit.page.onAction('onFocusAppearAnchor', async () => {
+    async onFocusBlockAnchor(block: Block, options?: { store?: boolean, merge?: boolean, render?: boolean, last?: boolean }) {
+        await this.kit.page.onAction('onFocusAppearAnchor', async () => {
             if (options?.merge) this.kit.page.snapshoot.merge();
             this.focusBlockAnchor(block, options)
             if (options?.render) {

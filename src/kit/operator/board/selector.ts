@@ -11,7 +11,8 @@ import { ActionDirective } from "../../../history/declare";
 import { loadPaper } from "../../../paper";
 import { setBoardBlockCache } from "../../../page/common/cache";
 
-export function CheckBoardTool(kit: Kit,
+export function CheckBoardTool(
+    kit: Kit,
     block: Block,
     event: React.MouseEvent) {
     var fra: Block = block ? block.frameBlock : kit.page.getPageFrame();
@@ -109,7 +110,7 @@ export function CheckBoardTool(kit: Kit,
             }
         })
     }
-    else if (url == BlockUrlConstant.Image || url == BlockUrlConstant.Note ||url== BlockUrlConstant.BoardPageCard || url == BlockUrlConstant.Shape || url == BlockUrlConstant.Frame) {
+    else if (url == BlockUrlConstant.Image || url == BlockUrlConstant.Note || url == BlockUrlConstant.BoardPageCard || url == BlockUrlConstant.Shape || url == BlockUrlConstant.Frame) {
         var newBlock: Block;
         var isMounted: boolean = false;
         var initMatrix: Matrix;
@@ -191,11 +192,8 @@ export function CheckBoardTool(kit: Kit,
         var path: paper.Path;
         var points: { x: number, y: number }[] = [];
         async function createNewPenBlock() {
-            console.log('pick...');
             await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
-                console.log('xxxx');
                 var paper = await loadPaper();
-                console.log('ggg', paper);
                 var data = kit.boardSelector.currentSelector.data || {};
                 newBlock = await kit.page.createBlock(kit.boardSelector.currentSelector.url, data, fra);
                 await setBoardBlockCache(newBlock);
@@ -214,13 +212,15 @@ export function CheckBoardTool(kit: Kit,
                 createNewPenBlock();
             },
             move(ev, data) {
-                if (newBlock) {
+                if (newBlock && path) {
                     var tr = gm.inverseTransform(Point.from(ev));
                     path.add([tr.x, tr.y]);
                     var ma = new Matrix();
                     points.push(tr);
                     var poly = new Polygon(...points);
                     var bound = poly.bound;
+                    var s = newBlock.pattern?.getSvgStyle()?.strokeWidth || 1;
+                    bound = bound.extend(fra.realPx(s));
                     ma.translate(bound.x, bound.y);
                     newBlock.matrix = ma;
                     newBlock.fixedWidth = Math.abs(bound.width);

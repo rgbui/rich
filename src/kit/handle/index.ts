@@ -75,6 +75,9 @@ export class Handle extends Events {
             willDropBlock = undefined;
         }
         if (willDropBlock && this.dragBlocks.some(s => s === willDropBlock)) return;
+        if (willDropBlock) {
+            if (this.dragBlocks.some(s => s.find(c => c == willDropBlock)) ? true : false) return
+        }
         if (willDropBlock !== this.dropBlock && this.dropBlock) {
             this.dropBlock.dropLeave();
         }

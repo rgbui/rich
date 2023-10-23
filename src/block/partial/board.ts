@@ -192,7 +192,7 @@ export class Block$Board {
                 block.page.kit.picker.view.forceUpdate();
                 if (isEnd) {
                     block.page.onAction(ActionDirective.onResizeBlock, async () => {
-                        if (!matrix.equals(block.matrix))await block.updateMatrix(matrix, block.matrix);
+                        if (!matrix.equals(block.matrix)) await block.updateMatrix(matrix, block.matrix);
                         await block.manualUpdateProps(
                             { fixedWidth: w, fixedHeight: h },
                             { fixedWidth: block.fixedWidth, fixedHeight: block.fixedHeight }
@@ -282,11 +282,9 @@ export class Block$Board {
         }
         if (isSelfUpdate) this.forceUpdate()
     }
-
     isBoardCanMove(this: Block) {
         return true;
     }
-
     boardMoveStart(this: Block, point: Point) {
 
     }
@@ -297,8 +295,7 @@ export class Block$Board {
     }
     setBoardMoveMatrix(this: Block, matrix: Matrix) {
         this.moveMatrix = matrix;
-        this.updateRenderLines();
-        this.forceUpdate()
+        this.updateRenderLines(true);
     }
     async boardMoveEnd(this: Block, from: Point, to: Point) {
         var moveMatrix = new Matrix();
@@ -330,6 +327,7 @@ export class Block$Board {
             }
         }
     }
+
 }
 
 

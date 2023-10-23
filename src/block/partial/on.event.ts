@@ -145,7 +145,7 @@ export class Block$Event {
                             text: f.text,
                             overlay: f.text,
                             value: f.color,
-                            checked: this.pattern?.getFontStyle()?.color == f.color ? true : false
+                            checked: lodash.isEqual(this.pattern?.getFontStyle()?.color,f.color) ? true : false
                         }
                     })
                 },
@@ -223,10 +223,11 @@ export class Block$Event {
     }
     async onContextmenu(this: Block, event: MouseEvent | Point) {
         var self = this;
+        console.log(event, 'ggg', await this.onGetContextMenus())
         var re = await useSelectMenuItem(
             this.isFreeBlock ? { roundPoint: event instanceof Point ? event : Point.from(event) } : {
                 roundArea: !(event instanceof Point) ? Rect.fromEvent(event) : undefined,
-                roundPoint: event instanceof Point ? Point.from(event) : undefined,
+                roundPoint: event instanceof Point ? event : undefined,
                 direction: 'left'
             },
             await this.onGetContextMenus(),

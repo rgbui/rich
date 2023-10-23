@@ -57,7 +57,7 @@ export enum DropDirection {
  * @returns 
  * 
  */
-export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block, event: MouseEvent) {
+export function cacDragDirection(kit: Kit,dragBlocks: Block[],dropBlock: Block, event: MouseEvent) {
     var fr: 'left' | 'right' | 'bottom' | 'none' = 'none';
     var ele = event.target as HTMLElement;
     var point = Point.from(event);
@@ -69,10 +69,10 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
         /**
          * 这表示从左边开始查找，如果找到，说明方位在右边
          */
-        dropBlock = kit.page.findXBlock(event, g => !g.isView && !g.isPanel && g !== oldDropBlock, 'left', bound);
+        dropBlock = kit.page.findXBlock(event, g => !g.isView && g.isAllowDrop && g !== oldDropBlock, 'left', bound);
         if (dropBlock) fr = 'right';
         if (!dropBlock) {
-            dropBlock = kit.page.findXBlock(event, g => !g.isView && !g.isPanel && g !== oldDropBlock, 'right', bound);
+            dropBlock = kit.page.findXBlock(event, g => !g.isView && g.isAllowDrop && g !== oldDropBlock, 'right', bound);
             if (dropBlock) fr = 'left';
         }
         var innerBlock = oldDropBlock.getInnerPanelBlock();
@@ -147,7 +147,6 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
             fr = 'bottom'
         }
     }
-
     console.log('finally', dropBlock, fr);
     var direction = DropDirection.none;
     var drs = dropBlock.canDropDirections();

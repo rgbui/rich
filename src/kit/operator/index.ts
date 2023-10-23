@@ -53,7 +53,6 @@ export class PageOperator {
                 rect = rect.extend(this.kit.boardLine.line.realPx(50));
                 var bs = gm.findBlocksByRect(rect);
                 bs = bs.findAll(g => g.isFreeBlock);
-                console.log('gggg', bs);
                 var b = bs.findMin(g => g.getVisibleBound().middleCenter.dis(rect.middleCenter));
                 if (b) {
                     block = b;

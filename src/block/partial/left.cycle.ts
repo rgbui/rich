@@ -6,9 +6,12 @@ import { Matrix } from "../../common/matrix";
 import { DropDirection } from "../../kit/handle/direction";
 import { BlockFactory } from "../factory/block.factory";
 import { Pattern } from "../pattern";
+import { GetFontStores, loadFontFamily } from "../../../extensions/board.edit.tool/fontfamily/store";
 
 export class Block$LifeCycle {
-    mounted(this: Block, fn: () => void) {
+    mounted(this: Block,
+        fn: () => void
+    ) {
         this.once('mounted', fn);
     }
     /**
@@ -40,6 +43,13 @@ export class Block$LifeCycle {
      * @param this 
      */
     async onMounted(this: Block) {
+        var fontFamily = this?.pattern?.getFontStyle()?.fontFamily;
+        if (fontFamily) {
+            var ls = GetFontStores().find(c => c.name == fontFamily);
+            if (ls) {
+                loadFontFamily(ls.name)
+            }
+        }
         if (this.createSource) {
             await this.createdDidMounted()
         }

@@ -27,6 +27,7 @@ export class BoardBlockHover extends React.Component<{ kit: Kit }>{
                     case BoardPointType.pathConnectPort:
                         return <circle
                             onMouseEnter={e => this.enter(pi, e)}
+                            onMouseLeave={e => this.leave(pi, e)}
                             className="connect"
                             key={i} cx={pi.point.x}
                             cy={pi.point.y}
