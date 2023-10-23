@@ -58,7 +58,6 @@ export class MeasureView extends React.Component<{
             event: e,
             dis: 0,
             moving(ev, data, isEnd) {
-                console.log(ev, isEnd);
                 setValue(ev, isEnd);
             }
         })
