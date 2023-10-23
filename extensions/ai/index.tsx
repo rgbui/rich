@@ -156,6 +156,7 @@ export class AITool extends EventsComponent {
      */
     render(): ReactNode {
         var style: CSSProperties = {
+            minWidth: 300
         }
         if (this.visible == false) style.display = 'none';
         if (this.options.pos) {
@@ -404,7 +405,7 @@ export class AITool extends EventsComponent {
                             for (let i = 0; i < blockDatas.length; i++) {
                                 if (blockDatas[i].url == BlockUrlConstant.TextSpan) {
                                     var bd = bs[i];
-                                    if (bd.pattern) {
+                                    if (bd?.pattern) {
                                         var pattern = await bd.pattern.cloneData();
                                         if (bd.url != BlockUrlConstant.TextSpan) {
                                             blockDatas[i].url = bd.url;
@@ -725,7 +726,8 @@ export class AITool extends EventsComponent {
     lastCommand: { ask: string, command: 'text' | 'image' | 'selection', options?: any } = null;
     async aiText(options: { prompt?: string, model?: string, isNotFound?: boolean }) {
         this.controller = null;
-        if (typeof options.model == 'undefined') options.model = this?.page?.ws?.aiConfig?.text
+        if (!options) options = {} as any;
+        if (!options?.model) options.model = this?.page?.ws?.aiConfig?.text || (window.shyConfig.isUS ? "gpt-3.5-turbo" : "ERNIE-Bot-turbo");
         this.lastCommand = { ask: this.ask, command: 'text', options: lodash.cloneDeep(options) };
         var self = this;
         this.status = AIAskStatus.asking;
