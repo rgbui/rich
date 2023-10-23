@@ -90,6 +90,7 @@ export class PageCardView extends BlockView<PageCard>{
             borderRadius: s?.contentStyle?.round,
             boxShadow: s?.contentStyle?.shadow,
         }
+        contentStyle.minHeight = 50;
         contentStyle.borderRadius = 16;
         contentStyle.boxShadow = 'rgba(18, 18, 18, 0.1) 0px 1px 3px 0px';
         contentStyle.boxSizing = 'border-box';
