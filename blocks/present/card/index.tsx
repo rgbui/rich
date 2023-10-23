@@ -76,6 +76,11 @@ export class PageCard extends Block {
         }
         return await super.onClickContextMenu(item, event);
     }
+    getScrollDiv(): HTMLElement {
+        var p = this.parentPanel;
+        if (p) return p.getScrollDiv()
+        else return this.page.getScrollDiv();
+    }
 }
 @view('/card')
 export class PageCardView extends BlockView<PageCard>{

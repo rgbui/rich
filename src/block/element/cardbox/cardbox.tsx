@@ -234,6 +234,11 @@ export class CardBox extends Block {
     get contentEl() {
         return (this.view as any)?.contentEl as HTMLElement;
     }
+    getScrollDiv(): HTMLElement {
+        var p = this.parentPanel;
+        if (p) return p.getScrollDiv()
+        else return this.page.getScrollDiv();
+    }
 }
 /*** 在一个页面上，从视觉上有多个视图块，
  * 如每个页面都有一个初始的内容视图，不可拖动
