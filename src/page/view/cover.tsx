@@ -19,7 +19,7 @@ export class PageCover extends React.Component<{ page: Page }>{
         var self = this;
         var page = this.props.page;
         var pd = this.props.page.getPageDataInfo();
-        if (pd.cover?.abled && this.props.page.onlyDisplayContent !== true) {
+        if (pd.cover?.abled && this.props.page.hideDocTitle !== true) {
             async function changeIcon(event: React.MouseEvent) {
                 if (!page.isCanEdit) return;
                 event.stopPropagation();
@@ -72,7 +72,10 @@ export class PageCover extends React.Component<{ page: Page }>{
                 self.forceUpdate();
             }
             var isCenter = (this.props.page.find(c => c.url == BlockUrlConstant.Title) as Title)?.align == 'center';
-            return <div className="shy-page-view-cover" onMouseDown={e => dragStart(e)}>
+            var isInsideCover = this.props.page?.pageTheme?.coverStyle?.display == 'inside-cover'
+            var isInside = this.props.page?.pageTheme?.coverStyle?.display == 'inside';
+            var isNoBorder = this.props.page?.pageTheme?.contentStyle?.transparency == 'noborder';
+            return <div className="shy-page-view-cover" style={isInside ? page.getScreenStyle() : undefined} onMouseDown={e => dragStart(e)}>
                 <img ref={e => this.img = e}
                     onDragStart={e => false}
                     onLoad={e => onloadSuccess()}
@@ -80,16 +83,18 @@ export class PageCover extends React.Component<{ page: Page }>{
                     draggable={false}
                     style={{
                         height: 240,
+                        borderRadius: isInsideCover && !isNoBorder ? '16px 16px 0px 0px' : undefined,
                         objectPosition: 'center' + (typeof pd?.cover?.top == 'number' ? pd.cover.top : 50) + '%'
                     }} />
                 {pd.cover?.thumb && <img className="shy-page-view-cover-thumb" style={{
                     height: 240,
+                    borderRadius: isInsideCover && !isNoBorder ? '16px 16px 0px 0px' : undefined,
                     visibility: self.loadThumb ? "hidden" : 'visible',
                     objectPosition: 'center' + (typeof pd?.cover?.top == 'number' ? pd.cover.top : 50) + '%'
                 }} onDragStart={e => false} draggable={false} src={autoImageUrl(pd.cover.thumb)} />}
                 {self.startPos && <div className="shy-page-view-cover-drag-tip"><S>拖动图片调整位置</S></div>}
                 <div className="shy-page-view-cover-nav">
-                    <div style={page.getScreenStyle()}>
+                    <div style={(isInside || isInsideCover) ? { paddingLeft: 16, paddingRight: 16 } : page.getScreenStyle()}>
                         <div style={{ position: 'relative', height: 24 }}>
                             {pd?.icon && <div onMouseDown={e => changeIcon(e)} className={"shy-page-view-cover-icon" + (isCenter ? " center" : "")}>
                                 <Icon size={72} icon={pd?.icon}></Icon>

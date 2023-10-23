@@ -1,4 +1,4 @@
-import { CSSProperties, Component } from "react";
+import { Component } from "react";
 import React from 'react';
 import { Page } from "../index";
 import { ChildsArea } from "../../block/view/appear";
@@ -58,7 +58,7 @@ export class PageView extends Component<{ page: Page }>{
         channel.sync('/page/update/info', this.updatePageInfo);
         this.observeScroll();
         this.observeOutsideDrop();
-        this.el.addEventListener('keydown', (this._keydown = e => this.page.onKeydown(e)), true);
+        document.addEventListener('keydown', (this._keydown = e => this.page.onKeydown(e)), true);
         this.el.addEventListener('wheel', this._wheel = e => this.page.onWheel(e), {
             passive: false
         });
@@ -148,7 +148,7 @@ export class PageView extends Component<{ page: Page }>{
     scrollTop: number;
     componentWillUnmount() {
         channel.off('/page/update/info', this.updatePageInfo);
-        this.el.removeEventListener('keydown', this._keydown, true);
+        document.removeEventListener('keydown', this._keydown, true);
         document.removeEventListener('mousedown', this._mousedown);
         document.removeEventListener('mouseup', this._mouseup);
         document.removeEventListener('mousemove', this._mousemove);
@@ -194,13 +194,13 @@ export class PageView extends Component<{ page: Page }>{
                 <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={20} icon={PageSvg} ></Icon><span><S>空白页面</S></span></a>
                 {!(this.page.ws.aiConfig?.disabled == true) && <>
                     <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc, { useAi: true })}><Icon size={20} icon={AiStartSvg}></Icon><span><S>用AI开始创作</S></span></a>
-                    <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.docCard, { useAi: true })}><Icon size={20} icon={MagicSvg}></Icon><span><S>用AI开始生成PPT</S></span></a>
+                    {/* <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.docCard, { useAi: true })}><Icon size={20} icon={MagicSvg}></Icon><span><S>用AI开始生成PPT</S></span></a> */}
                 </>}
             </div>
             <div className="shy-page-view-template-picker-items gap-t-20">
                 <div className="remark f-14"><S>新增</S></div>
                 {(window.shyConfig.isDev || ws.sn <= 20) && <a onMouseDown={e => this.page.onOpenTemplate()}><Icon icon={CubesSvg}></Icon><span><S>选择模板创建</S></span></a>}
-                {/*<a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={20} icon={PageSvg} ></Icon><span>页面</span></a> */}
+                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={20} icon={PageSvg} ></Icon><span>页面</span></a>
                 <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.db)}><Icon size={18} icon={CollectTableSvg} ></Icon><span><S>表格</S></span></a>
                 <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.docCard)}><Icon size={20} icon={DocCardsSvg} ></Icon><span><S>宣传页</S></span></a>
                 <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.board)}><Icon size={20} icon={{ name: 'bytedance-icon', code: 'enter-the-keyboard' }}></Icon><span><S>白板</S></span></a>
@@ -224,8 +224,8 @@ export class PageView extends Component<{ page: Page }>{
     pageBar: PageBar;
     render() {
         var pageStyle: Record<string, any> = {
-            lineHeight: this.page.lineHeight + 'px',
-            fontSize: this.page.fontSize + 'px'
+            lineHeight: this.page.lineHeight,
+            fontSize: this.page.fontSize
         }
         if (this.props.page.visiblePageBar === false) {
             pageStyle.top = 0;
@@ -234,23 +234,8 @@ export class PageView extends Component<{ page: Page }>{
             pageStyle.overflowY = 'hidden';
             pageStyle.overflowX = 'hidden';
         }
-        var pageContentStyle: CSSProperties = {}
-        var isDocCard = this.page?.pageLayout.type == PageLayoutType.docCard
-        if (isDocCard) {
-            if (this.props.page.pageFill.mode == 'color') {
-                pageContentStyle.backgroundColor = this.props.page.pageFill.color;
-            }
-            else if (this.props.page.pageFill.mode == 'image' || this.props.page.pageFill.mode == 'uploadImage') {
-                pageContentStyle.backgroundImage = `url(${this.props.page.pageFill.src})`;
-                pageContentStyle.backgroundSize = 'cover';
-                pageContentStyle.backgroundRepeat = 'no-repeat';
-                pageContentStyle.backgroundPosition = 'center center';
-                pageContentStyle.backgroundAttachment = 'fixed';
-            }
-            else pageContentStyle.backgroundColor = '#f7f3f2';
-        }
         var gap = 60;
-        if ([PageLayoutType.doc, PageLayoutType.formView, PageLayoutType.db].includes(this.props.page?.pageLayout?.type)) {
+        if ([PageLayoutType.doc, PageLayoutType.db].includes(this.props.page?.pageLayout?.type)) {
             gap = 60
         }
         else if (this.props.page?.pageLayout?.type == PageLayoutType.docCard) {
@@ -260,8 +245,8 @@ export class PageView extends Component<{ page: Page }>{
             gap = 0
         }
         var pd = this.props.page.getPageDataInfo();
-        return <div className="shy-page" style={pageContentStyle} >
-            <PageBar ref={e => this.pageBar = e} page={this.page}></PageBar>
+        return <div className="shy-page" >
+            <PageBar ref={e => { this.pageBar = e; }} page={this.page}></PageBar>
             <div className={'shy-page-view' + (this.page.readonly ? " shy-page-view-readonly" : "")}
                 style={pageStyle}
                 ref={e => this.page.viewEl = e}
@@ -271,16 +256,13 @@ export class PageView extends Component<{ page: Page }>{
                 onMouseEnter={e => this.page.onMouseenter(e)}
                 onMouseLeave={e => this.page.onMouseleave(e)}
                 onMouseDownCapture={e => this.page.onMouseDownCapture(e)}
-            // onPaste={e => this.page.onPaste(e.nativeEvent)}
-            // onCopy={e =>this.page.onCopy(e)}
-            // onCut={e =>this.page.onCut(e)}
             >
-                <div className={'shy-page-view-box ' + (this.props.page.isPageContent ? " shy-page-view-box-content" : "")}
+                <div className={'shy-page-view-box'}
                     onContextMenu={e => this.page.onContextmenu(e)}
                     onMouseDown={e => this.page.onMousedown(e)}>
                     <PageLayoutView page={this.page}>
                         <div className={'shy-page-view-content '} ref={e => this.page.contentEl = e}>
-                            <PageCover page={this.page}></PageCover>
+                            {!(this.page?.pageTheme?.coverStyle?.display == 'inside-cover') && <PageCover page={this.page}></PageCover>}
                             {!pd?.cover?.abled && gap > 0 && <div className={'h-' + gap}></div>}
                             {this.renderPageContent()}
                         </div>

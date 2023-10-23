@@ -19,7 +19,7 @@ import lodash from "lodash";
  * 
  */
 export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
-    window.shyLog('block', block);
+    // window.shyLog('block', block);
     kit.anchorCursor.renderSelectBlocks([]);
     var downPoint = Point.from(event);
     var gm = block ? block.panelGridMap : kit.page.gridMap;
@@ -100,7 +100,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                         kit.anchorCursor.onFocusBlockAnchor(lastBlock, { last: true, render: true });
                     }
                     else {
-                        if ([PageLayoutType.doc, PageLayoutType.formView].includes(kit.page.pageLayout.type))
+                        if ([PageLayoutType.doc, PageLayoutType.recordView].includes(kit.page.pageLayout.type))
                             kit.page.onCreateTailTextSpan(undefined);
                     }
                 }

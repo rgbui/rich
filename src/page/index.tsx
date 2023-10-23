@@ -17,7 +17,7 @@ import { PageDirective } from './directive';
 import { Mix } from '../../util/mix';
 import { Page$Cycle } from './partial/life.cycle';
 import { Page$Operator } from './partial/operator';
-import { LinkPageItem, LinkWs, PageLayoutType, PageVersion } from './declare';
+import { LinkPageItem, LinkWs, PageLayoutType, PageThemeStyle, PageVersion } from './declare';
 import { Point, Rect } from '../common/vector/point';
 import { GridMap } from './grid';
 import { Matrix } from '../common/matrix';
@@ -33,7 +33,6 @@ import { BlockUrlConstant } from '../block/constant';
 import lodash from 'lodash';
 import { ActionDirective } from '../history/declare';
 import { isMobileOnly } from "react-device-detect";
-import { BoxFillType, BoxStyle } from '../../extensions/doc.card/declare';
 import { dom } from '../common/dom';
 import { DataGridView } from '../../blocks/data-grid/view/base';
 import { Link } from '../../blocks/page/link';
@@ -107,10 +106,9 @@ export class Page extends Events<PageDirective>{
     showMembers: boolean = false;
     /**
      * 页面格式 
-     * 仅文档、数据表格起作用
+     * 仅文档、数据表格、宣传页起作用
      */
-    onlyDisplayContent: boolean = false;
-    isPageContent: boolean = false;
+    hideDocTitle: boolean = false;
     isPageForm: boolean = false;
     bar = true;
     get visiblePageBar() {
@@ -258,19 +256,25 @@ export class Page extends Events<PageDirective>{
     getScreenStyle() {
         var style: CSSProperties = {};
         if (isMobileOnly) {
-            style.paddingLeft = 20
-            style.paddingRight = 20
+            style.marginLeft = 20
+            style.marginRight = 20
         }
         else {
             if (this.isSupportScreen) {
                 var isFull: boolean = this.isFullWidth;
                 if (this.isPubSite) isFull = this.ws?.publishConfig.isFullWidth;
                 if (isFull) {
-                    style.paddingLeft = 80;
-                    style.paddingRight = 80;
+                    style.marginLeft = 80;
+                    style.marginRight = 80;
+                    if (this.pageLayout?.type == PageLayoutType.textChannel) {
+                        style.marginLeft = 0;
+                        style.marginRight = 0;
+                    }
                 }
                 else {
-                    style.width = 800;
+                    if (window.innerWidth < 1800) style.width = 800;
+                    else style.width = 1000;
+                    if (this.pageLayout?.type == PageLayoutType.textChannel) style.width += 200;
                     style.margin = '0 auto';
                 }
             }
@@ -294,7 +298,6 @@ export class Page extends Events<PageDirective>{
         if (this.locker?.lock) return false;
         if (!this.isSign) return false;
         if (this.readonly) return false;
-        if (this.pageLayout?.type == PageLayoutType.dbPickRecord) return false;
         if (this.isPubSite) return false;
         if (this.edit) return true;
         if (isMobileOnly) return false;
@@ -320,7 +323,6 @@ export class Page extends Events<PageDirective>{
         if (!this.isSign) return false;
         if (options.ignoreReadonly !== true)
             if (this.readonly) return false;
-        if (this.pageLayout?.type == PageLayoutType.dbPickRecord) return false;
         if (this.isPubSite) return false;
         if (this.edit) return true;
         if (isMobileOnly) return false;
@@ -373,17 +375,16 @@ export class Page extends Events<PageDirective>{
     get isSupportScreen() {
         return [
             PageLayoutType.db,
-            PageLayoutType.formView,
-            PageLayoutType.recordView,
             PageLayoutType.docCard,
-            PageLayoutType.doc
+            PageLayoutType.doc,
+            PageLayoutType.textChannel
         ].includes(this.pageLayout?.type || PageLayoutType.doc)
     }
     /**
      * 是否支持用户自定义封面
      */
     get isSupportCover() {
-        return [PageLayoutType.db, PageLayoutType.formView, PageLayoutType.doc].includes(this.pageLayout?.type || PageLayoutType.doc)
+        return [PageLayoutType.db, PageLayoutType.doc].includes(this.pageLayout?.type || PageLayoutType.doc)
     }
     async forceUpdate() {
         return new Promise((resolve, reject) => {
@@ -400,6 +401,7 @@ export class Page extends Events<PageDirective>{
             sf = this.ws.publishConfig.smallFont;
         }
         if (this.pageLayout?.type == PageLayoutType.docCard) return sf ? '1.6rem' : '1.8rem'
+        else if (this.pageLayout?.type == PageLayoutType.textChannel) return sf ? '1.2rem' : '1.4rem'
         return sf ? '1.4rem' : '1.6rem'
     }
     get lineHeight() {
@@ -408,6 +410,7 @@ export class Page extends Events<PageDirective>{
             sf = this.ws.publishConfig.smallFont;
         }
         if (this.pageLayout?.type == PageLayoutType.docCard) return sf ? '2.6rem' : '3.0rem'
+        else if (this.pageLayout?.type == PageLayoutType.textChannel) return sf ? '1.8rem' : '2.2rem'
         return sf ? '2.2rem' : '2.6rem'
     }
     private _pe: {
@@ -431,7 +434,7 @@ export class Page extends Events<PageDirective>{
         options?: { block?: Block, disabledStore?: boolean }
     ) => {
         return this.onAction(directive, fn, options);
-    },700)
+    }, 700)
     getScrollDiv(el?: HTMLElement) {
         if (this.pageLayout?.type == PageLayoutType.textChannel) {
             var tc = this.find(g => g.url == BlockUrlConstant.TextChannel);
@@ -440,10 +443,22 @@ export class Page extends Events<PageDirective>{
             }
         }
         if (!el) el = this.root.querySelector('.shy-page-view-box') as HTMLElement
-        return dom(el).getOverflowPanel()
+        if (el)
+            return dom(el).getOverflowPanel()
     }
-    pageFill: BoxFillType = { mode: 'none', color: '' }
-    pageStyle: BoxStyle = { color: 'light', transparency: 'noborder' }
+    pageTheme: PageThemeStyle = {
+        bgStyle: {
+            mode: 'color',
+            color: '#fff',
+        },
+        contentStyle: {
+            color: 'light',
+            transparency: "noborder"
+        },
+        coverStyle: {
+            display: 'outside'
+        }
+    }
     onLazyUpdateProps = lodash.debounce(async (props: Record<string, any>, isUpdate?: boolean) => {
         this.onUpdateProps(props, isUpdate);
     }, 1000)

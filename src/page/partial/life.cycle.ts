@@ -88,8 +88,6 @@ export class Page$Cycle {
                 else this.pageLayout = Object.assign(this.pageLayout || {}, { type: PageLayoutType.doc });
             }
             if ([
-                PageLayoutType.formView,
-                PageLayoutType.dbPickRecord,
                 PageLayoutType.recordView
             ].some(s => s == this.pageLayout.type)) {
                 this.requireSelectLayout = false;
@@ -142,8 +140,7 @@ export class Page$Cycle {
         }
         if (typeof this.pageLayout == 'undefined') this.pageLayout = Object.assign(this.pageLayout, { type: PageLayoutType.doc });
         if ([
-            PageLayoutType.formView,
-            PageLayoutType.dbPickRecord,
+            PageLayoutType.recordView,
         ].some(s => s == this.pageLayout.type)) {
             this.requireSelectLayout = false;
         }
@@ -198,8 +195,9 @@ export class Page$Cycle {
             sourceItemId: this.sourceItemId,
             loadElementUrl: this.customElementUrl
         };
+        json.pageTheme = lodash.cloneDeep(this.pageTheme);
         json.requireSelectLayout = this.requireSelectLayout;
-        json.onlyDisplayContent = this.onlyDisplayContent;
+        json.hideDocTitle = this.hideDocTitle;
         json.pageLayout = util.clone(this.pageLayout);
         json.matrix = this.matrix.getValues();
         json.nav = this.nav;
@@ -208,9 +206,8 @@ export class Page$Cycle {
             return await x.get()
         })
         json.addedSubPages = this.addedSubPages.map(s => s);
-        json.pageFill = lodash.cloneDeep(this.pageFill);
-        json.pageStyle = lodash.cloneDeep(this.pageStyle);
-        json.isPageContent = this.isPageContent;
+        // json.pageFill = lodash.cloneDeep(this.pageFill);
+        // json.pageStyle = lodash.cloneDeep(this.pageStyle);
         json.isPageForm = this.isPageForm;
         json.locker = lodash.cloneDeep(this.locker);
         return json;
@@ -258,14 +255,6 @@ export class Page$Cycle {
         else {
             var r = await import("../template/default.page");
             dr = r.data as any;
-            if (this.isPageContent) {
-                dr = {
-                    url: '/page',
-                    views: [
-                        { url: '/view', }
-                    ]
-                } as any
-            }
         }
         if (this.ws?.createPageConfig) {
             if (typeof this.ws.createPageConfig.smallFont != 'undefined') {
@@ -883,9 +872,10 @@ export class Page$Cycle {
             }, this);
         }
     }
-    async onUpdateProps(this: Page, props: Record<string, any>, isUpdate?: boolean) {
+    async onUpdateProps(this: Page, props: Record<string, any>, isUpdate?: boolean,callback?:()=>void) {
         await this.onAction(ActionDirective.onPageUpdateProps, async () => {
             await this.updateProps(props);
+            if(typeof callback=='function')callback();
             if (isUpdate) this.addPageUpdate();
         });
     }

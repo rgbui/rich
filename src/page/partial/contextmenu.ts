@@ -49,12 +49,12 @@ import { usePageHistoryStore } from "../../../extensions/history";
 import { PageDirective } from "../directive";
 import { usePagePublish } from "../../../extensions/publish";
 import { BlockUrlConstant } from "../../block/constant";
-import { useCardBoxStyle } from "../../../extensions/doc.card/style";
+import { useCardBoxStyle } from "../../../extensions/theme/card.style";
 import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
 import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
 import { Field } from "../../../blocks/data-grid/schema/field";
 import { GetFieldFormBlockInfo } from "../../../blocks/data-grid/element/service";
-import { ElementType, getElementUrl } from "../../../net/element.type";
+import { ElementType } from "../../../net/element.type";
 import { FieldType } from "../../../blocks/data-grid/schema/type";
 import { getWsWikiRobots } from "../../../net/ai/robot";
 import { util } from "../../../util/util";
@@ -67,6 +67,7 @@ import { Title } from "../../../blocks/page/title";
 import { BlockButton } from "../../../blocks/form/button";
 import { Block } from "../../block";
 import { RobotInfo } from "../../../types/user";
+import { usePageTheme } from "../../../extensions/theme";
 
 export class PageContextmenu {
     async onGetContextMenus(this: Page) {
@@ -133,20 +134,18 @@ export class PageContextmenu {
                 { type: MenuItemType.divide },
                 { name: 'nav', text: lst('目录'), icon: OutlineSvg, type: MenuItemType.switch, checked: this.nav },
                 {
-                    icon: { name: 'bytedance-icon', code: 'top-bar' },
-                    text: lst('版式'),
-                    name: 'isPageContent',
-                    type: MenuItemType.switch,
-                    checked: this.isPageContent ? true : false
+                    text: lst('主题'),
+                    icon: PlatteSvg,
+                    name: 'theme',
                 },
                 {
                     text: lst('小部件'),
                     icon: FieldsSvg,
                     childs: [
-                        { name: 'onlyDisplayContent', text: lst('标题'), type: MenuItemType.switch, checked: this.onlyDisplayContent ? false : true, icon: HSvg },
+                        { name: 'onlyDisplayContent', text: lst('标题'), type: MenuItemType.switch, checked: this.hideDocTitle ? false : true, icon: HSvg },
                         { name: 'refPages', text: lst("引用"), visible: [ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type) ? false : true, icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
                         { name: 'showComment', text: lst("评论"), icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
-                        { name: 'showDiscuss', text: lst('讨论'), icon: { name: 'bytedance-icon', code: 'topic-discussion', }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
+                        // { name: 'showDiscuss', text: lst('讨论'), icon: { name: 'bytedance-icon', code: 'topic-discussion', }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                         { name: 'prevOrNext', text: lst('上下篇'), visible: [ElementType.SchemaData].includes(this.pe.type), icon: { name: 'bytedance-icon', code: 'transfer-data' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PagePreOrNext) }
                     ]
                 },
@@ -190,10 +189,15 @@ export class PageContextmenu {
                 { name: 'fullWidth', text: lst('宽版'), checked: this.isFullWidth ? true : false, type: MenuItemType.switch },
                 { type: MenuItemType.divide },
                 {
-                    text: lst('自定义页面'),
-                    icon: ComponentsSvg,
+                    text: lst('主题'),
+                    icon: PlatteSvg,
+                    name: 'theme',
+                },
+                {
+                    text: lst('小部件'),
+                    icon: FieldsSvg,
                     childs: [
-                        { name: 'onlyDisplayContent', text: lst('标题'), type: MenuItemType.switch, checked: this.onlyDisplayContent ? false : true, icon: NoteSvg },
+                        { name: 'onlyDisplayContent', text: lst('标题'), type: MenuItemType.switch, checked: this.hideDocTitle ? false : true, icon: NoteSvg },
                         { name: 'showComment', text: lst("评论"), icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                     ]
                 },
@@ -218,9 +222,9 @@ export class PageContextmenu {
                 { name: 'fullWidth', text: lst('宽版'), checked: this.isFullWidth ? true : false, type: MenuItemType.switch },
                 { type: MenuItemType.divide },
                 {
-                    name: 'bg',
                     text: lst('主题'),
-                    icon: PlatteSvg
+                    icon: PlatteSvg,
+                    name: 'theme',
                 },
                 { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? lst("除消编辑保护") : lst("编辑保护"), icon: this.locker?.lock ? LockSvg : UnlockSvg },
                 { name: 'history', icon: VersionHistorySvg, text: lst('页面历史') },
@@ -240,15 +244,25 @@ export class PageContextmenu {
         }
         else if (this.pageLayout.type == PageLayoutType.textChannel) {
             items = [
+                { name: 'smallText', text: lst('小字号'), checked: this.smallFont ? true : false, type: MenuItemType.switch },
+                { name: 'fullWidth', text: lst('宽版'), checked: this.isFullWidth ? true : false, type: MenuItemType.switch },
+                { type: MenuItemType.divide },
+                {
+                    text: lst('主题'),
+                    icon: PlatteSvg,
+                    name: 'theme',
+                },
+                { type: MenuItemType.divide },
                 {
                     name: 'speak',
                     text: lst('发言'),
-                    icon: CommunicationSvg,
+                    icon: { name: 'bytedance-icon', code: 'voice-one' },
                     type: MenuItemType.select,
                     value: this.pageInfo?.speak || 'more',
                     options: [
-                        { text: lst('允许发言多次'), value: 'more' },
-                        { text: lst('从此刻仅允许发言一次'), value: "only" }
+                        { text: lst('允许多人发言'), value: 'more' },
+                        { text: lst('禁言'), value: 'unspeak' },
+                        { text: lst('仅限每人发言一次'), value: "only" }
                     ]
                 },
                 { type: MenuItemType.divide },
@@ -259,6 +273,12 @@ export class PageContextmenu {
         }
         else if (this.pageLayout.type == PageLayoutType.board) {
             items = [
+                {
+                    text: lst('主题'),
+                    icon: PlatteSvg,
+                    name: 'theme',
+                },
+                { type: MenuItemType.divide },
                 { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? lst("除消编辑保护") : lst("编辑保护"), icon: this.locker?.lock ? LockSvg : UnlockSvg },
                 { name: 'history', icon: VersionHistorySvg, text: lst('页面历史') },
                 { type: MenuItemType.divide },
@@ -292,7 +312,7 @@ export class PageContextmenu {
                         if (!title) {
                             await this.createBlock(BlockUrlConstant.Title, {}, this.views[0], 0, 'childs');
                         }
-                        await this.updateProps({ onlyDisplayContent: item.checked ? false : true })
+                        await this.updateProps({ hideDocTitle: item.checked ? false : true })
                         this.addPageUpdate();
                     });
                 }
@@ -341,8 +361,8 @@ export class PageContextmenu {
             else if (r.item.name == 'history') {
                 this.onOpenHistory()
             }
-            else if (r.item.name == 'bg') {
-                this.onOpenBackground()
+            else if (r.item.name == 'theme') {
+                this.onOpenTheme()
             }
             else if (r.item.name == 'ai-sync-turn') {
                 this.onSyncAi(r.item.value, true);
@@ -480,17 +500,8 @@ export class PageContextmenu {
         });
         this.view.forceUpdate();
     }
-    async onOpenBackground(this: Page) {
-        var g = await useCardBoxStyle({
-            open: 'onlyBg',
-            fill: this.pageFill,
-            cardStyle: this.pageStyle
-        }, (g) => {
-            this.onLazyUpdateProps({ pageFill: g.fill, pageStyle: g.cardStyle }, true)
-        });
-        if (g) {
-            await this.onUpdateProps({ pageFill: g.fill, pageStyle: g.cardStyle }, true)
-        }
+    async onOpenTheme(this: Page) {
+        await usePageTheme(this);
     }
     async onPageRemove(this: Page) {
         channel.air('/page/remove', { item: this.pageInfo.id });

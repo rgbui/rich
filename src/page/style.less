@@ -164,10 +164,8 @@
 }
 
 .shy-page-layout-doc-card {
-    box-sizing         : border-box;
-    min-height         : 100%;
-    // background-color: #f7f3f2;
-    // border-left     : 1px solid #ddd;
+    box-sizing: border-box;
+    min-height: 100%;
 
     .shy-page-view-content {
         padding-bottom: 0px !important;
@@ -175,16 +173,15 @@
 }
 
 .shy-page-layout-board {
-    position              : relative;
-    box-sizing            : border-box;
-    padding               : 0px;
-    min-height            : 100%;
-    overflow              : hidden;
-    // background-color: #fff;
-    background-color      : #f0f0f0;
-    // border-left        : 1px solid #ddd;
-    background-image      : url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAD1BMVEX////19fXn5+fo6Ojl5eU/mVj3AAAAHElEQVR4AWMYkUDIEE3AxAlNQMUZTUBYcUSGFABtQAFVBCjxewAAAABJRU5ErkJggg==);
-    background-size: 16px;
+    position        : relative;
+    box-sizing      : border-box;
+    padding         : 0px;
+    min-height      : 100%;
+    overflow        : hidden;
+    background-color: #f0f0f0;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAD1BMVEX////19fXn5+fo6Ojl5eU/mVj3AAAAHElEQVR4AWMYkUDIEE3AxAlNQMUZTUBYcUSGFABtQAFVBCjxewAAAABJRU5ErkJggg==);
+    background-size : 16px;
+
     .shy-page-layout-wrapper {
         width           : 100%;
         transform-origin: 0px 0px;
@@ -251,7 +248,7 @@
         box-sizing         : border-box;
         // border-left     : 1px solid #ddd;
         // background-color: rgb(227, 229, 232) !important;
-        background-color   : rgb(246, 246, 246) !important;
+        background-color   : rgb(246, 246, 246);
     }
 }
 
@@ -344,5 +341,18 @@
     100% {
         background-color: rgba(255, 71, 71, 0) // opacity: 0;
             // width  : rgba(46, 170, 220, 0);
+    }
+}
+
+
+.text-theme-dark {
+    .shy-appear-text:empty {
+        color: rgba(255, 255, 255, 1);
+    }
+    .shy-appear-text.shy-text-focus:empty::after,
+    .shy-appear-text.shy-text-empy-visible:empty::after {
+        text-decoration-color  : rgba(255, 255, 255, 1) !important;
+        caret-color            : rgba(255, 255, 255, .7) !important;
+        -webkit-text-fill-color: rgba(255, 255, 255, .7) !important;
     }
 }

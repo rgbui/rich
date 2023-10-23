@@ -107,129 +107,133 @@ export class BlockPicker {
         var self = this;
         this.onCancel();
         async function createConnectLine() {
-            var data = { url: BlockUrlConstant.Line } as Record<string, any>;
-            data.from = { x: arrows[1], y: arrows[0], blockId: block.id };
-            data.to = { x: re.x, y: re.y };
-            lineBlock = await self.kit.page.createBlock(data.url, data, fra);
-            await setBoardBlockCache(lineBlock);
-            block.conectLine(lineBlock);
-            lineBlock.mounted(() => {
-                isMounted = true;
-            });
-            self.kit.boardLine.onStartConnectOther(lineBlock);
-            lineBlock.parent.forceUpdate();
+            await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
+                var data = { url: BlockUrlConstant.Line } as Record<string, any>;
+                data.from = { x: arrows[1], y: arrows[0], blockId: block.id };
+                data.to = { x: re.x, y: re.y };
+                lineBlock = await self.kit.page.createBlock(data.url, data, fra);
+                await setBoardBlockCache(lineBlock);
+                block.conectLine(lineBlock);
+                lineBlock.mounted(() => {
+                    isMounted = true;
+                });
+                self.kit.boardLine.onStartConnectOther(lineBlock);
+                lineBlock.parent.forceUpdate();
+            })
         }
-        await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
-            await new Promise((resolve: (value: any) => void, reject) => {
-                MouseDragger({
-                    event,
-                    moveStart() {
-                        forceCloseBoardEditTool()
-                        createConnectLine();
-                    },
-                    move(ev, data) {
-                        if (lineBlock) {
-                            var tr = gm.inverseTransform(Point.from(ev));
-                            (lineBlock as any).to = { x: tr.x, y: tr.y };
-                            if (isMounted) lineBlock.forceUpdate();
-                        }
-                    },
-                    async moveEnd(ev, isMove, data) {
-                        var newBlock: Block;
-                        if (!lineBlock) {
-                            await createConnectLine();
-                        }
-                        if (isMove) {
-                            if (self.kit.boardLine.over) {
-                                await lineBlock.updateProps({
-                                    to: {
-                                        blockId: self.kit.boardLine.over.block.id,
-                                        x: self.kit.boardLine.over.selector.arrows[1],
-                                        y: self.kit.boardLine.over.selector.arrows[0]
-                                    }
-                                });
-                                self.kit.boardLine.over.block.conectLine(lineBlock);
-                            }
-                            else {
-                                var s;
-                                if (block.url == BlockUrlConstant.Shape) {
-                                    s = await useShapeSelector({ roundPoint: Point.from(ev) });
-                                    if (s) {
-                                        var ma = new Matrix();
-                                        re = gm.inverseTransform(Point.from(ev));
-                                        ma.translate(re.x, re.y);
-                                        var cd = await block.cloneData();
-                                        cd.matrix = ma.getValues();
-                                        cd.svg = s.svg;
-                                        cd.svgName = s.name;
-                                        var shapeBlock = await fra.page.createBlock(BlockUrlConstant.Shape, cd, fra);
-                                        var pickers = shapeBlock.getBlockBoardSelector([BoardPointType.pathConnectPort]);
-                                        var otherArrow = arrows.includes(PointArrow.right) ? PointArrow.left : PointArrow.right
-                                        if (arrows.includes(PointArrow.top) || arrows.includes(PointArrow.bottom))
-                                            otherArrow = arrows.includes(PointArrow.top) ? PointArrow.bottom : PointArrow.top
-                                        var p2 = pickers.find(g => g.arrows.includes(otherArrow))
-                                        await lineBlock.updateProps({
-                                            to: {
-                                                blockId: shapeBlock.id,
-                                                x: p2.arrows[0],
-                                                y: p2.arrows[1]
-                                            }
-                                        });
-                                        shapeBlock.conectLine(lineBlock);
-                                        newBlock = shapeBlock;
-                                    }
-                                }
-                                if (!s) {
-                                    var tr = gm.inverseTransform(Point.from(ev));
-                                    await lineBlock.updateProps({
-                                        to: { x: tr.x, y: tr.y }
-                                    });
-                                }
-                            }
-                        }
-                        else {
-                            var ma = block.matrix.clone();
-                            if (arrows.includes(PointArrow.right)) {
-                                ma.translate(block.fixedWidth + 100, 0)
-                            }
-                            else if (arrows.includes(PointArrow.left)) {
-                                ma.translate(0 - (block.fixedWidth + 100), 0)
-                            }
-                            else if (arrows.includes(PointArrow.top)) {
-                                ma.translate(0, 0 - (block.fixedHeight + 100))
-                            }
-                            else if (arrows.includes(PointArrow.bottom)) {
-                                ma.translate(0, block.fixedHeight + 100)
-                            }
-                            var cloneData = await block.cloneData();
-                            cloneData.matrix = ma.getValues();
-                            var cloneBlock = await fra.page.createBlock(cloneData.url, cloneData, fra);
-                            var pickers = cloneBlock.getBlockBoardSelector([BoardPointType.pathConnectPort]);
-                            var otherArrow = arrows.includes(PointArrow.right) ? PointArrow.left : PointArrow.right
-                            if (arrows.includes(PointArrow.top) || arrows.includes(PointArrow.bottom))
-                                otherArrow = arrows.includes(PointArrow.top) ? PointArrow.bottom : PointArrow.top
-                            var p2 = pickers.find(g => g.arrows.includes(otherArrow))
+
+        MouseDragger({
+            event,
+            moveStart() {
+                forceCloseBoardEditTool()
+                createConnectLine();
+            },
+            move(ev, data) {
+                if (lineBlock) {
+                    var tr = gm.inverseTransform(Point.from(ev));
+                    (lineBlock as any).to = { x: tr.x, y: tr.y };
+                    if (isMounted) lineBlock.forceUpdate();
+                }
+            },
+            async moveEnd(ev, isMove, data) {
+                var newBlock: Block;
+                if (!lineBlock) {
+                    await createConnectLine();
+                }
+                if (isMove) {
+                    if (self.kit.boardLine.over) {
+                        await self.kit.page.onAction('onBoardToolConnectBlockAfter', async () => {
                             await lineBlock.updateProps({
                                 to: {
-                                    blockId: cloneBlock.id,
-                                    x: p2.arrows[0],
-                                    y: p2.arrows[1]
+                                    blockId: self.kit.boardLine.over.block.id,
+                                    x: self.kit.boardLine.over.selector.arrows[1],
+                                    y: self.kit.boardLine.over.selector.arrows[0]
                                 }
                             });
-                            cloneBlock.conectLine(lineBlock);
-                            newBlock = cloneBlock;
-                        }
-                        if (isMounted) lineBlock.forceUpdate()
-                        self.kit.boardLine.onEndConnectOther();
-                        self.kit.page.addUpdateEvent(async () => {
-                            if (newBlock) self.kit.picker.onPicker([newBlock])
-                            else self.kit.picker.onPicker([lineBlock])
                         })
-                        resolve(true);
+                        self.kit.boardLine.over.block.conectLine(lineBlock);
                     }
-                });
-            })
-        })
+                    else {
+                        var s;
+                        s = await useShapeSelector({ roundPoint: Point.from(ev) });
+                        await self.kit.page.onAction('onBoardToolConnectBlockAfter', async () => {
+                            if (s) {
+                                var ma = new Matrix();
+                                re = gm.inverseTransform(Point.from(ev));
+                                ma.translate(re.x, re.y);
+                                var cd = await block.cloneData();
+                                cd.matrix = ma.getValues();
+                                cd.svg = s.svg;
+                                cd.svgName = s.name;
+                                var shapeBlock = await fra.page.createBlock(BlockUrlConstant.Shape, cd, fra);
+                                await setBoardBlockCache(shapeBlock);
+                                var pickers = shapeBlock.getBlockBoardSelector([BoardPointType.pathConnectPort]);
+                                var otherArrow = arrows.includes(PointArrow.right) ? PointArrow.left : PointArrow.right
+                                if (arrows.includes(PointArrow.top) || arrows.includes(PointArrow.bottom))
+                                    otherArrow = arrows.includes(PointArrow.top) ? PointArrow.bottom : PointArrow.top
+                                var p2 = pickers.find(g => g.arrows.includes(otherArrow))
+                                await lineBlock.updateProps({
+                                    to: {
+                                        blockId: shapeBlock.id,
+                                        x: p2.arrows[0],
+                                        y: p2.arrows[1]
+                                    }
+                                });
+                                shapeBlock.conectLine(lineBlock);
+                                newBlock = shapeBlock;
+                            }
+                            else {
+                                var tr = gm.inverseTransform(Point.from(ev));
+                                await lineBlock.updateProps({
+                                    to: { x: tr.x, y: tr.y }
+                                });
+                            }
+                        })
+                    }
+                }
+                else {
+                    await self.kit.page.onAction('onBoardToolConnectBlockAfter', async () => {
+                        var ma = block.matrix.clone();
+                        var wd = fra.realPx(100);
+                        if (arrows.includes(PointArrow.right)) {
+                            ma.translate(block.fixedWidth + wd, 0)
+                        }
+                        else if (arrows.includes(PointArrow.left)) {
+                            ma.translate(0 - (block.fixedWidth + wd), 0)
+                        }
+                        else if (arrows.includes(PointArrow.top)) {
+                            ma.translate(0, 0 - (block.fixedHeight + wd))
+                        }
+                        else if (arrows.includes(PointArrow.bottom)) {
+                            ma.translate(0, block.fixedHeight + wd)
+                        }
+                        var cloneData = await block.cloneData();
+                        cloneData.matrix = ma.getValues();
+                        var cloneBlock = await fra.page.createBlock(cloneData.url, cloneData, fra);
+                        var pickers = cloneBlock.getBlockBoardSelector([BoardPointType.pathConnectPort]);
+                        var otherArrow = arrows.includes(PointArrow.right) ? PointArrow.left : PointArrow.right
+                        if (arrows.includes(PointArrow.top) || arrows.includes(PointArrow.bottom))
+                            otherArrow = arrows.includes(PointArrow.top) ? PointArrow.bottom : PointArrow.top
+                        var p2 = pickers.find(g => g.arrows.includes(otherArrow))
+                        await lineBlock.updateProps({
+                            to: {
+                                blockId: cloneBlock.id,
+                                x: p2.arrows[0],
+                                y: p2.arrows[1]
+                            }
+                        });
+                        cloneBlock.conectLine(lineBlock);
+                        newBlock = cloneBlock;
+                    })
+                }
+                if (isMounted) lineBlock.forceUpdate()
+                self.kit.boardLine.onEndConnectOther();
+                // self.kit.page.addUpdateEvent(async () => {
+                if (newBlock) self.kit.picker.onPicker([newBlock])
+                else self.kit.picker.onPicker([lineBlock])
+                // })
+            }
+        });
     }
     async onSplitLinePort(block: Line, selector: BoardBlockSelector, event: React.MouseEvent) {
         event.stopPropagation();
@@ -295,6 +299,7 @@ export class BlockPicker {
                                 y: self.kit.boardLine.over.selector.arrows[0]
                             };
                         }
+                        // console.log(self.kit.boardLine.over,block, block.from, block.to);
                         block.onUpdateLine(block.from, block.to, oldData);
                     }
                 },

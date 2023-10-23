@@ -395,7 +395,7 @@ async function onPasteUrl(kit: Kit, aa: AppearAnchor, url: string) {
         kit.writer.inputPop = {
             rect,
             type: InputTextPopSelectorType.UrlSelector,
-            offset: offset - url.length,
+            offset: offset,
             aa,
             selector: (await useInputUrlSelector())
         };

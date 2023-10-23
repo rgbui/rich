@@ -32,10 +32,15 @@ export class DefinePageNavBar extends React.Component<{
                 return;
             }
         }
-        if (item.urlType == 'url') {
+        var ns = this.getNavMenus();
+        ns.arrayJsonEach('childs', g => {
+            g.spread = false;
+        })
+        this.forceUpdate();
+        if (item.urlType == 'url' && item.url) {
             location.href = item.url;
         }
-        else if (item.urlType == 'page') {
+        else if (item.urlType == 'page' && item.pageId) {
             channel.air('/page/open', { item: item.pageId })
         }
         return false;
@@ -45,7 +50,7 @@ export class DefinePageNavBar extends React.Component<{
         if (e.urlType == 'page') {
             href = this.props.ws.resolve({ pageId: e.pageId });
         }
-        var hasLink = e.urlType == 'page' && e.pageId || e.urlType == 'url' && e.url;
+        var hasLink = e.urlType == 'page' && e.pageId || e.urlType == 'url' && e.url || e.childs?.length > 0;
         return <a href={href} style={{ color: hasLink ? 'inherit' : undefined, paddingLeft: isMobileOnly ? deep * 20 : undefined }} onMouseDown={eg => {
             this.mouseItem(eg, e)
         }} className={"flex round min-w-120   padding-w-10 padding-h-5  " + (e.remark ? " flex-top " : "") + (hasLink ? " item-hover " : " remark f-12 ")} >
@@ -117,7 +122,6 @@ export class DefinePageNavBar extends React.Component<{
         var self = this;
         var props = this.props;
         var h = props.ws.publishConfig.contentTheme == 'default' ? 48 : 48;
-
         return this.getNavMenus().map((e, i) => {
             var href = e.urlType == 'url' ? e.url : undefined;
             if (e.urlType == 'page') {
@@ -140,7 +144,7 @@ export class DefinePageNavBar extends React.Component<{
                     style={{ height: h, color: 'inherit' }} className={"flex round padding-w-10  "}>
                     {e.type == 'logo' && e.pic && <img className="obj-center " style={{ height: 40 }} src={e.pic?.url} />}
                     {e.icon && <span className="flex-fixed size-20 flex-center"><Icon size={16} icon={e.icon}></Icon></span>}
-                    <span className={"flex-auto " + ((e.type == 'logo' ? " f-18 " : " f-16 ") + (e.urlType == 'page' && e.pageId || e.urlType == 'url' && e.url ? "link-hover" : " remark "))}>{e.text || lst('菜单项')}</span>
+                    <span className={"flex-auto " + ((e.type == 'logo' ? " f-18 " : " f-16 ") + (e.urlType == 'page' && e.pageId || e.urlType == 'url' && e.url || e.type == 'logo' || e.childs?.length > 0 ? "link-hover" : " remark "))}>{e.text || lst('菜单项')}</span>
                     <span className="flex-fixed flex-center">
                         {Array.isArray(e.childs) && e.childs.length > 0 && <Icon size={16} icon={ChevronDownSvg}></Icon>}
                     </span>
@@ -238,8 +242,8 @@ export class DefinePageNavBar extends React.Component<{
                             placeholder={lst('搜索...')}
                             prefix={<span className="flex-center remark size-24"><Icon size={16} icon={SearchSvg}></Icon></span>}></Input>
                     </div>}
-                    {!props.user && <Button size="small" onClick={e => this.toLogin()}><S>登录</S></Button>}
-                    {props.user && <Avatar onMousedown={e => this.openUser(e)} size={32} userid={props.user.id}></Avatar>}
+                    {!props.user?.id && <Button size="small" onClick={e => this.toLogin()}><S>登录</S></Button>}
+                    {props.user?.id && <Avatar onMousedown={e => this.openUser(e)} size={32} userid={props.user.id}></Avatar>}
                 </div>
             </div>
         </div>

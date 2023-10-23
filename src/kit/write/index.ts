@@ -39,7 +39,7 @@ import { AiInput } from "./ai";
 import { useAITool } from "../../../extensions/ai";
 import { channel } from "../../../net/channel";
 import { BlockSelectorItem } from "../../../extensions/block/delcare";
-import { useOperatorBlockData } from "./operator";
+import { useOpenDataGridTemplate } from "./operator";
 import { BlockRenderRange } from "../../block/enum";
 
 /**
@@ -81,8 +81,7 @@ import { BlockRenderRange } from "../../block/enum";
 
 export class PageWrite {
     constructor(public kit: Kit) { }
-    async mousedown(aa: AppearAnchor,event: React.MouseEvent)
-    {
+    async mousedown(aa: AppearAnchor, event: React.MouseEvent) {
         this.isCompositionstart = false;
         var sel = window.getSelection();
         var rowBlock = aa.block.closest(x => x.isBlock);
@@ -390,10 +389,7 @@ export class PageWrite {
                 var aa = this.inputPop.aa;
                 var newBlock: Block;
                 var bd = lodash.cloneDeep(blockData);
-                if (blockData.operator) {
-                    newBlock = await useOperatorBlockData(blockData, aa, offset);
-                }
-                else {
+                if (!blockData.operator) {
                     delete bd.isLine;
                     delete bd.url;
                     if (blockData.isLine) {
@@ -431,15 +427,16 @@ export class PageWrite {
                         newBlock = await aa.block.visibleDownCreateBlock(blockData.url, { ...bd, createSource: 'InputBlockSelector' });
                         await aa.block.clearEmptyBlock();
                     }
+                    if (newBlock)
+                        newBlock.mounted(async () => {
+                            await this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true })
+                            await util.delay(50);
+                            await this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true })
+                        });
                 }
-                //console.log('newBlock', newBlock);
-                if (newBlock)
-                    newBlock.mounted(async () => {
-                        await this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true })
-                        await util.delay(50);
-                        await this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true })
-                    });
             });
+            if (blockData.operator == 'openDataGridTemplate')
+                await useOpenDataGridTemplate(blockData, aa, offset);
         }
         var blockData = args[0];
         var sel = window.getSelection();

@@ -10,7 +10,6 @@ import {
     DoubleRightSvg,
     LockSvg,
     MemberSvg,
-
     PageSvg,
     PublishSvg,
     SearchSvg
@@ -207,7 +206,6 @@ export class PageBar extends React.Component<{ page: Page }>{
         }
         if ([PageLayoutType.textChannel].includes(this.props.page.pageLayout?.type)) {
             isMember = true;
-            isContextMenu = false;
         }
         if (this.props.page.isSign) return <div className="flex r-flex-center r-size-24 r-item-hover r-round r-cursor r-gap-l-10 text-1 gap-r-20">
             {isField && <span onMouseDown={e => this.props.page.onOpenFieldProperty(e)} ><Icon size={18} icon={{ name: 'bytedance-icon', code: 'form-one' }}></Icon></span>}
@@ -227,7 +225,8 @@ export class PageBar extends React.Component<{ page: Page }>{
     }
     render(): React.ReactNode {
         if (this.props.page.visiblePageBar === false) return <></>
-        if (this.props.page.isPubSiteDefineBarMenu) {
+        var isFormData = this.props.page.pe.type == ElementType.SchemaData && this.props.page.openSource != 'page'
+        if (this.props.page.isPubSiteDefineBarMenu && !isFormData) {
             return this.renderDefineBar();
         }
         var isDocCard = this.props.page.pageLayout?.type == PageLayoutType.docCard;
@@ -241,7 +240,7 @@ export class PageBar extends React.Component<{ page: Page }>{
                 <Icon icon={ChevronLeftSvg} size={18}></Icon>
             </span>}
             {!isMobileOnly && this.props.page.openSource == 'page' && !this.props.page.isPubSiteDefineContent && <ToolTip placement="bottom" overlay={lst('折叠侧边栏')}><span onClick={e => this.onSpreadMenu()} className="flex-fixed size-20 flex-center item-hover round cursor ">
-                <Icon icon={{ name: 'bytedance-icon', code: 'hamburger-button' }} size={14}></Icon>
+                <Icon icon={{ name: 'bytedance-icon', code: 'hamburger-button' }} size={18}></Icon>
             </span></ToolTip>}
             {this.renderTitle()}
             <div className="flex-fixed flex">{this.renderUsers()}{this.renderPropertys()}</div>

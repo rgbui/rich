@@ -229,7 +229,14 @@ export class Page$Operator {
         if (!(event instanceof Point))
             event.preventDefault();
         if (blocks.length == 1) {
-            return await blocks[0].onContextmenu(event);
+            console.log('gggg', blocks);
+            try {
+                return await blocks[0].onContextmenu(event);
+            }
+            catch (ex) {
+                console.error(ex)
+                return;
+            }
         }
         var re = await useSelectMenuItem(
             {

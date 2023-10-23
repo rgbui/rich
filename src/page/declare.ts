@@ -12,12 +12,12 @@ export enum PageLayoutType {
     docCard = 2,
     //#region db
     db = 20,
-    formView = 21,
+    // formView = 21,
     recordView = 22,
     /**
      * 从表里选择一些数据的页面窗体
      */
-    dbPickRecord = 23,
+    // dbPickRecord = 23,
     /**
      * schema view
      */
@@ -37,20 +37,6 @@ export enum PageLayoutType {
 export enum PageVersion {
     v1 = '0.0.1'
 }
-
-export enum PageLayout {
-    page = 1,//类似notion的网页版  题头图
-    content = 2, //类似网页内容 设置背景色
-
-    content13 = 3,//类似网页内容 1:3  可以设置背景色 ，内容可适明，可不透明
-    content31 = 4,//类似网页内容 3:1
-    content121 = 5,//类似网页内容 1:2:1
-    content111 = 6,//类似网页内容 1:1:1
-
-    contentTable = 10, //内容表格，如excel展示那样
-}
-
-
 
 export interface LinkPageItem<T = {}> {
     id?: string;
@@ -92,7 +78,7 @@ export interface LinkPageItem<T = {}> {
 
     getSubItems?(): Promise<LinkPageItem[]>;
     getItem?(): Partial<LinkPageItem>;
-    speak?: 'more' | 'only';
+    speak?: 'more' | 'only' | 'unspeak';
     speakDate?: Date,
     textChannelMode?: 'chat' | 'weibo' | 'ask' | 'tieba'
 
@@ -173,7 +159,7 @@ export interface LinkWs {
     };
     isMember: boolean
     publishConfig: {
-        abled: boolean,
+        abled: boolean, allowSearch: boolean,
         defineNavMenu: boolean,
         navMenus: WorkspaceNavMenuItem[],
         defineContent: boolean,
@@ -182,6 +168,8 @@ export interface LinkWs {
         contentTheme: 'default' | 'none' | 'wiki',
         defineBottom: boolean
     }
+    isManager: boolean
+    isOwner: boolean
 }
 
 export type WorkspaceNavMenuItem = {
@@ -189,6 +177,7 @@ export type WorkspaceNavMenuItem = {
     date?: number,
     userid?: string,
     text: string,
+    remark?: string,
     type: 'logo' | 'text' | 'link',
     pic?: ResourceArguments,
     icon?: IconArguments,
@@ -204,7 +193,7 @@ export function getPageIcon(item: LinkPageItem, defaultIcon?: SvgrComponent) {
     if (item?.icon) return item.icon;
     if (!item) return defaultIcon || PageSvg
     if (item.pageType == PageLayoutType.board) {
-        return PageSvg
+        return { name: 'bytedance-icon', code: 'enter-the-keyboard' } as IconValueType
     }
     else if (item.pageType == PageLayoutType.doc) {
         return PageSvg
@@ -220,7 +209,6 @@ export function getPageIcon(item: LinkPageItem, defaultIcon?: SvgrComponent) {
     }
     return defaultIcon || PageSvg
 }
-
 
 export function getPageText(item: LinkPageItem) {
     if (item?.text) return item.text;
@@ -242,6 +230,41 @@ export function getPageText(item: LinkPageItem) {
     }
     return lst('新页面')
 }
+
+export type PageThemeStyle = {
+    /**
+     * 如果是自定义，值为custom
+     */
+    name?: string,
+    bgStyle?: {
+        mode: "color" | "image" | "uploadImage" | "none" | "grad";
+        color?: string;
+        src?: string;
+        grad?: {
+            bg?: string,
+            name?: string,
+            x?: number,
+            y?: number
+        }
+    }
+    contentStyle?: {
+        color: "dark" | "light";
+        transparency: "frosted" | "solid" | "noborder" | "faded",
+        bgStyle?: PageThemeStyle['bgStyle'],
+        round?: number,
+        border?: string,
+        shadow?: string
+    }
+    coverStyle?: {
+        display: 'none' | 'outside' | 'inside' | 'inside-cover' | 'inside-cover-left' | 'inside-cover-right' | 'inside-cover-bottom',
+        url?: string,
+        thumb?: string,
+        top?: 50,
+        bgStyle?: PageThemeStyle['bgStyle'],
+    }
+}
+
+
 export var PageTemplateTypeGroups: { icon: IconValueType, visible?: boolean, spread: boolean, text: string, childs: { text: string, visible?: boolean }[] }[] = [
     {
         icon: PageSvg,

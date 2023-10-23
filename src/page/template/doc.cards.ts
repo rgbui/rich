@@ -9,7 +9,15 @@ export var data = {
                         url: '/card/box',
                         blocks: {
                             childs: [
-                                { url: '/card/box/title' }
+                                { url: '/title' }
+                            ]
+                        }
+                    },
+                    {
+                        url: '/card/box',
+                        blocks: {
+                            childs: [
+                                { url: '/head' }
                             ]
                         }
                     }

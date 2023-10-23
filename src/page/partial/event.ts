@@ -18,6 +18,7 @@ import { ElementType } from "../../../net/element.type";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import lodash from "lodash";
 import { lst } from "../../../i18n/store";
+import { Block } from "../../block";
 
 export class PageEvent {
     /**
@@ -58,9 +59,9 @@ export class PageEvent {
 
     }
     onPaste(this: Page, event: ClipboardEvent) {
+        if (this.isPageOff) return;
         if (this.pageLayout?.type == PageLayoutType.board) {
-            if (this.isOff == false)
-                onPasteBlank(this.kit, event);
+            onPasteBlank(this.kit, event);
         }
     }
     /**
@@ -73,8 +74,17 @@ export class PageEvent {
         if (this.readonly) return;
         this.kit.handle.onCloseBlockHandle();
         if (this.isBoard) {
-            event.preventDefault();
+            var ele = event.target as HTMLElement;
+            var block = this.getEleBlock(ele);
+            var bpc: Block;
+            if (block && block.url != BlockUrlConstant.BoardPageCard) {
+                var c = block.closest(g => g.url == BlockUrlConstant.BoardPageCard);
+                if (c) {
+                    bpc = c;
+                }
+            }
             if (event.ctrlKey == true) {
+                event.preventDefault();
                 if (this.lastTriggerTime && (Date.now() - this.lastTriggerTime < 60)) return;
                 this.lastTriggerTime = Date.now();
                 var ma = this.matrix.clone();
@@ -101,6 +111,15 @@ export class PageEvent {
                 var r = 1 / this.scale;
                 var dx = g(event.deltaX) * r;
                 var dy = g(event.deltaY) * r;
+                if (bpc) {
+                    var sc = bpc.getScrollDiv();
+                    if (sc && dy != 0 && sc.scrollHeight > sc.clientHeight) {
+                        if (sc.scrollTop > 0 && sc.scrollTop < sc.scrollHeight - sc.clientHeight || sc.scrollTop == 0 && dy < 0 || sc.scrollTop == sc.scrollHeight - sc.clientHeight && dy > 0) {
+                            return;
+                        }
+                    }
+                }
+                event.preventDefault();
                 var ma = this.matrix.clone();
                 ma.translate(dx, dy);
                 this.onSetMatrix(ma);
@@ -113,7 +132,11 @@ export class PageEvent {
      * @param event 
      */
     onKeydown(this: Page, event: KeyboardEvent) {
-        this.keyboardPlate.keydown(event);
+        if (this.isPageOff == true) return;
+        var ele = event.target as HTMLElement;
+        if (ele && (ele === document.body || this.view.el === ele || this.view.el.contains(ele))) {
+            this.keyboardPlate.keydown(event);
+        }
     }
     onKeyup(this: Page, event: KeyboardEvent) {
         this.keyboardPlate.keyup(event);
@@ -255,7 +278,6 @@ export class PageEvent {
             var wr = bound.width / rect.width;
             var hr = bound.height / rect.height;
             var r = Math.max(wr, hr);
-            console.log('gggg',r);
             if (r > 1) {
                 r = 1 / r;
             }
@@ -290,10 +312,10 @@ export class PageEvent {
         event.preventDefault();
         if (!this.isCanEdit) return;
     }
-    async onAddCover(this: Page) {
+    async onAddCover(this: Page, toggle = true) {
         if (!this.isCanEdit) return;
         var pd = this.getPageDataInfo();
-        if (pd.cover?.abled) {
+        if (pd.cover?.abled && toggle !== false) {
             this.onUpdatePageCover({ 'cover.abled': false }, true);
         }
         else {

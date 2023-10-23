@@ -304,6 +304,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                 return;
             }
             else {
+
                 if (isEmpty && block.isLine) await block.delete()
                 /**
                  * 如果满足转换，
@@ -345,10 +346,13 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                     write.kit.page.addUpdateEvent(async () => {
                         write.kit.anchorCursor.onFocusBlockAnchor(prevAppearBlock, { last: true, render: true, merge: true });
                     });
+                    if (rowBlock.isContentEmpty) {
+                        await rowBlock.delete();
+                    }
                 }
-                if (rowBlock.isContentEmpty && !(!rowBlock?.prev && (rowBlock.parent?.isPanel || rowBlock.parent?.isLayout || rowBlock?.parent?.isCell))) {
-                    await rowBlock.delete();
-                }
+                // if (rowBlock.isContentEmpty && !(!rowBlock?.prev && (rowBlock.parent?.isPanel || rowBlock.parent?.isLayout || rowBlock?.parent?.isCell))) {
+                //     await rowBlock.delete();
+                // }
             }
         });
     }
