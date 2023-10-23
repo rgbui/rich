@@ -14,9 +14,9 @@ import {
 import { Icon } from "../../../../component/view/icon";
 import { useSelectMenuItem } from "../../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
-import { useCardBoxStyle } from "../../../../extensions/doc.card/style";
+import { useCardBoxStyle } from "../../../../extensions/theme/card.style";
 import { Point, Rect } from "../../../common/vector/point";
-import { PageLayoutType } from "../../../page/declare";
+import { PageLayoutType, PageThemeStyle } from "../../../page/declare";
 import { GridMap } from "../../../page/grid";
 import { BlockDirective, BlockRenderRange } from "../../enum";
 import { prop, url, view } from "../../factory/observable";
@@ -24,7 +24,6 @@ import { BlockView } from "../../view";
 import { ChildsArea } from "../../view/appear";
 import "./style.less";
 import { ToolTip } from "../../../../component/view/tooltip";
-import { BoxFillType, BoxStyle } from "../../../../extensions/doc.card/declare";
 import { DropDirection } from "../../../kit/handle/direction";
 import { lst } from "../../../../i18n/store"
 import { BlockUrlConstant } from "../../constant";
@@ -135,9 +134,9 @@ export class CardBox extends Block {
         }
     }
     @prop()
-    cardFill: BoxFillType = { mode: 'none', color: '' }
+    cardFill: PageThemeStyle['bgStyle'] = { mode: 'none', color: '' }
     @prop()
-    cardStyle: BoxStyle = { color: 'light', transparency: 'frosted' }
+    cardStyle: PageThemeStyle['contentStyle'] = { color: 'light', transparency: 'frosted' }
     getVisibleHandleCursorPoint() {
         if ((this.view as any).contentEl) {
             var c = (this.view as any).contentEl as HTMLElement;
@@ -251,6 +250,9 @@ export class ViewComponent extends BlockView<CardBox>{
             style.boxSizing = 'border-box';
             if (this.block.cardFill.mode == 'color') {
                 style.backgroundColor = this.block.cardFill.color;
+            }
+            else if (this.block.cardFill.mode == 'grad') {
+                style.backgroundImage = this.block.cardFill.grad.bg;
             }
             else if (this.block.cardFill.mode == 'image' || this.block.cardFill.mode == 'uploadImage') {
                 style.backgroundImage = `url(${this.block.cardFill.src})`;

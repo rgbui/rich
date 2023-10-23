@@ -1,27 +1,29 @@
 import lodash from "lodash";
 import React from "react";
-import { EventsComponent } from "../../../component/lib/events.component";
-import { BlockcolorSvg, CardBackgroundFillSvg, CardBrushSvg, CheckSvg, ChevronDownSvg, CloseSvg, NoneSvg, PicSvg, UploadSvg } from "../../../component/svgs";
-import { Button } from "../../../component/view/button";
-import { ColorInput } from "../../../component/view/color/input";
-import { Icon } from "../../../component/view/icon";
-import { useSelectMenuItem } from "../../../component/view/menu";
-import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
-import { Rect } from "../../../src/common/vector/point";
-import { BackgroundColorList } from "../../color/data";
-import { GalleryPics } from "../../image/gellery";
-import { PopoverSingleton } from "../../popover/popover";
-import { PopoverPosition } from "../../popover/position";
-import { BoxFillType, BoxStyle } from "../declare";
-import { lst } from "../../../i18n/store";
-import { S } from "../../../i18n/view";
-import { UploadView } from "../../file/upload";
+import { EventsComponent } from "../../component/lib/events.component";
+import { CardBackgroundFillSvg, CardBrushSvg, CheckSvg, ChevronDownSvg, CloseSvg, NoneSvg, PicSvg, UploadSvg } from "../../component/svgs";
+import { Button } from "../../component/view/button";
+import { ColorInput } from "../../component/view/color/input";
+import { Icon } from "../../component/view/icon";
+import { useSelectMenuItem } from "../../component/view/menu";
+import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
+import { Rect } from "../../src/common/vector/point";
+import { GalleryBgs } from "../image/gellery";
+import { PopoverSingleton } from "../popover/popover";
+import { PopoverPosition } from "../popover/position";
+
+import { lst } from "../../i18n/store";
+import { S } from "../../i18n/view";
+import { UploadView } from "../file/upload";
+import { GetPageBgs } from "./themes";
+import { PageThemeStyle } from "../../src/page/declare";
+import { GradColor } from "./grad";
 
 export class CardBoxStyle extends EventsComponent {
     options: {
         open: 'background' | 'style' | 'onlyBg',
-        fill?: BoxFillType,
-        cardStyle?: BoxStyle
+        fill?: PageThemeStyle['bgStyle'],
+        cardStyle?: PageThemeStyle['contentStyle']
     } = {
             open: 'background',
             fill: { mode: 'none' },
@@ -40,7 +42,8 @@ export class CardBoxStyle extends EventsComponent {
             { icon: PicSvg, name: 'image', text: lst('选择图片'), value: 'image', checkLabel: self.options?.fill?.mode == 'image' },
             { icon: UploadSvg, name: 'uploadImage', text: lst('上传图片'), value: 'uploadImage', checkLabel: self.options?.fill?.mode == 'uploadImage' },
             { type: MenuItemType.divide },
-            { icon: { name: 'bytedance-icon', code: 'color-filter' }, name: 'color', text: lst('颜色'), value: 'color', checkLabel: self.options?.fill?.mode == 'color' }
+            { icon: { name: 'bytedance-icon', code: 'background-color' }, name: 'color', text: lst('颜色'), value: 'color', checkLabel: self.options?.fill.mode == 'color' },
+            { icon: { name: 'bytedance-icon', code: 'color-filter' }, name: 'grad', text: lst('渐变色'), value: 'grad', checkLabel: self.options?.fill.mode == 'grad' }
         ]
         async function openMenu(event: React.MouseEvent) {
             var r = await useSelectMenuItem(
@@ -62,7 +65,7 @@ export class CardBoxStyle extends EventsComponent {
                     <S>无背景</S>
                 </div>}
                 {this.options.fill.mode == 'image' && <div>
-                    {GalleryPics().map(gp => {
+                    {GalleryBgs().map(gp => {
                         return <div className="gap-b-15" key={gp.group}>
                             <div className="remark padding-w-15">{gp.group}</div>
                             <div className="flex flex-wrap">
@@ -100,7 +103,7 @@ export class CardBoxStyle extends EventsComponent {
                         }}></ColorInput>
                     </div>
                     <div className="remark f-14 gap-b-5"><S>选择主题色</S></div>
-                    {BackgroundColorList().map(bg => {
+                    {GetPageBgs().map(bg => {
                         return <div key={bg.color}
                             onMouseDown={e => {
                                 this.setProps({ 'fill.mode': 'color', 'fill.color': bg.color })
@@ -113,6 +116,12 @@ export class CardBoxStyle extends EventsComponent {
                             </span>}
                         </div>
                     })}
+                </div>}
+                {this.options.fill.mode == 'grad' && <div className="gap-w-15">
+                    <GradColor grad={this.options?.fill.grad} onChange={e => {
+                        this.setProps({ 'fill.mode': 'grad', 'fill.grad': e });
+                    }}>
+                    </GradColor>
                 </div>}
 
             </div>
@@ -131,7 +140,6 @@ export class CardBoxStyle extends EventsComponent {
         this.forceUpdate();
     }
     renderStyle() {
-
         return <div className="h-400 padding-h-10 overflow-y f-14">
             <div className="remark gap-w-15 gap-h-10 f-12">
                 <S>透明性</S>
@@ -172,7 +180,7 @@ export class CardBoxStyle extends EventsComponent {
                     <div className="flex gap-h-10">{this.options.cardStyle.transparency == 'noborder' && <span className="size-20"><Icon size={16} icon={CheckSvg}></Icon></span>}<span><S>无边框</S></span></div>
                 </div>
             </div>
-            <div className="remark gap-w-15 gap-h-10 f-12">
+            {/* <div className="remark gap-w-15 gap-h-10 f-12">
                 <S>颜色</S>
             </div>
             <div className="flex flex-wrap text-1">
@@ -192,7 +200,7 @@ export class CardBoxStyle extends EventsComponent {
                     </div>
                     <div className="flex gap-h-10">{this.options.cardStyle.color == 'dark' && <span className="size-20"><Icon size={16} icon={CheckSvg}></Icon></span>}<span><S>暗黑</S></span></div>
                 </div>
-            </div>
+            </div> */}
         </div>
     }
     render() {
