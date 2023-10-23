@@ -29,7 +29,7 @@ export class DataGridSelectorView extends EventsComponent {
             var btns = undefined
             var cs: MenuItem[] = [];
             if (Array.isArray(rd.views) && rd.views.length > 0) {
-                cs.push({ type: MenuItemType.text, text:lst('视图')  })
+                cs.push({ type: MenuItemType.text, text: lst('视图') })
                 var srs = getSchemaViews();
                 cs.push(...rd.views.findAll(g => srs.some(s => s.url == g.url)).map(rv => {
                     return {
@@ -56,19 +56,20 @@ export class DataGridSelectorView extends EventsComponent {
             })
         })
         if (list.length > 0) {
-            items.push({ text: lst('选择已创建的表格') , type: MenuItemType.text })
+            items.push({ text: lst('选择已创建表格'), type: MenuItemType.text })
             items.push(itemPanel);
             items.push({ type: MenuItemType.divide })
+            items.push({ text: lst('创建新表格'), type: MenuItemType.text })
         }
         items.push({
             type: MenuItemType.input,
             name: "table",
-            text:lst('输入表格名称') ,
+            text: lst('输入表格名称'),
         })
         items.push({ type: MenuItemType.gap })
         items.push({
             type: MenuItemType.button,
-            text: lst('创建表格') ,
+            text: lst('创建表格'),
             name: 'createTable',
             buttonClick: 'click'
         })

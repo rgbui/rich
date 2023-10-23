@@ -32,7 +32,7 @@ export class DataSourceView extends EventsComponent {
         async function input(item) {
             if (item.name == 'name') {
                 var dr: Record<string, any> = {};
-                if (item.text != item.data.text) dr.text = item.text;
+                if (item.value != item.data.text) dr.text = item.value;
                 if (!lodash.isEqual(item.icon, item.data.icon)) dr.icon = item.icon;
                 if (Object.keys(dr).length > 0)
                     saveTable(item.data, dr);
@@ -99,7 +99,7 @@ export class DataSourceView extends EventsComponent {
                     type: MenuItemType.inputTitleAndIcon,
                     value: rd.text,
                     icon: lodash.cloneDeep(rd.icon) || CollectTableSvg,
-                    text: lst('编辑表名'),
+                    placeholder: lst('编辑表名'),
                     data: rd,
                 })
                 if (cs.length > 0 && cs.last().type != MenuItemType.divide) {
