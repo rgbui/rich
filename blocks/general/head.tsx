@@ -173,32 +173,32 @@ export class HeadView extends BlockView<Head>{
         var ns: string[] = [];
         var self = this;
         if (this.block.level == 'h1') {
-            style.fontSize = 30
-            style.lineHeight = '39px';
+            style.fontSize = '1.875em'
+            style.lineHeight = '1.3';
             style.marginTop = 32;
             style.marginBottom = '4px';
             pt = lst('一级标题');
             ns = [undefined]
         }
         else if (this.block.level == 'h2') {
-            style.fontSize = 24;
-            style.lineHeight = '31.2px';
+            style.fontSize = '1.5em';
+            style.lineHeight = '1.3';
             style.marginTop = 22;
             style.marginBottom = '1px';
             pt = lst('二级标题');
             ns = [undefined, undefined]
         }
         else if (this.block.level == 'h3') {
-            style.fontSize = 20;
-            style.lineHeight = '26px';
+            style.fontSize = '1.25em';
+            style.lineHeight = '1.3';
             style.marginTop = '1em';
             style.marginBottom = '1px';
             pt = lst('三级标题');
             ns = [undefined, undefined, undefined]
         }
         else if (this.block.level == 'h4') {
-            style.fontSize = 16;
-            style.lineHeight = '26px';
+            style.fontSize = '1em';
+            style.lineHeight = '1.3';
             style.marginTop = '1em';
             style.marginBottom = '1px';
             pt = lst('四级标题');
@@ -206,7 +206,11 @@ export class HeadView extends BlockView<Head>{
         }
         var pa = this.block.parent;
         if (pa.url == BlockUrlConstant.CardBox) {
-            style.fontSize = style.fontSize * 1.6;
+            style.fontSize = (parseFloat(style.fontSize.replace('em', '')) * 1.6) + 'em';
+            if (this.block.at == 0)
+                style.marginTop = 0;
+        }
+        else if (pa.url == BlockUrlConstant.BoardPageCard || pa.url == BlockUrlConstant.Card) {
             if (this.block.at == 0)
                 style.marginTop = 0;
         }
