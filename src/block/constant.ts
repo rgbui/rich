@@ -39,6 +39,7 @@ export enum BlockUrlConstant {
     DataGridPage = '/data-grid/paging',
     Button = '/button',
     Comment = '/comments',
+    Discuss = '/discuss',
     FieldTitle = '/field/title',
     Image = '/image',
     BoardImage = '/board/image',
@@ -46,7 +47,9 @@ export enum BlockUrlConstant {
     RecordPageView = '/data-grid/page/record',
     Table = '/table',
     Cell = '/table/cell',
-    BoardPageCard='/board/page/card',
+    BoardPageCard = '/board/page/card',
+    PagePreOrNext = '/page/preOrNext',
+    Card = '/card'
 }
 export enum BlockChildKey {
     childs = 'childs',

@@ -28,6 +28,7 @@ import { SnapshootBlockPos, SnapshootBlockPropPos } from "../history/snapshoot";
 import lodash from "lodash";
 import { AtomPermission } from "../page/permission";
 import { util } from "../../util/util";
+import { dom } from "../common/dom";
 
 export abstract class Block extends Events {
     constructor(page: Page) {
@@ -41,13 +42,23 @@ export abstract class Block extends Events {
         if (typeof this.init == 'function') this.init();
     }
     /**
-     * 建产索引查询
+     * 建立栅格索引
      */
     gridMap: GridMap;
     get panelGridMap() {
         var c = this.closest(x => x.gridMap ? true : false);
         if (c) return c.gridMap;
         else return this.page.gridMap;
+    }
+    get panel() {
+        return this.closest(x => x.isPanel);
+    }
+    get parentPanel() {
+        return this.closest(x => x.isPanel && x !== this);
+    }
+    getScrollDiv() {
+        if (this.el)
+            return dom(this.el).findOverflowPanel()
     }
     parent: Block;
     url: string;
@@ -319,6 +330,12 @@ export abstract class Block extends Events {
         return true;
     }
     /**
+     * 表示块是否可以拖动
+     */
+    get isCanDrag() {
+        return true;
+    }
+    /**
     * 判断该块是否接受dragBlocks拖到这里
     */
     isAllowDrops(dragBlocks: Block[]) {
@@ -529,11 +546,11 @@ export abstract class Block extends Events {
             var bound = this.getVisibleBound();
             var contentEle = this.contentEl;
             var cb = Rect.fromEle(contentEle as HTMLElement);
-            if (rect instanceof Rect && bound.isCross(rect)) {
+            if (bound && rect instanceof Rect && bound.isCross(rect)) {
                 if (cb.isCross(rect)) return true;
                 else return false;
             }
-            else if (rect instanceof Point && bound.contain(rect)) {
+            else if (bound && rect instanceof Point && bound.contain(rect)) {
                 if (cb.contain(rect)) return true;
                 else return false;
             }
@@ -541,10 +558,10 @@ export abstract class Block extends Events {
         }
         else {
             var bound = this.getVisibleBound();
-            if (rect instanceof Rect && bound.isCross(rect)) {
+            if (bound && rect instanceof Rect && bound.isCross(rect)) {
                 return true;
             }
-            else if (rect instanceof Point && bound.contain(rect)) {
+            else if (bound && rect instanceof Point && bound.contain(rect)) {
                 return true;
             }
             return false;
@@ -768,7 +785,6 @@ export abstract class Block extends Events {
         })
     }
     async onSyncReferenceBlock() {
-
     }
     isCanEdit() {
         return this.page.isCanEdit;

@@ -25,6 +25,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
     var gm = block ? block.panelGridMap : kit.page.gridMap;
     var currentBlocks: Block[];
     var scrollDiv = block?.panel ? block.panel.getScrollDiv() : kit.page.getScrollDiv();
+    //console.log(scrollDiv, block?.panel, block);
     MouseDragger({
         event,
         dis: 5,
