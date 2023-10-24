@@ -33,6 +33,7 @@ import { BorderBoxStyle, ShapeStroke } from "./stroke";
 import "./style.less";
 import { lst } from "../../i18n/store";
 import lodash from "lodash";
+import { tipLayer } from "../../component/lib/zindex";
 
 export class BoardEditTool extends EventsComponent {
     el: HTMLElement;
@@ -40,7 +41,8 @@ export class BoardEditTool extends EventsComponent {
         if (this.visible != true) return <></>;
         var style: CSSProperties = {
             top: this.point.y,
-            left: this.point.x
+            left: this.point.x,
+            zIndex: tipLayer.zoom(this)
         };
         var self = this;
         function getValue(name: string) {
@@ -326,6 +328,9 @@ export class BoardEditTool extends EventsComponent {
             this.dropName = '';
             this.forceUpdate()
         }
+    }
+    componentWillUnmount(): void {
+        tipLayer.clear(this);
     }
 }
 export interface BoardEditTool {

@@ -21,6 +21,7 @@ import { util } from "../../util/util";
 import { useSearchBox } from "../search/keyword";
 import { Page } from "../../src/page";
 import { lst } from "../../i18n/store";
+import { tipLayer } from "../../component/lib/zindex";
 
 export type TextToolStyle = {
     link: string,
@@ -31,7 +32,7 @@ export type TextToolStyle = {
     deleteLine: boolean,
     code: boolean,
     equation: boolean,
-    color: string,
+    color: string | { color: string, grad: string },
     fill: Partial<FillCss>,
     page: boolean
 }
@@ -88,7 +89,8 @@ class TextTool extends EventsComponent {
     render() {
         var style: CSSProperties = {
             top: this.point.y,
-            left: this.point.x
+            left: this.point.x,
+            zIndex:tipLayer.zoom(this)
         };
         return <div tabIndex={1} onMouseUp={e => e.stopPropagation()} ref={el => this.el = el}>
             {this.selection.rects.length > 0 &&
@@ -324,6 +326,7 @@ class TextTool extends EventsComponent {
     }
     componentWillUnmount() {
         document.removeEventListener('mousedown', this.onGlobalMousedown, true);
+        tipLayer.clear(this);
     }
     async onOpenBlockSelector(event: React.MouseEvent) {
         event.stopPropagation();
