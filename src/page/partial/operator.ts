@@ -63,6 +63,7 @@ export class Page$Operator {
             this.monitorBlockOperator(block, 'create');
             this.addPageUpdate();
         }
+        await block.loadSyncBlock();
         return block;
     }
     async onCreateTailTextSpan(this: Page, panel?: Block) {

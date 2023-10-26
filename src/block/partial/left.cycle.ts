@@ -288,10 +288,8 @@ export class Block$LifeCycle {
                     this.page.onSyncUserActions(r.data.operates, 'loadSyncBlock');
             }
         }
-        else {
-            for (let n in this.blocks) {
-                await this.blocks[n].eachAsync(async b => await b.loadSyncBlock());
-            }
+        for (let n in this.blocks) {
+            await this.blocks[n].eachAsync(async b => await b.loadSyncBlock());
         }
     }
     async get(this: Block, args?: { syncBlock: boolean }, options?: { emptyChilds?: boolean }) {
