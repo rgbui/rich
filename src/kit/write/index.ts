@@ -200,7 +200,10 @@ export class PageWrite {
                     this.kit.page.emit(PageDirective.save)
                     return;
                 }
-                if (aa.block.isEnterCreateNewLine) {
+                if (aa?.block.isFreeBlock) {
+                    await onEnterInput(this, aa, event);
+                }
+                else if (aa.block.isEnterCreateNewLine) {
                     if (!this.kit.page.keyboardPlate.isShift()) {
                         await onEnterInput(this, aa, event);
                     }
