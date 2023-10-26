@@ -138,7 +138,11 @@ export class BoxTip extends React.Component<{
     mouseEnterDelay?: number;
     /**0.1s */
     mouseLeaveDelay?: number;
-    placement?: OverlayPlacement
+    placement?: OverlayPlacement,
+    /**
+     * 禁用鼠标按下关闭
+     */
+    disableMousedownClose?: boolean
 }>{
     el: HTMLElement;
     componentDidMount() {
@@ -161,6 +165,7 @@ export class BoxTip extends React.Component<{
         }
     }
     mousedown = (event: MouseEvent) => {
+        if (this.props.disableMousedownClose == true) return;
         this.close();
     }
     enterTime;
