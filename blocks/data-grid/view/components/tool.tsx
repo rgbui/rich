@@ -8,7 +8,6 @@ import {
     ChevronDownSvg,
     CollectTableSvg,
     DotsSvg,
-    FieldsSvg,
     FilterSvg,
     MaximizeSvg,
     SettingsSvg,
@@ -16,8 +15,6 @@ import {
 } from "../../../../component/svgs";
 import "./style.less";
 import { PageLayoutType } from "../../../../src/page/declare";
-import { BlockUrlConstant } from "../../../../src/block/constant";
-import { DataGridForm } from "../form";
 import { S } from "../../../../i18n/view";
 
 export class DataGridTool extends React.Component<{ block: DataGridView }>{
@@ -27,12 +24,7 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
         props.block.dataGridTool = this;
         var view = props.block.schema?.views?.find(g => g.id == props.block.syncBlockId)
         if (!view) return <></>
-        var isForm = view.url == BlockUrlConstant.FormView;
         function renderToolOperators() {
-            if (isForm) return <>
-                <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => (props.block as DataGridForm).onFormFields(e)}><Icon size={16} icon={FieldsSvg}></Icon></label>
-                <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => { (props.block as DataGridForm).onFormSettings(e) }}><Icon size={16} icon={DotsSvg}></Icon></label>
-            </>
             return <>
                 {props.block.isCanEdit() && <><label className="item-hover round padding-w-5 h-24 flex-center cursor gap-r-10" onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e))}><Icon size={16} icon={SettingsSvg}></Icon><span className="f-14 padding-l-5"><S>视图配置</S></span></label>
                     {props.block.filter?.items?.length > 0 && <label className="item-hover round  flex-center cursor gap-r-10 padding-w-5 h-24 " onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e), 'filter')}><Icon size={16} icon={FilterSvg}></Icon><span className="f-14 padding-l-5"><S>过滤</S></span></label>}
@@ -45,29 +37,33 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                 </div>}
             </>
         }
-        if (props.block.noTitle) return <div className='h-20 relative'>
-            {props.block.isOver && <div className="flex h-40 pos shadow bg-white round padding-w-10 padding-h-0" style={{
-                top: -30,
-                left: 0,
-                right: 0,
-                zIndex: 3000
-            }}><div className="flex-fixed">
-                    <label className="cursor flex round  item-hover padding-r-5 text f-14" onMouseDown={e => {
-                        if (!props.block.page.isSign) return;
-                        e.stopPropagation();
-                        props.block.onOpenViewSettings(Rect.fromEvent(e))
-                    }}>
-                        <span className="size-24 bold flex-center flex-fixed">
-                            <Icon size={18} icon={view.icon || getSchemaViewIcon(view.url) || CollectTableSvg}></Icon>
-                        </span>
-                        <span className="flex-auto">{view?.text}</span>
-                    </label>
+        if (props.block.noTitle) {
+            if (props.block.isCanEdit())
+                return <div className='h-20 relative'>
+                    {props.block.isOver && <div className="flex h-40 pos shadow bg-white round padding-w-10 padding-h-0" style={{
+                        top: -30,
+                        left: 0,
+                        right: 0,
+                        zIndex: 3000
+                    }}><div className="flex-fixed">
+                            <label className="cursor flex round  item-hover padding-r-5 text f-14" onMouseDown={e => {
+                                if (!props.block.page.isSign) return;
+                                e.stopPropagation();
+                                props.block.onOpenViewSettings(Rect.fromEvent(e))
+                            }}>
+                                <span className="size-24 bold flex-center flex-fixed">
+                                    <Icon size={18} icon={view.icon || getSchemaViewIcon(view.url) || CollectTableSvg}></Icon>
+                                </span>
+                                <span className="flex-auto">{view?.text}</span>
+                            </label>
+                        </div>
+                        <div className="sy-dg-tool-operators flex-auto flex-end">
+                            {renderToolOperators()}
+                        </div>
+                    </div>}
                 </div>
-                <div className="sy-dg-tool-operators flex-auto flex-end">
-                    {renderToolOperators()}
-                </div>
-            </div>}
-        </div>
+            else return <></>
+        }
         else return <div className="sy-dg-tool">
             <div className="flex-fixed">
                 <label className="cursor flex round  item-hover padding-r-5  text f-14"

@@ -24,7 +24,6 @@ import { OriginFilterField } from "../../element/filter/origin.field";
 import { FilterSort } from "../../element/filter/sort";
 import { Page } from "../../../../src/page";
 import { Field } from "../../schema/field";
-import { BlockUrlConstant } from "../../../../src/block/constant";
 import { useCreateDataGrid } from "../../../../extensions/data-grid/create/view";
 import { AtomPermission } from "../../../../src/page/permission";
 
@@ -38,6 +37,7 @@ import { AtomPermission } from "../../../../src/page/permission";
  */
 export class DataGridView extends Block {
     checkItems: Record<string, any>[] = [];
+    viewProps: string[] = ['filter', 'size', 'sorts'];
     @prop()
     fields: ViewField[] = [];
     @prop()
@@ -111,12 +111,8 @@ export class DataGridView extends Block {
             }
             else await this.setPropData(n, data[n]);
         }
-        if (this.syncBlockId) {
-            // await this.loadSyncBlock();
-        }
     }
     async get(this: DataGridView) {
-        if (this.url == BlockUrlConstant.FormView) return await super.get();
         var json: Record<string, any> = {
             id: this._id,
             syncBlockId: this.syncBlockId,
@@ -130,7 +126,7 @@ export class DataGridView extends Block {
         if (Array.isArray(this.__props)) {
             var ss = super.__props;
             await this.__props.eachAsync(async pro => {
-                if (ss.includes(pro) || pro == 'size')
+                if (ss.includes(pro) || this.viewProps.includes(pro))
                     json[pro] = await this.clonePropData(pro, this[pro]);
             })
         }
@@ -143,19 +139,17 @@ export class DataGridView extends Block {
         json.blocks = {};
         if (Array.isArray(this.__props)) {
             await this.__props.eachAsync(async pro => {
-                if (pro !== 'size')
+                if (!this.viewProps.includes(pro))
                     json[pro] = await this.clonePropData(pro, this[pro]);
             })
         }
         return json;
     }
     async getSyncString() {
-        if (this.url == BlockUrlConstant.FormView) return await super.getSyncString();
         return JSON.stringify(await this.getSync());
     }
     async loadSyncBlock(this: DataGridView): Promise<void> {
         if (this.syncBlockId) {
-            if (this.url == BlockUrlConstant.FormView) return await super.loadSyncBlock();
             var r = await channel.get('/view/snap/query', { ws: this.page.ws, elementUrl: this.elementUrl });
             if (r.ok) {
                 var data;
@@ -170,6 +164,7 @@ export class DataGridView extends Block {
                 }
                 this.fields = [];
                 for (var n in data) {
+                    if (this.viewProps.includes(n)) continue;
                     if (n == 'pattern') {
                         await this.pattern.load(data[n]);
                     }
@@ -183,6 +178,7 @@ export class DataGridView extends Block {
             }
         }
         else await super.loadSyncBlock();
+
     }
     getSearchFilter() {
         var f: SchemaFilter = {} as any;

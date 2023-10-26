@@ -1,17 +1,15 @@
 
-import { PageLayoutType } from "../../../../src/page/declare";
 import { TableSchema } from "../../schema/meta";
 import { FieldType } from "../../schema/type";
-import { ViewField } from "../../schema/view";
 import { DataGridView } from ".";
 import { channel } from "../../../../net/channel";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
 import lodash from "lodash";
-import { lst } from "../../../../i18n/store";
+
 export class DataGridViewLife {
     async loadSchema(this: DataGridView) {
         if (this.schemaId && !this.schema) {
-            this.schema = await TableSchema.loadTableSchema(this.schemaId,this.page.ws);
+            this.schema = await TableSchema.loadTableSchema(this.schemaId, this.page.ws);
         }
     }
     async loadViewFields(this: DataGridView) {
@@ -37,11 +35,6 @@ export class DataGridViewLife {
                 FieldType.deleted].includes(g.field?.type)
             )
         }
-        if (this.page.pageLayout.type == PageLayoutType.dbPickRecord) {
-            if (!this.fields.some(s => s.type == 'check')) {
-                this.fields.insertAt(0, new ViewField({ type: 'check', text:lst('选择')  }, this.schema))
-            }
-        }
     }
     async loadRelationSchemas(this: DataGridView) {
         var tableIds: string[] = [];
@@ -53,7 +46,7 @@ export class DataGridViewLife {
             }
         });
         if (tableIds.length > 0) {
-            this.relationSchemas = await TableSchema.loadListSchema(tableIds,this.page);
+            this.relationSchemas = await TableSchema.loadListSchema(tableIds, this.page);
         }
     }
     async loadRelationDatas(this: DataGridView,) {
@@ -81,7 +74,7 @@ export class DataGridViewLife {
                 var v = vr.ids;
                 var sea = this.relationSchemas.find(g => g.id == key);
                 if (sea) {
-                    var rd = await sea.all({ page: 1, filter: { id: { $in: v } } },this.page.ws);
+                    var rd = await sea.all({ page: 1, filter: { id: { $in: v } } }, this.page.ws);
                     if (rd.ok) {
                         this.relationDatas.set(key, rd.data.list);
                     }
@@ -97,7 +90,7 @@ export class DataGridViewLife {
                 size: this.size,
                 filter: this.getSearchFilter(),
                 sorts: this.getSearchSorts()
-            },this.page.ws);
+            }, this.page.ws);
             if (r.data) {
                 this.data = Array.isArray(r.data.list) ? r.data.list : [];
                 this.total = r.data?.total || 0;
@@ -120,7 +113,7 @@ export class DataGridViewLife {
                     var r = await channel.get('/user/interactives', {
                         schemaId: this.schema.id,
                         ids: ids,
-                        ws:this.page.ws,
+                        ws: this.page.ws,
                         es: fs.map(f => getElementUrl(ElementType.SchemaFieldNameData, this.schema.id, f.name, ids[0]))
                     });
                     if (r.ok) {

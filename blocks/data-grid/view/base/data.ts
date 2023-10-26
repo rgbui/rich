@@ -24,8 +24,6 @@ export class DataGridViewData {
     }
     async onOpenAddForm(this: DataGridView, viewId?: string, isOver?: boolean, forceUrl?: '/page/open' | '/page/dialog' | '/page/slide', initData?: Record<string, any>) {
         var vid = viewId || this.schema.defaultAddForm?.id;
-        if (vid && !this.schema.recordViews.some(s => s.id == vid)) vid = undefined;
-        if (!vid) vid = this.schema.recordViews[0]?.id;
         var url: '/page/open' | '/page/dialog' | '/page/slide' = '/page/dialog';
         if (this.createRecordSource == 'page') {
             url = '/page/open';
