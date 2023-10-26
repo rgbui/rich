@@ -146,10 +146,7 @@ export function getSchemaViewIcon(url: string): IconValueType {
         case '/data-grid/charts':
         case '/data-grid/statistic/value':
             return { name: 'bytedance-icon', code: 'chart-pie-one' }
-            break;
-        case BlockUrlConstant.FormView:
-            return OrderSvg;
-            break;
+           
     }
 }
 export function getChartViews() {

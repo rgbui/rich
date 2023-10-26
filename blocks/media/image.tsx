@@ -494,8 +494,10 @@ export class ImageView extends BlockView<Image>{
         }
     }
     imageWrapper: HTMLDivElement;
-    renderEmptyImage() {
-        if (this.block.speed) {
+    renderEmptyImage()
+    {
+        if (this.block.speed)
+        {
             return <div className="sy-block-image-empty flex f-14">
                 <Spin size={16}></Spin>
                 <span><S>上传中</S>:{this.block.speed}</span>
@@ -516,7 +518,6 @@ export class ImageView extends BlockView<Image>{
             justifyContent: 'center'
         }
         if (this.block.captionAlign == 'left') captionStyle.justifyContent = 'flex-start'
-
         var imageMaskStyle: CSSProperties = {}
         if (this.block.mask == 'radius') imageMaskStyle.borderRadius = '10%';
         else if (this.block.mask == 'circle') {

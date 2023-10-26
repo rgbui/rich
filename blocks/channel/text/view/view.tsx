@@ -294,11 +294,6 @@ export class ChannelTextView extends BlockView<ChannelText>{
             delete style.paddingLeft;
             delete style.paddingRight;
             style.height = this.block.page.pageVisibleHeight;
-            style.backgroundColor = '#fff';
-            if (this.block.page.pageInfo.textChannelMode == 'weibo') {
-                style.position = 'relative';
-                classList.push('bg-light border-light-left')
-            }
         }
         return <div className={classList.join(" ")} style={style}>
             {this.renderChats()}
