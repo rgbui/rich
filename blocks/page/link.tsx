@@ -63,7 +63,6 @@ export class LinkView extends BlockView<Link>{
         channel.off('/page/update/info', this.updatePageInfo);
     }
     renderView() {
-
         return <div style={this.block.visibleStyle}><div className='sy-block-link'>
             {this.block.pageInfo &&
                 <a style={this.block.contentStyle} href={this.block.pageInfo.url} onClick={e => this.block.openPage(e)}>
