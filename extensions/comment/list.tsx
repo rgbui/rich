@@ -72,7 +72,7 @@ export class CommentListView extends React.Component<{
     }
     async onReply(l, user, event: React.MouseEvent) {
         if (this.checkSign() == false) return;
-        var g = await useUserComments({ userid: this.userid, placeholder: lst('回复') +'@'+ user.name });
+        var g = await useUserComments({ userid: this.userid, placeholder: lst('回复') + '@' + user.name });
         if (g) {
             var r = await channel.put('/ws/comment/send', {
                 elementUrl: this.elementUrl,
@@ -93,7 +93,7 @@ export class CommentListView extends React.Component<{
             { name: 'del', visible: this.userid == l.creater, text: lst('删除'), icon: TrashSvg },
             // { name: 'unlike', text: '踩评论', icon: OpposeSvg },
             { type: MenuItemType.divide },
-            { name: 'report', disabled: true, text:lst('举报') , icon: ReportSvg },
+            { name: 'report', disabled: true, text: lst('举报'), icon: ReportSvg },
             { name: 'copy', text: lst('复制'), icon: DuplicateSvg },
         ]);
         if (r?.item) {
@@ -230,7 +230,7 @@ export class CommentListView extends React.Component<{
                             </div>
                         </div>
                         {l.replyCount > 0 && !l.replys && <div className="flex gap-t-10">
-                            <span className="link cursor f-12" onMouseDown={e => this.onExpends(l)}><Sp text={'展开回复{count}条'} data={{count:l.replyCount}}>展开回复{l.replyCount}条</Sp></span>
+                            <span className="link cursor f-12" onMouseDown={e => this.onExpends(l)}><Sp text={'展开回复{count}条'} data={{ count: l.replyCount }}>展开回复{l.replyCount}条</Sp></span>
                         </div>}
                         {l.replys && <div className="gap-t-10">{this.renderComments(l.replys.list, deep + 1)}</div>}
                     </div></>}
@@ -251,7 +251,7 @@ export class CommentListView extends React.Component<{
     render() {
         return <div className={this.pop ? "w-600 padding-w-14" : ""}>
             <div className="flex gap-b-10 gap-t-5 ">
-                <span className="bold f-14 flex-fixed">{this.total == 0 ? "" : lst('{total}条评论',{total:this.total})}</span>
+                <span className="bold f-14 flex-fixed">{this.total == 0 ? "" : lst('{total}条评论', { total: this.total })}</span>
                 <div className="flex-auto flex-end f-12">
                     <em onMouseDown={e => this.onSet('default')} className={"h-24 flex-center cursor round padding-w-5" + (this.sort == 'default' ? " item-hover-focus" : "")}><S>默认</S></em>
                     <em onMouseDown={e => this.onSet('date')} className={"h-24 flex-center cursor round padding-w-5" + (this.sort == 'date' ? " item-hover-focus" : "")}><S>最新</S></em>
