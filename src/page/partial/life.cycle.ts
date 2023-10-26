@@ -27,6 +27,7 @@ import { QueueHandle } from "../../../component/lib/queue";
 import { Image } from "../../../blocks/media/image";
 import { FieldType } from "../../../blocks/data-grid/schema/type";
 import { ls } from "../../../i18n/store";
+import { BuildTemplate } from "../template/build";
 
 export class Page$Cycle {
     async init(this: Page) {
@@ -201,13 +202,10 @@ export class Page$Cycle {
         json.pageLayout = util.clone(this.pageLayout);
         json.matrix = this.matrix.getValues();
         json.nav = this.nav;
-        json.autoRefPages = this.autoRefPages;
         json.views = await this.views.asyncMap(async x => {
             return await x.get()
         })
         json.addedSubPages = this.addedSubPages.map(s => s);
-        // json.pageFill = lodash.cloneDeep(this.pageFill);
-        // json.pageStyle = lodash.cloneDeep(this.pageStyle);
         json.isPageForm = this.isPageForm;
         json.locker = lodash.cloneDeep(this.locker);
         return json;
@@ -246,37 +244,11 @@ export class Page$Cycle {
         }
         else await this.load()
     }
-    async getDefaultData(this: Page) {
-        var dr: Partial<Page>;
-        if (this.pageLayout?.type == PageLayoutType.docCard) {
-            var g = await import('../template/doc.cards');
-            dr = g.data as any;
-        }
-        else {
-            var r = await import("../template/default.page");
-            dr = r.data as any;
-        }
-        if (this.ws?.createPageConfig) {
-            if (typeof this.ws.createPageConfig.smallFont != 'undefined') {
-                dr.smallFont = this.ws.createPageConfig.smallFont
-            }
-            if (typeof this.ws.createPageConfig.isFullWidth != 'undefined') {
-                dr.isFullWidth = this.ws.createPageConfig.isFullWidth
-            }
-            if (typeof this.ws.createPageConfig.nav != 'undefined') {
-                dr.nav = this.ws.createPageConfig.nav
-            }
-            if (typeof this.ws.createPageConfig.autoRefPages != 'undefined') {
-                dr.autoRefPages = this.ws.createPageConfig.autoRefPages
-            }
-            if (typeof this.ws.createPageConfig.autoRefSubPages != 'undefined') {
-                dr.autoRefSubPages = this.ws.createPageConfig.autoRefSubPages
-            }
-        }
-        return dr;
+    getDefaultData(this: Page) {
+        return BuildTemplate(this);
     }
     async loadDefaultData(this: Page) {
-        var data = await this.getDefaultData();
+        var data = this.getDefaultData();
         await this.load(data);
     }
     onPageSave(this: Page) {
@@ -872,10 +844,10 @@ export class Page$Cycle {
             }, this);
         }
     }
-    async onUpdateProps(this: Page, props: Record<string, any>, isUpdate?: boolean,callback?:()=>void) {
+    async onUpdateProps(this: Page, props: Record<string, any>, isUpdate?: boolean, callback?: () => void) {
         await this.onAction(ActionDirective.onPageUpdateProps, async () => {
             await this.updateProps(props);
-            if(typeof callback=='function')callback();
+            if (typeof callback == 'function') callback();
             if (isUpdate) this.addPageUpdate();
         });
     }

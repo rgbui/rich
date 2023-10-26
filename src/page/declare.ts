@@ -55,6 +55,7 @@ export interface LinkPageItem<T = {}> {
     share?: 'net' | 'nas' | 'local';
     createDate?: Date,
     editDate?: Date,
+    editor?: string,
     mime?: any,
     /**
       * 互联网是否公开，如果公开的权限是什么
@@ -87,12 +88,15 @@ export interface LinkPageItem<T = {}> {
     thumb?: ResourceArguments,
     deletedDate?: Date,
 
-
     checkedHasChilds?: boolean;
     willLoadSubs?: boolean;
     subCount?: number;
     spread?: boolean,
     childs?: (LinkPageItem & T)[]
+
+    browse?: { count: number, users: string[] }
+    edit?: { count?: number, users: string[] }
+    like?: { count?: number, users?: string[] }
 }
 
 export interface LinkWs {

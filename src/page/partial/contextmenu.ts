@@ -49,7 +49,6 @@ import { usePageHistoryStore } from "../../../extensions/history";
 import { PageDirective } from "../directive";
 import { usePagePublish } from "../../../extensions/publish";
 import { BlockUrlConstant } from "../../block/constant";
-import { useCardBoxStyle } from "../../../extensions/theme/card.style";
 import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
 import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
 import { Field } from "../../../blocks/data-grid/schema/field";
@@ -143,10 +142,12 @@ export class PageContextmenu {
                     icon: FieldsSvg,
                     childs: [
                         { name: 'onlyDisplayContent', text: lst('标题'), type: MenuItemType.switch, checked: this.hideDocTitle ? false : true, icon: HSvg },
-                        { name: 'refPages', text: lst("引用"), visible: [ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type) ? false : true, icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
                         { name: 'showComment', text: lst("评论"), icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                         // { name: 'showDiscuss', text: lst('讨论'), icon: { name: 'bytedance-icon', code: 'topic-discussion', }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
-                        { name: 'prevOrNext', text: lst('上下篇'), visible: [ElementType.SchemaData].includes(this.pe.type), icon: { name: 'bytedance-icon', code: 'transfer-data' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PagePreOrNext) }
+                        { name: 'pageAuthor', text: lst('作者'), icon: { name: 'bytedance-icon', code: 'edit-name' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PageAuthor) },
+                        { name: 'pageUpvotedOrShared', text: lst('点赞分享'), icon: { name: 'bytedance-icon', code: 'send' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PageUpvotedOrShared) },
+                        { name: 'prevOrNext', text: lst('上下篇'), visible: [ElementType.SchemaData].includes(this.pe.type), icon: { name: 'bytedance-icon', code: 'transfer-data' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PagePreOrNext) },
+                        { name: 'refPages', text: lst("引用"), visible: [ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type) ? false : true, icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.RefLinks) },
                     ]
                 },
                 { type: MenuItemType.divide },
@@ -198,6 +199,7 @@ export class PageContextmenu {
                     icon: FieldsSvg,
                     childs: [
                         { name: 'onlyDisplayContent', text: lst('标题'), type: MenuItemType.switch, checked: this.hideDocTitle ? false : true, icon: NoteSvg },
+                        { name: 'pageUpvotedOrShared', text: lst('点赞分享'), icon: { name: 'bytedance-icon', code: 'send' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PageUpvotedOrShared) },
                         { name: 'showComment', text: lst("评论"), icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                     ]
                 },
@@ -225,6 +227,17 @@ export class PageContextmenu {
                     text: lst('主题'),
                     icon: PlatteSvg,
                     name: 'theme',
+                },
+                {
+                    text: lst('小部件'),
+                    icon: FieldsSvg,
+                    childs: [
+                        { name: 'onlyDisplayContent', text: lst('标题'), type: MenuItemType.switch, checked: this.hideDocTitle ? false : true, icon: NoteSvg },
+                        { name: 'pageAuthor', text: lst('作者'), icon: { name: 'bytedance-icon', code: 'edit-name' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PageAuthor) },
+                        { name: 'pageUpvotedOrShared', text: lst('点赞分享'), icon: { name: 'bytedance-icon', code: 'send' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PageUpvotedOrShared) },
+                        { name: 'showComment', text: lst("评论"), icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
+                        { name: 'refPages', text: lst("引用"), visible: [ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type) ? false : true, icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.RefLinks) },
+                    ]
                 },
                 { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? lst("除消编辑保护") : lst("编辑保护"), icon: this.locker?.lock ? LockSvg : UnlockSvg },
                 { name: 'history', icon: VersionHistorySvg, text: lst('页面历史') },
@@ -317,10 +330,10 @@ export class PageContextmenu {
                     });
                 }
                 else if (item.name == 'nav') {
-                    this.onOpenNav({ nav: item.checked })
+                    this.onToggleOutline({ nav: item.checked })
                 }
                 else if (item.name == 'refPages') {
-                    this.onOpenRefPages({ refPages: item.checked })
+                    this.onToggleRefPages({ refPages: item.checked })
                 }
                 else if (item.name == 'channel') {
                     this.onChangeTextChannel(item.value as any)
@@ -330,6 +343,12 @@ export class PageContextmenu {
                 }
                 else if (item.name == 'showComment') {
                     this.onToggleComments(item.checked)
+                }
+                else if (item.name == 'pageAuthor') {
+                    this.onTogglePageAuthor(item.checked);
+                }
+                else if (item.name == 'pageUpvotedOrShared') {
+                    this.onToggleUpvotedOrShared(item.checked);
                 }
                 else if (item.name == 'showDiscuss') {
                     this.onToggleDiscuss(item.checked)

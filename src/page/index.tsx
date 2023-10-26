@@ -100,7 +100,6 @@ export class Page extends Events<PageDirective>{
         }
         return false;
     }
-    autoRefPages: boolean = false;
     autoRefSubPages: boolean = true;
     addedSubPages: string[] = [];
     showMembers: boolean = false;
@@ -187,7 +186,7 @@ export class Page extends Events<PageDirective>{
             panel.appendChild(this.root);
             this.view.observeScroll();
             await this.view.AutomaticHandle();
-            if ([ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type)) {
+            if ([ElementType.SchemaRecordView, ElementType.SchemaRecordViewData, ElementType.SchemaData].includes(this.pe.type)) {
                 await this.loadPageSchema();
             }
             var isForceUpdate = false;

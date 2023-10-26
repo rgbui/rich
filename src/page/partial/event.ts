@@ -173,7 +173,7 @@ export class PageEvent {
                 });
                 await this.createBlock('/data-grid/table', {
                     schemaId: schema.id,
-                    syncBlockId: schema.views.find(g => ![BlockUrlConstant.RecordPageView, BlockUrlConstant.FormView].includes(g.url as any))?.id
+                    syncBlockId: schema.views.find(g => ![BlockUrlConstant.RecordPageView].includes(g.url as any))?.id
                 }, view);
                 break;
             case PageLayoutType.docCard:

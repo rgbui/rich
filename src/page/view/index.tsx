@@ -286,14 +286,7 @@ export class PageView extends Component<{ page: Page }>{
         await this.page.onAction(ActionDirective.AutomaticHandle, async () => {
             var isForceUpdate: boolean = false;
             if (this.page.pageLayout?.type == PageLayoutType.doc && this.page.requireSelectLayout == false) {
-                if (this.page.autoRefPages == true) {
-                    if (!this.page.exists(g => g.url == BlockUrlConstant.RefLinks)) {
-                        var view = this.page.views[0];
-                        await this.page.createBlock(BlockUrlConstant.RefLinks, {}, view, view.blocks.childs.length, BlockChildKey.childs)
-                        isForceUpdate = true;
-                    }
-                }
-                if (this.page.autoRefSubPages == true && this.page.pageInfo) {
+              if (this.page.autoRefSubPages == true && this.page.pageInfo) {
                     var oldSubPages = this.page.addedSubPages.map(c => c)
                     var items = await this.page.pageInfo.getSubItems();
                     this.page.addedSubPages = items.map(it => it.id);

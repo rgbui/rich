@@ -305,9 +305,9 @@ export class Page$Operator {
                 break;
         }
     }
-    async onOpenNav(this: Page, d: { nav: boolean }) {
-        await this.onAction('onOpenNav', async () => {
-            this.updateProps({ nav: d.nav });
+    async onToggleOutline(this: Page, d: { nav: boolean }) {
+        await this.onAction('onToggleOutline', async () => {
+            await this.updateProps({ nav: d.nav });
             if (this.requireSelectLayout == true) {
                 this.updateProps({ requireSelectLayout: false, 'pageLayout.type': PageLayoutType.doc });
             }
@@ -338,9 +338,9 @@ export class Page$Operator {
         })
         this.forceUpdate();
     }
-    async onOpenRefPages(this: Page, d: { refPages: boolean }) {
-        await this.onAction('onOpenRefPages', async () => {
-            this.updateProps({ autoRefPages: d.refPages });
+    async onToggleRefPages(this: Page, d: { refPages: boolean }) {
+        await this.onAction('onToggleRefPages', async () => {
+            await this.updateProps({ autoRefPages: d.refPages });
             if (this.requireSelectLayout == true) {
                 this.updateProps({
                     requireSelectLayout: false,
@@ -353,6 +353,10 @@ export class Page$Operator {
             }
             else {
                 var view = this.views[0];
+                if (this.pageLayout.type == PageLayoutType.docCard) {
+                    view = view.childs.last();
+                    if (!view) view = await this.createBlock(BlockUrlConstant.CardBox, { url: BlockUrlConstant.CardBox }, view);
+                }
                 await this.createBlock(BlockUrlConstant.RefLinks, { url: BlockUrlConstant.RefLinks }, view, view.childs.length, 'childs');
             }
         })
@@ -366,7 +370,67 @@ export class Page$Operator {
             if (toggle == true) {
                 if (cs.length == 0) {
                     var view = this.views[0];
+                    if (this.pageLayout.type == PageLayoutType.docCard) {
+                        view = view.childs.last();
+                        if (!view) view = await this.createBlock(BlockUrlConstant.CardBox, { url: BlockUrlConstant.CardBox }, view);
+                    }
                     await this.createBlock(BlockUrlConstant.Comment, {}, view);
+                }
+                else if (cs.length > 1) {
+                    await cs.findAll((g, i) => i > 0).eachAsync(async c => c.delete());
+                }
+            }
+            else if (toggle == false) {
+                await cs.eachAsync(async c => c.delete())
+            }
+        })
+    }
+    async onTogglePageAuthor(this: Page, toggle: boolean) {
+        var cs = this.findAll(c => c.url == BlockUrlConstant.PageAuthor);
+        if (toggle == true && cs.length == 1) return;
+        if (toggle == false && cs.length == 0) return;
+        await this.onAction('onTogglePageAuthor', async () => {
+            if (toggle == true) {
+                if (cs.length == 0) {
+                    var view = this.views[0];
+                    var title = view.find(g => g.url == BlockUrlConstant.Title);
+                    if (title) {
+                        await title.visibleDownCreateBlock(BlockUrlConstant.PageAuthor, {})
+                    }
+                    else {
+                        if (this.pageLayout.type == PageLayoutType.docCard) {
+                            view = view.childs.last();
+                            if (!view) view = await this.createBlock(BlockUrlConstant.CardBox, { url: BlockUrlConstant.CardBox }, view);
+                        } await this.createBlock(BlockUrlConstant.PageAuthor, {}, view);
+                    }
+                }
+                else if (cs.length > 1) {
+                    await cs.findAll((g, i) => i > 0).eachAsync(async c => c.delete());
+                }
+            }
+            else if (toggle == false) {
+                await cs.eachAsync(async c => c.delete())
+            }
+        })
+    }
+    async onToggleUpvotedOrShared(this: Page, toggle: boolean) {
+        var cs = this.findAll(c => c.url == BlockUrlConstant.PageUpvotedOrShared);
+        if (toggle == true && cs.length == 1) return;
+        if (toggle == false && cs.length == 0) return;
+        await this.onAction('onToggleUpvotedOrShared', async () => {
+            if (toggle == true) {
+                if (cs.length == 0) {
+                    var view = this.views[0];
+                    var comment = view.find(c => c.url == BlockUrlConstant.Comment);
+                    if (comment) {
+                        await comment.visibleUpCreateBlock(BlockUrlConstant.PageUpvotedOrShared, {})
+                    }
+                    else {
+                        if (this.pageLayout.type == PageLayoutType.docCard) {
+                            view = view.childs.last();
+                            if (!view) view = await this.createBlock(BlockUrlConstant.CardBox, { url: BlockUrlConstant.CardBox }, view);
+                        } await this.createBlock(BlockUrlConstant.PageUpvotedOrShared, {}, view);
+                    }
                 }
                 else if (cs.length > 1) {
                     await cs.findAll((g, i) => i > 0).eachAsync(async c => c.delete());
@@ -385,6 +449,10 @@ export class Page$Operator {
             if (toggle == true) {
                 if (cs.length == 0) {
                     var view = this.views[0];
+                    if (this.pageLayout.type == PageLayoutType.docCard) {
+                        view = view.childs.last();
+                        if (!view) view = await this.createBlock(BlockUrlConstant.CardBox, { url: BlockUrlConstant.CardBox }, view);
+                    }
                     await this.createBlock(BlockUrlConstant.PagePreOrNext, {}, view);
                 }
                 else if (cs.length > 1) {
@@ -404,6 +472,10 @@ export class Page$Operator {
             if (toggle == true) {
                 if (cs.length == 0) {
                     var view = this.views[0];
+                    if (this.pageLayout.type == PageLayoutType.docCard) {
+                        view = view.childs.last();
+                        if (!view) view = await this.createBlock(BlockUrlConstant.CardBox, { url: BlockUrlConstant.CardBox }, view);
+                    }
                     await this.createBlock(BlockUrlConstant.Discuss, {}, view);
                 }
                 else if (cs.length > 1) {

@@ -306,8 +306,8 @@ export class AddRecordsCommandView extends FlowCommandView<AddRecordsCommand>{
                     <span className="flex-auto gap-l-10"><S>打开视图模板</S></span>
                     <SelectBox className={'flex-fixed item-hover remark item-hover-light-focus round padding-l-5'} onChange={e => this.command.onUpdateProps({ schemaViewId: e })} value={this.command.schemaViewId} options={[
                         { text: lst('关闭'), value: '' },
-                        { type: MenuItemType.divide, visible: this.command.schema.views.findAll(g => [BlockUrlConstant.FormView, BlockUrlConstant.RecordPageView].includes(g.url as any)).length > 0 },
-                        ...this.command.schema.views.findAll(g => [BlockUrlConstant.FormView, BlockUrlConstant.RecordPageView].includes(g.url as any)).map(n => ({
+                        { type: MenuItemType.divide, visible: this.command.schema.views.findAll(g => [ BlockUrlConstant.RecordPageView].includes(g.url as any)).length > 0 },
+                        ...this.command.schema.views.findAll(g => [ BlockUrlConstant.RecordPageView].includes(g.url as any)).map(n => ({
                             text: n.text,
                             value: n.id
                         }))
@@ -625,7 +625,7 @@ export class EditRecordsCommandView extends FlowCommandView<EditRecordsCommand> 
                     <SelectBox className={'flex-fixed item-hover remark item-hover-light-focus round padding-l-5'} onChange={e => this.command.onUpdateProps({ schemaViewId: e })} value={this.command.schemaViewId} options={[
                         { text: lst('关闭'), value: '' },
                         { type: MenuItemType.divide, visible: this.command.schema.views.length > 0 },
-                        ...this.command.schema.views.findAll(g => [BlockUrlConstant.FormView, BlockUrlConstant.RecordPageView].includes(g.url as any)).map(n => ({
+                        ...this.command.schema.views.findAll(g => [ BlockUrlConstant.RecordPageView].includes(g.url as any)).map(n => ({
                             text: n.text,
                             value: n.id
                         }))
