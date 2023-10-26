@@ -76,7 +76,7 @@ class TabelSchemaFormDrop extends EventsComponent {
                 type: MenuItemType.inputTitleAndIcon,
                 text: lst('重命名模板'),
                 value: view.text,
-                icon: view.icon,
+                icon: view.icon || DetailSvg,
                 name: 'rename'
             },
             { type: MenuItemType.divide },
@@ -85,7 +85,7 @@ class TabelSchemaFormDrop extends EventsComponent {
             { text: lst('默认新增时打开'), name: 'defaultCollect', checkLabel: this.schema.defaultCollectFormId == view.id ? true : false, icon: OrderSvg },
             { text: lst('默认编辑时打开'), name: 'defaultEdit', checkLabel: this.schema.defaultEditFormId == view.id ? true : false, icon: DetailSvg },
             { type: MenuItemType.divide },
-            { text: lst('删除'), name: 'delete', icon: TrashSvg, disabled: this.schema.views.findAll(g => [BlockUrlConstant.FormView, BlockUrlConstant.RecordPageView].includes(g.url as any)).length == 1 ? true : false }
+            { text: lst('删除'), name: 'delete', icon: TrashSvg, disabled: this.schema.views.findAll(g => [BlockUrlConstant.RecordPageView].includes(g.url as any)).length == 1 ? true : false }
         ]
         var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
         if (um) {
@@ -130,7 +130,7 @@ class TabelSchemaFormDrop extends EventsComponent {
     }
     render(): ReactNode {
         if (!this.schema) return <div></div>
-        var views = this.schema.views.filter(g => [BlockUrlConstant.FormView, BlockUrlConstant.RecordPageView].includes(g.url as any));
+        var views = this.schema.views.filter(g => [BlockUrlConstant.RecordPageView].includes(g.url as any));
         if (!Array.isArray(views)) views = [];
         return <div className="shadow w-250 padding-h-10">
             <div className="bold padding-w-10 "><S>模板列表</S></div>
@@ -139,7 +139,7 @@ class TabelSchemaFormDrop extends EventsComponent {
                 return <div className="item-hover padding-w-5 gap-w-5 h-30 round flex cursor text-1 f-14" key={v.id} onClick={e => this.onOpenTemplate(v)}>
                     <span className="size-24 flex-center flex-fixed round item-hover"><Icon size={12} className={'drag'} icon={DragHandleSvg}></Icon></span>
                     <span className="flex-fixed size-24 flex-center item-hover round">
-                        <Icon size={16} icon={v.icon || (v.url == BlockUrlConstant.FormView ? OrderSvg : DetailSvg)}></Icon>
+                        <Icon size={16} icon={v.icon || (DetailSvg)}></Icon>
                     </span>
                     <span className="flex-auto">{v.text}</span>
                     <span className="size-24 flex-center flex-fixed item-hover round">
