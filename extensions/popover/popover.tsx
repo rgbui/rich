@@ -5,14 +5,14 @@ import { EventsComponent } from "../../component/lib/events.component";
 import { PopoverPosition } from "./position";
 import './style.less';
 import { popoverLayer } from "../../component/lib/zindex";
-class Popover<T extends React.Component> extends EventsComponent<{
+export class Popover<T extends React.Component> extends EventsComponent<{
     component: { new(...args: any[]): T },
     shadow?: boolean,
     args?: Record<string, any>,
     mask?: boolean,
     visible?: "hidden" | "none",
     frame?: boolean,
-    did?: (e:any) => void
+    did?: (e: any) => void
 }> {
     visible: boolean;
     point: Point = new Point(0, 0);
@@ -84,13 +84,13 @@ class Popover<T extends React.Component> extends EventsComponent<{
         if (this.props.visible == 'hidden') {
             return <div className="shy-popover-box" ref={e => this.box = e} style={{ zIndex: this.zindex, display: this.visible == true ? "block" : "none" }}>
                 {this.props.mask == true && <div className={'shy-popover-mask' + (this.props.shadow ? " shy-popover-mask-shadow" : "")} onMouseDown={e => this.onClose(e)}></div>}
-                <div style={style} className='shy-popover' ref={e => this.el = e}><CP {...this.props.args} ref={e => this.cp = e}></CP></div>
+                <div style={style} className='shy-popover' ref={e => this.el = e}><CP {...this.props.args} ref={e => { this.cp = e; if (this.cp) (this.cp as any).popover = this as any }}></CP></div>
             </div>
         }
         else {
             return <div className="shy-popover-box" ref={e => this.box = e} style={{ zIndex: this.zindex, display: this.visible == false ? 'none' : undefined }} >{this.visible && <>
                 {this.props.mask == true && <div className={'shy-popover-mask' + (this.props.shadow ? " shy-popover-mask-shadow" : "")} onMouseDown={e => this.onClose(e)}></div>}
-                <div style={style} className='shy-popover' ref={e => this.el = e}><CP {...this.props.args} ref={e => this.cp = e}></CP></div>
+                <div style={style} className='shy-popover' ref={e => this.el = e}><CP {...this.props.args} ref={e => { { this.cp = e; if (this.cp) (this.cp as any).popover = this as any } }}></CP></div>
             </>}</div>
         }
     }
@@ -117,6 +117,10 @@ class Popover<T extends React.Component> extends EventsComponent<{
         document.removeEventListener('mousedown', this.onGlobalMousedown, true);
     }
     onGlobalMousedown = (event: MouseEvent) => {
+        if (this._stopMousedownClose == true) {
+            this._stopMousedownClose = true;
+            return;
+        }
         if (this.el) {
             var target = event.target as HTMLDivElement;
             if (this.el.contains(target)) return;
@@ -152,6 +156,15 @@ class Popover<T extends React.Component> extends EventsComponent<{
             }
         }
     }
+
+    /***
+     * 弹窗有时候会打另一个弹窗，点在空白处，两个弹窗都会关闭，这里主动设置不关闭
+     */
+    private _stopMousedownClose: boolean = false;
+    stopMousedownClose(close?: boolean) {
+        if (typeof close == 'boolean') { this._stopMousedownClose = close; return; }
+        this._stopMousedownClose = true;
+    }
 }
 
 type MapC<T extends React.Component> = Map<{ new(...args: any[]): T }, Popover<T>>
@@ -170,7 +183,7 @@ export async function PopoverSingleton<T extends React.Component>(CP: { new(...a
         var ele = document.createElement('div');
         document.body.appendChild(ele);
         ReactDOM.render(<Popover<T> {...(props || {})} args={args || {}} component={CP} ref={e => {
-           
+
             maps.set(CP, e);
             if (props?.slow !== true)
                 resolve(e);
