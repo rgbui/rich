@@ -39,12 +39,13 @@ class FieldTextView extends BlockView<FieldText>{
     renderView() {
         var fc: FieldConfig = this.block.field.config;
         var ops: DataGridOptionType[] = [];
-        if (fc.isMultiple) {
+        if (fc?.isMultiple) {
             ops = this.block.field.config?.options?.filter(g => this.block.value?.includes(g.value))
         }
         else {
-            ops = fc.options?.filter(g => g.value == this.block.value);
+            ops = fc?.options?.filter(g => g.value == this.block.value);
         }
+        if (!Array.isArray(ops)) ops = [];
         return <FieldView block={this.block}>
             <div className="sy-form-field-option-value flex" onMouseDown={e => this.mousedown(e)}>
                 {ops.map(op => {

@@ -63,10 +63,7 @@ export class MeasureView extends BlockView<Measure>{
             event: e,
             dis: 0,
             moving(ev, data, isEnd) {
-                setValue(ev, false);
-            },
-            moveEnd(e, isMove, data) {
-                setValue(e, true);
+                setValue(ev, isEnd);
             }
         })
     }

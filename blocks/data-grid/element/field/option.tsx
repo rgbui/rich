@@ -21,7 +21,7 @@ export class FieldOption extends OriginField {
             }, this.value,
                 {
                     isEdit: this.isCanEdit(),
-                    multiple: this.field.type == FieldType.options || fc.isMultiple ? true : false,
+                    multiple: this.field.type == FieldType.options || fc?.isMultiple ? true : false,
                     options: fc?.options || [],
                     changeOptions: async (ops) => {
                         await this.onUpdateCellFieldSchema({ config: { options: ops } })

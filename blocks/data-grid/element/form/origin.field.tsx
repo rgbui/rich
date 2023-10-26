@@ -3,11 +3,9 @@ import { HideSvg, TrashSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import { Block } from "../../../../src/block";
-import { BlockUrlConstant } from "../../../../src/block/constant";
 import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../../../src/block/enum";
 import { prop } from "../../../../src/block/factory/observable";
 import { TextSpanArea } from "../../../../src/block/view/appear";
-import { DataGridForm } from "../../view/form";
 import { GetFieldTypeSvg } from "../../schema/util";
 import { ShyAlert } from "../../../../component/lib/alert";
 import { lst } from "../../../../i18n/store";
@@ -21,15 +19,9 @@ export class OriginFormField extends Block {
         if (this.page.schema) {
             return this.page.schema.fields.find(g => g.id == this.fieldId);
         }
-        var c = this.closest(x => x.url == BlockUrlConstant.FormView) as DataGridForm;
-        if (c?.schema) return c.schema.fields.find(g => g.id == this.fieldId);
     }
     get schema() {
         if (this.page.schema) return this.page.schema;
-        else {
-            var c = this.closest(x => x.url == BlockUrlConstant.FormView) as DataGridForm;
-            if (c?.schema) return c.schema;
-        }
     }
     @prop()
     fieldId: string;

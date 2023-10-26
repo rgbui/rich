@@ -16,7 +16,7 @@ export class FieldRelation extends OriginField {
         var vs: string[] = this.value;
         if (!Array.isArray(vs)) vs = [];
         if (vs.length == 0) return [];
-        if (!this.field.config.isMultiple) {
+        if (!this.field.config?.isMultiple) {
             vs = vs.slice(0, 1);
         }
         var g = this.dataGrid.relationDatas.get(this.field.config?.relationTableId);
@@ -34,7 +34,7 @@ export class FieldRelation extends OriginField {
             var r = await useRelationPickData({ roundArea: Rect.fromEvent(event) }, {
                 field: this.viewField.field,
                 relationDatas: this.relationList,
-                isMultiple: this.viewField.field.config.isMultiple,
+                isMultiple: this.viewField.field.config?.isMultiple,
                 relationSchema: this.relationSchema,
                 page: this.page
             });
@@ -83,7 +83,7 @@ export class FieldRollup extends OriginField {
             var vs: string[] = item.value;
             if (!Array.isArray(vs)) vs = [];
             if (vs.length == 0) return [];
-            if (!item.field.config.isMultiple) {
+            if (!item.field.config?.isMultiple) {
                 vs = vs.slice(0, 1);
             }
             return gs.findAll(g => vs.includes(g.id));

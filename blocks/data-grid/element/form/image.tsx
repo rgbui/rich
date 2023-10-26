@@ -19,7 +19,8 @@ class FormFieldImage extends OriginFormField {
         var file = await OpenFileDialoug({ exts });
         if (file) {
             var r = await channel.post('/ws/upload/file', {
-                file, uploadProgress: (event) => {
+                file,
+                uploadProgress: (event) => {
                     console.log(event, 'ev');
                 }
             })

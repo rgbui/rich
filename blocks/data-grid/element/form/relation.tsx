@@ -40,7 +40,7 @@ class FormFieldRelation extends OriginFormField {
         var r = await useRelationPickData({ roundArea: Rect.fromEvent(event) }, {
             field: this.field,
             relationDatas: this.relationList,
-            isMultiple: this.field.config.isMultiple,
+            isMultiple: this.field.config?.isMultiple,
             relationSchema: this.relationSchema,
             page: this.page
         });
@@ -85,7 +85,7 @@ class FormFieldRelationView extends BlockView<FormFieldRelation>{
                 </span></Tip>}
             </a>
         })}
-            {(this.block.field.config.isMultiple || (!(this.block.relationList.length > 0))) && this.block.isCanEdit() && <div
+            {(this.block.field.config?.isMultiple || (!(this.block.relationList.length > 0))) && this.block.isCanEdit() && <div
                 className={this.block.relationList.length > 0 ? "gap-h-10" : ""}
             ><Button size="small" onMouseDown={e => { this.block.onCellMousedown(e) }} ghost><S>添加关联记录</S></Button></div>}
         </div>
