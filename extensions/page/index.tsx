@@ -11,7 +11,7 @@ export function PageContentView(props: {
     elementUrl?: string,
     wsId?: string,
     canEdit?: boolean,
-    onlyDisplayContent?: boolean,
+    hideDocTitle?: boolean,
     type?: PageLayoutType,
     requireSelectLayout?: boolean
 }) {
@@ -40,7 +40,7 @@ export function PageContentView(props: {
             page.customElementUrl = e;
             page.readonly = props.canEdit ? false : true;
             page.bar = false;
-            page.onlyDisplayContent = props.onlyDisplayContent || false;
+            page.hideDocTitle = props.hideDocTitle || false;
             page.requireSelectLayout = typeof props.requireSelectLayout == 'boolean' ? props.requireSelectLayout : true;
             if (typeof props.type != 'undefined') {
                 page.pageLayout = { type: props.type }

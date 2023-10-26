@@ -18,18 +18,16 @@ export class TabItem extends Block {
     get isAllowDrop() {
         return false;
     }
-
     async getMd() {
         var ps: string[] = [];
         ps.push((await this.childs.asyncMap(async b => await b.getMd())).join(""))
         ps.push((await this.otherChilds.asyncMap(async b => await b.getMd())).join(""))
         return ps.join('  \n');
     }
-
 }
 @view('/tab/item')
 export class TabItemView extends BlockView<TabItem>{
-    renderView()  {
+    renderView() {
         return <div
             onContextMenu={e => this.block.myTab.onTabeItemContextmenu(e, this.block.at)}
             onClick={e => this.block.myTab.changeTabIndex(this.block.at)}

@@ -459,6 +459,13 @@ item-selected:选中的效果
     }
 }
 
+.item-hover-shadow,
+.r-item-hover-shadow>* {
+    &:hover {
+        box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.6)
+    }
+}
+
 .item-hover-border,
 .r-item-hover-border>* {
     border: 0.1rem solid transparent;
@@ -518,9 +525,11 @@ item-selected:选中的效果
 .bg-error {
     background-color: fade(rgb(225, 98, 89), 30%);
 }
-.no-bg{
+
+.no-bg {
     background: transparent !important;
 }
+
 /**
 文本显示
 字的大小、精细
@@ -596,6 +605,9 @@ item-selected:选中的效果
 
 .remark {
     color: rgba(55, 53, 47, 0.5);
+}
+.remark-important,.remark-im{
+    color: rgba(55, 53, 47, 0.5) !important;
 }
 
 .text-white {
@@ -857,7 +869,7 @@ cursor鼠标
 宽度
 ***/
 
-@selectors: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 24, 25, 26, 28, 30, 32, 36, 40, 48, 50, 60, 72, 80, 88, 90, 100, 120, 150, 160, 180, 200, 220, 240, 250, 270, 280, 300, 320, 350, 360, 400, 450, 480, 500, 540, 550, 600, 720, 750, 760, 800, 900, 960, 1000, 1200;
+@selectors: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 24, 25, 26, 28, 30, 32, 36, 40, 48, 50, 60, 70, 72, 80, 88, 90, 100, 110, 120, 130, 140, 150, 160, 180, 200, 220, 240, 250, 270, 280, 300, 320, 350, 360, 400, 450, 480, 500, 540, 550, 600, 720, 750, 760, 800, 900, 960, 1000, 1200;
 
 each(@selectors, {
         .w-@{value}, .r-w-@{value}>* {
@@ -1923,7 +1935,13 @@ each(@zs, {
 
         >*:last-child {
             display: none;
-
         }
     }
+}
+
+/*
+（PNG透明背景的灰白网格效果）
+**/
+.checkerboard {
+    background: conic-gradient(#eee 25%, white 0deg 50%, #eee 0deg 75%, white 0deg) 0 / 20px 20px;
 }

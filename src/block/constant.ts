@@ -43,13 +43,15 @@ export enum BlockUrlConstant {
     FieldTitle = '/field/title',
     Image = '/image',
     BoardImage = '/board/image',
-    FormView = '/data-grid/form',
+    // FormView = '/data-grid/form',
     RecordPageView = '/data-grid/page/record',
     Table = '/table',
     Cell = '/table/cell',
     BoardPageCard = '/board/page/card',
     PagePreOrNext = '/page/preOrNext',
-    Card = '/card'
+    Card = '/card',
+    PageAuthor = '/page/author',
+    PageUpvotedOrShared = '/page/UpvotedOrShared',
 }
 export enum BlockChildKey {
     childs = 'childs',

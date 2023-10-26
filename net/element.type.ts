@@ -6,6 +6,10 @@ export enum ElementType {
      */
     PageItem,
     /**
+     * /PageItem/{id}/emoji/{id1}
+     */
+    PageItemEmoji,
+    /**
      * /Page/{id}/Block/{id1} 文档中的某个块
      */
     Block,
@@ -83,6 +87,7 @@ export function getElementUrl(type: ElementType, id: string, id1?: string, id2?:
     else if (type == ElementType.SyncBlock) return `/SyncBlock/${id}`
     else if (type == ElementType.WsCommentEmoji) return `/Comment/${id}/emoji/${id1}`
     else if (type == ElementType.WsDocView) return `/Ws/Doc/${id}`
+    else if (type == ElementType.PageItemEmoji) return `/PageItem/${id}/emoji/${id1}`
     else return `/${ElementType[type]}/${id}`
 }
 export function parseElementUrl(url: string) {
@@ -186,10 +191,20 @@ export function parseElementUrl(url: string) {
         }
     }
     else if (us.includes('PageItem')) {
-        us.removeAll(g => g == 'PageItem')
-        return {
-            type: ElementType.PageItem,
-            id: us[0]
+        if (us.includes('emoji')) {
+            us.removeAll(g => g == 'PageItem' || g == 'emoji')
+            return {
+                type: ElementType.PageItemEmoji,
+                id: us[0],
+                id1: us[1]
+            }
+        }
+        else {
+            us.removeAll(g => g == 'PageItem')
+            return {
+                type: ElementType.PageItem,
+                id: us[0]
+            }
         }
     }
     else if (us.includes("Room")) {

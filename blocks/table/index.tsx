@@ -157,7 +157,7 @@ export class Table extends Block {
                     await this.page.createBlock('/table/row', { blocks: { childs: cs } }, this, m);
                 }
             };
-            await   this.manualUpdateProps({ cols: this.cols }, { cols }, BlockRenderRange.self);
+            await this.manualUpdateProps({ cols: this.cols }, { cols }, BlockRenderRange.self);
         });
     }
     async onChangeRowIndex(rowIndx: number, newRowIndex: number) {
@@ -188,7 +188,7 @@ export class Table extends Block {
                 cs.remove(g => g === oc);
                 cs.push(oc);
             }
-            await   this.manualUpdateProps({ cols: this.cols }, { cols: cs }, BlockRenderRange.self)
+            await this.manualUpdateProps({ cols: this.cols }, { cols: cs }, BlockRenderRange.self)
         });
     }
     async onRemoveColumn(columnIndex: number) {
@@ -200,7 +200,7 @@ export class Table extends Block {
                 if (row.childs[columnIndex])
                     await row.childs[columnIndex].delete()
             });
-            await  this.manualUpdateProps({ cols: this.cols }, { cols: cs }, BlockRenderRange.self)
+            await this.manualUpdateProps({ cols: this.cols }, { cols: cs }, BlockRenderRange.self)
         })
     }
     async getHtml() {
@@ -536,6 +536,7 @@ export class TableView extends BlockView<Table>{
                     self.topDrag.style.display = 'none';
                 },
                 moving: (ev, data, isend) => {
+                    if(isend)return;
                     ghostView.move(Point.from(ev));
                     var w = tableLeft + 5;
                     var isFind: boolean = false;
@@ -592,6 +593,7 @@ export class TableView extends BlockView<Table>{
                     self.leftDrag.style.display = 'none';
                 },
                 moving: (ev, data, isend) => {
+                    if (isend) return;
                     ghostView.move(Point.from(ev));
                     var isFind: boolean = false;
                     for (let s = 0; s < trs.length; s++) {

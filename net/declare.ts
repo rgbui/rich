@@ -335,10 +335,13 @@ export interface ChannelQueryMapUrls {
 export interface ChannelActMapUrls {
     "/page/create/by_text":{args:{word:string},returnType:SockResponse<LinkPageItem>},
 	"/cache/set":{args:{key:string,value:any},returnType:Promise<void>},
+	"/open/user/settings":{args:{},returnType:Promise<void>},
+	"/open/workspace/settings":{args:{},returnType:Promise<void>},
+	"/user/logout":{args:{},returnType:Promise<number>},
 	"/view/snap/operator":{args:{ elementUrl: string, operate: Partial<UserAction> },returnType:Promise<{seq: number,id: string;}>},
 	"/view/snap/store":{args:{  elementUrl: string, seq: number, content: any,plain?:string,text?:string,thumb?:any },returnType:Promise<void>},
 	"/open/pay":{args:{},returnType:{}},
-	"/shy/share":{args:{type: "weibo"|"updateTimelineShareData"|"updateAppMessageShareData", title: string, description?: string, pic?: string, url: string},returnType:{}}
+	"/shy/share":{args:{type: "weibo"|"weixin"|"updateTimelineShareData"|"updateAppMessageShareData", title: string, description?: string, pic?: string, url: string},returnType:{}}
 }
 export interface ChannelAirMapUrls {
     "/page/update/info":{args:{id?: string,elementUrl?:string, pageInfo:LinkPageItem},returnType:void},

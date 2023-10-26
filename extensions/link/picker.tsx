@@ -8,7 +8,6 @@ import { GlobalLinkSvg, PlusSvg, TrashSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import lodash from "lodash";
 import { channel } from "../../net/channel";
-import "./style.less";
 import { Divider } from "../../component/view/grid";
 import { LinkPageItem, getPageIcon, getPageText } from "../../src/page/declare";
 import { Spin } from "../../component/view/spin";
@@ -17,9 +16,10 @@ import { KeyboardCode } from "../../src/common/keys";
 import { util } from "../../util/util";
 import { Block } from "../../src/block";
 import { SearchListType } from "../../component/types";
-import { ls, lst } from "../../i18n/store";
+import {  lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
 import { Tip } from "../../component/view/tooltip/tip";
+import "./style.less";
 
 /**
  * 

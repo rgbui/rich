@@ -262,8 +262,8 @@ export class Tab extends Block {
         }
         return await super.onClickContextMenu(item, e);
     }
-    get tabPages(){
-        return (this.view as any). tabPages as HTMLElement;
+    get tabPages() {
+        return (this.view as any).tabPages as HTMLElement;
     }
 }
 @view('/tab')
@@ -307,7 +307,7 @@ export class TabView extends BlockView<Tab>{
             style={this.block.visibleStyle}>
             <div style={contentStyle}>
                 <div className="sy-block-tab-items relative" style={itemStyle}>
-                    <div className="sy-block-tab-items-panel" > <ChildsArea childs={this.block.blocks.childs}></ChildsArea></div>
+                    <div className="sy-block-tab-items-panel" ><ChildsArea childs={this.block.blocks.childs}></ChildsArea></div>
                     {this.block.isCanEdit() && <><Tip text={'添加标签页'}><div className="visible flex-center round size-24  cursor item-hover" onMouseDown={e => this.block.onAddTabItem()}><Icon size={18} icon={PlusSvg}></Icon></div></Tip>
                         <div className="pos-right-full">
                             <Tip text={'标签页菜单'}><div className="visible flex-center round size-24  cursor item-hover" onMouseDown={e => { e.stopPropagation(); this.block.onContextmenu(e.nativeEvent) }}>

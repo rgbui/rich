@@ -147,7 +147,6 @@ export function cacDragDirection(kit: Kit,dragBlocks: Block[],dropBlock: Block, 
             fr = 'bottom'
         }
     }
-    console.log('finally', dropBlock, fr);
     var direction = DropDirection.none;
     var drs = dropBlock.canDropDirections();
     if (dropBlock && dropBlock.isAllowDrops(dragBlocks)) {

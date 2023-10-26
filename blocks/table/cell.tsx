@@ -70,7 +70,7 @@ export class TableCellView extends BlockView<TableCell>{
         event.preventDefault();
         event.stopPropagation();
         try {
-            function getColors(name?: string, options?: { font: string, fill: string }) {
+            function getColors(name?: string, options?: { font: string | { color: string, grad: string }, fill: string }) {
                 if (!name) name = '';
                 else name = name + '-'
                 return [
@@ -86,7 +86,7 @@ export class TableCellView extends BlockView<TableCell>{
                                 text: f.text,
                                 overlay: f.text,
                                 value: f.color,
-                                checked: options?.font == f.color ? true : false
+                                checked: lodash.isEqual(options?.font, f.color) ? true : false
                             }
                         })
                     },

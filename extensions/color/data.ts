@@ -14,12 +14,17 @@ export var FontColorList = () => [
     { color: 'rgb(11,110,153)', text: lst('蓝色') },
     { color: 'rgb(105,64,165)', text: lst('紫色') },
     { color: 'rgb(173,26,114)', text: lst('粉色') },
-    { color: 'rgb(224,62,62)', text: lst('红色') }
-];
+    { color: 'rgb(224,62,62)', text: lst('红色') },
+    // { color: { grad: 'linear-gradient(90deg, rgb(40, 188, 190) 0%, rgb(57, 53, 221) 100%)', color: 'rgb(49, 121, 206)' }, text: lst('渐变') },
+    // { color: { grad: 'linear-gradient(90deg, rgb(36, 73, 254) 0%, rgb(202, 75, 167) 100%)', color: 'rgb(119, 74, 211)' }, text: lst('渐变') },
+    // { color: { grad: 'linear-gradient(90deg, rgb(255, 113, 0) 0%, rgb(243, 0, 173) 100%)', color: 'rgb(249, 57, 87)' }, text: lst('渐变') },
+    // { color: { grad: 'linear-gradient(90deg, rgb(243, 170, 0) 0%, rgb(228, 62, 41) 100%)', color: 'rgb(236, 116, 21)' }, text: lst('渐变') },
+    // { color: { grad: 'linear-gradient(90deg, rgb(177, 106, 77) 0%, rgb(213, 166, 56) 100%)', color: 'rgb(195, 136, 67)' }, text: lst('渐变') },
+] as { color: string | { grad: string, color: string }, text: string }[];
 /**
  * 背景色
  */
-export var BackgroundColorList = ()=>[
+export var BackgroundColorList = () => [
     { color: 'rgba(255,255,255,0)', text: lst('默认') },
     { color: 'rgba(237,233,235,0.5)', text: lst('白灰') },
     { color: 'rgba(217,211,215,0.5)', text: lst('暗银') },

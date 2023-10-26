@@ -524,6 +524,27 @@ export function getCardThemes() {
                         }
                     }
                 },
+                {
+                    text: '',
+                    name: 'style-9',
+                    pageTheme: {
+                        name: 'style-9',
+                        contentStyle: {
+                            color: 'light',
+                            transparency: 'solid',
+                            border: '1px solid #e7eaf3',
+                            round: 20,
+                            shadow: '0 .2rem 1.25rem rgba(0, 0, 0, .07)'
+                        },
+                        coverStyle: {
+                            display: 'inside',
+                            bgStyle: {
+                                mode: 'color',
+                                color: '#fff'
+                            },
+                        }
+                    }
+                }
             ]
         }
     ]

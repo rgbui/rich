@@ -18,8 +18,7 @@ import { lst } from "../../i18n/store";
 export class Callout extends TextSpan {
     display = BlockDisplay.block;
     blocks: { childs: Block[], subChilds: Block[] } = { childs: [], subChilds: [] };
-    get allBlockKeys()
-    {
+    get allBlockKeys() {
         return [BlockChildKey.childs, BlockChildKey.subChilds];
     }
     async initialedLoad(this: Block): Promise<void> {
@@ -73,6 +72,7 @@ export class Callout extends TextSpan {
         return ps.join('  \n');
     }
     async onChangeIcon(e: React.MouseEvent) {
+        if (!this.isCanEdit()) return;
         var icon = await useIconPicker({ roundArea: Rect.fromEvent(e) }, this.calloutIcon);
         if (typeof icon != 'undefined') {
             this.onUpdateProps({ calloutIcon: icon }, { range: BlockRenderRange.self })
@@ -88,7 +88,7 @@ export class Callout extends TextSpan {
 }
 @view('/callout')
 export class CalloutView extends BlockView<Callout>{
-    renderView()  {
+    renderView() {
         var style = this.block.contentStyle;
         var bg = style.backgroundColor?.replace(/ /g, '')
         if (bg == 'rgba(255,255,255,0)' || bg == 'rgb(255,255,255,0)') style.border = '1px solid rgb(233, 231, 231)';

@@ -8,12 +8,13 @@ import lodash from "lodash";
 import { SpinBox } from "../../component/view/spin";
 import { Input } from "../../component/view/input";
 import { Icon } from "../../component/view/icon";
-import { DiceSvg, RandomSvg } from "../../component/svgs";
+import { DiceSvg } from "../../component/svgs";
 import { channel } from "../../net/channel";
 import { ByteDanceType } from "./declare";
 import { byteDanceStore } from "./store";
 import { ls, lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
+
 const BYTE_DANCE_HISTORYS = '_bytedance_historys__';
 export class ByteDanceIconView extends React.Component<{ loaded?: () => void, onChange: (data: { code: string, color?: string }) => void }> {
     shouldComponentUpdate(nextProps, nextStates) {
@@ -95,13 +96,16 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
     }
     renderFontColors() {
         return <div className='shy-font-awesome-colors'>
-            {FontColorList().map(c =>{
-                return <ToolTip overlay={c.text} key={c.color} ><a className={this.color == c.color ? "hover" : ""} onMouseDown={e => this.onSetFont(c)} style={{ backgroundColor: c.color == 'inherit' ? "var(--text-color)" : c.color }}></a></ToolTip>
+            {FontColorList().map((c, i) => {
+                return <ToolTip overlay={c.text} key={i} ><a className={lodash.isEqual(this.color, c.color) ? "hover" : ""} onMouseDown={e => this.onSetFont(c)} style={{
+                    backgroundColor: c.color == 'inherit' ? "var(--text-color)" : (typeof c.color == 'string' ? c.color : undefined),
+                    backgroundImage: typeof c.color == 'string' ? undefined : c.color.grad,
+                }}></a></ToolTip>
             })}
         </div>
     }
     renderSvg(icon: ByteDanceType) {
-        return byteDanceStore.renderSvg(icon.name,this.color=='inherit'?"var(--text-color)":this.color);
+        return byteDanceStore.renderSvg(icon.name, this.color == 'inherit' ? "var(--text-color)" : this.color);
     }
     renderSearch() {
         if (this.searchEmojis.length == 0) return <div className="flex-center remark f-12"><S>没有搜索图标</S></div>
@@ -134,7 +138,7 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
             {!this.word && <div className='shy-font-awesome' onScroll={e => this.onScroll(e)}>
                 {this.renderFontColors()}
                 {this.loading && <div className='shy-font-awesome-loading'></div>}
-                {this.loading != true && <div style={{ color: this.color=='inherit'?"var(--text-color)":this.color }} className='shy-font-awesome-content'>{this.renderFontAwesomes()}</div>}
+                {this.loading != true && <div style={{ color: this.color == 'inherit' ? "var(--text-color)" : this.color }} className='shy-font-awesome-content'>{this.renderFontAwesomes()}</div>}
             </div>}
         </div>
     }
@@ -169,8 +173,8 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
             this.forceUpdate()
         }
     }, 800)
-    onClear(){
-        if(this.word){
+    onClear() {
+        if (this.word) {
             this.loadSearch('')
         }
     }

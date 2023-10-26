@@ -39,12 +39,14 @@ class SelectWorkspacePage extends EventsComponent {
         }
         else this.links = [];
         this.loading = false;
-        this.forceUpdate();
+        this.forceUpdate(() => {
+            this.emit('update')
+        });
     }
     selectIndex = 0;
     el: HTMLElement;
     render() {
-        return <div ref={e => this.el = e} style={{ zIndex: popoverLayer.zoom(this) }} className='pos-fixed bg-white w-250 max-h-300 overlay-y padding-10 round shadow'>
+        return <div ref={e => this.el = e} style={{ zIndex: popoverLayer.zoom(this) }} className='pos-fixed bg-white w-250 max-h-300 overlay-y padding-w-10 padding-t-10 padding-b-40 round shadow'>
             <div className="gap-b-10"><Input size='small'
                 placeholder={lst('搜索页面')}
                 onChange={e => { this.word = e; this.syncSearch() }}
@@ -68,7 +70,9 @@ class SelectWorkspacePage extends EventsComponent {
     async onOpen() {
         if (!this.currentLinks) {
             this.currentLinks = await channel.query('/ws/current/pages');
-            this.forceUpdate();
+            this.forceUpdate(() => {
+                this.emit('update')
+            });
         }
     }
 }
@@ -81,6 +85,9 @@ export async function useSelectWorkspacePage(pos: PopoverPosition) {
         picker.on('change', (link: LinkPageItem) => {
             resolve(link);
             popover.close();
+        })
+        picker.on('update', () => {
+            popover.updateLayout();
         })
         popover.on('close', () => resolve(null))
     })

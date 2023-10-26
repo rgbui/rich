@@ -73,9 +73,7 @@ export class Block$Operator {
             await this.updateProps(pb.data.listType ? Object.assign(pb.data, da || {}) : { listType: 0, ...(da || {}) }, BlockRenderRange.self);
             return this;
         }
-        console.log(url, da, 't');
         var data = await this.getWillTurnData(url);
-        console.log('parrr', data);
         if (da) Object.assign(data, da);
         var newBlock = await BlockFactory.createBlock(url, this.page, data, this.parent);
         var bs = this.parent.blocks[this.parentKey];

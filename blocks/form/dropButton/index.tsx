@@ -1,5 +1,4 @@
 import React from "react";
-import { ReactNode } from "react";
 import { ChevronDownSvg, DotsSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { Block } from "../../../src/block";
