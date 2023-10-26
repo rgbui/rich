@@ -9,7 +9,7 @@ import { ToolTip } from "../../component/view/tooltip";
 import { ls } from "../../i18n/store";
 
 export type ColorValue = {
-    color?: string,
+    color?: string | { color: string, grad: string },
     backgroundColor?: string
 }
 class ColorSelector extends EventsComponent {
@@ -21,8 +21,12 @@ class ColorSelector extends EventsComponent {
             <div className='shy-color-selector-box-head'><span><S>文字颜色</S></span></div>
             <div className={'shy-color-selector-box-content' + (ls.isCn ? "" : " lang-en")}>
                 {FontColorList().map((x, i) => {
-                    return <ToolTip key={x.color + i} overlay={x.text}><div onMouseDown={e => this.onChange({ color: x.color })} className={'shy-color-selector-item item-hover-light' + (x.color == this.cv?.color || !this.cv?.color && i == 0 ? " item-hover-focus" : "")}>
-                        <a style={{ color: x.color }}>A</a>
+                    return <ToolTip key={i} overlay={x.text}><div onMouseDown={e => this.onChange({ color: x.color })} className={'shy-color-selector-item item-hover-light' + (x.color == this.cv?.color || !this.cv?.color && i == 0 ? " item-hover-focus" : "")}>
+                        <a style={{
+                            color: typeof x.color == 'string' ? x.color : x.color.color,
+                            backgroundImage: typeof x.color != 'string' ? x.color.grad : undefined,
+                            WebkitBackgroundClip: typeof x.color != 'string' ? 'text' : undefined,
+                        }}>A</a>
                         <span >{x.text}</span>
                     </div></ToolTip>
                 })}
