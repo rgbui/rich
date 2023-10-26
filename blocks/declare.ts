@@ -111,7 +111,8 @@ import './page/ref.links';
 import './page/sub.links';
 import './page/comment/index';
 import "./page/tag";
-
+import "./page/author";
+import "./page/upvotedOrShared";
 import "./map/amap";
 
 import './board/note/index';

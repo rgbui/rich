@@ -21,15 +21,15 @@ export class PageOrNextView extends BlockView<PageOrNext>{
                     this.block.page.onFormOpen('prev')
                 }}>
                 <Icon className={'remark-im'} size={16} icon={DoubleLeftSvg}></Icon>
-                <span className="gap-w-5  remark-im f-12"><S>上一篇</S></span>
+                <span className="gap-w-5  remark-im f-14"><S>上一篇</S></span>
                 <span className={this.block.page.formPreRow ? "" : "remark-im"}>{this.block.page.formPreRow ? this.block.page.formPreRow?.title : <S>没有了</S>}</span>
             </a>
-                <a className="w50 gap-l-20  flex"
+                <a className="w50 gap-l-20  flex-ebd"
                     style={{ cursor: this.block.page.formNextRow ? 'pointer' : 'default' }}
                     onClick={e => {
                         this.block.page.onFormOpen('next')
                     }}>
-                    <span className={'remark-im  f-12'} ><S>下一篇</S></span>
+                    <span className={'remark-im  f-14'} ><S>下一篇</S></span>
                     <span className={"gap-w-5 " + (this.block.page.formNextRow ? "" : "remark-im")}>{this.block.page.formNextRow ? this.block.page.formNextRow?.title : <S>没有了</S>}</span>
                     <Icon className={'remark-im'} size={16} icon={DoubleRightSvg}></Icon>
                 </a></div>
