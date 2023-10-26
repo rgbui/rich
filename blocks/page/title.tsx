@@ -42,9 +42,6 @@ export class Title extends Block {
             this.page.kit.anchorCursor.onFocusBlockAnchor(this, { store: false, render: true });
         }
     }
-    // get handleBlock() {
-    //     return null;
-    // }
     get isCanEmptyDelete() {
         return false
     }
@@ -59,7 +56,7 @@ export class Title extends Block {
             name: 'addIcon',
             text: lst('添加图标'),
             type: MenuItemType.switch,
-            checked: pd?.icon.abled ? false : true,
+            checked: pd?.icon?.abled ? false : true,
             icon: EmojiSvg
         })
         rs.push({
@@ -105,10 +102,13 @@ export class Title extends Block {
     async onClickContextMenu(item: MenuItem<string | BlockDirective>, e) {
         switch (item.name) {
             case 'hidden':
-                this.page.onUpdateProps({ onlyDisplayContent: true }, true)
+                this.page.onUpdateProps({ hideDocTitle: this.page.hideDocTitle ? false : true }, true)
                 return;
         }
         return await super.onClickContextMenu(item, e);
+    }
+    get isCanDrag() {
+        return false;
     }
 }
 @view('/title')
@@ -144,7 +144,7 @@ export class TitleView extends BlockView<Title>{
         var isAdd: boolean = this.block.page.isSupportCover;
         if (!this.block.page.isCanEdit) isAdd = false;
         var pd = this.block.page.getPageDataInfo();
-        if (this.block.page.onlyDisplayContent) return <div className="sy-block-page-info visible-hover" style={{
+        if (this.block.page.hideDocTitle) return <div className="sy-block-page-info visible-hover" style={{
             ...this.block.visibleStyle,
             display: 'none'
         }}></div>
