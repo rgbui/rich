@@ -1,29 +1,33 @@
 import React from "react";
-import { TableSchema } from "../../blocks/data-grid/schema/meta";
-import { Singleton } from "../../component/lib/Singleton";
-import { ElementType, parseElementUrl } from "../../net/element.type";
-import { KeyboardCode } from "../../src/common/keys";
-import { Rect } from "../../src/common/vector/point";
-import { InputTextPopSelector } from "../common/input.pop";
+import { TableSchema } from "../../../blocks/data-grid/schema/meta";
+import { Singleton } from "../../../component/lib/Singleton";
+import { ElementType, parseElementUrl } from "../../../net/element.type";
+import { KeyboardCode } from "../../../src/common/keys";
+import { Rect } from "../../../src/common/vector/point";
+import { InputTextPopSelector } from "../../common/input.pop";
 import { ConvertEmbed } from "./embed.url";
+import { BookSvg, EmbedSvg, LinkSvg, PageSvg, TableSvg } from "../../../component/svgs";
+import { Icon, IconValueType } from "../../../component/view/icon";
+import B from "../../../src/assert/img/bilibili.ico";
+import M from "../../../src/assert/img/163.music.ico";
+import { lst } from "../../../i18n/store";
+import { Page } from "../../../src/page";
+import { channel } from "../../../net/channel";
 import "./style.less";
-import { BookSvg, EmbedSvg, LinkSvg, TableSvg } from "../../component/svgs";
-import { Icon } from "../../component/view/icon";
-import { IconArguments } from "../icon/declare";
-import B from "../../src/assert/img/bilibili.ico";
-import M from "../../src/assert/img/163.music.ico";
-import { lst } from "../../i18n/store";
+
 class InputUrlSelector extends InputTextPopSelector {
     onClose(): void {
         this.close();
     }
     private url: string;
-    async open(round: Rect, text: string, callback: (...args: any[]) => void): Promise<boolean> {
+    async open(round: Rect, text: string, callback: (...args: any[]) => void, page: Page): Promise<boolean> {
+        this.page = page;
         if (this.url) { this.close(); return false; }
         this.urlTexts = [
             { icon: LinkSvg, text: lst('网址'), name: 'url', url: '/text', isLine: true },
             { icon: BookSvg, text: lst('书签'), name: 'bookmark', url: '/bookmark' },
-            { icon: EmbedSvg, text: lst('嵌入'), name: 'embed', url: '/embed' }
+            { icon: EmbedSvg, text: lst('嵌入'), name: 'embed', url: '/embed' },
+            { icon: { name: 'bytedance-icon', code: 'text' }, text: lst('纯文本'), name: 'text', url: '/text', isLine: true },
         ];
         this.url = text;
         var cr = ConvertEmbed(this.url);
@@ -36,25 +40,65 @@ class InputUrlSelector extends InputTextPopSelector {
                     text: cr?.embedType == 'music.163' ? lst("嵌入网易云音乐") : lst('嵌入B站'),
                     name: 'embed',
                     url: '/embed'
-                }
+                },
+                { icon: { name: 'bytedance-icon', code: 'text' }, text: lst('纯文本'), name: 'text', url: '/text', isLine: true },
             ];
         }
-        var ur = new window.URL(this.url);
-        if (ur.pathname.endsWith('/r')) {
-            try {
-                var elementUrl = ur.searchParams.get('url');
-                var pe = parseElementUrl(elementUrl);
-                if (pe.type == ElementType.SchemaView) {
-                    var ts = await TableSchema.getTableSchema(pe.id);
-                    var sv = ts.views.find(c => c.id == pe.id1);
-                    this.urlTexts = [
-                        { icon: TableSvg, text: lst('引用数据表格'), name: 'data-grid', url: sv.url, data: { schemaId: ts.id, syncBlockId: pe.id1 } },
-                        { icon: LinkSvg, text: lst('保持网址'), name: 'url', url: '/text', isLine: true },
-                    ]
+        if (this.page.ws.isWsUrl(this.url)) {
+            var ur = new window.URL(this.url);
+            if (ur.pathname.endsWith('/r')) {
+                try {
+                    var elementUrl = ur.searchParams.get('url');
+                    if (elementUrl) {
+                        var pe = parseElementUrl(elementUrl);
+                        if (pe) {
+                            if (pe.type == ElementType.SchemaView) {
+                                var ts = await TableSchema.getTableSchema(pe.id);
+                                var sv = ts.views.find(c => c.id == pe.id1);
+                                this.urlTexts = [
+                                    { icon: TableSvg, text: lst('引用数据表格'), name: 'data-grid', url: sv.url, data: { schemaId: ts.id, syncBlockId: pe.id1 } },
+                                    { icon: LinkSvg, text: lst('保持网址'), name: 'url', url: '/text', isLine: true },
+                                    { icon: { name: 'bytedance-icon', code: 'text' }, text: lst('纯文本'), name: 'text', url: '/text', isLine: true },
+                                ]
+                            }
+                            else if (pe.type == ElementType.SchemaData || pe.type == ElementType.SchemaRecordView) {
+                                this.urlTexts = [
+                                    { icon: LinkSvg, text: lst('保持网址'), name: 'url', url: '/text', isLine: true },
+                                    { icon: { name: 'bytedance-icon', code: 'text' }, text: lst('纯文本'), name: 'text', url: '/text', isLine: true },
+                                ]
+                            }
+                        }
+                    }
+                }
+                catch (ex) {
+
                 }
             }
-            catch (ex) {
-
+            else if (ur.pathname.match(/\/page\/[\w]+(#[\w]+)?$/)) {
+                var item;
+                var blockId: string;
+                var n = this.url.slice(this.url.lastIndexOf('/page/'));
+                if (n.indexOf('#') > -1) {
+                    n = n.slice(0, n.indexOf('#'));
+                    blockId = this.url.slice(this.url.lastIndexOf('#') + 1);
+                }
+                n = n.replace('/page/', '');
+                if (n) {
+                    var r = await channel.get('/page/query/info', { ws: this.page.ws, sn: /^[\d]+$/.test(n) ? parseFloat(n) : undefined, id: ! /^[\d]+$/.test(n) ? n : undefined });
+                    if (r.ok) item = r.data;
+                }
+                if (item) {
+                    this.urlTexts = [
+                        { icon: PageSvg, text: lst('页面'), name: 'page', url: '/link', data: { pageId: item.id, refBlockId: blockId || undefined } },
+                        { icon: LinkSvg, text: lst('保持网址'), name: 'url', url: '/text', isLine: true },
+                        { icon: { name: 'bytedance-icon', code: 'text' }, text: lst('纯文本'), name: 'text', url: '/text', isLine: true },
+                    ]
+                }
+                else
+                    this.urlTexts = [
+                        { icon: LinkSvg, text: lst('保持网址'), name: 'url', url: '/text', isLine: true },
+                        { icon: { name: 'bytedance-icon', code: 'text' }, text: lst('纯文本'), name: 'text', url: '/text', isLine: true },
+                    ]
             }
         }
         this.pos = round.leftBottom;
@@ -71,7 +115,8 @@ class InputUrlSelector extends InputTextPopSelector {
                 var props: Record<string, any> = {};
                 if (item.url == '/text') {
                     props.content = this.url;
-                    props.link = { url: this.url }
+                    if (item.name != 'text')
+                        props.link = { url: this.url }
                 }
                 else if (item.url == '/embed') {
                     var ru = ConvertEmbed(this.url);
@@ -80,7 +125,7 @@ class InputUrlSelector extends InputTextPopSelector {
                     props.origin = ru.origin;
                 }
                 else if (item.url == '/bookmark') { props.bookmarkUrl = this.url; }
-                else if (item.name == 'data-grid') {
+                else if (item.name == 'data-grid' || item.name == 'page') {
                     Object.assign(props, ut.data);
                 }
                 if (isReturn) {
@@ -126,7 +171,7 @@ class InputUrlSelector extends InputTextPopSelector {
         }
         return false;
     }
-    private urlTexts: { text: string, icon?: string | IconArguments | JSX.Element | SvgrComponent, name: string, isLine?: boolean, data?: Record<string, any>, url: string }[] = [];
+    private urlTexts: { text: string, icon?: IconValueType, name: string, isLine?: boolean, data?: Record<string, any>, url: string }[] = [];
     private get selectUrl() {
         var b = this.urlTexts[this.selectIndex];
         return b;
