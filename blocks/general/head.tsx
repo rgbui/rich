@@ -172,6 +172,7 @@ export class HeadView extends BlockView<Head>{
         var pt: string = '';
         var ns: string[] = [];
         var self = this;
+        var textLineHeight = parseFloat(this.block.page.fontSize.replace('rem', '')) * 10 * 1.3;
         if (this.block.level == 'h1') {
             style.fontSize = '1.875em'
             style.lineHeight = '1.3';
@@ -204,6 +205,7 @@ export class HeadView extends BlockView<Head>{
             pt = lst('四级标题');
             ns = [undefined, undefined, undefined, undefined]
         }
+        textLineHeight *= parseFloat(style.fontSize.replace('em', ''));
         var pa = this.block.parent;
         if (pa.url == BlockUrlConstant.CardBox) {
             style.fontSize = (parseFloat(style.fontSize.replace('em', '')) * 1.6) + 'em';
@@ -224,7 +226,7 @@ export class HeadView extends BlockView<Head>{
                 <div className="flex flex-top" style={{ ...alignStyle }}>
                     {self.block.toggle && <span
                         className='w-24 flex-center flex-inline'
-                        style={{ height: style.lineHeight }}
+                        style={{ height: textLineHeight }}
                     >
                         <span onMouseDown={e => {
                             e.stopPropagation();
