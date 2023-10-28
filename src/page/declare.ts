@@ -107,6 +107,7 @@ export interface LinkWs {
     owner: string
     url: string
     resolve(url: string | { pageId?: string | number, elementUrl?: string }): string
+    isWsUrl(url: string): boolean
     text: string
     icon: IconArguments
     cover: IconArguments

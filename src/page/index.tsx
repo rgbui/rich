@@ -160,9 +160,12 @@ export class Page extends Events<PageDirective>{
     isPageOff: boolean = false;
     cacheFragment() {
         try {
-            if (!this.fragment) this.fragment = document.createDocumentFragment();
-            if (!this.fragment.contains(this.root))
-                this.fragment.appendChild(this.root);
+            if (this.root) {
+                if (!this.fragment)
+                    this.fragment = document.createDocumentFragment();
+                if (!this.fragment.contains(this.root))
+                    this.fragment.appendChild(this.root);
+            }
             this.isPageOff = true;
             this.kit.picker.onCancel();
             forceCloseBoardEditTool();
