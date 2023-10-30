@@ -200,6 +200,14 @@ export class MenuItemView extends React.Component<{
                     <Icon className={'flex-fixed'} size={16} icon={ChevronDownSvg}></Icon>
                 </span>
             </div>}
+            {item.type == MenuItemType.buttonOptions && <div className="flex flex-wrap padding-l-5">
+                {item.options.map((op, index) => {
+                    return <div key={index} onMouseDown={e => this.select(item, e.nativeEvent)} style={{ flexGrow: 1 }} className="item-hover padding-h-5 round gap-r-5">
+                        {op.icon && <div className="flex-center" style={{ color: item.value == op.value ? "var(--text-p-color)" : "var(--text-color)" }}><Icon size={item.iconSize || 18} icon={op.icon}></Icon></div>}
+                        <div className="remark flex-center">{op.text}</div>
+                    </div>
+                })}
+            </div>}
             {item.type == MenuItemType.drag && <ToolTip overlay={item.overlay} placement={item.placement || 'right'} ><div data-drag={item.drag}
                 onMouseDown={e => this.select(item, e.nativeEvent)} className="shy-menu-box-item-drag">
                 <em className={'drag'} onMouseDown={e => { e.stopPropagation() }}><Icon size={12} icon={DragHandleSvg}></Icon></em>
@@ -215,8 +223,7 @@ export class MenuItemView extends React.Component<{
             </div></ToolTip>}
             {item.type == MenuItemType.color && <div className={"shy-menu-box-item-colors  gap-h-10" + (item.block ? "" : " flex-top flex-wrap")}>
                 {item.options.map(t => {
-                    if (item.block)
-                    {
+                    if (item.block) {
                         return <a key={t.value} className={"flex  cursor padding-w-10 padding-h-3 round item-hover " + (t.checked ? "item-hover-focus" : "")}
                             onMouseDown={e => { e.stopPropagation(); item.value = t.value; this.select(item, e.nativeEvent) }}>
                             {item.name && item.name.indexOf('font') > -1 && <span className="size-24 flex-center circle  border" style={{ color: t.value }}>
