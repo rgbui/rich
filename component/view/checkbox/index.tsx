@@ -1,21 +1,28 @@
-import React, { ReactNode } from "react";
-
-import "./style.less"
+import React, { CSSProperties, ReactNode } from "react";
+import { util } from "../../../util/util";
 
 export class CheckBox extends React.Component<{
-
     checked?: boolean,
+    block?: boolean,
     onChange?: (checked: boolean) => void,
-    children?: ReactNode
-
+    children?: ReactNode,
+    readOnly?: boolean, style?: CSSProperties,
 }>{
+    id = util.guid();
     constructor(props) {
         super(props);
     }
+    componentDidUpdate(prevProps: Readonly<{ checked?: boolean; onChange?: (checked: boolean) => void; children?: ReactNode; }>, prevState: Readonly<{}>, snapshot?: any): void {
+        if (this.refInput && this.refInput.checked !== this.props.checked) {
+            this.refInput.checked = this.props.checked;
+        }
+    }
+    refInput: HTMLInputElement;
     render(): React.ReactNode {
-        return <div className="shy-checkbox">
-            <input type='checkbox' checked={this.props.checked} onChange={e => this.props.onChange((e.target as HTMLInputElement).checked)}></input>
-            <span className="shy-checkbox-content">{this.props.children}</span>
+        var id = 'c' + this.id;
+        return <div className={"flex " + (this.props.block ? "flex-inline" : "")} style={this.props.style || {}}>
+            <input id={id} readOnly={this.props.readOnly} ref={e => this.refInput = e} type='checkbox' defaultChecked={this.props.checked} onChange={e => this.props.onChange ? this.props.onChange((e.target as HTMLInputElement).checked) : undefined}></input>
+            <label htmlFor={id} className="gap-l-5">{this.props.children}</label>
         </div>
     }
 }

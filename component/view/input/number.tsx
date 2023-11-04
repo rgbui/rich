@@ -21,13 +21,11 @@ export class InputNumber extends React.Component<{
             if (isNaN(r)) return undefined;
             else return r;
         }
-
         function onInput(e: React.FormEvent<HTMLInputElement>) {
             var v = filterValue((e.target as HTMLInputElement).value);
             if (typeof v == 'number')
                 props.onChange(v, e);
         }
-
         function onDeep(increase: number) {
             var v = filterValue(self.inputEl.value || '0');
             if (typeof v == 'number') {
@@ -35,7 +33,6 @@ export class InputNumber extends React.Component<{
                 self.inputEl.value = (v + increase).toString();
             }
         }
-
         function keydown(e: React.KeyboardEvent<HTMLInputElement>) {
             if (e.key == 'Enter' && props.onEnter) {
                 var v = filterValue((e.target as HTMLInputElement).value);
