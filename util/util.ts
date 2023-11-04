@@ -246,7 +246,7 @@ export var util = {
     },
     covertToArray(d) {
         if (Array.isArray(d)) return d;
-        else return d ? [d] : []
+        else return !lodash.isUndefined(d) && !lodash.isNull(d) ? [d] : []
     },
     decimalToLetter(decimal) {
         let result = '';
