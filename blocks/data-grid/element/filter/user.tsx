@@ -37,7 +37,8 @@ export class SearchUser extends OriginFilterField {
             value: this.selectUsers
         }]
     }
-    async onGetContextMenus() {
+    async onGetContextMenus()
+    {
         var rs = await super.onGetContextMenus();
         var pos = rs.findIndex(g => g.name == 'showFieldText');
         if (pos > -1) {
@@ -74,7 +75,7 @@ export class SearchUser extends OriginFilterField {
 @view('/field/filter/user')
 export class SearchTextView extends BlockView<SearchUser>{
     async mousedown(event: React.MouseEvent) {
-        var r = await useUserPicker({ roundArea: Rect.fromEvent(event) }, this.block.page.ws);
+        var r = await useUserPicker({ roundArea: Rect.fromEvent(event) }, this.block.page.ws, { ignoreUserAll: true });
         if (r) {
             this.block.onFilter(r.id)
         }

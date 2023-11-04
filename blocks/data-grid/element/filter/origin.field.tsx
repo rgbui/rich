@@ -5,19 +5,15 @@ import { prop } from "../../../../src/block/factory/observable";
 import { SchemaFilter } from "../../schema/declare";
 import { DataGridView } from "../../view/base";
 import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../../../src/block/enum";
-import { SolidArea } from "../../../../src/block/view/appear";
-import { DotsSvg, DragHandleSvg, TrashSvg } from "../../../../component/svgs";
-import { Icon } from "../../../../component/view/icon";
 import { BoxTip } from "../../../../component/view/tooltip/box";
 import { DragBlockLine } from "../../../../src/kit/handle/line";
-import { Tip } from "../../../../component/view/tooltip/tip";
 import lodash from "lodash";
-import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
+import { MenuItem } from "../../../../component/view/menu/declare";
 import { lst } from "../../../../i18n/store";
 
 export class OriginFilterField extends Block {
     @prop()
-    showFieldText: boolean = true;
+    fieldTextDisplay: 'x' | 'y' | 'none' = 'x';
     @prop()
     align: 'left' | 'center' | 'right' = 'left';
     @prop()
@@ -49,7 +45,6 @@ export class OriginFilterField extends Block {
     async onOpenMenu(event: React.MouseEvent) {
         await this.onContextmenu(event.nativeEvent);
     }
-    
     async onGetContextMenus() {
         var rs = await super.onGetContextMenus();
         var rg = rs.find(g => g.name == 'text-center');
@@ -82,11 +77,17 @@ export class OriginFilterField extends Block {
             var pos = rs.findIndex(g => g == rg);
             var ns: MenuItem<string | BlockDirective>[] = [];
             ns.push({
-                type: MenuItemType.switch,
-                text: lst('显示属性名'),
-                checked: this.showFieldText,
-                name: 'showFieldText',
+                text: lst('属性名'),
+                childs: [
+                    { name: 'fieldTextDisplay', value: 'x', text: lst('横向'), checkLabel: this.fieldTextDisplay == 'x' },
+                    { name: 'fieldTextDisplay', value: 'y', text: lst('纵向'), checkLabel: this.fieldTextDisplay == 'y' },
+                    { name: 'fieldTextDisplay', value: 'none', text: lst('不显示'), checkLabel: this.fieldTextDisplay == 'none' },
+                ],
                 icon: { name: 'bytedance-icon', code: 'preview-close' }
+            })
+            ns.push({
+                name: 'fieldTextDisplay',
+                visible: false
             })
             rs.splice(pos + 1, 0, ...ns)
             lodash.remove(rs, g => g.name == 'color');
@@ -95,8 +96,8 @@ export class OriginFilterField extends Block {
     }
     async onContextMenuInput(this: Block, item: MenuItem<string | BlockDirective>): Promise<void> {
         switch (item.name) {
-            case 'showFieldText':
-                this.onUpdateProps({ [item.name]: item.checked }, { range: BlockRenderRange.self })
+            case 'fieldTextDisplay':
+                await this.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self })
                 return;
         }
         super.onContextMenuInput(item)
@@ -106,38 +107,42 @@ export class OriginFilterField extends Block {
             case 'text-center':
                 await this.onUpdateProps({ align: item.value }, { range: BlockRenderRange.self })
                 return
+            case 'fieldTextDisplay':
+                await this.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self })
+                return
         }
         return await super.onClickContextMenu(item, e);
     }
-
 }
 export class OriginFilterFieldView extends React.Component<{
     style?: CSSProperties,
     filterField: OriginFilterField,
     children?: JSX.Element | string | React.ReactNode,
+    top?: boolean
 }> {
     boxTip: BoxTip;
     render(): React.ReactNode {
         if (!this.props.filterField.refBlock) return <Spin block></Spin>
-        if (this.props.filterField.display == BlockDisplay.block) {
-            return <div className="flex" style={this.props.style || {}}>
-                {this.props.filterField.showFieldText && <label className="gap-r-5">{this.props.filterField.fieldText}:</label>}
-                <div onMouseDown={e => { e.stopPropagation() }} className="flex-auto flex">{this.props.children}</div>
+        if (this.props.filterField.fieldTextDisplay == 'x') {
+            return <div className={"flex" + (this.props.top ? " flex-top" : '')} style={this.props.style || {}}>
+                <label className="gap-r-5">{this.props.filterField.fieldText}:</label>
+                <div onMouseDown={e => { e.stopPropagation() }} className="flex-auto">{this.props.children}</div>
             </div>
         }
-        return this.props.filterField.refBlock && <BoxTip
-            disabled={this.props.filterField.isCanEdit() ? false : true}
-            ref={e => this.boxTip = e}
-            overlay={<div className="flex h-30 round padding-w-5">
-                <Tip text={'拖动'}><a className="flex-center size-24 round item-hover gap-r-5 cursor text" onMouseDown={e => this.props.filterField.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></a></Tip>
-                <Tip text={'删除'}><span className="flex-center text-1  item-hover size-24 round cursor" onMouseDown={e => this.props.filterField.onDelete()}><Icon size={16} icon={TrashSvg}></Icon></span></Tip>
-                <Tip text={'菜单'}><span className="flex-center text-1  item-hover size-24 round cursor" onMouseDown={e => this.props.filterField.onOpenMenu(e)}><Icon size={16} icon={DotsSvg}></Icon></span></Tip>
-            </div>}><SolidArea gap line block={this.props.filterField} prop='field'>
-                <div className="inline" style={this.props.style || {}}>
-                    {this.props.filterField.showFieldText && <label className="inline-block gap-r-5">{this.props.filterField.fieldText}:</label>}
-                    <div onMouseDown={e => { e.stopPropagation() }} className="inline">{this.props.children}</div>
-                </div>
-            </SolidArea>
-        </BoxTip>
+        else if (this.props.filterField.fieldTextDisplay == 'y') {
+            return <div>
+                <div>{this.props.filterField.fieldText}</div>
+                <div className="gap-t-5">{this.props.children}</div>
+            </div>
+        }
+        else if (this.props.filterField.fieldTextDisplay == 'none') {
+            return <div style={this.props.style || {}} onMouseDown={e => { e.stopPropagation() }}>
+                {this.props.children}
+            </div>
+        }
+        return <div className={"flex" + (this.props.top ? " flex-top" : '')} style={this.props.style || {}}>
+            {this.props.filterField.fieldTextDisplay && <label className="gap-r-5">{this.props.filterField.fieldText}:</label>}
+            <div onMouseDown={e => { e.stopPropagation() }} className="flex-auto">{this.props.children}</div>
+        </div>
     }
 }

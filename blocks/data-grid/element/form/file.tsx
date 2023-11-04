@@ -29,8 +29,12 @@ class FormFieldFile extends OriginFormField {
             })
             if (r.ok) {
                 if (r.data.file) {
-                    if (!Array.isArray(this.value)) this.value = [];
-                    this.value.push(r.data.file);
+                    var vs = util.covertToArray(this.value);
+                    if (!Array.isArray(vs)) vs = [];
+                    if (this.field?.config?.isMultiple !== true)
+                        vs = [];
+                    vs.push(r.data.file);
+                    this.onChange(vs);
                     this.forceUpdate();
                 }
             }
@@ -47,15 +51,15 @@ class FormFieldFileView extends BlockView<FormFieldFile>{
         this.block.value = vs;
         this.forceUpdate();
     }
-    renderFiles(images: { filename: string, size: number, url: string }[]) {
-        return images.map((img, i) => {
+    renderFiles(files: { filename: string, size: number, url: string }[]) {
+        return files.map((img, i) => {
             return <div className="sy-field-file-item padding-h-3 padding-w-10 cursor flex item-hover-focus round visible-hover" key={i}>
                 <a className="link f-14 flex-auto flex" download={img.url} href={img.url}>
                     <span className="flex-fixed item-hover round size-24 remark flex-center"><Icon size={18} icon={FileSvg}></Icon></span>
                     <span className="flex-fixed text-overflow gap-w-5">{img.filename}</span>
                     <em className="flex-fixed remark">{util.byteToString(img.size)}</em>
                 </a>
-                {this.block.isCanEdit() && <span onClick={e => this.deleteImage(img)} className="gap-l-10 flex-fixed visible size-20 round cursor flex-center item-hover"><Icon size={16} icon={CloseSvg}></Icon></span>}
+                {this.block.isCanEdit() && this.block.fieldType != 'doc-detail' && <span onClick={e => this.deleteImage(img)} className="gap-l-10 flex-fixed visible size-20 round cursor flex-center item-hover"><Icon size={16} icon={CloseSvg}></Icon></span>}
             </div>
         })
     }
@@ -70,7 +74,7 @@ class FormFieldFileView extends BlockView<FormFieldFile>{
                 {this.block.value && <div className="sy-field-files">
                     {this.renderFiles(vs)}
                 </div>}
-                {(vs.length == 0 || this.block.field?.config?.isMultiple) && this.block.isCanEdit() && <div className={vs.length > 0 ? "gap-t-30" : ""}><Button size={'small'} ghost onClick={e => this.block.uploadFile(e)}><S>上传</S>{text}</Button></div>}
+                {(vs.length == 0 || this.block.field?.config?.isMultiple)  && this.block.fieldType != 'doc-detail' && <div className={vs.length > 0 ? "gap-t-30" : ""}><Button size={'small'} ghost onClick={e => this.block.uploadFile(e)}><S>上传</S>{text}</Button></div>}
             </div>
         </FieldView>
     }

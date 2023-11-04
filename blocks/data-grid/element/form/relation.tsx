@@ -80,12 +80,12 @@ class FormFieldRelationView extends BlockView<FormFieldRelation>{
                     <Icon size={18} icon={getPageIcon({ pageType: PageLayoutType.doc, icon: r[icon.name] })}></Icon>
                 </span>
                 <span className="flex-auto text-overflow">{r[f?.name]}</span>
-                {this.block.isCanEdit() && <Tip text='移除'><span onClick={e => this.block.onDeleteData(e, r.id)} className="flex-fixed size-20 gap-w-5 item-hover  flex-center visible round">
+                {this.block.fieldType != 'doc-detail' && <Tip text='移除'><span onClick={e => this.block.onDeleteData(e, r.id)} className="flex-fixed size-20 gap-w-5 item-hover  flex-center visible round">
                     <Icon size={12} icon={CloseSvg}></Icon>
                 </span></Tip>}
             </a>
         })}
-            {(this.block.field.config?.isMultiple || (!(this.block.relationList.length > 0))) && this.block.isCanEdit() && <div
+            {(this.block.field.config?.isMultiple || (!(this.block.relationList.length > 0))) && this.block.fieldType != 'doc-detail' && <div
                 className={this.block.relationList.length > 0 ? "gap-h-10" : ""}
             ><Button size="small" onMouseDown={e => { this.block.onCellMousedown(e) }} ghost><S>添加关联记录</S></Button></div>}
         </div>

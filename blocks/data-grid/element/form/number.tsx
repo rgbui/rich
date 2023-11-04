@@ -3,6 +3,7 @@ import { InputNumber } from "../../../../component/view/input/number";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { FieldView, OriginFormField } from "./origin.field";
+
 @url('/form/number')
 class FieldText extends OriginFormField {
 
@@ -12,11 +13,12 @@ class FieldTextView extends BlockView<FieldText>{
     renderView() {
         var self = this;
         return <FieldView block={this.block}>
-            <InputNumber
+            {this.block.fieldType == 'doc-detail' && <span>{this.block.value}</span>}
+            {this.block.fieldType != 'doc-detail' && <InputNumber
                 value={this.block.value}
                 onChange={e => this.block.onInput(e)}
                 onEnter={e => self.block.onChange(e)}
-            ></InputNumber>
+            ></InputNumber>}
         </FieldView>
     }
 }

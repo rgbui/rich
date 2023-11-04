@@ -11,6 +11,7 @@ import lodash from "lodash";
 export class FieldEmoji extends OriginField {
 
 }
+
 @view('/field/emoji')
 export class FieldEmailView extends OriginFileView<FieldEmoji>{
     renderFieldValue() {

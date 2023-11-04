@@ -5,12 +5,18 @@ import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare"
 import { Block } from "../../../../src/block";
 import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../../../src/block/enum";
 import { prop } from "../../../../src/block/factory/observable";
-import { TextSpanArea } from "../../../../src/block/view/appear";
+import { TextArea } from "../../../../src/block/view/appear";
 import { GetFieldTypeSvg } from "../../schema/util";
 import { ShyAlert } from "../../../../component/lib/alert";
 import { lst } from "../../../../i18n/store";
 import { S } from "../../../../i18n/view";
 import "./style.less";
+import lodash from "lodash";
+import { channel } from "../../../../net/channel";
+import { getElementUrl, ElementType } from "../../../../net/element.type";
+import { Field } from "../../schema/field";
+import { FieldType } from "../../schema/type";
+import { OriginField } from "../field/origin.field";
 
 export class OriginFormField extends Block {
     display = BlockDisplay.block;
@@ -24,9 +30,13 @@ export class OriginFormField extends Block {
         if (this.page.schema) return this.page.schema;
     }
     @prop()
+    fieldType: 'doc' | 'doc-add' | 'doc-detail' = 'doc';
+    @prop()
     fieldId: string;
     @prop()
     required: boolean = false;
+    @prop()
+    hidePropTitle: boolean = false;
     get isSupportTextStyle() {
         return false;
     }
@@ -37,6 +47,59 @@ export class OriginFormField extends Block {
         this.value = value;
         this.view.forceUpdate();
     }
+    async onUpdateCellInteractive(field: Field) {
+        var r = await channel.patch('/interactive/emoji', {
+            elementUrl: getElementUrl(
+                field.type == FieldType.emoji ? ElementType.SchemaFieldData : ElementType.SchemaFieldNameData,
+                this.page.schema.id,
+                field.type == FieldType.emoji ? field.id : field.name,
+                this.page.formRowData?.id
+            ),
+            fieldName: field.name
+        });
+        if (r.ok) {
+            var ov = lodash.cloneDeep(this.page.formRowData[field.name]);
+            if (typeof ov == 'undefined' || lodash.isNull(ov)) ov = { count: 0 };
+            if (typeof ov == 'number') ov = { count: ov };
+            ov.count = r.data.count;
+            var userid = this.page.user?.id;
+            if (userid) {
+                if (!Array.isArray(ov.users)) {
+                    ov.users = []
+                }
+                if (r.data.exists) {
+                    var ops = this.page.formUserEmojis[field.name];
+                    if (!Array.isArray(ops)) this.page.formUserEmojis[field.name] = ops = []
+                    if (!ops.exists(c => c == this.page.formRowData.id)) ops.push(this.page.formRowData.id);
+                    if (!ov.users.exists(g => g == userid)) ov.users.push(userid)
+                }
+                else {
+                    var ops = this.page.formUserEmojis[field.name];
+                    if (!Array.isArray(ops)) this.page.formUserEmojis[field.name] = ops = []
+                    if (ops.exists(c => c == this.page.formRowData.id)) lodash.remove(ops, c => c == this.page.formRowData.id);
+                    lodash.remove(ov.users, g => (g as any) == userid);
+                }
+                if (typeof r.data.otherCount == 'number') {
+                    var name = field.name == 'like' ? FieldType[FieldType.oppose] : FieldType[FieldType.like];
+                    this.page.formRowData[name] = r.data.otherCount;
+                    var cs = this.childs.findAll(g => (g instanceof OriginField) && g.field?.name == name);
+                    if (!r.data.otherExists) {
+                        var ops = this.page.formUserEmojis[name];
+                        if (!Array.isArray(ops)) this.page.formUserEmojis[name] = ops = []
+                        if (ops.exists(c => c == this.page.formRowData.id)) lodash.remove(ops, c => c == this.page.formRowData.id);
+                    }
+                    if (cs.length > 0) {
+                        for (var i = 0; i < cs.length; i++) {
+                            (cs[i] as any).value = r.data.otherCount;
+                            cs[i].forceUpdate();
+                        }
+                    }
+                }
+            }
+            this.page.formRowData[field.name] = ov;
+            return ov;
+        }
+    }
     @prop()
     allowRemark: boolean = false;
     @prop()
@@ -44,7 +107,7 @@ export class OriginFormField extends Block {
     fieldError: string = '';
     async onGetContextMenus() {
         var items: MenuItem<BlockDirective | string>[] = [];
-        if (this.page.isPageForm) {
+        if (this.fieldType == 'doc-add') {
             items.push({
                 name: 'required',
                 text: lst('必填'),
@@ -64,29 +127,29 @@ export class OriginFormField extends Block {
             });
         }
         items.push({
-            name: 'hide',
+            name: 'hidePropTitle',
+            text: lst('隐藏属性名'),
             icon: HideSvg,
-            text: lst('隐藏')
+            type: MenuItemType.switch,
+            checked: this.hidePropTitle
+        })
+        items.push({
+            name: 'hide',
+            icon: TrashSvg,
+            text: lst('删除')
         });
         return items;
     }
     async onContextMenuInput(this: Block, item: MenuItem<BlockDirective | string>) {
-        if (item?.name == 'required') {
-            this.onUpdateProps({ [item?.name]: item.checked }, { range: BlockRenderRange.self });
+        if (['required', 'allowRemark', 'hidePropTitle'].includes(item.name as string)) {
+            await this.onUpdateProps({ [item.name]: item.checked }, { range: BlockRenderRange.self });
+            return;
         }
-        else if (item?.name == 'allowRemark') {
-            this.onUpdateProps({ [item?.name]: item.checked }, { range: BlockRenderRange.self });
-        }
+        else await super.onContextMenuInput(item);
     }
     async onClickContextMenu(this: Block, item: MenuItem<BlockDirective | string>, event: MouseEvent) {
         if (item) {
             switch (item.name) {
-                case 'required':
-                    //this.onUpdateProps({ required: item.checked });
-                    break;
-                case 'allowRemark':
-                    //this.onUpdateProps({ allowRemark: item.checked });
-                    break;
                 case 'hide':
                     this.onDelete()
                     break;
@@ -109,7 +172,7 @@ export class OriginFormField extends Block {
     }
     getVisibleHandleCursorPoint() {
         var point = super.getVisibleHandleCursorPoint();
-        if (this.page.isPageForm) {
+        if (this.fieldType == 'doc-add') {
             point = point.move(0, -5);
         }
         else {
@@ -118,15 +181,16 @@ export class OriginFormField extends Block {
         return point;
     }
 }
+
 export function FieldView(props: { block: OriginFormField, children?: JSX.Element | string | React.ReactNode }) {
     var block = props.block;
-    if (!block.page.isPageForm) {
+    if (block.fieldType !== 'doc-add') {
         return <div className="sy-form-field-detail" style={block.visibleStyle}>
             <div className="gap-h-10 flex flex-top">
-                <div className="flex-fixed  h-30 w-120 flex remark f-14 item-hover round gap-r-10 cursor">
+                {props.block.hidePropTitle !== true && <div className="flex-fixed  h-30 w-120 flex remark f-14 item-hover round gap-r-10 cursor">
                     <span className="flex-fixed size-20 flex-center  gap-l-5"><Icon size={14} icon={GetFieldTypeSvg(block.field.type)}></Icon></span>
                     <span className="flex-auto">{block.field.text}</span>
-                </div>
+                </div>}
                 <div className="flex-auto  flex remark  min-h-30 item-hover round padding-w-10">
                     {props.children}
                 </div>
@@ -136,14 +200,14 @@ export function FieldView(props: { block: OriginFormField, children?: JSX.Elemen
     return <div className='sy-form-field' onMouseDown={e => e.stopPropagation()}>
         <div className="gap-t-10 gap-b-30">
             {block.field && <div className="sy-form-field-box">
-                <div className="flex gap-h-3">
-                    <label className="b-500 f-16">{block.field.text}</label>
-                    {block.required && <em className="text-primary f-12 round-4 gap-l-5 padding-w-5 "
+                <div className="flex gap-h-5">
+                    {props.block.hidePropTitle !== true && <label className="b-500 f-16">{block.field.text}</label>}
+                    {block.required && <em className="text-primary f-12 l-16 round-4 gap-l-5 padding-w-5 "
                         style={{ backgroundColor: 'rgba(207,86,89,.16)' }}
                     ><S>必填</S></em>}
                 </div>
-                {block.allowRemark && <div className="sy-form-field-remark remark f-12 gap-h-3">
-                    <TextSpanArea placeholderEmptyVisible={true} placeholder={lst("请输入说明介绍")} prop="fieldRemark" block={block} ></TextSpanArea>
+                {block.allowRemark && <div className="sy-form-field-remark remark f-12 gap-h-5">
+                    <TextArea plain placeholderEmptyVisible={true} placeholder={lst("请输入说明介绍")} prop="fieldRemark" block={block} ></TextArea>
                 </div>}
                 <div className="sy-form-field-control">{props.children}</div>
             </div>}

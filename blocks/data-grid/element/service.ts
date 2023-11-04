@@ -2,9 +2,10 @@
 import { Field } from "../schema/field";
 import { FieldType } from "../schema/type";
 
-
-export function GetFieldFormBlockInfo(field: Field) {
-    switch (field.type) {
+export function GetFieldFormBlockInfo(field: Field)
+{
+    switch (field.type)
+    {
         case FieldType.text:
         case FieldType.title:
         case FieldType.email:
@@ -66,6 +67,14 @@ export function GetFieldFormBlockInfo(field: Field) {
         case FieldType.rich:
             return {
                 url: '/form/rich',
+                fieldId: field.id
+            }
+        case FieldType.emoji:
+        case FieldType.like:
+        case FieldType.love:
+        case FieldType.oppose:
+            return {
+                url: '/form/emoji',
                 fieldId: field.id
             }
     }

@@ -3,18 +3,25 @@ import React from "react";
 import { CloseSvg, SwitchArrowSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import { useDatePicker } from "../../../../extensions/date";
-import { url, view } from "../../../../src/block/factory/observable";
+import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/vector/point";
 import { util } from "../../../../util/util";
 import { SchemaFilter } from "../../schema/declare";
 import { OriginFilterField, OriginFilterFieldView } from "./origin.field";
 import { S } from "../../../../i18n/view";
+import { SelectBox } from "../../../../component/view/select/box";
+import { lst } from "../../../../i18n/store";
+import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
+import { SelectButtons } from "../../../../component/view/button/select";
+import { BlockDirective, BlockRenderRange } from "../../../../src/block/enum";
 
 @url('/field/filter/date')
 export class FilterFieldDate extends OriginFilterField {
     startDate: Date;
     endDate: Date;
+    @prop()
+    filterType: 'dateRange' | 'dateSelect' | 'dateButtons' = 'dateRange';
     async openDatePicker(key: string, event: React.MouseEvent) {
         event.stopPropagation();
         var el = event.currentTarget as HTMLElement;
@@ -28,6 +35,7 @@ export class FilterFieldDate extends OriginFilterField {
             this.forceUpdate()
         }
     }
+    dateSelectValue: '' | 'today' | 'yesterday' | 'tomorrow' | 'thisWeek' | 'lastWeek' | 'nextWeek' | 'thisMonth' | 'lastMonth' | 'nextMonth' | 'thisYear' | 'lastYear' | 'nextYear' = ''
     get format() {
         var fr = 'YYYY-MM-DD';
         if (this.field?.config?.includeTime) fr = 'YYYY-MM-DD HH:mm';
@@ -35,31 +43,87 @@ export class FilterFieldDate extends OriginFilterField {
     }
     get filters(): SchemaFilter[] {
         var rs: SchemaFilter[] = [];
+        var s: Date;
+        var e: Date;
+        if (this.filterType == 'dateRange') {
+            s = this.startDate;
+            e = this.endDate;
+        }
+        else {
+            if (this.dateSelectValue == 'today') {
+                s = new Date();
+                e = new Date()
+            }
+            else if (this.dateSelectValue == 'yesterday') {
+                s = dayjs(new Date()).subtract(1, 'day').toDate();
+                e = new Date()
+            }
+            else if (this.dateSelectValue == 'tomorrow') {
+                s = new Date();
+                e = dayjs(new Date()).add(1, 'day').toDate();
+            }
+            else if (this.dateSelectValue == 'thisWeek') {
+                s = dayjs(new Date()).startOf('week').toDate();
+                e = dayjs(new Date()).endOf('week').toDate();
+            }
+            else if (this.dateSelectValue == 'lastWeek') {
+                s = dayjs(new Date()).subtract(1, 'week').startOf('week').toDate();
+                e = dayjs(new Date()).subtract(1, 'week').endOf('week').toDate();
+            }
+            else if (this.dateSelectValue == 'nextWeek') {
+                s = dayjs(new Date()).add(1, 'week').startOf('week').toDate();
+                e = dayjs(new Date()).add(1, 'week').endOf('week').toDate();
+            }
+            else if (this.dateSelectValue == 'thisMonth') {
+                s = dayjs(new Date()).startOf('month').toDate();
+                e = dayjs(new Date()).endOf('month').toDate();
+            }
+            else if (this.dateSelectValue == 'lastMonth') {
+                s = dayjs(new Date()).subtract(1, 'month').startOf('month').toDate();
+                e = dayjs(new Date()).subtract(1, 'month').endOf('month').toDate();
+            }
+            else if (this.dateSelectValue == 'nextMonth') {
+                s = dayjs(new Date()).add(1, 'month').startOf('month').toDate();
+                e = dayjs(new Date()).add(1, 'month').endOf('month').toDate();
+            }
+            else if (this.dateSelectValue == 'thisYear') {
+                s = dayjs(new Date()).startOf('year').toDate();
+                e = dayjs(new Date()).endOf('year').toDate();
+            }
+            else if (this.dateSelectValue == 'lastYear') {
+                s = dayjs(new Date()).subtract(1, 'year').startOf('year').toDate();
+                e = dayjs(new Date()).subtract(1, 'year').endOf('year').toDate();
+            }
+            else if (this.dateSelectValue == 'nextYear') {
+                s = dayjs(new Date()).add(1, 'year').startOf('year').toDate();
+                e = dayjs(new Date()).add(1, 'year').endOf('year').toDate();
+            }
+        }
         if (this.field?.config?.includeTime) {
-            if (this.startDate) {
+            if (s) {
                 rs.push({
                     field: this.field.name,
                     operator: "$gte",
-                    value: this.startDate
+                    value: s
                 })
             }
-            if (this.endDate) {
+            if (e) {
                 rs.push({
                     field: this.field.name,
                     operator: "$lte",
-                    value: this.endDate
+                    value: e
                 })
             }
             return rs;
         }
         else {
             var sd: Date;
-            if (this.startDate) {
-                sd = util.dateToStart(this.startDate)
+            if (s) {
+                sd = util.dateToStart(s)
             }
             var ed: Date;
-            if (this.endDate) {
-                ed = util.dateToStart(this.endDate)
+            if (e) {
+                ed = util.dateToStart(e)
             }
             if (sd) {
                 rs.push({
@@ -71,7 +135,7 @@ export class FilterFieldDate extends OriginFilterField {
             if (ed) {
                 rs.push({
                     field: this.field.name,
-                    operator: "$gte",
+                    operator: "$lte",
                     value: ed
                 })
             }
@@ -84,12 +148,70 @@ export class FilterFieldDate extends OriginFilterField {
         if (this.refBlock) this.refBlock.onSearch()
         this.forceUpdate()
     }
+    async onGetContextMenus() {
+        var rs = await super.onGetContextMenus();
+        var pos = rs.findIndex(g => g.name == 'showFieldText');
+        var ns: MenuItem<string | BlockDirective>[] = [];
+        ns.push({
+            name: 'filterType',
+            text: lst('日期类型'),
+            type: MenuItemType.select,
+            value: this.filterType,
+            options: [
+                { text: lst('范围日期'), value: 'dateRange' },
+                { text: lst('下拉类别'), value: 'dateSelect' },
+                { text: lst('日期类别分组'), value: 'dateButtons' },
+            ]
+        })
+        rs.splice(pos + 1, 0, ...ns)
+        return rs;
+    }
+    async onContextMenuInput(item: MenuItem<string | BlockDirective>): Promise<void> {
+        switch (item.name) {
+            case 'filterType':
+                this.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self })
+                return;
+        }
+        super.onContextMenuInput(item)
+    }
 }
+
 @view('/field/filter/date')
 export class FilterFieldDateView extends BlockView<FilterFieldDate>{
     renderView() {
+        var dateOptions = [
+            { text: lst('不限'), value: '' },
+            { type: MenuItemType.divide },
+            { text: lst('今天'), value: 'today' },
+            { text: lst('昨天'), value: 'yesterday' },
+            { text: lst('明天'), value: 'tomorrow' },
+            { type: MenuItemType.divide },
+            { text: lst('本周'), value: 'thisWeek' },
+            { text: lst('上周'), value: 'lastWeek' },
+            { text: lst('下周'), value: 'nextWeek' },
+            { type: MenuItemType.divide },
+            { text: lst('本月'), value: 'thisMonth' },
+            { text: lst('上月'), value: 'lastMonth' },
+            { text: lst('下月'), value: 'nextMonth' },
+            { type: MenuItemType.divide },
+            { text: lst('今年'), value: 'thisYear' },
+            { text: lst('去年'), value: 'lastYear' },
+            // { text: lst('来年'), value: 'nextYear' },
+        ]
         return <div style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle} filterField={this.block}>
-            <div className="flex-line flex round relative" style={{
+            {this.block.filterType == 'dateButtons' && <div>
+                <SelectButtons value={this.block.dateSelectValue} onChange={e => {
+                    this.block.dateSelectValue = e;
+                    if (this.block.refBlock) this.block.refBlock.onSearch()
+                    this.forceUpdate()
+                }} options={dateOptions.filter(g => g?.type != MenuItemType.divide) as any}></SelectButtons>
+            </div>}
+            {this.block.filterType == 'dateSelect' && <SelectBox small border options={dateOptions} value={this.block.dateSelectValue} onChange={e => {
+                this.block.dateSelectValue = e;
+                if (this.block.refBlock) this.block.refBlock.onSearch()
+                this.forceUpdate()
+            }}></SelectBox>}
+            {this.block.filterType == 'dateRange' && <div className="flex-line flex round relative" style={{
                 height: 28,
                 width: '100%',
                 boxShadow: 'rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset',
@@ -103,7 +225,7 @@ export class FilterFieldDateView extends BlockView<FilterFieldDate>{
                 <span style={{ display: this.block.startDate || this.block.endDate ? "flex" : 'none' }} onMouseDown={e => this.block.onClear()} className="pos-right-full flex-center gap-r-5" >
                     <span className="size-16 flex-center cursor circle item-hover"><Icon size={12} icon={CloseSvg}></Icon></span>
                 </span>
-            </div>
+            </div>}
         </OriginFilterFieldView></div>
     }
 }

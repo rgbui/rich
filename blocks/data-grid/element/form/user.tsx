@@ -35,7 +35,7 @@ export class FieldTextView extends BlockView<FieldUser>{
         if (!Array.isArray(vs)) vs = [];
         return <FieldView block={this.block}>
             <UserAvatars size={30} users={vs}>
-                {(this.block.field?.config?.isMultiple || vs.length < 2) && <span onMouseDown={e => this.block.onSelectUser(e)} className=" round item-hover-focus size-24 flex-center cursor"><Icon size={16} icon={PlusSvg}></Icon></span>}
+                {(this.block.field?.config?.isMultiple || vs.length < 2) && this.block.fieldType != 'doc-detail' && <span onMouseDown={e => this.block.onSelectUser(e)} className=" round item-hover-focus size-24 flex-center cursor"><Icon size={16} icon={PlusSvg}></Icon></span>}
             </UserAvatars>
         </FieldView>
     }

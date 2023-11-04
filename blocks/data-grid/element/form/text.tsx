@@ -13,9 +13,8 @@ class FieldText extends OriginFormField {
     inputType: 'input' | 'textarea' = 'input';
     async onGetContextMenus() {
         var items = await super.onGetContextMenus();
-        if (this.page.isPageForm && [FieldType.text].includes(this.field.type)) {
-            var index = items.findIndex(g => g.name == 'hide');
-            items.splice(index, 0, {
+        if (this.fieldType == 'doc-add' && [FieldType.text].includes(this.field.type)) {
+            items.splice(0, 0, {
                 name: 'inputType',
                 text: lst('多行文本'),
                 type: MenuItemType.switch,
@@ -43,6 +42,11 @@ class FieldTextView extends BlockView<FieldText>{
                 if (!self.block.isCanEdit()) return;
                 self.block.onChange((event.target as HTMLInputElement).value);
             }
+        }
+        if (this.block.fieldType == 'doc-detail') {
+            return <FieldView block={this.block}>
+                <div >{this.block.value}</div>
+            </FieldView>
         }
         return <FieldView block={this.block}>
             {this.block.inputType == 'input' && <input

@@ -50,11 +50,6 @@ export class FilterRelation extends OriginFilterField {
         super.onContextMenuInput(item)
     }
     async onClickContextMenu(item: MenuItem<string | BlockDirective>, e) {
-        // switch (item.name) {
-        //     case 'text-center':
-        //         await this.onUpdateProps({ align: item.value }, { range: BlockRenderRange.self })
-        //         return
-        // }
         return await super.onClickContextMenu(item, e);
     }
 }
@@ -86,7 +81,7 @@ export class FilterRelationView extends BlockView<FilterRelation>{
     renderView() {
         return <div style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle}
             filterField={this.block}>
-            <div onMouseDown={e => this.mousedown(e)} className="flex-line flex round relative visible-hover padding-l-5" style={{
+            <div onMouseDown={e =>this.mousedown(e)} className="flex-line flex round relative visible-hover padding-l-5" style={{
                 height: 28,
                 width: '100%',
                 boxShadow: 'rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset',

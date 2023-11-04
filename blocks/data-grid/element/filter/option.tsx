@@ -1,14 +1,16 @@
 import React from "react";
-import { useSelectMenuItem } from "../../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import { url, prop, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
-import { Rect } from "../../../../src/common/vector/point";
 import { OriginFilterField, OriginFilterFieldView } from "./origin.field";
 import { lst } from "../../../../i18n/store";
-import { S } from "../../../../i18n/view";
-import { Block } from "../../../../src/block";
 import { BlockDirective, BlockRenderRange } from "../../../../src/block/enum";
+import { SelectBox } from "../../../../component/view/select/box";
+import lodash from "lodash";
+import { SelectButtons } from "../../../../component/view/button/select";
+import { util } from "../../../../util/util";
+import { CheckBoxList } from "../../../../component/view/checkbox/list";
+import { SelectItems } from "../../../../component/view/button/item";
 
 @url('/field/filter/option')
 export class FilterFieldOption extends OriginFilterField {
@@ -16,40 +18,70 @@ export class FilterFieldOption extends OriginFilterField {
     @prop()
     isMultiple: boolean = false;
     @prop()
-    format: 'select' | 'expose' = 'expose';
-    onFilter(value, force?: boolean) {
-        if (force == true) {
-            this.values = value;
+    format: 'select' | 'listLine' | 'list' | 'listCheck' = 'listLine';
+    @prop()
+    isStat: boolean = false;
+    async onFilter(value) {
+        var vs = util.covertToArray(value);
+        if (!this.values.includes('')) {
+            if (vs.includes('')) vs = ['']
         }
         else {
-            if (this.isMultiple) {
-                if (!this.values.includes(value)) {
-                    this.values.push(value)
-                }
-            }
-            else this.values = [value];
+            if (vs.includes('')) lodash.remove(vs, g => g === '');
         }
-        if (this.refBlock) this.refBlock.onSearch();
+        if (vs.length == 0) vs = [''];
+        this.values = vs;
+        if (this.refBlock) await this.refBlock.onSearch();
         this.forceUpdate()
     }
     get filters() {
-        if (this.values.length == 0) return null
-        return [{
-            field: this.field.name,
-            operator: '$in',
-            value: this.values
-        }]
+        var vs = lodash.cloneDeep(this.values);
+        if (vs.includes('')) return null;
+        if (vs.length == 0) return null
+        if (vs.length == 1)
+            return [{
+                field: this.field.name,
+                operator: '$eq',
+                value: vs[0]
+            }]
+        else
+            return [{
+                field: this.field.name,
+                operator: '$in',
+                value: this.values
+            }]
     }
     async onGetContextMenus() {
         var rs = await super.onGetContextMenus();
-        var pos = rs.findIndex(g => g.name == 'showFieldText');
+        var pos = rs.findIndex(g => g.name == 'fieldTextDisplay');
         if (pos > -1) {
             var ns: MenuItem<string | BlockDirective>[] = [];
+            ns.push({ type: MenuItemType.divide })
             ns.push({
                 name: 'isMultiple',
                 text: lst('多选'),
                 icon: { name: 'bytedance-icon', code: 'more-three' },
                 checked: this.isMultiple,
+                type: MenuItemType.switch,
+            })
+            ns.push({
+                name: 'format',
+                text: lst('格式'),
+                icon: { name: 'bytedance-icon', code: 'components' },
+                type: MenuItemType.select,
+                options: [
+                    { text: lst('下拉框'), value: 'select' },
+                    { text: lst('行内列表'), value: 'listLine' },
+                    { text: lst('列表'), value: 'list' },
+                    { text: lst('复选选择'), value: 'listCheck' }
+                ],
+                value: this.format
+            })
+            ns.push({
+                name: 'isStat',
+                text: lst('分类统计'),
+                icon: { name: 'bytedance-icon', code: 'chart-pie' },
+                checked: this.isStat,
                 type: MenuItemType.switch,
             })
             rs.splice(pos + 1, 0, ...ns)
@@ -59,59 +91,130 @@ export class FilterFieldOption extends OriginFilterField {
     async onContextMenuInput(item: MenuItem<string | BlockDirective>) {
         switch (item.name) {
             case 'isMultiple':
-                this.onUpdateProps({ [item.name]: item.checked }, { range: BlockRenderRange.self })
+            case 'isStat':
+                if (item.name == 'isStat') await this.cacStat();
+                await this.onUpdateProps({ [item.name]: item.checked }, { range: BlockRenderRange.self })
+                return;
+            case 'format':
+                await this.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self })
                 return;
         }
         super.onContextMenuInput(item)
     }
     async onClickContextMenu(item: MenuItem<string | BlockDirective>, e) {
-        // switch (item.name) {
-        //     case 'text-center':
-        //         await this.onUpdateProps({ align: item.value }, { range: BlockRenderRange.self })
-        //         return
-        // }
+
         return await super.onClickContextMenu(item, e);
     }
+    async didMounted() {
+        this.cacStat(true);
+    }
+    async cacStat(force?: boolean) {
+        if (this.isStat) {
+            var s = this.refBlock?.schema;
+            var willCac = async () => {
+                if (this.refBlock?.schema) {
+                    var r = await this.refBlock?.schema.group({ group: this.field.name }, this.page.ws);
+                    if (r.data) {
+                        this.statOptions = r.data.list.map(c => {
+                            return {
+                                value: c[this.field.name],
+                                count: c.count
+                            }
+                        });
+                        if (force)
+                            this.forceUpdate()
+                        return;
+                    }
+                }
+                this.statOptions = [];
+            }
+            if (s) {
+                willCac();
+            }
+            else this.refBlock.once('loadDataGrided', () => {
+                willCac();
+            })
+        }
+    }
+    statOptions: { value: string, count: number }[] = [];
 }
 @view('/field/filter/option')
 export class FilterFieldOptionView extends BlockView<FilterFieldOption>{
     renderOptions() {
         var self = this;
-        if (this.block.format == 'select') {
-            async function select(event: React.MouseEvent) {
-                var rs = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, [
-                    { text: lst('选择选项'), type: MenuItemType.text },
-                    { text: lst('全部'), name: 'all', checkLabel: self.block.values.length == 0 ? true : false },
-                    ...self.block.field.config.options.map(op => {
-                        return {
-                            text: op.text,
-                            value: op.value,
-                            checkLabel: self.block.values.includes(op.value)
-                        }
-                    })
-                ]);
-                if (rs?.item) {
-                    if (rs.item.name == 'all') self.block.onFilter([], true)
-                    else if (rs.item.value) self.block.onFilter(rs.item.value)
+        function gs(v) {
+            if (self.block.isStat) {
+                var s = 0;
+                if (v == '') {
+                    s = self.block.statOptions.sum(c => c.count)
                 }
+                else {
+                    var g = self.block.statOptions.find(c => typeof c.value == 'string' && c.value == v || Array.isArray(c.value) && c.value.includes(v));
+                    if (g) s = g.count;
+                }
+                return ` (${s})`
             }
-            var ops = this.block.field.config.options.findAll(g => this.block.values.includes(g.value));
-            if (ops.length == 0) return <span onMouseDown={e => select(e)}><S>全部</S></span>
-            else return <div onMouseDown={e => select(e)}>{ops.map(op => { return <span key={op.value}>{op.text}</span> })}</div>
+            else return '';
         }
-        else return <div className="inline">
-            <span className={"gap-r-10 padding-w-5 padding-h-3  round cursor " + (!this.block.values.some(s => this.block.field?.config.options.some(c => c.value == s)) ? " text-white bg-primary" : "")} onClick={e => {
-                this.block.onFilter([], true)
-            }}><S>全部</S></span>
-            {this.block.field?.config.options.map(g => {
-                return <span className={"gap-r-10 padding-w-5 padding-h-3  round cursor " + (this.block.values.includes(g.value) ? " text-white bg-primary" : "")} key={g.value} onClick={e => {
-                    this.block.onFilter(g.value);
-                }}>{g.text}</span>
-            })}</div>
+        if (this.block.format == 'select') {
+            return <div>
+                <SelectBox small multiple={this.block.isMultiple} value={this.block.isMultiple ? this.block.values : (this.block.values.length == 0 ? "" : this.block.values[0] || "")} border
+                    options={[{ text: lst('全部') + gs(''), value: '' }, ...this.block.field.config.options.map(c => {
+                        return {
+                            text: c.text + gs(c.value),
+                            value: c.value
+                        }
+                    })]}
+                    onChange={e => {
+                        this.block.onFilter(e);
+                    }}></SelectBox>
+            </div>
+        }
+        else if (this.block.format == 'listLine') return <div className="inline">
+            <SelectButtons gap={10} multiple={this.block.isMultiple} value={this.block.isMultiple ? this.block.values : (this.block.values.length == 0 ? "" : (this.block.values[0] || ""))}
+                options={[{ text: lst('全部') + gs(''), value: '' }, ...this.block.field.config.options.map(c => {
+                    return {
+                        text: c.text + gs(c.value),
+                        value: c.value
+                    }
+                })]} onChange={e => {
+                    this.block.onFilter(e);
+                }}></SelectButtons>
+        </div>
+        else if (this.block.format == 'list') {
+            return <div>
+                <SelectItems
+                    gap={10}
+                    multiple={this.block.isMultiple}
+                    value={this.block.isMultiple ? this.block.values : (this.block.values.length == 0 ? "" : (this.block.values[0] || ""))}
+                    options={[...this.block.field.config.options.map(c => {
+                        return {
+                            text: c.text + gs(c.value),
+                            value: c.value
+                        }
+                    })]} onChange={e => {
+                        this.block.onFilter(e);
+                    }}></SelectItems>
+            </div>
+        }
+        else if (this.block.format == 'listCheck') {
+            return <div>
+                <CheckBoxList direction={'y'} multiple={this.block.isMultiple} value={this.block.isMultiple ? this.block.values : (this.block.values.length == 0 ? "" : this.block.values[0] || "")}
+                    options={[...this.block.field.config.options.map(c => {
+                        return {
+                            text: c.text + gs(c.value),
+                            value: c.value
+                        }
+                    })]}
+                    onChange={e => {
+                        this.block.onFilter(e);
+                    }}></CheckBoxList>
+            </div>
+        }
     }
     renderView() {
-        return <div style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle} filterField={this.block}>
-            {this.renderOptions()}
+        return <div style={this.block.visibleStyle}><OriginFilterFieldView top={this.block.format == 'list' || this.block.format == 'listCheck'} style={this.block.contentStyle} filterField={this.block}>
+            {this.block.field?.config?.options && this.renderOptions()}
         </OriginFilterFieldView></div>
     }
 }
