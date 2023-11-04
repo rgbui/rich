@@ -31,7 +31,7 @@ export class BlockButton extends Block {
     @prop()
     ghost: boolean = false;
     @prop()
-    buttonSize: 'default' | 'larger' | 'small' = 'default';
+    buttonSize: 'default' | 'larger' | 'small' = 'small';
     async getMd() {
         return '<button>' + this.buttonText + '</button>'
     }
@@ -114,6 +114,7 @@ export class BlockButton extends Block {
         }
         return false;
     }
+    
 }
 @view('/button')
 export class BlockButtonView extends BlockView<BlockButton>{
