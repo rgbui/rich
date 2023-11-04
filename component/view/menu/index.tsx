@@ -2,10 +2,10 @@ import React from "react";
 import { PopoverPosition } from "../../../extensions/popover/position";
 import { Singleton } from "../../lib/Singleton";
 import { EventsComponent } from "../../lib/events.component";
-import "./style.less";
 import { MenuBox } from "./box";
 import { MenuItem } from "./declare";
 import { popoverLayer } from "../../lib/zindex";
+import "./style.less";
 
 export class MenuPanel<T> extends EventsComponent {
     open(pos: PopoverPosition,
