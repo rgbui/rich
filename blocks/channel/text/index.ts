@@ -68,11 +68,14 @@ export class ChannelText extends Block {
             this.abledSend = false;
         }
         if (this.page.pageInfo?.speak == 'only') {
-            var r = await channel.get('/ws/channel/abled/send', { ws: this.page.ws, roomId: this.roomId, pageId: this.page.pageInfo.id });
+            var r = await channel.get('/ws/channel/abled/send', { ws: this.page.ws, roomId: this.roomId });
             if (r.ok) {
                 this.abledSend = r.data.abled;
             }
             else this.abledSend = false;
+        }
+        else if (this.page.pageInfo?.speak == 'unspeak') {
+            this.abledSend = false;
         }
         if (force == true) this.view.forceUpdate();
     }

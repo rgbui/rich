@@ -20,13 +20,12 @@ import { RobotApply, RobotInfo } from "../../../../types/user";
 import { lst } from "../../../../i18n/store";
 import { S, Sp } from "../../../../i18n/view";
 
-
 @view('/channel/text')
 export class ChannelTextView extends BlockView<ChannelText>{
     contentEl: HTMLElement;
     async openEdit(event: React.MouseEvent) {
         var pd = this.block.page.getPageDataInfo();
-        var model = { text: pd?.text || lst('新页面'), description: pd?.description }
+        var model = { text: pd?.text || lst('新话题'), description: pd?.description }
         var f = await useForm({
             head: false,
             fields: [{ name: 'text', text: lst('频道名称'), type: 'input' }, { name: 'description', text: lst('频道描述'), type: 'textarea' }],
@@ -50,7 +49,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
                     e.stopPropagation();
                     this.block.page.onChangeIcon(e)
                 }} size={72} icon={pd?.icon || TopicSvg}></Icon>
-                <div className="h1 flex"><span>{pd?.text || lst('新页面')}</span>{this.block.page.isCanManage && <span className="flex-center round gap-l-5 cursor item-hover flex-line size-24 visible"><Icon onClick={e => this.openEdit(e)} size={18} icon={Edit1Svg}></Icon></span>}</div>
+                <div className="h1 flex"><span>{pd?.text || lst('新话题')}</span>{this.block.page.isCanManage && <span className="flex-center round gap-l-5 cursor item-hover flex-line size-24 visible"><Icon onClick={e => this.openEdit(e)} size={18} icon={Edit1Svg}></Icon></span>}</div>
                 {pd?.description && <div className="text-1 f-14">
                     <Markdown md={pd?.description}></Markdown>
                 </div>}
