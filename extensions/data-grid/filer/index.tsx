@@ -33,7 +33,6 @@ export class DataGridFileViewer extends EventsComponent {
         this.isMultiple = options.isMultiple;
         this.mime = options.mime || 'file';
         this.resources = options.resources || [];
-        console.log(this.isMultiple, 'isMultiple');
         this.forceUpdate(async () => {
             await util.delay(20);
             this.emit('update');
@@ -70,7 +69,7 @@ export class DataGridFileViewer extends EventsComponent {
             resource = await useVideoPicker({ roundArea: Rect.fromEvent(event) })
         }
         else if (this.mime == 'user') {
-            var r = await useUserPicker({ roundArea: Rect.fromEvent(event) }, undefined);
+            var r = await useUserPicker({ roundArea: Rect.fromEvent(event) }, undefined, { ignoreUserAll: true });
             if (r && !this.resources.includes(r.id as any)) {
                 resource = r.id as any;
             }
@@ -127,7 +126,7 @@ export class DataGridFileViewer extends EventsComponent {
             <div className="max-h-300 overflow-y padding-h-5">
                 <DragList onChange={(e, c) => this.dragChange(e, c)}
                     isDragBar={e => e.closest('.drag') ? true : false}>
-                    {this.resources.map((re,i) => {
+                    {this.resources.map((re, i) => {
                         return <div className="flex cursor min-h-30 padding-w-14 text-1 item-hover round" key={i}>
                             <span className="round flex-fixed drag size-24 remark flex-center cursor item-hover">
                                 <Icon icon={DragHandleSvg} size={14}></Icon>

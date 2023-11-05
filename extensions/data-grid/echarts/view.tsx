@@ -105,7 +105,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                 await self.block.onShowCheck(item.checked ? "checkbox" : 'none');
             }
             else if (item.name == 'showPager') {
-                await self.block.onExtendControlBlock(BlockUrlConstant.DataGridPage, {})
+                await self.block.onExtendTriggerBlock(BlockUrlConstant.DataGridPage, {}, !self.block.hasTriggerBlock(BlockUrlConstant.DataGridPage))
             }
             else if (item.name == 'noHead') {
                 await self.block.onUpdateProps({ noHead: !item.checked }, { range: BlockRenderRange.self });

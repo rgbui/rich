@@ -356,7 +356,6 @@ export class CustomTableFilterView extends EventsComponent {
     ws: LinkWs
 }
 
-
 export async function useCustomTableFilter(pos: PopoverPosition,
     option: {
         schema: TableSchema,

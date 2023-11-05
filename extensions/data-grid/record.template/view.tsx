@@ -83,7 +83,6 @@ class TabelSchemaFormDrop extends EventsComponent {
             { text: lst('编辑'), name: 'edit', icon: Edit1Svg },
             { type: MenuItemType.divide },
             { text: lst('默认新增时打开'), name: 'defaultCollect', checkLabel: this.schema.defaultCollectFormId == view.id ? true : false, icon: OrderSvg },
-            { text: lst('默认编辑时打开'), name: 'defaultEdit', checkLabel: this.schema.defaultEditFormId == view.id ? true : false, icon: DetailSvg },
             { type: MenuItemType.divide },
             { text: lst('删除'), name: 'delete', icon: TrashSvg, disabled: this.schema.views.findAll(g => [BlockUrlConstant.RecordPageView].includes(g.url as any)).length == 1 ? true : false }
         ]

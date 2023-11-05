@@ -14,7 +14,7 @@ import { TableStoreBoard } from "../../../../blocks/data-grid/view/board";
 import { MenuView } from "../../../../component/view/menu/menu";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import lodash from "lodash";
-import { CheckSvg, LoopSvg } from "../../../../component/svgs";
+import { CheckSvg, DetailSvg, LoopSvg } from "../../../../component/svgs";
 import { Rect } from "../../../../src/common/vector/point";
 import { DataGridConfig } from "..";
 import { lst } from "../../../../i18n/store";
@@ -104,10 +104,21 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
             {
                 text: lst('分页'),
                 type: MenuItemType.switch,
-                checked: (this.block as TableStore).hasPagerBlock(),
+                checked: (this.block as TableStore).hasTriggerBlock(BlockUrlConstant.DataGridPage),
                 name: 'showPager'
             },
             { type: MenuItemType.divide },
+            {
+                text: lst('创建记录'),
+                value: this.block.createRecordSource,
+                name: 'createRecordSource',
+                type: MenuItemType.select,
+                options: [
+                    { text: lst('页面'), value: 'page' },
+                    { text: lst('对话框居中'), value: 'dialog' },
+                    { text: lst('侧栏右侧'), value: 'slide' },
+                ]
+            },
             {
                 text: lst('打开记录'),
                 value: this.block.openRecordSource,
@@ -120,14 +131,23 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 ]
             },
             {
-                text: lst('创建记录'),
-                value: this.block.createRecordSource,
-                name: 'createRecordSource',
+                text: lst('打开记录模板'),
+                value: this.block.openRecordViewId,
+                name: 'openRecordViewId',
                 type: MenuItemType.select,
                 options: [
-                    { text: lst('页面'), value: 'page' },
-                    { text: lst('对话框居中'), value: 'dialog' },
-                    { text: lst('侧栏右侧'), value: 'slide' },
+                    {
+                        text: lst('原始记录'),
+                        value: '',
+                        icon: { name: 'bytedance-icon', code: 'rectangle-one' }
+                    },
+                    ...this.schema.recordViews.map(rd => {
+                        return {
+                            text: rd.text,
+                            value: rd.id,
+                            icon: rd.icon || DetailSvg
+                        }
+                    })
                 ]
             }
         ]
@@ -228,14 +248,13 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
         async function input(item) {
             if (item.name == 'size') self.block.onChangeSize(item.value)
             else if (item.name == 'noTitle') self.block.onUpdateProps({ noTitle: !item.checked }, { range: BlockRenderRange.self });
-            else if (item.name == 'openRecordSource') self.block.onUpdateProps({ openRecordSource: item.value }, {})
-            else if (item.name == 'createRecordSource') self.block.onUpdateProps({ createRecordSource: item.value }, {})
+            else if (['openRecordViewId', 'openRecordSource', 'createRecordSource'].includes(item.name)) self.block.onUpdateProps({ [item.name]: item.value }, {})
             else if (item.name == 'showRowNum') self.block.onShowRowNum(item.checked);
             else if (item.name == 'checkRow') {
                 await self.block.onShowCheck(item.checked ? "checkbox" : 'none');
             }
             else if (item.name == 'showPager') {
-                await self.block.onExtendControlBlock(BlockUrlConstant.DataGridPage, {})
+                await self.block.onExtendTriggerBlock(BlockUrlConstant.DataGridPage, {}, !self.block.hasTriggerBlock(BlockUrlConstant.DataGridPage))
             }
             else if (item.name == 'noHead') {
                 await self.block.onUpdateProps({ noHead: !item.checked }, { range: BlockRenderRange.self });

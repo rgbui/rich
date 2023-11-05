@@ -9,7 +9,7 @@ import { DataGridFields } from "./field";
 import { TableFilterView } from "./filter";
 import { TableSortView } from "./sort";
 import { DataGridViewConfig } from "./view";
-import { DataGridControl } from "./control";
+import { DataGridTrigger } from "./trigger";
 import { BlockUrlConstant } from "../../../src/block/constant";
 import { PageLayoutType } from "../../../src/page/declare";
 import { lst } from "../../../i18n/store";
@@ -26,8 +26,8 @@ export class DataGridConfig extends EventsComponent {
             this.tableFilterView.onOpen(this.dataGrid);
         if (this.tableSortView)
             this.tableSortView.onOpen(this.dataGrid);
-        if (this.dataGridControl)
-            this.dataGridControl.onOpen(this.dataGrid);
+        if (this.dataGridTrigger)
+            this.dataGridTrigger.onOpen(this.dataGrid);
         if (mode == 'field' && this.tab) this.tab.onFocus(1)
         if (mode == 'filter' && this.tab) this.tab.onFocus(2)
         if (mode == 'sort' && this.tab) this.tab.onFocus(3)
@@ -38,7 +38,7 @@ export class DataGridConfig extends EventsComponent {
     dataGridFields: DataGridFields;
     tableFilterView: TableFilterView;
     tableSortView: TableSortView;
-    dataGridControl: DataGridControl;
+    dataGridTrigger: DataGridTrigger;
     tab: Tab;
     render() {
         if (this.dataGrid?.page?.pageLayout?.type != PageLayoutType.db)
@@ -57,7 +57,7 @@ export class DataGridConfig extends EventsComponent {
                         <TableSortView ref={e => this.tableSortView = e}></TableSortView>
                     </Tab.Page>
                     <Tab.Page item={lst('触发器')}>
-                        <DataGridControl ref={e => this.dataGridControl = e}></DataGridControl>
+                        <DataGridTrigger ref={e => this.dataGridTrigger = e}></DataGridTrigger>
                     </Tab.Page>
                 </Tab>
             </div>
@@ -89,7 +89,8 @@ export class DataGridConfig extends EventsComponent {
 
 
 export async function useDataGridConfig(pos: PopoverPosition, options?: { mode?: 'view' | 'field' | 'sort' | 'filter' | 'group', dataGrid: DataGridView }) {
-    let popover = await PopoverSingleton(DataGridConfig, { mask: true });
+   //mask: true 
+    let popover = await PopoverSingleton(DataGridConfig, { });
     let dataGridViewer = await popover.open(pos);
     dataGridViewer.onOpen(options.dataGrid, options.mode)
     return new Promise((resolve: (data: ResourceArguments) => void, reject) => {
