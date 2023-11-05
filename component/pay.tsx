@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 import { channel } from "../net/channel";
 import { EventsComponent } from "./lib/events.component";
-import { PopoverPosition } from "../extensions/popover/position";
-import { PopoverSingleton } from "../extensions/popover/popover";
+import { PopoverPosition } from "./popover/position";
+import { PopoverSingleton } from "./popover/popover";
 import React from "react";
 import { Avatar } from "./view/avator/face";
 import { Button } from "./view/button";

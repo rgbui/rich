@@ -1,8 +1,8 @@
 import React from "react";
 import { ReactNode } from "react";
 import { EventsComponent } from "../../component/lib/events.component";
-import { PopoverSingleton } from "../popover/popover";
-import { PopoverPosition } from "../popover/position";
+import { PopoverSingleton } from "../../component/popover/popover";
+import { PopoverPosition } from "../../component/popover/position";
 import { ShapesList, ShapeType } from "./shapes";
 
 class ShapeBox extends EventsComponent {

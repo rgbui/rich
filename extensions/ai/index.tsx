@@ -4,7 +4,7 @@ import React from "react";
 import { AiStartSvg, CheckSvg, ChevronDownSvg, CloseSvg, Edit1Svg, PicSvg, PublishSvg, RefreshSvg, TrashSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { Singleton } from "../../component/lib/Singleton";
-import { PopoverPosition } from "../popover/position";
+import { PopoverPosition } from "../../component/popover/position";
 import { Block } from "../../src/block";
 import { riseLayer } from "../../component/lib/zindex";
 import { channel } from "../../net/channel";

@@ -1,8 +1,8 @@
 import React, { CSSProperties } from "react";
 import { EventsComponent } from "../../component/lib/events.component";
 import { Block } from "../../src/block";
-import { Popover, PopoverSingleton } from "../popover/popover";
-import { PopoverPosition } from "../popover/position";
+import { Popover, PopoverSingleton } from "../../component/popover/popover";
+import { PopoverPosition } from "../../component/popover/position";
 import { Icon } from "../../component/view/icon";
 import { CardBrushSvg, CheckSvg, PlatteSvg } from "../../component/svgs";
 import { S } from "../../i18n/view";

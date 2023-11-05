@@ -1,6 +1,6 @@
 import React from "react";
 import { Tip } from "../../component/view/tooltip/tip";
-import { PopoverSingleton } from "../popover/popover";
+import { PopoverSingleton } from "../../component/popover/popover";
 import { EventsComponent } from "../../component/lib/events.component";
 import Link from "../../src/assert/svg/link.svg";
 import Upload from "../../src/assert/svg/upload.svg";
@@ -8,7 +8,7 @@ import Unsplash from "../../src/assert/svg/unsplash.svg";
 import Pexels from "../../src/assert/svg/pexels.svg";
 import { OutsideUrl } from "../link/outside";
 import { UploadView } from "../file/upload";
-import { PopoverPosition } from "../popover/position";
+import { PopoverPosition } from "../../component/popover/position";
 import { ResourceArguments } from "../icon/declare";
 import { GalleryType } from "./declare";
 import { ThirdGallery } from "./third.gallery";

@@ -1,6 +1,6 @@
 import React from "react";
 import { Point, Rect, RectUtility } from "../../src/common/vector/point";
-import { PopoverPosition } from "../popover/position";
+import { PopoverPosition } from "../../component/popover/position";
 import { KeyboardCode } from "../../src/common/keys";
 import { SearchListType } from "../../component/types";
 import lodash from "lodash";

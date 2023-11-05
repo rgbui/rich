@@ -12,7 +12,7 @@ import { useSelectMenuItem } from "../../component/view/menu";
 import { Singleton } from "../../component/lib/Singleton";
 import { MenuItem } from "../../component/view/menu/declare";
 import { BlockDirective } from "../../src/block/enum";
-import { PopoverPosition } from "../popover/position";
+import { PopoverPosition } from "../../component/popover/position";
 import { FixedViewScroll } from "../../src/common/scroll";
 import { blockStore } from "../block/store";
 import { AiStartSvg, BoldSvg, ChevronDownSvg, CodeSvg, CommentSvg, DeleteLineSvg, DoubleLinkSvg, EquationSvg, FontStyleSvg, ItalicSvg, LinkSvg, MagicSvg, SearchSvg, UnderlineSvg } from "../../component/svgs";

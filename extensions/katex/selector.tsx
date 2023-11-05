@@ -1,7 +1,7 @@
 import React from "react";
 import { EventsComponent } from "../../component/lib/events.component";
-import { PopoverPosition } from "../popover/position";
-import { PopoverSingleton } from "../popover/popover";
+import { PopoverPosition } from "../../component/popover/position";
+import { PopoverSingleton } from "../../component/popover/popover";
 import { Katex } from "../../component/view/katex";
 import { lst } from "../../i18n/store";
 import lodash from "lodash";

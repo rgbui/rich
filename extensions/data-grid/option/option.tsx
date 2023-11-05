@@ -1,8 +1,8 @@
 import lodash from "lodash";
 import React from "react";
 import { EventsComponent } from "../../../component/lib/events.component";
-import { PopoverSingleton } from "../../popover/popover";
-import { PopoverPosition } from "../../popover/position";
+import { PopoverSingleton } from "../../../component/popover/popover";
+import { PopoverPosition } from "../../../component/popover/position";
 import CloseTick from "../../../src/assert/svg/closeTick.svg";
 
 import DragHandle from "../../../src/assert/svg/dragHandle.svg";

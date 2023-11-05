@@ -8,8 +8,8 @@ import { Divider } from "../../component/view/grid";
 import { Icon } from "../../component/view/icon";
 import { Rect } from "../../src/common/vector/point";
 import { useOpenEmoji } from "../emoji";
-import { PopoverSingleton } from "../popover/popover";
-import { PopoverPosition } from "../popover/position";
+import { PopoverSingleton } from "../../component/popover/popover";
+import { PopoverPosition } from "../../component/popover/position";
 import { lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
 

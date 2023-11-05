@@ -1,6 +1,6 @@
 
 import React from "react";
-import { PopoverPosition } from "../../../extensions/popover/position";
+import { PopoverPosition } from "../../../component/popover/position";
 import { Matrix } from "../matrix";
 import { Polygon } from "./polygon";
 

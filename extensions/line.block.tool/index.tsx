@@ -4,7 +4,7 @@ import { Singleton } from "../../component/lib/Singleton";
 import { Block } from "../../src/block";
 import { FixedViewScroll } from "../../src/common/scroll";
 import { Point, Rect, RectUtility } from "../../src/common/vector/point";
-import { PopoverPosition } from "../popover/position";
+import { PopoverPosition } from "../../component/popover/position";
 import "./style.less";
 export class LineBlockTool extends EventsComponent {
     constructor(props) {

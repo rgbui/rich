@@ -6,8 +6,8 @@ import { Tab } from "../../component/view/tab";
 import { Tip } from "../../component/view/tooltip/tip";
 import { ResourceArguments } from "../icon/declare";
 import { OutsideUrl } from "../link/outside";
-import { PopoverSingleton } from "../popover/popover";
-import { PopoverPosition } from "../popover/position";
+import { PopoverSingleton } from "../../component/popover/popover";
+import { PopoverPosition } from "../../component/popover/position";
 import { UploadView } from "./upload";
 
 class ImageFilePicker extends EventsComponent {

@@ -4,8 +4,8 @@ import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItemType } from "../../../component/view/menu/declare";
 import { channel } from "../../../net/channel";
 import { Point } from "../../../src/common/vector/point";
-import { PopoverSingleton } from "../../popover/popover";
-import { PopoverPosition } from "../../popover/position";
+import { PopoverSingleton } from "../../../component/popover/popover";
+import { PopoverPosition } from "../../../component/popover/position";
 import { Divider } from "../../../component/view/grid";
 import {
     DetailSvg,

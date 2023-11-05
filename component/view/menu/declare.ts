@@ -1,5 +1,5 @@
 import { CSSProperties } from "react"
-import { PopoverPosition } from "../../../extensions/popover/position"
+import { PopoverPosition } from "../../popover/position"
 import { IconValueType } from "../icon"
 import { OverlayPlacement } from "../tooltip"
 import { MenuItemView } from "./item"

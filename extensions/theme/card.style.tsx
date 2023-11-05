@@ -9,8 +9,8 @@ import { useSelectMenuItem } from "../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { Rect } from "../../src/common/vector/point";
 import { GalleryBgs } from "../image/gellery";
-import { PopoverSingleton } from "../popover/popover";
-import { PopoverPosition } from "../popover/position";
+import { PopoverSingleton } from "../../component/popover/popover";
+import { PopoverPosition } from "../../component/popover/position";
 
 import { lst } from "../../i18n/store";
 import { S } from "../../i18n/view";

@@ -16,7 +16,7 @@ import { exportExcel } from "../../../src/import-export/excel/export";
 import { exportHtmlDb } from "../../../src/import-export/html/db.export";
 import { exportMarkdownDb } from "../../../src/import-export/markdown/db.export";
 import { util } from "../../../util/util";
-import { PopoverSingleton } from "../../popover/popover";
+import { PopoverSingleton } from "../../../component/popover/popover";
 import { lst } from "../../../i18n/store";
 import { S, Sp } from "../../../i18n/view";
 

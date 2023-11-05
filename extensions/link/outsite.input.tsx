@@ -5,8 +5,8 @@ import { Icon } from "../../component/view/icon";
 import { Tab } from "../../component/view/tab";
 import { Tip } from "../../component/view/tooltip/tip";
 import { ResourceArguments } from "../icon/declare";
-import { PopoverSingleton } from "../popover/popover";
-import { PopoverPosition } from "../popover/position";
+import { PopoverSingleton } from "../../component/popover/popover";
+import { PopoverPosition } from "../../component/popover/position";
 import { OutsideUrl } from "./outside";
 
 class OutSideUrlInput extends EventsComponent {

@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 import { EventsComponent } from "../../component/lib/events.component";
 import React from "react";
-import { PopoverPosition } from "../popover/position";
-import { PopoverSingleton } from "../popover/popover";
+import { PopoverPosition } from "../../component/popover/position";
+import { PopoverSingleton } from "../../component/popover/popover";
 import { channel } from "../../net/channel";
 import { SearchListType } from "../../component/types";
 import { PageLink } from "../link/declare";

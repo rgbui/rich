@@ -1,6 +1,6 @@
 import React, { CSSProperties } from "react";
 import { MenuPanel } from ".";
-import { PopoverPosition } from "../../../extensions/popover/position";
+import { PopoverPosition } from "../../popover/position";
 import { Point, Rect, RectUtility } from "../../../src/common/vector/point";
 import { popoverLayer } from "../../lib/zindex";
 import { MenuItem } from "./declare";

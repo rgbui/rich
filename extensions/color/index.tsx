@@ -1,7 +1,7 @@
 import React from "react";
 import { EventsComponent } from "../../component/lib/events.component";
-import { PopoverSingleton } from "../popover/popover";
-import { PopoverPosition } from "../popover/position";
+import { PopoverSingleton } from "../../component/popover/popover";
+import { PopoverPosition } from "../../component/popover/position";
 import { BackgroundColorList, FontColorList } from "./data";
 import "./style.less";
 import { S } from "../../i18n/view";

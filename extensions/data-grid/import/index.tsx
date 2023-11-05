@@ -3,8 +3,8 @@ import { ReactNode } from "react";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { Button } from "../../../component/view/button";
-import { PopoverSingleton } from "../../popover/popover";
-import { PopoverPosition } from "../../popover/position";
+import { PopoverSingleton } from "../../../component/popover/popover";
+import { PopoverPosition } from "../../../component/popover/position";
 import { S } from "../../../i18n/view";
 
 class TableImportView extends EventsComponent {

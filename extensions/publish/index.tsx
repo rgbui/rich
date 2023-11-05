@@ -20,8 +20,8 @@ import {
     getAtomPermissionOptions
 } from "../../src/page/permission";
 
-import { PopoverSingleton } from "../popover/popover";
-import { PopoverPosition } from "../popover/position";
+import { PopoverSingleton } from "../../component/popover/popover";
+import { PopoverPosition } from "../../component/popover/position";
 import { getPageText } from "../../src/page/declare";
 import { UserBox } from "../../component/view/avator/user";
 import { S } from "../../i18n/view";

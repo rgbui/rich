@@ -1,7 +1,7 @@
 
 import lodash from "lodash";
 import React from "react";
-import { PopoverSingleton } from "../../../extensions/popover/popover";
+import { PopoverSingleton } from "../../popover/popover";
 import { EventsComponent } from "../../lib/events.component";
 import { PlusSvg } from "../../svgs";
 import { Button } from "../button";

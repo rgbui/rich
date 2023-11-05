@@ -16,8 +16,8 @@ import { useFilePicker } from "../../file/file.picker";
 import { useImageFilePicker } from "../../file/image.picker";
 import { useVideoPicker } from "../../file/video.picker";
 import { ResourceArguments } from "../../icon/declare";
-import { PopoverSingleton } from "../../popover/popover";
-import { PopoverPosition } from "../../popover/position";
+import { PopoverSingleton } from "../../../component/popover/popover";
+import { PopoverPosition } from "../../../component/popover/position";
 import { util } from "../../../util/util";
 import { lst } from "../../../i18n/store";
 

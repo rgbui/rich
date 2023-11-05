@@ -1,7 +1,7 @@
 import React from "react";
 import { EventsComponent } from "../../../component/lib/events.component";
-import { PopoverSingleton } from "../../popover/popover";
-import { PopoverPosition } from "../../popover/position";
+import { PopoverSingleton } from "../../../component/popover/popover";
+import { PopoverPosition } from "../../../component/popover/position";
 import { getChartViews, getSchemaViewIcon, getSchemaViews } from "../../../blocks/data-grid/schema/util";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { MenuView } from "../../../component/view/menu/menu";

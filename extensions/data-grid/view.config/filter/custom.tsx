@@ -20,8 +20,8 @@ import { useDatePicker } from "../../../date";
 import { Icon } from "../../../../component/view/icon";
 import { Switch } from "../../../../component/view/switch";
 import { LinkWs } from "../../../../src/page/declare";
-import { PopoverSingleton } from "../../../popover/popover";
-import { PopoverPosition } from "../../../popover/position";
+import { PopoverSingleton } from "../../../../component/popover/popover";
+import { PopoverPosition } from "../../../../component/popover/position";
 import { EventsComponent } from "../../../../component/lib/events.component";
 
 export class CustomTableFilterView extends EventsComponent {

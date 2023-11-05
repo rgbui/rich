@@ -1,6 +1,6 @@
 import React from "react";
-import { PopoverSingleton } from "../../../extensions/popover/popover";
-import { PopoverPosition } from "../../../extensions/popover/position";
+import { PopoverSingleton } from "../../popover/popover";
+import { PopoverPosition } from "../../popover/position";
 import { channel } from "../../../net/channel";
 import { autoImageUrl } from "../../../net/element.type";
 import { UserBasic } from "../../../types/user";

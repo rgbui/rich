@@ -1,8 +1,8 @@
 import React from "react";
 import { EventsComponent } from "../../component/lib/events.component";
 import { channel } from "../../net/channel";
-import { PopoverSingleton } from "../popover/popover";
-import { PopoverPosition } from "../popover/position";
+import { PopoverSingleton } from "../../component/popover/popover";
+import { PopoverPosition } from "../../component/popover/position";
 import "./style.less";
 import { Textarea } from "../../component/view/input/textarea";
 import { Button } from "../../component/view/button";

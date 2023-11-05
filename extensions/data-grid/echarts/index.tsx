@@ -1,8 +1,8 @@
 import React from "react";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { ResourceArguments } from "../../icon/declare";
-import { PopoverSingleton } from "../../popover/popover";
-import { PopoverPosition } from "../../popover/position";
+import { PopoverSingleton } from "../../../component/popover/popover";
+import { PopoverPosition } from "../../../component/popover/position";
 import { DataGridChart } from "../../../blocks/data-grid/view/statistic/charts";
 import { lst } from "../../../i18n/store";
 import { TableFilterView } from "../view.config/filter";

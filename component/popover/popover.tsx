@@ -1,10 +1,10 @@
 import React, { CSSProperties } from "react";
 import ReactDOM from "react-dom";
 import { Point, Rect, RectUtility } from "../../src/common/vector/point";
-import { EventsComponent } from "../../component/lib/events.component";
+import { EventsComponent } from "../lib/events.component";
 import { PopoverPosition } from "./position";
 import './style.less';
-import { popoverLayer } from "../../component/lib/zindex";
+import { popoverLayer } from "../lib/zindex";
 export class Popover<T extends React.Component> extends EventsComponent<{
     component: { new(...args: any[]): T },
     shadow?: boolean,

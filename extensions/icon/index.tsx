@@ -10,8 +10,8 @@ import { ByteDanceIconView } from "../byte-dance.icons";
 import { OutsideUrl } from "../link/outside";
 import { Tab } from "../../component/view/tab";
 import { IconArguments } from "./declare";
-import { PopoverSingleton } from "../popover/popover";
-import { PopoverPosition } from "../popover/position";
+import { PopoverSingleton } from "../../component/popover/popover";
+import { PopoverPosition } from "../../component/popover/position";
 import './style.less';
 import {
     EmojiSvg,

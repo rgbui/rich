@@ -7,8 +7,8 @@ import Link from "../../src/assert/svg/link.svg";
 import Upload from "../../src/assert/svg/upload.svg";
 import { ResourceArguments } from "../icon/declare";
 
-import { PopoverPosition } from "../popover/position";
-import { PopoverSingleton } from "../popover/popover";
+import { PopoverPosition } from "../../component/popover/position";
+import { PopoverSingleton } from "../../component/popover/popover";
 import { Tab } from "../../component/view/tab";
 import { Icon } from "../../component/view/icon";
 

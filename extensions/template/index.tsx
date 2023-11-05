@@ -9,7 +9,7 @@ import { ToolTip } from "../../component/view/tooltip";
 import { getElementUrl, ElementType, autoImageUrl } from "../../net/element.type";
 import { PageTemplateTypeGroups } from "../../src/page/declare";
 import { ResourceArguments } from "../icon/declare";
-import { PopoverSingleton } from "../popover/popover";
+import { PopoverSingleton } from "../../component/popover/popover";
 import { CubesSvg, ChevronDownSvg, ChevronLeftSvg, CollectTableSvg, TopicSvg, DocCardsSvg } from "../../component/svgs";
 import { channel } from "../../net/channel";
 import { PageContentView } from "../page";

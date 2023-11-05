@@ -1,5 +1,5 @@
-import { PopoverPosition } from "../../popover/position";
-import { PopoverSingleton } from "../../popover/popover";
+import { PopoverPosition } from "../../../component/popover/position";
+import { PopoverSingleton } from "../../../component/popover/popover";
 import { FieldType } from "../../../blocks/data-grid/schema/type";
 import { Field, FieldConfig } from "../../../blocks/data-grid/schema/field";
 import React from "react";

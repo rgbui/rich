@@ -1,7 +1,7 @@
 import React from "react";
 import { EventsComponent } from "../../component/lib/events.component";
-import { PopoverSingleton } from "../popover/popover";
-import { PopoverPosition } from "../popover/position";
+import { PopoverSingleton } from "../../component/popover/popover";
+import { PopoverPosition } from "../../component/popover/position";
 import { MindSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { S } from "../../i18n/view";

@@ -1,6 +1,6 @@
 import React from "react";
 import { ResourceArguments } from "../../../extensions/icon/declare";
-import { PopoverSingleton } from "../../../extensions/popover/popover";
+import { PopoverSingleton } from "../../popover/popover";
 import { ChevronLeftSvg, ChevronRightSvg } from "../../svgs";
 import { Icon } from "../icon";
 import { getImageSize } from "../../file";

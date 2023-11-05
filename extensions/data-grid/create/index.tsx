@@ -1,8 +1,8 @@
 import React from "react";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { Input } from "../../../component/view/input";
-import { PopoverSingleton } from "../../popover/popover";
-import { PopoverPosition } from "../../popover/position";
+import { PopoverSingleton } from "../../../component/popover/popover";
+import { PopoverPosition } from "../../../component/popover/position";
 import { getSchemaViewIcon, getSchemaViews } from "../../../blocks/data-grid/schema/util";
 import { CollectTableSvg } from "../../../component/svgs";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";

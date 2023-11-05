@@ -1,6 +1,6 @@
 import React from "react";
-import { PopoverSingleton } from "../../../extensions/popover/popover";
-import { PopoverPosition } from "../../../extensions/popover/position";
+import { PopoverSingleton } from "../../popover/popover";
+import { PopoverPosition } from "../../popover/position";
 import { EventsComponent } from "../../lib/events.component";
 import { ChromePicker } from 'react-color';
 class ColorPicker extends EventsComponent {

@@ -3,8 +3,8 @@ import { EventsComponent } from "../../component/lib/events.component";
 import './style.less';
 import { EmojiCode } from "./store";
 import { EmojiView } from "./view";
-import { PopoverSingleton } from "../popover/popover";
-import { PopoverPosition } from "../popover/position";
+import { PopoverSingleton } from "../../component/popover/popover";
+import { PopoverPosition } from "../../component/popover/position";
 /**
  * https://www.zhangxinxu.com/wordpress/2020/03/css-emoji-opentype-svg-fonts/
  */

@@ -1,8 +1,8 @@
 import React from "react";
 import { Input } from "../../component/view/input";
 import { EventsComponent } from "../../component/lib/events.component";
-import { PopoverSingleton } from "../popover/popover";
-import { PopoverPosition } from "../popover/position";
+import { PopoverSingleton } from "../../component/popover/popover";
+import { PopoverPosition } from "../../component/popover/position";
 import { PageLink } from "./declare";
 import { GlobalLinkSvg, PlusSvg, TrashSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";

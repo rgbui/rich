@@ -1,6 +1,6 @@
 import React from "react";
 import { EventsComponent } from "../../component/lib/events.component";
-import { PopoverSingleton } from "../popover/popover";
+import { PopoverSingleton } from "../../component/popover/popover";
 import { Page } from "../../src/page";
 import { Button } from "../../component/view/button";
 import { SelectBox } from "../../component/view/select/box";

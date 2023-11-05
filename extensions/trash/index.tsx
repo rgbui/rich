@@ -1,7 +1,7 @@
 import React from "react";
-import { PopoverSingleton } from "../popover/popover";
+import { PopoverSingleton } from "../../component/popover/popover";
 import { EventsComponent } from "../../component/lib/events.component";
-import { PopoverPosition } from "../popover/position";
+import { PopoverPosition } from "../../component/popover/position";
 import { LinkPageItem, LinkWs, getPageIcon, getPageText } from "../../src/page/declare";
 import { SearchListType } from "../../component/types";
 import lodash from "lodash";
