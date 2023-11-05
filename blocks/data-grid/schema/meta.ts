@@ -28,6 +28,10 @@ export interface TableSchemaView {
      */
     disabledUserMultiple?: boolean,
     /**
+     * 是否允许匿名提交
+     */
+    allowAnonymous?: boolean,
+    /**
      * 是否为公开
      * net 互联网公开
      * nas 网络存储
@@ -129,7 +133,6 @@ export class TableSchema {
             FieldType.sort,
             FieldType.comment,
             FieldType.browse
-
         ].includes(g.type))
     }
     get allowSortFields() {
@@ -147,11 +150,11 @@ export class TableSchema {
             FieldType.rollup,
             FieldType.comment,
             FieldType.blog,
-            FieldType.emoji,
-            FieldType.like,
-            FieldType.love,
-            FieldType.approve,
-            FieldType.oppose
+            // FieldType.emoji,
+            // FieldType.like,
+            // FieldType.love,
+            // FieldType.approve,
+            // FieldType.oppose
         ].includes(g.type))
     }
     isType(fieldId: string, ...types: FieldType[]) {
@@ -163,18 +166,12 @@ export class TableSchema {
     }
     views: TableSchemaView[] = [];
     get recordViews() {
-        return this.views.findAll(g => [ BlockUrlConstant.RecordPageView].includes(g.url as any))
+        return this.views.findAll(g => [BlockUrlConstant.RecordPageView].includes(g.url as any))
     }
     get listViews() {
-        return this.views.findAll(g => ![ BlockUrlConstant.RecordPageView].includes(g.url as any))
+        return this.views.findAll(g => ![BlockUrlConstant.RecordPageView].includes(g.url as any))
     }
     defaultCollectFormId: string = '';
-    defaultEditFormId: string = '';
-    get defaultEditForm() {
-        var rv = this.defaultEditFormId ? this.views.find(g => g.id == this.defaultEditFormId) : this.views.find(g => g.url ==BlockUrlConstant.RecordPageView)
-        if (!rv) rv = this.views.find(g => g.url == BlockUrlConstant.RecordPageView)
-        return rv;
-    }
     get defaultAddForm() {
         var rv = this.defaultCollectFormId ? this.views.find(g => g.id == this.defaultCollectFormId) : this.views.find(g => g.url == BlockUrlConstant.RecordPageView)
         if (!rv) rv = this.views.find(g => g.url == BlockUrlConstant.RecordPageView)

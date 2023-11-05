@@ -93,7 +93,7 @@ export class Page$Cycle {
             ].some(s => s == this.pageLayout.type)) {
                 this.requireSelectLayout = false;
             }
-            if (this.pe && [ElementType.SchemaRecordView, ElementType.Schema, ElementType.SchemaData].includes(this.pe.type)) {
+            if (this.pe && [ElementType.SchemaRecordView, ElementType.SchemaRecordViewData, ElementType.Schema, ElementType.SchemaData].includes(this.pe.type)) {
                 this.requireSelectLayout = false;
                 await this.loadPageSchema();
             }
@@ -202,11 +202,11 @@ export class Page$Cycle {
         json.pageLayout = util.clone(this.pageLayout);
         json.matrix = this.matrix.getValues();
         json.nav = this.nav;
+        json.formType = this.formType;
         json.views = await this.views.asyncMap(async x => {
             return await x.get()
         })
         json.addedSubPages = this.addedSubPages.map(s => s);
-        json.isPageForm = this.isPageForm;
         json.locker = lodash.cloneDeep(this.locker);
         return json;
     }
@@ -321,7 +321,7 @@ export class Page$Cycle {
         if (this.pe.type == ElementType.SchemaData) {
             this.onPageSave();
             var newRow = await this.getSchemaRow()
-            if (this.isCanEdit && newRow) {
+            if (this.isCanEdit && newRow && Object.keys(newRow).length > 0) {
                 await this.schema.rowUpdate({ dataId: this.pe.id1, data: newRow })
             }
         }
@@ -852,6 +852,7 @@ export class Page$Cycle {
         });
     }
     formRowData: Record<string, any>;
+    formUserEmojis: Record<string, string[]> = {};
     formPreRow: Record<string, any>;
     formNextRow: Record<string, any>;
     async loadPageSchema(this: Page) {
@@ -859,9 +860,12 @@ export class Page$Cycle {
             this.schema = await TableSchema.loadTableSchema(this.pe.id, this.ws);
         }
         if (this.schema) {
-            if (this.pe.type == ElementType.Schema) {
+            if (this.pe.type == ElementType.Schema || this.pe.type == ElementType.SchemaView) {
                 if (!this.exists(g => g instanceof DataGridView)) {
-                    var view = this.schema.views.first();
+                    var view = this.pe.type == ElementType.Schema ? this.schema.listViews.first() : this.schema.listViews.find(g => g.id == this.pe.id1);
+                    if (!view) {
+                        view = this.schema.listViews.first();
+                    }
                     var dc = await BlockFactory.createBlock(view.url, this, {
                         schemaId: this.schema.id,
                         syncBlockId: view.id,
@@ -871,30 +875,16 @@ export class Page$Cycle {
             }
             else {
                 if (this.loadDefault == true) {
-                    var view = this.schema.views.find(c => c.id == this.pe.id1);
-                    if (view?.url == BlockUrlConstant.RecordPageView) {
-                        var cs: Record<string, any>[] = this.schema.allowFormFields.toArray(field => {
-                            var r = GetFieldFormBlockInfo(field);
-                            if (r) return Object.assign({
-                                fieldMode: 'detail'
-                            }, r);
-                        })
-                        cs.splice(0, 0, { url: BlockUrlConstant.Title })
-                        this.views = [];
-                        await this.loadViews({ views: [{ url: BlockUrlConstant.View, blocks: { childs: cs } }] })
-                    }
-                    else {
-                        var cs: Record<string, any>[] = this.schema.allowFormFields.toArray(field => {
-                            if (field?.type == FieldType.title && this.isSchemaRecordViewTemplate) return undefined;
-                            var r = GetFieldFormBlockInfo(field);
-                            if (r) return Object.assign({
-                                fieldMode: 'detail'
-                            }, r);
-                        })
-                        cs.splice(0, 0, { url: BlockUrlConstant.Title })
-                        this.views = [];
-                        await this.loadViews({ views: [{ url: BlockUrlConstant.View, blocks: { childs: cs } }] })
-                    }
+                    var cs: Record<string, any>[] = this.schema.allowFormFields.toArray(field => {
+                        if (field?.type == FieldType.title && this.isSchemaRecordViewTemplate) return undefined;
+                        var r = GetFieldFormBlockInfo(field);
+                        if (r) return Object.assign({
+                            fieldMode: 'detail'
+                        }, r);
+                    })
+                    cs.splice(0, 0, { url: BlockUrlConstant.Title })
+                    this.views = [];
+                    await this.loadViews({ views: [{ url: BlockUrlConstant.View, blocks: { childs: cs } }] })
                     this.loadDefault = false;
                 }
                 if (!this.isSchemaRecordViewTemplate) {
@@ -903,8 +893,8 @@ export class Page$Cycle {
                         lodash.remove(r.parentBlocks, g => g == r);
                     }
                 }
-                if (this.pe.type == ElementType.SchemaData) {
-                    var rg = await this.schema.rowGetPrevAndNext(this.pe.id1, this.ws);
+                if (this.pe.type == ElementType.SchemaData || this.pe.type == ElementType.SchemaRecordViewData) {
+                    var rg = await this.schema.rowGetPrevAndNext(this.pe.type == ElementType.SchemaRecordViewData ? this.pe.id2 : this.pe.id1, this.ws);
                     if (rg) {
                         this.formRowData = lodash.cloneDeep(rg.data.data);
                         this.formPreRow = lodash.cloneDeep(rg.data.prev);
@@ -931,6 +921,22 @@ export class Page$Cycle {
                         }
                     }
                 })
+            }
+            var fs = this.schema.fields.findAll(g => [FieldType.like, FieldType.oppose, FieldType.love].includes(g.type))
+            var es = fs.map(f => {
+                return getElementUrl(ElementType.SchemaFieldNameData, this.schema.id, f.name, this.formRowData.id)
+            })
+            var rgc = await channel.get('/user/interactives',
+                {
+
+                    schemaId: this.schema?.id,
+                    ids: [this.formRowData.id],
+                    ws: this.ws,
+                    es: es
+                });
+            if (rgc.ok) {
+                this.formUserEmojis = rgc.data.list;
+                this.forceUpdate();
             }
         }
     }
@@ -964,9 +970,10 @@ export class Page$Cycle {
                 var b = GetFieldFormBlockInfo(field);
                 if (b) {
                     var view = this.views[0];
+                    (b as any).fieldType = this.formType;
                     var newBlock = await this.createBlock(b.url, b, view, view.childs.length);
                     if (this.formRowData)
-                        newBlock.updateProps({ value: field.getValue(this.formRowData) })
+                        await newBlock.updateProps({ value: field.getValue(this.formRowData) })
                 }
             }
             else {

@@ -3,7 +3,7 @@ import React from "react";
 import { Page } from "..";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
-import { BlockDirective } from "../../block/enum";
+import { BlockDirective, BlockRenderRange } from "../../block/enum";
 import { Point, Rect } from "../../common/vector/point";
 import { PageLayoutType, PageTemplateTypeGroups } from "../declare";
 import {
@@ -67,8 +67,8 @@ import { BlockButton } from "../../../blocks/form/button";
 import { Block } from "../../block";
 import { RobotInfo } from "../../../types/user";
 import { usePageTheme } from "../../../extensions/theme";
-
 export class PageContextmenu {
+
     async onGetContextMenus(this: Page) {
         if (this.isBoard) return this.onGetBoardContextMenus();
         var items: MenuItem<BlockDirective | string>[] = [];
@@ -150,7 +150,6 @@ export class PageContextmenu {
                         { name: 'refPages', text: lst("引用"), visible: [ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type) ? false : true, icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.RefLinks) },
                     ]
                 },
-                { type: MenuItemType.divide },
                 {
                     icon: AiStartSvg,
                     text: lst("AI语料库"),
@@ -168,20 +167,20 @@ export class PageContextmenu {
                         }
                     })
                 },
-                { name: 'favourite', visible: false, icon: 'favorite:sy', text: lst('添加至收藏'), disabled: true },
-                { name: 'history', icon: VersionHistorySvg, text: lst('页面历史') },
-                { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? lst("除消编辑保护") : lst("编辑保护"), icon: this.locker?.lock ? LockSvg : UnlockSvg },
-                { name: 'undo', text: lst('撤消'), icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
-                { name: 'redo', text: lst('重做'), icon: RedoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
                 { type: MenuItemType.divide },
+                { name: 'copylink', icon: LinkSvg, text: lst('复制链接') },
+                { name: 'favourite', visible: false, icon: 'favorite:sy', text: lst('添加至收藏'), disabled: true },
+                { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? lst("除消编辑保护") : lst("编辑保护"), icon: this.locker?.lock ? LockSvg : UnlockSvg },
                 { name: 'export', iconSize: 16, text: lst('导出'), icon: FileSvg },
                 ...(window.shyConfig.isDev || window.shyConfig.isBeta || this.ws?.sn == 19 ? [
                     { name: 'requireTemplate', icon: TemplatesSvg, text: lst('申请模板') },
                 ] : []),
                 { name: 'move', text: lst('移动'), icon: MoveToSvg, visible: false },
                 { type: MenuItemType.divide },
-                { name: 'delete', icon: TrashSvg, text: lst('删除') },
-                { name: 'copylink', icon: LinkSvg, text: lst('复制链接') },
+                { name: 'undo', text: lst('撤消'), icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
+                { name: 'redo', text: lst('重做'), icon: RedoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
+                { name: 'history', icon: VersionHistorySvg, text: lst('页面历史') },
+                { name: 'delete', icon: TrashSvg, text: lst('删除') }
             ];
         }
         else if (this.pageLayout.type == PageLayoutType.db) {
@@ -415,26 +414,61 @@ export class PageContextmenu {
     }
     async onOpenFieldProperty(this: Page, event: React.MouseEvent) {
         var self = this;
+        var view = this.schema.recordViews.find(g => g.id == this.pe.id1)
         var r = await useSelectMenuItem(
             { roundArea: Rect.fromEvent(event) },
             [
                 {
-                    icon: { name: 'bytedance-icon', code: 'form-one' },
-                    name: 'form',
-                    text: lst('表单'),
+                    name: 'viewDisplay',
+                    type: MenuItemType.buttonOptions,
+                    value: this.formType,
+                    options: [
+                        {
+                            text: lst('默认'),
+                            value: 'doc',
+                            icon: { name: 'bytedance-icon', code: 'editor' },
+                            overlay: lst('数据记录浏览编辑')
+                        },
+                        {
+                            text: lst('表单'),
+                            value: 'doc-add',
+                            icon: { name: 'bytedance-icon', code: 'doc-add' },
+                            overlay: lst('收集数据的数据表单')
+                        },
+                        {
+                            text: lst('清单'),
+                            value: 'doc-detail',
+                            icon: { name: 'bytedance-icon', code: 'doc-detail' },
+                            overlay: lst('只读的数据记录清单')
+                        }
+                    ]
+                },
+                { type: MenuItemType.divide },
+                {
+                    icon: { name: 'bytedance-icon', code: 'one-key' },
+                    name: 'disabledUserMultiple',
+                    text: lst('仅允许提交一次'),
                     type: MenuItemType.switch,
-                    checked: this.isPageForm,
+                    checked: view?.disabledUserMultiple,
+                    visible: this.isSchemaRecordViewTemplate ? true : false
+                },
+                {
+                    icon: { name: 'bytedance-icon', code: 'personal-privacy' },
+                    name: 'allowAnonymous',
+                    text: lst('允许匿名提交'),
+                    type: MenuItemType.switch,
+                    checked: view?.allowAnonymous,
                     visible: this.isSchemaRecordViewTemplate ? true : false
                 },
                 {
                     name: 'editForm',
                     icon: { name: 'bytedance-icon', code: 'arrow-right-up' },
                     text: lst('编辑模板'),
-                    visible: this.isSchemaRecordViewTemplate || this.pe.type == ElementType.SchemaData ? false : true
+                    visible: this.pe.type == ElementType.SchemaRecordViewData || this.pe.type == ElementType.SchemaRecordView && !this.isSchemaRecordViewTemplate ? true : false
                 },
                 {
                     type: MenuItemType.gap,
-                    visible: this.isSchemaRecordViewTemplate ? true : false
+                    visible: true
                 },
                 { text: lst('显示字段'), type: MenuItemType.text },
                 ...this.schema.allowFormFields.findAll(g => (this.pe.type == ElementType.SchemaRecordView && !this.isSchemaRecordViewTemplate || this.pe.type == ElementType.SchemaData) && g.type == FieldType.title ? false : true).toArray(uf => {
@@ -449,6 +483,13 @@ export class PageContextmenu {
                 }),
                 { type: MenuItemType.divide },
                 {
+                    name: 'hidePropTitle',
+                    type: MenuItemType.switch,
+                    checked: this.findAll(g => g instanceof OriginFormField).every(c => (c as OriginFormField).hidePropTitle !== true),
+                    icon: { name: 'bytedance-icon', code: 'tag-one' },
+                    text: lst('字段属性名')
+                },
+                {
                     name: 'hideAllFields',
                     icon: EyeHideSvg,
                     text: lst('隐藏所有字段')
@@ -456,30 +497,16 @@ export class PageContextmenu {
             ],
             {
                 input: async (newItem) => {
-                    if (newItem.name == 'form') {
-                        await self.onAction('onToggleForm', async () => {
-                            await self.updateProps({ isPageForm: newItem.checked })
-                            if (newItem.checked) {
-                                var title = self.find(g => g.url == BlockUrlConstant.Title) as Title;
-                                await title.updateProps({ align: 'center' })
-                                var button = self.find(g => g.url == BlockUrlConstant.Button && (g as BlockButton).isFormSubmit() == true) as BlockButton;
-                                if (!button) {
-                                    var last: Block = self.findReverse(g => (g instanceof OriginFormField));
-                                    if (!last) {
-                                        last = self.views[0].childs.last();
-                                    }
-                                    if (last) {
-                                        await last.visibleDownCreateBlock(BlockUrlConstant.Button, {
-                                            align: 'center',
-                                            buttonText: lst('提交') + this.getPageDataInfo()?.text,
-                                            flow: {
-                                                commands: [{ url: '/form/submit' }]
-                                            }
-                                        });
-                                    }
-                                }
+                    if (['disabledUserMultiple', 'allowAnonymous'].includes(newItem.name)) {
+                        self.onChangeSchemaView(view.id, { [newItem.name]: newItem.checked })
+                    }
+                    else if (newItem.name == 'hidePropTitle') {
+                        self.onAction('hideAllFields', async () => {
+                            var fs = self.findAll(c => (c instanceof OriginFormField));
+                            var isHide = (fs[0] as OriginFormField)?.hidePropTitle ? false : true
+                            for (let f of fs) {
+                                await f.updateProps({ hidePropTitle: isHide }, BlockRenderRange.self)
                             }
-                            self.addPageUpdate();
                         })
                     }
                     else self.onToggleFieldView(this.schema.allowFormFields.find(g => g.id == newItem.name), newItem.checked)
@@ -491,13 +518,61 @@ export class PageContextmenu {
                 self.onFormOpen('template');
             }
             else if (r.item.name == 'hideAllFields') {
-                var fs = self.findAll(c => (c instanceof OriginFormField));
                 self.onAction('hideAllFields', async () => {
+                    var fs = self.findAll(c => (c instanceof OriginFormField));
                     for (let f of fs) {
                         await f.delete()
                     }
                 })
             }
+            else if (r.item.name == 'hidePropTitle') {
+                self.onAction('hideAllFields', async () => {
+                    var fs = self.findAll(c => (c instanceof OriginFormField));
+                    for (let f of fs) {
+                        await f.updateProps({ hidePropTitle: true }, BlockRenderRange.self)
+                    }
+                })
+            }
+            else if (r.item.name == 'viewDisplay') {
+                await this.onTurnForm(r.item.value);
+            }
+        }
+    }
+    async onTurnForm(this: Page, value: 'doc' | 'doc-add' | 'doc-detail') {
+        var self = this;
+        await this.onAction('onTurnForm', async () => {
+            var fs = this.findAll(g => g instanceof OriginFormField);
+            for (let i = 0; i < fs.length; i++) {
+                var off = fs[i];
+                await off.updateProps({ fieldType: value }, BlockRenderRange.self);
+            }
+            if (value == 'doc-add') {
+                var title = self.find(g => g.url == BlockUrlConstant.Title) as Title;
+                await title.updateProps({ align: 'center' })
+                var button = self.find(g => g.url == BlockUrlConstant.Button && (g as BlockButton).isFormSubmit() == true) as BlockButton;
+                if (!button) {
+                    var last: Block = self.findReverse(g => (g instanceof OriginFormField));
+                    if (!last) {
+                        last = self.views[0].childs.last();
+                    }
+                    if (last) {
+                        await last.visibleDownCreateBlock(BlockUrlConstant.Button, {
+                            align: 'center',
+                            buttonText: lst('提交') + this.getPageDataInfo()?.text,
+                            flow: {
+                                commands: [{ url: '/form/submit' }]
+                            }
+                        });
+                    }
+                }
+            }
+            await this.updateProps({ formType: value })
+        })
+    }
+    async onChangeSchemaView(this: Page, viewId: string, props) {
+        var view = this.schema.views.find(g => g.id == viewId);
+        if (view) {
+            this.schema.onSchemaOperate([{ name: 'updateSchemaView', id: view.id, data: props }])
         }
     }
     async onToggleFieldView(this: Page, field: Field, checked: boolean) {

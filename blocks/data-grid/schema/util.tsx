@@ -8,15 +8,12 @@ import {
     CollectionListSvg,
     CollectTableSvg,
     CommentSvg,
-    DocAddSvg,
-    DocEditSvg,
     EmojiSvg,
     EyeSvg,
     FlagSvg,
     LikeSvg,
     LoveSvg,
     OpposeSvg,
-    OrderSvg,
     PicSvg,
     ReportSvg,
     RowNoSvg,
@@ -42,7 +39,6 @@ import {
     WordSvg
 } from "../../../component/svgs";
 import { MenuItemType } from "../../../component/view/menu/declare";
-import { BlockUrlConstant } from "../../../src/block/constant";
 import { TableSchema } from "./meta";
 import { Field } from "./field";
 import dayjs from "dayjs";
@@ -146,7 +142,7 @@ export function getSchemaViewIcon(url: string): IconValueType {
         case '/data-grid/charts':
         case '/data-grid/statistic/value':
             return { name: 'bytedance-icon', code: 'chart-pie-one' }
-           
+
     }
 }
 export function getChartViews() {
@@ -322,4 +318,39 @@ return ${field.config.formula.jsCode}
         console.error(ex);
         return '';
     }
+}
+
+export function getFieldFilterUrl(field: Field) {
+    var url: string = '/field/filter/null';
+    if ([FieldType.bool].includes(field.type)) {
+        url = '/field/filter/check';
+    }
+    else if ([FieldType.image, FieldType.video, FieldType.audio, FieldType.file].includes(field.type)) {
+        url = '/field/filter/null';
+    }
+    else if ([FieldType.createDate, FieldType.modifyDate, FieldType.date].includes(field.type)) {
+        url = '/field/filter/date';
+    }
+    else if ([FieldType.creater, FieldType.modifyer, FieldType.user].includes(field.type)) {
+        url = '/field/filter/user';
+    }
+    else if ([FieldType.option, FieldType.options].includes(field.type)) {
+        url = '/field/filter/option';
+    }
+    else if ([FieldType.relation].includes(field.type)) {
+        url = '/field/filter/relation';
+    }
+    else if ([FieldType.number].includes(field.type)) {
+        url = '/field/filter/number';
+    }
+    else if ([
+        FieldType.title,
+        FieldType.text,
+        FieldType.email,
+        FieldType.like,
+        FieldType.phone
+    ].includes(field.type)) {
+        url = '/field/filter/search';
+    }
+    return url;
 }

@@ -27,6 +27,7 @@ import { PageBar } from "./bar";
 import { useAITool } from "../../../extensions/ai";
 import { lst } from "../../../i18n/store";
 import { S } from "../../../i18n/view";
+import { util } from "../../../util/util";
 
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
@@ -90,6 +91,7 @@ export class PageView extends Component<{ page: Page }>{
             if (!isMove) {
                 switch (type) {
                     case 'pageItem':
+                    case 'createBlock':
                         handle.isDown = true;
                         handle.isDrag = true;
                         break;
@@ -105,7 +107,7 @@ export class PageView extends Component<{ page: Page }>{
                 switch (type) {
                     case 'pageItem':
                         if (handle.dropBlock) {
-                            var ds = Array.isArray(data) ? data : [data];
+                            var ds = util.covertToArray(data);
                             await self.page.onBatchDragCreateBlocks(ds.map(d => {
                                 return {
                                     url: '/link',
@@ -115,6 +117,13 @@ export class PageView extends Component<{ page: Page }>{
                                     text: d.text
                                 }
                             }), handle.dropBlock, handle.dropDirection)
+                            handle.onDropEnd();
+                        }
+                        break;
+                    case 'createBlock':
+                        if (handle.dropBlock) {
+                            var ds = util.covertToArray(data);
+                            await self.page.onBatchDragCreateBlocks(ds, handle.dropBlock, handle.dropDirection)
                             handle.onDropEnd();
                         }
                         break;
@@ -286,7 +295,7 @@ export class PageView extends Component<{ page: Page }>{
         await this.page.onAction(ActionDirective.AutomaticHandle, async () => {
             var isForceUpdate: boolean = false;
             if (this.page.pageLayout?.type == PageLayoutType.doc && this.page.requireSelectLayout == false) {
-              if (this.page.autoRefSubPages == true && this.page.pageInfo) {
+                if (this.page.autoRefSubPages == true && this.page.pageInfo) {
                     var oldSubPages = this.page.addedSubPages.map(c => c)
                     var items = await this.page.pageInfo.getSubItems();
                     this.page.addedSubPages = items.map(it => it.id);
