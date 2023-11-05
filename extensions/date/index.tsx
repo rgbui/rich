@@ -15,6 +15,7 @@ import { PopoverSingleton } from "../popover/popover";
 import { Divider } from "../../component/view/grid";
 import { lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
+import { TrashSvg } from "../../component/svgs";
 dayjs.extend(customParseFormat);
 export class DatePicker extends EventsComponent {
     date: Date = new Date();
@@ -48,7 +49,7 @@ export class DatePicker extends EventsComponent {
             }
             i += 1;
         }
-        var weeks: string[] = [lst('一'), lst('二'), lst('三'), lst('四'),lst('五') , lst('六'), lst('日')];
+        var weeks: string[] = [lst('一'), lst('二'), lst('三'), lst('四'), lst('五'), lst('六'), lst('日')];
         return <div className='shy-date-picker-days'>
             <div className='shy-date-picker-days-week'>
                 {weeks.map(we => {
@@ -135,7 +136,7 @@ export class DatePicker extends EventsComponent {
         var v = dayjs('2008/09/01 ' + value, "YYYY/MM/DD HH:mm");
         this.error = '';
         if (!v.isValid() || (v.hour() < 0 || v.hour() > 23 || v.minute() < 0 || v.minute() > 59)) {
-            this.error =lst('解析日期错误') ;
+            this.error = lst('解析日期错误');
             this.forceUpdate();
         }
         else {
@@ -177,8 +178,9 @@ export class DatePicker extends EventsComponent {
             </div>
             {this.renderDays()}
             <Divider></Divider>
-            <div className="shy-date-picker-clear" onClick={e => this.onClear()}>
-                <S>清理</S>
+            <div className="h-30 item-hover padding-w-10 gap-b-4 gap-w-5 cursor flex text-1 round" onClick={e => this.onClear()}>
+                <Icon size={16} icon={TrashSvg}></Icon>
+                <span className="gap-l-3"><S>清理</S></span>
             </div>
         </div>
     }
