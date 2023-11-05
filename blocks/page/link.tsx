@@ -7,14 +7,16 @@ import { BlockDisplay } from "../../src/block/enum";
 import { prop, url, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
 import { SolidArea } from "../../src/block/view/appear";
-import "./style.less";
 import lodash from "lodash";
 import { LinkPageItem, getPageIcon, getPageText } from "../../src/page/declare";
+import "./style.less";
 
 @url('/link')
 export class Link extends Block {
     @prop()
     pageId: string;
+    @prop()
+    refBlockId: string;
     display = BlockDisplay.block;
     pageInfo: LinkPageItem
     @prop()
@@ -65,7 +67,7 @@ export class LinkView extends BlockView<Link>{
     renderView() {
         return <div style={this.block.visibleStyle}><div className='sy-block-link'>
             {this.block.pageInfo &&
-                <a style={this.block.contentStyle} href={this.block.pageInfo.url} onClick={e => this.block.openPage(e)}>
+                <a style={this.block.contentStyle} href={this.block.pageInfo.url + (this.block.refBlockId ? "#" + this.block.refBlockId : "")} onClick={e => this.block.openPage(e)}>
                     <SolidArea block={this.block} prop='text'>
                         <div className="flex">
                             <i className="flex-fixed text flex-inline flex-center size-24 gap-r-5"><Icon size={20} icon={getPageIcon(this.block.pageInfo)}></Icon></i>
