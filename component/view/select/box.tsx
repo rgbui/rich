@@ -19,7 +19,7 @@ export class SelectBox<T = any> extends React.Component<{
     onChange?: (value: any, item?: MenuItem<string>) => void,
     style?: CSSProperties,
     dropHeight?: number,
-    dropAlign?: 'left' | 'right',
+    dropAlign?: 'left' | 'right' | 'full',
     border?: boolean,
     dropWidth?: number,
     small?: boolean,
@@ -29,6 +29,7 @@ export class SelectBox<T = any> extends React.Component<{
     textAlign?: 'left' | 'center' | 'right',
     checkChange?: (value: any, item?: MenuItem<string>) => Promise<boolean>
 }>{
+    el: HTMLElement;
     render() {
         var self = this;
         async function mousedown(event: React.MouseEvent) {
@@ -48,11 +49,10 @@ export class SelectBox<T = any> extends React.Component<{
             }
             var rect = Rect.fromEle(event.currentTarget as HTMLElement)
             var r = await useSelectMenuItem(
-                { roundArea: rect, align: self.props.dropAlign == 'left' ? 'start' : 'end' },
+                { roundArea: rect, align: self.props.dropAlign == 'left' || self.props.dropAlign == 'full' ? 'start' : 'end' },
                 ms,
                 {
-
-                    width: self.props.dropWidth || 160,
+                    width: self.props.dropAlign == 'full' ? rect.width : (self.props.dropWidth || 160),
                     nickName: 'selectBox'
                 });
             if (r) {
@@ -88,7 +88,7 @@ export class SelectBox<T = any> extends React.Component<{
         var style = this.props.style || {};
         if (this.props.inline) style.display = 'inline-flex';
         style.boxSizing = 'border-box';
-        return <div style={style}
+        return <div ref={e => { this.el = e; }} style={style}
             className={classList.join(" ")}
             onMouseDown={e => mousedown(e)}>
             {this.props.children && <>{this.props.children}<Icon className={'gap-l-3'} size={14} icon={ChevronDownSvg}></Icon></>}
