@@ -27,10 +27,10 @@ export function SpinBox(props: {
     mask?: boolean
 }) {
     var ov = props.overlay;
-    if (!ov) ov = getCircle();
+    if (!ov) ov = getCircle(24);
     return <div className="relative">
         {props.children}
-        {props.mask && <div className="pos-full" style={{ background: 'rgba(0,0,0,.1)', opacity: .4 }}></div>}
+        {props.mask && props.spin && <div className="pos-full" style={{ background: 'rgba(0,0,0,.1)', opacity: .4 }}></div>}
         {props.spin && <div className="pos-center"><div className="shy-spin-circle">{ov}</div></div>}
     </div>
 }
