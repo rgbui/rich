@@ -1,8 +1,8 @@
 import React from "react";
-import { useUserComments } from ".";
+import { useUserComments } from "./send";
 import { CopyText } from "../../component/copy";
 import { ShyAlert } from "../../component/lib/alert";
-import { TrashSvg, ReportSvg, DuplicateSvg, DotsSvg, LikeSvg, OpposeSvg, EmojiSvg } from "../../component/svgs";
+import { TrashSvg, DuplicateSvg, DotsSvg, LikeSvg, EmojiSvg, CommentSvg } from "../../component/svgs";
 import { Avatar } from "../../component/view/avator/face";
 import { UserBox } from "../../component/view/avator/user";
 import { Button } from "../../component/view/button";
@@ -22,12 +22,14 @@ import { PopoverPosition } from "../popover/position";
 import { Page } from "../../src/page";
 import { lst } from "../../i18n/store";
 import { S, Sp } from "../../i18n/view";
+import { useUserCard } from "../../component/view/avator/card";
 
 export class CommentListView extends React.Component<{
     page: Page,
     userid: string;
     elementUrl: string;
     sort?: 'default' | 'date',
+    display?: 'simple' | 'full',
     onChange?: (props: Record<string, any>) => void
 }>{
     list: Record<string, any>[] = [];
@@ -56,6 +58,7 @@ export class CommentListView extends React.Component<{
         });
         if (r.ok) {
             l.like.count = r.data.count;
+            l.like.exists = r.data.exists;
             this.forceUpdate()
         }
     }
@@ -83,19 +86,30 @@ export class CommentListView extends React.Component<{
             if (r.ok) {
                 if (typeof l.replyCount != 'number') l.replyCount = 0;
                 l.replyCount += 1;
+                if (typeof l.replys == 'undefined') l.replys = {
+                    page: 1,
+                    size: 20,
+                    total: 0,
+                    list: []
+                }
+                l.replys?.list.push(r.data.data);
+                l.replys.total += 1;
                 await this.onExpends(l);
             }
         }
     }
     async onProperty(l, event: React.MouseEvent) {
         if (this.checkSign() == false) return;
+        var el = event.currentTarget as HTMLElement;
+        el.classList.remove('visible');
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, [
             { name: 'del', visible: this.userid == l.creater, text: lst('删除'), icon: TrashSvg },
             // { name: 'unlike', text: '踩评论', icon: OpposeSvg },
             { type: MenuItemType.divide },
-            { name: 'report', disabled: true, text: lst('举报'), icon: ReportSvg },
+            { name: 'report', disabled: true, text: lst('举报'), icon: { name: 'bytedance-icon', code: 'bill' } },
             { name: 'copy', text: lst('复制'), icon: DuplicateSvg },
         ]);
+        el.classList.add('visible')
         if (r?.item) {
             if (r.item.name == 'del') {
                 await channel.del('/ws/comment/del', { id: l.id });
@@ -154,6 +168,11 @@ export class CommentListView extends React.Component<{
         }
     }
     async onExpends(l) {
+        if (l.replys) {
+            l.spread = l.spread ? false : true;
+            this.forceUpdate();
+            return;
+        }
         var r = await channel.get('/ws/comment/list', {
             elementUrl: this.elementUrl,
             parentId: l.id,
@@ -164,6 +183,7 @@ export class CommentListView extends React.Component<{
         });
         if (r?.ok) {
             l.replys = r.data;
+            l.spread = true;
             this.forceUpdate();
         }
     }
@@ -206,37 +226,78 @@ export class CommentListView extends React.Component<{
     }
     textarea: HTMLTextAreaElement;
     spread: boolean = false;
+    onMentionUser(event: React.MouseEvent) {
+        var el = event.target as HTMLElement;
+        var u = el.closest('[data-mention-userid]') as HTMLLinkElement;
+        if (u) {
+            var mentionUserid = u.getAttribute('data-mention-userid');
+            if (mentionUserid) {
+                event.stopPropagation();
+                useUserCard({ roundArea: Rect.fromEle(u) }, { userid: mentionUserid });
+            }
+        }
+    }
     renderComments(comments, deep: number = 0) {
-        return comments.map(l => {
+        return <div onMouseDown={e => this.onMentionUser(e)}>{comments.map(l => {
             return <div key={l.id} className={"flex-top gap-b-15"}>
                 <UserBox userid={l.creater}>{(user) => <>
-                    <div className="flex-fixed"> <Avatar className="flex-fixed" size={deep > 0 ? 24 : 32} user={user}></Avatar></div>
-                    <div className={"flex-auto gap-l-10  " + (deep > 0 ? "" : " padding-b-10 border-bottom")}>
+                    <div className="flex-fixed"><Avatar className="flex-fixed" size={28} user={user}></Avatar></div>
+                    <div className={"flex-auto gap-l-10  " + (deep > 0 ? "border-top-light" : " padding-b-10 border-bottom-light")}>
                         <div className="visible-hover">
                             <div className="flex"><span className="flex-auto f-14 bold" >{user.name}</span>
-                                <span onMouseDown={e => this.onProperty(l, e)} className="visible size-24 flex-fixed flex-center flex-line item-hover cursor round text-1"><Icon size={18} icon={DotsSvg}></Icon></span></div>
-                            <div className="text">{l.text}</div>
+                                <span onMouseDown={e => this.onProperty(l, e)} className="visible size-20 flex-fixed flex-center flex-line item-hover cursor round text-1"><Icon size={18} icon={DotsSvg}></Icon></span></div>
+                            <div className="text" dangerouslySetInnerHTML={{ __html: l.text }}></div>
                             <div className="flex">
                                 <div className="flex-auto flex flex-inline">
-                                    <span className="f-12 remark  gap-r-10 ">{util.showTime(l.createDate)}</span>
-                                    <span className="h-24 padding-w-5 gap-r-10 item-hover flex-center round cursor remark f-12" onClick={e => this.likeComment(l)}><Icon size={16} icon={LikeSvg}></Icon>{l.like?.count || ""}</span>
-                                    <span className="h-24 padding-w-5  gap-r-10 item-hover flex-center round cursor remark f-12" onClick={e => this.unlikeComment(l)}><Icon size={16} icon={OpposeSvg}></Icon>{l.unlike?.count || ""}</span>
-                                    <span className="h-24 gap-r-10 padding-w-5 item-hover flex-center round cursor remark f-12" onClick={e => this.onReply(l, user, e)}>
-                                        {/* <Icon size={16} icon={CommentSvg}></Icon> */}
-                                        <S>回复</S></span>
+                                    <span className="flex-fixed f-12 remark  gap-r-10 ">{util.showTime(l.createDate)}</span>
                                 </div>
                                 <div className="flex-fixed flex-end">
+                                    <span className={"h-24 padding-w-5 gap-r-10 flex-center round cursor remark f-12 " + (l.like?.exists ? "fill-p" : "")} onClick={e => this.likeComment(l)}><Icon size={16} icon={LikeSvg}></Icon><span className="gap-l-3">{l.like?.count || ""}</span></span>
+                                    <span className="h-24 padding-w-5 flex-center round cursor remark f-12" onClick={e => this.onReply(l, user, e)}><Icon size={16} icon={CommentSvg}></Icon><span className="gap-l-3">{l.replyCount || ""}</span></span>
                                 </div>
                             </div>
                         </div>
-                        {l.replyCount > 0 && !l.replys && <div className="flex gap-t-10">
-                            <span className="link cursor f-12" onMouseDown={e => this.onExpends(l)}><Sp text={'展开回复{count}条'} data={{ count: l.replyCount }}>展开回复{l.replyCount}条</Sp></span>
+                        {l.replyCount > 0 && <div className="gap-t-10 flex" onMouseDown={e => this.onExpends(l)}>
+                            <span className={"remark cursor f-14  gap-r-3  "}><Sp text={'{count}条回复'} data={{ count: l.replyCount }}>{l.replyCount}条回复</Sp></span>
+                            {l.replys && <span className="remark flex-center size-20 "><Icon size={14} icon={{ name: 'bytedance-icon', code: l.spread == true ? 'right' : 'down' }}></Icon></span>}
                         </div>}
-                        {l.replys && <div className="gap-t-10">{this.renderComments(l.replys.list, deep + 1)}</div>}
+                        {l.replys && l.spread == true && <div className="gap-t-10">{this.renderComments(l.replys.list, deep + 1)}</div>}
                     </div></>}
                 </UserBox>
             </div>
-        })
+        })}</div>
+    }
+    renderSendComment() {
+        return <div className="flex-top  padding-w-14 gap-t-10">
+            {this.userid && <Avatar className="flex-fixed" size={32} userid={this.userid}></Avatar>}
+            <div tabIndex={1}
+                onFocus={e => this.onFocus(e)}
+                onBlur={e => this.onBlur(e)}
+                className="flex-auto gap-l-10 border round padding-10"
+                style={{ height: this.spread ? 92 : 24 }}
+            ><textarea
+                className="ef"
+                style={{
+                    width: '100%',
+                    lineHeight: "24px",
+                    border: 'none',
+                    padding: 0,
+                    height: this.spread ? 50 : 24,
+                    resize: 'none'
+                }}
+                placeholder={lst("发表评论")}
+                ref={e => this.textarea = e}></textarea>
+                {this.spread && <><Divider></Divider>
+                    <div className="flex">
+                        <div className="flex-auto">
+                            <span onMouseDown={e => this.onOpenEmjoji(e)} className="size-24 flex-center round item-hover"><Icon size={18} icon={EmojiSvg}></Icon></span>
+                        </div>
+                        <span className="flex-fixed flex">
+                            <Button size="small" onMouseDown={e => this.addComment(e)}><S>发布</S></Button>
+                        </span>
+                    </div></>}
+            </div>
+        </div>
     }
     isOver: boolean = false;
     onFocus(e) {
@@ -250,53 +311,24 @@ export class CommentListView extends React.Component<{
     }
     render() {
         return <div className={this.pop ? "w-600 padding-w-14" : ""}>
-            <div className="flex gap-b-10 gap-t-5 ">
-                <span className="bold f-14 flex-fixed">{this.total == 0 ? "" : lst('{total}条评论', { total: this.total })}</span>
+            <div className="flex gap-t-5 ">
+                <span className="bold f-14 flex-fixed">{this.total == 0 ? lst("评论") : lst('{total}条评论', { total: this.total })}</span>
                 <div className="flex-auto flex-end f-12">
                     <em onMouseDown={e => this.onSet('default')} className={"h-24 flex-center cursor round padding-w-5" + (this.sort == 'default' ? " item-hover-focus" : "")}><S>默认</S></em>
                     <em onMouseDown={e => this.onSet('date')} className={"h-24 flex-center cursor round padding-w-5" + (this.sort == 'date' ? " item-hover-focus" : "")}><S>最新</S></em>
                 </div>
             </div>
             <Divider></Divider>
-            <div className="padding-h-10   round min-h-30 overflow-y">
-                <SpinBox spin={this.loading}> {this.renderComments(this.list)}
+            <div className="padding-h-10  round min-h-30 overflow-y">
+                <SpinBox spin={this.loading}>
+                    {this.renderComments(this.list)}
                     <Pagination size={this.size} total={this.total} index={this.index}></Pagination>
-                    {this.list.length == 0 && <div className="remark min-50 flex-center"><S>暂无评论</S></div>}
+                    {this.list.length == 0 && <div className="remark min-50 flex-center f-12"><S>暂无评论</S></div>}
                 </SpinBox>
             </div>
             <div className="gap-b-15">
                 <Divider></Divider>
-                <div className="flex-top  padding-w-14 gap-t-10">
-                    {this.userid && <Avatar className="flex-fixed" size={32} userid={this.userid}></Avatar>}
-                    <div tabIndex={1}
-                        onFocus={e => this.onFocus(e)}
-                        onBlur={e => this.onBlur(e)}
-                        className="flex-auto gap-l-10 border round padding-10"
-                        style={{ height: this.spread ? 92 : 24 }}
-                    >
-                        <textarea
-                            className="ef"
-                            style={{
-                                width: '100%',
-                                lineHeight: "24px",
-                                border: 'none',
-                                padding: 0,
-                                height: this.spread ? 50 : 24,
-                                resize: 'none'
-                            }}
-                            placeholder={lst("评论千万条，友善第一条")}
-                            ref={e => this.textarea = e}></textarea>
-                        {this.spread && <><Divider></Divider>
-                            <div className="flex">
-                                <div className="flex-auto">
-                                    <span onMouseDown={e => this.onOpenEmjoji(e)} className="size-24 flex-center round item-hover"><Icon size={18} icon={EmojiSvg}></Icon></span>
-                                </div>
-                                <span className="flex-fixed flex">
-                                    <Button size="small" onMouseDown={e => this.addComment(e)}><S>发布</S></Button>
-                                </span>
-                            </div></>}
-                    </div>
-                </div>
+                {this.renderSendComment()}
             </div>
         </div>
     }

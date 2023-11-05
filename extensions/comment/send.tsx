@@ -51,7 +51,7 @@ class UserComments extends EventsComponent {
                 <Avatar className="flex-fixed" size={32} userid={this.options.userid}></Avatar>
                 <div
                     className="flex-auto gap-l-10 border round padding-10"
-                    style={{ height: 92 }}
+                    style={{ minHeight: 92 }}
                 >
                     <textarea
                         className="ef"
@@ -62,7 +62,7 @@ class UserComments extends EventsComponent {
                             padding: 0,
                             height: 50
                         }}
-                        placeholder={this.options.placeholder || lst("评论千万条，友善第一条")}
+                        placeholder={this.options.placeholder || lst("发表评论")}
                         ref={e => this.textarea = e}></textarea>
                     <><Divider></Divider>
                         <div className="flex">
@@ -70,9 +70,10 @@ class UserComments extends EventsComponent {
                                 <span onMouseDown={e => this.onOpenEmjoji(e)} className="size-24 flex-center round item-hover"><Icon size={18} icon={EmojiSvg}></Icon></span>
                             </div>
                             <span className="flex-fixed flex">
-                                <Button size="small" onMouseDown={e => this.addComment(e)}><S>发布</S></Button>
+                                <Button size="small" onMouseDown={e => this.addComment(e)}><S>评论</S></Button>
                             </span>
-                        </div></>
+                        </div>
+                    </>
                 </div>
             </div>}
         </div>
