@@ -3,7 +3,7 @@ import React from "react";
 import { CopyText } from "../../component/copy";
 import { ShyAlert } from "../../component/lib/alert";
 import { EventsComponent } from "../../component/lib/events.component";
-import { CloseSvg, GlobalLinkSvg, LinkSvg, PlusSvg } from "../../component/svgs";
+import { CloseSvg, GlobalLinkSvg, PlusSvg } from "../../component/svgs";
 import { Avatar } from "../../component/view/avator/face";
 import { Divider } from "../../component/view/grid";
 import { Icon } from "../../component/view/icon";
@@ -19,6 +19,7 @@ import {
     getAtomPermissionComputedChanges,
     getAtomPermissionOptions
 } from "../../src/page/permission";
+
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 import { getPageText } from "../../src/page/declare";
@@ -26,6 +27,8 @@ import { UserBox } from "../../component/view/avator/user";
 import { S } from "../../i18n/view";
 import { lst } from "../../i18n/store";
 import { Tip } from "../../component/view/tooltip/tip";
+import { ElementType } from "../../net/element.type";
+import { TableSchemaView } from "../../blocks/data-grid/schema/meta";
 
 class PagePublish extends EventsComponent {
     constructor(props) {
@@ -42,6 +45,18 @@ class PagePublish extends EventsComponent {
     }
     render() {
         var pr = this.page ? this.page?.getPermissions() : undefined;
+        var view: TableSchemaView;
+        if (this.page && this.page?.pe?.type == ElementType.SchemaRecordView) {
+            view = this.page.schema.recordViews.find(g => g.id == this.page.pe.id1);
+            if (view) {
+                pr = {
+                    share: view.share,
+                    memberPermissions: view.memberPermissions,
+                    netPermissions: view.netPermissions,
+                    inviteUsersPermissions: view.inviteUsersPermissions
+                }
+            }
+        }
         var self = this;
         var ps: {
             roleId?: string;
@@ -57,7 +72,12 @@ class PagePublish extends EventsComponent {
             )
         }
         async function setGlobalShare(data) {
-            await self.page.onUpdatePermissions(data);
+            if (view) {
+                await self.page.schema.onSchemaOperate([{ name: 'updateSchemaView', id: view.id, data }])
+            }
+            else {
+                await self.page.onUpdatePermissions(data);
+            }
             self.forceUpdate()
         }
         async function addPermission(event: React.MouseEvent) {
@@ -226,7 +246,7 @@ class PagePublish extends EventsComponent {
             <Divider></Divider>
             <div className="item-hover h-30  cursor  padding-w-14 flex"
                 onClick={e => this.copyLink()}>
-                <Icon size={18} icon={LinkSvg}></Icon><span className="gap-l-5"><S>复制页面访问链接</S></span>
+                <Icon size={18} icon={{ name: 'bytedance-icon', code: 'copy-link' }}></Icon><span className="gap-l-5"><S>复制页面访问链接</S></span>
             </div>
         </div>
     }
