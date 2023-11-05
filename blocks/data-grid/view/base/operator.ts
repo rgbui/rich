@@ -382,7 +382,6 @@ export class DataGridViewOperator {
             }
         })
     }
-
     async onCopySchemaView(this: DataGridView) {
         var r = await this.schema.onSchemaOperate([{
             name: 'duplicateSchemaView',
@@ -607,110 +606,34 @@ export class DataGridViewOperator {
         CopyText(url);
         ShyAlert(lst('视图链接已复制'))
     }
-    hasPagerBlock(this: DataGridView) {
-        return this.page.exists(c => c.url == BlockUrlConstant.DataGridPage && c.refBlockId == this.id)
+    hasTriggerBlock(this: DataGridView, url: string) {
+        return this.page.exists(c => c.url == url && c.refBlockId == this.id)
     }
-    async onExtendControlBlock(this: DataGridView, url: BlockUrlConstant, props: Record<string, any>, visible?: boolean) {
-        await this.page.onAction('onExtendControlBlock', async () => {
-            if (url == BlockUrlConstant.DataGridPage) {
-                if (typeof visible != 'boolean') visible = this.hasPagerBlock() ? false : true;
+    async onExtendTriggerBlock(this: DataGridView, url: BlockUrlConstant|string, props: Record<string, any>, visible?: boolean) {
+        await this.page.onAction('onExtendTriggerBlock', async () => {
+            if (typeof visible == 'boolean') {
                 if (visible) {
-                    var newBlock = await this.page.createBlock(url, { refBlockId: this.id, ...props }, this.parent, this.at + 1, this.parentKey);
+                    var newBlock = await this.page.createBlock(url, { refBlockId: this.id, ...props }, this.parent, url == BlockUrlConstant.DataGridPage ? (this.at + 1) : this.at, this.parentKey);
                     this.registerReferenceBlocker(newBlock);
                 }
                 else {
-                    var r = this.page.find(g => g.url == BlockUrlConstant.DataGridPage && g.refBlockId == this.id);
-                    if (r) {
-                        await r.delete()
+                    var rs = this.page.findAll(g => g.url == BlockUrlConstant.DataGridPage && g.refBlockId == this.id);
+                    if (rs) {
+                        for (let r of rs) {
+                            await r.delete()
+                        }
                     }
                 }
             }
-            // else if (url == BlockUrlConstant.Button) {
-            //     var pre = this.prev;
-            //     if (pre && !pre.isLine && pre.find(g => g.url == BlockUrlConstant.Button)) {
-            //         var newBlock = await this.page.createBlock(url, {
-            //             url,
-            //             refBlockId: this.id,
-            //             ...props
-            //         }, pre, pre.childs.length,
-            //         );
-            //         this.registerReferenceBlocker(newBlock);
-            //     }
-            //     else {
-            //         var newBlock = await this.page.createBlock(BlockUrlConstant.TextSpan, {
-            //             blocks: {
-            //                 childs: [{ url, refBlockId: this.id, ...props }]
-            //             }
-            //         },
-            //             this.parent,
-            //             this.at,
-            //             this.parentKey);
-            //         this.registerReferenceBlocker(newBlock);
-            //     }
-            // }
-        })
-    }
-    async onExtendControlFilter(this: DataGridView, field: Field) {
-        var url: string = '';
-        if ([FieldType.bool].includes(field.type)) {
-            url = '/field/filter/check';
-        }
-        else if ([FieldType.image, FieldType.video, FieldType.audio, FieldType.file].includes(field.type)) {
-            url = '/field/filter/null';
-        }
-        else if ([FieldType.createDate, FieldType.modifyDate, FieldType.date].includes(field.type)) {
-            url = '/field/filter/date';
-        }
-        else if ([FieldType.creater, FieldType.modifyer, FieldType.user].includes(field.type)) {
-            url = '/field/filter/user';
-        }
-        else if ([FieldType.option, FieldType.options].includes(field.type)) {
-            url = '/field/filter/option';
-        }
-        else if ([FieldType.relation].includes(field.type)) {
-            url = '/field/filter/relation';
-        }
-        else if ([FieldType.number].includes(field.type)) {
-            url = '/field/filter/number';
-        } else if ([
-            FieldType.title,
-            FieldType.text,
-            FieldType.email,
-            FieldType.like,
-            FieldType.phone
-        ].includes(field.type)) {
-            url = '/field/filter/search';
-        }
-        await this.page.onAction('onExtendControlFilter', async () => {
-            var newBlock: Block = await this.visibleUpCreateBlock(url, {
-                refBlockId: this.id, refFieldId: field.id
-            })
-            this.registerReferenceBlocker(newBlock);
-        })
-    }
-    async onExtendControlSort(this: DataGridView, field: Field) {
-        var url: string = '/field/filter/sort';
-        await this.page.onAction('onExtendControlSort', async () => {
-            var prev = this.prev;
-            var newBlock: Block;
-            if (prev.url == BlockUrlConstant.TextSpan) {
-                newBlock = await prev.appendBlock({ url, refBlockId: this.id, refFieldId: field.id, })
-            }
             else {
-                newBlock = await this.page.createBlock(BlockUrlConstant.TextSpan,
+                var newBlock: Block = await this.page.createBlock(url,
                     {
-                        blocks: {
-                            childs: [{
-                                url,
-                                refBlockId: this.id,
-                                refFieldId: field.id
-                            }]
-                        }
+                        refBlockId: this.id,
+                        ...props
                     },
                     this.parent, this.at, this.parentKey);
-                newBlock = newBlock.childs.first();
+                this.registerReferenceBlocker(newBlock);
             }
-            this.registerReferenceBlocker(newBlock);
         })
     }
     async onOpenDataSource(this: DataGridView, event: Rect) {

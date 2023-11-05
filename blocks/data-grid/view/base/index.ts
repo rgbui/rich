@@ -26,6 +26,9 @@ import { Page } from "../../../../src/page";
 import { Field } from "../../schema/field";
 import { useCreateDataGrid } from "../../../../extensions/data-grid/create/view";
 import { AtomPermission } from "../../../../src/page/permission";
+import { BlockUrlConstant } from "../../../../src/block/constant";
+import { LatestOrHot } from "../../block/latestOrHot";
+import { OptionDefineRule } from "../../block/optionRule";
 
 /**
  * 
@@ -37,7 +40,7 @@ import { AtomPermission } from "../../../../src/page/permission";
  */
 export class DataGridView extends Block {
     checkItems: Record<string, any>[] = [];
-    viewProps: string[] = ['filter', 'size', 'sorts'];
+    viewProps: string[] = ['filter', 'noTitle', 'openRecordSource', 'openRecordViewId', ' createRecordSource', 'size', 'sorts'];
     @prop()
     fields: ViewField[] = [];
     @prop()
@@ -54,6 +57,8 @@ export class DataGridView extends Block {
     noTitle: boolean = false;
     @prop()
     openRecordSource: Page['openSource'] = 'dialog';
+    @prop()
+    openRecordViewId: string = '';
     @prop()
     createRecordSource: Page['openSource'] = 'dialog';
     schema: TableSchema;
@@ -195,6 +200,13 @@ export class DataGridView extends Block {
                 }
             })
         }
+        var ru=this.referenceBlockers.find(g=>g.url==BlockUrlConstant.DataGridOptionRule) as OptionDefineRule
+        if(ru){
+            var fl = ru.getFilters();
+            if (fl) {
+                rs.push(...fl);
+            }
+        }
         if (f && rs.length > 0) {
             if (f.logic == 'and') {
                 f.items.push(...rs);
@@ -219,10 +231,12 @@ export class DataGridView extends Block {
             })
             return sorts;
         }
-        var sf = this.referenceBlockers.find(g => g instanceof FilterSort) as FilterSort;
-        if (sf) {
-            var so = sf.getSort();
-            if (so) Object.assign(sorts, so);
+        var sfs = this.referenceBlockers.findAll(g => g instanceof FilterSort || g.url == BlockUrlConstant.DataGridLatestOrHot) as FilterSort[];
+        if (sfs) {
+            for (let sf of sfs) {
+                var so = sf.getSort();
+                if (so) Object.assign(sorts, so);
+            }
         }
         return sorts;
     }
@@ -246,6 +260,9 @@ export class DataGridView extends Block {
         }
     }
     async didMounted(force: boolean = true) {
+        await this.loadDataGrid(force);
+    }
+    async loadDataGrid(force: boolean = true) {
         await this.loadSchema();
         if (this.schema) {
             await this.loadViewFields();
@@ -257,6 +274,7 @@ export class DataGridView extends Block {
             await this.onNotifyReferenceBlocks();
             if (this.view && force) this.view.forceUpdate();
         }
+        this.emit('loadDataGrided');
     }
     async onAddCreateTableView() {
         var r = Rect.fromEle(this.el);
@@ -294,7 +312,7 @@ export class DataGridView extends Block {
                         })
                     });
                 }
-                await this.didMounted();
+                await this.loadDataGrid();
                 this.willCreateSchema = false;
                 if (this.view) this.view.forceUpdate();
             }

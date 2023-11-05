@@ -11,13 +11,10 @@ import {
     PropertysSvg,
     SortSvg,
     TemplatesSvg,
-    ImportSvg,
     LoopSvg,
     UnlockSvg,
-    PlusSvg,
     DatasourceSvg,
-    DocEditSvg,
-    CollectTableSvg
+  
 } from "../../../../component/svgs";
 
 import { useSelectMenuItem } from "../../../../component/view/menu";

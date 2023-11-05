@@ -53,9 +53,16 @@ export class DataGridViewData {
             else if (this.openRecordSource == 'slide')
                 url = '/page/slide';
         }
+        var elementUrl = getElementUrl(ElementType.SchemaData, this.schema.id, id)
+        if (this.openRecordViewId) {
+            var view = this.schema.views.find(g => g.id == this.openRecordViewId);
+            if (view) {
+                elementUrl = getElementUrl(ElementType.SchemaRecordViewData, this.schema.id, view.id, id)
+            }
+        }
         await this.onDataGridTool(async () => {
             await channel.air(url, {
-                elementUrl: getElementUrl(ElementType.SchemaData, this.schema.id, id),
+                elementUrl: elementUrl,
                 config: {
                     force: true,
                     isCanEdit: true
