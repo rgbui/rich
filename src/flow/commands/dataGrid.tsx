@@ -83,13 +83,13 @@ export class AddRecordsCommand extends FlowCommand {
         }
         else {
             var data: Record<string, any> = {};
-            this.fields.forEach(f => {
+            this.fields.forEach(f=>{
                 var fe = this.schema.fields.find(g => g.id == f.fieldId);
                 if (fe) {
                     data[fe.name] = lodash.cloneDeep(f.value);
                 }
             });
-            var dialougPage: Page = await channel.air('/page/dialog', {
+            await channel.air('/page/dialog', {
                 elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, this.schemaViewId),
                 config: {
                     force: true,
@@ -97,12 +97,6 @@ export class AddRecordsCommand extends FlowCommand {
                     initData: lodash.cloneDeep(data)
                 }
             })
-            if (dialougPage) {
-                dialougPage.onPageSave();
-                var newRow = await dialougPage.getSchemaRow();
-                if (newRow) await this.schema.rowAdd({ data: newRow })
-            }
-            await channel.air('/page/dialog', { elementUrl: null });
         }
     }
     async loadSchema() {
@@ -306,8 +300,8 @@ export class AddRecordsCommandView extends FlowCommandView<AddRecordsCommand>{
                     <span className="flex-auto gap-l-10"><S>打开视图模板</S></span>
                     <SelectBox className={'flex-fixed item-hover remark item-hover-light-focus round padding-l-5'} onChange={e => this.command.onUpdateProps({ schemaViewId: e })} value={this.command.schemaViewId} options={[
                         { text: lst('关闭'), value: '' },
-                        { type: MenuItemType.divide, visible: this.command.schema.views.findAll(g => [ BlockUrlConstant.RecordPageView].includes(g.url as any)).length > 0 },
-                        ...this.command.schema.views.findAll(g => [ BlockUrlConstant.RecordPageView].includes(g.url as any)).map(n => ({
+                        { type: MenuItemType.divide, visible: this.command.schema.views.findAll(g => [BlockUrlConstant.RecordPageView].includes(g.url as any)).length > 0 },
+                        ...this.command.schema.views.findAll(g => [BlockUrlConstant.RecordPageView].includes(g.url as any)).map(n => ({
                             text: n.text,
                             value: n.id
                         }))
@@ -335,6 +329,10 @@ export class AddRecordsCommandView extends FlowCommandView<AddRecordsCommand>{
         </div>
     }
 }
+
+
+
+
 
 @flow('/editRecords')
 export class EditRecordsCommand extends FlowCommand {
@@ -625,7 +623,7 @@ export class EditRecordsCommandView extends FlowCommandView<EditRecordsCommand> 
                     <SelectBox className={'flex-fixed item-hover remark item-hover-light-focus round padding-l-5'} onChange={e => this.command.onUpdateProps({ schemaViewId: e })} value={this.command.schemaViewId} options={[
                         { text: lst('关闭'), value: '' },
                         { type: MenuItemType.divide, visible: this.command.schema.views.length > 0 },
-                        ...this.command.schema.views.findAll(g => [ BlockUrlConstant.RecordPageView].includes(g.url as any)).map(n => ({
+                        ...this.command.schema.views.findAll(g => [BlockUrlConstant.RecordPageView].includes(g.url as any)).map(n => ({
                             text: n.text,
                             value: n.id
                         }))

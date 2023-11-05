@@ -12,6 +12,7 @@ import { MenuItemType } from "../../component/view/menu/declare";
 import { Rect } from "../common/vector/point";
 import { lst } from "../../i18n/store";
 import "./declare";
+import { ElementType } from "../../net/element.type";
 
 export class Flow {
     ws: LinkWs;
@@ -83,13 +84,11 @@ export class Flow {
             { type: MenuItemType.divide },
             { text: lst('添加记录至数据表'), value: '/addRecords', icon: PlusSvg },
             { text: lst('编辑记录至数据表'), value: '/editRecords', icon: Edit1Svg },
-            // { text: '批量选择记录编辑', value: '/batchEditRecords' },
-            // { text: '批量选择记录删除', value: '/batchDeleteRecords' },
             { type: MenuItemType.divide },
             { text: lst('确认继续'), value: '/confirm', icon: { name: 'bytedance-icon', code: 'help' } },
             { type: MenuItemType.divide },
             { text: lst('打开页面'), value: '/openPage', icon: { name: 'bytedance-icon', code: 'arrow-right-up' } },
-            { text: lst('表单提交'), value: '/form/submit', icon: { name: 'bytedance-icon', code: 'form-one' }, visible: this.buttonBlock?.page.isPageForm ? true : false },
+            { text: lst('表单提交'), value: '/form/submit', icon: { name: 'bytedance-icon', code: 'form-one' }, visible: [ElementType.SchemaRecordView, ElementType.SchemaData, ElementType.SchemaRecordViewData].includes(this.buttonBlock.page.pe.type) ? true : false },
         ]);
         if (r) {
             var data: Record<string, any> = {};

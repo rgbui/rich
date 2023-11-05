@@ -103,12 +103,12 @@ export class Page extends Events<PageDirective>{
     autoRefSubPages: boolean = true;
     addedSubPages: string[] = [];
     showMembers: boolean = false;
+    formType: 'doc' | 'doc-add' | 'doc-detail' = 'doc';
     /**
      * 页面格式 
      * 仅文档、数据表格、宣传页起作用
      */
     hideDocTitle: boolean = false;
-    isPageForm: boolean = false;
     bar = true;
     get visiblePageBar() {
         if (this.isPubSite) {
