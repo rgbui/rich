@@ -606,7 +606,9 @@ item-selected:选中的效果
 .remark {
     color: rgba(55, 53, 47, 0.5);
 }
-.remark-important,.remark-im{
+
+.remark-important,
+.remark-im {
     color: rgba(55, 53, 47, 0.5) !important;
 }
 
@@ -616,7 +618,15 @@ item-selected:选中的效果
 
 .text-primary,
 .text-p {
-    color: rgb(225, 98, 89);
+    color: var(--text-p-color);
+}
+
+.fill-p {
+    svg {
+        path,rect,circle {
+            fill: var(--text-p-color) !important;
+        }
+    }
 }
 
 .text-black {
@@ -624,12 +634,13 @@ item-selected:选中的效果
 }
 
 body {
-    --text-color  : #060607;
-    --text-p-color: rgb(225, 98, 89);
+    --text-color  : rgba(55, 53, 47);
+    --text-p-color: #B84C4E;
+    --text-b-color: #64a1df;
 }
 
 .text {
-    color   : rgba(55, 53, 47);
+    color   : var(--text-color);
     // fill : currentColor;
 }
 
@@ -644,11 +655,11 @@ body {
 .link,
 .text-link,
 .text-l {
-    color: #64a1df;
+    color: var(--text-b-color);
 }
 
 .link-red {
-    color: #B84C4E;
+    color: var(--text-p-color);
 }
 
 .link-remark {
@@ -657,7 +668,7 @@ body {
 
 .link-hover {
     &:hover {
-        color: #64a1df;
+        color: var(--text-b-color);
     }
 }
 
@@ -1385,15 +1396,7 @@ each(@ops, {
     border-right: 0.1rem solid rgba(55, 53, 47, 0.16);
 }
 
-.border-light-right,
-.border-right-light {
-    border-right: 0.1rem solid rgba(55, 53, 47, 0.08);
-}
 
-.border-light-left,
-.border-left-light {
-    border-left: 0.1rem solid rgba(55, 53, 47, 0.08);
-}
 
 .border-primary,
 .border-p {
@@ -1440,13 +1443,25 @@ each(@ops, {
 }
 
 .border-light-bottom,
-.border-light-b {
+.border-light-b,
+.border-bottom-light {
     border-bottom: 0.1rem solid rgba(55, 53, 47, 0.08);
 }
 
 .border-light-top,
-.border-light-t {
+.border-light-t,
+.border-top-light {
     border-top: 0.1rem solid rgba(55, 53, 47, 0.08);
+}
+
+.border-light-right,
+.border-right-light {
+    border-right: 0.1rem solid rgba(55, 53, 47, 0.08);
+}
+
+.border-light-left,
+.border-left-light {
+    border-left: 0.1rem solid rgba(55, 53, 47, 0.08);
 }
 
 .border-t {

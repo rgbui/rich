@@ -229,7 +229,7 @@ export interface ChannelPutMapUrls {
 	"/ws/flow":{args:{ws:LinkWs,wsId?:string,flow:Record<string,any>},returnType:Promise<SockResponse<{flow:Record<string,any>}>>},
 	"/ws/role/create":{args:{data:Record<string,any>},returnType:Promise<SockResponse<{role:Record<string,any>}>>},
 	"/ws/comment/send":{args:{elementUrl: string,wsId?: string, parentId: string, rootId: string,content: string},returnType:Promise<SockResponse<{data:any}>>},
-	"/ws/comment/emoji":{args:{wsId?: string, elementUrl: string},returnType:Promise<SockResponse<{count:number}>>},
+	"/ws/comment/emoji":{args:{wsId?: string, elementUrl: string},returnType:Promise<SockResponse<{count:number,exists?:boolean}>>},
 	"/page/item/create":{args:{wsId?:string,data:Record<string,any>},returnType:Promise<SockResponse<{ item:Record<string,any> }>>},
 	"/view/snap/direct":{args:{wsId?:string,  elementUrl: string, content: any,plain?:string,text?:string,thumb?:any },returnType:Promise<Promise<void>>},
 	"/bookmark/url":{args:{url:string},returnType:Promise<SockResponse<{title:string,description:string,image:ResourceArguments,icon:ResourceArguments}>>},

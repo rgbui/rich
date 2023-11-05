@@ -37,6 +37,9 @@ export enum BlockUrlConstant {
     Link = '/link',
     Todo = '/todo',
     DataGridPage = '/data-grid/paging',
+    DataGridOptionRule = '/data-grid/OptionRule',
+    DataGridLatestOrHot = '/data-grid/LatestOrHot',
+    DataGridFieldSort='/field/filter/sort',
     Button = '/button',
     Comment = '/comments',
     Discuss = '/discuss',
@@ -51,7 +54,7 @@ export enum BlockUrlConstant {
     PagePreOrNext = '/page/preOrNext',
     Card = '/card',
     PageAuthor = '/page/author',
-    PageUpvotedOrShared = '/page/UpvotedOrShared',
+    PageUpvotedOrShared = '/page/UpvotedOrShared'
 }
 export enum BlockChildKey {
     childs = 'childs',

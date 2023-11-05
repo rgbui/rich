@@ -20,7 +20,7 @@ import { CompassSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { ResourceArguments } from "../../extensions/icon/declare";
 import { useOutSideUrlInput } from "../../extensions/link/outsite.input";
-import { ConvertEmbed } from "../../extensions/url/embed.url";
+import { ConvertEmbed } from "../../extensions/link/url/embed.url";
 import { Block } from "../../src/block";
 import { prop, url, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";

@@ -67,7 +67,8 @@ export class Popover<T extends React.Component> extends EventsComponent<{
         var CP = this.props.component;
         var style: CSSProperties = {
             top: this.point.y,
-            left: this.point.x
+            left: this.point.x,
+            pointerEvents: 'visible'
         }
         if (this.pos?.dockRight) {
             style = {
@@ -82,14 +83,14 @@ export class Popover<T extends React.Component> extends EventsComponent<{
             style.boxShadow = 'none';
         }
         if (this.props.visible == 'hidden') {
-            return <div className="shy-popover-box" ref={e => this.box = e} style={{ zIndex: this.zindex, display: this.visible == true ? "block" : "none" }}>
-                {this.props.mask == true && <div className={'shy-popover-mask' + (this.props.shadow ? " shy-popover-mask-shadow" : "")} onMouseDown={e => this.onClose(e)}></div>}
+            return <div className="shy-popover-box" ref={e => this.box = e} style={{ zIndex: this.zindex, pointerEvents: 'none', display: this.visible == true ? "block" : "none" }}>
+                {this.props.mask == true && <div style={{ pointerEvents: 'visible' }} className={'shy-popover-mask' + (this.props.shadow ? " shy-popover-mask-shadow" : "")} onMouseDown={e => this.onClose(e)}></div>}
                 <div style={style} className='shy-popover' ref={e => this.el = e}><CP {...this.props.args} ref={e => { this.cp = e; if (this.cp) (this.cp as any).popover = this as any }}></CP></div>
             </div>
         }
         else {
-            return <div className="shy-popover-box" ref={e => this.box = e} style={{ zIndex: this.zindex, display: this.visible == false ? 'none' : undefined }} >{this.visible && <>
-                {this.props.mask == true && <div className={'shy-popover-mask' + (this.props.shadow ? " shy-popover-mask-shadow" : "")} onMouseDown={e => this.onClose(e)}></div>}
+            return <div className="shy-popover-box" ref={e => this.box = e} style={{ zIndex: this.zindex, pointerEvents: 'none', display: this.visible == false ? 'none' : undefined }} >{this.visible && <>
+                {this.props.mask == true && <div style={{ pointerEvents: 'visible' }} className={'shy-popover-mask' + (this.props.shadow ? " shy-popover-mask-shadow" : "")} onMouseDown={e => this.onClose(e)}></div>}
                 <div style={style} className='shy-popover' ref={e => this.el = e}><CP {...this.props.args} ref={e => { { this.cp = e; if (this.cp) (this.cp as any).popover = this as any } }}></CP></div>
             </>}</div>
         }
