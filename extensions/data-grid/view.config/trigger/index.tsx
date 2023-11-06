@@ -50,7 +50,7 @@ export class DataGridTrigger extends EventsComponent {
         if (!this.block) return <></>;
         if (!this.schema) return <div></div>
         return <div className="f-14 max-h-300 overflow-y">
-            <div className="remark f-12 padding-w-10 gap-w-5 gap-t-10"><S text='按钮触发器'>按钮触发器</S></div>
+            <div className="remark f-12 padding-w-10 gap-w-5 gap-t-10"><S text='查询按钮'>查询按钮</S></div>
             <div>
                 <div className="flex item-hover round h-30 padding-w-5 gap-w-5   ">
                     <Tip text='拖至页面插入'><span className="size-24 text-1 item-hover round flex-center cursor" onMouseDown={e => this.onDrag(e, { url: BlockUrlConstant.DataGridLatestOrHot })}><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>
@@ -63,7 +63,7 @@ export class DataGridTrigger extends EventsComponent {
                     <span className="flex-auto flex-end"><Tip text={'插入到页面'}><span className="size-24 flex-center item-hover round cursor text-1  " onMouseDown={e => { this.block.onExtendTriggerBlock(BlockUrlConstant.DataGridOptionRule, { refBlockId: this.block.id }) }}><Icon size={18} icon={PlusSvg}></Icon></span></Tip></span>
                 </div>
             </div>
-            <div className="remark f-12 padding-w-10 gap-w-5 gap-t-10"><S text='表单触发器'>表单触发器</S></div>
+            <div className="remark f-12 padding-w-10 gap-w-5 gap-t-10"><S text='表单按钮'>表单</S></div>
             <div>
                 {this.block.schema.recordViews.map(rv => {
                     return <div key={rv.id} className="flex item-hover round h-30 padding-w-5 gap-w-5  cursor"><Tip text='拖至页面插入'><span className="size-24 text-1 item-hover round flex-center" onMouseDown={e => this.onDrag(e, {
@@ -86,7 +86,7 @@ export class DataGridTrigger extends EventsComponent {
                     </div>
                 })}
             </div>
-            <div className="remark f-12 padding-w-10 gap-w-5 gap-t-10"><S text='字段组件查询触发器'>字段组件查询触发器</S></div>
+            <div className="remark f-12 padding-w-10 gap-w-5 gap-t-10"><S text='字段查询'>字段查询</S></div>
             {this.block.schema.visibleFields.findAll(g => ![
                 // FieldType.video,
                 FieldType.formula,
@@ -110,7 +110,7 @@ export class DataGridTrigger extends EventsComponent {
                     </ToolTip>
                 </div>
             })}
-            <div className="remark f-12 padding-w-10 gap-w-5 gap-t-10"><S text='字段组件排序触发器'>字段组件排序触发器</S></div>
+            <div className="remark f-12 padding-w-10 gap-w-5 gap-t-10"><S text='字段排序'>字段排序</S></div>
             {this.block.schema.visibleFields.findAll(g => ![
                 // FieldType.video,
                 FieldType.formula,
