@@ -28,6 +28,7 @@ import {
     MoveToSvg,
     NoteSvg,
     OutlineSvg,
+    PicSvg,
     PlatteSvg,
     RedoSvg,
     RefreshOneSvg,
@@ -142,8 +143,10 @@ export class PageContextmenu {
                     icon: FieldsSvg,
                     childs: [
                         { name: 'onlyDisplayContent', text: lst('标题'), type: MenuItemType.switch, checked: this.hideDocTitle ? false : true, icon: HSvg },
-                        { name: 'showComment', text: lst("评论"), icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
+                        { name: 'showCover', text: lst('封面'), type: MenuItemType.switch, checked: this.pageInfo?.cover?.abled && this.pageInfo?.cover.url ? true : false, icon: PicSvg },
                         { name: 'pageAuthor', text: lst('作者'), icon: { name: 'bytedance-icon', code: 'edit-name' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PageAuthor) },
+                        { type: MenuItemType.divide },
+                        { name: 'showComment', text: lst("评论"), icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                         { name: 'pageUpvotedOrShared', text: lst('点赞分享'), icon: { name: 'bytedance-icon', code: 'send' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PageUpvotedOrShared) },
                         { name: 'prevOrNext', text: lst('上下篇'), visible: [ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type), icon: { name: 'bytedance-icon', code: 'transfer-data' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PagePreOrNext) },
                         { name: 'refPages', text: lst("引用"), visible: [ElementType.SchemaRecordView].includes(this.pe.type) ? false : true, icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.RefLinks) },
@@ -343,14 +346,14 @@ export class PageContextmenu {
                 else if (item.name == 'showComment') {
                     this.onToggleComments(item.checked)
                 }
+                else if (item.name == 'showCover') {
+                    this.onAddCover(item.checked ? false : true);
+                }
                 else if (item.name == 'pageAuthor') {
                     this.onTogglePageAuthor(item.checked);
                 }
                 else if (item.name == 'pageUpvotedOrShared') {
                     this.onToggleUpvotedOrShared(item.checked);
-                }
-                else if (item.name == 'showDiscuss') {
-                    this.onToggleDiscuss(item.checked)
                 }
                 else if (item.name == 'prevOrNext') {
                     this.onTogglePrevOrNext(item.checked);

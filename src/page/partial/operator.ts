@@ -465,33 +465,6 @@ export class Page$Operator {
             }
         })
     }
-    async onToggleDiscuss(this: Page, toggle: boolean) {
-        var cs = this.findAll(c => c.url == BlockUrlConstant.Discuss);
-        if (toggle == true && cs.length == 1) return;
-        if (toggle == false && cs.length == 0) return;
-        await this.onAction('onToggleComments', async () => {
-            if (toggle == true) {
-                if (cs.length == 0) {
-                    var view = this.views[0];
-                    if (this.pageLayout.type == PageLayoutType.docCard) {
-                        view = view.childs.last();
-                        if (!view) view = await this.createBlock(BlockUrlConstant.CardBox, { url: BlockUrlConstant.CardBox }, view);
-                    }
-                    await this.createBlock(BlockUrlConstant.Discuss, {}, view);
-                }
-                else if (cs.length > 1) {
-                    await cs.findAll((g, i) => i > 0).eachAsync(async c => {
-                        c.delete();
-                    });
-                }
-            }
-            else if (toggle == false) {
-                await cs.eachAsync(async c => {
-                    c.delete()
-                })
-            }
-        })
-    }
     async onCopyBlocks(this: Page, blocks: Block[]) {
         await storeCopyBlocks(blocks);
     }

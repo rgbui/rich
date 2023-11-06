@@ -19,7 +19,7 @@ export class PageCover extends React.Component<{ page: Page }>{
         var self = this;
         var page = this.props.page;
         var pd = this.props.page.getPageDataInfo();
-        if (pd.cover?.abled && this.props.page.hideDocTitle !== true) {
+        if (pd.cover?.abled) {
             async function changeIcon(event: React.MouseEvent) {
                 if (!page.isCanEdit) return;
                 event.stopPropagation();

@@ -31,6 +31,9 @@ export class ViewComponent extends BlockView<View>{
         var WrapperStyle: CSSProperties = {};
         var isTextChannel = this.block.page.pageLayout?.type == PageLayoutType.textChannel;
         var isDocCard = this.block.page.pageLayout?.type == PageLayoutType.docCard;
+        if (isMainView) {
+            WrapperStyle.paddingTop = 50;
+        }
         if (this.block.page.isSupportScreen && !isTextChannel && !isDocCard && isMainView) {
             layoutStyle.border = '1px solid transparent';
             layoutStyle.boxShadow = 'none';
@@ -78,12 +81,6 @@ export class ViewComponent extends BlockView<View>{
                         layoutStyle.border = 'none'
                     }
                 }
-            }
-            var page = this.block.page;
-            var pd = page.getPageDataInfo();
-
-            if (isMainView && pd?.icon && pd?.cover?.abled === true) {
-                WrapperStyle.paddingTop = 50;
             }
             return <div className={'sy-block-view'} >
                 {isContentGap && <div style={{ height: isMobileOnly ? 30 : 80 }}></div>}
