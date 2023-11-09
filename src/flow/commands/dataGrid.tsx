@@ -83,7 +83,7 @@ export class AddRecordsCommand extends FlowCommand {
         }
         else {
             var data: Record<string, any> = {};
-            this.fields.forEach(f=>{
+            this.fields.forEach(f => {
                 var fe = this.schema.fields.find(g => g.id == f.fieldId);
                 if (fe) {
                     data[fe.name] = lodash.cloneDeep(f.value);
@@ -603,6 +603,7 @@ export class EditRecordsCommandView extends FlowCommandView<EditRecordsCommand> 
             schema: this.command.schema,
             filter: this.command.filter || {},
             ws: this.command.flow.ws,
+            formSchema: this.command.flow.buttonBlock.page.schema,
             onChange: async (filter: SchemaFilter) => {
                 this.command.filter = lodash.cloneDeep(filter);
                 this.forceUpdate();

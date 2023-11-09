@@ -326,7 +326,7 @@ export class Block$Event {
     }) {
         var { appear, oldValue, newValue, action } = options;
         await this.page.onAction(ActionDirective.onInputText, async () => {
-            await this.manualUpdateProps({ [appear.prop]: oldValue }, { [appear.prop]: newValue }, BlockRenderRange.none, true);
+            await this.manualUpdateProps({ [appear.prop]: oldValue }, { [appear.prop]: newValue }, BlockRenderRange.none, { isOnlyRecord: true });
             if (typeof action == 'function') await action();
             await this.changeAppear(appear);
         })
@@ -374,11 +374,18 @@ export class Block$Event {
         newProps: Record<string, any>,
         options?: {
             range?: BlockRenderRange,
-            isOnlyRecord?: boolean
+            isOnlyRecord?: boolean,
+            isOnlyStore?: boolean;
         }
     ) {
         await this.page.onAction(ActionDirective.onUpdateProps, async () => {
-            await this.manualUpdateProps(oldProps, newProps, options?.range, options?.isOnlyRecord);
+            await this.manualUpdateProps(oldProps,
+                newProps,
+                options?.range,
+                {
+                    isOnlyRecord: options?.isOnlyRecord,
+                    isOnlyStore: options?.isOnlyStore
+                });
         })
     }
     async onLock(this: Block, locked: boolean) {

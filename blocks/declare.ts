@@ -51,7 +51,7 @@ import './data-grid/view/map';
 import "./data-grid/view/statistic/value";
 import "./data-grid/view/statistic/charts";
 
-import "./data-grid/element/record";
+import "./data-grid/view/item/record";
 import "./data-grid/element/field/text";
 import "./data-grid/element/field/number";
 import "./data-grid/element/field/date";

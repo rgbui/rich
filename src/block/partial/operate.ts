@@ -577,25 +577,36 @@ export class Block$Operator {
         oldProps: Record<string, any>,
         newProps: Record<string, any>,
         range = BlockRenderRange.self,
-        isOnlyRecord: boolean = false) {
+        options?: {
+            isOnlyRecord?: boolean,
+            isOnlyStore?: boolean
+        }
+    ) {
         var oldValue: Record<string, any> = {};
         var newValue: Record<string, any> = {};
-        if (isOnlyRecord == true) {
-            for (let prop in newProps) {
-                oldValue[prop] = await this.clonePropData(prop, lodash.get(oldProps, prop));
-                newValue[prop] = await this.clonePropData(prop, lodash.get(newProps, prop));
-                await this.setPropData(prop, newValue[prop])
-            }
+        if (options?.isOnlyStore == true) {
+            newValue = newProps;
+            oldValue = oldProps;
         }
         else {
-            for (let prop in newProps) {
-                if (!lodash.isEqual(lodash.get(oldProps, prop), lodash.get(newProps, prop))) {
+            if (options?.isOnlyRecord == true) {
+                for (let prop in newProps) {
                     oldValue[prop] = await this.clonePropData(prop, lodash.get(oldProps, prop));
                     newValue[prop] = await this.clonePropData(prop, lodash.get(newProps, prop));
                     await this.setPropData(prop, newValue[prop])
                 }
             }
+            else {
+                for (let prop in newProps) {
+                    if (!lodash.isEqual(lodash.get(oldProps, prop), lodash.get(newProps, prop))) {
+                        oldValue[prop] = await this.clonePropData(prop, lodash.get(oldProps, prop));
+                        newValue[prop] = await this.clonePropData(prop, lodash.get(newProps, prop));
+                        await this.setPropData(prop, newValue[prop])
+                    }
+                }
+            }
         }
+
         if (Object.keys(oldValue).length > 0) {
             this.syncUpdate(range);
             for (let n in newValue) {

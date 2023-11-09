@@ -623,7 +623,10 @@ item-selected:选中的效果
 
 .fill-p {
     svg {
-        path,rect,circle {
+
+        path,
+        rect,
+        circle {
             fill: var(--text-p-color) !important;
         }
     }
@@ -1289,6 +1292,10 @@ each(@ops, {
 .r-bg-primary>*,
 .r-bg-p>* {
     background-color: rgb(225, 98, 89)
+}
+
+.bg-p-light {
+    background-color: rgba(225, 98, 89, 0.2)
 }
 
 .bg-primary-hover,
