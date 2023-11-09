@@ -6,6 +6,8 @@ import { BlockView } from "../../../src/block/view";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { lst } from "../../../i18n/store";
 import { BlockDirective, BlockRenderRange } from "../../../src/block/enum";
+import { Point } from "../../../src/common/vector/point";
+import { util } from "../../../util/util";
 
 @url('/comments')
 export class Comment extends Block {
@@ -43,6 +45,14 @@ export class Comment extends Block {
             return;
         }
         await super.onContextMenuInput(item);
+    }
+    getVisibleHandleCursorPoint(): Point {
+        var bound = this.getVisibleContentBound()
+        if (bound) {
+            var pos = Point.from(bound);
+            pos = pos.move(0, 8 + util.remToPx(this.page.lineHeight) / 2);
+            return pos;
+        }
     }
 }
 
