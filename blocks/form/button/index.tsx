@@ -1,26 +1,25 @@
 import React from "react";
-import { DragHandleSvg, Edit1Svg, SettingsSvg, } from "../../../component/svgs";
+import { SettingsSvg, } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { BoxTip } from "../../../component/view/tooltip/box";
 import { IconArguments } from "../../../extensions/icon/declare";
 import { Block } from "../../../src/block";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { DragBlockLine } from "../../../src/kit/handle/line";
-import { SolidArea } from "../../../src/block/view/appear";
-import { Tip } from "../../../component/view/tooltip/tip";
 import { Input } from "../../../component/view/input";
 import { Button } from "../../../component/view/button";
 import { S } from "../../../i18n/view";
 import { FlowView } from "../../../src/flow/view";
 import { Flow } from "../../../src/flow";
 import { useIconPicker } from "../../../extensions/icon";
-import { Rect } from "../../../src/common/vector/point";
+import { Point, Rect } from "../../../src/common/vector/point";
 import { BlockDirective, BlockRenderRange } from "../../../src/block/enum";
 import { BlockView } from "../../../src/block/view";
 import { MenuItem } from "../../../component/view/menu/declare";
 import { lst } from "../../../i18n/store";
 import lodash from "lodash";
 import "./style.less";
+import { util } from "../../../util/util";
 
 @url('/button')
 export class BlockButton extends Block {
@@ -52,9 +51,7 @@ export class BlockButton extends Block {
         })
     }
     isEditFlow: boolean = false;
-    mousedown(event: React.MouseEvent) {
-
-    }
+    mousedown(event: React.MouseEvent) { }
     @prop()
     flow: Flow = new Flow(this, this.page.ws);
     get isSupportTextStyle(): boolean {
@@ -72,6 +69,33 @@ export class BlockButton extends Block {
         var rg = rs.find(g => g.name == 'text-center');
         if (rg) {
             rg.text = lst('对齐');
+            rg.name = undefined;
+            rg.icon = { name: 'bytedance-icon', code: 'align-text-both' }
+            rg.type = undefined;
+            rg.childs = [
+                {
+                    name: 'text-center',
+                    icon: { name: 'bytedance-icon', code: 'align-text-left' },
+                    text: lst('居左'),
+                    value: 'left',
+                    checkLabel: this.align == 'left'
+                },
+                {
+                    name: 'text-center',
+                    icon: { name: 'bytedance-icon', code: 'align-text-center' },
+                    text: lst('居中'), value: 'center', checkLabel: this.align == 'center'
+                },
+                {
+                    name: 'text-center',
+                    icon: {
+                        name: 'bytedance-icon',
+                        code: 'align-text-right'
+                    },
+                    text: lst('居右'),
+                    value: 'right',
+                    checkLabel: this.align == 'right'
+                }
+            ]
             var pos = rs.findIndex(g => g == rg);
             var ns: MenuItem<string | BlockDirective>[] = [];
             ns.push({
@@ -100,7 +124,8 @@ export class BlockButton extends Block {
         switch (item.name) {
             case 'ghost':
             case 'buttonSize':
-                await this.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self })
+            case 'text-center':
+                await this.onUpdateProps({ [item.name == 'text-center' ? "align" : item.name]: item.value }, { range: BlockRenderRange.self })
                 return
         }
         return await super.onClickContextMenu(item, e);
@@ -114,8 +139,19 @@ export class BlockButton extends Block {
         }
         return false;
     }
-    
+    getVisibleHandleCursorPoint(): Point {
+        if (this.el) {
+            var db = this.el.querySelector('[data-button]') as HTMLElement;
+            var bound = Rect.fromEle(db);
+            if (bound) {
+                var pos = Point.from(bound);
+                pos = pos.move(0, 3 + util.remToPx(this.page.lineHeight) / 2);
+                return pos;
+            }
+        }
+    }
 }
+
 @view('/button')
 export class BlockButtonView extends BlockView<BlockButton>{
     boxTip: BoxTip;
@@ -135,40 +171,30 @@ export class BlockButtonView extends BlockView<BlockButton>{
         var classList: string[] = ['sy-button'];
         if (this.block.buttonSize) classList.push('sy-button-' + this.block.buttonSize);
         if (this.block.ghost) classList.push('sy-button-ghost');
-        if (this.block.isLine) {
-            return <span>
-                <BoxTip
-                    ref={e => this.boxTip = e}
-                    overlay={<div className="flex h-30 round padding-w-5">
-                        <Tip text={'拖动'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></a></Tip>
-                        <Tip text={'编辑'}><span className="flex-center text-1  item-hover size-24 round cursor" onMouseDown={e => this.openEdit(e)}><Icon size={16} icon={Edit1Svg}></Icon></span></Tip>
-                    </div>}>
-                    <SolidArea gap block={this.block} prop={'content'}><button className={'flex ' + classList.join(' ')}
-                        onMouseDown={e => this.block.mousedown(e)}>
-                        {this.block.buttonIcon && <Icon icon={this.block.buttonIcon}></Icon>}
-                        <span>{this.block.buttonText}</span>
-                    </button>
-                    </SolidArea>
-                </BoxTip>
-            </span>
-        }
-        else {
-            return <div className="visible-hover" style={this.block.visibleStyle}>
-                <div className={"flex" + (this.block.align == 'center' ? " flex-center" : "")}>
-                    <div onMouseDown={e => { e.stopPropagation(); this.block.onExcute() }} className={"flex flex-inline " + classList.join(" ")}>
+        var style: React.CSSProperties = {};
+        if (this.block.align == 'center') style.justifyContent = 'center';
+        else if (this.block.align == 'right') style.justifyContent = 'flex-end'
+        return <div className="visible-hover" style={this.block.visibleStyle}>
+            <div className={"flex"} style={style}>
+                <div className="relative" style={{ display: 'inline-block' }}>
+                    <span data-button={true} onMouseDown={e => { e.stopPropagation(); this.block.onExcute() }} className={"relative flex flex-inline " + classList.join(" ")}>
                         {this.block.buttonIcon && <Icon size={18} className={this.block.buttonText ? 'gap-r-5' : ""} icon={this.block.buttonIcon}></Icon>}
                         {this.block.buttonText && <span>{this.block.buttonText}</span>}
                         {!this.block.buttonText && !this.block.buttonIcon && <span><S>按钮</S></span>}
-                    </div>
-                    <span className="visible cursor flex-center " onClick={async e => {
+                    </span>
+                    <span className="visible flex-center  pos-center-right-outside" onMouseDown={async e => {
+                        e.stopPropagation();
                         this.openEdit(e)
-                    }} ><Icon size={16} icon={SettingsSvg}></Icon></span>
+                    }} >
+                        <span className="cursor flex-center gap-l-5 size-20">   <Icon size={16} icon={SettingsSvg}></Icon></span>
+
+                    </span>
                 </div>
-                {this.block.isEditFlow && <div className="relative">
-                    {this.renderFlow()}
-                </div>}
             </div>
-        }
+            {this.block.isEditFlow && <div className="relative flex" style={style}>
+                {this.renderFlow()}
+            </div>}
+        </div>
     }
     async onSave() {
         await this.block.onManualUpdateProps({
