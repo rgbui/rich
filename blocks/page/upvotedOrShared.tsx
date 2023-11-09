@@ -113,21 +113,21 @@ export class UpvotedOrSharedView extends BlockView<UpvotedOrShared>{
         return <div style={this.block.visibleStyle}>
             <div className="flex">
                 <div className="flex-fixed flex">
-                    <span onMouseDown={e => this.onLike()} className={"cursor flex-center  padding-w-10 h-30 round-16 " + (isLike ? " border-primary bg-primary text-white" : " text-1 item-hover border")}><Icon size={20} icon={LikeSvg}></Icon>{likeCount > 0 && <span>{likeCount}</span>}</span>
-                    <span className="gap-l-10"><UserAvatars size={30} users={users}></UserAvatars></span>
+                    <span onMouseDown={e => this.onLike()} className={"cursor flex-center  padding-w-10 h-30 round " + (isLike ? " border-primary bg-primary text-white" : "bg-p-light text-p")}><Icon size={20} icon={LikeSvg}></Icon>{likeCount > 0 && <span>{likeCount}</span>}</span>
+                    <span className="gap-l-10"><UserAvatars size={28} users={users}></UserAvatars></span>
                 </div>
                 <div className="flex-auto flex-end r-flex-center r-size-30 r-round r-item-hover r-gap-l-5">
                     <BoxTip overlay={<div className="bg-white text r-padding-w-10 r-padding-h-5 r-flex">
                         <div className="flex item-hover " onMouseDown={e => CopyAlert(this.block.page.pageUrl, lst('已复制链接'))}><span className="flex-center size-20"><Icon size={18} icon={LinkSvg}></Icon></span><span className="gap-l-5"><S>复制链接</S></span></div>
                         <div className="flex item-hover "><span className="flex-center size-20"><Icon size={18} icon={{ name: 'bytedance-icon', code: "friends-circle" }}></Icon></span><span className="gap-l-5"><S>微信分享</S></span></div>
-                        <div className="flex">
+                        <div className="flex size-80">
                             <QR size={80} url={this.block.page.pageUrl}></QR>
                         </div>
                         {/* <div className="flex"  onMouseDown={e => { this.onWxShare('weibo') }}><span><Icon icon={{ name: 'bytedance-icon', code: "weibo" }}></Icon></span><S>微博分享</S></div> */}
                     </div>}>
-                        <span><Icon size={20} icon={{ name: 'bytedance-icon', code: "send" }}></Icon></span>
+                        <span className="cursor" ><Icon size={20} icon={{ name: 'bytedance-icon', code: "send" }}></Icon></span>
                     </BoxTip>
-                    {this.block.isCanEdit() && <span onMouseDown={e => this.block.onContextmenu(e.nativeEvent)} ><Icon size={20} icon={DotsSvg}></Icon></span>}
+                    {this.block.isCanEdit() && <span className="cursor" onMouseDown={e => this.block.onContextmenu(e.nativeEvent)} ><Icon size={20} icon={DotsSvg}></Icon></span>}
                 </div>
             </div>
         </div>
