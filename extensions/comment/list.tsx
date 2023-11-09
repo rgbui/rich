@@ -2,7 +2,7 @@ import React from "react";
 import { useUserComments } from "./send";
 import { CopyText } from "../../component/copy";
 import { ShyAlert } from "../../component/lib/alert";
-import { TrashSvg, DuplicateSvg, DotsSvg, LikeSvg, EmojiSvg, CommentSvg } from "../../component/svgs";
+import { TrashSvg, DuplicateSvg, DotsSvg, LikeSvg, EmojiSvg, CommentSvg, PublishSvg, PlusSvg } from "../../component/svgs";
 import { Avatar } from "../../component/view/avator/face";
 import { UserBox } from "../../component/view/avator/user";
 import { Button } from "../../component/view/button";
@@ -29,7 +29,7 @@ export class CommentListView extends React.Component<{
     userid: string;
     elementUrl: string;
     sort?: 'default' | 'date',
-    display?: 'simple' | 'full',
+    displayFormat?: 'comment' | 'answer' | 'discuss',
     onChange?: (props: Record<string, any>) => void
 }>{
     list: Record<string, any>[] = [];
@@ -75,25 +75,34 @@ export class CommentListView extends React.Component<{
     }
     async onReply(l, user, event: React.MouseEvent) {
         if (this.checkSign() == false) return;
-        var g = await useUserComments({ userid: this.userid, placeholder: lst('回复') + '@' + user.name });
+        if (!user) user = (channel.query('/query/current/user'))
+        var g = await useUserComments({ userid: this.userid, format: l ? "comment" : 'answer', placeholder: (l ? lst('回复') + '@' + user.name : lst('添加回答')) });
         if (g) {
             var r = await channel.put('/ws/comment/send', {
                 elementUrl: this.elementUrl,
-                parentId: l.id,
-                rootId: l.rootId,
+                parentId: l?.id ?? null,
+                rootId: l?.rootId ?? null,
                 content: g
             });
             if (r.ok) {
-                if (typeof l.replyCount != 'number') l.replyCount = 0;
-                l.replyCount += 1;
-                if (typeof l.replys == 'undefined') l.replys = {
-                    page: 1,
-                    size: 20,
-                    total: 0,
-                    list: []
+                if (l) {
+                    if (typeof l.replyCount != 'number') l.replyCount = 0;
+                    l.replyCount += 1;
+                    if (typeof l.replys == 'undefined') l.replys = {
+                        page: 1,
+                        size: 20,
+                        total: 0,
+                        list: []
+                    }
+                    l.replys?.list.push(r.data.data);
+                    l.replys.total += 1;
                 }
-                l.replys?.list.push(r.data.data);
-                l.replys.total += 1;
+                else {
+                    this.list.push(r.data.data);
+                    this.total += 1;
+                    this.count += 1;
+                }
+
                 await this.onExpends(l);
             }
         }
@@ -129,7 +138,7 @@ export class CommentListView extends React.Component<{
             }
         }
     }
-    async addComment(event: React.MouseEvent) {
+    async addComment(event: React.MouseEvent, l?) {
         if (this.checkSign() == false) return;
         event.preventDefault();
         var value = this.textarea.value;
@@ -137,14 +146,28 @@ export class CommentListView extends React.Component<{
             this.textarea.value = '';
             var r = await channel.put('/ws/comment/send', {
                 elementUrl: this.elementUrl,
-                parentId: null,
-                rootId: null,
+                parentId: l?.id ?? null,
+                rootId: l?.rootId ?? null,
                 content: value
             });
             if (r.ok) {
-                this.list.push(r.data.data);
-                this.total += 1;
-                this.count += 1;
+                if (l) {
+                    if (typeof l.replyCount != 'number') l.replyCount = 0;
+                    l.replyCount += 1;
+                    if (typeof l.replys == 'undefined') l.replys = {
+                        page: 1,
+                        size: 20,
+                        total: 0,
+                        list: []
+                    }
+                    l.replys?.list.push(r.data.data);
+                    l.replys.total += 1;
+                }
+                else {
+                    this.list.push(r.data.data);
+                    this.total += 1;
+                    this.count += 1;
+                }
                 this.forceUpdate()
             }
         }
@@ -267,49 +290,7 @@ export class CommentListView extends React.Component<{
             </div>
         })}</div>
     }
-    renderSendComment() {
-        return <div className="flex-top  padding-w-14 gap-t-10">
-            {this.userid && <Avatar className="flex-fixed" size={32} userid={this.userid}></Avatar>}
-            <div tabIndex={1}
-                onFocus={e => this.onFocus(e)}
-                onBlur={e => this.onBlur(e)}
-                className="flex-auto gap-l-10 border round padding-10"
-                style={{ height: this.spread ? 92 : 24 }}
-            ><textarea
-                className="ef"
-                style={{
-                    width: '100%',
-                    lineHeight: "24px",
-                    border: 'none',
-                    padding: 0,
-                    height: this.spread ? 50 : 24,
-                    resize: 'none'
-                }}
-                placeholder={lst("发表评论")}
-                ref={e => this.textarea = e}></textarea>
-                {this.spread && <><Divider></Divider>
-                    <div className="flex">
-                        <div className="flex-auto">
-                            <span onMouseDown={e => this.onOpenEmjoji(e)} className="size-24 flex-center round item-hover"><Icon size={18} icon={EmojiSvg}></Icon></span>
-                        </div>
-                        <span className="flex-fixed flex">
-                            <Button size="small" onMouseDown={e => this.addComment(e)}><S>发布</S></Button>
-                        </span>
-                    </div></>}
-            </div>
-        </div>
-    }
-    isOver: boolean = false;
-    onFocus(e) {
-        this.spread = true;
-        this.forceUpdate();
-    }
-    onBlur(e) {
-        if (this.isOver) return;
-        this.spread = false;
-        this.forceUpdate();
-    }
-    render() {
+    renderComment() {
         return <div className={this.pop ? "w-600 padding-w-14" : ""}>
             <div className="flex gap-t-5 ">
                 <span className="bold f-14 flex-fixed">{this.total == 0 ? lst("评论") : lst('{total}条评论', { total: this.total })}</span>
@@ -332,6 +313,110 @@ export class CommentListView extends React.Component<{
             </div>
         </div>
     }
+    renderSendComment(l?) {
+        return <div className="flex-top  padding-w-14 gap-t-10">
+            {this.userid && <Avatar className="flex-fixed" size={32} userid={this.userid}></Avatar>}
+            <div tabIndex={1}
+                onFocus={e => this.onFocus(e)}
+                onBlur={e => this.onBlur(e)}
+                className="flex-auto gap-l-10 border round padding-10"
+                style={{ height: this.spread ? l ? (92 - 26) : 92 : 24 }}
+            ><textarea
+                className="ef"
+                style={{
+                    width: '100%',
+                    lineHeight: "24px",
+                    border: 'none',
+                    padding: 0,
+                    height: this.spread ? (l ? 24 : 50) : 24,
+                    resize: 'none'
+                }}
+                placeholder={lst("发表评论")}
+                ref={e => this.textarea = e}></textarea>
+                {this.spread && <><Divider></Divider>
+                    <div className="flex">
+                        <div className="flex-auto">
+                            <span onMouseDown={e => this.onOpenEmjoji(e)} className="size-24 flex-center round item-hover"><Icon size={18} icon={EmojiSvg}></Icon></span>
+                        </div>
+                        <span className="flex-fixed flex">
+                            <Button size="small" onMouseDown={e => this.addComment(e, l)}><S>发布</S></Button>
+                        </span>
+                    </div></>}
+            </div>
+        </div>
+    }
+    isOver: boolean = false;
+    onFocus(e) {
+        this.spread = true;
+        this.forceUpdate();
+    }
+    onBlur(e) {
+        if (this.isOver) return;
+        this.spread = false;
+        this.forceUpdate();
+    }
+    renderAnswerList(comments) {
+        return <div onMouseDown={e => this.onMentionUser(e)}>{comments.map(l => {
+            return <div key={l.id} className={"gap-b-15"}>
+                <UserBox userid={l.creater}>{(user) => <>
+                    <div className="flex"><Avatar size={28} user={user}></Avatar><span>{user.name}</span></div>
+                    <div className="text gap-h-10 f-14 text-1" dangerouslySetInnerHTML={{ __html: l.text }}></div>
+                    <div>
+                        <div className="flex">
+                            <span className="flex-fixed">
+                                <span className={"flex-center cursor padding-w-10 round  " + (l.like?.exists ? "bg-p text-white" : " bg-p-light text-p")} onMouseDown={e => this.likeComment(l)}><Icon icon={LikeSvg}></Icon><span className="gap-l-5">{l.like.count ?? ""}</span></span>
+                            </span>
+                            <div className="flex-fixed flex f-14">
+                                <span onMouseDown={e => this.onExpends(l)} className="remark  cursor flex-center gap-w-10  h-30  padding-w-10 item-hover round">
+                                    <Icon size={16} icon={CommentSvg}></Icon>
+                                    <span className="gap-l-5">{lst('{total}条评论', { total: l.replyCount ?? 0 })}</span>
+                                </span>
+                                <span className=" cursor remark  flex-center h-24  gap-w-10 padding-w-5 item-hover round">
+                                    <Icon size={16} icon={PublishSvg}></Icon>
+                                    <span className="gap-l-5">分享</span>
+                                </span>
+                                <span onMouseDown={e => this.onProperty(l, e)} className=" cursor flex-center size-24 item-hover round">
+                                    <Icon size={16} icon={DotsSvg}></Icon>
+                                </span>
+                            </div>
+                        </div>
+                        {l.replys && l.spread == true && <div>
+                            <div>{this.renderSendComment(l)}</div>
+                            <div className="border-light gap-t-10 padding-10 round">
+                                {this.renderComments(l.replys.list)}
+                            </div>
+                        </div>}
+                    </div>
+                    <Divider></Divider>
+                </>}
+                </UserBox>
+            </div>
+        })}</div>
+    }
+    renderAnswer() {
+        return <div className={this.pop ? "w-600 padding-w-14" : ""}>
+            <div className="flex gap-t-5 ">
+                <span className="bold f-14 flex-fixed">{this.total == 0 ? lst("回答") : lst('{total}条回答', { total: this.total })}</span>
+                <div className="flex-auto flex-end f-12">
+                    {this.props.displayFormat == 'answer' && <em className="padding-w-10 flex-center bg-p text-white round cursor gap-r-10" onMouseDown={e => this.onReply(null, null, e)}><Icon icon={PlusSvg}></Icon><span>写回答</span></em>}
+                    <em onMouseDown={e => this.onSet('default')} className={"h-24 flex-center cursor round padding-w-5" + (this.sort == 'default' ? " item-hover-focus" : "")}><S>默认</S></em>
+                    <em onMouseDown={e => this.onSet('date')} className={"h-24 flex-center cursor round padding-w-5" + (this.sort == 'date' ? " item-hover-focus" : "")}><S>最新</S></em>
+                </div>
+            </div>
+            <Divider></Divider>
+            <div className="padding-h-10  round min-h-30 overflow-y">
+                <SpinBox spin={this.loading}>
+                    {this.renderAnswerList(this.list)}
+                    <Pagination size={this.size} total={this.total} index={this.index}></Pagination>
+                    {this.list.length == 0 && <div className="remark min-50 flex-center f-12"><S>暂无评论</S></div>}
+                </SpinBox>
+            </div>
+        </div>
+    }
+    render() {
+        if (this.props.displayFormat == 'comment') return this.renderComment();
+        else if (this.props.displayFormat == 'answer') return this.renderAnswer();
+    }
     componentDidMount(): void {
         if (typeof this.props.sort == 'string') this.sort = this.props.sort;
         if (typeof this.props.userid == 'string') this.userid = this.props.userid;
@@ -352,6 +437,11 @@ export class CommentListView extends React.Component<{
         this.forceUpdate()
     }
     count: number = 0;
+    componentDidUpdate(prevProps: Readonly<{ page: Page; userid: string; elementUrl: string; sort?: 'default' | 'date'; displayFormat?: 'comment' | 'answer' | 'discuss'; onChange?: (props: Record<string, any>) => void; }>, prevState: Readonly<{}>, snapshot?: any): void {
+        // if (prevProps.displayFormat != this.props.displayFormat) {
+        //     this.forceUpdate()
+        // }
+    }
 }
 
 export async function useCommentListView(props: {

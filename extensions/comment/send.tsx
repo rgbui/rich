@@ -21,7 +21,11 @@ class UserComments extends EventsComponent {
         })
     }
     textarea: HTMLTextAreaElement;
-    options: { userid: string, placeholder?: string };
+    options: {
+        userid: string,
+        format?: 'answer' | 'comment',
+        placeholder?: string
+    };
     async onOpenEmjoji(event: React.MouseEvent) {
         var s = this.textarea.selectionStart;
         var e = this.textarea.selectionEnd;
@@ -46,7 +50,7 @@ class UserComments extends EventsComponent {
         }
     }
     render() {
-        return <div className="padding-14 round min-w-350">
+        return <div className={"padding-14 round "+(this.options?.format=='answer'?"min-w-500":"min-w-350")}>
             {this.options && <div className="flex-top">
                 <Avatar className="flex-fixed" size={32} userid={this.options.userid}></Avatar>
                 <div
@@ -60,7 +64,7 @@ class UserComments extends EventsComponent {
                             lineHeight: "24px",
                             border: 'none',
                             padding: 0,
-                            height: 50
+                            height: this.options?.format == 'answer' ? 80 : 50
                         }}
                         placeholder={this.options.placeholder || lst("发表评论")}
                         ref={e => this.textarea = e}></textarea>
@@ -70,7 +74,7 @@ class UserComments extends EventsComponent {
                                 <span onMouseDown={e => this.onOpenEmjoji(e)} className="size-24 flex-center round item-hover"><Icon size={18} icon={EmojiSvg}></Icon></span>
                             </div>
                             <span className="flex-fixed flex">
-                                <Button size="small" onMouseDown={e => this.addComment(e)}><S>评论</S></Button>
+                                <Button size="small" onMouseDown={e => this.addComment(e)}>{this.options.format == 'answer' ? <S>回答</S> : <S>评论</S>} </Button>
                             </span>
                         </div>
                     </>
