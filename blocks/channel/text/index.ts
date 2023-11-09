@@ -3,7 +3,6 @@ import { Block } from "../../../src/block";
 import { url } from "../../../src/block/factory/observable";
 import { LinkPageItem, PageLayoutType } from "../../../src/page/declare";
 import { ChannelTextType } from "./declare";
-import "./style.less";
 import { KeyboardCode } from "../../../src/common/keys";
 import { ChannelTextView } from "./view/view";
 import lodash from "lodash";
@@ -11,6 +10,7 @@ import { ElementType, getElementUrl } from "../../../net/element.type";
 import { Rect } from "../../../src/common/vector/point";
 import { util } from "../../../util/util";
 import { AtomPermission } from "../../../src/page/permission";
+import "./style.less";
 
 @url('/channel/text')
 export class ChannelText extends Block {

@@ -9,12 +9,12 @@ import { lst } from "../../../i18n/store";
 import { PageThemeStyle } from "../../../src/page/declare";
 import { Icon } from "../../../component/view/icon";
 import { DotsSvg, PlatteSvg } from "../../../component/svgs";
-import "./style.less";
 import { Rect } from "../../../src/common/vector/point";
 import { useCardTheme } from "../../../extensions/theme/card";
 import lodash from "lodash";
 import { MenuItem } from "../../../component/view/menu/declare";
 import { BlockDirective } from "../../../src/block/enum";
+import "./style.less";
 
 @url('/card')
 export class PageCard extends Block {
@@ -82,6 +82,7 @@ export class PageCard extends Block {
         else return this.page.getScrollDiv();
     }
 }
+
 @view('/card')
 export class PageCardView extends BlockView<PageCard>{
     renderCard() {
@@ -222,15 +223,23 @@ export class PageCardView extends BlockView<PageCard>{
             <div className='min-h-60 relative visible-hover' >
                 {this.block.isCanEdit() && <>
                     <div style={{ zIndex: 1000, top: -30 }} className="h-30 visible  pos-top-right flex">
-                        <span onMouseDown={e => {
+                        <span onMouseDown={async e => {
                             e.stopPropagation();
-                            this.block.openCardStyle()
-                        }} className="size-24 round flex-center item-hover bg-white cursor shadow">
+                            var el = (e.currentTarget as HTMLElement).parentNode as HTMLElement;
+                            el?.classList.remove('visible')
+                            await this.block.openCardStyle()
+                            el.classList.add('visible')
+
+                        }} className="size-24 round flex-center item-hover bg-white cursor shadow gap-r-5">
                             <Icon size={18} icon={PlatteSvg}></Icon>
                         </span>
-                        <span onMouseDown={e => {
+                        <span onMouseDown={async e => {
                             e.stopPropagation();
-                            this.block.onContextmenu(e.nativeEvent)
+                            var el = (e.currentTarget as HTMLElement).parentNode as HTMLElement;
+                            el?.classList.remove('visible')
+                            await this.block.onContextmenu(e.nativeEvent)
+                            el.classList.add('visible')
+
                         }} className="size-24 round flex-center item-hover bg-white cursor shadow ">
                             <Icon size={18} icon={DotsSvg}></Icon>
                         </span>

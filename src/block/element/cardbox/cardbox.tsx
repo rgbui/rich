@@ -34,67 +34,77 @@ export class CardBox extends Block {
         this.gridMap = new GridMap(this)
     }
     async openContextmenu(event: React.MouseEvent) {
-        var r = await useSelectMenuItem(
-            { roundArea: Rect.fromEvent(event) },
-            [
-                {
-                    name: 'copylink',
-                    icon: LinkSvg,
-                    text: lst("复制链接")
-                },
-                {
-                    name: 'cloneCard',
-                    icon: DuplicateSvg,
-                    text: lst("复制卡片")
-                },
-                { type: MenuItemType.divide },
-                {
-                    name: 'background',
-                    icon: CardBackgroundFillSvg,
-                    text: lst("更换背景")
-                },
-                {
-                    name: 'style',
-                    icon: CardBrushSvg,
-                    text: lst("卡片样式")
-                },
-                {
-                    name: 'merge',
-                    disabled: this.prev && this.prev instanceof CardBox ? false : true,
-                    icon: ArrowUpSvg,
-                    text: lst("合并内容到上一个")
-                },
-                { type: MenuItemType.divide },
-                {
-                    name: 'delete',
-                    icon: TrashSvg,
-                    text: lst("删除卡片")
+        var el = event.currentTarget?.parentNode as HTMLElement;
+        el.classList.remove('visible');
+        try {
+            var r = await useSelectMenuItem(
+                { roundArea: Rect.fromEvent(event) },
+                [
+                    {
+                        name: 'copylink',
+                        icon: LinkSvg,
+                        text: lst("复制链接")
+                    },
+                    {
+                        name: 'cloneCard',
+                        icon: DuplicateSvg,
+                        text: lst("复制卡片")
+                    },
+                    { type: MenuItemType.divide },
+                    {
+                        name: 'background',
+                        icon: CardBackgroundFillSvg,
+                        text: lst("更换背景")
+                    },
+                    {
+                        name: 'style',
+                        icon: CardBrushSvg,
+                        text: lst("卡片样式")
+                    },
+                    {
+                        name: 'merge',
+                        disabled: this.prev && this.prev instanceof CardBox ? false : true,
+                        icon: ArrowUpSvg,
+                        text: lst("合并内容到上一个")
+                    },
+                    { type: MenuItemType.divide },
+                    {
+                        name: 'delete',
+                        icon: TrashSvg,
+                        text: lst("删除卡片")
+                    }
+                ]
+            );
+            if (r?.item) {
+                if (r.item.name == 'copylink') {
+                    this.onCopyLink();
                 }
-            ]
-        );
-        if (r?.item) {
-            if (r.item.name == 'copylink') {
-                this.onCopyLink();
-            }
-            else if (r.item.name == 'cloneCard') {
-                this.onClone()
-            } else if (r.item.name == 'background') {
-                this.onOpenCardStyle(r.item.name)
-            } else if (r.item.name == 'style') {
-                this.onOpenCardStyle()
-            } else if (r.item.name == 'merge') {
-                var prev = this.prev as CardBox;
-                if (prev instanceof CardBox) {
-                    var cs = this.childs;
-                    this.page.onAction('onCardMerge', async () => {
-                        await prev.appendArray(cs, prev.childs.length, prev.parentKey);
-                        await this.delete()
-                    })
+                else if (r.item.name == 'cloneCard') {
+                    this.onClone()
+                } else if (r.item.name == 'background') {
+                    this.onOpenCardStyle(r.item.name)
+                } else if (r.item.name == 'style') {
+                    this.onOpenCardStyle()
+                } else if (r.item.name == 'merge') {
+                    var prev = this.prev as CardBox;
+                    if (prev instanceof CardBox) {
+                        var cs = this.childs;
+                        this.page.onAction('onCardMerge', async () => {
+                            await prev.appendArray(cs, prev.childs.length, prev.parentKey);
+                            await this.delete()
+                        })
+                    }
+                }
+                else if (r.item.name == 'delete') {
+                    this.onDelete()
                 }
             }
-            else if (r.item.name == 'delete') {
-                this.onDelete()
-            }
+        }
+        catch (ex) {
+            console.error(ex)
+        }
+        finally {
+            el.classList.add('visible');
         }
     }
     async onAddCardBox(event: React.MouseEvent) {
@@ -240,6 +250,7 @@ export class CardBox extends Block {
         else return this.page.getScrollDiv();
     }
 }
+
 /*** 在一个页面上，从视觉上有多个视图块，
  * 如每个页面都有一个初始的内容视图，不可拖动
  *  但页面可以会有弹层等一些其它的视图
