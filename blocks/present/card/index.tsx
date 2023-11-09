@@ -219,19 +219,19 @@ export class PageCardView extends BlockView<PageCard>{
     }
     renderView() {
         return <div style={this.block.visibleStyle}>
-            <div className='sy-block-card relative visible-hover' >
+            <div className='min-h-60 relative visible-hover' >
                 {this.block.isCanEdit() && <>
-                    <div style={{ zIndex: 1000 }} className="visible  pos-top-right gap-20 flex">
+                    <div style={{ zIndex: 1000, top: -30 }} className="h-30 visible  pos-top-right flex">
                         <span onMouseDown={e => {
                             e.stopPropagation();
                             this.block.openCardStyle()
-                        }} className="size-24 round flex-center item-hover bg-white cursor ">
+                        }} className="size-24 round flex-center item-hover bg-white cursor shadow">
                             <Icon size={18} icon={PlatteSvg}></Icon>
                         </span>
                         <span onMouseDown={e => {
                             e.stopPropagation();
                             this.block.onContextmenu(e.nativeEvent)
-                        }} className="size-24 round flex-center item-hover bg-white cursor ">
+                        }} className="size-24 round flex-center item-hover bg-white cursor shadow ">
                             <Icon size={18} icon={DotsSvg}></Icon>
                         </span>
                     </div>
