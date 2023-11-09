@@ -68,6 +68,7 @@ import { BlockButton } from "../../../blocks/form/button";
 import { Block } from "../../block";
 import { RobotInfo } from "../../../types/user";
 import { usePageTheme } from "../../../extensions/theme";
+
 export class PageContextmenu {
 
     async onGetContextMenus(this: Page) {
@@ -234,10 +235,14 @@ export class PageContextmenu {
                     icon: FieldsSvg,
                     childs: [
                         { name: 'onlyDisplayContent', text: lst('标题'), type: MenuItemType.switch, checked: this.hideDocTitle ? false : true, icon: HSvg },
-                        { name: 'showComment', text: lst("评论"), icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
-                        { name: 'pageAuthor', text: lst('作者'), icon: { name: 'bytedance-icon', code: 'edit-name' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PageAuthor) },
+                        {
+                            name: 'pageAuthor', text: lst('作者'), icon: { name: 'bytedance-icon', code: 'edit-name' },
+                            type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PageAuthor)
+                        },
+                        { type: MenuItemType.divide },
                         { name: 'pageUpvotedOrShared', text: lst('点赞分享'), icon: { name: 'bytedance-icon', code: 'send' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PageUpvotedOrShared) },
                         { name: 'prevOrNext', text: lst('上下篇'), visible: [ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type), icon: { name: 'bytedance-icon', code: 'transfer-data' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PagePreOrNext) },
+                        { name: 'showComment', text: lst("评论"), icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                         { name: 'refPages', text: lst("引用"), visible: [ElementType.SchemaRecordView].includes(this.pe.type) ? false : true, icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.RefLinks) },
                     ]
                 },
