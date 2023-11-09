@@ -17,7 +17,6 @@ import {
 import { Rect } from "../../../../src/common/vector/point";
 import { DragList } from "../../../../component/view/drag.list";
 import { BlockUrlConstant } from "../../../../src/block/constant";
-import lodash from "lodash";
 import { MenuView } from "../../../../component/view/menu/menu";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import { FieldType } from "../../../../blocks/data-grid/schema/type";
@@ -250,20 +249,20 @@ export class DataGridFields extends EventsComponent {
         }
         return <div className="max-h-200 overflow-y">
             <div className="flex padding-w-14 gap-t-10">
-                <span className="remark flex-auto f-12 "><S>数据视图字段</S></span>
+                <span className="remark flex-auto f-12 "><S>卡片视图字段</S></span>
             </div>
             <div>
                 {card.props.map(pro => {
                     var bp = (self.block as TableStoreGallery).cardConfig.templateProps?.props?.find(g => g.name == pro.name);
-                    var fe = self.block.fields.find(g => g.field?.id == bp?.bindFieldId)
-                    return <div key={pro.name} className="flex h-30 f-14 padding-w-5 gap-w-5 item-hover round cursor text-1">
-                        <span className="flex-fixed flex-center size-24 round item-hover cursor"><Icon size={14} icon={GetFieldTypeSvg(fe?.field?.type ? fe.field.type : pro.types[0])}></Icon></span>
-                        <span className="flex-auto gap-r-10 text-over">{pro.text}</span>
+                    return <div key={pro.name} className="flex padding-h-3 f-14 padding-w-5 gap-w-5 item-hover round cursor text-1">
+                        <span className="size-24 round flex-center flex-fixed"><Icon size={14} icon={GetFieldTypeSvg(pro.types.first())}></Icon></span>
+                        <span className="flex-auto gap-r-10  text-over">{pro.text}</span>
                         <div className="flex-fixed">
-                            <SelectBox small border
-                                value={bp?.bindFieldId}
+                            <SelectBox small
+                                multiple
+                                value={Array.isArray(bp.bindFieldIds) ? bp.bindFieldIds : (bp.bindFieldId ? [bp.bindFieldId] : [])}
                                 onChange={e => {
-                                    changeArrayProp(bp, { name: pro.name, bindFieldId: e })
+                                    changeArrayProp(bp, { name: pro.name, bindFieldIds: e })
                                 }}
                                 options={self.block.schema.recordViewTemplateFields.findAll(c => pro.types.includes(c.type)).map(c => {
                                     return {
@@ -277,7 +276,8 @@ export class DataGridFields extends EventsComponent {
                     </div>
                 })}
             </div>
-            <div className="flex  padding-w-14 gap-t-10" >
+            <Divider></Divider>
+            <div className="flex  padding-w-14 " >
                 <span className="remark flex-auto f-12 "><S>字段</S></span>
             </div>
             <div className="shy-table-field-view-items">{fs.map(f => {
@@ -289,9 +289,6 @@ export class DataGridFields extends EventsComponent {
             })}</div>
         </div>
     }
-    onStoreViewText = lodash.debounce((value) => {
-        console.log('deb', value);
-    }, 1000)
     render(): ReactNode {
         if (!this.block) return <></>;
         if (!this.schema) return <div></div>

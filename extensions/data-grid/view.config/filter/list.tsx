@@ -80,7 +80,8 @@ export class DataGridFilterList extends EventsComponent {
             }
         }
     }
-    schema: TableSchema
+    schema: TableSchema;
+    formSchema:TableSchema;
     filters: SchemaFilterItem[] = [];
     ws: LinkWs
     render() {
@@ -121,6 +122,7 @@ export async function useDataGridFilterList(pos: PopoverPosition,
     option: {
         schema: TableSchema,
         filters: SchemaFilterItem[],
+        formSchema:TableSchema,
         ws: LinkWs
     }) {
     let popover = await PopoverSingleton(DataGridFilterList, { mask: true });

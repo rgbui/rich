@@ -532,7 +532,7 @@ export class DataGridViewOperator {
         })
     }
     async changeFields(this: DataGridView, oldFields: ViewField[], newFields: ViewField[]) {
-        await this.manualUpdateProps({ fields: oldFields }, { fields: newFields }, BlockRenderRange.none, true);
+        await this.manualUpdateProps({ fields: oldFields }, { fields: newFields }, BlockRenderRange.none,{isOnlyRecord:true});
         this.fields = newFields;
     }
     async onChangeFields(this: DataGridView, oldFields: ViewField[], newFields: ViewField[]) {

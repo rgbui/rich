@@ -10,7 +10,7 @@ import { Avatar } from "../../../../component/view/avator/face";
 import { Divider } from "../../../../component/view/grid";
 import { Input } from "../../../../component/view/input";
 import { useSelectMenuItem } from "../../../../component/view/menu";
-import { MenuItemType } from "../../../../component/view/menu/declare";
+import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import { SelectBox } from "../../../../component/view/select/box";
 import { lst } from "../../../../i18n/store";
 import { S } from "../../../../i18n/view";
@@ -23,6 +23,7 @@ import { LinkWs } from "../../../../src/page/declare";
 import { PopoverSingleton } from "../../../../component/popover/popover";
 import { PopoverPosition } from "../../../../component/popover/position";
 import { EventsComponent } from "../../../../component/lib/events.component";
+import { util } from "../../../../util/util";
 
 export class CustomTableFilterView extends EventsComponent {
     getFields() {
@@ -35,7 +36,8 @@ export class CustomTableFilterView extends EventsComponent {
         });
         return fs;
     }
-    getComputedFields(fieldId: string) {
+    getComputedFields(fieldId: string)
+    {
         var field = this.schema.fields.find(g => g.id == fieldId);
         if ([FieldType.image, FieldType.video, FieldType.video, FieldType.file].includes(field.type)) {
             return [
@@ -59,6 +61,8 @@ export class CustomTableFilterView extends EventsComponent {
             return [
                 { text: lst('等于'), value: '$eq' },
                 { text: lst('不等于'), value: '$ne' },
+                { text: lst('包含'), value: '$in' },
+                { text: lst('不包含'), value: '$notIn' },
                 { text: lst('为空'), value: '$isNull' },
                 { text: lst('不为空'), value: '$isNotNull' },
             ]
@@ -229,32 +233,88 @@ export class CustomTableFilterView extends EventsComponent {
         var self = this;
         var fe = self.schema.fields.find(g => g.id == item.field);
         var options = fe.config?.options || [];
-        var op = options.find(g => g.value == item.value);
-        async function mousedown(item: SchemaFilter, event: React.MouseEvent) {
-            var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, options.map(op => {
-                return {
-                    text: op.text,
-                    value: op.value,
-                    checkLabel: item.value == op.value,
-                    type: MenuItemType.custom,
-                    render(it) {
-                        return <div className="flex padding-w-10 gap-w-5  h-30 item-hover round cursor">
-                            <span className="flex-fixed size-20 round gap-r-10 border" style={{ backgroundColor: op.color }}></span>
-                            <span className="flex-auto text f-14">{op.text}</span>
-                            {it.value == item.value && <span className="flex-fixed size-24 flex-center"><Icon size={16} icon={CheckSvg}></Icon></span>}
-                        </div>
+        if (item.operator == '$in' || item.operator == '$notIn') {
+            var vs = util.covertToArray(item.value);
+            var ops = options.findAll(g => vs.includes(g.value));
+            async function mousedown(item: SchemaFilter, event: React.MouseEvent) {
+                var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, options.map(op => {
+                    return {
+                        text: op.text,
+                        value: op.value,
+                        checkLabel: item.value == op.value,
+                        type: MenuItemType.custom,
+                        render(it) {
+                            return <div className="flex padding-w-14 h-30 item-hover round cursor">
+                                <span className="flex-fixed size-20 round gap-r-10 border" style={{ backgroundColor: op.color }}></span>
+                                <span className="flex-auto text f-14">{op.text}</span>
+                                {it.value == item.value && <span className="flex-fixed size-24 flex-center"><Icon size={16} icon={CheckSvg}></Icon></span>}
+                            </div>
+                        }
+                    }
+                }));
+                if (r?.item) {
+                    vs = util.covertToArray(item.value);
+                    if (vs.includes(r.item.value)) lodash.remove(vs, g => g == r.item.value)
+                    else vs.push(r.item.value);
+                    item.value = vs;
+                    self.onForceStore();
+                }
+            }
+            return <div onMouseDown={e => mousedown(item, e)} className="border box-border round h-26 padding-w-14 flex-center gap-r-10">
+                {ops.map(op => {
+                    return <span className="gap-r-5" key={op.value} style={{ background: op?.color ? op.color : undefined }}>{op?.text || lst('请选择一项')}</span>
+                })}
+                {ops.length == 0 && <span>{lst('请选择一项')}</span>}
+            </div>
+        }
+        else {
+            var op = options.find(g => g.value == item.value);
+            if (!op && self.formSchema) {
+                op = self.formSchema.fields.find(g => '@' + g.text == item.value) as any;
+                if (op)
+                    op = { text: '@' + op.text, value: '@' + op.text } as any;
+            }
+            async function mousedown(item: SchemaFilter, event: React.MouseEvent) {
+                var menus: MenuItem[] = options.map(op => {
+                    return {
+                        text: op.text,
+                        value: op.value,
+                        checkLabel: item.value == op.value,
+                        type: MenuItemType.custom,
+                        render(it) {
+                            return <div className="flex padding-w-14 h-30 item-hover round cursor">
+                                <span className="flex-fixed size-20 round gap-r-10 border" style={{ backgroundColor: op.color }}></span>
+                                <span className="flex-auto text f-14">{op.text}</span>
+                                {it.value == item.value && <span className="flex-fixed size-24 flex-center"><Icon size={16} icon={CheckSvg}></Icon></span>}
+                            </div>
+                        }
+                    }
+                })
+                if (self.formSchema) {
+                    var fs = self.formSchema.fields.findAll(g => g.type == FieldType.option || g.type == FieldType.options);
+                    if (fs) {
+                        menus.push({ type: MenuItemType.divide });
+                        menus.push({ type: MenuItemType.text, text: lst('表单字段') })
+                        menus.push(...fs.map(f => {
+                            return {
+                                text: '@' + f.text,
+                                value: '@' + f.text,
+                                icon: GetFieldTypeSvg(f.type)
+                            }
+                        }))
                     }
                 }
-            }));
-            if (r?.item) {
-                item.value = r.item.value;
-                self.onForceStore();
+                var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, menus);
+                if (r?.item) {
+                    item.value = r.item.value;
+                    self.onForceStore();
+                }
             }
+            return <div onMouseDown={e => mousedown(item, e)} className="border box-border round h-26 padding-w-14 flex-center gap-r-10">
+                {op?.color && <span className="circle size-20 gap-r-5" style={{ background: op?.color ? op.color : undefined }}></span>}
+                <span>{op?.text || lst('请选择一项')}</span>
+            </div>
         }
-        return <div onMouseDown={e => mousedown(item, e)} className="border box-border round h-26 padding-w-14 flex-center gap-r-10">
-            {op?.color && <span className="circle size-20 gap-r-5" style={{ background: op?.color ? op.color : undefined }}></span>}
-            <span>{op?.text || lst('请选择一项')}</span>
-        </div>
     }
     renderUserInput(item: SchemaFilter) {
         var self = this;
@@ -301,7 +361,7 @@ export class CustomTableFilterView extends EventsComponent {
                     self.onForceStore();
                 }}></SelectBox></em><S>条件的数据</S>
             </div>
-            <div className="max-h-300 overflow-y">{self.filter.items.map((item, index) => {
+            <div className={"max-h-300 overflow-y" + (self.filter.items.length > 0 ? " min-h-200" : " ")}>{self.filter.items.map((item, index) => {
                 var fe = self.schema.fields.find(g => g.id == item.field);
                 return <div className="flex visible-hover max-h-30 padding-w-14 gap-h-10" key={index}>
                     <div className="flex-auto flex">
@@ -325,7 +385,26 @@ export class CustomTableFilterView extends EventsComponent {
                                 ].includes(fe.type) && ['$ne', '$eq'].includes(item.operator))
                             )
                             &&
-                            <Input className={'gap-r-10'} style={{ width: 120 }} placeholder={lst('值')} value={item.value} onChange={e => { item.value = e; self.onStore(); }}></Input>}
+                            <Input onSearchDrop={async (v) => {
+                                if (!v) return []
+                                if (this.formSchema) {
+                                    var fs = this.formSchema.fields.findAll(g => [
+                                        FieldType.text,
+                                        FieldType.textarea,
+                                        FieldType.title,
+                                        FieldType.link,
+                                        FieldType.phone,
+                                        FieldType.email].includes(g.type) && ('@' + g.text).startsWith(v));
+                                    return fs.map(f => {
+                                        return {
+                                            value: '@' + f.text,
+                                            text: '@' + f.text,
+                                            type: GetFieldTypeSvg(f.type)
+                                        }
+                                    })
+                                }
+                                return [] as any
+                            }} className={'gap-r-10'} style={{ width: 120 }} placeholder={lst('值')} onEnter={e=>{item.value=e;self.onForceStore();}} value={item.value} onChange={e => { item.value = e; self.onStore(); }}></Input>}
                         {[FieldType.number, FieldType.autoIncrement].includes(fe.type) && !['$isNull', '$isNotNull'].includes(item.operator) && <Input className={'gap-r-10'} type='number' style={{ width: 120 }} placeholder={lst('值')} value={item.value} onChange={e => { item.value = e; self.onStore(); }}></Input>}
                         {[FieldType.date, FieldType.modifyDate, FieldType.createDate].includes(fe.type) && !['$isNull', '$isNotNull'].includes(item.operator) && self.renderDateInput(item)}
                         {[FieldType.option, FieldType.options].includes(fe.type) && !['$isNull', '$isNotNull'].includes(item.operator) && self.renderOptionInput(item)}
@@ -345,20 +424,23 @@ export class CustomTableFilterView extends EventsComponent {
     }
     open(options: {
         schema: TableSchema,
+        formSchema?: TableSchema,
         filter: SchemaFilter,
         ws: LinkWs,
     }) {
         Object.assign(this, options);
         this.forceUpdate();
     }
-    schema: TableSchema
+    schema: TableSchema;
     filter: SchemaFilter;
+    formSchema?: TableSchema;
     ws: LinkWs
 }
 
 export async function useCustomTableFilter(pos: PopoverPosition,
     option: {
         schema: TableSchema,
+        formSchema?: TableSchema,
         filter: SchemaFilter,
         ws: LinkWs,
         onChange(filter: SchemaFilter): void

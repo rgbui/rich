@@ -29,6 +29,7 @@ import { AtomPermission } from "../../../../src/page/permission";
 import { BlockUrlConstant } from "../../../../src/block/constant";
 import { LatestOrHot } from "../../block/latestOrHot";
 import { OptionDefineRule } from "../../block/optionRule";
+import { FieldType } from "../../schema/type";
 
 /**
  * 
@@ -200,8 +201,8 @@ export class DataGridView extends Block {
                 }
             })
         }
-        var ru=this.referenceBlockers.find(g=>g.url==BlockUrlConstant.DataGridOptionRule) as OptionDefineRule
-        if(ru){
+        var ru = this.referenceBlockers.find(g => g.url == BlockUrlConstant.DataGridOptionRule) as OptionDefineRule
+        if (ru) {
             var fl = ru.getFilters();
             if (fl) {
                 rs.push(...fl);
@@ -218,6 +219,49 @@ export class DataGridView extends Block {
                 f = { logic: 'and', items: [...rs] }
             }
         }
+        var ef = (g: SchemaFilter) => {
+            if (typeof g.value != 'undefined') {
+                var gf = this.schema.fields.find(c => c.id == g.field)
+                if (Array.isArray(g.value)) {
+                    if (g.value.some(s => typeof s == 'string' && s.startsWith('@'))) {
+                        g.value = g.value.map(s => {
+                            if (typeof s == 'string' && s.startsWith('@') && this.page.schema && this.page.formRowData) {
+                                var f = this.page.schema.fields.find(c => '@' + c.text == s);
+                                if (f) {
+                                    if ([FieldType.option, FieldType.options].includes(gf.type)) {
+                                        var ops = gf.config?.options.find(c => '@' + c.text == g.value);
+                                        if (ops) {
+                                            return ops.value;
+                                        }
+                                    }
+                                    else
+                                        return this.page.formRowData[f.name];
+                                }
+                            }
+                            return s;
+                        })
+                    }
+                }
+                else if (g.value && typeof g.value == 'string' && g.value.startsWith('@') && this.page.schema && this.page.formRowData) {
+                    var f = this.page.schema.fields.find(c => '@' + c.text == g.value);
+                    if (f) {
+                        if ([FieldType.option, FieldType.options].includes(gf.type)) {
+                            var ops = gf.config?.options.find(c => '@' + c.text == g.value);
+                            if (ops) {
+                                g.value = ops.value;
+                            }
+                        }
+                        else g.value = this.page.formRowData[f.name];
+                    }
+                }
+            }
+            if (Array.isArray(g.items)) {
+                g.items.forEach(gg => {
+                    ef(gg)
+                })
+            }
+        }
+        ef(f);
         return f
     }
     getSearchSorts() {

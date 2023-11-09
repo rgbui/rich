@@ -157,6 +157,7 @@ export class OptionDefineRule extends Block {
         var r = await useDataGridFilterList({ roundArea: this.getVisibleBound() }, {
             schema: this.refBlock.schema,
             ws: this.page.ws,
+            formSchema: this.page.schema,
             filters: lodash.cloneDeep(this.optionRules),
         });
         if (r) {
@@ -166,6 +167,7 @@ export class OptionDefineRule extends Block {
     getFilters(): SchemaFilter[] {
         var fs = this.optionRules.findAll(g => this.values.includes(g.id)).map(v => v.filter);
         if (fs.length > 0) {
+           
             if (this.isMultiple)
                 return [{
                     logic: 'or',

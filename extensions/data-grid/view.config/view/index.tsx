@@ -74,13 +74,19 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                                                 <div>{c.title}</div>
                                                 <div className="remark">{c.remark}</div>
                                             </div>
-                                            {self.block.getCardUrl() == c.url && <div className="pos pos-right pos-t-5 pos-r-5 size-20 cursor round">
+                                            {self.block.getCardUrl() == c.url && <div className="pos pos-right pos-t-5 pos-r-5 size-20 cursor round ">
                                                 <Icon size={16} icon={CheckSvg}></Icon>
                                             </div>}
                                         </div>
                                     }
                                 }
-                            })
+                            }),
+                            {
+                                type: MenuItemType.custom,
+                                render(item, view) {
+                                    return <div className="flex padding-w-10 padding-h-3"><span className="text-1">{lst('AI生成数据视图')}</span><span className="op-3 gap-l-5 bg-p text-white padding-w-3 round padding-h-1">coming soon</span></div>
+                                }
+                            }
                         ]
                     }
                 ]

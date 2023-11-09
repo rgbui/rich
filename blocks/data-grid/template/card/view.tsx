@@ -2,7 +2,7 @@
 import React from "react";
 import { TableStoreGallery } from "../../view/gallery";
 import { TableStoreItem } from "../../view/item";
-import { DataGridItemRecord } from "../../element/record";
+import { DataGridItemRecord } from "../../view/item/record";
 import { useImageFilePicker } from "../../../../extensions/file/image.picker";
 import { Rect } from "../../../../src/common/vector/point";
 import { DataGridView } from "../../view/base";
@@ -28,17 +28,31 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
         if (this.props.item instanceof TableStoreItem) return this.props.item.dataIndex;
         else return -1;
     }
-    getField(name: string) {
+    getFields(name: string) {
         var n = this.cardConfig().templateProps.props?.find(g => g.name == name);
         if (n) {
-            var f = this.schema.fields.find(c => c.id == n.bindFieldId);
-            if (f) return f;
+            var fs: Field[];
+            if (Array.isArray(n.bindFieldIds)) {
+                fs = this.schema.fields.filter(c => n.bindFieldIds.includes(c.id));
+            }
+            else fs = [this.schema.fields.find(c => c.id == n.bindFieldId)];
+            lodash.remove(fs, c => c ? false : true);
+            return fs
         }
+        return []
+    }
+    getFieldRowValue(name: string) {
+        var fs = this.getFields(name);
+        if (fs.length > 0) {
+            for (let f of fs) {
+                if (typeof this.props.item.dataRow[f.name] != 'undefined') return { field: f, value: this.props.item.dataRow[f.name] };
+            }
+        }
+        return { field: null, value: undefined };
     }
     getValue<T = string>(name: string, safeType?: FieldType): T {
-        var f = this.getField(name);
-        if (f && this.props.item.dataRow) {
-            var value = this.props.item.dataRow[f.name];
+        var { value, field } = this.getFieldRowValue(name)
+        if (typeof value != 'undefined') {
             if (typeof safeType != 'undefined') {
                 switch (safeType) {
                     case FieldType.comment:
@@ -54,7 +68,7 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
                         if (lodash.isUndefined(value) || lodash.isNull(value)) return [] as any;
                         var v = Array.isArray(value) ? value : [value];
                         return v.map(g => {
-                            var op = f.config.options.find(c => c.value == g);
+                            var op = field.config.options.find(c => c.value == g);
                             if (op?.text) return { text: op.text, color: op.color };
                             else return { text: g };
                         }) as any
@@ -99,10 +113,13 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
         if (typeof (event as any).stopPropagation == 'function') (event as any).stopPropagation()
         var resource = await useImageFilePicker({ roundArea: event instanceof Rect ? event : Rect.fromEle(event.currentTarget as HTMLElement) });
         if (resource) {
-            var field = this.getField(name);
+            var fs = this.getFields(name);
+            var field: Field;
+            if (fs.length > 1) field = fs.find(g => g.type != FieldType.cover)
+            else field = fs[0];
             if (this.props.item instanceof TableStoreItem) {
                 if (updateFileName) {
-                    var uf = this.getField(updateFileName);
+                    var uf = this.schema.fields.find(c => c.name == updateFileName);
                     var filename = resource.filename;
                     var filename = filename.slice(0, filename.lastIndexOf('.'))
                     await this.props.item.onUpdateCellProps({
@@ -132,7 +149,7 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
     }
     isEmoji(name: string) {
         if (!this.props.item.dataRow) return false;
-        var field: Field = this.getField(name);
+        var field: Field = this.getFields(name).first();
         if ((this.props.dataGrid instanceof TableStoreGallery || this.props.dataGrid instanceof TableStoreList) && field) {
             var r = this.props.dataGrid.isEmoji(field, this.props.item.dataRow.id);
             return r;
@@ -144,7 +161,7 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
             ShyAlert(lst('请先登录'))
             return
         }
-        var field: Field = this.getField(name);
+        var field: Field = this.getFields(name).first();
         if (this.props.item instanceof TableStoreItem) {
             await this.props.item.onUpdateCellInteractive(field);
             this.forceUpdate()

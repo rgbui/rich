@@ -1,7 +1,7 @@
 import { TableStoreItem } from ".";
 import { Block } from "../../../../src/block";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
-import { DataGridItemRecord } from "../../element/record";
+import { DataGridItemRecord } from "./record";
 import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
 export async function createFieldBlock(viewField: ViewField, block: TableStoreItem | DataGridItemRecord) {
@@ -187,7 +187,14 @@ export interface CardConfig {
         props?: {
             name: string,
             visible: boolean,
-            bindFieldId: string
+            /**
+             * 弃用
+             */
+            bindFieldId?: string,
+            /**
+             * 以这个为准
+             */
+            bindFieldIds?:string[]
         }[]
     }
 }
