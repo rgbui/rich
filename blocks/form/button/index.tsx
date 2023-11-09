@@ -191,7 +191,7 @@ export class BlockButtonView extends BlockView<BlockButton>{
                     </span>
                 </div>
             </div>
-            {this.block.isEditFlow && <div className="relative flex" style={style}>
+            {this.block.isEditFlow && <div className="relative flex " style={{zIndex:10}}>
                 {this.renderFlow()}
             </div>}
         </div>
@@ -212,8 +212,9 @@ export class BlockButtonView extends BlockView<BlockButton>{
         }
     }
     renderFlow() {
-        return <div className='min-w-300 max-w-600 round-6 padding-14 gap-h-10'
+        return <div className='pos min-w-400 max-w-600 round-6 padding-14 gap-h-10'
             style={{
+                top: 0,
                 background: 'rgb(251, 251, 250)',
                 border: '1px solid rgba(55, 53, 47, 0.09)'
             }}>
