@@ -216,6 +216,9 @@ export class HeadView extends BlockView<Head>{
             if (this.block.at == 0)
                 style.marginTop = 0;
         }
+        else if (this.block?.prev?.url == BlockUrlConstant.Title && pa.url == BlockUrlConstant.View && this.block.page.hideDocTitle == true) {
+            style.marginTop = 0;
+        }
         function renderHead() {
             var alignStyle: CSSProperties = {};
             if (self.block.toggle != true) {
