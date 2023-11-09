@@ -191,7 +191,7 @@ export class BlockButtonView extends BlockView<BlockButton>{
                     </span>
                 </div>
             </div>
-            {this.block.isEditFlow && <div className="relative flex " style={{zIndex:10}}>
+            {this.block.isEditFlow && <div className="relative" style={{ zIndex: 10 }}>
                 {this.renderFlow()}
             </div>}
         </div>
@@ -212,25 +212,30 @@ export class BlockButtonView extends BlockView<BlockButton>{
         }
     }
     renderFlow() {
-        return <div className='pos min-w-400 max-w-600 round-6 padding-14 gap-h-10'
-            style={{
-                top: 0,
-                background: 'rgb(251, 251, 250)',
-                border: '1px solid rgba(55, 53, 47, 0.09)'
-            }}>
-            <div className="flex" onMouseDown={e => { e.stopPropagation() }}>
-                <span className="border size-24 round cursor flex-center"><Icon size={18} onMousedown={e => this.changeIcon(e)} icon={this.block.buttonIcon || { name: 'bytedance-icon', code: 'smiling-face' }}></Icon></span>
-                <span className="flex-auto gap-w-10"><Input value={this.block.buttonText} onChange={e => {
-                    this.block.buttonText = e;
-                }} onEnter={e => {
-                    this.onSave()
-                }}></Input></span>
-                <span className="flex-fixed"><Button onClick={async (e, b) => {
-                    this.openEdit(e)
-                }}><S>保存</S></Button></span>
-            </div>
-            <div>
-                {this.block.flow && <FlowView flow={this.block.flow}></FlowView>}
+        var style: React.CSSProperties = {};
+        if (this.block.align == 'center') style.justifyContent = 'center';
+        else if (this.block.align == 'right') style.justifyContent = 'flex-end'
+        return <div className="pos flex" style={{ top: 0, left: 0, right: 0, ...style }}>
+            <div className='min-w-400 max-w-600 round-6 padding-14 gap-h-10'
+                style={{
+                    top: 0,
+                    background: 'rgb(251, 251, 250)',
+                    border: '1px solid rgba(55, 53, 47, 0.09)'
+                }}>
+                <div className="flex" onMouseDown={e => { e.stopPropagation() }}>
+                    <span className="border size-24 round cursor flex-center"><Icon size={18} onMousedown={e => this.changeIcon(e)} icon={this.block.buttonIcon || { name: 'bytedance-icon', code: 'smiling-face' }}></Icon></span>
+                    <span className="flex-auto gap-w-10"><Input value={this.block.buttonText} onChange={e => {
+                        this.block.buttonText = e;
+                    }} onEnter={e => {
+                        this.onSave()
+                    }}></Input></span>
+                    <span className="flex-fixed"><Button onClick={async (e, b) => {
+                        this.openEdit(e)
+                    }}><S>保存</S></Button></span>
+                </div>
+                <div>
+                    {this.block.flow && <FlowView flow={this.block.flow}></FlowView>}
+                </div>
             </div>
         </div>
     }
