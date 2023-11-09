@@ -13,6 +13,7 @@ import { BoxTip } from "../../component/view/tooltip/box";
 import { S } from "../../i18n/view";
 import { CopyAlert } from "../../component/copy";
 import { lst } from "../../i18n/store";
+import { QR } from "../../component/view/qr";
 
 /***
  * 点赞或分享
@@ -89,15 +90,6 @@ export class UpvotedOrSharedView extends BlockView<UpvotedOrShared>{
             this.forceUpdate();
         }
     }
-    async onWxShare(type: 'weixin' | 'weibo') {
-        var pd = this.block.page.getPageDataInfo();
-        channel.act('/shy/share', {
-            type,
-            title: pd.text,
-            description: pd.description,
-            url: this.block.page.pageUrl
-        })
-    }
     renderView() {
         var likeCount = 0;
         var users: string[] = [];
@@ -127,7 +119,10 @@ export class UpvotedOrSharedView extends BlockView<UpvotedOrShared>{
                 <div className="flex-auto flex-end r-flex-center r-size-30 r-round r-item-hover r-gap-l-5">
                     <BoxTip overlay={<div className="bg-white text r-padding-w-10 r-padding-h-5 r-flex">
                         <div className="flex item-hover " onMouseDown={e => CopyAlert(this.block.page.pageUrl, lst('已复制链接'))}><span className="flex-center size-20"><Icon size={18} icon={LinkSvg}></Icon></span><span className="gap-l-5"><S>复制链接</S></span></div>
-                        <div className="flex item-hover " onMouseDown={e => { this.onWxShare('weixin') }}><span className="flex-center size-20"><Icon size={18} icon={{ name: 'bytedance-icon', code: "friends-circle" }}></Icon></span><span className="gap-l-5"><S>微信分享</S></span></div>
+                        <div className="flex item-hover "><span className="flex-center size-20"><Icon size={18} icon={{ name: 'bytedance-icon', code: "friends-circle" }}></Icon></span><span className="gap-l-5"><S>微信分享</S></span></div>
+                        <div className="flex">
+                            <QR size={80} url={this.block.page.pageUrl}></QR>
+                        </div>
                         {/* <div className="flex"  onMouseDown={e => { this.onWxShare('weibo') }}><span><Icon icon={{ name: 'bytedance-icon', code: "weibo" }}></Icon></span><S>微博分享</S></div> */}
                     </div>}>
                         <span><Icon size={20} icon={{ name: 'bytedance-icon', code: "send" }}></Icon></span>
