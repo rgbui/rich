@@ -28,6 +28,7 @@ import { useAITool } from "../../../extensions/ai";
 import { lst } from "../../../i18n/store";
 import { S } from "../../../i18n/view";
 import { util } from "../../../util/util";
+import { isMobileOnly } from "react-device-detect";
 
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
@@ -54,6 +55,17 @@ export class PageView extends Component<{ page: Page }>{
     componentDidMount() {
         this.didMounted();
     }
+    async loadWxShare() {
+        if (isMobileOnly) {
+            var pd = this.page.getPageDataInfo();
+            channel.act('/shy/share', {
+                type: 'updateTimelineShareData',
+                title: pd.text,
+                description: pd.description,
+                url: this.page.pageUrl
+            })
+        }
+    }
     async didMounted() {
         this.el = ReactDOM.findDOMNode(this) as HTMLElement;
         channel.sync('/page/update/info', this.updatePageInfo);
@@ -70,6 +82,7 @@ export class PageView extends Component<{ page: Page }>{
         document.addEventListener('paste', this._paste = e => this.page.onPaste(e))
         await this.AutomaticHandle();
         this.page.emit(PageDirective.mounted)
+        this.loadWxShare();
     }
     updatePageInfo = (r: { id: string, elementUrl: string, pageInfo: LinkPageItem }) => {
         if (r.elementUrl && this.page.elementUrl === r.elementUrl || r.id && r.id == r.pageInfo.id) {
