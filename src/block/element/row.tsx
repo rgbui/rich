@@ -121,19 +121,19 @@ export class RowView extends BlockView<Row>{
                 childs: [
                     {
                         name: 'lineWidth',
-                        text: lst('1px'),
+                        text: ('1px'),
                         value: 1,
                         checkLabel: gap?.width == 1
                     },
                     {
                         name: 'lineWidth',
-                        text: lst('2px'),
+                        text: ('2px'),
                         value: 2,
                         checkLabel: gap?.width == 2
                     },
                     {
                         name: 'lineWidth',
-                        text: lst('4px'),
+                        text: ('4px'),
                         value: 4,
                         checkLabel: gap?.width == 4
                     }
@@ -259,7 +259,7 @@ export class RowView extends BlockView<Row>{
                         }}
                         key={block.id + 'gap'}
                         data-index={i}
-                        style={{ opacity: 1, visibility: this.block.isCanEdit() ? "visible" : "hidden" }}
+                        style={{ opacity: 1, visibility: this.block.isCanEdit() ? undefined : "hidden" }}
                         className='sy-block-row-gap visible-hover'>
                         <i className='flex-center visible'>
                             <ToolTip overlay={lst('平均分栏')}><span onMouseDown={e => this.agvCols(e)} style={{ background: '#eee' }} className={'size-24 remark  flex-center round cursor '}><Icon size={16} icon={HorizontalDistributionSvg}></Icon></span></ToolTip>
