@@ -416,6 +416,7 @@ export class CommentListView extends React.Component<{
     render() {
         if (this.props.displayFormat == 'comment') return this.renderComment();
         else if (this.props.displayFormat == 'answer') return this.renderAnswer();
+        else return  <div></div>
     }
     componentDidMount(): void {
         if (typeof this.props.sort == 'string') this.sort = this.props.sort;
