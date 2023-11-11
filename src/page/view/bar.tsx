@@ -167,7 +167,9 @@ export class PageBar extends React.Component<{ page: Page }>{
         else location.href = 'https://shy.live/home'.replace('shy.live', window.shyConfig.isUS ? "shy.red" : "shy.live")
     }
     renderPropertys() {
+        console.log(this.props.page?.ws?.accessWorkspace);
         if (this.props.page.openSource == 'snap') return <></>
+        if (this.props.page?.ws?.accessWorkspace == 'embed') return <></>
         var user = this.props.page.user;
         if (this.props.page.isPubSite) {
             if (this.props.page.isSign) return <div className="flex   gap-r-10">

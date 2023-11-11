@@ -171,7 +171,7 @@ export interface ChannelPostMapUrls {
 	"/ws/upload/file":{args:{file:File,uploadProgress: (event: ProgressEvent) => void},returnType:Promise<SockResponse<{ file:{url:string,name:string,size:number} }>>},
 	"/ws/download/url":{args:{url:string},returnType:Promise<SockResponse<{ file:{url:string,name:string,size:number} }>>},
 	"/create/template":{args:{wsId?:string,config?:{pageId?: string, dataGridMaxRecordCount?: number}},returnType:Promise<SockResponse<{file:ResourceArguments}>>},
-	"/create/workspace/template":{args:{config?:Record<string,any>,file: ResourceArguments, wsId: string, pageId?: string, templateUrl: string, text?: string, description?: string, type:"workspace"|"dir"|"page"},returnType:Promise<SockResponse<void>>},
+	"/create/workspace/template":{args:{config?:Record<string,any>,file: ResourceArguments, wsId: string, pageId?: string, elementUrl:string, templateUrl: string, text?: string,icon?:any, description?: string, type:"workspace"|"dir"|"page"},returnType:Promise<SockResponse<void>>},
 	"/page/item/recover":{args:{ws?:LinkWs,wsId?:string,parentId:string,pageId:string},returnType:Promise<SockResponse<void>>},
 	"/view/snap/rollup":{args:{id:string,elementUrl:string,wsId?:string,bakeTitle?:string,pageTitle?:string},returnType:Promise<SockResponse<{seq:number,id:string}>>},
 	"/row/block/sync/refs":{args:{ws:LinkWs,wsId?:string,pageId?:string,operators:any[]},returnType:Promise<SockResponse<{results:{ id: string, error?: string }[]}>>},
@@ -319,7 +319,7 @@ export interface ChannelGetMapUrls {
 	"/get/tag/refs":{args:{ws:LinkWs,wsId?:string,tagId?:string,tag?:string,size?:number,desc?:boolean},returnType:Promise<SockResponse<{pages:LinkPageItem[],list:any[],total:number,size:number,page:number}>>},
 	"/tag/word/query":{args:{word?:string,ws:LinkWs,wsId?:string,size?:number},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>},
 	"/tag/query":{args:{ws:LinkWs,wsId?:string,id?:string,ids?:string[]},returnType:Promise<SockResponse<{list:any[],tag:any}>>},
-	"/search/workspace/template":{args:{ classify: string,tags: string[],mime: string,page: number,word: string,size: number},returnType:Promise<SockResponse<{page:number,list:any[],total:number,size:number}>>}
+	"/search/workspace/template":{args:{ classify?: string,tags?: string[],mime?: string,page: number,word?: string,size: number},returnType:Promise<SockResponse<{page:number,list:any[],total:number,size:number}>>}
 }
 export interface ChannelQueryMapUrls {
     "/query/current/user":{args:any,returnType:UserBasic},

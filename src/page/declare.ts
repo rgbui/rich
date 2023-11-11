@@ -1,5 +1,6 @@
 import { PageSvg, TopicSvg, CollectTableSvg, DocCardsSvg } from "../../component/svgs";
 import { IconValueType } from "../../component/view/icon";
+import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { IconArguments, ResourceArguments } from "../../extensions/icon/declare";
 import { lst } from "../../i18n/store";
 import { AtomPermission } from "./permission";
@@ -111,6 +112,7 @@ export interface LinkWs {
     text: string
     icon: IconArguments
     cover: IconArguments
+    accessWorkspace?: 'none' | 'embed';
     /**
      * 0:不公开 
      * 1:公开
@@ -270,84 +272,81 @@ export type PageThemeStyle = {
 }
 
 
-export var PageTemplateTypeGroups: { icon: IconValueType, visible?: boolean, spread: boolean, text: string, childs: { text: string, visible?: boolean }[] }[] = [
+export var PageTemplateTypeGroups: { icon: IconValueType, visible?: boolean, spread: boolean, text: string }[] = [
     {
         icon: PageSvg,
         text: '个人',
         spread: true,
         visible: true,
-        childs: [
-            { text: '个人工作' },
-            { text: '业余爱好' },
-            { text: '旅行' },
-            { text: '键康运动' },
-            { text: '食品与营养' },
-            { text: '个人财务' },
-            { text: '职业建设' },
-            { text: '住房' }
-        ]
+    },
+    {
+        icon: PageSvg,
+        text: '社区',
+        spread: true
     },
     {
         icon: PageSvg,
         text: '教育',
         spread: true,
-        childs: [
-            { text: '学习' },
-            { text: '俱乐部' },
-            { text: '职业建设' },
-            { text: '教学' },
-            { text: '学校申请' },
-            { text: '学术研究' }
-        ]
     },
     {
         icon: PageSvg,
         text: '工作',
-        spread: true,
-        childs: [
-            { text: '产品' },
-            { text: '营销' },
-            { text: '工程' },
-            { text: '设计' },
-            { text: '启动' },
-            { text: '运营' },
-            { text: '销售量' },
-            { text: '招聘' },
-            { text: '人力资源' },
-            { text: '供应商' },
-            { text: "私人" }
-        ]
+        spread: true
+
     },
-    {
-        icon: PageSvg,
-        text: '社区',
-        spread: true,
-        childs: [
-            { text: '论坛' },
-            { text: '贴子' },
-            { text: '图文' }
-        ]
-    },
+
     {
         icon: PageSvg,
         text: '项目',
-        spread: true,
-        childs: [
-            { text: '路线图和日历' },
-            { text: '问题跟踪' },
-            { text: '规划与目标' },
-            { text: '指南' }
-        ]
+        spread: true
     },
     {
         icon: PageSvg,
         text: '百科',
         spread: true,
-        childs: [
-            { text: '知识库' },
-            { text: '公司网站' },
-            { text: '人员与组织' },
-            { text: '内部通讯和更新' }
-        ]
     }
+]
+
+export var PageTemplateTags: MenuItem[] = [
+    { text: '个人工作' },
+    { text: '业余爱好' },
+    { text: '旅行' },
+    { text: '键康运动' },
+    { text: '食品与营养' },
+    { text: '个人财务' },
+    { text: '住房' },
+    { type: MenuItemType.divide },
+    { text: '学习' },
+    { text: '俱乐部' },
+    { text: '职业建设' },
+    { text: '教学' },
+    { text: '学校申请' },
+    { text: '学术研究' },
+    { text: '知识库' },
+    { type: MenuItemType.divide },
+    { text: '公司网站' },
+    { text: '人员与组织' },
+    { text: '内部通讯和更新' },
+    { text: '路线图和日历' },
+    { text: '问题跟踪' },
+    { text: '规划与目标' },
+    { text: '指南' },
+    { type: MenuItemType.divide },
+    { text: '论坛' },
+    { text: '贴子' },
+    { text: '图文' },
+    { type: MenuItemType.divide },
+    { text: '产品' },
+    { text: '营销' },
+    { text: '工程' },
+    { text: '设计' },
+    { text: '启动' },
+    { text: '运营' },
+    { type: MenuItemType.divide },
+    { text: '销售量' },
+    { text: '招聘' },
+    { text: '人力资源' },
+    { text: '供应商' },
+    { text: "私人" }
 ]

@@ -5,7 +5,7 @@ import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { BlockDirective, BlockRenderRange } from "../../block/enum";
 import { Point, Rect } from "../../common/vector/point";
-import { PageLayoutType, PageTemplateTypeGroups } from "../declare";
+import { PageLayoutType, PageTemplateTags, PageTemplateTypeGroups } from "../declare";
 import {
     AiStartSvg,
     BookSvg,
@@ -685,23 +685,23 @@ export class PageContextmenu {
             model: {
                 mime: util.covertToArray(tgd['mime']),
                 classify: tgd['classify'],
-                tags: tgd['tags'],
-                previewCover: tgd['previewCover']
+                tags: tgd['tags']
             },
             fields: [
                 { name: 'text', text: lst('标题'), default: this.pageInfo?.text, type: 'input' },
                 { name: 'description:', text: lst('描述'), default: this.pageInfo?.description, type: 'textarea' },
                 {
-                    name: 'mime',
-                    text: lst('类型'),
+                    name: 'tags',
+                    text: lst('标签'),
                     multiple: true,
                     type: 'select',
-                    options: [
-                        { text: lst('页面'), value: 'page' },
-                        { text: lst('数据表格'), value: 'db' },
-                        { text: lst('频道'), value: 'channel' },
-                        { text: lst('PPT'), value: 'ppt' }
-                    ]
+                    options: PageTemplateTags.map(p => {
+                        return {
+                            text: p.text,
+                            value: p.text,
+                            type: p.type
+                        }
+                    })
                 },
                 {
                     name: 'classify',
@@ -712,20 +712,9 @@ export class PageContextmenu {
                         return {
                             text: c.text,
                             icon: c.icon,
-                            childs: c.childs.map(g => {
-                                return {
-                                    text: g.text,
-                                    value: g.text
-                                }
-                            })
+                            value: c.text
                         }
                     })
-                },
-                {
-                    name: 'previewCover',
-                    text: lst('封面图'),
-                    type: "file",
-                    mime: 'image'
                 }
             ]
         })
@@ -740,13 +729,14 @@ export class PageContextmenu {
                         pageId: this.pageInfo?.id,
                         type: 'page',
                         templateUrl: r.data.file.url,
+                        elementUrl: this.elementUrl,
                         text: rf.text,
                         description: rf.description,
                         file: r.data.file,
+                        icon: this.pageInfo?.icon,
                         config: {
-                            mime: rf.mime,
                             classify: rf.classify,
-                            previewCover: rf.previewCover
+                            tags: rf.tags
                         }
                     });
                 }

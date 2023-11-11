@@ -73,6 +73,7 @@ export class Page extends Events<PageDirective>{
     get isPubSiteDefineBarMenu() {
         return this.isPubSite && this.ws?.publishConfig?.navMenus?.length > 0 && this.ws?.publishConfig?.defineNavMenu
     }
+    
     get isPubSiteDefineContent() {
         return this.isPubSite && this.ws?.publishConfig?.defineContent && this.ws.publishConfig.contentTheme == 'none'
     }
