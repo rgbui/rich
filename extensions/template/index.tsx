@@ -11,6 +11,7 @@ import { channel } from "../../net/channel";
 import { S } from "../../i18n/view";
 import { Input } from "../../component/view/input";
 import { ElementType, getElementUrl } from "../../net/element.type";
+import { Avatar } from "../../component/view/avator/face";
 
 export interface PageTemplateType {
     id: string,
@@ -37,8 +38,8 @@ export class TemplateView extends EventsComponent<{ isOrg?: boolean }> {
             style={{
                 backgroundColor: 'var(--background-secondary)'
             }}
-            className="flex-fixed w-200 padding-10 overflow-y">
-            <div className="bold flex h-30 border-bottom remark gap-b-10">
+            className="flex-fixed w-200 padding-10 overflow-y border-right">
+            <div className="bold flex h-30 remark gap-b-10">
                 <span className="flex-fixed size-24 flex-center"><Icon size={20} icon={{ name: 'bytedance-icon', code: 'oval-love' }}></Icon></span>
                 <span className="flex-auto"><S>模板</S></span>
             </div>
@@ -57,19 +58,19 @@ export class TemplateView extends EventsComponent<{ isOrg?: boolean }> {
             {this.typeGroups.map((tg, i) => {
                 var ts = this.templateList.list.findAll(g => g.classify == tg.text);
                 if (ts.length == 0) return <div key={i}></div>
-                return <div className="gap-b-10" key={i}>
+                return <div className="gap-b-10 gap-t-20" key={i}>
                     <div onClick={e => {
                         tg.spread = tg.spread ? false : true;
                         this.forceUpdate();
-                    }} className="f-14 flex remark cursor">
+                    }} className="f-12 flex remark cursor padding-w-10">
                         <span className="flex-fixed">{tg.text}</span>
                     </div>
                     <div>
                         {ts.map((tl, j) => {
                             return <div onMouseDown={e => {
                                 this.onSetTemplate(tl);
-                            }} className={"h-30 flex round cursor item-hover-light padding-w-5  padding-r-10" + (this.currentPageTemplate === tl ? " item-hover-focus" : "")} key={tl.id}>
-                                <Icon size={20} icon={tl.icon || PageSvg}></Icon><span className="gap-l-5">{tg.text}</span>
+                            }} className={"remark h-30 flex round cursor item-hover-light padding-w-10 " + (this.currentPageTemplate === tl ? " item-hover-focus" : "")} key={tl.id}>
+                                <span className="flex-center size-24 rounc cursor flex-fixed"><Icon size={18} icon={tl.icon || PageSvg}></Icon></span><span className="gap-l-5 text-overflow flex-auto">{tl.text}</span>
                             </div>
                         })}
                     </div>
@@ -128,16 +129,20 @@ export class TemplateView extends EventsComponent<{ isOrg?: boolean }> {
             <div className="flex-auto">
                 <iframe ref={e => this.iframe = e} className="w100 h100 no-border"></iframe>
             </div>
-            <div className="flex-fixed flex">
-                <div className="flex-auto"></div>
+            {this.currentPageTemplate && <div className="flex-fixed flex border-top padding-20 ">
+                <div className="flex-auto">
+                    <div className="bold f-16">{this.currentPageTemplate.text}</div>
+                    <div className="gap-h-10"><Avatar showName size={28} userid={this.currentPageTemplate.userid}></Avatar></div>
+                    <div className="remark">{this.currentPageTemplate.descrption}</div>
+                </div>
                 <div className="flex-fixed">
                     <Button onClick={e => this.onSelect(this.currentPageTemplate)}><S>使用模板</S></Button>
                 </div>
-            </div>
+            </div>}
         </div>
     }
     render(): React.ReactNode {
-        return <div className={this.props.isOrg ? "user-none padding-t-20" : "vw80-max min-w-1200 h-500 vh80-max user-none"}>
+        return <div className={this.props.isOrg ? "user-none padding-t-20" : "max-vw80 min-w-1200 h-700 max-vh80 user-none"}>
             <div className="flex flex-full h100">
                 {this.renderSide()}
                 {this.renderContent()}
@@ -145,18 +150,24 @@ export class TemplateView extends EventsComponent<{ isOrg?: boolean }> {
         </div>
     }
     open() {
-        this.templateList = { type: '', mime: 'page', loading: false, tags: [], total: 0, list: [], page: 1, size: 20 }
-        this.onSearch()
+        // this.templateList = { type: '', mime: 'page', loading: false, tags: [], total: 0, list: [], page: 1, size: 20 }
+        // this.onSearch()
     }
     currentPageTemplate: PageTemplateType = null;
     componentDidMount(): void {
-        this.onSearch();
+        this.load();
+    }
+    async load() {
+        await this.onSearch();
+        if (this.templateList.list.length > 0) {
+            await this.onSetTemplate(this.templateList.list[0]);
+        }
     }
 }
 
 export async function useTemplateView() {
     let popover = await PopoverSingleton(TemplateView, { mask: true, shadow: true });
-    let fv = await popover.open({ center: true, centerTop: 100 });
+    let fv = await popover.open({ center: true });
     fv.open();
     return new Promise((resolve: (pageTemplate: PageTemplateType) => void, reject) => {
         fv.only('close', () => {
@@ -172,3 +183,4 @@ export async function useTemplateView() {
         });
     })
 }
+
