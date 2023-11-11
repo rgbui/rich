@@ -3,7 +3,6 @@ import { BlockUrlConstant } from "../../block/constant";
 import { PageLayoutType } from "../declare";
 
 
-
 export function BuildTemplate(page: Page) {
     var dr: Record<string, any>;
     if (page.pageLayout?.type == PageLayoutType.docCard) {
@@ -35,7 +34,7 @@ export function BuildTemplate(page: Page) {
                 }
             ]
         }
-        if (typeof page.ws.createPageConfig.autoRefPages != 'undefined') {
+        if (page.requireSelectLayout !== true && typeof page.ws.createPageConfig.autoRefPages != 'undefined') {
             docs.views[0].blocks.childs.last().blocks.childs.push({
                 url: BlockUrlConstant.RefLinks
             })
@@ -56,7 +55,7 @@ export function BuildTemplate(page: Page) {
                 }
             ]
         }
-        if (typeof page.ws.createPageConfig.autoRefPages != 'undefined') {
+        if (page.requireSelectLayout !== true && typeof page.ws.createPageConfig.autoRefPages != 'undefined') {
             pageInfo.views[0].blocks.childs.push({
                 url: BlockUrlConstant.RefLinks
             })

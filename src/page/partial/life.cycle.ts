@@ -60,7 +60,7 @@ export class Page$Cycle {
         try {
             if (!data || typeof data == 'object' && Object.keys(data).length == 0) {
                 //这里加载默认的页面数据
-                data = await this.getDefaultData();
+                data =this.getDefaultData();
                 this.loadDefault = true;
             }
             else {
