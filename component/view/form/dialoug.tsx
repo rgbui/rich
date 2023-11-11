@@ -9,7 +9,7 @@ import { Col, Dialoug, Row, Space } from "../grid";
 import { Icon } from "../icon";
 import { Input } from "../input";
 import { Textarea } from "../input/textarea";
-import { Remark, ErrorText } from "../text";
+import { Remark, ErrorText, HelpTip } from "../text";
 import { ToolTip } from "../tooltip";
 import { SelectBox } from "../select/box";
 import "./style.less";
@@ -40,6 +40,7 @@ export type FormDialougType = {
      */
     maskCloseNotSave?: boolean
 }
+
 class FormDialoug extends EventsComponent {
     render() {
         return <Dialoug className={'shy-form-dialoug'}
@@ -55,21 +56,21 @@ class FormDialoug extends EventsComponent {
                     </Space>
                 </Col>
             </Row> : undefined}
-        >{this.remark && <Row className={'shy-form-remark'} align="center"><Remark>{this.remark}</Remark></Row>}
-            <div className="shy-form-box">
+        >
+            {this.remark && <div className=" f-14 remark flex-center gap-10">{this.remark}</div>}
+            <div className="padding-b-30 f-14">
                 {this.fields.map(f => {
-                    return <div className="shy-form-element" key={f.name}>
-                        <Row><Col><label>{f.text}</label>{f.tip && <ToolTip overlay={f.tip}><Icon icon={PlusSvg}></Icon></ToolTip>}</Col></Row>
-                        <Row>
-                            <Col>
-                                {f.type == 'input' && <Input onEnter={e => this.onSave()} onChange={e => this.model[f.name] = e} value={this.model[f.name] || ''}></Input>}
-                                {f.type == 'textarea' && <Textarea onEnter={e => this.onSave()} onChange={e => this.model[f.name] = e} value={this.model[f.name] || ''}></Textarea>}
-                                {f.type == 'select' && <SelectBox multiple={f.multiple ? true : false} onChange={e => { this.model[f.name] = e; this.forceUpdate(); }} value={this.model[f.name] || (f.multiple ? [] : '')} options={f.options || []}></SelectBox>}
-                                {f.type == 'file' && <FileInput mime={f.mime} value={this.model[f.name]} onChange={e => { this.model[f.name] = e; this.forceUpdate(); }}></FileInput>}
-                            </Col>
-                        </Row>
+                    return <div key={f.name} className="gap-b-15">
+                        <div className="flex gap-t-5"><label>{f.text}</label>{f.tip && <HelpTip overlay={f.tip}></HelpTip>}</div>
+                        <div>
+                            {f.type == 'input' && <Input onEnter={e => this.onSave()} onChange={e => this.model[f.name] = e} value={this.model[f.name] || ''}></Input>}
+                            {f.type == 'textarea' && <Textarea onEnter={e => this.onSave()} onChange={e => this.model[f.name] = e} value={this.model[f.name] || ''}></Textarea>}
+                            {f.type == 'select' && <SelectBox  border multiple={f.multiple ? true : false} onChange={e => { this.model[f.name] = e; this.forceUpdate(); }} value={this.model[f.name] || (f.multiple ? [] : '')} options={f.options || []}></SelectBox>}
+                            {f.type == 'file' && <FileInput mime={f.mime} value={this.model[f.name]} onChange={e => { this.model[f.name] = e; this.forceUpdate(); }}></FileInput>}
+                        </div>
                     </div>
-                })}
+                }
+                )}
             </div>
         </Dialoug>
     }
