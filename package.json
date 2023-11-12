@@ -36,6 +36,7 @@
     "katex": "^0.12.0",
     "loadsh": "0.0.4",
     "lodash": "^4.17.21",
+    "mammoth": "^1.6.0",
     "marked": "^5.0.0",
     "mobx": "^6.3.5",
     "mobx-react": "^7.2.0",
@@ -59,7 +60,6 @@
   },
   "devDependencies": {
     "@icon-park/compiler": "^1.0.7",
-    "@types/ua-parser-js": "^0.7.36",
     "@svgr/webpack": "^7.0.0",
     "@types/lodash": "^4.14.176",
     "@types/node": "^14.14.41",
@@ -67,6 +67,7 @@
     "@types/react-dom": "^17.0.0",
     "@types/react-router": "^5.1.15",
     "@types/react-router-dom": "^5.1.8",
+    "@types/ua-parser-js": "^0.7.36",
     "babel-loader": "^8.2.2",
     "babel-plugin-prismjs": "^2.0.1",
     "clean-webpack-plugin": "^4.0.0",
