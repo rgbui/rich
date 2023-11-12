@@ -28,7 +28,7 @@ export function exportMarkdownDb(headers, rows, filename: string) {
 
 
 
-        //         | 左对齐 | 右对齐 | 居中对齐 |
+        // | 左对齐 | 右对齐 | 居中对齐 |
         // | :-----| ----: | :----: |
         // | 单元格 | 单元格 | 单元格 |
         // | 单元格 | 单元格 | 单元格 |
