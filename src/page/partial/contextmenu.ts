@@ -677,19 +677,21 @@ export class PageContextmenu {
         var tg = await channel.get('/get/workspace/template', {
             wsId: ws.id,
             pageId: this.pageInfo?.id,
+            elementUrl: this.elementUrl,
         });
         var tgd = tg.data?.template || {};
         var rf = await useForm({
             maskCloseNotSave: true,
             title: lst('申请模板'),
             model: {
-                mime: util.covertToArray(tgd['mime']),
                 classify: tgd['classify'],
-                tags: tgd['tags']
+                tags: tgd['tags'],
+                description: tgd['description'],
+                text: tgd['text'] || this.pageInfo?.text
             },
             fields: [
-                { name: 'text', text: lst('标题'), default: this.pageInfo?.text, type: 'input' },
-                { name: 'description:', text: lst('描述'), default: this.pageInfo?.description, type: 'textarea' },
+                { name: 'text', text: lst('标题'), type: 'input' },
+                { name: 'description', text: lst('描述'), type: 'textarea' },
                 {
                     name: 'tags',
                     text: lst('标签'),

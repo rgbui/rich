@@ -301,7 +301,7 @@ export interface ChannelGetMapUrls {
 	"/ws/comment/list":{args:{ws:LinkWs,wsId?:string,elementUrl: string, parentId: string, sort: 'default' | 'date', page: number,size: number},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
 	"/ws/robots":{args:{},returnType:Promise<SockResponse<{list:{userid:string,name:string}[]}>>},
 	"/robots/info":{args:{ids:string[]},returnType:Promise<SockResponse<{list:any[]}>>},
-	"/get/workspace/template":{args:{wsId: string, pageId?: string},returnType:Promise<SockResponse<{template:Record<string,any>}>>},
+	"/get/workspace/template":{args:{wsId: string, pageId?: string,elementUrl?:string},returnType:Promise<SockResponse<{template:Record<string,any>}>>},
 	"/page/items":{args:{ws:LinkWs,wsId?:string,ids:string[],sock?:any},returnType:Promise<SockResponse<{ list:any[],favs:any[]}>>},
 	"/page/item/subs":{args:{ws:LinkWs,wsId?:string,id:string},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/parent/ids":{args:{ws:LinkWs,wsId?:string,id:string},returnType:Promise<SockResponse<{ parentIds:string[],exists:boolean }>>},

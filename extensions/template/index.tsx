@@ -18,7 +18,7 @@ export interface PageTemplateType {
     text: string,
     icon: IconArguments,
     classify: string,
-    descrption: string,
+    description: string,
     file: ResourceArguments,
     type: 'page' | 'workspace',
     previewCover: ResourceArguments,
@@ -108,7 +108,9 @@ export class TemplateView extends EventsComponent<{ isOrg?: boolean }> {
     async onSetTemplate(pageTemplate: PageTemplateType) {
         this.currentPageTemplate = pageTemplate;
         if (!this.iframe.getAttribute('src')) {
-            var url = `/ws/${this.currentPageTemplate.sourceWorkspaceId}/r?url=` + encodeURIComponent(getElementUrl(ElementType.PageItem, this.currentPageTemplate.sourcePageId));
+            var su = pageTemplate.sourceElementUrl;
+            if (!su) su = getElementUrl(ElementType.PageItem, this.currentPageTemplate.sourcePageId)
+            var url = `/ws/${this.currentPageTemplate.sourceWorkspaceId}/r?url=` + encodeURIComponent(su);
             url = url + "&accessWorkspace=embed";
             if (window.shyConfig?.isPro) {
                 url = (window.shyConfig.isUS ? "https://shy.red" : 'https://shy.live') + url
@@ -133,7 +135,7 @@ export class TemplateView extends EventsComponent<{ isOrg?: boolean }> {
                 <div className="flex-auto">
                     <div className="bold f-16">{this.currentPageTemplate.text}</div>
                     <div className="gap-h-10"><Avatar showName size={28} userid={this.currentPageTemplate.userid}></Avatar></div>
-                    <div className="remark">{this.currentPageTemplate.descrption}</div>
+                    <div className="remark">{this.currentPageTemplate.description}</div>
                 </div>
                 <div className="flex-fixed">
                     <Button onClick={e => this.onSelect(this.currentPageTemplate)}><S>使用模板</S></Button>
