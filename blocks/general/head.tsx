@@ -226,7 +226,7 @@ export class HeadView extends BlockView<Head>{
             }
             var content = <>
                 <div style={{ left: self.block.toggle ? 24 : 0 }} className="sy-block-text-head-tips pos flex-center h-10 visible r-size-3 r-gap-r-5 r-circle ">{ns.map((n, i) => <em key={i}></em>)}</div>
-                <div className="flex flex-top" style={{ ...alignStyle }}>
+                <div className="flex flex-top" style={{ ...alignStyle, ...self.block.contentStyle }}>
                     {self.block.toggle && <span
                         className='w-24 flex-center flex-inline'
                         style={{ height: textLineHeight }}
@@ -260,7 +260,7 @@ export class HeadView extends BlockView<Head>{
         }
         return <div className='sy-block-text-head'>
             <div className="visible-hover" style={this.block.visibleStyle}>
-                <div data-block-content style={this.block.contentStyle}>{renderHead()}</div>
+                <div data-block-content >{renderHead()}</div>
             </div>
             {this.block.isExpand && <div className="sy-block-text-head-subs" style={{ paddingLeft: 24 }}>
                 <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>
