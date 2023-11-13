@@ -138,7 +138,7 @@ export function TextLineChilds(props: {
 }
 
 export function TextSpanArea(props: { block: Block, className?: string | string[], placeholderEmptyVisible?: boolean, prop?: string, placeholder?: string }) {
-    var isAi = props.block.page.ws.aiConfig?.disabled == true ? false : true;
+    var isAi = props.block.page.ws?.aiConfig?.disabled == true ? false : true;
     if (props.block.childs.length > 0)
         return <TextLineChilds className={props.className} childs={props.block.childs}></TextLineChilds>
     else
