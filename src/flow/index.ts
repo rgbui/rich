@@ -6,7 +6,7 @@ import { LinkWs } from "../page/declare";
 import { channel } from "../../net/channel";
 import { Block } from "../block";
 import { FlowView } from "./view";
-import { DuplicateSvg, PlusSvg, Edit1Svg } from "../../component/svgs";
+import { DuplicateSvg, PlusSvg, Edit1Svg, LinkSvg } from "../../component/svgs";
 import { useSelectMenuItem } from "../../component/view/menu";
 import { MenuItemType } from "../../component/view/menu/declare";
 import { Rect } from "../common/vector/point";
@@ -88,6 +88,7 @@ export class Flow {
             { text: lst('确认继续'), value: '/confirm', icon: { name: 'bytedance-icon', code: 'help' } },
             { type: MenuItemType.divide },
             { text: lst('打开页面'), value: '/openPage', icon: { name: 'bytedance-icon', code: 'arrow-right-up' } },
+            { text: lst('页面跳转'), value: '/openPage/url', icon: LinkSvg },
             { text: lst('表单提交'), value: '/form/submit', icon: { name: 'bytedance-icon', code: 'form-one' }, visible: [ElementType.SchemaRecordView, ElementType.SchemaData, ElementType.SchemaRecordViewData].includes(this.buttonBlock.page.pe.type) ? true : false },
         ]);
         if (r) {
@@ -96,6 +97,7 @@ export class Flow {
                 data.block = { url: '/template' }
             }
             if (typeof at == 'undefined') at = this.commands.length;
+           
             this.commands.splice(at, 0, await FlowCommandFactory.createCommand(r.item.value, this, data));
             this.view.forceUpdate()
         }

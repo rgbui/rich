@@ -28,6 +28,8 @@ export class FlowCommandFactory {
     }
     public static getView(url: string) {
         var bm = this.blockMap.get(url);
+        if (!bm)
+            console.log(this.blockMap, url, bm);
         return bm.view;
     }
 }

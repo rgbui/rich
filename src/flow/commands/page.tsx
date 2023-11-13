@@ -11,6 +11,8 @@ import { channel } from "../../../net/channel";
 import lodash from "lodash";
 import { SelectBox } from "../../../component/view/select/box";
 import { lst } from "../../../i18n/store";
+import { LinkSvg } from "../../../component/svgs";
+import { Input } from "../../../component/view/input";
 
 @flow('/openPage')
 export class OpenPageCommand extends FlowCommand {
@@ -81,6 +83,58 @@ export class OpenPageCommandView extends FlowCommandView<OpenPageCommand> {
                         { text: lst('对话框打开'), value: 'dialog' },
                         { text: lst('侧边栏打开'), value: 'slide' }
                     ]}></SelectBox>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@flow('/openPage/url')
+export class OpenPageUrlCommand extends FlowCommand {
+    pageUrl: string = '';
+    target: '_blank' | '_self' = '_blank';
+    async get() {
+        var json = await super.get();
+        json.pageUrl = this.pageUrl;
+        json.target = this.target;
+        return json;
+    }
+    async clone() {
+        var json = await super.clone();
+        json.pageUrl = this.pageUrl;
+        json.target = this.target;
+        return json;
+    }
+    async excute() {
+        if (this.target == '_blank') window.open(this.pageUrl, '_blank')
+        else window.location.href = this.pageUrl;
+    }
+}
+
+@flowView('/openPage/url')
+export class OpenPageUrlCommandView extends FlowCommandView<OpenPageUrlCommand>{
+    renderView() {
+        return <div>
+            {this.renderHead(<Icon size={16} icon={LinkSvg}></Icon>,
+                <><S>打开网址</S>
+                </>)}
+            <div>
+                <div className="flex">
+                    <span className="flex-auto gap-l-10"><S>网址</S></span>
+                    <div className="flex-fixed  round padding-l-5">
+                        <Input value={this.command.pageUrl} onEnter={e => {
+                            this.command.onUpdateProps({ pageUrl: e })
+                        }} onChange={e => { this.command.onUpdateProps({ pageUrl: e }) }}></Input>
+                    </div>
+                </div>
+                <div className="flex gap-h-10">
+                    <span className="flex-auto gap-l-10"><S>跳转</S></span>
+                    <SelectBox className={'flex-fixed item-hover remark round padding-l-5'}
+                        onChange={e => this.command.onUpdateProps({ target: e })}
+                        value={this.command.target} options={[
+                            { text: lst('新窗口'), value: '_blank' },
+                            { text: lst('当前窗口'), value: '_self' }
+                        ]}></SelectBox>
                 </div>
             </div>
         </div>
