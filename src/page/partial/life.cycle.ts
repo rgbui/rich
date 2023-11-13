@@ -200,7 +200,7 @@ export class Page$Cycle {
         json.requireSelectLayout = this.requireSelectLayout;
         json.hideDocTitle = this.hideDocTitle;
         json.pageLayout = util.clone(this.pageLayout);
-        if (typeof this.matrix != 'undefined')
+        if (typeof this.matrix != 'undefined' && typeof this.matrix.getValues == 'function')
             json.matrix = this.matrix.getValues();
         json.nav = this.nav;
         json.formType = this.formType;

@@ -1,6 +1,7 @@
 import lodash from "lodash";
 import { PageLayoutType } from "./declare";
 import { lst } from "../../i18n/store";
+import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 
 /**
  * 基本的权限点列表
@@ -133,34 +134,43 @@ export function getAtomPermissionComputedChanges(pageType: PageLayoutType, vs: A
     }
 }
 
-export function getAtomPermissionOptions(pageType: PageLayoutType) {
+export function getAtomPermissionOptions(pageType: PageLayoutType): MenuItem[] {
     if ([PageLayoutType.board, PageLayoutType.doc, PageLayoutType.docCard].includes(pageType)) {
         return [
             { text: lst('所有权限'), value: AtomPermission.all },
+            { type: MenuItemType.divide },
             { text: lst('可编辑'), value: AtomPermission.docEdit },
             { text: lst('可编辑行'), value: AtomPermission.dbEditRow },
+            { type: MenuItemType.divide },
             { text: lst('可添加行'), value: AtomPermission.dbAddRow },
             { text: lst('可评论'), value: AtomPermission.docComment },
             { text: lst('可查看'), value: AtomPermission.docView },
+            { type: MenuItemType.divide },
             { text: lst('无权限'), value: AtomPermission.docNotAllow },
         ]
     }
     else if ([PageLayoutType.textChannel].includes(pageType)) {
         return [
             { text: lst('所有权限'), value: AtomPermission.all },
+            { type: MenuItemType.divide },
             { text: lst('可编辑'), value: AtomPermission.channelEdit },
+            { type: MenuItemType.divide },
             { text: lst('可发言'), value: AtomPermission.channelSpeak },
             { text: lst('可查看'), value: AtomPermission.channelView },
+            { type: MenuItemType.divide },
             { text: lst('无权限'), value: AtomPermission.channelNotAllow },
         ]
     }
     else if ([PageLayoutType.db]) {
         return [
             { text: lst('所有权限'), value: AtomPermission.all },
+            { type: MenuItemType.divide },
             { text: lst('可编辑'), value: AtomPermission.dbEdit },
             { text: lst('可编辑行'), value: AtomPermission.dbEditRow },
+            { type: MenuItemType.divide },
             { text: lst('可添加行'), value: AtomPermission.dbAddRow },
             { text: lst('可查看'), value: AtomPermission.dbView },
+            { type: MenuItemType.divide },
             { text: lst('无权限'), value: AtomPermission.dbNotAllow },
         ]
     }
