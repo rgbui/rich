@@ -20,6 +20,8 @@ import { PageDirective } from "../directive";
 import { useTemplateView } from "../../../extensions/template";
 import { lst } from "../../../i18n/store";
 import { Matrix } from "../../common/matrix";
+import { useImportFile } from "../../../extensions/import-file";
+import { buildPage } from "../common/create";
 
 export class Page$Operator {
     /**
@@ -532,6 +534,31 @@ export class Page$Operator {
             finally {
                 CloseShyAlert()
             }
+        }
+    }
+    async onOpenImport(this: Page) {
+        var r = await useImportFile({ page: this });
+        if (r?.blocks) {
+            var pa = await buildPage(r.blocks, { isTitle: true }, this.ws);
+            var d = await pa.get();
+            await this.onAction('onOpenImport', async () => {
+                var vs = lodash.cloneDeep(d.views);
+                var vo = vs[0];
+                delete d.views;
+                delete d.id;
+                delete d.sourceItemId;
+                delete d.loadElementUrl;
+                var view = this.views.first();
+                for (let v of view.childs) {
+                    await v.delete();
+                }
+                await this.createBlock(vo.url, vo, view, 0, BlockChildKey.childs);
+                if (r.text && !this.getPageDataInfo()?.text) {
+                    await this.onUpdatePageTitle(r.text);
+                }
+                await this.onUpdateProps(d, true);
+            })
+            this.emit(PageDirective.save);
         }
     }
     async onGridAlign(this: Page, blocks: Block[], command: string, value: string) {

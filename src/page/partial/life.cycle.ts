@@ -60,7 +60,7 @@ export class Page$Cycle {
         try {
             if (!data || typeof data == 'object' && Object.keys(data).length == 0) {
                 //这里加载默认的页面数据
-                data =this.getDefaultData();
+                data = this.getDefaultData();
                 this.loadDefault = true;
             }
             else {
@@ -200,7 +200,8 @@ export class Page$Cycle {
         json.requireSelectLayout = this.requireSelectLayout;
         json.hideDocTitle = this.hideDocTitle;
         json.pageLayout = util.clone(this.pageLayout);
-        json.matrix = this.matrix.getValues();
+        if (typeof this.matrix != 'undefined')
+            json.matrix = this.matrix.getValues();
         json.nav = this.nav;
         json.formType = this.formType;
         json.views = await this.views.asyncMap(async x => {

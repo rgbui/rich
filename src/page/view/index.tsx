@@ -16,6 +16,7 @@ import {
     CollectTableSvg,
     CubesSvg,
     DocCardsSvg,
+    DownloadSvg,
     MagicSvg,
     PageSvg
 } from "../../../component/svgs";
@@ -221,7 +222,9 @@ export class PageView extends Component<{ page: Page }>{
             </div>
             <div className="shy-page-view-template-picker-items gap-t-20">
                 <div className="remark f-14"><S>新增</S></div>
-                {(window.shyConfig.isDev || ws.sn <= 20) && <a onMouseDown={e => this.page.onOpenTemplate()}><Icon icon={{ name: 'bytedance-icon', code: 'oval-love' }}></Icon><span><S>选择模板创建</S></span></a>}
+                <a onMouseDown={e => this.page.onOpenTemplate()}><Icon icon={{ name: 'bytedance-icon', code: 'oval-love' }}></Icon><span><S>选择模板创建</S></span></a>
+                <a onMouseDown={e => this.page.onOpenImport()}><Icon icon={DownloadSvg}></Icon><span><S>导入</S></span></a>
+
                 <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={20} icon={PageSvg} ></Icon><span>页面</span></a>
                 <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.db)}><Icon size={18} icon={CollectTableSvg} ></Icon><span><S>表格</S></span></a>
                 <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.docCard)}><Icon size={20} icon={DocCardsSvg} ></Icon><span><S>宣传页</S></span></a>

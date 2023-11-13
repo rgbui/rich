@@ -10,6 +10,7 @@ import { util } from "../../util/util";
 import { parseHtml } from "../../src/import-export/html/parse";
 import { parseWord } from "../../src/import-export/word/parse";
 import { ShyAlert } from "../../component/lib/alert";
+import { lst } from "../../i18n/store";
 
 class ImportFile extends EventsComponent {
     render() {
@@ -41,10 +42,9 @@ class ImportFile extends EventsComponent {
             else if (ext == '.md') type = 'markdown';
             else if (ext == '.txt') type = 'markdown';
             else {
-                ShyAlert('仅支持.txt,.docx,.md,.html文件导入')
+                ShyAlert(lst('仅支持某些文件导入'))
                 return;
             }
-
             var blocks: any[] = [];
             if (type == 'markdown') blocks = await parseMarkdown(file);
             else if (type == 'html') {
@@ -54,7 +54,7 @@ class ImportFile extends EventsComponent {
             else if (type == 'word') {
                 blocks = await parseWord(file);
             }
-            this.emit('save', { text: file.text, blocks });
+            this.emit('save', { text: file.name.slice(0, file.name.lastIndexOf('.')), blocks });
         }
     }
     onOpen(options?: { page: Page }) {
@@ -66,8 +66,12 @@ export async function useImportFile(options?: { page: Page }) {
     let popover = await PopoverSingleton(ImportFile, { slow: true });
     let filePicker = await popover.open({ center: true, centerTop: 100 });
     filePicker.onOpen(options)
-    return new Promise((resolve: (data: any) => void, reject) => {
+    return new Promise((resolve: (data: { text: string, blocks: any[] }) => void, reject) => {
 
+        filePicker.only('save', data => {
+            popover.close();
+            resolve(data);
+        })
         popover.only('close', () => {
             resolve(null)
         })

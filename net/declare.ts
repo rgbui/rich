@@ -178,7 +178,7 @@ export interface ChannelPostMapUrls {
 	"/screenshot/png":{args:{wsId?:string,text?:string,url:string},returnType:Promise<SockResponse<{file:ResourceArguments}>>},
 	"/screenshot/pdf":{args:{wsId?:string,text?:string,url:string},returnType:Promise<SockResponse<{file:ResourceArguments}>>},
 	"/workspace/template/useCount":{args:{id:string},returnType:Promise<SockResponse<void>>},
-	"/import/page":{args:{text?: string,templateUrl?: string,wsId?:string,parentId?:string,pageId?:string,},returnType:Promise<SockResponse<void>>}
+	"/import/page":{args:{text?: string,templateUrl?: string,wsId?:string,parentId?:string,pageId?:string,},returnType:Promise<SockResponse<{item:any,items:any[]}>>}
 }
 export interface ChannelPatchMapUrls {
     "/datastore/update":{args:{schemaId:string,dataId:string,data:Record<string, any>},returnType:Promise<SockResponse<void>>},
@@ -233,7 +233,8 @@ export interface ChannelPutMapUrls {
 	"/page/item/create":{args:{wsId?:string,data:Record<string,any>},returnType:Promise<SockResponse<{ item:Record<string,any> }>>},
 	"/view/snap/direct":{args:{wsId?:string,  elementUrl: string, content: any,plain?:string,text?:string,thumb?:any },returnType:Promise<Promise<void>>},
 	"/bookmark/url":{args:{url:string},returnType:Promise<SockResponse<{title:string,description:string,image:ResourceArguments,icon:ResourceArguments}>>},
-	"/tag/create":{args:{tag:string,wsId?:string},returnType:Promise<SockResponse<{id:string,tag:string,workspaceId:string,rootId:string,creater:string,createDate:Date}>>}
+	"/tag/create":{args:{tag:string,wsId?:string},returnType:Promise<SockResponse<{id:string,tag:string,workspaceId:string,rootId:string,creater:string,createDate:Date}>>},
+	"/import/page/data":{args:{text?:string,wsId?:string,parentId?:string,mime:number,pageData:Record<string,any>|string,plain?:string},returnType:Promise<SockResponse<{item:any}>>}
 }
 export interface ChannelGetMapUrls {
     "/gallery/query":{args:{type: GalleryType, word: string},returnType:Promise<{ok:boolean,data:OuterPic[],warn:string}>},
