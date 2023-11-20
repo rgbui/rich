@@ -50,9 +50,9 @@ export class TrashBox extends EventsComponent {
                         <span className="flex-fixed f-12 remark">
                             {util.showTime(pa.deletedDate)}
                         </span>
-                        <span className="flex-auto flex-end r-size-24 r-flex-center r-item-hover r-round r-cursor r-gap-l-10">
-                            <ToolTip overlay={lst('恢复')}><span onMouseDown={e => this.onRecover(pa)}><Icon size={18} icon={{ name: 'bytedance-icon', code: 'undo' }}></Icon></span></ToolTip>
-                            <ToolTip overlay={lst('彻底删除')}><span onMouseDown={e => this.onDel(pa)}><Icon size={18} icon={TrashSvg}></Icon></span></ToolTip>
+                        <span className="flex-auto flex-end r-size-24 r-flex-center r-item-hover r-round r-cursor r-gap-l-10 remark">
+                            <ToolTip overlay={lst('恢复')}><span onMouseDown={e => this.onRecover(pa)}><Icon size={16} icon={{ name: 'bytedance-icon', code: 'undo' }}></Icon></span></ToolTip>
+                            <ToolTip overlay={lst('彻底删除')}><span onMouseDown={e => this.onDel(pa)}><Icon size={16} icon={TrashSvg}></Icon></span></ToolTip>
                         </span>
                     </div>
                 })}
