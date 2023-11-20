@@ -214,22 +214,22 @@ export class PageView extends Component<{ page: Page }>{
         return <div className="shy-page-view-template-picker" style={this.page.getScreenStyle()}>
             <div className="remark f-14"><S text='回车开始编辑'>回车开始编辑，或者从下方选择</S></div>
             <div className="shy-page-view-template-picker-items">
-                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={20} icon={PageSvg} ></Icon><span><S>空白页面</S></span></a>
+                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={18} icon={PageSvg} ></Icon><span><S>空白页面</S></span></a>
                 {!(this.page.ws.aiConfig?.disabled == true) && <>
-                    <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc, { useAi: true })}><Icon size={20} icon={AiStartSvg}></Icon><span><S>用AI开始创作</S></span></a>
+                    <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc, { useAi: true })}><Icon size={18} icon={AiStartSvg}></Icon><span><S>用AI开始创作</S></span></a>
                     {/* <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.docCard, { useAi: true })}><Icon size={20} icon={MagicSvg}></Icon><span><S>用AI开始生成PPT</S></span></a> */}
                 </>}
             </div>
             <div className="shy-page-view-template-picker-items gap-t-20">
                 <div className="remark f-14"><S>新增</S></div>
-                <a onMouseDown={e => this.page.onOpenTemplate()}><Icon icon={{ name: 'bytedance-icon', code: 'oval-love' }}></Icon><span><S>选择模板创建</S></span></a>
-                <a onMouseDown={e => this.page.onOpenImport()}><Icon icon={DownloadSvg}></Icon><span><S>导入</S></span></a>
+                <a onMouseDown={e => this.page.onOpenTemplate()}><Icon size={18} icon={{ name: 'bytedance-icon', code: 'oval-love' }}></Icon><span><S>选择模板创建</S></span></a>
+                <a onMouseDown={e => this.page.onOpenImport()}><Icon size={18}  icon={DownloadSvg}></Icon><span><S>导入</S></span></a>
 
-                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={20} icon={PageSvg} ></Icon><span>页面</span></a>
+                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={18} icon={PageSvg} ></Icon><span>页面</span></a>
                 <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.db)}><Icon size={18} icon={CollectTableSvg} ></Icon><span><S>表格</S></span></a>
-                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.docCard)}><Icon size={20} icon={DocCardsSvg} ></Icon><span><S>宣传页</S></span></a>
-                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.board)}><Icon size={20} icon={{ name: 'bytedance-icon', code: 'enter-the-keyboard' }}></Icon><span><S>白板</S></span></a>
-                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.textChannel)}><Icon size={20} icon={BoardToolFrameSvg}></Icon><span><S>频道</S></span></a>
+                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.docCard)}><Icon size={18} icon={DocCardsSvg} ></Icon><span><S>宣传页</S></span></a>
+                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.board)}><Icon size={18} icon={{ name: 'bytedance-icon', code: 'enter-the-keyboard' }}></Icon><span><S>白板</S></span></a>
+                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.textChannel)}><Icon size={18} icon={BoardToolFrameSvg}></Icon><span><S>频道</S></span></a>
             </div>
         </div>
     }

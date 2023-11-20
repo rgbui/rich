@@ -152,6 +152,7 @@ export interface ChannelDelMapUrls {
 	"/ws/member/delete":{args:{userid:string},returnType:Promise<SockResponse<void>>},
 	"/ws/role/delete":{args:{roleId:string},returnType:Promise<SockResponse<void>>},
 	"/ws/comment/del":{args:{id:string},returnType:Promise<SockResponse<void>>},
+	"/del/workspace/template":{args:{id:string},returnType:Promise<SockResponse<void>>},
 	"/page/deleted/clean":{args:{ws?:LinkWs,wsId?:string,pageId:string},returnType:Promise<SockResponse<void>>},
 	"/view/snap/del":{args:{id:string},returnType:Promise<SockResponse<void>>}
 }

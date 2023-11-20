@@ -669,8 +669,7 @@ export class PageContextmenu {
                 dg.onExport()
             }
         }
-        else
-            await useExportFile({ page: this });
+        else await useExportFile({ page: this });
     }
     async onRequireTemplate(this: Page) {
         var ws = this.ws;
@@ -682,6 +681,7 @@ export class PageContextmenu {
         var tgd = tg.data?.template || {};
         var rf = await useForm({
             maskCloseNotSave: true,
+            deleteButton: true,
             title: lst('申请模板'),
             model: {
                 classify: tgd['classify'],
@@ -720,36 +720,44 @@ export class PageContextmenu {
                 }
             ]
         })
-        ShyAlert(lst('正在申请中...'), 'warn', 1000 * 60 * 10);
-        try {
-            var g = await channel.post('/create/template', { config: { pageId: this.pageInfo?.id } })
-            if (g.ok) {
-                var r = await channel.post('/download/file', { url: g.data.file.url });
-                if (r.ok) {
-                    await channel.post('/create/workspace/template', {
-                        wsId: ws.id,
-                        pageId: this.pageInfo?.id,
-                        type: 'page',
-                        templateUrl: r.data.file.url,
-                        elementUrl: this.elementUrl,
-                        text: rf.text,
-                        description: rf.description,
-                        file: r.data.file,
-                        icon: this.pageInfo?.icon,
-                        config: {
-                            classify: rf.classify,
-                            tags: rf.tags
+        if (rf) {
+            ShyAlert(rf && rf.delete == true ? lst('正在删除中...') : lst('正在申请中...'), 'warn', 1000 * 60 * 10);
+            try {
+                if (rf && rf.delete == true) {
+                    await channel.del('/del/workspace/template', { id: tg.data.template.id });
+                }
+                else {
+                    var g = await channel.post('/create/template', { config: { pageId: this.pageInfo?.id } })
+                    if (g.ok) {
+                        var r = await channel.post('/download/file', { url: g.data.file.url });
+                        if (r.ok) {
+                            await channel.post('/create/workspace/template', {
+                                wsId: ws.id,
+                                pageId: this.pageInfo?.id,
+                                type: 'page',
+                                templateUrl: r.data.file.url,
+                                elementUrl: this.elementUrl,
+                                text: rf.text,
+                                description: rf.description,
+                                file: r.data.file,
+                                icon: this.pageInfo?.icon,
+                                config: {
+                                    classify: rf.classify,
+                                    tags: rf.tags
+                                }
+                            });
                         }
-                    });
+                    }
                 }
             }
-        }
-        catch (ex) {
+            catch (ex) {
 
+            }
+            finally {
+                CloseShyAlert()
+            }
         }
-        finally {
-            CloseShyAlert()
-        }
+
     }
 }
 

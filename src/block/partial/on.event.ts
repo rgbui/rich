@@ -1,9 +1,6 @@
 import { Block } from "..";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { BlockDirective, BlockRenderRange } from "../enum";
-import moveTo from '../../assert/svg/moveTo.svg';
-import comment from "../../assert/svg/comment.svg";
-// import trash from "../../assert/svg/trash.svg";
 import { blockStore } from "../../../extensions/block/store";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { AppearAnchor } from "../appear";
@@ -235,7 +232,6 @@ export class Block$Event {
                     await self.onContextMenuInput(item);
                 },
                 async click(item, ev, name, mp) {
-                    console.log('gggg', item, ev, name, mp);
                     mp.onFree();
                     try {
                         await self.onContextMenuClick(item, ev, name, mp);
