@@ -53,10 +53,10 @@ class FormDialoug extends EventsComponent {
             </> : undefined}
         >
             {this.remark && <div className=" f-14 remark flex-center gap-10">{this.remark}</div>}
-            <div className="padding-b-30 f-14">
+            <div className="padding-b-10 f-14">
                 {this.fields.map(f => {
-                    return <div key={f.name} className="gap-b-15">
-                        <div className="flex gap-t-5"><label>{f.text}</label>{f.tip && <HelpTip overlay={f.tip}></HelpTip>}</div>
+                    return <div key={f.name} className="gap-h-10">
+                        <div className="flex gap-h-5 f-12 remark"><label>{f.text}</label>{f.tip && <HelpTip overlay={f.tip}></HelpTip>}</div>
                         <div>
                             {f.type == 'input' && <Input onEnter={e => this.onSave()} onChange={e => this.model[f.name] = e} value={this.model[f.name] || ''}></Input>}
                             {f.type == 'textarea' && <Textarea onEnter={e => this.onSave()} onChange={e => this.model[f.name] = e} value={this.model[f.name] || ''}></Textarea>}
