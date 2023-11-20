@@ -7,7 +7,8 @@ export class Tip extends React.Component<{
     children: React.ReactElement | React.ReactElement[],
     text?:string,
     overlay?: React.ReactNode,
-    placement?: 'left' | 'top' | 'bottom' | 'right'
+    placement?: 'left' | 'top' | 'bottom' | 'right',
+    disabled?:boolean
 }>{
     constructor(props) {
         super(props);
@@ -17,6 +18,7 @@ export class Tip extends React.Component<{
     }
     private tip: any;
     render() {
+        if(this.props.disabled)return <>{this.props.children}</>
         var ov = typeof this.props.text != 'undefined' ? <S>{this.props.text}</S> : this.props.overlay;
         return <ToolTip ref={e => this.tip = e}
             mouseEnterDelay={0.8}

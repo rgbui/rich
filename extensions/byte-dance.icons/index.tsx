@@ -8,7 +8,7 @@ import lodash from "lodash";
 import { SpinBox } from "../../component/view/spin";
 import { Input } from "../../component/view/input";
 import { Icon } from "../../component/view/icon";
-import { DiceSvg } from "../../component/svgs";
+import { CheckSvg, DiceSvg } from "../../component/svgs";
 import { channel } from "../../net/channel";
 import { ByteDanceType } from "./declare";
 import { byteDanceStore } from "./store";
@@ -97,10 +97,10 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
     renderFontColors() {
         return <div className='shy-font-awesome-colors'>
             {FontColorList().map((c, i) => {
-                return <ToolTip overlay={c.text} key={i} ><a className={lodash.isEqual(this.color, c.color) ? "hover" : ""} onMouseDown={e => this.onSetFont(c)} style={{
+                return <ToolTip overlay={c.text} key={i} ><a className={'flex-center text-white ' + (lodash.isEqual(this.color, c.color) ? "hover" : "")} onMouseDown={e => this.onSetFont(c)} style={{
                     backgroundColor: c.color == 'inherit' ? "var(--text-color)" : (typeof c.color == 'string' ? c.color : undefined),
                     backgroundImage: typeof c.color == 'string' ? undefined : c.color.grad,
-                }}></a></ToolTip>
+                }}>{lodash.isEqual(this.color, c.color) && <Icon size={16} icon={CheckSvg}></Icon>}</a></ToolTip>
             })}
         </div>
     }
@@ -123,9 +123,9 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
     }
     render() {
         return <div>
-            <div className="flex padding-t-14 padding-w-14">
+            <div className="flex padding-t-14 padding-w-10">
                 <div className="flex-auto"><Input clear placeholder={lst("搜索...")} value={this.word} onClear={() => this.loadSearch('')} onEnter={e => { this.word = e; this.loadSearch.flush() }} onChange={e => this.loadSearch(e)} ></Input></div>
-                <div className="flex-fixed gap-l-20 gap-r-10 text-1">
+                <div className="flex-fixed gap-l-20  text-1">
                     <Tip overlay={<S>随机</S>}><span onMouseDown={e => this.onRandomIcon()} className=" flex-center size-30 round item-hover cursor">
                         <Icon size={24} icon={DiceSvg}></Icon>
                     </span></Tip>

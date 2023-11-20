@@ -58,13 +58,12 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
     emojis: EmojiType[] = [];
     renderEmoji() {
         if (this.loading == true) return <SpinBox></SpinBox>
-        // var cs = this.emojis.lookup(x => x.category);
         var els: JSX.Element[] = [];
         if (this.historyEmojis.length > 0) {
             els.push(<div className='shy-emoji-view-category' key={'history'}>
                 <div className='shy-emoji-view-category-head'><span><S>最近</S></span></div>
                 <div className='shy-emoji-view-category-emojis'>{this.historyEmojis.map(emoji => {
-                    return <Tip overlay={<>{emoji.e.name}</>} key={emoji.e.code}><span className="ef" onMouseDown={e => this.onChange(emoji.e)} dangerouslySetInnerHTML={{ __html: getEmoji(emoji.e.code) }}></span></Tip>
+                    return <Tip disabled={true} overlay={<>{emoji.e.name}</>} key={emoji.e.code}><span className="ef" onMouseDown={e => this.onChange(emoji.e)} dangerouslySetInnerHTML={{ __html: getEmoji(emoji.e.code) }}></span></Tip>
                 })}</div>
             </div>)
         }
@@ -75,7 +74,7 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
             els.push(<div className='shy-emoji-view-category' key={category.id}>
                 <div className='shy-emoji-view-category-head'><span>{category.name}</span></div>
                 <div className='shy-emoji-view-category-emojis'>{category.childs.map(emoji => {
-                    return <Tip overlay={<>{emoji.name}</>} key={emoji.code}><span className="ef" onMouseDown={e => this.onChange(emoji)} dangerouslySetInnerHTML={{ __html: getEmoji(emoji.code) }}></span></Tip>
+                    return <Tip  overlay={<>{emoji.name}</>} key={emoji.code}><span  className="ef"   onMouseDown={e => this.onChange(emoji)} dangerouslySetInnerHTML={{ __html: getEmoji(emoji.code) }}></span></Tip>
                 })}</div>
             </div>)
         });
@@ -87,15 +86,15 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
         return <div className='shy-emoji-view-category'>
             <div className="shy-emoji-view-category-emojis">
                 {this.searchEmojis.map(emoji => {
-                    return <Tip overlay={<>{emoji.name}</>} key={emoji.code}><span className="ef" onMouseDown={e => this.onChange(emoji)} dangerouslySetInnerHTML={{ __html: getEmoji(emoji.code) }}></span></Tip>
+                    return <Tip  overlay={<>{emoji.name}</>} key={emoji.code}><span className="ef" onMouseDown={e => this.onChange(emoji)} dangerouslySetInnerHTML={{ __html: getEmoji(emoji.code) }}></span></Tip>
                 })}
             </div></div>
     }
     render() {
         return <div>
-            <div className="flex padding-h-14 padding-w-14">
+            <div className="flex padding-h-14 padding-w-10">
                 <div className="flex-auto"><Input clear placeholder={lst("搜索...")} value={this.word} onClear={() => this.loadSearch('')} onEnter={e => { this.word = e; this.loadSearch.flush() }} onChange={e => this.loadSearch(e)} ></Input></div>
-                <div className="flex-fixed gap-l-10 gap-r-10 text-1">
+                <div className="flex-fixed gap-l-10 text-1">
                     <Tip overlay={<S>随机</S>}><span onMouseDown={e => this.onRandomIcon()} className=" flex-center size-30 round item-hover cursor">
                         <Icon size={24} icon={DiceSvg}></Icon>
                     </span></Tip>
@@ -116,6 +115,7 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
         if (typeof w == 'string') this.word = w;
         this.searchEmojis = [];
         this.searching = true;
+        console.log('search forceUpdate...');
         this.forceUpdate()
         if (this.word) {
             this.emojis.forEach(ej => {
@@ -133,6 +133,7 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
         if (this.scrollOver == true) return;
         var dm = dom(event.target as HTMLElement);
         if (dm.isScrollBottom(100)) {
+            console.log('gggxx');
             if (this.isScrollRendering == true) return;
             this.scrollIndex += 1;
             this.isScrollRendering = true;

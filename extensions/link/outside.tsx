@@ -16,13 +16,13 @@ export class OutsideUrl extends React.Component<{ url?: string, remark?: React.R
         this.props.change(this.url);
     }
     render() {
-        return <div className='shy-outside-url'>
+        return <div className='shy-outside-url padding-10 flex-center flex-col'>
             <Input placeholder={ls.t('请输入网址')} value={this.url} onChange={e => this.url = e} onEnter={e => { this.url = e; this.save() }}></Input>
-            <div className="flex-center">
+            <div className="flex-center gap-h-10">
                 <Button block style={{ width: 200 }} onClick={() => this.save()}><S>保存</S></Button>
             </div>
-            {this.error && <div className='shy-outside-url-error'>{this.error}</div>}
-            {this.props.remark && <div className='shy-outside-url-remark'>{this.props.remark}</div>}
+            {this.error && <div className='shy-outside-url-error error'>{this.error}</div>}
+            {this.props.remark && <div className='shy-outside-url-remark remark f-12'>{this.props.remark}</div>}
         </div>
     }
 }
