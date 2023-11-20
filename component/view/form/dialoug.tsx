@@ -3,14 +3,11 @@ import lodash from "lodash";
 import React from "react";
 import { PopoverSingleton } from "../../popover/popover";
 import { EventsComponent } from "../../lib/events.component";
-import { PlusSvg } from "../../svgs";
 import { Button } from "../button";
-import { Col, Dialoug, Row, Space } from "../grid";
-import { Icon } from "../icon";
+import { Dialoug, } from "../grid";
 import { Input } from "../input";
 import { Textarea } from "../input/textarea";
-import { Remark, ErrorText, HelpTip } from "../text";
-import { ToolTip } from "../tooltip";
+import { HelpTip } from "../text";
 import { SelectBox } from "../select/box";
 import "./style.less";
 import { FileInput } from "../input/file";
@@ -38,24 +35,22 @@ export type FormDialougType = {
     /**
      * 关闭对话框时，通过mask，仍然返回数据，但实际没有修改，也不需要保存
      */
-    maskCloseNotSave?: boolean
+    maskCloseNotSave?: boolean,
+    deleteButton?: boolean
 }
 
 class FormDialoug extends EventsComponent {
     render() {
         return <Dialoug className={'shy-form-dialoug'}
             head={this.head ? <span>{this.title}</span> : undefined}
-            footer={this.footer ? <Row>
-                <Col span={12}>
-                    {this.error && <ErrorText>{this.error}</ErrorText>}
-                </Col>
-                <Col span={12} align={'end'}>
-                    <Space>
-                        <Button onClick={e => this.onClose()} ghost><S>取消</S></Button>
-                        <Button onClick={e => this.onSave()} ref={e => this.button = e}><S>确定</S></Button>
-                    </Space>
-                </Col>
-            </Row> : undefined}
+            footer={this.footer ? <>
+                <div className="flex-auto">{this.error && <span className="error">{this.error}</span>}&nbsp;</div>
+                <div className="flex-fixed flex r-gap-l-10">
+                    <Button onClick={e => this.onClose()} ghost><S>取消</S></Button>
+                    {this.deleteButton && <Button onClick={e => this.emit('delete')} ghost><S>删除</S></Button>}
+                    <Button onClick={e => this.onSave()} ref={e => this.button = e}><S>确定</S></Button>
+                </div>
+            </> : undefined}
         >
             {this.remark && <div className=" f-14 remark flex-center gap-10">{this.remark}</div>}
             <div className="padding-b-30 f-14">
@@ -65,7 +60,7 @@ class FormDialoug extends EventsComponent {
                         <div>
                             {f.type == 'input' && <Input onEnter={e => this.onSave()} onChange={e => this.model[f.name] = e} value={this.model[f.name] || ''}></Input>}
                             {f.type == 'textarea' && <Textarea onEnter={e => this.onSave()} onChange={e => this.model[f.name] = e} value={this.model[f.name] || ''}></Textarea>}
-                            {f.type == 'select' && <SelectBox  border multiple={f.multiple ? true : false} onChange={e => { this.model[f.name] = e; this.forceUpdate(); }} value={this.model[f.name] || (f.multiple ? [] : '')} options={f.options || []}></SelectBox>}
+                            {f.type == 'select' && <SelectBox border multiple={f.multiple ? true : false} onChange={e => { this.model[f.name] = e; this.forceUpdate(); }} value={this.model[f.name] || (f.multiple ? [] : '')} options={f.options || []}></SelectBox>}
                             {f.type == 'file' && <FileInput mime={f.mime} value={this.model[f.name]} onChange={e => { this.model[f.name] = e; this.forceUpdate(); }}></FileInput>}
                         </div>
                     </div>
@@ -105,10 +100,12 @@ class FormDialoug extends EventsComponent {
     fields: FormDialougType['fields'] = [];
     head: boolean = true;
     footer: boolean = true;
+    deleteButton = false;
     open(options: FormDialougType) {
         this.fields = options.fields;
         this.head = options.head;
         this.title = options.title;
+        this.deleteButton = options.deleteButton || false;
         this.remark = options.remark || "";
         this.model = options.model ? lodash.cloneDeep(options.model) : {};
         this.button.loading = false;
@@ -133,6 +130,10 @@ export async function useForm(options: FormDialougType) {
             popover.close();
             resolve(null);
         });
+        fv.only('delete', () => {
+            popover.close();
+            resolve({ 'delete': true });
+        })
         fv.only('save', function (d) {
             popover.close();
             resolve(d);
