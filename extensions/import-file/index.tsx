@@ -27,7 +27,7 @@ class ImportFile extends EventsComponent {
                     <Icon icon={{ name: 'bytedance-icon', code: 'word' }}></Icon><span className="gap-l-5">Word</span>
                 </div>
             </div>
-            <div className="remark gap-h-10">
+            <div className="remark gap-h-10 gap-w-10">
                 <S text="仅支持某些文件导入">仅支持.txt,.docx,.md,.html文件导入</S>
             </div>
         </div>
