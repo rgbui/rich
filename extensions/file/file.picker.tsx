@@ -82,7 +82,7 @@ interface UploadPicker {
 }
 
 export async function useUploadPicker(pos: PopoverPosition, mime?: UploadPicker['mime']) {
-    let popover = await PopoverSingleton(UploadPicker);
+    let popover = await PopoverSingleton(UploadPicker,{mask:true});
     let filePicker = await popover.open(pos);
     filePicker.open(mime);
     return new Promise((resolve: (data: ResourceArguments) => void, reject) => {

@@ -39,6 +39,7 @@ export class OnlineUsers extends React.Component<{ ws: LinkWs }> {
                 return <div className="padding-w-14 margin-h-10 cursor round item-hover padding-h-5"
                     key={(user as any).userid}><Avatar
                         showCard={true}
+                        ws={this.props.ws}
                         size={30}
                         userid={(user as any).userid}
                         showName></Avatar></div>

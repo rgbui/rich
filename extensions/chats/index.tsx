@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import lodash from "lodash";
 import React from "react";
-import { FileIconSvg, DownloadSvg, Emoji1Svg, Edit1Svg, ReplySvg, DotsSvg, EditSvg, TrashSvg, ReportSvg, CheckSvg, EmojiSvg, DuplicateSvg } from "../../component/svgs";
+import { FileIconSvg, DownloadSvg, Edit1Svg, ReplySvg, DotsSvg, EditSvg, TrashSvg, ReportSvg, CheckSvg, EmojiSvg, DuplicateSvg } from "../../component/svgs";
 import { Avatar } from "../../component/view/avator/face";
 import { UserBox } from "../../component/view/avator/user";
 import { Icon } from "../../component/view/icon";
@@ -9,7 +9,7 @@ import { useSelectMenuItem } from "../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { Remark } from "../../component/view/text";
 import { SockResponse } from "../../net/declare";
-import { autoImageUrl, getEmoji } from "../../net/element.type";
+import { ElementType, autoImageUrl, getElementUrl, getEmoji } from "../../net/element.type";
 import { KeyboardCode } from "../../src/common/keys";
 import { Rect } from "../../src/common/vector/point";
 import { UserBasic } from "../../types/user";
@@ -24,9 +24,13 @@ import { S } from "../../i18n/view";
 import { lst } from "../../i18n/store";
 import { useImageViewer } from "../../component/view/image.preview";
 import { CopyAlert } from "../../component/copy";
+import { LinkWs } from "../../src/page/declare";
+
+import { useOpenReport } from "../report";
 
 export class ViewChats extends React.Component<{
     readonly?: boolean,
+    ws?: LinkWs,
     redit(d: ChannelTextType)
     delChat(d: ChannelTextType): Promise<SockResponse<void, string>>
     emojiChat(d: ChannelTextType, re: Partial<EmojiCode>): Promise<SockResponse<{
@@ -126,7 +130,7 @@ export class ViewChats extends React.Component<{
         return <div data-channel-text-id={d.id} className={"sy-channel-text-item" + (noUser ? " no-user" : "")} key={d.id}>
             {d.reply && <div className="sy-channel-text-item-reply">
                 <UserBox userid={d.reply.userid}>{us => {
-                    return < ><Avatar showCard user={us} userid={d.userid} size={16}></Avatar>
+                    return < ><Avatar ws={this.props.ws} showCard user={us} userid={d.userid} size={16}></Avatar>
                         <div className="sy-channel-text-item-reply-content">{this.renderContent(d.reply)}</div>
                     </>
                 }}</UserBox>
@@ -135,7 +139,7 @@ export class ViewChats extends React.Component<{
                 <UserBox userid={d.userid}>{us => {
                     return <>
                         <div className="sy-channel-text-item-edited-content">
-                            <Avatar showCard user={us} userid={d.userid} size={40}></Avatar>
+                            <Avatar ws={this.props.ws} showCard user={us} userid={d.userid} size={40}></Avatar>
                             <div className="sy-channel-text-item-edited-content-wrapper" >
                                 <div className="sy-channel-text-item-head">
                                     <a>{us.name}</a>
@@ -163,7 +167,7 @@ export class ViewChats extends React.Component<{
             }
             {!(d.id == this.editChannelText?.id) && !noUser && <UserBox userid={d.userid}>{us => {
                 return <div className="sy-channel-text-item-box" >
-                    <Avatar showCard user={us} userid={d.userid} size={40}></Avatar>
+                    <Avatar ws={this.props.ws} showCard user={us} userid={d.userid} size={40}></Avatar>
                     <div className="sy-channel-text-item-wrapper" >
                         <div className="sy-channel-text-item-head">
                             <a>{us.name}</a>
@@ -298,8 +302,14 @@ export class ViewChats extends React.Component<{
     async reply(d: ChannelTextType) {
         await this.props.replyChat(d)
     }
-    async report(d: ChannelTextType) {
-        await this.props.replyChat(d);
+    async report(d: ChannelTextType)
+    {
+        await useOpenReport({
+            reportContent: d.content,
+            userid: d.userid,
+            workspaceId: d.workspaceId,
+            reportElementUrl: getElementUrl(ElementType.RoomChat, d.roomId, d.id)
+        })
     }
     private async del(d: ChannelTextType) {
         var op = this.getOp(d);
@@ -318,8 +328,10 @@ export class ViewChats extends React.Component<{
         var op = this.getOp(d);
         var items: MenuItem<string>[] = [];
         if (d.userid == this.currentUser.id) {
-            items.push({ name: 'copy', disabled: d.content ? false : true, text: lst('拷贝'), icon: DuplicateSvg });
             items.push({ name: 'edit', text: lst('编辑'), icon: EditSvg });
+            items.push({ name: 'reply', text: lst('回复'), icon: ReplySvg });
+            items.push({ type: MenuItemType.divide });
+            items.push({ name: 'copy', disabled: d.content ? false : true, text: lst('拷贝'), icon: DuplicateSvg });
             items.push({ type: MenuItemType.divide });
             items.push({ name: 'delete', text: lst('删除'), icon: TrashSvg });
         }
@@ -327,7 +339,7 @@ export class ViewChats extends React.Component<{
             items.push({ name: 'reply', text: lst('回复'), icon: ReplySvg });
             items.push({ name: 'copy', disabled: d.content ? false : true, text: lst('拷贝'), icon: DuplicateSvg });
             items.push({ type: MenuItemType.divide });
-            items.push({ name: 'report', disabled: true, text: lst('举报'), icon: ReportSvg });
+            items.push({ name: 'report', text: lst('举报'), icon: { name: 'bytedance-icon', code: 'harm' } });
         }
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) },
             items

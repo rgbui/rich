@@ -4,12 +4,13 @@ import { autoImageUrl } from '../../../net/element.type';
 import { Rect } from '../../../src/common/vector/point';
 import { UserBasic, UserStatus } from '../../../types/user';
 import { useUserCard } from './card';
-import "./style.less";
 import { CheckSvg } from '../../svgs';
 import { Icon } from '../icon';
 import lodash from 'lodash';
 import { lst } from '../../../i18n/store';
 import { S } from '../../../i18n/view';
+import { LinkWs } from '../../../src/page/declare';
+import "./style.less";
 
 export class Avatar extends React.Component<{
     size?: number,
@@ -21,6 +22,7 @@ export class Avatar extends React.Component<{
     className?: string,
     showName?: boolean,
     hideStatus?: boolean,
+    ws?: LinkWs,
     onMousedown?: (event: React.MouseEvent) => void
 }> {
     private user: UserBasic;
@@ -69,7 +71,11 @@ export class Avatar extends React.Component<{
         if (this.props.userid && this.props.showCard == true) {
             event.stopPropagation();
             if (this.props.userid == 'all') return;
-            await useUserCard({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, { user: this.props.user, userid: this.props.userid })
+            await useUserCard({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
+                user: this.props.user,
+                ws: this.props.ws,
+                userid: this.props.userid
+            })
         }
         if (typeof this.props.onMousedown == 'function')
             this.props.onMousedown(event)
