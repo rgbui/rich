@@ -347,7 +347,9 @@ export interface ChannelActMapUrls {
 	"/shy/share":{args:{type: "weibo"|"weixin"|"updateTimelineShareData"|"updateAppMessageShareData", title: string, description?: string, pic?: string, url: string},returnType:{}},
 	"/user/exit/current/workspace":{args:{},returnType:SockResponse<void>},
 	"/current/ws/remove/member":{args:{userid:string},returnType:SockResponse<void>},
-	"/open/user/private/channel":{args:{userid:string},returnType:SockResponse<void>}
+	"/open/user/private/channel":{args:{userid:string},returnType:SockResponse<void>},
+	"/current/page/copy":{args:{},returnType:SockResponse<void>},
+	"/current/page/move":{args:{},returnType:SockResponse<void>}
 }
 export interface ChannelAirMapUrls {
     "/page/update/info":{args:{id?: string,elementUrl?:string, pageInfo:LinkPageItem},returnType:void},
