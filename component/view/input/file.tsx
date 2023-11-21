@@ -39,7 +39,7 @@ export class FileInput extends React.Component<{
                     <span onClick={e => {
                         e.stopPropagation();
                         this.props.onChange(null);
-                    }} className="size-24 flex-center cursor item-hover"><Icon size={12} icon={CloseSvg}></Icon></span>
+                    }} className="size-20 flex-center cursor item-hover round bg-dark text-white"><Icon size={12} icon={CloseSvg}></Icon></span>
                 </div>
             </span>}
             {this.props.value && this.props.mime != 'image' && <span onMouseDown={e => uploadFile(e)} className="flex flex-inline item-hover round padding-w-5 padding-h-2">
