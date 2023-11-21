@@ -18,7 +18,7 @@ import {
 import { UserAvatars } from "../../../component/view/avator/users";
 import { Button } from "../../../component/view/button";
 import { Icon } from "../../../component/view/icon";
-import { Spin } from "../../../component/view/spin";
+import { Loading1, Spin } from "../../../component/view/spin";
 import { channel } from "../../../net/channel";
 import { ElementType } from "../../../net/element.type";
 import { PageLayoutType, getPageIcon, getPageText } from "../declare";
@@ -55,7 +55,7 @@ export class PageBar extends React.Component<{ page: Page }>{
                         <span className="gap-l-5">{this.props.page?.formRowData?.title || '新页面'}</span>
                     </span>
                 </>}
-                {this.saving && <Spin></Spin>}
+                {this.saving && <Loading1></Loading1>}
             </div>
         }
         else if ([ElementType.SchemaView, ElementType.SchemaRecordView].includes(this.props.page.pe.type) && !this.props.page.isSchemaRecordViewTemplate) {
@@ -73,7 +73,7 @@ export class PageBar extends React.Component<{ page: Page }>{
                 {this.props.page.locker?.lock && this.props.page.isCanManage && <span onMouseDown={e => this.props.page.onLockPage()} className="flex-center visible size-24 item-hover cursor round">
                     <Icon size={18} icon={LockSvg}></Icon>
                 </span>}
-                {this.saving && <Spin></Spin>}
+                {this.saving && <Loading1></Loading1>}
             </div>
         }
         else if (this.props.page.isSchemaRecordViewTemplate) {
@@ -92,7 +92,7 @@ export class PageBar extends React.Component<{ page: Page }>{
                 {this.props.page.locker?.lock && this.props.page.isCanManage && <span onMouseDown={e => this.props.page.onLockPage()} className="flex-center visible size-24 item-hover cursor round">
                     <Icon size={18} icon={LockSvg}></Icon>
                 </span>}
-                {this.saving && <Spin></Spin>}
+                {this.saving && <Loading1></Loading1>}
             </div>
         }
         return <div className="flex-auto flex">
@@ -104,10 +104,10 @@ export class PageBar extends React.Component<{ page: Page }>{
                 </span>
                 <span className={"flex-auto gap-l-5 remark text-overflow " + (isMobileOnly ? " max-w-250" : " max-w-500")}>{this.props.page?.pageInfo?.description}</span>
             </span>
-            {this.props.page.locker?.lock && this.props.page.isCanManage && <span onMouseDown={e => this.props.page.onLockPage()} className="flex-center visible size-24 item-hover cursor round">
+            {this.props.page.locker?.lock && this.props.page.isCanManage && <span onMouseDown={e => this.props.page.onLockPage()} className="flex-center size-24 item-hover cursor round">
                 <Icon size={18} icon={LockSvg}></Icon>
             </span>}
-            {this.saving && <Spin></Spin>}
+            {this.saving && <Loading1></Loading1>}
         </div>
     }
     be: ToolTip;
