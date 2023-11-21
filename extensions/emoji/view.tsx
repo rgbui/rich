@@ -52,8 +52,12 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
         }
         this.historyEmojis.sort((a, b) => b.t - a.t);
         await channel.act('/cache/set', { key: EMOJI_HISTORYS, value: this.historyEmojis })
+        await new Promise((resolve, reject) => {
+            this.forceUpdate(() => {
+                resolve(true);
+            })
+        })
         this.props.onChange(code);
-        this.forceUpdate()
     }
     emojis: EmojiType[] = [];
     renderEmoji() {
@@ -74,7 +78,7 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
             els.push(<div className='shy-emoji-view-category' key={category.id}>
                 <div className='shy-emoji-view-category-head'><span>{category.name}</span></div>
                 <div className='shy-emoji-view-category-emojis'>{category.childs.map(emoji => {
-                    return <Tip  overlay={<>{emoji.name}</>} key={emoji.code}><span  className="ef"   onMouseDown={e => this.onChange(emoji)} dangerouslySetInnerHTML={{ __html: getEmoji(emoji.code) }}></span></Tip>
+                    return <Tip overlay={<>{emoji.name}</>} key={emoji.code}><span className="ef" onMouseDown={e => this.onChange(emoji)} dangerouslySetInnerHTML={{ __html: getEmoji(emoji.code) }}></span></Tip>
                 })}</div>
             </div>)
         });
@@ -86,7 +90,7 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
         return <div className='shy-emoji-view-category'>
             <div className="shy-emoji-view-category-emojis">
                 {this.searchEmojis.map(emoji => {
-                    return <Tip  overlay={<>{emoji.name}</>} key={emoji.code}><span className="ef" onMouseDown={e => this.onChange(emoji)} dangerouslySetInnerHTML={{ __html: getEmoji(emoji.code) }}></span></Tip>
+                    return <Tip overlay={<>{emoji.name}</>} key={emoji.code}><span className="ef" onMouseDown={e => this.onChange(emoji)} dangerouslySetInnerHTML={{ __html: getEmoji(emoji.code) }}></span></Tip>
                 })}
             </div></div>
     }
@@ -115,7 +119,6 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
         if (typeof w == 'string') this.word = w;
         this.searchEmojis = [];
         this.searching = true;
-        console.log('search forceUpdate...');
         this.forceUpdate()
         if (this.word) {
             this.emojis.forEach(ej => {
@@ -133,7 +136,6 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
         if (this.scrollOver == true) return;
         var dm = dom(event.target as HTMLElement);
         if (dm.isScrollBottom(100)) {
-            console.log('gggxx');
             if (this.isScrollRendering == true) return;
             this.scrollIndex += 1;
             this.isScrollRendering = true;
