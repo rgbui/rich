@@ -51,6 +51,7 @@ export function RenderChats(
 
     }
     return <ViewChats
+        ws={block.page.ws}
         readonly={block.abledSend && block.page.user?.id ? false : true}
         user={block.page.user}
         chats={block.chats}

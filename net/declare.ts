@@ -148,7 +148,7 @@ export interface ChannelDelMapUrls {
 	"/user/del/order":{args:{orderId:string},returnType:Promise<SockResponse<void>>},
 	"/open/weixin/unbind":{args:{id:string},returnType:Promise<SockResponse<void>>},
 	"/ws/channel/cancel":{args:{roomId: string, id: string, wsId?: string, sockId?: string},returnType:Promise<SockResponse<void>>},
-	"/ws/member/exit":{args:{wsId:string,sock:any},returnType:Promise<SockResponse<void>>},
+	"/ws/member/exit":{args:{wsId?:string},returnType:Promise<SockResponse<void>>},
 	"/ws/member/delete":{args:{userid:string},returnType:Promise<SockResponse<void>>},
 	"/ws/role/delete":{args:{roleId:string},returnType:Promise<SockResponse<void>>},
 	"/ws/comment/del":{args:{id:string},returnType:Promise<SockResponse<void>>},
@@ -222,6 +222,7 @@ export interface ChannelPutMapUrls {
 	"/create/qr_pay/order":{args:{subject: string,body: string,price: number,count: number,amount?: number,kind: string},returnType:Promise<SockResponse<{orderId:string,code:string}>>},
 	"/open/weixin/bind":{args:{weixinOpen:any},returnType:Promise<SockResponse<void>>},
 	"/open/sign":{args:{},returnType:Promise<SockResponse<{user:Record<string,any>,guid:string,token:string}>>},
+	"/user/report":{args:{report:{userid:string,tags:string[],reason:string,reportElementUrl?:string,wsId?:string,reportContent?:string}},returnType:Promise<SockResponse<void>>},
 	"/ws/create":{args:{text:string,dataServiceAddress?:string,searchServiceAddress?:string,fileServiceAddress?:string,templateUrl?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>,pids:any[]}>>},
 	"/ws/invite/create":{args:any,returnType:Promise<SockResponse<{code:string}>>},
 	"/ws/invite/join":{args:{wsId:string,sock?:any,agree?:boolean,username:string},returnType:Promise<SockResponse<void>>},
@@ -343,7 +344,10 @@ export interface ChannelActMapUrls {
 	"/view/snap/operator":{args:{ elementUrl: string, operate: Partial<UserAction> },returnType:Promise<{seq: number,id: string;}>},
 	"/view/snap/store":{args:{  elementUrl: string, seq: number, content: any,plain?:string,text?:string,thumb?:any },returnType:Promise<void>},
 	"/open/pay":{args:{},returnType:{}},
-	"/shy/share":{args:{type: "weibo"|"weixin"|"updateTimelineShareData"|"updateAppMessageShareData", title: string, description?: string, pic?: string, url: string},returnType:{}}
+	"/shy/share":{args:{type: "weibo"|"weixin"|"updateTimelineShareData"|"updateAppMessageShareData", title: string, description?: string, pic?: string, url: string},returnType:{}},
+	"/user/exit/current/workspace":{args:{},returnType:SockResponse<void>},
+	"/current/ws/remove/member":{args:{userid:string},returnType:SockResponse<void>},
+	"/open/user/private/channel":{args:{userid:string},returnType:SockResponse<void>}
 }
 export interface ChannelAirMapUrls {
     "/page/update/info":{args:{id?: string,elementUrl?:string, pageInfo:LinkPageItem},returnType:void},
