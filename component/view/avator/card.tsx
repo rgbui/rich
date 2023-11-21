@@ -16,6 +16,7 @@ import { MenuItem, MenuItemType } from "../menu/declare";
 import "./style.less"
 import { Confirm } from "../../lib/confirm";
 import { useOpenReport } from "../../../extensions/report";
+import { ShyAlert } from "../../lib/alert";
 
 export class UserCard extends EventsComponent {
     user: UserBasic;
@@ -65,7 +66,7 @@ export class UserCard extends EventsComponent {
         if (u.id == this.user.id) {
             items = [
                 { name: 'userSettings', text: lst('个人设置'), icon: SettingsSvg },
-                { name: 'exitWorkspace', text: lst('退出空间'), icon: LogoutSvg }
+                { name: 'exitWorkspace', visible: this.ws ? true : false, text: lst('退出空间'), icon: LogoutSvg }
             ]
         }
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, items);
@@ -73,9 +74,11 @@ export class UserCard extends EventsComponent {
             switch (r.item.name) {
                 case 'letter':
                     await channel.act('/open/user/private/channel', { userid: this.user.id });
+                    this.emit('close');
                     break;
                 case 'addFriends':
                     await channel.put('/friend/join', { userid: this.user.id });
+                    ShyAlert(lst('已发送好友请求'))
                     break;
                 case 'removeFriends':
                     if (await Confirm(lst('确定删除好友？')))
@@ -87,6 +90,7 @@ export class UserCard extends EventsComponent {
                     break;
                 case 'report':
                     await useOpenReport({ userid: this.user.id });
+                    this.emit('close');
                     break;
                 case 'removeMemeber':
                     if (await Confirm(lst('确认移出成员？')))
@@ -94,9 +98,11 @@ export class UserCard extends EventsComponent {
                     break;
                 case 'userSettings':
                     await channel.act('/open/user/settings');
+                    this.emit('close');
                     break;
                 case 'exitWorkspace':
                     await channel.act('/user/exit/current/workspace');
+                    this.emit('close');
                     break;
             }
         }
