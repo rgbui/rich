@@ -131,7 +131,7 @@ export class ViewChats extends React.Component<{
             {d.reply && <div className="sy-channel-text-item-reply">
                 <UserBox userid={d.reply.userid}>{us => {
                     return < ><Avatar ws={this.props.ws} showCard user={us} userid={d.userid} size={16}></Avatar>
-                        <div className="sy-channel-text-item-reply-content">{this.renderContent(d.reply)}</div>
+                        <div className="sy-channel-text-item-reply-content f-12">{this.renderContent(d.reply)}</div>
                     </>
                 }}</UserBox>
             </div>}
@@ -180,7 +180,7 @@ export class ViewChats extends React.Component<{
                 </div>
             }}</UserBox>}
             {!(d.id == this.editChannelText?.id) && noUser && <div className="sy-channel-text-item-box" >
-                <div className="sy-channel-text-item-date">{dayjs(d.createDate).format('HH:mm')}</div>
+                <div className="sy-channel-text-item-date remark">{dayjs(d.createDate).format('HH:mm')}</div>
                 <div className="sy-channel-text-item-wrapper" >
                     <div className="sy-channel-text-item-content">{this.renderContent(d)}</div>
                 </div>

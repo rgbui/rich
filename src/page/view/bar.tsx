@@ -2,6 +2,7 @@ import React, { CSSProperties } from "react";
 import { Page } from "..";
 
 import {
+    AiStartSvg,
     ArrowZoomSvg,
     ChevronLeftSvg,
     ChevronRightSvg,
@@ -26,11 +27,13 @@ import { PageDirective } from "../directive";
 import { isMobileOnly } from "react-device-detect";
 import { Avatar } from "../../../component/view/avator/face";
 import { ToolTip } from "../../../component/view/tooltip";
-import { useWsSearch } from "../../../extensions/search";
+
 import { DefinePageNavBar } from "./common";
 import { S } from "../../../i18n/view";
 import { lst } from "../../../i18n/store";
 import { Tip } from "../../../component/view/tooltip/tip";
+import { useAISearchBox } from "../../../extensions/search/ai";
+import { useSearchBox } from "../../../extensions/search/keyword";
 
 export class PageBar extends React.Component<{ page: Page }>{
     preTip: Tip;
@@ -186,6 +189,7 @@ export class PageBar extends React.Component<{ page: Page }>{
         var isSearch: boolean = true;
         var isPublish: boolean = true;
         var isContextMenu: boolean = true;
+        var isAi:boolean=this.props.page.ws?.aiConfig?.aiSearch;
         if (!this.props.page.isSign) {
             isPublish = false;
         }
@@ -211,7 +215,8 @@ export class PageBar extends React.Component<{ page: Page }>{
         if (this.props.page.isSign) return <div className="flex r-flex-center r-size-24 r-item-hover r-round r-cursor r-gap-l-10 text-1 gap-r-20">
             {isField && <span onMouseDown={e => this.props.page.onOpenFieldProperty(e)} ><Icon size={18} icon={{ name: 'bytedance-icon', code: 'setting-one' }}></Icon></span>}
             {isMember && <span onMouseDown={e => this.props.page.onOpenMember(e)} ><Icon size={18} icon={MemberSvg}></Icon></span>}
-            {isSearch && <span onMouseDown={async e => { await useWsSearch({ ws: this.props.page.ws }) }}><Icon size={18} icon={SearchSvg}></Icon></span>}
+            {isSearch && <span onMouseDown={async e => { await useSearchBox({ ws: this.props.page.ws }) }}><Icon size={18} icon={SearchSvg}></Icon></span>}
+            {isAi&& <span onMouseDown={async e => { await useAISearchBox({ ws: this.props.page.ws }) }}><Icon size={18} icon={AiStartSvg}></Icon></span>}
             {isPublish && <span onMouseDown={e => this.props.page.onOpenPublish(e)} ><Icon size={18} icon={PublishSvg}></Icon></span>}
             {isContextMenu && <span onMouseDown={e => this.props.page.onPageContextmenu(e)} ><Icon size={18} icon={DotsSvg}></Icon></span>}
             {!isCanEdit && ws.access == 0 && !ws.isMember && <span className="size-30 gap-r-30"><Avatar size={32} userid={user.id}></Avatar></span>}

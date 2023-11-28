@@ -27,9 +27,9 @@ import {
     MakeLonger,
     MakeSmall,
     PolishTemplate,
-    PromptRobot,
+
     SelectionPrompt,
-    SelectionRobotPrompt,
+
     SummarizeTemplate,
     TranslateTemplate,
     WritingAssistant,
@@ -43,10 +43,7 @@ import { CanSupportFeature, PayFeatureCheck } from "../../component/pay";
 import { lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
 import { KeyboardCode } from "../../src/common/keys";
-import { getRobotWikiContext, getWsWikiRobots } from "../../net/ai/robot";
-import { RobotApply, RobotInfo } from "../../types/user";
-import { Avatar } from "../../component/view/avator/face";
-import { useSelectMenuItem } from "../../component/view/menu";
+
 import lodash from "lodash";
 
 /**
@@ -101,8 +98,6 @@ export enum AIAskStatus {
     selectionAsked
 }
 
-const CURRENT_ROBOT_ID = 'SHY_AI_WRITER_CURRENT_ROBOT_ID';
-
 /**
  * The AITool component.
  */
@@ -119,37 +114,6 @@ export class AITool extends EventsComponent {
     error: string = '';
     private fvs: FixedViewScroll = new FixedViewScroll();
     mdEl: HTMLElement;
-    async onSelectRobot(event: React.MouseEvent) {
-        var r = await useSelectMenuItem({
-            roundArea: Rect.fromEle(event.currentTarget as HTMLElement)
-        },
-            [
-                { name: 'shyAI', text: lst('诗云AI'), icon: AiStartSvg },
-                {
-                    text: lst('自定义AI'),
-                    type: MenuItemType.text,
-                },
-                ...this.robots.map(robot => {
-                    return {
-                        type: MenuItemType.user,
-                        userid: robot.robotId,
-                        value: robot.id
-                    }
-                })]
-        );
-        if (r) {
-            if (r.item.name == 'shyAI') {
-                this.currentRobotId = '';
-                this.forceUpdate()
-                if (this.mv) this.mv.forceUpdateItems(this.getItems())
-            }
-            else {
-                this.currentRobotId = r.item.value;
-                this.forceUpdate()
-                if (this.mv) this.mv.forceUpdateItems(this.getItems())
-            }
-        }
-    }
     /**
      * Renders the AITool component.
      * @returns The rendered AITool component.
@@ -181,10 +145,8 @@ export class AITool extends EventsComponent {
                     </>
                     }
                     <div className="flex flex-top">
-                        <span onMouseDown={e => { this.onSelectRobot(e) }} className={"flex-fixed h-30 w-40 gap-h-5 flex-center gap-r-5" + (this.robots.length > 0 ? " cursor" : "")}>
-                            {!this.robot && <Icon size={18} icon={AiStartSvg}></Icon>}
-                            {this.robot && <Avatar size={20} userid={this.robot.robotId}></Avatar>}
-                            {this.robots.length > 0 && <Icon size={12} icon={ChevronDownSvg}></Icon>}
+                        <span className={"flex-fixed h-30 w-30 gap-h-5 flex-center "}>
+                            <Icon size={18} icon={AiStartSvg}></Icon>
                         </span>
                         <div className="flex-auto flex">
                             {([AIAskStatus.asking, AIAskStatus.selectionAsking].includes(this.status)) && <div className=" gap-h-10 flex remark  flex"><S>AI正在写作</S><Loading1></Loading1></div>}
@@ -347,21 +309,6 @@ export class AITool extends EventsComponent {
                         this.aiImage({ prompt: preContent, genImageProp: true })
                     }
                     break;
-                case 'selectionPrompt':
-                    var selection = this.getPrevBlockContent();
-                    var pro = self.robot.prompts.find(g => g.id == item.value);
-                    if (pro) {
-                        var wc = await getRobotWikiContext(self.robot, self.ask, pro.prompt)
-                        var content = '';
-                        var isNotFound: boolean = wc?.notFound;
-                        content = getTemplateInstance(pro.prompt, {
-                            prompt: self.ask,
-                            selection: selection,
-                            context: wc?.context || ''
-                        });
-                        this.aiSelection({ isNotFound, prompt: content, model: self.robot.model || (window.shyConfig.isUS ? "gpt" : "ERNIE-Bot-turbo"), })
-                    }
-                    break;
             }
         }
         else if ([AIAskStatus.selectionAsked].includes(this.status)) {
@@ -442,17 +389,7 @@ export class AITool extends EventsComponent {
                     if (await CanSupportFeature(PayFeatureCheck.aiImage, self.page.ws))
                         self.aiImage({ prompt: self.ask })
                     break;
-                case 'prompt':
-                    var pro = self.robot.prompts.find(g => g.id == item.value);
-                    var wc = await getRobotWikiContext(self.robot, self.ask, pro.prompt)
-                    var content = '';
-                    var isNotFound: boolean = wc?.notFound;
-                    content = getTemplateInstance(pro.prompt, {
-                        prompt: self.ask,
-                        context: wc?.context || ''
-                    });
-                    this.aiText({ isNotFound, prompt: content, model: self.robot.model || (window.shyConfig.isUS ? "gpt" : "ERNIE-Bot-turbo"), })
-                    break;
+
             }
         }
     }
@@ -483,120 +420,98 @@ export class AITool extends EventsComponent {
     getItems() {
         var items: MenuItem[] = [];
         if ([AIAskStatus.willAsk].includes(this.status)) {
-            if (!this.robot)
-                items = [
-                    { text: lst('用AI写作'), type: MenuItemType.text },
-                    { name: 'continue', text: lst('用AI续写...'), icon: Edit1Svg },
-                    { type: MenuItemType.divide },
-                    { text: lst('基于页面生成'), type: MenuItemType.text },
-                    { name: 'pageSummary', text: lst('页面内容总结'), icon: Edit1Svg },
-                    {
-                        text: lst("翻译"),
-                        childsPos: { align: 'end' },
-                        childs: [
-                            { text: lst('中文'), name: 'pageTranslate', value: 'Chinese' },
-                            { text: lst('英文'), name: 'pageTranslate', value: 'English' },
-                            { text: lst('日文'), name: 'pageTranslate', value: 'Japanese' },
-                            { text: lst('韩文'), name: 'pageTranslate', value: 'Korean' },
-                            { text: lst('德语'), name: 'pageTranslate', value: 'German' },
-                            { text: lst('法语'), name: 'pageTranslate', value: 'French' },
-                            { text: lst('俄语'), name: 'pageTranslate', value: 'Russian' },
-                            { text: lst('意大利'), name: 'pageTranslate', value: 'Italian' },
-                            { text: lst('葡萄牙'), name: 'pageTranslate', value: 'Portuguese' },
-                            { text: lst('西班牙'), name: 'pageTranslate', value: 'Spanish' },
-                            { text: lst('荷兰'), name: 'pageTranslate', value: 'Dutch' },
-                            { text: lst('阿拉伯'), name: 'pageTranslate', value: 'Arabic' },
-                            { text: lst('印度尼西亚'), name: 'pageTranslate', value: 'Indonesian' }
-                        ],
-                        icon: Edit1Svg
-                    }
-                ];
-            else if (Array.isArray(this.robot?.prompts) && this.robot.prompts.findAll(g => g.apply == RobotApply.askWrite && g.prompt && g.prompt.indexOf('{prompt}') == -1).length > 0) items = this.robot.prompts.findAll(g => g.apply == RobotApply.askWrite && g.prompt && g.prompt.indexOf('{prompt}') == -1).map(pro => {
-                return { name: 'prompt', value: pro.id, text: pro.text, icon: pro.icon }
-            })
-            else items = [];
+            items = [
+                { text: lst('用AI写作'), type: MenuItemType.text },
+                { name: 'continue', text: lst('用AI续写...'), icon: { name: 'byte', code: 'go-on' } },
+                { type: MenuItemType.divide },
+                { text: lst('基于页面生成'), type: MenuItemType.text },
+                { name: 'pageSummary', text: lst('页面内容总结'), icon: { name: 'byte', code: 'converging-gateway' } },
+                {
+                    text: lst("翻译"),
+                    childsPos: { align: 'end' },
+                    childs: [
+                        { text: lst('中文'), name: 'pageTranslate', value: 'Chinese' },
+                        { text: lst('英文'), name: 'pageTranslate', value: 'English' },
+                        { text: lst('日文'), name: 'pageTranslate', value: 'Japanese' },
+                        { text: lst('韩文'), name: 'pageTranslate', value: 'Korean' },
+                        { text: lst('德语'), name: 'pageTranslate', value: 'German' },
+                        { text: lst('法语'), name: 'pageTranslate', value: 'French' },
+                        { text: lst('俄语'), name: 'pageTranslate', value: 'Russian' },
+                        { text: lst('意大利'), name: 'pageTranslate', value: 'Italian' },
+                        { text: lst('葡萄牙'), name: 'pageTranslate', value: 'Portuguese' },
+                        { text: lst('西班牙'), name: 'pageTranslate', value: 'Spanish' },
+                        { text: lst('荷兰'), name: 'pageTranslate', value: 'Dutch' },
+                        { text: lst('阿拉伯'), name: 'pageTranslate', value: 'Arabic' },
+                        { text: lst('印度尼西亚'), name: 'pageTranslate', value: 'Indonesian' }
+                    ],
+                    icon: { name: 'byte', code: 'translation' }
+                }
+            ];
         }
         else if ([AIAskStatus.willAsking].includes(this.status)) {
-            if (this.robot) {
-                items = [
-                    { name: 'image', text: lst('生成图片'), icon: PicSvg },
-                ]
-            }
-            else if (Array.isArray(this.robot?.prompts) && this.robot.prompts.findAll(g => g.apply == RobotApply.askWrite && g.prompt && g.prompt.indexOf('{prompt}') > -1).length > 0) items = this.robot.prompts.findAll(g => g.apply == RobotApply.askWrite && g.prompt && g.prompt.indexOf('{prompt}') > -1).map(pro => {
-                return { name: 'prompt', value: pro.id, text: pro.text, icon: pro.icon }
-            })
-            else items = [];
+            items = [
+                { name: 'image', text: lst('生成图片'), icon: PicSvg },
+            ]
         }
         else if ([AIAskStatus.asked].includes(this.status)) {
             items = [
                 { name: 'done', text: lst('完成'), icon: CheckSvg },
-                { name: 'continue', text: lst('继续'), icon: Edit1Svg },
-                // { name: 'makeLonger', text: '内容加长', icon: Edit1Svg },
-                // {name:'',text:'',icon:Edit1Svg},
+                { name: 'continue', text: lst('继续'), icon: { name: 'byte', code: 'go-on' } },
                 { type: MenuItemType.divide },
                 { name: 'try', text: lst('重新尝试'), icon: RefreshSvg },
                 { name: 'cancel', text: lst('取消'), icon: CloseSvg }
             ]
         }
         else if ([AIAskStatus.selectionWillAsk].includes(this.status)) {
-            if (!this.robot)
-                items = [
-                    { text: lst('编辑优化选择的内容'), type: MenuItemType.text },
-                    { name: 'improveWrite', text: lst('提升写作'), icon: Edit1Svg },
-                    { name: 'fix', text: lst('拼写及语法优化'), icon: Edit1Svg },
-                    { name: 'explain', text: lst('解释'), icon: Edit1Svg },
-                    { name: 'summary', text: lst('总结'), icon: Edit1Svg },
-                    { name: 'abstract', text: lst('摘要'), icon: Edit1Svg },
-                    {
-                        text: lst("翻译"),
-                        childsPos: { align: 'end' },
-                        childs: [
-                            { text: lst('中文'), name: 'translate', value: 'Chinese' },
-                            { text: lst('英文'), name: 'translate', value: 'English' },
-                            { text: lst('日文'), name: 'translate', value: 'Japanese' },
-                            { text: lst('韩文'), name: 'translate', value: 'Korean' },
-                            { text: lst('德语'), name: 'translate', value: 'German' },
-                            { text: lst('法语'), name: 'translate', value: 'French' },
-                            { text: lst('俄语'), name: 'translate', value: 'Russian' },
-                            { text: lst('意大利'), name: 'translate', value: 'Italian' },
-                            { text: lst('葡萄牙'), name: 'translate', value: 'Portuguese' },
-                            { text: lst('西班牙'), name: 'translate', value: 'Spanish' },
-                            { text: lst('荷兰'), name: 'translate', value: 'Dutch' },
-                            { text: lst('阿拉伯'), name: 'translate', value: 'Arabic' },
-                            { text: lst('印度尼西亚'), name: 'translate', value: 'Indonesian' },
-                        ],
-                        icon: Edit1Svg
-                    },
-                    { type: MenuItemType.divide },
-                    { name: 'makeLonger', text: lst('变长一些'), icon: Edit1Svg },
-                    { name: 'makeSmaller', text: lst('简洁一些'), icon: Edit1Svg },
-                    {
-                        text: '润色',
-                        icon: Edit1Svg,
-                        childs: [
-                            { name: 'polish', text: lst('更专业一些'), icon: Edit1Svg },
-                            { name: 'polish', text: lst('更友好一些'), icon: Edit1Svg },
-                            { name: 'polish', text: lst('更自信一些'), icon: Edit1Svg },
-                            { name: 'polish', text: lst('更直接一些'), icon: Edit1Svg },
-                            { name: 'polish', text: lst('更口语话一些'), icon: Edit1Svg },
-                        ]
-                    },
-                    { name: 'insertImage', text: lst("生成插图"), icon: PicSvg },
-                ];
-            else if (Array.isArray(this.robot?.prompts) && this.robot.prompts.findAll(g => g.apply == RobotApply.selectionAskWrite && g.prompt && g.prompt.indexOf('{prompt}') == -1))
-                items = this.robot.prompts.findAll(g => g.apply == RobotApply.selectionAskWrite && g.prompt && g.prompt.indexOf('{prompt}') == -1).map(pro => {
-                    return { name: 'selectionPrompt', value: pro.id, text: pro.text, icon: pro.icon }
-                })
-            else items = [];
+
+            items = [
+                { text: lst('编辑优化选择的内容'), type: MenuItemType.text },
+                { name: 'improveWrite', text: lst('提升写作'), icon: { name: 'byte', code: 'optimize' }, },
+                { name: 'fix', text: lst('拼写及语法优化'), icon: { name: 'byte', code: 'modify' } },
+                { name: 'explain', text: lst('解释'), icon: { name: 'byte', code: 'transform' } },
+                { name: 'summary', text: lst('总结'), icon: { name: 'byte', code: 'converging-gateway' } },
+                { name: 'abstract', text: lst('摘要'), icon: { name: 'byte', code: 'magic-wand' } },
+                {
+                    text: lst("翻译"),
+                    childsPos: { align: 'end' },
+                    childs: [
+                        { text: lst('中文'), name: 'translate', value: 'Chinese' },
+                        { text: lst('英文'), name: 'translate', value: 'English' },
+                        { text: lst('日文'), name: 'translate', value: 'Japanese' },
+                        { text: lst('韩文'), name: 'translate', value: 'Korean' },
+                        { text: lst('德语'), name: 'translate', value: 'German' },
+                        { text: lst('法语'), name: 'translate', value: 'French' },
+                        { text: lst('俄语'), name: 'translate', value: 'Russian' },
+                        { text: lst('意大利'), name: 'translate', value: 'Italian' },
+                        { text: lst('葡萄牙'), name: 'translate', value: 'Portuguese' },
+                        { text: lst('西班牙'), name: 'translate', value: 'Spanish' },
+                        { text: lst('荷兰'), name: 'translate', value: 'Dutch' },
+                        { text: lst('阿拉伯'), name: 'translate', value: 'Arabic' },
+                        { text: lst('印度尼西亚'), name: 'translate', value: 'Indonesian' },
+                    ],
+                    icon: { name: 'byte', code: 'translation' }
+                },
+                { type: MenuItemType.divide },
+                { name: 'makeLonger', text: lst('变长一些'), icon: { name: 'byte', code: 'indent-right' } },
+                { name: 'makeSmaller', text: lst('简洁一些'), icon: { name: 'byte', code: 'indent-left' } },
+                {
+                    text: '润色',
+
+                    icon: { name: 'byte', code: 'effects' },
+                    childs: [
+                        { name: 'polish', text: lst('更专业一些'), icon: Edit1Svg },
+                        { name: 'polish', text: lst('更友好一些'), icon: Edit1Svg },
+                        { name: 'polish', text: lst('更自信一些'), icon: Edit1Svg },
+                        { name: 'polish', text: lst('更直接一些'), icon: Edit1Svg },
+                        { name: 'polish', text: lst('更口语话一些'), icon: Edit1Svg },
+                    ]
+                },
+                { name: 'insertImage', text: lst("生成插图"), icon: PicSvg },
+            ];
+
         }
         else if ([AIAskStatus.selectionWillAsking].includes(this.status)) {
-            if (!this.robot)
-                items = []
-            else if (Array.isArray(this.robot?.prompts) && this.robot.prompts.findAll(g => g.apply == RobotApply.selectionAskWrite && g.prompt && g.prompt.indexOf('{prompt}') > -1))
-                items = this.robot.prompts.findAll(g => g.apply == RobotApply.selectionAskWrite && g.prompt && g.prompt.indexOf('{prompt}') > -1).map(pro => {
-                    return { name: 'selectionPrompt', value: pro.id, text: pro.text, icon: pro.icon }
-                })
-            else items = [];
+            items = [];
         }
         else if ([AIAskStatus.selectionAsked].includes(this.status)) {
             items = [
@@ -657,25 +572,11 @@ export class AITool extends EventsComponent {
     onEnter = async () => {
         var self = this;
         if (this.ask) {
-            if (this.robot) {
-                var wc = await getRobotWikiContext(this.robot, self.ask, '{context}');
-                if (this.options.block) {
-                    var propTemplate = getTemplateInstance(PromptRobot, { prompt: self.ask, context: wc?.context, });
-                    this.aiText({ isNotFound: wc?.notFound, prompt: propTemplate, model: self.robot.model || (window.shyConfig.isUS ? "gpt" : "ERNIE-Bot-turbo"), })
-                }
-                else if (this.options.blocks) {
-                    var preContent = this.getPrevBlockContent();
-                    var propTemplate = getTemplateInstance(SelectionRobotPrompt, { prompt: self.ask, context: wc?.context, selection: preContent });
-                    this.aiSelection({ isNotFound: wc?.notFound, prompt: propTemplate, model: self.robot.model || (window.shyConfig.isUS ? "gpt" : "ERNIE-Bot-turbo"), })
-                }
-            }
-            else {
-                if (this.options.block) this.aiText({ prompt: self.ask })
-                else if (this.options.blocks) {
-                    var preContent = this.getPrevBlockContent();
-                    var propTemplate = getTemplateInstance(SelectionPrompt, { prompt: self.ask, selection: preContent });
-                    this.aiSelection({ prompt: propTemplate })
-                }
+            if (this.options.block) this.aiText({ prompt: self.ask })
+            else if (this.options.blocks) {
+                var preContent = this.getPrevBlockContent();
+                var propTemplate = getTemplateInstance(SelectionPrompt, { prompt: self.ask, selection: preContent });
+                this.aiSelection({ prompt: propTemplate })
             }
         }
     }
@@ -703,12 +604,6 @@ export class AITool extends EventsComponent {
         this.options = options;
         this.page.setPaddingBottom(500);
         if (this.textarea) this.textarea.innerText = '';
-        this.robots = (await getWsWikiRobots()) || [];
-        var rid = await channel.query('/cache/get', { key: CURRENT_ROBOT_ID });
-        if (rid) this.currentRobotId = rid;
-        if (!this.robots.exists(g => g.id == this.currentRobotId)) {
-            this.currentRobotId = '';
-        }
         this.updateView(() => {
             if (this.textarea)
                 this.textarea.focus()
@@ -717,11 +612,7 @@ export class AITool extends EventsComponent {
             }
         })
     }
-    robots: RobotInfo[] = [];
-    currentRobotId: string = '';
-    get robot() {
-        return this.robots.find(g => g.id == this.currentRobotId)
-    }
+
     controller?: AbortController
     lastCommand: { ask: string, command: 'text' | 'image' | 'selection', options?: any } = null;
     async aiText(options: { prompt?: string, model?: string, isNotFound?: boolean }) {
@@ -770,7 +661,7 @@ export class AITool extends EventsComponent {
                     }
                     else self.writer.accept(undefined, done);
                     if (done) {
-                        console.log('answer', JSON.stringify(self.anwser))
+                        //console.log('answer', JSON.stringify(self.anwser))
                         var bs = self.writer.writedBlocks;
                         var p = bs.first().parent;
                         if (bs.some(s => s.url == BlockUrlConstant.List && (s as List).listType == ListType.number)) {

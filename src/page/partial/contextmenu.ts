@@ -45,7 +45,7 @@ import { Field } from "../../../blocks/data-grid/schema/field";
 import { GetFieldFormBlockInfo } from "../../../blocks/data-grid/element/service";
 import { ElementType } from "../../../net/element.type";
 import { FieldType } from "../../../blocks/data-grid/schema/type";
-import { getWsWikiRobots } from "../../../net/ai/robot";
+
 import { util } from "../../../util/util";
 import { ActionDirective } from "../../history/declare";
 import { useExportFile } from "../../../extensions/export-file";
@@ -59,13 +59,13 @@ import { RobotInfo } from "../../../types/user";
 import { usePageTheme } from "../../../extensions/theme";
 
 export class PageContextmenu {
-
     async onGetContextMenus(this: Page) {
         if (this.isBoard) return this.onGetBoardContextMenus();
         var items: MenuItem<BlockDirective | string>[] = [];
         return items;
     }
-    async onGetBoardContextMenus(this: Page) {
+    async onGetBoardContextMenus(this: Page)
+    {
         var items: MenuItem<BlockDirective | string>[] = [];
         items.push({
             type: MenuItemType.switch,
@@ -85,7 +85,8 @@ export class PageContextmenu {
         if (this.isBoard) return this.onClickBoardContextMenu(item, event);
     }
     async onClickBoardContextMenu(this: Page, item: MenuItem<BlockDirective | string>, event: MouseEvent) {
-        switch (item.name) {
+        switch (item.name)
+        {
             case 'lock':
                 channel.air('/page/update/info', {
                     id: this.pageInfo.id,
@@ -116,7 +117,7 @@ export class PageContextmenu {
     }
     async onPageContextmenu(this: Page, event: React.MouseEvent) {
         var items: MenuItem<BlockDirective | string>[] = [];
-        var robots = await getWsWikiRobots();
+        var robots = (await this.ws.getWsRobots()).filter(g => g.disabledWiki !== true);
         if (this.pageLayout.type == PageLayoutType.doc) {
             items = [
                 { name: 'smallText', icon: { name: 'bytedance-icon', code: 'add-text' }, text: lst('小字号'), checked: this.smallFont ? true : false, type: MenuItemType.switch },
@@ -145,8 +146,8 @@ export class PageContextmenu {
                 {
                     icon: AiStartSvg,
                     text: lst("AI语料库"),
-                    visible: robots.findAll(g => g.scene == 'wiki').length > 0 ? true : false,
-                    childs: robots.findAll(g => g.scene == 'wiki').map(robot => {
+                    visible: robots.length > 0 ? true : false,
+                    childs: robots.map(robot => {
                         return {
                             type: MenuItemType.user,
                             userid: robot.robotId,
@@ -765,7 +766,6 @@ export class PageContextmenu {
                 CloseShyAlert()
             }
         }
-
     }
     async onCopyPage(this: Page) {
         await channel.act('/current/page/copy');

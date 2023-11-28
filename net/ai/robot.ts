@@ -1,11 +1,14 @@
 
 import { ResourceArguments } from "../../extensions/icon/declare";
-import { RobotInfo, RobotTask } from "../../types/user";
-import { util } from "../../util/util";
+import { RobotInfo} from "../../types/user";
+
 import { channel } from "../channel";
-import { AskTemplate, getTemplateInstance } from "../../extensions/ai/prompt";
+
 import { marked } from "marked"
 import { lst } from "../../i18n/store";
+import { parseElementUrl } from "../element.type";
+import lodash from "lodash";
+import { LinkPageItem } from "../../src/page/declare";
 
 /**
  *  获取robot wikit基于ask的相关上下文参考资料
@@ -19,192 +22,146 @@ import { lst } from "../../i18n/store";
  * 
  */
 export async function getRobotWikiContext(robot: RobotInfo,
-    ask: string, prompt: string)
-    {
-    if (prompt.indexOf('{context}') > -1 && robot.disabledWiki !== true && ask) {
-        var g = await channel.get('/query/wiki/answer', {
-            model: robot.embeddingModel || (window.shyConfig.isUS ? "gpt" : "Baidu-Embedding-V1"),
-            robotId: robot.robotId,
-            ask,
-            contextSize: robot.wikiConfig?.fragmentContextSize || 10,
-            size: robot.wikiConfig?.fragmentSize || 5
-        });
-        if (g.data?.docs?.length > 0) {
-            var minLower = robot.wikiConfig?.minLowerRank || 0.3;
-            if (g.data.docs[0].ps.exists(g => g.rank > minLower)) {
-                var nps = g.data.docs.findAll(g => g.ps.exists(c => c.rank > minLower));
-                return {
-                    context: nps.map(np => np.ps.map(p => p.content).join("\n\n")).join('\n\n\n\n')
-                }
-            }
-            else return {
-                notFound: true
-            }
-        }
-    }
-    return null;
-}
-
-
-export async function RobotRquest(robot: RobotInfo,
-    task: RobotTask,
-    args: Record<string, any>, options: {
-        isAt: boolean,
-        prompt?: ArrayOf<RobotInfo['prompts']>
-    } = { isAt: false },
-    callback: (msg: string, done?: boolean, content?: string, files?: ResourceArguments[]) => Promise<void>) {
-    var user = await channel.query('/query/current/user')
-    if (robot.scene == 'wiki') {
-        var text = args.ask + `<a class='at-user' data-userid='${user.id}'>@${user.name}</a><br/>`;
-        if (options.isAt) text = '';
-        args.robotId = robot.robotId;
-        await callback(text + "<span class='typed-print'></span>", false, text);
-        try {
-            var template = options?.prompt?.prompt || AskTemplate;
-            var content = '';
-            var context = await getRobotWikiContext(robot, args.ask, template);
-            if (!context) content = getTemplateInstance(template, {
-                prompt: args.ask
-            });
-            else if (context.notFound) {
-                callback(marked.parse(text + lst('未找到匹配的答案')), true, marked.parse(text + lst('未找到匹配的答案')))
-                return;
-            }
-            else {
-                content = getTemplateInstance(template, {
-                    prompt: args.ask,
-                    context: context.context
-                });
-            }
-            await channel.post('/text/ai/stream', {
-                question: content,
-                model: robot.model || (window.shyConfig.isUS ? "gpt-3.5-turbo" : "ERNIE-Bot-turbo"),
-                callback(str, done) {
-                    if (typeof str == 'string') text += str;
-                    callback(marked.parse(text + (done ? "" : "<span class='typed-print'></span>")), done, marked.parse(text))
-                }
-            });
-        }
-        catch (ex) {
-            text += `<p class='error'>${lst('回答出错')}</p>`
-            console.error(ex)
-            callback(text, true)
+    ask: string, minRank?: number) {
+    if (typeof minRank == 'undefined') minRank = 0.45;
+    var g = await channel.get('/query/wiki/answer', {
+        model: robot.embeddingModel || (window.shyConfig.isUS ? "gpt" : "Baidu-Embedding-V1"),
+        robotId: robot.robotId,
+        ask,
+        contextSize: robot.wikiConfig?.fragmentContextSize || 10,
+        size: robot.wikiConfig?.fragmentSize || 5,
+        minRank
+    });
+    if (g.data?.docs?.length > 0) {
+        return {
+            context: g.data.docs.map(np => np.ps.map(p => p.content).join("\n\n")).join('\n\n\n\n')
         }
     }
     else {
-        var url = robot.basePath || '';
-        if (url.endsWith('/')) url = url.slice(0, url.length - 1);
-        if (task.url.startsWith('http')) url = task.url;
-        else if (task.url) url = url + (task.url.startsWith('/') ? task.url : "/" + task.url);
-        var method = task.method || 'post';
-        if (task.handle == 'stream') {
-            var ks = Object.keys(args)
-            var cts = ks.length == 1 ? args[ks[0]] : ks.map(c => `${c}:${args[c]}`).join('<br/>')
-            var text = cts + `-<a class='at-user' data-userid='${user.id}'>@${user.name}</a><br/>`;
-            if (options.isAt) text = '';
-            await callback(text + "<span class='typed-print'></span>", false, text);
-            await channel.post('/fetch', {
-                url,
-                method,
-                data: args,
-                callback: (str, done) => {
-                    if (typeof str == 'string') text += str;
-                    callback(marked.parse(text + (done ? "" : "<span class='typed-print'></span>")), done, marked.parse(text))
+        return {
+            notFound: true
+        }
+    }
+}
+
+export async function getWsContext(prompt: string, minRank?: number) {
+    if (typeof minRank == 'undefined') minRank = 0.45;
+    var g = await channel.get('/ws/ai/search', {
+        ask: prompt,
+        minRank
+    });
+    var ms = g.data.docs.map(doc => {
+        return {
+            url: doc.elementUrl,
+            pe: parseElementUrl(doc.elementUrl),
+            blockId: doc.blockId,
+            content: doc.ps.map(p => {
+                return {
+                    content: p.content,
+                    rank: p.rank
                 }
             })
         }
-        else if (task.handle == 'sync') {
-            var text = '';
-            if (task.replys[0]?.mime == 'image') {
-                var ks = Object.keys(args)
-                var cts = ks.length == 1 ? args[ks[0]] : ks.map(c => `${c}:${args[c]}`).join('<br/>')
-                text = cts + `-<a class='at-user' data-userid='${user.id}'>@${user.name}</a><br/>`;
-                await callback(text + "<span class='typed-print'></span>", false, text);
+    });
+    if (ms.length > 0) {
+        var context = ms.map(m => {
+            return m.content.map(c => c.content).join('\n\n')
+        }).join('\n\n\n\n')
+        var ids = ms.map(m => m.pe.id);
+        lodash.uniqBy(ids, s => s);
+
+        var pageItems = await channel.get('/page/items', { ids });
+        var refs: { elementUrl: string, page: LinkPageItem, blockIds: string[] }[] = [];
+        ms.forEach(m => {
+            var rf = refs.find(r => r.elementUrl == m.url);
+            if (rf) {
+                rf.blockIds.push(m.blockId)
             }
-            try {
-                var r = await channel.post('/http', {
-                    url,
-                    method,
-                    data: args
-                });
-                if (task.replys[0]?.mime == 'image') {
-                    await callback(text, true, text, r.data.images);
-                }
-                else {
-                    var t = task.template || '';
-                    if (t) {
-                        t = t.replace(/({[^}]+})/g, function (match, key) {
-                            key = key.slice(1);
-                            key = key.slice(0, key.length - 1);
-                            return args[key];
-                        })
-                    } else t = r.data;
-                    callback(t, true, t);
-                }
-            }
-            catch (ex) {
-                console.error(ex);
-                if (task.replys[0]?.mime == 'image') {
-                    text += `<p class='error'>${lst('响应出错')}</p>`
-                    callback(text, true)
-                }
-                else {
-                    text += `<p class='error'>${lst('响应出错')}</p>`
-                    callback(text, true)
-                }
-            }
+            else refs.push({
+                elementUrl: m.url,
+                page: pageItems.data.list.find(p => p.id == m.pe.id),
+                blockIds: [m.blockId]
+            })
+        })
+        return {
+            refs,
+            context: context
+        }
+    }
+    else {
+
+        return {
+            notFound: true
         }
     }
 }
 
 
-var robots: RobotInfo[];
-var robotsDate: number;
 
-/**
- * 获取空间内所有的机器人
- * 包括空间内部创建的及空间添加别人的
- * @returns 
- */
-export async function getWsRobots() {
-    try {
-        if (Array.isArray(robots) && robotsDate && robotsDate > Date.now() - 1000 * 60 * 1) return robots;
-        var gs = await channel.get('/ws/robots');
-        if (gs.ok) {
-            var rs = await channel.get('/robots/info', { ids: gs.data.list.map(g => g.userid) });
-            if (rs.ok) {
-                robots = rs.data.list;
-                robotsDate = new Date().getTime();
-                robots.forEach(robot => {
-                    if (robot.scene == 'wiki') {
-                        robot.tasks = [
-                            {
-                                id: util.guid(),
-                                name: '问题',
-                                args: [
-                                    {
-                                        id: util.guid(),
-                                        text: lst("问题"),
-                                        name: 'ask', type: 'string'
-                                    }
-                                ]
-                            }
-                        ]
+
+
+
+export async function AgentRequest(robot: RobotInfo,
+    message: string,
+    options: { isAt?: boolean },
+    callback: (options: {
+        msg: string,
+        done?: boolean,
+        content?: string,
+        files?: ResourceArguments[],
+        refs?: { elementUrl: string, page: LinkPageItem, blockIds: string[] }[]
+    }) => Promise<void>) {
+    var user = await channel.query('/query/current/user')
+    var text = message + `<a class='at-user' data-userid='${user.id}'>@${user.name}</a><br/>`;
+    if (options?.isAt !== true) text = '';
+    await callback({ msg: text + "<span class='typed-print'></span>", done: false, content: text });
+    var content = '';
+    if (robot.disabledWiki !== true) {
+        var context = await getRobotWikiContext(robot, message);
+        if (context?.notFound) {
+            // callback(marked.parse(text + lst('未找到匹配的答案')), true, marked.parse(text + lst('未找到匹配的答案')))
+        }
+        else if (context?.context) {
+            content = context?.context;
+        }
+    }
+    var refs: {
+        elementUrl: string;
+        page: LinkPageItem<{}>;
+        blockIds: string[];
+    }[] = [];
+    if (robot.disabledWorkspaceSearch !== true) {
+        var cc = await getWsContext(message);
+        if (cc.notFound) {
+
+        }
+        else if (cc?.context) {
+            content = cc.context;
+            refs = cc.refs;
+        }
+    }
+    if (content) {
+        await new Promise(async (resolve, reject) => {
+            await channel.post('/text/ai/stream', {
+                question: content,
+                role: robot.instructions || undefined,
+                model: robot.model || (window.shyConfig.isUS ? "gpt-3.5-turbo" : "ERNIE-Bot-turbo"),
+                callback(str, done) {
+                    if (typeof str == 'string') text += str;
+                    callback({ msg: marked.parse(text + (done ? "" : "<span class='typed-print'></span>")), done, content: marked.parse(text) })
+                    if (done) {
+                        resolve(true)
                     }
-                })
-            }
+                }
+            });
+        })
+        if (robot.abledCommandModel !== true) {
+
         }
     }
-    catch (ex) {
-        console.error(ex);
+    else {
+        callback({ msg: marked.parse(text + lst('未找到匹配的答案')), done: true, content: marked.parse(text + lst('未找到匹配的答案')) })
     }
-    finally {
-        return robots || [];
-    }
-}
 
 
-export async function getWsWikiRobots() {
-    var rs = await getWsRobots();
-    return rs.findAll(g => g.scene == 'wiki');
 }

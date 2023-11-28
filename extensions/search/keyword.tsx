@@ -10,7 +10,7 @@ import { PopoverPosition } from "../../component/popover/position";
 import "./style.less";
 import { LinkPageItem, getPageIcon, getPageText } from "../../src/page/declare";
 import { Spin } from "../../component/view/spin";
-import { AiStartSvg, SearchSvg } from "../../component/svgs";
+import {SearchSvg } from "../../component/svgs";
 import { SearchListType } from "../../component/types";
 import { util } from "../../util/util";
 import { SwitchText } from "../../component/view/switch";

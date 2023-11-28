@@ -6,7 +6,7 @@ export function AiInput(write: PageWrite, aa: AppearAnchor, event: React.Keyboar
     if (aa.block.page.ws.aiConfig?.disabled === true) return false;
     if (event.key.toLowerCase() == ' ' || event.keyCode === 32) {
         var sel = window.getSelection();
-        if (sel.focusOffset == 0 && aa.isRowStart) {
+        if (sel.focusOffset == 0 && aa.isRowStart && !aa.isSolid) {
             var block = aa.block.closest(x => x.isBlock);
             useAITool({ block })
             return true;
