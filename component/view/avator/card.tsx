@@ -7,7 +7,7 @@ import { UserBasic } from "../../../types/user";
 import { EventsComponent } from "../../lib/events.component";
 import { Avatar } from "./face";
 import { Icon } from "../icon";
-import { CheckSvg, DotsSvg, LogoutSvg, SettingsSvg } from '../../svgs';
+import { CheckSvg, DotsSvg, EditSvg, LogoutSvg, SettingsSvg } from '../../svgs';
 import { LinkWs } from "../../../src/page/declare";
 import { useSelectMenuItem } from "../menu";
 import { Rect } from "../../../src/common/vector/point";
@@ -59,14 +59,36 @@ export class UserCard extends EventsComponent {
             { type: MenuItemType.divide },
             { name: 'addBlack', text: lst('拉黑'), icon: { name: 'bytedance-icon', code: 'people-safe' } },
             { name: 'report', text: lst('举报'), icon: { name: 'bytedance-icon', code: 'harm' } },
-            { type: MenuItemType.divide },
-            { name: 'removeMemeber', text: lst('移出空间'), icon: { name: 'bytedance-icon', code: 'people-delete' } }
+            { type: MenuItemType.divide, visible: this.ws?.isManager, },
+            { name: 'removeMemeber', visible: this.ws?.isManager, text: lst('移出空间'), icon: { name: 'bytedance-icon', code: 'people-delete' } }
         ]
+        if (this.user.role == 'robot') {
+            items = [
+                { name: 'letter', text: lst('私信'), icon: { name: 'bytedance-icon', code: 'send' } },
+                { type: MenuItemType.divide },
+                { name: 'addBlack', text: lst('拉黑'), icon: { name: 'bytedance-icon', code: 'people-safe' } },
+                { name: 'report', text: lst('举报'), icon: { name: 'bytedance-icon', code: 'harm' } },
+            ]
+            if (this.ws && this.ws.isManager) {
+                var rs = await this.ws?.getWsRobots();
+                if (rs?.length > 0 && rs.some(s => s.id == this.user.id)) {
+                    items.push({ type: MenuItemType.divide });
+                    items.push({ name: 'openRobot', text: lst('编辑机器人'), icon: EditSvg })
+                }
+                else {
+                    items.push(...[
+                        { type: MenuItemType.divide },
+                        { name: 'removeMemeber', text: lst('移出空间'), icon: { name: 'bytedance-icon', code: 'people-delete' } }
+                    ] as any)
+                }
+            }
+
+        }
         var u = channel.query('/query/current/user');
         if (u.id == this.user.id) {
             items = [
                 { name: 'userSettings', text: lst('个人设置'), icon: SettingsSvg },
-                { name: 'exitWorkspace', visible: this.ws ? true : false, text: lst('退出空间'), icon: LogoutSvg }
+                { name: 'exitWorkspace', visible: this.ws && !this.ws.isOwner ? true : false, text: lst('退出空间'), icon: LogoutSvg }
             ]
         }
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, items);
@@ -103,6 +125,9 @@ export class UserCard extends EventsComponent {
                 case 'exitWorkspace':
                     await channel.act('/user/exit/current/workspace');
                     this.emit('close');
+                    break;
+                case 'openRobot':
+                    await channel.air('/robot/open', { robot: this.user });
                     break;
             }
         }
