@@ -41,19 +41,19 @@ export class PageBar extends React.Component<{ page: Page }>{
     expendTip: Tip;
     renderTitle() {
         if ([ElementType.SchemaData].includes(this.props.page.pe.type) && !this.props.page.isSchemaRecordViewTemplate) {
-            return <div className="flex-auto flex">
-                {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onPageClose()} className="item-hover size-24 round cursor flex-center "><Icon size={20} icon={DoubleRightSvg}></Icon></span>}
-                {(this.props.page.openSource == 'dialog' || this.props.page.openSource == 'slide') && <> <Tip text='展开为整页' ref={e => this.expendTip = e}><span onMouseDown={e => { this.expendTip.close(); this.props.page.onFormOpen('page') }} className="size-20 flex-center round item-hover cursor gap-r-5"><Icon size={16} icon={ArrowZoomSvg}></Icon></span></Tip>
-                    <Tip ref={e => this.preTip = e} text='上一条'><span onMouseDown={e => { this.preTip.close(); this.props.page.onFormOpen('prev') }} className={" gap-r-5 size-20 flex-center round item-hover cursor" + (this.props.page.formPreRow ? "" : " remark")}><Icon icon={{ name: 'bytedance-icon', code: 'up' }} size={24} ></Icon></span></Tip>
-                    <Tip ref={e => this.nextTip = e} text='下一条'><span onMouseDown={e => { this.nextTip.close(); this.props.page.onFormOpen('next') }} className={" gap-r-5 size-20 flex-center round item-hover cursor" + (this.props.page.formNextRow ? "" : " remark")}><Icon icon={{ name: 'bytedance-icon', code: 'down' }} size={24} ></Icon></span></Tip></>
+            return <div className="flex-auto flex desk-drag">
+                {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onPageClose()} className="desk-no-drag item-hover size-24 round cursor flex-center "><Icon size={20} icon={DoubleRightSvg}></Icon></span>}
+                {(this.props.page.openSource == 'dialog' || this.props.page.openSource == 'slide') && <> <Tip text='展开为整页' ref={e => this.expendTip = e}><span onMouseDown={e => { this.expendTip.close(); this.props.page.onFormOpen('page') }} className="desk-no-drag size-20 flex-center round item-hover cursor gap-r-5"><Icon size={16} icon={ArrowZoomSvg}></Icon></span></Tip>
+                    <Tip ref={e => this.preTip = e} text='上一条'><span onMouseDown={e => { this.preTip.close(); this.props.page.onFormOpen('prev') }} className={"desk-no-drag  gap-r-5 size-20 flex-center round item-hover cursor" + (this.props.page.formPreRow ? "" : " remark")}><Icon icon={{ name: 'bytedance-icon', code: 'up' }} size={24} ></Icon></span></Tip>
+                    <Tip ref={e => this.nextTip = e} text='下一条'><span onMouseDown={e => { this.nextTip.close(); this.props.page.onFormOpen('next') }} className={"desk-no-drag  gap-r-5 size-20 flex-center round item-hover cursor" + (this.props.page.formNextRow ? "" : " remark")}><Icon icon={{ name: 'bytedance-icon', code: 'down' }} size={24} ></Icon></span></Tip></>
                 }
                 {this.props.page.openSource == 'page' && <>
-                    <span onMouseDown={e => this.props.page.onBack()} className="item-hover round flex cursor padding-h-3 padding-w-5">
+                    <span onMouseDown={e => this.props.page.onBack()} className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5">
                         {this.props.page.schema?.icon && <Icon size={20} icon={this.props.page.schema?.icon || CollectTableSvg}></Icon>}
                         <span className="gap-l-5">{this.props.page.schema?.text}</span>
                     </span>
-                    <span className="flex-center"><Icon icon={ChevronRightSvg} size={20}></Icon></span>
-                    <span className="item-hover round flex cursor padding-h-3 padding-w-5">
+                    <span className="flex-centerdesk-no-drag "><Icon icon={ChevronRightSvg} size={20}></Icon></span>
+                    <span className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5">
                         <Icon size={20} icon={this.props.page?.formRowData?.icon || PageSvg}></Icon>
                         <span className="gap-l-5">{this.props.page?.formRowData?.title || '新页面'}</span>
                     </span>
@@ -62,18 +62,18 @@ export class PageBar extends React.Component<{ page: Page }>{
             </div>
         }
         else if ([ElementType.SchemaView, ElementType.SchemaRecordView].includes(this.props.page.pe.type) && !this.props.page.isSchemaRecordViewTemplate) {
-            return <div className="flex-auto flex">
-                {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onPageClose()} className="item-hover size-24 round cursor flex-center "><Icon size={20} icon={DoubleRightSvg}></Icon></span>}
-                <span onMouseDown={e => this.props.page.onBack()} className="item-hover round flex cursor padding-h-3 padding-w-5">
+            return <div className="flex-auto flex desk-drag">
+                {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onPageClose()} className="desk-no-drag item-hover size-24 round cursor flex-center "><Icon size={20} icon={DoubleRightSvg}></Icon></span>}
+                <span onMouseDown={e => this.props.page.onBack()} className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5">
                     {this.props.page.schema?.icon && <Icon size={20} icon={this.props.page.schema?.icon || CollectTableSvg}></Icon>}
                     <span className="gap-l-5">{this.props.page.schema?.text}</span>
                 </span>
-                <span className="flex-center"><Icon icon={ChevronRightSvg} size={18}></Icon></span>
-                <span className="item-hover round flex cursor padding-h-3 padding-w-5">
+                <span className="desk-no-drag flex-center"><Icon icon={ChevronRightSvg} size={18}></Icon></span>
+                <span className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5">
                     <Icon size={20} icon={this.props.page?.formRowData?.icon || PageSvg}></Icon>
                     <span className="gap-l-5">{this.props.page?.formRowData?.title || '新页面'}</span>
                 </span>
-                {this.props.page.locker?.lock && this.props.page.isCanManage && <span onMouseDown={e => this.props.page.onLockPage()} className="flex-center visible size-24 item-hover cursor round">
+                {this.props.page.locker?.lock && this.props.page.isCanManage && <span onMouseDown={e => this.props.page.onLockPage()} className="desk-no-drag flex-center visible size-24 item-hover cursor round">
                     <Icon size={18} icon={LockSvg}></Icon>
                 </span>}
                 {this.saving && <Loading1></Loading1>}
@@ -81,33 +81,33 @@ export class PageBar extends React.Component<{ page: Page }>{
         }
         else if (this.props.page.isSchemaRecordViewTemplate) {
             var sv = this.props.page.schema.views.find(g => g.id == this.props.page.pe.id1);
-            return <div className="flex-auto flex">
-                {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onPageClose()} className="item-hover size-24 round cursor flex-center "><Icon size={20} icon={DoubleRightSvg}></Icon></span>}
-                <span onMouseDown={e => this.props.page.onBack()} className="item-hover round flex cursor padding-h-3 padding-w-5">
+            return <div className="flex-auto flex desk-drag">
+                {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onPageClose()} className="desk-no-drag item-hover size-24 round cursor flex-center "><Icon size={20} icon={DoubleRightSvg}></Icon></span>}
+                <span onMouseDown={e => this.props.page.onBack()} className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5">
                     {this.props.page.schema?.icon && <Icon size={20} icon={this.props.page.schema?.icon || CollectTableSvg}></Icon>}
                     <span className="gap-l-5">{this.props.page.schema?.text}</span>
                 </span>
-                <span className="flex-center"><Icon icon={ChevronRightSvg} size={18}></Icon></span>
-                <span className="item-hover round flex  cursor padding-h-3 padding-w-5">
+                <span className="desk-no-drag flex-center"><Icon icon={ChevronRightSvg} size={18}></Icon></span>
+                <span className="desk-no-drag item-hover round flex  cursor padding-h-3 padding-w-5">
                     <Icon size={20} icon={sv?.icon || PageSvg}></Icon>
                     <span className="gap-l-5">{sv?.text || ''}</span>
                 </span>
-                {this.props.page.locker?.lock && this.props.page.isCanManage && <span onMouseDown={e => this.props.page.onLockPage()} className="flex-center visible size-24 item-hover cursor round">
+                {this.props.page.locker?.lock && this.props.page.isCanManage && <span onMouseDown={e => this.props.page.onLockPage()} className="desk-no-drag flex-center visible size-24 item-hover cursor round">
                     <Icon size={18} icon={LockSvg}></Icon>
                 </span>}
                 {this.saving && <Loading1></Loading1>}
             </div>
         }
-        return <div className="flex-auto flex">
-            {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onPageClose()} className="item-hover size-24 round cursor flex-center "><Icon size={20} icon={DoubleRightSvg}></Icon></span>}
-            <span className=" round flex">
-                <span className="flex-fixed item-hover flex round  cursor padding-h-3 padding-w-5 ">
+        return <div className="flex-auto flex desk-drag">
+            {this.props.page.openSource == 'slide' && <span  onMouseDown={e => this.props.page.onPageClose()} className="desk-no-drag item-hover size-24 round cursor flex-center "><Icon size={20} icon={DoubleRightSvg}></Icon></span>}
+            <span className=" round flex ">
+                <span className="flex-fixed desk-no-drag  item-hover flex round  cursor padding-h-3 padding-w-5 ">
                     {this.props.page?.pageInfo?.icon && <Icon size={20} icon={getPageIcon(this.props.page?.pageInfo)}></Icon>}
                     <span className={"gap-l-5 text-overflow " + (isMobileOnly ? "max-w-120" : "max-w-300")}>{getPageText(this.props.page?.pageInfo)}</span>
                 </span>
                 <span className={"flex-auto gap-l-5 remark text-overflow " + (isMobileOnly ? " max-w-250" : " max-w-500")}>{this.props.page?.pageInfo?.description}</span>
             </span>
-            {this.props.page.locker?.lock && this.props.page.isCanManage && <span onMouseDown={e => this.props.page.onLockPage()} className="flex-center size-24 item-hover cursor round">
+            {this.props.page.locker?.lock && this.props.page.isCanManage && <span onMouseDown={e => this.props.page.onLockPage()} className="desk-no-drag flex-center size-24 item-hover cursor round">
                 <Icon size={18} icon={LockSvg}></Icon>
             </span>}
             {this.saving && <Loading1></Loading1>}
