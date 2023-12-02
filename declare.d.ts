@@ -64,6 +64,7 @@ interface Window {
     isBeta: boolean, 
     isUS?:boolean,
     isDev: boolean,
+    isDesk: boolean,
     version: string,
     isWeb: boolean,
     isPc: boolean,

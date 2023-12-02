@@ -32,7 +32,7 @@ export interface PageTemplateType {
     sourceElementUrl?: string
 }
 
-export class TemplateView extends EventsComponent<{ isOrg?: boolean }> {
+export class TemplateView extends EventsComponent {
     renderSide() {
         return <div
             style={{
@@ -144,7 +144,13 @@ export class TemplateView extends EventsComponent<{ isOrg?: boolean }> {
         </div>
     }
     render(): React.ReactNode {
-        return <div className={this.props.isOrg ? "user-none padding-t-20" : "max-vw80 min-w-1200 h-700 max-vh80 user-none"}>
+        var w = window.innerWidth;
+        var classList: string[] = ['h-700', 'max-vh80', 'user-none'];
+        if (w > 1400) {
+            classList.push('min-w-1200')
+        }
+        else classList.push('min-ww80');
+        return <div className={classList.join(" ")}>
             <div className="flex flex-full h100">
                 {this.renderSide()}
                 {this.renderContent()}

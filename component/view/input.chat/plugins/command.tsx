@@ -146,7 +146,7 @@ export class ChatCommandInput extends React.Component<{
                     status: UserStatus.online,
                     slogan: '',
                     online: true,
-                    scene: 'command',
+                  
                     tasks: [
                         {
                             id: '1', name: '任务1', description: '任务1描述', args: [

@@ -7,7 +7,6 @@ import { ChildsArea } from "../../../src/block/view/appear";
 import { TextTurns } from "../../../src/block/turn/text";
 import { Button } from "../../../component/view/button";
 import { Icon } from "../../../component/view/icon";
-import "./style.less";
 import { Divider } from "../../../component/view/grid";
 import { PlusSvg, SettingsSvg } from "../../../component/svgs";
 import { BlockFactory } from "../../../src/block/factory/block.factory";
@@ -24,6 +23,7 @@ import { getPageText } from "../../../src/page/declare";
 import { Rect } from "../../../src/common/vector/point";
 import { lst } from "../../../i18n/store";
 import { S } from "../../../i18n/view";
+import "./style.less";
 
 @url('/button/template')
 export class ButtonTemplate extends Block {

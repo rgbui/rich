@@ -6,9 +6,8 @@ import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../../src/blo
 import { ResourceArguments } from "../../../extensions/icon/declare";
 import { useOutSideUrlInput } from "../../../extensions/link/outsite.input";
 import { Rect } from "../../../src/common/vector/point";
-import { BookSvg, DotsSvg, DuplicateSvg, LinkSvg, RefreshSvg } from "../../../component/svgs";
+import { BookSvg, DotsSvg,RefreshSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
-import "./style.less";
 import { channel } from "../../../net/channel";
 import { autoImageUrl } from "../../../net/element.type";
 import { ActionDirective } from "../../../src/history/declare";
@@ -20,7 +19,7 @@ import { lst } from "../../../i18n/store";
 import { S } from "../../../i18n/view";
 import { Tip } from "../../../component/view/tooltip/tip";
 import { ShyAlert } from "../../../component/lib/alert";
-
+import "./style.less";
 
 @url('/bookmark')
 export class Bookmark extends Block {
