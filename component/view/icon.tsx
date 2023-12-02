@@ -89,6 +89,7 @@ export function Icon(props: {
                     <i className={'fa fa-' + pc.code}></i>
                 </span>
             case 'bytedance-icon':
+            case 'byte':
                 Object.assign(style, {
                     // color: pc.color || 'currentColor',
                     // fontSize: props.size == 'none' ? undefined : props.size,
