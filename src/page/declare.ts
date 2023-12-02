@@ -3,6 +3,7 @@ import { IconValueType } from "../../component/view/icon";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { IconArguments, ResourceArguments } from "../../extensions/icon/declare";
 import { lst } from "../../i18n/store";
+import { RobotInfo } from "../../types/user";
 import { AtomPermission } from "./permission";
 
 export enum PageLayoutType {
@@ -112,6 +113,7 @@ export interface LinkWs {
     text: string
     icon: IconArguments
     cover: IconArguments
+    datasource: 'private-clound' | 'public-clound' | 'private-local'
     accessWorkspace?: 'none' | 'embed';
     /**
      * 0:不公开 
@@ -127,7 +129,11 @@ export interface LinkWs {
         text?: string,
         image?: string,
         embedding?: string,
-        disabled?: boolean
+        disabled?: boolean,
+
+        aiSearch?: boolean,
+        esSearch?: boolean,
+        seoSearch?: boolean,
     }
     /**
      * 创建文档时的初始配置
@@ -166,7 +172,8 @@ export interface LinkWs {
     };
     isMember: boolean
     publishConfig: {
-        abled: boolean, allowSearch: boolean,
+        abled: boolean,
+        allowSearch: boolean,
         defineNavMenu: boolean,
         navMenus: WorkspaceNavMenuItem[],
         defineContent: boolean,
@@ -177,6 +184,7 @@ export interface LinkWs {
     }
     isManager: boolean
     isOwner: boolean
+    getWsRobots(): Promise<RobotInfo[]>
 }
 
 export type WorkspaceNavMenuItem = {

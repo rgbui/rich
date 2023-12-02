@@ -15,10 +15,9 @@ import { util } from "../../../../util/util";
 import { ChannelTextType } from "../declare";
 import { RenderChats } from "./chats";
 import { ChatInputType, InputChatBox } from "../../../../component/view/input.chat/box";
-import { RobotRquest, getWsRobots } from "../../../../net/ai/robot";
-import { RobotApply, RobotInfo } from "../../../../types/user";
 import { lst } from "../../../../i18n/store";
 import { S, Sp } from "../../../../i18n/view";
+import { AgentRequest } from "../../../../net/ai/robot";
 
 @view('/channel/text')
 export class ChannelTextView extends BlockView<ChannelText>{
@@ -82,68 +81,120 @@ export class ChannelTextView extends BlockView<ChannelText>{
     uploadFiles: { id: string, speed: string }[] = [];
     async onRobotInput(data: ChatInputType, options: {
         isAt: boolean,
-        prompt?: ArrayOf<RobotInfo['prompts']>,
         replyId?: string,
     }) {
         //机器要指令
         var gr;
         var loadding = false;
         return new Promise(async (resolve, reject) => {
-            await RobotRquest(data.robot,
-                data.task,
-                data.args,
-                options,
-                async (re, done, tc, files) => {
-                    if (!gr && !loadding) {
-                        loadding = true;
-                        var cr = await channel.put('/ws/channel/send', {
+            await AgentRequest(data.robot, data.args.ask, {
+                isAt: options.isAt,
+            }, async (result) => {
+                if (!gr && !loadding) {
+                    loadding = true;
+                    var cr = await channel.put('/ws/channel/send', {
+                        roomId: this.block.roomId,
+                        content: result.content,
+                        robotId: data.robot.robotId,
+                        files: result.files || undefined,
+                        replyId: options.replyId
+                    })
+                    if (cr.data) {
+                        var chat: ChannelTextType = {
+                            id: cr.data.id,
+                            userid: data.robot.robotId,
+                            createDate: cr.data.createDate || new Date(),
+                            content: result.content,
                             roomId: this.block.roomId,
-                            content: tc,
-                            robotId: data.robot.robotId,
-                            files: files || undefined,
+                            seq: cr.data.seq,
+                            files: result.files || [],
                             replyId: options.replyId
-                        })
-                        if (cr.data) {
-                            var chat: ChannelTextType = {
-                                id: cr.data.id,
-                                userid: data.robot.robotId,
-                                createDate: cr.data.createDate || new Date(),
-                                content: re,
-                                roomId: this.block.roomId,
-                                seq: cr.data.seq,
-                                files: files || [],
-                                replyId: options.replyId
-                            };
-                            this.block.chats.push(chat);
-                            if (options.replyId) {
-                                chat.reply = this.block.chats.find(g => g.id == options.replyId);
-                            }
-                            await this.block.setLocalSeq(cr.data.seq);
-                            gr = chat;
-                            loadding = false;
-                            this.forceUpdate(() => this.updateScroll());
+                        };
+                        this.block.chats.push(chat);
+                        if (options.replyId) {
+                            chat.reply = this.block.chats.find(g => g.id == options.replyId);
                         }
+                        await this.block.setLocalSeq(cr.data.seq);
+                        gr = chat;
+                        loadding = false;
+                        this.forceUpdate(() => this.updateScroll());
                     }
-                    else {
-                        if (done) {
-                            await channel.patch('/ws/channel/patch', {
-                                id: gr.id,
-                                roomId: this.block.roomId,
-                                content: tc,
-                                isEdited: false,
-                                files: files || undefined
-                            });
-                            resolve(true)
-                        }
-                        var c = this.block.chats.find(g => g.id == gr.id);
-                        if (c) {
-                            c.content = re
-                            if (Array.isArray(files))
-                                c.files = files || [];
-                            this.forceUpdate(() => this.updateScroll());
-                        }
+                }
+                else {
+                    if (result.done) {
+                        await channel.patch('/ws/channel/patch', {
+                            id: gr.id,
+                            roomId: this.block.roomId,
+                            content: result.content,
+                            isEdited: false,
+                            files: result.files || undefined
+                        });
+                        resolve(true)
                     }
-                })
+                    var c = this.block.chats.find(g => g.id == gr.id);
+                    if (c) {
+                        c.content = result.content
+                        if (Array.isArray(result.files))
+                            c.files = result.files || [];
+                        this.forceUpdate(() => this.updateScroll());
+                    }
+                }
+            })
+            // await RobotRquest(data.robot,
+            //     data.task,
+            //     data.args,
+            //     options,
+            //     async (re, done, tc, files) => {
+            //         if (!gr && !loadding) {
+            //             loadding = true;
+            //             var cr = await channel.put('/ws/channel/send', {
+            //                 roomId: this.block.roomId,
+            //                 content: tc,
+            //                 robotId: data.robot.robotId,
+            //                 files: files || undefined,
+            //                 replyId: options.replyId
+            //             })
+            //             if (cr.data) {
+            //                 var chat: ChannelTextType = {
+            //                     id: cr.data.id,
+            //                     userid: data.robot.robotId,
+            //                     createDate: cr.data.createDate || new Date(),
+            //                     content: re,
+            //                     roomId: this.block.roomId,
+            //                     seq: cr.data.seq,
+            //                     files: files || [],
+            //                     replyId: options.replyId
+            //                 };
+            //                 this.block.chats.push(chat);
+            //                 if (options.replyId) {
+            //                     chat.reply = this.block.chats.find(g => g.id == options.replyId);
+            //                 }
+            //                 await this.block.setLocalSeq(cr.data.seq);
+            //                 gr = chat;
+            //                 loadding = false;
+            //                 this.forceUpdate(() => this.updateScroll());
+            //             }
+            //         }
+            //         else {
+            //             if (done) {
+            //                 await channel.patch('/ws/channel/patch', {
+            //                     id: gr.id,
+            //                     roomId: this.block.roomId,
+            //                     content: tc,
+            //                     isEdited: false,
+            //                     files: files || undefined
+            //                 });
+            //                 resolve(true)
+            //             }
+            //             var c = this.block.chats.find(g => g.id == gr.id);
+            //             if (c) {
+            //                 c.content = re
+            //                 if (Array.isArray(files))
+            //                     c.files = files || [];
+            //                 this.forceUpdate(() => this.updateScroll());
+            //             }
+            //         }
+            //     })
         })
     }
     async onInput(data: ChatInputType) {
@@ -177,7 +228,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
                 this.forceUpdate(() => this.updateScroll());
             }
             if (Array.isArray(data.mentions) && data.mentions.length > 0) {
-                var ws = await getWsRobots();
+                var ws = await this.block.page.ws.getWsRobots();
                 if (data.mentions.every(c => ws.some(w => w.robotId == c))) {
                     var message = data.content;
                     message = message.replace(/<a[\s]+class\="at-user"[^>]+>@[^@]+<\/a>/, '');
@@ -186,17 +237,16 @@ export class ChannelTextView extends BlockView<ChannelText>{
                     var dm = ws.findAll(g => data.mentions.some(c => c == g.robotId));
                     for (let i = 0; i < dm.length; i++) {
                         var robot = dm[i];
-                        if (robot.scene == 'wiki') {
+                        if (robot.abledCommandModel !== true) {
                             var task = robot.tasks[0];
                             if (task) {
-                                var prompt = robot.prompts?.find(g => g.apply == RobotApply.channel) || null;
                                 await this.onRobotInput({
                                     robot: robot,
                                     task: task,
                                     args: {
                                         'ask': message
                                     }
-                                }, { isAt: true, prompt, replyId: re.data.id }
+                                }, { isAt: true, replyId: re.data.id }
                                 );
                             }
                         }
@@ -277,7 +327,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
         else return []
     }
     searchRobot = async () => {
-        var g = await getWsRobots();
+        var g = await this.block.page.ws.getWsRobots();
         return g;
     }
     get isPageLayoutTextChannel() {

@@ -21,7 +21,6 @@ export type UserBasic = {
     slogan?: string
 }
 
-
 export type RobotTask = {
     workspaceId?: string;
     robotId?: string;
@@ -43,11 +42,11 @@ export type RobotTask = {
         remark?: string,
         default_value?: any
     }[],
-    replys?: { id: string, mime: 'text' | 'json' | 'markdown' | 'image' | 'error', code?: string, template?: string, content?: string, data?: Record<string, any>, images?: { url: string, alt?: string }[] }[]
-    /**
-     * nextActions[0].args[0].value='$args.name|$replys['name']'
-     */
-    nextActions?: { text: string, task: string, args?: { name: string, value: string }[] }[]
+    // replys?: { id: string, mime: 'text' | 'json' | 'markdown' | 'image' | 'error', code?: string, template?: string, content?: string, data?: Record<string, any>, images?: { url: string, alt?: string }[] }[]
+    // /**
+    //  * nextActions[0].args[0].value='$args.name|$replys['name']'
+    //  */
+    // nextActions?: { text: string, task: string, args?: { name: string, value: string }[] }[]
     disabled?: boolean,
     /**
      * args replys
@@ -57,7 +56,7 @@ export type RobotTask = {
      * replys 
      * ```
      */
-    template?: string,
+    // template?: string,
 }
 
 export enum RobotApply {
@@ -116,22 +115,29 @@ export function GetRobotApplyArgs(apply: RobotApply) {
 
 
 export type RobotInfo = UserBasic & {
-    remark?: string,
     basePath?: string,
-    scene: 'wiki' | 'command';
     model?: string;
+    instructions?: string;
     imageModel?: string;
     embeddingModel?: string;
     /**
      * 是否禁用知识库上下文 ，
      */
     disabledWiki?: boolean;
+
+    disabledImage?: boolean;
+
+    /**
+     * 是否开启空间检索功能
+     * 
+     */
+    disabledWorkspaceSearch?: boolean;
+
     /**
      * 是否争对指令型的机器人开启大模型的调用模式
      * 可以通过自然语来调用
      */
     abledCommandModel?: boolean;
-
     wikiConfig?: {
         /**
          * 取最多的片段数 
@@ -153,20 +159,8 @@ export type RobotInfo = UserBasic & {
     robotId?: string,
     headers?: { name: string, value: string }[],
     tasks?: RobotTask[],
-    prompts?: {
-        id?: string,
-        createDate?: Date,
-        apply?: RobotApply,
-        type?: 'ask' | 'write' | 'polish',
-        text: string,
-        icon?: IconArguments,
-        abled?: boolean,
-        prompt: string,
-        temperature?: number,
-        config?: {
 
-        }
-    }[]
+    share?: 'private' | 'public',
 }
 
 
