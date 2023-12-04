@@ -47,7 +47,6 @@ export class ChatInputPop extends React.Component<{
             if (typeof this.props.search == 'function') {
                 this.users = await this.props.search();
             }
-            // console.log('open pop');
         }
         catch (ex) {
             console.error(ex)

@@ -222,8 +222,8 @@ export class TableStoreBoardView extends BlockView<TableStoreBoard>{
             </div>
         </div>
     }
-    renderItem(itemBlock: Block) {
-        console.log(this.block);
+    renderItem(itemBlock: Block)
+    {
         if (this.block.cardConfig.showMode == 'define' && this.block.cardConfig.templateProps.url) {
             var CV = CardFactory.getCardView(this.block.cardConfig.templateProps.url);
             if (CV) return <CV item={itemBlock as any} dataGrid={this.block}></CV>

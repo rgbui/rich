@@ -18,7 +18,6 @@ import {
     LinkSvg,
     LockSvg,
     LoopSvg,
-    MagicSvg,
     TrashSvg,
     UnlockSvg
 } from "../../../component/svgs";
