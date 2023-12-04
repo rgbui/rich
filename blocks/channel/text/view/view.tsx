@@ -140,61 +140,6 @@ export class ChannelTextView extends BlockView<ChannelText>{
                     }
                 }
             })
-            // await RobotRquest(data.robot,
-            //     data.task,
-            //     data.args,
-            //     options,
-            //     async (re, done, tc, files) => {
-            //         if (!gr && !loadding) {
-            //             loadding = true;
-            //             var cr = await channel.put('/ws/channel/send', {
-            //                 roomId: this.block.roomId,
-            //                 content: tc,
-            //                 robotId: data.robot.robotId,
-            //                 files: files || undefined,
-            //                 replyId: options.replyId
-            //             })
-            //             if (cr.data) {
-            //                 var chat: ChannelTextType = {
-            //                     id: cr.data.id,
-            //                     userid: data.robot.robotId,
-            //                     createDate: cr.data.createDate || new Date(),
-            //                     content: re,
-            //                     roomId: this.block.roomId,
-            //                     seq: cr.data.seq,
-            //                     files: files || [],
-            //                     replyId: options.replyId
-            //                 };
-            //                 this.block.chats.push(chat);
-            //                 if (options.replyId) {
-            //                     chat.reply = this.block.chats.find(g => g.id == options.replyId);
-            //                 }
-            //                 await this.block.setLocalSeq(cr.data.seq);
-            //                 gr = chat;
-            //                 loadding = false;
-            //                 this.forceUpdate(() => this.updateScroll());
-            //             }
-            //         }
-            //         else {
-            //             if (done) {
-            //                 await channel.patch('/ws/channel/patch', {
-            //                     id: gr.id,
-            //                     roomId: this.block.roomId,
-            //                     content: tc,
-            //                     isEdited: false,
-            //                     files: files || undefined
-            //                 });
-            //                 resolve(true)
-            //             }
-            //             var c = this.block.chats.find(g => g.id == gr.id);
-            //             if (c) {
-            //                 c.content = re
-            //                 if (Array.isArray(files))
-            //                     c.files = files || [];
-            //                 this.forceUpdate(() => this.updateScroll());
-            //             }
-            //         }
-            //     })
         })
     }
     async onInput(data: ChatInputType) {
@@ -303,6 +248,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
             <div className="sy-channel-text-input" data-shy-page-no-focus onMouseDown={e => e.stopPropagation()}>
                 <div className="sy-channel-text-input-wrapper">
                     <InputChatBox
+                        ws={this.block.page.ws}
                         disabled={this.block.abledSend && this.block.page.user?.id ? false : true}
                         placeholder={this.block.abledSend && this.block.page.user?.id ? lst("回车提交") : (this.block.page.user?.id ? lst("您不能发言") : lst("请登录发言"))}
                         ref={e => this.inputChatBox = e}

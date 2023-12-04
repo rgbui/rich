@@ -16,6 +16,7 @@ import { MenuItem, MenuItemType } from "../menu/declare";
 import { Avatar } from "../avator/face";
 import { ToolTip } from "../tooltip";
 import { lst } from "../../../i18n/store";
+import { LinkWs } from "../../../src/page/declare";
 
 export type ChatInputType = {
     content?: string,
@@ -42,6 +43,7 @@ export class InputChatBox extends React.Component<{
     disabledInputQuote?: boolean
     className?: string[] | string,
     searchRobots?: () => Promise<RobotInfo[]>,
+    ws?: LinkWs
 }>{
     el: HTMLElement;
     render(): React.ReactNode {
@@ -215,28 +217,55 @@ export class InputChatBox extends React.Component<{
             var file = files[i];
             var fr: ArrayOf<InputChatBox['uploadFiles']> = { id, size: file.size, text: file.name, speed: `${file.name}-准备上传中...` };
             this.uploadFiles.push(fr);
-            var d = await channel.post('/ws/upload/file', {
-                file,
-                uploadProgress: (event) => {
-                    if (event.lengthComputable) {
-                        fr.speed = `${file.name}-${util.byteToString(event.total)}(${(100 * event.loaded / event.total).toFixed(2)}%)`;
-                        this.forceUpdate()
+            if (this.props.ws) {
+                var d = await channel.post('/ws/upload/file', {
+                    file,
+                    uploadProgress: (event) => {
+                        if (event.lengthComputable) {
+                            fr.speed = `${file.name}-${util.byteToString(event.total)}(${(100 * event.loaded / event.total).toFixed(2)}%)`;
+                            this.forceUpdate()
+                        }
                     }
+                });
+                if (d.ok) {
+                    fr.speed = `${file.name}-` + lst('上传成功');
+                    var g = lodash.cloneDeep(d.data.file) as any;
+                    g.text = g.name;
+                    delete g.name;
+                    fr.file = { name: 'upload', ...g }
                 }
-            });
-            if (d.ok) {
-                fr.speed = `${file.name}-`+lst('上传成功');
-                var g = lodash.cloneDeep(d.data.file) as any;
-                g.text = g.name;
-                delete g.name;
-                fr.file = { name: 'upload', ...g }
+                else {
+                    fr.speed = `${file.name}-` + lst('上传失败');
+                    this.openEror(`${file.name}-` + lst('上传失败'))
+                    this.forceUpdate();
+                    await util.delay(3e3);
+                }
             }
             else {
-                fr.speed = `${file.name}-`+lst('上传失败');
-                this.openEror(`${file.name}-`+lst('上传失败'))
-                this.forceUpdate();
-                await util.delay(3e3);
+                var dc = await channel.post('/user/upload/file', {
+                    file,
+                    uploadProgress: (event) => {
+                        if (event.lengthComputable) {
+                            fr.speed = `${file.name}-${util.byteToString(event.total)}(${(100 * event.loaded / event.total).toFixed(2)}%)`;
+                            this.forceUpdate()
+                        }
+                    }
+                })
+                if (dc.ok) {
+                    fr.speed = `${file.name}-` + lst('上传成功');
+                    var g = lodash.cloneDeep(dc.data.file) as any;
+                    g.text = g.name;
+                    delete g.name;
+                    fr.file = { name: 'upload', ...g }
+                }
+                else {
+                    fr.speed = `${file.name}-` + lst('上传失败');
+                    this.openEror(`${file.name}-` + lst('上传失败'))
+                    this.forceUpdate();
+                    await util.delay(3e3);
+                }
             }
+
             fr.speed = ``;
             this.forceUpdate()
             await util.delay(20)
