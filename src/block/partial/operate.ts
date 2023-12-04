@@ -51,6 +51,12 @@ export class Block$Operator {
                 this.page.addBlockUpdate(this.parent);
                 this.page.addBlockClearLayout(this.parent);
                 this.page.addBlockChange(this.parent);
+                if (this.parent?.url == BlockUrlConstant.Mind) {
+                    var parent = this.parent;
+                    this.page.addUpdateEvent(async () => {
+                        (parent as any).renderAllMinds();
+                    })
+                }
                 delete this.parent;
             }
         }
