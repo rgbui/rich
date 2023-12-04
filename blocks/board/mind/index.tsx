@@ -765,6 +765,5 @@ export class FlowMindView extends BlockView<FlowMind>{
  * 节点的连接线端点，点击松开（不应自动创建线，至少方位不对）
  * 输入时，文本框没有自适应
  * mind的节点线，感觉调整样式风格极为不方便
- * 频道不能上传图片
  * 频道的消息通知有问题
  */
