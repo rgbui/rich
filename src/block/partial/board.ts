@@ -269,7 +269,7 @@ export class Block$Board {
      * 重新渲染线条
      * @param this 
      */
-    updateRenderLines(this: Block, isSelfUpdate?: boolean) {
+    updateRenderLines(this: Block, isSelfUpdate?: boolean, isAll?: boolean) {
         if (this.isFrame) {
             this.childs.each(b => {
                 b.lines.each(line => { line.forceUpdate() })

@@ -7,7 +7,6 @@ import { ChildsArea, TextSpanArea } from "../../../src/block/view/appear";
 import { Point, PointArrow, Rect, RectUtility } from "../../../src/common/vector/point";
 import { FlowMindLine, GetLineSvg } from "./line";
 import { BoardPointType, BoardBlockSelector } from "../../../src/block/partial/board";
-import { Polygon } from "../../../src/common/vector/polygon";
 import { ActionDirective } from "../../../src/history/declare";
 import { Matrix } from "../../../src/common/matrix";
 import { BlockCssName } from "../../../src/block/pattern/css";
@@ -16,8 +15,8 @@ import { BlockChildKey } from "../../../src/block/constant";
 import { MouseDragger } from "../../../src/common/dragger";
 import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
 import { lst } from "../../../i18n/store";
-import './style.less';
 import { VR } from "../../../src/common/render";
+import './style.less';
 
 @url('/flow/mind')
 export class FlowMind extends Block {
@@ -185,12 +184,16 @@ export class FlowMind extends Block {
             })
         }
     }
-    updateRenderLines(isSelfUpdate?: boolean): void {
+    updateRenderLines(isSelfUpdate?: boolean, isAll?: boolean): void {
         super.updateRenderLines(isSelfUpdate);
         if (this.parent instanceof FlowMind) {
             (this.parent.view as any).updateFlowLine();
         }
         (this.view as any).updateFlowLine();
+        if (isAll) {
+            this.blocks.subChilds.forEach((c: FlowMind) => c.updateRenderLines(isSelfUpdate, isAll));
+            this.blocks.otherChilds.forEach((c: FlowMind) => c.updateRenderLines());
+        }
     }
     get relativeFixedRect() {
         var s = this.fixedSize;
@@ -294,14 +297,6 @@ export class FlowMind extends Block {
             });
         }
     }
-    updateAllFlowLines() {
-        if (this.view) (this.view as any).updateFlowLine();
-        else {
-            console.log('not view', this);
-        }
-        this.blocks.subChilds.forEach((c: FlowMind) => c.updateAllFlowLines());
-        this.blocks.otherChilds.forEach((c: FlowMind) => c.updateAllFlowLines());
-    }
     async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
         var bold = this.pattern.css(BlockCssName.font)?.fontWeight;
         var cs: { name: string; value?: any; }[] = [];
@@ -323,11 +318,9 @@ export class FlowMind extends Block {
         cs.push({ name: 'borderColor', value: this.minBoxStyle.borderColor });
         cs.push({ name: 'borderRadius', value: this.minBoxStyle.radius });
 
-
         return cs;
     }
     async setBoardEditCommand(name: string, value: any) {
-
         if (name == 'mindDirection') {
             await this.updateProps({ direction: value }, BlockRenderRange.self);
             this.page.addUpdateEvent(async () => {
@@ -381,12 +374,11 @@ export class FlowMind extends Block {
         return style;
     }
     renderAllMinds() {
-        this.mindRoot.cacChildsFlowMind(true);
-        this.mindRoot.updateAllFlowLines();
+        this.mindRoot.renderMinds();
     }
     renderMinds() {
         this.cacChildsFlowMind(true);
-        this.updateAllFlowLines();
+        this.updateRenderLines(true, true);
     }
     boardMoveStart(point: Point): void {
         this.moveTo = null;
@@ -394,6 +386,7 @@ export class FlowMind extends Block {
     boardMove(from: Point, to: Point) {
         super.boardMove(from, to);
         if (this.isMindRoot) {
+            this.renderAllMinds();
             return
         }
         var crect = new Rect(0, 0, this.fixedWidth, this.fixedHeight);
@@ -530,7 +523,6 @@ export class FlowMind extends Block {
             var posRect = new Rect(0, 0, this.moveTo.posBlock.fixedSize.width, this.moveTo.posBlock.fixedSize.height);
             posRect = posRect.transformToRect(this.moveTo.posBlock.globalWindowMatrix);
             var rectPath = `M${posRect.left} ${posRect.top} L${posRect.right} ${posRect.top} L${posRect.right} ${posRect.bottom} L${posRect.left} ${posRect.bottom} L${posRect.left} ${posRect.top}`
-            console.log('rectPath', rectPath, lineD);
             VR.renderSvg(`
             <path fill='none' stroke='#ff0000' stroke-width='2' stroke-dasharray="2 2" d=\'${lineD}\'></path>
             <path fill='none' stroke='#ff0000' stroke-width='2' stroke-dasharray="2 2" d=\'${rectPath}\'></path>
@@ -546,7 +538,13 @@ export class FlowMind extends Block {
         posBlock: Block,
     } = null;
     async boardMoveEnd(from: Point, to: Point) {
-        if (this.isMindRoot) { await super.boardMoveEnd(from, to); return }
+        if (this.isMindRoot) {
+            await super.boardMoveEnd(from, to);
+            this.page.addUpdateEvent(async () => {
+                this.renderAllMinds();
+            })
+            return
+        }
         var oldMindRoot: FlowMind, currentMindRoot: FlowMind;
         if (this.moveTo?.block) {
             oldMindRoot = this.mindRoot;
