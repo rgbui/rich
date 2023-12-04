@@ -201,19 +201,16 @@ export class PageWrite {
                     return;
                 }
                 if (aa?.block.isFreeBlock) {
-                    await onEnterInput(this, aa, event);
+                   //不做任何处理，自动键入换行符
                 }
                 else if (aa.block.isEnterCreateNewLine) {
                     if (!this.kit.page.keyboardPlate.isShift()) {
                         await onEnterInput(this, aa, event);
                     }
                     else if (this.kit.page.keyboardPlate.isShift() && aa.block.isDisabledInputLine) {
+                        event.preventDefault()
                         await onEnterInput(this, aa, event);
                     }
-                    // else if (this.kit.page.keyboardPlate.isShift() && aa.isSolid) {
-                    //     event.preventDefault()
-                    //     this.onSolidInputCreateTextBlock(aa, event, '\n', 1);
-                    // }
                 }
                 break;
             case KeyboardCode.Delete.toLowerCase():
