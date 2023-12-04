@@ -5,6 +5,7 @@ import { Segment } from "../../../src/block/svg/segment";
 import { Matrix } from "../../../src/common/matrix";
 import { Point } from "../../../src/common/vector/point";
 import { Line } from "./line";
+
 export function renderLine(line: Line) {
     if (!line.page.viewEl) return <></>
     var strokeWidth = line.realPx(10);
@@ -15,12 +16,12 @@ export function renderLine(line: Line) {
     if (s?.end && s.np !== true) segs[0].point = s.end;
     if (e?.end && e.np !== true) segs.last().point = e.end;
     var sd = Segment.getSegmentsPathString(segs);
-
+    var sdd = line.pattern.getSvgStyle()?.strokeDasharray
     return <>
-        <path className="visible" strokeLinejoin="round" d={sd}></path>
+        <path className="visible" strokeLinecap={sdd == 'dash-circle' ? "round" : undefined} strokeLinejoin="round" d={sd}></path>
         {s && <>{s.el}{s.te}</>}
         {e && <>{e.el}{e.te}</>}
-        <path className="transparent" d={sd} stroke="transparent" strokeWidth={strokeWidth}></path>
+        <path className="transparent" strokeLinecap={sdd == 'dash-circle' ? "round" : undefined} strokeLinejoin="round" d={sd} stroke="transparent" strokeWidth={strokeWidth}></path>
     </>
 }
 

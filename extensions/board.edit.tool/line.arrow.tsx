@@ -240,7 +240,7 @@ export function LineTypes(props: {
                         <path d="M0 14h6v2H0zm9 0h6v2H9zm9 0h6v2h-6z" fill="currentColor" fillRule="evenodd"></path>
                     </svg>
                 </a>
-                {/*<a className={props.strokeDasharray == 'dash-circle' ? "hover" : ""}
+                <a className={props.strokeDasharray == 'dash-circle' ? "hover" : ""}
                     onMouseDown={e => props.change('strokeDasharray', 'dash-circle')}
                 >
                     <svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
@@ -253,7 +253,7 @@ export function LineTypes(props: {
                             <rect width="2" height="2" x="20" rx="1"></rect>
                         </g>
                     </svg>
-                </a> */}
+                </a>
             </div>
         </div>}
     </div>
