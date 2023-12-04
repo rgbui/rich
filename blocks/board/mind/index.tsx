@@ -192,7 +192,7 @@ export class FlowMind extends Block {
         (this.view as any).updateFlowLine();
         if (isAll) {
             this.blocks.subChilds.forEach((c: FlowMind) => c.updateRenderLines(isSelfUpdate, isAll));
-            this.blocks.otherChilds.forEach((c: FlowMind) => c.updateRenderLines());
+            this.blocks.otherChilds.forEach((c: FlowMind) => c.updateRenderLines(isSelfUpdate, isAll));
         }
     }
     get relativeFixedRect() {
@@ -507,26 +507,31 @@ export class FlowMind extends Block {
         if (this.moveTo) {
             var p = this.moveTo.rect.middleCenter;
             var t = crect.middleCenter;
-            if (this.moveTo.block.mindRoot.mindDirection == 'x') {
-                p = this.moveTo.childKey == 'subChilds' ? this.moveTo.rect.leftMiddle : this.moveTo.rect.rightMiddle;
-                t = this.moveTo.childKey == 'subChilds' ? crect.rightMiddle : crect.leftMiddle;
+            if (this.moveTo.block.mindRoot) {
+                if (this.moveTo.block.mindRoot.mindDirection == 'x') {
+                    p = this.moveTo.childKey == 'subChilds' ? this.moveTo.rect.leftMiddle : this.moveTo.rect.rightMiddle;
+                    t = this.moveTo.childKey == 'subChilds' ? crect.rightMiddle : crect.leftMiddle;
+                }
+                else if (this.moveTo.block.mindRoot.mindDirection == 'y') {
+                    p = this.moveTo.childKey == 'subChilds' ? this.moveTo.rect.topCenter : this.moveTo.rect.bottomCenter;
+                    t = this.moveTo.childKey == 'subChilds' ? crect.bottomCenter : crect.topCenter;
+                }
+                var lineD = GetLineSvg(this.moveTo.block.mindRoot.lineType,
+                    this.moveTo.block.mindRoot.mindDirection as any,
+                    p,
+                    t,
+                    0.4);
+                var posRect = new Rect(0, 0, this.moveTo.posBlock.fixedSize.width, this.moveTo.posBlock.fixedSize.height);
+                posRect = posRect.transformToRect(this.moveTo.posBlock.globalWindowMatrix);
+                var rectPath = `M${posRect.left} ${posRect.top} L${posRect.right} ${posRect.top} L${posRect.right} ${posRect.bottom} L${posRect.left} ${posRect.bottom} L${posRect.left} ${posRect.top}`
+                VR.renderSvg(`
+                <path fill='none' stroke='#ff0000' stroke-width='2' stroke-dasharray="2 2" d=\'${lineD}\'></path>
+                <path fill='none' stroke='#ff0000' stroke-width='2' stroke-dasharray="2 2" d=\'${rectPath}\'></path>
+                `);
             }
-            else if (this.moveTo.block.mindRoot.mindDirection == 'y') {
-                p = this.moveTo.childKey == 'subChilds' ? this.moveTo.rect.topCenter : this.moveTo.rect.bottomCenter;
-                t = this.moveTo.childKey == 'subChilds' ? crect.bottomCenter : crect.topCenter;
+            else {
+                VR.unload();
             }
-            var lineD = GetLineSvg(this.moveTo.block.mindRoot.lineType,
-                this.moveTo.block.mindRoot.mindDirection as any,
-                p,
-                t,
-                0.4);
-            var posRect = new Rect(0, 0, this.moveTo.posBlock.fixedSize.width, this.moveTo.posBlock.fixedSize.height);
-            posRect = posRect.transformToRect(this.moveTo.posBlock.globalWindowMatrix);
-            var rectPath = `M${posRect.left} ${posRect.top} L${posRect.right} ${posRect.top} L${posRect.right} ${posRect.bottom} L${posRect.left} ${posRect.bottom} L${posRect.left} ${posRect.top}`
-            VR.renderSvg(`
-            <path fill='none' stroke='#ff0000' stroke-width='2' stroke-dasharray="2 2" d=\'${lineD}\'></path>
-            <path fill='none' stroke='#ff0000' stroke-width='2' stroke-dasharray="2 2" d=\'${rectPath}\'></path>
-            `);
         }
         else VR.unload();
     }
@@ -538,7 +543,7 @@ export class FlowMind extends Block {
         posBlock: Block,
     } = null;
     async boardMoveEnd(from: Point, to: Point) {
-        if (this.isMindRoot) {
+        if (this.isMindRoot && !this.moveTo?.block?.mindRoot) {
             await super.boardMoveEnd(from, to);
             this.page.addUpdateEvent(async () => {
                 this.renderAllMinds();
@@ -546,7 +551,7 @@ export class FlowMind extends Block {
             return
         }
         var oldMindRoot: FlowMind, currentMindRoot: FlowMind;
-        if (this.moveTo?.block) {
+        if (this.moveTo?.block?.mindRoot) {
             oldMindRoot = this.mindRoot;
             await this.moveTo.block.append(this, this.moveTo.at, this.moveTo.childKey);
             currentMindRoot = this.mindRoot;
@@ -721,6 +726,9 @@ export class FlowMindView extends BlockView<FlowMind>{
                 rightPoints,
             );
         }
+        else{
+            console.log(this.block,'flow empty...')
+        }
     }
     renderItem() {
         var text = lst('中心主题');
@@ -753,15 +761,10 @@ export class FlowMindView extends BlockView<FlowMind>{
 
 /**
  * 存在的问题
- * shift+enter 有问题
  * 将子节点拖到父节点右侧没感应（引时父节点没有子节点）
- * 节点输入回退
- * 节点选中时，矩形框不要显示出来
  * 节点的连接线端点，点击松开（不应自动创建线，至少方位不对）
  * 输入时，文本框没有自适应
- * 删除时，文本线没有跟着删除
  * mind的节点线，感觉调整样式风格极为不方便
- * 白板不能添加图片
  * 频道不能上传图片
  * 频道的消息通知有问题
  */

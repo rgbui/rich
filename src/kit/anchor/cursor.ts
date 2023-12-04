@@ -71,11 +71,14 @@ export class AnchorCursor {
         var old = this.record;
         var sel = window.getSelection();
         this.startAnchor = findBlockAppear(sel.anchorNode);
-        this.startOffset = this.startAnchor.getCursorOffset(sel.anchorNode, sel.anchorOffset);
+        if (this.startAnchor)
+            this.startOffset = this.startAnchor.getCursorOffset(sel.anchorNode, sel.anchorOffset);
         this.endAnchor = findBlockAppear(sel.focusNode);
-        this.endOffset = this.endAnchor.getCursorOffset(sel.focusNode, sel.focusOffset);
+        if (this.endAnchor)
+            this.endOffset = this.endAnchor.getCursorOffset(sel.focusNode, sel.focusOffset);
         this.currentSelectedBlocks = [];
-        this.kit.page.snapshoot.record(OperatorDirective.$change_cursor_offset, { old_value: old, new_value: this.record }, this.kit.page)
+        if (this.startAnchor && this.endAnchor)
+            this.kit.page.snapshoot.record(OperatorDirective.$change_cursor_offset, { old_value: old, new_value: this.record }, this.kit.page)
     }
     onCollapse(anchor: AppearAnchor, offset: number) {
         this.kit.page.onAction('onCollapse', async () => {
