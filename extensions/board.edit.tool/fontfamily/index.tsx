@@ -17,11 +17,15 @@ export class FontFamily extends React.Component<{
         var self = this;
         async function changeFont(ft: FontFamilyStyle) {
             props.change(ft.name);
-            loadFontFamily(ft.name);
+            load(ft);
         }
         async function load(ft: FontFamilyStyle) {
-            await loadFontFamily(ft.name)
-            self.forceUpdate();
+            if (ft.loading !== true && ft.loaded !== true) {
+                ft.loading = true;
+                self.forceUpdate();
+                await loadFontFamily(ft.name)
+                self.forceUpdate();
+            }
         }
         return <div className="relative" >
             <div className="h-20" style={{ marginTop: 2, minWidth: 20, minHeight: 20 }} onMouseDown={e => props.tool.showDrop('fontFamily')}>
@@ -37,13 +41,13 @@ export class FontFamily extends React.Component<{
                             {(c.name == props.value || c.name == '' && !props.value) && <span className="flex-center size-24"><Icon size={18} icon={CheckSvg}></Icon></span>}
                         </span>
                         <span className="flex-auto text-overflow" style={{ fontFamily: c.name }}>{c.text}</span>
-                        {c.name!='inherit' && <span className="flex-fixed flex">
+                        {c.name != 'inherit' && <span className="flex-fixed flex">
                             {
                                 c.loaded && <span className="flex-center size-24 cursor"><Icon icon={{ name: 'bytedance-icon', code: 'local-pin' }} size={18}></Icon></span>
                             }
                             {c.loaded !== true && c.loading !== true && <Tip text='下载字体'><span onMouseDown={e => {
                                 e.stopPropagation();
-                                if (c.loading !== true) { c.loading = true; self.forceUpdate(); load(c) }
+                                load(c)
                             }} className="flex-center size-24 cursor">
                                 <Icon icon={{ name: 'bytedance-icon', code: 'download-one' }} size={18}></Icon>
                             </span></Tip>}
