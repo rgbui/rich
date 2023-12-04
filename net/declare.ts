@@ -351,7 +351,8 @@ export interface ChannelActMapUrls {
 	"/current/ws/remove/member":{args:{userid:string},returnType:SockResponse<void>},
 	"/open/user/private/channel":{args:{userid:string},returnType:SockResponse<void>},
 	"/current/page/copy":{args:{},returnType:SockResponse<void>},
-	"/current/page/move":{args:{},returnType:SockResponse<void>}
+	"/current/page/move":{args:{},returnType:SockResponse<void>},
+	"/workspace/mode":{args:{isApp:boolean},returnType:SockResponse<void>}
 }
 export interface ChannelAirMapUrls {
     "/page/update/info":{args:{id?: string,elementUrl?:string, pageInfo:LinkPageItem},returnType:void},

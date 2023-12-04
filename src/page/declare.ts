@@ -185,6 +185,9 @@ export interface LinkWs {
     isManager: boolean
     isOwner: boolean
     getWsRobots(): Promise<RobotInfo[]>
+    isPubSite: boolean
+    isPubSiteDefineBarMenu: boolean
+    isPubSiteHideMenu: boolean
 }
 
 export type WorkspaceNavMenuItem = {

@@ -50,9 +50,9 @@ export class WsAvatar extends React.Component<{
                 <div className="shy-ws-avatar-slogan"
                     style={{
                         display: '-webkit-box',
-                        '-webkit-line-clamp': '3', /* 显示两行 */
-                        '-webkit-box-orient': 'vertical'
-                    } as any}
+                        WebkitLineClamp: 3,/* 显示两行 */
+                        WebkitBoxOrient: 'vertical'
+                    }}
                 >{this.ws.slogan}</div>
                 <div className="shy-ws-avatar-count gap-h-10">
                     <span><i className="online"></i><em>{this.ws.memberOnlineCount}<S>在线</S></em></span>

@@ -99,7 +99,7 @@ export class PageBar extends React.Component<{ page: Page }>{
             </div>
         }
         return <div className="flex-auto flex desk-drag">
-            {this.props.page.openSource == 'slide' && <span  onMouseDown={e => this.props.page.onPageClose()} className="desk-no-drag item-hover size-24 round cursor flex-center "><Icon size={20} icon={DoubleRightSvg}></Icon></span>}
+            {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onPageClose()} className="desk-no-drag item-hover size-24 round cursor flex-center "><Icon size={20} icon={DoubleRightSvg}></Icon></span>}
             <span className=" round flex ">
                 <span className="flex-fixed desk-no-drag  item-hover flex round  cursor padding-h-3 padding-w-5 ">
                     {this.props.page?.pageInfo?.icon && <Icon size={20} icon={getPageIcon(this.props.page?.pageInfo)}></Icon>}
@@ -173,7 +173,7 @@ export class PageBar extends React.Component<{ page: Page }>{
         if (this.props.page.openSource == 'snap') return <></>
         if (this.props.page?.ws?.accessWorkspace == 'embed') return <></>
         var user = this.props.page.user;
-        if (this.props.page.isPubSite) {
+        if (this.props.page.ws.isPubSite) {
             if (this.props.page.isSign) return <div className="flex   gap-r-10">
                 <span onClick={e => this.toHome()} className="size-40 gap-r-30 flex-center cursor"><Avatar size={32} userid={user.id}></Avatar></span>
             </div>
@@ -189,7 +189,7 @@ export class PageBar extends React.Component<{ page: Page }>{
         var isSearch: boolean = true;
         var isPublish: boolean = true;
         var isContextMenu: boolean = true;
-        var isAi:boolean=this.props.page.ws?.aiConfig?.aiSearch;
+        var isAi: boolean = this.props.page.ws?.aiConfig?.aiSearch;
         if (!this.props.page.isSign) {
             isPublish = false;
         }
@@ -198,10 +198,7 @@ export class PageBar extends React.Component<{ page: Page }>{
         }
         if (this.props.page.pe.type == ElementType.SchemaData) {
             isField = true;
-            if (!isCanEdit) {
-                isField = false;
-                isPublish = false;
-            }
+            if (!isCanEdit) { isField = false; isPublish = false; }
             if (this.props.page.isSchemaRecordViewTemplate) isPublish = true;
             else isPublish = false;
         }
@@ -216,7 +213,7 @@ export class PageBar extends React.Component<{ page: Page }>{
             {isField && <span onMouseDown={e => this.props.page.onOpenFieldProperty(e)} ><Icon size={18} icon={{ name: 'bytedance-icon', code: 'setting-one' }}></Icon></span>}
             {isMember && <span onMouseDown={e => this.props.page.onOpenMember(e)} ><Icon size={18} icon={MemberSvg}></Icon></span>}
             {isSearch && <span onMouseDown={async e => { await useSearchBox({ ws: this.props.page.ws }) }}><Icon size={18} icon={SearchSvg}></Icon></span>}
-            {isAi&& <span onMouseDown={async e => { await useAISearchBox({ ws: this.props.page.ws }) }}><Icon size={18} icon={AiStartSvg}></Icon></span>}
+            {isAi && <span onMouseDown={async e => { await useAISearchBox({ ws: this.props.page.ws }) }}><Icon size={18} icon={AiStartSvg}></Icon></span>}
             {isPublish && <span onMouseDown={e => this.props.page.onOpenPublish(e)} ><Icon size={18} icon={PublishSvg}></Icon></span>}
             {isContextMenu && <span onMouseDown={e => this.props.page.onPageContextmenu(e)} ><Icon size={18} icon={DotsSvg}></Icon></span>}
             {!isCanEdit && ws.access == 0 && !ws.isMember && <span className="size-30 gap-r-30"><Avatar size={32} userid={user.id}></Avatar></span>}
@@ -230,9 +227,9 @@ export class PageBar extends React.Component<{ page: Page }>{
         this.props.page.emit(PageDirective.spreadSln)
     }
     render(): React.ReactNode {
-        if (this.props.page.visiblePageBar === false) return <></>
+        if (this.props.page.bar === false) return <></>
         var isFormData = this.props.page.pe.type == ElementType.SchemaData && this.props.page.openSource != 'page'
-        if (this.props.page.isPubSiteDefineBarMenu && !isFormData) {
+        if (this.props.page.ws.isPubSiteDefineBarMenu && !isFormData) {
             return this.renderDefineBar();
         }
         var isDocCard = this.props.page.pageLayout?.type == PageLayoutType.docCard;
@@ -245,7 +242,7 @@ export class PageBar extends React.Component<{ page: Page }>{
             {isMobileOnly && <span onClick={e => this.onSpreadMenu()} className="flex-fixed size-20 flex-center item-hover round cursor ">
                 <Icon icon={ChevronLeftSvg} size={18}></Icon>
             </span>}
-            {!isMobileOnly && this.props.page.openSource == 'page' && !this.props.page.isPubSiteDefineContent && <ToolTip placement="bottom" overlay={lst('折叠侧边栏')}><span onClick={e => this.onSpreadMenu()} className="flex-fixed size-24 flex-center item-hover round cursor ">
+            {!isMobileOnly && this.props.page.openSource == 'page' && !this.props.page.ws.isPubSiteHideMenu && <ToolTip placement="bottom" overlay={lst('折叠侧边栏')}><span onClick={e => this.onSpreadMenu()} className="flex-fixed size-24 flex-center item-hover round cursor ">
                 <Icon icon={{ name: 'bytedance-icon', code: 'hamburger-button' }} size={18}></Icon>
             </span></ToolTip>}
             {this.renderTitle()}
@@ -260,7 +257,7 @@ export class PageBar extends React.Component<{ page: Page }>{
             marginLeft: 20,
             marginRight: 20
         }
-        if (this.props.page.isPubSiteDefineContent) {
+        if (this.props.page.ws?.isPubSiteHideMenu) {
             style = this.props.page.getScreenStyle()
         }
         if (isMobileOnly) {

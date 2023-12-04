@@ -67,16 +67,17 @@ export class Page extends Events<PageDirective>{
     get isSign() {
         return this.user?.id ? true : false
     }
-    get isPubSite() {
-        return (window.shyConfig?.isDomainWs) && this.ws.access == 1 && this.ws.publishConfig?.abled
-    }
-    get isPubSiteDefineBarMenu() {
-        return this.isPubSite && this.ws?.publishConfig?.navMenus?.length > 0 && this.ws?.publishConfig?.defineNavMenu
-    }
-    
-    get isPubSiteDefineContent() {
-        return this.isPubSite && this.ws?.publishConfig?.defineContent && this.ws.publishConfig.contentTheme == 'none'
-    }
+    // get isPubSite() {
+
+    //     return (window.shyConfig?.isDomainWs) && this.ws.access == 1 && this.ws.publishConfig?.abled
+    // }
+    // get isPubSiteDefineBarMenu() {
+    //     return this.isPubSite && this.ws?.publishConfig?.navMenus?.length > 0 && this.ws?.publishConfig?.defineNavMenu
+    // }
+
+    // get isPubSiteDefineContent() {
+    //     return this.isPubSite && this.ws?.publishConfig?.defineContent && this.ws.publishConfig.contentTheme == 'none'
+    // }
     kit: Kit = new Kit(this);
     snapshoot = new HistorySnapshoot(this)
     pageLayout: { type: PageLayoutType };
@@ -110,15 +111,10 @@ export class Page extends Events<PageDirective>{
      * 仅文档、数据表格、宣传页起作用
      */
     hideDocTitle: boolean = false;
+    /**
+     * 是否显示页面头部
+     */
     bar = true;
-    get visiblePageBar() {
-        if (this.isPubSite) {
-            if (!this.isPubSiteDefineContent) {
-                if (this.isPubSiteDefineBarMenu) return false;
-            }
-        }
-        return this.bar;
-    }
     get windowMatrix() {
         var rect = Rect.fromEle(this.viewEl);
         var matrix = new Matrix();
@@ -265,7 +261,7 @@ export class Page extends Events<PageDirective>{
         else {
             if (this.isSupportScreen) {
                 var isFull: boolean = this.isFullWidth;
-                if (this.isPubSite) isFull = this.ws?.publishConfig.isFullWidth;
+                if (this.ws?.isPubSite) isFull = this.ws?.publishConfig.isFullWidth;
                 if (isFull) {
                     style.marginLeft = 80;
                     style.marginRight = 80;
@@ -301,7 +297,7 @@ export class Page extends Events<PageDirective>{
         if (this.locker?.lock) return false;
         if (!this.isSign) return false;
         if (this.readonly) return false;
-        if (this.isPubSite) return false;
+        if (this.ws?.isPubSite) return false;
         if (this.edit) return true;
         if (isMobileOnly) return false;
         return this.isAllow(...[
@@ -326,7 +322,7 @@ export class Page extends Events<PageDirective>{
         if (!this.isSign) return false;
         if (options.ignoreReadonly !== true)
             if (this.readonly) return false;
-        if (this.isPubSite) return false;
+        if (this.ws?.isPubSite) return false;
         if (this.edit) return true;
         if (isMobileOnly) return false;
         return this.isAllow(...[
@@ -339,7 +335,7 @@ export class Page extends Events<PageDirective>{
     }
     get isCanManage() {
         if (!this.isSign) return false;
-        if (this.isPubSite) return false;
+        if (this.ws?.isPubSite) return false;
         if (this.currentPermissions?.isOwner) return true;
         return this.isAllow(...[AtomPermission.all])
     }
@@ -400,7 +396,7 @@ export class Page extends Events<PageDirective>{
     }
     get fontSize() {
         var sf = this.smallFont;
-        if (this.isPubSite) {
+        if (this.ws?.isPubSite) {
             sf = this.ws.publishConfig.smallFont;
         }
         if (this.pageLayout?.type == PageLayoutType.docCard) return sf ? '1.6rem' : '1.8rem'
@@ -409,7 +405,7 @@ export class Page extends Events<PageDirective>{
     }
     get lineHeight() {
         var sf = this.smallFont;
-        if (this.isPubSite) {
+        if (this.ws?.isPubSite) {
             sf = this.ws.publishConfig.smallFont;
         }
         if (this.pageLayout?.type == PageLayoutType.docCard) return sf ? '2.6rem' : '3.0rem'

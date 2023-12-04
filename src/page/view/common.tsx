@@ -4,7 +4,7 @@ import { LinkWs, WorkspaceNavMenuItem } from "../declare";
 import { Button } from "../../../component/view/button";
 import { Avatar } from "../../../component/view/avator/face";
 import { Icon } from "../../../component/view/icon";
-import { ChevronDownSvg, LogoutSvg, SearchSvg, SettingsSvg } from "../../../component/svgs";
+import { ChevronDownSvg, Edit1Svg, LogoutSvg, SearchSvg, SettingsSvg } from "../../../component/svgs";
 import { UserBasic } from "../../../types/user";
 import { lst } from "../../../i18n/store";
 import lodash from "lodash";
@@ -14,6 +14,7 @@ import { Rect } from "../../common/vector/point";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { useSearchBox } from "../../../extensions/search/keyword";
 import { isMobileOnly } from "react-device-detect";
+import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 
 export class DefinePageNavBar extends React.Component<{
     ws: LinkWs,
@@ -201,12 +202,25 @@ export class DefinePageNavBar extends React.Component<{
     }
     async openUser(event: React.MouseEvent) {
         var rect = Rect.fromEle(event.currentTarget as HTMLElement);
-        var r = await useSelectMenuItem({ roundArea: rect }, [
+        var items: MenuItem<string>[] = [
             { text: lst('主页'), name: 'home', icon: { name: 'bytedance-icon', code: 'home' } },
+            { type: MenuItemType.divide },
             { text: lst('个人中心'), name: 'user', icon: { name: "bytedance-icon", code: 'user' } },
             { text: lst('空间设置'), name: 'space', visible: this.props.ws.isManager ? true : false, icon: SettingsSvg },
+            { type: MenuItemType.divide },
             { text: lst('退出'), name: 'logout', icon: LogoutSvg }
-        ]);
+        ];
+        if (this.props.ws?.isManager) {
+            items = [
+                { text: lst('编辑应用'), name: 'edit', icon: { name: 'byte', code: 'editor' } },
+                { type: MenuItemType.divide },
+                { text: lst('个人中心'), name: 'user', icon: { name: "bytedance-icon", code: 'user' } },
+                { text: lst('空间设置'), name: 'space', visible: this.props.ws.isManager ? true : false, icon: SettingsSvg },
+                { type: MenuItemType.divide },
+                { text: lst('退出'), name: 'logout', icon: LogoutSvg }
+            ];
+        }
+        var r = await useSelectMenuItem({ roundArea: rect }, items);
         if (r) {
             if (r.item.name == 'home') {
                 this.toHome();
@@ -219,6 +233,9 @@ export class DefinePageNavBar extends React.Component<{
             }
             else if (r.item.name == 'logout') {
                 channel.act('/user/logout', {});
+            }
+            else if (r.item.name == 'edit') {
+                channel.act('/workspace/mode', { isApp: false });
             }
         }
     }

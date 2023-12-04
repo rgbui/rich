@@ -236,7 +236,7 @@ export class PageView extends Component<{ page: Page }>{
     renderNavs() {
         var isFirstDocTitle = this.page.views[0].childs[0].url == BlockUrlConstant.Title;
         var isFull = this.page.isFullWidth;
-        if (this.page.isPubSite) isFull = this.page.ws?.publishConfig.isFullWidth;
+        if (this.page.ws.isPubSite) isFull = this.page.ws?.publishConfig.isFullWidth;
         return <div className={"shy-page-view-content-nav" + (isFull ? "" : " shy-page-view-content-nav-center")}>
             <div className="shy-page-view-content-nav-left">
                 <ChildsArea childs={[this.page.views[0]]}></ChildsArea>
@@ -252,7 +252,7 @@ export class PageView extends Component<{ page: Page }>{
             lineHeight: this.page.lineHeight,
             fontSize: this.page.fontSize
         }
-        if (this.props.page.visiblePageBar === false) {
+        if (this.props.page.bar === false) {
             pageStyle.top = 0;
         }
         if (this.page.pageLayout?.type == PageLayoutType.textChannel || this.page.pageLayout?.type == PageLayoutType.board) {
