@@ -18,14 +18,13 @@ import lodash from "lodash";
  * 否在编辑中，实际改变了元素的物理坐标，但没有同步到grid中
  * 
  */
-export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
-    // window.shyLog('block', block);
+export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent)
+{
     kit.anchorCursor.renderSelectBlocks([]);
     var downPoint = Point.from(event);
     var gm = block ? block.panelGridMap : kit.page.gridMap;
     var currentBlocks: Block[];
     var scrollDiv = block?.panel ? block.panel.getScrollDiv() : kit.page.getScrollDiv();
-    //console.log(scrollDiv, block?.panel, block);
     MouseDragger({
         event,
         dis: 5,

@@ -110,7 +110,7 @@ export function CheckBoardTool(
             }
         })
     }
-    else if (url == BlockUrlConstant.Image || url == BlockUrlConstant.Note || url == BlockUrlConstant.BoardPageCard || url == BlockUrlConstant.Shape || url == BlockUrlConstant.Frame) {
+    else if (url == BlockUrlConstant.BoardImage|| url == BlockUrlConstant.Note || url == BlockUrlConstant.BoardPageCard || url == BlockUrlConstant.Shape || url == BlockUrlConstant.Frame) {
         var newBlock: Block;
         var isMounted: boolean = false;
         var initMatrix: Matrix;
@@ -126,6 +126,7 @@ export function CheckBoardTool(
                         childs: [{ url: BlockUrlConstant.TextSpan }]
                     }
                 }
+                console.log(kit.boardSelector.currentSelector.url, data);
                 newBlock = await kit.page.createBlock(kit.boardSelector.currentSelector.url, data, fra);
                 await setBoardBlockCache(newBlock);
                 fw = newBlock.fixedWidth;

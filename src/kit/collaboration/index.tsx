@@ -8,8 +8,8 @@ import { findBlocksBetweenAppears } from "../../block/appear/visible.seek";
 import { FixedViewScroll } from "../../common/scroll";
 import { TextEle } from "../../common/text.ele";
 import { Point, Rect } from "../../common/vector/point";
-import "./style.less";
 import { Avatar } from "../../../component/view/avator/face";
+import "./style.less";
 
 var colors = [
     '#55efc4',
@@ -44,8 +44,7 @@ export class Collaboration extends React.Component<{ kit: Kit }>{
     }
     componentDidMount() {
         var sc = this.props.kit.page.getScrollDiv();
-        if (sc)
-            this.fvs.bind(sc);
+        if (sc) this.fvs.bind(sc);
     }
     componentWillUnmount() {
         this.fvs.unbind();
