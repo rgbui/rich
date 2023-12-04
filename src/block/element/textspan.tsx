@@ -255,7 +255,7 @@ export class TextSpanView extends BlockView<TextSpan>{
         var pa = this.block.parent
         return <div className='sy-block-text-span' style={this.block.visibleStyle}>
             <div style={style}>
-                <TextSpanArea placeholder={this.block.isFreeBlock || pa?.url == BlockUrlConstant.Cell ? lst("输入文本") : undefined} block={this.block}></TextSpanArea>
+                <TextSpanArea placeholderEmptyVisible={this.block.isFreeBlock?true:false} placeholder={this.block.isFreeBlock || pa?.url == BlockUrlConstant.Cell ? lst("输入文本") : undefined} block={this.block}></TextSpanArea>
             </div>
         </div>
     }
