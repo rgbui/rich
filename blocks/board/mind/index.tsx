@@ -88,18 +88,18 @@ export class FlowMind extends Block {
         var s = gm.getScaling().x;
         var extendRect = rect.extend(20 / s);
         var pathRects = RectUtility.getRectLineRects(rect, 1 / s);
-        pickers.push(...pathRects.map((pr, i) => {
-            var arrows: PointArrow[] = [];
-            if (i == 0) arrows = [PointArrow.top, PointArrow.center];
-            else if (i == 1) arrows = [PointArrow.middle, PointArrow.right];
-            else if (i == 2) arrows = [PointArrow.bottom, PointArrow.center]
-            else if (i == 3) arrows = [PointArrow.middle, PointArrow.left]
-            return {
-                type: BoardPointType.path,
-                arrows,
-                poly: new Polygon(...pr.points.map(p => gm.transform(p)))
-            }
-        }))
+        // pickers.push(...pathRects.map((pr, i) => {
+        //     var arrows: PointArrow[] = [];
+        //     if (i == 0) arrows = [PointArrow.top, PointArrow.center];
+        //     else if (i == 1) arrows = [PointArrow.middle, PointArrow.right];
+        //     else if (i == 2) arrows = [PointArrow.bottom, PointArrow.center]
+        //     else if (i == 3) arrows = [PointArrow.middle, PointArrow.left]
+        //     return {
+        //         type: BoardPointType.path,
+        //         arrows,
+        //         poly: new Polygon(...pr.points.map(p => gm.transform(p)))
+        //     }
+        // }))
         pickers.push(...rect.centerPoints.map((pr, i) => {
             var arrows: PointArrow[] = [];
             if (i == 0) arrows = [PointArrow.top, PointArrow.center];
