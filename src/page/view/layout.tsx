@@ -58,6 +58,7 @@ export class PageLayoutView extends React.Component<{
         else if (type == PageLayoutType.board) {
             var style: CSSProperties = { minHeight: mh, width: '100%', ...pageContentStyle };
             Object.assign(style, props.page.matrix.getCss());
+            style.backgroundColor='transparent';
             return <div className={"shy-page-layout shy-page-layout-board"} style={{ width: '100%', height: mh }}>
                 <div className='shy-page-layout-wrapper' style={style}>
                     {props.children}
