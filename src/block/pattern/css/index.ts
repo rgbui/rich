@@ -210,7 +210,7 @@ export class SvgCss extends BlockCss {
             fillOpacity: typeof this.fillOpacity == 'number' ? this.fillOpacity : 1
         };
         if (this.strokeDasharray == 'dash-circle') {
-            st.strokeDasharray = this.strokeWidth + "," + (this.strokeWidth*2);
+            st.strokeDasharray = (0) + "," + (this.strokeWidth*2);
         }
         return st;
     }
