@@ -296,5 +296,9 @@ export var util = {
         if (lodash.isNull(number) || lodash.isUndefined(number)) return def;
         else if (typeof number == 'number') return number;
         else return def;
+    },
+    
+    replaceAll(str:string, search:string, replacement:string) {
+        return str.split(search).join(replacement);
     }
 }
