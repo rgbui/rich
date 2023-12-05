@@ -10,6 +10,7 @@
  */
 declare var MODE: 'pro' | 'dev' | 'beta';
 declare var ASSERT_URL: string;
+declare var STATIC_URL:string;
 type ArrayOf<T> = T extends (infer p)[] ? p : never;
 
 type SvgrComponent = React.StatelessComponent<React.SVGAttributes<SVGElement>>

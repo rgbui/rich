@@ -22,7 +22,7 @@ class FormulaSelector extends EventsComponent {
     cacheDatas = new Map<string, string>()
     openData = lodash.debounce(async (f) => {
         try {
-            var url = ASSERT_URL + 'assert/data-grid/formula/docs' + f.url;
+            var url =STATIC_URL + 'static/data-grid/formula/docs' + f.url;
             var d = this.cacheDatas.get(url);
             if (!d) {
                 d = await util.getText(url);
@@ -52,7 +52,7 @@ class FormulaSelector extends EventsComponent {
             ].includes(f.type)) {
                 type = 'date';
             }
-            var url = ASSERT_URL + 'assert/data-grid/formula/docs/example/' + type + ".md";
+            var url = STATIC_URL + 'static/data-grid/formula/docs/example/' + type + ".md";
             var d = this.cacheDatas.get(url);
             if (!d) {
                 d = await util.getText(url);
