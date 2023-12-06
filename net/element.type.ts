@@ -253,10 +253,10 @@ export function autoImageUrl(url: string, width?: 50 | 120 | 250 | 500 | 900) {
         return '';
     }
     var newUrl = url;
-    if (url.startsWith('https://resources.shy.red')) newUrl = url.replace('https://resources.shy.red', 'https://resources.shy.live')
-    else if (url.indexOf('shy.red') > -1) {
-        newUrl = url.replace(/shy\.red/g, 'shy.live');
-    }
+    // if (url.startsWith('https://resources.shy.red')) newUrl = url.replace('https://resources.shy.red', 'https://resources.shy.live')
+    // else if (url.indexOf('shy.red') > -1) {
+    //     newUrl = url.replace(/shy\.red/g, 'shy.live');
+    // }
     if (typeof width == 'number') {
         newUrl = newUrl + (newUrl.indexOf('?') > -1 ? "&" : "?") + "width=" + width;
     }
