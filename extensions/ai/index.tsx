@@ -495,8 +495,7 @@ export class AITool extends EventsComponent {
                 { name: 'makeLonger', text: lst('变长一些'), icon: { name: 'byte', code: 'indent-right' } },
                 { name: 'makeSmaller', text: lst('简洁一些'), icon: { name: 'byte', code: 'indent-left' } },
                 {
-                    text: '润色',
-
+                    text: lst('润色'),
                     icon: { name: 'byte', code: 'effects' },
                     childs: [
                         { name: 'polish', text: lst('更专业一些'), icon: Edit1Svg },
@@ -508,7 +507,6 @@ export class AITool extends EventsComponent {
                 },
                 { name: 'insertImage', text: lst("生成插图"), icon: PicSvg },
             ];
-
         }
         else if ([AIAskStatus.selectionWillAsking].includes(this.status)) {
             items = [];
@@ -680,7 +678,7 @@ export class AITool extends EventsComponent {
     async aiSelection(options: { prompt?: string, model?: string, isNotFound?: boolean }) {
         this.controller = null;
         this.lastCommand = { ask: this.ask, command: 'selection', options: lodash.cloneDeep(options) };
-        if (typeof options.model == 'undefined') options.model = this?.page?.ws?.aiConfig?.text
+        if (!options?.model) options.model = this?.page?.ws?.aiConfig?.text || (window.shyConfig.isUS ? "gpt-3.5-turbo" : "ERNIE-Bot-turbo");
         var self = this;
         this.status = AIAskStatus.selectionAsking;
         self.anwser = '';
