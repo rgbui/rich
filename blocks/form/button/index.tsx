@@ -18,8 +18,9 @@ import { BlockView } from "../../../src/block/view";
 import { MenuItem } from "../../../component/view/menu/declare";
 import { lst } from "../../../i18n/store";
 import lodash from "lodash";
-import "./style.less";
 import { util } from "../../../util/util";
+import "./style.less";
+
 
 @url('/button')
 export class BlockButton extends Block {
@@ -102,17 +103,17 @@ export class BlockButton extends Block {
                 text: lst('大小'),
                 icon: { name: 'bytedance-icon', code: 'zoom-in' },
                 childs: [
-                    { name: 'buttonSize', text: '大', value: 'larger', checkLabel: this.buttonSize == 'larger' },
-                    { name: 'buttonSize', text: '中', value: 'default', checkLabel: this.buttonSize == 'default' },
-                    { name: 'buttonSize', text: '小', value: 'small', checkLabel: this.buttonSize == 'small' }
+                    { name: 'buttonSize', text: lst('大'), value: 'larger', checkLabel: this.buttonSize == 'larger' },
+                    { name: 'buttonSize', text: lst('中'), value: 'default', checkLabel: this.buttonSize == 'default' },
+                    { name: 'buttonSize', text: lst('小'), value: 'small', checkLabel: this.buttonSize == 'small' }
                 ]
             })
             ns.push({
                 text: lst('按钮样式'),
                 icon: { name: 'bytedance-icon', code: 'link-four' },
                 childs: [
-                    { name: 'ghost', text: '红色', value: false, checkLabel: !this.ghost },
-                    { name: 'ghost', text: '白色', value: true, checkLabel: this.ghost }
+                    { name: 'ghost', text: lst('红色'), value: false, checkLabel: !this.ghost },
+                    { name: 'ghost', text: lst('白色'), value: true, checkLabel: this.ghost }
                 ]
             })
             rs.splice(pos + 1, 0, ...ns)
@@ -182,13 +183,13 @@ export class BlockButtonView extends BlockView<BlockButton>{
                         {this.block.buttonText && <span>{this.block.buttonText}</span>}
                         {!this.block.buttonText && !this.block.buttonIcon && <span><S>按钮</S></span>}
                     </span>
-                    <span className="visible flex-center  pos-center-right-outside" onMouseDown={async e => {
+                    {this.block.isCanEdit() && <span className="visible flex-center  pos-center-right-outside" onMouseDown={async e => {
                         e.stopPropagation();
                         this.openEdit(e)
                     }} >
                         <span className="cursor flex-center gap-l-5 size-20">   <Icon size={16} icon={SettingsSvg}></Icon></span>
 
-                    </span>
+                    </span>}
                 </div>
             </div>
             {this.block.isEditFlow && <div className="relative" style={{ zIndex: 10 }}>
