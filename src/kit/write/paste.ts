@@ -11,7 +11,7 @@ import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
 import { Matrix } from "../../common/matrix";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
-import { parseDom } from "../../import-export/html/parse";
+import { parseHtml } from "../../import-export/html/parse";
 import { readCopyBlocks } from "../../page/common/copy";
 import { PageLayoutType } from "../../page/declare";
 import { URL_RGEX } from "./declare";
@@ -198,8 +198,8 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
                     return;
                 }
                 let parser = new DOMParser();
-                var doc = parser.parseFromString(html, "text/html");
-                var blocks = await parseDom(doc);
+                // var doc = parser.parseFromString(html, "text/html");
+                var blocks = parseHtml(html);
                 if (blocks?.length > 0) {
                     if (blocks.length == 1 && blocks[0].url == BlockUrlConstant.TextSpan) {
                         var cs = blocks[0].blocks.childs

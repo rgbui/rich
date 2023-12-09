@@ -11,14 +11,19 @@ class Dom {
         if (this.el instanceof Text) {
             return null;
         }
-        try {
-            return getComputedStyle(this.el as HTMLElement, pseudoElt)[attr];
+        if (this.el instanceof HTMLElement) {
+            try {
+                var sp = getComputedStyle(this.el as HTMLElement, pseudoElt || null);
+                return sp[attr];
+                // return sp.getPropertyValue(attr);
+            }
+            catch (ex) {
+                console.error(ex, this.el);
+                console.warn('not el computed style')
+                return null;
+            }
         }
-        catch (ex) {
-            console.error(ex);
-            console.warn('not el computed style')
-            return null;
-        }
+        return null;
     }
     lineHeight(def?: number) {
         try {
@@ -36,9 +41,9 @@ class Dom {
                 fontVariant: this.style('fontVariant'),
                 fontWeight: this.style('fontWeight'),
                 fontSize: this.style('fontSize'),
-                lineHeight: this.style('lineHeight'),
+                lineHeight: this.style('lineHeight') as any,
                 fontFamily: this.style('fontFamily'),
-                letterSpacing: this.style('letterSpacing'),
+                letterSpacing: this.style('letterSpacing') as any,
                 color: this.style('color')
             };
             if (typeof fontStyle.lineHeight == 'string')
@@ -52,7 +57,7 @@ class Dom {
     }
     closest(predict: (node: Node) => boolean, ignore: boolean = false) {
         if (ignore == false && predict(this.el) == true) return this.el;
-        var p = this.el.parentElement;
+        var p = this.el?.parentElement;
         while (true) {
             if (p) {
                 if (predict(p)) return p;

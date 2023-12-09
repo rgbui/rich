@@ -3,6 +3,8 @@ import lodash from "lodash";
 import { ListType } from "../../../blocks/present/list/list";
 import { BlockCssName } from "../../block/pattern/css";
 import { dom } from "../../common/dom";
+import { util } from "../../../util/util";
+
 
 /**
  * 
@@ -14,10 +16,11 @@ import { dom } from "../../common/dom";
  * 
  * 
  */
-async function parseTextBlock(element: HTMLElement[] | HTMLElement) {
+function parseTextBlock(element: HTMLElement[] | HTMLElement) {
     var blocks: Record<string, any>[] = [];
     function fr(node: HTMLElement, style?: Record<string, any>) {
         var name = node?.tagName?.toLowerCase();
+       
         if (node instanceof Text) {
             var text = node.textContent;
             if (text && text != '\n')
@@ -39,8 +42,9 @@ async function parseTextBlock(element: HTMLElement[] | HTMLElement) {
             var fontStyle = dm.style('fontStyle');
             var font = {
                 textDecoration: textDecoration ? textDecoration : undefined,
-                fontWeight: bold ? bold : undefined,
-                fontStyle: fontStyle ? fontStyle : undefined
+                fontWeight: isBold(bold) ? "bold" : undefined,
+                fontStyle: fontStyle ? fontStyle : undefined,
+                color: dm.style('color'),
             }
             if (style && style.pattern) {
                 var pa = lodash.cloneDeep(style?.pattern?.styles[0]?.cssList[0] || {});
@@ -69,9 +73,16 @@ async function parseTextBlock(element: HTMLElement[] | HTMLElement) {
                     }]
                 }
             }
-            for (let i = 0; i < cs.length; i++) {
-                var ele = cs[i] as HTMLElement;
-                fr(ele, lodash.assign(style || { isCode }, pattern ? { pattern } : {}));
+            if (cs.length > 0) {
+                for (let i = 0; i < cs.length; i++) {
+                    var ele = cs[i] as HTMLElement;
+                    fr(ele, lodash.assign(style || { isCode }, pattern ? { pattern } : {}));
+                }
+            }
+            else {
+                var text = node.textContent;
+                if (text && text != '\n')
+                    blocks.push({ url: '/text', content: node.textContent, ...(style || {}) })
             }
         }
     }
@@ -86,7 +97,15 @@ async function parseTextBlock(element: HTMLElement[] | HTMLElement) {
     return blocks;
 }
 
-async function parseTable(element: HTMLElement) {
+function isBold(bold) {
+    if (bold == 'bold') return true;
+    else {
+        var b = parseInt(bold);
+        if (!isNaN(b) && b >= 700) return true;
+        else return false;
+    }
+}
+function parseTable(element: HTMLElement) {
     var table = element as HTMLTableElement;
     var rowBlocks: any[] = [];
     var firstRow = table.querySelector('thead')
@@ -125,7 +144,7 @@ async function parseTable(element: HTMLElement) {
     return { url: '/table', blocks: { childs: rowBlocks } }
 }
 
-async function parseOl(element: HTMLElement) {
+function parseOl(element: HTMLElement) {
     var cs = element.childNodes;
     var blocks: Record<string, any>[] = [];
     for (let i = 0; i < cs.length; i++) {
@@ -139,8 +158,8 @@ async function parseOl(element: HTMLElement) {
             if (eleChilds.some(s => s?.tagName?.toLowerCase() == 'ol' || s?.tagName?.toLowerCase() == 'ul')) {
                 var panel = eleChilds.find(s => s?.tagName?.toLowerCase() == 'ol' || s?.tagName?.toLowerCase() == 'ul');
                 eleChilds.remove(g => g === panel);
-                var childsBlock = await parseTextBlock(eleChilds as any);
-                var otherBlocks = await parseBlock(panel);
+                var childsBlock = parseTextBlock(eleChilds as any);
+                var otherBlocks = parseBlock(panel);
                 blocks.push({
                     url: '/list',
                     listType: lt,
@@ -151,7 +170,7 @@ async function parseOl(element: HTMLElement) {
                 });
             }
             else {
-                var rs = await parseTextBlock(ele);
+                var rs = parseTextBlock(ele);
                 if (rs.length > 0) {
                     blocks.push({ url: '/list', blocks: { childs: rs }, listType: lt })
                 }
@@ -161,7 +180,7 @@ async function parseOl(element: HTMLElement) {
     return blocks;
 }
 
-async function parseMedia(element: HTMLElement) {
+function parseMedia(element: HTMLElement) {
     var name = element?.tagName.toLowerCase();
     if (name == 'img') {
         return { url: '/image', initialData: { url: element.getAttribute('src') } }
@@ -174,7 +193,7 @@ async function parseMedia(element: HTMLElement) {
     }
 }
 
-async function parsefigure(element: HTMLElement) {
+function parsefigure(element: HTMLElement) {
     var caption = element.innerText;
     var img = element.querySelector('img');
     if (img) {
@@ -207,7 +226,7 @@ function isLineElement(element: HTMLElement) {
     else return false;
 }
 
-async function parseBlock(element: HTMLElement) {
+function parseBlock(element: HTMLElement) {
     var name = element?.tagName?.toLowerCase();
     var textBlockUrl = getTextBlock(element);
     /**
@@ -218,17 +237,18 @@ async function parseBlock(element: HTMLElement) {
     if (name == 'p' && element.querySelector('img,video,audio,iframe')) {
         textBlockUrl = undefined;
     }
+    if (name == 'meta') return null;
     // console.log(name,textBlockUrl,'name-textBlockUrl');
     if (textBlockUrl) {
-        var texts = await parseTextBlock(element);
+        var texts = parseTextBlock(element);
         if (texts.length > 0) return { url: textBlockUrl, blocks: { childs: texts } }
         else return null;
     }
-    else if (name == 'table') return await parseTable(element)
-    else if (name == 'ol' || name == 'ul' || name == 'li') return await parseOl(element)
-    else if (name == 'img' || name == 'video' || name == 'audio' || name == 'iframe') return await parseMedia(element)
+    else if (name == 'table') return parseTable(element)
+    else if (name == 'ol' || name == 'ul' || name == 'li') return parseOl(element)
+    else if (name == 'img' || name == 'video' || name == 'audio' || name == 'iframe') return parseMedia(element)
     else if (name == 'figure') {
-        return await parsefigure(element);
+        return parsefigure(element);
     }
     else {
         var rs: any[] = [];
@@ -239,13 +259,13 @@ async function parseBlock(element: HTMLElement) {
                 if (isLineElement(ele)) lineElements.push(ele);
                 else {
                     if (lineElements.length > 0) {
-                        var texts = await parseTextBlock(lineElements);
+                        var texts = parseTextBlock(lineElements);
                         if (texts.length > 0) {
                             rs.push({ url: '/textspan', blocks: { childs: texts } })
                         }
                         lineElements = [];
                     }
-                    var pb = await parseBlock(ele);
+                    var pb = parseBlock(ele);
                     if (pb) {
                         if (Array.isArray(pb)) {
                             pb.each(p => {
@@ -257,7 +277,7 @@ async function parseBlock(element: HTMLElement) {
                 }
             }
             if (lineElements.length > 0) {
-                var texts = await parseTextBlock(lineElements);
+                var texts = parseTextBlock(lineElements);
                 if (texts.length > 0) {
                     rs.push({ url: '/textspan', blocks: { childs: texts } })
                 }
@@ -265,7 +285,7 @@ async function parseBlock(element: HTMLElement) {
             }
         }
         else {
-            var texts = await parseTextBlock(element);
+            var texts = parseTextBlock(element);
             if (texts.length > 0) {
                 return { url: '/textspan', blocks: { childs: texts } }
             }
@@ -274,20 +294,29 @@ async function parseBlock(element: HTMLElement) {
     }
 }
 
-async function parsePanel(panel: HTMLElement) {
-    return Array.from(panel.children).map(c => parseBlock(c as HTMLElement));
+function parsePanel(panel: HTMLElement) {
+    var rs = Array.from(panel.children).map(c => parseBlock(c as HTMLElement));
+    lodash.remove(rs, g => g ? false : true);
+    return rs;
 }
 
-export async function parseDom(dom: HTMLElement | Document) {
+function parseDom(dom: HTMLElement | Document) {
     var body = dom.querySelector('body');
-    if (body) return await parseDom(body);
+    if (body) return parseDom(body);
     else return parseBlock(dom as HTMLElement);
 }
-
-export async function parseHtml(html: string) {
-    let parser = new DOMParser();
-    var doc = parser.parseFromString(html, "text/html");
-    return await parseDom(doc)
+var iframe: HTMLIFrameElement;
+export function parseHtml(html: string) {
+    if (!iframe) {
+        iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+    }
+    iframe.contentWindow.document.body.innerHTML = html;
+    var rs = parseDom(iframe.contentWindow.document)
+    if (Array.isArray(rs)) return rs;
+    else if (rs) return [rs]
+    else return []
 }
 
 

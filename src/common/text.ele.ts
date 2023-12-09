@@ -10,9 +10,9 @@ export class TextEle {
                 fontVariant: dm.style('fontVariant'),
                 fontWeight: dm.style('fontWeight'),
                 fontSize: dm.style('fontSize'),
-                lineHeight: dm.style('lineHeight'),
+                lineHeight: dm.style('lineHeight') as any,
                 fontFamily: dm.style('fontFamily'),
-                letterSpacing: dm.style('letterSpacing'),
+                letterSpacing: dm.style('letterSpacing') as any,
                 color: dm.style('color')
             };
             if (fontStyle.lineHeight == 'normal' || fontStyle.lineHeight == 'inherit') {
