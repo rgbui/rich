@@ -653,7 +653,7 @@ export class Page$Cycle {
     async onAction(this: Page,
         directive: ActionDirective | string,
         fn: () => Promise<void>,
-        options?: { disabledStore?: boolean }
+        options?: { disabledStore?: boolean,immediate?:boolean }
     ) {
         if (typeof this.onActionQueue == 'undefined') this.onActionQueue = new QueueHandle();
         await this.onActionQueue.create(

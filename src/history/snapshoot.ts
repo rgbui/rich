@@ -118,11 +118,14 @@ export class HistorySnapshoot extends Events {
             console.error(ex);
         }
     }
-    async sync(directive: ActionDirective | string, action: (monitorChangeBlocks: (cbs: Block[]) => void) => Promise<void>, options?: { block?: Block, blocks?: Block[], disabledStore?: boolean }) {
+    async sync(directive: ActionDirective | string, action: (monitorChangeBlocks: (cbs: Block[]) => void) => Promise<void>, options?: { block?: Block, blocks?: Block[], immediate?: boolean, disabledStore?: boolean }) {
         this.declare(directive);
         try {
+            if (options?.immediate) this.action.immediate = true;
             await action((bs) => {
+
                 this.action.syncBlocks = bs.map(b => b.closest(x => x.syncBlockId ? true : false) || null);
+
                 if (this.action.syncBlocks.some(s => s === null)) {
                     this.action.syncPage = true;
                 }

@@ -36,6 +36,7 @@ export class UserAction {
     syncBlocks?: Block[];
     syncBlockIds?: string[];
     syncPage?: boolean;
+    immediate?: boolean;
     elementUrl?: string
     constructor() {
         this.id = channel.query('/guid');
@@ -50,6 +51,7 @@ export class UserAction {
             startDate: this.startDate,
             endDate: this.endDate,
             seq: this.seq,
+            immediate: this.immediate,
             syncPage: this.syncPage,
             syncBlockIds: Array.isArray(this.syncBlocks) ? this.syncBlocks.map(b => b.id) : undefined,
             directive: this.directive,

@@ -215,8 +215,10 @@ export function PageHistory(page: Page,snapshoot: HistorySnapshoot)
     });
     snapshoot.registerOperator(OperatorDirective.pageUpdateProp, async (operator, source) => {
         await page.updateProps(operator.data.new);
+        page.addPageUpdate();
     }, async (operator) => {
         await page.updateProps(operator.data.old);
+        page.addPageUpdate();
     });
     /***
      * 新的指令
@@ -503,7 +505,6 @@ export function PageHistory(page: Page,snapshoot: HistorySnapshoot)
             await block.turn(dr.from)
         }
     });
-  
     snapshoot.registerOperator(OperatorDirective.$data_grid_change_view_url, async (operator) => {
         var dr = operator.data;
         var block: DataGridView = page.find(x => x.id == dr.pos.blockId) as any;

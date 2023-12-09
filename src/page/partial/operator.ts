@@ -51,7 +51,7 @@ export class Page$Operator {
             }, block);
             this.monitorBlockOperator(block, 'create');
             this.addBlockUpdate(parent);
-            this.addBlockChange(parent);
+            this.addBlockChange(block);
         }
         else {
             if (typeof at == 'undefined')
