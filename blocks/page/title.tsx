@@ -169,7 +169,7 @@ export class TitleView extends BlockView<Title>{
                     className={'shy-text-empty-font-inherit'}
                     placeholderEmptyVisible
                     plain
-                    html={!this.block.isCanEdit() ? getPageText(this.block.pageInfo) : undefined}
+                    html={getPageText(this.block.pageInfo)}
                 ></TextArea></span>
             </div>}
         </div>

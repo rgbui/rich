@@ -1,7 +1,6 @@
 
 import React, { CSSProperties } from 'react';
 import ReactDOM from 'react-dom';
-import "./style.less";
 import { Events } from "../../util/events";
 import { util } from "../../util/util";
 import { View } from "../block/element/view";
@@ -38,6 +37,7 @@ import { DataGridView } from '../../blocks/data-grid/view/base';
 import { Link } from '../../blocks/page/link';
 import { AtomPermission } from './permission';
 import { forceCloseBoardEditTool } from '../../extensions/board.edit.tool';
+import "./style.less";
 
 export class Page extends Events<PageDirective>{
     root: HTMLElement;
@@ -67,17 +67,6 @@ export class Page extends Events<PageDirective>{
     get isSign() {
         return this.user?.id ? true : false
     }
-    // get isPubSite() {
-
-    //     return (window.shyConfig?.isDomainWs) && this.ws.access == 1 && this.ws.publishConfig?.abled
-    // }
-    // get isPubSiteDefineBarMenu() {
-    //     return this.isPubSite && this.ws?.publishConfig?.navMenus?.length > 0 && this.ws?.publishConfig?.defineNavMenu
-    // }
-
-    // get isPubSiteDefineContent() {
-    //     return this.isPubSite && this.ws?.publishConfig?.defineContent && this.ws.publishConfig.contentTheme == 'none'
-    // }
     kit: Kit = new Kit(this);
     snapshoot = new HistorySnapshoot(this)
     pageLayout: { type: PageLayoutType };

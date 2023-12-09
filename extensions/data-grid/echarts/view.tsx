@@ -34,7 +34,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                 value: this.block.schemaView.text,
                 name: 'viewText',
                 type: MenuItemType.inputTitleAndIcon,
-                icon: this.block.schemaView.icon || getSchemaViewIcon(this.block.schemaView.url),
+                icon: this.block.schemaView.icon || getSchemaViewIcon(this.block.schemaView.url) || { name: 'byte', code: 'chart-proportion' },
             },
             { type: MenuItemType.divide },
             // {
@@ -263,7 +263,18 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                         <SelectBox textAlign="right" dropHeight={150}
                             value={bc.chart_config?.x_fieldId}
                             onChange={async e => {
-                                await bc.onUpdateProps({ 'chart_config.x_fieldId': e }, { range: BlockRenderRange.self })
+                                var sf = this.schema.fields.find(g => g.id == e);
+                                var props = {
+                                    'chart_config.x_fieldId': e
+                                }
+                                if (sf && [FieldType.createDate, FieldType.date, FieldType.modifyDate].includes(sf.type)) {
+                                    if (!bc.chart_config.x_fieldIdUnit)
+                                        props['bc.chart_config.x_fieldIdUnit'] = 'day';
+                                }
+                                else {
+                                    props['bc.chart_config.x_fieldIdUnit'] = '';
+                                }
+                                await bc.onUpdateProps(props, { range: BlockRenderRange.self })
                                 await bc.didMounted();
                                 this.forceUpdate()
                             }}
@@ -367,12 +378,24 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             value={bc.chart_config?.group_fieldId}
                             dropHeight={150}
                             onChange={async e => {
-                                await bc.onUpdateProps({ 'chart_config.group_fieldId': e }, { range: BlockRenderRange.self })
+                                var sf = this.block.schema.fields.find(g => g.id == e);
+                                var props = {
+                                    'chart_config.group_fieldId': e
+                                }
+                                if (sf && [FieldType.createDate, FieldType.date, FieldType.modifyDate].includes(sf.type)) {
+                                    if (!bc.chart_config.group_fieldIdUnit)
+                                        props['chart_config.group_fieldIdUnit'] = 'day';
+                                }
+                                else {
+                                    props['chart_config.group_fieldIdUnit'] = '';
+                                }
+                                await bc.onUpdateProps(props, { range: BlockRenderRange.self })
                                 await bc.didMounted();
                                 this.forceUpdate()
                             }}
                             options={[
                                 { text: '无', value: '', icon: { name: 'bytedance-icon', code: 'square' } },
+                                { type: MenuItemType.divide },
                                 ...this.schema.fields.findAll(g => [
                                     FieldType.title,
                                     FieldType.date,
@@ -426,6 +449,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             }}
                             options={[
                                 { text: lst('无'), value: 'none', icon: { name: 'bytedance-icon', code: 'square' } },
+                                { type: MenuItemType.divide },
                                 { text: lst('升序'), value: 'asc', icon: { name: "bytedance-icon", code: 'arrow-up' } },
                                 { text: lst('降序'), value: 'desc', icon: { name: "bytedance-icon", code: 'arrow-down' } }
                             ]}></SelectBox>
