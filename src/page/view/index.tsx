@@ -14,12 +14,11 @@ import {
     AiStartSvg,
     BoardToolFrameSvg,
     CollectTableSvg,
-    CubesSvg,
     DocCardsSvg,
     DownloadSvg,
-    MagicSvg,
     PageSvg
 } from "../../../component/svgs";
+
 import { PageOutLine } from "../../../blocks/page/outline";
 import { ActionDirective } from "../../history/declare";
 import { Block } from "../../block";
@@ -30,6 +29,7 @@ import { lst } from "../../../i18n/store";
 import { S } from "../../../i18n/view";
 import { util } from "../../../util/util";
 import { isMobileOnly } from "react-device-detect";
+import { Loading1, Loading2 } from "../../../component/view/spin";
 
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
@@ -183,54 +183,69 @@ export class PageView extends Component<{ page: Page }>{
         delete this.el.shy_end;
         if (this.scrollDiv) this.scrollDiv.removeEventListener('scroll', this.scroll);
     }
+    turnLayoutLoading: boolean = false;
     async onPageTurnLayout(type: PageLayoutType, config?: { useAi?: boolean }) {
-        if (type == PageLayoutType.doc) {
-            await this.page.onPageTurnLayout(type, async () => {
-                var lastBlock = this.page.findReverse(g => g.isBlock);
-                var newBlock: Block;
-                if (lastBlock && lastBlock.parent == this.page.views.last()) {
-                    newBlock = await this.page.createBlock(BlockUrlConstant.TextSpan, {}, lastBlock.parent, lastBlock.at + 1);
+        try {
+            if (this.turnLayoutLoading) return;
+            this.turnLayoutLoading = true;
+            this.forceUpdate();
+            var actions;
+            if (type == PageLayoutType.doc)
+                actions = async () => {
+                    var lastBlock = this.page.findReverse(g => g.isBlock);
+                    var newBlock: Block;
+                    if (lastBlock && lastBlock.parent == this.page.views.last()) {
+                        newBlock = await this.page.createBlock(BlockUrlConstant.TextSpan, {}, lastBlock.parent, lastBlock.at + 1);
+                    }
+                    else {
+                        newBlock = await this.page.createBlock(BlockUrlConstant.TextSpan, {}, this.page.views.last());
+                    }
+                    newBlock.mounted(() => {
+                        this.page.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
+                        var title = this.page.getPageDataInfo()?.text;
+                        if (config?.useAi)
+                            useAITool({
+                                block: newBlock,
+                                isRun: true,
+                                ask: title ? lst('以{title}为主题写一份不少于1000字文档', { title }) : lst('写一份文档不少于1000字')
+                            })
+                    })
                 }
-                else {
-                    newBlock = await this.page.createBlock(BlockUrlConstant.TextSpan, {}, this.page.views.last());
-                }
-                newBlock.mounted(() => {
-                    this.page.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
-                    var title = this.page.getPageDataInfo()?.text;
-                    if (config?.useAi)
-                        useAITool({
-                            block: newBlock,
-                            isRun: true,
-                            ask: (title ? lst('以{title}为主题', { title }) + "," : "") + lst('写一份文档，不少于1000字')
-                        })
-                })
-            });
+            await this.page.onPageTurnLayout(type, actions);
         }
-        else await this.page.onPageTurnLayout(type);
-        this.page.emit(PageDirective.save);
+        catch (ex) {
+
+        }
+        finally {
+            this.turnLayoutLoading = false;
+            this.forceUpdate();
+        }
     }
     renderPageTemplate() {
         var ws = this.page.ws
         return <div className="shy-page-view-template-picker" style={this.page.getScreenStyle()}>
-            <div className="remark f-14"><S text='回车开始编辑'>回车开始编辑，或者从下方选择</S></div>
-            <div className="shy-page-view-template-picker-items">
-                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={18} icon={PageSvg} ></Icon><span><S>空白页面</S></span></a>
-                {!(this.page.ws.aiConfig?.disabled == true) && <>
-                    <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc, { useAi: true })}><Icon size={18} icon={AiStartSvg}></Icon><span><S>用AI开始创作</S></span></a>
-                    {/* <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.docCard, { useAi: true })}><Icon size={20} icon={MagicSvg}></Icon><span><S>用AI开始生成PPT</S></span></a> */}
-                </>}
-            </div>
-            <div className="shy-page-view-template-picker-items gap-t-20">
-                <div className="remark f-14"><S>新增</S></div>
-                <a onMouseDown={e => this.page.onOpenTemplate()}><Icon size={18} icon={{ name: 'bytedance-icon', code: 'oval-love' }}></Icon><span><S>选择模板创建</S></span></a>
-                <a onMouseDown={e => this.page.onOpenImport()}><Icon size={18} icon={DownloadSvg}></Icon><span><S>导入</S></span></a>
+            {this.turnLayoutLoading && <div className="flex"><Loading1></Loading1><S>创建页面中...</S></div>}
+            {!this.turnLayoutLoading && <>
+                <div className="remark f-14"><S text='回车开始编辑'>回车开始编辑，或者从下方选择</S></div>
+                <div className="shy-page-view-template-picker-items">
+                    <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={18} icon={PageSvg} ></Icon><span><S>空白页面</S></span></a>
+                    {!(this.page.ws.aiConfig?.disabled == true) && <>
+                        <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc, { useAi: true })}><Icon size={18} icon={AiStartSvg}></Icon><span><S>用AI开始创作</S></span></a>
+                        {/* <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.docCard, { useAi: true })}><Icon size={20} icon={MagicSvg}></Icon><span><S>用AI开始生成PPT</S></span></a> */}
+                    </>}
+                </div>
+                <div className="shy-page-view-template-picker-items gap-t-20">
+                    <div className="remark f-14"><S>新增</S></div>
+                    <a onMouseDown={e => this.page.onOpenTemplate()}><Icon size={18} icon={{ name: 'bytedance-icon', code: 'oval-love' }}></Icon><span><S>选择模板创建</S></span></a>
+                    <a onMouseDown={e => this.page.onOpenImport()}><Icon size={18} icon={DownloadSvg}></Icon><span><S>导入</S></span></a>
 
-                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={18} icon={PageSvg} ></Icon><span><S>页面</S></span></a>
-                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.db)}><Icon size={18} icon={CollectTableSvg} ></Icon><span><S>表格</S></span></a>
-                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.docCard)}><Icon size={18} icon={DocCardsSvg} ></Icon><span><S>宣传页</S></span></a>
-                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.board)}><Icon size={18} icon={{ name: 'bytedance-icon', code: 'enter-the-keyboard' }}></Icon><span><S>白板</S></span></a>
-                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.textChannel)}><Icon size={18} icon={BoardToolFrameSvg}></Icon><span><S>频道</S></span></a>
-            </div>
+                    <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={18} icon={PageSvg} ></Icon><span><S>页面</S></span></a>
+                    <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.db)}><Icon size={18} icon={CollectTableSvg} ></Icon><span><S>表格</S></span></a>
+                    <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.docCard)}><Icon size={18} icon={DocCardsSvg} ></Icon><span><S>宣传页</S></span></a>
+                    <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.board)}><Icon size={18} icon={{ name: 'bytedance-icon', code: 'enter-the-keyboard' }}></Icon><span><S>白板</S></span></a>
+                    <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.textChannel)}><Icon size={18} icon={BoardToolFrameSvg}></Icon><span><S>频道</S></span></a>
+                </div>
+            </>}
         </div>
     }
     renderNavs() {
