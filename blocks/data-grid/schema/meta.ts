@@ -458,6 +458,12 @@ export class TableSchema {
         }
         else return []
     })
+    static fieldIsDate(field: Field) {
+        return [FieldType.date, FieldType.modifyDate, FieldType.createDate].includes(field.type);
+    }
+    static fieldValueIsArray(field: Field) {
+        return [FieldType.option, FieldType.options, FieldType.user].includes(field.type)
+    }
 }
 
 

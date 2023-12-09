@@ -19,6 +19,7 @@ import { getSchemaViewIcon } from "../../schema/util";
 import { DataGridView } from "../base";
 import { useDataGridChartConfig } from "../../../../extensions/data-grid/echarts";
 import { EChartsOption } from "echarts";
+import { FieldType } from "../../schema/type";
 
 @url('/data-grid/charts')
 export class DataGridChart extends DataGridView {
@@ -60,10 +61,20 @@ export class DataGridChart extends DataGridView {
             var groups: string[] = [];
             var aggregate: Record<string, any> = {}
             if (this.chart_config?.x_fieldId) {
-                groups.push(this.schema.fields.find(x => x.id == this.chart_config?.x_fieldId)?.name + (this.chart_config?.x_fieldIdUnit ? "." + this.chart_config?.x_fieldIdUnit : ''))
+                var sf = this.schema.fields.find(x => x.id == this.chart_config?.x_fieldId);
+                if (sf) {
+                    if ([FieldType.createDate, FieldType.date, FieldType.modifyDate].includes(sf.type))
+                        groups.push(sf?.name + (this.chart_config?.x_fieldIdUnit ? "." + this.chart_config?.x_fieldIdUnit : ''))
+                    else groups.push(sf.name);
+                }
             }
             if (this.chart_config?.group_fieldId) {
-                groups.push(this.schema.fields.find(x => x.id == this.chart_config?.group_fieldId)?.name + (this.chart_config?.group_fieldIdUnit ? "." + this.chart_config?.group_fieldIdUnit : ''))
+                if (sf) {
+                    var sf = this.schema.fields.find(x => x.id == this.chart_config?.group_fieldId);
+                    if ([FieldType.createDate, FieldType.date, FieldType.modifyDate].includes(sf.type))
+                        groups.push(sf?.name + (this.chart_config?.group_fieldIdUnit ? "." + this.chart_config?.group_fieldIdUnit : ''))
+                    else groups.push(sf.name);
+                }
             }
             if (this.chart_config?.y_fieldId) {
                 var name = this.schema.fields.find(x => x.id == this.chart_config?.y_fieldId)?.name;
@@ -110,69 +121,203 @@ export class DataGridChart extends DataGridView {
                 this.myChart.dispose();
                 this.myChart = echarts.init(ele, this.chart_config?.theme || undefined);
             }
-            var xs = this.data.map(g => g[this.schema.fields.find(x => x.id == this.chart_config?.x_fieldId)?.name])
-            var ys = this.data.map(g => g[this.schema.fields.find(x => x.id == this.chart_config?.y_fieldId)?.name || 'count'])
-            var option: EChartsOption = {
-                xAxis: {
-                    type: 'category',
-                    data: xs
-                },
-                yAxis: {
-                    type: 'value'
-                },
-                series: [
-                    {
-                        data: ys,
-                        type: 'line'
-                    }
-                ]
-            };
-            switch (this.chart_type) {
-                case 'line':
-                    break;
-                case 'bar':
-                    lodash.set(option, 'series[0].type', 'bar');
-                    break;
-                case 'pie':
-                    option = {
-                        title: {
-                            text: this.schemaView?.text,
-                            // subtext: 'Fake Data',
-                            left: 'center'
-                        },
-                        tooltip: {
-                            trigger: 'item'
-                        },
-                        legend: {
-                            orient: 'vertical',
-                            left: 'left'
-                        },
-                        series: [
-                            {
-                                name: this.schema.fields.find(x => x.id == this.chart_config?.x_fieldId)?.text,
-                                type: 'pie',
-                                radius: '50%',
-                                data: this.data.map(g => {
-                                    return {
-                                        name: g[this.schema.fields.find(x => x.id == this.chart_config?.x_fieldId)?.name],
-                                        value: g[this.schema.fields.find(x => x.id == this.chart_config?.y_fieldId)?.name || 'count']
-                                    }
-                                }),
-                                emphasis: {
-                                    itemStyle: {
-                                        shadowBlur: 10,
-                                        shadowOffsetX: 0,
-                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+            var groups: string[] = [];
+            if (this.chart_config?.x_fieldId) {
+                var sf = this.schema.fields.find(x => x.id == this.chart_config?.x_fieldId);
+                if (sf)
+                    groups.push(sf?.name)
+            }
+            if (this.chart_config?.group_fieldId) {
+                var sf = this.schema.fields.find(x => x.id == this.chart_config?.group_fieldId);
+                if (sf)
+                    groups.push(sf?.name)
+            }
+            if (groups.length == 1) {
+                var xs = this.data.map(g => g[groups[0]])
+                var sf = this.schema.fields.find(x => x.name == groups[0]);
+                if ([FieldType.option, FieldType.options].includes(sf.type)) {
+                    xs = this.data.map(g => {
+                        var v = g[groups[0]];
+                        if (Array.isArray(sf?.config?.options)) {
+                            var o = sf.config?.options.find(g => g.value == v);
+                            if (o?.text) return o.text;
+                            else return ''
+                        }
+                        else return '';
+                    })
+                }
+                var ys = this.data.map(g => g[this.schema.fields.find(x => x.id == this.chart_config?.y_fieldId)?.name || 'count'])
+                var option: EChartsOption = {
+                    xAxis: {
+                        type: 'category',
+                        data: xs
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            data: ys,
+                            type: 'line'
+                        }
+                    ]
+                };
+                switch (this.chart_type) {
+                    case 'line':
+                        break;
+                    case 'bar':
+                        lodash.set(option, 'series[0].type', 'bar');
+                        break;
+                    case 'pie':
+                        option = {
+                            title: {
+                                text: this.schemaView?.text,
+                                // subtext: 'Fake Data',
+                                left: 'center'
+                            },
+                            tooltip: {
+                                trigger: 'item'
+                            },
+                            legend: {
+                                orient: 'vertical',
+                                left: 'left'
+                            },
+                            series: [
+                                {
+                                    name: this.schema.fields.find(x => x.name == groups[0])?.text,
+                                    type: 'pie',
+                                    radius: '50%',
+                                    data: xs.map(x => {
+                                        return {
+                                            name: x,
+                                            value: ys[xs.indexOf(x)]
+                                        }
+                                    }),
+                                    emphasis: {
+                                        itemStyle: {
+                                            shadowBlur: 10,
+                                            shadowOffsetX: 0,
+                                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                        }
                                     }
                                 }
-                            }
-                        ]
-                    };
-                    break;
-                case 'scatter':
-                    break;
+                            ]
+                        };
+                        break;
+                    case 'scatter':
+                        break;
+                }
+                this.myChart.setOption(option);
             }
-            this.myChart.setOption(option);
+            else if (groups.length > 1) {
+
+                var xs = this.data.map(g => g[groups[0]])
+                lodash.uniqBy(xs, g => g);
+                var xsValues = lodash.cloneDeep(xs);
+                var sf = this.schema.fields.find(x => x.name == groups[0]);
+                if ([FieldType.option, FieldType.options].includes(sf.type)) {
+                    xsValues = this.data.map(g => {
+                        var v = g[groups[0]];
+                        if (Array.isArray(sf?.config?.options)) {
+                            var o = sf.config?.options.find(g => g.value == v);
+                            if (o?.text) return o.text;
+                            else return ''
+                        }
+                        else return '';
+                    })
+                    lodash.uniqBy(xsValues, g => g);
+                }
+                var xs2 = this.data.map(g => g[groups[1]])
+                lodash.uniqBy(xs2, g => g);
+                var sf2 = this.schema.fields.find(x => x.name == groups[1]);
+
+                var yname = this.schema.fields.find(x => x.id == this.chart_config?.y_fieldId)?.name || 'count'
+                var option: EChartsOption = {
+                    xAxis: {
+                        type: 'category',
+                        data: xsValues
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: xs2.map(x => {
+                        var name: string = x;
+                        if ([FieldType.option, FieldType.options].includes(sf2.type)) {
+                            var o = sf2.config?.options.find(g => g.value == x);
+                            if (o) {
+                                name = o.text;
+                            }
+                        }
+                        return {
+                            name: name,
+                            type: 'line',
+                            data: xs.map(c => {
+                                var d = this.data.find(g => g[groups[0]] === c && g[groups[1]] === x);
+                                if (d) return d[yname];
+                                else return 0;
+                            })
+                        }
+                    })
+                };
+                switch (this.chart_type) {
+                    case 'line':
+
+                        break;
+                    case 'bar':
+                        if (Array.isArray(option.series))
+                            option.series.forEach(g => {
+                                lodash.set(g, 'type', 'bar');
+                            })
+                        // lodash.set(option, 'series[0].type', 'bar');
+                        break;
+                    case 'pie':
+                        option = {
+                            title: {
+                                text: this.schemaView?.text,
+                                // subtext: 'Fake Data',
+                                left: 'center'
+                            },
+                            tooltip: {
+                                trigger: 'item'
+                            },
+                            legend: {
+                                orient: 'vertical',
+                                left: 'left'
+                            },
+                            series: xs2.map(x => {
+                                var name: string = x;
+                                if ([FieldType.option, FieldType.options].includes(sf2.type)) {
+                                    var o = sf2.config?.options.find(g => g.value == x);
+                                    if (o) {
+                                        name = o.text;
+                                    }
+                                }
+                                return {
+                                    name: name,
+                                    type: 'pie',
+                                    data: xs.map(g => {
+                                        var d = this.data.find(c => g[groups[0]] == c && g[groups[1]] == x);
+                                        if (d) return d[yname];
+                                        else return 0;
+                                    }),
+                                    emphasis: {
+                                        itemStyle: {
+                                            shadowBlur: 10,
+                                            shadowOffsetX: 0,
+                                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                        }
+                                    }
+                                }
+                            })
+                        };
+                        break;
+                    case 'scatter':
+                        break;
+                }
+                console.log(option, 'option');
+                this.myChart.setOption(option);
+
+            }
         }
     }
     async onContextmenu(event: Point | MouseEvent) {
@@ -377,9 +522,9 @@ export class DataGridChartView extends BlockView<DataGridChart>{
         }
         if (this.block.align == 'left') style.justifyContent = 'flex-start'
         else if (this.block.align == 'right') style.justifyContent = 'flex-end'
-        return <div className='sy-dg-charts visible-hover'>
+        return <div className='sy-dg-charts'>
             <div className="flex-center" style={style}>
-                <div className="relative" ref={e => this.imageWrapper = e} style={{ width: this.block.canvasWith, height: this.block.canvasHeight }}>
+                <div className="relative visible-hover" ref={e => this.imageWrapper = e} style={{ width: this.block.canvasWith, height: this.block.canvasHeight }}>
                     <div className="sy-dg-echarts-view w100 h100" ></div>
                     {this.block.isCanEdit() && <>
                         <div className="sy-block-resize-bottom-right visible" onMouseDown={e => this.onMousedown(e, 'bottom-right')}></div>
