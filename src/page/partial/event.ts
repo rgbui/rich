@@ -214,7 +214,7 @@ export class PageEvent {
             this.emit(PageDirective.changePageLayout);
             if (typeof actions == 'function') await actions();
             this.addPageUpdate();
-        });
+        },{immediate:true});
     }
     /**
      * 

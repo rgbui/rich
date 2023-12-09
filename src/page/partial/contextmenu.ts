@@ -64,8 +64,7 @@ export class PageContextmenu {
         var items: MenuItem<BlockDirective | string>[] = [];
         return items;
     }
-    async onGetBoardContextMenus(this: Page)
-    {
+    async onGetBoardContextMenus(this: Page) {
         var items: MenuItem<BlockDirective | string>[] = [];
         items.push({
             type: MenuItemType.switch,
@@ -85,8 +84,7 @@ export class PageContextmenu {
         if (this.isBoard) return this.onClickBoardContextMenu(item, event);
     }
     async onClickBoardContextMenu(this: Page, item: MenuItem<BlockDirective | string>, event: MouseEvent) {
-        switch (item.name)
-        {
+        switch (item.name) {
             case 'lock':
                 channel.air('/page/update/info', {
                     id: this.pageInfo.id,
@@ -382,10 +380,10 @@ export class PageContextmenu {
                 }
             }
             else if (r.item.name == 'copy') {
-
+                await this.onPageCopy();
             }
             else if (r.item.name == 'move') {
-
+                await this.onPageMove();
             }
             else if (r.item.name == 'undo') {
                 this.onUndo();
@@ -421,6 +419,12 @@ export class PageContextmenu {
         if (result) {
             this.emit(PageDirective.rollup, result);
         }
+    }
+    async onPageCopy(this: Page) {
+        await channel.act('/current/page/copy');
+    }
+    async onPageMove(this: Page) {
+        await channel.act('/current/page/move');
     }
     async onOpenPublish(this: Page, event: React.MouseEvent) {
         await usePagePublish({ roundArea: Rect.fromEvent(event) }, this)
