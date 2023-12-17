@@ -114,6 +114,7 @@ export var util = {
         else if (byte > 0) {
             return (byte).toFixed(2) + "B"
         }
+        else return '0KB'
     },
     async getText(url: string) {
         return new Promise((resolve: (d: string) => void, reject) => {
