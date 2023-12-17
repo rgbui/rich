@@ -49,6 +49,9 @@ export type BoardBlockSelector = {
     point?: Point;
     arrowPoint?: Point;
     poly?: Polygon;
+    stroke?: string;
+    strokeOpacity?: number;
+    fillOpacity?:number;
     data?: Record<string, any>
 }
 export class Block$Board {

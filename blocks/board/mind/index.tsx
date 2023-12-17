@@ -16,6 +16,7 @@ import { MouseDragger } from "../../../src/common/dragger";
 import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
 import { lst } from "../../../i18n/store";
 import { VR } from "../../../src/common/render";
+import { Polygon } from "../../../src/common/vector/polygon";
 import './style.less';
 
 @url('/flow/mind')
@@ -87,18 +88,19 @@ export class FlowMind extends Block {
         var s = gm.getScaling().x;
         var extendRect = rect.extend(20 / s);
         var pathRects = RectUtility.getRectLineRects(rect, 1 / s);
-        // pickers.push(...pathRects.map((pr, i) => {
-        //     var arrows: PointArrow[] = [];
-        //     if (i == 0) arrows = [PointArrow.top, PointArrow.center];
-        //     else if (i == 1) arrows = [PointArrow.middle, PointArrow.right];
-        //     else if (i == 2) arrows = [PointArrow.bottom, PointArrow.center]
-        //     else if (i == 3) arrows = [PointArrow.middle, PointArrow.left]
-        //     return {
-        //         type: BoardPointType.path,
-        //         arrows,
-        //         poly: new Polygon(...pr.points.map(p => gm.transform(p)))
-        //     }
-        // }))
+        pickers.push(...pathRects.map((pr, i) => {
+            var arrows: PointArrow[] = [];
+            if (i == 0) arrows = [PointArrow.top, PointArrow.center];
+            else if (i == 1) arrows = [PointArrow.middle, PointArrow.right];
+            else if (i == 2) arrows = [PointArrow.bottom, PointArrow.center]
+            else if (i == 3) arrows = [PointArrow.middle, PointArrow.left]
+            return {
+                type: BoardPointType.path,
+                arrows,
+                fillOpacity: 0,
+                poly: new Polygon(...pr.points.map(p => gm.transform(p)))
+            }
+        }))
         pickers.push(...rect.centerPoints.map((pr, i) => {
             var arrows: PointArrow[] = [];
             if (i == 0) arrows = [PointArrow.top, PointArrow.center];
@@ -397,6 +399,7 @@ export class FlowMind extends Block {
         var bs: { dis: number, rect: Rect, x: number, y: number, block: FlowMind }[] = [];
         gm.findBlocksByRect(rect, (block) => {
             if (block instanceof FlowMind && block !== this) {
+                if (this.exists(g => g === this)) return false;
                 var { width, height } = block.fixedSize;
                 var rect = new Rect(0, 0, width, height);
                 var nrect = rect.transformToRect(block.globalWindowMatrix);
@@ -726,8 +729,8 @@ export class FlowMindView extends BlockView<FlowMind>{
                 rightPoints,
             );
         }
-        else{
-            console.log(this.block,'flow empty...')
+        else {
+            console.log(this.block, 'flow empty...')
         }
     }
     renderItem() {

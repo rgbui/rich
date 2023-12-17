@@ -6,9 +6,9 @@ import { Icon } from "../../../component/view/icon";
 import { Block } from "../../block";
 import { BoardPointType } from "../../block/partial/board";
 import { PointArrow } from "../../common/vector/point";
-import "./style.less";
 import { Tip } from "../../../component/view/tooltip/tip";
 import { Sp } from "../../../i18n/view";
+import "./style.less";
 
 export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
     constructor(props) {
@@ -30,7 +30,9 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
                         if (pi.arrows.includes(PointArrow.right)) cursor = 'e-resize';
                         else if (pi.arrows.includes(PointArrow.bottom)) cursor = 's-resize';
                         else if (pi.arrows.includes(PointArrow.left)) cursor = 'w-resize';
-                        return <path onMouseDown={e => this.picker.onResizeBlock(block, pi.arrows, e)}
+                        return <path
+                            fillOpacity={typeof pi.fillOpacity == 'number' ? pi.fillOpacity : 0.8}
+                            onMouseDown={e => this.picker.onResizeBlock(block, pi.arrows, e)}
                             style={{ cursor: cursor }}
                             d={pi.poly.pathString()} key={i}></path>
                     case BoardPointType.lineSplitPort:
