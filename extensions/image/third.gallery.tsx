@@ -2,10 +2,11 @@ import React from "react";
 import { Input } from "../../component/view/input";
 import { GalleryType, OuterPic } from "./declare";
 import { createClient } from 'pexels';
-import { Loading } from "../../component/view/loading";
 import { util } from "../../util/util";
 import { S, Sp } from "../../i18n/view";
 import { ls, lst } from "../../i18n/store";
+import { Spin } from "../../component/view/spin";
+
 export class ThirdGallery extends React.Component<{ type: GalleryType, onChange: (image: OuterPic) => void }>{
     word: string = '';
     error: string = '';
@@ -52,7 +53,7 @@ export class ThirdGallery extends React.Component<{ type: GalleryType, onChange:
                             title: '',
                             thumb: g.src.tiny,
                             url: g.src.original,
-                            name: g.photographer || lst('未知') ,
+                            name: g.photographer || lst('未知'),
                             link: g.photographer_url,
                         })
                     })
@@ -100,7 +101,7 @@ export class ThirdGallery extends React.Component<{ type: GalleryType, onChange:
                     中禁止上传的其它内容</Sp>
             </div>
             <div className='shy-third-gallery-content'>
-                {this.loading == true && <div className='shy-third-gallery-loading'><Loading></Loading></div>}
+                {this.loading == true && <div className='shy-third-gallery-loading'><Spin block></Spin></div>}
                 {this.loading == false && this.renderImages()}
                 {this.error && this.pics.length == 0 && <div className='shy-third-gallery-error'><span><S>图片资源获取失败</S></span><a onClick={e => this.onSearch(this.word)}><S>重新尝试</S></a></div>}
             </div>

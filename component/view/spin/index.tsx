@@ -1,4 +1,4 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import "./style.less";
 
 function getCircle(size?: 24 | 16) {
@@ -44,9 +44,19 @@ export function Loading1() {
     </div>
 }
 
-export function Loading2(props?: { size?: number }) {
+export function Loading2(props?: { size?: number, remark?: boolean, className?: string | (string[]) }) {
     var size = props?.size || 32;
-    return <div className="loading2" style={{ width: size, height: size }}>
+    var classList: string[] = ['loading2'];
+    if (Array.isArray(props?.className)) classList = classList.concat(props?.className);
+    else if (props.className) classList.push(props.className);
+    var style: CSSProperties = {
+        width: size,
+        height: size
+    }
+    if (props.remark) {
+        classList.push('remark-im');
+    }
+    return <div className={classList.join(" ")} style={style}>
         <div></div>
         <div></div>
     </div>
@@ -64,4 +74,13 @@ export function Loading3() {
         <div></div>
     </div>
 
+}
+
+
+export function SK(props: { children?: React.ReactNode, style?: CSSProperties, className?: (string[]) | string }) {
+    var classList: string[] = ['sketelon'];
+    var style: CSSProperties = props.style || {};
+    if (Array.isArray(props.className)) classList = classList.concat(props.className);
+    else if (props.className) classList.push(props.className);
+    return <div style={style} className={classList.join(" ")}>{props.children}</div>
 }
