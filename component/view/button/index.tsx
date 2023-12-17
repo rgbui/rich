@@ -10,6 +10,7 @@ export class Button extends React.Component<{
     onMouseDown?: (event: React.MouseEvent, button?: Button) => void,
     block?: boolean,
     ghost?: boolean,
+    dark?:boolean,
     link?: boolean,
     danger?: boolean,
     style?: CSSProperties,
@@ -52,6 +53,7 @@ export class Button extends React.Component<{
         if (props.className) classList.push(props.className)
         if (props.link) classList.push('shy-button-link')
         if (props.ghost) classList.push('shy-button-ghost')
+        if(props.dark) classList.push('shy-button-dark')
         if (this.props.size) classList.push('shy-button-' + this.props.size)
         if (props.danger) classList.push('shy-button-danger')
         if (props.disabled || this._disabled) classList.push('shy-button-disabled')
