@@ -199,7 +199,7 @@ export interface DatePicker {
     emit(name: 'clear');
 }
 export async function useDatePicker(pos: PopoverPosition, date: Date, options?: { includeTime?: boolean }) {
-    let popover = await PopoverSingleton(DatePicker);
+    let popover = await PopoverSingleton(DatePicker, { mask: true });
     let datePicker = await popover.open(pos);
     datePicker.open(date, options);
     return new Promise((resolve: (date: Date) => void, reject) => {
