@@ -10,11 +10,12 @@ import { S } from "../i18n/view";
 import { LinkWs } from "../src/page/declare";
 
 export enum PayFeatureCheck {
-    aiGPT = 'ai-gpt',
-    aiGPT4 = 'ai-gpt-4',
-    aiImage = 'ai-image',
-    upload = 'upload',
-    dataGridRow = 'data-grid-row'
+    cheapAI = 'cheapAI',
+    expensiveAI = 'expensiveAI',
+    diskSpace = 'diskSpace',
+    rowCount = 'rowCount',
+    aiImage = 'aiImage',
+    netStream = 'netStream'
 }
 
 export async function CanSupportFeature(check: PayFeatureCheck, ws: LinkWs) {
