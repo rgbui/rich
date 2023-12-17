@@ -6,7 +6,6 @@ import { ImportSvg, RenameSvg, TrashSvg } from "../../component/svgs";
 import { Button } from "../../component/view/button";
 import { useForm } from "../../component/view/form/dialoug";
 import { Icon } from "../../component/view/icon";
-import { Loading } from "../../component/view/loading";
 import { useSelectMenuItem } from "../../component/view/menu";
 import { MenuItemType } from "../../component/view/menu/declare";
 import { channel } from "../../net/channel";
@@ -16,9 +15,10 @@ import { util } from "../../util/util";
 import { PopoverSingleton } from "../../component/popover/popover";
 import { PopoverPosition } from "../../component/popover/position";
 import { createFormPage } from "./page";
-import "./style.less";
 import { S, Sp } from "../../i18n/view";
 import { lst } from "../../i18n/store";
+import "./style.less";
+import { Spin } from "../../component/view/spin";
 
 export class PageHistoryStore extends EventsComponent {
     render() {
@@ -26,7 +26,7 @@ export class PageHistoryStore extends EventsComponent {
             <div className="shy-page-history-body">
                 <div className="shy-page-history-list">
                     <div className="shy-page-history-list-record"><span><Sp text={'{total}条历史记录'} data={{ total: this.total }}>{this.total}条历史记录</Sp></span></div>
-                    {this.loadList && <Loading></Loading>}
+                    {this.loadList && <Spin block></Spin>}
                     {this.list.map(r => {
                         return <a className={r.id == this.currentId ? "hover" : ""} onMouseDown={e => this.loadPageContent(r.id)} key={r.id}>
                             <span>{r.bakeTitle || (r.createDate ? util.showTime(r.createDate ? r.createDate : new Date()) : r.seq)}</span>
@@ -35,7 +35,7 @@ export class PageHistoryStore extends EventsComponent {
                     })}
                 </div>
                 <div className="shy-page-history-view relative">
-                    {this.loadContent && <Loading></Loading>}
+                    {this.loadContent &&<Spin block></Spin>}
                     <div ref={e => this.el = e} className="shy-page-history-view-content"></div>
                 </div>
             </div>

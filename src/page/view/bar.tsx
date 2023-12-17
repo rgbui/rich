@@ -19,7 +19,7 @@ import {
 import { UserAvatars } from "../../../component/view/avator/users";
 import { Button } from "../../../component/view/button";
 import { Icon } from "../../../component/view/icon";
-import { Loading1, Spin } from "../../../component/view/spin";
+import { Loading2 } from "../../../component/view/spin";
 import { channel } from "../../../net/channel";
 import { ElementType } from "../../../net/element.type";
 import { PageLayoutType, getPageIcon, getPageText } from "../declare";
@@ -55,10 +55,10 @@ export class PageBar extends React.Component<{ page: Page }>{
                     <span className="flex-centerdesk-no-drag "><Icon icon={ChevronRightSvg} size={20}></Icon></span>
                     <span className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5">
                         <Icon size={20} icon={this.props.page?.formRowData?.icon || PageSvg}></Icon>
-                        <span className="gap-l-5">{this.props.page?.formRowData?.title || '新页面'}</span>
+                        <span className="gap-l-5">{this.props.page?.formRowData?.title || lst('新页面')}</span>
                     </span>
                 </>}
-                {this.saving && <Loading1></Loading1>}
+                {this.saving && <Loading2 remark className={'op-7'} size={20}></Loading2>}
             </div>
         }
         else if ([ElementType.SchemaView, ElementType.SchemaRecordView].includes(this.props.page.pe.type) && !this.props.page.isSchemaRecordViewTemplate) {
@@ -71,12 +71,12 @@ export class PageBar extends React.Component<{ page: Page }>{
                 <span className="desk-no-drag flex-center"><Icon icon={ChevronRightSvg} size={18}></Icon></span>
                 <span className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5">
                     <Icon size={20} icon={this.props.page?.formRowData?.icon || PageSvg}></Icon>
-                    <span className="gap-l-5">{this.props.page?.formRowData?.title || '新页面'}</span>
+                    <span className="gap-l-5">{this.props.page?.formRowData?.title || lst('新页面')}</span>
                 </span>
                 {this.props.page.locker?.lock && this.props.page.isCanManage && <span onMouseDown={e => this.props.page.onLockPage()} className="desk-no-drag flex-center visible size-24 item-hover cursor round">
                     <Icon size={18} icon={LockSvg}></Icon>
                 </span>}
-                {this.saving && <Loading1></Loading1>}
+                {this.saving && <Loading2 remark className={'op-7'} size={20}></Loading2>}
             </div>
         }
         else if (this.props.page.isSchemaRecordViewTemplate) {
@@ -95,7 +95,7 @@ export class PageBar extends React.Component<{ page: Page }>{
                 {this.props.page.locker?.lock && this.props.page.isCanManage && <span onMouseDown={e => this.props.page.onLockPage()} className="desk-no-drag flex-center visible size-24 item-hover cursor round">
                     <Icon size={18} icon={LockSvg}></Icon>
                 </span>}
-                {this.saving && <Loading1></Loading1>}
+                {this.saving && <Loading2 remark className={'op-7'} size={20}></Loading2>}
             </div>
         }
         return <div className="flex-auto flex desk-drag">
@@ -110,7 +110,7 @@ export class PageBar extends React.Component<{ page: Page }>{
             {this.props.page.locker?.lock && this.props.page.isCanManage && <span onMouseDown={e => this.props.page.onLockPage()} className="desk-no-drag flex-center size-24 item-hover cursor round">
                 <Icon size={18} icon={LockSvg}></Icon>
             </span>}
-            {this.saving && <Loading1></Loading1>}
+            {this.saving && <Loading2 remark className={'op-7'} size={20}></Loading2>}
         </div>
     }
     be: ToolTip;
@@ -178,7 +178,7 @@ export class PageBar extends React.Component<{ page: Page }>{
                 <span onClick={e => this.toHome()} className="size-40 gap-r-30 flex-center cursor"><Avatar size={32} userid={user.id}></Avatar></span>
             </div>
             else if (this.props.page.openSource == 'page') return <div className="flex r-flex-center  r-gap-r-10 ">
-                <Button size="small" onClick={e => this.toLogin()}><S>登录</S></Button>
+                <Button dark onClick={e => this.toLogin()}><S>登录/注册</S></Button>
             </div>
             else return <></>
         }
@@ -219,7 +219,7 @@ export class PageBar extends React.Component<{ page: Page }>{
             {!isCanEdit && ws.access == 0 && !ws.isMember && <span className="size-30 gap-r-30"><Avatar size={32} userid={user.id}></Avatar></span>}
         </div>
         else if (this.props.page.openSource == 'page') return <div className="flex r-flex-center  r-gap-r-10 ">
-            <Button size="small" onClick={e => this.toLogin()}><S>登录</S></Button>
+            <Button dark onClick={e => this.toLogin()}><S>登录/注册</S></Button>
         </div>
         else return <></>
     }

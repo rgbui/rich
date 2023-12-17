@@ -29,7 +29,7 @@ import { lst } from "../../../i18n/store";
 import { S } from "../../../i18n/view";
 import { util } from "../../../util/util";
 import { isMobileOnly } from "react-device-detect";
-import { Loading1, Loading2 } from "../../../component/view/spin";
+import { Loading1 } from "../../../component/view/spin";
 
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
