@@ -1,5 +1,6 @@
 import React, { CSSProperties } from "react";
 import "./style.less";
+import { util } from "../../../util/util";
 
 function getCircle(size?: 24 | 16) {
     return <div className={"size-" + (size) + " relative"}>
@@ -83,4 +84,33 @@ export function SK(props: { children?: React.ReactNode, style?: CSSProperties, c
     if (Array.isArray(props.className)) classList = classList.concat(props.className);
     else if (props.className) classList.push(props.className);
     return <div style={style} className={classList.join(" ")}>{props.children}</div>
+}
+
+export class Ring extends React.Component<{
+    lineWidth: number,
+    color?: string,
+    hoverColor?: string,
+    size?: number,
+    value?: number,
+    percent?: number,
+    className?: string,
+}> {
+    render() {
+        var lineWidth = this.props.lineWidth || 4;
+        var size = this.props.size || 30;
+        var color = this.props.color || 'rgba(199, 198, 196, 0.5)';
+        var hoverColor = this.props.hoverColor || 'red';
+        var value = this.props.value || 0;
+        var percent = this.props.percent || 100;
+        var r = (size - lineWidth) / 2;
+        var c = size / 2;
+        var d = lineWidth;
+        var cc = r * 2 * Math.PI;
+        var off = ((percent - Math.min(percent, value)) / percent) * cc;
+        var cls = util.covertToArray(this.props.className);
+        return <svg className={cls.join(" ")} viewBox={`0 0 ${size} ${size}`} color="transparent" style={{ "width": size, "height": size, "transform": "rotate(-90deg)", "transformOrigin": "50% 50%" }}>
+            <circle r={r} cx={c} cy={c} strokeWidth={d} stroke={color} strokeLinecap="round" fill="transparent"></circle>
+            <circle r={r} cx={c} cy={c} strokeWidth={d} stroke={hoverColor} strokeLinecap="round" strokeDasharray={cc} strokeDashoffset={off} fill="transparent"></circle>
+        </svg>
+    }
 }
