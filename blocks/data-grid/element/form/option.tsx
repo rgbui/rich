@@ -11,6 +11,7 @@ import lodash from "lodash";
 import { MenuItemType, MenuItem } from "../../../../component/view/menu/declare";
 import { lst } from "../../../../i18n/store";
 import { BlockDirective, BlockRenderRange } from "../../../../src/block/enum";
+import { S } from "../../../../i18n/view";
 
 @url('/form/option')
 class FieldText extends OriginFormField {
@@ -43,6 +44,7 @@ class FieldText extends OriginFormField {
         return await super.onContextMenuInput(item);
     }
 }
+
 @view('/form/option')
 class FieldTextView extends BlockView<FieldText>{
     async mousedown(event: React.MouseEvent) {
@@ -118,9 +120,9 @@ class FieldTextView extends BlockView<FieldText>{
                     </div>
                 }
             }
-            return <div className="sy-form-field-option-value flex" onMouseDown={e => self.mousedown(e)}>
+            return <div className={"flex " + (self.block.fieldType == 'doc-add' ? "sy-form-field-input-value" : "  padding-h-5 round item-hover-light padding-w-10 " + (ops.length == 0 ? " h-30" : ""))} onMouseDown={e => self.mousedown(e)}>
                 {ops.map(op => {
-                    return <span key={op.value} className="gap-r-10 padding-w-5 round cursor" style={{ background: op.color }}>{op.text}</span>
+                    return <span key={op.value} className="gap-r-10 padding-w-5 f-14 padding-h-2  l-16 round cursor" style={{ background: op.color }}>{op.text}</span>
                 })}
             </div>
         }
@@ -128,8 +130,9 @@ class FieldTextView extends BlockView<FieldText>{
             {this.block.fieldType != 'doc-detail' && renderSelectOptions()}
             {this.block.fieldType == 'doc-detail' && <div className="flex">
                 {ops.map(op => {
-                    return <span key={op.value} className="gap-r-10 padding-w-5 round cursor" style={{ background: op.color }}>{op.text}</span>
+                    return <span key={op.value} className="gap-r-10 padding-w-5 f-14 padding-h-2  l-16  round cursor" style={{ background: op.color }}>{op.text}</span>
                 })}
+                {ops.length == 0 && <span className="f-14 remark"><S>空内容</S></span>}
             </div>}
         </FieldView>
     }

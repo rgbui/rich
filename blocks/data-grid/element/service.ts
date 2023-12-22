@@ -2,10 +2,8 @@
 import { Field } from "../schema/field";
 import { FieldType } from "../schema/type";
 
-export function GetFieldFormBlockInfo(field: Field)
-{
-    switch (field.type)
-    {
+export function GetFieldFormBlockInfo(field: Field) {
+    switch (field.type) {
         case FieldType.text:
         case FieldType.title:
         case FieldType.email:

@@ -11,28 +11,23 @@ class FieldText extends OriginFormField {
     @prop()
     checkLabel: string = '';
 }
-
 @view('/form/check')
 class FieldTextView extends BlockView<FieldText>{
     renderView() {
-        var self = this;
         return <FieldView block={this.block}>
-            {this.block.fieldType == 'doc-detail' && <div className="flex">
-                <div className="flex-fixed gap-r-5"><CheckBox checked={this.block.value}></CheckBox></div>
-                <div className="flex-auto">
-                    {this.block.checkLabel}
-                </div>
+            {this.block.fieldType == 'doc-detail' && <div >
+                <CheckBox checked={this.block.value}>{this.block.checkLabel}</CheckBox>
             </div>}
-            {this.block.fieldType != 'doc-detail' && <div className="flex">
-                <div className="flex-fixed gap-r-5"><CheckBox
+            {this.block.fieldType != 'doc-detail' && <div className={this.block.fieldType == 'doc-add' ? "" : "padding-w-10"}><div className="flex">
+                <div className="flex-fixed" onMouseDown={e => { e.stopPropagation() }}><CheckBox
                     checked={this.block.value}
                     onChange={e => {
                         this.block.onChange(e);
                     }}></CheckBox></div>
-                <div className="flex-auto">
+                <div className="flex-auto f-14">
                     <TextArea plain placeholderEmptyVisible={true} placeholder={lst("输入待办内容")} prop="checkLabel" block={this.block} ></TextArea>
                 </div>
-            </div>}
+            </div></div>}
         </FieldView>
     }
 }

@@ -3,6 +3,7 @@
 
     &-control {
         display: block;
+
         .shy-input {
             input {
                 height    : 34px;
@@ -26,65 +27,83 @@
     outline      : none;
     border       : 0px;
     box-sizing   : border-box;
-
     &:focus {
         box-shadow: rgba(46 170 220, 0.7) 0px 0px 0px 1px inset, rgba(46 170 220, 0.4) 0px 0px 0px 2px !important;
     }
 }
 
-.sy-form-field-date-value,
-.sy-form-field-option-value {
+.sy-doc-field-input-value {
+    width      : 100%;
+    font-size  : 14px;
+    line-height: 26px;
+    cursor     : text;
+    outline    : none;
+    border     : 0px;
+    box-sizing : border-box;
+    box-shadow : none;
+    height     : 30px;
+    font-weight: normal;
 
-    width        : 100%;
-    font-size    : 14px;
-    height       : 34px;
-    padding      : 4px 10px;
-    border-radius: 4px;
-    box-shadow   : rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
-    background   : rgba(242, 241, 238, 0.6);
-    cursor       : text;
-    outline      : none;
-    border       : 0px;
-    box-sizing   : border-box;
-}
-
-.sy-form-field-detail {
-    .sy-form-field-input-value {
-        height          : 28px !important;
-        box-shadow      : none !important;
-        padding         : 0px 0px !important;
-        background-color: transparent !important;
-        box-shadow      : none !important;
-
-        &:focus {
-            box-shadow: none !important;
-        }
-    }
-
-    .shy-input {
-        box-shadow: none !important;
-        background: transparent !important;
-
-        input {
-            border          : none;
-            height          : 28px !important;
-            box-shadow      : none !important;
-            padding         : 0px 0px !important;
-            background-color: transparent !important;
-            box-shadow      : none !important;
-
-            &:focus {
-                box-shadow: none !important;
-            }
-        }
-    }
-
-    .sy-form-field-date-value,
-    .sy-form-field-option-value {
-        height          : 28px !important;
-        box-shadow      : none !important;
-        padding         : 0px 0px !important;
-        background-color: transparent !important;
-        box-shadow      : none !important;
+    &::placeholder {
+        color      : rgba(55, 53, 47, 0.5);
+        font-weight: normal;
+        font-size: 12px;
     }
 }
+
+// .sy-form-field-date-value,
+// .sy-form-field-option-value {
+
+//     width        : 100%;
+//     font-size    : 14px;
+//     height       : 34px;
+//     padding      : 4px 10px;
+//     border-radius: 4px;
+//     box-shadow   : rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
+//     background   : rgba(242, 241, 238, 0.6);
+//     cursor       : text;
+//     outline      : none;
+//     border       : 0px;
+//     box-sizing   : border-box;
+// }
+
+// .sy-form-field-detail {
+//     .sy-form-field-input-value {
+//         height          : 28px !important;
+//         box-shadow      : none !important;
+//         padding         : 0px 0px !important;
+//         background-color: transparent !important;
+//         box-shadow      : none !important;
+
+//         &:focus {
+//             box-shadow: none !important;
+//         }
+//     }
+
+//     .shy-input {
+//         box-shadow: none !important;
+//         background: transparent !important;
+
+//         input {
+//             border          : none;
+//             height          : 28px !important;
+//             box-shadow      : none !important;
+//             padding         : 0px 0px !important;
+//             background-color: transparent !important;
+//             box-shadow      : none !important;
+
+//             &:focus {
+//                 box-shadow: none !important;
+//             }
+//         }
+//     }
+
+//     .sy-form-field-date-value,
+//     .sy-form-field-option-value {
+//         height          : 28px !important;
+//         box-shadow      : none !important;
+//         padding         : 0px 0px !important;
+//         background-color: transparent !important;
+//         box-shadow      : none !important;
+//     }
+// }

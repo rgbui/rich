@@ -10,13 +10,14 @@ import { GetFieldTypeSvg } from "../../schema/util";
 import { ShyAlert } from "../../../../component/lib/alert";
 import { lst } from "../../../../i18n/store";
 import { S } from "../../../../i18n/view";
-import "./style.less";
 import lodash from "lodash";
 import { channel } from "../../../../net/channel";
 import { getElementUrl, ElementType } from "../../../../net/element.type";
 import { Field } from "../../schema/field";
 import { FieldType } from "../../schema/type";
 import { OriginField } from "../field/origin.field";
+import { util } from "../../../../util/util";
+import "./style.less";
 
 export class OriginFormField extends Block {
     display = BlockDisplay.block;
@@ -58,6 +59,7 @@ export class OriginFormField extends Block {
             fieldName: field.name
         });
         if (r.ok) {
+            var other;
             var ov = lodash.cloneDeep(this.page.formRowData[field.name]);
             if (typeof ov == 'undefined' || lodash.isNull(ov)) ov = { count: 0 };
             if (typeof ov == 'number') ov = { count: ov };
@@ -81,23 +83,29 @@ export class OriginFormField extends Block {
                 }
                 if (typeof r.data.otherCount == 'number') {
                     var name = field.name == 'like' ? FieldType[FieldType.oppose] : FieldType[FieldType.like];
-                    this.page.formRowData[name] = r.data.otherCount;
-                    var cs = this.childs.findAll(g => (g instanceof OriginField) && g.field?.name == name);
-                    if (!r.data.otherExists) {
+                    var occ = lodash.cloneDeep(this.page.formRowData[name]);
+                    if (typeof occ == 'undefined' || lodash.isNull(occ)) occ = { count: 0 };
+                    if (typeof occ == 'number') occ = { count: occ };
+                    occ.count = r.data.otherCount;
+                    if (!Array.isArray(occ.users)) occ.users = []
+                    if (r.data.otherExists) {
+                        var ops = this.page.formUserEmojis[name];
+                        if (!Array.isArray(ops)) this.page.formUserEmojis[name] = ops = []
+                        if (!ops.exists(c => c == this.page.formRowData.id)) ops.push(this.page.formRowData.id);
+                        if (!occ.users.exists(g => g == userid)) occ.users.push(userid)
+                    }
+                    else {
                         var ops = this.page.formUserEmojis[name];
                         if (!Array.isArray(ops)) this.page.formUserEmojis[name] = ops = []
                         if (ops.exists(c => c == this.page.formRowData.id)) lodash.remove(ops, c => c == this.page.formRowData.id);
+                        lodash.remove(occ.users, g => (g as any) == userid);
                     }
-                    if (cs.length > 0) {
-                        for (var i = 0; i < cs.length; i++) {
-                            (cs[i] as any).value = r.data.otherCount;
-                            cs[i].forceUpdate();
-                        }
-                    }
+                    this.page.formRowData[name] = occ;
+                    other = occ;
                 }
             }
             this.page.formRowData[field.name] = ov;
-            return ov;
+            return { data: ov, other: other };
         }
     }
     @prop()
@@ -182,34 +190,35 @@ export class OriginFormField extends Block {
     }
 }
 
-export function FieldView(props: { block: OriginFormField, children?: JSX.Element | string | React.ReactNode }) {
+export function FieldView(props: { block: OriginFormField, className?: string | string[], children?: JSX.Element | string | React.ReactNode }) {
     var block = props.block;
+    var classList = util.covertToArray(props.className);
     if (block.fieldType !== 'doc-add') {
-        return <div className="sy-form-field-detail" style={block.visibleStyle}>
+        return <div className={"sy-form-field-detail " + classList.join(' ')} style={block.visibleStyle}>
             <div className="gap-h-10 flex flex-top">
-                {props.block.hidePropTitle !== true && <div className="flex-fixed  h-30 w-120 flex remark f-14 item-hover round gap-r-10 cursor">
+                {props.block.hidePropTitle !== true && <div className="flex-fixed  h-30 w-120 flex text-1 f-14 item-hover round gap-r-10 cursor">
                     <span className="flex-fixed size-20 flex-center  gap-l-5"><Icon size={14} icon={GetFieldTypeSvg(block.field.type)}></Icon></span>
                     <span className="flex-auto">{block.field.text}</span>
                 </div>}
-                <div className="flex-auto  flex remark  min-h-30 item-hover round padding-w-10">
+                <div className="flex-auto">
                     {props.children}
                 </div>
             </div>
         </div>
     }
-    return <div className='sy-form-field' onMouseDown={e => e.stopPropagation()}>
+    return <div className={'sy-form-field ' + classList.join(' ')} onMouseDown={e => e.stopPropagation()}>
         <div className="gap-t-10 gap-b-30">
             {block.field && <div className="sy-form-field-box">
-                <div className="flex gap-h-5">
+                <div className="flex gap-t-5">
                     {props.block.hidePropTitle !== true && <label className="b-500 f-16">{block.field.text}</label>}
                     {block.required && <em className="text-primary f-12 l-16 round-4 gap-l-5 padding-w-5 "
                         style={{ backgroundColor: 'rgba(207,86,89,.16)' }}
                     ><S>必填</S></em>}
                 </div>
-                {block.allowRemark && <div className="sy-form-field-remark remark f-12 gap-h-5">
+                {block.allowRemark && <div className="sy-form-field-remark remark f-12">
                     <TextArea plain placeholderEmptyVisible={true} placeholder={lst("请输入说明介绍")} prop="fieldRemark" block={block} ></TextArea>
                 </div>}
-                <div className="sy-form-field-control">{props.children}</div>
+                <div className="sy-form-field-control gap-t-5">{props.children}</div>
             </div>}
             {!block.field && <div onClick={e => props.block.onDelete()} className="sy-form-field-tip round padding-w-10 min-h-30 f-14 item-hover-focus flex">
                 <span className="remark"><S>表单字段不存在</S></span>

@@ -1,43 +1,39 @@
 
 import lodash from "lodash";
 import React from "react";
-import { OpenFileDialoug } from "../../../../component/file";
-import { CloseSvg, FileSvg } from "../../../../component/svgs";
-import { Button } from "../../../../component/view/button";
+import { CloseSvg, FileSvg, PlusSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
-import { channel } from "../../../../net/channel";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { util } from "../../../../util/util";
 import { FieldType } from "../../schema/type";
 import { OriginFormField, FieldView } from "./origin.field";
-import { S } from "../../../../i18n/view";
 import { lst } from "../../../../i18n/store";
+import { PopoverPosition } from "../../../../component/popover/position";
+import { useFilePicker } from "../../../../extensions/file/file.picker";
+import { Rect } from "../../../../src/common/vector/point";
+import { S } from "../../../../i18n/view";
 
 @url('/form/file')
 class FormFieldFile extends OriginFormField {
-    async uploadFile(event: React.MouseEvent) {
+    async uploadFile(pos: PopoverPosition, img?: any) {
         if (this.checkEdit() === false) return;
-        var exts = ['*'];
-        var file = await OpenFileDialoug({ exts });
-        if (file) {
-            var r = await channel.post('/ws/upload/file', {
-                file,
-                uploadProgress: (event) => {
-                    //console.log(event, 'ev');
-                }
-            })
-            if (r.ok) {
-                if (r.data.file) {
-                    var vs = util.covertToArray(this.value);
-                    if (!Array.isArray(vs)) vs = [];
-                    if (this.field?.config?.isMultiple !== true)
-                        vs = [];
-                    vs.push(r.data.file);
-                    this.onChange(vs);
-                    this.forceUpdate();
-                }
+        var mime: "image" | "file" | "audio" | "video" = 'file';
+        if (this.field?.type == FieldType.video) mime = 'video'
+        else if (this.field?.type == FieldType.audio) mime = 'audio';
+        var r = await useFilePicker(pos, mime);
+        if (r) {
+            var vs = util.covertToArray(this.value);
+            if (img) {
+                var at = vs.indexOf(img);
+                vs[at] = r;
             }
+            else {
+                if (this.field?.config?.isMultiple !== true) vs = [];
+                vs.push(r);
+            }
+            this.onChange(vs);
+            this.forceUpdate();
         }
     }
 }
@@ -52,30 +48,37 @@ class FormFieldFileView extends BlockView<FormFieldFile>{
         this.forceUpdate();
     }
     renderFiles(files: { filename: string, size: number, url: string }[]) {
-        return files.map((img, i) => {
-            return <div className="sy-field-file-item padding-h-3 padding-w-10 cursor flex item-hover-focus round visible-hover" key={i}>
-                <a className="link f-14 flex-auto flex" download={img.url} href={img.url}>
-                    <span className="flex-fixed item-hover round size-24 remark flex-center"><Icon size={18} icon={FileSvg}></Icon></span>
-                    <span className="flex-fixed text-overflow gap-w-5">{img.filename}</span>
-                    <em className="flex-fixed remark">{util.byteToString(img.size)}</em>
-                </a>
-                {this.block.isCanEdit() && this.block.fieldType != 'doc-detail' && <span onClick={e => this.deleteImage(img)} className="gap-l-10 flex-fixed visible size-20 round cursor flex-center item-hover"><Icon size={16} icon={CloseSvg}></Icon></span>}
-            </div>
-        })
+        var text = lst('添加文件');
+        if (this.block.field?.type == FieldType.video) text = lst('添加视频')
+        else if (this.block.field?.type == FieldType.audio) text = lst('添加音频')
+        return <div className={this.block.fieldType == 'doc' ? "gap-w-10" : ""}>
+            {files.length > 0 && <div className="gap-b-5 item-hover-light-focus round">
+                {files.map((img, i) => {
+                    return <div className="padding-h-2 padding-w-10   item-hover-light   round cursor flex  visible-hover" key={i}>
+                        <a className="link f-14 flex-auto flex" download={img.url} href={img.url}>
+                            <span className="flex-fixed item-hover round size-24 remark flex-center"><Icon size={18} icon={FileSvg}></Icon></span>
+                            <span className="flex-fixed text-overflow gap-w-5">{img.filename}</span>
+                            <em className="flex-fixed remark">{util.byteToString(img.size)}</em>
+                        </a>
+                        {this.block.isCanEdit() && this.block.fieldType != 'doc-detail' && <span onClick={e => this.deleteImage(img)} className="gap-l-10 flex-fixed visible size-20 round cursor flex-center item-hover remark"><Icon size={14} icon={CloseSvg}></Icon></span>}
+                    </div>
+                })}
+            </div>}
+            {files.length == 0 && this.block.fieldType == 'doc-detail' && <div className="f-14 remark"><S>空内容</S></div>}
+            {this.isCanPlus() && <div className={"flex " + (files.length > 0 ? "visible" : "")}><span className={"item-hover-light-focus item-hover round padding-w-5 f-12   cursor flex text-1"} onClick={e => this.block.uploadFile({ roundArea: Rect.fromEvent(e) })}><Icon size={16} icon={PlusSvg}></Icon><span >{text}</span></span></div>}
+        </div>
     }
-    renderView() {
-        var text = lst('文件');
-        if (this.block.field?.type == FieldType.video) text = lst('视频')
-        else if (this.block.field?.type == FieldType.audio) text = lst('音频')
+    isCanPlus() {
         var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);
         if (!this.block.field?.config?.isMultiple && vs.length > 1) vs = [vs.first()]
-        return <FieldView block={this.block}>
-            <div className="sy-form-field-file-value gap-h-5" >
-                {this.block.value && <div className="sy-field-files">
-                    {this.renderFiles(vs)}
-                </div>}
-                {(vs.length == 0 || this.block.field?.config?.isMultiple)  && this.block.fieldType != 'doc-detail' && <div className={vs.length > 0 ? "gap-t-30" : ""}><Button size={'small'} ghost onClick={e => this.block.uploadFile(e)}><S>上传</S>{text}</Button></div>}
-            </div>
+        return (vs.length < 1 || vs.length > 1 && this.block.field?.config?.isMultiple) && this.block.fieldType != 'doc-detail'
+    }
+    renderView() {
+
+        var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);
+        if (!this.block.field?.config?.isMultiple && vs.length > 1) vs = [vs.first()]
+        return <FieldView block={this.block} className={'visible-hover'}>
+            {this.renderFiles(vs)}
         </FieldView>
     }
 }

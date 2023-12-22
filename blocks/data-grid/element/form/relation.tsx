@@ -1,19 +1,18 @@
 import lodash from "lodash";
 import React from "react";
-import { CloseSvg } from "../../../../component/svgs";
-import { Button } from "../../../../component/view/button";
+import { CloseSvg, PlusSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import { useRelationPickData } from "../../../../extensions/data-grid/relation.picker";
-import { getElementUrl, ElementType } from "../../../../net/element.type";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/vector/point";
-import { PageLayoutType, getPageIcon } from "../../../../src/page/declare";
+import { getPageIcon, getPageText } from "../../../../src/page/declare";
 import { TableSchema } from "../../schema/meta";
 import { FieldType } from "../../schema/type";
 import { FieldView, OriginFormField } from "./origin.field";
 import { S } from "../../../../i18n/view";
 import { Tip } from "../../../../component/view/tooltip/tip";
+
 
 @url('/form/relation')
 class FormFieldRelation extends OriginFormField {
@@ -35,7 +34,7 @@ class FormFieldRelation extends OriginFormField {
         await this.loadFieldData();
         this.view.forceUpdate()
     }
-    async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
+    async onSelectData(event: React.MouseEvent<Element, MouseEvent>) {
         if (this.checkEdit() === false) return;
         var r = await useRelationPickData({ roundArea: Rect.fromEvent(event) }, {
             field: this.field,
@@ -46,8 +45,7 @@ class FormFieldRelation extends OriginFormField {
         });
         if (r) {
             var ids = r.map(r => r.id);
-            this.value = ids;
-            this.forceUpdate();
+            this.onChange(ids);
         }
     }
     async onDeleteData(event: React.MouseEvent, id: string) {
@@ -56,8 +54,7 @@ class FormFieldRelation extends OriginFormField {
         var vs = Array.isArray(this.value) ? this.value : (this.value ? [this.value] : []);
         lodash.remove(vs, c => c == id);
         lodash.remove(this.relationList, c => c.id == id);
-        this.value = vs;
-        this.forceUpdate()
+        this.onChange(vs);
     }
 }
 
@@ -69,30 +66,30 @@ class FormFieldRelationView extends BlockView<FormFieldRelation>{
         var f = rs?.fields?.find(g => g.type == FieldType.title);
         var icon = rs?.fields.find(g => g.type == FieldType.icon);
         if (!f) f = rs?.fields.find(g => g.type == FieldType.text);
-        return <div>{this.block.relationList?.map(r => {
-            var url = getElementUrl(ElementType.SchemaData, rs.id, r.id);
-            return <a className="flex no-underline text-1 padding-h-3 gap-t-10 flex-block round item-hover visible-hover"
-                // href={url}
-                onClick={e => e.preventDefault()}
-                key={r.id}
-            >
-                <span className="flex-fixed size-20 gap-l-5 flex-center flex-inline cursor">
-                    <Icon size={18} icon={getPageIcon({ pageType: PageLayoutType.doc, icon: r[icon.name] })}></Icon>
-                </span>
-                <span className="flex-auto text-overflow">{r[f?.name]}</span>
-                {this.block.fieldType != 'doc-detail' && <Tip text='移除'><span onClick={e => this.block.onDeleteData(e, r.id)} className="flex-fixed size-20 gap-w-5 item-hover  flex-center visible round">
-                    <Icon size={12} icon={CloseSvg}></Icon>
-                </span></Tip>}
-            </a>
-        })}
-            {(this.block.field.config?.isMultiple || (!(this.block.relationList.length > 0))) && this.block.fieldType != 'doc-detail' && <div
-                className={this.block.relationList.length > 0 ? "gap-h-10" : ""}
-            ><Button size="small" onMouseDown={e => { this.block.onCellMousedown(e) }} ghost><S>添加关联记录</S></Button></div>}
+        return <div>
+            {this.block.relationList?.length > 0 && <div className="gap-b-5 item-hover-light-focus round ">
+                {this.block.relationList?.map(r => {
+                    return <div className="padding-h-2 padding-w-10   item-hover-light   round cursor flex  visible-hover"
+                        onClick={e => e.preventDefault()}
+                        key={r.id}
+                    >
+                        <span className="flex-fixed size-20  flex-center flex-inline cursor">
+                            <Icon size={16} icon={getPageIcon({ icon: r[icon.name] })}></Icon>
+                        </span>
+                        <span className="flex-auto f-14 text-overflow">{getPageText({ text: r[f?.name] })}</span>
+                        {this.block.fieldType != 'doc-detail' && <Tip text='移除'><span onClick={e => this.block.onDeleteData(e, r.id)} className="flex-fixed size-20 item-hover  flex-center visible round">
+                            <Icon size={12} icon={CloseSvg}></Icon>
+                        </span></Tip>}
+                    </div>
+                })}
+            </div>}
+            {this.block.relationList.length == 0 && <span className="f-14 remark"><S>空内容</S></span>}
+            {(this.block.field.config?.isMultiple || (!(this.block.relationList.length > 0))) && this.block.fieldType != 'doc-detail' && <div className={"flex " + (this.block.relationList.length > 0 ? " visible" : "")}><span className={"item-hover-light-focus item-hover round padding-w-5 f-12   cursor flex text-1"} onClick={e => this.block.onSelectData(e)}><Icon size={16} icon={PlusSvg}></Icon><span ><S>添加关联</S></span></span></div>}
         </div>
     }
     renderView() {
-        return <FieldView block={this.block}>
-            <div>
+        return <FieldView block={this.block} className={'visible-hover'}>
+            <div className={this.block.fieldType == 'doc' ? "gap-w-10" : ""}>
                 {this.renderList()}
             </div>
         </FieldView>
