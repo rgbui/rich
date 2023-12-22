@@ -34,7 +34,7 @@ export function BuildTemplate(page: Page) {
                 }
             ]
         }
-        if (page.requireSelectLayout !== true && typeof page.ws.createPageConfig.autoRefPages != 'undefined') {
+        if (page.requireSelectLayout !== true &&  page.ws.createPageConfig.autoRefPages==true) {
             docs.views[0].blocks.childs.last().blocks.childs.push({
                 url: BlockUrlConstant.RefLinks
             })
@@ -55,7 +55,7 @@ export function BuildTemplate(page: Page) {
                 }
             ]
         }
-        if (page.requireSelectLayout !== true && typeof page.ws.createPageConfig.autoRefPages != 'undefined') {
+        if (page.requireSelectLayout !== true && page.ws.createPageConfig.autoRefPages==true) {
             pageInfo.views[0].blocks.childs.push({
                 url: BlockUrlConstant.RefLinks
             })
