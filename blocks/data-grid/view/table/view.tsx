@@ -90,14 +90,16 @@ export class TableStoreView extends BlockView<TableStore>{
                 data.colEles = cols;
                 data.colWidth = Rect.fromEle(cs[data.colIndex]).width;
             },
-            moving: (ev, data, isend) => {
+            moving: (ev, data, isend, isM) => {
+                if (!isM) return;
                 self.isMoveLine = true;
                 var dx = ev.clientX - event.clientX;
                 var w = dx + data.colWidth;
                 w = Math.max(w, 50);
-                data.colEles.forEach(el => {
-                    el.style.width = w + 'px';
-                })
+                if (data.colEles)
+                    data.colEles.forEach(el => {
+                        el.style.width = w + 'px';
+                    })
                 var left = cs.findAll((g, i) => i < data.colIndex).sum(g => Rect.fromEle(g).width) + w;
                 self.subline.style.left = left + 'px';
                 var tableHeadRect = Rect.fromEle(self.block.el.querySelector('.sy-dg-table-head') as HTMLElement);
@@ -132,7 +134,7 @@ export class TableStoreView extends BlockView<TableStore>{
                 th.classList.add('dragging')
                 th.style.pointerEvents = 'none';
             },
-            moving: (ev, data, isend) => {
+            move: (ev, data) => {
                 ghostView.move(Point.from(ev));
                 var ele = ev.target as HTMLElement;
                 var overTh = ele.closest('.sy-dg-table-head-th') as HTMLElement;
@@ -187,14 +189,14 @@ export class TableStoreView extends BlockView<TableStore>{
                         flexShrink: 1
                     }
                 }
-                return <div className="sy-dg-table-head-th  remark f-14" onMouseDown={e => this.onDragMouseField(e, f)}
+                return <div className="sy-dg-table-head-th  text-1 f-14" onMouseDown={e => this.onDragMouseField(e, f)}
                     style={style}
                     key={f?.field?.id || i}>
-                    <div className={'sy-dg-table-head-th-icon flex-fix size-16 flex-center gap-r-5 '} >
+                    <div className={'sy-dg-table-head-th-icon remark flex-fix size-16 flex-center gap-r-5 '} >
                         <Icon icon={icon} size={16}></Icon>
                     </div>
                     <label>{f.field?.text || f.text}</label>
-                    {this.block.dataGridIsCanEdit() && <div className={'sy-dg-table-head-th-property'} onMouseDown={e => this.block.onOpenFieldConfig(e, f)}><Icon icon={DotsSvg}></Icon></div>}
+                    {this.block.dataGridIsCanEdit() && <div className={'sy-dg-table-head-th-property remark'} onMouseDown={e => this.block.onOpenFieldConfig(e, f)}><Icon icon={DotsSvg}></Icon></div>}
                 </div>
             })}
             {this.block.dataGridIsCanEdit() && <div className='sy-dg-table-head-th sy-dg-table-head-th-plus'

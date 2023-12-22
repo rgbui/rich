@@ -1,9 +1,9 @@
 
 import { prop, url } from "../../../../src/block/factory/observable";
 import { DataGridView } from '../base';
-import "./style.less";
 import { BlockFactory } from '../../../../src/block/factory/block.factory';
 import { DataGridTableItem } from './row';
+import "./style.less";
 
 /***
  * 数据总共分三部分
