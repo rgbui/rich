@@ -2,8 +2,9 @@
     display        : inline-flex;
     align-items    : center;
     justify-content: flex-start;
-    padding        : 5px 15px;
-    border-radius  : 4px;
+    padding        : 0px 12px;
+    height         : 32px;
+    border-radius  : 6px;
     background     : rgb(225, 98, 89);
     border         : 1px solid rgb(190, 86, 67);
     box-shadow     : rgba(15, 15, 15, 0.1) 0px 1px 2px 0px;
@@ -13,18 +14,21 @@
     border         : 0px;
 
     &:hover {
-        opacity: .7;
+        // opacity: .7;
+        background-color: rgba(225, 98, 89, .7);
     }
 
     &-small {
-        height   : auto;
-        padding  : 3px 5px;
-        font-size: 14px;
+        height       : 24px;
+        padding      : 0px 7px;
+        font-size    : 14px;
+        border-radius: 4px;
     }
 
     &-larger {
-        height : auto;
-        padding: 10px 30px;
+        height       : 40px;
+        padding      : 0px 16px;
+        border-radius: 6px;
     }
 
     &-ghost {
@@ -35,6 +39,18 @@
 
         &:hover {
             background-color: #f5f5f5;
+        }
+    }
+
+    &-dark {
+        background-color: #000;
+        color           : #fff;
+        border          : 1px solid #000;
+
+        &:hover {
+            background-color   : rgba(0, 0, 0, .7);
+            // background-color: #333;
+            border             : 1px solid #333;
         }
     }
 }

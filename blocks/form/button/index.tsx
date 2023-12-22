@@ -29,7 +29,7 @@ export class BlockButton extends Block {
     @prop()
     buttonText: string = '';
     @prop()
-    ghost: boolean = false;
+    buttonStyle: 'primary' | 'ghost' | 'dark' = 'primary'
     @prop()
     buttonSize: 'default' | 'larger' | 'small' = 'small';
     async getMd() {
@@ -112,8 +112,9 @@ export class BlockButton extends Block {
                 text: lst('按钮样式'),
                 icon: { name: 'bytedance-icon', code: 'link-four' },
                 childs: [
-                    { name: 'ghost', text: lst('红色'), value: false, checkLabel: !this.ghost },
-                    { name: 'ghost', text: lst('白色'), value: true, checkLabel: this.ghost }
+                    { name: 'buttonStyle', text: lst('红色'), value: 'primary', checkLabel: this.buttonStyle == 'primary' },
+                    { name: 'buttonStyle', text: lst('黑色'), value: 'dark', checkLabel: this.buttonStyle == 'dark' },
+                    { name: 'buttonStyle', text: lst('白色'), value: 'ghost', checkLabel: this.buttonStyle == 'ghost' },
                 ]
             })
             rs.splice(pos + 1, 0, ...ns)
@@ -123,7 +124,7 @@ export class BlockButton extends Block {
     }
     async onClickContextMenu(item: MenuItem<string | BlockDirective>, e) {
         switch (item.name) {
-            case 'ghost':
+            case 'buttonStyle':
             case 'buttonSize':
             case 'text-center':
                 await this.onUpdateProps({ [item.name == 'text-center' ? "align" : item.name]: item.value }, { range: BlockRenderRange.self })
@@ -171,7 +172,7 @@ export class BlockButtonView extends BlockView<BlockButton>{
     renderView() {
         var classList: string[] = ['sy-button'];
         if (this.block.buttonSize) classList.push('sy-button-' + this.block.buttonSize);
-        if (this.block.ghost) classList.push('sy-button-ghost');
+        if (this.block.buttonStyle) classList.push('sy-button-' + this.block.buttonStyle);
         var style: React.CSSProperties = {};
         if (this.block.align == 'center') style.justifyContent = 'center';
         else if (this.block.align == 'right') style.justifyContent = 'flex-end'
