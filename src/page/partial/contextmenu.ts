@@ -559,10 +559,10 @@ export class PageContextmenu {
     async onTurnForm(this: Page, value: 'doc' | 'doc-add' | 'doc-detail') {
         var self = this;
         await this.onAction('onTurnForm', async () => {
-            var fs = this.findAll(g => g instanceof OriginFormField);
+            var fs = this.findAll(g => g instanceof OriginFormField) as OriginFormField[];
             for (let i = 0; i < fs.length; i++) {
                 var off = fs[i];
-                await off.updateProps({ fieldType: value }, BlockRenderRange.self);
+                await off.turnForm(value);
             }
             if (value == 'doc-add') {
                 var title = self.find(g => g.url == BlockUrlConstant.Title) as Title;
@@ -583,6 +583,10 @@ export class PageContextmenu {
                         });
                     }
                 }
+            }
+            else {
+                var button = self.find(g => g.url == BlockUrlConstant.Button && (g as BlockButton).isFormSubmit() == true) as BlockButton;
+                if (button) await button.delete();
             }
             await this.updateProps({ formType: value })
         })

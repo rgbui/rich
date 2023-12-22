@@ -188,6 +188,9 @@ export class OriginFormField extends Block {
         }
         return point;
     }
+    async turnForm(fieldType) {
+        await this.updateProps({ fieldType: fieldType }, BlockRenderRange.self);
+    }
 }
 
 export function FieldView(props: { block: OriginFormField, className?: string | string[], children?: JSX.Element | string | React.ReactNode }) {

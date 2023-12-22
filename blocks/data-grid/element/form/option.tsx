@@ -43,6 +43,12 @@ class FieldText extends OriginFormField {
         }
         return await super.onContextMenuInput(item);
     }
+    async turnForm(fieldType: any): Promise<void> {
+        await super.turnForm(fieldType);
+        if (this.fieldType != 'doc-add') {
+            await this.updateProps({ optionType: 'default' })
+        }
+    }
 }
 
 @view('/form/option')
@@ -86,7 +92,7 @@ class FieldTextView extends BlockView<FieldText>{
         var self = this;
         function renderSelectOptions() {
             if (self.block.optionType == 'select') {
-                return <SelectBox border dropAlign="full" value={fc?.isMultiple ? ops.map(o => o.value) : ops?.first()?.value} multiple={fc?.isMultiple ? true : false} options={options} onChange={e => {
+                return <SelectBox className={self.block.fieldType == 'doc-add' ? "sy-form-field-input-value" : "  padding-h-5 round item-hover-light padding-w-10 "} border dropAlign="full" value={fc?.isMultiple ? ops.map(o => o.value) : ops?.first()?.value} multiple={fc?.isMultiple ? true : false} options={options} onChange={e => {
                     self.block.onChange(e);
                 }}></SelectBox>
             }
