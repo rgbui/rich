@@ -241,7 +241,25 @@ export class DefinePageNavBar extends React.Component<{
     }
     render() {
         var props = this.props;
-        var style: CSSProperties = Object.assign({}, this.props.style || {})
+        var style: CSSProperties = Object.assign({
+            marginLeft: 20, marginRight: 20
+        }, this.props.style || {})
+        if (isMobileOnly) {
+            style.marginLeft = 5;
+            style.marginRight = 5;
+        }
+        var isFull: boolean = true;
+        if (this.props.ws?.isPubSite) isFull = this.props.ws?.publishConfig.isFullWidth;
+        if (isFull) {
+            style.marginLeft = 80;
+            style.marginRight = 80;
+        }
+        else {
+            if (window.innerWidth < 1800) style.width = 800;
+            else style.width = 1000;
+            style.margin = '0 auto';
+        }
+
         return <div className="shy-page-bar ">
             <div className="flex" style={style}>
                 <div className="flex-auto flex r-gap-r-10">
@@ -259,7 +277,7 @@ export class DefinePageNavBar extends React.Component<{
                             placeholder={lst('搜索...')}
                             prefix={<span className="flex-center remark size-24"><Icon size={16} icon={SearchSvg}></Icon></span>}></Input>
                     </div>}
-                    {!props.user?.id && <Button size="small" onClick={e => this.toLogin()}><S>登录</S></Button>}
+                    {!props.user?.id && <Button dark onClick={e => this.toLogin()}><S>登录</S></Button>}
                     {props.user?.id && <Avatar onMousedown={e => this.openUser(e)} size={32} userid={props.user.id}></Avatar>}
                 </div>
             </div>
