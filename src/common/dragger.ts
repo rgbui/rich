@@ -37,7 +37,7 @@ export function MouseDragger<T = Record<string, any>>(options: {
                 if (options.cursor) MouseCursor.show(options.cursor);
                 try {
                     if (typeof options.move == 'function') options.move(event, data)
-                    if (typeof options.moving == 'function') options.moving(event, data, false, null);
+                    if (typeof options.moving == 'function') options.moving(event, data, false, scope.isMove);
                 }
                 catch (ex) {
                     console.error(ex);
