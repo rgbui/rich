@@ -29,6 +29,7 @@ import { AtomPermission } from "../../../../src/page/permission";
 import { BlockUrlConstant } from "../../../../src/block/constant";
 import { OptionDefineRule } from "../../block/optionRule";
 import { FieldType } from "../../schema/type";
+import { Input } from "../../../../component/view/input";
 
 /**
  * 
@@ -40,7 +41,7 @@ import { FieldType } from "../../schema/type";
  */
 export class DataGridView extends Block {
     checkItems: Record<string, any>[] = [];
-    viewProps: string[] = ['url','filter', 'noTitle', 'openRecordSource', 'openRecordViewId', ' createRecordSource', 'size', 'sorts'];
+    viewProps: string[] = ['url', 'filter', 'noTitle', 'openRecordSource', 'openRecordViewId', ' createRecordSource', 'size', 'sorts'];
     @prop()
     fields: ViewField[] = [];
     @prop()
@@ -65,6 +66,7 @@ export class DataGridView extends Block {
     relationSchemas: TableSchema[] = [];
     relationDatas: Map<string, any[]> = new Map();
     isOver: boolean = false;
+    searchTitle: { input: Input, focus: boolean, word: string } = { input: null, focus: false, word: '' };
     async onGetTurnUrls() {
         return [];
         // return DataGridTurns.urls
@@ -130,7 +132,7 @@ export class DataGridView extends Block {
             json.pattern = await this.pattern.get();
         json.blocks = {};
         if (Array.isArray(this.__props)) {
-            var ss =super.__props;
+            var ss = super.__props;
             await this.__props.eachAsync(async pro => {
                 if (ss.includes(pro) || this.viewProps.includes(pro))
                     json[pro] = await this.clonePropData(pro, this[pro]);
@@ -207,6 +209,14 @@ export class DataGridView extends Block {
             if (fl) {
                 rs.push(...fl);
             }
+        }
+        if (this.searchTitle?.focus && this.searchTitle?.word)
+        {
+            rs.push({
+                field: this.schema.fields.find(g => g.name == 'title')?.id,
+                value: this.searchTitle.word,
+                operator: '$startWith'
+            })
         }
         if (f && rs.length > 0) {
             if (f.logic == 'and') {
@@ -410,6 +420,9 @@ export class DataGridView extends Block {
     onSyncAddRow = lodash.debounce(async (data, id?: string, arrow: 'before' | 'after' = 'after') => {
         await this.onAddRow(data, id, arrow)
     }, 1000)
+    onLazySearch = lodash.debounce(async () => {
+        await this.onSearch()
+    },700);
 }
 
 export interface DataGridView extends DataGridViewLife { }
