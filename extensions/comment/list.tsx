@@ -37,6 +37,7 @@ export class CommentListView extends React.Component<{
     index = 1;
     size = 30;
     sort = 'default';
+    displayFormat?: 'comment' | 'answer' | 'discuss' = 'comment';
     userid: string;
     elementUrl: string;
     loading: boolean = false;
@@ -223,28 +224,30 @@ export class CommentListView extends React.Component<{
         await this.loadComment();
     }
     async loadComment() {
-        this.loading = true;
-        this.forceUpdate();
-        try {
-            var r = await channel.get('/ws/comment/list', {
-                elementUrl: this.elementUrl,
-                parentId: null,
-                sort: this.sort as any,
-                page: this.index,
-                size: this.size,
-                ws: this.props.page?.ws,
-            });
-            if (r.ok) {
-                this.list = r.data.list;
-                this.total = r.data.total;
+        if (this.elementUrl) {
+            this.loading = true;
+            this.forceUpdate();
+            try {
+                var r = await channel.get('/ws/comment/list', {
+                    elementUrl: this.elementUrl,
+                    parentId: null,
+                    sort: this.sort as any,
+                    page: this.index,
+                    size: this.size,
+                    ws: this.props.page?.ws,
+                });
+                if (r.ok) {
+                    this.list = r.data.list;
+                    this.total = r.data.total;
+                }
             }
-        }
-        catch (ex) {
+            catch (ex) {
 
-        }
-        finally {
-            this.loading = false;
-            this.forceUpdate()
+            }
+            finally {
+                this.loading = false;
+                this.forceUpdate()
+            }
         }
     }
     textarea: HTMLTextAreaElement;
@@ -275,13 +278,13 @@ export class CommentListView extends React.Component<{
                                     <span className="flex-fixed f-12 remark  gap-r-10 ">{util.showTime(l.createDate)}</span>
                                 </div>
                                 <div className="flex-fixed flex-end">
-                                    <span className={"h-24 padding-w-5 gap-r-10 flex-center round cursor remark f-12 " + (l.like?.exists ? "fill-p" : "")} onClick={e => this.likeComment(l)}><Icon size={16} icon={LikeSvg}></Icon><span className="gap-l-3">{l.like?.count || ""}</span></span>
-                                    <span className="h-24 padding-w-5 flex-center round cursor remark f-12" onClick={e => this.onReply(l, user, e)}><Icon size={16} icon={CommentSvg}></Icon><span className="gap-l-3">{l.replyCount || ""}</span></span>
+                                    <span className={"h-24 padding-w-5 gap-r-10 flex-center round cursor remark f-14 " + (l.like?.exists ? "fill-p" : "")} onClick={e => this.likeComment(l)}><Icon size={16} icon={LikeSvg}></Icon><span className="gap-l-3">{l.like?.count || ""}</span></span>
+                                    <span className="h-24 padding-w-5 flex-center round cursor remark f-14" onClick={e => this.onReply(l, user, e)}><Icon size={16} icon={CommentSvg}></Icon><span className="gap-l-3">{l.replyCount || ""}</span></span>
                                 </div>
                             </div>
                         </div>
                         {l.replyCount > 0 && <div className="gap-t-10 flex" onMouseDown={e => this.onExpends(l)}>
-                            <span className={"remark cursor f-14  gap-r-3  "}><Sp text={'{count}条回复'} data={{ count: l.replyCount }}>{l.replyCount}条回复</Sp></span>
+                            <span className={"remark cursor f-12  gap-r-3  "}><Sp text={'{count}条回复'} data={{ count: l.replyCount }}>{l.replyCount}条回复</Sp></span>
                             {l.replys && <span className="remark flex-center size-20 "><Icon size={14} icon={{ name: 'bytedance-icon', code: l.spread == true ? 'right' : 'down' }}></Icon></span>}
                         </div>}
                         {l.replys && l.spread == true && <div className="gap-t-10">{this.renderComments(l.replys.list, deep + 1)}</div>}
@@ -414,9 +417,9 @@ export class CommentListView extends React.Component<{
         </div>
     }
     render() {
-        if (this.props.displayFormat == 'comment') return this.renderComment();
-        else if (this.props.displayFormat == 'answer') return this.renderAnswer();
-        else return  <div></div>
+        if (this.props.displayFormat == 'comment' || this.displayFormat == 'comment') return this.renderComment();
+        else if (this.props.displayFormat == 'answer' || this.displayFormat == 'answer') return this.renderAnswer();
+        else return <div></div>
     }
     componentDidMount(): void {
         if (typeof this.props.sort == 'string') this.sort = this.props.sort;
@@ -428,32 +431,29 @@ export class CommentListView extends React.Component<{
         userid: string;
         elementUrl: string;
         sort?: 'default' | 'date',
+        displayFormat?: 'comment' | 'answer' | 'discuss',
     }) {
         this.pop = true;
         this.count = 0;
         this.userid = props.userid;
         this.elementUrl = props.elementUrl;
         this.sort = props.sort;
+        this.displayFormat = props.displayFormat;
         await this.loadComment();
-        this.forceUpdate()
     }
     count: number = 0;
-    componentDidUpdate(prevProps: Readonly<{ page: Page; userid: string; elementUrl: string; sort?: 'default' | 'date'; displayFormat?: 'comment' | 'answer' | 'discuss'; onChange?: (props: Record<string, any>) => void; }>, prevState: Readonly<{}>, snapshot?: any): void {
-        // if (prevProps.displayFormat != this.props.displayFormat) {
-        //     this.forceUpdate()
-        // }
-    }
 }
 
 export async function useCommentListView(props: {
     userid: string;
     elementUrl: string;
     sort?: 'default' | 'date',
+    displayFormat?: 'comment' | 'answer' | 'discuss',
 }) {
     var pos: PopoverPosition = { center: true };
     let popover = await PopoverSingleton(CommentListView, { mask: true, shadow: true });
     let fv = await popover.open(pos);
-    fv.open(props);
+    await fv.open(props);
     return new Promise((resolve: (count: number) => void, reject) => {
         popover.only('close', () => {
             resolve(fv.count)
