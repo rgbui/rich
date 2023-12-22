@@ -18,14 +18,15 @@ class FilePicker extends EventsComponent {
     }
     render() {
         return <div className='shy-file-picker' >
-            <Tab keeplive>
+            <UploadView mine={this.mime} change={e => this.onChange({ name: 'upload', ...e })}></UploadView>
+            {/* <Tab keeplive>
                 <Tab.Page item={<Tip placement='bottom' text={'上传文件'}><Icon size={20} icon={Upload}></Icon></Tip>}>
                     <UploadView mine={this.mime} change={e => this.onChange({ name: 'upload', ...e })}></UploadView>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' text={'网址链接'}><Icon size={18} icon={Link}></Icon></Tip>}>
                     <OutsideUrl change={e => this.onChange({ name: 'link', url: e })}></OutsideUrl>
                 </Tab.Page>
-            </Tab>
+            </Tab> */}
         </div>
     }
     mime: 'image' | 'file' | 'audio' | 'video' = 'file';
@@ -82,7 +83,7 @@ interface UploadPicker {
 }
 
 export async function useUploadPicker(pos: PopoverPosition, mime?: UploadPicker['mime']) {
-    let popover = await PopoverSingleton(UploadPicker,{mask:true});
+    let popover = await PopoverSingleton(UploadPicker, { mask: true });
     let filePicker = await popover.open(pos);
     filePicker.open(mime);
     return new Promise((resolve: (data: ResourceArguments) => void, reject) => {
