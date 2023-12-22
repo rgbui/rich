@@ -68,6 +68,7 @@ export class TableSchema {
     private constructor(data) {
         for (var n in data) {
             if (n == 'fields') continue;
+            if (['recordViews', 'listViews', 'visibleFields', 'recordViewTemplateFields'].includes(n)) continue;
             this[n] = data[n];
         }
         if (Array.isArray(data.fields))

@@ -19,6 +19,7 @@ import { DataGridOptionType } from "../../schema/field";
 import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
 import { lst } from "../../../../i18n/store";
+import { BackgroundColorList } from "../../../../extensions/color/data";
 
 export class DataGridViewField {
     private getFieldMenuItems(this: DataGridView, viewField: ViewField) {
@@ -193,37 +194,97 @@ export class DataGridViewField {
                 ]);
                 items.insertAt(3, { type: MenuItemType.divide });
                 items.insertAt(4, {
+                    text: lst('显示'),
+                    updateMenuPanel: true,
+                    type: MenuItemType.select,
+                    icon: { name: 'byte', code: 'sales-report' },
+                    name: 'config.numberDisplay.display',
+                    value: viewField.field.config?.numberDisplay?.display || 'auto',
+                    options: [
+                        { text: lst('数字'), value: 'auto' },
+                        { text: lst('进度条'), value: 'percent' },
+                        { text: lst('圆环'), value: 'ring' }
+                    ]
+                })
+                items.insertAt(5, {
                     text: lst('数字格式'),
                     childs: dateItems,
-                    icon: SettingsSvg
+                    icon: SettingsSvg,
+                    visible: (items) => {
+                        var mp = items.find(g => g.name == 'config.numberDisplay.display');
+                        if (mp?.value == 'auto') return true
+                        else return false
+                    },
                 });
-            }
-            else if (viewField.field?.type == FieldType.bool) {
-                var dateItems: MenuItem<BlockDirective | string>[] = [];
-                dateItems.push(...[
-                    { text: lst('勾选框'), value: '' },
-                    { text: lst('开关'), value: '' },
-                    {
-                        text: lst('自定义'),
-                        childs: [
-                            {
-                                name: 'dateCustomFormat',
-                                type: MenuItemType.input,
-                                value: '',
-                                text: lst('编辑日期格式'),
-                            },
-                            { text: lst('是否'), value: '' },
-                        ]
-                    }
-                ]);
-                items.insertAt(3, { type: MenuItemType.divide });
-                items.insertAt(4, {
-                    text: lst('显示格式'),
-                    childs: dateItems,
-                    icon: SettingsSvg
+                items.insertAt(6, {
+                    text: lst('格式'),
+                    icon: SettingsSvg,
+                    visible: (items) => {
+                        var mp = items.find(g => g.name == 'config.numberDisplay.display');
+                        if (mp?.value == 'auto') return false
+                        else return true
+                    },
+                    childs: [
+                        {
+                            text: lst('颜色'),
+                            type: MenuItemType.color,
+                            value: viewField.field.config?.numberDisplay?.color || 'rgba(55,53,47,0.6)',
+                            name: 'config.numberDisplay.color',
+                            options: BackgroundColorList().map(f => {
+                                return {
+                                    text: f.text,
+                                    overlay: f.text,
+                                    value: f.color,
+                                    checked: lodash.isEqual(viewField.field.config?.numberDisplay?.color, f.color) ? true : false
+                                }
+                            })
+                        },
+                        { type: MenuItemType.divide },
+                        {
+                            text: lst('度量'),
+                            label: lst('度量'),
+                            type: MenuItemType.input,
+                            value: viewField.field.config?.numberDisplay?.decimal || 100,
+                            name: 'config.numberDisplay.decimal'
+                        },
+                        { type: MenuItemType.divide },
+                        {
+                            text: lst('数字'),
+                            type: MenuItemType.switch,
+                            checked: viewField.field.config?.numberDisplay?.showNumber ? true : false,
+                            name: 'config.numberDisplay.showNumber',
+                            icon: { name: 'byte', code: 'preview-open' }
+                        }
+                    ]
                 });
-                items.insertAt(5, { type: MenuItemType.divide })
+
             }
+            // else if (viewField.field?.type == FieldType.bool) {
+            //     var dateItems: MenuItem<BlockDirective | string>[] = [];
+            //     dateItems.push(...[
+            //         { text: lst('勾选框'), value: '' },
+            //         { text: lst('开关'), value: '' },
+            //         {
+            //             text: lst('自定义'),
+            //             childs: [
+            //                 {
+            //                     name: 'dateCustomFormat',
+            //                     type: MenuItemType.input,
+            //                     value: '',
+            //                     text: lst('编辑日期格式'),
+            //                 },
+            //                 { text: lst('是否'), value: '' },
+            //             ]
+            //         }
+            //     ]);
+            //     items.insertAt(3, { type: MenuItemType.divide });
+            //     items.insertAt(4, {
+            //         text: lst('显示格式'),
+            //         childs: dateItems,
+            //         icon: SettingsSvg
+            //     });
+            //     items.insertAt(5, { type: MenuItemType.divide })
+            // }
             else if (viewField.field.type == FieldType.image) {
                 items.insertAt(4, {
                     text: lst('图片展示'),
@@ -474,13 +535,23 @@ export class DataGridViewField {
                         ops.insertAt(to, f);
                         await self.onUpdateFieldConfig(viewField.field, { options: ops });
                     }
+                    else if (['config.numberDisplay.showNumber',
+                        'config.numberDisplay.display',
+                        'config.imageFormat.display',
+                        'config.imageFormat.multipleDisplay',
+                        'config.numberDisplay.color'].includes(item.name as string)) {
+                        var n = (item.name as string).replace('config.', '');
+                        await self.onUpdateFieldConfig(viewField.field, { [n]: item.value });
+                    }
                 }
             }
         );
         var ReItem = items.find(g => g.name == 'name');
-        var dItem = items.arrayJsonFind('childs', g => g.name == 'dateCustomFormat');
-        var nItem = items.arrayJsonFind('childs', g => g.name == 'numberUnitCustom');
+        var dateCustomFormat = items.arrayJsonFind('childs', g => g.name == 'dateCustomFormat');
+        var numberUnitCustom = items.arrayJsonFind('childs', g => g.name == 'numberUnitCustom');
+        var config_numberDisplay_decimal = items.arrayJsonFind('childs', g => g.name == 'config.numberDisplay.decimal');
         if (re) {
+            console.log('item', re.item);
             if (re.item.name == 'hide') {
                 this.onHideField(viewField);
             }
@@ -522,11 +593,11 @@ export class DataGridViewField {
                 this.onSetSortField(viewField, 1);
             }
             else if (re?.item.name == 'dateFormat') {
-                if (dItem) dItem.value = re.item.value;
+                if (dateCustomFormat) dateCustomFormat.value = re.item.value;
                 await this.onUpdateFieldConfig(viewField.field, { dateFormat: re.item.value })
             }
             else if (re?.item.name == 'numberFormat' || re?.item.name == 'numberUnit') {
-                nItem.value = re.item.value;
+                numberUnitCustom.value = re.item.value;
                 await this.onUpdateFieldConfig(viewField.field, { numberFormat: re.item.value });
             }
             else if (re.item.name == 'formula') {
@@ -542,11 +613,16 @@ export class DataGridViewField {
                     await self.onUpdateFieldConfig(viewField.field, { emoji: rc });
                 }
             }
-            else if (re.item.name == 'config.imageFormat.display') {
-                await self.onUpdateFieldConfig(viewField.field, { 'imageFormat.display': re.item.value });
-            }
-            else if (re.item.name == 'config.imageFormat.multipleDisplay') {
-                await self.onUpdateFieldConfig(viewField.field, { 'imageFormat.multipleDisplay': re.item.value });
+            else if (
+                [
+                    'config.numberDisplay.showNumber',
+                    'config.numberDisplay.display',
+                    'config.imageFormat.display',
+                    'config.imageFormat.multipleDisplay',
+                    'config.numberDisplay.color'
+                ].includes(re.item.name as any)) {
+                var n = (re.item.name as string).replace('config.', '');
+                await self.onUpdateFieldConfig(viewField.field, { [n]: re.item.value });
             }
             else if (re.item.name == 'openRelation') {
                 await self.onOpenSchemaPage(viewField.field.config.relationTableId)
@@ -564,14 +640,19 @@ export class DataGridViewField {
                 this.onUpdateField(viewField.field, { text: ReItem.value })
             }
         }
-        if (dItem) {
-            if (dItem.value != viewField.field?.config?.dateFormat) {
-                await this.onUpdateFieldConfig(viewField.field, { dateFormat: dItem.value });
+        if (dateCustomFormat) {
+            if (dateCustomFormat.value != viewField.field?.config?.dateFormat) {
+                await this.onUpdateFieldConfig(viewField.field, { dateFormat: dateCustomFormat.value });
             }
         }
-        if (nItem) {
-            if (nItem.value && nItem.value != viewField.field.config.numberFormat) {
-                await this.onUpdateFieldConfig(viewField.field, { numberFormat: nItem.value });
+        if (config_numberDisplay_decimal) {
+            if (config_numberDisplay_decimal.value != viewField.field?.config?.numberDisplay?.decimal) {
+                await this.onUpdateFieldConfig(viewField.field, { numberDisplay: { decimal: config_numberDisplay_decimal.value } });
+            }
+        }
+        if (numberUnitCustom) {
+            if (numberUnitCustom.value && numberUnitCustom.value != viewField.field.config.numberFormat) {
+                await this.onUpdateFieldConfig(viewField.field, { numberFormat: numberUnitCustom.value });
             }
         }
         self.dataGridTool.isOpenTool = false;

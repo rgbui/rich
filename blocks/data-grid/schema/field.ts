@@ -65,7 +65,12 @@ export interface FieldConfig {
     dateFormat?: string,
     includeTime?: boolean,
     numberFormat?: string,
-    numberRadix?: string,
+    numberDisplay?: {
+        display: 'auto' | 'percent' | 'ring',
+        decimal: number,
+        color: string,
+        showNumber: boolean,
+    },
     imageFormat?: {
         display: 'thumb' | 'auto',
         multipleDisplay: "tile" | 'carousel'

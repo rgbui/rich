@@ -27,7 +27,6 @@ import { Field } from "../../schema/field";
 import { useCreateDataGrid } from "../../../../extensions/data-grid/create/view";
 import { AtomPermission } from "../../../../src/page/permission";
 import { BlockUrlConstant } from "../../../../src/block/constant";
-import { LatestOrHot } from "../../block/latestOrHot";
 import { OptionDefineRule } from "../../block/optionRule";
 import { FieldType } from "../../schema/type";
 
@@ -41,7 +40,7 @@ import { FieldType } from "../../schema/type";
  */
 export class DataGridView extends Block {
     checkItems: Record<string, any>[] = [];
-    viewProps: string[] = ['filter', 'noTitle', 'openRecordSource', 'openRecordViewId', ' createRecordSource', 'size', 'sorts'];
+    viewProps: string[] = ['url','filter', 'noTitle', 'openRecordSource', 'openRecordViewId', ' createRecordSource', 'size', 'sorts'];
     @prop()
     fields: ViewField[] = [];
     @prop()
@@ -118,6 +117,7 @@ export class DataGridView extends Block {
             else await this.setPropData(n, data[n]);
         }
     }
+
     async get(this: DataGridView) {
         var json: Record<string, any> = {
             id: this._id,
@@ -130,7 +130,7 @@ export class DataGridView extends Block {
             json.pattern = await this.pattern.get();
         json.blocks = {};
         if (Array.isArray(this.__props)) {
-            var ss = super.__props;
+            var ss =super.__props;
             await this.__props.eachAsync(async pro => {
                 if (ss.includes(pro) || this.viewProps.includes(pro))
                     json[pro] = await this.clonePropData(pro, this[pro]);

@@ -31,7 +31,7 @@ export class DataGridViewOperator {
             { dataGrid: self }
         );
         if (!result) return;
-        this.page.onAction(ActionDirective.onSchemaCreateField, async () => {
+        await this.page.onAction(ActionDirective.onSchemaCreateField, async () => {
             this.page.addBlockChange(this);
             var fieldData = await this.schema.fieldAdd({
                 text: result.text,
@@ -160,7 +160,7 @@ export class DataGridViewOperator {
     }
     async onDeleteField(this: DataGridView, field: Field, force?: boolean) {
         if (force == true || await Confirm(lst('确定要删除该列吗'))) {
-            this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
+            await this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
                 this.page.addBlockChange(this);
                 var r = await this.schema.fieldRemove(field.id);
                 if (r.ok) {
@@ -251,7 +251,7 @@ export class DataGridViewOperator {
         })
     }
     async onDataGridChangeViewByTemplate(this: DataGridView, url: string) {
-        await this.page.onAction('onDataGridChangeView', async () => {
+        await this.page.onAction('onDataGridChangeViewByTemplate', async () => {
             var cm = CardFactory.CardModels.get(url);
             var viewUrl = cm.forUrls[0];
             var ps = cm.props.toArray(pro => {
@@ -260,7 +260,8 @@ export class DataGridViewOperator {
                     return {
                         name: pro.name,
                         visible: true,
-                        bindFieldId: f.id
+                        // bindFieldId: f.id,
+                        bindFieldIds: [f.id]
                     }
                 }
             })
@@ -532,7 +533,7 @@ export class DataGridViewOperator {
         })
     }
     async changeFields(this: DataGridView, oldFields: ViewField[], newFields: ViewField[]) {
-        await this.manualUpdateProps({ fields: oldFields }, { fields: newFields }, BlockRenderRange.none,{isOnlyRecord:true});
+        await this.manualUpdateProps({ fields: oldFields }, { fields: newFields }, BlockRenderRange.none, { isOnlyRecord: true });
         this.fields = newFields;
     }
     async onChangeFields(this: DataGridView, oldFields: ViewField[], newFields: ViewField[]) {
@@ -609,7 +610,7 @@ export class DataGridViewOperator {
     hasTriggerBlock(this: DataGridView, url: string) {
         return this.page.exists(c => c.url == url && c.refBlockId == this.id)
     }
-    async onExtendTriggerBlock(this: DataGridView, url: BlockUrlConstant|string, props: Record<string, any>, visible?: boolean) {
+    async onExtendTriggerBlock(this: DataGridView, url: BlockUrlConstant | string, props: Record<string, any>, visible?: boolean) {
         await this.page.onAction('onExtendTriggerBlock', async () => {
             if (typeof visible == 'boolean') {
                 if (visible) {
