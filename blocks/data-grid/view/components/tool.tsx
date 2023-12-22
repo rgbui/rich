@@ -6,6 +6,7 @@ import { getSchemaViewIcon } from "../../schema/util";
 
 import {
     ChevronDownSvg,
+    CloseSvg,
     CollectTableSvg,
     DotsSvg,
     FilterSvg,
@@ -13,13 +14,15 @@ import {
     SettingsSvg,
     SortSvg
 } from "../../../../component/svgs";
-import "./style.less";
 import { PageLayoutType } from "../../../../src/page/declare";
 import { S } from "../../../../i18n/view";
+import { lst } from "../../../../i18n/store";
+import "./style.less";
 
 export class DataGridTool extends React.Component<{ block: DataGridView }>{
     isOpenTool: boolean = false;
     render() {
+        var self = this;
         var props = this.props;
         props.block.dataGridTool = this;
         var view = props.block.schema?.views?.find(g => g.id == props.block.syncBlockId)
@@ -30,6 +33,63 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                     {props.block.filter?.items?.length > 0 && <label className="item-hover round  flex-center cursor gap-r-10 padding-w-5 h-24 text-1 " onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e), 'filter')}><Icon size={16} icon={FilterSvg}></Icon><span className="f-14 padding-l-5"><S>过滤</S></span></label>}
                     {props.block.sorts?.length > 0 && <label className="item-hover round  flex-center cursor gap-r-10 padding-w-5 h-24  text-1 " onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e), 'sort')}><Icon size={16} icon={SortSvg}></Icon><span className="f-14 padding-l-5"><S>排序</S></span></label>}
                     {props.block.page.pageLayout.type != PageLayoutType.db && <label className="item-hover round size-24 flex-center cursor gap-r-10 text-1" onMouseDown={e => { e.stopPropagation(); props.block.onOpenSchemaPage() }}><Icon icon={MaximizeSvg} size={14}></Icon></label>}
+                    <label onMouseDown={e => {
+                        e.stopPropagation();
+                    }}
+                        className={"flex gap-r-10  " + (props.block.searchTitle.focus ? " relative" : "")}>
+                        <span onMouseDown={e => {
+                            props.block.searchTitle.focus = !props.block.searchTitle.focus;
+                            if (!props.block.searchTitle.focus) {
+                                if (props.block.searchTitle.word) {
+                                    props.block.searchTitle.word = '';
+                                    props.block.onSearch();
+                                }
+                            }
+                            self.forceUpdate();
+                        }} className="flex-fixed text-1 size-24 item-hover round flex-center cursor"><Icon size={16} icon={{ name: 'byte', code: 'search' }}></Icon></span>
+                        <input
+                            style={{
+                                width: props.block.searchTitle.focus ? '100px' : '0px',
+                                transition: 'width 0.3s',
+                                height: '24px',
+                                lineHeight: '24px',
+                                // display: props.block.searchTitle.focus ? 'inline-block' : 'none'
+                            }}
+                            placeholder={lst('搜索...')}
+                            type="text"
+                            className="noborder flex-auto"
+                            defaultValue={props.block.searchTitle.word}
+                            onInput={e => {
+                                props.block.searchTitle.word = e.currentTarget.value.trim();
+                                props.block.onLazySearch();
+                            }}
+                            onBlur={async e => {
+                                if (!props.block.searchTitle.word) {
+                                    props.block.searchTitle.focus = false;
+                                    if (props.block.searchTitle.word) {
+                                        props.block.searchTitle.word = '';
+                                        await props.block.onSearch()
+                                    }
+                                    self.forceUpdate();
+                                }
+                            }}
+                        />
+                        {props.block.searchTitle.word && <span
+                            onMouseDown={async e => {
+                                e.stopPropagation();
+                                props.block.searchTitle.word = '';
+                                props.block.searchTitle.focus = false;
+                                await props.block.onSearch()
+                                self.forceUpdate()
+                            }}
+                            className="pos w-20 flex-center cursor text-1 round" style={{
+                                right: 0,
+                                top: 0,
+                                bottom: 0
+                            }}>
+                            <span className="flex-center size-20 cursor item-hover round"><Icon size={14} icon={CloseSvg}></Icon></span>
+                        </span>}
+                    </label>
                     <label className="item-hover round size-24 flex-center cursor gap-r-10 text-1" onMouseDown={e => { e.stopPropagation(); props.block.onOpenViewProperty(Rect.fromEvent(e)) }}><Icon size={16} icon={DotsSvg}></Icon></label></>}
                 {props.block.isCanAddRow() && <div className="sy-dg-tool-operators-add">
                     <span className={"padding-l-15 text-white" + (!props.block.isCanEdit() ? " padding-r-15" : "")} onClick={e => { e.stopPropagation(); props.block.onOpenAddForm(undefined, true) }}><S>新增</S></span>
@@ -40,7 +100,7 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
         if (props.block.noTitle) {
             if (props.block.isCanEdit())
                 return <div className='h-20 relative'>
-                    {props.block.isOver && <div className="flex h-40 pos shadow bg-white round padding-w-10 padding-h-0" style={{
+                    {(props.block.isOver || props.block.searchTitle.focus == true) && <div className="flex h-40 pos shadow bg-white round padding-w-10 padding-h-0" style={{
                         top: -30,
                         left: 0,
                         right: 0,
@@ -78,7 +138,7 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                     <span className="flex-auto bold">{view?.text}</span>
                 </label>
             </div>
-            {props.block.isOver && <div className="sy-dg-tool-operators  flex-auto flex-end">
+            {(props.block.isOver || props.block.searchTitle.focus == true) && <div className="sy-dg-tool-operators  flex-auto flex-end">
                 {renderToolOperators()}
             </div>}
         </div>
