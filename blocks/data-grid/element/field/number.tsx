@@ -6,6 +6,9 @@ import lodash from "lodash";
 import { KeyboardCode } from "../../../../src/common/keys";
 import { util } from "../../../../util/util";
 import { BlockUrlConstant } from "../../../../src/block/constant";
+import { lst } from "../../../../i18n/store";
+import { ColorUtil } from "../../../../util/color";
+import { Ring } from "../../../../component/view/spin";
 
 // 数字转为千分位，并保留两个小数位
 function numberFilter(oldNum, isFixed) {
@@ -90,6 +93,7 @@ export class FieldNumber extends OriginField {
         }
     }
 }
+
 @view('/field/number')
 export class FieldTextView extends OriginFileView<FieldNumber>{
     isCom: boolean = false;
@@ -158,7 +162,7 @@ export class FieldTextView extends OriginFileView<FieldNumber>{
             return <div className={'sy-field-number  f-14 min-h-20' + (isTable ? "text-right" : "")}  >{this.block.value}</div>
         else return <div className={'sy-field-number f-14' + (isTable ? "text-right" : "")}>
             {this.block.isFocus && <input type='text'
-                placeholder="输入数字"
+                placeholder={lst('输入数字')}
                 defaultValue={this.block.value}
                 onKeyDown={keydown}
                 onInput={input}
@@ -170,7 +174,40 @@ export class FieldTextView extends OriginFileView<FieldNumber>{
                 onPaste={paste}
                 style={{ textIndent: isTable ? 10 : 0 }}
             />}
-            {!this.block.isFocus && <span className="text l-22 " >{this.block.formatValue(this.block.value)}</span>}
+            {!this.block.isFocus && this.renderNumber()}
         </div>
+    }
+    renderNumber() {
+        var cc = this.block.field?.config?.numberDisplay?.decimal || 100;
+        var co = this.block.field?.config?.numberDisplay?.color;
+        var f = this.block.field?.config?.numberDisplay.display || 'auto';
+        if (f == 'auto') return <span className="text l-22 " >{this.block.formatValue(this.block.value)}</span>
+        else if (f == 'percent') {
+            var cd = ColorUtil.parseColor(color);
+            var hex = ColorUtil.toHex(cd);
+            return <div className="flex">
+                {this.block.field?.config.numberDisplay?.showNumber !== false && <span className="text l-22 flex-fixed gap-r-10 f-14" >{this.block.value}</span>}
+                <div className="flex-auto border h-8 round">
+                    <div className="round" style={{ background: hex, height: 8, maxWidth: '100%', width: (this.block.value * 100 / cc) + '%' }}></div>
+                </div>
+            </div>
+        }
+        else if (f == 'ring') {
+            var r = 24;
+            var d = 4;
+            var color = co || '#ddd';
+            var cd = ColorUtil.parseColor(color);
+            var hex = ColorUtil.toHex(cd);
+            var isNumber = typeof this.block.value == 'number'
+            return <div className="flex">
+                {this.block.field?.config.numberDisplay?.showNumber !== false && <span className="text l-22 flex-fixed gap-r-10 f-14" >{this.block.value}</span>}
+                {isNumber && <Ring className='flex-fixed' size={r}
+                    lineWidth={d}
+                    value={this.block.value}
+                    percent={this.block.field?.config?.numberDisplay?.decimal || 100}
+                    hoverColor={hex}
+                ></Ring>}
+            </div>
+        }
     }
 }

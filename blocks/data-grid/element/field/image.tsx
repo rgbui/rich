@@ -66,7 +66,7 @@ export class FieldImageView extends OriginFileView<FieldImage>{
         var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);
         if (!this.block.field?.config?.isMultiple && vs.length > 1) vs = [vs.first()]
         return <div className='sy-field-image'>
-            {vs.length > 0 && <div className="sy-field-images">
+            {vs.length > 0 && <div className={"sy-field-images" + (vs.length > 1 && this.block.field?.config?.imageFormat?.display == 'thumb' ? " flex flex-wrap r-gap-r-10" : "")}>
                 {this.renderImages(vs)}
             </div>}
         </div>

@@ -3,7 +3,6 @@ import React from "react";
 import { useCommentListView } from "../../../../extensions/comment/list";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { url, view } from "../../../../src/block/factory/observable";
-
 import { OriginField, OriginFileView } from "./origin.field";
 import lodash from "lodash";
 import { S } from "../../../../i18n/view";
@@ -18,14 +17,15 @@ export class FieldComment extends OriginField {
                 elementUrl: getElementUrl(ElementType.SchemaData,
                     this.dataGrid.schema.id,
                     this.item.dataRow.id),
-                sort: 'default'
+                sort: 'default',
+                displayFormat: this.value?.format ?? 'comment',
             });
             if (r != 0 && typeof r == 'number') {
                 var v = this.value;
                 if (typeof v == 'object' && typeof v.count == 'number') {
                     v.count = v.count + r;
                 }
-                else v = { count: r, users: [this.page.user] };
+                else v = { count: r, format: 'comment', users: [this.page.user] };
                 this.value = v;
                 this.forceUpdate();
             }
@@ -42,7 +42,7 @@ export class FieldCommentView extends OriginFileView<FieldComment>{
         if (lodash.isNull(v) || lodash.isUndefined(v)) v = 0;
         var countStr = v > 0 ? `(${v})` : '';
         return <div className='sy-field-text  f-14' >
-            <span onMouseDown={e => this.block.onOpenComment(e)} className="flex-center flex-inline  text-1 padding-w-5 h-30 round-16 item-hover"><S>评论</S><em>{countStr}</em></span>
+            <span onMouseDown={e => this.block.onOpenComment(e)} className="flex-center flex-inline  text-1 padding-w-5 h-30 round item-hover"><S>评论</S><em>{countStr}</em></span>
         </div>
     }
 }

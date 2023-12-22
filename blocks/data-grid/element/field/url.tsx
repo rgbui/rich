@@ -8,9 +8,9 @@ import { Rect } from "../../../../src/common/vector/point";
 import { lst } from "../../../../i18n/store";
 import { Tip } from "../../../../component/view/tooltip/tip";
 
-
 @url('/field/url')
 export class FieldUrl extends OriginField {
+
 }
 
 @view('/field/url')
@@ -36,12 +36,12 @@ export class FieldUrlView extends OriginFileView<FieldUrl>{
     keydown(e: React.KeyboardEvent) {
         this.move()
     }
-    renderFieldValue()  {
-        return <div className={'flex l-20 text-1  flex-top sy-field-title   f-14 '}  onKeyDown={e => this.keydown(e)} onMouseMove={e => this.move(e)}>
+    renderFieldValue() {
+        return <div className={'flex l-20 text-1  flex-top sy-field-title   f-14 '} onKeyDown={e => this.keydown(e)} onMouseMove={e => this.move(e)}>
             <TextArea plain block={this.block} prop='value' placeholder={lst("网址")} ></TextArea>
-            <Tip text={'打开网址'}><a ref={e => this.span = e} href={this.block.value} target="_blank" className="pos-t-r item-hover visible flex-center size-24 text-1 border  round  cursor bg-hover">
-                <Icon icon={LinkSvg}></Icon>
-            </a></Tip>
+            {this.block.value && this.block.value.startsWith('http') && <Tip text={'打开网址'}><a ref={e => this.span = e} href={this.block.value} target="_blank" className={"pos-t-r item-hover visible flex-center size-20 text-1 border  round  cursor bg-hover " + ((this.block?.value as string)?.startsWith('http') ? " " : "hidden")}>
+                <Icon size={16} icon={LinkSvg}></Icon>
+            </a></Tip>}
         </div>
     }
 }

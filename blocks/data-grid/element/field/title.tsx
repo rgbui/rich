@@ -55,7 +55,7 @@ export class FieldTextView extends OriginFileView<FieldText>{
                 icon: this.block.item?.dataRow?.icon
             })}></Icon></span>}
             <TextArea plain block={this.block} prop='value' placeholder={lst("标题")} ></TextArea>
-            {this.block.dataGrid.url == BlockUrlConstant.DataGridTable && <span ref={e => this.span = e} onClick={e => this.block.openPage()} className="sy-field-title-button visible flex-center f-12 text-1 border  round padding-w-5 padding-h-2 cursor">
+            {this.block.dataGrid.url == BlockUrlConstant.DataGridTable && <span ref={e => this.span = e} onClick={e => this.block.openPage()} className="sy-field-title-button visible flex-center f-12 text-1 border-light  round padding-w-5 padding-h-1 cursor">
                 <em><S>打开</S></em>
             </span>}
         </div>

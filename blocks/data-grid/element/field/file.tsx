@@ -2,7 +2,6 @@ import React from "react";
 import { useDataGridFileViewer } from "../../../../extensions/data-grid/filer";
 import { ResourceArguments } from "../../../../extensions/icon/declare";
 import { url, view } from "../../../../src/block/factory/observable";
-
 import { Rect } from "../../../../src/common/vector/point";
 import { util } from "../../../../util/util";
 import { OriginField, OriginFileView } from "./origin.field";
@@ -42,10 +41,10 @@ export class FieldFileView extends OriginFileView<FieldFile>{
         util.downloadFile(img.url, img.filename)
     }
     renderFiles(images: ResourceArguments[]) {
-        return images.map((img, i) => {
-            return <div className="min-h-30 flex" key={i}>
-                <a className="round l-18 padding-w-2 item-hover-focus cursor text-1 text-overflow" >{img.filename}</a>
-                <Tip text={'下载文件'}><span onMouseDown={e => { this.down(img, e) }} className="gap-l-5 size-18 visible flex-center item-hover round cursor"><Icon size={18} icon={DownloadSvg}></Icon></span></Tip>
+        return images.map((img,i)=>{
+            return <div className="min-h-30 gap-b-5 padding-w-5 flex item-hover-focus round " key={i}>
+                <span className="cursor text-1 text-overflow flex-auto" >{img.filename}</span>
+                <Tip text={'下载文件'}><span onMouseDown={e => { this.down(img, e) }} className="gap-l-5 size-20 visible flex-center item-hover round cursor flex-fixed"><Icon size={14} icon={DownloadSvg}></Icon></span></Tip>
             </div>
         })
     }

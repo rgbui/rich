@@ -5,7 +5,7 @@ import { useRelationPickData } from "../../../../extensions/data-grid/relation.p
 import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { url, view } from "../../../../src/block/factory/observable";
 import { Rect } from "../../../../src/common/vector/point";
-import { PageLayoutType, getPageIcon } from "../../../../src/page/declare";
+import { PageLayoutType, getPageIcon, getPageText } from "../../../../src/page/declare";
 import { FieldType } from "../../schema/type";
 import { OriginField, OriginFileView } from "./origin.field";
 
@@ -62,7 +62,7 @@ export class FieldRelationView extends OriginFileView<FieldRelation>{
                 <span className="size-24 remark flex-center flex-inline">
                     <Icon size={18} icon={getPageIcon({ pageType: PageLayoutType.doc, icon: r[icon.name] })}></Icon>
                 </span>
-                <span style={{ maxWidth: Math.max(this.block.viewField.colWidth - 50, 60) }} className="flex-auto  text-overflow">{r[f?.name]}</span>
+                <span style={{ maxWidth: Math.max(this.block.viewField.colWidth - 50, 60) }} className="flex-auto  text-overflow">{getPageText({ text: r[f?.name] })}</span>
             </a></div>
         })}
         </div>
