@@ -90,11 +90,13 @@ export class TableStoreOption extends EventsComponent {
             </div>
             <div className="shy-tablestore-option-selector-drop overflow-y max-h-180">
                 <div className="remark gap-h-8 padding-w-10 h-20 f-12">{this.filterOptions.length > 0 ? lst('选择或创建一个选项') : lst('暂无选项')}</div>
-                <DragList onChange={change} isDragBar={e => e.closest('.shy-tablestore-option-item-icon') ? true : false}>
+                <DragList
+                    onChange={change}
+                    isDragBar={e => e.closest('.shy-tablestore-option-item-icon') ? true : false}>
                     {this.filterOptions.map(op => {
                         return <div className="shy-tablestore-option-item" key={op.text} onClick={e => this.setOption(op)} >
                             {this.isEdit && <span className="shy-tablestore-option-item-icon"><DragHandle></DragHandle></span>}
-                            <span className="shy-tablestore-option-item-text text-overflow"><em style={{ backgroundColor: op.color }}>{op.text}</em></span>
+                            <span className="shy-tablestore-option-item-text text-overflow"><em className=" f-14 padding-h-2  l-16 " style={{ backgroundColor: op.color }}>{op.text}</em></span>
                             {this.isEdit && <span className="shy-tablestore-option-item-property" onClick={e => this.configOption(op, e)}><Dots></Dots></span>}
                         </div>
                     })}

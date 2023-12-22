@@ -19,7 +19,7 @@ import { DragList } from "../../../../component/view/drag.list";
 import { BlockUrlConstant } from "../../../../src/block/constant";
 import { MenuView } from "../../../../component/view/menu/menu";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
-import { FieldType } from "../../../../blocks/data-grid/schema/type";
+import { FieldType, sysFieldTypes } from "../../../../blocks/data-grid/schema/type";
 import { TableStoreGallery } from "../../../../blocks/data-grid/view/gallery";
 import { BlockRenderRange } from "../../../../src/block/enum";
 import { SelectBox } from "../../../../component/view/select/box";
@@ -45,14 +45,17 @@ export class DataGridFields extends EventsComponent {
         </div>
     }
     async openProperty(type: 'field' | 'view', viewField: ViewField | Field, event: React.MouseEvent) {
-        var self = this; var gr = type == "view" ? (viewField as any).field as Field : (viewField as Field);
+        var self = this;
+        var gr = type == "view" ? (viewField as any).field as Field : (viewField as Field);
         if (gr) {
+            var isCanDeleted: boolean = true;
+            if (sysFieldTypes.includes(gr.type)) isCanDeleted = false;
             var items = [
                 { name: 'name', type: MenuItemType.input, value: gr.text },
                 { type: MenuItemType.divide },
                 { name: 'clone', icon: DuplicateSvg, text: lst('复制') },
                 { type: MenuItemType.divide },
-                { name: 'delete', icon: TrashSvg, text: lst('删除') }
+                { name: 'delete', disabled: isCanDeleted ? false : true, icon: TrashSvg, text: lst('删除') }
             ];
             var na = items[0];
             var r = await useSelectMenuItem(
@@ -90,7 +93,6 @@ export class DataGridFields extends EventsComponent {
             await self.block.onMoveViewField(to, from);
             self.forceUpdate();
         }
-
         function getFieldIcon(vf: ViewField) {
             if (vf.type == 'check') return { name: 'bytedance-icon', code: 'check-correct' } as IconValueType
             else if (vf.type == 'rowNum') return { name: 'bytedance-icon', code: 'list-numbers' } as IconValueType
@@ -135,9 +137,10 @@ export class DataGridFields extends EventsComponent {
             </div>
         </div>
     }
-    addField(event: React.MouseEvent) {
+    async addField(event: React.MouseEvent) {
         event.stopPropagation();
-        this.block.onAddField(Rect.fromEvent(event));
+        await this.block.onAddField(Rect.fromEvent(event));
+        this.forceUpdate();
     }
     renderCard() {
         var self = this;
@@ -260,7 +263,7 @@ export class DataGridFields extends EventsComponent {
                         <div className="flex-fixed">
                             <SelectBox small
                                 multiple
-                                value={Array.isArray(bp.bindFieldIds) ? bp.bindFieldIds : (bp.bindFieldId ? [bp.bindFieldId] : [])}
+                                value={bp && Array.isArray(bp.bindFieldIds) ? bp.bindFieldIds : (bp?.bindFieldId ? [bp.bindFieldId] : [])}
                                 onChange={e => {
                                     changeArrayProp(bp, { name: pro.name, bindFieldIds: e })
                                 }}

@@ -20,6 +20,7 @@ import { PopoverSingleton } from "../../../component/popover/popover";
 import { PopoverPosition } from "../../../component/popover/position";
 import { util } from "../../../util/util";
 import { lst } from "../../../i18n/store";
+import { UploadView } from "../../file/upload";
 
 export class DataGridFileViewer extends EventsComponent {
     mime: 'file' | 'image' | 'video' | 'audio' | 'user' = 'file';
@@ -81,6 +82,12 @@ export class DataGridFileViewer extends EventsComponent {
             else this.onSave();
         }
     }
+    onSaveResource(resource: ResourceArguments) {
+        if (this.isMultiple) this.resources.push(resource);
+        else this.resources = [resource]
+        if (this.isMultiple) this.forceUpdate()
+        else this.onSave();
+    }
     render(): ReactNode {
         var self = this;
         function renderItem(resource: ResourceArguments) {
@@ -123,7 +130,7 @@ export class DataGridFileViewer extends EventsComponent {
             return text;
         }
         return <div className={"gap-h-14" + (this.mime == 'user' ? " w-180" : " w-300")}>
-            <div className="max-h-300 overflow-y padding-h-5">
+            {this.resources.length > 0 && <div className="max-h-300 overflow-y padding-h-5">
                 <DragList onChange={(e, c) => this.dragChange(e, c)}
                     isDragBar={e => e.closest('.drag') ? true : false}>
                     {this.resources.map((re, i) => {
@@ -137,10 +144,11 @@ export class DataGridFileViewer extends EventsComponent {
                             </span>
                         </div>
                     })}</DragList>
-            </div>
+            </div>}
             {this.resources.length > 0 && <Divider></Divider>}
-            <div className="gap-h-10 padding-w-14">
-                <Button onClick={e => this.uploadFile(e)} block>{getButtonText()}</Button>
+            <div className="padding-w-14">
+                {self.mime == 'user' && <Button onClick={e => this.uploadFile(e)} block>{getButtonText()}</Button>}
+                {self.mime != 'user' && <UploadView mine={self.mime} change={e => this.onSaveResource(e)}></UploadView>}
             </div>
         </div>
     }

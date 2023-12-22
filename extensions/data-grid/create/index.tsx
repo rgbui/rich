@@ -97,7 +97,8 @@ export class DataGridSelectorView extends EventsComponent {
                 // }
             }
         }
-        function click(item) {
+        function click(item, e) {
+            if (e) e.stopPropagation();
             if (item.name == 'createTable') {
                 var it = items.find(c => c.name == 'table');
                 if (it.value) {

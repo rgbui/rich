@@ -138,7 +138,6 @@ export class DataSourceView extends EventsComponent {
                 })
             }
         })
-
         return <MenuView ref={e => this.mv = e} input={input}
             select={select}
             style={{

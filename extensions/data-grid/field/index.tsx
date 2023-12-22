@@ -6,7 +6,7 @@ import React from "react";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
 import { EventsComponent } from "../../../component/lib/events.component";
-import { PlusSvg, ChevronDownSvg } from "../../../component/svgs";
+import { ChevronDownSvg } from "../../../component/svgs";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { Point, Rect } from "../../../src/common/vector/point";
 import { useOpenEmoji } from "../../emoji";
@@ -18,13 +18,13 @@ import { Input } from "../../../component/view/input";
 import { Switch } from "../../../component/view/switch";
 import { Textarea } from "../../../component/view/input/textarea";
 import { getEmoji } from "../../../net/element.type";
-import './style.less';
 import { DataGridView } from "../../../blocks/data-grid/view/base";
 import lodash from "lodash";
 import { useDataSourceView } from "../datasource";
 import { MenuItemType } from "../../../component/view/menu/declare";
 import { lst } from "../../../i18n/store";
 import { S } from "../../../i18n/view";
+import './style.less';
 
 export class TableFieldView extends EventsComponent {
     onSave() {
@@ -156,7 +156,7 @@ export class TableFieldView extends EventsComponent {
                 <div className="gap-h-10 padding-w-14">
                     <label className="flex gap-b-5 remark f-12"><S>统计表格列</S>:</label>
                     <div onClick={e => selectField(e)} className="flex h-30 padding-w-5 round item-hover cursor">
-                        <Icon icon={GetFieldTypeSvg(self.rollTableSchema.visibleFields.find(g => g.id == this.config.rollupFieldId)?.type)}></Icon>
+                        <Icon size={16} className={'text-1'} icon={GetFieldTypeSvg(self.rollTableSchema.visibleFields.find(g => g.id == this.config.rollupFieldId)?.type)}></Icon>
                         {self.rollTableSchema.visibleFields.find(g => g.id == this.config.rollupFieldId)?.text}
                     </div>
                 </div>
@@ -169,6 +169,7 @@ export class TableFieldView extends EventsComponent {
                             { text: lst('最小值'), value: '$min' },
                             { text: lst('最大值'), value: '$max' },
                             { text: lst('数量'), value: '$count' }
+
                         ].find(g => g.value == this.config.rollupStatistic)?.text}
                     </div>
                 </div>}
