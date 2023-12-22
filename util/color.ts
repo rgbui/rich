@@ -222,6 +222,94 @@ export class ColorUtil {
             return fromHSV(h, s, v);
         }
     }
+    static parseColor(value: string) {
+        if (!value) {
+            value = 'transparent';
+        }
+        if (typeof value != 'string') {
+            console.log('color value is not string');
+            console.trace(value);
+            value = 'transparent';
+        }
+        if (value.toLowerCase() == 'transparent') {
+            value = 'rgba(0,0,0,0)';
+        }
+        value = value.trim();
+        if (value.startsWith('hsl')) {
+            var h: number, s: number, v: number, a = 100;
+            const parts = value.replace(/hsla|hsl|\(|\)/gm, '')
+                .split(/\s|,/g).filter((val) => val !== '').map((val, index) => index > 2 ? parseFloat(val) : parseInt(val, 10));
+
+            if (parts.length === 4) {
+                a = Math.floor(parseFloat(parts[3].toString()) * 100);
+            } else if (parts.length === 3) {
+                a = 100;
+            }
+            if (parts.length >= 3) {
+                const { h, s, v } = this.hsl2hsv(parts[0], parts[1], parts[2]);
+                var c = this.hsv2rgb(h, s, v) as { r: number, g: number, b: number, a: number };
+                c.a = a / 100;
+                return c;
+            }
+        }
+        else if (value.startsWith('hsv')) {
+            var h: number, s: number, v: number, a = 100;
+            const parts = value.replace(/hsva|hsv|\(|\)/gm, '')
+                .split(/\s|,/g).filter((val) => val !== '').map((val, index) => index > 2 ? parseFloat(val) : parseInt(val, 10));
+
+            if (parts.length === 4) {
+                a = Math.floor(parseFloat(parts[3].toString()) * 100);
+            } else if (parts.length === 3) {
+                a = 100;
+            }
+            if (parts.length >= 3) {
+                var c = this.hsv2rgb(parts[0], parts[1], parts[2]) as { r: number, g: number, b: number, a: number };
+                c.a = a / 100;
+                return c;
+            }
+        }
+        else if (value.startsWith('rgb')) {
+            var h: number, s: number, v: number, a = 100;
+            const parts = value.replace(/rgba|rgb|\(|\)/gm, '')
+                .split(/\s|,/g).filter((val) => val !== '').map((val, index) => index > 2 ? parseFloat(val) : parseInt(val, 10));
+            console.log(value, parts);
+            if (parts.length === 4) {
+                a = Math.floor(parseFloat(parts[3].toString()) * 100);
+            } else if (parts.length === 3) {
+                a = 100;
+            }
+            if (parts.length >= 3) {
+                return {
+                    r: parts[0],
+                    g: parts[1],
+                    b: parts[2],
+                    a: a / 100
+                }
+            }
+        }
+        else if (value.startsWith('#')) {
+            const hex = value.replace('#', '').trim();
+            let r, g, b;
+
+            if (hex.length === 3) {
+                r = parseHexChannel(hex[0] + hex[0]);
+                g = parseHexChannel(hex[1] + hex[1]);
+                b = parseHexChannel(hex[2] + hex[2]);
+            } else if (hex.length === 6 || hex.length === 8) {
+                r = parseHexChannel(hex.substring(0, 2));
+                g = parseHexChannel(hex.substring(2, 4));
+                b = parseHexChannel(hex.substring(4, 6));
+            }
+            if (hex.length === 8) {
+                a = Math.floor(parseHexChannel(hex.substring(6)) / 255 * 100);
+            } else if (hex.length === 3 || hex.length === 6) {
+                a = 100;
+            }
+            return {
+                r: r, g, b, a: a / 100
+            }
+        }
+    }
     /***
      * @percentage in [0,100]
      *
