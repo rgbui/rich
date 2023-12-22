@@ -584,6 +584,7 @@ export class DataGridViewOperator {
     async onSearch(this: DataGridView) {
         await this.onReloadData();
     }
+   
     async onDataGridTool(this: DataGridView, fn: () => Promise<void>) {
         try {
             this.dataGridTool.isOpenTool = true;

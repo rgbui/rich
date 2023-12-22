@@ -25,7 +25,8 @@ export class Input extends React.Component<{
     className?: string | (string[]),
     onMousedown?: (event: React.MouseEvent) => void,
     prefix?: React.ReactNode,
-    onSearchDrop?: (value: string) => Promise<MenuItem[]>
+    onSearchDrop?: (value: string) => Promise<MenuItem[]>,
+    onBlur?: (e: React.FocusEvent<HTMLInputElement, Element>) => void
 }>{
     private inputEl: HTMLInputElement;
     onClear() {
@@ -120,6 +121,7 @@ export class Input extends React.Component<{
                     disabled={props.disabled ? true : false}
                     placeholder={props.placeholder}
                     onInput={e => onInput(e)}
+                    onBlur={e => props.onBlur(e)}
                     onKeyDown={e => keydown(e)}
                     readOnly={props.readonly}
                     maxLength={props.maxLength || undefined}
