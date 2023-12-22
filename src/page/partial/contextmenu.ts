@@ -343,9 +343,6 @@ export class PageContextmenu {
                 else if (item.name == 'refPages') {
                     this.onToggleRefPages({ refPages: item.checked })
                 }
-                else if (item.name == 'channel') {
-                    this.onChangeTextChannel(item.value as any)
-                }
                 else if (item.name == 'speak') {
                     this.onChangeTextChannelSpeak(item.value as any)
                 }

@@ -490,18 +490,24 @@ item-selected:选中的效果
 }
 
 
-.item-hover-focus {
+.item-hover-focus,
+.r-item-hover-focus>* {
     background-color: rgba(55, 53, 47, 0.1);
 }
 
 .item-hover-light,
-.item-light-hover {
+.item-light-hover,
+.r-item-hover-light>*,
+.r-item-light-hover>* {
     &:hover {
         background-color: rgba(55, 53, 47, 0.06);
     }
 }
 
-.item-hover-light-focus {
+.item-hover-light-focus,
+.item-light-hover-focus,
+.r-item-hover-light-focus>*,
+.r-item-light-hover-focus>* {
     background-color: rgba(55, 53, 47, 0.06);
 }
 
@@ -509,7 +515,10 @@ item-selected:选中的效果
     background-color: rgba(55, 53, 47, 0.08);
 }
 
-.item-hover-primary {
+.item-hover-primary,
+.item-hover-p,
+.r-item-hover-primary>*,
+.r-item-hover-p>* {
     &:hover {
         background-color: rgb(225, 98, 89);
     }
@@ -739,7 +748,20 @@ body {
         .visible {
             visibility: visible;
         }
+
+        .visible-hover {
+            .visible {
+                visibility: hidden;
+            }
+            &:hover{
+                .visible {
+                    visibility: visible;
+                }
+            }
+        }
     }
+
+
 }
 
 .hide {

@@ -253,7 +253,8 @@ export class Block$LifeCycle {
             this.page.onError(err);
         }
     }
-    async loadSyncBlock(this: Block) {
+    async loadSyncBlock(this: Block)
+    {
         if (this.syncBlockId) {
             var r = await channel.get('/view/snap/query', { ws: this.page.ws, elementUrl: this.elementUrl });
             if (r.ok) {
@@ -267,10 +268,12 @@ export class Block$LifeCycle {
                     console.error(ex);
                     this.page.onError(ex);
                 }
+                console.log('dddd', data);
                 if (typeof data == 'object') {
                     for (var n in data) {
                         if (n == 'blocks') continue;
                         else if (n == 'pattern') await this.pattern.load(data[n]);
+                        else if (n == 'url') continue;
                         else await this.setPropData(n, data[n]);
                     }
                     if (typeof data.blocks == 'object') {
@@ -285,7 +288,7 @@ export class Block$LifeCycle {
                     }
                 }
                 if (Array.isArray(r.data.operates) && r.data.operates.length > 0)
-                    this.page.onSyncUserActions(r.data.operates, 'loadSyncBlock');
+                    await this.page.onSyncUserActions(r.data.operates, 'loadSyncBlock');
             }
         }
         for (let n in this.blocks) {

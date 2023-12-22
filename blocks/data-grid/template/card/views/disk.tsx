@@ -11,8 +11,6 @@ import { CardView } from "../view";
 import { useSelectMenuItem } from "../../../../../component/view/menu";
 import { Rect } from "../../../../../src/common/vector/point";
 import { MenuItem, MenuItemType } from "../../../../../component/view/menu/declare";
-import { lst } from "../../../../../i18n/store";
-
 
 CardModel({
     url: '/list/disk',

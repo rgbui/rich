@@ -137,7 +137,8 @@ export class Page extends Events<PageDirective>{
     layout(options: { width?: number, height?: number }) {
         this.pageVisibleWidth = options?.width;
         this.pageVisibleHeight = options?.height;
-        this.view.forceUpdate()
+        if (this.view)
+            this.view.forceUpdate()
     }
     fragment: DocumentFragment;
     /**

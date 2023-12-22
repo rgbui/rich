@@ -26,24 +26,26 @@ class SyConfirm extends EventsComponent {
         tipLayer.clear(this)
         this.forceUpdate()
     }
-    onConfirm() {
+    onConfirm(e: React.MouseEvent) {
+        e.stopPropagation();
         this.emit('confirm');
         this.close()
     }
-    onCancel() {
+    onCancel(e: React.MouseEvent) {
+        e.stopPropagation();
         this.emit('cancel');
         this.close()
     }
     render() {
         return this.visible && <div className='shy-confirm-box' style={{ zIndex: tipLayer.zoom(this) }}>
-            <div className='shy-confirm-mask' onMouseDown={e => this.onCancel()}></div>
+            <div className='shy-confirm-mask' onMouseDown={e => this.onCancel(e)}></div>
             <div className='shy-confirm'>
                 <div className='shy-confirm-msg'>{this.msg}</div>
                 {this.description && <div className='syh-confirm-description'>{this.description}</div>}
                 <div className='syh-confirm-buttons' style={{ marginTop: 20 }}>
                     <Space align="center">
-                        <Button onClick={e => this.onConfirm()}>{this.continueButton || <S>确定</S>}</Button>
-                        <Button onClick={e => this.onCancel()} ghost>{this.cancelButton || <S>取消</S>}</Button>
+                        <Button onClick={e => this.onConfirm(e)}>{this.continueButton || <S>确定</S>}</Button>
+                        <Button onClick={e => this.onCancel(e)} ghost>{this.cancelButton || <S>取消</S>}</Button>
                     </Space>
                 </div>
             </div>
@@ -51,9 +53,9 @@ class SyConfirm extends EventsComponent {
     }
 }
 var syConfirm: SyConfirm;
-export async function Confirm(msg: string, description?: string,continueButton?: string, cancelButton?: string) {
+export async function Confirm(msg: string, description?: string, continueButton?: string, cancelButton?: string) {
     syConfirm = await Singleton(SyConfirm);
-    syConfirm.open(msg, description,continueButton, cancelButton);
+    syConfirm.open(msg, description, continueButton, cancelButton);
     return new Promise((resolve, reject) => {
         syConfirm.only('confirm', () => resolve(true))
         syConfirm.only('cancel', () => resolve(false))

@@ -3,6 +3,7 @@ import { IconValueType } from "../../component/view/icon";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { IconArguments, ResourceArguments } from "../../extensions/icon/declare";
 import { lst } from "../../i18n/store";
+import { WsConsumeType } from "../../net/ai/cost";
 import { RobotInfo } from "../../types/user";
 import { AtomPermission } from "./permission";
 
@@ -72,30 +73,24 @@ export interface LinkPageItem<T = {}> {
      * 可以指定角色，也可以指定具体的人
      */
     memberPermissions?: { roleId?: string, userid?: string, permissions: AtomPermission[] }[];
-
     isAllow?(...ps: AtomPermission[]): boolean;
     /**
      * 是否能编辑
      */
     isCanEdit?: boolean;
-
     getSubItems?(): Promise<LinkPageItem[]>;
     getItem?(): Partial<LinkPageItem>;
     speak?: 'more' | 'only' | 'unspeak';
     speakDate?: Date,
-    textChannelMode?: 'chat' | 'weibo' | 'ask' | 'tieba'
-
     cover?: { abled: boolean, url: string, thumb: string, top: number },
     plain?: string,
     thumb?: ResourceArguments,
     deletedDate?: Date,
-
     checkedHasChilds?: boolean;
     willLoadSubs?: boolean;
     subCount?: number;
     spread?: boolean,
     childs?: (LinkPageItem & T)[]
-
     browse?: { count: number, users: string[] }
     edit?: { count?: number, users: string[] }
     like?: { count?: number, users?: string[] }
@@ -126,9 +121,9 @@ export interface LinkWs {
         joinProtocol: string
     }
     aiConfig: {
-        text?: string,
-        image?: string,
-        embedding?: string,
+        text?:  WsConsumeType,
+        image?:  WsConsumeType,
+        embedding?:  WsConsumeType,
         disabled?: boolean,
 
         aiSearch?: boolean,

@@ -5,9 +5,10 @@ import { GalleryType, OuterPic } from "../extensions/image/declare";
 import { StatusCode } from "./status.code";
 import { UserAction } from "../src/history/action";
 import { RobotInfo, UserBasic, UserStatus } from "../types/user";
-import {IconArguments, ResourceArguments } from "../extensions/icon/declare";
+import { ResourceArguments } from "../extensions/icon/declare";
 import { PayFeatureCheck } from "../component/pay";
 import { AtomPermission } from "../src/page/permission";
+import { WsConsumeType } from "./ai/cost";
 export type SockResponse<T, U = string> = {
         /**
          * 返回状态码
@@ -163,10 +164,10 @@ export interface ChannelPostMapUrls {
 	"/email/send/code":{args:{email:string},returnType:Promise<SockResponse<{code?:string}>>},
 	"/user/upload/file":{args:{file:File,uploadProgress: (event: ProgressEvent) => void},returnType:Promise<SockResponse<{file:{url:string}}>>},
 	"/robot/doc/embedding":{args:{id:string},returnType:Promise<SockResponse<{totalCount:number}>>},
-	"/text/ai":{args:{input: string, model?: string, uid?: string, options?: {isSession?: boolean,sessionTimeOut?: number, parameters?: Record<string, any>}},returnType:Promise<SockResponse<{message:string}>>},
-	"/text/ai/stream":{args:{question: string,role?:string, model?: string, uid?: string, options?: Record<string, any>,callback:(str:string,done?:boolean,controller?:AbortController)=>void},returnType:Promise<SockResponse<void>>},
+	"/text/ai":{args:{input: string, model?: WsConsumeType, uid?: string, options?: {isSession?: boolean,sessionTimeOut?: number, parameters?: Record<string, any>}},returnType:Promise<SockResponse<{message:string}>>},
+	"/text/ai/stream":{args:{question: string,role?:string, model?: WsConsumeType, uid?: string, options?: Record<string, any>,callback:(str:string,done?:boolean,controller?:AbortController)=>void},returnType:Promise<SockResponse<void>>},
 	"/text/edit":{args:{code: boolean, input: string, question: string, options: any},returnType:Promise<SockResponse<{content:string}>>},
-	"/text/to/image":{args:{prompt:string,options:Record<string,any>},returnType:Promise<SockResponse<{file:Record<string,any>}>>},
+	"/text/to/image":{args:{prompt:string,model?:WsConsumeType,options:Record<string,any>},returnType:Promise<SockResponse<{file:Record<string,any>}>>},
 	"/fetch":{args:{url: string,data?: Record<string, any>,method: string,callback: (chunk: any, done?: boolean) => void},returnType:Promise<void>},
 	"/http":{args:{url: string;data?: Record<string, any>;method: string;},returnType:Promise<SockResponse<any>>},
 	"/ws/upload/file":{args:{file:File,uploadProgress: (event: ProgressEvent) => void},returnType:Promise<SockResponse<{ file:{url:string,name:string,size:number} }>>},
@@ -278,7 +279,7 @@ export interface ChannelGetMapUrls {
 	"/user/order/list":{args:{page?: number, size?: number, word?: string, status?: string,deal?:boolean},returnType:Promise<SockResponse<{page:number,size:number,list:any[],total:number}>>},
 	"/user/wallet":{args:{},returnType:Promise<SockResponse<{money:number,meal:string}>>},
 	"/check/feature":{args:{type:PayFeatureCheck,config?:{fileSize?:number}},returnType:Promise<SockResponse<{warn:boolean,limit:boolean,wallet:{due:Date,oveDue:boolean,meal:string,money:number},free:Record<string,any>,consume:Record<string,any>}>>},
-	"/query/wiki/answer":{args:{ask: string,minRank?:number,model:string, robotId: string,size?:number,contextSize?:number},returnType:Promise<SockResponse<{docs:{contentId:string,docId:string,ps:{at:number,content:string,contentId:string,rank:number}[]}[]}>>},
+	"/query/wiki/answer":{args:{ask: string,minRank?:number,model?:WsConsumeType, robotId: string,size?:number,contextSize?:number},returnType:Promise<SockResponse<{docs:{contentId:string,docId:string,ps:{at:number,content:string,contentId:string,rank:number}[]}[]}>>},
 	"/text/embedding":{args:{text:string},returnType:Promise<SockResponse<{embedding:number[]}>>},
 	"/open/list":{args:any,returnType:Promise<SockResponse<{list:any[]}>>},
 	"/ws/basic":{args:{name?:string,wsId?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},

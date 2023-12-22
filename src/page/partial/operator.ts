@@ -474,15 +474,6 @@ export class Page$Operator {
         await storeCopyBlocks(blocks);
         await this.onBatchDelete(blocks);
     }
-    async onChangeTextChannel(this: Page, mode: LinkPageItem['textChannelMode']) {
-        await channel.air('/page/update/info', {
-            id: this.pageInfo.id,
-            pageInfo: {
-                textChannelMode: mode
-            }
-        })
-        this.forceUpdate()
-    }
     async onChangeTextChannelSpeak(this: Page, speak: LinkPageItem['speak']) {
         await channel.air('/page/update/info', {
             id: this.pageInfo.id,

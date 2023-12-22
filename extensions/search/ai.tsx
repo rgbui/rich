@@ -22,6 +22,7 @@ import { Rect } from "../../src/common/vector/point";
 import { getWsContext } from "../../net/ai/robot";
 import "./style.less";
 import { CopyAlert } from "../../component/copy";
+import { WsConsumeType } from "../../net/ai/cost";
 
 var messages: { id: string, userid?: string, date: Date, content: string, refs?: { blockIds: string[], page: LinkPageItem, elementUrl: string }[] }[] = [];
 
@@ -146,11 +147,9 @@ export class AISearchBox extends EventsComponent {
                 this.forceUpdate();
                 await new Promise(async (resolve, reject) => {
                     await channel.post('/text/ai/stream', {
-
                         question: content,
-                        model: this.ws.aiConfig.text || (window.shyConfig?.isUS ? "gpt" : 'baidu'),
+                        model: this.ws.aiConfig.text || (window.shyConfig?.isUS ? WsConsumeType.gpt_35_turbo : WsConsumeType.ERNIE_Bot_turbo),
                         callback(str, done) {
-                            console.log(str, done);
                             if (typeof str == 'string') text += str;
                             cb.content = marked.parse(text + (done ? "" : "<span class='typed-print'></span>"));
                             self.forceUpdate(() => {

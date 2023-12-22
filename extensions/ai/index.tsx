@@ -45,6 +45,7 @@ import { S } from "../../i18n/view";
 import { KeyboardCode } from "../../src/common/keys";
 
 import lodash from "lodash";
+import { WsConsumeType } from "../../net/ai/cost";
 
 /**
  * The type of the options object that can be passed to the AITool component.
@@ -610,13 +611,12 @@ export class AITool extends EventsComponent {
             }
         })
     }
-
     controller?: AbortController
     lastCommand: { ask: string, command: 'text' | 'image' | 'selection', options?: any } = null;
-    async aiText(options: { prompt?: string, model?: string, isNotFound?: boolean }) {
+    async aiText(options: { prompt?: string, model?: WsConsumeType, isNotFound?: boolean }) {
         this.controller = null;
         if (!options) options = {} as any;
-        if (!options?.model) options.model = this?.page?.ws?.aiConfig?.text || (window.shyConfig.isUS ? "gpt-3.5-turbo" : "ERNIE-Bot-turbo");
+        if (!options?.model) options.model = this?.page?.ws?.aiConfig?.text || (window.shyConfig.isUS ? WsConsumeType.gpt_35_turbo : WsConsumeType.ERNIE_Bot_turbo);
         this.lastCommand = { ask: this.ask, command: 'text', options: lodash.cloneDeep(options) };
         var self = this;
         this.status = AIAskStatus.asking;
@@ -675,10 +675,10 @@ export class AITool extends EventsComponent {
         }
 
     }
-    async aiSelection(options: { prompt?: string, model?: string, isNotFound?: boolean }) {
+    async aiSelection(options: { prompt?: string, model?: WsConsumeType, isNotFound?: boolean }) {
         this.controller = null;
         this.lastCommand = { ask: this.ask, command: 'selection', options: lodash.cloneDeep(options) };
-        if (!options?.model) options.model = this?.page?.ws?.aiConfig?.text || (window.shyConfig.isUS ? "gpt-3.5-turbo" : "ERNIE-Bot-turbo");
+        if (!options?.model) options.model = this?.page?.ws?.aiConfig?.text || (window.shyConfig.isUS ? WsConsumeType.gpt_35_turbo : WsConsumeType.ERNIE_Bot_turbo);
         var self = this;
         this.status = AIAskStatus.selectionAsking;
         self.anwser = '';
@@ -714,7 +714,7 @@ export class AITool extends EventsComponent {
             });
         }
     }
-    async aiImage(options: { prompt?: string, model?: string, isNotFound?: boolean, genImageProp?: boolean }) {
+    async aiImage(options: { prompt?: string, model?: WsConsumeType, isNotFound?: boolean, genImageProp?: boolean }) {
         this.controller = null;
         if (typeof options.model == 'undefined') options.model = this?.page?.ws?.aiConfig?.image
         this.lastCommand = { ask: this.ask, command: 'image', options: lodash.cloneDeep(options) };
@@ -724,16 +724,6 @@ export class AITool extends EventsComponent {
         if (this.options.block) this.status = AIAskStatus.asking;
         else this.status = AIAskStatus.selectionAsking;
         this.updateView()
-        if (options?.genImageProp) {
-            var g = await channel.post('/text/ai', {
-                model: this?.page?.ws?.aiConfig?.text,
-                input: getTemplateInstance(ImagePrompt, { content: options.prompt })
-            })
-            if (g.ok) {
-                ask = g.data.message;
-            }
-        }
-        // console.log(options, ask);
         var r = await channel.post('/http', {
             url: '/text/ai/image',
             method: 'post',
@@ -796,6 +786,9 @@ export class AITool extends EventsComponent {
         if (event.key == KeyboardCode.Esc) {
             if ([AIAskStatus.asking, AIAskStatus.selectionAsking].includes(this.status)) {
                 this.onEsc();
+            }
+            if ([AIAskStatus.willAsk, AIAskStatus.selectionWillAsk].includes(this.status)) {
+                this.close()
             }
         }
         else if (event.key == KeyboardCode.R) {
