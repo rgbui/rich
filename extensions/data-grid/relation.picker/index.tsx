@@ -2,7 +2,7 @@ import React from "react";
 import { Field } from "../../../blocks/data-grid/schema/field";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { EventsComponent } from "../../../component/lib/events.component";
-import { CloseSvg, CollectTableSvg, SearchSvg } from "../../../component/svgs";
+import { CloseSvg, SearchSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { PopoverSingleton } from "../../../component/popover/popover";
 import { PopoverPosition } from "../../../component/popover/position";
@@ -55,7 +55,7 @@ class RelationPicker extends EventsComponent {
             })
             return <div>
                 <div >
-                    <div className="gap-w-14 gap-h-5">
+                    <div className="gap-w-14 gap-t-10 gap-b-5">
                         <Input
                             prefix={<span className="size-24 flex-center cursor"><Icon className={'remark'} size={16} icon={SearchSvg}></Icon></span>}
                             size='small'
