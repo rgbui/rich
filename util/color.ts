@@ -272,7 +272,6 @@ export class ColorUtil {
             var h: number, s: number, v: number, a = 100;
             const parts = value.replace(/rgba|rgb|\(|\)/gm, '')
                 .split(/\s|,/g).filter((val) => val !== '').map((val, index) => index > 2 ? parseFloat(val) : parseInt(val, 10));
-            console.log(value, parts);
             if (parts.length === 4) {
                 a = Math.floor(parseFloat(parts[3].toString()) * 100);
             } else if (parts.length === 3) {
