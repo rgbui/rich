@@ -40,6 +40,7 @@ export class LatestOrHot extends Block {
         }
     }
 }
+
 @view('/data-grid/LatestOrHot')
 export class LatestOrHotView extends BlockView<LatestOrHot>{
     renderView(): ReactNode {
