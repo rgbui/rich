@@ -1,9 +1,9 @@
 import React, { CSSProperties } from "react";
 import { CloseSvg } from "../../svgs";
 import { Icon } from "../icon";
-import "./style.less";
 import { MenuItem } from "../menu/declare";
 import { KeyboardCode } from "../../../src/common/keys";
+import "./style.less";
 
 export class Input extends React.Component<{
     style?: CSSProperties,
@@ -121,7 +121,10 @@ export class Input extends React.Component<{
                     disabled={props.disabled ? true : false}
                     placeholder={props.placeholder}
                     onInput={e => onInput(e)}
-                    onBlur={e => props.onBlur(e)}
+                    onBlur={e => {
+                        if (props.onBlur)
+                            props?.onBlur(e)
+                    }}
                     onKeyDown={e => keydown(e)}
                     readOnly={props.readonly}
                     maxLength={props.maxLength || undefined}
@@ -130,7 +133,7 @@ export class Input extends React.Component<{
                 ></input>
             </div>
             {props.clear && this.props.value && <div className="shy-input-clear flex-fixed" onClick={e => this.onClear()}>
-                <div className="size-20 flex-center item-hover circle cursor "><Icon size={10} icon={CloseSvg}></Icon></div>
+                <div className="size-20 flex-center item-hover circle cursor "><Icon size={12} icon={CloseSvg}></Icon></div>
             </div>}
             {this.drop?.items && this.drop?.items?.length > 0 && this.drop.visible && <div style={{ top: 30 }} className="pos pos-top-full padding-h-10 round bg-white shadow">
                 {this.drop.items.map((item, i) => {
