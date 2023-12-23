@@ -1,14 +1,17 @@
 import lodash from "lodash";
 import React from "react";
 import { Input } from "../../../../component/view/input";
-import { url, view } from "../../../../src/block/factory/observable";
+import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { OriginFilterField, OriginFilterFieldView } from "./origin.field";
-import { Icon } from "../../../../component/view/icon";
-import { SearchSvg } from "../../../../component/svgs";
+import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
+import { BlockDirective, BlockRenderRange } from "../../../../src/block/enum";
+import { lst } from "../../../../i18n/store";
 
 @url('/field/filter/search')
 export class SearchText extends OriginFilterField {
+    @prop()
+    InputSize: 'default' | 'larger' = 'default';
     word: string = '';
     onInputValue = lodash.debounce((value) => {
         this.onForceInput(value);
@@ -26,6 +29,34 @@ export class SearchText extends OriginFilterField {
             value: this.word
         }]
     }
+    async onGetContextMenus() {
+        var rs = await super.onGetContextMenus();
+        var pos = rs.findIndex(g => g.name == 'fieldTextDisplay');
+        if (pos > -1) {
+            var ns: MenuItem<string | BlockDirective>[] = [];
+            ns.push({
+                name: 'InputSize',
+                text: lst('大小 '),
+                icon: { name: 'bytedance-icon', code: 'zoom-in' },
+                value: this.InputSize,
+                type: MenuItemType.select,
+                options: [
+                    { text: lst('小'), value: 'default', checkLabel: this.InputSize == 'default' },
+                    { text: lst('大'), value: 'larger', checkLabel: this.InputSize == 'larger' },
+                ]
+            })
+            rs.splice(pos + 1, 0, ...ns)
+        }
+        return rs;
+    }
+    async onContextMenuInput(item: MenuItem<string | BlockDirective>) {
+        switch (item.name) {
+            case 'InputSize':
+                this.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self })
+                return;
+        }
+        super.onContextMenuInput(item)
+    }
 }
 
 @view('/field/filter/search')
@@ -37,11 +68,19 @@ export class SearchTextView extends BlockView<SearchText>{
                 style={this.block.contentStyle}
                 filterField={this.block}>
                 <Input
-                    prefix={<span className="size-24 flex-center cursor"><Icon className={'remark'} size={16} icon={SearchSvg}></Icon></span>}
+                    style={{
+                        background: '#fff',
+                        borderRadius: this.block.InputSize == 'larger' ? 10 : undefined,
+                    }}
+                    // prefix={<span className="size-24 flex-center cursor"><Icon className={'remark'} size={16} icon={SearchSvg}></Icon></span>}
                     value={this.block.word}
-                    onChange={e => this.block.onInputValue(e)}
+                    onChange={e => {
+                        this.block.onInputValue(e)
+                    }}
+                    placeholder={lst('搜索...')}
                     onEnter={e => { self.block.refBlock.onSearch() }}
                     clear
+                    size={this.block.InputSize}
                     onClear={() => {
                         self.block.onForceInput('');
                     }}

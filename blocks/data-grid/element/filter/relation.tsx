@@ -11,6 +11,7 @@ import { BlockDirective, BlockRenderRange } from "../../../../src/block/enum";
 import { CloseSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import lodash from "lodash";
+import { getPageIcon, getPageText } from "../../../../src/page/declare";
 
 @url('/field/filter/relation')
 export class FilterRelation extends OriginFilterField {
@@ -27,7 +28,7 @@ export class FilterRelation extends OriginFilterField {
     }
     async onGetContextMenus() {
         var rs = await super.onGetContextMenus();
-        var pos = rs.findIndex(g => g.name == 'showFieldText');
+        var pos = rs.findIndex(g => g.name == 'fieldTextDisplay');
         if (pos > -1) {
             var ns: MenuItem<string | BlockDirective>[] = [];
             ns.push({
@@ -81,25 +82,31 @@ export class FilterRelationView extends BlockView<FilterRelation>{
     renderView() {
         return <div style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle}
             filterField={this.block}>
-            <div onMouseDown={e =>this.mousedown(e)} className="flex-line flex round relative visible-hover padding-l-5" style={{
-                height: 28,
-                width: '100%',
-                boxShadow: 'rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset',
-                background: 'rgba(242, 241, 238, 0.6)',
-                borderRadius: 4,
-                lineHeight: '26px'
-            }}>
-                {this.block.selectDataIds.map(s => {
-                    return <span className="remark f-12 flex-center item-hover l-20 cursor round padding-w-5 " key={s.id}>
-                        {s.title}
-                        <em className="gap-l-2 size-12 flex-center cursor round visible" onMouseDown={e => {
-                            e.stopPropagation();
-                            lodash.remove(this.block.selectDataIds, g => g.id == s.id)
-                            if (this.block.refBlock) this.block.refBlock.onSearch();
-                            this.forceUpdate()
-                        }}><Icon icon={CloseSvg} size={10}></Icon></em>
-                    </span>
-                })}
+            <div className="flex">
+                <div
+                    onMouseDown={e => this.mousedown(e)}
+                    className="flex-line flex round relative visible-hover padding-l-5" style={{
+                        height: 28,
+                        width: '100%',
+                        boxShadow: 'rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset',
+                        // background: 'rgba(242, 241, 238, 0.6)',
+                        background: '#fff',
+                        borderRadius: 4,
+                        lineHeight: '26px'
+                    }}>
+                    {this.block.selectDataIds.map(s => {
+                        return <span className="f-12 flex-center item-hover l-20 cursor round padding-w-5 " key={s.id}>
+                            <span className="flex-fixed size-16 flex-center remark "><Icon icon={getPageIcon(s)}></Icon></span>
+                            <span className="flex-auto text-overflow max-w-80 text">{getPageText({ text: s.title })}</span>
+                            <em className="flex-fixed gap-l-2 size-12 flex-center cursor round visible remark " onMouseDown={e => {
+                                e.stopPropagation();
+                                lodash.remove(this.block.selectDataIds, g => g.id == s.id)
+                                if (this.block.refBlock) this.block.refBlock.onSearch();
+                                this.forceUpdate()
+                            }}><Icon icon={CloseSvg} size={10}></Icon></em>
+                        </span>
+                    })}
+                </div>
             </div>
         </OriginFilterFieldView ></div>
     }

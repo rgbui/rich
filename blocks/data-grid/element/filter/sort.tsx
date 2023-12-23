@@ -20,23 +20,26 @@ export class FilterSort extends OriginFilterField {
             }
     }
 }
+
 @view('/field/filter/sort')
 export class SearchTextView extends BlockView<FilterSort>{
     renderView() {
         return <div style={this.block.visibleStyle}><OriginFilterFieldView
             style={this.block.contentStyle}
             filterField={this.block}>
-            <SelectBox
-                small
-                border
-                inline
-                value={this.block.sortRule}
-                onChange={e => this.block.onFilter(e as number)}
-                options={[
-                    { text: lst('默认'), value: 0, icon: { name: 'bytedance-icon', code: 'align-text-both' } },
-                    { text: lst("升序"), value: 1, icon: { name: 'bytedance-icon', code: 'sort-amount-up' } },
-                    { text: lst('降序'), value: -1, icon: { name: 'bytedance-icon', code: 'sort-amount-down' } }
-                ]}></SelectBox>
+            <div className="flex">
+                <SelectBox
+                    small
+                    border
+                    inline
+                    value={this.block.sortRule}
+                    onChange={e => this.block.onFilter(e as number)}
+                    options={[
+                        { text: lst('默认'), value: 0, icon: { name: 'bytedance-icon', code: 'align-text-both' } },
+                        { text: lst("升序"), value: 1, icon: { name: 'bytedance-icon', code: 'sort-amount-up' } },
+                        { text: lst('降序'), value: -1, icon: { name: 'bytedance-icon', code: 'sort-amount-down' } }
+                    ]}></SelectBox>
+            </div>
         </OriginFilterFieldView ></div>
     }
 }

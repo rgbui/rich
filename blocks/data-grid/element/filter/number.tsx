@@ -46,12 +46,13 @@ export class FilterFieldNumberView extends BlockView<FilterFieldNumber>{
                 height: 28,
                 width: '100%',
                 boxShadow: 'rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset',
-                background: 'rgba(242, 241, 238, 0.6)',
+                // background: 'rgba(242, 241, 238, 0.6)',
+                background: '#fff',
                 borderRadius: 4,
                 lineHeight: '26px'
             }}>
                 <input
-                    className="noborder gap-l-10 no-bg  text-center"
+                    className="noborder placeholder-remark gap-l-10 no-bg  text-center f-14"
                     style={{ width: 40 }}
                     type='text'
                     placeholder={lst("起始值")}
@@ -60,7 +61,7 @@ export class FilterFieldNumberView extends BlockView<FilterFieldNumber>{
                 />
                 <span className="remark gap-w-5 flex-center h-20"><Icon size={16} rotate={90} icon={NsArowSvg} ></Icon></span>
                 <input
-                    className="noborder no-bg text-center"
+                    className="noborder placeholder-remark no-bg text-center  f-14"
                     style={{ width: 40 }}
                     type='text'
                     placeholder={lst("结束值")}

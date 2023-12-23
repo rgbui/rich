@@ -37,10 +37,9 @@ export class SearchUser extends OriginFilterField {
             value: this.selectUsers
         }]
     }
-    async onGetContextMenus()
-    {
+    async onGetContextMenus() {
         var rs = await super.onGetContextMenus();
-        var pos = rs.findIndex(g => g.name == 'showFieldText');
+        var pos = rs.findIndex(g => g.name == 'fieldTextDisplay');
         if (pos > -1) {
             var ns: MenuItem<string | BlockDirective>[] = [];
             ns.push({
@@ -75,7 +74,7 @@ export class SearchUser extends OriginFilterField {
 @view('/field/filter/user')
 export class SearchTextView extends BlockView<SearchUser>{
     async mousedown(event: React.MouseEvent) {
-        var r = await useUserPicker({ roundArea: Rect.fromEvent(event) }, this.block.page.ws, { ignoreUserAll: true });
+        var r = await useUserPicker({ roundArea: Rect.fromEvent(event) }, this.block.page.ws, {});
         if (r) {
             this.block.onFilter(r.id)
         }
@@ -85,7 +84,7 @@ export class SearchTextView extends BlockView<SearchUser>{
             filterField={this.block}
         >
             <div onMouseDown={e => this.mousedown(e)}>
-                {!(this.block.selectUsers?.length > 0) && <em className="remark f-14"><S>所有人</S></em>}
+                {!(this.block.selectUsers?.length > 0) && <em className="remark cursor item-hover round padding-w-5 padding-h-2 f-14 "><S>所有人</S></em>}
                 <UserAvatars size={24} users={this.block.selectUsers}></UserAvatars>
             </div>
         </OriginFilterFieldView ></div>

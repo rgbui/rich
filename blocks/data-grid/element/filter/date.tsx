@@ -150,17 +150,19 @@ export class FilterFieldDate extends OriginFilterField {
     }
     async onGetContextMenus() {
         var rs = await super.onGetContextMenus();
-        var pos = rs.findIndex(g => g.name == 'showFieldText');
+        var pos = rs.findIndex(g => g.name == 'fieldTextDisplay');
         var ns: MenuItem<string | BlockDirective>[] = [];
+        ns.push({ type: MenuItemType.divide });
         ns.push({
             name: 'filterType',
             text: lst('日期类型'),
             type: MenuItemType.select,
             value: this.filterType,
+            icon: { name: 'bytedance-icon', code: 'config' },
             options: [
                 { text: lst('范围日期'), value: 'dateRange' },
-                { text: lst('下拉类别'), value: 'dateSelect' },
-                { text: lst('日期类别分组'), value: 'dateButtons' },
+                { text: lst('固定选择'), value: 'dateSelect' },
+                { text: lst('固定分组'), value: 'dateButtons' },
             ]
         })
         rs.splice(pos + 1, 0, ...ns)
@@ -206,24 +208,25 @@ export class FilterFieldDateView extends BlockView<FilterFieldDate>{
                     this.forceUpdate()
                 }} options={dateOptions.filter(g => g?.type != MenuItemType.divide) as any}></SelectButtons>
             </div>}
-            {this.block.filterType == 'dateSelect' && <SelectBox small border options={dateOptions} value={this.block.dateSelectValue} onChange={e => {
+            {this.block.filterType == 'dateSelect' && <SelectBox border options={dateOptions} value={this.block.dateSelectValue} onChange={e => {
                 this.block.dateSelectValue = e;
                 if (this.block.refBlock) this.block.refBlock.onSearch()
                 this.forceUpdate()
             }}></SelectBox>}
-            {this.block.filterType == 'dateRange' && <div className="flex-line flex round relative" style={{
+            {this.block.filterType == 'dateRange' && <div className="flex-line flex round relative visible-hover" style={{
                 height: 28,
                 width: '100%',
                 boxShadow: 'rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset',
-                background: 'rgba(242, 241, 238, 0.6)',
+                background: '#fff',
+                // background: 'rgba(242, 241, 238, 0.6)',
                 borderRadius: 4,
                 lineHeight: '26px'
             }}>
-                <span className="cursor gap-l-10" onMouseDown={e => this.block.openDatePicker('startDate', e)}>{this.block.startDate ? dayjs(this.block.startDate).format(this.block.format) : <em className="remark f-14"><S>起始日期</S></em>}</span>
-                <em className="remark gap-w-5 flex-center h-20"><Icon size={16} icon={SwitchArrowSvg}></Icon></em>
-                <span className="cursor" onMouseDown={e => this.block.openDatePicker('endDate', e)}>{this.block.endDate ? dayjs(this.block.endDate).format(this.block.format) : <em className="remark f-14"><S>结束日期</S></em>}</span>
-                <span style={{ display: this.block.startDate || this.block.endDate ? "flex" : 'none' }} onMouseDown={e => this.block.onClear()} className="pos-right-full flex-center gap-r-5" >
-                    <span className="size-16 flex-center cursor circle item-hover"><Icon size={12} icon={CloseSvg}></Icon></span>
+                <span className="cursor gap-l-10 flex-fixed f-14" onMouseDown={e => this.block.openDatePicker('startDate', e)}>{this.block.startDate ? dayjs(this.block.startDate).format(this.block.format) : <em className="remark f-14"><S>起始日期</S></em>}</span>
+                <em className="remark gap-w-5 flex-center h-20 flex-fixed"><Icon size={16} icon={SwitchArrowSvg}></Icon></em>
+                <span className="cursor flex-fixed f-14" onMouseDown={e => this.block.openDatePicker('endDate', e)}>{this.block.endDate ? dayjs(this.block.endDate).format(this.block.format) : <em className="remark f-14"><S>结束日期</S></em>}</span>
+                <span style={{ display: this.block.startDate || this.block.endDate ? "flex" : 'none' }} onMouseDown={e => this.block.onClear()} className="pos-right-full flex-center gap-r-5 visible" >
+                    <span className="size-20 flex-center cursor circle item-hover"><Icon size={12} icon={CloseSvg}></Icon></span>
                 </span>
             </div>}
         </OriginFilterFieldView></div>

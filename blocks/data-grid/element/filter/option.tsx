@@ -70,12 +70,15 @@ export class FilterFieldOption extends OriginFilterField {
                 icon: { name: 'bytedance-icon', code: 'components' },
                 type: MenuItemType.select,
                 options: [
-                    { text: lst('下拉框'), value: 'select' },
+                    { text: lst('下拉列表'), value: 'select' },
                     { text: lst('行内列表'), value: 'listLine' },
                     { text: lst('列表'), value: 'list' },
-                    { text: lst('复选选择'), value: 'listCheck' }
+                    { text: lst('选择列表'), value: 'listCheck' }
                 ],
                 value: this.format
+            })
+            ns.push({
+                type: MenuItemType.divide
             })
             ns.push({
                 name: 'isStat',
@@ -157,8 +160,8 @@ export class FilterFieldOptionView extends BlockView<FilterFieldOption>{
             else return '';
         }
         if (this.block.format == 'select') {
-            return <div>
-                <SelectBox small multiple={this.block.isMultiple} value={this.block.isMultiple ? this.block.values : (this.block.values.length == 0 ? "" : this.block.values[0] || "")} border
+            return <div className="flex">
+                <SelectBox multiple={this.block.isMultiple} value={this.block.isMultiple ? this.block.values : (this.block.values.length == 0 ? "" : this.block.values[0] || "")} border
                     options={[{ text: lst('全部') + gs(''), value: '' }, ...this.block.field.config.options.map(c => {
                         return {
                             text: c.text + gs(c.value),
@@ -182,9 +185,9 @@ export class FilterFieldOptionView extends BlockView<FilterFieldOption>{
                 }}></SelectButtons>
         </div>
         else if (this.block.format == 'list') {
-            return <div>
+            return <div className="f-14">
                 <SelectItems
-                    gap={10}
+                    gap={5}
                     multiple={this.block.isMultiple}
                     value={this.block.isMultiple ? this.block.values : (this.block.values.length == 0 ? "" : (this.block.values[0] || ""))}
                     options={[...this.block.field.config.options.map(c => {
@@ -198,7 +201,7 @@ export class FilterFieldOptionView extends BlockView<FilterFieldOption>{
             </div>
         }
         else if (this.block.format == 'listCheck') {
-            return <div>
+            return <div className="f-14">
                 <CheckBoxList direction={'y'} multiple={this.block.isMultiple} value={this.block.isMultiple ? this.block.values : (this.block.values.length == 0 ? "" : this.block.values[0] || "")}
                     options={[...this.block.field.config.options.map(c => {
                         return {

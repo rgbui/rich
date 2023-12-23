@@ -77,11 +77,11 @@ export class OriginFilterField extends Block {
             var pos = rs.findIndex(g => g == rg);
             var ns: MenuItem<string | BlockDirective>[] = [];
             ns.push({
-                text: lst('属性名'),
+                text: lst('显示'),
                 childs: [
                     { name: 'fieldTextDisplay', value: 'x', text: lst('横向'), checkLabel: this.fieldTextDisplay == 'x' },
                     { name: 'fieldTextDisplay', value: 'y', text: lst('纵向'), checkLabel: this.fieldTextDisplay == 'y' },
-                    { name: 'fieldTextDisplay', value: 'none', text: lst('不显示'), checkLabel: this.fieldTextDisplay == 'none' },
+                    { name: 'fieldTextDisplay', value: 'none', text: lst('仅显示组件'), checkLabel: this.fieldTextDisplay == 'none' },
                 ],
                 icon: { name: 'bytedance-icon', code: 'preview-close' }
             })
@@ -124,24 +124,24 @@ export class OriginFilterFieldView extends React.Component<{
     render(): React.ReactNode {
         if (!this.props.filterField.refBlock) return <Spin block></Spin>
         if (this.props.filterField.fieldTextDisplay == 'x') {
-            return <div className={"flex" + (this.props.top ? " flex-top" : '')} style={this.props.style || {}}>
-                <label className="gap-r-5">{this.props.filterField.fieldText}:</label>
+            return <div className={"text-1 flex" + (this.props.top ? " flex-top" : '')} style={this.props.style || {}}>
+                <label className="gap-r-5 flex-fixed">{this.props.filterField.fieldText}:</label>
                 <div onMouseDown={e => { e.stopPropagation() }} className="flex-auto">{this.props.children}</div>
             </div>
         }
         else if (this.props.filterField.fieldTextDisplay == 'y') {
-            return <div>
+            return <div className="text-1">
                 <div>{this.props.filterField.fieldText}</div>
                 <div className="gap-t-5">{this.props.children}</div>
             </div>
         }
         else if (this.props.filterField.fieldTextDisplay == 'none') {
-            return <div style={this.props.style || {}} onMouseDown={e => { e.stopPropagation() }}>
+            return <div className="text-1" style={this.props.style || {}} onMouseDown={e => { e.stopPropagation() }}>
                 {this.props.children}
             </div>
         }
-        return <div className={"flex" + (this.props.top ? " flex-top" : '')} style={this.props.style || {}}>
-            {this.props.filterField.fieldTextDisplay && <label className="gap-r-5">{this.props.filterField.fieldText}:</label>}
+        return <div className={"text-1 flex" + (this.props.top ? " flex-top" : '')} style={this.props.style || {}}>
+            {this.props.filterField.fieldTextDisplay && <label className="gap-r-5 flex-fixed">{this.props.filterField.fieldText}:</label>}
             <div onMouseDown={e => { e.stopPropagation() }} className="flex-auto">{this.props.children}</div>
         </div>
     }
