@@ -208,7 +208,7 @@ export class FilterFieldDateView extends BlockView<FilterFieldDate>{
                     this.forceUpdate()
                 }} options={dateOptions.filter(g => g?.type != MenuItemType.divide) as any}></SelectButtons>
             </div>}
-            {this.block.filterType == 'dateSelect' && <SelectBox border options={dateOptions} value={this.block.dateSelectValue} onChange={e => {
+            {this.block.filterType == 'dateSelect' && <SelectBox inline border options={dateOptions} value={this.block.dateSelectValue} onChange={e => {
                 this.block.dateSelectValue = e;
                 if (this.block.refBlock) this.block.refBlock.onSearch()
                 this.forceUpdate()

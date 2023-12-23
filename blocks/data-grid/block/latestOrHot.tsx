@@ -6,6 +6,8 @@ import { BlockView } from "../../../src/block/view";
 import { DataGridView } from "../view/base";
 import React from "react";
 import { FieldType } from "../schema/type";
+import { SelectButtons } from "../../../component/view/button/select";
+import { lst } from "../../../i18n/store";
 
 @url('/data-grid/LatestOrHot')
 export class LatestOrHot extends Block {
@@ -50,8 +52,14 @@ export class LatestOrHotView extends BlockView<LatestOrHot>{
         else style.justifyContent = 'flex-start';
         return <div style={this.block.visibleStyle}>
             <div className="flex" style={style}>
-                <span style={{ borderRadius: '4px 0px 0px 4px' }} className={"cursor padding-w-10 padding-h-2 f-14 " + (this.block.lasteOrHost == 'latest' ? "bg-primary text-white" : "item-hover-focus")} onMouseDown={e => { e.stopPropagation(); this.block.onSet('latest') }}>最新</span>
-                <span style={{ borderRadius: '0px 4px 4px 0px' }} className={"cursor padding-w-10 padding-h-2 f-14 " + (this.block.lasteOrHost == 'hot' ? "bg-primary text-white" : "item-hover-focus")} onMouseDown={e => { e.stopPropagation(); this.block.onSet('hot') }}>最热</span>
+                <SelectButtons
+                    value={this.block.lasteOrHost}
+                    options={[
+                        { text: lst('最新'), value: 'latest' },
+                        { text: lst('最热'), value: 'hot' }
+                    ]}
+                    onChange={v => this.block.onSet(v)}
+                ></SelectButtons>
             </div>
         </div>
     }

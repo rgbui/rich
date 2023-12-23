@@ -60,7 +60,7 @@ export class FilterFieldOption extends OriginFilterField {
             ns.push({
                 name: 'isMultiple',
                 text: lst('多选'),
-                icon: { name: 'bytedance-icon', code: 'more-three' },
+                icon: { name: 'bytedance-icon', code: 'more-two' },
                 checked: this.isMultiple,
                 type: MenuItemType.switch,
             })
@@ -161,7 +161,7 @@ export class FilterFieldOptionView extends BlockView<FilterFieldOption>{
         }
         if (this.block.format == 'select') {
             return <div className="flex">
-                <SelectBox multiple={this.block.isMultiple} value={this.block.isMultiple ? this.block.values : (this.block.values.length == 0 ? "" : this.block.values[0] || "")} border
+                <SelectBox   inline multiple={this.block.isMultiple} value={this.block.isMultiple ? this.block.values : (this.block.values.length == 0 ? "" : this.block.values[0] || "")} border
                     options={[{ text: lst('全部') + gs(''), value: '' }, ...this.block.field.config.options.map(c => {
                         return {
                             text: c.text + gs(c.value),
@@ -174,7 +174,7 @@ export class FilterFieldOptionView extends BlockView<FilterFieldOption>{
             </div>
         }
         else if (this.block.format == 'listLine') return <div className="inline">
-            <SelectButtons gap={10} multiple={this.block.isMultiple} value={this.block.isMultiple ? this.block.values : (this.block.values.length == 0 ? "" : (this.block.values[0] || ""))}
+            <SelectButtons gap={5} multiple={this.block.isMultiple} value={this.block.isMultiple ? this.block.values : (this.block.values.length == 0 ? "" : (this.block.values[0] || ""))}
                 options={[{ text: lst('全部') + gs(''), value: '' }, ...this.block.field.config.options.map(c => {
                     return {
                         text: c.text + gs(c.value),

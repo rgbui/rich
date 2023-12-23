@@ -16,6 +16,7 @@ import { SelectButtons } from "../../../component/view/button/select";
 import { SelectItems } from "../../../component/view/button/item";
 import { CheckBoxList } from "../../../component/view/checkbox/list";
 import { util } from "../../../util/util";
+import { S } from "../../../i18n/view";
 
 @url('/data-grid/OptionRule')
 export class OptionDefineRule extends Block {
@@ -73,6 +74,16 @@ export class OptionDefineRule extends Block {
             icon: { name: 'bytedance-icon', code: 'association' }
         });
         items.push({
+            name: 'isMultiple',
+            text: lst('多选'),
+            icon: { name: 'bytedance-icon', code: 'more-two' },
+            checked: this.isMultiple,
+            type: MenuItemType.switch,
+        })
+
+        items.push({ type: MenuItemType.divide })
+
+        items.push({
             text: lst('对齐'),
             icon: { name: 'bytedance-icon', code: 'align-text-both' },
             childs: [
@@ -106,20 +117,14 @@ export class OptionDefineRule extends Block {
             icon: { name: 'bytedance-icon', code: 'components' },
             type: MenuItemType.select,
             options: [
-                { text: lst('下拉框'), value: 'select' },
+                { text: lst('下拉列表'), value: 'select' },
                 { text: lst('行内列表'), value: 'listLine' },
                 { text: lst('列表'), value: 'list' },
-                { text: lst('复选选择'), value: 'listCheck' }
+                { text: lst('选择选择'), value: 'listCheck' }
             ],
             value: this.format
         })
-        items.push({
-            name: 'isMultiple',
-            text: lst('多选'),
-            icon: { name: 'bytedance-icon', code: 'more-three' },
-            checked: this.isMultiple,
-            type: MenuItemType.switch,
-        })
+
         items.push({
             type: MenuItemType.divide
         });
@@ -167,7 +172,7 @@ export class OptionDefineRule extends Block {
     getFilters(): SchemaFilter[] {
         var fs = this.optionRules.findAll(g => this.values.includes(g.id)).map(v => v.filter);
         if (fs.length > 0) {
-           
+
             if (this.isMultiple)
                 return [{
                     logic: 'or',
@@ -183,7 +188,7 @@ export class OptionDefineRuleView extends BlockView<OptionDefineRule>{
         var self = this;
         if (this.block.format == 'select') {
             return <div>
-                <SelectBox small multiple={this.block.isMultiple} value={this.block.isMultiple ? this.block.values : (this.block.values.length == 0 ? "" : this.block.values[0] || "")} border
+                <SelectBox inline multiple={this.block.isMultiple} value={this.block.isMultiple ? this.block.values : (this.block.values.length == 0 ? "" : this.block.values[0] || "")} border
                     options={[{ text: lst('全部'), value: '' }, ...this.block.optionRules.map(c => {
                         return {
                             text: c.text,
@@ -247,11 +252,11 @@ export class OptionDefineRuleView extends BlockView<OptionDefineRule>{
         return <div style={this.block.visibleStyle}>
             {this.block.optionRules.length == 0 && <div onMouseDown={e => { e.stopPropagation(); this.block.onOpenRule() }} className="flex remark round padding-h-3 padding-r-10" style={{ backgroundColor: 'rgb(242, 241, 238)' }}>
                 <span className="size-30 gap-l-5 flex-center cursor item-hover"><Icon size={20} icon={{ name: 'bytedance-icon', code: 'association' }}></Icon></span>
-                <span >添加查询规则</span>
+                <span ><S>添加查询规则</S></span>
             </div>}
-            <div className="flex" style={style}>
+            {this.block.optionRules.length > 0 && <div style={style}>
                 {this.renderOptions()}
-            </div>
+            </div>}
         </div>
     }
 }

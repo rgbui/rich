@@ -34,13 +34,6 @@ export class FilterFieldCheck extends OriginFilterField {
         if (pos > -1) {
             var ns: MenuItem<string | BlockDirective>[] = [];
             ns.push({ type: MenuItemType.divide })
-            // ns.push({
-            //     name: 'isMultiple',
-            //     text: lst('多选'),
-            //     icon: { name: 'bytedance-icon', code: 'more-three' },
-            //     checked: this.isMultiple,
-            //     type: MenuItemType.switch,
-            // })
             ns.push({
                 name: 'format',
                 text: lst('格式'),
@@ -48,19 +41,10 @@ export class FilterFieldCheck extends OriginFilterField {
                 type: MenuItemType.select,
                 options: [
                     { text: lst('复选框'), value: 'checkbox' },
-                    { text: lst('开关'), value: 'toggle' },
-                    // { text: lst('列表'), value: 'list' },
-                    // { text: lst('复选选择'), value: 'listCheck' }
+                    { text: lst('开关'), value: 'toggle' }
                 ],
                 value: this.format
             })
-            // ns.push({
-            //     name: 'isStat',
-            //     text: lst('分类统计'),
-            //     icon: { name: 'bytedance-icon', code: 'chart-pie' },
-            //     checked: this.isStat,
-            //     type: MenuItemType.switch,
-            // })
             rs.splice(pos + 1, 0, ...ns)
         }
         return rs;

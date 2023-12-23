@@ -34,7 +34,7 @@ export class FilterRelation extends OriginFilterField {
             ns.push({
                 name: 'isMultiple',
                 text: lst('多选'),
-                icon: { name: 'bytedance-icon', code: 'more-three' },
+                icon: { name: 'bytedance-icon', code: 'more-two' },
                 checked: this.isMultiple,
                 type: MenuItemType.switch,
             })
