@@ -94,11 +94,11 @@ export class SelectBox<T = any> extends React.Component<{
             {this.props.children && <>{this.props.children}<Icon className={'gap-l-3'} size={14} icon={ChevronDownSvg}></Icon></>}
             {!this.props.children && <div style={{ width: '100%' }} className="flex">
                 {this.props.prefix}
-                {this.props.multiple != true && <span style={{ justifyContent: this.props.textAlign == 'right' ? "flex-end" : undefined }} className={this.props.border ? "flex-auto " : "flex-fixed"}>{op?.icon && this.props.iconHidden !== true && <Icon size={14} icon={op.icon}></Icon>}{op?.text}</span>}
-                {this.props.multiple == true && <span className={this.props.border ? "flex-auto" : "flex-fixed"}><span>{ops.map((op, i) => {
-                    return <span className={'padding-l-5 round padding-h-2 ' + (i > 0 ? "" : "gap-l-5")} key={op.value}><span className={i < ops.length - 1 ? "gap-r-3" : ""}>{op?.icon && <Icon size={14} icon={op.icon}></Icon>}{op?.text}</span>{i < ops.length - 1 ? "," : ""}</span>
+                {this.props.multiple != true && <span style={{ justifyContent: this.props.textAlign == 'right' ? "flex-end" : undefined }} className={'flex f-14 ' + (this.props.border ? "flex-auto " : "flex-fixed")}>{op?.icon && this.props.iconHidden !== true && <Icon size={14} icon={op.icon}></Icon>}{op?.text}</span>}
+                {this.props.multiple == true && <span className={'f-14 flex ' + (this.props.border ? "flex-auto" : "flex-fixed")}><span>{ops.map((op, i) => {
+                    return <span className={'round padding-h-2 ' + (i == 0 && this.props.prefix ? "gap-l-5" : (i == 0 ? "" : "padding-l-5 "))} key={op.value}><span className={i < ops.length - 1 ? "gap-r-3" : ""}>{op?.icon && <Icon size={14} icon={op.icon}></Icon>}{op?.text}</span>{i < ops.length - 1 ? "," : ""}</span>
                 })}</span></span>}
-                <span className="flex-fixed size-24 flex-center">
+                <span className="flex-fixed size-20 flex-center">
                     <Icon size={14} icon={ChevronDownSvg}></Icon>
                 </span>
             </div>}
