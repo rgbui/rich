@@ -53,12 +53,12 @@ export class DataGridTrigger extends EventsComponent {
             <div className="remark f-12 padding-w-10 gap-w-5 gap-t-10"><S text='查询按钮'>查询按钮</S></div>
             <div>
                 <div className="flex item-hover round h-30 padding-w-5 gap-w-5   ">
-                    <Tip text='拖至页面插入'><span className="size-24 text-1 item-hover round flex-center cursor" onMouseDown={e => this.onDrag(e, { url: BlockUrlConstant.DataGridLatestOrHot })}><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>
+                    <Tip text='拖至页面插入'><span className="size-24 text-1 item-hover round flex-center cursor" onMouseDown={e => this.onDrag(e, { url: BlockUrlConstant.DataGridLatestOrHot, refBlockId: this.block.id })}><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>
                     <span className="flex-center size-24 round item-hover"><Icon size={16} icon={{ name: 'bytedance-icon', code: 'fire' }}></Icon></span><span><S>最新最热</S></span>
                     <span className="flex-auto flex-end"><Tip text={'插入到页面'}><span className="size-24 flex-center item-hover round cursor  text-1  " onMouseDown={e => { this.block.onExtendTriggerBlock(BlockUrlConstant.DataGridLatestOrHot, { refBlockId: this.block.id }) }}><Icon size={18} icon={PlusSvg}></Icon></span></Tip></span>
                 </div>
                 <div className="flex item-hover round h-30 padding-w-5 gap-w-5   ">
-                    <Tip text='拖至页面插入'><span className="size-24 text-1 item-hover round flex-center cursor" onMouseDown={e => this.onDrag(e, { url: BlockUrlConstant.DataGridOptionRule })}><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>
+                    <Tip text='拖至页面插入'><span className="size-24 text-1 item-hover round flex-center cursor" onMouseDown={e => this.onDrag(e, { url: BlockUrlConstant.DataGridOptionRule, refBlockId: this.block.id })}><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>
                     <span className="flex-center size-24 round item-hover"><Icon size={16} icon={{ name: 'bytedance-icon', code: 'association' }}></Icon></span><span><S>自定义查询规则</S></span>
                     <span className="flex-auto flex-end"><Tip text={'插入到页面'}><span className="size-24 flex-center item-hover round cursor text-1  " onMouseDown={e => { this.block.onExtendTriggerBlock(BlockUrlConstant.DataGridOptionRule, { refBlockId: this.block.id }) }}><Icon size={18} icon={PlusSvg}></Icon></span></Tip></span>
                 </div>
@@ -95,8 +95,13 @@ export class DataGridTrigger extends EventsComponent {
                 FieldType.deleted,
                 // FieldType.audio,
                 FieldType.parentId,
-                //FieldType.image,
-                // FieldType.file,
+                FieldType.like,
+                FieldType.oppose,
+                FieldType.love,
+                FieldType.comment,
+                FieldType.emoji,
+                FieldType.sort,
+                FieldType.autoIncrement,
 
             ].includes(g.type)).reverse().map(f => {
                 return <div key={f.id} className="flex item-hover round h-30 padding-w-5 gap-w-5 ">
@@ -121,7 +126,14 @@ export class DataGridTrigger extends EventsComponent {
                 FieldType.parentId,
                 FieldType.image,
                 FieldType.file,
-                FieldType.video
+                FieldType.video,
+                FieldType.like,
+                FieldType.oppose,
+                FieldType.love,
+                FieldType.comment,
+                FieldType.emoji,
+                FieldType.sort,
+                FieldType.autoIncrement,
 
             ].includes(g.type)).reverse().map(f => {
                 return <div key={f.id} className="flex item-hover round h-30 padding-w-5 gap-w-5 ">

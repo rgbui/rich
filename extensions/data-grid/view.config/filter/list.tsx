@@ -81,7 +81,7 @@ export class DataGridFilterList extends EventsComponent {
         }
     }
     schema: TableSchema;
-    formSchema:TableSchema;
+    formSchema: TableSchema;
     filters: SchemaFilterItem[] = [];
     ws: LinkWs
     render() {
@@ -100,8 +100,8 @@ export class DataGridFilterList extends EventsComponent {
                         <span className="flex-center size-24 round item-hover  cursor"><Icon size={16} icon={DragHandleSvg}></Icon></span>
                         <span className="flex-auto">{f.text}</span>
                         {/* <span className="flex-center size-24 round item-hover"><Icon size={18} icon={{ name: 'bytedance-icon', code: f.visible ? 'preview-open' : "preview-close-one" }}></Icon></span> */}
-                        <span className="flex-center size-24 round item-hover cursor" item-btn={true} onMouseDown={e => this.openEdit(e, f)}><Icon size={18} icon={Edit1Svg}></Icon></span>
-                        <span className="flex-center size-24 round item-hover cursor" item-btn={true} onMouseDown={e => this.openProperty(e, f)}><Icon size={18} icon={DotsSvg}></Icon></span>
+                        <span className="flex-center size-24 round item-hover cursor" item-btn={'true'} onMouseDown={e => this.openEdit(e, f)}><Icon size={18} icon={Edit1Svg}></Icon></span>
+                        <span className="flex-center size-24 round item-hover cursor" item-btn={'true'} onMouseDown={e => this.openProperty(e, f)}><Icon size={18} icon={DotsSvg}></Icon></span>
                     </div>
                 })}
             </DragList>
@@ -122,7 +122,7 @@ export async function useDataGridFilterList(pos: PopoverPosition,
     option: {
         schema: TableSchema,
         filters: SchemaFilterItem[],
-        formSchema:TableSchema,
+        formSchema: TableSchema,
         ws: LinkWs
     }) {
     let popover = await PopoverSingleton(DataGridFilterList, { mask: true });
