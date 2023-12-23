@@ -6,6 +6,7 @@ import { lst } from '../../../i18n/store';
 export function TextArea(props: {
     block: Block,
     placeholderEmptyVisible?: boolean,
+    placeholderSmallFont?:boolean,
     prop?: string,
     html?: string,
     /**是否为纯文本 */
@@ -60,6 +61,7 @@ export function TextArea(props: {
         else classList.push(props.className)
     }
     if (props.placeholderEmptyVisible) classList.push('shy-text-empy-visible');
+    if(props.placeholderSmallFont) classList.push('shy-text-placeholder-small-font');
     if (props.isBlock) {
         if (props.isHtml) return <div className={classList.join(" ")} dangerouslySetInnerHTML={{ __html: html }} {...(ps as any)}></div>
         return <div className={classList.join(" ")} {...(ps as any)}>{html}</div>
