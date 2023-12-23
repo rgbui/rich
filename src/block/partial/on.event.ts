@@ -64,6 +64,9 @@ export class Block$Event {
         if (this.page.ws.aiConfig?.disabled == true) {
             hasAi = false;
         }
+        if (!this.appearAnchors.some(s => s.isText)) {
+            hasAi = false;
+        }
         if (hasAi) {
             items.push({
                 name: 'askAi',
