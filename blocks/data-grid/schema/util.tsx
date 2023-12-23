@@ -325,7 +325,7 @@ export function getFieldFilterUrl(field: Field) {
     if ([FieldType.bool].includes(field.type)) {
         url = '/field/filter/check';
     }
-    else if ([FieldType.image, FieldType.video, FieldType.audio, FieldType.file].includes(field.type)) {
+    else if ([FieldType.image, FieldType.comment, FieldType.like, FieldType.video, FieldType.audio, FieldType.file].includes(field.type)) {
         url = '/field/filter/null';
     }
     else if ([FieldType.createDate, FieldType.modifyDate, FieldType.date].includes(field.type)) {
@@ -347,8 +347,8 @@ export function getFieldFilterUrl(field: Field) {
         FieldType.title,
         FieldType.text,
         FieldType.email,
-        FieldType.like,
-        FieldType.phone
+        FieldType.phone,
+        FieldType.link
     ].includes(field.type)) {
         url = '/field/filter/search';
     }
