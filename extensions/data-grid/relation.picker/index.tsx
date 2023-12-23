@@ -55,7 +55,7 @@ class RelationPicker extends EventsComponent {
             })
             return <div>
                 <div >
-                    <div className="gap-14">
+                    <div className="gap-w-14 gap-h-5">
                         <Input
                             prefix={<span className="size-24 flex-center cursor"><Icon className={'remark'} size={16} icon={SearchSvg}></Icon></span>}
                             size='small'
