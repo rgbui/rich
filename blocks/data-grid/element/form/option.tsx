@@ -31,7 +31,7 @@ class FieldText extends OriginFormField {
                     { text: lst('下拉框'), value: 'select' },
                     { text: lst('多选框'), value: 'checkList' }
                 ],
-                icon: { name: 'bytedance-icon', code: 'more-three' }
+                icon: { name: 'bytedance-icon', code: 'more-two' }
             });
         }
         return items;

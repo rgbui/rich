@@ -21,7 +21,7 @@ class FieldText extends OriginFormField {
                 text: lst('多行文本'),
                 type: MenuItemType.switch,
                 checked: this.inputType == 'textarea',
-                icon: { name: 'bytedance-icon', code: 'more-three' }
+                icon: { name: 'bytedance-icon', code: 'more-two' }
             });
         }
         return items;
