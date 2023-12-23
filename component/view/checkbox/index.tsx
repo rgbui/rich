@@ -21,8 +21,8 @@ export class CheckBox extends React.Component<{
     render(): React.ReactNode {
         var id = 'c' + this.id;
         return <div className={"flex " + (this.props.block ? "flex-inline" : "")} style={this.props.style || {}}>
-            <input id={id} readOnly={this.props.readOnly} ref={e => this.refInput = e} type='checkbox' defaultChecked={this.props.checked} onChange={e => this.props.onChange ? this.props.onChange((e.target as HTMLInputElement).checked) : undefined}></input>
-            <label htmlFor={id} className="gap-l-2">{this.props.children}</label>
+            <input className="checkbox" id={id} readOnly={this.props.readOnly} ref={e => this.refInput = e} type='checkbox' defaultChecked={this.props.checked} onChange={e => this.props.onChange ? this.props.onChange((e.target as HTMLInputElement).checked) : undefined}></input>
+            {this.props.children && <label htmlFor={id} className="gap-l-2">{this.props.children}</label>}
         </div>
     }
 }
