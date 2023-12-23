@@ -73,7 +73,7 @@ export class SelectButtons extends React.Component<{
                 else if (i == 0) style.borderRadius = '4px 0 0 4px';
                 else if (i == this.props.options.length - 1) style.borderRadius = '0 4px 4px 0';
 
-                return <div className="flex"><div key={i}
+                return <div className="flex" key={i}><div
                     style={style}
                     onMouseDown={e => mousedown(e, g)}
                     className={classList.join(" ")} >

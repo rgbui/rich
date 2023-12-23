@@ -15,7 +15,7 @@ import { useIconPicker } from "../../../extensions/icon";
 import { Point, Rect } from "../../../src/common/vector/point";
 import { BlockDirective, BlockRenderRange } from "../../../src/block/enum";
 import { BlockView } from "../../../src/block/view";
-import { MenuItem } from "../../../component/view/menu/declare";
+import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { lst } from "../../../i18n/store";
 import lodash from "lodash";
 import { util } from "../../../util/util";
@@ -32,6 +32,8 @@ export class BlockButton extends Block {
     buttonStyle: 'primary' | 'ghost' | 'dark' = 'primary'
     @prop()
     buttonSize: 'default' | 'larger' | 'small' = 'small';
+    @prop()
+    buttonIsBlock: boolean = false;
     async getMd() {
         return '<button>' + this.buttonText + '</button>'
     }
@@ -100,7 +102,15 @@ export class BlockButton extends Block {
             var pos = rs.findIndex(g => g == rg);
             var ns: MenuItem<string | BlockDirective>[] = [];
             ns.push({
-                text: lst('大小'),
+                type: MenuItemType.switch,
+                icon: { name: 'bytedance-icon', code: 'auto-width' },
+                text: lst('充满'),
+                name: 'buttonIsBlock',
+                checked: this.buttonIsBlock
+            })
+            ns.push({ type: MenuItemType.divide })
+            ns.push({
+                text: lst('尺寸'),
                 icon: { name: 'bytedance-icon', code: 'zoom-in' },
                 childs: [
                     { name: 'buttonSize', text: lst('大'), value: 'larger', checkLabel: this.buttonSize == 'larger' },
@@ -109,7 +119,7 @@ export class BlockButton extends Block {
                 ]
             })
             ns.push({
-                text: lst('按钮样式'),
+                text: lst('按钮主题'),
                 icon: { name: 'bytedance-icon', code: 'link-four' },
                 childs: [
                     { name: 'buttonStyle', text: lst('红色'), value: 'primary', checkLabel: this.buttonStyle == 'primary' },
@@ -122,8 +132,18 @@ export class BlockButton extends Block {
         }
         return rs;
     }
+    async onContextMenuInput(this: Block, item: MenuItem<BlockDirective | string>) {
+        if (['buttonIsBlock'].includes(item.name as string)) {
+            await this.onUpdateProps({ [item.name]: item.checked }, { range: BlockRenderRange.self });
+            return;
+        }
+        else await super.onContextMenuInput(item);
+    }
     async onClickContextMenu(item: MenuItem<string | BlockDirective>, e) {
         switch (item.name) {
+            case 'buttonIsBlock':
+                await this.onUpdateProps({ [item.name]: item.checked }, { range: BlockRenderRange.self });
+                break;
             case 'buttonStyle':
             case 'buttonSize':
             case 'text-center':
@@ -173,23 +193,27 @@ export class BlockButtonView extends BlockView<BlockButton>{
         var classList: string[] = ['sy-button'];
         if (this.block.buttonSize) classList.push('sy-button-' + this.block.buttonSize);
         if (this.block.buttonStyle) classList.push('sy-button-' + this.block.buttonStyle);
+        if (!this.block.buttonIsBlock) classList.push('flex-inline');
         var style: React.CSSProperties = {};
         if (this.block.align == 'center') style.justifyContent = 'center';
         else if (this.block.align == 'right') style.justifyContent = 'flex-end'
         return <div className="visible-hover" style={this.block.visibleStyle}>
             <div className={"flex"} style={style}>
-                <div className="relative" style={{ display: 'inline-block' }}>
-                    <span data-button={true} onMouseDown={e => { e.stopPropagation(); this.block.onExcute() }} className={"relative flex flex-inline " + classList.join(" ")}>
+                <div className="relative" style={{ display: this.block.buttonIsBlock ? "block" : 'inline-block', width: this.block.buttonIsBlock ? "100%" : undefined }}>
+                    <div
+                        data-button={'true'}
+                        onMouseDown={e => { e.stopPropagation(); this.block.onExcute() }}
+                        className={" flex-center  " + classList.join(" ")}
+                        style={{ width: this.block.buttonIsBlock ? "100%" : undefined }}
+                    >
                         {this.block.buttonIcon && <Icon size={18} className={this.block.buttonText ? 'gap-r-5' : ""} icon={this.block.buttonIcon}></Icon>}
                         {this.block.buttonText && <span>{this.block.buttonText}</span>}
                         {!this.block.buttonText && !this.block.buttonIcon && <span><S>按钮</S></span>}
-                    </span>
+                    </div>
                     {this.block.isCanEdit() && <span className="visible flex-center  pos-center-right-outside" onMouseDown={async e => {
                         e.stopPropagation();
                         this.openEdit(e)
-                    }} >
-                        <span className="cursor flex-center gap-l-5 size-20">   <Icon size={16} icon={SettingsSvg}></Icon></span>
-
+                    }}><span className="cursor flex-center gap-l-5 size-20"><Icon size={16} icon={SettingsSvg}></Icon></span>
                     </span>}
                 </div>
             </div>
