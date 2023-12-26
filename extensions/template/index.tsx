@@ -39,9 +39,9 @@ export class TemplateView extends EventsComponent {
                 backgroundColor: 'var(--background-secondary)'
             }}
             className="flex-fixed w-200 padding-10 overflow-y border-right">
-            <div className="bold flex h-30 remark gap-b-10">
-                <span className="flex-fixed size-24 flex-center"><Icon size={20} icon={{ name: 'bytedance-icon', code: 'oval-love' }}></Icon></span>
-                <span className="flex-auto"><S>模板</S></span>
+            <div className="flex h-30 remark gap-b-10">
+                <span className="flex-fixed size-24 flex-center"><Icon size={18} icon={{ name: 'bytedance-icon', code: 'oval-love' }}></Icon></span>
+                <span className="flex-auto bold-500 "><S>模板</S></span>
             </div>
             <div className="gap-h-5">
                 <Input clear value={this.templateList.word} onEnter={e => {
