@@ -1,5 +1,4 @@
 .shy-date-picker {
-    position     : absolute;
     width        : 7*(24px+8px)+28px;
     border-radius: 3px;
     background   : white;
@@ -198,7 +197,13 @@
     outline      : none;
     border       : 0px;
     box-sizing   : border-box;
-    line-height: 26px;
-    height: 34px;
-    padding: 4px 10px;
+    line-height  : 26px;
+    height       : 34px;
+    padding      : 4px 10px;
+
+    &.small {
+        height     : 28px;
+        line-height: 26px;
+        padding    : 2px 8px;
+    }
 }

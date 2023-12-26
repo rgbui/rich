@@ -30,7 +30,9 @@ export class DatePicker extends EventsComponent {
         if (typeof options != 'undefined') {
             if (typeof options.includeTime == 'boolean') this.includeTime = options.includeTime
         }
-        this.forceUpdate()
+        this.forceUpdate(() => {
+            this.emit('update')
+        })
         this.updateInput();
     }
     private renderDays(): JSX.Element {
@@ -197,10 +199,15 @@ export interface DatePicker {
     emit(name: 'close');
     only(name: 'clear', fn: () => void);
     emit(name: 'clear');
+    only(name: 'update', fn: () => void)
+    emit(name: 'update')
 }
 export async function useDatePicker(pos: PopoverPosition, date: Date, options?: { includeTime?: boolean }) {
     let popover = await PopoverSingleton(DatePicker, { mask: true });
     let datePicker = await popover.open(pos);
+    datePicker.only('update', () => {
+        popover.updateLayout()
+    })
     datePicker.open(date, options);
     return new Promise((resolve: (date: Date) => void, reject) => {
         datePicker.only('save', (data) => {
