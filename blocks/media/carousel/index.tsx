@@ -14,8 +14,7 @@ import lodash from "lodash";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { util } from "../../../util/util";
 import { MenuPanel, useSelectMenuItem } from "../../../component/view/menu";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+
 /***
  * https://react-slick.neostack.com/
  */

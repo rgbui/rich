@@ -466,6 +466,8 @@ item-selected:选中的效果
     }
 }
 
+
+
 .item-hover-shadow,
 .r-item-hover-shadow>* {
     &:hover {
@@ -660,10 +662,10 @@ item-selected:选中的效果
 }
 
 body {
-    --text-color  : rgba(55, 53, 47);
+    --text-color     : rgba(55, 53, 47);
     // --text-p-color: #B84C4E;
-    --text-p-color:rgb(225, 98, 89);
-    --text-b-color: #64a1df;
+    --text-p-color   : rgb(225, 98, 89);
+    --text-b-color   : #64a1df;
 }
 
 .text {
@@ -2027,7 +2029,7 @@ each(@zs, {
 
 .checkbox {
     appearance      : none;
-    margin:0px;
+    margin          : 0px;
     background-color: rgb(255, 255, 255);
     border          : 1px solid rgb(222, 226, 230);
     color           : rgb(0, 0, 0);
@@ -2038,10 +2040,10 @@ each(@zs, {
 
     &:focus {
         // border-color: #86b7fe;
-        border-color: var(--text-p-color);
+        border-color   : var(--text-p-color);
         // opacity     : 0.7;
-        outline     : 0;
-        box-shadow  : 0 0 0 0.25rem rgba(225, 98, 89, .25);
+        outline        : 0;
+        box-shadow     : 0 0 0 0.25rem rgba(225, 98, 89, .25);
     }
 
     &:checked {

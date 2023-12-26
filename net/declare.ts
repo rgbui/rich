@@ -5,7 +5,7 @@ import { GalleryType, OuterPic } from "../extensions/image/declare";
 import { StatusCode } from "./status.code";
 import { UserAction } from "../src/history/action";
 import { RobotInfo, UserBasic, UserStatus } from "../types/user";
-import { ResourceArguments } from "../extensions/icon/declare";
+import {IconArguments, ResourceArguments } from "../extensions/icon/declare";
 import { PayFeatureCheck } from "../component/pay";
 import { AtomPermission } from "../src/page/permission";
 import { WsConsumeType } from "./ai/cost";
@@ -249,7 +249,8 @@ export interface ChannelGetMapUrls {
 	"/schema/ids/list":{args:{ws:LinkWs,wsId?:string,ids:string[]},returnType:Promise<SockResponse<{list:Partial<TableSchema>[]}>>},
 	"/datastore/query":{args:{ws:LinkWs,wsId?:string,schemaId:string,id:string},returnType:Promise<{ok:boolean,data:{data:Record<string, any>},warn:string}>},
 	"/datastore/query/pre_next":{args:{ws:LinkWs,wsId?:string,schemaId:string,id:string},returnType:Promise<{ok:boolean,data:{data:Record<string, any>,prev:Record<string, any>,next:Record<string, any>},warn:string}>},
-	"/datastore/query/list":{args:{ws:LinkWs,wsId?:string,schemaId:string,page?:number,size?:number,filter?:Record<string, any>,sorts?:Record<string, 1|-1>},returnType:Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number},warn:string}>},
+	"/datastore/query/list":{args:{ws:LinkWs,wsId?:string,schemaId:string,page?:number,size?:number,filter?:Record<string, any>,sorts?:Record<string, 1|-1>,projects?: string[],isIgnoreCount?: boolean},returnType:Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number},warn:string}>},
+	"/datastore/query/distinct":{args:{ws:LinkWs,wsId?:string,schemaId:string,field:string,filter?:Record<string, any>},returnType:Promise<SockResponse<{list:any[]}>>},
 	"/datastore/query/ids":{args:{ws:LinkWs,wsId?:string,schemaId:string,ids:string[]},returnType:Promise<{ok:boolean,data:{list:any[]},warn:string}>},
 	"/datastore/query/all":{args:{ws:LinkWs,wsId?:string,schemaId:string,page?:number,size?:number,filter?:Record<string, any>,sorts?:Record<string, 1|-1>},returnType:Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number},warn:string}>},
 	"/datastore/group":{args:{ws:LinkWs,wsId?:string,schemaId:string,page?:number,size?:number,filter?:Record<string, any>,sorts?:Record<string, 1|-1>,group:string},returnType:Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number},warn:string}>},
