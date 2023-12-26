@@ -5,7 +5,7 @@ import { BlockRenderRange } from "../../../../src/block/enum";
 import { Point, Rect } from "../../../../src/common/vector/point";
 import { ActionDirective } from "../../../../src/history/declare";
 import { PageDirective } from "../../../../src/page/directive";
-import { SchemaFilter } from "../../schema/declare";
+import { SchemaFilter, SchemaFilterJoin } from "../../schema/declare";
 import { Field } from "../../schema/field";
 import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
@@ -476,27 +476,24 @@ export class DataGridViewOperator {
     async onUpdateSorts(this: DataGridView, sorts: { field: string, sort: number }[]) {
         await this.page.onAction(ActionDirective.onDataGridUpdateSorts, async () => {
             this.page.addBlockChange(this);
-            this.updateProps({ sorts })
+            await this.updateProps({ sorts })
         })
     }
     async onUpdateFilter(this: DataGridView, filter: SchemaFilter) {
         await this.page.onAction(ActionDirective.onDataGridUpdateFilter, async () => {
             this.page.addBlockChange(this);
-            this.updateProps({ filter })
+            await this.updateProps({ filter })
         })
     }
     async onAddFilter(this: DataGridView, viewField: ViewField) {
         await this.page.onAction(ActionDirective.onDataGridUpdateFilter, async () => {
             this.page.addBlockChange(this);
-            if (!Array.isArray(this.filter.items)) {
-                this.filter = { logic: 'and', items: [] }
-            }
-            this.filter.items.push({
+            var newFilter = SchemaFilterJoin(this.filter, {
                 operator: '$contain',
                 field: viewField.field.id,
                 value: ''
-            })
-            this.updateProps({ filter: this.filter })
+            }, this.filter?.logic || "and")
+            await this.updateProps({ filter: newFilter })
         });
         var rect = this.getVisibleContentBound();
         rect.height = 20;
@@ -514,7 +511,7 @@ export class DataGridViewOperator {
             this.page.addBlockChange(this);
             if (visible == true) await this.arrayPush({ prop: 'fields', data: new ViewField({ type: 'rowNum', text: lst('序号') }, this.schema), at: 0 })
             else await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.type == 'rowNum' });
-            this.updateProps({ showRowNum: visible });
+            await this.updateProps({ showRowNum: visible });
             await this.createItem();
             this.forceUpdate();
         })
@@ -525,7 +522,7 @@ export class DataGridViewOperator {
         else if (value == 'none' && !newFields.some(s => s.type == 'check')) return
         await this.page.onAction(ActionDirective.onDataGridShowCheck, async () => {
             this.page.addBlockChange(this);
-            this.updateProps({ checkRow: value });
+            await this.updateProps({ checkRow: value });
             if (value == 'checkbox') await this.arrayPush({ prop: 'fields', at: 0, data: new ViewField({ type: 'check', text: lst('选择') }, this.schema) })
             else await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.type == 'check' })
             await this.createItem();
@@ -572,7 +569,7 @@ export class DataGridViewOperator {
             if (!(this.pageIndex >= 1 && this.pageIndex <= totalPage)) {
                 this.pageIndex = 1;
             }
-            this.updateProps({ size });
+            await this.updateProps({ size });
             await this.onLoadingAction(async () => {
                 await this.loadData();
                 this.forceUpdate();
@@ -584,18 +581,20 @@ export class DataGridViewOperator {
     async onSearch(this: DataGridView) {
         await this.onReloadData();
     }
-   
     async onDataGridTool(this: DataGridView, fn: () => Promise<void>) {
         try {
-            this.dataGridTool.isOpenTool = true;
+            if (this.dataGridTool)
+                this.dataGridTool.isOpenTool = true;
             await fn();
         }
         catch (ex) {
             this.page.onError(ex);
         }
         finally {
-            this.dataGridTool.isOpenTool = false;
-            this.onOver(this.getVisibleContentBound().contain(Point.from(this.page.kit.operator.moveEvent)))
+            if (this.dataGridTool) {
+                this.dataGridTool.isOpenTool = false;
+                this.onOver(this.getVisibleContentBound().contain(Point.from(this.page.kit.operator.moveEvent)))
+            }
         }
     }
     onOver(this: DataGridView, isOver: boolean) {

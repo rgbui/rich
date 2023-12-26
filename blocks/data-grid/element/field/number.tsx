@@ -180,7 +180,7 @@ export class FieldTextView extends OriginFileView<FieldNumber>{
     renderNumber() {
         var cc = this.block.field?.config?.numberDisplay?.decimal || 100;
         var co = this.block.field?.config?.numberDisplay?.color;
-        var f = this.block.field?.config?.numberDisplay.display || 'auto';
+        var f = this.block.field?.config?.numberDisplay?.display || 'auto';
         if (f == 'auto') return <span className="text l-22 " >{this.block.formatValue(this.block.value)}</span>
         else if (f == 'percent') {
             var cd = ColorUtil.parseColor(color);
