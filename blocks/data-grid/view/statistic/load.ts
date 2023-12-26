@@ -1,4 +1,3 @@
-import { EChartsOption } from 'echarts';
 import { SyncLoad } from '../../../../component/lib/sync';
 import { lst } from '../../../../i18n/store';
 import { channel } from '../../../../net/channel';

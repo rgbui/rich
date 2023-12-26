@@ -3,38 +3,48 @@ import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { TableSchema } from "../../schema/meta";
 import { DataGridTurns } from "../../turn";
-import { loadEchart } from "./load";
 import { Icon } from "../../../../component/view/icon";
-import { DatasourceSvg, DotsSvg, DuplicateSvg, LinkSvg, LoopSvg, SettingsSvg, TrashSvg } from "../../../../component/svgs";
+import { DotsSvg, SettingsSvg } from "../../../../component/svgs";
 import { MouseDragger } from "../../../../src/common/dragger";
-import { useSelectMenuItem } from "../../../../component/view/menu";
-import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
-import { BlockDirective } from "../../../../src/block/enum";
-import { Point, Rect } from "../../../../src/common/vector/point";
-import lodash from "lodash";
-import { lst } from "../../../../i18n/store";
-import { ElementType } from "../../../../net/element.type";
-import { BlockUrlConstant } from "../../../../src/block/constant";
-import { getSchemaViewIcon } from "../../schema/util";
+import { Rect } from "../../../../src/common/vector/point";
 import { DataGridView } from "../base";
 import { useDataGridChartConfig } from "../../../../extensions/data-grid/echarts";
-import { EChartsOption } from "echarts";
 import { FieldType } from "../../schema/type";
+import { loadGraph, renderEcharts } from "./render";
+import { SchemaFilter, SchemaFilterJoin } from "../../schema/declare";
+import { getDateRange } from "../../../../extensions/date/input";
 
 @url('/data-grid/charts')
 export class DataGridChart extends DataGridView {
     @prop()
-    chart_type: 'line' | 'bar' | 'pie' | 'scatter' = 'line';
+    chart_type: 'line' | 'bar' | 'pie' | 'scatter' | 'radar' | 'funnel' | 'gauge' | 'wordCloud' | 'summary' | 'graph' | 'calendarHeatmap' = 'line';
     @prop()
     chart_config: {
+        remark?: string,
         x_fieldId?: string,
-        x_fieldIdUnit?: string,
+        x_fieldIdUnit?: 'year' | 'day' | 'month' | 'hour' | 'week',
         group_fieldId?: string,
-        group_fieldIdUnit?: string,
+        group_fieldIdUnit?: 'year' | 'day' | 'month' | 'hour' | 'week',
+        graph_fieldId?: string,
         y_fieldId?: string,
         y_aggregate?: string,
+        y_sort?: 'none' | 'asc' | 'desc',
+        y1_fieldId?: string,
+        y1_aggregate?: string,
+        y1_sort?: 'none' | 'asc' | 'desc',
+        y2_fieldId?: string,
+        y2_aggregate?: string,
+        y2_sort?: 'none' | 'asc' | 'desc',
+        calendarHeatmap_value?: string | number,
+        aggs?: { fieldId: string, aggregate: string, sort: 'none' | 'asc' | 'desc', target?: number }[],
         sort_x?: 'none' | 'asc' | 'desc',
         theme?: string,
+        isX?: boolean,
+        isArea?: boolean,
+        isSmooth?: boolean,
+        isRadius?: boolean,
+        targetValue?: number,
+        color?: string,
     } = {
             sort_x: 'none'
         }
@@ -56,50 +66,207 @@ export class DataGridChart extends DataGridView {
         }
     }
     data: any[] = [];
+    statisticValue: number;
+    graphData: {
+        nodes: { id: string, value: number, name: string, category: number }[],
+        links: { source: string, target: string }[],
+        categories: { name: string }[]
+    } = {
+            nodes: [],
+            links: [],
+            categories: []
+        }
     async loadData() {
         if (this.schema) {
-            var groups: string[] = [];
-            var aggregate: Record<string, any> = {}
-            if (this.chart_config?.x_fieldId) {
-                var sf = this.schema.fields.find(x => x.id == this.chart_config?.x_fieldId);
-                if (sf) {
-                    if ([FieldType.createDate, FieldType.date, FieldType.modifyDate].includes(sf.type))
-                        groups.push(sf?.name + (this.chart_config?.x_fieldIdUnit ? "." + this.chart_config?.x_fieldIdUnit : ''))
-                    else groups.push(sf.name);
+            if (this.chart_type == 'graph') {
+                await loadGraph(this);
+            }
+            else if (this.chart_type == 'calendarHeatmap') {
+                var groups: string[] = [];
+                var aggregate: Record<string, any> = {}
+                if (!this.chart_config?.x_fieldId) {
+                    var s = this.schema.fields.find(g => [FieldType.createDate, FieldType.date, FieldType.modifyDate].includes(g.type));
+                    if (s) {
+                        this.chart_config.x_fieldId = s.id;
+                        this.chart_config.x_fieldIdUnit = 'year';
+                    }
                 }
-            }
-            if (this.chart_config?.group_fieldId) {
-                if (sf) {
-                    var sf = this.schema.fields.find(x => x.id == this.chart_config?.group_fieldId);
-                    if ([FieldType.createDate, FieldType.date, FieldType.modifyDate].includes(sf.type))
-                        groups.push(sf?.name + (this.chart_config?.group_fieldIdUnit ? "." + this.chart_config?.group_fieldIdUnit : ''))
-                    else groups.push(sf.name);
+                if (this.chart_config?.x_fieldId) {
+                    var sf = this.schema.fields.find(x => x.id == this.chart_config?.x_fieldId);
+                    if (sf) {
+                        if ([FieldType.createDate, FieldType.date, FieldType.modifyDate].includes(sf.type))
+                            groups.push(sf?.name + (this.chart_config?.x_fieldIdUnit ? "." + this.chart_config?.x_fieldIdUnit : ''))
+                        else groups.push(sf.name);
+                    }
                 }
-            }
-            if (this.chart_config?.y_fieldId) {
-                var name = this.schema.fields.find(x => x.id == this.chart_config?.y_fieldId)?.name;
-                if (this.chart_config?.y_aggregate) aggregate[name] = { [this.chart_config?.y_aggregate]: '$' + name };
-                else aggregate[name] = { $sum: 1 }
-            }
-            var r = await this.schema.statistics({
-                page: 1,
-                groups,
-                filter: this.filter,
-                aggregate: aggregate
-            }, this.page.ws)
-            if (r.ok) {
-                var da = r.data.list;
-                var name = this.schema.fields.find(x => x.id == this.chart_config?.y_fieldId)?.name || 'count'
-                if (this.chart_config.sort_x != 'none') {
-                    da.sort((a, b) => {
-                        if (this.chart_config.sort_x == 'asc') {
-                            return a[name] - b[name]
-                        } else {
-                            return b[name] - a[name]
+                if (this.chart_config?.y_fieldId) {
+                    var name = this.schema.fields.find(x => x.id == this.chart_config?.y_fieldId)?.name;
+                    if (this.chart_config?.y_aggregate) aggregate[name] = { [this.chart_config?.y_aggregate]: '$' + name };
+                    else aggregate[name] = { $sum: 1 }
+                }
+                var sd = getDateRange(this.chart_config?.calendarHeatmap_value, this.chart_config?.x_fieldIdUnit);
+                var rangeFilter: SchemaFilter = {
+                    logic: 'and',
+                    items: [
+                        {
+                            field: this.chart_config?.x_fieldId,
+                            operator: 'gte',
+                            value: sd.start
+                        },
+                        {
+                            field: this.chart_config?.x_fieldId,
+                            operator: 'lte',
+                            value: sd.end
                         }
-                    })
+                    ]
                 }
-                this.data = da;
+                var filter = SchemaFilterJoin(rangeFilter, this.filter);
+                var r = await this.schema.statistics({
+                    page: 1,
+                    groups,
+                    filter: filter,
+                    aggregate: aggregate
+                }, this.page.ws)
+                if (r.ok) {
+                    var da = r.data.list;
+                    this.data = da;
+                }
+            }
+            else if (this.chart_type == 'gauge' || this.chart_type == 'summary') {
+                var name = this.schema.fields.find(x => x.id == this.chart_config?.y_fieldId)?.name;
+                var rcc = await this.schema.statisticValue({
+                    filter: this.filter,
+                    fieldName: name || "id",
+                    indicator: name ? this.chart_config?.y1_aggregate : "$count"
+                }, this.page.ws);
+                if (rcc?.ok) {
+                    this.statisticValue = rcc.data.value;
+                }
+            }
+            else if (this.chart_type == 'radar') {
+                var groups: string[] = [];
+                var aggregate: Record<string, any> = {}
+                if (!this.chart_config?.x_fieldId) {
+                    var s = this.schema.fields.find(g => g.type == FieldType.option || g.type == FieldType.options);
+                    if (s) {
+                        this.chart_config.x_fieldId = s.id;
+                    }
+                    else {
+                        s = this.schema.fields.find(g => g.type == FieldType.creater);
+                        if (s) {
+                            this.chart_config.x_fieldId = s.id;
+                        }
+                    }
+                }
+                if (this.chart_config?.x_fieldId) {
+                    var sf = this.schema.fields.find(x => x.id == this.chart_config?.x_fieldId);
+                    if (sf) {
+                        if ([FieldType.createDate, FieldType.date, FieldType.modifyDate].includes(sf.type))
+                            groups.push(sf?.name + (this.chart_config?.x_fieldIdUnit ? "." + this.chart_config?.x_fieldIdUnit : ''))
+                        else groups.push(sf.name);
+                    }
+                }
+                if (this.chart_config?.group_fieldId) {
+                    if (sf) {
+                        var sf = this.schema.fields.find(x => x.id == this.chart_config?.group_fieldId);
+                        if ([FieldType.createDate, FieldType.date, FieldType.modifyDate].includes(sf.type))
+                            groups.push(sf?.name + (this.chart_config?.group_fieldIdUnit ? "." + this.chart_config?.group_fieldIdUnit : ''))
+                        else groups.push(sf.name);
+                    }
+                }
+                this.chart_config?.aggs?.forEach(agg => {
+                    var sf = this.schema.fields.find(x => x.id == agg.fieldId);
+                    if (sf) {
+                        aggregate[sf.name] = { [agg.aggregate]: '$' + sf.name };
+                    }
+                })
+                var r = await this.schema.statistics({
+                    page: 1,
+                    groups,
+                    filter: this.filter,
+                    aggregate: aggregate
+                }, this.page.ws)
+                if (r.ok) {
+                    var da = r.data.list;
+                    var name = this.schema.fields.find(x => x.id == this.chart_config?.y_fieldId)?.name || 'count'
+                    this.data = da;
+                }
+            }
+            else {
+                var groups: string[] = [];
+                var aggregate: Record<string, any> = {}
+                if (!this.chart_config?.x_fieldId) {
+                    var s = this.schema.fields.find(g => g.type == FieldType.option || g.type == FieldType.options);
+                    if (s) {
+                        this.chart_config.x_fieldId = s.id;
+                    }
+                    else {
+                        s = this.schema.fields.find(g => g.type == FieldType.creater);
+                        if (s) {
+                            this.chart_config.x_fieldId = s.id;
+                        }
+                    }
+                }
+                if (this.chart_config?.x_fieldId) {
+                    var sf = this.schema.fields.find(x => x.id == this.chart_config?.x_fieldId);
+                    if (sf) {
+                        if ([FieldType.createDate, FieldType.date, FieldType.modifyDate].includes(sf.type))
+                            groups.push(sf?.name + (this.chart_config?.x_fieldIdUnit ? "." + this.chart_config?.x_fieldIdUnit : ''))
+                        else groups.push(sf.name);
+                    }
+                }
+                if (this.chart_config?.group_fieldId) {
+                    if (sf) {
+                        var sf = this.schema.fields.find(x => x.id == this.chart_config?.group_fieldId);
+                        if ([FieldType.createDate, FieldType.date, FieldType.modifyDate].includes(sf.type))
+                            groups.push(sf?.name + (this.chart_config?.group_fieldIdUnit ? "." + this.chart_config?.group_fieldIdUnit : ''))
+                        else groups.push(sf.name);
+                    }
+                }
+                if (this.chart_config?.y_fieldId) {
+                    var name = this.schema.fields.find(x => x.id == this.chart_config?.y_fieldId)?.name;
+                    if (this.chart_config?.y_aggregate) aggregate[name] = { [this.chart_config?.y_aggregate]: '$' + name };
+                    else aggregate[name] = { $sum: 1 }
+                }
+                if (this.chart_config?.y1_fieldId) {
+                    var name = this.schema.fields.find(x => x.id == this.chart_config?.y1_fieldId)?.name;
+                    if (this.chart_config?.y1_aggregate) aggregate[name] = { [this.chart_config?.y1_aggregate]: '$' + name };
+                    else aggregate[name] = { $sum: 1 }
+                }
+                if (this.chart_config?.y2_fieldId) {
+                    var name = this.schema.fields.find(x => x.id == this.chart_config?.y2_fieldId)?.name;
+                    if (this.chart_config?.y2_aggregate) aggregate[name] = { [this.chart_config?.y2_aggregate]: '$' + name };
+                    else aggregate[name] = { $sum: 1 }
+                }
+                if (this.chart_type == 'wordCloud' || this.chart_type == 'pie') {
+                    groups = groups.slice(0, 1);
+                    aggregate = {}
+                    if (this.chart_config?.y_fieldId) {
+                        var name = this.schema.fields.find(x => x.id == this.chart_config?.y_fieldId)?.name;
+                        if (this.chart_config?.y_aggregate) aggregate[name] = { [this.chart_config?.y_aggregate]: '$' + name };
+                        else aggregate[name] = { $sum: 1 }
+                    }
+                }
+                var r = await this.schema.statistics({
+                    page: 1,
+                    groups,
+                    filter: this.filter,
+                    aggregate: aggregate
+                }, this.page.ws)
+                if (r.ok) {
+                    var da = r.data.list;
+                    var name = this.schema.fields.find(x => x.id == this.chart_config?.y_fieldId)?.name || 'count'
+                    if (this.chart_config.sort_x != 'none') {
+                        da.sort((a, b) => {
+                            if (this.chart_config.sort_x == 'asc') {
+                                return a[name] - b[name]
+                            } else {
+                                return b[name] - a[name]
+                            }
+                        })
+                    }
+                    this.data = da;
+                }
             }
         }
     }
@@ -110,373 +277,21 @@ export class DataGridChart extends DataGridView {
         this.forceUpdate();
     }
     myChart
-    async renderEcharts() {
-        var ele = this.el?.querySelector('.sy-dg-echarts-view') as HTMLElement;
-        if (ele) {
-            var echarts = await loadEchart();
-            if (typeof this.myChart == 'undefined') {
-                this.myChart = echarts.init(ele, this.chart_config?.theme || undefined);
-            }
-            else {
-                this.myChart.dispose();
-                this.myChart = echarts.init(ele, this.chart_config?.theme || undefined);
-            }
-            var groups: string[] = [];
-            if (this.chart_config?.x_fieldId) {
-                var sf = this.schema.fields.find(x => x.id == this.chart_config?.x_fieldId);
-                if (sf)
-                    groups.push(sf?.name)
-            }
-            if (this.chart_config?.group_fieldId) {
-                var sf = this.schema.fields.find(x => x.id == this.chart_config?.group_fieldId);
-                if (sf)
-                    groups.push(sf?.name)
-            }
-            if (groups.length == 1) {
-                var xs = this.data.map(g => g[groups[0]])
-                var sf = this.schema.fields.find(x => x.name == groups[0]);
-                if ([FieldType.option, FieldType.options].includes(sf.type)) {
-                    xs = this.data.map(g => {
-                        var v = g[groups[0]];
-                        if (Array.isArray(sf?.config?.options)) {
-                            var o = sf.config?.options.find(g => g.value == v);
-                            if (o?.text) return o.text;
-                            else return ''
-                        }
-                        else return '';
-                    })
-                }
-                var ys = this.data.map(g => g[this.schema.fields.find(x => x.id == this.chart_config?.y_fieldId)?.name || 'count'])
-                var option: EChartsOption = {
-                    xAxis: {
-                        type: 'category',
-                        data: xs
-                    },
-                    yAxis: {
-                        type: 'value'
-                    },
-                    series: [
-                        {
-                            data: ys,
-                            type: 'line'
-                        }
-                    ]
-                };
-                switch (this.chart_type) {
-                    case 'line':
-                        break;
-                    case 'bar':
-                        lodash.set(option, 'series[0].type', 'bar');
-                        break;
-                    case 'pie':
-                        option = {
-                            title: {
-                                text: this.schemaView?.text,
-                                // subtext: 'Fake Data',
-                                left: 'center'
-                            },
-                            tooltip: {
-                                trigger: 'item'
-                            },
-                            legend: {
-                                orient: 'vertical',
-                                left: 'left'
-                            },
-                            series: [
-                                {
-                                    name: this.schema.fields.find(x => x.name == groups[0])?.text,
-                                    type: 'pie',
-                                    radius: '50%',
-                                    data: xs.map(x => {
-                                        return {
-                                            name: x,
-                                            value: ys[xs.indexOf(x)]
-                                        }
-                                    }),
-                                    emphasis: {
-                                        itemStyle: {
-                                            shadowBlur: 10,
-                                            shadowOffsetX: 0,
-                                            shadowColor: 'rgba(0, 0, 0, 0.5)'
-                                        }
-                                    }
-                                }
-                            ]
-                        };
-                        break;
-                    case 'scatter':
-                        break;
-                }
-                this.myChart.setOption(option);
-            }
-            else if (groups.length > 1) {
-
-                var xs = this.data.map(g => g[groups[0]])
-                lodash.uniqBy(xs, g => g);
-                var xsValues = lodash.cloneDeep(xs);
-                var sf = this.schema.fields.find(x => x.name == groups[0]);
-                if ([FieldType.option, FieldType.options].includes(sf.type)) {
-                    xsValues = this.data.map(g => {
-                        var v = g[groups[0]];
-                        if (Array.isArray(sf?.config?.options)) {
-                            var o = sf.config?.options.find(g => g.value == v);
-                            if (o?.text) return o.text;
-                            else return ''
-                        }
-                        else return '';
-                    })
-                    lodash.uniqBy(xsValues, g => g);
-                }
-                var xs2 = this.data.map(g => g[groups[1]])
-                lodash.uniqBy(xs2, g => g);
-                var sf2 = this.schema.fields.find(x => x.name == groups[1]);
-
-                var yname = this.schema.fields.find(x => x.id == this.chart_config?.y_fieldId)?.name || 'count'
-                var option: EChartsOption = {
-                    xAxis: {
-                        type: 'category',
-                        data: xsValues
-                    },
-                    yAxis: {
-                        type: 'value'
-                    },
-                    series: xs2.map(x => {
-                        var name: string = x;
-                        if ([FieldType.option, FieldType.options].includes(sf2.type)) {
-                            var o = sf2.config?.options.find(g => g.value == x);
-                            if (o) {
-                                name = o.text;
-                            }
-                        }
-                        return {
-                            name: name,
-                            type: 'line',
-                            data: xs.map(c => {
-                                var d = this.data.find(g => g[groups[0]] === c && g[groups[1]] === x);
-                                if (d) return d[yname];
-                                else return 0;
-                            })
-                        }
-                    })
-                };
-                switch (this.chart_type) {
-                    case 'line':
-
-                        break;
-                    case 'bar':
-                        if (Array.isArray(option.series))
-                            option.series.forEach(g => {
-                                lodash.set(g, 'type', 'bar');
-                            })
-                        // lodash.set(option, 'series[0].type', 'bar');
-                        break;
-                    case 'pie':
-                        option = {
-                            title: {
-                                text: this.schemaView?.text,
-                                // subtext: 'Fake Data',
-                                left: 'center'
-                            },
-                            tooltip: {
-                                trigger: 'item'
-                            },
-                            legend: {
-                                orient: 'vertical',
-                                left: 'left'
-                            },
-                            series: xs2.map(x => {
-                                var name: string = x;
-                                if ([FieldType.option, FieldType.options].includes(sf2.type)) {
-                                    var o = sf2.config?.options.find(g => g.value == x);
-                                    if (o) {
-                                        name = o.text;
-                                    }
-                                }
-                                return {
-                                    name: name,
-                                    type: 'pie',
-                                    data: xs.map(g => {
-                                        var d = this.data.find(c => g[groups[0]] == c && g[groups[1]] == x);
-                                        if (d) return d[yname];
-                                        else return 0;
-                                    }),
-                                    emphasis: {
-                                        itemStyle: {
-                                            shadowBlur: 10,
-                                            shadowOffsetX: 0,
-                                            shadowColor: 'rgba(0, 0, 0, 0.5)'
-                                        }
-                                    }
-                                }
-                            })
-                        };
-                        break;
-                    case 'scatter':
-                        break;
-                }
-                console.log(option, 'option');
-                this.myChart.setOption(option);
-
-            }
-        }
-    }
-    async onContextmenu(event: Point | MouseEvent) {
-        var self = this;
-        var rect = event instanceof Point ? new Rect(event.x, event.y, 0, 0) : Rect.fromEvent(event)
-        function getMenuItems() {
-            var items: MenuItem<BlockDirective | string>[] = [];
-            items.push(...[
-                {
-                    name: 'name',
-                    type: MenuItemType.inputTitleAndIcon,
-                    value: self.schemaView?.text,
-                    icon: self.schemaView.icon || getSchemaViewIcon(self.schemaView?.url),
-                    text: lst('编辑视图名'),
-                },
-                { type: MenuItemType.divide },
-                {
-                    text: lst("切换视图"),
-                    icon: LoopSvg,
-                    childs: [
-                        {
-                            type: MenuItemType.container,
-                            drag: true,
-                            name: 'viewContainer',
-                            childs: [
-                                ...self.schema.views.findAll(g => ![BlockUrlConstant.RecordPageView].includes(g.url as any)).map(v => {
-                                    return {
-                                        name: 'turn',
-                                        text: v.text,
-                                        type: MenuItemType.drag,
-                                        value: v.id,
-                                        icon: v.icon || getSchemaViewIcon(v.url),
-                                        checkLabel: v.id == self.schemaView?.id,
-                                        btns: [
-                                            { icon: DotsSvg, name: 'property' }
-                                        ]
-                                    }
-                                }),
-                                { type: MenuItemType.divide },
-                                { name: 'addView', type: MenuItemType.button, text: lst('创建视图') }
-                            ]
-                        }
-                    ]
-                },
-                { text: lst('配置视图'), name: 'viewConfig', icon: SettingsSvg },
-                { type: MenuItemType.divide },
-                { text: lst('数据源'), name: 'datasource', icon: DatasourceSvg },
-                { type: MenuItemType.divide },
-                { name: 'link', icon: LinkSvg, text: lst('复制视图链接') },
-                { type: MenuItemType.divide },
-                { name: 'clone', icon: DuplicateSvg, text: lst('复制视图') },
-                { name: 'delete', icon: TrashSvg, text: lst('移除视图') },
-            ]);
-            if (self.page.pe.type == ElementType.Schema) {
-                items.splice(-7, 2);
-                items.splice(-1, 1);
-            }
-            return items;
-        }
-        var view = self.schemaView;
-        var items: MenuItem<BlockDirective | string>[] = getMenuItems();
-        var rname = items.find(g => g.name == 'name');
-        var r = await useSelectMenuItem({ roundArea: rect }, items, {
-            async click(item, ev, name, mp) {
-                mp.onFree();
-                try {
-                    if (item.name == 'turn') {
-                        var rs: MenuItem<BlockDirective | string>[] = [];
-                        if (item.value == view?.id) {
-                            rs.push(...[
-                                { name: 'duplicate', icon: DuplicateSvg, text: lst('复制') }
-                            ])
-                        }
-                        else
-                            rs.push(...[
-                                {
-                                    name: 'name',
-                                    type: MenuItemType.inputTitleAndIcon,
-                                    icon: item.icon || getSchemaViewIcon(item.url),
-                                    value: item.text,
-                                    text: lst('编辑视图名'),
-                                },
-                                { type: MenuItemType.divide },
-                                { name: 'delete', disabled: item.value == view?.id, icon: TrashSvg, text: lst('删除') }
-                            ])
-                        var rg = await useSelectMenuItem({ roundArea: Rect.fromEvent(ev) },
-                            rs,
-                            { nickName: 'second' }
-                        );
-                        if (rg?.item) {
-                            if (rg?.item.name == 'delete') {
-                                self.schema.onSchemaOperate([{ name: 'removeSchemaView', id: item.value }])
-                                items.arrayJsonRemove('childs', g => g === item);
-                                mp.updateItems(items);
-                            }
-                        }
-                        var rn = rs.find(g => g.name == 'name');
-                        if (rn.value != item.text && rn.value) {
-                            self.schema.onSchemaOperate([
-                                { name: 'updateSchemaView', id: item.value, data: { text: rn.value } }
-                            ]);
-                            item.text = rn.value;
-                            mp.updateItems(items);
-                        }
-                        if (!lodash.isEqual(rn.icon, item.icon)) {
-                            self.schema.onSchemaOperate([
-                                { name: 'updateSchemaView', id: item.value, data: { icon: rn.icon } }
-                            ]);
-                            item.icon = rn.icon;
-                            mp.updateItems(items);
-                        }
-                    }
-                }
-                catch (ex) {
-
-                }
-                finally {
-                    mp.onUnfree()
-                }
-            },
-            input(item) {
-                if (item.name == 'viewContainer') {
-                    var [from, to] = item.value;
-                    self.onSchemaViewMove(self.schema.views[from].id, from, to);
-                }
-            }
-        });
-        if (r?.item?.name) {
-            if (r.item.name == 'link') {
-                self.onCopyViewLink();
-            }
-            else if (r.item.name == 'delete') {
-                self.onDelete();
-            }
-            else if (r.item.name == 'datasource') {
-                self.onOpenDataSource(rect);
-            }
-            else if (r.item.name == 'turn') {
-                self.onDataGridTurnView(r.item.value);
-            }
-            else if (r.item.name == 'viewConfig') {
-                self.onOpenEchartsConfig(rect);
-            }
-            else if (r.item.name == 'clone') {
-                self.onCopySchemaView();
-            }
-            else if (r.item.name == 'addView') {
-                await self.onAddCreateTableView();
-            }
-        }
-        if (rname.value != self.schemaView.text && rname.value) {
-            self.onSchemaViewUpdate(view?.id, { text: rname.value });
-        }
-        if (!lodash.isEqual(rname.icon, self.schemaView.icon)) {
-            self.onSchemaViewUpdate(view?.id, { icon: rname.icon });
-        }
-    }
     async onOpenEchartsConfig(rect: Rect) {
         await useDataGridChartConfig({ roundArea: rect }, { dataGrid: this })
+    }
+    async renderEcharts() {
+        await renderEcharts(this);
+    }
+    getVisibleContentBound() {
+        var img = (this.view as any).imageWrapper;
+        if (img) {
+            return Rect.fromEle(img);
+        }
+        return super.getVisibleContentBound();
+    }
+    async onOpenViewConfig(rect: Rect, mode?: 'view' | 'field' | 'sort' | 'filter' | 'group') {
+        await this.onOpenEchartsConfig(rect);
     }
 }
 
@@ -520,12 +335,23 @@ export class DataGridChartView extends BlockView<DataGridChart>{
         var style: CSSProperties = {
             justifyContent: 'center'
         }
-        if (this.block.align == 'left') style.justifyContent = 'flex-start'
-        else if (this.block.align == 'right') style.justifyContent = 'flex-end'
+        if (this.block.align == 'left') style.justifyContent = 'flex-start';
+        else if (this.block.align == 'right') style.justifyContent = 'flex-end';
         return <div className='sy-dg-charts'>
             <div className="flex-center" style={style}>
                 <div className="relative visible-hover" ref={e => this.imageWrapper = e} style={{ width: this.block.canvasWith, height: this.block.canvasHeight }}>
-                    <div className="sy-dg-echarts-view w100 h100" ></div>
+                    <div className="sy-dg-echarts-view w100 h100"
+                        style={{
+                            display: ['summary'].includes(this.block.chart_type) ? 'none' : 'block'
+                        }} ></div>
+                    {this.block.chart_type == 'summary' && <div className="flex-center flex-col  w100 h100">
+                        <div className="gap-h-10" style={{ fontSize: 20, fontWeight: 'bold', lineHeight: '20px' }}>{this.block.schemaView?.text}</div>
+                        {this.block.chart_config.remark && <div className="gap-h-10 text-1 f-14" style={{ fontSize: 20, lineHeight: 20 }}>{this.block.chart_config.remark}</div>}
+                        <div className="gap-t-20 gap-b-10" style={{ fontSize: 40, fontWeight: 'bold', lineHeight: '50px', color: this.block.chart_config?.color }}>{this.block.statisticValue}</div>
+                        {this.block.chart_config?.targetValue && <div className="remark f-14">
+                            <span>{(this.block.statisticValue * 100 / this.block.chart_config?.targetValue).toFixed(2)}%</span>
+                        </div>}
+                    </div>}
                     {this.block.isCanEdit() && <>
                         <div className="sy-block-resize-bottom-right visible" onMouseDown={e => this.onMousedown(e, 'bottom-right')}></div>
                         <div className="sy-block-resize-bottom-left visible" onMouseDown={e => this.onMousedown(e, 'bottom-left')}></div>
@@ -550,14 +376,11 @@ export class DataGridChartView extends BlockView<DataGridChart>{
                                 pa.classList.remove('visible');
                                 await this.block.onContextmenu(e.nativeEvent);
                                 pa.classList.add('visible');
-
                             }} className="size-24 round flex-center bg-dark cursor  text-white "><Icon size={18} icon={DotsSvg}></Icon></span>
                         </div>
                     </>}
                 </div>
-
             </div>
-
         </div>
     }
 }
