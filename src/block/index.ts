@@ -837,8 +837,14 @@ export abstract class Block extends Events {
         range?: BlockRenderRange;
         merge?: boolean;
         syncBlock?: Block;
+        cb?: () => Promise<void>
     }) => {
-        await this.onUpdateProps(props, options)
+        await this.onUpdateProps(props, {
+            range: options?.range,
+            merge: options?.merge
+        })
+        if (typeof options.cb == 'function')
+            await options.cb();
     }, 700)
     get isCanEmptyDelete() {
         return true

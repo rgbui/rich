@@ -214,7 +214,7 @@ export class PageEvent {
             this.emit(PageDirective.changePageLayout);
             if (typeof actions == 'function') await actions();
             this.addPageUpdate();
-        },{immediate:true});
+        }, { immediate: true });
     }
     /**
      * 
@@ -366,7 +366,6 @@ export class PageEvent {
         else {
             if (this.pe.type == ElementType.Schema) {
                 var schema = await TableSchema.loadTableSchema(this.pe.id, this.ws);
-                console.log(schema, this.pe.id);
                 var props = lodash.pick(data, ['icon', 'description', 'text'])
                 if (schema && Object.keys(props).length > 0)
                     schema.update(props)

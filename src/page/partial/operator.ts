@@ -232,7 +232,6 @@ export class Page$Operator {
         if (!(event instanceof Point))
             event.preventDefault();
         if (blocks.length == 1) {
-            console.log('gggg', blocks);
             try {
                 return await blocks[0].onContextmenu(event);
             }

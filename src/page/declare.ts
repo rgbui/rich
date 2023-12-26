@@ -121,9 +121,9 @@ export interface LinkWs {
         joinProtocol: string
     }
     aiConfig: {
-        text?:  WsConsumeType,
-        image?:  WsConsumeType,
-        embedding?:  WsConsumeType,
+        text?: WsConsumeType,
+        image?: WsConsumeType,
+        embedding?: WsConsumeType,
         disabled?: boolean,
 
         aiSearch?: boolean,
@@ -206,6 +206,7 @@ export function getPageIcon(item: LinkPageItem, defaultIcon?: SvgrComponent) {
     if (item?.icon) return item.icon;
     if (!item) return defaultIcon || PageSvg
     if (item.pageType == PageLayoutType.board) {
+        return { name: 'bytedance-icon', code: 'chopping-board' } as IconValueType
         return { name: 'bytedance-icon', code: 'enter-the-keyboard' } as IconValueType
     }
     else if (item.pageType == PageLayoutType.doc) {
@@ -215,9 +216,11 @@ export function getPageIcon(item: LinkPageItem, defaultIcon?: SvgrComponent) {
         return DocCardsSvg
     }
     else if (item.pageType == PageLayoutType.textChannel) {
+        return { name: 'byte', code: 'pound' } as IconValueType
         return TopicSvg
     }
     else if (item.pageType == PageLayoutType.db) {
+        // return { name: 'byte', code: 'table-file' } as IconValueType
         return CollectTableSvg
     }
     return defaultIcon || PageSvg

@@ -10,7 +10,6 @@ import { Icon } from "../../../../../component/view/icon";
 import { UserAvatars } from "../../../../../component/view/avator/users";
 import { util } from "../../../../../util/util";
 import { Avatar } from "../../../../../component/view/avator/face";
-import { lst } from "../../../../../i18n/store";
 
 CardModel({
     abled:false,
