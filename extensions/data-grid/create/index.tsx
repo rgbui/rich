@@ -1,75 +1,89 @@
 import React from "react";
 import { EventsComponent } from "../../../component/lib/events.component";
-import { Input } from "../../../component/view/input";
 import { PopoverSingleton } from "../../../component/popover/popover";
 import { PopoverPosition } from "../../../component/popover/position";
-import { getSchemaViewIcon, getSchemaViews } from "../../../blocks/data-grid/schema/util";
-import { CollectTableSvg } from "../../../component/svgs";
-import { TableSchema } from "../../../blocks/data-grid/schema/meta";
-import lodash from "lodash";
+import { getChartViews, getSchemaViewIcon, getSchemaViews } from "../../../blocks/data-grid/schema/util";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { MenuView } from "../../../component/view/menu/menu";
-import { util } from "../../../util/util";
 import { lst } from "../../../i18n/store";
+import { CardFactory } from "../../../blocks/data-grid/template/card/factory/factory";
+import { CheckSvg } from "../../../component/svgs";
+import { Icon } from "../../../component/view/icon";
+import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 
-
-export class DataGridSelectorView extends EventsComponent {
+export class DataGridCreateTable extends EventsComponent {
+    url: string = '/data-grid/table';
+    source: 'tableView' | 'dataView' = 'tableView';
+    viewText: string = '';
     renderItems() {
         var self = this;
         var items: MenuItem[] = [];
-        var itemPanel: MenuItem = {
-            type: MenuItemType.container,
-            containerHeight: 180,
-            childs: []
-        }
-
-        var list = Array.from(TableSchema.schemas.values());
-        list = lodash.sortBy(list, g => 0 - g.createDate.getTime())
-        list.forEach((rd) => {
-            var btns = undefined
-            var cs: MenuItem[] = [];
-            if (Array.isArray(rd.views) && rd.views.length > 0) {
-                cs.push({ type: MenuItemType.text, text: lst('视图') })
-                var srs = getSchemaViews();
-                cs.push(...rd.views.findAll(g => srs.some(s => s.url == g.url)).map(rv => {
-                    return {
-                        text: rv.text,
-                        value: {
-                            tableId: rd.id,
-                            viewUrl: rv.url,
-                            type: 'view',
-                            viewId: rv.id
-                        },
-                        name: 'view',
-                        // checkLabel: rv.id == self.currentViewId,
-                        icon: getSchemaViewIcon(rv.url),
-                    }
-                }))
-            }
-            itemPanel.childs.push({
-                text: rd.text,
-                value: rd.id,
-                remark: util.showTime(rd.createDate),
-                icon: (rd as any).icon || CollectTableSvg,
-                forceHasChilds: true,
-                childs: cs
-            })
-        })
-        if (list.length > 0) {
-            items.push({ text: lst('选择已创建表格'), type: MenuItemType.text })
-            items.push(itemPanel);
-            items.push({ type: MenuItemType.divide })
-            items.push({ text: lst('创建新表格'), type: MenuItemType.text })
-        }
         items.push({
             type: MenuItemType.input,
             name: "table",
-            text: lst('输入表格名称'),
+            text: this.selectView ? lst('输入视图名称') : lst('输入表格名称'),
         })
         items.push({ type: MenuItemType.gap })
+        var views = getSchemaViews();
+        views.forEach(v => {
+            items.push({
+                text: v.text,
+                value: v.url,
+                name: 'tableView',
+                icon: getSchemaViewIcon(v as any),
+                checkLabel: v.url == self.url,
+            })
+        })
+        var cms = CardFactory.getCardModels(this.schema);
+        items.push({
+            text: lst('数据视图'),
+            icon: { name: 'bytedance-icon', code: 'application-two' },
+            childsStyle: { width: 300 },
+            childs: cms.map(c => {
+                return {
+                    type: MenuItemType.custom,
+                    name: 'dataView',
+                    value: c.url,
+                    render(item, view) {
+                        return <div className="flex-full relative item-hover round padding-w-14 padding-h-10">
+                            <div className="flex-fixed">
+                                <img src={c.image} className="obj-center h-60 w-120" />
+                            </div>
+                            <div className="flex-auto gap-l-10">
+                                <div>{c.title}</div>
+                                <div className="remark">{c.remark}</div>
+                            </div>
+                            {self.source == 'dataView' && self.url == c.url && <div className="pos pos-right pos-t-5 pos-r-5 size-20 cursor round">
+                                <Icon size={16} icon={CheckSvg}></Icon>
+                            </div>}
+                        </div>
+                    }
+                }
+            })
+        })
+        var gs = getChartViews();
+        items.push({
+            text: lst('统计图'),
+            icon: { name: 'bytedance-icon', code: 'chart-pie-one' },
+            childsStyle: { width: 300 },
+            childs: gs.map(g => {
+                if (g.type == MenuItemType.divide) return g as any;
+                return {
+                    name: 'tableView',
+                    type: MenuItemType.item,
+                    value: g.url,
+                    text: g.title,
+                    icon: g.icon,
+                    checkLabel: g.url == self.url
+                }
+            })
+        })
+        items.push({
+            type: MenuItemType.divide
+        })
         items.push({
             type: MenuItemType.button,
-            text: lst('创建表格'),
+            text: this.selectView ? lst('创建视图') : lst('创建表格'),
             name: 'createTable',
             buttonClick: 'click'
         })
@@ -79,34 +93,27 @@ export class DataGridSelectorView extends EventsComponent {
             }
         }
         async function select(item) {
-            if (item?.name == 'table') {
-                // self.onChange(item.value);
-                // self.emit('save', item.value);
+            if (item.name == 'tableView') {
+                self.url = item.value;
+                self.source = item.name;
+                self.viewText = item.text;
+                self.forceUpdate()
             }
-            else if (item?.name == 'view') {
-                self.emit('save', {
-                    schemaId: item.value.tableId,
-                    syncBlockId: item.value.viewId,
-                    url: item.value.viewUrl
-                });
-            }
-            else if (item?.name == 'deleteTable') {
-                // if (await Confirm('确认要删除表格吗')) {
-                //     await TableSchema.deleteTableSchema(item.value);
-                //     self.forceUpdate()
-                // }
+            else if (item.name == 'dataView') {
+                self.url = item.value;
+                self.source = item.name;
+                self.viewText = item.text;
+                self.forceUpdate()
             }
         }
-        function click(item, e) {
-            if (e) e.stopPropagation();
+        function click(item) {
             if (item.name == 'createTable') {
                 var it = items.find(c => c.name == 'table');
-                if (it.value) {
-                    self.emit('save', {
-                        text: it.value,
-                        url: '/data-grid/table'
-                    })
-                }
+                self.emit('save', {
+                    text: it.value || self.viewText,
+                    url: self.url,
+                    source: self.source
+                })
             }
         }
         return <MenuView
@@ -128,21 +135,17 @@ export class DataGridSelectorView extends EventsComponent {
             {this.renderItems()}
         </div>
     }
-    input: Input;
     selectView: boolean = false;
-    async open(options: { selectView: boolean }) {
-        // this.url = '/data-grid/table';
-        await TableSchema.onLoadAll()
-        if (options) {
-            Object.assign(this, options);
-        }
+    schema: TableSchema = null;
+    async open(options: { selectView: boolean, schema: TableSchema }) {
+        this.selectView = options?.selectView || false;
+        this.schema = options?.schema;
         this.forceUpdate();
-
     }
 }
 
-export async function useDataGridSelectView(pos: PopoverPosition, options?: { selectView: boolean }) {
-    let popover = await PopoverSingleton(DataGridSelectorView, { mask: true });
+export async function useCreateDataGrid(pos: PopoverPosition, options?: { selectView: boolean, schema: TableSchema }) {
+    let popover = await PopoverSingleton(DataGridCreateTable, { mask: true });
     let fv = await popover.open(pos);
     await fv.open(options);
     return new Promise((resolve: (data: {
@@ -150,9 +153,10 @@ export async function useDataGridSelectView(pos: PopoverPosition, options?: { se
         syncBlockId?: string,
         url?: string,
         text?: string,
-
+        source?: DataGridCreateTable['source']
     }) => void, reject) => {
         fv.only('save', (value) => {
+            console.log('save value', value);
             popover.close();
             resolve(value);
         });

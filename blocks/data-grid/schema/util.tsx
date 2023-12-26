@@ -39,7 +39,7 @@ import {
     WordSvg
 } from "../../../component/svgs";
 import { MenuItemType } from "../../../component/view/menu/declare";
-import { TableSchema } from "./meta";
+import { TableSchema, TableSchemaView } from "./meta";
 import { Field } from "./field";
 import dayjs from "dayjs";
 import lodash from "lodash";
@@ -48,6 +48,13 @@ import { IconValueType } from "../../../component/view/icon";
 import * as BarBackground from "../../../src/assert/img/bar-background.webp";
 import * as Line from "../../../src/assert/img/line-simple.webp";
 import * as Pie from "../../../src/assert/img/pie-simple.webp";
+import * as Scatter from "../../../src/assert/img/scatter-simple.webp";
+import * as Graph from "../../../src/assert/img/graph-label-overlap.webp";
+import * as Funnel from "../../../src/assert/img/funnel.webp";
+import * as Gauge from "../../../src/assert/img/gauge.webp";
+import * as WordCloud from "../../../src/assert/img/word-cloud.png";
+import * as Radar from "../../../src/assert/img/radar.webp";
+import * as Summary from "../../../src/assert/img/summary.png";
 
 export function GetFieldTypeSvg(type: FieldType) {
     switch (type) {
@@ -122,71 +129,140 @@ export function GetFieldTypeSvg(type: FieldType) {
     }
 }
 
-export function getSchemaViewIcon(url: string): IconValueType {
+export function getSchemaViewIcon(view: TableSchemaView): IconValueType {
+    if (view?.icon) return view.icon;
+    var url = view?.url;
+    if (url.indexOf('?') > 0) url = url.substring(0, url.indexOf('?'))
     switch (url) {
         case '/data-grid/table':
             return CollectTableSvg
-            break;
         case '/data-grid/board':
             return CollectionBoardSvg
-            break;
         case '/data-grid/gallery':
             return CollectionGallerySvg
-            break;
         case '/data-grid/list':
             return CollectionListSvg
-            break;
         case '/data-grid/calendar':
             return CollectionCalendarSvg
-            break;
         case '/data-grid/charts':
         case '/data-grid/statistic/value':
             return { name: 'bytedance-icon', code: 'chart-pie-one' }
-
+        default:
+            return CollectTableSvg
     }
 }
+
 export function getChartViews() {
     var menus = [
         {
-            title: '折线图',
+            title: lst('折线图'),
             url: '/data-grid/charts?{"chart_type":"line"}',
             remark: '',
             name: 'line',
-            image: Line.default
+            image: Line.default,
+            icon: { name: 'byte', code: 'chart-line' }
         },
         {
-            title: '柱状图',
+            title: lst('柱状图'),
             url: '/data-grid/charts?{"chart_type":"bar"}',
             remark: 'bar',
             name: 'bar',
-            image: BarBackground.default
+            image: BarBackground.default,
+            icon: { name: 'byte', code: 'chart-histogram' }
         },
         {
-            title: '饼图',
+            title: lst('饼图'),
             url: '/data-grid/charts?{"chart_type":"pie"}',
             remark: '',
             name: 'pie',
+            icon: { name: 'byte', code: 'chart-pie' },
             image: Pie.default
         },
+        {
+            title: lst('漏斗图'),
+            url: '/data-grid/charts?{"chart_type":"funnel"}',
+            remark: '',
+            name: 'funnel',
+            image: Funnel.default,
+            icon: { name: 'byte', code: 'filter' }
+        },
+        { type: MenuItemType.divide },
+        {
+            title: lst('散点图'),
+            url: '/data-grid/charts?{"chart_type":"scatter"}',
+            remark: '',
+            name: 'scatter',
+            image: Scatter.default,
+            icon: { name: 'byte', code: 'chart-scatter' }
+        },
+        {
+            title: lst('雷达图'),
+            url: '/data-grid/charts?{"chart_type":"radar"}',
+            remark: '',
+            name: 'radar',
+            image: Radar.default,
+            icon: { name: 'byte', code: 'radar-chart' }
+        },
+        // { type: MenuItemType.divide },
         // {
-        //     title: '散点图',
-        //     url: '/data-grid/charts?{"chart_type":"scatter"}',
+        //     title: lst('日历热力图'),
+        //     url: '/data-grid/charts?{"chart_type":"calendarHeatmap"}',
+        //     name: 'calendarHeatmap',
         //     remark: '',
-        //     name: 'scatter',
-        //     image: Scatter.default
-        // }
+        //     image: Summary.default,
+        //     icon:{name:'byte',code:'calendar-dot'}
+        // },
+        { type: MenuItemType.divide },
+        {
+            title: lst('关系图'),
+            url: '/data-grid/charts?{"chart_type":"graph"}',
+            remark: '',
+            name: 'graph',
+            image: Graph.default,
+            icon: { name: 'byte', code: 'circular-connection' }
+        },
+        { type: MenuItemType.divide },
+        {
+            title: lst('仪表盘'),
+            url: '/data-grid/charts?{"chart_type":"gauge"}',
+            remark: '',
+            name: 'gauge',
+            image: Gauge.default,
+            icon: { name: 'byte', code: 'speed-one' }
+        },
+        {
+            title: lst('统计与指标'),
+            url: '/data-grid/charts?{"chart_type":"summary"}',
+            name: 'summary',
+            remark: '',
+            image: Summary.default,
+            icon: { name: 'byte', code: 'mark' }
+        },
+        { type: MenuItemType.divide },
+        {
+            title: lst('字符云'),
+            url: '/data-grid/charts?{"chart_type":"wordCloud"}',
+            name: 'wordCloud',
+            remark: '',
+            image: WordCloud.default,
+            icon: { name: 'byte', code: 'cloudy' }
+        }
+
     ]
     return menus;
 }
 
+/**
+ * 
+ * @returns 
+ */
 export function getSchemaViews() {
     return [
         { url: '/data-grid/table', text: lst('表格') },
         { url: '/data-grid/gallery', text: lst('卡片') },
         { url: '/data-grid/board', text: lst('看板') },
         { url: '/data-grid/list', text: lst('列表') },
-        { url: '/data-grid/calendar', text: lst('日历') },
-        // { url: BlockUrlConstant.FormView, text: '表单' }
+        { url: '/data-grid/calendar', text: lst('日历') }
     ]
 }
 

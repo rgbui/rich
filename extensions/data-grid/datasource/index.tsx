@@ -77,7 +77,7 @@ export class DataSourceView extends EventsComponent {
                             },
                             name: 'view',
                             checkLabel: rv.id == self.currentViewId,
-                            icon: rv.icon || getSchemaViewIcon(rv.url),
+                            icon:  getSchemaViewIcon(rv),
                         }
                     }))
                 }

@@ -36,8 +36,7 @@ export class CustomTableFilterView extends EventsComponent {
         });
         return fs;
     }
-    getComputedFields(fieldId: string)
-    {
+    getComputedFields(fieldId: string) {
         var field = this.schema.fields.find(g => g.id == fieldId);
         if ([FieldType.image, FieldType.video, FieldType.video, FieldType.file].includes(field.type)) {
             return [
@@ -404,7 +403,7 @@ export class CustomTableFilterView extends EventsComponent {
                                     })
                                 }
                                 return [] as any
-                            }} className={'gap-r-10'} style={{ width: 120 }} placeholder={lst('值')} onEnter={e=>{item.value=e;self.onForceStore();}} value={item.value} onChange={e => { item.value = e; self.onStore(); }}></Input>}
+                            }} className={'gap-r-10'} style={{ width: 120 }} placeholder={lst('值')} onEnter={e => { item.value = e; self.onForceStore(); }} value={item.value} onChange={e => { item.value = e; self.onStore(); }}></Input>}
                         {[FieldType.number, FieldType.autoIncrement].includes(fe.type) && !['$isNull', '$isNotNull'].includes(item.operator) && <Input className={'gap-r-10'} type='number' style={{ width: 120 }} placeholder={lst('值')} value={item.value} onChange={e => { item.value = e; self.onStore(); }}></Input>}
                         {[FieldType.date, FieldType.modifyDate, FieldType.createDate].includes(fe.type) && !['$isNull', '$isNotNull'].includes(item.operator) && self.renderDateInput(item)}
                         {[FieldType.option, FieldType.options].includes(fe.type) && !['$isNull', '$isNotNull'].includes(item.operator) && self.renderOptionInput(item)}

@@ -112,7 +112,7 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                                 props.block.onOpenViewSettings(Rect.fromEvent(e))
                             }}>
                                 <span className="size-24 bold flex-center flex-fixed">
-                                    <Icon size={18} icon={view.icon || getSchemaViewIcon(view.url) || CollectTableSvg}></Icon>
+                                    <Icon size={18} icon={getSchemaViewIcon(view)}></Icon>
                                 </span>
                                 <span className="flex-auto">{view?.text}</span>
                             </label>
@@ -133,7 +133,7 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                         props.block.onOpenViewSettings(Rect.fromEvent(e))
                     }}>
                     <span className="size-24 flex-center flex-fix">
-                        <Icon size={18} icon={view.icon || getSchemaViewIcon(view.url) || CollectTableSvg}></Icon>
+                        <Icon size={18} icon={ getSchemaViewIcon(view)}></Icon>
                     </span>
                     <span className="flex-auto bold">{view?.text}</span>
                 </label>

@@ -38,7 +38,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 value: this.block.schemaView.text,
                 name: 'viewText',
                 type: MenuItemType.inputTitleAndIcon,
-                icon: this.block.schemaView.icon || getSchemaViewIcon(this.block.schemaView.url),
+                icon:  getSchemaViewIcon(this.block.schemaView),
             },
             { type: MenuItemType.divide },
             {
@@ -50,7 +50,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                             name: "toggleView",
                             value: v.url,
                             text: v.text,
-                            icon: getSchemaViewIcon(v.url),
+                            icon: getSchemaViewIcon(v as any),
                             checkLabel: !this.block.getCardUrl() && this.block.url == v.url
                         }
                     }),

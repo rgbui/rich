@@ -236,7 +236,9 @@ export class TableSchema {
         size?: number,
         filter?: Record<string, any>,
         directFilter?: Record<string, any>,
-        sorts?: Record<string, -1 | 1>
+        sorts?: Record<string, -1 | 1>,
+        projects?: string[];
+        isIgnoreCount?: boolean;
     }, ws: LinkWs) {
         return channel.get('/datastore/query/list', Object.assign({ schemaId: this.id, ws: ws }, options));
     }
@@ -270,6 +272,9 @@ export class TableSchema {
     }
     statisticValue(options: { filter?: Record<string, any>, fieldName?: string, indicator: string; }, ws: LinkWs) {
         return channel.get('/datastore/statistics/value', Object.assign({ schemaId: this.id, ws: ws }, options));
+    }
+    distinct(options:{filter?:Record<string,any>,field:string}, ws: LinkWs){
+        return channel.get('/datastore/query/distinct', Object.assign({ schemaId: this.id, ws: ws }, options))
     }
     fieldAdd(field: { text: string, type: FieldType, config?: Record<string, any> }) {
         return this.onSchemaOperate([{ name: 'addField', field }])
