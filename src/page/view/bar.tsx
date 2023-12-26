@@ -33,11 +33,22 @@ import { lst } from "../../../i18n/store";
 import { Tip } from "../../../component/view/tooltip/tip";
 import { useAISearchBox } from "../../../extensions/search/ai";
 import { useSearchBox } from "../../../extensions/search/keyword";
+import { useInputIconAndText } from "../../../component/view/input/iconAndText";
+import { IconArguments } from "../../../extensions/icon/declare";
+import { Rect } from "../../common/vector/point";
 
 export class PageBar extends React.Component<{ page: Page }>{
     preTip: Tip;
     nextTip: Tip;
     expendTip: Tip;
+    async onRenamePage(event: React.MouseEvent, options: { text: string, icon: IconArguments }) {
+        if (!this.props.page.isCanEdit) return;
+        if (this.props.page.openSource !== 'page') return;
+        var r = await useInputIconAndText({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, options);
+        if (r) {
+            this.props.page.onUpdatePageData(r)
+        }
+    }
     renderTitle() {
         if ([ElementType.SchemaData].includes(this.props.page.pe.type) && !this.props.page.isSchemaRecordViewTemplate) {
             return <div className="flex-auto flex desk-drag">
@@ -52,7 +63,7 @@ export class PageBar extends React.Component<{ page: Page }>{
                         <span className="gap-l-5">{this.props.page.schema?.text}</span>
                     </span>
                     <span className="flex-center desk-no-drag "><Icon className={'text-1'} icon={ChevronRightSvg} size={20}></Icon></span>
-                    <span className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5">
+                    <span onMouseDown={e => this.onRenamePage(e, { text: this.props.page?.formRowData?.title, icon: this.props.page?.formRowData?.icon })} className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5">
                         <Icon size={20} className={'text-1'} icon={this.props.page?.formRowData?.icon || PageSvg}></Icon>
                         <span className="gap-l-5">{this.props.page?.formRowData?.title || lst('新页面')}</span>
                     </span>
@@ -68,7 +79,7 @@ export class PageBar extends React.Component<{ page: Page }>{
                     <span className="gap-l-5">{this.props.page.schema?.text}</span>
                 </span>
                 <span className="desk-no-drag flex-center"><Icon className={'text-1'} icon={ChevronRightSvg} size={18}></Icon></span>
-                <span className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5">
+                <span onMouseDown={e => { this.onRenamePage(e, { text: this.props.page?.formRowData?.title, icon: this.props.page?.formRowData?.icon }) }} className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5">
                     <Icon className={'text-1'} size={20} icon={this.props.page?.formRowData?.icon || PageSvg}></Icon>
                     <span className="gap-l-5">{this.props.page?.formRowData?.title || lst('新页面')}</span>
                 </span>
@@ -87,7 +98,7 @@ export class PageBar extends React.Component<{ page: Page }>{
                     <span className="gap-l-5">{this.props.page.schema?.text}</span>
                 </span>
                 <span className="desk-no-drag flex-center"><Icon icon={ChevronRightSvg} size={18}></Icon></span>
-                <span className="desk-no-drag item-hover round flex  cursor padding-h-3 padding-w-5">
+                <span onMouseDown={e => { this.onRenamePage(e, { text: sv?.text, icon: sv?.icon }) }} className="desk-no-drag item-hover round flex  cursor padding-h-3 padding-w-5">
                     <Icon className={'text-1'} size={20} icon={sv?.icon || PageSvg}></Icon>
                     <span className="gap-l-5">{sv?.text || ''}</span>
                 </span>
@@ -100,7 +111,7 @@ export class PageBar extends React.Component<{ page: Page }>{
         return <div className="flex-auto flex desk-drag">
             {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onPageClose()} className="desk-no-drag item-hover size-24 round cursor flex-center "><Icon size={20} icon={DoubleRightSvg}></Icon></span>}
             <span className=" round flex ">
-                <span className="flex-fixed desk-no-drag  item-hover flex round  cursor padding-h-3 padding-w-5 ">
+                <span onMouseDown={e => { this.onRenamePage(e, { text: this.props.page?.pageInfo.text, icon: this.props.page.pageInfo.icon }) }} className="flex-fixed desk-no-drag  item-hover flex round  cursor padding-h-3 padding-w-5 ">
                     {this.props.page?.pageInfo?.icon && <Icon className={'text-1'} size={20} icon={getPageIcon(this.props.page?.pageInfo)}></Icon>}
                     <span className={"gap-l-5 text-overflow " + (isMobileOnly ? "max-w-120" : "max-w-300")}>{getPageText(this.props.page?.pageInfo)}</span>
                 </span>
