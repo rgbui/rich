@@ -22,7 +22,7 @@ export class TrashBox extends EventsComponent {
             <div className="gap-w-14 padding-h-10">
                 <div >
                     <Input
-                        placeholder={lst('搜索{text}中被删除的页面',{text:this.ws?.text})}
+                        placeholder={lst('搜索{text}中被删除的页面', { text: this.ws?.text })}
                         clear
                         onClear={() => {
                             this.forceSearch();
@@ -44,13 +44,14 @@ export class TrashBox extends EventsComponent {
                 </div>
                 {this.search.loading && <Spin block><S>搜索中...</S></Spin>}
                 {this.search.list.map(pa => {
-                    return <div key={pa.id} className="flex item-hover round padding-h-3  padding-w-14 ">
-                        <span className="flex-fixed flex-center size-24 item-hover  round "><Icon size={20} icon={getPageIcon(pa)}></Icon></span>
-                        <span className="flex-fixed max-w-120 text-overflow gap-r-5">{getPageText(pa)}</span>
+                    return <div key={pa.id} className="flex item-hover round padding-h-3  padding-w-5 gap-w-10 ">
+                        {/* <span className="flex-fixed flex-center size-24 remark  round "></span> */}
+                        <Icon className={'remark'} size={18} icon={getPageIcon(pa)}></Icon>
+                        <span className="flex-fixed max-w-120 text-overflow gap-r-5 gap-l-3">{getPageText(pa)}</span>
                         <span className="flex-fixed f-12 remark">
                             {util.showTime(pa.deletedDate)}
                         </span>
-                        <span className="flex-auto flex-end r-size-24 r-flex-center r-item-hover r-round r-cursor r-gap-l-10 remark">
+                        <span className="flex-auto flex-end r-size-24 r-flex-center r-item-hover r-round r-cursor r-gap-l-5 remark">
                             <ToolTip overlay={lst('恢复')}><span onMouseDown={e => this.onRecover(pa)}><Icon size={16} icon={{ name: 'bytedance-icon', code: 'undo' }}></Icon></span></ToolTip>
                             <ToolTip overlay={lst('彻底删除')}><span onMouseDown={e => this.onDel(pa)}><Icon size={16} icon={TrashSvg}></Icon></span></ToolTip>
                         </span>
