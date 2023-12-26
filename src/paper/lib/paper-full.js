@@ -15671,7 +15671,7 @@ Base.exports.PaperScript = function() {
 	var global = this,
 		acorn = global.acorn;
 	if (!acorn && typeof require !== 'undefined') {
-		try { acorn = require('acorn'); } catch(e) {}
+		// try { acorn = require('acorn'); } catch(e) {}
 	}
 	if (!acorn) {
 		var exports, module;
