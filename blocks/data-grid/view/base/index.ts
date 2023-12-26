@@ -1,10 +1,10 @@
-import { useDataGridSelectView } from "../../../../extensions/data-grid/create";
+import { useDataGridSelectView } from "../../../../extensions/data-grid/create/select.view";
 import { channel } from "../../../../net/channel";
 import { Block } from "../../../../src/block";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { prop } from "../../../../src/block/factory/observable";
 import { Pattern } from "../../../../src/block/pattern";
-import { Rect } from "../../../../src/common/vector/point";
+import { Point, Rect } from "../../../../src/common/vector/point";
 import { ActionDirective } from "../../../../src/history/declare";
 import { SchemaFilter } from "../../schema/declare";
 import { TableSchema } from "../../schema/meta";
@@ -24,7 +24,7 @@ import { OriginFilterField } from "../../element/filter/origin.field";
 import { FilterSort } from "../../element/filter/sort";
 import { Page } from "../../../../src/page";
 import { Field } from "../../schema/field";
-import { useCreateDataGrid } from "../../../../extensions/data-grid/create/view";
+import { useCreateDataGrid } from "../../../../extensions/data-grid/create";
 import { AtomPermission } from "../../../../src/page/permission";
 import { BlockUrlConstant } from "../../../../src/block/constant";
 import { OptionDefineRule } from "../../block/optionRule";
@@ -210,8 +210,7 @@ export class DataGridView extends Block {
                 rs.push(...fl);
             }
         }
-        if (this.searchTitle?.focus && this.searchTitle?.word)
-        {
+        if (this.searchTitle?.focus && this.searchTitle?.word) {
             rs.push({
                 field: this.schema.fields.find(g => g.name == 'title')?.id,
                 value: this.searchTitle.word,
@@ -422,7 +421,11 @@ export class DataGridView extends Block {
     }, 1000)
     onLazySearch = lodash.debounce(async () => {
         await this.onSearch()
-    },700);
+    }, 700);
+    async onContextmenu(event: Point | MouseEvent) {
+        var rect = event instanceof Point ? new Rect(event.x, event.y, 0, 0) : Rect.fromEvent(event);
+        await this.onOpenViewSettings(rect)
+    }
 }
 
 export interface DataGridView extends DataGridViewLife { }
