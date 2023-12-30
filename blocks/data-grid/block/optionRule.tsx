@@ -3,7 +3,7 @@ import { Block } from "../../../src/block";
 import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
-import { SchemaFilter } from "../schema/declare";
+import { SchemaFilter } from "../schema/filter";
 import { DataGridView } from "../view/base";
 import lodash from "lodash";
 import { DuplicateSvg, LinkSvg, TrashSvg } from "../../../component/svgs";
