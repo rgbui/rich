@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { SchemaFilter } from "../../../../blocks/data-grid/schema/declare";
+import { SchemaFilter } from "../../../../blocks/data-grid/schema/filter";
 import { TableSchema } from "../../../../blocks/data-grid/schema/meta";
 import dayjs from "dayjs";
 import lodash from "lodash";
@@ -27,7 +27,7 @@ import { util } from "../../../../util/util";
 
 export class CustomTableFilterView extends EventsComponent {
     getFields() {
-        var fs = this.schema.initUserFields.findAll(g => g.text && ![FieldType.formula].includes(g.type)).map(fe => {
+        var fs = this.schema.defaultViewFields.findAll(g => g.text && ![FieldType.formula].includes(g.type)).map(fe => {
             return {
                 icon: GetFieldTypeSvg(fe.type),
                 text: fe.text,

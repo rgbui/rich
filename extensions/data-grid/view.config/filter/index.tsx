@@ -8,7 +8,7 @@ import { Icon } from "../../../../component/view/icon";
 import { Input } from "../../../../component/view/input";
 import { ArrowRightSvg, CheckSvg, CloseSvg, PlusSvg } from "../../../../component/svgs";
 import lodash from "lodash";
-import { SchemaFilter } from "../../../../blocks/data-grid/schema/declare";
+import { SchemaFilter } from "../../../../blocks/data-grid/schema/filter";
 import { SelectBox } from "../../../../component/view/select/box";
 import { GetFieldTypeSvg } from "../../../../blocks/data-grid/schema/util";
 import { Switch } from "../../../../component/view/switch";
@@ -38,7 +38,7 @@ export class TableFilterView extends EventsComponent {
         this.forceUpdate();
     }
     getFields() {
-        var fs = this.schema.initUserFields.findAll(g => g.text && ![FieldType.formula].includes(g.type)).map(fe => {
+        var fs = this.schema.defaultViewFields.findAll(g => g.text && ![FieldType.formula].includes(g.type)).map(fe => {
             return {
                 icon: GetFieldTypeSvg(fe.type),
                 text: fe.text,

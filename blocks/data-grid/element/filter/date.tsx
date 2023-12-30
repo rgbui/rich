@@ -7,7 +7,7 @@ import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/vector/point";
 import { util } from "../../../../util/util";
-import { SchemaFilter } from "../../schema/declare";
+import { SchemaFilter } from "../../schema/filter";
 import { OriginFilterField, OriginFilterFieldView } from "./origin.field";
 import { S } from "../../../../i18n/view";
 import { SelectBox } from "../../../../component/view/select/box";

@@ -1,5 +1,5 @@
 import React from "react";
-import { SchemaFilter } from "../../../../blocks/data-grid/schema/declare";
+import { SchemaFilter } from "../../../../blocks/data-grid/schema/filter";
 import { TableSchema } from "../../../../blocks/data-grid/schema/meta";
 import { EventsComponent } from "../../../../component/lib/events.component";
 import { LinkWs } from "../../../../src/page/declare";

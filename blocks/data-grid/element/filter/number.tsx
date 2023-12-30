@@ -4,7 +4,7 @@ import { NsArowSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
-import { SchemaFilter } from "../../schema/declare";
+import { SchemaFilter } from "../../schema/filter";
 import { OriginFilterField, OriginFilterFieldView } from "./origin.field";
 import { lst } from "../../../../i18n/store";
 

@@ -2,7 +2,7 @@ import React, { CSSProperties } from "react";
 import { Spin } from "../../../../component/view/spin";
 import { Block } from "../../../../src/block";
 import { prop } from "../../../../src/block/factory/observable";
-import { SchemaFilter } from "../../schema/declare";
+import { SchemaFilter } from "../../schema/filter";
 import { DataGridView } from "../../view/base";
 import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../../../src/block/enum";
 import { BoxTip } from "../../../../component/view/tooltip/box";
