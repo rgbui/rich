@@ -4,7 +4,7 @@ import { CoverMask, IconArguments } from "../../../extensions/icon/declare";
 import { channel } from "../../../net/channel";
 import { BlockUrlConstant } from "../../../src/block/constant";
 import { Field } from "./field";
-import { FieldType } from "./type";
+import { FieldType, SysFieldTypes } from "./type";
 import { ViewField } from "./view";
 import { AtomPermission } from "../../../src/page/permission";
 import { Page } from "../../../src/page";
@@ -91,9 +91,12 @@ export class TableSchema {
         date: number,
         userid: string
     }
+    /**
+     * 可以被用户感知显示的字段
+     * 用户可以选择显示的字段
+     */
     get visibleFields(): Field[] {
         return this.fields.findAll(g => g.text && ![
-            FieldType.id,
             FieldType.icon,
             FieldType.cover,
             FieldType.description,
@@ -103,59 +106,62 @@ export class TableSchema {
             FieldType.sort
         ].includes(g.type))
     }
-    get recordViewTemplateFields() {
+    /**
+     * 系统创建表格时，默认创建显示的字段
+     */
+    get defaultViewFields() {
         return this.fields.findAll(g => g.text && ![
-            FieldType.id,
-            FieldType.description,
-            FieldType.deleted,
-            FieldType.sort
-        ].includes(g.type) ? true : false);
-    }
-    get userFields(): Field[] {
-        return this.fields.findAll(g => g.text && ![
-            FieldType.id,
-            FieldType.icon,
-            FieldType.cover,
-            FieldType.description,
-            FieldType.plain,
-            FieldType.thumb,
-            FieldType.deleted,
-            FieldType.sort
-        ].includes(g.type) ? true : false);
-    }
-    get initUserFields() {
-        return this.userFields.findAll(g => g.text && ![
-            FieldType.parentId,
-            FieldType.creater,
             FieldType.modifyDate,
-            FieldType.modifyer,
             FieldType.createDate,
+            FieldType.creater,
+            FieldType.cover,
+            FieldType.icon,
+            FieldType.comment,
+            FieldType.browse,
+            FieldType.plain,
+            FieldType.description,
+            FieldType.thumb,
             FieldType.autoIncrement,
             FieldType.sort,
-            FieldType.comment,
-            FieldType.browse
+            FieldType.id,
+            FieldType.deleted
         ].includes(g.type))
     }
     get allowSortFields() {
-        return this.userFields.findAll(x => x.text && ![
+        return this.fields.findAll(x => x.text && ![
             FieldType.formula,
             FieldType.image,
             FieldType.file,
             FieldType.audio,
-            FieldType.video
+            FieldType.video,
+            FieldType.cover,
+            FieldType.icon,
+            FieldType.plain,
+            FieldType.description,
+            FieldType.thumb,
+            FieldType.sort,
+            FieldType.id,
+            FieldType.deleted
         ].includes(x.type) ? true : false)
     }
     get allowFormFields() {
-        return this.initUserFields.findAll(g => ![
+        return this.fields.findAll(g => ![
             FieldType.formula,
             FieldType.rollup,
+            FieldType.modifyDate,
+            FieldType.createDate,
+            FieldType.creater,
+            FieldType.cover,
+            FieldType.icon,
             FieldType.comment,
-            FieldType.blog,
-            // FieldType.emoji,
-            // FieldType.like,
-            // FieldType.love,
-            // FieldType.approve,
-            // FieldType.oppose
+            FieldType.browse,
+            FieldType.plain,
+            FieldType.description,
+            FieldType.thumb,
+            FieldType.autoIncrement,
+            FieldType.sort,
+            FieldType.id,
+            FieldType.deleted
         ].includes(g.type))
     }
     isType(fieldId: string, ...types: FieldType[]) {
@@ -179,7 +185,7 @@ export class TableSchema {
         return rv;
     }
     getViewFields() {
-        var fs = this.initUserFields;
+        var fs = this.defaultViewFields;
         return fs.map(f => {
             return this.createViewField(f);
         })
@@ -273,7 +279,7 @@ export class TableSchema {
     statisticValue(options: { filter?: Record<string, any>, fieldName?: string, indicator: string; }, ws: LinkWs) {
         return channel.get('/datastore/statistics/value', Object.assign({ schemaId: this.id, ws: ws }, options));
     }
-    distinct(options:{filter?:Record<string,any>,field:string}, ws: LinkWs){
+    distinct(options: { filter?: Record<string, any>, field: string }, ws: LinkWs) {
         return channel.get('/datastore/query/distinct', Object.assign({ schemaId: this.id, ws: ws }, options))
     }
     fieldAdd(field: { text: string, type: FieldType, config?: Record<string, any> }) {
@@ -470,23 +476,9 @@ export class TableSchema {
     static fieldValueIsArray(field: Field) {
         return [FieldType.option, FieldType.options, FieldType.user].includes(field.type)
     }
+    static isSystemField(field: Field) {
+        return SysFieldTypes.includes(field.type)
+    }
 }
-
-
-
-/***
- * 
- * 
- * view ask-list
- * 
- * form add ask
- * 
- * record-view ask-questions
- * 
- * form add question
- * 
- * 
- */
-
 
 

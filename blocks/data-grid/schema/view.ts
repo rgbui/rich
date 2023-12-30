@@ -1,6 +1,6 @@
 import { util } from "../../../util/util";
 import { TableSchema } from "./meta";
-import { FieldType, sysFieldTypes } from "./type";
+import { FieldType, SysFieldTypes } from "./type";
 export class ViewField {
     id: string;
     fieldId?: string;
@@ -50,7 +50,7 @@ export class ViewField {
         return new ViewField(this.get(), this.schema)
     }
     getValue(row) {
-        if (sysFieldTypes.includes(this.field.type)) {
+        if (SysFieldTypes.includes(this.field.type)) {
             return row[FieldType[this.field.type]];
         }
         if (this?.field?.name) return row[this.field.name];

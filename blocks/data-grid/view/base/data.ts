@@ -41,7 +41,7 @@ export class DataGridViewData {
                     initData
                 }
             })
-            await this.didMounted();
+            await this.loadDataGrid();
         })
     }
     async onOpenEditForm(this: DataGridView, id: string, forceUrl?: '/page/open' | '/page/dialog' | '/page/slide') {
@@ -68,7 +68,7 @@ export class DataGridViewData {
                     isCanEdit: true
                 }
             })
-            await this.didMounted();
+            await this.loadDataGrid();
         })
     }
     async onAddRow(this: DataGridView, data, id?: string, arrow: 'before' | 'after' = 'after') {

@@ -27,14 +27,9 @@ export async function createFieldBlock(viewField: ViewField, block: TableStoreIt
                     viewField
                 }, block);
                 break;
+            case FieldType.id:
             case FieldType.text:
                 cellContent = await BlockFactory.createBlock('/field/text', page, {
-                    value: viewField.getValue(row),
-                    viewField
-                }, block);
-                break;
-            case FieldType.rich:
-                cellContent = await BlockFactory.createBlock('/field/rich', page, {
                     value: viewField.getValue(row),
                     viewField
                 }, block);
@@ -75,8 +70,6 @@ export async function createFieldBlock(viewField: ViewField, block: TableStoreIt
                     value: viewField.getValue(row),
                 }, block);
                 break;
-            case FieldType.vote:
-            case FieldType.report:
             case FieldType.oppose:
             case FieldType.like:
             case FieldType.love:
@@ -130,12 +123,6 @@ export async function createFieldBlock(viewField: ViewField, block: TableStoreIt
                 break;
             case FieldType.phone:
                 cellContent = await BlockFactory.createBlock('/field/phone', page, {
-                    viewField,
-                    value: viewField.getValue(row),
-                }, block);
-                break;
-            case FieldType.blog:
-                cellContent = await BlockFactory.createBlock('/field/blog', page, {
                     viewField,
                     value: viewField.getValue(row),
                 }, block);
@@ -194,7 +181,7 @@ export interface CardConfig {
             /**
              * 以这个为准
              */
-            bindFieldIds?:string[]
+            bindFieldIds?: string[]
         }[]
     }
 }

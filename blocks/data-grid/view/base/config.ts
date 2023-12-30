@@ -31,9 +31,9 @@ import { BlockUrlConstant } from "../../../../src/block/constant";
 import { lst } from "../../../../i18n/store";
 import lodash from "lodash";
 import { DataGridChart } from "../statistic/charts";
+import { IconValueType } from "../../../../component/view/icon";
 
 export class DataGridViewConfig {
-
     async onOpenViewSettings(this: DataGridView, rect: Rect) {
         var self = this;
         var view = this.schemaView;
@@ -77,7 +77,7 @@ export class DataGridViewConfig {
                             }
                         ]
                     },
-                    { text: lst('配置视图'), name: 'viewConfig', icon: SettingsSvg },
+                    { text: lst('配置视图'), name: 'viewConfig', icon: { name: 'byte', code: 'setting-one' } as IconValueType },
                     { type: MenuItemType.divide },
                     { text: lst('数据源'), name: 'datasource', icon: DatasourceSvg },
                     { type: MenuItemType.divide },
@@ -143,7 +143,6 @@ export class DataGridViewConfig {
                                 if (props.text) item.text = props.text || item.text;
                                 if (props.icon) item.icon = props.icon || item.icon;
                                 mp.updateItems(items);
-                                console.log(props, view.url);
                                 if (props.text && view.url.startsWith('/data-grid/charts')) {
                                     await (self as DataGridChart).renderEcharts();
                                 }

@@ -21,7 +21,7 @@ export class TableStoreListItemView extends BlockView<TableStoreListItem>{
     renderRows() {
         var title = this.block.childs.find(g => (g as OriginField).url == '/field/title');
         var cs = this.block.childs.findAll(g => g !== title);
-        return <div className="flex item-hover round padding-5 ">
+        return <div className="flex item-light-hover round padding-5 ">
             <div className="flex-fixed bold cursor">
                 {title && <title.viewComponent block={title}></title.viewComponent>}
             </div>

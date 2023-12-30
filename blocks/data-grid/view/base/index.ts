@@ -6,7 +6,7 @@ import { prop } from "../../../../src/block/factory/observable";
 import { Pattern } from "../../../../src/block/pattern";
 import { Point, Rect } from "../../../../src/common/vector/point";
 import { ActionDirective } from "../../../../src/history/declare";
-import { SchemaFilter } from "../../schema/declare";
+import { SchemaFilter } from "../../schema/filter";
 import { TableSchema } from "../../schema/meta";
 import { ViewField } from "../../schema/view";
 import { DataGridTurns } from "../../turn";
@@ -17,7 +17,7 @@ import { DataGridViewLife } from "./left.cycle";
 import { DataGridViewOperator } from "./operator";
 import { DataGridViewData } from "./data";
 import { DataGridViewConfig } from "./config";
-import { ElementType, getElementUrl } from "../../../../net/element.type";
+import { ElementType,getElementUrl } from "../../../../net/element.type";
 import { DataGridViewField } from "./field";
 import lodash from "lodash";
 import { OriginFilterField } from "../../element/filter/origin.field";
@@ -186,7 +186,6 @@ export class DataGridView extends Block {
             }
         }
         else await super.loadSyncBlock();
-
     }
     getSearchFilter() {
         var f: SchemaFilter = {} as any;
@@ -274,7 +273,7 @@ export class DataGridView extends Block {
         return f
     }
     getSearchSorts() {
-        var sorts: Record<string, any> = {};
+        var sorts: Record<string, any> = { createDate: -1 };
         if (Array.isArray(this.sorts) && this.sorts.length > 0) {
             this.sorts.forEach(s => {
                 var f = this.schema.fields.find(g => g.id == s.field);
@@ -282,7 +281,6 @@ export class DataGridView extends Block {
                     sorts[f.name] = s.sort;
                 }
             })
-            return sorts;
         }
         var sfs = this.referenceBlockers.findAll(g => g instanceof FilterSort || g.url == BlockUrlConstant.DataGridLatestOrHot) as FilterSort[];
         if (sfs) {

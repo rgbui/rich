@@ -309,7 +309,6 @@ export async function renderEcharts(dg: DataGridChart) {
                 })
             }]
         } as any;
-        console.log(option);
         dg.myChart.setOption(option);
     }
     else {

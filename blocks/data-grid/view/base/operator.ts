@@ -5,7 +5,7 @@ import { BlockRenderRange } from "../../../../src/block/enum";
 import { Point, Rect } from "../../../../src/common/vector/point";
 import { ActionDirective } from "../../../../src/history/declare";
 import { PageDirective } from "../../../../src/page/directive";
-import { SchemaFilter, SchemaFilterJoin } from "../../schema/declare";
+import { SchemaFilter, SchemaFilterJoin } from "../../schema/filter";
 import { Field } from "../../schema/field";
 import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
@@ -22,6 +22,8 @@ import { Block } from "../../../../src/block";
 import { lst } from "../../../../i18n/store";
 import { IconValueType } from "../../../../component/view/icon";
 import { CardFactory } from "../../template/card/factory/factory";
+import { TableSchema } from "../../schema/meta";
+import { OptionBackgroundColorList } from "../../../../extensions/data-grid/option/option";
 
 export class DataGridViewOperator {
     async onAddField(this: DataGridView, event: Rect, at?: number) {
@@ -200,7 +202,7 @@ export class DataGridViewOperator {
     async onShowAllField(this: DataGridView) {
         await this.page.onAction(ActionDirective.onSchemaShowField, async () => {
             this.page.addBlockChange(this);
-            var fs = this.schema.userFields.map(g => this.schema.createViewField(g));
+            var fs = this.schema.fields.map(g => this.schema.createViewField(g));
             var oss = this.fields.map(f => f.clone()).filter(g => g.type ? true : false);
             fs.each(f => { oss.push(f) });
             await this.changeFields(this.fields, oss);
@@ -252,7 +254,7 @@ export class DataGridViewOperator {
     }
     async onDataGridChangeViewByTemplate(this: DataGridView, url: string) {
         await this.page.onAction('onDataGridChangeViewByTemplate', async () => {
-            var cm = CardFactory.CardModels.get(url);
+            var cm = CardFactory.CardModels.get(url)?.model;
             var viewUrl = cm.forUrls[0];
             var ps = cm.props.toArray(pro => {
                 var f = this.schema.fields.find(x => x.text == pro.text && x.type == pro.types[0]);
@@ -291,6 +293,23 @@ export class DataGridViewOperator {
         var pa = this.parent;
         var id = this.id;
         await this.delete();
+        if (url == BlockUrlConstant.DataGridBoard) {
+            if (!this.schema.fields.some(s => s.type == FieldType.option || s.type == FieldType.options)) {
+                var opbs = OptionBackgroundColorList();
+                await this.schema.fieldAdd({
+                    text: lst('状态'),
+                    type: FieldType.option,
+                    config: {
+                        options: [
+                            { text: lst('未开始'), value: util.guid(), color: opbs.randomOf()?.color },
+                            { text: lst('进行中'), value: util.guid(), color: opbs.randomOf()?.color },
+                            { text: lst('已完成'), value: util.guid(), color: opbs.randomOf()?.color },
+                        ]
+                    }
+                });
+                console.log(this.schema);
+            }
+        }
         var newBlock = await this.page.createBlock(url,
             {
                 syncBlockId: view.id,
@@ -298,7 +317,7 @@ export class DataGridViewOperator {
             },
             pa,
             at
-        );
+        ) as DataGridView;
         if (viewProps && Object.keys(viewProps).length > 0) {
             await newBlock.updateProps(viewProps);
         }
@@ -329,14 +348,12 @@ export class DataGridViewOperator {
         })
         this.page.addBlockUpdate(newBlock.parent);
         this.page.addUpdateEvent(async () => {
-            await newBlock.didMounted();
-            for (let i = 0; i < bs.length; i++) {
-                await bs[i].forceUpdate();
-            }
+            // await newBlock.loadDataGrid();
         })
     }
     /**
      * 将表格切换成其它视图
+     * 可能是其它shema view
      * @param this 
      * @param viewId 
      * @param schemaId 
@@ -352,19 +369,23 @@ export class DataGridViewOperator {
         if (!this.schema) {
             await this.loadSchema();
         }
+        var sch = this.schema;
+        if (schemaId && this.schemaId != schemaId) {
+            sch = await TableSchema.loadTableSchema(schemaId, this.page.ws);
+        }
+        var v = sch.views.find(g => g.id == viewId);
         var bs = this.referenceBlockers;
-        var view = this.schema.views.find(g => g.id == viewId);
         var at = this.at;
         var pa = this.parent;
         await this.delete();
-        var newBlock = await this.page.createBlock(view.url,
+        var newBlock = await this.page.createBlock(v.url,
             {
-                syncBlockId: view.id,
+                syncBlockId: v.id,
                 schemaId: schemaId || this.schema.id
             },
             pa,
             at
-        );
+        ) as DataGridView;
         if (viewProps && Object.keys(viewProps).length > 0) {
             await newBlock.updateProps(viewProps);
         }
@@ -376,8 +397,6 @@ export class DataGridViewOperator {
         })
         this.page.addBlockUpdate(newBlock.parent);
         this.page.addUpdateEvent(async () => {
-            await newBlock.loadSyncBlock();
-            await newBlock.didMounted();
             for (let i = 0; i < bs.length; i++) {
                 await bs[i].forceUpdate();
             }
@@ -434,7 +453,7 @@ export class DataGridViewOperator {
         await this.onDataGridTurnView(oneAction.id, viewProps);
     }
     async onSchemaViewCreateByTemplate(this: DataGridView, text: string, url: string) {
-        var cm = CardFactory.CardModels.get(url);
+        var cm = CardFactory.CardModels.get(url)?.model;
         var viewUrl = cm.forUrls[0];
         var ps = cm.props.toArray(pro => {
             var f = this.schema.fields.find(x => x.text == pro.text && x.type == pro.types[0]);

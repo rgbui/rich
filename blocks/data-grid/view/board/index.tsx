@@ -5,7 +5,6 @@ import { DataGridView } from "../base";
 import { FieldType } from "../../schema/type";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { TableStoreItem } from "../item";
-import { ChildsArea } from "../../../../src/block/view/appear";
 import { DataGridTool } from "../components/tool";
 import { CollectTableSvg, DotsSvg, EyeHideSvg, EyeSvg, PlusSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
@@ -21,12 +20,12 @@ import { BlockRenderRange } from "../../../../src/block/enum";
 import { OptionBackgroundColorList } from "../../../../extensions/data-grid/option/option";
 import { DataGridOptionType } from "../../schema/field";
 import { util } from "../../../../util/util";
-import './style.less';
 import { ShyAlert } from "../../../../component/lib/alert";
 import { Tip } from "../../../../component/view/tooltip/tip";
 import { CardConfig } from "../item/service";
 import { Block } from "../../../../src/block";
 import { CardFactory } from "../../template/card/factory/factory";
+import './style.less';
 
 @url('/data-grid/board')
 export class TableStoreBoard extends DataGridView {
@@ -41,6 +40,9 @@ export class TableStoreBoard extends DataGridView {
     async loadData() {
         if (!this.groupFieldId) {
             this.groupFieldId = this.fields.find(g => g.field?.type == FieldType.option || g.field?.type == FieldType.options)?.field?.id;
+            if (!this.groupFieldId) {
+                this.groupFieldId = this.schema.fields.find(g => g.type == FieldType.option || g?.type == FieldType.options)?.id;
+            }
         }
         if (this.groupField) {
             if (this.schema) {
@@ -106,8 +108,8 @@ export class TableStoreBoard extends DataGridView {
                 { type: MenuItemType.divide },
                 { name: 'addRow', icon: PlusSvg, text: lst('新增数据') },
                 { type: MenuItemType.divide },
-                { name: 'deleteAllRows', icon: { name: 'bytedance-icon', code: 'clear' }, text: lst('清空分组数据') },
-                { name: 'deleteGroup', icon: { name: 'bytedance-icon', code: 'delete-two' }, text: lst('删除分组及数据') }
+                { name: 'deleteAllRows', icon: { name: 'bytedance-icon', code: 'clear' }, text: lst('删除数据') },
+                { name: 'deleteGroup', icon: { name: 'bytedance-icon', code: 'delete-two' }, text: lst('删除数据及分组') }
             ]);
             if (r?.item) {
                 if (r.item.name == 'hidden') {
@@ -199,31 +201,37 @@ export class TableStoreBoard extends DataGridView {
         return this.cardConfig?.auto || this.cardConfig.showMode == 'define'
     }
 }
+
 @view('/data-grid/board')
 export class TableStoreBoardView extends BlockView<TableStoreBoard>{
     renderGroup(dg: ArrayOf<TableStoreBoard['dataGroups']>, index: number) {
         var cs = this.block.childs.findAll(g => g.mark == dg.group);
         return <div className="sy-data-grid-board-group visible-hover" key={index}>
             <div className="sy-data-grid-board-group-head">
-                <span className="flex-auto"><span style={{ backgroundColor: dg.color || undefined }}>{dg.group || lst('未定义')}</span><label>{dg.count}</label></span>
-                {this.block.isCanEdit() && <div onMouseDown={e => {
-                    e.stopPropagation();
-                    this.block.onOpenGroupEdit(dg, e);
-                }} className="flex-center flex-fixed cursor size-24 round item-hover"><Icon size={16} icon={DotsSvg}></Icon></div>}
+                <span className="flex-auto"><span className="text-overflow padding-w-6 f-14 padding-h-2  l-16" style={{ backgroundColor: dg.color || undefined }}>{dg.group || lst('未定义')}</span><label>{dg.count}</label></span>
+                {this.block.isCanEdit() && <div className="flex-fixed flex">
+                    <div onMouseDown={e => {
+                        e.stopPropagation();
+                        this.block.onOpenGroupEdit(dg, e);
+                    }} className="flex-center flex-fixed cursor size-24 round item-hover"><Icon size={16} icon={DotsSvg}></Icon></div>
+                    <div onMouseDown={e => this.block.onAddGroup(dg)} className="flex-center flex-fixed cursor size-24 round item-hover">
+                        <Icon icon={PlusSvg} size={16}></Icon>
+                    </div>
+                </div>
+                }
             </div>
             <div className="sy-data-grid-board-group-childs">
                 {cs.map(c => {
                     return <div key={c.id}>{this.renderItem(c)}</div>
                 })}
-                {this.block.isCanEdit() && <div onMouseDown={e => this.block.onAddGroup(dg)} className="f-12 gap-b-10 visible item-hover item-hover-light-focus flex-center remark round h-30 cursor">
-                    <Icon size={18} icon={PlusSvg}></Icon>
+                {this.block.isCanEdit() && <div onMouseDown={e => this.block.onAddGroup(dg)} className="f-12 gap-b-10 visible item-hover item-hover-light-focus flex text-1 round h-30 cursor">
+                    <Icon size={18} className={'gap-l-10'} icon={PlusSvg}></Icon>
                     <S>新增</S>
                 </div>}
             </div>
         </div>
     }
-    renderItem(itemBlock: Block)
-    {
+    renderItem(itemBlock: Block) {
         if (this.block.cardConfig.showMode == 'define' && this.block.cardConfig.templateProps.url) {
             var CV = CardFactory.getCardView(this.block.cardConfig.templateProps.url);
             if (CV) return <CV item={itemBlock as any} dataGrid={this.block}></CV>
@@ -238,14 +246,13 @@ export class TableStoreBoardView extends BlockView<TableStoreBoard>{
         </div>
     }
     renderAddGroup() {
-
         return <div className="sy-data-grid-board-group visible-hover" >
             <div className="item-hover flex-center round h-30 cursor remark" onMouseDown={e => this.block.onAddNewGroup(e)}><Icon icon={PlusSvg}></Icon><S>新增分组</S></div>
             {this.block.hideGroups.length > 0 && this.block.hideGroups.map(hg => {
                 var dg = this.block.dataGroups.find(c => c.value == hg)
                 return <div className="flex" key={hg}>
                     <span className="flex-auto">
-                        <span className="f-14 padding-w-6 l-18 " style={{ backgroundColor: dg?.color }}>{dg?.group}</span>
+                        <span className="text-overflow padding-w-6  f-14 padding-h-2  l-16 round " style={{ backgroundColor: dg?.color }}>{dg?.group || lst('未定义')}</span>
                         <label className="remark f-12 gap-l-5">{dg?.count}</label>
                     </span>
                     <Tip text='取消隐藏分组'><span onMouseDown={e => {

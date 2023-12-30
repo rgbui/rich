@@ -1,6 +1,6 @@
 import React, { CSSProperties } from "react"
 import { TableStore } from "."
-import { Icon } from "../../../../component/view/icon"
+import { Icon, IconValueType } from "../../../../component/view/icon"
 import { view } from "../../../../src/block/factory/observable"
 import { BlockView } from "../../../../src/block/view"
 import { ChildsArea } from "../../../../src/block/view/appear"
@@ -175,7 +175,7 @@ export class TableStoreView extends BlockView<TableStore>{
         return <div style={{ minWidth: this.block.sumWidth }} onMouseLeave={e => this.mouseleaveHead(e)} className="sy-dg-table-head" onMouseMove={e => this.mousemove(e.nativeEvent)}>
             <div className='sy-dg-table-subline' onMouseDown={e => this.onMousedownLine(e)} ref={e => this.subline = e}></div>
             {this.block.fields.map((f, i) => {
-                var icon: SvgrComponent | JSX.Element;
+                var icon: IconValueType;
                 if (f.type == 'check') icon = CheckSvg;
                 else if (f.type == 'rowNum') icon = TypesNumberSvg;
                 else if (f.field) icon = GetFieldTypeSvg(f.field.type);

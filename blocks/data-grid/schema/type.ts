@@ -31,14 +31,6 @@ export enum FieldType {
     /**
      * 用于排序的字段，一般不会让用户看到，主要是确保视野上排序是稳定的。
      * 主要是确保在视野上的数据，位置不要随便跳动
-     * 有点不好处理，比如在两条数据中间插入一条数据，
-     * 那么理论上当前的sort=(prev.sort+next.sort)/2.0
-     * 这样就有可能会产生很长的小数sort，
-     * 如果小数太长，是否考虑将处于一定范围内的小数（比如小数范围长度大于1的，
-     * 在重新排序一下，按长度1重新计数，
-     * 这样貌似更新的数据量没那么大，good idea
-     * ）
-     * 如果不这样，就全局更新排序，这太蛋疼了
      * 
      */
     sort = 201,
@@ -57,8 +49,12 @@ export enum FieldType {
     text = 500,
     /**
      * 多行文本
+     *  弃用
      */
     textarea = 501,
+    /**
+     * 弃用
+     */
     paw = 505,
     /**
      * 邮件
@@ -134,8 +130,10 @@ export enum FieldType {
      * 就是关联自身
      */
     parentId = 1300,
+    subs = 1310,
     /**
      * guid字段
+     * 弃用
      */
     guid = 1400,
 
@@ -155,13 +153,23 @@ export enum FieldType {
      */
     emoji = 7000,
     comment = 7010,
+    /**
+ * 弃用
+ */
     favourite = 7020,
+    /**
+     * 弃用
+     */
     share = 7030,
+    /**
+ * 弃用
+ */
     donate = 7040,
+    /**
+ * 弃用
+ */
     buy = 7050,
     browse = 7060,
-
-
     /**
      * 喜欢
      */
@@ -170,6 +178,7 @@ export enum FieldType {
     like = 7071,
     /**
      * 投票
+     * 弃用
      */
     vote = 7072,
     /**
@@ -179,21 +188,25 @@ export enum FieldType {
 
     /**
      * 审批
+     * 弃用
      */
     approve = 7080,
 
     /**
      * 举报
+     * 弃用
      */
     report = 7090,
 
 
     /**
    * 文章
+   * 弃用
    */
     blog = 8000,
     /**
      * 富文本
+     * 弃用
      */
     rich = 9000,
 }
@@ -201,29 +214,48 @@ export enum FieldType {
 /**
  * 系统字段
  */
-export var sysFieldTypes: FieldType[] = [
-    FieldType.creater,
-    FieldType.modifyDate,
-    FieldType.modifyer,
+export var SysFieldTypes: FieldType[] = [
     FieldType.createDate,
+    FieldType.creater,
+    FieldType.modifyer,
+    FieldType.modifyDate,
+    FieldType.cover,
+    FieldType.icon,
+    FieldType.title,
+    FieldType.comment,
+    FieldType.browse,
+    FieldType.plain,
+    FieldType.description,
+    FieldType.thumb,
     FieldType.autoIncrement,
     FieldType.sort,
-
-    FieldType.comment,
-    FieldType.oppose,
-    FieldType.like,
-    FieldType.love,
-    FieldType.report,
-    FieldType.vote,
-    FieldType.deleted,
-
-    FieldType.icon,
-    FieldType.description,
-    FieldType.plain,
-    FieldType.thumb,
-    FieldType.cover,
     FieldType.id,
-    FieldType.parentId,
-    FieldType.title
+    FieldType.deleted
+]
 
+/**
+ * 只能创建一次性的字段
+ * 不能创建多个
+ */
+export var OnlyFieldTypes: FieldType[] = [
+    FieldType.modifyDate,
+    FieldType.createDate,
+    FieldType.creater,
+    FieldType.cover,
+    FieldType.icon,
+    FieldType.title,
+    FieldType.comment,
+    FieldType.browse,
+    FieldType.plain,
+    FieldType.description,
+    FieldType.thumb,
+    FieldType.autoIncrement,
+    FieldType.sort,
+    FieldType.id,
+    FieldType.deleted,
+    FieldType.like,
+    FieldType.oppose,
+    FieldType.love,
+    FieldType.parentId,
+    FieldType.subs
 ]

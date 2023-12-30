@@ -3,15 +3,12 @@ import { Icon } from "../../../../component/view/icon";
 import { DataGridView } from "../base";
 import { Rect } from "../../../../src/common/vector/point";
 import { getSchemaViewIcon } from "../../schema/util";
-
 import {
     ChevronDownSvg,
     CloseSvg,
-    CollectTableSvg,
     DotsSvg,
     FilterSvg,
     MaximizeSvg,
-    SettingsSvg,
     SortSvg
 } from "../../../../component/svgs";
 import { PageLayoutType } from "../../../../src/page/declare";
@@ -29,7 +26,7 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
         if (!view) return <></>
         function renderToolOperators() {
             return <>
-                {props.block.isCanEdit() && <><label className="item-hover round padding-w-5 h-24 flex-center cursor gap-r-10 text-1 " onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e))}><Icon size={16} icon={SettingsSvg}></Icon><span className="f-14 padding-l-5"><S>视图配置</S></span></label>
+                {props.block.isCanEdit() && <><label className="item-hover round padding-w-5 h-24 flex-center cursor gap-r-10 text-1 " onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e))}><Icon size={16} icon={{ name: 'byte', code: 'setting-one' }}></Icon><span className="f-14 padding-l-5"><S>视图配置</S></span></label>
                     {props.block.filter?.items?.length > 0 && <label className="item-hover round  flex-center cursor gap-r-10 padding-w-5 h-24 text-1 " onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e), 'filter')}><Icon size={16} icon={FilterSvg}></Icon><span className="f-14 padding-l-5"><S>过滤</S></span></label>}
                     {props.block.sorts?.length > 0 && <label className="item-hover round  flex-center cursor gap-r-10 padding-w-5 h-24  text-1 " onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e), 'sort')}><Icon size={16} icon={SortSvg}></Icon><span className="f-14 padding-l-5"><S>排序</S></span></label>}
                     {props.block.page.pageLayout.type != PageLayoutType.db && <label className="item-hover round size-24 flex-center cursor gap-r-10 text-1" onMouseDown={e => { e.stopPropagation(); props.block.onOpenSchemaPage() }}><Icon icon={MaximizeSvg} size={14}></Icon></label>}
@@ -133,7 +130,7 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                         props.block.onOpenViewSettings(Rect.fromEvent(e))
                     }}>
                     <span className="size-24 flex-center flex-fix">
-                        <Icon size={18} icon={ getSchemaViewIcon(view)}></Icon>
+                        <Icon size={16} icon={getSchemaViewIcon(view)}></Icon>
                     </span>
                     <span className="flex-auto bold">{view?.text}</span>
                 </label>

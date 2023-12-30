@@ -11,7 +11,7 @@ import { DataGridView } from "../base";
 import { useDataGridChartConfig } from "../../../../extensions/data-grid/echarts";
 import { FieldType } from "../../schema/type";
 import { loadGraph, renderEcharts } from "./render";
-import { SchemaFilter, SchemaFilterJoin } from "../../schema/declare";
+import { SchemaFilter, SchemaFilterJoin } from "../../schema/filter";
 import { getDateRange } from "../../../../extensions/date/input";
 
 @url('/data-grid/charts')
@@ -271,6 +271,9 @@ export class DataGridChart extends DataGridView {
         }
     }
     async didMounted() {
+        await this.loadDataGrid();
+    }
+    async loadDataGrid() {
         await this.loadSchema();
         await this.loadData();
         await this.renderEcharts();
@@ -337,7 +340,7 @@ export class DataGridChartView extends BlockView<DataGridChart>{
         }
         if (this.block.align == 'left') style.justifyContent = 'flex-start';
         else if (this.block.align == 'right') style.justifyContent = 'flex-end';
-        return <div className='sy-dg-charts'>
+        return <div className='sy-dg-charts' style={this.block.visibleStyle}>
             <div className="flex-center" style={style}>
                 <div className="relative visible-hover" ref={e => this.imageWrapper = e} style={{ width: this.block.canvasWith, height: this.block.canvasHeight }}>
                     <div className="sy-dg-echarts-view w100 h100"

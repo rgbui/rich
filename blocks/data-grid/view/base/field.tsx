@@ -551,7 +551,6 @@ export class DataGridViewField {
         var numberUnitCustom = items.arrayJsonFind('childs', g => g.name == 'numberUnitCustom');
         var config_numberDisplay_decimal = items.arrayJsonFind('childs', g => g.name == 'config.numberDisplay.decimal');
         if (re) {
-            console.log('item', re.item);
             if (re.item.name == 'hide') {
                 this.onHideField(viewField);
             }

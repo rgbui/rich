@@ -1,7 +1,7 @@
 import lodash from "lodash";
 import { EmojiCode } from "../../../extensions/emoji/store";
 import { util } from "../../../util/util";
-import { FieldType, sysFieldTypes } from "./type";
+import { FieldType, SysFieldTypes } from "./type";
 
 export class Field {
     id: string;
@@ -40,7 +40,7 @@ export class Field {
         return undefined;
     }
     getValue(row) {
-        if (sysFieldTypes.includes(this.type)) {
+        if (SysFieldTypes.includes(this.type)) {
             return row[FieldType[this.type]];
         }
         if (this?.name) return row[this.name];

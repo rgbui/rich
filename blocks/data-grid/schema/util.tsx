@@ -1,7 +1,6 @@
 import { FieldType } from "./type";
 import {
     AudioSvg,
-    BlogSvg,
     CollectionBoardSvg,
     CollectionCalendarSvg,
     CollectionGallerySvg,
@@ -10,12 +9,10 @@ import {
     CommentSvg,
     EmojiSvg,
     EyeSvg,
-    FlagSvg,
     LikeSvg,
     LoveSvg,
     OpposeSvg,
     PicSvg,
-    ReportSvg,
     RowNoSvg,
     TypesButtonSvg,
     TypesCheckboxSvg,
@@ -35,8 +32,7 @@ import {
     TypesSelectSvg,
     TypesStringSvg,
     TypesTitleSvg,
-    VideoSvg,
-    WordSvg
+    VideoSvg
 } from "../../../component/svgs";
 import { MenuItemType } from "../../../component/view/menu/declare";
 import { TableSchema, TableSchemaView } from "./meta";
@@ -56,7 +52,7 @@ import * as WordCloud from "../../../src/assert/img/word-cloud.png";
 import * as Radar from "../../../src/assert/img/radar.webp";
 import * as Summary from "../../../src/assert/img/summary.png";
 
-export function GetFieldTypeSvg(type: FieldType) {
+export function GetFieldTypeSvg(type: FieldType): IconValueType {
     switch (type) {
         case FieldType.bool:
             return TypesCheckboxSvg
@@ -108,22 +104,20 @@ export function GetFieldTypeSvg(type: FieldType) {
             return LoveSvg
         case FieldType.like:
             return LikeSvg
-        case FieldType.vote:
-            return FlagSvg
         case FieldType.oppose:
             return OpposeSvg
-        case FieldType.report:
-            return ReportSvg
-        case FieldType.blog:
-            return BlogSvg;
-        case FieldType.rich:
-            return WordSvg;
         case FieldType.autoIncrement:
             return RowNoSvg
         case FieldType.title:
             return TypesTitleSvg
         case FieldType.browse:
             return EyeSvg;
+        case FieldType.id:
+            return { name: 'byte', code: 'adobe-indesign' }
+        case FieldType.parentId:
+            return { name: 'byte', code: 'arrow-right-up' }
+        case FieldType.subs:
+            return { name: 'byte', code: 'list-two' }
         default:
             return TypesStringSvg
     }
@@ -274,10 +268,10 @@ export function getSchemaFieldMenus(map: (list: any) => any) {
         },
         ...map([
             { text: lst('文本'), value: FieldType.text },
-            //{ text: '多行文本', value: FieldType.textarea },
             { text: lst('数字'), value: FieldType.number },
             //{ text: '价钱', value: FieldType.price },
             { text: lst('单选'), value: FieldType.option },
+            { text: lst('多选'), value: FieldType.options },
             { text: lst('勾选'), value: FieldType.bool },
             { text: lst('日期'), value: FieldType.date },
             { text: lst('图像'), value: FieldType.image },
@@ -288,29 +282,24 @@ export function getSchemaFieldMenus(map: (list: any) => any) {
             { text: lst('邮箱'), value: FieldType.email },
             { text: lst('手机号'), value: FieldType.phone },
             { text: lst('网址'), value: FieldType.link },
-            // { text: '富文本', value: FieldType.rich },
+        ]),
+        { type: MenuItemType.text, text: lst('高级') },
+        ...map([
             // { text: '位置', value: FieldType.geolocation },
             { text: lst('关联'), value: FieldType.relation },
             { text: lst('统计'), value: FieldType.rollup },
             { text: lst('公式'), value: FieldType.formula },
-            // { text: '文档', value: FieldType.blog },
         ]),
         { type: MenuItemType.text, text: lst('交互') },
         ...map([
             { text: lst('喜欢'), value: FieldType.love },
             { text: lst('点赞'), value: FieldType.like },
             { text: lst('反对'), value: FieldType.oppose },
-            // { text: '投票', value: FieldType.vote },
+
             { text: lst('表情'), value: FieldType.emoji },
             { text: lst('评论'), value: FieldType.comment },
-            //{ text: '举报', value: FieldType.report },
-            // { text: '操作按钮', value: FieldType.button },
-            // { text: '收藏', value: FieldType.favourite },
-            // { text: '分享', value: FieldType.share },
-            // { text: '打赏', value: FieldType.donate },
-            // { text: '购买', value: FieldType.buy },
-            // { text: '置顶', value: FieldType.top },
-            // { text: '浏览', value: FieldType.browse },
+            // { text: '操作按钮', value: FieldType.button }
+            { text: '浏览', value: FieldType.browse },
         ]),
         { type: MenuItemType.text, text: lst('默认') },
         ...map([
@@ -319,7 +308,6 @@ export function getSchemaFieldMenus(map: (list: any) => any) {
             { text: lst('创建时间'), value: FieldType.createDate },
             { text: lst('修改人'), value: FieldType.modifyer },
             { text: lst('修改时间'), value: FieldType.modifyDate },
-            //{ text: '修改情况', value: FieldType.modifyDynamic },
         ])
     ];
     return menus;
@@ -396,37 +384,3 @@ return ${field.config.formula.jsCode}
     }
 }
 
-export function getFieldFilterUrl(field: Field) {
-    var url: string = '/field/filter/null';
-    if ([FieldType.bool].includes(field.type)) {
-        url = '/field/filter/check';
-    }
-    else if ([FieldType.image, FieldType.comment, FieldType.like, FieldType.video, FieldType.audio, FieldType.file].includes(field.type)) {
-        url = '/field/filter/null';
-    }
-    else if ([FieldType.createDate, FieldType.modifyDate, FieldType.date].includes(field.type)) {
-        url = '/field/filter/date';
-    }
-    else if ([FieldType.creater, FieldType.modifyer, FieldType.user].includes(field.type)) {
-        url = '/field/filter/user';
-    }
-    else if ([FieldType.option, FieldType.options].includes(field.type)) {
-        url = '/field/filter/option';
-    }
-    else if ([FieldType.relation].includes(field.type)) {
-        url = '/field/filter/relation';
-    }
-    else if ([FieldType.number].includes(field.type)) {
-        url = '/field/filter/number';
-    }
-    else if ([
-        FieldType.title,
-        FieldType.text,
-        FieldType.email,
-        FieldType.phone,
-        FieldType.link
-    ].includes(field.type)) {
-        url = '/field/filter/search';
-    }
-    return url;
-}
