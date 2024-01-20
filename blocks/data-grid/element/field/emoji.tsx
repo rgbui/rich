@@ -40,6 +40,11 @@ export class FieldEmailView extends OriginFileView<FieldEmoji>{
                 sp = <span className="cursor flex-center size-24  text-1  ">
                     <Icon className={(isOp ? " fill-primary" : " text-1")} size={18} icon={svg}></Icon></span>
             }
+            else if (this.block.viewField.field.type == FieldType.vote) {
+                var isOp = self.block.dataGrid.isEmoji(this.block.viewField.field, self.block.item.dataRow.id);
+                sp = <span className={"min-w-40 cursor f-14 flex-center flex-inline h-24 padding-w-5 round-32  " + (isOp ? "  bg-primary text-white" : " bg-p-light text-p")}>
+                    <Icon className={'gap-r-3'} size={18} icon={svg}></Icon>{countStr}</span>
+            }
             else if (this.block.viewField.field.type == FieldType.like) {
                 var isOp = self.block.dataGrid.isEmoji(this.block.viewField.field, self.block.item.dataRow.id);
                 sp = <span className={"min-w-40 cursor f-14 flex-center flex-inline h-24 padding-w-5 round-32  " + (isOp ? "  bg-primary text-white" : " bg-p-light text-p")}>
@@ -47,7 +52,7 @@ export class FieldEmailView extends OriginFileView<FieldEmoji>{
 
             } else if (this.block.viewField.field.type == FieldType.oppose) {
                 var isOp = self.block.dataGrid.isEmoji(this.block.viewField.field, self.block.item.dataRow.id);
-                sp =  <span className={"min-w-40 cursor f-14 flex-center flex-inline h-24 padding-w-5 round-32  " + (isOp ? "  bg-primary text-white" : " bg-p-light text-p")}>
+                sp = <span className={"min-w-40 cursor f-14 flex-center flex-inline h-24 padding-w-5 round-32  " + (isOp ? "  bg-primary text-white" : " bg-p-light text-p")}>
                     <Icon className={'gap-r-3'} size={18} icon={svg}></Icon>{countStr}</span>
 
             } else {

@@ -63,7 +63,7 @@ class FormFieldImage extends OriginFormField {
             });
         }
         newItems.push({ type: MenuItemType.divide })
-        items.splice(3, 0, ...newItems);
+        items.splice(2, 0, ...newItems);
         return items;
     }
     async onContextMenuInput(item: MenuItem<BlockDirective | string>) {
@@ -124,7 +124,7 @@ class FormFieldImageView extends BlockView<FormFieldImage>{
                             key={i}>
                             {this.block.fieldType != 'doc-detail' && <Tip text='属性'><span
                                 onClick={e => this.openProperty(img, e)}
-                                className="pos-top-right flex-center size-20  bg-dark-1 text-white circle cursor visible">
+                                className="pos-top-right flex-center size-20  bg-dark-1 text-white round cursor visible">
                                 <Icon size={16} icon={DotsSvg}></Icon>
                             </span></Tip>}
                             <img src={img.url} className={"obj-center " + (this.block?.imageFormat?.display == 'thumb' ? " size-100 round" : "max-w100 max-w-300  max-h-300  round")} />

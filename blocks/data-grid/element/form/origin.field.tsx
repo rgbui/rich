@@ -15,7 +15,6 @@ import { channel } from "../../../../net/channel";
 import { getElementUrl, ElementType } from "../../../../net/element.type";
 import { Field } from "../../schema/field";
 import { FieldType } from "../../schema/type";
-import { OriginField } from "../field/origin.field";
 import { util } from "../../../../util/util";
 import "./style.less";
 
@@ -81,7 +80,7 @@ export class OriginFormField extends Block {
                     if (ops.exists(c => c == this.page.formRowData.id)) lodash.remove(ops, c => c == this.page.formRowData.id);
                     lodash.remove(ov.users, g => (g as any) == userid);
                 }
-                if (typeof r.data.otherCount == 'number') {
+                if (typeof r.data.otherCount == 'number' && (field.name == 'like' || field.name == 'oppose')) {
                     var name = field.name == 'like' ? FieldType[FieldType.oppose] : FieldType[FieldType.like];
                     var occ = lodash.cloneDeep(this.page.formRowData[name]);
                     if (typeof occ == 'undefined' || lodash.isNull(occ)) occ = { count: 0 };
@@ -102,6 +101,9 @@ export class OriginFormField extends Block {
                     }
                     this.page.formRowData[name] = occ;
                     other = occ;
+                }
+                else if (typeof r.data.otherCount == 'number') {
+
                 }
             }
             this.page.formRowData[field.name] = ov;
@@ -201,7 +203,7 @@ export function FieldView(props: { block: OriginFormField, className?: string | 
             <div className="gap-h-10 flex flex-top">
                 {props.block.hidePropTitle !== true && <div className="flex-fixed  h-30 w-120 flex text-1 f-14 item-hover round gap-r-10 cursor">
                     <span className="flex-fixed size-20 flex-center  gap-l-5"><Icon size={14} icon={GetFieldTypeSvg(block.field.type)}></Icon></span>
-                    <span className="flex-auto">{block.field.text}</span>
+                    <span className="flex-auto l-30 h-30 text-overflow">{block.field.text}</span>
                 </div>}
                 <div className="flex-auto">
                     {props.children}

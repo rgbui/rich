@@ -24,7 +24,7 @@ class FieldTextView extends BlockView<FieldText>{
                     onChange={e => {
                         this.block.onChange(e);
                     }}></CheckBox></div>
-                <div className="flex-auto f-14">
+                <div className="flex-auto f-14 gap-l-5">
                     <TextArea plain placeholderEmptyVisible={true} placeholder={lst("输入待办内容")} prop="checkLabel" block={this.block} ></TextArea>
                 </div>
             </div></div>}

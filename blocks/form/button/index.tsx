@@ -31,7 +31,7 @@ export class BlockButton extends Block {
     @prop()
     buttonStyle: 'primary' | 'ghost' | 'dark' = 'primary'
     @prop()
-    buttonSize: 'default' | 'larger' | 'small' = 'small';
+    buttonSize: 'default' | 'larger' | 'small' = 'default';
     @prop()
     buttonIsBlock: boolean = false;
     async getMd() {
@@ -167,7 +167,7 @@ export class BlockButton extends Block {
             var bound = Rect.fromEle(db);
             if (bound) {
                 var pos = Point.from(bound);
-                pos = pos.move(0, 3 + util.remToPx(this.page.lineHeight) / 2);
+                pos = pos.move(0, (this.buttonSize == 'small' ? 0 : 3) + util.remToPx(this.page.lineHeight) / 2);
                 return pos;
             }
         }

@@ -29,8 +29,8 @@ export class FieldOption extends OriginField {
                     }
                 }
             );
-            if (op != null && typeof op != 'undefined') {
-                this.onUpdateProps({ value: op.map(o => o.value) }, { range: BlockRenderRange.self });
+            if (typeof op != 'undefined') {
+                this.onUpdateProps({ value: op ? op.map(o => o.value) : [] }, { range: BlockRenderRange.self });
             }
         }
         if (this.dataGrid) await this.dataGrid.onDataGridTool(fn)

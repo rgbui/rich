@@ -56,9 +56,8 @@ class FieldTextView extends BlockView<FieldText>{
     async mousedown(event: React.MouseEvent) {
         if (this.block.checkEdit() === false) return;
         var fc: FieldConfig = this.block.field.config;
-        var op = await useTableStoreOption({
-            roundArea: Rect.fromEle(event.currentTarget as HTMLElement)
-        }, this.block.value,
+        var op = await useTableStoreOption({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) },
+            this.block.value,
             {
                 multiple: fc?.isMultiple ? true : false,
                 options: fc?.options || [],
@@ -73,9 +72,8 @@ class FieldTextView extends BlockView<FieldText>{
                 }
             }
         );
-        if (op !== null && typeof op != 'undefined') {
-            if (fc?.isMultiple) this.block.onChange(op.map(c => c.value));
-            else this.block.onChange(op[0].value);
+        if (typeof op != 'undefined') {
+            this.block.onChange(op?op.map(o=>o.value):[]);
         }
     }
     renderView() {

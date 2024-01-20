@@ -46,7 +46,7 @@ export class FieldImageView extends OriginFileView<FieldImage>{
             style.objectFit = 'cover';
             style.objectPosition = '50% 50%';
         }
-        if (this.block.field.config?.isMultiple && this.block.field?.config?.imageFormat?.multipleDisplay == 'carousel') {
+        if (this.block.field?.config?.isMultiple && this.block.field?.config?.imageFormat?.multipleDisplay == 'carousel') {
             var settings = {
                 autoplay: true,
                 renderCenterLeftControls: () => <></>,
