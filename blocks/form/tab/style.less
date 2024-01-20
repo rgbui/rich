@@ -2,6 +2,7 @@
 
     .sy-block-tab-items-panel {
         display: inline-flex;
+        height : 26px;
     }
 
     &-items {
@@ -13,19 +14,17 @@
         overflow       : hidden;
 
         .sy-block-tab-item {
-            border: 2px solid transparent;
-
-            &-content {
-                transition   : background 20ms ease-in 0s;
-                cursor       : pointer;
-                white-space  : nowrap;
-                height       : 26px;
-                border-radius: 3px;
-                min-width    : 0px;
-                padding-left : 12px;
-                padding-right: 12px;
-                max-width    : 220px;
-            }
+            border       : 2px solid transparent;
+            transition   : background 20ms ease-in 0s;
+            cursor       : pointer;
+            white-space  : nowrap;
+            height       : 26px;
+            border-radius: 3px;
+            min-width    : 0px;
+            padding-left : 12px;
+            padding-right: 12px;
+            max-width    : 220px;
+            font-size    : 14px;
 
             &.hover {
                 border-bottom: 2px solid var(--text-p-color);
@@ -54,7 +53,14 @@
             border-right-color : transparent;
             border-bottom-color: transparent;
             border-radius      : 0px;
+
+            &.sy-block-tab-pages-border {
+                border-left-color  : rgba(0, 0, 0, .12);
+                border-right-color : rgba(0, 0, 0, .12);
+                border-bottom-color: rgba(0, 0, 0, .12);
+            }
         }
+
 
         &.visible-hover:hover {
             .sy-block-tab-pages {
@@ -70,6 +76,13 @@
         .sy-block-tab-pages {
             border-color : transparent;
             border-radius: 0px;
+
+            &.sy-block-tab-pages-border {
+                border-top-color: rgba(0, 0, 0, .12);
+                border-left-color  : rgba(0, 0, 0, .12);
+                border-right-color : rgba(0, 0, 0, .12);
+                border-bottom-color: rgba(0, 0, 0, .12);
+            }
         }
 
         &.visible-hover:hover {
@@ -81,32 +94,43 @@
 
         .sy-block-tab-items-panel {
             background-color: rgba(55, 53, 47, 0.06);
-            border-radius   : 16px;
+            border-radius   : 4px;
+            height          : 30px;
+            margin-right    : 5px;
         }
 
         .sy-block-tab-item {
             border-color : transparent;
             border-radius: 0px;
+            height       : 22px;
+            margin-top   : 2px;
 
             &:last-child {
-                border-radius: 0px 16px 16px 0px;
+                border-radius: 0px 4px 4px 0px;
+                margin-right : 3px;
             }
 
             &:first-child {
-                border-radius: 16px 0px 0px 16px;
+                border-radius: 4px 0px 0px 4px;
+                margin-left  : 3px;
             }
 
             &.hover {
-                background-color: var(--text-p-color);
-                color           : #fff;
-                border-radius   : 16px;
+                box-shadow      : var(--shadow);
+                background-color: #fff;
+                color           : inherit;
+                border-radius   : 4px;
             }
         }
     }
 
     &-resize {
+        position        : absolute;
+        left            : 0px;
+        right           : 0px;
+        bottom          : -5px;
         height          : 10px;
-        background-color: rgba(55, 53, 47, 0.06);
+        background-color: transparent;
         cursor          : row-resize;
     }
 }
