@@ -55,6 +55,7 @@ export type MenuItem<T = string> = {
      */
     size?: number
 }
+
 export enum MenuItemType {
     divide = 1,
     text = 2,

@@ -180,7 +180,7 @@ export class MenuItemView extends React.Component<{
             </div>}
             {item.type == MenuItemType.inputTitleAndIcon && <div className="shy-menu-box-item-input-icon flex">
                 <div onMouseDown={e => this.changeIcon(item, e)} className="cursor flex-fixed size-20 flex-center gap-r-10 round item-hover border">
-                    <Icon icon={item.icon} size={item.iconSize || 18}></Icon>
+                    <Icon icon={item.icon} size={item.iconSize || 16}></Icon>
                 </div>
                 <div className="flex-auto"><Input size={'small'}
                     value={item.value}
