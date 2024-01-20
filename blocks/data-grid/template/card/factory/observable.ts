@@ -2,8 +2,8 @@ import { CardPropsType } from "../declare";
 import { CardFactory } from "./factory";
 
 
-export function CardModel(data: CardPropsType) {
-    CardFactory.registerCardModel(data);
+export function CardModel(url: string, model: () => CardPropsType) {
+    CardFactory.registerCardModel(url,model);
 }
 
 

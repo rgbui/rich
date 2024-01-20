@@ -1,6 +1,7 @@
-
+import dayjs from "dayjs";
 import React from "react";
-import { Edit1Svg, TrashSvg, DotsSvg } from "../../../../../component/svgs";
+import { Edit1Svg, UploadSvg, TrashSvg, LikeSvg, CommentSvg, DotsSvg } from "../../../../../component/svgs";
+import { Avatar } from "../../../../../component/view/avator/face";
 import { UserBox } from "../../../../../component/view/avator/user";
 import { useSelectMenuItem } from "../../../../../component/view/menu";
 import { MenuItemType } from "../../../../../component/view/menu/declare";
@@ -17,9 +18,9 @@ import { CardView } from "../view";
 import { Icon } from "../../../../../component/view/icon";
 import { util } from "../../../../../util/util";
 
-CardModel('/rank', () => ({
-    url: '/rank',
-    title: lst('排名'),
+CardModel('/voted', () => ({
+    url: '/voted',
+    title: lst('投票'),
     forUrls: [BlockUrlConstant.DataGridList],
     props: [
         {
@@ -36,6 +37,7 @@ CardModel('/rank', () => ({
         },
         { name: 'remark', text: lst('简介'), types: [FieldType.plain, FieldType.text] },
         { name: 'like', text: lst('点赞'), types: [FieldType.like] },
+        { name: 'vote', text: lst('投票'), types: [FieldType.vote] },
         { name: 'author', text: lst('作者'), types: [FieldType.creater, FieldType.user] },
         { name: 'tags', text: lst('分类'), types: [FieldType.option, FieldType.options] },
         { name: 'date', text: lst('日期'), types: [FieldType.createDate, FieldType.date] },
@@ -43,9 +45,9 @@ CardModel('/rank', () => ({
         { name: 'browse', text: lst('浏览量'), types: [FieldType.browse] },
     ],
     views: [
-        { url: BlockUrlConstant.DataGridTable, text: lst('排名'), },
-        { autoCreate: true, url: BlockUrlConstant.DataGridList, text: lst('排名列表'), },
-        { url: BlockUrlConstant.RecordPageView, text: lst('排名详情'), }
+        { url: BlockUrlConstant.DataGridTable, text: ('文章'), },
+        { autoCreate: true, url: BlockUrlConstant.DataGridList, text: ('文章列表'), },
+        { url: BlockUrlConstant.RecordPageView, text: ('文章详情'), }
     ],
     async createDataList() {
         return [
@@ -78,7 +80,7 @@ CardModel('/rank', () => ({
     }
 }))
 
-@CardViewCom('/rank')
+@CardViewCom('/voted')
 export class CardPin extends CardView {
     async openMenu(event: React.MouseEvent) {
         var self = this;
@@ -91,7 +93,6 @@ export class CardPin extends CardView {
                 var rect = Rect.fromEvent(event);
                 var r = await useSelectMenuItem({ roundArea: rect }, [
                     { name: 'open', icon: Edit1Svg, text: lst('编辑') },
-                    { type: MenuItemType.divide },
                     {
                         name: 'align',
                         icon: { name: 'byte', code: 'align-text-both' },
@@ -160,16 +161,16 @@ export class CardPin extends CardView {
         var cs = this.cardSettings<{ align: 'left' | 'right', size: number }>({ align: 'left', size: 40 });
         var author = this.getValue<string[]>('author', FieldType.user)[0];
         var date = this.getValue<Date>('date');
-        var index = this.getRowIndex() + 1;
-        var numberSize = '20px';
-        if (cs.size == 100) numberSize = '60px';
-        else if (cs.size == 70) numberSize = '40px';
+        var vote = this.getValue<{ count: number, users: string[] }>('vote', FieldType.vote);
+        var isVote = this.isEmoji('vote');
         if (cs.align == 'left') {
-            return <div onMouseDown={e => this.openEdit(e)} className={"relative gap-h-10 visible-hover " + (hasPic ? "flex  flex-full  " : "")}>
+            return <div onMouseDown={e => this.openEdit(e)} className={"relative gap-h-10 visible-hover  flex"}>
                 <div
-                    className={"flex-fixed flex-center gap-r-10 " + ("w-40") + " " + (index <= 3 ? "text-p" : "text")}
-                    style={{ fontSize: numberSize, fontStyle: 'italic' }}>
-                    {index}
+                    onMouseDown={e => this.onUpdateCellInteractive(e, 'vote')}
+                    className={"flex-fixed cursor flex-center flex-col  gap-r-10 " + ("size-" + 50) + " " + (isVote ? "border-p round-8" : "border round-8")}
+                >
+                    <Icon className={isVote ? "fill-p" : "text"} icon={{ name: 'byte', code: 'up-one' }}></Icon>
+                    <span className={isVote ? "text-p" : 'text-1'}>{vote?.count}</span>
                 </div>
                 {hasPic && <div className="flex-fixed flex-center">
                     <img className={"size-" + cs.size + "  block round  object-center"} src={autoImageUrl(pics[0].url, 120)} />
@@ -178,7 +179,7 @@ export class CardPin extends CardView {
                     <div className="f-16 bold">{title}</div>
                     {remark && <div className="f-12 remark rows-2">{remark}</div>}
                     {tags.length > 0 && <div className="flex">{tags.map((tag, i) => {
-                        return <span className="item-light-hover-focus round padding-w-5 h-20 remark f-12" key={i}>#{tag.text}</span>
+                        return <span className="item-light-hover-focus f-12 text-1 round padding-w-5 h-20" key={i}>#{tag.text}</span>
                     })}</div>}
                     {author && <div className="flex remark f-12 r-gap-r-5">
                         <UserBox userid={author}>{u => {
@@ -187,8 +188,8 @@ export class CardPin extends CardView {
                         <span>{util.showTime(date)}</span>
                     </div>}
                 </div>
-                <div className="pos-top-full  flex-end z-2  gap-t-5 r-size-24 r-gap-r-5 r-round r-cursor">
-                    {this.isCanEdit && <span onMouseDown={e => self.openMenu(e)} className="bg-dark-1 visible text-white   flex-center">
+                <div className="pos-top pos-right flex-end z-2  gap-t-5 r-size-24 r-gap-r-5 r-round r-cursor">
+                    {this.isCanEdit && <span onMouseDown={e => self.openMenu(e)} className="item-hover remark visible    flex-center">
                         <Icon size={18} icon={DotsSvg}></Icon>
                     </span>}
                 </div>
@@ -196,7 +197,7 @@ export class CardPin extends CardView {
         }
         else {
 
-            return <div onMouseDown={e => this.openEdit(e)} className={"relative   gap-h-10  visible-hover  " + (hasPic ? "flex  flex-full  " : "")}>
+            return <div onMouseDown={e => this.openEdit(e)} className={"relative   gap-h-10  visible-hover  flex"}>
                 {hasPic && <div className="flex-fixed flex-center">
                     <img className={"size-" + cs.size + "  block round  object-center"} src={autoImageUrl(pics[0].url, 120)} />
                 </div>}
@@ -204,7 +205,7 @@ export class CardPin extends CardView {
                     <div className="f-16 bold">{title}</div>
                     {remark && <div className="f-12 remark rows-2">{remark}</div>}
                     {tags.length > 0 && <div className="flex">{tags.map((tag, i) => {
-                        return <span className="item-light-hover-focus round padding-w-5 h-20 remark f-12" key={i}>#{tag.text}</span>
+                        return <span className="item-light-hover-focus round padding-w-5 h-20 f-12 text-1 " key={i}>#{tag.text}</span>
                     })}</div>}
                     {author && <div className="flex remark f-12 r-gap-r-5">
                         <UserBox userid={author}>{u => {
@@ -214,9 +215,11 @@ export class CardPin extends CardView {
                     </div>}
                 </div>
                 <div
-                    className={"flex-fixed flex-center gap-l-10 " + "w-40" + " " + (index <= 3 ? "text-p" : "text")}
-                    style={{ fontSize: numberSize, fontStyle: 'italic' }}>
-                    {index}
+                    onMouseDown={e => this.onUpdateCellInteractive(e, 'vote')}
+                    className={"flex-fixed cursor  flex flex-col flex-center  gap-r-10 " + ("size-" + 50) + " " + (isVote ? "border-p round-8" : "border round-8")}
+                >
+                    <Icon className={isVote ? "fill-p" : "text"} icon={{ name: 'byte', code: 'up-one' }}></Icon>
+                    <span className={isVote ? "text-p" : 'text-1'}>{vote?.count}</span>
                 </div>
                 <div className="pos-top pos-right  flex-end z-2  gap-t-5 r-size-24 r-gap-r-5 r-round r-cursor">
                     {this.isCanEdit && <span onMouseDown={e => self.openMenu(e)} className="bg-dark-1 visible text-white   flex-center">

@@ -1,7 +1,6 @@
-
 import React from "react";
 import { Edit1Svg, TrashSvg, DotsSvg } from "../../../../../component/svgs";
-import { UserBox } from "../../../../../component/view/avator/user";
+
 import { useSelectMenuItem } from "../../../../../component/view/menu";
 import { MenuItemType } from "../../../../../component/view/menu/declare";
 import { ResourceArguments } from "../../../../../extensions/icon/declare";
@@ -15,11 +14,13 @@ import { FieldType } from "../../../schema/type";
 import { CardModel, CardViewCom } from "../factory/observable";
 import { CardView } from "../view";
 import { Icon } from "../../../../../component/view/icon";
+import { UserBox } from "../../../../../component/view/avator/user";
 import { util } from "../../../../../util/util";
 
-CardModel('/rank', () => ({
-    url: '/rank',
-    title: lst('排名'),
+
+CardModel('/text/image', () => ({
+    url: '/text/image',
+    title: lst('图文'),
     forUrls: [BlockUrlConstant.DataGridList],
     props: [
         {
@@ -31,7 +32,7 @@ CardModel('/rank', () => ({
         {
             name: 'pic',
             text: lst('缩略图'),
-            types: [FieldType.image, FieldType.video, FieldType.thumb, FieldType.cover],
+            types: [FieldType.image, FieldType.video,FieldType.thumb,  FieldType.cover],
             required: true
         },
         { name: 'remark', text: lst('简介'), types: [FieldType.plain, FieldType.text] },
@@ -43,9 +44,9 @@ CardModel('/rank', () => ({
         { name: 'browse', text: lst('浏览量'), types: [FieldType.browse] },
     ],
     views: [
-        { url: BlockUrlConstant.DataGridTable, text: lst('排名'), },
-        { autoCreate: true, url: BlockUrlConstant.DataGridList, text: lst('排名列表'), },
-        { url: BlockUrlConstant.RecordPageView, text: lst('排名详情'), }
+        { url: BlockUrlConstant.DataGridTable, text: ('文章'), },
+        { autoCreate: true, url: BlockUrlConstant.DataGridList, text: ('文章列表'), },
+        { url: BlockUrlConstant.RecordPageView, text: ('文章详情'), }
     ],
     async createDataList() {
         return [
@@ -78,7 +79,7 @@ CardModel('/rank', () => ({
     }
 }))
 
-@CardViewCom('/rank')
+@CardViewCom('/text/image')
 export class CardPin extends CardView {
     async openMenu(event: React.MouseEvent) {
         var self = this;
@@ -91,7 +92,6 @@ export class CardPin extends CardView {
                 var rect = Rect.fromEvent(event);
                 var r = await useSelectMenuItem({ roundArea: rect }, [
                     { name: 'open', icon: Edit1Svg, text: lst('编辑') },
-                    { type: MenuItemType.divide },
                     {
                         name: 'align',
                         icon: { name: 'byte', code: 'align-text-both' },
@@ -160,25 +160,17 @@ export class CardPin extends CardView {
         var cs = this.cardSettings<{ align: 'left' | 'right', size: number }>({ align: 'left', size: 40 });
         var author = this.getValue<string[]>('author', FieldType.user)[0];
         var date = this.getValue<Date>('date');
-        var index = this.getRowIndex() + 1;
-        var numberSize = '20px';
-        if (cs.size == 100) numberSize = '60px';
-        else if (cs.size == 70) numberSize = '40px';
         if (cs.align == 'left') {
+
             return <div onMouseDown={e => this.openEdit(e)} className={"relative gap-h-10 visible-hover " + (hasPic ? "flex  flex-full  " : "")}>
-                <div
-                    className={"flex-fixed flex-center gap-r-10 " + ("w-40") + " " + (index <= 3 ? "text-p" : "text")}
-                    style={{ fontSize: numberSize, fontStyle: 'italic' }}>
-                    {index}
-                </div>
-                {hasPic && <div className="flex-fixed flex-center">
+                {hasPic && <div className="flex-fixed">
                     <img className={"size-" + cs.size + "  block round  object-center"} src={autoImageUrl(pics[0].url, 120)} />
                 </div>}
                 <div className={hasPic ? "flex-auto gap-l-10" : ""}>
                     <div className="f-16 bold">{title}</div>
-                    {remark && <div className="f-12 remark rows-2">{remark}</div>}
+                    <div className="f-12 remark rows-2" style={{ minHeight: cs.size >= 70 ? 40 : undefined }}>{remark}</div>
                     {tags.length > 0 && <div className="flex">{tags.map((tag, i) => {
-                        return <span className="item-light-hover-focus round padding-w-5 h-20 remark f-12" key={i}>#{tag.text}</span>
+                        return <span className="item-light-hover-focus round padding-w-5 h-20" key={i}>#{tag.text}</span>
                     })}</div>}
                     {author && <div className="flex remark f-12 r-gap-r-5">
                         <UserBox userid={author}>{u => {
@@ -187,7 +179,7 @@ export class CardPin extends CardView {
                         <span>{util.showTime(date)}</span>
                     </div>}
                 </div>
-                <div className="pos-top-full  flex-end z-2  gap-t-5 r-size-24 r-gap-r-5 r-round r-cursor">
+                <div className="pos-top pos-right  flex-end z-2  gap-t-5 r-size-24 r-gap-r-5 r-round r-cursor">
                     {this.isCanEdit && <span onMouseDown={e => self.openMenu(e)} className="bg-dark-1 visible text-white   flex-center">
                         <Icon size={18} icon={DotsSvg}></Icon>
                     </span>}
@@ -195,16 +187,12 @@ export class CardPin extends CardView {
             </div>
         }
         else {
-
-            return <div onMouseDown={e => this.openEdit(e)} className={"relative   gap-h-10  visible-hover  " + (hasPic ? "flex  flex-full  " : "")}>
-                {hasPic && <div className="flex-fixed flex-center">
-                    <img className={"size-" + cs.size + "  block round  object-center"} src={autoImageUrl(pics[0].url, 120)} />
-                </div>}
-                <div className={hasPic ? "flex-auto gap-l-10" : ""}>
+            return <div onMouseDown={e => this.openEdit(e)} className={"relative  gap-h-10  visible-hover  " + (hasPic ? "flex  flex-full  " : "")}>
+                <div className={hasPic ? "flex-auto gap-r-10" : ""}>
                     <div className="f-16 bold">{title}</div>
-                    {remark && <div className="f-12 remark rows-2">{remark}</div>}
+                    <div className="f-12 remark rows-2" style={{ minHeight: cs.size >= 70 ? 40 : undefined }}>{remark}</div>
                     {tags.length > 0 && <div className="flex">{tags.map((tag, i) => {
-                        return <span className="item-light-hover-focus round padding-w-5 h-20 remark f-12" key={i}>#{tag.text}</span>
+                        return <span className="item-light-hover-focus round padding-w-5 h-20" key={i}>#{tag.text}</span>
                     })}</div>}
                     {author && <div className="flex remark f-12 r-gap-r-5">
                         <UserBox userid={author}>{u => {
@@ -213,11 +201,9 @@ export class CardPin extends CardView {
                         <span>{util.showTime(date)}</span>
                     </div>}
                 </div>
-                <div
-                    className={"flex-fixed flex-center gap-l-10 " + "w-40" + " " + (index <= 3 ? "text-p" : "text")}
-                    style={{ fontSize: numberSize, fontStyle: 'italic' }}>
-                    {index}
-                </div>
+                {hasPic && <div className="flex-fixed">
+                    <img className={"size-" + cs.size + " block round  object-center"} src={autoImageUrl(pics[0].url, 120)} />
+                </div>}
                 <div className="pos-top pos-right  flex-end z-2  gap-t-5 r-size-24 r-gap-r-5 r-round r-cursor">
                     {this.isCanEdit && <span onMouseDown={e => self.openMenu(e)} className="bg-dark-1 visible text-white   flex-center">
                         <Icon size={18} icon={DotsSvg}></Icon>

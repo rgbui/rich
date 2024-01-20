@@ -1,0 +1,585 @@
+{
+    "id": "3BwK15pfVnuwqpbzgFAsuX",
+    "date": 1704163653135,
+    "isFullWidth": true,
+    "smallFont": false,
+    "version": "0.0.1",
+    "loadElementUrl": "/Schema/4b6b173a016940048f27e1c87a0e1ad8/Data/47e1c7d3244840cca1635dadf975fc90",
+    "pageTheme": {
+        "bgStyle": {
+            "mode": "color",
+            "color": "#fff"
+        },
+        "contentStyle": {
+            "color": "light",
+            "transparency": "noborder"
+        },
+        "coverStyle": {
+            "display": "outside"
+        }
+    },
+    "requireSelectLayout": false,
+    "hideDocTitle": false,
+    "pageLayout": {
+        "type": 1
+    },
+    "matrix": [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+    ],
+    "nav": false,
+    "formType": "doc",
+    "views": [
+        {
+            "id": "kxNrbyiYJ4twYXUBNcCEAe",
+            "url": "/view",
+            "matrix": [
+                1,
+                0,
+                0,
+                1,
+                0,
+                0
+            ],
+            "pattern": {},
+            "blocks": {
+                "childs": [
+                    {
+                        "id": "n9amkWDHms8wYmJSY1Ts3x",
+                        "url": "/title",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": []
+                        },
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1704163653135
+                        },
+                        "align": "left"
+                    },
+                    {
+                        "id": "wfAEAoqN6hGm2Jrx22ouob",
+                        "url": "/image",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": []
+                        },
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1704163653135
+                        },
+                        "src": {
+                            "url": "https://api-w1.shy.live/ws/img?id=e90c90e3f4634b49a19eceba035d30d8"
+                        },
+                        "imageWidthPercent": 49,
+                        "imageSizeMode": "none",
+                        "caption": "",
+                        "allowCaption": false,
+                        "captionAlign": "center",
+                        "originSize": null,
+                        "align": "center",
+                        "mask": "rect",
+                        "link": null
+                    },
+                    {
+                        "id": "t6AdaYuef5H8jipP1szVLg",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": []
+                        },
+                        "content": "盆栽种植的步骤包括：",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1704163653135
+                        },
+                        "align": "left",
+                        "fontScale": 1
+                    },
+                    {
+                        "id": "ezW3BTZq7fCCnEtnhHjgC7",
+                        "url": "/list",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [],
+                            "subChilds": []
+                        },
+                        "content": " 选择合适的盆土：选择大小合适的盆器，土壤宜松软、富含有机质。",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1704185643293
+                        },
+                        "listType": 1,
+                        "listView": 0,
+                        "startNumber": 1,
+                        "expand": true
+                    },
+                    {
+                        "id": "9S43yPr1G5zQpjh42k1ezK",
+                        "url": "/list",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [],
+                            "subChilds": []
+                        },
+                        "content": " 挑选合适的植物：选择根系发达、无病虫害的植物。",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1704185643508
+                        },
+                        "listType": 1,
+                        "listView": 0,
+                        "startNumber": 1,
+                        "expand": true
+                    },
+                    {
+                        "id": "sUuEWT4ZXMii62wLFuSNH4",
+                        "url": "/list",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [],
+                            "subChilds": []
+                        },
+                        "content": " 栽种植物：将植物放入盆器中，填入土壤，注意根系的舒展。",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1704185643802
+                        },
+                        "listType": 1,
+                        "listView": 0,
+                        "startNumber": 1,
+                        "expand": true
+                    },
+                    {
+                        "id": "prkAXkSQBiRheWhhnBg3b5",
+                        "url": "/list",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [],
+                            "subChilds": [
+                                {
+                                    "id": "cbJVCvSawM9CcWpRNSe7CN",
+                                    "url": "/list",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": [],
+                                        "subChilds": []
+                                    },
+                                    "content": "浇水：遵循见干见湿的原则，保持土壤湿润但不积水。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1704185645014
+                                    },
+                                    "listType": 0,
+                                    "listView": 0,
+                                    "startNumber": 1,
+                                    "expand": true
+                                },
+                                {
+                                    "id": "dTtdNW9K6s4arH5QULgWy9",
+                                    "url": "/list",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": [],
+                                        "subChilds": []
+                                    },
+                                    "content": "光照：多数植物需要充足的阳光，特别是绿植，若光照不足叶子会发黄。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1704185645402
+                                    },
+                                    "listType": 0,
+                                    "listView": 0,
+                                    "startNumber": 1,
+                                    "expand": true
+                                },
+                                {
+                                    "id": "uPRQAN3B2hC5foPTmhHLJz",
+                                    "url": "/list",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": [],
+                                        "subChilds": []
+                                    },
+                                    "content": "温度：不同植物对温度有不同要求，一些植物在寒冷环境下生长较慢，需注意保暖。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1704185645989
+                                    },
+                                    "listType": 0,
+                                    "listView": 0,
+                                    "startNumber": 1,
+                                    "expand": true
+                                },
+                                {
+                                    "id": "4uU8BLJefaA9iRp7U3FuHo",
+                                    "url": "/list",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": [],
+                                        "subChilds": []
+                                    },
+                                    "content": "施肥：薄肥多施，生长期间每隔1周左右施肥一次即可。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1704185646586
+                                    },
+                                    "listType": 0,
+                                    "listView": 0,
+                                    "startNumber": 1,
+                                    "expand": true
+                                },
+                                {
+                                    "id": "fEvVfu5H1JchXPCX6c7dzd",
+                                    "url": "/list",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": [],
+                                        "subChilds": []
+                                    },
+                                    "content": "修剪：定期修剪植物，保持其形状美观。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1704185646994
+                                    },
+                                    "listType": 0,
+                                    "listView": 0,
+                                    "startNumber": 1,
+                                    "expand": true
+                                },
+                                {
+                                    "id": "vET8hjG5Pbp3YhMTxNuead",
+                                    "url": "/list",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": [
+                                            {
+                                                "id": "5ULJkohFzjsTrHmATDt2Lh",
+                                                "url": "/text",
+                                                "matrix": [
+                                                    1,
+                                                    0,
+                                                    0,
+                                                    1,
+                                                    0,
+                                                    0
+                                                ],
+                                                "pattern": {},
+                                                "blocks": {
+                                                    "childs": []
+                                                },
+                                                "content": "换盆：根据植物生长情况，适时更换更大号的盆器，并添加适量营养土。",
+                                                "fixedWidth": 100,
+                                                "fixedHeight": 100,
+                                                "zindex": 1,
+                                                "isScale": false,
+                                                "refLines": [],
+                                                "locker": {
+                                                    "lock": false,
+                                                    "date": 1704185771631
+                                                },
+                                                "link": null,
+                                                "comment": null,
+                                                "code": false,
+                                                "refLinks": null
+                                            }
+                                        ],
+                                        "subChilds": []
+                                    },
+                                    "content": "",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1704185647475
+                                    },
+                                    "listType": 0,
+                                    "listView": 0,
+                                    "startNumber": 1,
+                                    "expand": true
+                                }
+                            ]
+                        },
+                        "content": " 后期养护：",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1704185645011
+                        },
+                        "listType": 1,
+                        "listView": 0,
+                        "startNumber": 1,
+                        "expand": true
+                    },
+                    {
+                        "id": "m6uVfkGoLZX7EUYSVV1BNq",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": []
+                        },
+                        "content": "遵循以上步骤，并注意观察盆栽植物的生长情况，就可以成功种植盆栽了。",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1704185648208
+                        },
+                        "align": "left",
+                        "fontScale": 1
+                    },
+                    {
+                        "id": "h3AjeVVCctVoF8Pf6SHsgV",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": []
+                        },
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1704163653136
+                        },
+                        "align": "left",
+                        "fontScale": 1
+                    },
+                    {
+                        "id": "8jC77tz9kRq8ARXNUaoVy9",
+                        "url": "/comments",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": []
+                        },
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1704163653136
+                        },
+                        "sort": "default",
+                        "displayFormat": "comment"
+                    }
+                ]
+            },
+            "content": "",
+            "fixedWidth": 100,
+            "fixedHeight": 100,
+            "zindex": 1,
+            "isScale": false,
+            "refLines": [],
+            "locker": {
+                "lock": false,
+                "date": 1704163653135
+            }
+        }
+    ],
+    "addedSubPages": []
+}

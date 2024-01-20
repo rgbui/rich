@@ -3,29 +3,45 @@ import { FieldType } from "../../schema/type"
 import { DataGridView } from "../../view/base";
 import { CardView } from "./view";
 
-import "./views/pin";
 import "./views/article";
-import "./views/events";
-import "./views/tool";
-import "./views/things";
-import "./views/tizhi";
-import "./views/disk";
-
-import "./views/issue";
-import "./views/questions";
+import "./views/pin";
+import "./views/text.image";
+import "./views/think";
 import "./views/rank";
-import "./views/user.story";
+import "./views/vote";
+import "./views/disk";
+import "./views/events";
+import "./views/things";
+import "./views/user.card";
+import "./views/goods";
+import "./views/job";
+import { Block } from "../../../../src/block";
+import { FieldConfig } from "../../schema/field";
 
 export type CardPropsType = {
     url: string,
     title: string,
     abled?: boolean,
     remark?: string,
-    image: any,
+    image?: any,
+    /**
+     * 自定义菜单显示时使用
+     * @param g 
+     * @returns 
+     */
+    renderItem?: (g: CardPropsType) => Promise<JSX.Element>,
+    renderSettings?: (block: Block, g: CardPropsType) => Promise<JSX.Element>,
     forUrls?: string[],
-    props?: { name: string, required?: boolean, text: string, types: FieldType[] }[],
+    props?: {
+        name: string,
+        required?: boolean,
+        text: string,
+        types: FieldType[],
+        config?: FieldConfig
+    }[],
     view?: typeof CardView,
     views?: Partial<TableSchemaView & { autoCreate?: boolean }>[],
+    createViews?: () => Promise<Partial<TableSchemaView & { autoCreate?: boolean }>[]>,
     blockViewHandle?: (block: DataGridView, g: CardPropsType) => Promise<void>,
     dataList?: any[],
     createDataList?(): Promise<any[]>

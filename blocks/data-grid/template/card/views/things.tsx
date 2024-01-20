@@ -2,7 +2,7 @@
 
 
 import React from "react";
-import { ReactNode } from "react";
+
 import { CommentSvg, LikeSvg, } from "../../../../../component/svgs";
 import { Avatar } from "../../../../../component/view/avator/face";
 import { UserBox } from "../../../../../component/view/avator/user";
@@ -13,32 +13,33 @@ import { CardModel, CardViewCom } from "../factory/observable";
 import { CardView } from "../view";
 import * as Card1 from "../../../../../src/assert/img/card/card1.png"
 import { BlockUrlConstant } from "../../../../../src/block/constant";
-import { Divider } from "../../../../../component/view/grid";
 import { lst } from "../../../../../i18n/store";
 
 /**
  * 
  * 
  * https://segmentfault.com/jobs
+ * 
  */
-CardModel({
+CardModel('/things', () => ({
     url: '/things',
-    title: ('需求发布'),
-    remark:( '适用于需求发布'),
+    title: lst('发布需求'),
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridList],
     props: [
-        { name: 'title', text:( '标题'), types: [FieldType.title, FieldType.text], required: true },
-        { name: 'author', text: ('作者'), types: [FieldType.creater] },
-        { name: 'tags', text: ('分类'), types: [FieldType.option, FieldType.options] },
-        { name: 'date', text: ('日期'), types: [FieldType.createDate, FieldType.date] },
-        { name: 'comment', text: ('评论'), types: [FieldType.comment] },
-        { name: 'like', text: ('点赞'), types: [FieldType.like] },
+        { name: 'title', text: lst('标题'), types: [FieldType.title, FieldType.text], required: true },
+        { name: 'author', text: lst('发布人'), types: [FieldType.creater] },
+        { name: 'tags', text: lst('分类'), types: [FieldType.option, FieldType.options] },
+        { name: 'date', text: lst('日期'), types: [FieldType.createDate, FieldType.date] },
+        { name: 'comment', text: lst('评论'), types: [FieldType.comment] },
+        { name: 'like', text: lst('点赞'), types: [FieldType.like] },
+        { name: 'remark', text: lst('简介'), types: [FieldType.plain, FieldType.text] },
+        { name: 'expire', text: lst('有效期'), types: [FieldType.date] }
     ],
     views: [
-        { url: BlockUrlConstant.DataGridTable, text: ('问题'), },
-        { autoCreate: true, url: BlockUrlConstant.DataGridList, text: ('列表'), },
-        { url: BlockUrlConstant.RecordPageView, text:( '问题详情'), }
+        { url: BlockUrlConstant.DataGridTable, text: lst('需求'), },
+        { autoCreate: true, url: BlockUrlConstant.DataGridList, text:  lst('需求'), },
+        { url: BlockUrlConstant.RecordPageView, text:  lst('需求详情'), }
     ],
     dataList: [
         { title: '评论里面的点赞数量统计不对' },
@@ -48,11 +49,11 @@ CardModel({
         { title: '批量选择块，ctrl+c至其它页面，无反应' },
         { title: '大标题不能通过当前行的#来切换不同级别的标题' },
     ]
-})
+}))
 
 @CardViewCom('/things')
 export class CardPin extends CardView {
-    render(): ReactNode {
+    render() {
         var self = this;
         var author = this.getValue<string>('author');
         var title = this.getValue<string>('title');
@@ -60,22 +61,25 @@ export class CardPin extends CardView {
         var comment = this.getValue<{ count: number, users: string[] }>('comment', FieldType.comment);
         var like = this.getValue<{ count: number, users: string[] }>('like', FieldType.like);
         var isLike = this.isEmoji('like');
-        return <div className="padding-h-10" onMouseDown={e => self.openEdit(e)}>
+        var expire = this.getValue<Date>('expire');
+        var remark = this.getValue<string>('remark');
+
+        return <div className="padding-h-10 border-bottom" onMouseDown={e => self.openEdit(e)}>
             <div className="bold f-16 cursor">{title}</div>
+            {remark && <div className="f-12 gap-h-5 remark">{remark}</div>}
             <div className="flex">
                 <UserBox userid={author}>{(user) => {
-                    return <>
+                    return <div className="flex-fixed flex">
                         <Avatar size={24} user={user}></Avatar>
                         <a className="cursor gap-l-10 underline-hover text-1">{user.name}</a>
-                    </>
+                    </div>
                 }}</UserBox>
-                <div className="remark gap-l-10 f-14">{util.showTime(date)}</div>
-                <div className="flex-fixed flex r-gap-5 r-item-hover r-round r-cursor r-padding-w-5   r-flex-center remark">
-                    <span onMouseDown={e => self.onUpdateCellInteractive(e, 'like')} className={isLike ? "text-p" : ""}><Icon size={16} icon={LikeSvg}></Icon><span className="gap-l-5 f-14">{like.count}</span></span>
-                    <span><Icon size={16} icon={CommentSvg}></Icon><span className="gap-l-5 f-14">{comment.count}</span></span>
+                <div className="remark gap-l-10 f-14">{util.showTime(expire instanceof Date ? expire : date)}</div>
+                <div className="flex-fixed flex r-gap-5  r-round r-cursor r-padding-w-5   r-flex-center remark">
+                    <span onMouseDown={e => self.onUpdateCellInteractive(e, 'like')} className={'flex h-20 '+(isLike ? "fill-p" : " text-hover")}><Icon size={16} icon={LikeSvg}></Icon>{like.count > 0 && <span className="gap-l-5 f-14">{like.count}</span>}</span>
+                    <span className="flex"><Icon size={16} icon={CommentSvg}></Icon>{comment.count > 0 && <span className="gap-l-5 f-14">{comment.count}</span>}</span>
                 </div>
             </div>
-            <Divider></Divider>
         </div>
     }
 } 

@@ -12,12 +12,25 @@ import { TableStoreList } from "../../view/list";
 import lodash from "lodash";
 import { ShyAlert } from "../../../../component/lib/alert";
 import { lst } from "../../../../i18n/store";
+import { Confirm } from "../../../../component/lib/confirm";
+import { util } from "../../../../util/util";
 
-export class CardView extends React.Component<{ item: DataGridItemRecord | TableStoreItem, dataGrid: DataGridView | DataGridItemRecord }> {
+export class CardView extends React.Component<{
+    item: DataGridItemRecord | TableStoreItem,
+    dataGrid: DataGridView | DataGridItemRecord
+}> {
+    get dataGrid() {
+        return this.props.dataGrid instanceof DataGridView ? this.props.dataGrid : null;
+    }
     cardConfig() {
         if ((this.props.dataGrid instanceof TableStoreGallery) || (this.props.dataGrid instanceof TableStoreList)) {
             return this.props.dataGrid.cardConfig;
         }
+    }
+    cardSettings<T = Record<string, any>>(def?: T) {
+        var cs = this.props.dataGrid?.cardSettings || {};
+        if (typeof def == 'undefined') def = {} as T;
+        return Object.assign(def, cs) as T;
     }
     get schema() {
         if ((this.props.dataGrid instanceof TableStoreGallery) || (this.props.dataGrid instanceof TableStoreList)) {
@@ -65,8 +78,7 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
                         break
                     case FieldType.option:
                     case FieldType.options:
-                        if (lodash.isUndefined(value) || lodash.isNull(value)) return [] as any;
-                        var v = Array.isArray(value) ? value : [value];
+                        var v = util.covertToArray(value);
                         return v.map(g => {
                             var op = field.config.options.find(c => c.value == g);
                             if (op?.text) return { text: op.text, color: op.color };
@@ -75,13 +87,13 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
                         break;
                     case FieldType.image:
                     case FieldType.cover:
-                        if (lodash.isUndefined(value) || lodash.isNull(value)) return [] as any;
-                        var v = Array.isArray(value) ? value : [value];
+                        var v = util.covertToArray(value);
                         return v as any;
                         break;
+                    case FieldType.creater:
+                    case FieldType.modifyer:
                     case FieldType.user:
-                        if (lodash.isUndefined(value) || lodash.isNull(value)) return [] as any;
-                        var v = Array.isArray(value) ? value : [value];
+                        var v = util.covertToArray(value);
                         return v as any;
                         break;
                 }
@@ -103,6 +115,8 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
                     case FieldType.image:
                     case FieldType.cover:
                         return [] as any
+                    case FieldType.creater:
+                    case FieldType.modifyer:
                     case FieldType.user:
                         return [] as any
                 }
@@ -136,12 +150,13 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
     }
     async deleteItem() {
         if (this.props.item instanceof TableStoreItem || this.props.dataGrid instanceof TableStoreList) {
-            await (this.props.dataGrid as DataGridView).onRemoveRow(this.props.item.dataRow.id);
+            if (await Confirm(lst("确定要删除吗")))
+                await (this.props.dataGrid as DataGridView).onRemoveRow(this.props.item.dataRow.id);
         }
     }
-    async openEdit(event: React.MouseEvent, forceUrl?: '/page/open' | '/page/dialog' | '/page/slide') {
-        if (this.props.dataGrid instanceof TableStoreGallery || this.props.dataGrid instanceof TableStoreList) {
-            this.props.dataGrid.onOpenEditForm(this.props.item.dataRow.id, forceUrl)
+    async openEdit(event?: React.MouseEvent, forceUrl?: '/page/open' | '/page/dialog' | '/page/slide') {
+        if (this.dataGrid) {
+            this.dataGrid.onOpenEditForm(this.props.item.dataRow.id, forceUrl)
         }
     }
     get isCanEdit() {
