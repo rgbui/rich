@@ -17,7 +17,6 @@ import lodash from "lodash";
 import { Confirm } from "../../../../component/lib/confirm";
 import { MenuItemType } from "../../../../component/view/menu/declare";
 import { BlockRenderRange } from "../../../../src/block/enum";
-import { OptionBackgroundColorList } from "../../../../extensions/data-grid/option/option";
 import { DataGridOptionType } from "../../schema/field";
 import { util } from "../../../../util/util";
 import { ShyAlert } from "../../../../component/lib/alert";
@@ -26,6 +25,7 @@ import { CardConfig } from "../item/service";
 import { Block } from "../../../../src/block";
 import { CardFactory } from "../../template/card/factory/factory";
 import './style.less';
+import { OptionBackgroundColorList } from "../../../../extensions/color/data";
 
 @url('/data-grid/board')
 export class TableStoreBoard extends DataGridView {
@@ -239,7 +239,7 @@ export class TableStoreBoardView extends BlockView<TableStoreBoard>{
         return <itemBlock.viewComponent block={itemBlock}></itemBlock.viewComponent>
     }
     renderCreateTable() {
-        return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
+        return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus padding-h-5 padding-w-10 cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
             {this.block.willCreateSchema && <Spin></Spin>}
             <span className="size-24 flex-center remark"><Icon size={16} icon={CollectTableSvg}></Icon></span>
             <span className="remark"><S>创建数据表格</S></span>

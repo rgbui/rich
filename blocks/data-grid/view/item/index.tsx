@@ -27,6 +27,9 @@ import { lst } from "../../../../i18n/store";
 @url('/data-grid/item')
 export class TableStoreItem extends Block {
     dataId: string;
+    get elementUrl() {
+        return getElementUrl(ElementType.SchemaData, this.dataGrid.schema.id, this.dataId)
+    }
     get dataRow() {
         if (Array.isArray(this.dataGrid.data)) return this.dataGrid.data.find(g => g.id == this.dataId);
         else return null;
@@ -111,7 +114,7 @@ export class TableStoreItem extends Block {
                     if (ops.exists(c => c == this.dataRow.id)) lodash.remove(ops, c => c == this.dataRow.id);
                     lodash.remove(ov.users, g => (g as any) == userid);
                 }
-                if (typeof r.data.otherCount == 'number') {
+                if (typeof r.data.otherCount == 'number' && (['like', 'oppose'].includes(field.name))) {
                     var name = field.name == 'like' ? FieldType[FieldType.oppose] : FieldType[FieldType.like];
                     this.dataRow[name] = r.data.otherCount;
                     var cs = this.childs.findAll(g => (g instanceof OriginField) && g.field?.name == name);
@@ -126,6 +129,9 @@ export class TableStoreItem extends Block {
                             cs[i].forceUpdate();
                         }
                     }
+                }
+                else if (r.data.otherId && field.name == 'vote') {
+                    this.dataGrid.userEmojis[field.name] = [this.dataRow.id]
                 }
             }
             this.dataRow[field.name] = ov;

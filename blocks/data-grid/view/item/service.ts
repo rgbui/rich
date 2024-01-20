@@ -74,6 +74,7 @@ export async function createFieldBlock(viewField: ViewField, block: TableStoreIt
             case FieldType.like:
             case FieldType.love:
             case FieldType.emoji:
+            case FieldType.vote:
                 cellContent = await BlockFactory.createBlock('/field/emoji', page, {
                     viewField,
                     value: viewField.getValue(row),

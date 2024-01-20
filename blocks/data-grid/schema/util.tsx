@@ -106,6 +106,8 @@ export function GetFieldTypeSvg(type: FieldType): IconValueType {
             return LikeSvg
         case FieldType.oppose:
             return OpposeSvg
+        case FieldType.vote:
+            return { name: 'byte', code: 'ticket-one' }
         case FieldType.autoIncrement:
             return RowNoSvg
         case FieldType.title:
@@ -125,7 +127,9 @@ export function GetFieldTypeSvg(type: FieldType): IconValueType {
 
 export function getSchemaViewIcon(view: TableSchemaView): IconValueType {
     if (view?.icon) return view.icon;
+
     var url = view?.url;
+    if (!url) return CollectTableSvg
     if (url.indexOf('?') > 0) url = url.substring(0, url.indexOf('?'))
     switch (url) {
         case '/data-grid/table':
@@ -294,12 +298,13 @@ export function getSchemaFieldMenus(map: (list: any) => any) {
         ...map([
             { text: lst('喜欢'), value: FieldType.love },
             { text: lst('点赞'), value: FieldType.like },
-            { text: lst('反对'), value: FieldType.oppose },
+            // { text: lst('反对'), value: FieldType.oppose },
 
             { text: lst('表情'), value: FieldType.emoji },
             { text: lst('评论'), value: FieldType.comment },
             // { text: '操作按钮', value: FieldType.button }
             { text: '浏览', value: FieldType.browse },
+            { text: '投票', value: FieldType.vote }
         ]),
         { type: MenuItemType.text, text: lst('默认') },
         ...map([

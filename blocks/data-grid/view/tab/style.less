@@ -1,0 +1,48 @@
+.sy-data-grid-tab-items {
+    height       : 30px;
+    border-bottom: 2px solid rgba(55, 53, 47, 0.09);
+    position     : relative;
+}
+
+.sy-data-grid-tab-item {
+    border: 2px solid transparent;
+    height: 30px;
+
+    &-hover {
+        border-bottom: 2px solid var(--text-p-color);
+        color        : var(--text-p-color)
+    }
+}
+
+.sy-data-grid-tab-button {
+
+    background-color: rgba(55, 53, 47, 0.06);
+    border-radius   : 4px;
+    height          : 30px;
+    margin-right    : 5px;
+    border-bottom   : 2px solid transparent;
+
+    .sy-data-grid-tab-item {
+        border-color : transparent;
+        border-radius: 0px;
+        height       : 22px;
+        margin-top   : 2px;
+
+        &:last-child {
+            border-radius: 0px 4px 4px 0px;
+            margin-right : 3px;
+        }
+
+        &:first-child {
+            border-radius: 4px 0px 0px 4px;
+            margin-left  : 3px;
+        }
+
+        &.sy-data-grid-tab-item-hover {
+            box-shadow      : var(--shadow);
+            background-color: #fff;
+            color           : inherit;
+            border-radius   : 4px;
+        }
+    }
+}

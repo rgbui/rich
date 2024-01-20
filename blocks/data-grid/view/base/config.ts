@@ -2,7 +2,6 @@
 import {
     FilterSvg,
     TrashSvg,
-    SettingsSvg,
     DotsSvg,
     DuplicateSvg,
     LinkSvg,
@@ -10,7 +9,6 @@ import {
     LockSvg,
     PropertysSvg,
     SortSvg,
-    TemplatesSvg,
     LoopSvg,
     UnlockSvg,
     DatasourceSvg
@@ -32,6 +30,7 @@ import { lst } from "../../../../i18n/store";
 import lodash from "lodash";
 import { DataGridChart } from "../statistic/charts";
 import { IconValueType } from "../../../../component/view/icon";
+import { useDataSourceView } from "../../../../extensions/data-grid/datasource";
 
 export class DataGridViewConfig {
     async onOpenViewSettings(this: DataGridView, rect: Rect) {
@@ -215,10 +214,10 @@ export class DataGridViewConfig {
     async onOpenViewProperty(this: DataGridView, rect: Rect) {
         var self = this;
         await this.onDataGridTool(async () => {
-            var menus = [
+            var menus: MenuItem<BlockDirective | string>[] = [
                 { text: lst('复制视图链接'), icon: LinkSvg, name: 'copylink' },
                 { type: MenuItemType.divide },
-                { text: lst('视图设置...'), icon: TemplatesSvg, name: 'view' },
+                { text: lst('视图设置...'), icon: { name: 'byte', code: 'setting-one' }, name: 'view' },
                 { text: lst('字段设置...'), icon: PropertysSvg, name: 'propertys' },
                 { text: lst('过滤设置...'), icon: FilterSvg, name: 'filter' },
                 { text: lst('排序设置...'), icon: SortSvg, name: 'sort' },
@@ -271,6 +270,71 @@ export class DataGridViewConfig {
     async onOpenViewTemplates(this: DataGridView, rect: Rect) {
         await this.onDataGridTool(async () => {
             await useTabelSchemaFormDrop({ roundArea: rect, direction: 'bottom', align: 'end' }, { block: this });
+        })
+    }
+    async onOpenAddTabView(this: DataGridView, event: React.MouseEvent) {
+        var self = this;
+        self.onDataGridTool(async () => {
+            var rect = Rect.fromEle(event.currentTarget as HTMLElement);
+            var g = await useDataSourceView({ roundArea: rect }, {
+                tableId: this.schema.id,
+                viewId: this.syncBlockId,
+                selectView: true,
+                editTable: true
+            });
+            if (g) {
+                if (typeof g != 'string' && g.type == 'view') {
+                    var s = this.schemaId == g.tableId ? this.schema : await TableSchema.loadTableSchema(g.tableId, this.page.ws);
+                    var sv = s.listViews.find(c => c.id == (g as any).viewId)
+                    this.page.onReplace(this, {
+                        url: BlockUrlConstant.DataGridTab,
+                        tabIndex: 1,
+                        tabItems: [
+                            {
+                                schemaId: this.schemaId,
+                                viewId: this.syncBlockId,
+                                viewText: this.schemaView?.text,
+                                viewIcon: this.schemaView?.icon
+                            },
+                            {
+                                schemaId: g.tableId,
+                                viewId: g.viewId,
+                                viewText: sv?.text,
+                                viewIcon: sv?.icon
+                            }
+                        ],
+                        blocks: {
+                            childs: [],
+                            otherChilds: [
+                                {
+                                    url: BlockUrlConstant.DataGridTabPage,
+                                    blocks: {
+                                        childs: [
+                                            {
+                                                url: this.url,
+                                                schemaId: this.schemaId,
+                                                syncBlockId: this.syncBlockId
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    url: BlockUrlConstant.DataGridTabPage,
+                                    blocks: {
+                                        childs: [
+                                            {
+                                                url: sv.url,
+                                                schemaId: g.tableId,
+                                                syncBlockId: g.viewId
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    })
+                }
+            }
         })
     }
 }

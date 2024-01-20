@@ -1,5 +1,5 @@
 import React from "react";
-import { autoImageUrl } from "../../../../net/element.type";
+import { ElementType, autoImageUrl, getElementUrl } from "../../../../net/element.type";
 import { Block } from "../../../../src/block";
 import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
@@ -34,6 +34,8 @@ export class DataGridItemRecord extends Block {
         showField: 'none',
         templateProps: {}
     }
+    @prop()
+    cardSettings: Record<string, any> = {};
     schema: TableSchema;
     dataRow: Record<string, any> = {};
     relationSchemas: TableSchema[] = [];
@@ -143,6 +145,9 @@ export class DataGridItemRecord extends Block {
         if (this.schema) {
             this.dataRow = await this.schema.rowGet(this.dataId);
         }
+    }
+    get elementUrl(){
+        return getElementUrl(ElementType.SchemaData, this.schema.id, this.dataId)
     }
 }
 @view('/data-grid/record')

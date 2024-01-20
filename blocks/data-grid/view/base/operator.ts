@@ -23,7 +23,7 @@ import { lst } from "../../../../i18n/store";
 import { IconValueType } from "../../../../component/view/icon";
 import { CardFactory } from "../../template/card/factory/factory";
 import { TableSchema } from "../../schema/meta";
-import { OptionBackgroundColorList } from "../../../../extensions/data-grid/option/option";
+import { OptionBackgroundColorList } from "../../../../extensions/color/data";
 
 export class DataGridViewOperator {
     async onAddField(this: DataGridView, event: Rect, at?: number) {
@@ -285,13 +285,14 @@ export class DataGridViewOperator {
         })
     }
     async dataGridChangeView(this: DataGridView, url: string, viewProps?: Record<string, any>) {
+        var dt = this.dataGridTab;
         var view = this.schema.views.find(g => g.id == this.syncBlockId);
         var actions: any[] = [{ name: 'changeSchemaView', id: this.syncBlockId, data: { url } }];
         await this.schema.onSchemaOperate(actions);
         var bs = this.referenceBlockers;
         var at = this.at;
         var pa = this.parent;
-        var id = this.id;
+        var pk = this.parentKey;
         await this.delete();
         if (url == BlockUrlConstant.DataGridBoard) {
             if (!this.schema.fields.some(s => s.type == FieldType.option || s.type == FieldType.options)) {
@@ -316,7 +317,8 @@ export class DataGridViewOperator {
                 schemaId: this.schema.id
             },
             pa,
-            at
+            at,
+            pk
         ) as DataGridView;
         if (viewProps && Object.keys(viewProps).length > 0) {
             await newBlock.updateProps(viewProps);
@@ -347,9 +349,9 @@ export class DataGridViewOperator {
             newBlock.registerReferenceBlocker(c);
         })
         this.page.addBlockUpdate(newBlock.parent);
-        this.page.addUpdateEvent(async () => {
-            // await newBlock.loadDataGrid();
-        })
+        if (dt) {
+            await dt.updateView(newBlock);
+        }
     }
     /**
      * 将表格切换成其它视图
@@ -366,6 +368,7 @@ export class DataGridViewOperator {
         }
     }
     async dataGridTrunView(this: DataGridView, viewId: string, viewProps?: Record<string, any>, schemaId?: string) {
+        var dt = this.dataGridTab;
         if (!this.schema) {
             await this.loadSchema();
         }
@@ -377,6 +380,7 @@ export class DataGridViewOperator {
         var bs = this.referenceBlockers;
         var at = this.at;
         var pa = this.parent;
+        var pk = this.parentKey;
         await this.delete();
         var newBlock = await this.page.createBlock(v.url,
             {
@@ -384,7 +388,8 @@ export class DataGridViewOperator {
                 schemaId: schemaId || this.schema.id
             },
             pa,
-            at
+            at,
+            pk
         ) as DataGridView;
         if (viewProps && Object.keys(viewProps).length > 0) {
             await newBlock.updateProps(viewProps);
@@ -401,6 +406,10 @@ export class DataGridViewOperator {
                 await bs[i].forceUpdate();
             }
         })
+
+        if (dt) {
+            await dt.updateView(newBlock);
+        }
     }
     async onCopySchemaView(this: DataGridView) {
         var r = await this.schema.onSchemaOperate([{
@@ -491,6 +500,9 @@ export class DataGridViewOperator {
             }
         ]);
         self.forceUpdate()
+        if (this.dataGridTab) {
+            this.dataGridTab.forceUpdate();
+        }
     }
     async onUpdateSorts(this: DataGridView, sorts: { field: string, sort: number }[]) {
         await this.page.onAction(ActionDirective.onDataGridUpdateSorts, async () => {
@@ -601,6 +613,10 @@ export class DataGridViewOperator {
         await this.onReloadData();
     }
     async onDataGridTool(this: DataGridView, fn: () => Promise<void>) {
+        if (this.dataGridTab) {
+            await this.dataGridTab.onDataGridTool(fn);
+            return;
+        }
         try {
             if (this.dataGridTool)
                 this.dataGridTool.isOpenTool = true;

@@ -103,7 +103,7 @@ export class DataGridViewLife {
     async loadDataInteraction(this: DataGridView) {
         if (!this.page.isSign) return;
         if (this.schema) {
-            var fs = this.schema.fields.findAll(g => [FieldType.like, FieldType.oppose, FieldType.love].includes(g.type))
+            var fs = this.schema.fields.findAll(g => [FieldType.like, FieldType.oppose,FieldType.vote,FieldType.love].includes(g.type))
             if (fs.length > 0) {
                 var ds = this.data.findAll(g => {
                     return fs.some(f => typeof g[f.name]?.count == 'number' && g[f.name]?.count > 0)

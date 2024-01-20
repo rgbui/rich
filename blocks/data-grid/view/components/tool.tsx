@@ -9,23 +9,25 @@ import {
     DotsSvg,
     FilterSvg,
     MaximizeSvg,
+    PlusSvg,
     SortSvg
 } from "../../../../component/svgs";
 import { PageLayoutType } from "../../../../src/page/declare";
 import { S } from "../../../../i18n/view";
 import { lst } from "../../../../i18n/store";
 import "./style.less";
+import { Tip } from "../../../../component/view/tooltip/tip";
+import { DataGridTab } from "../tab";
 
-export class DataGridTool extends React.Component<{ block: DataGridView }>{
+export class RenderToolOperators extends React.Component<{ block: DataGridView, dataGridTab?: DataGridTab }>{
     isOpenTool: boolean = false;
     render() {
-        var self = this;
         var props = this.props;
-        props.block.dataGridTool = this;
-        var view = props.block.schema?.views?.find(g => g.id == props.block.syncBlockId)
-        if (!view) return <></>
-        function renderToolOperators() {
-            return <>
+        var self = this;
+        var is = true;
+        if (props.dataGridTab) is = props.dataGridTab.isOver || props.block.searchTitle.focus == true
+        if (is)
+            return <div className="flex-end">
                 {props.block.isCanEdit() && <><label className="item-hover round padding-w-5 h-24 flex-center cursor gap-r-10 text-1 " onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e))}><Icon size={16} icon={{ name: 'byte', code: 'setting-one' }}></Icon><span className="f-14 padding-l-5"><S>视图配置</S></span></label>
                     {props.block.filter?.items?.length > 0 && <label className="item-hover round  flex-center cursor gap-r-10 padding-w-5 h-24 text-1 " onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e), 'filter')}><Icon size={16} icon={FilterSvg}></Icon><span className="f-14 padding-l-5"><S>过滤</S></span></label>}
                     {props.block.sorts?.length > 0 && <label className="item-hover round  flex-center cursor gap-r-10 padding-w-5 h-24  text-1 " onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e), 'sort')}><Icon size={16} icon={SortSvg}></Icon><span className="f-14 padding-l-5"><S>排序</S></span></label>}
@@ -50,6 +52,7 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                                 transition: 'width 0.3s',
                                 height: '24px',
                                 lineHeight: '24px',
+                                backgroundColor: 'transparent'
                                 // display: props.block.searchTitle.focus ? 'inline-block' : 'none'
                             }}
                             placeholder={lst('搜索...')}
@@ -92,8 +95,20 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                     <span className={"padding-l-15 text-white" + (!props.block.isCanEdit() ? " padding-r-15" : "")} onClick={e => { e.stopPropagation(); props.block.onOpenAddForm(undefined, true) }}><S>新增</S></span>
                     {props.block.isCanEdit() && <span className="flex-center cursor size-16 padding-l-5 padding-r-5" onClick={e => { e.stopPropagation(); props.block.onOpenViewTemplates(Rect.fromEvent(e)) }}><Icon size={14} icon={ChevronDownSvg}></Icon></span>}
                 </div>}
-            </>
-        }
+            </div>
+        else return <></>
+    }
+}
+
+export class DataGridTool extends React.Component<{ block: DataGridView }>{
+    isOpenTool: boolean = false;
+    render() {
+        if (this.props.block?.dataGridTab) return <></>
+        var self = this;
+        var props = this.props;
+        props.block.dataGridTool = this;
+        var view = props.block.schema?.views?.find(g => g.id == props.block.syncBlockId)
+        if (!view) return <></>
         if (props.block.noTitle) {
             if (props.block.isCanEdit())
                 return <div className='h-20 relative'>
@@ -114,15 +129,15 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                                 <span className="flex-auto">{view?.text}</span>
                             </label>
                         </div>
-                        <div className="sy-dg-tool-operators flex-auto flex-end">
-                            {renderToolOperators()}
+                        <div className="flex-auto">
+                            <RenderToolOperators block={this.props.block}></RenderToolOperators>
                         </div>
                     </div>}
                 </div>
             else return <></>
         }
-        else return <div className="sy-dg-tool">
-            <div className="flex-fixed">
+        else return <div className="h-30 flex">
+            <div className="flex-fixed flex">
                 <label className="cursor flex round  item-hover padding-r-5  text f-14"
                     onMouseDown={e => {
                         if (!props.block.page.isSign) return;
@@ -134,9 +149,14 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                     </span>
                     <span className="flex-auto bold">{view?.text}</span>
                 </label>
+                {props.block.isCanEdit() && (props.block.isOver || props.block.searchTitle.focus == true) && <Tip text="添加视图"><div onMouseDown={e => {
+                    props.block.onOpenAddTabView(e)
+                }} className="flex-center round size-20 gap-l-5 item-hover cursor">
+                    <Icon size={16} icon={PlusSvg}></Icon>
+                </div></Tip>}
             </div>
-            {(props.block.isOver || props.block.searchTitle.focus == true) && <div className="sy-dg-tool-operators  flex-auto flex-end">
-                {renderToolOperators()}
+            {(props.block.isOver || props.block.searchTitle.focus == true) && <div className="flex-auto">
+                <RenderToolOperators block={this.props.block}></RenderToolOperators>
             </div>}
         </div>
     }

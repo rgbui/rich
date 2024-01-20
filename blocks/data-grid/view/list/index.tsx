@@ -46,7 +46,7 @@ export class TableStoreList extends DataGridView {
 @view('/data-grid/list')
 export class TableStoreListView extends BlockView<TableStoreList>{
     renderCreateTable() {
-        return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
+        return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus padding-h-5 padding-w-10 cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
             <span className="size-24 flex-center remark"><Icon size={16} icon={CollectTableSvg}></Icon></span>
             <span className="remark"><S>创建数据表格</S></span>
         </div>
@@ -56,7 +56,7 @@ export class TableStoreListView extends BlockView<TableStoreList>{
             onMouseEnter={e => this.block.onOver(true)}
             onMouseLeave={e => this.block.onOver(false)}
         ><DataGridTool block={this.block}></DataGridTool>
-            {!this.block.noTitle && <Divider></Divider>}
+            {!this.block.noTitle && <Divider hidden={this.block.dataGridTab ? true : false}></Divider>}
             <ChildsArea childs={this.block.childs}></ChildsArea>
             {this.block.dataGridIsCanEdit() && !this.block.isCardAuto && <div
                 onMouseDown={e => { e.stopPropagation(); this.block.onSyncAddRow({}, undefined, 'after') }}

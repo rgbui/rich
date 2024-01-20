@@ -1,4 +1,4 @@
-import { useDataGridSelectView } from "../../../../extensions/data-grid/create/select.view";
+import { useDataGridCreate } from "../../../../extensions/data-grid/create/select.view";
 import { channel } from "../../../../net/channel";
 import { Block } from "../../../../src/block";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
@@ -17,19 +17,21 @@ import { DataGridViewLife } from "./left.cycle";
 import { DataGridViewOperator } from "./operator";
 import { DataGridViewData } from "./data";
 import { DataGridViewConfig } from "./config";
-import { ElementType,getElementUrl } from "../../../../net/element.type";
+import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { DataGridViewField } from "./field";
 import lodash from "lodash";
 import { OriginFilterField } from "../../element/filter/origin.field";
 import { FilterSort } from "../../element/filter/sort";
 import { Page } from "../../../../src/page";
 import { Field } from "../../schema/field";
-import { useCreateDataGrid } from "../../../../extensions/data-grid/create";
+import { useCreateDataGridView } from "../../../../extensions/data-grid/create/view";
 import { AtomPermission } from "../../../../src/page/permission";
 import { BlockUrlConstant } from "../../../../src/block/constant";
 import { OptionDefineRule } from "../../block/optionRule";
 import { FieldType } from "../../schema/type";
 import { Input } from "../../../../component/view/input";
+import { onCreateDataGridTemplate } from "../../template/create";
+import { DataGridTab } from "../tab";
 
 /**
  * 
@@ -62,6 +64,8 @@ export class DataGridView extends Block {
     openRecordViewId: string = '';
     @prop()
     createRecordSource: Page['openSource'] = 'dialog';
+    @prop()
+    cardSettings: Record<string, any> = {};
     schema: TableSchema;
     relationSchemas: TableSchema[] = [];
     relationDatas: Map<string, any[]> = new Map();
@@ -119,7 +123,6 @@ export class DataGridView extends Block {
             else await this.setPropData(n, data[n]);
         }
     }
-
     async get(this: DataGridView) {
         var json: Record<string, any> = {
             id: this._id,
@@ -132,7 +135,7 @@ export class DataGridView extends Block {
             json.pattern = await this.pattern.get();
         json.blocks = {};
         if (Array.isArray(this.__props)) {
-            var ss = super.__props;
+            var ss = super.getCurrentProps();
             await this.__props.eachAsync(async pro => {
                 if (ss.includes(pro) || this.viewProps.includes(pro))
                     json[pro] = await this.clonePropData(pro, this[pro]);
@@ -330,9 +333,9 @@ export class DataGridView extends Block {
     async onAddCreateTableView() {
         var r = Rect.fromEle(this.el);
         var newRect = new Rect(r.left, r.top - (this.noTitle ? 40 : 0), r.width, 40);
-        var dg = await useCreateDataGrid(
+        var dg = await useCreateDataGridView(
             { roundArea: newRect },
-            { selectView: true, schema: this.schema }
+            { schema: this.schema }
         );
         if (dg) {
             if (dg.source == 'dataView') await this.onSchemaViewCreateByTemplate(dg.text, dg.url)
@@ -342,30 +345,50 @@ export class DataGridView extends Block {
     willCreateSchema: boolean = false;
     async onCreateTableSchema() {
         if (!this.schemaId) {
-            var dg = await useDataGridSelectView({ roundArea: Rect.fromEle(this.el) }, { selectView: this.createSource == 'InputBlockSelector' ? false : true });
+            var dg = await useDataGridCreate({ roundArea: Rect.fromEle(this.el) });
             if (dg) {
                 this.willCreateSchema = true;
                 if (this.view) this.view.forceUpdate();
+                var viewUrl: string = '';
                 if (dg.schemaId) {
-                    await this.page.onAction('SelectTableSchema', async () => {
-                        this.updateProps({
+                    viewUrl = dg.url;
+                    if (viewUrl == dg.url) await this.page.onAction('SelectTableSchema', async () => {
+                        await this.updateProps({
                             schemaId: dg.schemaId,
                             syncBlockId: dg.syncBlockId
                         })
                     })
+                    else await this.page.onReplace(this, {
+                        url: dg.url,
+                        schemaId: dg.schemaId,
+                        syncBlockId: dg.syncBlockId
+                    })
+                }
+                else if (dg.source == 'dataView') {
+                    var view = await onCreateDataGridTemplate(dg.text, this, dg.url)
+                    viewUrl = view.url;
                 }
                 else {
                     this.schema = await TableSchema.onCreate({ text: dg.text, url: this.url });
-                    await this.page.onAction(ActionDirective.onCreateTableSchema, async () => {
-                        this.updateProps({
+                    var view = this.schema.listViews.first();
+                    viewUrl = view.url;
+                    if (viewUrl == this.url) await this.page.onAction(ActionDirective.onCreateTableSchema, async () => {
+                        await this.updateProps({
                             schemaId: this.schema.id,
-                            syncBlockId: this.schema.views.first().id
+                            syncBlockId: view.id
                         })
                     });
+                    else await this.page.onReplace(this, {
+                        url: viewUrl,
+                        schemaId: this.schema.id,
+                        syncBlockId: view.id
+                    })
                 }
-                await this.loadDataGrid();
-                this.willCreateSchema = false;
-                if (this.view) this.view.forceUpdate();
+                if (viewUrl == this.url) {
+                    await this.loadDataGrid();
+                    this.willCreateSchema = false;
+                    if (this.view) this.view.forceUpdate();
+                }
             }
         }
     }
@@ -423,6 +446,11 @@ export class DataGridView extends Block {
     async onContextmenu(event: Point | MouseEvent) {
         var rect = event instanceof Point ? new Rect(event.x, event.y, 0, 0) : Rect.fromEvent(event);
         await this.onOpenViewSettings(rect)
+    }
+    get dataGridTab() {
+        if (this.parent?.url == BlockUrlConstant.DataGridTabPage) {
+            return this.parent.parent as DataGridTab;
+        }
     }
 }
 

@@ -10,7 +10,6 @@ import { useSelectMenuItem } from "../../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import { useTableStoreAddField } from "../../../../extensions/data-grid/field";
 import { useFormula } from "../../../../extensions/data-grid/formula";
-import { OptionBackgroundColorList } from "../../../../extensions/data-grid/option/option";
 import { useOpenEmoji } from "../../../../extensions/emoji";
 import { BlockDirective } from "../../../../src/block/enum";
 import { Rect, Point } from "../../../../src/common/vector/point";
@@ -19,7 +18,7 @@ import { DataGridOptionType } from "../../schema/field";
 import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
 import { lst } from "../../../../i18n/store";
-import { BackgroundColorList } from "../../../../extensions/color/data";
+import { BackgroundColorList, OptionBackgroundColorList } from "../../../../extensions/color/data";
 
 export class DataGridViewField {
     private getFieldMenuItems(this: DataGridView, viewField: ViewField) {
@@ -257,34 +256,7 @@ export class DataGridViewField {
                         }
                     ]
                 });
-
             }
-            // else if (viewField.field?.type == FieldType.bool) {
-            //     var dateItems: MenuItem<BlockDirective | string>[] = [];
-            //     dateItems.push(...[
-            //         { text: lst('勾选框'), value: '' },
-            //         { text: lst('开关'), value: '' },
-            //         {
-            //             text: lst('自定义'),
-            //             childs: [
-            //                 {
-            //                     name: 'dateCustomFormat',
-            //                     type: MenuItemType.input,
-            //                     value: '',
-            //                     text: lst('编辑日期格式'),
-            //                 },
-            //                 { text: lst('是否'), value: '' },
-            //             ]
-            //         }
-            //     ]);
-            //     items.insertAt(3, { type: MenuItemType.divide });
-            //     items.insertAt(4, {
-            //         text: lst('显示格式'),
-            //         childs: dateItems,
-            //         icon: SettingsSvg
-            //     });
-            //     items.insertAt(5, { type: MenuItemType.divide })
-            // }
             else if (viewField.field.type == FieldType.image) {
                 items.insertAt(4, {
                     text: lst('图片展示'),
@@ -394,10 +366,13 @@ export class DataGridViewField {
                             childs: [
                                 ...(viewField.field.config?.options || []).map(op => {
                                     return {
-                                        text: op.text,
+                                        // text: op.text,
                                         value: op.value,
                                         name: 'optionItem',
                                         type: MenuItemType.drag,
+                                        renderContent() {
+                                            return <span className="flex round padding-w-5 f-14 padding-h-2  l-16" style={{ backgroundColor: op.color }}>{op.text}</span>
+                                        },
                                         btns: [{ name: 'editOptionOption', icon: DotsSvg }]
                                     }
                                 })
@@ -470,26 +445,41 @@ export class DataGridViewField {
         viewField: ViewField) {
         event.stopPropagation();
         var self = this;
-        self.dataGridTool.isOpenTool = true;
         var rp = Rect.fromEvent(event);
-        var isSysField: boolean = viewField.type || viewField?.field?.type == FieldType.autoIncrement ? true : false;
-        var items = this.getFieldMenuItems(viewField);
-        var re = await useSelectMenuItem(
-            {
-                roundArea: rp,
-                direction: 'left'
-            },
-            items,
-            {
-                async click(item, ev, name, mp) {
-                    mp.onFree();
-                    try {
-                        if (item.name == 'optionItem') {
-                            if (name == 'editOptionOption') {
-                                var ops = lodash.cloneDeep(viewField.field.config.options);
-                                var op = ops.find(g => g.value == item.value);
+        await this.onDataGridTool(async () => {
+            var isSysField: boolean = viewField.type || viewField?.field?.type == FieldType.autoIncrement ? true : false;
+            var items = this.getFieldMenuItems(viewField);
+            var re = await useSelectMenuItem(
+                {
+                    roundArea: rp,
+                    direction: 'left'
+                },
+                items,
+                {
+                    async click(item, ev, name, mp) {
+                        mp.onFree();
+                        try {
+                            if (item.name == 'optionItem') {
+                                if (name == 'editOptionOption') {
+                                    var ops = lodash.cloneDeep(viewField.field.config.options);
+                                    var op = ops.find(g => g.value == item.value);
+                                    await self.onOpenFieldOptions(ops, op, ev);
+                                    if (JSON.stringify(ops) != JSON.stringify(viewField.field.config.options)) {
+                                        var config = lodash.cloneDeep(viewField?.field?.config);
+                                        if (typeof config == 'undefined') config = {};
+                                        config.options = ops;
+                                        await self.onUpdateField(viewField.field, { config });
+                                        mp.updateItems(self.getFieldMenuItems(viewField))
+                                    }
+                                }
+                            }
+                            else if (item.name == 'addOption') {
+                                var ops = lodash.cloneDeep(viewField.field?.config?.options || []);
+                                var or = OptionBackgroundColorList().find(g => ops.some(s => s.color == g.color) ? false : true);
+                                var op: DataGridOptionType = { text: '', value: util.guid(), color: or?.color || OptionBackgroundColorList[0].color };
                                 await self.onOpenFieldOptions(ops, op, ev);
-                                if (JSON.stringify(ops) != JSON.stringify(viewField.field.config.options)) {
+                                if (op.text) {
+                                    ops.push(op);
                                     var config = lodash.cloneDeep(viewField?.field?.config);
                                     if (typeof config == 'undefined') config = {};
                                     config.options = ops;
@@ -498,163 +488,147 @@ export class DataGridViewField {
                                 }
                             }
                         }
-                        else if (item.name == 'addOption') {
-                            var ops = lodash.cloneDeep(viewField.field?.config?.options || []);
-                            var or = OptionBackgroundColorList().find(g => ops.some(s => s.color == g.color) ? false : true);
-                            var op: DataGridOptionType = { text: '', value: util.guid(), color: or?.color || OptionBackgroundColorList[0].color };
-                            await self.onOpenFieldOptions(ops, op, ev);
-                            if (op.text) {
-                                ops.push(op);
-                                var config = lodash.cloneDeep(viewField?.field?.config);
-                                if (typeof config == 'undefined') config = {};
-                                config.options = ops;
-                                await self.onUpdateField(viewField.field, { config });
-                                mp.updateItems(self.getFieldMenuItems(viewField))
-                            }
+                        catch (ex) {
+
+                        }
+                        finally {
+                            mp.onUnfree()
+                        }
+                    },
+                    async input(item) {
+                        if (item.name == 'includeTime') {
+                            await self.onUpdateFieldConfig(viewField.field, { includeTime: item.checked });
+                        }
+                        else if (item.name == 'isMultiple') {
+                            await self.onUpdateFieldConfig(viewField.field, { isMultiple: item.checked });
+                        }
+                        else if (item.name == 'optionContainer') {
+                            var [from, to] = item.value;
+                            var ops = lodash.cloneDeep(viewField.field.config.options);
+                            var f = ops[from];
+                            ops.remove(g => g === f);
+                            ops.insertAt(to, f);
+                            await self.onUpdateFieldConfig(viewField.field, { options: ops });
+                        }
+                        else if (['config.numberDisplay.showNumber',
+                            'config.numberDisplay.display',
+                            'config.imageFormat.display',
+                            'config.imageFormat.multipleDisplay',
+                            'config.numberDisplay.color'].includes(item.name as string)) {
+                            var n = (item.name as string).replace('config.', '');
+                            await self.onUpdateFieldConfig(viewField.field, { [n]: item.value });
                         }
                     }
-                    catch (ex) {
-
+                }
+            );
+            var ReItem = items.find(g => g.name == 'name');
+            var dateCustomFormat = items.arrayJsonFind('childs', g => g.name == 'dateCustomFormat');
+            var numberUnitCustom = items.arrayJsonFind('childs', g => g.name == 'numberUnitCustom');
+            var config_numberDisplay_decimal = items.arrayJsonFind('childs', g => g.name == 'config.numberDisplay.decimal');
+            if (re) {
+                if (re.item.name == 'hide') {
+                    this.onHideField(viewField);
+                }
+                else if (re.item.name == 'editProperty') {
+                    var r = await useTableStoreAddField(
+                        { roundArea: rp },
+                        { field: viewField.field, dataGrid: self }
+                    );
+                    if (r) {
+                        if (r.type == viewField.field.type) {
+                            var rd = util.extendKey(r.config, 'config')
+                            await this.onUpdateField(viewField.field, { text: r.text, ...rd })
+                        }
+                        else {
+                            var rd = util.extendKey(r.config, 'config')
+                            await this.onTurnField(viewField, r.type, { text: r.text, ...rd });
+                        }
                     }
-                    finally {
-                        mp.onUnfree()
+                }
+                else if (re.item.name == 'leftInsert') {
+                    this.onAddField(rp, this.fields.findIndex(g => g == viewField));
+                }
+                else if (re.item.name == 'rightInsert') {
+                    this.onAddField(rp, this.fields.findIndex(g => g == viewField) + 1);
+                }
+                else if (re.item.name == 'clone') {
+                    this.onCloneViewField(viewField);
+                }
+                else if (re.item.name == 'deleteProperty') {
+                    this.onDeleteViewField(viewField);
+                }
+                else if (re.item.name == 'filter') {
+                    this.onAddFilter(viewField);
+                }
+                else if (re.item.name == 'sortDesc') {
+                    this.onSetSortField(viewField, -1);
+                }
+                else if (re.item.name == 'sortAsc') {
+                    this.onSetSortField(viewField, 1);
+                }
+                else if (re?.item.name == 'dateFormat') {
+                    if (dateCustomFormat) dateCustomFormat.value = re.item.value;
+                    await this.onUpdateFieldConfig(viewField.field, { dateFormat: re.item.value })
+                }
+                else if (re?.item.name == 'numberFormat' || re?.item.name == 'numberUnit') {
+                    numberUnitCustom.value = re.item.value;
+                    await this.onUpdateFieldConfig(viewField.field, { numberFormat: re.item.value });
+                }
+                else if (re.item.name == 'formula') {
+                    var formula = await useFormula({ roundArea: rp }, {
+                        schema: this.schema,
+                        formula: viewField.field.config.formula?.formula || ''
+                    });
+                    if (formula) await this.onUpdateFieldConfig(viewField.field, { formula });
+                }
+                else if (re.item.name == 'emoji') {
+                    var rc = await useOpenEmoji({ roundArea: rp });
+                    if (rc) {
+                        await self.onUpdateFieldConfig(viewField.field, { emoji: rc });
                     }
-                },
-                async input(item) {
-                    if (item.name == 'includeTime') {
-                        await self.onUpdateFieldConfig(viewField.field, { includeTime: item.checked });
-                    }
-                    else if (item.name == 'isMultiple') {
-                        await self.onUpdateFieldConfig(viewField.field, { isMultiple: item.checked });
-                    }
-                    else if (item.name == 'optionContainer') {
-                        var [from, to] = item.value;
-                        var ops = lodash.cloneDeep(viewField.field.config.options);
-                        var f = ops[from];
-                        ops.remove(g => g === f);
-                        ops.insertAt(to, f);
-                        await self.onUpdateFieldConfig(viewField.field, { options: ops });
-                    }
-                    else if (['config.numberDisplay.showNumber',
+                }
+                else if (
+                    [
+                        'config.numberDisplay.showNumber',
                         'config.numberDisplay.display',
                         'config.imageFormat.display',
                         'config.imageFormat.multipleDisplay',
-                        'config.numberDisplay.color'].includes(item.name as string)) {
-                        var n = (item.name as string).replace('config.', '');
-                        await self.onUpdateFieldConfig(viewField.field, { [n]: item.value });
-                    }
+                        'config.numberDisplay.color'
+                    ].includes(re.item.name as any)) {
+                    var n = (re.item.name as string).replace('config.', '');
+                    await self.onUpdateFieldConfig(viewField.field, { [n]: re.item.value });
+                }
+                else if (re.item.name == 'openRelation') {
+                    await self.onOpenSchemaPage(viewField.field.config.relationTableId)
                 }
             }
-        );
-        var ReItem = items.find(g => g.name == 'name');
-        var dateCustomFormat = items.arrayJsonFind('childs', g => g.name == 'dateCustomFormat');
-        var numberUnitCustom = items.arrayJsonFind('childs', g => g.name == 'numberUnitCustom');
-        var config_numberDisplay_decimal = items.arrayJsonFind('childs', g => g.name == 'config.numberDisplay.decimal');
-        if (re) {
-            if (re.item.name == 'hide') {
-                this.onHideField(viewField);
-            }
-            else if (re.item.name == 'editProperty') {
-                var r = await useTableStoreAddField(
-                    { roundArea: rp },
-                    { field: viewField.field, dataGrid: self }
-                );
-                if (r) {
-                    if (r.type == viewField.field.type) {
-                        var rd = util.extendKey(r.config, 'config')
-                        await this.onUpdateField(viewField.field, { text: r.text, ...rd })
-                    }
-                    else {
-                        var rd = util.extendKey(r.config, 'config')
-                        await this.onTurnField(viewField, r.type, { text: r.text, ...rd });
-                    }
+            if (isSysField) {
+                if (ReItem.value != viewField?.text) {
+                    //编辑列名了
+                    this.onUpdateViewField(viewField, { text: ReItem.value })
                 }
             }
-            else if (re.item.name == 'leftInsert') {
-                this.onAddField(rp, this.fields.findIndex(g => g == viewField));
-            }
-            else if (re.item.name == 'rightInsert') {
-                this.onAddField(rp, this.fields.findIndex(g => g == viewField) + 1);
-            }
-            else if (re.item.name == 'clone') {
-                this.onCloneViewField(viewField);
-            }
-            else if (re.item.name == 'deleteProperty') {
-                this.onDeleteViewField(viewField);
-            }
-            else if (re.item.name == 'filter') {
-                this.onAddFilter(viewField);
-            }
-            else if (re.item.name == 'sortDesc') {
-                this.onSetSortField(viewField, -1);
-            }
-            else if (re.item.name == 'sortAsc') {
-                this.onSetSortField(viewField, 1);
-            }
-            else if (re?.item.name == 'dateFormat') {
-                if (dateCustomFormat) dateCustomFormat.value = re.item.value;
-                await this.onUpdateFieldConfig(viewField.field, { dateFormat: re.item.value })
-            }
-            else if (re?.item.name == 'numberFormat' || re?.item.name == 'numberUnit') {
-                numberUnitCustom.value = re.item.value;
-                await this.onUpdateFieldConfig(viewField.field, { numberFormat: re.item.value });
-            }
-            else if (re.item.name == 'formula') {
-                var formula = await useFormula({ roundArea: rp }, {
-                    schema: this.schema,
-                    formula: viewField.field.config.formula?.formula || ''
-                });
-                if (formula) await this.onUpdateFieldConfig(viewField.field, { formula });
-            }
-            else if (re.item.name == 'emoji') {
-                var rc = await useOpenEmoji({ roundArea: rp });
-                if (rc) {
-                    await self.onUpdateFieldConfig(viewField.field, { emoji: rc });
+            else {
+                if (ReItem.value != viewField.field?.text) {
+                    //编辑列名了
+                    this.onUpdateField(viewField.field, { text: ReItem.value })
                 }
             }
-            else if (
-                [
-                    'config.numberDisplay.showNumber',
-                    'config.numberDisplay.display',
-                    'config.imageFormat.display',
-                    'config.imageFormat.multipleDisplay',
-                    'config.numberDisplay.color'
-                ].includes(re.item.name as any)) {
-                var n = (re.item.name as string).replace('config.', '');
-                await self.onUpdateFieldConfig(viewField.field, { [n]: re.item.value });
+            if (dateCustomFormat) {
+                if (dateCustomFormat.value != viewField.field?.config?.dateFormat) {
+                    await this.onUpdateFieldConfig(viewField.field, { dateFormat: dateCustomFormat.value });
+                }
             }
-            else if (re.item.name == 'openRelation') {
-                await self.onOpenSchemaPage(viewField.field.config.relationTableId)
+            if (config_numberDisplay_decimal) {
+                if (config_numberDisplay_decimal.value != viewField.field?.config?.numberDisplay?.decimal) {
+                    await this.onUpdateFieldConfig(viewField.field, { numberDisplay: { decimal: config_numberDisplay_decimal.value } });
+                }
             }
-        }
-        if (isSysField) {
-            if (ReItem.value != viewField?.text) {
-                //编辑列名了
-                this.onUpdateViewField(viewField, { text: ReItem.value })
+            if (numberUnitCustom) {
+                if (numberUnitCustom.value && numberUnitCustom.value != viewField.field.config.numberFormat) {
+                    await this.onUpdateFieldConfig(viewField.field, { numberFormat: numberUnitCustom.value });
+                }
             }
-        }
-        else {
-            if (ReItem.value != viewField.field?.text) {
-                //编辑列名了
-                this.onUpdateField(viewField.field, { text: ReItem.value })
-            }
-        }
-        if (dateCustomFormat) {
-            if (dateCustomFormat.value != viewField.field?.config?.dateFormat) {
-                await this.onUpdateFieldConfig(viewField.field, { dateFormat: dateCustomFormat.value });
-            }
-        }
-        if (config_numberDisplay_decimal) {
-            if (config_numberDisplay_decimal.value != viewField.field?.config?.numberDisplay?.decimal) {
-                await this.onUpdateFieldConfig(viewField.field, { numberDisplay: { decimal: config_numberDisplay_decimal.value } });
-            }
-        }
-        if (numberUnitCustom) {
-            if (numberUnitCustom.value && numberUnitCustom.value != viewField.field.config.numberFormat) {
-                await this.onUpdateFieldConfig(viewField.field, { numberFormat: numberUnitCustom.value });
-            }
-        }
-        self.dataGridTool.isOpenTool = false;
-        this.onOver(this.getVisibleContentBound().contain(Point.from(this.page.kit.operator.moveEvent)))
+        })
     }
 }
