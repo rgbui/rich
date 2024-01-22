@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import lodash from 'lodash';
 import { channel } from '../net/channel';
 import { lst } from '../i18n/store';
+import axios from 'axios';
 
 export var util = {
     guid() {
@@ -139,24 +140,31 @@ export var util = {
             console.error(err);
         }
     },
-    async downloadFile(url, fileName) {
-        return new Promise((resolve, reject) => {
-            var x = new XMLHttpRequest();
-            x.open("GET", url, true);
-            x.responseType = 'blob';
-            x.onload = function (e) {
-                var url = window.URL.createObjectURL(x.response)
-                var a = document.createElement('a');
-                a.href = url
-                a.download = fileName;
-                a.click();
-                resolve(true)
-            }
-            x.onerror = function (err) {
-                reject(err);
-            }
-            x.send();
+    async downloadFile(fileUrl, fileName) {
+        
+        /****
+         * 这里有部分图片，因浏览器缓存(img src)的问题，
+         * img中的src没有对跨域给出处理，
+         * 而下载触发非简单请求，在前台就基于跨域性的问题给拦截了，实际后台对跨域是支持的
+         * 所以这里加上时间戳，避免浏览器缓存
+         */
+        if (fileUrl.indexOf('?') > -1) fileUrl += "&____t=" + new Date().getTime();
+        else fileUrl += "?____t=" + new Date().getTime();
+        var response = await axios({
+            url: fileUrl, // 替换为实际的文件下载URL
+            method: 'GET',
+            responseType: 'blob', // 表示服务器响应的数据类型
         })
+        // 创建一个隐藏的a标签用于下载
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', fileName); // 设置下载文件的名称
+        document.body.appendChild(link);
+        link.click(); // 模拟点击下载
+        // 清理并释放URL对象
+        window.URL.revokeObjectURL(url);
+        link.remove();
     },
     async downloadFileByData(data: string, name: string) {
         //Blob为js的一个对象，表示一个不可变的, 原始数据的类似文件对象，这是创建文件中不可缺少的！
@@ -298,8 +306,14 @@ export var util = {
         else if (typeof number == 'number') return number;
         else return def;
     },
-    
-    replaceAll(str:string, search:string, replacement:string) {
+    replaceAll(str: string, search: string, replacement: string) {
         return str.split(search).join(replacement);
+    },
+    showPrice(price: number | string) {
+        if (typeof price == 'string') {
+            price = parseFloat(price);
+        }
+        if (isNaN(price)) return '0.00';
+        return price.toFixed(2);
     }
 }
