@@ -86,7 +86,7 @@ export class Avatar extends React.Component<{
         var renderIcon = () => {
             if (user) {
                 if (user?.avatar) return <img style={{ width: size, height: size }} src={autoImageUrl(user.avatar.url, 120)} />
-                if (user?.name) return <span style={{ width: size, height: size, fontSize: size * 0.6, lineHeight: (size * 0.6) + 'px' }}
+                if (user?.name) return <span style={{ width: size, height: size, fontSize: size * 0.6, lineHeight: size + 'px' }}
                     className='shy-avatar-name'>{user.name.slice(0, 1)}</span>
             }
         }
