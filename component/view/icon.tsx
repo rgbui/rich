@@ -19,7 +19,7 @@ export function Icon(props: {
     wrapper?: boolean
 }) {
     if (typeof props.icon == 'undefined' || !props.icon) {
-        return <i>the icon is empty</i>
+        return <i></i>
     }
     var classList: string[] = ['shy-icon'];
     if (typeof props.icon == 'string' && props.icon.indexOf(':')) {
