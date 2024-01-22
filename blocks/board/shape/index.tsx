@@ -107,6 +107,9 @@ export class Shape extends Block {
         rect = rect.transformToRect(this.globalWindowMatrix);
         return rect;
     }
+    getVisibleContentBound() {
+        return this.getVisibleBound()
+    }
 }
 @view('/shape')
 export class ShapeView extends BlockView<Shape>{

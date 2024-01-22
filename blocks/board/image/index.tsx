@@ -26,6 +26,9 @@ export class Image extends Block {
         rect = rect.transformToRect(this.globalWindowMatrix);
         return rect;
     }
+    getVisibleContentBound() {
+        return this.getVisibleBound()
+    }
 }
 @view('/board/image')
 export class ImageView extends BlockView<Image>{

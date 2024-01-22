@@ -33,6 +33,9 @@ export class PageCard extends Block {
         rect = rect.transformToRect(this.globalWindowMatrix);
         return rect;
     }
+    getVisibleContentBound() {
+        return this.getVisibleBound()
+    }
 }
 
 @view('/board/page/card')

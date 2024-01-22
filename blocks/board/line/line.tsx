@@ -245,6 +245,12 @@ export class Line extends Block {
     async didMounted() {
         this.view.forceUpdate();
     }
+    async get(args?: { syncBlock: boolean },
+        options?: { emptyChilds?: boolean }) {
+        var segs = this.segments;
+        if (!(segs?.length > 0)) return null;
+        return await super.get(args, options)
+    }
 }
 @view('/line')
 export class LineView extends BlockView<Line>{

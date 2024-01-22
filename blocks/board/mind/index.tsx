@@ -699,6 +699,9 @@ export class FlowMind extends Block {
         rect = rect.transformToRect(this.globalWindowMatrix);
         return rect;
     }
+    getVisibleContentBound() {
+        return this.getVisibleBound()
+    }
     async onInputed(): Promise<void> {
         this.page.kit.picker.onRePicker();
     }

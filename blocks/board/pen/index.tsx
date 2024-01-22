@@ -38,6 +38,9 @@ export class Pen extends Block {
         rect = rect.transformToRect(this.globalWindowMatrix);
         return rect;
     }
+    getVisibleContentBound() {
+        return this.getVisibleBound()
+    }
 }
 
 @view('/pen')
