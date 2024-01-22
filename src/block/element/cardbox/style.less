@@ -61,16 +61,29 @@
             backdrop-filter : none;
             border          : 1px solid transparent;
         }
-
         .shy-appear-text:empty {
             color: rgba(255, 255, 255, 1);
         }
-
         .shy-appear-text.shy-text-focus:empty::after,
         .shy-appear-text.shy-text-empy-visible:empty::after {
             text-decoration-color  : rgba(255, 255, 255, 1) !important;
             caret-color            : rgba(255, 255, 255, .7) !important;
             -webkit-text-fill-color: rgba(255, 255, 255, .7) !important;
+        }
+    }
+}
+
+.sy-block-view-card {
+    .sy-block-view-card-ops {
+        visibility: hidden;
+    }
+
+    &:hover {
+        .sy-block-view-card-ops {
+            visibility: visible;
+        }
+        .sy-block-card-box-noborder{
+            border:1px solid #ddd;
         }
     }
 }

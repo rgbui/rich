@@ -466,6 +466,13 @@ item-selected:选中的效果
     }
 }
 
+.item-color-hover {
+    &:hover {
+        color           : var(--interactive-hover);
+        background-color: rgba(55, 53, 47, 0.08);
+    }
+}
+
 
 
 .item-hover-shadow,
@@ -526,16 +533,34 @@ item-selected:选中的效果
     }
 }
 
-.item-white-hover {
+.shadow-hover {
     &:hover {
-        background-color: #f5f5f5;
+        z-index   : 2;
+        box-shadow: 0 20px 16px 0 hsla(0, 0%, 70.2%, .2);
     }
 }
 
-.bg-hover {
+.bg-hover,
+.item-bg-hover,
+.r-bg-hover>*,
+.r-item-bg-hover>* {
     background-color: #fff;
 
     &:hover {
+        background-color: #eee;
+
+    }
+}
+
+.border-bg-hover,
+.item-border-bg-hover,
+.r-border-bg-hover>*,
+.r-item-border-bg-hover>* {
+    background-color: #fff;
+    border          : 0.1rem solid transparent;
+
+    &:hover {
+        border          : 0.1rem solid rgba(55, 53, 47, 0.16);
         background-color: #eee;
     }
 }
@@ -626,6 +651,7 @@ item-selected:选中的效果
 }
 
 .placeholder-remark,
+.input-placeholder-remark,
 .p-remark {
     &::placeholder {
         color: rgba(55, 53, 47, 0.5) !important;
@@ -644,6 +670,18 @@ item-selected:选中的效果
 .text-primary,
 .text-p {
     color: var(--text-p-color);
+}
+
+.text-hover {
+    &:hover {
+        color: rgb(33, 33, 33);
+    }
+}
+
+.text-p-hover {
+    &:hover {
+        color: var(--text-p-color);
+    }
 }
 
 .fill-p {
@@ -666,6 +704,7 @@ body {
     // --text-p-color: #B84C4E;
     --text-p-color   : rgb(225, 98, 89);
     --text-b-color   : #64a1df;
+    --shadow         : rgba(15, 15, 15, 0.016) 0rem 0rem 0rem 1px, rgba(15, 15, 15, 0.03) 0rem 3px 6px, rgba(15, 15, 15, 0.06) 0rem 9px 24px;
 }
 
 .text {
@@ -775,7 +814,8 @@ body {
 
 }
 
-.hide {
+.hide,
+.hidden {
     visibility: hidden;
 }
 
@@ -845,6 +885,53 @@ body {
     overflow     : hidden;
 }
 
+.text-rows-2,
+.rows-2 {
+    display           : -webkit-box;
+    line-clamp        : 2;
+    -webkit-line-clamp: 2;
+    box-orient        : vertical;
+    -webkit-box-orient: vertical;
+    line-height       : 20px;
+    max-height        : 40px;
+    overflow          : hidden;
+}
+
+.text-rows-3,
+.rows-3 {
+    display           : -webkit-box;
+    line-clamp        : 3;
+    -webkit-line-clamp: 3;
+    box-orient        : vertical;
+    -webkit-box-orient: vertical;
+    line-height       : 20px;
+    max-height        : 60px;
+    overflow          : hidden;
+}
+
+.text-rows-4,
+.rows-4 {
+    display           : -webkit-box;
+    line-clamp        : 4;
+    -webkit-line-clamp: 4;
+    box-orient        : vertical;
+    -webkit-box-orient: vertical;
+    line-height       : 20px;
+    max-height        : 80px;
+    overflow          : hidden;
+}
+
+.text-rows-5,
+.rows-5 {
+    display           : -webkit-box;
+    line-clamp        : 5;
+    -webkit-line-clamp: 5;
+    box-orient        : vertical;
+    -webkit-box-orient: vertical;
+    line-height       : 20px;
+    max-height        : 100px;
+    overflow          : hidden;
+}
 
 /***
 图片显示

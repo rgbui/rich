@@ -23,6 +23,7 @@
   "homepage": "https://github.com/rgbui/kanhai#readme",
   "dependencies": {
     "animate.css": "^4.1.1",
+    "axios": "^1.6.5",
     "bezier-js": "^6.1.0",
     "codemirror": "^6.0.1",
     "dayjs": "^1.10.6",
@@ -48,6 +49,7 @@
     "react-slick": "^0.29.0",
     "remark-gfm": "^3.0.1",
     "short-uuid": "^4.2.0",
+    "slick-carousel": "^1.8.1",
     "ua-parser-js": "^0.7.28",
     "xgplayer": "^3.0.6"
   },

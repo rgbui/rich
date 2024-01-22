@@ -44,3 +44,4 @@
      changeSchema - directive - actions
      changeView  -directive -actions
                  -directive syncBlock -actions
+https://js.design/community?category=detail&type=resource&id=6577c8d8c52c65da01689c60

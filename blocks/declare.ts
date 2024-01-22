@@ -17,7 +17,6 @@ import "./form/measure";
 import "./form/button/index";
 
 import "./form/tab/index";
-import "./form/tab/item";
 import "./form/tab/page";
 
 
@@ -49,6 +48,8 @@ import './data-grid/view/timeline';
 import './data-grid/view/item';
 import './data-grid/view/map';
 import "./data-grid/view/statistic/charts";
+import "./data-grid/view/tab";
+import "./data-grid/view/tab/page";
 
 import "./data-grid/view/item/record";
 import "./data-grid/element/field/text";

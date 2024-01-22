@@ -2,7 +2,7 @@
     display        : flex;
     justify-content: flex-start;
     align-items    : flex-start;
-    
+
     &-gap {
         width           : 46px;
         background-color: transparent;
@@ -23,7 +23,7 @@
             height   : 30px;
             left     : 50%;
             transform: translate(-50%, 0px);
-            display: none;
+            display  : none;
         }
 
         em {
@@ -37,7 +37,8 @@
 
         &:hover {
             opacity: 1;
-            i{
+
+            i {
                 display: block;
             }
         }
@@ -72,24 +73,32 @@
 
 .sy-block-text-content-code {
     em {
-        font-style         : inherit;
-        line-height        : inherit;
-        font-weight        : inherit;
-        text-decoration    : inherit;
-        background         : rgba(135, 131, 120, 0.15);
-        color              : #EB5757;
-        border-radius      : 3px;
-        font-size          : 85%;
-        border             : 3px solid transparent;
-        border-top-width   : 0.2em;
-        border-bottom-width: 0.2em;
-        border-left-width  : 0.4em;
-        border-right-width : 0.4em;
-        display            : inline;
-        margin-left        : 5px;
-        margin-right       : 5px;
+        font-style               : inherit;
+        line-height              : inherit;
+        font-weight              : inherit;
+        text-decoration          : inherit;
+        // background            : rgba(135, 131, 120, 0.15);
+        // color                 : #EB5757;
+        background-color         : rgba(31, 34, 37, 0.03);
+        border-radius            : 3px;
+        font-size                : 85%;
+        border                   : 0.1em solid transparent;
+        border-color             : rgba(31, 34, 37, 0.1);
+        border-width             : 0.1em;
+        padding-top              : 0.2em;
+        padding-bottom           : 0.2em;
+        padding-left             : 0.3em;
+        padding-right            : 0.3em;
+        // border-top-width   : 0.2em;
+        // border-bottom-width: 0.2em;
+        // border-left-width  : 0.4em;
+        // border-right-width : 0.4em;
+        display                  : inline;
+        // margin-left        : 5px;
+        // margin-right       : 5px;
 
         &.next-code {
+            padding-right             : 0px;
             border-right-width        : 0px;
             border-top-right-radius   : 0px;
             border-bottom-right-radius: 0px;
@@ -99,6 +108,7 @@
 
 .sy-block-text-content-code+.sy-block-text-content-code {
     em {
+        padding-left             : 0px;
         border-left-width        : 0px;
         border-top-left-radius   : 0px;
         border-bottom-left-radius: 0px;
