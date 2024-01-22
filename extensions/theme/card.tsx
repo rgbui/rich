@@ -4,7 +4,7 @@ import { Block } from "../../src/block";
 import { Popover, PopoverSingleton } from "../../component/popover/popover";
 import { PopoverPosition } from "../../component/popover/position";
 import { Icon } from "../../component/view/icon";
-import { CardBrushSvg, CheckSvg, PlatteSvg } from "../../component/svgs";
+import { CheckSvg } from "../../component/svgs";
 import { S } from "../../i18n/view";
 import { PageThemeStyle } from "../../src/page/declare";
 import { SelectBox } from "../../component/view/select/box";
@@ -12,11 +12,10 @@ import { lst } from "../../i18n/store";
 import { PageFillStyle } from "./bg";
 import { getCardThemes } from "./themes";
 import { Rect } from "../../src/common/vector/point";
-import { InputNumber } from "../../component/view/input/number";
-import { Input } from "../../component/view/input";
 import lodash from "lodash";
 import { BlockRenderRange } from "../../src/block/enum";
 import { Tip } from "../../component/view/tooltip/tip";
+import { BgBorder } from "./bg.boder";
 
 export class CardTheme extends EventsComponent {
     popover: Popover<CardTheme>;
@@ -26,80 +25,70 @@ export class CardTheme extends EventsComponent {
     pageTheme: PageThemeStyle;
     async setTheme(key: string, value: any) {
         lodash.set(this.pageTheme, key, value)
-        await this.setPageTheme(this.pageTheme);
+        if (key == 'coverStyle.display') {
+            if (this.pageTheme.coverStyle?.display != 'none') {
+                if (!this.pageTheme.bgStyle) {
+                    this.pageTheme.bgStyle = { mode: 'color', color: '#fff' }
+                }
+                if (this.pageTheme.bgStyle.mode == 'none') {
+                    this.pageTheme.bgStyle.mode = 'color';
+                    this.pageTheme.bgStyle.color = '#fff';
+                }
+            }
+        }
+        this.onUpdateTheme();
     }
-    async setPageTheme(pageTheme: PageThemeStyle, group?: string) {
-        await this.updateTheme({ 'cardStyle': pageTheme });
+    async onUpdateTheme() {
+        await this.block.onUpdateProps({ 'cardStyle': this.pageTheme }, { range: BlockRenderRange.self });
+        this.forceUpdate();
     }
-    async updateTheme(data: Record<string, any>, cb?: () => void) {
-        await this.block.onUpdateProps(data, { range: BlockRenderRange.self });
-        this.open(this.block);
-    }
+    onLazyUpdate = lodash.debounce(async (d) => {
+        await this.block.onUpdateProps({ 'cardStyle': this.pageTheme }, { range: BlockRenderRange.self });
+    }, 800)
     renderCustom() {
+        var textp = 'var(--text-p-color)';
+        var solid = '2px solid var(--text-p-color)'
         return <div className="padding-w-10">
-            <div className="remark gap-t-10 gap-b-5 f-12"><S>封面</S></div>
+            <div className="remark gap-b-5 f-12"><S>封面</S></div>
             <div className="flex r-gap-r-10 r-round-2">
-
-                <Tip text='无布局'><div className="cursor" onMouseDown={e => this.setTheme('coverStyle.display', 'none')} style={{ border: (this.pageTheme?.coverStyle?.display || 'none') == 'none' ? "2px solid #553bff" : '2px solid #cac5c4', width: 30, height: 20 }}></div></Tip>
-                <Tip text='背景布局' ><div className="cursor" onMouseDown={e => this.setTheme('coverStyle.display', 'inside')} style={{ border: this.pageTheme?.coverStyle?.display == 'inside' ? "2px solid #553bff" : '2px solid #cac5c4', width: 30, height: 20, background: this.pageTheme?.coverStyle?.display == 'inside' ? "#553bff" : '#cac5c4' }}></div></Tip>
-                <Tip text='Top布局' ><div className="cursor" onMouseDown={e => this.setTheme('coverStyle.display', 'inside-cover')} style={{ border: this.pageTheme?.coverStyle?.display == 'inside-cover' ? "2px solid #553bff" : '2px solid #cac5c4', width: 30, height: 20 }}><div style={{ background: this.pageTheme?.coverStyle?.display == 'inside-cover' ? "#553bff" : '#cac5c4', height: 6 }}></div></div></Tip>
-                <Tip text='Left布局'><div className="cursor flex" onMouseDown={e => this.setTheme('coverStyle.display', 'inside-cover-left')} style={{ border: this.pageTheme?.coverStyle?.display == 'inside-cover-left' ? "2px solid #553bff" : '2px solid #cac5c4', width: 30, height: 20 }} ><div style={{ background: this.pageTheme?.coverStyle?.display == 'inside-cover-left' ? "#553bff" : '#cac5c4', width: 10, height: 20 }}></div></div></Tip>
-                <Tip text='Right布局' ><div className="cursor flex-end" onMouseDown={e => this.setTheme('coverStyle.display', 'inside-cover-right')} style={{ border: this.pageTheme?.coverStyle?.display == 'inside-cover-right' ? "2px solid #553bff" : '2px solid #cac5c4', width: 30, height: 20 }} ><div style={{ background: this.pageTheme?.coverStyle?.display == 'inside-cover-right' ? "#553bff" : '#cac5c4', width: 10, height: 20 }}></div></div></Tip>
-
+                <Tip text='无布局'><div className="cursor" onMouseDown={e => this.setTheme('coverStyle.display', 'none')} style={{ border: (this.pageTheme?.coverStyle?.display || 'none') == 'none' ? solid : '2px solid #cac5c4', width: 30, height: 20 }}></div></Tip>
+                <Tip text='背景布局' ><div className="cursor" onMouseDown={e => this.setTheme('coverStyle.display', 'inside')} style={{ border: this.pageTheme?.coverStyle?.display == 'inside' ? solid : '2px solid #cac5c4', width: 30, height: 20, background: this.pageTheme?.coverStyle?.display == 'inside' ? textp : '#cac5c4' }}></div></Tip>
+                <Tip text='Top布局' ><div className="cursor" onMouseDown={e => this.setTheme('coverStyle.display', 'inside-cover')} style={{ border: this.pageTheme?.coverStyle?.display == 'inside-cover' ? solid : '2px solid #cac5c4', width: 30, height: 20 }}><div style={{ background: this.pageTheme?.coverStyle?.display == 'inside-cover' ? textp : '#cac5c4', height: 6 }}></div></div></Tip>
+                <Tip text='Left布局'><div className="cursor flex" onMouseDown={e => this.setTheme('coverStyle.display', 'inside-cover-left')} style={{ border: this.pageTheme?.coverStyle?.display == 'inside-cover-left' ? solid : '2px solid #cac5c4', width: 30, height: 20 }} ><div style={{ background: this.pageTheme?.coverStyle?.display == 'inside-cover-left' ? textp : '#cac5c4', width: 10, height: 20 }}></div></div></Tip>
+                <Tip text='Right布局' ><div className="cursor flex-end" onMouseDown={e => this.setTheme('coverStyle.display', 'inside-cover-right')} style={{ border: this.pageTheme?.coverStyle?.display == 'inside-cover-right' ? solid : '2px solid #cac5c4', width: 30, height: 20 }} ><div style={{ background: this.pageTheme?.coverStyle?.display == 'inside-cover-right' ? textp : '#cac5c4', width: 10, height: 20 }}></div></div></Tip>
             </div>
-            <div className="remark  gap-t-10 gap-b-5 f-12"><S>背景</S></div>
-            <div>
-                <PageFillStyle openSpread={e => {
-                    if (e == true) { this.el.classList.remove('overflow-y'); this.el.classList.remove('h-300') }
-                    else { this.el.classList.add('overflow-y'); this.el.classList.add('h-300') }
-                    if (this.popover) this.popover.stopMousedownClose(e);
-                }} onChange={e => this.setTheme('coverStyle.bgStyle', e)} bgStyle={this.pageTheme.coverStyle.bgStyle}></PageFillStyle>
-            </div>
+            {(this.pageTheme?.coverStyle?.display || 'none') != 'none' && <div>
+                <div className="remark  gap-t-10 gap-b-5 f-12"><S>背景</S></div>
+                <div>
+                    <PageFillStyle isNotEmpty openSpread={e => {
+                        if (e == true) { this.el.classList.remove('overflow-y'); this.el.classList.remove('h-300') }
+                        else { this.el.classList.add('overflow-y'); this.el.classList.add('h-300') }
+                        if (this.popover) this.popover.stopMousedownClose(e);
+                    }} onChange={e => this.setTheme('coverStyle.bgStyle', e)} bgStyle={this.pageTheme.coverStyle.bgStyle}></PageFillStyle>
+                </div>
+            </div>}
             {this.pageTheme?.coverStyle.display == 'inside' && <><div className="remark   gap-t-10 gap-b-5 f-12">
                 <S>透明性</S>
             </div>
-                <div className="flex flex-wrap text-1">
+                <div >
                     <SelectBox
                         border
+                        dropAlign="full"
                         value={this.pageTheme?.contentStyle?.transparency || 'noborder'}
                         onChange={e => {
                             this.setTheme('contentStyle.transparency', e)
                         }}
                         options={[
-                            { text: lst('纯色'), value: 'solid' },
                             { text: lst('透明'), value: 'noborder' },
                             { text: lst('渐变'), value: 'faded' },
                             { text: lst('毛玻璃'), value: 'frosted' }
                         ]}></SelectBox>
-                </div></>}
-            <div className="remark   gap-t-10 gap-b-5 f-12">
-                <S>圆角</S>
-            </div>
-            <div className="flex flex-wrap text-1">
-                <InputNumber value={this.pageTheme.contentStyle.round} onChange={e => {
-                    this.setTheme('contentStyle.round', e)
-                }}></InputNumber>
-            </div>
-            <div className="remark   gap-t-10 gap-b-5 f-12">
-                <S>边框</S>
-            </div>
-            <div className="flex flex-wrap text-1">
-                <Input value={this.pageTheme.contentStyle.border} onChange={e => {
-                    this.setTheme('contentStyle.border', e)
-                }}></Input>
-            </div>
-            <div className="remark   gap-t-10 gap-b-5 f-12">
-                <S>阴影</S>
-            </div>
-            <div className="flex flex-wrap text-1">
-                <Input value={this.pageTheme.contentStyle.shadow} onChange={e => {
-                    this.setTheme('contentStyle.shadow', e)
-                }}></Input>
-            </div>
+                </div>
+            </>}
         </div>
     }
     renderSys() {
-        var pageThems = getCardThemes();
+        var pt = getCardThemes()[0];
         var self = this;
         function renderItem(g, i, name: string) {
             var s = g.pageTheme as PageThemeStyle;
@@ -114,7 +103,16 @@ export class CardTheme extends EventsComponent {
                 contentStyle.border = '1px solid rgb(238, 238, 238)';
                 var cs = s.contentStyle;
                 if (cs.border) {
-                    if (typeof cs.border == 'string') contentStyle.border = cs.border;
+                    if (typeof cs.border == 'string') {
+                        if (contentStyle.border.includes(';')) {
+                            var ccs = contentStyle.border.split(';');
+                            contentStyle.borderTop = ccs[0];
+                            contentStyle.borderRight = ccs[1];
+                            contentStyle.borderBottom = ccs[2];
+                            contentStyle.borderLeft = ccs[3];
+                        }
+                        else contentStyle.border = cs.border;
+                    }
                     else Object.assign(contentStyle, cs.border);
                 }
                 if (cs.round) {
@@ -153,112 +151,77 @@ export class CardTheme extends EventsComponent {
                         bgStyle.backgroundAttachment = 'fixed';
                     }
                 }
-                var round = contentStyle.borderRadius
-                if (s.coverStyle?.display == 'none') {
-                    return <div >
-                        <div className="flex-center flex-col h-90" style={contentStyle}>
-                            <div className="f-20"><S>标题</S></div>
-                            <div className="h-60 f-14"><S>正文或链接</S></div>
-                        </div>
+                return <div >
+                    <div className="flex-center flex-col h-90" style={contentStyle}>
+                        <div className="f-20"><S>标题</S></div>
+                        <div className="h-60 f-14"><S>正文或链接</S></div>
                     </div>
-                }
-                else if (s.coverStyle.display == 'inside') {
-                    return <div className="relative">
-                        <div className="flex-center flex-col  h-90" style={{ ...contentStyle, ...bgStyle }}>
-                            <div className="f-20"><S>标题</S></div>
-                            <div className="h-60 f-14"><S>正文或链接</S></div>
-                        </div>
-                    </div>
-                }
-                else if (s.coverStyle.display == 'inside-cover') {
-                    bgStyle.borderRadius = `${round}px ${round}px  0px 0px`
-                    return <div className="h-90" style={contentStyle} >
-                        <div className="h-30" style={bgStyle}>
-                        </div>
-                        <div className="flex-center flex-col h-60">
-                            <div className="f-20"><S>标题</S></div>
-                            <div className="h-60 f-14"><S>正文或链接</S></div>
-                        </div>
-                    </div>
-                }
-                else if (s.coverStyle.display == 'inside-cover-bottom') {
-                    bgStyle.borderRadius = `  0px 0px ${round}px ${round}px`
-                    return <div className="h-90" style={contentStyle} >
-                        <div className="flex-center flex-col h-60">
-                            <div className="f-20"><S>标题</S></div>
-                            <div className="h-60 f-14"><S>正文或链接</S></div>
-                        </div>
-                        <div className="h-30" style={bgStyle}>
-                        </div>
-                    </div>
-                }
-                else if (s.coverStyle.display == 'inside-cover-left') {
-                    bgStyle.borderRadius = `${round}px 0px 0px ${round}px `
-                    contentStyle.borderRadius = `0px ${round}px ${round}px 0px`
-                    return <div className="flex flex-full" style={contentStyle} >
-                        <div className="h-90 flex-fixed" style={bgStyle}>
-                        </div>
-                        <div className="flex-auto flex-center flex-col  h-90">
-                            <div className="f-20"><S>标题</S></div>
-                            <div className="h-60 f-14"><S>正文或链接</S></div>
-                        </div>
-                    </div>
-                }
-                else if (s.coverStyle.display == 'inside-cover-right') {
-                    bgStyle.borderRadius = `0px ${round}px ${round}px 0px`
-                    contentStyle.borderRadius = `${round}px 0px 0px ${round}px `
-                    return <div className="flex flex-full" style={contentStyle} >
-                        <div className="flex-auto flex-center h-90">
-                            <div className="f-20"><S>标题</S></div>
-                            <div className="h-60 f-14"><S>正文或链接</S></div>
-                        </div>
-                        <div className="flex-fixed h-90" style={bgStyle}>
-                        </div>
-                    </div>
-                }
+                </div>
             }
             return <div onMouseDown={e => {
-                self.setPageTheme(s, name);
+                self.pageTheme.name = s.name;
+                Object.assign(self.pageTheme.contentStyle, lodash.cloneDeep(s.contentStyle))
+                self.onUpdateTheme();
             }} className="item-hover cursor padding-w-5 padding-t-5 round" key={i} style={{ width: 150 }}>
                 {renderContent()}
                 <div className="flex-center h-30 f-12">{self.pageTheme?.name == s.name && <span className="flex-center size-20"><Icon size={18} icon={CheckSvg}></Icon></span>}<span>{g.text}</span></div>
             </div>
         }
         return <div className="padding-w-10 padding-b-100">
-            {pageThems.map((pt, index) => {
-                return <div key={index}>
-                    <div className="flex remark f-12 gap-h-10">{pt.text}</div>
-                    <div className="flex flex-wrap ">
-                        {pt.childs.map((s, i) => {
-                            return renderItem(s, i, pt.name);
-                        })}
-                    </div>
-                </div>
-            })}
+            <div >
+                {this.mode == 'style' && <div className="flex remark f-12 gap-h-10">
+                    <span className="flex-fixed" onMouseDown={e => {
+                        if (this.mode == 'style') return;
+                        this.mode = 'style';
+                        this.forceUpdate();
+                    }}>{pt.text}</span>
+                    <span className="link cursor flex-auto flex-end" onMouseDown={e => {
+                        if (this.mode == 'custom') return;
+                        this.mode = 'custom';
+                        this.forceUpdate()
+                    }}><S>自定义风格</S></span>
+                </div>}
+                {this.mode == 'custom' && <div className="flex remark f-12 gap-h-10">
+                    <span className="flex-fixed" onMouseDown={e => {
+                        if (this.mode == 'custom') return;
+                        this.mode = 'custom';
+                        this.forceUpdate()
+                    }}><S>自定义风格</S></span>
+                    <span className=" link cursor flex-auto flex-end" onMouseDown={e => {
+                        if (this.mode == 'style') return;
+                        this.mode = 'style';
+                        this.forceUpdate();
+                    }}>{pt.text}</span>
+                </div>}
+                {this.mode == 'custom' && <div>
+                    <BgBorder contentStyle={self.pageTheme.contentStyle} onChange={e => {
+                        Object.assign(self.pageTheme.contentStyle, e);
+                        this.forceUpdate();
+                        this.onLazyUpdate(e);
+                    }} ></BgBorder>
+                </div>}
+                {this.mode == 'style' && <div className="flex flex-wrap ">
+                    {pt.childs.map((s, i) => {
+                        return renderItem(s, i, pt.name);
+                    })}
+                </div>}
+            </div>
         </div>
     }
+    mode: 'style' | 'custom' = 'style';
     open(block: Block) {
         this.block = block;
+        this.mode = 'style';
         this.pageTheme = (this.block as any).cardStyle;
         this.forceUpdate();
     }
     render() {
         return <div
             ref={e => this.el = e}
-            className="padding-h-15 bg-white round w-350 h-300 overflow-y" >
-            <div className="flex gap-b-10  padding-w-10">
-                <a onClick={e => {
-                    this.tab = 'sys';
-                    this.forceUpdate()
-                }} className={"cursor gap-r-10 flex-auto padding-w-10 flex-center h-30 round-8 " + (this.tab == 'sys' ? " bg-primary text-white" : "")}><span className="flex-center size-20"><Icon size={18} icon={PlatteSvg}></Icon></span><span><S>标准样式</S></span></a>
-                <a onClick={e => {
-                    this.tab = 'custom';
-                    this.forceUpdate()
-                }} className={"cursor gap-l-10 flex-auto  padding-w-10 flex-center h-30 round-8 " + (this.tab == 'custom' ? " bg-primary text-white" : "")}><span className="flex-center size-20"><Icon size={18} icon={CardBrushSvg}></Icon></span><span><S>自定义样式</S></span></a>
-            </div>
+            className="padding-h-10 bg-white round w-350 h-300 overflow-y" >
             <div>
-                {this.tab == 'custom' && this.block && this.renderCustom()}
-                {this.tab == 'sys' && this.block && this.renderSys()}
+                {this.block && this.renderCustom()}
+                {this.block && this.renderSys()}
             </div>
         </div>
     }

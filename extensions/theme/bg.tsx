@@ -16,8 +16,10 @@ import { GetPageBgs } from "./themes";
 
 export class PageFillStyle extends React.Component<{
     bgStyle: PageThemeStyle['bgStyle'],
+    isFill?: boolean,
+    isNotEmpty?: boolean,
     onChange: (e: PageThemeStyle['bgStyle']) => void,
-    openSpread: (spread: boolean) => void
+    openSpread?: (spread: boolean) => void
 }>{
     constructor(props) {
         super(props);
@@ -36,10 +38,16 @@ export class PageFillStyle extends React.Component<{
     el: HTMLElement;
     top: number = 0;
     render() {
+        if (this.props.isFill) {
+            return <div ref={e => this.el = e}>
+                {this.renderDrops()}
+            </div>
+        }
         return <div className="relative" ref={e => this.el = e}>
             <div className="h-30 border round flex" onMouseDown={e => {
                 this.spread = true;
-                this.props.openSpread(true);
+                if (this.props.openSpread)
+                    this.props.openSpread(true);
                 this.top = 0;
                 this.forceUpdate(() => this.cacDrop());
             }}>
@@ -61,6 +69,7 @@ export class PageFillStyle extends React.Component<{
         this.props.onChange(data as any);
     }
     cacDrop() {
+        if (this.props.isFill) return;
         if (this.dropEle) {
             var de = Rect.fromEle(this.dropEle);
             var re = Rect.fromEle(this.el);
@@ -74,7 +83,7 @@ export class PageFillStyle extends React.Component<{
     spread: boolean = false;
     dropEle: HTMLElement;
     getItems() {
-        return [
+        var items = [
             { icon: { name: 'bytedance-icon', code: 'square' }, name: 'none', value: "none", text: lst('无背景'), checkLabel: this.bgStyle?.mode == 'none' },
             { type: MenuItemType.divide },
             { icon: PicSvg, name: 'image', text: lst('选择图片'), value: 'image', checkLabel: this.bgStyle?.mode == 'image' },
@@ -83,22 +92,34 @@ export class PageFillStyle extends React.Component<{
             { icon: { name: 'bytedance-icon', code: 'background-color' }, name: 'color', text: lst('颜色'), value: 'color', checkLabel: this.bgStyle?.mode == 'color' },
             { icon: { name: 'bytedance-icon', code: 'color-filter' }, name: 'grad', text: lst('渐变色'), value: 'grad', checkLabel: this.bgStyle?.mode == 'grad' }
         ] as MenuItem<string>[];
+        if (this.props.isNotEmpty == true)
+            items = items.slice(2);
+        return items;
     }
     renderDrops() {
         var self = this;
-        return <div ref={e => this.dropEle = e} className="pos padding-10 max-h-400 overflow-y  shadow border round bg-white " style={{ top: this.top, transform: 'translate(-100%, 0%)', width: 330, left: 0 }}>
-            <div className="pos size-24 round item-hover flex-center cursor" onMouseDown={e => {
+        return <div ref={e => this.dropEle = e} className={this.props.isFill ? "" : "pos padding-h-10  max-h-400 overflow-y  shadow border round bg-white "}
+            style={this.props.isFill ? {} : {
+                top: this.top,
+                transform: 'translate(-100%, 0%)',
+                width: 310,
+                left: 0
+            }}>
+            {!this.props.isFill && <div className="pos size-24 round item-hover flex-center cursor" onMouseDown={e => {
                 this.spread = false;
                 setTimeout(() => {
-                    this.props.openSpread(this.spread);
+                    if (this.props.openSpread)
+                        this.props.openSpread(this.spread);
                 }, 10);
                 this.forceUpdate();
             }} style={{ top: 0, right: 0 }}>
                 <Icon icon={CloseSvg} size={14}></Icon>
-            </div>
-            <div className="h-24 padding-w-15"><span className="remark f-12"><S>设置背景</S></span></div>
-            <div className="gap-w-15 gap-b-10">
-                <SelectBox border value={this.bgStyle.mode} onChange={(r, item) => {
+            </div>}
+            {!this.props.isFill && <div className="h-16 hidden">
+                <span className="remark f-12"><S>设置背景</S></span>
+            </div>}
+            <div className="gap-b-10 padding-w-15">
+                <SelectBox dropAlign="full" border value={this.bgStyle.mode} onChange={(r, item) => {
                     self.setProps({ mode: item.value })
                     self.forceUpdate(() => {
                         self.cacDrop();
@@ -106,15 +127,15 @@ export class PageFillStyle extends React.Component<{
                 }} options={this.getItems()}></SelectBox>
             </div>
             {
-                this.bgStyle.mode == 'none' && <div className=" padding-w-15 remark f-12 flex-center min-h-30">
+                this.bgStyle.mode == 'none' && <div className="padding-w-15 remark f-12 flex-center min-h-30">
                     <S>无背景</S>
                 </div>
             }
             {
-                this.bgStyle.mode == 'image' && <div>
+                this.bgStyle.mode == 'image' && <div className="padding-l-15">
                     {GalleryBgs().map(gp => {
-                        return <div className="gap-b-15" key={gp.group}>
-                            <div className="remark padding-w-15">{gp.group}</div>
+                        return <div className="gap-b-15 " key={gp.group}>
+                            <div className="remark">{gp.group}</div>
                             <div className="flex flex-wrap">
                                 {gp.childs.map(gc => {
                                     return <div
@@ -122,7 +143,7 @@ export class PageFillStyle extends React.Component<{
                                             this.setProps({ 'mode': 'image', 'src': gc.url })
                                         }}
                                         key={gc.url}
-                                        style={{ width: (300 - 45) / 2 }} className={'relative gap-l-15 w-120 h-80 gap-b-10 cursor gap-h-10 '}>
+                                        style={{ width: (300 - 45) / 2 }} className={'relative gap-r-15 w-120 h-80 gap-b-10 cursor gap-h-10 '}>
                                         <img className="obj-center w100 h100 round-8" src={gc.thumb} />
                                         {gc.url == this.bgStyle?.src && <div className="pos-all flex-end-top">
                                             <span className="flex-center size-20 round bg-white shadow gap-5"><Icon size={16} icon={CheckSvg}></Icon></span>
@@ -146,7 +167,7 @@ export class PageFillStyle extends React.Component<{
                 </div>
             }
             {
-                this.bgStyle.mode == 'color' && <div className="padding-w-15">
+                this.bgStyle.mode == 'color' && <div className="padding-w-15" >
                     <div className="remark f-12 gap-b-5"><S>背景色</S></div>
                     <div className="gap-b-10">
                         <ColorInput color={this.bgStyle?.color} onChange={e => {
@@ -169,7 +190,7 @@ export class PageFillStyle extends React.Component<{
                     })}
                 </div>
             }
-            {this.bgStyle.mode == 'grad' && <div className="gap-w-15">
+            {this.bgStyle.mode == 'grad' && <div className="padding-w-15" >
                 <GradColor grad={this.bgStyle.grad} onChange={e => {
                     this.setProps({ mode: 'grad', grad: e });
                 }}>
@@ -191,7 +212,8 @@ export class PageFillStyle extends React.Component<{
         if (s.contains(ele) && !this.el.contains(ele) || panel.contains(ele) && !this.el.contains(ele)) {
             this.spread = false;
             setTimeout(() => {
-                this.props.openSpread(this.spread);
+                if (this.props.openSpread)
+                    this.props.openSpread(this.spread);
             }, 10);
             e.stopPropagation();
             this.forceUpdate();
