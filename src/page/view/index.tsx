@@ -278,12 +278,10 @@ export class PageView extends Component<{ page: Page }>{
         if ([PageLayoutType.doc, PageLayoutType.db].includes(this.props.page?.pageLayout?.type)) {
             gap = 60
         }
-        else if (this.props.page?.pageLayout?.type == PageLayoutType.docCard) {
+        else if ([PageLayoutType.docCard, PageLayoutType.textChannel, PageLayoutType.board].includes(this.props.page?.pageLayout?.type)) {
             gap = 0
         }
-        else if (this.props.page?.pageLayout?.type == PageLayoutType.textChannel) {
-            gap = 0
-        }
+
         var pd = this.props.page.getPageDataInfo();
         return <div className="shy-page" >
             <PageBar ref={e => { this.pageBar = e; }} page={this.page}></PageBar>
