@@ -12,11 +12,13 @@ import { BlockRenderRange } from "../../block/enum";
 import { BoardBlockSelector, BoardPointType } from "../../block/partial/board";
 import { MouseDragger } from "../../common/dragger";
 import { Matrix } from "../../common/matrix";
-import { Point, PointArrow } from "../../common/vector/point";
+import { Point, PointArrow, Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
 import { openBoardEditTool } from "../operator/board/edit";
 import { BlockPickerView } from "./view";
 import { setBoardBlockCache } from "../../page/common/cache";
+import { GridMap } from "../../page/grid";
+import { CacAlignLines } from "./common";
 
 export class BlockPicker {
     kit: Kit;
@@ -26,8 +28,14 @@ export class BlockPicker {
     }
     visible: boolean = false;
     blocks: Block[] = [];
+    alighLines: {
+        arrow: 'x' | 'y';
+        start: Point;
+        end: Point;
+    }[] = [];
     onPicker(blocks: Block[], openEditTool = false) {
         this.blocks = blocks;
+        this.alighLines = [];
         this.visible = true;
         if (this.view)
             this.view.forceUpdate();
@@ -36,6 +44,7 @@ export class BlockPicker {
         }
     }
     onRePicker() {
+        this.alighLines = [];
         this.blocks.forEach(bl => {
             bl.updateRenderLines();
         });
@@ -56,39 +65,68 @@ export class BlockPicker {
         forceCloseBoardEditTool();
     }
     onMoveStart(point: Point) {
+        this.alighLines = [];
         this.blocks.forEach(bl => {
             bl.boardMoveStart(point);
         });
+        if (this.blocks.length == 1 && this.blocks[0].url !== BlockUrlConstant.Line) {
+            this.moveRect = this.blocks[0].getVisibleBound();
+        }
+        else this.moveRect = undefined;
     }
-    onMove(from: Point, to: Point) {
+    moveRect: Rect;
+    onMove(from: Point, to: Point, gm?: GridMap) {
+        var gs: {
+            ox: number;
+            oy: number;
+            lines: {
+                arrow: 'x' | 'y';
+                start: Point;
+                end: Point;
+            }[];
+        }
+        if (gm && this.blocks.length == 1 && this.moveRect)
+            gs = CacAlignLines(this.blocks[0], gm, from, to, this.moveRect);
+        if (typeof gs?.ox == 'number' || typeof gs?.oy == 'number') {
+            if (gs.ox) to.x = gs.ox + to.x;
+            if (gs.oy) to.y = gs.oy + to.y;
+        }
         this.blocks.forEach(bl => {
             if (bl.isBoardCanMove())
                 bl.boardMove(from, to);
         });
+        this.alighLines = gs?.lines || [];
+        this.alighLines.forEach(ag => {
+            ag.start = this.kit.page.windowMatrix.inverseTransform(ag.start);
+            ag.end = this.kit.page.windowMatrix.inverseTransform(ag.end);
+        })
         this.view.forceUpdate();
     }
-    async onMoveEnd(from: Point, to: Point) {
+    async onMoveEnd(from: Point, to: Point, gm?: GridMap) {
+        var gs: {
+            ox: number;
+            oy: number;
+            lines: {
+                arrow: 'x' | 'y';
+                start: Point;
+                end: Point;
+            }[];
+        }
+        if (gm && this.blocks.length == 1 && this.moveRect)
+            gs = CacAlignLines(this.blocks[0], gm, from, to, this.moveRect);
+        if (typeof gs?.ox == 'number' || typeof gs?.oy == 'number') {
+            if (gs.ox) to.x = gs.ox + to.x;
+            if (gs.oy) to.y = gs.oy + to.y;
+        }
+        this.alighLines = [];
+        this.moveRect = null;
         await this.kit.page.onAction(ActionDirective.onMove, async () => {
-            if (this.kit.page.keyboardPlate.isAlt()) {
-                var bs = await this.blocks.asyncMap(async c => await c.clone());
-                await this.blocks.eachAsync(async b => {
-                    b.setBoardMoveMatrix(new Matrix());
-                })
-                await bs.eachAsync(async b => {
-                    await b.boardMoveEnd(from, to);
-                });
-                this.kit.page.addUpdateEvent(async () => {
-                    this.onPicker(bs);
-                })
-            }
-            else {
-                await this.blocks.eachAsync(async (bl) => {
-                    /**
-                     * this.currentMatrix*moveMatrix=newMatrix*this.selfMatrix;
-                     */
-                    await bl.boardMoveEnd(from, to)
-                });
-            }
+            await this.blocks.eachAsync(async (bl) => {
+                /**
+                 * this.currentMatrix*moveMatrix=newMatrix*this.selfMatrix;
+                 */
+                await bl.boardMoveEnd(from, to)
+            });
         })
         this.view.forceUpdate();
     }
@@ -228,10 +266,8 @@ export class BlockPicker {
                 }
                 if (isMounted) lineBlock.forceUpdate()
                 self.kit.boardLine.onEndConnectOther();
-                // self.kit.page.addUpdateEvent(async () => {
                 if (newBlock) self.kit.picker.onPicker([newBlock])
                 else self.kit.picker.onPicker([lineBlock])
-                // })
             }
         });
     }
@@ -426,12 +462,12 @@ export class BlockPicker {
                 forceCloseBoardEditTool()
             },
             move(ev, data) {
-                self.onMove(Point.from(event), Point.from(ev));
+                self.onMove(Point.from(event), Point.from(ev), gm);
             },
-            moveEnd(ev, isMove, data) {
+            async moveEnd(ev, isMove, data) {
                 if (isMove) {
+                    await self.onMoveEnd(Point.from(event), Point.from(ev), gm)
                     gm.over()
-                    self.onMoveEnd(Point.from(event), Point.from(ev));
                 }
             }
         })

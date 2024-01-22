@@ -253,8 +253,7 @@ export class Block$LifeCycle {
             this.page.onError(err);
         }
     }
-    async loadSyncBlock(this: Block)
-    {
+    async loadSyncBlock(this: Block) {
         if (this.syncBlockId) {
             var r = await channel.get('/view/snap/query', { ws: this.page.ws, elementUrl: this.elementUrl });
             if (r.ok) {
@@ -268,7 +267,6 @@ export class Block$LifeCycle {
                     console.error(ex);
                     this.page.onError(ex);
                 }
-                console.log('dddd', data);
                 if (typeof data == 'object') {
                     for (var n in data) {
                         if (n == 'blocks') continue;
@@ -310,8 +308,10 @@ export class Block$LifeCycle {
         json.blocks = {};
         if (!options?.emptyChilds == true) {
             for (let b in this.blocks) {
-                if (this.allBlockKeys.some(s => s == b))
+                if (this.allBlockKeys.some(s => s == b)) {
                     json.blocks[b] = await this.blocks[b].asyncMap(async x => await x.get(args));
+                    lodash.remove(json.blocks[b], g => typeof g == 'undefined' || lodash.isNull(g));
+                }
             }
         }
         if (Array.isArray(this.__props)) {

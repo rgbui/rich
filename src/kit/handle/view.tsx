@@ -51,21 +51,21 @@ export class HandleView extends React.Component<{ handle: Handle }>{
             if (self.handle.dragBlocks.some(s => s.isFreeBlock)) {
                 self.handle.kit.picker.onPicker(self.handle.dragBlocks);
                 window.getSelection().collapse(self.handle.kit.page.viewEl)
-                MouseDragger<{ item: HTMLElement }>({
-                    event,
-                    dis: 5,
-                    moveStart(ev, data) {
-                        self.handle.kit.picker.onMoveStart(Point.from(ev));
-                    },
-                    move(ev, data) {
-                        self.handle.kit.picker.onMove(Point.from(event), Point.from(ev))
-                    },
-                    async moveEnd(ev, isMove, data) {
-                        self.handle.isDown = false;
-                        if (isMove) self.handle.kit.picker.onMoveEnd(Point.from(event), Point.from(ev))
-                        else await self.handle.onClickBlock(ev);
-                    }
-                })
+                // MouseDragger<{ item: HTMLElement }>({
+                //     event,
+                //     dis: 5,
+                //     moveStart(ev, data) {
+                //         self.handle.kit.picker.onMoveStart(Point.from(ev));
+                //     },
+                //     move(ev, data) {
+                //         self.handle.kit.picker.onMove(Point.from(event), Point.from(ev))
+                //     },
+                //     async moveEnd(ev, isMove, data) {
+                //         self.handle.isDown = false;
+                //         if (isMove) self.handle.kit.picker.onMoveEnd(Point.from(event), Point.from(ev))
+                //         else await self.handle.onClickBlock(ev);
+                //     }
+                // })
             }
             else {
                 var scrollDiv = self.handle.dragBlocks[0]?.panel?.getScrollDiv();

@@ -26,26 +26,40 @@ export function BoardDrag(
     var beforeIsPicked = kit.picker.blocks.some(s => s == block);
 
     var hasBlock: boolean = block ? true : false;
+    var isCopy: boolean = false;
     if (kit.page.keyboardPlate.isShift() && block?.isFreeBlock) {
         //连选
         kit.picker.onShiftPicker([block]);
     }
     else if (block?.isFreeBlock) {
-        kit.picker.onPicker([block]);
+        if (kit.picker.blocks.includes(block)) { }
+        else kit.picker.onPicker([block]);
     }
     else kit.picker.onCancel();
+    if (kit.page.keyboardPlate.isAlt()) isCopy = true;
     var point = Point.from(event);
+    async function createCopyBlocks() {
+        await kit.page.onAction('createAltCopyBlocks', async () => {
+            var bs = await kit.picker.blocks.asyncMap(async c => await c.clone());
+            kit.page.addUpdateEvent(async () => {
+                kit.picker.onPicker(bs);
+            })
+        })
+    }
     MouseDragger({
         event,
         dis: 5,
-        moveStart(ev) {
+        async moveStart(ev) {
+            if (isCopy) {
+                await createCopyBlocks();
+            }
             gm.start();
             if (!hasBlock) kit.anchorCursor.selector.setStart(Point.from(ev));
             kit.picker.onMoveStart(Point.from(event));
         },
         move(ev, data) {
             if (hasBlock) {
-                kit.picker.onMove(Point.from(event), Point.from(ev));
+                kit.picker.onMove(Point.from(event), Point.from(ev), gm);
             }
             else {
                 /***
@@ -59,18 +73,20 @@ export function BoardDrag(
             }
         },
         async moveEnd(ev, isMove, data) {
-            gm.over();
+
             if (isMove) {
                 if (hasBlock) {
-                    kit.picker.onMoveEnd(Point.from(event), Point.from(ev));
+                    await kit.picker.onMoveEnd(Point.from(event), Point.from(ev), gm);
                 }
                 else {
                     kit.anchorCursor.selector.close();
                 }
+                gm.over();
                 if (kit.picker.blocks.length > 0)
                     await openBoardEditTool(kit);
             }
             else {
+                gm.over();
                 /**
                  * 这里说明是点击选择board块，那么判断是否有shift连选操作
                  * 

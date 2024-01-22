@@ -24,7 +24,7 @@ export async function PageDrag(kit: Kit, event: React.MouseEvent) {
      * 判断块的类型来决定后续的操作分类，不一定靠谱
      */
     var block = kit.page.getBlockByMouseOrPoint(event.nativeEvent);
-    if (!(kit.page.isBoard || block?.isFreeBlock)) {
+    if (!(kit.page.isBoard || block?.isFreeBlock) && kit.page.isCanEdit) {
         kit.boardSelector.close();
         if (block) {
             var bb = block.closest(x => x.isBoardBlock);

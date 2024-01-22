@@ -32,16 +32,22 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
                         else if (pi.arrows.includes(PointArrow.left)) cursor = 'w-resize';
                         return <path
                             fillOpacity={typeof pi.fillOpacity == 'number' ? pi.fillOpacity : 0.8}
-                            onMouseDown={e => this.picker.onResizeBlock(block, pi.arrows, e)}
+                            onMouseDown={e => { block.isLock ? undefined : this.picker.onResizeBlock(block, pi.arrows, e) }}
                             style={{ cursor: cursor }}
                             d={pi.poly.pathString()} key={i}></path>
                     case BoardPointType.lineSplitPort:
-                        return <circle onMouseDown={e => this.picker.onSplitLinePort(block as Line, pi, e)} className="line-split-port" key={i} cx={pi.point.x} cy={pi.point.y} r={connectR}  ></circle>
+                        return <circle onMouseDown={e => {
+                            if (block.isLock) return;
+                            this.picker.onSplitLinePort(block as Line, pi, e)
+                        }
+                        } className="line-split-port" key={i} cx={pi.point.x} cy={pi.point.y} r={connectR}  ></circle>
                     case BoardPointType.lineMovePort:
+                        if (block.isLock) return <g key={i} ></g>
                         return <circle onMouseDown={e => this.picker.onMovePortBlock(block as Line, pi, e)} className="move-port" key={i} cx={pi.point.x} cy={pi.point.y} r={r}   ></circle>
                     case BoardPointType.connectPort:
                         return <circle onMouseDown={e => this.picker.onCreateBlockConnect(block, pi.arrows, e)} className="connect" key={i} cx={pi.point.x} cy={pi.point.y} r={connectR}  ></circle>
                     case BoardPointType.resizePort:
+                        if (block.isLock) return <g key={i} ></g>
                         var cursor = 'ne-resize';
                         if (pi.arrows.includes(PointArrow.top) && pi.arrows.includes(PointArrow.right)) cursor = 'ne-resize'
                         else if (pi.arrows.includes(PointArrow.top) && pi.arrows.includes(PointArrow.left)) cursor = 'nw-resize'
@@ -55,6 +61,7 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
                         ></circle>
                         break;
                     case BoardPointType.rotatePort:
+                        if (block.isLock) return <g key={i} ></g>
                         return <foreignObject key={i}
                             width={20}
                             height={20}
@@ -88,6 +95,17 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
             {this.picker.visible && <svg className="shy-kit-picker-svg" style={{ zIndex: 100 }}>
                 {this.picker.blocks.map(block => {
                     return this.renderBlockRange(block);
+                })}
+                {this.picker.alighLines.map((line, i) => {
+                    return <line
+                        key={i}
+                        x1={line.start.x}
+                        y1={line.start.y}
+                        x2={line.end.x}
+                        y2={line.end.y}
+                        stroke="#64a1df"
+                        strokeWidth="1"
+                    ></line>
                 })}
             </svg>}
         </div>

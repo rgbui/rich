@@ -51,7 +51,7 @@ export type BoardBlockSelector = {
     poly?: Polygon;
     stroke?: string;
     strokeOpacity?: number;
-    fillOpacity?:number;
+    fillOpacity?: number;
     data?: Record<string, any>
 }
 export class Block$Board {
