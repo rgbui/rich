@@ -24,7 +24,7 @@ import {
     RedoSvg,
     RefreshOneSvg,
     RefreshSvg,
-    TemplatesSvg,
+
     TrashSvg,
     UndoSvg,
     UnlockSvg,
@@ -73,7 +73,6 @@ export class PageContextmenu {
             name: 'lock'
         });
         items.push({ type: MenuItemType.divide });
-        // items.push({ name: 'add-favourite', text: '星标' });
         items.push({ name: 'copy-link', text: lst('复制链接') })
         items.push({ type: MenuItemType.divide });
         items.push({ name: 'show-all', text: lst('显示所有内容') });
@@ -120,13 +119,13 @@ export class PageContextmenu {
             items = [
                 { name: 'smallText', icon: { name: 'bytedance-icon', code: 'add-text' }, text: lst('小字号'), checked: this.smallFont ? true : false, type: MenuItemType.switch },
                 { name: 'fullWidth', icon: { name: 'bytedance-icon', code: 'fullwidth' }, text: lst('宽版'), checked: this.isFullWidth ? true : false, type: MenuItemType.switch },
-                { type: MenuItemType.divide },
-                { name: 'nav', text: lst('目录'), icon: OutlineSvg, type: MenuItemType.switch, checked: this.nav },
                 {
                     text: lst('主题'),
                     icon: PlatteSvg,
                     name: 'theme',
                 },
+                { type: MenuItemType.divide },
+                { name: 'nav', text: lst('目录'), icon: OutlineSvg, type: MenuItemType.switch, checked: this.nav },
                 {
                     text: lst('小部件'),
                     icon: FieldsSvg,
@@ -159,7 +158,6 @@ export class PageContextmenu {
                     })
                 },
                 { type: MenuItemType.divide },
-
                 { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? lst("除消编辑保护") : lst("编辑保护"), icon: this.locker?.lock ? LockSvg : UnlockSvg },
                 { name: 'copy', text: lst('拷贝'), icon: DuplicateSvg },
                 { name: 'move', text: lst('移动'), icon: MoveToSvg },
@@ -171,7 +169,7 @@ export class PageContextmenu {
 
                 ...(window.shyConfig.isDev || window.shyConfig.isBeta || this.ws?.sn == 19 ? [
                     { type: MenuItemType.divide },
-                    { name: 'requireTemplate', icon: TemplatesSvg, text: lst('申请模板') },
+                    { name: 'requireTemplate', icon: { name: 'byte', code: 'graphic-stitching' } as any, text: lst('申请模板') },
                 ] : []),
                 { type: MenuItemType.divide },
                 { name: 'copylink', icon: LinkSvg, text: lst('复制链接') },
@@ -182,12 +180,12 @@ export class PageContextmenu {
             items = [
                 { name: 'smallText', icon: { name: 'bytedance-icon', code: 'add-text' }, text: lst('小字号'), checked: this.smallFont ? true : false, type: MenuItemType.switch },
                 { name: 'fullWidth', icon: { name: 'bytedance-icon', code: 'fullwidth' }, text: lst('宽版'), checked: this.isFullWidth ? true : false, type: MenuItemType.switch },
-                { type: MenuItemType.divide },
                 {
                     text: lst('主题'),
                     icon: PlatteSvg,
                     name: 'theme',
                 },
+                { type: MenuItemType.divide },
                 {
                     text: lst('小部件'),
                     icon: FieldsSvg,
@@ -198,7 +196,6 @@ export class PageContextmenu {
                     ]
                 },
                 { type: MenuItemType.divide },
-
                 { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? lst("除消编辑保护") : lst("编辑保护"), icon: this.locker?.lock ? LockSvg : UnlockSvg },
                 { name: 'copy', text: lst('拷贝'), icon: DuplicateSvg },
                 { name: 'move', text: lst('移动'), icon: MoveToSvg },
@@ -207,7 +204,6 @@ export class PageContextmenu {
                 { type: MenuItemType.divide },
                 { name: 'undo', text: lst('撤消'), icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
                 { name: 'redo', text: lst('重做'), icon: RedoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
-
                 { type: MenuItemType.divide },
                 { name: 'copylink', icon: LinkSvg, text: lst('复制链接') },
                 { name: 'history', icon: VersionHistorySvg, text: lst('页面历史') },
@@ -250,7 +246,7 @@ export class PageContextmenu {
                 { name: 'redo', text: lst('重做'), icon: RedoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
                 ...(window.shyConfig.isDev || window.shyConfig.isBeta || this.ws?.sn == 19 ? [
                     { type: MenuItemType.divide },
-                    { name: 'requireTemplate', icon: TemplatesSvg, text: lst('申请模板') },
+                    { name: 'requireTemplate', icon: { name: 'byte', code: 'graphic-stitching' } as any, text: lst('申请模板') },
                 ] : []),
                 { type: MenuItemType.divide },
                 { name: 'copylink', icon: LinkSvg, text: lst('复制链接') },
@@ -259,14 +255,21 @@ export class PageContextmenu {
         }
         else if (this.pageLayout.type == PageLayoutType.textChannel) {
             items = [
+                { name: 'smallText', icon: { name: 'bytedance-icon', code: 'add-text' }, text: lst('小字号'), checked: this.smallFont ? true : false, type: MenuItemType.switch },
+                {
+                    name: 'fullWidth', icon: { name: 'bytedance-icon', code: 'fullwidth' }, text: lst('宽版'),
+                    updateMenuPanel: true,
+                    checked: this.isFullWidth ? true : false, type: MenuItemType.switch
+                },
                 {
                     text: lst('主题'),
                     icon: PlatteSvg,
                     name: 'theme',
+                    visible(items) {
+                        var ic = items.find(g => g.name == 'fullWidth');
+                        return ic.checked ? false : true;
+                    }
                 },
-                { type: MenuItemType.divide },
-                { name: 'smallText', icon: { name: 'bytedance-icon', code: 'add-text' }, text: lst('小字号'), checked: this.smallFont ? true : false, type: MenuItemType.switch },
-                { name: 'fullWidth', icon: { name: 'bytedance-icon', code: 'fullwidth' }, text: lst('宽版'), checked: this.isFullWidth ? true : false, type: MenuItemType.switch },
                 { type: MenuItemType.divide },
                 {
                     name: 'speak',
@@ -290,15 +293,15 @@ export class PageContextmenu {
         }
         else if (this.pageLayout.type == PageLayoutType.board) {
             items = [
-                {
-                    text: lst('主题'),
-                    icon: PlatteSvg,
-                    name: 'theme',
-                },
-                { type: MenuItemType.divide },
-                { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? lst("除消编辑保护") : lst("编辑保护"), icon: this.locker?.lock ? LockSvg : UnlockSvg },
+                // {
+                //     text: lst('主题'),
+                //     icon: PlatteSvg,
+                //     name: 'theme',
+                // },
+                // { type: MenuItemType.divide },
                 { name: 'copy', text: lst('拷贝'), icon: DuplicateSvg },
                 { name: 'move', text: lst('移动'), icon: MoveToSvg },
+                { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? lst("除消编辑保护") : lst("编辑保护"), icon: this.locker?.lock ? LockSvg : UnlockSvg },
                 { name: 'export', disabled: true, iconSize: 16, text: lst('导出'), icon: { name: 'bytedance-icon', code: 'download-one' } },
                 { name: 'delete', icon: TrashSvg, text: lst('删除') },
                 { type: MenuItemType.divide },
@@ -306,7 +309,7 @@ export class PageContextmenu {
                 { name: 'redo', text: lst('重做'), icon: RedoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
                 ...(window.shyConfig.isDev || window.shyConfig.isBeta || this.ws?.sn == 19 ? [
                     { type: MenuItemType.divide },
-                    { name: 'requireTemplate', icon: TemplatesSvg, text: lst('申请模板') },
+                    { name: 'requireTemplate', icon: { name: 'byte', code: 'graphic-stitching' } as any, text: lst('申请模板') },
                 ] : []),
                 { type: MenuItemType.divide },
                 { name: 'copylink', icon: LinkSvg, text: lst('复制链接') },
