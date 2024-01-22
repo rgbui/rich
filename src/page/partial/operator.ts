@@ -123,12 +123,15 @@ export class Page$Operator {
             callback(newBlock, oldBlock);
         });
     }
-    async onReplace(this: Page, block: Block, blockData: (Record<string, any> | Block) | ((Record<string, any> | Block)[])) {
+    async onReplace(this: Page, block: Block, blockData: (Record<string, any> | Block) | ((Record<string, any> | Block)[]), action?: (block: Block) => Promise<void>) {
         if (!Array.isArray(blockData)) blockData = [blockData];
+        var newBlock: Block = null;
         await this.onAction(ActionDirective.onReplace, async () => {
-            if (blockData[0] instanceof Block) await await block.replace(blockData as Block[]);
-            else await block.replaceDatas(blockData as Record<string, any>[]);
+            if (blockData[0] instanceof Block) newBlock = (await block.replace(blockData as Block[]))[0];
+            else newBlock = (await block.replaceDatas(blockData as Record<string, any>[]))[0];
+            if (typeof action == 'function') await action(newBlock);
         });
+        return newBlock;
     }
     async onBatchTurn(this: Page, blocks: Block[], url: string) {
         var bs: Block[] = [];
