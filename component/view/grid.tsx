@@ -101,11 +101,13 @@ export class Space extends React.Component<{
 export class Divider extends React.Component<{
     align?: 'left' | 'center' | 'right'
     children?: React.ReactNode,
-    style?: CSSProperties
+    style?: CSSProperties,
+    hidden?:boolean
 }>{
     render() {
         var style: CSSProperties = this.props.style || {};
         var align = this.props.align || 'left';
+        if(this.props.hidden)style.visibility='hidden';
         return <div style={style} className='shy-divider'>
             <div className='shy-divider-line'></div>
             {this.props.children && <div className={'shy-divider-title' + " " + align}>
