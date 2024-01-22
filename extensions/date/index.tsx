@@ -9,7 +9,6 @@ import { EventsComponent } from "../../component/lib/events.component";
 import chevronLeft from "../../src/assert/svg/chevronLeft.svg";
 import chevronRight from "../../src/assert/svg/chevronRight.svg";
 import { Icon } from "../../component/view/icon";
-import "./style.less";
 import { PopoverPosition } from "../../component/popover/position";
 import { PopoverSingleton } from "../../component/popover/popover";
 import { Divider } from "../../component/view/grid";
@@ -17,6 +16,8 @@ import { lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
 import { TrashSvg } from "../../component/svgs";
 dayjs.extend(customParseFormat);
+import "./style.less";
+
 export class DatePicker extends EventsComponent {
     date: Date = new Date();
     includeTime: boolean = false;
@@ -163,11 +164,11 @@ export class DatePicker extends EventsComponent {
         var dj = dayjs(this.date);
         return <div className='shy-date-picker'>
             {this.error && <div className="shy-date-picker-error">{this.error}</div>}
-            <div className={"shy-date-picker-input" + (this.error ? " shy-date-picker-input-error" : "")}>
+            <div className={"shy-date-picker-input padding-w-10" + (this.error ? " shy-date-picker-input-error" : "")}>
                 <div><input type='text' ref={e => this.inputDate = e} defaultValue={dj.format('YYYY/MM/DD')} onBlur={e => this.changeDate((e.target as HTMLInputElement).value)} /></div>
                 {this.includeTime && <><span></span><div><input ref={e => this.inputTime = e} type='text' defaultValue={dj.format('HH:mm')} onBlur={e => this.changeTime((e.target as HTMLInputElement).value)} /></div></>}
             </div>
-            <div className='shy-date-picker-head'>
+            <div className='shy-date-picker-head gap-w-10'>
                 <div className='shy-date-picker-head-title'>
                     <span style={{ cursor: 'pointer' }}>{dj.year()}<S>年</S></span>
                     <span style={{ cursor: 'pointer' }}>{dj.month() + 1}<S>月</S></span>
@@ -180,7 +181,7 @@ export class DatePicker extends EventsComponent {
             </div>
             {this.renderDays()}
             <Divider></Divider>
-            <div className="h-30 item-hover padding-w-10 gap-b-4 gap-w-5 cursor flex text-1 round" onClick={e => this.onClear()}>
+            <div className="h-30 item-hover padding-w-10 gap-b-5 gap-w-5 cursor flex text-1 round" onClick={e => this.onClear()}>
                 <Icon size={16} icon={TrashSvg}></Icon>
                 <span className="gap-l-3"><S>清理</S></span>
             </div>
@@ -190,6 +191,7 @@ export class DatePicker extends EventsComponent {
         this.emit('close');
     }
 }
+
 export interface DatePicker {
     only(name: 'change', fn: (data: Date) => void);
     emit(name: 'change', data: Date);
@@ -202,6 +204,7 @@ export interface DatePicker {
     only(name: 'update', fn: () => void)
     emit(name: 'update')
 }
+
 export async function useDatePicker(pos: PopoverPosition, date: Date, options?: { includeTime?: boolean }) {
     let popover = await PopoverSingleton(DatePicker, { mask: true });
     let datePicker = await popover.open(pos);
