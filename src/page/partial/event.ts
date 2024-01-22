@@ -34,7 +34,8 @@ export class PageEvent {
      */
     onMousedown(this: Page, event: React.MouseEvent) {
         if (this.pageLayout.type == PageLayoutType.board) {
-            this.kit.boardSelector.onShow(this.root);
+            if (this.kit.page.isCanEdit)
+                this.kit.boardSelector.onShow(this.root);
         }
         this.kit.operator.mousedown(event);
     }
@@ -287,12 +288,10 @@ export class PageEvent {
             else r = 1;
             var p = matrix.inverseTransform(visibleCenter);
             matrix.scale(r, r, p);
-
         }
         this.gridMap.over();
         this.matrix = matrix;
         this.view.forceUpdate();
-
     }
     onMouseenter(this: Page, event: React.MouseEvent) {
         if (this.isBoard) {
@@ -309,8 +308,8 @@ export class PageEvent {
         }
     }
     async onContextmenu(this: Page, event: React.MouseEvent) {
-        event.preventDefault();
         if (!this.isCanEdit) return;
+       // event.preventDefault();
     }
     async onAddCover(this: Page, toggle = true) {
         if (!this.isCanEdit) return;

@@ -103,6 +103,9 @@ export abstract class Block extends Events {
      */
     createSource: 'InputBlockSelector' | 'pageTurnLayout';
     __props: string[];
+    getCurrentProps(){
+        return this.__props;
+    }
     get childs() {
         return this.blocks.childs;
     }

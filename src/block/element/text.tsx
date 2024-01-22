@@ -177,7 +177,7 @@ export class TextContentView extends BlockView<TextContent>{
                 this.onClearLink();
             }
             else if (pageLink.link)
-                this.block.onUpdateProps({ link:pageLink.link, refLinks: null }, { range: BlockRenderRange.self });
+                this.block.onUpdateProps({ link: pageLink.link, refLinks: null }, { range: BlockRenderRange.self });
             else this.block.onUpdateProps({
                 link: null,
                 refLinks: pageLink.refLinks
@@ -228,6 +228,8 @@ export class TextContentView extends BlockView<TextContent>{
         var style = this.block.pattern.style;
         delete style.fontSize;
         delete style.lineHeight;
+        style.padding = '2px 0px';
+        style.borderRadius = '2px';
         return <span className={classList.join(" ")} style={style}>{ta}</span>
     }
 }

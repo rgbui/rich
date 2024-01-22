@@ -340,6 +340,10 @@ export class Rect {
         this.left = point.x;
         this.top = point.y;
     }
+    move(dx:number,dy:number){
+        this.left+=dx;
+        this.top+=dy;
+    }
     /**
      * 矩形到点point的距离
      * @param point 

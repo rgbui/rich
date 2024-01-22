@@ -58,13 +58,16 @@ export class Block$Event {
         }
         var items: MenuItem<BlockDirective | string>[] = [];
         var hasAi: boolean = true;
-        if (this.isPanel) {
-            hasAi = false;
-        }
+
         if (this.page.ws.aiConfig?.disabled == true) {
             hasAi = false;
         }
-        if (!this.appearAnchors.some(s => s.isText)) {
+        else {
+            if (!(this.appearAnchors.some(s => s.isText) || this.find(c => c.appearAnchors.some(s => s.isText)))) {
+                hasAi = false;
+            }
+        }
+        if (this.isPanel) {
             hasAi = false;
         }
         if (hasAi) {
@@ -93,12 +96,6 @@ export class Block$Event {
                 })
             });
         }
-        // items.push({
-        //     name: BlockDirective.moveTo,
-        //     text: langProvider.getText(LangID.menuMoveTo),
-        //     icon: moveTo,
-        //     disabled: true
-        // });
         items.push({
             name: BlockDirective.link,
             text: lst('复制块链接'),
@@ -119,9 +116,26 @@ export class Block$Event {
         if (typeof (this as any).align != 'undefined') {
             items.push({
                 name: 'text-center',
-                type: MenuItemType.switch,
-                checked: (this as any).align == 'center',
+                type: MenuItemType.select,
+                value: (this as any).align,
                 text: lst('文字居中'),
+                options: [
+                    {
+                        text: lst('左对齐'),
+                        value: 'left',
+                        icon: { name: 'byte', code: 'align-text-left' },
+                    },
+                    {
+                        text: lst('居中'),
+                        value: 'center',
+                        icon: { name: 'byte', code: 'align-text-center' },
+                    },
+                    {
+                        text: lst('右对齐'),
+                        value: 'right',
+                        icon: { name: 'byte', code: 'align-text-right' },
+                    }
+                ],
                 icon: AlignTextCenterSvg
             });
         }
@@ -253,7 +267,7 @@ export class Block$Event {
     }
     async onContextMenuInput(this: Block, item: MenuItem<BlockDirective | string>) {
         if (item?.name == 'text-center') {
-            this.onUpdateProps({ align: item.checked ? "center" : "left" }, { range: BlockRenderRange.self });
+            this.onUpdateProps({ align: item.value }, { range: BlockRenderRange.self });
         }
     }
     async onContextMenuClick(this: Block, item: MenuItem<string | BlockDirective>, event: React.MouseEvent<Element, MouseEvent>, clickName: string, mp: MenuPanel<any>) {
@@ -294,6 +308,7 @@ export class Block$Event {
                 })
                 break;
             case 'text-center':
+                this.onUpdateProps({ align: item.value }, { range: BlockRenderRange.self });
                 break;
         }
     }

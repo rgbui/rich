@@ -14,7 +14,7 @@ import { useCardTheme } from "../../../extensions/theme/card";
 import lodash from "lodash";
 import { MenuItem } from "../../../component/view/menu/declare";
 import { BlockDirective } from "../../../src/block/enum";
-import "./style.less";
+import { getCardStyle } from "../../../extensions/theme/themes";
 
 @url('/card')
 export class PageCard extends Block {
@@ -87,82 +87,7 @@ export class PageCard extends Block {
 export class PageCardView extends BlockView<PageCard>{
     renderCard() {
         var s = this.block.cardStyle;
-        var contentStyle: CSSProperties = {
-            borderRadius: s?.contentStyle?.round,
-            boxShadow: s?.contentStyle?.shadow,
-        }
-        contentStyle.minHeight = 50;
-        contentStyle.borderRadius = 16;
-        contentStyle.boxShadow = 'rgba(18, 18, 18, 0.1) 0px 1px 3px 0px';
-        contentStyle.boxSizing = 'border-box';
-        contentStyle.border = '1px solid rgb(238, 238, 238)';
-        var cs = s.contentStyle;
-        if (cs.border) {
-            if (typeof cs.border == 'string') contentStyle.border = cs.border;
-            else Object.assign(contentStyle, cs.border);
-        }
-        if (cs.round) {
-            if (typeof cs?.round == 'string' || typeof cs?.round == 'number') contentStyle.borderRadius = cs.round;
-            else Object.assign(contentStyle, cs.round);
-        }
-        if (cs.shadow) {
-            if (typeof cs.shadow == 'string') contentStyle.boxShadow = cs.shadow;
-            else Object.assign(contentStyle, cs.shadow);
-        }
-        if (s.contentStyle?.transparency !== 'noborder') {
-
-            if (s.contentStyle.transparency == 'solid') {
-                contentStyle.backgroundColor = '#fff'
-            }
-            else contentStyle.backgroundColor = 'rgba(255,255,255, 0.75)'
-            if (s.contentStyle.transparency == 'frosted') {
-                contentStyle.backdropFilter = 'blur(20px) saturate(170%)'
-            }
-        }
-        else {
-            contentStyle.boxShadow = 'none';
-            contentStyle.border = 'none';
-            contentStyle.borderRadius = 0;
-        }
-        var pageContentStyle: CSSProperties = {}
-        if (s?.coverStyle.bgStyle) {
-            var bs = s?.coverStyle.bgStyle;
-            if (bs.mode == 'color') pageContentStyle.backgroundColor = bs.color;
-            else if (bs.mode == 'image' || bs.mode == 'uploadImage') {
-                pageContentStyle.backgroundImage = `url(${bs.src})`;
-                pageContentStyle.backgroundSize = 'cover';
-                pageContentStyle.backgroundRepeat = 'no-repeat';
-                pageContentStyle.backgroundPosition = 'center center';
-                pageContentStyle.backgroundAttachment = 'fixed';
-            }
-            else if (bs.mode == 'grad') {
-                pageContentStyle.backgroundImage = bs?.grad?.bg;
-                pageContentStyle.backgroundSize = 'cover';
-                pageContentStyle.backgroundRepeat = 'no-repeat';
-                pageContentStyle.backgroundPosition = 'center center';
-                pageContentStyle.backgroundAttachment = 'fixed';
-            }
-        }
-        var round = contentStyle.borderRadius || 8;
-
-        var bgStyle: CSSProperties = {}
-        if (s.coverStyle.display != 'none' && s.coverStyle?.bgStyle) {
-            if (s.coverStyle?.bgStyle.mode == 'color') bgStyle.backgroundColor = bs.color;
-            else if (s.coverStyle?.bgStyle.mode == 'image' || s.coverStyle?.bgStyle.mode == 'uploadImage') {
-                bgStyle.backgroundImage = `url(${s.coverStyle?.bgStyle.src})`;
-                bgStyle.backgroundSize = 'cover';
-                bgStyle.backgroundRepeat = 'no-repeat';
-                bgStyle.backgroundPosition = 'center center';
-                bgStyle.backgroundAttachment = 'fixed';
-            }
-            else if (s.coverStyle?.bgStyle.mode == 'grad') {
-                bgStyle.backgroundImage = s.coverStyle?.bgStyle?.grad?.bg;
-                bgStyle.backgroundSize = 'cover';
-                bgStyle.backgroundRepeat = 'no-repeat';
-                bgStyle.backgroundPosition = 'center center';
-                bgStyle.backgroundAttachment = 'fixed';
-            }
-        }
+        var { bgStyle, contentStyle, coverStyle } = getCardStyle(s);
         if (s.coverStyle?.display == 'none') {
             return <div >
                 <div className="padding-10" style={contentStyle}>
@@ -171,81 +96,79 @@ export class PageCardView extends BlockView<PageCard>{
             </div>
         }
         else if (s.coverStyle.display == 'inside') {
-            return <div className="relative" style={{ ...bgStyle, borderRadius: round }}>
-                <div className="padding-10" style={contentStyle}>
+            var style: CSSProperties = {
+
+            }
+            if (contentStyle.backgroundColor) {
+                style.backgroundColor = contentStyle.backgroundColor
+                style.backdropFilter = contentStyle.backdropFilter;
+                delete contentStyle.backgroundColor;
+                delete contentStyle.backdropFilter;
+            }
+            return <div className="relative" style={{ ...coverStyle, ...contentStyle }}>
+                <div className="padding-10" style={style}>
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                 </div>
             </div>
         }
         else if (s.coverStyle.display == 'inside-cover') {
             return <div style={contentStyle} >
-                <div className="h-120" style={{ ...bgStyle, borderRadius: `${round}px ${round}px 0px 0px` }}>
+                <div className="h-120" style={{ ...coverStyle }}>
                 </div>
                 <div className="padding-10" >
                     <ChildsArea childs={this.block.childs}></ChildsArea>
-                </div>
-            </div>
-        }
-        else if (s.coverStyle.display == 'inside-cover-bottom') {
-            return <div style={contentStyle} >
-                <div className="padding-10" >
-                    <ChildsArea childs={this.block.childs}></ChildsArea>
-                </div>
-                <div className="h-120" style={{ ...bgStyle, borderRadius: ` 0px 0px ${round}px ${round}px` }}>
                 </div>
             </div>
         }
         else if (s.coverStyle.display == 'inside-cover-left') {
-            contentStyle.borderRadius = ` 0px ${round}px ${round}px 0px`
-            bgStyle.borderRadius = `${round}px 0px 0px ${round}px `
             return <div className="flex flex-full" style={contentStyle} >
-                <div className="flex-fixed" style={{ ...bgStyle, width: '33。3%' }}>
+                <div className="flex-fixed" style={{ ...coverStyle, width: '33.3%' }}>
                 </div>
-                <div className="padding-10" style={{ width: '66.6%' }}>
+                <div className="padding-10 flex-auto" >
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                 </div>
             </div>
         }
         else if (s.coverStyle.display == 'inside-cover-right') {
-            contentStyle.borderRadius = `${round}px 0px 0px ${round}px `
-            bgStyle.borderRadius = ` 0px ${round}px ${round}px 0px`
             return <div className="flex flex-full" style={contentStyle} >
-                <div className="padding-10" style={{ width: '66.6%' }}>
+                <div className="padding-10 flex-auto">
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                 </div>
-                <div style={{ ...bgStyle, width: '33。3%' }}>
+                <div className="flex-fixed" style={{ ...coverStyle, width: '33.3%' }}>
                 </div>
             </div>
         }
     }
     renderView() {
         return <div style={this.block.visibleStyle}>
-            <div className='min-h-60 relative visible-hover' >
-                {this.block.isCanEdit() && <>
-                    <div style={{ zIndex: 1000, top: -30 }} className="h-30 visible  pos-top-right flex">
-                        <span onMouseDown={async e => {
-                            e.stopPropagation();
-                            var el = (e.currentTarget as HTMLElement).parentNode as HTMLElement;
-                            el?.classList.remove('visible')
-                            await this.block.openCardStyle()
-                            el.classList.add('visible')
+            <div style={this.block.contentStyle}>
+                <div className='min-h-60 relative visible-hover' >
+                    {this.block.isCanEdit() && <>
+                        <div style={{ zIndex: 1000, top: -30 }} className="h-30 visible  pos-top-right flex">
+                            <span onMouseDown={async e => {
+                                e.stopPropagation();
+                                var el = (e.currentTarget as HTMLElement).parentNode as HTMLElement;
+                                el?.classList.remove('visible')
+                                await this.block.openCardStyle()
+                                el.classList.add('visible')
 
-                        }} className="size-24 round flex-center item-hover bg-white cursor shadow gap-r-5">
-                            <Icon size={18} icon={PlatteSvg}></Icon>
-                        </span>
-                        <span onMouseDown={async e => {
-                            e.stopPropagation();
-                            var el = (e.currentTarget as HTMLElement).parentNode as HTMLElement;
-                            el?.classList.remove('visible')
-                            await this.block.onContextmenu(e.nativeEvent)
-                            el.classList.add('visible')
+                            }} className="size-24 round flex-center bg-hover cursor shadow gap-r-5">
+                                <Icon size={18} icon={PlatteSvg}></Icon>
+                            </span>
+                            <span onMouseDown={async e => {
+                                e.stopPropagation();
+                                var el = (e.currentTarget as HTMLElement).parentNode as HTMLElement;
+                                el?.classList.remove('visible')
+                                await this.block.onContextmenu(e.nativeEvent)
+                                el.classList.add('visible')
 
-                        }} className="size-24 round flex-center item-hover bg-white cursor shadow ">
-                            <Icon size={18} icon={DotsSvg}></Icon>
-                        </span>
-                    </div>
-                </>}
-                <div>{this.renderCard()}</div>
+                            }} className="size-24 round flex-center bg-hover cursor shadow ">
+                                <Icon size={18} icon={DotsSvg}></Icon>
+                            </span>
+                        </div>
+                    </>}
+                    <div>{this.renderCard()}</div>
+                </div>
             </div>
         </div>
     }

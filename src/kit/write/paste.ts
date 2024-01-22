@@ -14,7 +14,7 @@ import { ActionDirective } from "../../history/declare";
 import { parseHtml } from "../../import-export/html/parse";
 import { readCopyBlocks } from "../../page/common/copy";
 import { PageLayoutType } from "../../page/declare";
-import { URL_RGEX } from "./declare";
+import { isUrl } from "./declare";
 import { inputBackspaceDeleteContent } from "./input";
 import { InputForceStore } from "./store";
 
@@ -24,7 +24,8 @@ export async function onPasteBlank(kit: Kit, event: ClipboardEvent) {
         var files: File[] = Array.from(event.clipboardData.files);
         var text = event.clipboardData.getData('text/plain');
         var html = event.clipboardData.getData('text/html');
-        kit.operator.onClearPage(); event.preventDefault();
+        kit.operator.onClearPage();
+        event.preventDefault();
         var point = kit.operator.moveEvent;
         var fra: Block = kit.page.getPageFrame();
         var gm = fra.globalWindowMatrix;
@@ -114,12 +115,13 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
         await onPasteInsertPlainText(kit, aa, text);
     }
     else {
+        text = text.trim();
         var files: File[] = Array.from(event.clipboardData.files);
         var html = event.clipboardData.getData('text/html');
         kit.operator.onClearPage();
         if (!html && text || text && html && html.endsWith(text)) {
             event.preventDefault();
-            if (URL_RGEX.test(text)) {
+            if (isUrl(text)) {
                 await onPasteUrl(kit, aa, text);
             }
             else {
@@ -143,7 +145,6 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
                     return;
                 }
             }
-
         }
         if (files.length > 0) {
             event.preventDefault();
@@ -189,7 +190,8 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
                      * text: 你好
                      * html: <p>你好</p>
                      */
-                    if (URL_RGEX.test(text)) {
+                    if (isUrl(text))
+                    {
                         await onPasteUrl(kit, aa, text);
                     }
                     else {
@@ -205,7 +207,7 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
                         var cs = blocks[0].blocks.childs
                         if (cs.length == 1 && cs[0].url == BlockUrlConstant.Text) {
                             var content = cs[0].content;
-                            if (URL_RGEX.test(content)) await onPasteUrl(kit, aa, text)
+                            if (isUrl(content)) await onPasteUrl(kit, aa, text)
                             else await onPasteInsertText(kit, aa, text);
                             return;
                         }

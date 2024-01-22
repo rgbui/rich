@@ -100,6 +100,7 @@ export class Block$Operator {
         var pk = this.parentKey;
         await this.parent.appendArray(newBlock, at, pk);
         await this.delete()
+        return newBlock;
     }
     async replaceDatas(this: Block, blockData: Record<string, any>[]) {
         var at = this.at;
@@ -288,6 +289,18 @@ export class Block$Operator {
             }
         }
         return cs;
+    }
+    async move(this: Block, at: number) {
+        var currentAt = this.at;
+        if (currentAt == at) return;
+        var from = this.pos;
+        var ps = this.parentBlocks;
+        ps.move(this, at);
+        this.page.snapshoot.record(OperatorDirective.$move, {
+            from,
+            to: this.pos
+        }, this);
+        this.page.addBlockUpdate(this.parent);
     }
     /**
      * 将一堆blocks拖到this block中

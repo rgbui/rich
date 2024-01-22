@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import lodash from "lodash";
 import React from "react";
-import { FileIconSvg, DownloadSvg, Edit1Svg, ReplySvg, DotsSvg, EditSvg, TrashSvg, ReportSvg, CheckSvg, EmojiSvg, DuplicateSvg } from "../../component/svgs";
+import { FileIconSvg, DownloadSvg, Edit1Svg, ReplySvg, DotsSvg, EditSvg, TrashSvg,  CheckSvg, EmojiSvg, DuplicateSvg } from "../../component/svgs";
 import { Avatar } from "../../component/view/avator/face";
 import { UserBox } from "../../component/view/avator/user";
 import { Icon } from "../../component/view/icon";

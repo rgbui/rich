@@ -33,7 +33,7 @@ import { BorderBoxStyle, ShapeStroke } from "./stroke";
 import "./style.less";
 import { lst } from "../../i18n/store";
 import lodash from "lodash";
-import { tipLayer } from "../../component/lib/zindex";
+import { popoverLayer } from "../../component/lib/zindex";
 
 export class BoardEditTool extends EventsComponent {
     el: HTMLElement;
@@ -42,7 +42,7 @@ export class BoardEditTool extends EventsComponent {
         var style: CSSProperties = {
             top: this.point.y,
             left: this.point.x,
-            zIndex: tipLayer.zoom(this)
+            zIndex: popoverLayer.zoom(this)
         };
         var self = this;
         function getValue(name: string) {
@@ -330,7 +330,7 @@ export class BoardEditTool extends EventsComponent {
         }
     }
     componentWillUnmount(): void {
-        tipLayer.clear(this);
+        popoverLayer.clear(this);
     }
 }
 export interface BoardEditTool {

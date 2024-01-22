@@ -247,7 +247,7 @@ export function parseElementUrl(url: string) {
  * 对当前的图做显示性的兼容性处理
  * @param url 
  */
-export function autoImageUrl(url: string, width?: 50 | 120 | 250 | 500 | 900) {
+export function autoImageUrl(url: string, width?: 50 | 120 | 250 | 500 | 900|1200) {
     if (!url || typeof url != 'string') {
         console.warn('auto image url is null');
         return '';

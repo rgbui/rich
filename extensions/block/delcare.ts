@@ -4,6 +4,7 @@ export type BlockGroup = {
     text: string,
     childs: BlockSelectorItem[]
 }
+
 export type BlockSelectorItem = {
     text?: string,
     pic?: JSX.Element,

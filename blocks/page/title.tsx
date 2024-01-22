@@ -13,6 +13,7 @@ import { LinkPageItem, getPageText } from "../../src/page/declare";
 import { S } from "../../i18n/view";
 import { lst } from "../../i18n/store";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
+import { Rect } from "../../src/common/vector/point";
 
 @url('/title')
 export class Title extends Block {
@@ -109,6 +110,15 @@ export class Title extends Block {
     }
     get isCanDrag() {
         return false;
+    }
+    getVisibleHandleCursorPoint() {
+        var r = super.getVisibleHandleCursorPoint();
+        var el = this.el.querySelector('.sy-block-page-info-head-title');
+        if (el) {
+            var rect = Rect.fromEle(el as HTMLElement);
+            return rect.leftMiddle;
+        }
+        return r;
     }
 }
 @view('/title')

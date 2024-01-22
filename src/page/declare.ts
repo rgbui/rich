@@ -267,12 +267,12 @@ export type PageThemeStyle = {
         color: "dark" | "light";
         transparency: "frosted" | "solid" | "noborder" | "faded",
         bgStyle?: PageThemeStyle['bgStyle'],
-        round?: number,
+        round?: number | string,
         border?: string,
         shadow?: string
     }
     coverStyle?: {
-        display: 'none' | 'outside' | 'inside' | 'inside-cover' | 'inside-cover-left' | 'inside-cover-right' | 'inside-cover-bottom',
+        display: 'none' | 'outside' | 'inside' | 'inside-cover' | 'inside-cover-left' | 'inside-cover-right',
         url?: string,
         thumb?: string,
         top?: 50,

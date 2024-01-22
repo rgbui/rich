@@ -13,7 +13,6 @@ import ArrowZoomSvg from "../src/assert/svg/arrowZoom.svg";
 import AudioSvg from "../src/assert/svg/audio.svg";
 import BillingSvg from "../src/assert/svg/billing.svg";
 import BlockcolorSvg from "../src/assert/svg/blockcolor.svg";
-import BlogSvg from "../src/assert/svg/blog.svg";
 import BoardCardSvg from "../src/assert/svg/board.card.svg";
 import BoardIconSvg from "../src/assert/svg/board.icon.svg";
 import BoardMoveBottomSvg from "../src/assert/svg/board.move.bottom.svg";
@@ -183,7 +182,6 @@ import RefreshSvg from "../src/assert/svg/refresh.svg";
 import RefreshOneSvg from "../src/assert/svg/refreshOne.svg";
 import RenameSvg from "../src/assert/svg/rename.svg";
 import ReplySvg from "../src/assert/svg/reply.svg";
-import ReportSvg from "../src/assert/svg/report.svg";
 import RobotSvg from "../src/assert/svg/robot.svg";
 import RotatingSvg from "../src/assert/svg/rotating.svg";
 import RowNoSvg from "../src/assert/svg/row.no.svg";
@@ -198,7 +196,6 @@ import SuccessSvg from "../src/assert/svg/success.svg";
 import SwitchArrowSvg from "../src/assert/svg/switchArrow.svg";
 import SystemSvg from "../src/assert/svg/system.svg";
 import TableSvg from "../src/assert/svg/table.svg";
-import TemplatesSvg from "../src/assert/svg/templates.svg";
 import TextSvg from "../src/assert/svg/text.svg";
 import ThemeSvg from "../src/assert/svg/theme.svg";
 import TimeSvg from "../src/assert/svg/time.svg";
@@ -257,7 +254,6 @@ ArrowZoomSvg,
 AudioSvg,
 BillingSvg,
 BlockcolorSvg,
-BlogSvg,
 BoardCardSvg,
 BoardIconSvg,
 BoardMoveBottomSvg,
@@ -427,7 +423,6 @@ RefreshSvg,
 RefreshOneSvg,
 RenameSvg,
 ReplySvg,
-ReportSvg,
 RobotSvg,
 RotatingSvg,
 RowNoSvg,
@@ -442,7 +437,6 @@ SuccessSvg,
 SwitchArrowSvg,
 SystemSvg,
 TableSvg,
-TemplatesSvg,
 TextSvg,
 ThemeSvg,
 TimeSvg,

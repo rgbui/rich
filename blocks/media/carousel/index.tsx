@@ -19,8 +19,10 @@ import { MenuPanel, useSelectMenuItem } from "../../../component/view/menu";
  * https://react-slick.neostack.com/
  */
 import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import "./style.less";
-import { ls, lst } from "../../../i18n/store";
+import { lst } from "../../../i18n/store";
 import { S } from "../../../i18n/view";
 
 @url('/carousel/image')
@@ -35,15 +37,23 @@ export class Carousel extends Block {
     align: 'left' | 'right' | 'center' = 'center';
     @prop()
     mask: 'rect' | 'circle' | 'radius' | 'rhombus' | 'pentagon' | "star" = 'rect';
-    async didMounted(): Promise<void> {
-
-    }
-    async addImage(e?: MouseEvent) {
+    async addImage(e?: MouseEvent, oldSrc?: ResourceArguments) {
         var rect = e ? Rect.fromEvent(e) : this.getVisibleBound();
         var r = await useImagePicker({ roundArea: rect });
         if (r) {
             var imgSize = await getImageSize(r?.url);
             var srcs = lodash.cloneDeep(this.srcs);
+            if (oldSrc) {
+                var old = srcs.find(g => g.src.url == oldSrc.url);
+                if (old) {
+                    old.src = r;
+                    old.originSize = imgSize;
+                    await this.onUpdateProps({
+                        srcs: srcs
+                    }, { range: BlockRenderRange.self });
+                    return;
+                }
+            }
             srcs.push({ id: util.guid(), src: r, originSize: imgSize })
             await this.onUpdateProps({
                 srcs: srcs
@@ -180,7 +190,7 @@ export class Carousel extends Block {
                 return;
             case 'download':
                 for (let i = 0; i < this.srcs.length; i++)
-                    await util.downloadFile(this.srcs[i].src?.url, (this.srcs[i].src?.filename) + (this.srcs[i].src.ext || '.jpg'))
+                    await util.downloadFile(this.srcs[i].src?.url, (this.srcs[i].src?.filename || (lst('图像') + (this.srcs[i].src.ext || '.jpg'))))
                 return;
             case 'align':
                 await this.onUpdateProps({ align: item.value }, { range: BlockRenderRange.self })
@@ -205,6 +215,11 @@ export class Carousel extends Block {
             var rg = await useSelectMenuItem(
                 { roundArea: Rect.fromEvent(event) },
                 [
+                    { name: 'replace', icon: UploadSvg, text: lst('替换') },
+                    { type: MenuItemType.divide },
+                    { name: 'download', icon: DownloadSvg, text: lst('下载') },
+                    { name: 'origin', icon: { name: 'bytedance-icon', code: 'arrow-right-up' }, text: lst('原图') },
+                    { type: MenuItemType.divide },
                     { name: 'delete', icon: TrashSvg, text: lst('删除') }
                 ],
                 { nickName: 'second' }
@@ -215,6 +230,16 @@ export class Carousel extends Block {
                     lodash.remove(srcs, g => g.id && g.id == item.value.id || g.src && g.src.url == item.value.src.url)
                     await this.onUpdateProps({ srcs }, { range: BlockRenderRange.self })
                     mp.updateItems(await this.onGetContextMenus());
+                }
+                else if (rg?.item.name == 'origin') {
+                    window.open(item.value.src.url);
+                }
+                else if (rg?.item.name == 'download') {
+                    var sc = item.value
+                    await util.downloadFile(sc.src?.url, sc.src?.filename || (lst('图像') + (sc.src.ext || '.jpg')))
+                }
+                else if (rg?.item.name == 'replace') {
+                    this.addImage(event.nativeEvent, item.value.src)
                 }
             }
         }
@@ -257,8 +282,10 @@ export class CarouselView extends BlockView<Carousel>{
                 if (isEnd) {
                     var rw = width * 100 / bound.width;
                     rw = Math.ceil(rw);
-                    self.block.onUpdateProps({ contentWidthPercent: rw, contentHeight: height });
-                    self.forceUpdate();
+                    self.block.onUpdateProps(
+                        { contentWidthPercent: rw, contentHeight: height },
+                        { range: BlockRenderRange.self }
+                    );
                 }
             }
         })
@@ -272,13 +299,6 @@ export class CarouselView extends BlockView<Carousel>{
         style.objectPosition = '50% 50%';
         var self = this;
         const settings = {
-            // customPaging: function (i) {
-            //     return (
-            //         <a>
-            //             <img className="obj-center w-100 h-100 round" src={self.block.srcs[i].src.url} />
-            //         </a>
-            //     );
-            // },
             dots: true,
             infinite: true,
             speed: 500,
@@ -304,24 +324,27 @@ export class CarouselView extends BlockView<Carousel>{
                 <Icon size={24} icon={PicSvg}></Icon>
                 <span><S>添加图片</S></span>
             </div>}
-            {this.block.srcs.length > 0 && <div className="flex flex-center" style={style}><div className='visible-hover sy-block-embed-wrapper'
+            {this.block.srcs.length > 0 && <div className="flex flex-center" style={{
+                ...style,
+                ...this.block.contentStyle
+            }}><div className='visible-hover sy-block-embed-wrapper'
                 ref={e => this.imageWrapper = e}
                 style={{
                     height: this.block.contentHeight,
                     width: this.block.contentWidthPercent ? this.block.contentWidthPercent + "%" : undefined
                 }}>
-                {this.renderSlickImages()}
-                {this.block.isCanEdit() && <>
-                    <div className="sy-block-resize-bottom-right visible" onMouseDown={e => this.onMousedown(e, 'bottom-right')}></div>
-                    <div className="sy-block-resize-bottom-left visible" onMouseDown={e => this.onMousedown(e, 'bottom-left')}></div>
-                    <div onMouseDown={e => {
-                        e.stopPropagation();
-                        this.block.onContextmenu(e.nativeEvent)
-                    }} className="bg-dark cursor visible text-white pos-top-right gap-10 size-24 round flex-center ">
-                        <Icon size={18} icon={DotsSvg}></Icon>
-                    </div>
-                </>}
-            </div></div>}
+                    {this.renderSlickImages()}
+                    {this.block.isCanEdit() && <>
+                        <div className="sy-block-resize-bottom-right visible" onMouseDown={e => this.onMousedown(e, 'bottom-right')}></div>
+                        <div className="sy-block-resize-bottom-left visible" onMouseDown={e => this.onMousedown(e, 'bottom-left')}></div>
+                        <div onMouseDown={e => {
+                            e.stopPropagation();
+                            this.block.onContextmenu(e.nativeEvent)
+                        }} className="bg-dark cursor visible text-white pos-top-right gap-10 size-24 round flex-center ">
+                            <Icon size={18} icon={DotsSvg}></Icon>
+                        </div>
+                    </>}
+                </div></div>}
         </div>
     }
 }

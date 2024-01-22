@@ -39,7 +39,6 @@ import { AiInput } from "./ai";
 import { useAITool } from "../../../extensions/ai";
 import { channel } from "../../../net/channel";
 import { BlockSelectorItem } from "../../../extensions/block/delcare";
-import { useOpenDataGridTemplate } from "./operator";
 import { BlockRenderRange } from "../../block/enum";
 
 /**
@@ -435,8 +434,8 @@ export class PageWrite {
                         });
                 }
             });
-            if (blockData.operator == 'openDataGridTemplate')
-                await useOpenDataGridTemplate(blockData, aa, offset);
+           
+               
         }
         var blockData = args[0];
         var sel = window.getSelection();

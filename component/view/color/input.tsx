@@ -16,7 +16,7 @@ export class ColorInput extends React.Component<{
     }
     shouldComponentUpdate(nextProps: Readonly<{ color: string; onChange: (color: string) => void; }>, nextState: Readonly<{}>, nextContext: any): boolean {
         if (this.props.color != nextProps.color) {
-            if (this.input) this.input.value = this.props.color;
+            if (this.input) this.input.value = nextProps.color;
             return true;
         }
         return false

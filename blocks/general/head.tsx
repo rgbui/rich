@@ -208,7 +208,7 @@ export class HeadView extends BlockView<Head>{
         textLineHeight *= parseFloat(style.fontSize.replace('em', ''));
         var pa = this.block.parent;
         if (pa.url == BlockUrlConstant.CardBox) {
-            style.fontSize = (parseFloat(style.fontSize.replace('em', '')) * 1.6) + 'em';
+            style.fontSize = (parseFloat(style.fontSize.replace('em', '')) * 1.4) + 'em';
             if (this.block.at == 0)
                 style.marginTop = 0;
         }

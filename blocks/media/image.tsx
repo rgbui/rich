@@ -93,7 +93,7 @@ export class Image extends Block {
                     file: this.initialData.file,
                     uploadProgress: (event) => {
                         if (event.lengthComputable) {
-                            this.speed = `${util.byteToString(event.total)}${(100 * event.loaded / event.total).toFixed(2)}%`;
+                            this.speed = `${util.byteToString(event.total)}&nbsp;&nbsp;${(100 * event.loaded / event.total).toFixed(2)}%`;
                             this.forceUpdate();
                         }
                     }
@@ -325,7 +325,7 @@ export class Image extends Block {
         }
         items.push({
             text: lst('关联网址'),
-            icon: { name: 'bytedance-icon', code: 'link-out' },
+            icon: { name: 'bytedance-icon', code: 'link-one' },
             childs: this.link ? [
                 {
                     name: 'imageLink',
@@ -365,7 +365,7 @@ export class Image extends Block {
                 window.open(this.src?.url)
                 return;
             case 'download':
-                util.downloadFile(this.src?.url, (this.src?.filename || this.caption) + (this.src.ext || '.jpg'))
+                await util.downloadFile(this.src?.url, (this.src?.filename) || (this.caption || lst('图像')) + (this.src.ext || '.jpg'));
                 return;
             case 'align':
                 await this.onUpdateProps({ align: item.value }, { range: BlockRenderRange.self })
@@ -494,13 +494,11 @@ export class ImageView extends BlockView<Image>{
         }
     }
     imageWrapper: HTMLDivElement;
-    renderEmptyImage()
-    {
-        if (this.block.speed)
-        {
+    renderEmptyImage() {
+        if (this.block.speed) {
             return <div className="sy-block-image-empty flex f-14">
                 <Spin size={16}></Spin>
-                <span><S>上传中</S>:{this.block.speed}</span>
+                <span><S>上传中</S>:<i dangerouslySetInnerHTML={{ __html: this.block.speed }}></i></span>
             </div>
         }
         return <div className='sy-block-image-empty item-hover cursor' onMouseDown={e => this.block.onOpenUploadImage(e)}>
@@ -557,7 +555,9 @@ export class ImageView extends BlockView<Image>{
         </div>}
             {!this.isLoadError && <div className='sy-block-image-content-view flex-center' style={style}>
                 <div className='sy-block-image-content-view-wrapper visible-hover' ref={e => this.imageWrapper = e} style={wStyle}>
-                    {this.block.src.name != 'none' && <img onMouseDown={e => { this.mousedown(e) }} style={imageMaskStyle} onError={e => this.onError(e)} src={autoImageUrl(this.block?.src?.url)} />}
+                    {this.block.src.name != 'none' && <img onMouseDown={e => { this.mousedown(e) }} style={imageMaskStyle} onError={e => this.onError(e)}
+                        src={autoImageUrl(this.block?.src?.url, this.block.originSize?.width > 1200 ? 1200 : undefined)}
+                    />}
                     {this.block.isCanEdit() && <>
                         <div className='sy-block-image-left-resize' onMouseDown={e => this.onMousedown(e, 'left')}></div>
                         <div className='sy-block-image-right-resize' onMouseDown={e => this.onMousedown(e, 'right')}></div>

@@ -26,7 +26,7 @@ import { useUserPicker } from "../../../extensions/at/picker";
 import { channel } from "../../../net/channel";
 import { getElementUrl, ElementType } from "../../../net/element.type";
 import { Page } from "../../page";
-import { SchemaFilter } from "../../../blocks/data-grid/schema/declare";
+import { SchemaFilter } from "../../../blocks/data-grid/schema/filter";
 import { useCustomTableFilter } from "../../../extensions/data-grid/view.config/filter/custom";
 
 @flow('/addRecords')

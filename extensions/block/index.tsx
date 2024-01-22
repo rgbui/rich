@@ -21,7 +21,7 @@ class BlockSelector extends InputTextPopSelector<{
     private renderSelectors() {
         var i = -1;
         if (this.list.length == 0) {
-            return <div className="flex-center remark f-14  padding-10">
+            return <div className="flex-center remark f-14  padding-w-10 padding-h-5">
                 <S>没有搜到块</S>
             </div>
         }

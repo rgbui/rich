@@ -112,6 +112,7 @@ export class Page$Cycle {
             console.error(ex);
             console.log(JSON.stringify(data));
         }
+        
     }
     async loadViews(this: Page, data?: Record<string, any>) {
         this.views = [];

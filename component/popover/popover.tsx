@@ -138,7 +138,6 @@ export class Popover<T extends React.Component> extends EventsComponent<{
         var pos = this.pos;
         if (this.el) {
             var b = Rect.from(this.el.getBoundingClientRect());
-            console.log('bbbb',b);
             if (pos.center == true) {
                 this.point = new Point(
                     (window.innerWidth - b.width) / 2,

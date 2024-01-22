@@ -135,8 +135,8 @@ export class CardPin extends CardView {
                     { name: 'open', icon: Edit1Svg, text: lst('编辑') },
                     {
                         name: 'align',
-                        icon: UploadSvg,
-                        text: lst('图片'),
+                        icon: { name: 'byte', code: 'align-text-both' },
+                        text: lst('对齐'),
                         type: MenuItemType.select,
                         options: [
                             { text: lst('居左'), value: 'left' },
@@ -225,7 +225,7 @@ export class CardPin extends CardView {
                     </span>}
                 </div>
             </div>
-            
+
         }
         else {
 

@@ -199,7 +199,7 @@ export interface ChannelPatchMapUrls {
 	"/ws/set/domain":{args:{wsId?:string,domain:string},returnType:Promise<SockResponse<{exists?:boolean,illegal?:boolean}>>},
 	"/ws/patch/member/roles":{args:{wsId?:string,userid:string,roleIds:string[]},returnType:Promise<SockResponse<void>>},
 	"/view/snap/patch":{args:{id:string,data:Record<string,any>},returnType:Promise<SockResponse<void>>},
-	"/interactive/emoji":{args:{elementUrl:string,fieldName:string},returnType:Promise<SockResponse<{count:number,exists:boolean,otherCount?:number,otherExists:boolean}>>}
+	"/interactive/emoji":{args:{elementUrl:string,fieldName:string},returnType:Promise<SockResponse<{count:number,exists:boolean,otherCount?:number,otherId?:string,otherExists:boolean}>>}
 }
 export interface ChannelPutMapUrls {
     "/schema/create":{args:{text:string,wsId?:string,url:string},returnType:Promise<SockResponse<{schema:Partial<TableSchema>}>>},

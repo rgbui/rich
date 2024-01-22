@@ -63,7 +63,8 @@ export async function buildPage(blocks: (Record<string, any> | string)[],
     var page = new Page();
     page.pageLayout = { type: PageLayoutType.doc };
     page.requireSelectLayout = false;
-    if (ws?.createPageConfig) {
+    if (ws?.createPageConfig)
+    {
         if (typeof ws.createPageConfig.smallFont != 'undefined') {
             page.smallFont = ws.createPageConfig.smallFont
         }

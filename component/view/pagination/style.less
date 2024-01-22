@@ -16,7 +16,6 @@
         &.shy-pagination-page {
             cursor: pointer;
             color : rgba(55, 53, 47);
-
             &:hover {
                 background-color: rgb(225, 98, 89);
                 color           : #fff;
@@ -29,7 +28,14 @@
         }
 
         &.shy-pagination-text {
-            color: rgba(55, 53, 47, 0.6);
+            color : rgba(55, 53, 47, 0.6);
+            border: 1px solid transparent;
+            cursor: default;
+
+            &:hover {
+                color : rgba(55, 53, 47, 0.6);
+                border: 1px solid transparent;
+            }
         }
     }
 }
