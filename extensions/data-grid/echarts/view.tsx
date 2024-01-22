@@ -62,17 +62,17 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                 return {
                                     type: MenuItemType.custom,
                                     name: 'dataView',
-                                    value: c.url,
+                                    value: c.model.url,
                                     render(item, view) {
                                         return <div className="flex-full relative item-hover round padding-w-14 padding-h-10">
                                             <div className="flex-fixed">
-                                                <img src={c.image} className="obj-center h-60 w-120" />
+                                                <img src={c.model.image} className="obj-center h-60 w-120" />
                                             </div>
                                             <div className="flex-auto gap-l-10">
-                                                <div>{c.title}</div>
-                                                <div className="remark">{c.remark}</div>
+                                                <div>{c.model.title}</div>
+                                                <div className="remark">{c.model.remark}</div>
                                             </div>
-                                            {self.block.getCardUrl() == c.url && <div className="pos pos-right pos-t-5 pos-r-5 size-20 cursor round">
+                                            {self.block.getCardUrl() == c.model.url && <div className="pos pos-right pos-t-5 pos-r-5 size-20 cursor round">
                                                 <Icon size={16} icon={CheckSvg}></Icon>
                                             </div>}
                                         </div>
@@ -431,11 +431,13 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
             </div>}
         </div>
     }
+    
     renderAggs() {
         var bc = (this.block as any) as DataGridChart;
-        function getSOptions() {
+        function getSOptions()
+        {
             return [
-                { text: lst('求和'), value: '$sum', icon: { name: 'byte', code: 'sum' } },
+                { text: lst('求和'), value: '$sum', icon: { name: 'byte', code: 'formula' } },
                 { text: lst('平均'), value: '$avg', icon: { name: 'byte', code: 'average' } },
                 { text: lst('最小'), value: '$min', icon: { name: 'byte', code: 'min' } },
                 { text: lst('最大'), value: '$max', icon: { name: 'byte', code: 'maximum' } },
@@ -529,7 +531,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                         }
                                     })}></SelectBox>
                             </span>
-                            <span className="flex-fixed gap-r-10 w-40 "><SelectBox textAlign="right"
+                            <span className="flex-fixed gap-r-10 w-60 "><SelectBox textAlign="right"
                                 value={agg.aggregate}
                                 onChange={async e => {
                                     await bc.onUpdateProps(

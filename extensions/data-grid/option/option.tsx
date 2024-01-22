@@ -3,12 +3,12 @@ import React from "react";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { PopoverSingleton } from "../../../component/popover/popover";
 import { PopoverPosition } from "../../../component/popover/position";
-import CloseTick from "../../../src/assert/svg/closeTick.svg";
+
 
 import DragHandle from "../../../src/assert/svg/dragHandle.svg";
 import Dots from "../../../src/assert/svg/dots.svg";
 import { MenuItemType } from "../../../component/view/menu/declare";
-import { CheckSvg, TrashSvg } from "../../../component/svgs";
+import { CheckSvg, CloseTickSvg, TrashSvg } from "../../../component/svgs";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { Point } from "../../../src/common/vector/point";
 import { Icon } from "../../../component/view/icon";
@@ -21,25 +21,9 @@ import { DataGridOptionType } from "../../../blocks/data-grid/schema/field";
 import { lst } from "../../../i18n/store";
 import { S } from "../../../i18n/view";
 import './style.less';
+import { OptionBackgroundColorList } from "../../color/data";
 
-/**
- * 
- * 背景色
- * 
- */
-export var OptionBackgroundColorList = () => [
-    { color: 'rgba(247,214,183,0.5)', text: lst('幼杏') },
-    { color: 'rgba(255,193,153,0.5)', text: lst('鲜橘') },
-    { color: 'rgba(252,246,189,0.5)', text: lst('淡黄') },
-    { color: 'rgba(205,243,220,0.5)', text: lst('浅绿') },
-    { color: 'rgba(169,222,249,0.5)', text: lst('天蓝') },
-    { color: 'rgba(189,201,255,0.5)', text: lst('雾蓝') },
-    { color: 'rgba(239,218,251,0.5)', text: lst('轻紫') },
-    { color: 'rgba(234,202,220,0.5)', text: lst('熏粉') },
-    { color: 'rgba(237,233,235,0.5)', text: lst('白灰') },
-    { color: 'rgba(217,211,215,0.5)', text: lst('暗银') },
-    { color: 'rgba(253,198,200,0.5)', text: lst('将红') },
-]
+
 
 export class TableStoreOption extends EventsComponent {
     render() {
@@ -57,6 +41,7 @@ export class TableStoreOption extends EventsComponent {
         }
         function changeInput(event: React.FormEvent<HTMLInputElement>) {
             self.value = (event.target as HTMLInputElement).value;
+            self.value = self.value.trim();
             self.forceUpdate()
         }
         function change(to: number, from: number) {
@@ -78,15 +63,26 @@ export class TableStoreOption extends EventsComponent {
         return <div className="shy-tablestore-option-selector">
             <div className="shy-tablestore-option-selector-input">
                 {this.ovs.map(ov => {
-                    return <a key={ov.value} style={{ backgroundColor: ov.color }}><span className="max-w-80 text-overflow inline-block">{ov.text}</span><em><CloseTick onClick={e => {
-                        if (self.multiple) {
-                            lodash.remove(self.ovs, o => o.value == ov.value);
-                            self.forceUpdate()
-                        }
-                        else self.clearOption()
-                    }}></CloseTick></em></a>
+                    return <a key={ov.value} style={{ backgroundColor: ov.color }}>
+                        <span className="max-w-80 text-overflow inline-block">{ov.text}</span>
+                        <Icon icon={CloseTickSvg} className={'gap-l-5 cursor remark'} size={8}
+                            onClick={e => {
+                                if (self.multiple) {
+                                    lodash.remove(self.ovs, o => o.value == ov.value);
+                                    self.forceUpdate()
+                                }
+                                else self.onlyClearOption();
+                            }}
+                        ></Icon>
+                    </a>
                 })}
-                <div className="shy-tablestore-option-selector-input-wrapper"><input ref={e => this.input = e} maxLength={this.value.length + 3} value={this.value} onInput={e => changeInput(e)} onKeyDown={e => keydown(e.nativeEvent)} /></div>
+                <div className={(this.ovs.length > 0 ? "gap-l-5" : "")}><input
+                    ref={e => this.input = e}
+                    placeholder={lst("请输入选项")}
+                    maxLength={this.value.length + 3}
+                    value={this.value}
+                    className="input-placeholder-remark"
+                    onInput={e => changeInput(e)} onKeyDown={e => keydown(e.nativeEvent)} /></div>
             </div>
             <div className="shy-tablestore-option-selector-drop overflow-y max-h-180">
                 <div className="remark gap-h-8 padding-w-10 h-20 f-12">{this.filterOptions.length > 0 ? lst('选择或创建一个选项') : lst('暂无选项')}</div>
@@ -256,14 +252,10 @@ export async function useTableStoreOption(pos: PopoverPosition,
         });
         fv.only('close', () => {
             popover.close();
-            if (options.multiple)
-                resolve(fv.ovs);
-            else resolve(null)
+            resolve(fv.ovs);
         });
         popover.only('close', () => {
-            if (options.multiple)
-                resolve(fv.ovs);
-            else resolve(null)
+            resolve(fv.ovs);
         });
     })
 }

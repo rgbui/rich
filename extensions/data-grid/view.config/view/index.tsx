@@ -38,7 +38,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 value: this.block.schemaView.text,
                 name: 'viewText',
                 type: MenuItemType.inputTitleAndIcon,
-                icon:  getSchemaViewIcon(this.block.schemaView),
+                icon: getSchemaViewIcon(this.block.schemaView),
             },
             { type: MenuItemType.divide },
             {
@@ -57,24 +57,23 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                     {
                         text: lst('数据视图'),
                         icon: { name: 'bytedance-icon', code: 'application-two' },
-                        childsStyle: { width: 300 },
                         childs: [
                             { text: lst('选择数据视图'), type: MenuItemType.text },
                             ...cms.map(c => {
                                 return {
                                     type: MenuItemType.custom,
                                     name: 'dataView',
-                                    value: c.url,
+                                    value: c.model.url,
                                     render(item, view) {
-                                        return <div className="flex-full relative item-hover round padding-w-14 padding-h-10">
+                                        return <div className="flex-full relative item-hover round padding-w-10 padding-h-5">
                                             <div className="flex-fixed">
-                                                <img src={c.image} className="obj-center h-60 w-120" />
+                                                <img src={c.model.image} className="obj-center round h-40 w-80" />
                                             </div>
-                                            <div className="flex-auto gap-l-10">
-                                                <div>{c.title}</div>
-                                                <div className="remark">{c.remark}</div>
+                                            <div className="flex-auto gap-l-10 f-14">
+                                                <div>{c.model.title}</div>
+                                                <div className="remark">{c.model.remark}</div>
                                             </div>
-                                            {self.block.getCardUrl() == c.url && <div className="pos pos-right pos-t-5 pos-r-5 size-20 cursor round ">
+                                            {self.block.getCardUrl() == c.model.url && <div className="pos pos-right pos-t-5 pos-r-5 size-20 cursor round ">
                                                 <Icon size={16} icon={CheckSvg}></Icon>
                                             </div>}
                                         </div>
@@ -84,7 +83,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                             {
                                 type: MenuItemType.custom,
                                 render(item, view) {
-                                    return <div className="flex padding-w-10 padding-h-3"><span className="text-1">{lst('AI生成数据视图')}</span><span className="op-3 gap-l-5 bg-p text-white padding-w-3 round padding-h-1">coming soon</span></div>
+                                    return <div className="flex padding-w-10 padding-h-3"><span className="text-1">{lst('AI生成数据视图')}</span><span className="op-3 gap-l-5 bg-p text-white padding-w-5 round l-20">coming soon</span></div>
                                 }
                             }
                         ]
@@ -220,7 +219,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                     value: (this.block as TableStoreBoard).groupFieldId,
                     name: 'groupFieldId',
                     type: MenuItemType.select,
-                    options: this.block.schema.userFields.filter(g => g.type == FieldType.option || g.type == FieldType.options).map(g => {
+                    options: this.block.schema.fields.filter(g => g.type == FieldType.option || g.type == FieldType.options).map(g => {
                         return {
                             text: g.text,
                             icon: GetFieldTypeSvg(g.type),
@@ -237,7 +236,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                     value: (this.block as TableStoreCalendar).dateFieldId,
                     name: 'dateFieldId',
                     type: MenuItemType.select,
-                    options: this.block.schema.userFields.filter(g => g.type == FieldType.date || g.type == FieldType.createDate || g.type == FieldType.modifyDate).map(g => {
+                    options: this.block.schema.fields.filter(g => g.type == FieldType.date || g.type == FieldType.createDate || g.type == FieldType.modifyDate).map(g => {
                         return {
                             text: g.text,
                             icon: GetFieldTypeSvg(g.type),

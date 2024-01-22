@@ -19,7 +19,7 @@ import { DragList } from "../../../../component/view/drag.list";
 import { BlockUrlConstant } from "../../../../src/block/constant";
 import { MenuView } from "../../../../component/view/menu/menu";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
-import { FieldType, sysFieldTypes } from "../../../../blocks/data-grid/schema/type";
+import { FieldType, SysFieldTypes } from "../../../../blocks/data-grid/schema/type";
 import { TableStoreGallery } from "../../../../blocks/data-grid/view/gallery";
 import { BlockRenderRange } from "../../../../src/block/enum";
 import { SelectBox } from "../../../../component/view/select/box";
@@ -29,6 +29,7 @@ import { useSelectMenuItem } from "../../../../component/view/menu";
 import { CardFactory } from "../../../../blocks/data-grid/template/card/factory/factory";
 import { lst } from "../../../../i18n/store";
 import { S } from "../../../../i18n/view";
+import { TableSchema } from "../../../../blocks/data-grid/schema/meta";
 
 export class DataGridFields extends EventsComponent {
     get schema() {
@@ -49,7 +50,7 @@ export class DataGridFields extends EventsComponent {
         var gr = type == "view" ? (viewField as any).field as Field : (viewField as Field);
         if (gr) {
             var isCanDeleted: boolean = true;
-            if (sysFieldTypes.includes(gr.type)) isCanDeleted = false;
+            if (SysFieldTypes.includes(gr.type)) isCanDeleted = false;
             var items = [
                 { name: 'name', type: MenuItemType.input, value: gr.text },
                 { type: MenuItemType.divide },
@@ -130,7 +131,7 @@ export class DataGridFields extends EventsComponent {
                             <span className="size-24 round flex-center flex-fixed"> <Icon size={14} icon={GetFieldTypeSvg(f.type)}></Icon></span>
                             <span className="flex-auto f-14">{f.text}</span>
                             <span className="size-24 round flex-center flex-fixed item-hover"><Icon className={'eye'} size={14} onClick={async () => { await self.block.onShowField(f); self.forceUpdate() }} icon={EyeHideSvg}></Icon></span>
-                            <span className="size-24 round flex-center flex-fixed item-hover"><Icon className={'eye'} size={14} onClick={async (e) => { self.openProperty('field', f, e) }} icon={DotsSvg}></Icon></span>
+                            {!TableSchema.isSystemField(f) && <span className="size-24 round flex-center flex-fixed item-hover"> <Icon className={'eye'} size={14} onClick={async (e) => { self.openProperty('field', f, e) }} icon={DotsSvg}></Icon></span>}
                         </div>
                     })}</div>
                 </>}
@@ -207,7 +208,7 @@ export class DataGridFields extends EventsComponent {
                         if (item.checked) return true;
                         else return false;
                     },
-                    options: this.block.schema.userFields.filter(g => g.type == FieldType.image).map(g => {
+                    options: this.block.schema.fields.filter(g => g.type == FieldType.image).map(g => {
                         return {
                             text: g.text,
                             icon: GetFieldTypeSvg(g.type),
@@ -240,6 +241,7 @@ export class DataGridFields extends EventsComponent {
     renderCardView() {
         var self = this;
         var fs = this.schema.visibleFields.findAll(g => g.text ? true : false);
+        fs = fs.reverse();
         var card = CardFactory.CardModels.get((self.block as TableStoreGallery).cardConfig?.templateProps?.url);
         async function changeArrayProp(data, update: Record<string, any>) {
             await self.block.onArraySave({
@@ -255,7 +257,7 @@ export class DataGridFields extends EventsComponent {
                 <span className="remark flex-auto f-12 "><S>卡片视图字段</S></span>
             </div>
             <div>
-                {card.props.map(pro => {
+                {card.model.props.map(pro => {
                     var bp = (self.block as TableStoreGallery).cardConfig.templateProps?.props?.find(g => g.name == pro.name);
                     return <div key={pro.name} className="flex padding-h-3 f-14 padding-w-5 gap-w-5 item-hover round cursor text-1">
                         <span className="size-24 round flex-center flex-fixed"><Icon size={14} icon={GetFieldTypeSvg(pro.types.first())}></Icon></span>
@@ -267,7 +269,7 @@ export class DataGridFields extends EventsComponent {
                                 onChange={e => {
                                     changeArrayProp(bp, { name: pro.name, bindFieldIds: e })
                                 }}
-                                options={self.block.schema.recordViewTemplateFields.findAll(c => pro.types.includes(c.type)).map(c => {
+                                options={self.block.schema.fields.findAll(c => pro.types.includes(c.type)).map(c => {
                                     return {
                                         icon: GetFieldTypeSvg(c.type),
                                         text: c.text,
@@ -287,7 +289,7 @@ export class DataGridFields extends EventsComponent {
                 return <div className={"flex h-30 round padding-w-5 gap-w-5 cursor item-hover"} key={f.id}>
                     <span className="size-24 round flex-center flex-fixed"><Icon size={14} icon={GetFieldTypeSvg(f.type)}></Icon></span>
                     <span className="flex-auto f-14">{f.text}</span>
-                    <span className="size-24 round flex-center flex-fixed item-hover"><Icon className={'eye'} size={14} onClick={async (e) => { self.openProperty('field', f, e) }} icon={DotsSvg}></Icon></span>
+                    {!TableSchema.isSystemField(f) && <span className="size-24 round flex-center flex-fixed item-hover"><Icon className={'eye'} size={14} onClick={async (e) => { self.openProperty('field', f, e) }} icon={DotsSvg}></Icon></span>}
                 </div>
             })}</div>
         </div>

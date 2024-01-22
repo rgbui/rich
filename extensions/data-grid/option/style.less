@@ -1,5 +1,6 @@
 .shy-tablestore-option-selector {
-    // width         : 250px;
+    max-width     : calc(100vw - 24px);
+    width         : 250px;
     min-height    : 34px;
     padding-bottom: 10px;
 
@@ -21,59 +22,30 @@
         a {
             height         : 18px;
             border-radius  : 3px;
-            padding-left   : 6px;
-            padding-right  : 0px;
+            padding        : 0px 3px;
             font-size      : 14px;
             line-height    : 120%;
             color          : rgb(73, 41, 14);
             display        : inline-flex;
             justify-content: center;
             align-items    : center;
-
-            span {}
-
-            em {
-                user-select    : none;
-                transition     : background 20ms ease-in 0s;
-                cursor         : pointer;
-                display        : flex;
-                align-items    : center;
-                justify-content: center;
-                flex-grow      : 0;
-                flex-shrink    : 0;
-                margin-left    : 2px;
-                margin-right   : 2px;
-                width          : 18px;
-                height         : 18px;
-
-                svg {
-                    width  : 8px;
-                    height : 8px;
-                    opacity: 0.5;
-                    fill   : currentColor;
-                }
-            }
         }
-
-        &-wrapper {
-            input {
-                font-size  : inherit;
-                line-height: inherit;
-                border     : none;
-                background : none;
-                min-width  : 60px;
-                display    : block;
-                resize     : none;
-                padding    : 0px;
-                height     : 18px;
-                outline    : none;
-            }
+        input {
+            font-size  : inherit;
+            line-height: inherit;
+            border     : none;
+            background : none;
+            min-width  : 60px;
+            display    : block;
+            resize     : none;
+            padding    : 0px;
+            height     : 18px;
+            outline    : none;
         }
     }
 
     &-drop {
         background-color: #fff;
-
     }
 
     .shy-tablestore-option-item-create {

@@ -22,7 +22,7 @@ class FormulaSelector extends EventsComponent {
     cacheDatas = new Map<string, string>()
     openData = lodash.debounce(async (f) => {
         try {
-            var url =STATIC_URL + 'static/data-grid/formula/docs' + f.url;
+            var url = STATIC_URL + 'static/data-grid/formula/docs' + f.url;
             var d = this.cacheDatas.get(url);
             if (!d) {
                 d = await util.getText(url);
@@ -148,7 +148,7 @@ class FormulaSelector extends EventsComponent {
         </div>
     }
     getFields() {
-        var fs = this.schema.userFields.findAll(g => [
+        var fs = this.schema.fields.findAll(g => [
             FieldType.title,
             FieldType.option,
             FieldType.phone,

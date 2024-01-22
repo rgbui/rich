@@ -1,6 +1,6 @@
 import { PopoverPosition } from "../../../component/popover/position";
 import { PopoverSingleton } from "../../../component/popover/popover";
-import { FieldType } from "../../../blocks/data-grid/schema/type";
+import { FieldType, OnlyFieldTypes } from "../../../blocks/data-grid/schema/type";
 import { Field, FieldConfig } from "../../../blocks/data-grid/schema/field";
 import React from "react";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
@@ -39,7 +39,11 @@ export class TableFieldView extends EventsComponent {
             return self.forceUpdate();
         }
         self.forceUpdate();
-        self.emit('save', { text: self.text, type: self.type, config: lodash.cloneDeep(self.config) });
+        self.emit('save', {
+            text: self.text,
+            type: self.type,
+            config: lodash.cloneDeep(self.config)
+        });
     }
     renderMultiple() {
         if ([
@@ -117,18 +121,18 @@ export class TableFieldView extends EventsComponent {
         }
         async function selectS(event: React.MouseEvent) {
             var menus = [
-                { text: lst('数量'), value: '$count' },
+                { text: lst('数量'), value: '$count', icon: { name: 'byte', code: 'sum' } },
                 { text: lst('聚合'), type: MenuItemType.text },
-                { text: lst('平均值'), value: '$agv' },
-                { text: lst('求和'), value: '$sum' },
-                { text: lst('最小值'), value: '$min' },
-                { text: lst('最大值'), value: '$max' },
+                { text: lst('平均值'), value: '$agv', icon: { name: 'byte', code: 'average' } },
+                { text: lst('求和'), value: '$sum', icon: { name: 'byte', code: 'formula' } },
+                { text: lst('最小值'), value: '$min', icon: { name: 'byte', code: 'min' } },
+                { text: lst('最大值'), value: '$max', icon: { name: 'byte', code: 'maximum' } },
             ];
             var f = self.rollTableSchema.visibleFields.find(g => g.id == self.config.rollupFieldId);
             if (f) {
                 if (![FieldType.number, FieldType.autoIncrement].includes(f.type)) {
                     menus = [
-                        { text: lst('数量'), value: '$count' }
+                        { text: lst('数量'), value: '$count', icon: { name: 'byte', code: 'sum' } }
                     ];
                 }
             }
@@ -201,6 +205,10 @@ export class TableFieldView extends EventsComponent {
     async openSelectType(event: React.MouseEvent) {
         event.stopPropagation();
         var menus = getMenus();
+        var os = this.dataGrid.schema.fields.filter(g => OnlyFieldTypes.includes(g.type));
+        if (os.length > 0) {
+            menus = menus.filter(g => !OnlyFieldTypes.includes(g.value));
+        }
         var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
         if (um?.item) {
             await this.changeType(um.item.value);
@@ -212,7 +220,7 @@ export class TableFieldView extends EventsComponent {
         var ms = getMenus();
         var tm = ms.find(g => g.value == this.type);
         return <div className="w-300 f-14 text">
-            <div className="flex  h-30 padding-w-14">
+            <div className="flex  h-20 gap-t-5 f-12 padding-w-14 text-1 bold">
                 <span>{this.fieldId ? lst("编辑字段") : lst("新增字段")}</span>
             </div>
             <Divider></Divider>
@@ -243,8 +251,8 @@ export class TableFieldView extends EventsComponent {
             <div className="flex padding-w-14 gap-h-10">
                 <span className="flex-auto error">{this.error}</span>
                 <div className="flex-fix flex-end">
-                    <Button className="gap-r-10" ghost onClick={e => this.emit('close')}><S>取消</S></Button>
-                    <Button onClick={e => self.onSave()}><S>确定</S></Button>
+                    <Button size="small" className="gap-r-10" ghost onClick={e => this.emit('close')}><S>取消</S></Button>
+                    <Button size="small" onClick={e => self.onSave()}>{this.fieldId ? <S>保存</S> : <S>创建</S>} <S>保存</S></Button>
                 </div>
             </div>
         </div>
@@ -309,8 +317,7 @@ export class TableFieldView extends EventsComponent {
     async open(options: {
         field?: Field,
         dataGrid: DataGridView
-    }
-    ) {
+    }) {
         this.fieldId = options?.field?.id || '';
         this.text = options.field?.text || '';
         this.type = options.field?.type || FieldType.text;

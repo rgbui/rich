@@ -11,7 +11,12 @@ import { CheckSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 
-export class DataGridCreateTable extends EventsComponent {
+/**
+ * 
+ * 创建数据表格视图
+ * 
+ */
+export class DataGridCreateView extends EventsComponent {
     url: string = '/data-grid/table';
     source: 'tableView' | 'dataView' = 'tableView';
     viewText: string = '';
@@ -21,7 +26,7 @@ export class DataGridCreateTable extends EventsComponent {
         items.push({
             type: MenuItemType.input,
             name: "table",
-            text: this.selectView ? lst('输入视图名称') : lst('输入表格名称'),
+            text: lst('输入视图名称'),
         })
         items.push({ type: MenuItemType.gap })
         var views = getSchemaViews();
@@ -38,22 +43,21 @@ export class DataGridCreateTable extends EventsComponent {
         items.push({
             text: lst('数据视图'),
             icon: { name: 'bytedance-icon', code: 'application-two' },
-            childsStyle: { width: 300 },
             childs: cms.map(c => {
                 return {
                     type: MenuItemType.custom,
                     name: 'dataView',
-                    value: c.url,
+                    value: c.model.url,
                     render(item, view) {
-                        return <div className="flex-full relative item-hover round padding-w-14 padding-h-10">
+                        return <div className="flex-full relative item-hover round padding-w-10 padding-h-5">
                             <div className="flex-fixed">
-                                <img src={c.image} className="obj-center h-60 w-120" />
+                                <img src={c.model.image} className="obj-center h-40 w-80" />
                             </div>
-                            <div className="flex-auto gap-l-10">
-                                <div>{c.title}</div>
-                                <div className="remark">{c.remark}</div>
+                            <div className="flex-auto gap-l-10 f-14">
+                                <div>{c.model.title}</div>
+                                <div className="remark">{c.model.remark}</div>
                             </div>
-                            {self.source == 'dataView' && self.url == c.url && <div className="pos pos-right pos-t-5 pos-r-5 size-20 cursor round">
+                            {self.source == 'dataView' && self.url == c.model.url && <div className="pos pos-right pos-t-5 pos-r-5 size-20 cursor round">
                                 <Icon size={16} icon={CheckSvg}></Icon>
                             </div>}
                         </div>
@@ -65,7 +69,6 @@ export class DataGridCreateTable extends EventsComponent {
         items.push({
             text: lst('统计图'),
             icon: { name: 'bytedance-icon', code: 'chart-pie-one' },
-            childsStyle: { width: 300 },
             childs: gs.map(g => {
                 if (g.type == MenuItemType.divide) return g as any;
                 return {
@@ -83,7 +86,7 @@ export class DataGridCreateTable extends EventsComponent {
         })
         items.push({
             type: MenuItemType.button,
-            text: this.selectView ? lst('创建视图') : lst('创建表格'),
+            text: lst('创建视图'),
             name: 'createTable',
             buttonClick: 'click'
         })
@@ -110,7 +113,7 @@ export class DataGridCreateTable extends EventsComponent {
             if (item.name == 'createTable') {
                 var it = items.find(c => c.name == 'table');
                 self.emit('save', {
-                    text: it.value || self.viewText,
+                    text: it.value || (self.schema?.text + "-" + self.viewText),
                     url: self.url,
                     source: self.source
                 })
@@ -127,7 +130,8 @@ export class DataGridCreateTable extends EventsComponent {
                 paddingTop: 10,
                 paddingBottom: 10,
                 overflowY: 'auto'
-            }} items={items}></MenuView>
+            }}
+            items={items}></MenuView>
     }
     private mv: MenuView;
     render() {
@@ -135,17 +139,17 @@ export class DataGridCreateTable extends EventsComponent {
             {this.renderItems()}
         </div>
     }
-    selectView: boolean = false;
+
     schema: TableSchema = null;
-    async open(options: { selectView: boolean, schema: TableSchema }) {
-        this.selectView = options?.selectView || false;
+    async open(options: { schema: TableSchema }) {
+
         this.schema = options?.schema;
         this.forceUpdate();
     }
 }
 
-export async function useCreateDataGrid(pos: PopoverPosition, options?: { selectView: boolean, schema: TableSchema }) {
-    let popover = await PopoverSingleton(DataGridCreateTable, { mask: true });
+export async function useCreateDataGridView(pos: PopoverPosition, options?: { schema: TableSchema }) {
+    let popover = await PopoverSingleton(DataGridCreateView, { mask: true });
     let fv = await popover.open(pos);
     await fv.open(options);
     return new Promise((resolve: (data: {
@@ -153,7 +157,7 @@ export async function useCreateDataGrid(pos: PopoverPosition, options?: { select
         syncBlockId?: string,
         url?: string,
         text?: string,
-        source?: DataGridCreateTable['source']
+        source?: DataGridCreateView['source']
     }) => void, reject) => {
         fv.only('save', (value) => {
             console.log('save value', value);

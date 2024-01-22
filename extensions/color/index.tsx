@@ -7,6 +7,7 @@ import "./style.less";
 import { S } from "../../i18n/view";
 import { ToolTip } from "../../component/view/tooltip";
 import { ls } from "../../i18n/store";
+import { Divider } from "../../component/view/grid";
 
 export type ColorValue = {
     color?: string | { color: string, grad: string },
@@ -49,7 +50,8 @@ class ColorSelector extends EventsComponent {
     render() {
         return <div className='shy-color-selector max-h-300 overflow-y'>
             {this.renderFontColor()}
-            <div className='shy-color-selector-devider'></div>
+            <Divider></Divider>
+            {/* <div className='shy-color-selector-devider'></div> */}
             {this.renderBackgroundColor()}</div>
     }
     onChange(value: ColorValue) {
