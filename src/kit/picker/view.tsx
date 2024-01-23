@@ -21,7 +21,14 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
     renderBlockRange(block: Block) {
         var r = 5;
         var connectR = 3;
-        var pickers = block.getBlockBoardSelector([BoardPointType.path, BoardPointType.lineMovePort, BoardPointType.connectPort, BoardPointType.resizePort]);
+        var pickers = block.getBlockBoardSelector([
+            BoardPointType.path,
+            BoardPointType.lineMovePort,
+            BoardPointType.brokenLinePort,
+            BoardPointType.brokenLineSplitPort,
+            BoardPointType.connectPort,
+            BoardPointType.resizePort
+        ]);
         return <g key={block.id}>
             {pickers.map((pi, i) => {
                 switch (pi.type) {
@@ -39,6 +46,17 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
                         return <circle onMouseDown={e => {
                             if (block.isLock) return;
                             this.picker.onSplitLinePort(block as Line, pi, e)
+                        }} className="line-split-port" key={i} cx={pi.point.x} cy={pi.point.y} r={connectR}  ></circle>
+                    case BoardPointType.brokenLinePort:
+                        return <circle onMouseDown={e => {
+                            if (block.isLock) return;
+                            this.picker.onBrokenLinePort(block as Line, pi, e)
+                        }
+                        } className="move-port" key={i} cx={pi.point.x} cy={pi.point.y} r={connectR}  ></circle>
+                    case BoardPointType.brokenLineSplitPort:
+                        return <circle onMouseDown={e => {
+                            if (block.isLock) return;
+                            this.picker.onBrokenLinePort(block as Line, pi, e)
                         }
                         } className="line-split-port" key={i} cx={pi.point.x} cy={pi.point.y} r={connectR}  ></circle>
                     case BoardPointType.lineMovePort:
@@ -70,7 +88,6 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
                             y={pi.point.y}>
                             <Tip overlay={<Sp text='拖动旋转点击重置'>拖动旋转<br />点击重置</Sp>}><Icon className={'cursor'} icon={RotatingSvg} size={16}></Icon></Tip>
                         </foreignObject>
-                        break;
                     case BoardPointType.mindAdd:
                         var s = 16;
                         return <foreignObject

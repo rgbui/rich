@@ -1,5 +1,5 @@
 import lodash from "lodash";
-import React, { ReactNode } from "react";
+import React from "react";
 import { Block } from "../../../src/block";
 import { BlockRenderRange } from "../../../src/block/enum";
 import { prop, url, view } from "../../../src/block/factory/observable";
@@ -30,31 +30,63 @@ export class Line extends Block {
         try {
             var gm = this.globalMatrix;
             var segs = this.segments;
-            segs.each((seg, i) => {
-                if (seg)
-                    pickers.push({
+            if (this.lineType == 'line') {
+                pickers.push({
+                    type: BoardPointType.lineMovePort,
+                    arrows: [PointArrow.point],
+                    point: gm.transform(segs.first().point),
+                    data: { at: 0 }
+                });
+                for (let i = 0; i < segs.length - 1; i++) {
+                    var current = segs[i];
+                    var next = segs[i + 1];
+                    if (current && next)
+                        pickers.push({
+                            type: (i == 0 || i == segs.length - 2) ? BoardPointType.brokenLineSplitPort : BoardPointType.brokenLinePort,
+                            arrows: [PointArrow.point],
+                            point: gm.transform(CurveUtil.cacCurvePoint(
+                                {
+                                    start: current.point,
+                                    end: next.point,
+                                    control1: current.handleOut,
+                                    control2: next.handleIn
+                                }, .5)),
+                            data: { at: i }
+                        });
+                }
+                pickers.push({
+                    type: BoardPointType.lineMovePort,
+                    arrows: [PointArrow.point],
+                    point: gm.transform(segs.last().point),
+                    data: { at: segs.length - 1 }
+                });
+            }
+            else {
+                segs.each((seg, i) => {
+                    if (seg) pickers.push({
                         type: BoardPointType.lineMovePort,
                         arrows: [PointArrow.point],
                         point: gm.transform(seg.point),
                         data: { at: i }
                     });
-            });
-            for (var i = 0; i < segs.length - 1; i++) {
-                var current = segs[i];
-                var next = segs[i + 1];
-                if (current && next)
-                    pickers.push({
-                        type: BoardPointType.lineSplitPort,
-                        arrows: [PointArrow.point],
-                        point: gm.transform(CurveUtil.cacCurvePoint(
-                            {
-                                start: current.point,
-                                end: next.point,
-                                control1: current.handleOut,
-                                control2: next.handleIn
-                            }, .5)),
-                        data: { at: i }
-                    });
+                });
+                for (var i = 0; i < segs.length - 1; i++) {
+                    var current = segs[i];
+                    var next = segs[i + 1];
+                    if (current && next)
+                        pickers.push({
+                            type: BoardPointType.lineSplitPort,
+                            arrows: [PointArrow.point],
+                            point: gm.transform(CurveUtil.cacCurvePoint(
+                                {
+                                    start: current.point,
+                                    end: next.point,
+                                    control1: current.handleOut,
+                                    control2: next.handleIn
+                                }, .5)),
+                            data: { at: i }
+                        });
+                }
             }
             return pickers;
         }
@@ -69,6 +101,23 @@ export class Line extends Block {
     to: PortLocation = { x: 100, y: 100 };
     @prop()
     points: PortLocation[] = [];
+    getPi(pl: PortLocation) {
+        if (pl.blockId) {
+            var block = this.page.find(g => g.id == pl.blockId);
+            if (block) {
+                var pickers = block.getBlockBoardSelector([BoardPointType.pathConnectPort]);
+                var ps = typeof pl.x == 'string' && typeof pl.y == 'string' ? pickers.findAll(x => x.type == BoardPointType.pathConnectPort) : pickers.findAll(x => x.type == BoardPointType.path);
+                if (typeof pl.x == 'string' && typeof pl.y == 'string') {
+                    var pi = ps.find(g => g.arrows.every(s => [pl.x, pl.y].includes(s)));
+                    if (pi) {
+                        var point = this.globalMatrix.inverseTransform(pi.point);
+                        return { point, pi };
+                    }
+                }
+            }
+        }
+        return { point: new Point(pl.x as number, pl.y as number) }
+    }
     cacPointSegment(pl: PortLocation, options?: { isOnlyPointSegment?: boolean }) {
         try {
             var seg: Segment;
@@ -154,12 +203,45 @@ export class Line extends Block {
     }
     get segments() {
         try {
-            var segs = [
-                this.cacPointSegment(this.from),
-                ...(this.points.toArray(pl => this.cacPointSegment(pl))),
-                this.cacPointSegment(this.to)
-            ];
-            lodash.remove(segs, g => g ? false : true);
+            var segs: Segment[] = [];
+            if (this.lineType == 'line') {
+                var ps: Point[] = [
+                    this.getPi(this.from).point,
+                    ...this.points.map(p => new Point(p.x as number, p.y as number)),
+                    this.getPi(this.to).point
+                ];
+                var isCorrectLine = true;
+                for (let j = 0; j < ps.length - 1; j++) {
+                    var p1 = ps[j];
+                    var p2 = ps[j + 1];
+                    if (!(Math.abs(p1.x - p2.x) < 10 || Math.abs(p1.y - p2.y) < 10)) {
+                        isCorrectLine = false;
+                        break;
+                    }
+                }
+                if (isCorrectLine) {
+                    for (let i = 0; i < ps.length; i++) {
+                        var one = ps[i];
+                        segs.push(Segment.create(one, undefined, undefined));
+                    }
+                }
+                else {
+                    var from = ps.first();
+                    var to = ps.last();
+                    segs.push(Segment.create(from, undefined, undefined));
+                    segs.push(Segment.create(new Point(from.x / 2 + to.x / 2, from.y), undefined, undefined));
+                    segs.push(Segment.create(new Point(from.x / 2 + to.x / 2, to.y), undefined, undefined));
+                    segs.push(Segment.create(to, undefined, undefined));
+                }
+            }
+            else {
+                segs = [
+                    this.cacPointSegment(this.from),
+                    ...(this.points.toArray(pl => this.cacPointSegment(pl))),
+                    this.cacPointSegment(this.to)
+                ];
+                lodash.remove(segs, g => g ? false : true);
+            }
             return segs;
         }
         catch (ex) {
@@ -208,7 +290,7 @@ export class Line extends Block {
     @prop()
     lineEnd: string | number = 'none';
     @prop()
-    lineType: 'straight' | 'curve' = 'curve';
+    lineType: 'straight' | 'curve' | 'line' = 'curve';
     async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
         var cs: { name: string; value?: any; }[] = [];
         cs.push({ name: 'lineStart', value: this.lineStart });
@@ -223,7 +305,10 @@ export class Line extends Block {
         if (name == 'backgroundColor') {
             this.pattern.setSvgStyle({ stroke: value })
         }
-        else if (['lineStart', 'lineEnd', 'lineType'].includes(name)) {
+        else if (name == 'lineType') {
+            await this.updateProps({ [name]: value }, BlockRenderRange.self);
+        }
+        else if (['lineStart', 'lineEnd'].includes(name)) {
             await this.updateProps({ [name]: value }, BlockRenderRange.self);
         }
         else if (['strokeWidth', 'strokeDasharray'].includes(name)) {

@@ -8,7 +8,6 @@
         bottom        : 0px;
         width         : 100vw;
         height        : 100vh;
-
         g {
             >path {
                 fill          : #e16259;
@@ -25,25 +24,29 @@
                 pointer-events: visible;
 
                 &.connect {
-                    stroke-width  : 0;
+                    stroke-width  : 2;
                     fill          : #e16259;
                     stroke        : #e16259;
-                    stroke-opacity: 1;
+                    stroke-opacity: 0.3;
                     cursor        : pointer;
 
                     &:hover {
+                        stop-opacity: 1;
                         stroke-width: 6px;
+                        stroke      : #e16259;
                     }
                 }
 
                 &.line-split-port {
-                    stroke-width  : 0;
+                    stroke-width  : 2;
                     fill          : #e16259;
                     stroke        : #e16259;
-                    stroke-opacity: 1;
+                    stroke-opacity: 0.3;
 
                     &:hover {
+                        stop-opacity: 1;
                         stroke-width: 6px;
+                        stroke      : #e16259;
                     }
                 }
             }

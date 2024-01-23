@@ -35,6 +35,14 @@ export enum BoardPointType {
      */
     lineSplitPort,
     /**
+     * 折线的控制点
+     */
+    brokenLinePort,
+    /**
+     * 折线的分割点
+     */
+    brokenLineSplitPort,
+    /**
      * 旋转
      */
     rotatePort,
@@ -65,7 +73,7 @@ export class Block$Board {
         var rect = new Rect(0, 0, width, height);
         var gm = this.globalMatrix;
         gm = this.globalMatrix;
-        var feelDist = this.realPx(width / 2);
+        var feelDist = this.realPx(Math.max(50, width / 2));
         /**
          * 这里基本没有skew，只有scale,rotate,translate
          * scale 水平和垂直相等
@@ -88,14 +96,16 @@ export class Block$Board {
         if (types.includes(BoardPointType.pathConnectPort))
             pickers.push(...rect.centerPoints.map((pr, i) => {
                 var arrows: PointArrow[] = [];
-                if (i == 0) arrows = [PointArrow.top, PointArrow.center];
-                else if (i == 1) arrows = [PointArrow.middle, PointArrow.right];
-                else if (i == 2) arrows = [PointArrow.bottom, PointArrow.center]
-                else if (i == 3) arrows = [PointArrow.middle, PointArrow.left]
+                var arrowPoint: Point;
+                if (i == 0) { arrows = [PointArrow.top, PointArrow.center]; arrowPoint = pr.move(0, 0 - feelDist); }
+                else if (i == 1) { arrows = [PointArrow.middle, PointArrow.right]; arrowPoint = pr.move(feelDist, 0); }
+                else if (i == 2) { arrows = [PointArrow.bottom, PointArrow.center]; arrowPoint = pr.move(0, feelDist); }
+                else if (i == 3) { arrows = [PointArrow.middle, PointArrow.left]; arrowPoint = pr.move(0 - feelDist, 0); }
                 return {
                     type: BoardPointType.pathConnectPort,
                     arrows,
-                    point: gm.transform(pr)
+                    point: gm.transform(pr),
+                    arrowPoint: gm.transform(arrowPoint)
                 }
             }))
         if (types.includes(BoardPointType.resizePort)) pickers.push(...rect.points.map((p, i) => {
@@ -113,16 +123,22 @@ export class Block$Board {
         if (!this.isFrame && types.includes(BoardPointType.connectPort)) {
             pickers.push(...extendRect.centerPoints.map((p, i) => {
                 var arrows: PointArrow[] = [];
-                var arrowPoint: Point;
-                if (i == 0) { arrows = [PointArrow.top, PointArrow.center]; arrowPoint = p.move(0, 0 - feelDist); }
-                else if (i == 1) { arrows = [PointArrow.middle, PointArrow.right]; arrowPoint = p.move(feelDist, 0); }
-                else if (i == 2) { arrows = [PointArrow.bottom, PointArrow.center]; arrowPoint = p.move(0, feelDist); }
-                else if (i == 3) { arrows = [PointArrow.middle, PointArrow.left]; arrowPoint = p.move(0 - feelDist, 0); }
+                if (i == 0) {
+                    arrows = [PointArrow.top, PointArrow.center];
+                }
+                else if (i == 1) {
+                    arrows = [PointArrow.middle, PointArrow.right];
+                }
+                else if (i == 2) {
+                    arrows = [PointArrow.bottom, PointArrow.center];
+                }
+                else if (i == 3) {
+                    arrows = [PointArrow.middle, PointArrow.left];
+                }
                 return {
                     type: BoardPointType.connectPort,
                     arrows,
                     point: gm.transform(p),
-                    arrowPoint: gm.transform(arrowPoint)
                 }
             }))
         }

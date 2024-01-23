@@ -29,7 +29,9 @@ export class Segment {
             handleOut: this.handleOut ? [this.handleOut.x, this.handleOut.y] : undefined
         }
     }
-   
+    clone() {
+        return Segment.create(this.point, this.handleIn, this.handleOut);
+    }
     static create(
         point: Point,
         handleIn?: Point,
@@ -94,8 +96,8 @@ export class Segment {
     static fromPoint(point: Point) {
         return new Segment({ point: [point.x, point.y] })
     }
-    static fromXY(x:number,y:number){
-        return new Segment({ point: [x,y] })
+    static fromXY(x: number, y: number) {
+        return new Segment({ point: [x, y] })
     }
-    
+
 }

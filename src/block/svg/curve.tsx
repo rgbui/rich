@@ -33,8 +33,8 @@ export class CurveUtil {
         control1: Point,
         control2?: Point
     }, t: number) {
-        if(!curve.control1&&curve.control2){
-            curve.control1=curve.control2;
+        if (!curve.control1 && curve.control2) {
+            curve.control1 = curve.control2;
             delete curve.control2;
         }
         if (curve.control2) {

@@ -19,6 +19,8 @@ import { BlockPickerView } from "./view";
 import { setBoardBlockCache } from "../../page/common/cache";
 import { GridMap } from "../../page/grid";
 import { CacAlignLines } from "./common";
+import lodash from "lodash";
+import { Segment } from "../../block/svg/segment";
 
 export class BlockPicker {
     kit: Kit;
@@ -299,6 +301,186 @@ export class BlockPicker {
                 if (isMove) {
                     var ps = block.points.find(g => g != po);
                     block.onManualUpdateProps({ points: ps }, { points: block.points }, { range: BlockRenderRange.self });
+                    self.onRePicker();
+                    block.forceUpdate();
+                    await openBoardEditTool(self.kit);
+                }
+            }
+        });
+    }
+    async onBrokenLinePort(block: Line, selector: BoardBlockSelector, event: React.MouseEvent) {
+        event.stopPropagation();
+        var gm = block.globalWindowMatrix;
+        var po: Point;
+        var self = this;
+        var segs = block.segments.map(s => s.clone())
+        var oldSegs = block.segments.map(s => s.clone())
+        var current = segs[selector.data.at];
+        var next = segs[selector.data.at + 1];
+        var isX = Math.abs(current.point.x - next.point.x) > Math.abs(current.point.y - next.point.y);
+        var isStart = selector.data.at == 0 ? true : false;
+        var tr = gm.inverseTransform(Point.from(event));
+        po = new Point(tr.x, tr.y);
+        MouseDragger({
+            event,
+            moveStart(ev) {
+                forceCloseBoardEditTool()
+                if (selector.type == BoardPointType.brokenLinePort) {
+
+                }
+                else {
+                    if (isX) {
+                        if (isStart) {
+                            segs.insertAt(selector.data.at + 1, Segment.create(new Point(po.x, current.point.y)));
+                            segs.insertAt(selector.data.at + 2, Segment.create(po));
+                        }
+                        else {
+                            segs.insertAt(selector.data.at + 1, Segment.create(po));
+                            segs.insertAt(selector.data.at + 2, Segment.create(new Point(po.x, current.point.y)));
+                        }
+                    }
+                    else {
+                        if (isStart) {
+                            segs.insertAt(selector.data.at + 1, Segment.create(new Point(current.point.x, po.y)));
+                            segs.insertAt(selector.data.at + 2, Segment.create(po));
+                        }
+                        else {
+                            segs.insertAt(selector.data.at + 1, Segment.create(po));
+                            segs.insertAt(selector.data.at + 2, Segment.create(new Point(current.point.x, po.y)));
+                        }
+                    }
+                    block.points = segs.slice(1, -1).map(c => c.point);
+                    console.log(block.points);
+                }
+                self.onRePicker();
+                block.forceUpdate();
+            },
+            move(ev, data) {
+                var newTr = gm.inverseTransform(Point.from(ev));
+                current = lodash.cloneDeep(oldSegs[selector.data.at]);
+                next = lodash.cloneDeep(oldSegs[selector.data.at + 1]);
+                var dx = newTr.x - po.x;
+                var dy = newTr.y - po.y;
+                if (selector.type == BoardPointType.brokenLinePort) {
+                    if (isX) {
+                        current.point.y += dy;
+                        next.point.y += dy;
+                    }
+                    else {
+                        current.point.x += dx;
+                        next.point.x += dx;
+                    }
+                    segs[selector.data.at] = current;
+                    segs[selector.data.at + 1] = next;
+                    block.points = segs.slice(1, -1).map(c => c.point);
+                }
+                else {
+                    var segs_c = segs.map(s => s.clone());
+                    if (isX) {
+                        if (isStart) {
+                            segs_c[selector.data.at + 2].point.x += dx;
+                            segs_c[selector.data.at + 2].point.y += dy;
+                            segs_c[selector.data.at + 1].point.x = segs_c[selector.data.at + 2].point.x;
+                            segs_c[selector.data.at + 3].point.y = segs_c[selector.data.at + 2].point.y;
+                        }
+                        else {
+                            segs_c[selector.data.at + 1].point.x += dx;
+                            segs_c[selector.data.at + 1].point.y += dy;
+                            segs_c[selector.data.at + 0].point.y = segs_c[selector.data.at + 1].point.y;
+                            segs_c[selector.data.at + 2].point.x = segs_c[selector.data.at + 1].point.x;
+                        }
+                    }
+                    else {
+                        if (isStart) {
+                            segs_c[selector.data.at + 2].point.x += dx;
+                            segs_c[selector.data.at + 2].point.y += dy;
+                            segs_c[selector.data.at + 1].point.y = segs_c[selector.data.at + 2].point.y;
+                            segs_c[selector.data.at + 3].point.x = segs_c[selector.data.at + 2].point.x;
+                        }
+                        else {
+                            segs_c[selector.data.at + 1].point.x += dx;
+                            segs_c[selector.data.at + 1].point.y += dy;
+                            segs_c[selector.data.at + 0].point.x = segs_c[selector.data.at + 1].point.x;
+                            segs_c[selector.data.at + 2].point.y = segs_c[selector.data.at + 1].point.y;
+                        }
+                    }
+                    block.points = segs_c.slice(1, -1).map(c => c.point);
+                    console.log(block.points);
+                }
+                self.onRePicker();
+                block.forceUpdate();
+            },
+            async moveEnd(ev, isMove, data) {
+                if (isMove) {
+                    var newTr = gm.inverseTransform(Point.from(ev));
+                    current = lodash.cloneDeep(oldSegs[selector.data.at]);
+                    next = lodash.cloneDeep(oldSegs[selector.data.at + 1]);
+                    var dx = newTr.x - po.x;
+                    var dy = newTr.y - po.y;
+                    if (selector.type == BoardPointType.brokenLinePort) {
+                        if (isX) {
+                            current.point.y += dy;
+                            next.point.y += dy;
+                        }
+                        else {
+                            current.point.x += dx;
+                            next.point.x += dx;
+                        }
+                        segs[selector.data.at] = current;
+                        segs[selector.data.at + 1] = next;
+                        var bps = segs.slice(1, -1).map(c => c.point);
+                        var d = 5;
+                        // 新的点集
+                        const newPoints = [bps[0]];
+                        for (let i = 1; i < bps.length - 1; i++) {
+                            const p1 = bps[i - 1];
+                            const p2 = bps[i];
+                            const p3 = bps[i + 1];
+                            // 检查是否形成垂直或水平线段
+                            const isHorizontal = Math.abs(p1.y - p2.y) < d && Math.abs(p2.y - p3.y) < d;
+                            const isVertical = Math.abs(p1.x - p2.x) < d && Math.abs(p2.x - p3.x) < d;
+                            if (!isHorizontal && !isVertical) {
+                                newPoints.push(p2);
+                            }
+                        }
+                        // 添加最后一个点
+                        newPoints.push(bps[bps.length - 1]);
+                        block.points = newPoints;
+                        await block.onManualUpdateProps({ points: lodash.cloneDeep(oldSegs.map(s => s.point)) }, { points: block.points }, { range: BlockRenderRange.self });
+                    }
+                    else {
+                        var segs_c = segs.map(s => s.clone());
+                        if (isX) {
+                            if (isStart) {
+                                segs_c[selector.data.at + 2].point.x += dx;
+                                segs_c[selector.data.at + 2].point.y += dy;
+                                segs_c[selector.data.at + 1].point.x = segs_c[selector.data.at + 2].point.x;
+                                segs_c[selector.data.at + 3].point.y = segs_c[selector.data.at + 2].point.y;
+                            }
+                            else {
+                                segs_c[selector.data.at + 1].point.x += dx;
+                                segs_c[selector.data.at + 1].point.y += dy;
+                                segs_c[selector.data.at + 0].point.y = segs_c[selector.data.at + 1].point.y;
+                                segs_c[selector.data.at + 2].point.x = segs_c[selector.data.at + 1].point.x;
+                            }
+                        }
+                        else {
+                            if (isStart) {
+                                segs_c[selector.data.at + 2].point.x += dx;
+                                segs_c[selector.data.at + 2].point.y += dy;
+                                segs_c[selector.data.at + 1].point.y = segs_c[selector.data.at + 2].point.y;
+                                segs_c[selector.data.at + 3].point.x = segs_c[selector.data.at + 2].point.x;
+                            }
+                            else {
+                                segs_c[selector.data.at + 1].point.x += dx;
+                                segs_c[selector.data.at + 1].point.y += dy;
+                                segs_c[selector.data.at + 0].point.x = segs_c[selector.data.at + 1].point.x;
+                                segs_c[selector.data.at + 2].point.y = segs_c[selector.data.at + 1].point.y;
+                            }
+                        }
+                        block.points = segs_c.slice(1, -1).map(c => c.point);
+                        await block.onManualUpdateProps({ points: lodash.cloneDeep(oldSegs.map(s => s.point)) }, { points: block.points }, { range: BlockRenderRange.self });
+                    }
                     self.onRePicker();
                     block.forceUpdate();
                     await openBoardEditTool(self.kit);

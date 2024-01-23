@@ -72,6 +72,7 @@ export var leftArrows: ShapeType[] = [
         value: '7'
     }
 ]
+
 export var rightArrows: ShapeType[] = [
     {
         shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
@@ -214,10 +215,10 @@ export function LineTypes(props: {
                     onMouseDown={e => props.change('lineType', 'straight')}
                     dangerouslySetInnerHTML={{ __html: Lines[0].shape }}
                 ></a>
-                {/* <a className={props.lineType == 'line' ? "hover" : ""}
+                <a className={'text-1 ' + (props.lineType == 'line' ? "hover" : "")}
                     onMouseDown={e => props.change('lineType', 'line')}
                     dangerouslySetInnerHTML={{ __html: Lines[1].shape }}
-                ></a> */}
+                ></a>
                 <a className={'text-1 ' + (props.lineType == 'curve' ? "hover" : "")}
                     onMouseDown={e => props.change('lineType', 'curve')}
                     dangerouslySetInnerHTML={{ __html: Lines[2].shape }}
