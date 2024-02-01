@@ -21,8 +21,27 @@ export function renderLine(line: Line) {
         <path className="visible" strokeLinecap={sdd == 'dash-circle' ? "round" : undefined} strokeLinejoin="round" d={sd}></path>
         {s && <>{s.el}{s.te}</>}
         {e && <>{e.el}{e.te}</>}
-        <path className="transparent" strokeLinecap={sdd == 'dash-circle' ? "round" : undefined} strokeLinejoin="round" d={sd} stroke="transparent" strokeWidth={strokeWidth}></path>
+        <path className="transparent" onMouseDown={e => {
+            // var ele = e.currentTarget as SVGPathElement;
+            // var is = isPointInStroke(ele, Point.from(e))
+            // console.log(e, is);
+        }} strokeLinecap={sdd == 'dash-circle' ? "round" : undefined} strokeLinejoin="round" d={sd} stroke="transparent" strokeWidth={strokeWidth}></path>
     </>
+}
+
+function isPointInStroke(ele: SVGPathElement, point: Point) {
+    try {
+        const pointObj = new DOMPoint(point.x, point.y);
+        return ele.isPointInStroke(pointObj);
+    } catch (e) {
+        // Fallback for browsers that don't support DOMPoint as an argument
+        var svg = ele.ownerSVGElement;
+        const pointObj = svg.createSVGPoint();
+        pointObj.x = point.x;
+        pointObj.y = point.y;
+        console.log(point, pointObj, ele, svg);
+        return ele.isPointInStroke(pointObj);
+    }
 }
 
 function getArrowMatrix(start: Point, arrowPoint: Point, toStart: Point, toArrowPoint: Point) {

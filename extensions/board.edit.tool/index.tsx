@@ -8,6 +8,7 @@ import {
     CureSvg,
     DeleteLineSvg,
     DotsSvg,
+    DragHandleSvg,
     ItalicSvg,
     MindDirectionXSvg,
     MindDirectionYSvg,
@@ -30,10 +31,11 @@ import { FrameScale } from "./frame.scale";
 import { LineArrow, LineTypes } from "./line.arrow";
 import { TurnShapes } from "./shapes";
 import { BorderBoxStyle, ShapeStroke } from "./stroke";
-import "./style.less";
 import { lst } from "../../i18n/store";
 import lodash from "lodash";
 import { popoverLayer } from "../../component/lib/zindex";
+import { MouseDragger } from "../../src/common/dragger";
+import "./style.less";
 
 export class BoardEditTool extends EventsComponent {
     el: HTMLElement;
@@ -52,7 +54,15 @@ export class BoardEditTool extends EventsComponent {
         function is(name: string) {
             return self.commands.some(s => s.name == name);
         }
+        if (self.blocks.some(s => s.isLock))
+            return <div ref={e => this.el = e} style={style} className="shy-board-edit-tool shadow border-light r-item-hover">
+                <div style={{ paddingLeft: 0, paddingRight: 0, margin: 0, paddingTop: 5, paddingBottom: 5, borderTopRightRadius: 0, borderBottomRightRadius: 0 }} onMouseDown={e => this.onDrag(e)} className={'shy-board-edit-tool-item remark'}><Icon size={16} icon={DragHandleSvg}></Icon></div>
+                <div className={'shy-board-edit-tool-devide'} style={{ marginLeft: 0 }}></div>
+                <div onMouseDown={e => this.onUnlock(e)} className={'shy-board-edit-tool-item'}><Icon size={16} icon={{ name: 'byte', code: 'lock' }}></Icon></div>
+            </div>
         return <div ref={e => this.el = e} style={style} className="shy-board-edit-tool shadow border-light r-item-hover">
+            <div style={{ paddingLeft: 0, paddingRight: 0, margin: 0, paddingTop: 5, paddingBottom: 5, borderTopRightRadius: 0, borderBottomRightRadius: 0 }} onMouseDown={e => this.onDrag(e)} className={'shy-board-edit-tool-item remark'}><Icon size={16} icon={DragHandleSvg}></Icon></div>
+            <div className={'shy-board-edit-tool-devide'} style={{ marginLeft: 0 }}></div>
             {is('mindDirection') && <Tip placement="top" text='思维导图方向'>
                 <div className={'shy-board-edit-tool-item'}>
                     <Select value={getValue('mindDirection')}
@@ -291,6 +301,35 @@ export class BoardEditTool extends EventsComponent {
             this.close();
         }
     }
+    async reOpen() {
+        await this.open(this.blocks, this.range);
+    }
+    onDrag(event: React.MouseEvent) {
+        var p = Point.from(event);
+        var self = this;
+        var ol = self.point.clone();
+        MouseDragger({
+            event,
+            moving(ev, data, isEnd, isMove) {
+                var dx = ev.clientX - p.x;
+                var dy = ev.clientY - p.y;
+                var oc = ol.clone();
+                oc.x += dx;
+                oc.y += dy;
+                self.point = oc;
+                self.forceUpdate();
+            }
+        })
+    }
+    async onUnlock(event: React.MouseEvent) {
+        await this.blocks.first().page.onAction('onUnlock', async () => {
+            for (let i = 0; i < this.blocks.length; i++) {
+                var bl = this.blocks[i];
+                await bl.unlock(false);
+            }
+            await this.reOpen();
+        })
+    }
     async onChange(name: string, value: any, isLazy?: boolean) {
         await BlockCache.set(name, value);
         if (isLazy) this.lazySave({ name, value })
@@ -324,9 +363,9 @@ export class BoardEditTool extends EventsComponent {
     }
     async onProperty(event: React.MouseEvent) {
         if (this.blocks.length == 1) {
-            this.blocks.first().onContextmenu(event.nativeEvent);
+            await this.blocks.first().onContextmenu(event.nativeEvent);
             this.dropName = '';
-            this.forceUpdate()
+            this.reOpen();
         }
     }
     componentWillUnmount(): void {

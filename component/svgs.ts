@@ -13,6 +13,12 @@ import ArrowZoomSvg from "../src/assert/svg/arrowZoom.svg";
 import AudioSvg from "../src/assert/svg/audio.svg";
 import BillingSvg from "../src/assert/svg/billing.svg";
 import BlockcolorSvg from "../src/assert/svg/blockcolor.svg";
+import BoardArrowCurveSvg from "../src/assert/svg/board.arrow.curve.svg";
+import BoardArrowFilletSvg from "../src/assert/svg/board.arrow.fillet.svg";
+import BoardArrowNoneSvg from "../src/assert/svg/board.arrow.none.svg";
+import BoardArrowPointerSvg from "../src/assert/svg/board.arrow.pointer.svg";
+import BoardArrowPolylineSvg from "../src/assert/svg/board.arrow.polyline.svg";
+import BoardArrowSvg from "../src/assert/svg/board.arrow.svg";
 import BoardCardSvg from "../src/assert/svg/board.card.svg";
 import BoardIconSvg from "../src/assert/svg/board.icon.svg";
 import BoardMoveBottomSvg from "../src/assert/svg/board.move.bottom.svg";
@@ -254,6 +260,12 @@ ArrowZoomSvg,
 AudioSvg,
 BillingSvg,
 BlockcolorSvg,
+BoardArrowCurveSvg,
+BoardArrowFilletSvg,
+BoardArrowNoneSvg,
+BoardArrowPointerSvg,
+BoardArrowPolylineSvg,
+BoardArrowSvg,
 BoardCardSvg,
 BoardIconSvg,
 BoardMoveBottomSvg,

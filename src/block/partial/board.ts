@@ -73,7 +73,7 @@ export class Block$Board {
         var rect = new Rect(0, 0, width, height);
         var gm = this.globalMatrix;
         gm = this.globalMatrix;
-        var feelDist = this.realPx(Math.max(50, width / 2));
+        var feelDist = this.realPx(Math.min(30, width / 2));
         /**
          * 这里基本没有skew，只有scale,rotate,translate
          * scale 水平和垂直相等
