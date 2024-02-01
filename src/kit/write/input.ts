@@ -20,6 +20,7 @@ import { InputForceStore, InputStore } from "./store";
 import { useTagSelector } from "../../../extensions/tag";
 import { URL_END_REGEX } from "./declare";
 
+
 /**
  * 输入弹窗
  */
@@ -240,6 +241,9 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
         if (isEmpty && !aa.block.isCanEmptyDelete) {
             return;
         }
+        if (aa.block.isFreeBlock) {
+            return;
+        }
         await InputForceStore(aa, async () => {
             var block = aa.block;
             var rowBlock = block.closest(x => !x.isLine);
@@ -253,7 +257,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                 }
                 else if (isEmpty) await block.delete()
                 if (!isSolidDelete && pv.appearAnchors.some(s => s.isText)) {
-                    pv.updateProps({ content: pv.content.slice(0, pv.content.length - 1) }, BlockRenderRange.self);
+                    await pv.updateProps({ content: pv.content.slice(0, pv.content.length - 1) }, BlockRenderRange.self);
                 }
                 if (pv.isContentEmpty) {
                     var fr = pv.prev;
@@ -304,39 +308,40 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                 return;
             }
             else {
-
                 if (isEmpty && block.isLine) await block.delete()
-                /**
-                 * 如果满足转换，
-                 * 则自动转换,如果是list块，且有子块，则不自动转换
-                 *  */
-                if (rowBlock.isBackspaceAutomaticallyTurnText) {
-                    var newBlock = await rowBlock.turn(BlockUrlConstant.TextSpan);
-                    write.kit.page.addUpdateEvent(async () => {
-                        write.kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
-                    });
-                    return;
-                }
-                //这里判断块前面没有同级的块，所以这里考虑能否升级
-                if (rowBlock?.parent?.hasSubChilds && !rowBlock.next) {
-                    var rp = rowBlock.parent;
-                    await rowBlock.insertAfter(rp);
-                    write.kit.page.addUpdateEvent(async () => {
-                        write.kit.anchorCursor.onFocusBlockAnchor(rowBlock, { render: true, merge: true });
-                    });
-                    return;
-                }
-                if (rowBlock.isTextBlock && rowBlock?.prev?.isTextBlock && rowBlock?.prev?.url != BlockUrlConstant.Title) {
-                    //这个需要合并块
-                    var lastPreBlock = await combineTextBlock(write, rowBlock);
-                    write.kit.page.addUpdateEvent(async () => {
-                        write.kit.anchorCursor.onFocusBlockAnchor(lastPreBlock, { last: true, render: true, merge: true });
-                    });
-                    return
-                }
-                if (rowBlock.isTextBlock && !rowBlock?.prev && !(rowBlock.parent?.isPanel || rowBlock.parent?.isCell || rowBlock.parent?.isLayout)) {
-                    //这个父块合并子块的内容
-                    return await combindSubBlock(write, rowBlock);
+                if (!rowBlock.isFreeBlock) {
+                    /**
+                                    * 如果满足转换，
+                                    * 则自动转换,如果是list块，且有子块，则不自动转换
+                                    *  */
+                    if (rowBlock.isBackspaceAutomaticallyTurnText) {
+                        var newBlock = await rowBlock.turn(BlockUrlConstant.TextSpan);
+                        write.kit.page.addUpdateEvent(async () => {
+                            write.kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
+                        });
+                        return;
+                    }
+                    //这里判断块前面没有同级的块，所以这里考虑能否升级
+                    if (rowBlock?.parent?.hasSubChilds && !rowBlock.next) {
+                        var rp = rowBlock.parent;
+                        await rowBlock.insertAfter(rp);
+                        write.kit.page.addUpdateEvent(async () => {
+                            write.kit.anchorCursor.onFocusBlockAnchor(rowBlock, { render: true, merge: true });
+                        });
+                        return;
+                    }
+                    if (rowBlock.isTextBlock && rowBlock?.prev?.isTextBlock && rowBlock?.prev?.url != BlockUrlConstant.Title) {
+                        //这个需要合并块
+                        var lastPreBlock = await combineTextBlock(write, rowBlock);
+                        write.kit.page.addUpdateEvent(async () => {
+                            write.kit.anchorCursor.onFocusBlockAnchor(lastPreBlock, { last: true, render: true, merge: true });
+                        });
+                        return
+                    }
+                    if (rowBlock.isTextBlock && !rowBlock?.prev && !(rowBlock.parent?.isPanel || rowBlock.parent?.isCell || rowBlock.parent?.isLayout)) {
+                        //这个父块合并子块的内容
+                        return await combindSubBlock(write, rowBlock);
+                    }
                 }
                 /***
                  * 这个回车啥也没干，光标跳动
@@ -350,9 +355,6 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                         await rowBlock.delete();
                     }
                 }
-                // if (rowBlock.isContentEmpty && !(!rowBlock?.prev && (rowBlock.parent?.isPanel || rowBlock.parent?.isLayout || rowBlock?.parent?.isCell))) {
-                //     await rowBlock.delete();
-                // }
             }
         });
     }

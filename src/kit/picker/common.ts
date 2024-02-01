@@ -7,7 +7,7 @@ import { BlockUrlConstant } from "../../block/constant";
 export function CacAlignLines(block: Block, gm: GridMap, from: Point, to: Point, rect: Rect) {
     rect = rect.clone();
     rect.move(to.x - from.x, to.y - from.y);
-    var re = block.realPx(10);
+    var re = 10;
     var d = rect.extend(re);
     var wr = block.page.bound;
     var xrect = new Rect(new Point(wr.left, d.top), new Point(wr.right, d.bottom));

@@ -21,6 +21,7 @@ import { GridMap } from "../../page/grid";
 import { CacAlignLines } from "./common";
 import lodash from "lodash";
 import { Segment } from "../../block/svg/segment";
+import { BoardDrag } from "../operator/board";
 
 export class BlockPicker {
     kit: Kit;
@@ -504,11 +505,9 @@ export class BlockPicker {
                 moveStart() {
                     forceCloseBoardEditTool()
                 },
-                moving(ev, data, isEnd) {
+                async moving(ev, data, isEnd) {
                     var point = gm.inverseTransform(Point.from(ev));
                     block[key] = { x: point.x, y: point.y };
-                    block.forceUpdate();
-                    self.view.forceUpdate();
                     if (isEnd) {
                         if (self.kit.boardLine.over) {
                             block[key] = {
@@ -517,13 +516,14 @@ export class BlockPicker {
                                 y: self.kit.boardLine.over.selector.arrows[0]
                             };
                         }
-                        // console.log(self.kit.boardLine.over,block, block.from, block.to);
-                        block.onUpdateLine(block.from, block.to, oldData);
+                        await block.onUpdateLine(block.from, block.to, oldData);
+                        self.kit.boardLine.onEndConnectOther();
+                        await openBoardEditTool(self.kit);
+                        self.onRePicker();
+                        return;
                     }
-                },
-                async moveEnd() {
-                    self.kit.boardLine.onEndConnectOther();
-                    await openBoardEditTool(self.kit);
+                    block.forceUpdate();
+                    self.view.forceUpdate();
                 }
             });
         }
@@ -542,15 +542,17 @@ export class BlockPicker {
                     point.x = current.x;
                     point.y = current.y;
                     if (isEnd) {
-                        var r = block.realPx(5);
+                        var r = block.realPx(10);
                         if (pre && new Point(pre.x as number, pre.y as number).nearBy(new Point(point.x as number, point.y as number), r)) {
                             block.points.remove(g => g === pre);
                         }
                         if (next && new Point(next.x as number, next.y as number).nearBy(new Point(point.x as number, point.y as number), r)) {
                             block.points.remove(g => g === next);
                         }
-                        block.onManualUpdateProps(oldProps, { points: block.points });
+                        await block.onManualUpdateProps(oldProps, { points: block.points }, { range: BlockRenderRange.self });
                         await openBoardEditTool(self.kit);
+                        self.onRePicker();
+                        return;
                     }
                     block.forceUpdate();
                     self.view.forceUpdate();
@@ -625,35 +627,14 @@ export class BlockPicker {
     }
     async onMousedownAppear(aa: AppearAnchor, event: React.MouseEvent) {
         event.stopPropagation();
+        event.preventDefault();
         var sel = window.getSelection();
         var rowBlock = aa.block.closest(x => x.isBlock);
         if (!this.blocks.some(s => s == rowBlock)) {
             setTimeout(() => {
                 sel.collapse(aa.block.page.viewEl);
-                // sel.removeAllRanges();
             }, 10);
         }
-        this.kit.picker.onPicker([rowBlock]);
-        var self = this;
-        var gm = rowBlock.panelGridMap;
-        MouseDragger({
-            event,
-            dis: 5,
-            moveStart() {
-                gm.start();
-                forceCloseBoardEditTool()
-            },
-            move(ev, data) {
-                self.onMove(Point.from(event), Point.from(ev), gm);
-            },
-            async moveEnd(ev, isMove, data) {
-                if (isMove) {
-                    await self.onMoveEnd(Point.from(event), Point.from(ev), gm)
-                    gm.over()
-                }
-            }
-        })
-        if (this.kit.picker.blocks.length > 0)
-            await openBoardEditTool(this.kit);
+        BoardDrag(this.kit, rowBlock, event);
     }
 }

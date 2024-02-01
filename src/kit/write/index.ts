@@ -200,7 +200,11 @@ export class PageWrite {
                     return;
                 }
                 if (aa?.block.isFreeBlock) {
-                   //不做任何处理，自动键入换行符
+                    //不做任何处理，自动键入换行符
+                    util.delay(50).then(() => {
+                        this.kit.picker.onRePicker();
+                    })
+                    return;
                 }
                 else if (aa.block.isEnterCreateNewLine) {
                     if (!this.kit.page.keyboardPlate.isShift()) {
@@ -237,6 +241,13 @@ export class PageWrite {
             case KeyboardCode.Space:
                 onSpaceInputUrl(this, aa, event);
                 break;
+        }
+        var r = aa.block.closest(x => !x.isLine);
+        if (r?.isFreeBlock) {
+            //不做任何处理，自动键入换行符
+            util.delay(50).then(() => {
+                this.kit.picker.onRePicker();
+            })
         }
     }
     input(aa: AppearAnchor, event: React.FormEvent) {
@@ -434,8 +445,8 @@ export class PageWrite {
                         });
                 }
             });
-           
-               
+
+
         }
         var blockData = args[0];
         var sel = window.getSelection();
