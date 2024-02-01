@@ -32,7 +32,7 @@ export class MenuPanel<T> extends EventsComponent {
     visible: boolean = false;
     private options: { height?: number, width?: number, overflow?: 'auto' | 'visible' } = {};
     onClose(e: React.MouseEvent) {
-        if (e) e.stopPropagation();
+        if (e) { e.stopPropagation(); e.preventDefault(); }
         setTimeout(() => {
             this.close();
             this.emit('close');
@@ -63,7 +63,7 @@ export class MenuPanel<T> extends EventsComponent {
     menus: MenuItem<T>[] = [];
     mb: MenuBox;
     render() {
-        return this.visible && <div className='shy-menu-panel' onContextMenu={e=>{e.preventDefault()}}>
+        return this.visible && <div className='shy-menu-panel' onContextMenu={e => { e.preventDefault() }}>
             <div className='shy-menu-mask' style={{ zIndex: popoverLayer.zoom(this) }} onMouseDown={e => this.onClose(e)}></div>
             <MenuBox parent={this}
                 style={{ height: this.options.height, width: this.options.width, maxHeight: this.options.height, overflow: this.options.overflow }}
