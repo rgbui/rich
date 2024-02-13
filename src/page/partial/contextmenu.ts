@@ -293,16 +293,16 @@ export class PageContextmenu {
         }
         else if (this.pageLayout.type == PageLayoutType.board) {
             items = [
-                // {
-                //     text: lst('主题'),
-                //     icon: PlatteSvg,
-                //     name: 'theme',
-                // },
-                // { type: MenuItemType.divide },
+                {
+                    text: lst('主题'),
+                    icon: PlatteSvg,
+                    name: 'theme',
+                },
+                { type: MenuItemType.divide },
+                { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? lst("除消编辑保护") : lst("编辑保护"), icon: this.locker?.lock ? LockSvg : UnlockSvg },
                 { name: 'copy', text: lst('拷贝'), icon: DuplicateSvg },
                 { name: 'move', text: lst('移动'), icon: MoveToSvg },
-                { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? lst("除消编辑保护") : lst("编辑保护"), icon: this.locker?.lock ? LockSvg : UnlockSvg },
-                { name: 'export', disabled: true, iconSize: 16, text: lst('导出'), icon: { name: 'bytedance-icon', code: 'download-one' } },
+                { name: 'export', iconSize: 16, text: lst('导出'), icon: { name: 'bytedance-icon', code: 'download-one' } },
                 { name: 'delete', icon: TrashSvg, text: lst('删除') },
                 { type: MenuItemType.divide },
                 { name: 'undo', text: lst('撤消'), icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },

@@ -54,8 +54,8 @@ export class PageTheme extends EventsComponent {
         if (this.page?.pageLayout.type == PageLayoutType.textChannel || this.page?.pageLayout?.type == PageLayoutType.docCard) hasCover = false;
         var textp = 'var(--text-p-color)';
         var solid = '2px solid var(--text-p-color)';
-        if (hasCover) return <div><div className="remark gap-t-10 gap-b-5 f-12"><S>封面</S></div>
-            <div className="flex r-gap-r-10 r-cursor">
+        if (hasCover) return <div><div className="padding-w-15 remark gap-t-10 gap-b-5 f-12"><S>封面</S></div>
+            <div className="flex r-gap-r-10 r-cursor padding-w-15">
                 <Tip text={lst('无')}>
                     <div onMouseDown={e => {
                         this.setPageTheme({ coverStyle: { display: 'none' } }, 'layout')
@@ -87,12 +87,12 @@ export class PageTheme extends EventsComponent {
         else return <></>
     }
     renderCustom() {
-        return <div className="padding-w-10">
+        return <div className="">
             {this.renderCover()}
-            <div className="remark   gap-t-10 gap-b-5 f-12">
+            <div className="remark padding-w-15  gap-t-10 gap-b-5 f-12">
                 <S>透明性</S>
             </div>
-            <div>
+            <div className="padding-w-15">
                 <SelectBox border value={this.page.pageTheme.contentStyle.transparency} options={[
                     { text: lst('无透明'), value: 'solid' },
                     { text: lst('毛玻璃'), value: 'frosted' },
@@ -102,7 +102,7 @@ export class PageTheme extends EventsComponent {
                     this.setTheme('pageTheme.contentStyle.transparency', e)
                 }}></SelectBox>
             </div>
-            <div className="remark  gap-t-10 gap-b-5 f-12"><S>页面背景</S></div>
+            <div className="remark padding-w-15 gap-t-10 gap-b-5 f-12"><S>页面背景</S></div>
             <div><PageFillStyle isFill openSpread={e => {
                 if (e == true) this.el.classList.remove('overflow-y')
                 else this.el.classList.add('overflow-y')
@@ -111,7 +111,6 @@ export class PageTheme extends EventsComponent {
                 onChange={e => this.setTheme('pageTheme.bgStyle', e)}
                 bgStyle={this.page.pageTheme.bgStyle}></PageFillStyle>
             </div>
-
         </div>
     }
     renderSys() {
@@ -221,51 +220,78 @@ export class PageTheme extends EventsComponent {
                 <div className="flex-center h-30 f-12">{(name == 'layout' && self.page.pageTheme.coverStyle.display == s.name || name == 'style' && self.page.pageTheme?.name == s.name) && <span className="flex-center size-20"><Icon size={18} icon={CheckSvg}></Icon></span>}<span>{g.text}</span></div>
             </div>
         }
-        return <div className="padding-w-10 padding-b-100">
-
+        return <div className="padding-b-100">
             {this.renderCover()}
-
-            {pageThems.map((pt, index) => {
-                return <div key={index}>
-                    <div className="flex remark f-12 gap-h-10">{pt.text}</div>
-                    <div className="flex flex-wrap ">
-                        {pt.childs.map((s, i) => {
-                            return renderItem(s, i, pt.name);
-                        })}
+            <div className="padding-w-15">
+                {pageThems.map((pt, index) => {
+                    return <div key={index}>
+                        <div className="flex remark f-12 gap-h-10">{pt.text}</div>
+                        <div className="flex flex-wrap ">
+                            {pt.childs.map((s, i) => {
+                                return renderItem(s, i, pt.name);
+                            })}
+                        </div>
                     </div>
-                </div>
-            })}
+                })}
+            </div>
         </div>
     }
     popover: Popover<PageTheme>;
     el: HTMLElement;
     render() {
         var isRenderBg = this.page?.pageLayout?.type == PageLayoutType.textChannel || this.page?.pageLayout?.type == PageLayoutType.docCard;
-        return <div ref={e => this.el = e} className="padding-h-15 bg-white round w-300 h100 overflow-y" style={{ width: 350 }}>
-            <div className="flex padding-w-10">
+        var isBoard = this.page?.pageLayout?.type == PageLayoutType.board;
+        return <div ref={e => this.el = e} className="padding-h-15 bg-white round w-310 h100 overflow-y" style={{ width: 360 }}>
+            <div className="flex flex-top padding-w-15">
                 <span className="flex-auto h1"><S>主题</S></span>
                 <span onClick={e => this.emit('close')} className="size-30 flex-center flex-fixed text-1 item-hover cursor round">
                     <Icon size={16} icon={CloseSvg}></Icon>
                 </span>
             </div>
-            {isRenderBg && this.renderbg()}
-            {!isRenderBg && <>
-                <div className="flex gap-b-10  padding-w-10">
-                    <a onClick={e => {
-                        this.tab = 'sys';
-                        this.forceUpdate()
-                    }} className={"cursor gap-r-10 flex-auto padding-w-10 flex-center h-30 round-8 " + (this.tab == 'sys' ? " bg-primary text-white" : "")}><span className="flex-center size-20"><Icon size={18} icon={PlatteSvg}></Icon></span><span><S>标准主题</S></span></a>
-                    <a onClick={e => {
-                        this.tab = 'custom';
-                        this.forceUpdate()
-                    }} className={"cursor gap-l-10 flex-auto  padding-w-10 flex-center h-30 round-8 " + (this.tab == 'custom' ? " bg-primary text-white" : "")}><span className="flex-center size-20"><Icon size={18} icon={CardBrushSvg}></Icon></span><span><S>自定义主题</S></span></a>
-
-                </div>
-                <div>
-                    {this.tab == 'custom' && this.page && this.renderCustom()}
-                    {this.tab == 'sys' && this.page && this.renderSys()}
-                </div>
+            {isBoard && this.renderBoardBg()}
+            {!isBoard && <>
+                {isRenderBg && this.renderbg()}
+                {!isRenderBg && <>
+                    <div className="flex gap-b-10  padding-w-15">
+                        <a onClick={e => {
+                            this.tab = 'sys';
+                            this.forceUpdate()
+                        }} className={"cursor gap-r-10 flex-auto padding-w-10 flex-center h-30 round-8 " + (this.tab == 'sys' ? " bg-primary text-white" : "")}><span className="flex-center size-20"><Icon size={18} icon={PlatteSvg}></Icon></span><span><S>标准主题</S></span></a>
+                        <a onClick={e => {
+                            this.tab = 'custom';
+                            this.forceUpdate()
+                        }} className={"cursor gap-l-10 flex-auto  padding-w-10 flex-center h-30 round-8 " + (this.tab == 'custom' ? " bg-primary text-white" : "")}><span className="flex-center size-20"><Icon size={18} icon={CardBrushSvg}></Icon></span><span><S>自定义主题</S></span></a>
+                    </div>
+                    <div>
+                        {this.tab == 'custom' && this.page && this.renderCustom()}
+                        {this.tab == 'sys' && this.page && this.renderSys()}
+                    </div>
+                </>}
             </>}
+        </div>
+    }
+    renderBoardBg() {
+        return <div><div className="remark padding-w-15  gap-t-10 gap-b-5 f-12">
+            <S>透明性</S>
+        </div>
+            <div className="padding-w-15">
+                <SelectBox border value={this.page.pageTheme.contentStyle.transparency} options={[
+                    { text: lst('无透明'), value: 'solid' },
+                    { text: lst('毛玻璃'), value: 'frosted' },
+                    { text: lst('渐近'), value: 'faded' },
+                    { text: lst('透明'), value: 'noborder' },
+                ]} onChange={e => {
+                    this.setTheme('pageTheme.contentStyle.transparency', e)
+                }}></SelectBox>
+            </div>
+            <div className="remark padding-w-15 gap-t-10 gap-b-5 f-12"><S>页面背景</S></div>
+            <div><PageFillStyle isFill openSpread={e => {
+                if (e == true) this.el.classList.remove('overflow-y')
+                else this.el.classList.add('overflow-y')
+                if (this.popover) this.popover.stopMousedownClose(e);
+            }} onChange={e => this.setTheme('pageTheme.bgStyle', e)}
+                bgStyle={this.page.pageTheme.bgStyle}></PageFillStyle>
+            </div>
         </div>
     }
     renderbg() {
