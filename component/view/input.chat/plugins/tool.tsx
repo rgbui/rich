@@ -1,7 +1,7 @@
 import React, { CSSProperties, ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { Point, Rect } from "../../../../src/common/vector/point";
-import { BoldSvg, CodeSvg, DeleteLineSvg, ItalicSvg, QuoteSvg } from "../../../svgs";
+import { CodeSvg, QuoteSvg } from "../../../svgs";
 import { Icon } from "../../icon";
 
 export class InputChatTool extends React.Component<{
@@ -45,9 +45,9 @@ export class InputChatTool extends React.Component<{
             ref={e => this.el = e}
             style={style}>
             <div className="flex border padding-w-10 h-30 r-size-24 r-round r-item-hover r-cursor r-flex-center ">
-                <span onMouseDown={e => this.onClick('bold')}><Icon size={16} icon={BoldSvg}></Icon></span>
-                <span onMouseDown={e => this.onClick('italic')}><Icon size={16} icon={ItalicSvg}></Icon></span>
-                <span onMouseDown={e => this.onClick('delete')}><Icon size={16} icon={DeleteLineSvg}></Icon></span>
+                <span onMouseDown={e => this.onClick('bold')}><Icon size={16} icon={{ name: 'byte', code: 'text-bold' }}></Icon></span>
+                <span onMouseDown={e => this.onClick('italic')}><Icon size={16} icon={{ name: 'byte', code: 'text-italic' }}></Icon></span>
+                <span onMouseDown={e => this.onClick('delete')}><Icon size={16} icon={{ name: 'byte', code: 'strikethrough' }}></Icon></span>
                 <span onMouseDown={e => this.onClick('quote')}><Icon size={16} icon={QuoteSvg}></Icon></span>
                 <span onMouseDown={e => this.onClick('code')}><Icon size={16} icon={CodeSvg}></Icon></span>
             </div>

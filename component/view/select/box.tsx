@@ -27,7 +27,9 @@ export class SelectBox<T = any> extends React.Component<{
     iconHidden?: boolean,
     prefix?: JSX.Element | string | React.ReactNode,
     textAlign?: 'left' | 'center' | 'right',
-    checkChange?: (value: any, item?: MenuItem<string>) => Promise<boolean>
+    placeholder?: string,
+    checkChange?: (value: any, item?: MenuItem<string>) => Promise<boolean>,
+    onDrop?: (spread?: boolean, e?: React.MouseEvent) => void
 }>{
     el: HTMLElement;
     render() {
@@ -47,6 +49,8 @@ export class SelectBox<T = any> extends React.Component<{
                 var op = ms.arrayJsonFind('childs', g => g.value == self.props.value);
                 if (op) op.checkLabel = true;
             }
+            if (self.props.onDrop)
+                self.props.onDrop(true, event);
             var rect = Rect.fromEle(event.currentTarget as HTMLElement)
             var r = await useSelectMenuItem(
                 { roundArea: rect, align: self.props.dropAlign == 'left' || self.props.dropAlign == 'full' ? 'start' : 'end' },
@@ -76,6 +80,8 @@ export class SelectBox<T = any> extends React.Component<{
                         self.props.onChange(r.item.value, r.item);
                 }
             }
+            if (self.props.onDrop)
+                self.props.onDrop(false, event)
         }
         var classList: string[] = ['shy-select-box'];
         if (this.props.disabled) classList.push("disabled")
@@ -91,14 +97,14 @@ export class SelectBox<T = any> extends React.Component<{
         return <div ref={e => { this.el = e; }} style={style}
             className={classList.join(" ")}
             onMouseDown={e => mousedown(e)}>
-            {this.props.children && <>{this.props.children}<Icon className={'gap-l-3'} size={14} icon={ChevronDownSvg}></Icon></>}
+            {this.props.children && <>{this.props.children}<Icon className={'gap-l-3 remark'} size={14} icon={ChevronDownSvg}></Icon></>}
             {!this.props.children && <div style={{ width: '100%' }} className="flex">
                 {this.props.prefix}
-                {this.props.multiple != true && <span style={{ justifyContent: this.props.textAlign == 'right' ? "flex-end" : undefined }} className={'flex f-14 ' + (this.props.border ? "flex-auto " : "flex-fixed")}>{op?.icon && this.props.iconHidden !== true && <Icon size={14} className={'gap-r-3'} icon={op.icon}></Icon>}{op?.text}</span>}
+                {this.props.multiple != true && <span style={{ justifyContent: this.props.textAlign == 'right' ? "flex-end" : undefined }} className={'flex f-14 ' + (this.props.border ? "flex-auto " : "flex-fixed")}>{op?.icon && this.props.iconHidden !== true && <Icon size={op?.iconSize || 14} className={'gap-r-3'} icon={op.icon}></Icon>}{op?.text}</span>}
                 {this.props.multiple == true && <span className={'f-14 flex ' + (this.props.border ? "flex-auto" : "flex-fixed")}><span>{ops.map((op, i) => {
-                    return <span className={'round padding-h-2 ' + (i == 0 && this.props.prefix ? "gap-l-5" : (i == 0 ? "" : "padding-l-5 "))} key={op.value}><span className={"flex " + (i < ops.length - 1 ? "gap-r-3" : "")}>{op?.icon && <Icon size={14} className={'gap-r-3'} icon={op.icon}></Icon>}{op?.text}</span>{i < ops.length - 1 ? "," : ""}</span>
+                    return <span className={'round padding-h-2 ' + (i == 0 && this.props.prefix ? "gap-l-5" : (i == 0 ? "" : "padding-l-5 "))} key={op.value}><span className={"flex " + (i < ops.length - 1 ? "gap-r-3" : "")}>{op?.icon && <Icon size={op?.iconSize || 14} className={'gap-r-3'} icon={op.icon}></Icon>}{op?.text}</span>{i < ops.length - 1 ? "," : ""}</span>
                 })}</span></span>}
-                <span className="flex-fixed size-20 flex-center">
+                <span className="flex-fixed size-14 gap-l-3 remark flex-center">
                     <Icon size={14} icon={ChevronDownSvg}></Icon>
                 </span>
             </div>}

@@ -463,10 +463,9 @@ export class ImageView extends BlockView<Image>{
             event,
             moveStart(ev, data) {
                 data.realWidth = self.imageWrapper.getBoundingClientRect().width;
-                data.event = ev as any;
             },
             moving: (ev, data, isEnd) => {
-                var dx = ev.clientX - data.event.clientX;
+                var dx = ev.clientX - event.clientX;
                 var width: number;
                 if (operator == 'right') width = data.realWidth + dx * 2;
                 else width = data.realWidth - dx * 2;

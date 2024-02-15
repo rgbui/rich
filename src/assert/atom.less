@@ -44,16 +44,10 @@ flex-fixed:固定大小
     flex-wrap      : nowrap;
 }
 
-.r-flex-end {
-    >* {
-        display        : flex;
-        justify-content: flex-end;
-        align-items    : center;
-        flex-wrap      : nowrap;
-    }
-}
 
-.flex-end {
+
+.flex-end,
+.r-flex-end>* {
     display        : flex;
     justify-content: flex-end;
     align-items    : center;
@@ -67,7 +61,8 @@ flex-fixed:固定大小
     flex-wrap      : nowrap;
 }
 
-.flex-top {
+.flex-top,
+.r-flex-top>* {
     display        : flex;
     justify-content: flex-start;
     align-items    : flex-start;
@@ -119,18 +114,22 @@ flex-fixed:固定大小
     flex-wrap: wrap;
 }
 
-.flow-no-wrap {
+.flex-no-wrap,
+.r-flex-no-wrap>* {
     flex-wrap: nowrap;
 }
 
 
 
 .flex-column,
-.flex-col {
+.flex-col,
+.r-flex-col>* {
     flex-direction: column;
 }
 
-.flex-auto {
+
+.flex-auto,
+.r-flex-auto>* {
     flex-grow  : 1;
     flex-shrink: 1;
 }
@@ -466,6 +465,12 @@ item-selected:选中的效果
     }
 }
 
+.no-item-hover {
+    &:hover {
+        background-color: transparent !important;
+    }
+}
+
 .item-color-hover {
     &:hover {
         color           : var(--interactive-hover);
@@ -700,11 +705,13 @@ item-selected:选中的效果
 }
 
 body {
-    --text-color     : rgba(55, 53, 47);
-    // --text-p-color: #B84C4E;
-    --text-p-color   : rgb(225, 98, 89);
-    --text-b-color   : #64a1df;
-    --shadow         : rgba(15, 15, 15, 0.016) 0rem 0rem 0rem 1px, rgba(15, 15, 15, 0.03) 0rem 3px 6px, rgba(15, 15, 15, 0.06) 0rem 9px 24px;
+    --text-color   : rgba(55, 53, 47);
+    --text-p-color : rgb(225, 98, 89);
+    --text-p1-color: #64a1df;
+    --text-b-color : #64a1df;
+    --shadow       : rgba(15, 15, 15, 0.05) 0rem 0rem 0rem 1px, rgba(15, 15, 15, 0.1) 0rem 3px 6px, rgba(15, 15, 15, 0.2) 0rem 9px 24px;
+    --shadow-light : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+    --shadow-s     : 0px 2px 8px rgba(25, 25, 26, .12), 0px 0px 1px rgba(25, 25, 26, .08);
 }
 
 .text {
@@ -1167,7 +1174,8 @@ each(@ops, {
     }
 
 ) .box-border,
-.border-box {
+.border-box,
+.r-border-box>* {
     box-sizing: border-box;
 }
 
@@ -1452,7 +1460,6 @@ each(@ops, {
     background-color: #64a1df;
 }
 
-
 .bg-primary-1-hover,
 .bg-p-1-hover,
 .r-bg-p-1-hover>*,
@@ -1501,18 +1508,15 @@ each(@ops, {
     background-color: rgba(55, 53, 47, 0.04) !important;
 }
 
-.shadow {
-    box-shadow: rgba(15, 15, 15, 0.016) 0rem 0rem 0rem 1px, rgba(15, 15, 15, 0.03) 0rem 3px 6px, rgba(15, 15, 15, 0.06) 0rem 9px 24px
+.shadow,
+.r-shadow>* {
+    //box-shadow: rgba(15, 15, 15, 0.016) 0rem 0rem 0rem 1px, rgba(15, 15, 15, 0.03) 0rem 3px 6px, rgba(15, 15, 15, 0.06) 0rem 9px 24px;
+    box-shadow: var(--shadow);
 }
 
-.shadow-1 {
-    box-shadow: rgba(15, 15, 15, 0.05) 0rem 0rem 0rem 1px, rgba(15, 15, 15, 0.1) 0rem 3px 6px, rgba(15, 15, 15, 0.2) 0rem 9px 24px
-}
-
-.r-shadow {
-    >* {
-        box-shadow: rgba(15, 15, 15, 0.016) 0rem 0rem 0rem 1px, rgba(15, 15, 15, 0.03) 0rem 3px 6px, rgba(15, 15, 15, 0.06) 0rem 9px 24px
-    }
+.shadow-light,
+.r-shadow-light>* {
+    box-shadow: var(--shadow-light)
 }
 
 .border {

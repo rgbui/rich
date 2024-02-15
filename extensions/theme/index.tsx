@@ -276,7 +276,7 @@ export class PageTheme extends EventsComponent {
         </div>
             <div className="padding-w-15">
                 <SelectBox border value={this.page.pageTheme.contentStyle.transparency} options={[
-                    { text: lst('无透明'), value: 'solid' },
+                    { text: lst('默认'), value: 'solid' },
                     { text: lst('毛玻璃'), value: 'frosted' },
                     { text: lst('渐近'), value: 'faded' },
                     { text: lst('透明'), value: 'noborder' },
@@ -284,14 +284,18 @@ export class PageTheme extends EventsComponent {
                     this.setTheme('pageTheme.contentStyle.transparency', e)
                 }}></SelectBox>
             </div>
-            <div className="remark padding-w-15 gap-t-10 gap-b-5 f-12"><S>页面背景</S></div>
-            <div><PageFillStyle isFill openSpread={e => {
-                if (e == true) this.el.classList.remove('overflow-y')
-                else this.el.classList.add('overflow-y')
-                if (this.popover) this.popover.stopMousedownClose(e);
-            }} onChange={e => this.setTheme('pageTheme.bgStyle', e)}
-                bgStyle={this.page.pageTheme.bgStyle}></PageFillStyle>
+            {this.page.pageTheme.contentStyle.transparency != 'solid' && <><div
+                className="remark padding-w-15 gap-t-10 gap-b-5 f-12">
+                <S>页面背景</S>
             </div>
+                <div><PageFillStyle isFill openSpread={e => {
+                    if (e == true) this.el.classList.remove('overflow-y')
+                    else this.el.classList.add('overflow-y')
+                    if (this.popover) this.popover.stopMousedownClose(e);
+                }} onChange={e => this.setTheme('pageTheme.bgStyle', e)}
+                    bgStyle={this.page.pageTheme.bgStyle}></PageFillStyle>
+                </div>
+            </>}
         </div>
     }
     renderbg() {

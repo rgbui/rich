@@ -56,12 +56,37 @@ export class PageLayoutView extends React.Component<{
             </div>
         }
         else if (type == PageLayoutType.board) {
-            var style: CSSProperties = { minHeight: mh, width: '100%', ...pageContentStyle };
+            var style: CSSProperties = { minHeight: mh, width: '100%' };
             Object.assign(style, props.page.matrix.getCss());
             style.backgroundColor = 'transparent';
-            return <div className={"shy-page-layout shy-page-layout-board"} style={{ width: '100%', height: mh }}>
-                <div className='shy-page-layout-wrapper' style={style}>
-                    {props.children}
+            var layoutStyle: CSSProperties = {};
+            var cs = this.props.page?.pageTheme?.contentStyle;
+            layoutStyle.backgroundColor = '#fff';
+            if (cs?.transparency) {
+                if (cs.transparency == 'frosted') {
+                    layoutStyle.backdropFilter = 'blur(20px) saturate(170%)';
+                    //'rgba(255, 252, 248, 0.75)';
+                    if (cs.color == 'light') layoutStyle.backgroundColor = 'rgba(255,255,255, 0.75)';
+                    else layoutStyle.backgroundColor = 'rgba(12, 12, 12, 0.75)';
+                }
+                else if (cs.transparency == 'faded') {
+                    if (cs.color == 'light') layoutStyle.backgroundColor = 'rgba(255,255,255, 0.75)';
+                    else layoutStyle.backgroundColor = 'rgba(12, 12, 12, 0.75)';
+                }
+                else if (cs.transparency == 'solid') {
+                    if (cs.color == 'light') layoutStyle.backgroundColor = '#fff'
+                    else layoutStyle.backgroundColor = 'rgba(12, 12, 12, 0.75)';
+                }
+                else if (cs.transparency == 'noborder') {
+                    if (cs.color == 'light') layoutStyle.backgroundColor = 'transparent'
+                    else layoutStyle.backgroundColor = 'transparent';
+                }
+            }
+            return <div className={"shy-page-layout shy-page-layout-board"} style={{ width: '100%', height: mh, ...pageContentStyle }}>
+                <div style={{ width: '100%', height: '100%', ...layoutStyle }}>
+                    <div className='shy-page-layout-wrapper' style={style}>
+                        {props.children}
+                    </div>
                 </div>
             </div>
         }

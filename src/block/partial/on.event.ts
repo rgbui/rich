@@ -220,8 +220,7 @@ export class Block$Event {
         items.push({
             name: 'copy',
             text: lst('复制'),
-            icon: DuplicateSvg,
-            disabled: true
+            icon: DuplicateSvg
         });
         items.push({
             type: MenuItemType.divide
@@ -234,10 +233,13 @@ export class Block$Event {
         });
         return items;
     }
-    async onContextmenu(this: Block, event: MouseEvent | Point) {
+    async onContextmenu(this: Block, event: MouseEvent | Point | Rect) {
         var self = this;
         var re = await useSelectMenuItem(
-            this.isFreeBlock ? { roundPoint: event instanceof Point ? event : Point.from(event) } : {
+            this.isFreeBlock ? {
+                roundPoint: event instanceof Rect ? undefined : (event instanceof Point ? event : Point.from(event)),
+                roundArea: event instanceof Rect ? event : undefined,
+            } : {
                 roundArea: !(event instanceof Point) ? Rect.fromEvent(event) : undefined,
                 roundPoint: event instanceof Point ? event : undefined,
                 direction: 'left'
@@ -329,6 +331,9 @@ export class Block$Event {
             case BlockDirective.delete:
                 this.page.onBatchDelete([this]);
                 break;
+            case BlockDirective.copy:
+                this.onClone();
+                break;
         }
     }
     async onInputText(this: Block, options: {
@@ -355,11 +360,15 @@ export class Block$Event {
         */
         this.page.onAction(ActionDirective.onCopyBlock, async () => {
             var nb = await this.clone();
+            if (this.isFreeBlock) {
+                var ma = nb.matrix.clone();
+                ma.translate(this.realPx(50), this.realPx(50));
+                await nb.updateMatrix(nb.matrix, ma);
+            }
             this.page.addUpdateEvent(async () => {
                 this.page.kit.anchorCursor.onFocusBlockAnchor(nb, { merge: true, render: true, last: true })
             })
         });
-
     }
     async clone(this: Block) {
         var d = await this.cloneData();
@@ -411,6 +420,15 @@ export class Block$Event {
                 }
             });
         })
+    }
+    async unlock(this: Block, locked: boolean) {
+        await this.updateProps({
+            locker: {
+                lock: locked,
+                date: Date.now(),
+                userid: this.page.user.id
+            }
+        });
     }
     async onZIndex(this: Block, layer: 'top' | 'bottom') {
         this.page.onAction(ActionDirective.onZIndex, async () => {

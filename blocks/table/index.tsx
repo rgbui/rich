@@ -14,6 +14,7 @@ import { Icon } from "../../component/view/icon";
 import { ghostView } from "../../src/common/ghost";
 import { ToolTip } from "../../component/view/tooltip";
 import { S } from "../../i18n/view";
+import { BoardBlockSelector, BoardPointType } from "../../src/block/partial/board";
 
 const COL_WIDTH = 150;
 const CELL_HEIGHT = 30;
@@ -224,6 +225,29 @@ export class Table extends Block {
         }
         return ps.join("\n");
     }
+    getBlockBoardSelector(this: Block, types?: BoardPointType[]): BoardBlockSelector[] {
+
+        return []
+    }
+    get visibleStyle() {
+        var style = super.visibleStyle;
+        style.backgroundColor = '#fff';
+        return style;
+    }
+    get fixedSize(): { width: number; height: number; } {
+        if (this.el) {
+            return {
+                width: this.el.offsetWidth,
+                height: this.el.offsetHeight
+            }
+        }
+        else {
+            return {
+                width: this.fixedWidth,
+                height: this.fixedHeight
+            }
+        }
+    }
 }
 @view('/table')
 export class TableView extends BlockView<Table>{
@@ -349,6 +373,9 @@ export class TableView extends BlockView<Table>{
         event.stopPropagation();
         var firstRow = this.table.querySelector('tr');
         var tds = Array.from(firstRow.children);
+        var gm = this.block.globalWindowMatrix;
+        var s = gm.getScaling().x;
+        var p = gm.inverseTransform(Point.from(event));
         MouseDragger<{ colIndex: number, colWidth: number, colEle: HTMLElement }>({
             event,
             cursor: 'col-resize',
@@ -358,23 +385,25 @@ export class TableView extends BlockView<Table>{
                 var tdRect = Rect.fromEle(tds[data.colIndex] as HTMLElement)
                 data.colWidth = tdRect.width;
             },
-            moving: (ev, data, isend) => {
+            moving: (ev, data, isend, isM) => {
+                if (!isM) return;
                 self.isMoveLine = true;
-                var dx = ev.clientX - event.clientX;
+                var ed = gm.inverseTransform(Point.from(ev));
+                var dx = ed.x - p.x;
                 var w = dx + data.colWidth;
                 w = Math.max(w, 20);
-                data.colEle.style.width = w + 'px';
-                data.colEle.style.minWidth = w + 'px';
+                data.colEle.style.width = (w / s) + 'px';
+                data.colEle.style.minWidth = (w / s) + 'px';
                 var tdRect = Rect.fromEle(tds[data.colIndex] as HTMLElement)
                 w = tdRect.width;
-                var left = self.block.cols.findAll((g, i) => i < data.colIndex).sum(g => g.width) + w + 1;
-                self.subline.style.left = (left + 5) + 'px';
+                var left = self.block.cols.findAll((g, i) => i < data.colIndex).sum(g => g.width) * s + (w) + 1;
+                self.subline.style.left = ((left + 5)) + 'px';
                 var tableRect = Rect.fromEle(self.table);
-                self.subline.style.height = tableRect.height + 'px';
+                self.subline.style.height = (tableRect.height) + 'px';
                 if (isend) {
                     var cols = lodash.cloneDeep(self.block.cols);
                     var col = cols[data.colIndex];
-                    col.width = w;
+                    col.width = w / s;
                     self.block.onUpdateProps({ cols }, { range: BlockRenderRange.self })
                 }
             },
@@ -519,6 +548,8 @@ export class TableView extends BlockView<Table>{
         event.stopPropagation();
         var boxRect = Rect.fromEle(this.box);
         var tableRect = Rect.fromEle(this.table);
+        var firstTr = this.table.querySelector('tr');
+        var tds = Array.from(firstTr.children) as HTMLElement[];
         var scrollLeft = this.box.scrollLeft;
         var tableLeft = boxRect.left - scrollLeft;
         if (arrow == 'top') {
@@ -535,29 +566,37 @@ export class TableView extends BlockView<Table>{
                     ghostView.load(html, { point: Point.from(event) });
                     self.topDrag.style.display = 'none';
                 },
-                moving: (ev, data, isend) => {
-                    if(isend)return;
+                moving: (ev, data, isend, isM) => {
+                    if (isend) return;
+                    if (!isM) return;
                     ghostView.move(Point.from(ev));
-                    var w = tableLeft + 5;
+                    var w = 5;
+                    var index = -1;
                     var isFind: boolean = false;
-                    for (let i = 0; i < this.block.cols.length; i++) {
-                        var col = this.block.cols[i];
-                        if (ev.clientX >= w && ev.clientX <= w + col.width) {
-                            if (ev.clientX >= w + col.width / 2) {
+                    for (let i = 0; i < tds.length; i++) {
+                        var col = tds[i];
+                        var colRect = Rect.fromEle(col);
+                        if (ev.clientX >= tableLeft + w && ev.clientX < tableLeft + w + colRect.width) {
+                            if (ev.clientX > tableLeft + w + colRect.width / 2) {
                                 this.subline.setAttribute('data-index', (i + 1).toString());
-                                this.subline.style.left = ((w - tableLeft) + col.width + 1) + 'px';
+                                w += colRect.width;
+                                index = i + 1;
                             }
                             else {
                                 this.subline.setAttribute('data-index', i.toString());
-                                this.subline.style.left = ((w - tableLeft) + 1) + 'px';
+                                index = i;
                             }
-                            this.subline.style.display = 'block';
-                            this.subline.style.height = tableRect.height + 'px';
                             isFind = true;
+                            break;
                         }
-                        w += col.width;
+                        else w += colRect.width;
                     }
-                    if (!isFind) {
+                    if (index > -1) {
+                        this.subline.style.display = 'block';
+                        this.subline.style.left = (w + 1) + 'px';
+                        this.subline.style.height = tableRect.height + 'px';
+                    }
+                    else {
                         this.subline.style.display = 'none';
                         this.subline.removeAttribute('data-index');
                     }
@@ -645,28 +684,10 @@ export class TableView extends BlockView<Table>{
             }
         }
     }
-    async onMousedownBtnRow(event: React.MouseEvent) {
-        // var at = parseFloat(this.btnsY.getAttribute('data-index'));
-        // await this.block.onAddRow(at, 'down');
-    }
-    async onMousedownBtnCol(event: React.MouseEvent, operator: string) {
-        // var at = parseFloat(this.btnsX.getAttribute('data-index'));
-        // if (operator == 'add') {
-        //     await this.block.onAddColumn(at, 'right')
-        // }
-        // else if (operator == 'agv') {
-
-        // }
-        // else if (operator == 'agv-all') {
-
-        // }
-    }
     table: HTMLElement;
     box: HTMLElement;
     subline: HTMLElement;
     sublineX: HTMLElement;
-    // btnsY: HTMLElement;
-    // btnsX: HTMLElement;
     bottomPlus: HTMLElement;
     rightPlus: HTMLElement;
     resizePlus: HTMLElement;
@@ -674,10 +695,13 @@ export class TableView extends BlockView<Table>{
     leftDrag: HTMLElement;
     private isMoveLine: boolean = false;
     renderView() {
+        var s = this.block.globalMatrix.getScaling().x;
         return <div style={this.block.visibleStyle}><div className='sy-block-table'
             style={this.block.contentStyle}
             onMouseMove={e => this.mousemove(e.nativeEvent)} onMouseLeave={e => this.onMouseleave()}>
-            <div className='sy-block-table-box' ref={e => this.box = e}>
+            <div className='sy-block-table-box'
+                style={{ overflow: this.block.isFreeBlock ? "visible" : undefined }}
+                ref={e => this.box = e}>
                 <table ref={e => this.table = e}>
                     <colgroup>
                         {this.block.cols.map((col, index) => {
@@ -688,25 +712,30 @@ export class TableView extends BlockView<Table>{
                         <ChildsArea childs={this.block.childs}></ChildsArea>
                     </tbody>
                 </table>
-                {this.block.isCanEdit() && <>
+                {this.block.isCanEdit() && <div
+                    style={this.block.isFreeBlock ? {
+                        transform: `scale(${1 / s})`,
+                        transformOrigin: '0 0',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        pointerEvents: 'none'
+                    } : {}}
+                >
                     <div className='sy-block-table-subline' onMouseDown={e => this.onMousedownLine(e)} ref={e => this.subline = e}></div>
                     <div className='sy-block-table-subline-x' ref={e => this.sublineX = e}></div>
-                    {/*<div className="sy-block-table-btns-y flex-center r-size-20 r-cursor bg-white border" ref={e => this.btnsY = e}>
-                    <span onMouseDown={e => this.onMousedownBtnRow(e)} className='flex-center'><Icon size={16} icon={PlusSvg}></Icon></span>
-                </div>
-                <div className="sy-block-table-btns-x flex-center r-size-20 r-cursor bg-white border" ref={e => this.btnsX = e}>
-                    <span onMouseDown={e => this.onMousedownBtnCol(e, 'add')} className='flex-center'><Icon size={16} icon={PlusSvg}></Icon></span>
-                </div>*/}
                     <div onMouseDown={e => this.onMousedownDrag(e, 'top')} ref={e => this.topDrag = e} className="sy-block-table-top-drag"><span>
                     </span>
                     </div>
                     <div onMouseDown={e => this.onMousedownDrag(e, 'left')} ref={e => this.leftDrag = e} className="sy-block-table-left-drag"><span>
                     </span>
                     </div>
-                    <ToolTip overlay={<div><S>点击添加行</S><br /><S>拖动批量创建行</S></div>}><div onMouseDown={e => this.onMousedownResize(e, 'bottom')} ref={e => this.bottomPlus = e} className="sy-block-table-bottom-plus"><Icon size={14} icon={PlusSvg}></Icon></div></ToolTip>
-                    <ToolTip overlay={<div><S>点击添加列</S><br /><S>拖动批量创建列</S></div>}><div onMouseDown={e => this.onMousedownResize(e, 'right')} ref={e => this.rightPlus = e} className="sy-block-table-right-plus"><Icon size={14} icon={PlusSvg}></Icon></div></ToolTip>
-                    <ToolTip overlay={<div><S>点击添加行列</S><br /><S>拖动批量创建行列</S></div>}><div onMouseDown={e => this.onMousedownResize(e, 'resize')} ref={e => this.resizePlus = e} className="sy-block-table-resize-plus"><Icon size={14} icon={PlusSvg}></Icon></div></ToolTip>
-                </>}
+                    <ToolTip overlay={<div><S>点击添加行</S><br /><S>拖动批量创建行</S></div>}><div onMouseDown={e => this.onMousedownResize(e, 'bottom')} ref={e => this.bottomPlus = e} className="sy-block-table-bottom-plus"><span className="size-20 round flex-center item-hover-focus"><Icon size={14} icon={PlusSvg}></Icon></span></div></ToolTip>
+                    <ToolTip overlay={<div><S>点击添加列</S><br /><S>拖动批量创建列</S></div>}><div onMouseDown={e => this.onMousedownResize(e, 'right')} ref={e => this.rightPlus = e} className="sy-block-table-right-plus"><span className="size-20 round  flex-center item-hover-focus"><Icon size={14} icon={PlusSvg}></Icon></span></div></ToolTip>
+                    <ToolTip overlay={<div><S>点击添加行列</S><br /><S>拖动批量创建行列</S></div>}><div onMouseDown={e => this.onMousedownResize(e, 'resize')} ref={e => this.resizePlus = e} className="sy-block-table-resize-plus"><span className="size-20 round  flex-center item-hover-focus"><Icon size={14} icon={PlusSvg}></Icon></span></div></ToolTip>
+                </div>}
 
             </div>
         </div>

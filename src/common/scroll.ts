@@ -26,7 +26,6 @@ export function onAutoScroll(options: {
         })
     }
     fn(true);
-    var i = 0;
     time = setInterval(function () {
         fn(false);
     }, options.interval);
@@ -138,5 +137,26 @@ export class FixedViewScroll extends Events {
             (sv.ele as HTMLElement).removeEventListener('scroll', sv.scroll);
         });
         this.svs = [];
+    }
+}
+
+
+
+var autoTime;
+export function onTimeAuto(options: { interval?: number, callback?(first: boolean): void }) {
+    onTimeAutoScrollStop()
+    if (typeof options.interval == 'undefined') options.interval = 200;
+    var fn = (fir: boolean) => {
+        if (options.callback) options.callback(fir);
+    }
+    fn(true);
+    autoTime = setInterval(function () {
+        fn(false);
+    }, options.interval);
+}
+export function onTimeAutoScrollStop() {
+    if (autoTime) {
+        clearInterval(autoTime);
+        autoTime = null;
     }
 }

@@ -50,6 +50,10 @@ export enum BoardPointType {
      * 思维导图的添加按钮
      */
     mindAdd,
+    /**
+     * 思维导图的展开按钮
+     */
+    mindSpread
 }
 export type BoardBlockSelector = {
     type: BoardPointType;

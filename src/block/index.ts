@@ -103,7 +103,7 @@ export abstract class Block extends Events {
      */
     createSource: 'InputBlockSelector' | 'pageTurnLayout';
     __props: string[];
-    getCurrentProps(){
+    getCurrentProps() {
         return this.__props;
     }
     get childs() {
@@ -661,6 +661,8 @@ export abstract class Block extends Events {
         if (this.isBoardBlock) return false;
         if (this.url == BlockUrlConstant.BoardPageCard) return true;
         if (this.closest(g => g.url == BlockUrlConstant.BoardPageCard)) return false;
+        var table = this.closest(x => x.url == BlockUrlConstant.Table);
+        if (table&&table!==this) return false;
         if (this.page.pageLayout.type == PageLayoutType.board) return true;
         return this.closest(x => x.isFrame || x.isBoardBlock) ? true : false;
     }

@@ -31,14 +31,15 @@
     }
 
     &-subline {
-        display    : none;
-        position   : absolute;
-        z-index    : 1;
-        top        : 5px;
-        left       : 0px;
-        width      : 10px;
-        margin-left: -5px;
-        cursor     : col-resize;
+        pointer-events: visible;
+        display       : none;
+        position      : absolute;
+        z-index       : 1;
+        top           : 5px;
+        left          : 0px;
+        width         : 10px;
+        margin-left   : -5px;
+        cursor        : col-resize;
 
         &::after {
             cursor       : col-resize;
@@ -54,14 +55,15 @@
     }
 
     &-subline-x {
-        display   : none;
-        position  : absolute;
-        z-index   : 1;
-        top       : 0px;
-        left      : 5px;
-        height    : 10px;
-        margin-top: -5px;
-        cursor    : row-resize;
+        pointer-events: visible;
+        display       : none;
+        position      : absolute;
+        z-index       : 1;
+        top           : 0px;
+        left          : 5px;
+        height        : 10px;
+        margin-top    : -5px;
+        cursor        : row-resize;
 
         &::after {
             cursor       : row-resize;
@@ -77,16 +79,17 @@
     }
 
     &-btns-x {
-        display      : none;
-        position     : absolute;
-        z-index      : 2;
-        left         : 30px;
-        top          : 0px;
-        width        : 20px;
-        margin-left  : -20px;
-        height       : 20px;
-        border-radius: 50%;
-        box-sizing   : border-box;
+        pointer-events: visible;
+        display       : none;
+        position      : absolute;
+        z-index       : 2;
+        left          : 30px;
+        top           : 0px;
+        width         : 20px;
+        margin-left   : -20px;
+        height        : 20px;
+        border-radius : 50%;
+        box-sizing    : border-box;
 
 
         // top      : 50%;
@@ -94,21 +97,23 @@
     }
 
     &-btns-y {
-        display    : none;
-        position   : absolute;
-        z-index    : 2;
-        top        : 30px;
-        left       : 0px;
-        margin-left: -50%;
-        transform  : translate(50%, 0px);
+        pointer-events: visible;
+        display       : none;
+        position      : absolute;
+        z-index       : 2;
+        top           : 30px;
+        left          : 0px;
+        margin-left   : -50%;
+        transform     : translate(50%, 0px);
     }
 
     &-top-drag,
     &-left-drag {
-        position: absolute;
-        z-index : 1;
-        cursor  : pointer;
-        display : none;
+        pointer-events: visible;
+        position      : absolute;
+        z-index       : 1;
+        cursor        : pointer;
+        display       : none;
 
         >span {
             background-color: #ddd;
@@ -123,8 +128,9 @@
     }
 
     &-top-drag {
-        height: 5px;
-        top   : 0px;
+        pointer-events: visible;
+        height        : 10px;
+        top           : -5px;
 
         >span {
             position     : absolute;
@@ -133,15 +139,16 @@
             transform    : translate(-50%, -50%);
             border-radius: 4px 4px 0px 0px;
             width        : inherit;
-            height       : 4px;
+            height       : 8px;
         }
     }
 
     &-left-drag {
-        left    : 0px;
-        width   : 5px;
-        position: absolute;
-        z-index : 1;
+        pointer-events: visible;
+        left          : -5px;
+        width         : 10px;
+        position      : absolute;
+        z-index       : 1;
 
         >span {
             position     : absolute;
@@ -149,7 +156,7 @@
             left         : 50%;
             transform    : translate(-50%, -50%);
             border-radius: 4px 0px 0px 4px;
-            width        : 4px;
+            width        : 8px;
             height       : inherit;
         }
     }
@@ -157,29 +164,33 @@
     &-bottom-plus,
     &-right-plus,
     &-resize-plus {
-        position        : absolute;
-        z-index         : 1;
-        background-color: rgba(55, 53, 47, 0.06);
-        color           : rgba(55, 53, 47, 0.45);
-        fill            : currentColor;
-        display         : none;
-        justify-content : center;
-        align-items     : center;
-        cursor          : pointer;
+        pointer-events     : visible;
+        position           : absolute;
+        z-index            : 1;
+        // background-color: rgba(55, 53, 47, 0.06);
+        // color           : rgba(55, 53, 47, 0.45);
+        // fill            : currentColor;
+        display            : none;
+        justify-content    : center;
+        align-items        : center;
+        cursor             : pointer;
     }
 
     &-bottom-plus {
-        left  : 5px;
-        height: 14px;
+        pointer-events: visible;
+        left          : 5px;
+        height        : 20px;
     }
 
     &-right-plus {
-        top  : 5px;
-        width: 14px;
+        pointer-events: visible;
+        top           : 5px;
+        width         : 20px;
     }
 
     &-resize-plus {
-        width : 14px;
-        height: 14px;
+        pointer-events: visible;
+        width         : 20px;
+        height        : 20px;
     }
 }

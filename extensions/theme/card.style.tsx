@@ -31,7 +31,6 @@ export class CardBoxStyle extends EventsComponent {
         this.onUpdateTheme();
     }
     async onUpdateTheme() {
-        console.log(this.cardThemeStyle, 'cardThemeStyle');
         await this.block.onUpdateProps({ 'cardThemeStyle': this.cardThemeStyle }, { range: BlockRenderRange.self });
         this.forceUpdate();
     }

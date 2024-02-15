@@ -6,7 +6,6 @@ import { BlockCssName } from "../../../src/block/pattern/css";
 import { BlockView } from "../../../src/block/view";
 import { TextSpanArea } from "../../../src/block/view/appear";
 import { Rect, PointArrow } from "../../../src/common/vector/point";
-import "./style.less";
 import { lst } from "../../../i18n/store";
 import { BlockRenderRange } from "../../../src/block/enum";
 
@@ -98,13 +97,13 @@ export class Note extends Block {
         return this.getVisibleBound()
     }
 }
+
 @view('/note')
 export class NoteView extends BlockView<Note>{
     renderBg() {
         var bw = this.block.fixedSize.width;
         var size = (8 / 48) * bw + bw - 4;
-
-        return <svg style={{
+        return <svg className="pos" style={{
             width: size,
             height: size,
             top: (bw - size) / 2,
@@ -127,13 +126,16 @@ export class NoteView extends BlockView<Note>{
     }
     renderView() {
         var dx = this.block.realPx(10);
-        return <div className="sy-block-note" style={this.block.visibleStyle}>
+        return <div style={this.block.visibleStyle}>
             {this.renderBg()}
-            <div className="sy-block-note-content" style={{
+            <div className="pos flex-center border-box" style={{
+                top: 0,
+                left: 0,
                 padding: dx,
                 background: this.block.color,
                 width: this.block.fixedSize.width,
-                height: this.block.fixedSize.height
+                height: this.block.fixedSize.height,
+                overflow: 'hidden'
             }}>
                 <TextSpanArea placeholder={this.block.isFreeBlock ? lst("输入文本") : undefined} block={this.block}></TextSpanArea>
             </div>
