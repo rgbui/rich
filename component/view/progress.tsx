@@ -13,7 +13,8 @@ export class MeasureView extends React.Component<{
     inputting?: boolean,
     onChange: (value: number) => void,
     unit?: string,
-    unitComputed?: (value: number) => number
+    unitComputed?: (value: number) => number,
+    theme?: 'primary' | 'dark' | 'light'
 }>{
     constructor(props) {
         super(props);
@@ -75,8 +76,8 @@ export class MeasureView extends React.Component<{
         return <div className='shy-measure' ref={e => this.el = e} onMouseDown={e => e.stopPropagation()} >
             <div className="shy-measure-wrapper" onMouseDown={e => this.setProgress(e)}>
                 <div className='shy-measure-progress'>
-                    <div className='shy-measure-progress-bar' style={{ width: pa * 100 + '%' }}></div>
-                    <div className="shy-measure-progress-circle" style={{ left: pa * 100 + '%' }}></div>
+                    <div className={'shy-measure-progress-bar ' } style={{ width: pa * 100 + '%' }}></div>
+                    <div className={"shy-measure-progress-circle "+ (this.props.theme ? 'shy-measure-progress-' + this.props.theme : "")} style={{ left: pa * 100 + '%' }}></div>
                 </div>
             </div>
             {props.showValue !== false && <div className='shy-measure-value'>{typeof this.props.unitComputed == 'function' ? this.props.unitComputed(this.props.value) : this.props.value}{this.props.unit}</div>}
