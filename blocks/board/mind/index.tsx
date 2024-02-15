@@ -18,11 +18,20 @@ import { lst } from "../../../i18n/store";
 import { VR } from "../../../src/common/render";
 import { Polygon } from "../../../src/common/vector/polygon";
 import './style.less';
+import { AppearAnchor } from "../../../src/block/appear";
+import { Icon } from "../../../component/view/icon";
 
 @url('/flow/mind')
 export class FlowMind extends Block {
-    async created(this: Block): Promise<void> {
+    async created() {
         this.pattern.setFillStyle({ color: 'rgb(80,194,139)' });
+        if (this.isMindRoot) {
+            this.pattern.setFontStyle({
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: 'rgb(242,71,38)',
+            });
+        }
     }
     @prop()
     direction: 'none' | 'x' | 'y' = 'none';
@@ -47,6 +56,13 @@ export class FlowMind extends Block {
         ];
     }
     @prop()
+    subMindSpread: boolean = true;
+    @prop()
+    otherMindSpread: boolean = true;
+
+    @prop()
+    isDragSize: boolean = false;
+    @prop()
     fixedWidth: number = 60;
     @prop()
     fixedHeight: number = 30;
@@ -57,13 +73,13 @@ export class FlowMind extends Block {
     @prop()
     minBoxStyle: {
         width: number,
-        type: 'solid' | 'dash' | 'none',
+        type: 'solid' | 'dash' | 'circle' | 'none',
         borderColor: string,
         radius: number
     } = {
-            width: 1,
+            width: 3,
             type: 'solid',
-            borderColor: 'rgb(80,194,139)',
+            borderColor: 'rgb(242,71,38)',
             radius: 16
         }
     get fixedSize(): { width: number; height: number; } {
@@ -86,7 +102,7 @@ export class FlowMind extends Block {
         var { width, height } = this.fixedSize;
         var rect = new Rect(0, 0, width, height);
         var s = gm.getScaling().x;
-        var extendRect = rect.extend(20 / s);
+        var extendRect = rect.extend(24 / s);
         var pathRects = RectUtility.getRectLineRects(rect, 1 / s);
         pickers.push(...pathRects.map((pr, i) => {
             var arrows: PointArrow[] = [];
@@ -129,6 +145,7 @@ export class FlowMind extends Block {
                 if (this.mindDirection == 'x' && (i == 0 || i == 2)) type = BoardPointType.connectPort;
                 else if (this.mindDirection == 'y' && (i == 1 || i == 3)) type = BoardPointType.connectPort;
             }
+            if (type == BoardPointType.mindAdd && this.subMindSpread === false) return;
             var arrows: PointArrow[] = [];
             if (i == 0) arrows = [PointArrow.top, PointArrow.center];
             else if (i == 1) arrows = [PointArrow.middle, PointArrow.right];
@@ -140,6 +157,35 @@ export class FlowMind extends Block {
                 point: gm.transform(p)
             }
         }))
+        if (this.subMindSpread && (this.otherChilds.length > 0 || this.subChilds.length > 0)) {
+            pickers.push(...rect.centerPoints.toArray((p, i) => {
+                var type = BoardPointType.mindSpread;
+                if (!this.isMindRoot) {
+                    if (this.parentKey == 'subChilds') {
+                        if (this.mindDirection == 'x' && i == 1) return;
+                        else if (this.mindDirection == 'y' && i == 2) return;
+                    }
+                    else if (this.parentKey == 'otherChilds') {
+                        if (this.mindDirection == 'x' && i == 3) return;
+                        else if (this.mindDirection == 'y' && i == 0) return;
+                    }
+                }
+                if (this.mindDirection != 'none') {
+                    if (this.mindDirection == 'x' && (i == 0 || i == 2)) return;
+                    else if (this.mindDirection == 'y' && (i == 1 || i == 3)) return;
+                }
+                var arrows: PointArrow[] = [];
+                if (i == 0) arrows = [PointArrow.top, PointArrow.center];
+                else if (i == 1) arrows = [PointArrow.middle, PointArrow.right];
+                else if (i == 2) arrows = [PointArrow.bottom, PointArrow.center]
+                else if (i == 3) arrows = [PointArrow.middle, PointArrow.left]
+                return {
+                    type,
+                    arrows,
+                    point: gm.transform(p)
+                }
+            }))
+        }
         return pickers;
     }
     get mindEl() {
@@ -183,6 +229,13 @@ export class FlowMind extends Block {
                         self.page.kit.picker.onPicker([newBlock], true);
                     })
                 })
+            })
+        }
+        else if (selector.type == BoardPointType.mindSpread) {
+            this.page.onAction('onMindSpread', async () => {
+                await this.updateProps({ mindSpread: !this.subMindSpread });
+                this.renderAllMinds();
+                this.forceUpdate();
             })
         }
     }
@@ -236,6 +289,7 @@ export class FlowMind extends Block {
         var rect = new Rect(0, 0, fs.width, fs.height);
         var offset = 100;
         var gap = 30;
+        if (this.subMindSpread === false) return;
         if (this.mindRoot.direction == 'x') {
             if (this.parent && this.parent instanceof FlowMind && !(this.parent as FlowMind).isMindRoot) {
                 var pa = this.parent as FlowMind;
@@ -307,6 +361,7 @@ export class FlowMind extends Block {
             cs.push({ name: 'mindLineType', value: this.lineType });
         }
         cs.push({ name: 'mindLineColor', value: this.lineColor });
+        cs.push({ name: 'fontFamily', value: this.pattern.css(BlockCssName.font)?.fontFamily });
         cs.push({ name: 'fontSize', value: Math.round(this.pattern.css(BlockCssName.font)?.fontSize || 14) });
         cs.push({ name: 'fontWeight', value: bold == 'bold' || bold == 500 ? true : false });
         cs.push({ name: 'fontStyle', value: this.pattern.css(BlockCssName.font)?.fontStyle == 'italic' ? true : false });
@@ -675,6 +730,8 @@ export class FlowMind extends Block {
                             },
                             { fixedWidth: block.fixedWidth, fixedHeight: block.fixedHeight }, BlockRenderRange.self
                         )
+                        if (block.isDragSize == false)
+                            await block.updateProps({ isDragSize: true }, BlockRenderRange.self);
                         block.page.addUpdateEvent(async () => {
                             if (block.isMindRoot) { block.renderAllMinds(); block.forceUpdate(); }
                             else { (block.parent as FlowMind).renderMinds(); block.parent.forceUpdate(); }
@@ -705,10 +762,17 @@ export class FlowMind extends Block {
     async onInputed(): Promise<void> {
         this.page.kit.picker.onRePicker();
     }
+    focusAnchor(this: Block, anchor: AppearAnchor) {
+        this.page.kit.picker.onRePicker();
+    }
+    blurAnchor(this: Block, anchor: AppearAnchor) {
+        this.page.kit.picker.onRePicker();
+    }
 }
 @view('/flow/mind')
 export class FlowMindView extends BlockView<FlowMind>{
     updateFlowLine() {
+        if (this.block.subMindSpread == false) return;
         if (this.flowMindLine) {
             var { width, height } = this.block.fixedSize;
             var rect = new Rect(0, 0, width, height);
@@ -740,14 +804,44 @@ export class FlowMindView extends BlockView<FlowMind>{
         var text = lst('中心主题');
         if (this.block.deep == 1) text = lst('分支主题');
         else text = lst('子主题')
-        return <div className='sy-flow-mind-text'
-            style={this.block.contentStyle}
+        var cs = this.block.contentStyle;
+        if (this.block.isDragSize == false) {
+            delete cs.width;
+        }
+        return <div className={'sy-flow-mind-text ' + (this.block.subMindSpread ? "" : "relative")}
+            style={cs}
             ref={e => this.mindEl = e} >
-            <TextSpanArea placeholder={text} block={this.block}></TextSpanArea>
+            <div style={{ margin: '5px 10px' }}>
+                <TextSpanArea placeholder={text} block={this.block}></TextSpanArea>
+            </div>
+            {this.block.subMindSpread == false && this.renderSpread()}
         </div>
+    }
+    renderSpread() {
+        var s = this.block.realPx(12);
+        if (this.block.mindRoot.direction == 'x') {
+            return <div>
+                <div className="pos flex-center" style={{ top: '50%', left: 0, transform: 'translate(-100%, -50%)' }}><div className="circle cursor flex-center" style={{ width: s, height: s, backgroundColor: 'var(--text-b-color)', color: '#fff' }}>
+                    <Icon size={8} icon={{ name: 'byte', code: 'minus' }}></Icon>
+                </div>
+                </div>
+                <div className="pos flex-center" style={{ top: '50%', right: 0, transform: 'translate(-100%, -50%)' }}> <div className="circle cursor flex-center" style={{ width: s, height: s, backgroundColor: 'var(--text-b-color)', color: '#fff' }}>
+                    <Icon size={8} icon={{ name: 'byte', code: 'minus' }}></Icon>
+                </div>
+                </div>
+            </div>
+        }
+        else {
+            return <div>
+
+            </div>
+        }
     }
     mindEl: HTMLElement;
     renderSubChilds() {
+        if (this.block.subMindSpread === false) {
+            return <></>
+        }
         return <>
             <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>
             <ChildsArea childs={this.block.blocks.otherChilds}></ChildsArea>
