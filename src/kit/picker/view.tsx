@@ -89,7 +89,7 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
                             <Tip overlay={<Sp text='拖动旋转点击重置'>拖动旋转<br />点击重置</Sp>}><Icon className={'cursor'} icon={RotatingSvg} size={16}></Icon></Tip>
                         </foreignObject>
                     case BoardPointType.mindAdd:
-                        var s = 16;
+                        var s = 18;
                         return <foreignObject
                             className="mind-add"
                             key={i}
@@ -104,7 +104,7 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
                         </foreignObject>
                         break;
                     case BoardPointType.mindSpread:
-                        var s = 12;
+                        var s = 14;
                         var ox = pi.point.x - s / 2;
                         var oy = pi.point.y - s / 2;
                         if (pi.arrows.includes(PointArrow.top)) {

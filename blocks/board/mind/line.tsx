@@ -49,7 +49,6 @@ export class FlowMindLine extends React.Component<{ mind: FlowMind }>{
     }
     render() {
         if (!this.leftOrigin) return <></>;
-        if (this.props.mind.subMindSpread == false) return <></>;
         var g: FlowMind = this.props.mind.closest(g => (g as FlowMind).lineColor ? true : false) as FlowMind;
         if (!g) g = this.props.mind.mindRoot;
         return <svg

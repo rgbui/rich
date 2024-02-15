@@ -17,9 +17,8 @@ import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
 import { lst } from "../../../i18n/store";
 import { VR } from "../../../src/common/render";
 import { Polygon } from "../../../src/common/vector/polygon";
-import './style.less';
 import { AppearAnchor } from "../../../src/block/appear";
-import { Icon } from "../../../component/view/icon";
+import './style.less';
 
 @url('/flow/mind')
 export class FlowMind extends Block {
@@ -59,7 +58,6 @@ export class FlowMind extends Block {
     subMindSpread: boolean = true;
     @prop()
     otherMindSpread: boolean = true;
-
     @prop()
     isDragSize: boolean = false;
     @prop()
@@ -102,7 +100,8 @@ export class FlowMind extends Block {
         var { width, height } = this.fixedSize;
         var rect = new Rect(0, 0, width, height);
         var s = gm.getScaling().x;
-        var extendRect = rect.extend(24 / s);
+        var sextendRect = rect.extend(15 / s);
+        var extendRect = rect.extend(30 / s);
         var pathRects = RectUtility.getRectLineRects(rect, 1 / s);
         pickers.push(...pathRects.map((pr, i) => {
             var arrows: PointArrow[] = [];
@@ -129,7 +128,7 @@ export class FlowMind extends Block {
                 point: gm.transform(pr)
             }
         }))
-        pickers.push(...extendRect.centerPoints.toArray((p, i) => {
+        pickers.push(...sextendRect.centerPoints.toArray((p, i) => {
             var type = BoardPointType.mindAdd;
             if (!this.isMindRoot) {
                 if (this.parentKey == 'subChilds') {
@@ -145,7 +144,7 @@ export class FlowMind extends Block {
                 if (this.mindDirection == 'x' && (i == 0 || i == 2)) type = BoardPointType.connectPort;
                 else if (this.mindDirection == 'y' && (i == 1 || i == 3)) type = BoardPointType.connectPort;
             }
-            if (type == BoardPointType.mindAdd && this.subMindSpread === false) return;
+            if (type == BoardPointType.mindAdd) return;
             var arrows: PointArrow[] = [];
             if (i == 0) arrows = [PointArrow.top, PointArrow.center];
             else if (i == 1) arrows = [PointArrow.middle, PointArrow.right];
@@ -157,35 +156,85 @@ export class FlowMind extends Block {
                 point: gm.transform(p)
             }
         }))
-        if (this.subMindSpread && (this.otherChilds.length > 0 || this.subChilds.length > 0)) {
-            pickers.push(...rect.centerPoints.toArray((p, i) => {
-                var type = BoardPointType.mindSpread;
-                if (!this.isMindRoot) {
-                    if (this.parentKey == 'subChilds') {
-                        if (this.mindDirection == 'x' && i == 1) return;
-                        else if (this.mindDirection == 'y' && i == 2) return;
-                    }
-                    else if (this.parentKey == 'otherChilds') {
-                        if (this.mindDirection == 'x' && i == 3) return;
-                        else if (this.mindDirection == 'y' && i == 0) return;
-                    }
+        pickers.push(...(this.mindDirection == 'none' ? sextendRect : extendRect).centerPoints.toArray((p, i) => {
+            var type = BoardPointType.mindAdd;
+            if (!this.isMindRoot) {
+                if (this.parentKey == 'subChilds') {
+                    if (this.mindDirection == 'x' && i == 1) return;
+                    else if (this.mindDirection == 'y' && i == 2) return;
+                    if (this.subMindSpread == false) return;
                 }
-                if (this.mindDirection != 'none') {
-                    if (this.mindDirection == 'x' && (i == 0 || i == 2)) return;
-                    else if (this.mindDirection == 'y' && (i == 1 || i == 3)) return;
+                else if (this.parentKey == 'otherChilds') {
+                    if (this.mindDirection == 'x' && i == 3) return;
+                    else if (this.mindDirection == 'y' && i == 0) return;
+                    if (this.otherMindSpread == false) return;
                 }
-                var arrows: PointArrow[] = [];
-                if (i == 0) arrows = [PointArrow.top, PointArrow.center];
-                else if (i == 1) arrows = [PointArrow.middle, PointArrow.right];
-                else if (i == 2) arrows = [PointArrow.bottom, PointArrow.center]
-                else if (i == 3) arrows = [PointArrow.middle, PointArrow.left]
-                return {
-                    type,
-                    arrows,
-                    point: gm.transform(p)
+            }
+            if (this.mindDirection != 'none') {
+                if (this.mindDirection == 'x' && (i == 0 || i == 2)) return;
+                else if (this.mindDirection == 'x') {
+                    if (i == 1 && this.otherMindSpread == false) return;
+                    if (i == 3 && this.subMindSpread == false) return;
                 }
-            }))
-        }
+                if (this.mindDirection == 'y' && (i == 1 || i == 3)) return;
+                else if (this.mindDirection == 'y') {
+                    if (i == 0 && this.subMindSpread == false) return;
+                    if (i == 2 && this.otherMindSpread == false) return;
+                }
+            }
+            var arrows: PointArrow[] = [];
+            if (i == 0) arrows = [PointArrow.top, PointArrow.center];
+            else if (i == 1) arrows = [PointArrow.middle, PointArrow.right];
+            else if (i == 2) arrows = [PointArrow.bottom, PointArrow.center]
+            else if (i == 3) arrows = [PointArrow.middle, PointArrow.left]
+            return {
+                type,
+                arrows,
+                point: gm.transform(p)
+            }
+        }))
+        pickers.push(...rect.centerPoints.toArray((p, i) => {
+            var type = BoardPointType.mindSpread;
+            if (!this.isMindRoot) {
+                if (this.parentKey == 'subChilds') {
+                    if (this.mindDirection == 'x' && i == 1) return;
+                    else if (this.mindDirection == 'y' && i == 2) return;
+                }
+                else if (this.parentKey == 'otherChilds') {
+                    if (this.mindDirection == 'x' && i == 3) return;
+                    else if (this.mindDirection == 'y' && i == 0) return;
+                }
+            }
+            var data: Record<string, any> = {};
+            if (this.mindDirection != 'none') {
+                if (this.mindDirection == 'x' && (i == 0 || i == 2)) return;
+                else if (this.mindDirection == 'y' && (i == 1 || i == 3)) return;
+                if (this.mindDirection == 'x' && (i == 1 || i == 3)) {
+                    if (i == 3 && (this.subChilds.length == 0 || this.subMindSpread == false)) return;
+                    else if (i == 3) data.key = 'subMindSpread';
+                    if (i == 1 && (this.otherChilds.length == 0 || this.otherMindSpread == false)) return;
+                    else if (i == 1) data.key = 'otherMindSpread';
+                }
+                if (this.mindDirection == 'y' && (i == 0 || i == 2)) {
+                    if (i == 0 && (this.subChilds.length == 0 || this.subMindSpread == false)) return;
+                    else if (i == 0) data.key = 'subMindSpread';
+                    if (i == 2 && (this.otherChilds.length == 0 || this.otherMindSpread == false)) return;
+                    else if (i == 2) data.key = 'otherMindSpread';
+                }
+            }
+            else return;
+            var arrows: PointArrow[] = [];
+            if (i == 0) arrows = [PointArrow.top, PointArrow.center];
+            else if (i == 1) arrows = [PointArrow.middle, PointArrow.right];
+            else if (i == 2) arrows = [PointArrow.bottom, PointArrow.center]
+            else if (i == 3) arrows = [PointArrow.middle, PointArrow.left]
+            return {
+                type,
+                arrows,
+                point: gm.transform(p),
+                data
+            }
+        }))
         return pickers;
     }
     get mindEl() {
@@ -199,7 +248,7 @@ export class FlowMind extends Block {
     async onPickerMousedown(selector: BoardBlockSelector, event: React.MouseEvent) {
         var self = this;
         if (selector.type == BoardPointType.mindAdd) {
-            this.page.onAction(ActionDirective.onMindAddSub, async () => {
+            await this.page.onAction(ActionDirective.onMindAddSub, async () => {
                 var keys = 'subChilds';
                 if (selector.arrows.every(g => [PointArrow.top, PointArrow.center].includes(g))) {
                     if (this.isMindRoot) await this.updateProps({ direction: 'y' });
@@ -232,19 +281,24 @@ export class FlowMind extends Block {
             })
         }
         else if (selector.type == BoardPointType.mindSpread) {
-            this.page.onAction('onMindSpread', async () => {
-                await this.updateProps({ mindSpread: !this.subMindSpread });
-                this.renderAllMinds();
-                this.forceUpdate();
-            })
+            var key = selector.data.key;
+            await this.onMindSpread(key);
+            this.page.kit.picker.onRePicker();
         }
+    }
+    async onMindSpread(key: string) {
+        await this.page.onAction('onMindSpread', async () => {
+            await this.updateProps({ [key]: !this[key] }, BlockRenderRange.self);
+        })
+        this.renderAllMinds();
     }
     updateRenderLines(isSelfUpdate?: boolean, isAll?: boolean): void {
         super.updateRenderLines(isSelfUpdate);
-        if (this.parent instanceof FlowMind) {
+        if (this.parent instanceof FlowMind && (this.parent.view as any)) {
             (this.parent.view as any).updateFlowLine();
         }
-        (this.view as any).updateFlowLine();
+        if ((this.view as any))
+            (this.view as any).updateFlowLine();
         if (isAll) {
             this.blocks.subChilds.forEach((c: FlowMind) => c.updateRenderLines(isSelfUpdate, isAll));
             this.blocks.otherChilds.forEach((c: FlowMind) => c.updateRenderLines(isSelfUpdate, isAll));
@@ -289,7 +343,6 @@ export class FlowMind extends Block {
         var rect = new Rect(0, 0, fs.width, fs.height);
         var offset = 100;
         var gap = 30;
-        if (this.subMindSpread === false) return;
         if (this.mindRoot.direction == 'x') {
             if (this.parent && this.parent instanceof FlowMind && !(this.parent as FlowMind).isMindRoot) {
                 var pa = this.parent as FlowMind;
@@ -297,29 +350,31 @@ export class FlowMind extends Block {
                 if (pr.w > fs.width) offset += pr.w - fs.width;
             }
             var topStart = 0 - (this.cacDirectionRange('left').h / 2 - rect.height / 2);
-            this.blocks.subChilds.each((item: FlowMind, i: number) => {
-                if (deep) item.cacChildsFlowMind(deep);
-                var rc = item.cacDirectionRange('left');
-                var fs = item.fixedSize;
-                var matrix = new Matrix();
-                var h = Math.max(rc.h, fs.height);
-                matrix.translate(0 - offset - fs.width, topStart + (h - fs.height) / 2);
-                topStart += h;
-                topStart += gap;
-                item.onlyUpdateMatrix(matrix);
-            });
+            if (this.subMindSpread !== false)
+                this.blocks.subChilds.each((item: FlowMind, i: number) => {
+                    if (deep) item.cacChildsFlowMind(deep);
+                    var rc = item.cacDirectionRange('left');
+                    var fs = item.fixedSize;
+                    var matrix = new Matrix();
+                    var h = Math.max(rc.h, fs.height);
+                    matrix.translate(0 - offset - fs.width, topStart + (h - fs.height) / 2);
+                    topStart += h;
+                    topStart += gap;
+                    item.onlyUpdateMatrix(matrix);
+                });
             var topStart = 0 - (this.cacDirectionRange('right').h / 2 - rect.height / 2);
-            this.blocks.otherChilds.each((item: FlowMind, i: number) => {
-                if (deep) item.cacChildsFlowMind(deep);
-                var rc = item.cacDirectionRange('right');
-                var fs = item.fixedSize;
-                var matrix = new Matrix();
-                var h = Math.max(rc.h, fs.height);
-                matrix.translate(offset + rect.width, topStart + (h - fs.height) / 2);
-                topStart += h;
-                topStart += gap;
-                item.onlyUpdateMatrix(matrix);
-            });
+            if (this.otherMindSpread !== false)
+                this.blocks.otherChilds.each((item: FlowMind, i: number) => {
+                    if (deep) item.cacChildsFlowMind(deep);
+                    var rc = item.cacDirectionRange('right');
+                    var fs = item.fixedSize;
+                    var matrix = new Matrix();
+                    var h = Math.max(rc.h, fs.height);
+                    matrix.translate(offset + rect.width, topStart + (h - fs.height) / 2);
+                    topStart += h;
+                    topStart += gap;
+                    item.onlyUpdateMatrix(matrix);
+                });
         }
         else if (this.mindRoot.direction == 'y') {
             if (this.parent && this.parent instanceof FlowMind && !(this.parent as FlowMind).isMindRoot) {
@@ -328,29 +383,31 @@ export class FlowMind extends Block {
                 if (pr.h > fs.height) offset += pr.h - fs.height;
             }
             var leftStart = rect.width / 2 - this.cacDirectionRange('top').w / 2;
-            this.blocks.subChilds.each((item: FlowMind, i: number) => {
-                if (deep) item.cacChildsFlowMind(deep);
-                var rc = item.cacDirectionRange('top');
-                var fs = item.fixedSize;
-                var matrix = new Matrix();
-                var w = Math.max(rc.w, fs.width);
-                matrix.translate(leftStart + (w - fs.width) / 2, 0 - offset - fs.height);
-                leftStart += w;
-                leftStart += gap;
-                item.onlyUpdateMatrix(matrix);
-            });
+            if (this.subMindSpread !== false)
+                this.blocks.subChilds.each((item: FlowMind, i: number) => {
+                    if (deep) item.cacChildsFlowMind(deep);
+                    var rc = item.cacDirectionRange('top');
+                    var fs = item.fixedSize;
+                    var matrix = new Matrix();
+                    var w = Math.max(rc.w, fs.width);
+                    matrix.translate(leftStart + (w - fs.width) / 2, 0 - offset - fs.height);
+                    leftStart += w;
+                    leftStart += gap;
+                    item.onlyUpdateMatrix(matrix);
+                });
             var leftStart = rect.width / 2 - this.cacDirectionRange('bottom').w / 2;
-            this.blocks.otherChilds.each((item: FlowMind, i: number) => {
-                if (deep) item.cacChildsFlowMind(deep);
-                var rc = item.cacDirectionRange('bottom');
-                var fs = item.fixedSize;
-                var matrix = new Matrix();
-                var w = Math.max(rc.w, fs.width);
-                matrix.translate(leftStart + (w - fs.width) / 2, offset + rect.height);
-                leftStart += w;
-                leftStart += gap;
-                item.onlyUpdateMatrix(matrix);
-            });
+            if (this.otherMindSpread !== false)
+                this.blocks.otherChilds.each((item: FlowMind, i: number) => {
+                    if (deep) item.cacChildsFlowMind(deep);
+                    var rc = item.cacDirectionRange('bottom');
+                    var fs = item.fixedSize;
+                    var matrix = new Matrix();
+                    var w = Math.max(rc.w, fs.width);
+                    matrix.translate(leftStart + (w - fs.width) / 2, offset + rect.height);
+                    leftStart += w;
+                    leftStart += gap;
+                    item.onlyUpdateMatrix(matrix);
+                });
         }
     }
     async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
@@ -769,10 +826,10 @@ export class FlowMind extends Block {
         this.page.kit.picker.onRePicker();
     }
 }
+
 @view('/flow/mind')
 export class FlowMindView extends BlockView<FlowMind>{
     updateFlowLine() {
-        if (this.block.subMindSpread == false) return;
         if (this.flowMindLine) {
             var { width, height } = this.block.fixedSize;
             var rect = new Rect(0, 0, width, height);
@@ -782,12 +839,14 @@ export class FlowMindView extends BlockView<FlowMind>{
                 var subRect = new Rect(0, 0, s.width, s.height);
                 return sub.matrix.appended(sub.moveMatrix).transform(this.block.mindDirection != 'y' ? subRect.rightMiddle : subRect.bottomCenter);
             });
+            if (this.block.subMindSpread === false) leftPoints = [];
             var rightOrigin = this.block.mindDirection != 'y' ? rect.rightMiddle : rect.bottomCenter;
             var rightPoints = this.block.blocks.otherChilds.map((sub: FlowMind) => {
                 var s = sub.fixedSize;
                 var subRect = new Rect(0, 0, s.width, s.height);
                 return sub.matrix.appended(sub.moveMatrix).transform(this.block.mindDirection != 'y' ? subRect.leftMiddle : subRect.topCenter);
             });
+            if (this.block.otherMindSpread === false) rightPoints = [];
             this.flowMindLine.updateView(
                 this.block.mindDirection,
                 leftOrigin,
@@ -808,44 +867,54 @@ export class FlowMindView extends BlockView<FlowMind>{
         if (this.block.isDragSize == false) {
             delete cs.width;
         }
-        return <div className={'sy-flow-mind-text ' + (this.block.subMindSpread ? "" : "relative")}
+        return <div className={'sy-flow-mind-text ' + (this.block.subMindSpread === false || this.block.otherMindSpread == false ? "relative" : "")}
             style={cs}
             ref={e => this.mindEl = e} >
             <div style={{ margin: '5px 10px' }}>
                 <TextSpanArea placeholder={text} block={this.block}></TextSpanArea>
             </div>
-            {this.block.subMindSpread == false && this.renderSpread()}
+            {this.renderSpread()}
         </div>
     }
     renderSpread() {
-        var s = this.block.realPx(12);
+        var s = 16;
         if (this.block.mindRoot.direction == 'x') {
             return <div>
-                <div className="pos flex-center" style={{ top: '50%', left: 0, transform: 'translate(-100%, -50%)' }}><div className="circle cursor flex-center" style={{ width: s, height: s, backgroundColor: 'var(--text-b-color)', color: '#fff' }}>
-                    <Icon size={8} icon={{ name: 'byte', code: 'minus' }}></Icon>
+
+                {this.block.otherChilds.length > 0 && this.block.otherMindSpread == false && <div onMouseDown={e => { e.stopPropagation(); this.block.onMindSpread('otherMindSpread') }} className="pos flex-center sy-flow-mind-spread" style={{ top: '50%', right: -2, transform: 'translate(100%, -50%)' }}><div className="circle cursor flex-center" style={{ width: s, height: s }}>
+                    <span style={{ fontSize: 14 }}>{this.block.otherChilds.length}</span>
                 </div>
-                </div>
-                <div className="pos flex-center" style={{ top: '50%', right: 0, transform: 'translate(-100%, -50%)' }}> <div className="circle cursor flex-center" style={{ width: s, height: s, backgroundColor: 'var(--text-b-color)', color: '#fff' }}>
-                    <Icon size={8} icon={{ name: 'byte', code: 'minus' }}></Icon>
-                </div>
-                </div>
+                </div>}
+
+                {this.block.subChilds.length > 0 && this.block.subMindSpread == false && <div onMouseDown={e => { e.stopPropagation(); this.block.onMindSpread('subMindSpread') }} className="pos flex-center  sy-flow-mind-spread" style={{ top: '50%', left: -2, transform: 'translate(-100%, -50%)' }}>
+                    <div className="circle cursor flex-center" style={{ width: s, height: s }}>
+                        <span style={{ fontSize: 14 }}>{this.block.subChilds.length}</span>
+                    </div>
+                </div>}
+
             </div>
         }
         else {
             return <div>
+                {this.block.otherChilds.length > 0 && this.block.otherMindSpread == false && <div onMouseDown={e => { e.stopPropagation(); this.block.onMindSpread('otherMindSpread') }} className="pos flex-center sy-flow-mind-spread" style={{ left: '50%', bottom: -2, transform: 'translate(-50%,100%)' }}><div className="circle cursor flex-center" style={{ width: s, height: s }}>
+                    <span style={{ fontSize: 14 }}>{this.block.otherChilds.length}</span>
+                </div>
+                </div>}
 
+                {this.block.subChilds.length > 0 && this.block.subMindSpread == false && <div onMouseDown={e => { e.stopPropagation(); this.block.onMindSpread('subMindSpread') }} className="pos flex-center  sy-flow-mind-spread" style={{ left: '50%', top: -2, transform: 'translate(-50%,-100%)' }}>
+                    <div className="circle cursor flex-center" style={{ width: s, height: s }}>
+                        <span style={{ fontSize: 14 }}>{this.block.subChilds.length}</span>
+                    </div>
+                </div>}
             </div>
         }
     }
     mindEl: HTMLElement;
     renderSubChilds() {
-        if (this.block.subMindSpread === false) {
-            return <></>
-        }
-        return <>
-            <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>
-            <ChildsArea childs={this.block.blocks.otherChilds}></ChildsArea>
-        </>
+        return <div>
+            {this.block.subMindSpread && <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>}
+            {this.block.otherMindSpread && <ChildsArea childs={this.block.blocks.otherChilds}></ChildsArea>}
+        </div>
     }
     flowMindLine: FlowMindLine;
     renderView() {

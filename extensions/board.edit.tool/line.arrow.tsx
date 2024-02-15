@@ -199,7 +199,7 @@ export function LineTypes(props: {
         ></div>
         {props.tool.isShowDrop('lineType') && <div className="shy-line-types-drops w-200">
             <div className="shy-line-types-opacity">
-                <div className=" f-12 text-1"><label><S>线条宽度</S></label><span style={{ float: 'right' }}>{Math.round(props.strokeWidth)}px</span></div>
+                <div className=" f-12 text-1"><label><S>线条宽度</S></label><span style={{ float: 'right' }}>{Math.round(props.strokeWidth)}</span></div>
                 <MeasureView
                     theme="light"
                     showValue={false}

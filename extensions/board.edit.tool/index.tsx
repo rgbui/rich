@@ -79,7 +79,7 @@ export class BoardEditTool extends EventsComponent {
         }
         if (name == 'divider') return <div key={at} className={'shy-board-edit-tool-devide'}></div>
         else if (name == 'mindDirection') {
-            return <Tip key={at} placement="top" text='思维导图方向'>
+            return <Tip key={at} placement="top" text='分支方向'>
                 <div className={'shy-board-edit-tool-item'}>
                     <SelectBox value={getValue('mindDirection')}
                         onChange={e => this.onChange('mindDirection', e)}
@@ -591,8 +591,8 @@ export class BoardEditTool extends EventsComponent {
                 "backgroundColor",
                 "backgroundNoTransparentColor",
                 "divider",
-                "borderWidth",
                 "fillColor",
+                "borderWidth",
                 "stroke",
                 "divider",
                 "frameFormat",
