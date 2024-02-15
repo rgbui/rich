@@ -20,6 +20,14 @@ import BoardArrowPointerSvg from "../src/assert/svg/board.arrow.pointer.svg";
 import BoardArrowPolylineSvg from "../src/assert/svg/board.arrow.polyline.svg";
 import BoardArrowSvg from "../src/assert/svg/board.arrow.svg";
 import BoardCardSvg from "../src/assert/svg/board.card.svg";
+import BoardFrame11Svg from "../src/assert/svg/board.frame.11.svg";
+import BoardFrame169Svg from "../src/assert/svg/board.frame.169.svg";
+import BoardFrame34Svg from "../src/assert/svg/board.frame.34.svg";
+import BoardFrame43Svg from "../src/assert/svg/board.frame.43.svg";
+import BoardFrameA4Svg from "../src/assert/svg/board.frame.a4.svg";
+import BoardFramePadSvg from "../src/assert/svg/board.frame.pad.svg";
+import BoardFramePhoneSvg from "../src/assert/svg/board.frame.phone.svg";
+import BoardFrameWebSvg from "../src/assert/svg/board.frame.web.svg";
 import BoardIconSvg from "../src/assert/svg/board.icon.svg";
 import BoardMoveBottomSvg from "../src/assert/svg/board.move.bottom.svg";
 import BoardMoveTopSvg from "../src/assert/svg/board.move.top.svg";
@@ -30,7 +38,6 @@ import BoardToolMeiSvg from "../src/assert/svg/board.tool.mei.svg";
 import BoardToolSharpSvg from "../src/assert/svg/board.tool.sharp.svg";
 import BoardToolStickerSvg from "../src/assert/svg/board.tool.sticker.svg";
 import BoardToolTextSvg from "../src/assert/svg/board.tool.text.svg";
-import BoldSvg from "../src/assert/svg/bold.svg";
 import BookSvg from "../src/assert/svg/book.svg";
 import BrainSvg from "../src/assert/svg/brain.svg";
 import BrokenLineSvg from "../src/assert/svg/brokenLine.svg";
@@ -70,7 +77,6 @@ import CustomizePageSvg from "../src/assert/svg/customizePage.svg";
 import CutSvg from "../src/assert/svg/cut.svg";
 import DatasourceSvg from "../src/assert/svg/datasource.svg";
 import DebugSvg from "../src/assert/svg/debug.svg";
-import DeleteLineSvg from "../src/assert/svg/delete.line.svg";
 import DeleteColSvg from "../src/assert/svg/deleteCol.svg";
 import DeleteRowSvg from "../src/assert/svg/deleteRow.svg";
 import DetailSvg from "../src/assert/svg/detail.svg";
@@ -130,16 +136,6 @@ import HorizontalDistributionSvg from "../src/assert/svg/horizontalDistribution.
 import ImageErrorSvg from "../src/assert/svg/imageError.svg";
 import ImportSvg from "../src/assert/svg/import.svg";
 import InfoSvg from "../src/assert/svg/info.svg";
-import ItalicSvg from "../src/assert/svg/italic.svg";
-import LayoutColSvg from "../src/assert/svg/layoutCol.svg";
-import LayoutCol2Svg from "../src/assert/svg/layoutCol2.svg";
-import LayoutCol3Svg from "../src/assert/svg/layoutCol3.svg";
-import LayoutColLeftSvg from "../src/assert/svg/layoutColLeft.svg";
-import LayoutColRightSvg from "../src/assert/svg/layoutColRight.svg";
-import LayoutContentSvg from "../src/assert/svg/layoutContent.svg";
-import LayoutContentCoverSvg from "../src/assert/svg/layoutContentCover.svg";
-import LayoutContentHeadFootSvg from "../src/assert/svg/layoutContentHeadFoot.svg";
-import LayoutContentsSvg from "../src/assert/svg/layoutContents.svg";
 import LikeSvg from "../src/assert/svg/like.svg";
 import LinkSvg from "../src/assert/svg/link.svg";
 import LinkToSvg from "../src/assert/svg/linkTo.svg";
@@ -149,7 +145,6 @@ import LogoutSvg from "../src/assert/svg/logout.svg";
 import LoopSvg from "../src/assert/svg/loop.svg";
 import LoveSvg from "../src/assert/svg/love.svg";
 import LoveFillSvg from "../src/assert/svg/loveFill.svg";
-import MagicSvg from "../src/assert/svg/magic.svg";
 import MaximizeSvg from "../src/assert/svg/maximize.svg";
 import MemberSvg from "../src/assert/svg/member.svg";
 import MentionSvg from "../src/assert/svg/mention.svg";
@@ -200,7 +195,6 @@ import SortSvg from "../src/assert/svg/sort.svg";
 import SquareplusSvg from "../src/assert/svg/squareplus.svg";
 import SuccessSvg from "../src/assert/svg/success.svg";
 import SwitchArrowSvg from "../src/assert/svg/switchArrow.svg";
-import SystemSvg from "../src/assert/svg/system.svg";
 import TableSvg from "../src/assert/svg/table.svg";
 import TextSvg from "../src/assert/svg/text.svg";
 import ThemeSvg from "../src/assert/svg/theme.svg";
@@ -231,7 +225,6 @@ import TypesSelectSvg from "../src/assert/svg/types.select.svg";
 import TypesSortSvg from "../src/assert/svg/types.sort.svg";
 import TypesStringSvg from "../src/assert/svg/types.string.svg";
 import TypesTitleSvg from "../src/assert/svg/types.title.svg";
-import UnderlineSvg from "../src/assert/svg/underline.svg";
 import UndoSvg from "../src/assert/svg/undo.svg";
 import UnlockSvg from "../src/assert/svg/unlock.svg";
 import UnpaySvg from "../src/assert/svg/unpay.svg";
@@ -267,6 +260,14 @@ BoardArrowPointerSvg,
 BoardArrowPolylineSvg,
 BoardArrowSvg,
 BoardCardSvg,
+BoardFrame11Svg,
+BoardFrame169Svg,
+BoardFrame34Svg,
+BoardFrame43Svg,
+BoardFrameA4Svg,
+BoardFramePadSvg,
+BoardFramePhoneSvg,
+BoardFrameWebSvg,
 BoardIconSvg,
 BoardMoveBottomSvg,
 BoardMoveTopSvg,
@@ -277,7 +278,6 @@ BoardToolMeiSvg,
 BoardToolSharpSvg,
 BoardToolStickerSvg,
 BoardToolTextSvg,
-BoldSvg,
 BookSvg,
 BrainSvg,
 BrokenLineSvg,
@@ -317,7 +317,6 @@ CustomizePageSvg,
 CutSvg,
 DatasourceSvg,
 DebugSvg,
-DeleteLineSvg,
 DeleteColSvg,
 DeleteRowSvg,
 DetailSvg,
@@ -377,16 +376,6 @@ HorizontalDistributionSvg,
 ImageErrorSvg,
 ImportSvg,
 InfoSvg,
-ItalicSvg,
-LayoutColSvg,
-LayoutCol2Svg,
-LayoutCol3Svg,
-LayoutColLeftSvg,
-LayoutColRightSvg,
-LayoutContentSvg,
-LayoutContentCoverSvg,
-LayoutContentHeadFootSvg,
-LayoutContentsSvg,
 LikeSvg,
 LinkSvg,
 LinkToSvg,
@@ -396,7 +385,6 @@ LogoutSvg,
 LoopSvg,
 LoveSvg,
 LoveFillSvg,
-MagicSvg,
 MaximizeSvg,
 MemberSvg,
 MentionSvg,
@@ -447,7 +435,6 @@ SortSvg,
 SquareplusSvg,
 SuccessSvg,
 SwitchArrowSvg,
-SystemSvg,
 TableSvg,
 TextSvg,
 ThemeSvg,
@@ -478,7 +465,6 @@ TypesSelectSvg,
 TypesSortSvg,
 TypesStringSvg,
 TypesTitleSvg,
-UnderlineSvg,
 UndoSvg,
 UnlockSvg,
 UnpaySvg,

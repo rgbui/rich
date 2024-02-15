@@ -1,0 +1,6 @@
+    <?xml version="1.0" encoding="UTF-8"?>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 32 32" id="icon-frame-phone">
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M21 23.5H11a.5.5 0 0 1-.5-.5V9a.5.5 0 0 1 .5-.5h2V9a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-.5h2a.5.5 0 0 1 .5.5v14a.5.5 0 0 1-.5.5ZM9 9a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H11a2 2 0 0 1-2-2V9Z"
+                fill="currentColor"></path>
+        </svg>

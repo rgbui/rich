@@ -1,0 +1,13 @@
+  <?xml version="1.0" encoding="UTF-8"?>
+  <svg 
+  xmlns="http://www.w3.org/2000/svg" 
+  width="24"
+   height="24" 
+  fill="none" 
+  viewBox="0 0 32 32" 
+  id="icon-frame-A4">
+            <path
+                d="M9.75 9c0-.69.56-1.25 1.25-1.25h7.586a.25.25 0 0 1 .177.073l.53-.53-.53.53 3.414 3.414a.25.25 0 0 1 .073.177V23c0 .69-.56 1.25-1.25 1.25H11c-.69 0-1.25-.56-1.25-1.25V9Z"
+                stroke="currentColor" stroke-width="1.5"></path>
+            <path d="m19 7 4 4v1h-4a1 1 0 0 1-1-1V7h1Z" fill="currentColor"></path>
+        </svg>
