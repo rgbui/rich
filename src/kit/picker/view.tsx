@@ -103,6 +103,35 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
                             </div>
                         </foreignObject>
                         break;
+                    case BoardPointType.mindSpread:
+                        var s = 12;
+                        var ox = pi.point.x - s / 2;
+                        var oy = pi.point.y - s / 2;
+                        if (pi.arrows.includes(PointArrow.top)) {
+                            oy = pi.point.y - s;
+                        }
+                        else if (pi.arrows.includes(PointArrow.bottom)) {
+                            oy = pi.point.y;
+                        }
+                        else if (pi.arrows.includes(PointArrow.left)) {
+                            ox = pi.point.x - s;
+                        }
+                        else {
+                            ox = pi.point.x
+                        }
+                        return <foreignObject
+                            className="mind-add"
+                            key={i}
+                            width={s}
+                            height={s}
+                            onMouseDown={e => this.picker.onPickerMousedown(block, pi, e)}
+                            x={ox}
+                            y={oy}>
+                            <div className="size-12 flex-center cursor" >
+                                <Icon size={8} icon={{ name: 'byte', code: 'minus' }}></Icon>
+                            </div>
+                        </foreignObject>
+                        break;
                 }
             })}
         </g>

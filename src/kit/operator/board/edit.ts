@@ -1,5 +1,6 @@
 import { Kit } from "../..";
 import { useBoardEditTool } from "../../../../extensions/board.edit.tool";
+import { BlockRenderRange } from "../../../block/enum";
 import { ActionDirective } from "../../../history/declare";
 export async function openBoardEditTool(kit: Kit) {
     if (kit.picker.blocks.length > 0) {
@@ -19,6 +20,9 @@ export async function openBoardEditTool(kit: Kit) {
                                 await block.setBoardEditCommand(r.name, r.value);
                             else for (let n in r) {
                                 await block.setBoardEditCommand(n, r[n]);
+                            }
+                            if (r.props) {
+                                await block.updateProps(r.props, BlockRenderRange.self)
                             }
                         })
                     });

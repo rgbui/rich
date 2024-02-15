@@ -19,7 +19,7 @@ export function CheckBoardTool(
     var gm = fra.globalWindowMatrix;
     var re = gm.inverseTransform(Point.from(event));
     var url = kit.boardSelector.currentSelector.url;
-    if (url == BlockUrlConstant.Mind || url == BlockUrlConstant.TextSpan) {
+    if (url == BlockUrlConstant.Mind || url == BlockUrlConstant.TextSpan || url == BlockUrlConstant.Table) {
         fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
             var data = kit.boardSelector.currentSelector.data || {};
             var ma = new Matrix();
@@ -45,7 +45,7 @@ export function CheckBoardTool(
                 data.to = lodash.cloneDeep(data.from);
                 oldTo = lodash.cloneDeep(data.to);
                 newBlock = await kit.page.createBlock(kit.boardSelector.currentSelector.url, data, fra);
-                await setBoardBlockCache(newBlock);
+                await setBoardBlockCache(newBlock, data);
                 newBlock.mounted(() => {
                     isMounted = true;
                 })
@@ -110,7 +110,7 @@ export function CheckBoardTool(
             }
         })
     }
-    else if (url == BlockUrlConstant.BoardImage|| url == BlockUrlConstant.Note || url == BlockUrlConstant.BoardPageCard || url == BlockUrlConstant.Shape || url == BlockUrlConstant.Frame) {
+    else if (url == BlockUrlConstant.BoardImage || url == BlockUrlConstant.Note || url == BlockUrlConstant.BoardPageCard || url == BlockUrlConstant.Shape || url == BlockUrlConstant.Frame) {
         var newBlock: Block;
         var isMounted: boolean = false;
         var initMatrix: Matrix;

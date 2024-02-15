@@ -3,6 +3,7 @@ import { Block } from "../../block";
 import { Point, Rect } from "../../common/vector/point";
 import { GridMap } from "../../page/grid";
 import { BlockUrlConstant } from "../../block/constant";
+import { FlowMind } from "../../../blocks/board/mind";
 
 export function CacAlignLines(block: Block, gm: GridMap, from: Point, to: Point, rect: Rect) {
     rect = rect.clone();
@@ -15,7 +16,7 @@ export function CacAlignLines(block: Block, gm: GridMap, from: Point, to: Point,
     var xbs = gm.findBlocksByRect(xrect);
     var ybs = gm.findBlocksByRect(yrect);
     var bs = block.page.getAtomBlocks(xbs.concat(ybs));
-    lodash.remove(bs, g => g === block || g.url == BlockUrlConstant.Line);
+    lodash.remove(bs, g => g === block || g.url == BlockUrlConstant.Line || g.url == BlockUrlConstant.Mind && !(g as FlowMind).isMindRoot);
 
     var vs: { nx: number, dx: number, dy: number, ny: number, lines: { arrow: 'x' | 'y', start: Point, end: Point }[] }[] = [];
     bs.forEach(b => {

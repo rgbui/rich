@@ -8,5 +8,6 @@ export enum BoardToolOperator{
     frame,
     upload,
     mind,
-    card
+    card,
+    table
 }

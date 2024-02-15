@@ -8,12 +8,23 @@ import {
     BoardToolStickerSvg,
     BoardToolSharpSvg,
     ConnetLineSvg,
-    BoardToolMeiSvg,
     BoardToolFrameSvg,
-    UploadSvg,
     MindSvg,
     BoardCardSvg,
-    PicSvg
+    PicSvg,
+    BoardArrowCurveSvg,
+    BoardArrowNoneSvg,
+    BoardArrowPolylineSvg,
+    BoardArrowSvg,
+    CollectTableSvg,
+    BoardFrame34Svg,
+    BoardFrame43Svg,
+    BoardFrame11Svg,
+    BoardFrame169Svg,
+    BoardFrameA4Svg,
+    BoardFramePadSvg,
+    BoardFrameWebSvg,
+    BoardFramePhoneSvg
 } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { getNoteSelector } from "../../../extensions/note";
@@ -25,8 +36,11 @@ import { Point, Rect } from "../../common/vector/point";
 import { BoardToolOperator } from "./declare";
 import { lst } from "../../../i18n/store";
 import { Tip } from "../../../component/view/tooltip/tip";
+import { S } from "../../../i18n/view";
 
-export class BoardSelector extends React.Component<{ kit: Kit }>{
+export class BoardSelector extends React.Component<{
+    kit: Kit
+}>{
     constructor(props) {
         super(props);
         this.fvs.on('change', (offset: Point) => {
@@ -43,65 +57,192 @@ export class BoardSelector extends React.Component<{ kit: Kit }>{
             style.top = this.point.y;
             style.right = this.point.x;
         }
-        return <div className="z-1000 pos w-40 padding-h-5  round-4 border-light shadow bg-white r-size-30 r-gap-l-5 r-gap-t-5 r-gap-b-5 r-item-hover r-round-4 r-cursor r-flex-center  " ref={e => this.el = e} style={style}>
+        return <div><div className="z-1000 pos w-40 padding-h-5  round-4 border-light shadow bg-white r-size-30 r-gap-l-5 r-gap-t-5 r-gap-b-5 r-item-hover r-round-4 r-cursor r-flex-center  " ref={e => this.el = e} style={style}>
 
             <Tip text='文本'><div
                 className={this.openSelector == BoardToolOperator.text ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.text, e) }}>
-                <Icon icon={BoardToolTextSvg} />
+                <Icon size={18} icon={BoardToolTextSvg} />
             </div></Tip>
 
             <Tip text='便签'><div
                 className={this.openSelector == BoardToolOperator.note ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.note, e) }}>
-                <Icon icon={BoardToolStickerSvg} />
+                <Icon size={18} icon={BoardToolStickerSvg} />
             </div></Tip>
 
             <Tip text='文档'>
                 <div
                     className={this.openSelector == BoardToolOperator.card ? "item-hover-focus" : ""}
                     onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.card, e) }}>
-                    <Icon icon={BoardCardSvg} />
+                    <Icon size={18} icon={BoardCardSvg} />
                 </div>
             </Tip>
 
             <Tip text='形状'><div
                 className={this.openSelector == BoardToolOperator.shape ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.shape, e) }}>
-                <Icon icon={BoardToolSharpSvg}></Icon>
+                <Icon size={18} icon={BoardToolSharpSvg}></Icon>
             </div></Tip>
 
             <Tip text='连线'><div
                 className={this.openSelector == BoardToolOperator.connect ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.connect, e) }}>
-                <Icon icon={ConnetLineSvg}></Icon>
+                <Icon size={18} icon={ConnetLineSvg}></Icon>
             </div></Tip>
 
             <Tip text='画笔'><div
                 className={this.openSelector == BoardToolOperator.pen ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.pen, e) }}>
-                <Icon icon={{ name: 'bytedance-icon', code: 'writing-fluently' }}></Icon>
+                <Icon size={18} icon={{ name: 'bytedance-icon', code: 'writing-fluently' }}></Icon>
             </div></Tip>
 
             <Tip text='容器'><div
                 className={this.openSelector == BoardToolOperator.frame ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.frame, e) }}>
-                <Icon icon={BoardToolFrameSvg}></Icon>
+                <Icon size={20} icon={BoardToolFrameSvg}></Icon>
             </div></Tip>
 
             <Tip text='图片'><div
                 className={this.openSelector == BoardToolOperator.upload ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.upload, e) }}>
                 {/* <Icon icon={UploadSvg}></Icon> */}
-                <Icon icon={PicSvg}></Icon>
+                <Icon size={18} icon={PicSvg}></Icon>
+            </div></Tip>
+
+            <Tip text='表格'><div
+                className={this.openSelector == BoardToolOperator.table ? "item-hover-focus" : ""}
+                onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.table, e) }}>
+                {/* <Icon icon={UploadSvg}></Icon> */}
+                <Icon size={18} icon={CollectTableSvg}></Icon>
             </div></Tip>
 
             <Tip text='思维导图'><div
                 className={this.openSelector == BoardToolOperator.mind ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.mind, e) }}>
-                <Icon icon={MindSvg}></Icon>
+                <Icon size={18} icon={MindSvg}></Icon>
             </div></Tip>
         </div>
+            {this.renderSelectProps()}
+        </div>
+    }
+    renderSelectProps() {
+        var style: CSSProperties = {};
+        if (this.openSelector == BoardToolOperator.connect) {
+            if (this.point) {
+                style.top = this.point.y + 100;
+                style.right = this.point.x + 60;
+            }
+            return <div style={style} className="z-1000 pos w-40 padding-h-5  round-4 border-light shadow bg-white r-size-30 r-gap-l-5 r-gap-t-5 r-gap-b-5 r-item-hover r-round-4 r-cursor r-flex-center  ">
+                <div onMouseDown={e => {
+                    this.currentSelector.data.lineType = 'straight';
+                    this.currentSelector.data.lineStart = 'none';
+                    this.currentSelector.data.lineEnd = '2';
+                }}><Icon size={32} icon={BoardArrowSvg}></Icon></div>
+                <div onMouseDown={e => {
+                    this.currentSelector.data.lineType = 'straight';
+                    this.currentSelector.data.lineStart = 'none';
+                    this.currentSelector.data.lineEnd = 'none';
+                }}><Icon size={32} icon={BoardArrowNoneSvg}></Icon></div>
+                <div onMouseDown={e => {
+                    this.currentSelector.data.lineType = 'curve';
+                    this.currentSelector.data.lineStart = 'none';
+                    this.currentSelector.data.lineEnd = '2';
+                }}><Icon size={32} icon={BoardArrowCurveSvg}></Icon></div>
+                <div onMouseDown={e => {
+                    this.currentSelector.data.lineType = 'line';
+                    this.currentSelector.data.lineStart = 'none';
+                    this.currentSelector.data.lineEnd = '2';
+                }}><Icon size={32} icon={BoardArrowPolylineSvg}></Icon></div>
+                {/* <div><Icon size={18} icon={BoardArrowFilletSvg}></Icon></div> */}
+            </div>
+        }
+        else if (this.openSelector == BoardToolOperator.frame) {
+            if (this.point) {
+                style.top = this.point.y + 100;
+                style.right = this.point.x + 60;
+                style.width = 3 * 55 + 5;
+            }
+            return <div style={style} className="z-1000 pos  padding-h-5  round-4 border-light shadow bg-white   ">
+                <div>
+                    <div className="gap-w-5 remark f-12"><S>画板</S></div>
+                    <div className="flex flex-wrap f-12 r-w-50 r-gap-l-5  r-item-hover r-round-4 r-cursor r-flex-center r-flex-col">
+
+                        <div style={{ height: 58 }} onMouseDown={e => {
+                            this.currentSelector.data.frameFormat = 'none';
+                        }}>
+                            <Icon size={20} icon={BoardToolFrameSvg}></Icon>
+                            <span><S>画板</S></span>
+                        </div>
+                        <div onMouseDown={e => {
+                            this.currentSelector.data.frameFormat = '3:4';
+                            this.currentSelector.data.fixedWidth = 300;
+                            this.currentSelector.data.fixedHeight = 400;
+                        }}><Icon size={32} icon={BoardFrame34Svg}></Icon>
+                            <span>3:4</span>
+                        </div>
+                        <div onMouseDown={e => {
+                            this.currentSelector.data.frameFormat = '4:3';
+                            this.currentSelector.data.fixedWidth = 400;
+                            this.currentSelector.data.fixedHeight = 300;
+                        }}><Icon size={32} icon={BoardFrame43Svg}></Icon>
+                            <span>4:3</span>
+                        </div>
+                        <div onMouseDown={e => {
+                            this.currentSelector.data.frameFormat = '1:1';
+                            this.currentSelector.data.fixedWidth = 300;
+                            this.currentSelector.data.fixedHeight = 300;
+                        }}><Icon size={32} icon={BoardFrame11Svg}></Icon>
+                            <span>1:1</span></div>
+                        <div onMouseDown={e => {
+                            this.currentSelector.data.frameFormat = '16:9';
+                            this.currentSelector.data.fixedWidth = 400;
+                            this.currentSelector.data.fixedHeight = 225;
+                        }}><Icon size={32} icon={BoardFrame169Svg}></Icon>
+                            <span>16:9</span></div>
+                        <div onMouseDown={e => {
+                            this.currentSelector.data.frameFormat = 'A4';
+                            this.currentSelector.data.fixedWidth = 210;
+                            this.currentSelector.data.fixedHeight = 297;
+                        }}><Icon size={32} icon={BoardFrameA4Svg}></Icon>
+                            <span>A4</span></div>
+                    </div>
+                </div>
+                <div>
+                    <div className="gap-w-5 remark f-12"><S>原型</S></div>
+                    <div className="flex  flex-wrap f-12  r-w-50 r-gap-l-5  r-item-hover r-round-4 r-cursor r-flex-center r-flex-col">
+
+                        <div onMouseDown={e => {
+                            this.currentSelector.data.frameFormat = 'phone';
+                            this.currentSelector.data.fixedWidth = 375;
+                            this.currentSelector.data.fixedHeight = 812;
+                        }}>
+                            <Icon size={32} icon={BoardFramePhoneSvg}></Icon>
+                            <span>Phone</span>
+                        </div>
+                        <div onMouseDown={e => {
+                            this.currentSelector.data.frameFormat = 'pad';
+                            this.currentSelector.data.fixedWidth = 768;
+                            this.currentSelector.data.fixedHeight = 1024;
+
+                        }}>
+                            <Icon size={32} icon={BoardFramePadSvg}></Icon>
+                            <span>Pad</span>
+                        </div>
+                        <div onMouseDown={e => {
+                            this.currentSelector.data.frameFormat = 'web';
+                            this.currentSelector.data.fixedWidth = 1440;
+                            this.currentSelector.data.fixedHeight = 1024;
+                        }}>
+                            <Icon size={32} icon={BoardFrameWebSvg}></Icon>
+                            <span>Web</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        }
+        else return <></>
     }
     currentSelector: { url: string, data?: Record<string, any>, event: React.MouseEvent }
     openSelector: BoardToolOperator = null;
@@ -110,7 +251,10 @@ export class BoardSelector extends React.Component<{ kit: Kit }>{
         else return false;
     }
     async selector(operator: BoardToolOperator, event: React.MouseEvent) {
-        if (operator == BoardToolOperator.arrow) { this.currentSelector = null; this.openSelector = null; }
+        if (operator == BoardToolOperator.arrow) {
+            this.currentSelector = null;
+            this.openSelector = null;
+        }
         else {
             if (this.openSelector == operator) {
                 await this.clearSelector();
@@ -150,9 +294,14 @@ export class BoardSelector extends React.Component<{ kit: Kit }>{
                     break;
                 case BoardToolOperator.connect:
                     sel.url = BlockUrlConstant.Line;
+                    sel.data = {}
                     break;
                 case BoardToolOperator.frame:
                     sel.url = BlockUrlConstant.Frame;
+                    sel.data = {}
+                    break;
+                case BoardToolOperator.table:
+                    sel.url = BlockUrlConstant.Table;
                     break;
                 case BoardToolOperator.pen:
                     sel.url = BlockUrlConstant.Pen;
