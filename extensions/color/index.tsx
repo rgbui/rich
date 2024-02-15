@@ -58,7 +58,7 @@ class ColorSelector extends EventsComponent {
         this.emit('change', value);
     }
     cv: ColorValue;
-    open(cv: ColorValue) {
+    open(cv?: ColorValue) {
         this.cv = cv;
         this.forceUpdate();
     }
@@ -68,7 +68,7 @@ interface ColorSelector {
     emit(name: 'change', data: ColorValue);
     only(name: 'change', fn: (data: ColorValue) => void);
 }
-export async function useColorSelector(pos: PopoverPosition, options: ColorValue) {
+export async function useColorSelector(pos: PopoverPosition, options?: ColorValue) {
     let popover = await PopoverSingleton(ColorSelector, { mask: true });
     let colorSelector = await popover.open(pos);
     colorSelector.open(options);

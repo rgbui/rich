@@ -8,8 +8,8 @@ export function TurnShapes(props: {
 }) {
     var sh = ShapesList.find(s => s.name == props.turnShapes);
     return <div className="shy-board-trun-shapes">
-        <div className="shy-board-trun-shapes-current" onMouseDown={e => props.tool.showDrop('turnShapes')}>
-            {sh && <span dangerouslySetInnerHTML={{ __html: sh.shape }}></span>}
+        <div className="shy-board-trun-shapes-current flex-center" onMouseDown={e => props.tool.showDrop('turnShapes')}>
+            {sh && <span className="size-16 flex-center" dangerouslySetInnerHTML={{ __html: sh.shape }}></span>}
         </div>
         {props.tool.isShowDrop('turnShapes') && <div className="shy-board-trun-shapes-drops">
             {ShapesList.filter(g => g.svg ? true : false).map(s => {

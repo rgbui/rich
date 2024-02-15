@@ -2,43 +2,67 @@ import React from "react";
 import { BoardEditTool } from ".";
 import { FontcolorSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
-import { ColorType } from "../note";
+import { BoardBackgroundColorList, BoardTextFontColorList } from "../color/data";
+import { ColorListBox } from "../color/list";
+import { lst } from "../../i18n/store";
 
-var colors: ColorType[] = [
-    { color: 'rgb(255,255,255)' },
-    { color: 'rgb(254,244,69)' },
-    { color: 'rgb(250,199,16)' },
-    { color: 'rgb(242,71,38)' },
-    { color: 'rgb(230,230,230)' },
-    { color: 'rgb(206,231,65)' },
-    { color: 'rgb(143,209,79)' },
-    { color: 'rgb(218,0,99)' },
-
-    { color: 'rgb(128,128,128)' },
-    { color: 'rgb(18,205,212)' },
-    { color: 'rgb(12,167,137)' },
-    { color: 'rgb(149,16,172)' },
-
-    { color: 'rgb(26,26,26)' },
-    { color: 'rgb(45,155,240)' },
-    { color: 'rgb(101,44,179)' },
-    { color: 'rgb(255,249,177)' },
-
-]
 export function FontColor(props: { tool: BoardEditTool, value: string, change?(value: string): void }) {
-
+    var colors = BoardTextFontColorList() as { text: string, color: string }[];
     return <div className="shy-board-edit-font-color" >
-        <div className="shy-board-edit-font-color-current" style={{marginTop:2}} onMouseDown={e => props.tool.showDrop('fontColor')}>
+        <div className="shy-board-edit-font-color-current flex-center flex-col" style={{ marginTop: 2 }} onMouseDown={e => props.tool.showDrop('fontColor')}>
             <Icon size={12} icon={FontcolorSvg}></Icon>
-            <div className="bottom-border" style={{ backgroundColor: props.value || '#fff' }}></div>
+            <div className="bottom-border round-2" style={{ backgroundColor: props.value || '#fff' }}></div>
         </div>
-        {props.tool.isShowDrop('fontColor') && <div className="w-160 shy-board-edit-font-color-drops">
-            {colors.map(c => {
-                return <a className={c.color == props.value ? "selected" : ""}
-                    onMouseDown={e => props.change(c.color)}
-                    key={c.color}
-                    style={{ backgroundColor: c.color }}></a>
-            })}
+        {props.tool.isShowDrop('fontColor') && <div style={{ width: 230 }} className="w-160 shy-board-edit-font-color-drops">
+            <ColorListBox title={lst('字体颜色')}
+                name={'fillColor'}
+                colors={colors}
+                value={props.value}
+                onChange={e => {
+                    props.change(e.color)
+                }}></ColorListBox>
+        </div>}
+    </div>
+}
+
+export function MindLineColor(props: { tool: BoardEditTool, value: string, change?(value: string): void }) {
+    var colors = BoardBackgroundColorList();
+    return <div className="shy-board-edit-font-color" >
+        <div className="shy-board-edit-font-color-current  flex-center flex-col" style={{ marginTop: 2 }} onMouseDown={e => props.tool.showDrop('mindLineColor')}>
+            <Icon size={16} icon={{ name: 'byte', code: 'mindmap-map' }}></Icon>
+            <div className="bottom-border round-2" style={{ backgroundColor: props.value || '#fff' }}></div>
+        </div>
+        {props.tool.isShowDrop('mindLineColor') && <div style={{ width: 230 }} className="w-160 shy-board-edit-font-color-drops">
+            <ColorListBox title={lst('分支颜色')}
+                name={'mindLineColor'}
+                colors={colors}
+                value={props.value}
+                onChange={e => {
+                    props.change(e.color)
+                }}></ColorListBox>
+        </div>}
+    </div>
+}
+
+export function LineColor(props: { name: string, tool: BoardEditTool, value: string, change?(value: string): void }) {
+    var colors = BoardBackgroundColorList();
+    return <div className="shy-board-edit-font-color" >
+        <div className="shy-board-edit-font-color-current  flex-center flex-col" style={{ marginTop: 2 }} onMouseDown={e => props.tool.showDrop(props.name)}>
+            <svg fill="none" viewBox="0 0 24 24" style={{ width: 12, height: 12 }} xmlns="http://www.w3.org/2000/svg">
+                <path fillRule="evenodd" clipRule="evenodd"
+                    d="M22.958 8.713a1 1 0 01-.67 1.245l-20 6a1 1 0 01-.575-1.916l20-6a1 1 0 011.245.67z" fill="currentColor">
+                </path>
+            </svg>
+            <div className="bottom-border round-2" style={{ backgroundColor: props.value || '#fff' }}></div>
+        </div>
+        {props.tool.isShowDrop(props.name) && <div style={{ width: 230 }} className="w-160 shy-board-edit-font-color-drops">
+            <ColorListBox title={lst('线条颜色')}
+                name={props.name}
+                colors={colors}
+                value={props.value}
+                onChange={e => {
+                    props.change(e.color)
+                }}></ColorListBox>
         </div>}
     </div>
 }

@@ -1,22 +1,22 @@
 .shy-board-edit-tool {
-    position          : fixed;
-    color             : rgb(55, 53, 47);
-    box-sizing        : border-box;
-    border-radius     : 3px;
-    background        : white;
-    z-index           : 10000;
-    display           : flex;
-    justify-content   : flex-start;
-    align-items       : stretch;
-    user-select       : none;
-    padding           : 5px;
-    border-radius     : 4px;
-    padding: 0px;
-    padding-right: 5px;
+    position       : fixed;
+    color          : rgb(55, 53, 47);
+    box-sizing     : border-box;
+    border-radius  : 3px;
+    background     : white;
+    display        : flex;
+    justify-content: flex-start;
+    align-items    : stretch;
+    user-select    : none;
+    padding        : 5px;
+    border-radius  : 4px;
+    padding        : 0px;
+    padding-right  : 5px;
+    box-shadow     : var(--shadow);
 
     &-item {
-        margin-top:5px;
-        margin-bottom: 5px;
+        margin-top     : 5px;
+        margin-bottom  : 5px;
         padding        : 5px;
         cursor         : pointer;
         display        : inline-flex;
@@ -24,35 +24,20 @@
         align-items    : center;
         border-radius  : 4px;
 
-        span {
-            font-size : 14px;
-            font-style: normal;
-        }
 
-        span+.shy-icon {
-            display    : inline-flex;
-            margin-left: 5px;
-            color      : rgba(55, 53, 47, 0.3);
-        }
 
         &.hover {
             color: rgb(46, 170, 220);
         }
     }
 
-    &-icon {
-        padding        : 5px 0px;
-        display        : flex;
-        justify-content: center;
-        align-items    : center;
-        cursor         : pointer;
-    }
-
     &-devide {
-        background-color: #eee;
+        background-color: rgba(18, 17, 42, 0.07);
         width           : 1px;
         margin-left     : 5px;
         margin-right    : 5px;
+        margin-top      : 10px;
+        margin-bottom   : 10px;
     }
 
     >* {
@@ -68,18 +53,10 @@
     height  : 20px;
 
     &-current {
-        display        : flex;
-        justify-content: flex-start;
-        align-items    : center;
-        flex-direction : column;
-
         a {
-            display      : inline-block;
-            width        : 18px;
-            height       : 18px;
-            border-radius: 50%;
-            border       : 1px solid rgba(0, 0, 0, 0.1);
-            box-sizing   : border-box;
+
+            border    : 1px solid rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
         }
 
         .bottom-border {
@@ -93,40 +70,22 @@
     }
 
     &-drops {
-        left              : 50%;
-        transform         : translate(-50%, 0px);
-        // margin-left    : -75px;
-        position          : absolute;
-        border-radius     : 3px;
-        background        : white;
-        z-index           : 2;
-        box-shadow        : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
-        top               : 28px;
-        overflow-y        : auto;
-        overflow-x        : hidden;
-        // width          : 160px;
-        min-height        : 100px;
-        display           : flex;
-        justify-content   : flex-start;
-        align-items       : flex-start;
-        flex-wrap         : wrap;
-        padding           : 10px;
-
-        a {
-            display      : inline-block;
-            box-sizing   : border-box;
-            width        : 30px;
-            height       : 30px;
-            margin       : 5px;
-            border-radius: 15px;
-            transition   : opacity 0.2s;
-            border       : 1px solid rgba(0, 0, 0, 0.1);
-            position     : relative;
-
-            &.selected {
-                box-shadow: 0 0 0 2px #fff, 0 0 0 4px blue;
-            }
-        }
+        left           : 50%;
+        transform      : translate(-50%, 0px);
+        position       : absolute;
+        border-radius  : 3px;
+        background     : white;
+        z-index        : 2;
+        box-shadow     : var(--shadow-s);
+        top            : 35px;
+        overflow-y     : auto;
+        overflow-x     : hidden;
+        min-height     : 100px;
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : flex-start;
+        flex-wrap      : wrap;
+        padding        : 10px;
     }
 }
 
@@ -136,18 +95,7 @@
     height  : 20px;
 
     &-current {
-        // display : inline-block;
         position: relative;
-        // width   : 18px;
-        // height  : 18px;
-
-        a,
-        >svg {
-            border-radius: 50%;
-            display      : inline-block;
-            width        : 18px;
-            height       : 18px;
-        }
 
         &::after {
             border-radius   : 50%;
@@ -156,8 +104,8 @@
             z-index         : 1;
             top             : 50%;
             left            : 50%;
-            width           : 12px;
-            height          : 12px;
+            width           : 6px;
+            height          : 6px;
             background-color: #fff;
             transform       : translate(-50%, -50%);
         }
@@ -171,69 +119,10 @@
         border-radius: 3px;
         background   : white;
         z-index      : 2;
-        box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
-        top          : 28px;
+        box-shadow   : var(--shadow-s);
+        top          : 35px;
         width        : 180px;
-        // padding      : 10px;
         box-sizing   : border-box;
-
-        // .shy-shape-stroke-opacity,
-        // .shy-shape-stroke-width {
-        //     margin: 0px 5px;
-        // }
-
-        // .shy-shape-stroke-types {
-        //     display        : flex;
-        //     justify-content: center;
-        //     align-items    : flex-start;
-
-        //     a {
-        //         cursor   : pointer;
-        //         flex-grow: 1;
-        //         height   : 30px;
-
-        //         svg {
-        //             width : 30px;
-        //             height: 30px;
-        //         }
-        //     }
-        // }
-
-        .shy-shape-stroke-colors {
-            // margin-top     : 10px;
-            // width          : 100%;
-            // display        : flex;
-            // justify-content: center;
-            // align-items    : flex-start;
-            // flex-wrap      : wrap;
-
-            a {
-                display      : inline-block;
-                box-sizing   : border-box;
-                width        : 30px;
-                height       : 30px;
-                margin       : 5px;
-                border-radius: 50%;
-                transition   : opacity 0.2s;
-                border       : 1px solid rgba(0, 0, 0, 0.1);
-
-                &.selected {
-                    box-shadow: 0 0 0 2px #fff, 0 0 0 4px blue;
-                }
-            }
-        }
-
-        .shy-measure-view-label {
-            text-align: left;
-            font-size : 12px;
-
-            >label {}
-
-            span {
-                font-size: 12px;
-                float    : right;
-            }
-        }
     }
 }
 
@@ -243,16 +132,15 @@
     height  : 20px;
 
     &-current {
-        display        : inline-block;
-        justify-content: center;
-        align-items    : center;
-        width          : 20px;
-        height         : 20px;
+        width : 20px;
+        height: 20px;
+
         a {
             display      : inline-block;
             width        : 16px;
             height       : 16px;
             border-radius: 50%;
+            box-sizing   : border-box;
             border       : 1px solid rgba(0, 0, 0, 0.1);
         }
     }
@@ -264,38 +152,10 @@
         border-radius: 4px;
         background   : white;
         z-index      : 2;
-        box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
-        top          : 28px;
+        box-shadow   : var(--shadow-s);
+        top          : 35px;
         width        : 180px;
-        // padding      : 10px;
         box-sizing   : border-box;
-
-        // .shy-shape-fill-opacity {
-        //     margin: 0px 5px;
-        // }
-
-        .shy-shape-fill-colors {
-            display        : flex;
-            justify-content: center;
-            align-items    : flex-start;
-            flex-wrap      : wrap;
-            width          : 100%;
-
-            a {
-                display      : inline-block;
-                box-sizing   : border-box;
-                width        : 30px;
-                height       : 30px;
-                margin       : 5px;
-                border-radius: 15px;
-                transition   : opacity 0.2s;
-                border       : 1px solid rgba(0, 0, 0, 0.1);
-
-                &.selected {
-                    box-shadow: 0 0 0 2px #fff, 0 0 0 4px blue;
-                }
-            }
-        }
     }
 }
 
@@ -326,9 +186,10 @@
         border-radius: 4px;
         background   : white;
         z-index      : 2;
-        box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
-        top          : 28px;
-        width        : 50px;
+
+        box-shadow: var(--shadow-s);
+        top       : 35px;
+        width     : 50px;
 
         a {
             display           : flex;
@@ -375,9 +236,8 @@
         border-radius: 4px;
         background   : white;
         z-index      : 2;
-        box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
-        top          : 28px;
-        width        : 150px;
+        box-shadow   : var(--shadow-s);
+        top          : 35px;
         padding      : 10px 5px;
         box-sizing   : border-box;
 
@@ -422,14 +282,14 @@
     height  : 20px;
 
     &-current {
-        display: inline-block;
+        // display: inline-block;
         width  : 20px;
         height : 20px;
 
         span {
             >svg {
-                width : 20px;
-                height: 20px;
+                width : 16px;
+                height: 16px;
             }
         }
     }
@@ -441,8 +301,8 @@
         border-radius: 4px;
         background   : white;
         z-index      : 2;
-        box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
-        top          : 28px;
+        box-shadow   : var(--shadow-s);
+        top          : 35px;
         width        : 180px;
         padding      : 10px;
         box-sizing   : border-box;

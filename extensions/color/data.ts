@@ -1,5 +1,6 @@
+import lodash from "lodash";
 import { lst } from "../../i18n/store";
-
+export type ColorType = { color: string, text?: string };
 
 /**
  * 文字颜色
@@ -52,23 +53,145 @@ export var BackgroundColorList = () => {
  * 
  */
 export var OptionBackgroundColorList = () => {
+    var cs = BackgroundColorList();
+    lodash.remove(cs, c => c.color == 'rgba(255,255,255,0)');
+    return cs;
+}
 
+
+export var BoardBackgroundColorList = () => {
+    // var colors: ColorType[] = [
+    //     { color: 'rgb(255,255,255)' },
+    //     { color: 'rgb(254,244,69)' },
+    //     { color: 'rgb(250,199,16)' },
+    //     { color: 'rgb(242,71,38)' },
+    //     { color: 'rgb(230,230,230)' },
+    //     { color: 'rgb(206,231,65)' },
+    //     { color: 'rgb(143,209,79)' },
+    //     { color: 'rgb(218,0,99)' },
+    //     { color: 'rgb(128,128,128)' },
+    //     { color: 'rgb(18,205,212)' },
+    //     { color: 'rgb(12,167,137)' },
+    //     { color: 'rgb(149,16,172)' },
+    //     { color: 'rgb(26,26,26)' },
+    //     { color: 'rgb(45,155,240)' },
+    //     { color: 'rgb(101,44,179)' },
+    //     { color: 'rgb(255,249,177)' }
+    // ]
+    // return colors;
+    // return [
+    //     // { "color": "#ffffff", "text": "No color" },
+    //     { "color": "#ffffff", "text": "White" },
+    //     { "color": "#fef445", "text": "Light Yellow" },
+    //     { "color": "#fac710", "text": "Yellow" },
+    //     { "color": "#f24726", "text": "Red" },
+    //     { "color": "#e6e6e6", "text": "Light Gray" },
+    //     { "color": "#cee741", "text": "Light Green" },
+    //     { "color": "#8fd14f", "text": "Green" },
+    //     { "color": "#da0063", "text": "Magenta" },
+    //     { "color": "#808080", "text": "Gray" },
+    //     { "color": "#12cdd4", "text": "Cyan" },
+    //     { "color": "#0ca789", "text": "Dark Green" },
+    //     { "color": "#652cb3", "text": "Purple" },
+    //     { "color": "#1a1a1a", "text": "Black" },
+    //     { "color": "#2d9bf0", "text": "Blue" },
+    //     { "color": "#414bb2", "text": "Dark Blue" },
+    //     { "color": "#9510ac", "text": "Violet" },
+    //     { "color": "#fff9b1", "text": "Light Yellow" },
+    //     { "color": "#883e3e", "text": "#883e3e" },
+    //     { "color": "#2d9bf0", "text": "Blue" }
+    // ] as ColorType[]
     return [
-        { color: 'rgba(247,214,183,1)', text: lst('幼杏') },
-        { color: 'rgba(255,193,153,1)', text: lst('鲜橘') },
-        { color: 'rgba(252,246,189,1)', text: lst('淡黄') },
-        { color: 'rgba(205,243,220,1)', text: lst('浅绿') },
-        { color: 'rgba(169,222,249,1)', text: lst('天蓝') },
-        { color: 'rgba(189,201,255,1)', text: lst('雾蓝') },
-        { color: 'rgba(239,218,251,1)', text: lst('轻紫') },
-        { color: 'rgba(234,202,220,1)', text: lst('熏粉') },
-        { color: 'rgba(237,233,235,1)', text: lst('白灰') },
-        { color: 'rgba(217,211,215,1)', text: lst('暗银') },
-        { color: 'rgba(253,198,200,1)', text: lst('将红') },
-    ].map(c => {
-        return {
-            color: c.color.replace('1)', '0.8)'),
-            text: c.text
-        }
-    })
+        { "color": "rgb(0,0,0)" },
+        { "color": "rgb(50,50,50)" },
+        { "color": "rgb(87,87,87)" },
+        { "color": "rgb(138,138,138)" },
+        { "color": "rgb(179,179,179)" },
+        { "color": "rgb(214,214,214)" },
+        { "color": "rgb(232,232,232)" },
+        { "color": "rgb(245,245,245)" },
+        { "color": "rgb(255,255,255)" },
+        { "color": "rgb(255,229,234)" },
+        { "color": "rgb(254,235,221)" },
+        { "color": "rgb(255,240,181)" },
+        { "color": "rgb(251,247,192)" },
+        { "color": "rgb(221,251,223)" },
+        { "color": "rgb(220,250,240)" },
+        { "color": "rgb(218,243,254)" },
+        { "color": "rgb(224,235,255)" },
+        { "color": "rgb(230,230,255)" },
+        { "color": "rgb(251,223,244)" },
+        { "color": "rgb(255,116,135)" },
+        { "color": "rgb(255,123,100)" },
+        { "color": "rgb(255,179,90)" },
+        { "color": "rgb(255,214,53)" },
+        { "color": "rgb(25,222,166)" },
+        { "color": "rgb(0,219,218)" },
+        { "color": "rgb(131,198,255)" },
+        { "color": "rgb(135,176,251)" },
+        { "color": "rgb(162,155,249)" },
+        { "color": "rgb(250,153,231)" }
+    ] as ColorType[]
+}
+
+
+export var BoardTextFontColorList = () => {
+    return [
+        { "color": "rgb(0,0,0)" },
+        { "color": "rgb(50,50,50)" },
+        { "color": "rgb(87,87,87)" },
+        { "color": "rgb(122,122,122)" },
+        { "color": "rgb(166,166,166)" },
+        { "color": "rgb(199,199,199)" },
+        { "color": "rgb(224,224,224)" },
+        { "color": "rgb(235,235,235)" },
+        { "color": "rgb(245,245,245)" },
+        { "color": "rgb(255,255,255)" },
+        { "color": "rgb(255,69,104)" },
+        { "color": "rgb(249,71,55)" },
+        { "color": "rgb(246,154,24)" },
+        { "color": "rgb(248,193,1)" },
+        { "color": "rgb(0,198,145)" },
+        { "color": "rgb(0,195,194)" },
+        { "color": "rgb(67,171,255)" },
+        { "color": "rgb(61,127,255)" },
+        { "color": "rgb(120,86,255)" },
+        { "color": "rgb(238,73,214)" }
+    ] as ColorType[]
+
+}
+export var BoardBorderColorList = () => {
+    return [
+        { "color": "rgb(0,0,0)" },
+        { "color": "rgb(50,50,50)" },
+        { "color": "rgb(87,87,87)" },
+        { "color": "rgb(122,122,122)" },
+        { "color": "rgb(166,166,166)" },
+        { "color": "rgb(199,199,199)" },
+        { "color": "rgb(224,224,224)" },
+        { "color": "rgb(235,235,235)" },
+        { "color": "rgb(245,245,245)" },
+        { "color": "rgb(255,255,255)" },
+        { "color": "rgb(250,192,198)" },
+        { "color": "rgb(254,197,184)" },
+        { "color": "rgb(255,205,153)" },
+        { "color": "rgb(255,214,53)" },
+        { "color": "rgb(85,243,188)" },
+        { "color": "rgb(74,238,237)" },
+        { "color": "rgb(173,220,255)" },
+        { "color": "rgb(196,217,253)" },
+        { "color": "rgb(214,213,253)" },
+        { "color": "rgb(248,196,237)" },
+        { "color": "rgb(255,69,104)" },
+        { "color": "rgb(249,71,55)" },
+        { "color": "rgb(229,128,19)" },
+        { "color": "rgb(231,160,0)" },
+        { "color": "rgb(0,171,125)" },
+        { "color": "rgb(0,168,167)" },
+        { "color": "rgb(0,150,242)" },
+        { "color": "rgb(61,127,255)" },
+        { "color": "rgb(138,120,254)" },
+        { "color": "rgb(238,73,214)" }
+    ] as ColorType[]
+
 }

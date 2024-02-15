@@ -15,13 +15,13 @@ import { BlockDirective } from "../../src/block/enum";
 import { PopoverPosition } from "../../component/popover/position";
 import { FixedViewScroll } from "../../src/common/scroll";
 import { blockStore } from "../block/store";
-import { AiStartSvg, BoldSvg, ChevronDownSvg, CodeSvg, CommentSvg, DeleteLineSvg, DoubleLinkSvg, EquationSvg, FontStyleSvg, ItalicSvg, LinkSvg, MagicSvg, SearchSvg, UnderlineSvg } from "../../component/svgs";
+import { AiStartSvg,  ChevronDownSvg, CodeSvg, CommentSvg, DoubleLinkSvg, EquationSvg, FontStyleSvg,  LinkSvg, SearchSvg } from "../../component/svgs";
 import { dom } from "../../src/common/dom";
 import { util } from "../../util/util";
 import { useSearchBox } from "../search/keyword";
 import { Page } from "../../src/page";
 import { lst } from "../../i18n/store";
-import { tipLayer } from "../../component/lib/zindex";
+import { popoverLayer, tipLayer } from "../../component/lib/zindex";
 
 export type TextToolStyle = {
     link: string,
@@ -90,7 +90,7 @@ class TextTool extends EventsComponent {
         var style: CSSProperties = {
             top: this.point.y,
             left: this.point.x,
-            zIndex:tipLayer.zoom(this)
+            zIndex:popoverLayer.zoom(this)
         };
         return <div tabIndex={1} onMouseUp={e => e.stopPropagation()} ref={el => this.el = el}>
             {this.selection.rects.length > 0 &&
@@ -131,24 +131,24 @@ class TextTool extends EventsComponent {
                 </Tip>*/}
                 <Tip text='加粗'>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.bold == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.bold == true ? TextCommand.cancelBold : TextCommand.bold, e)}>
-                        <span className="size-20 flex-center"><Icon size={16} icon={BoldSvg}></Icon></span>
+                        <span className="size-20 flex-center"><Icon size={16} icon={{name:'byte',code:'text-bold'}}></Icon></span>
                     </div>
                 </Tip>
                 <Tip text='斜体'>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.italic == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.italic == true ? TextCommand.cancelItalic : TextCommand.italic, e)}>
-                        <span className="size-20 flex-center"> <Icon size={16} icon={ItalicSvg}></Icon></span>
+                        <span className="size-20 flex-center"> <Icon size={16} icon={{ name: 'byte', code: 'text-italic' }}></Icon></span>
                     </div>
                 </Tip>
 
                 <Tip text='下划线'>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.underline == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.underline == true ? TextCommand.cancelLine : TextCommand.underline, e)}>
-                        <span className="size-20 flex-center"><Icon size={16} icon={UnderlineSvg}></Icon></span>
+                        <span className="size-20 flex-center"><Icon size={16} icon={{ name: 'byte', code: 'text-underline' }}></Icon></span>
                     </div>
                 </Tip>
 
                 <Tip text='删除线'>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.deleteLine == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.deleteLine == true ? TextCommand.cancelLine : TextCommand.deleteLine, e)}>
-                        <span className="size-20 flex-center">  <Icon size={16} icon={DeleteLineSvg}></Icon></span>
+                        <span className="size-20 flex-center">  <Icon size={16} icon={{ name: 'byte', code: 'strikethrough' }}></Icon></span>
                     </div>
                 </Tip>
 
@@ -326,7 +326,7 @@ class TextTool extends EventsComponent {
     }
     componentWillUnmount() {
         document.removeEventListener('mousedown', this.onGlobalMousedown, true);
-        tipLayer.clear(this);
+        popoverLayer.clear(this);
     }
     async onOpenBlockSelector(event: React.MouseEvent) {
         event.stopPropagation();

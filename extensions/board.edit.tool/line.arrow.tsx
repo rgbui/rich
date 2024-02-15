@@ -197,9 +197,11 @@ export function LineTypes(props: {
             onMouseDown={e => props.tool.showDrop('lineType')}
             dangerouslySetInnerHTML={{ __html: Lines[props.lineType == 'straight' ? 0 : (props.lineType == 'line' ? 1 : 2)].shape }}
         ></div>
-        {props.tool.isShowDrop('lineType') && <div className="shy-line-types-drops">
+        {props.tool.isShowDrop('lineType') && <div className="shy-line-types-drops w-200">
             <div className="shy-line-types-opacity">
+                <div className=" f-12 text-1"><label><S>线条宽度</S></label><span style={{ float: 'right' }}>{Math.round(props.strokeWidth)}px</span></div>
                 <MeasureView
+                    theme="light"
                     showValue={false}
                     min={1}
                     max={30}
@@ -208,54 +210,61 @@ export function LineTypes(props: {
                     onChange={e => {
                         props.change('strokeWidth', e);
                     }}></MeasureView>
-                <div className="shy-measure-view-label f-12 text-1"><label><S>线宽</S></label><span style={{ float: 'right' }}>{Math.round(props.strokeWidth)}px</span></div>
             </div>
-            <div className="shy-line-types-all  r-round-4 r-cursor r-item-hover">
-                <a className={'text-1 ' + (props.lineType == 'straight' ? "hover" : "")}
-                    onMouseDown={e => props.change('lineType', 'straight')}
-                    dangerouslySetInnerHTML={{ __html: Lines[0].shape }}
-                ></a>
-                <a className={'text-1 ' + (props.lineType == 'line' ? "hover" : "")}
-                    onMouseDown={e => props.change('lineType', 'line')}
-                    dangerouslySetInnerHTML={{ __html: Lines[1].shape }}
-                ></a>
-                <a className={'text-1 ' + (props.lineType == 'curve' ? "hover" : "")}
-                    onMouseDown={e => props.change('lineType', 'curve')}
-                    dangerouslySetInnerHTML={{ __html: Lines[2].shape }}
-                ></a>
+            <div className="gap-h-10">
+                <div className=" f-12 text-1 gap-w-10"><S>线条样式</S></div>
+                <div className="shy-line-types-all  r-round-4 r-cursor r-item-hover">
+                    <a className={'text-1 ' + (props.lineType == 'straight' ? "hover" : "")}
+                        onMouseDown={e => props.change('lineType', 'straight')}
+                        dangerouslySetInnerHTML={{ __html: Lines[0].shape }}
+                    ></a>
+                    <a className={'text-1 ' + (props.lineType == 'line' ? "hover" : "")}
+                        onMouseDown={e => props.change('lineType', 'line')}
+                        dangerouslySetInnerHTML={{ __html: Lines[1].shape }}
+                    ></a>
+                    <a className={'text-1 ' + (props.lineType == 'curve' ? "hover" : "")}
+                        onMouseDown={e => props.change('lineType', 'curve')}
+                        dangerouslySetInnerHTML={{ __html: Lines[2].shape }}
+                    ></a>
+                </div>
             </div>
-            <div className="shy-line-types-stash   r-round-4 r-cursor r-item-hover">
-                <a className={'text-1 ' + (props.strokeDasharray == 'none' ? "hover" : "")}
-                    onMouseDown={e => props.change('strokeDasharray', 'none')}
-                ><svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
-                        <g fill="none" fillRule="evenodd">
-                            <path d="M-18-5h60v40h-60z"></path>
-                            <path fill="currentColor" d="M0 14h24v2H0z"></path>
-                        </g>
-                    </svg>
-                </a>
-                <a className={'text-1 ' + (props.strokeDasharray == 'dash' ? "hover" : "")}
-                    onMouseDown={e => props.change('strokeDasharray', 'dash')}
-                >
-                    <svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M0 14h6v2H0zm9 0h6v2H9zm9 0h6v2h-6z" fill="currentColor" fillRule="evenodd"></path>
-                    </svg>
-                </a>
-                <a className={props.strokeDasharray == 'dash-circle' ? "hover" : ""}
-                    onMouseDown={e => props.change('strokeDasharray', 'dash-circle')}
-                >
-                    <svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
-                        <g fill="currentColor" transform="translate(0 14)" fillRule="evenodd">
-                            <rect width="2" height="2" rx="1"></rect>
-                            <rect width="2" height="2" x="4" rx="1"></rect>
-                            <rect width="2" height="2" x="8" rx="1"></rect>
-                            <rect width="2" height="2" x="12" rx="1"></rect>
-                            <rect width="2" height="2" x="16" rx="1"></rect>
-                            <rect width="2" height="2" x="20" rx="1"></rect>
-                        </g>
-                    </svg>
-                </a>
+
+            <div className="gap-h-10">
+                <div className=" f-12 text-1 gap-w-10"><S>线条样式</S></div>
+                <div className="shy-line-types-stash   r-round-4 r-cursor r-item-hover">
+                    <a className={'text-1 ' + (props.strokeDasharray == 'none' ? "hover" : "")}
+                        onMouseDown={e => props.change('strokeDasharray', 'none')}
+                    ><svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
+                            <g fill="none" fillRule="evenodd">
+                                <path d="M-18-5h60v40h-60z"></path>
+                                <path fill="currentColor" d="M0 14h24v2H0z"></path>
+                            </g>
+                        </svg>
+                    </a>
+                    <a className={'text-1 ' + (props.strokeDasharray == 'dash' ? "hover" : "")}
+                        onMouseDown={e => props.change('strokeDasharray', 'dash')}
+                    >
+                        <svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0 14h6v2H0zm9 0h6v2H9zm9 0h6v2h-6z" fill="currentColor" fillRule="evenodd"></path>
+                        </svg>
+                    </a>
+                    <a className={props.strokeDasharray == 'dash-circle' ? "hover" : ""}
+                        onMouseDown={e => props.change('strokeDasharray', 'dash-circle')}
+                    >
+                        <svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
+                            <g fill="currentColor" transform="translate(0 14)" fillRule="evenodd">
+                                <rect width="2" height="2" rx="1"></rect>
+                                <rect width="2" height="2" x="4" rx="1"></rect>
+                                <rect width="2" height="2" x="8" rx="1"></rect>
+                                <rect width="2" height="2" x="12" rx="1"></rect>
+                                <rect width="2" height="2" x="16" rx="1"></rect>
+                                <rect width="2" height="2" x="20" rx="1"></rect>
+                            </g>
+                        </svg>
+                    </a>
+                </div>
             </div>
+
         </div>}
     </div>
 }
