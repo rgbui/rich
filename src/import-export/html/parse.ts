@@ -3,8 +3,6 @@ import lodash from "lodash";
 import { ListType } from "../../../blocks/present/list/list";
 import { BlockCssName } from "../../block/pattern/css";
 import { dom } from "../../common/dom";
-import { util } from "../../../util/util";
-
 
 /**
  * 
@@ -20,7 +18,7 @@ function parseTextBlock(element: HTMLElement[] | HTMLElement) {
     var blocks: Record<string, any>[] = [];
     function fr(node: HTMLElement, style?: Record<string, any>) {
         var name = node?.tagName?.toLowerCase();
-       
+
         if (node instanceof Text) {
             var text = node.textContent;
             if (text && text != '\n')
@@ -83,6 +81,9 @@ function parseTextBlock(element: HTMLElement[] | HTMLElement) {
                 var text = node.textContent;
                 if (text && text != '\n')
                     blocks.push({ url: '/text', content: node.textContent, ...(style || {}) })
+                else if (name == 'br') {
+                    blocks.push({ url: '/text', content: '', ...(style || {}) })
+                }
             }
         }
     }

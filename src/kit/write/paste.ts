@@ -119,6 +119,7 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
         var files: File[] = Array.from(event.clipboardData.files);
         var html = event.clipboardData.getData('text/html');
         kit.operator.onClearPage();
+        console.log(text, html);
         if (!html && text || text && html && html.endsWith(text)) {
             event.preventDefault();
             if (isUrl(text)) {
@@ -182,7 +183,7 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
                 var regexText = text.replace(/[\(\)\\\.\[\]\*\?]/g, ($, $1) => {
                     return '\\' + $
                 })
-                if (html.match(new RegExp('([\\s]*<[^>]+>[\\s]*)?<[^>]+>' + regexText + '</[^>]+>'))) {
+                if (html.indexOf(text) > -1 && html.match(new RegExp('([\\s]*<[^>]+>[\\s]*)?<[^>]+>' + regexText + '</[^>]+>'))) {
 
                     /**
                      * 这里表示当前的文本就仅仅在外面包一层html，没有多个块
@@ -190,8 +191,7 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
                      * text: 你好
                      * html: <p>你好</p>
                      */
-                    if (isUrl(text))
-                    {
+                    if (isUrl(text)) {
                         await onPasteUrl(kit, aa, text);
                     }
                     else {
@@ -199,8 +199,6 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
                     }
                     return;
                 }
-                let parser = new DOMParser();
-                // var doc = parser.parseFromString(html, "text/html");
                 var blocks = parseHtml(html);
                 if (blocks?.length > 0) {
                     if (blocks.length == 1 && blocks[0].url == BlockUrlConstant.TextSpan) {
