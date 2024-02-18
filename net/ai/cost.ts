@@ -181,9 +181,9 @@ export function getAiModelOptions() {
         { text: 'GPT-4V', value: WsConsumeType.gpt_4_vision },
     ] : [
         { text: lst('智谱'), type: MenuItemType.text, label: '智谱' },
-        { text: 'glm-3-turbo', value: WsConsumeType.glm_3_turbo },
-        { text: 'glm-4', value: WsConsumeType.glm_4 },
-        { text: 'glm-4V', value: WsConsumeType.glm_4v },
+        { text: 'Glm-3-turbo', value: WsConsumeType.glm_3_turbo },
+        { text: 'Glm-4', value: WsConsumeType.glm_4 },
+        { text: 'Glm-4V', value: WsConsumeType.glm_4v },
         { text: lst('百度千帆'), type: MenuItemType.text, label: '文言一心' },
         { text: 'ERNIE-Bot-turbo', value: WsConsumeType.ERNIE_Bot_turbo },
         { text: 'ERNIE-Bot', value: WsConsumeType.ERNIE_Bot },
@@ -197,16 +197,16 @@ export function getAiModelOptions() {
 
 export function getAiImageModelOptions() {
     return window.shyConfig.isUS ? [
-        { text: 'DALLE-2', value: WsConsumeType.dall_2 },
         { text: 'DALLE-3', value: WsConsumeType.dall_3 },
+        { text: 'DALLE-2', value: WsConsumeType.dall_2 },
         { text: 'Stability', value: WsConsumeType.stability }
     ] : [
-        { text: '', value: WsConsumeType.cogview_3 },
+        { text: '智谱CogView-3', value: WsConsumeType.cogview_3 },
         { text: 'Stable Diffusion XL', value: WsConsumeType.badiu_Stable_Diffusion_XL },
         { text: '6pen', value: WsConsumeType.pen_6 },
         { text: 'Stability', value: WsConsumeType.stability, label: '仅用于体验' },
-        { text: 'DALLE-2', value: WsConsumeType.dall_2, label: '仅用于体验' },
         { text: 'DALLE-3', value: WsConsumeType.dall_3, label: '仅用于体验' },
+        { text: 'DALLE-2', value: WsConsumeType.dall_2, label: '仅用于体验' },
     ]
 }
 
