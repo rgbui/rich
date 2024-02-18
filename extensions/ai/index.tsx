@@ -740,13 +740,7 @@ export class AITool extends EventsComponent {
                     this.close()
                 }
                 else {
-                    // var ds=r.data.images||[{url:'http://localhost:8888/img?id=5ce14d2a04e04a758a23102692237a17'}]
-                    var ds = [{
-                        name: '',
-                        url: 'http://localhost:8888/img?id=5ce14d2a04e04a758a23102692237a17'
-                    }]
-                    self.anwser += r.data.images.map(g => `<img data-origin='${JSON.stringify(g)}' src='${g.url}'/>`).join("\n\n");
-                    self.anwser += ds.map(g => `![${g.name.slice(0, 10) || 'image'}](${g.url})`).join("\n\n");
+                    self.anwser += r.data.images.map(g => `![${g.filename.slice(0, 10) || 'image'}](${g.url})`).join("\n\n");
                     this.status = AIAskStatus.selectionAsked;
                     this.updateView();
                 }

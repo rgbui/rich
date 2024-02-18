@@ -166,8 +166,7 @@ export class AiWrite {
             }
             ts = mergeCode(ts);
             // console.log('gggg', ts, this.aa);
-            if (this.aa)
-            {
+            if (this.aa) {
                 var isWillSave = false;
                 if (typeof ts[0] != 'undefined') {
                     var c = ts[0];
