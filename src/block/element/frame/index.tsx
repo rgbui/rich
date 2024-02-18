@@ -11,6 +11,7 @@ import { Polygon } from '../../../common/vector/polygon';
 import { lst } from '../../../../i18n/store';
 import "./style.less";
 import { BlockRenderRange } from '../../enum';
+import { GridMap } from '../../../page/grid';
 
 /**
  * 可以将相邻的block变成一个整体去操作，
@@ -37,6 +38,7 @@ export class Frame extends Block {
     init() {
         super.init();
         this.content = lst('容器');
+        this.gridMap = new GridMap(this)
     }
     @prop()
     frameFormat: 'none' | '1:1' | "3:4" | "4:3" | "16:9" | "A4" | "web" | 'phone' | 'pad' = 'none';
@@ -146,10 +148,13 @@ export class FrameView extends BlockView<Frame>{
             height: this.block.fixedHeight
         }, this.block.visibleStyle);
         var gap = 0;
+        var gh = 0;
         if (['pad', 'phone'].includes(this.block.frameFormat)) {
             gap = 20;
         }
-        if (this.block.frameFormat == 'web') h += 24;
+        if (this.block.frameFormat == 'web') {
+            gh = 24;
+        }
         return <div className='sy-block-frame' style={style} >
             <div className='sy-block-frame-head' style={{ height: h, lineHeight: h + 'px', fontSize: h20 / 1.2 }}>
                 <TextArea block={this.block} placeholder={lst('容器')} prop='content' ></TextArea>
@@ -159,7 +164,7 @@ export class FrameView extends BlockView<Frame>{
                 <ChildsArea childs={this.block.childs}></ChildsArea>
             </div>
             <div className='sy-block-frame-content' style={{
-                top: gap + h,
+                top: gap + gh + h,
                 left: gap,
                 bottom: gap,
                 right: gap,
