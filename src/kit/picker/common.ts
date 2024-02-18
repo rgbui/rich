@@ -16,7 +16,7 @@ export function CacAlignLines(block: Block, gm: GridMap, from: Point, to: Point,
     var xbs = gm.findBlocksByRect(xrect);
     var ybs = gm.findBlocksByRect(yrect);
     var bs = block.page.getAtomBlocks(xbs.concat(ybs));
-    lodash.remove(bs, g => g === block || g.url == BlockUrlConstant.Line || g.url == BlockUrlConstant.Mind && !(g as FlowMind).isMindRoot);
+    lodash.remove(bs, g => g === block || block.exists(c => c == g) || g.url == BlockUrlConstant.Line || g.url == BlockUrlConstant.Mind && !(g as FlowMind).isMindRoot);
 
     var vs: { nx: number, dx: number, dy: number, ny: number, lines: { arrow: 'x' | 'y', start: Point, end: Point }[] }[] = [];
     bs.forEach(b => {
