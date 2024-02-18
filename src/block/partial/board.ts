@@ -1,6 +1,6 @@
 
 import { Block } from "..";
-import { PortLocation } from "../../../blocks/board/line/line";
+import { Line, PortLocation } from "../../../blocks/board/line/line";
 import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
 import { MouseDragger } from "../../common/dragger";
 import { Matrix } from "../../common/matrix";
@@ -77,7 +77,7 @@ export class Block$Board {
         var rect = new Rect(0, 0, width, height);
         var gm = this.globalMatrix;
         gm = this.globalMatrix;
-        var feelDist = this.realPx(Math.min(30, width / 2));
+        var feelDist = this.realPx(Math.min(100, width / 2));
         /**
          * 这里基本没有skew，只有scale,rotate,translate
          * scale 水平和垂直相等
@@ -342,6 +342,22 @@ export class Block$Board {
             else if (rs.length == 0 && this.parent?.isFrame) {
                 var fra = this.parent;
                 await fra.parent.append(this);
+                var lines = this.lines.findAll(c => {
+                    if (fra.childs.includes(c)) {
+                        var cg = c as Line;
+                        if (cg.from?.blockId && cg.to?.blockId) {
+                            var fb = this.page.find(x => x.id == cg.from.blockId);
+                            var tb = this.page.find(x => x.id == cg.to.blockId);
+                            if (fb.parent !== fra && tb.parent !== fra) {
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                });
+                await lines.eachAsync(async l => {
+                    await fra.parent.append(l);
+                })
                 var r = this.getTranslation().base(fra.getTranslation());
                 var nm = new Matrix();
                 nm.translate(r);
