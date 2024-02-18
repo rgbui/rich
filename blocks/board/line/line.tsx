@@ -111,7 +111,7 @@ export class Line extends Block {
                     var pi = ps.find(g => g.arrows.every(s => [pl.x, pl.y].includes(s)));
                     if (pi) {
                         var point = this.globalMatrix.inverseTransform(pi.point);
-                        return { point, pi };
+                        return { point, pi,block };
                     }
                 }
             }

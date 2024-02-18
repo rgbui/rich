@@ -23,13 +23,16 @@ import './style.less';
 @url('/flow/mind')
 export class FlowMind extends Block {
     async created() {
-        this.pattern.setFillStyle({ color: 'rgb(80,194,139)' });
         if (this.isMindRoot) {
             this.pattern.setFontStyle({
                 fontSize: 20,
                 fontWeight: 'bold',
-                color: 'rgb(242,71,38)',
+                color: 'rgb(0,198,145)',
             });
+        }
+        else {
+            this.minBoxStyle.type = 'none'
+            this.pattern.setFillStyle({ color: 'rgb(122,122,122)' });
         }
     }
     @prop()
@@ -65,9 +68,11 @@ export class FlowMind extends Block {
     @prop()
     fixedHeight: number = 30;
     @prop()
-    lineColor: string = '';
+    lineColor: string = 'rgb(0,198,145)';
     @prop()
     lineWidth: number = 2;
+    @prop()
+    isEditedMindBoxStyle: boolean = false;
     @prop()
     minBoxStyle: {
         width: number,
@@ -77,7 +82,7 @@ export class FlowMind extends Block {
     } = {
             width: 3,
             type: 'solid',
-            borderColor: 'rgb(242,71,38)',
+            borderColor: 'rgb(0,198,145)',
             radius: 16
         }
     get fixedSize(): { width: number; height: number; } {
@@ -112,7 +117,7 @@ export class FlowMind extends Block {
             return {
                 type: BoardPointType.path,
                 arrows,
-                fillOpacity: 0,
+                // fillOpacity: 0,
                 poly: new Polygon(...pr.points.map(p => gm.transform(p)))
             }
         }))
@@ -472,19 +477,39 @@ export class FlowMind extends Block {
         };
         var s = this.pattern.style;
         if (s.fill) style.backgroundColor = s.fill;
+        Object.assign(style, s);
         style.width = this.fixedWidth;
         style.borderRadius = this.minBoxStyle.radius;
         style.borderWidth = this.minBoxStyle.width;
         style.borderStyle = this.minBoxStyle.type == 'solid' ? 'solid' : 'dashed';
         if (this.minBoxStyle.type == 'none') style.borderStyle = 'none';
         style.borderColor = this.minBoxStyle.borderColor;
-        style.fontSize = s.fontSize;
-        if (typeof s.fontWeight != 'undefined')
-            style.fontWeight = s.fontWeight;
-        if (typeof s.fontStyle != 'undefined')
-            style.fontStyle = s.fontStyle;
-        if (typeof s.textDecoration != 'undefined')
-            style.textDecoration = s.textDecoration;
+        return style;
+    }
+    get visibleStyle() {
+        var style: CSSProperties = {};
+        if (this.isFreeBlock) {
+            style.position = 'absolute';
+            style.zIndex = this.zindex;
+            style.top = 0;
+            style.left = 0;
+            style.transformOrigin = '0% 0%';
+            Object.assign(style, this.transformStyle);
+        }
+        else {
+            if (this.isBlock) {
+                Object.assign(style, {
+                    paddingTop: '0.2rem',
+                    paddingBottom: '0.2rem',
+                });
+            }
+            else if (this.isLine) {
+                style.display = 'inline-block';
+            }
+            var s = this.pattern.style;
+            delete s.backgroundColor;
+            Object.assign(style, s);
+        }
         return style;
     }
     renderAllMinds() {
@@ -734,6 +759,7 @@ export class FlowMind extends Block {
         var minW = 50 / s;
         var minH = 20 / s;
         var self = this;
+        var isDs = this.isDragSize;
         MouseDragger({
             event,
             moveStart() {
@@ -774,6 +800,7 @@ export class FlowMind extends Block {
                 block.matrix = matrix.appended(ma);
                 // block.fixedHeight = bh;
                 block.fixedWidth = bw;
+                block.isDragSize = true;
                 block.updateRenderLines();
                 block.view.forceUpdate();
                 block.page.kit.picker.view.forceUpdate();
@@ -787,8 +814,8 @@ export class FlowMind extends Block {
                             },
                             { fixedWidth: block.fixedWidth, fixedHeight: block.fixedHeight }, BlockRenderRange.self
                         )
-                        if (block.isDragSize == false)
-                            await block.updateProps({ isDragSize: true }, BlockRenderRange.self);
+                        if (isDs == false)
+                            await block.manualUpdateProps({ isDragSize: false }, { isDragSize: true }, BlockRenderRange.self);
                         block.page.addUpdateEvent(async () => {
                             if (block.isMindRoot) { block.renderAllMinds(); block.forceUpdate(); }
                             else { (block.parent as FlowMind).renderMinds(); block.parent.forceUpdate(); }
@@ -871,7 +898,7 @@ export class FlowMindView extends BlockView<FlowMind>{
             style={cs}
             ref={e => this.mindEl = e} >
             <div style={{ margin: '5px 10px' }}>
-                <TextSpanArea placeholder={text} block={this.block}></TextSpanArea>
+                <TextSpanArea placeholderEmptyVisible placeholder={text} block={this.block}></TextSpanArea>
             </div>
             {this.renderSpread()}
         </div>
