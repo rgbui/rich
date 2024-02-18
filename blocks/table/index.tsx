@@ -1,6 +1,6 @@
 import { Block } from "../../src/block";
 import { BlockView } from "../../src/block/view";
-import React from "react";
+import React, { CSSProperties } from "react";
 import { prop, url, view } from "../../src/block/factory/observable";
 import "./style.less";
 import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
@@ -9,12 +9,17 @@ import { ActionDirective } from "../../src/history/declare";
 import { Point, Rect } from "../../src/common/vector/point";
 import lodash from 'lodash';
 import { MouseDragger } from "../../src/common/dragger";
-import { PlusSvg } from "../../component/svgs";
+import { ArrowDownSvg, ArrowLeftSvg, ArrowRightSvg, ArrowUpSvg, BlockcolorSvg, ClearCellSvg, DeleteColSvg, DeleteRowSvg, DotsSvg, DragHandleSvg, PlusSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { ghostView } from "../../src/common/ghost";
 import { ToolTip } from "../../component/view/tooltip";
 import { S } from "../../i18n/view";
 import { BoardBlockSelector, BoardPointType } from "../../src/block/partial/board";
+import { BoardDrag } from "../../src/kit/operator/board";
+import { useSelectMenuItem } from "../../component/view/menu";
+import { MenuItemType } from "../../component/view/menu/declare";
+import { FontColorList, BackgroundColorList } from "../../extensions/color/data";
+import { lst } from "../../i18n/store";
 
 const COL_WIDTH = 150;
 const CELL_HEIGHT = 30;
@@ -204,6 +209,239 @@ export class Table extends Block {
             await this.manualUpdateProps({ cols: this.cols }, { cols: cs }, BlockRenderRange.self)
         })
     }
+    async onColContextMenu(colIndex: number, event: React.MouseEvent | MouseEvent) {
+        event.preventDefault();
+        event.stopPropagation();
+        try {
+            function getColors(name?: string, options?: { font: string | { color: string, grad: string }, fill: string }) {
+                if (!name) name = '';
+                else name = name + '-'
+                return [
+                    {
+                        text: lst('文字颜色'),
+                        type: MenuItemType.text
+                    },
+                    {
+                        name: name + 'fontColor',
+                        type: MenuItemType.color,
+                        options: FontColorList().map(f => {
+                            return {
+                                text: f.text,
+                                overlay: f.text,
+                                value: f.color,
+                                checked: lodash.isEqual(options?.font, f.color) ? true : false
+                            }
+                        })
+                    },
+                    {
+                        type: MenuItemType.divide
+                    },
+                    {
+                        text: lst('背景颜色'),
+                        type: MenuItemType.text
+                    },
+                    {
+                        type: MenuItemType.color,
+                        name: name + 'fillColor',
+                        options: BackgroundColorList().map(f => {
+                            return {
+                                text: f.text,
+                                value: f.color,
+                                checked: options?.fill == f.color ? true : false
+                            }
+                        })
+                    },
+                ]
+            }
+            var items = [
+                { icon: ArrowLeftSvg, text: lst('在左边插入一列'), name: 'left' },
+                { icon: ArrowRightSvg, text: lst('在右侧插入一列'), name: 'right' },
+                { type: MenuItemType.divide },
+                {
+                    text: lst('颜色'),
+                    icon: BlockcolorSvg,
+                    childs: getColors()
+                },
+                { type: MenuItemType.divide },
+                { name: 'delCol', disabled: this.childs.first().childs.length > 0 ? false : true, icon: DeleteColSvg, text: lst('删除列') },
+                { type: MenuItemType.divide },
+                { icon: ClearCellSvg, text: lst('清空单元格'), name: 'clear' }
+            ]
+            var result = await useSelectMenuItem({ roundPoint: Point.from(event).move(10, 10) },
+                items
+            );
+            if (result) {
+                switch (result.item.name) {
+                    case 'left':
+                        await this.page.onAction('table.' + result.item.name, async () => {
+                            var at = colIndex;
+                            var table = this;
+                            var cs = lodash.cloneDeep(table.cols);
+                            cs.splice(at, 0, { width: 250 });
+                            await table.updateProps({ cols: cs }, BlockRenderRange.self);
+                            await table.childs.eachAsync(async (row) => {
+                                await row.page.createBlock('/table/cell', {}, row, at);
+                            })
+                        });
+                        break;
+                    case 'right':
+                        await this.page.onAction('table.' + result.item.name, async () => {
+                            var at = colIndex;
+                            var table = this;
+                            var cs = lodash.cloneDeep(table.cols);
+                            cs.splice(at + 1, 0, { width: 250 });
+                            await table.updateProps({ cols: cs }, BlockRenderRange.self);
+                            await table.childs.eachAsync(async (row) => {
+                                await row.page.createBlock('/table/cell', {}, row, at + 1);
+                            })
+                        });
+                        break;
+                    case 'delCol':
+                        await this.onRemoveColumn(colIndex);
+                        break;
+                    case 'clear':
+                        await this.page.onAction('table.' + result.item.name, async () => {
+                            var cs = this.blocks.childs.map(c => c.childs[colIndex]);
+                            cs = cs.filter(c => c.childs).flat(2);
+                            await cs.eachAsync(async (c) => await c.delete())
+                        })
+                        break;
+                    case 'fontColor':
+                        await this.page.onAction('setFontStyle', async () => {
+                            var cs = this.blocks.childs.map(c => c.childs[colIndex]);
+                            await cs.eachAsync(async c => {
+                                c.pattern.setFontStyle({ color: result.item.value });
+                            })
+                        })
+                        break;
+                    case 'fillColor':
+                        await this.page.onAction('setFillStyle', async () => {
+                            var cs = this.blocks.childs.map(c => c.childs[colIndex]);
+                            await cs.eachAsync(async c => {
+                                c.pattern.setFillStyle({ mode: 'color', color: result.item.value })
+                            })
+                        })
+                        break;
+                }
+            }
+        }
+        catch (ex) {
+            console.error(ex);
+            this.page.onError(ex);
+        }
+    }
+    async onRowContextmenu(rowIndex: number, event: React.MouseEvent | MouseEvent) {
+        function getColors(name?: string, options?: { font: string | { color: string, grad: string }, fill: string }) {
+            if (!name) name = '';
+            else name = name + '-'
+            return [
+                {
+                    text: lst('文字颜色'),
+                    type: MenuItemType.text
+                },
+                {
+                    name: name + 'fontColor',
+                    type: MenuItemType.color,
+                    options: FontColorList().map(f => {
+                        return {
+                            text: f.text,
+                            overlay: f.text,
+                            value: f.color,
+                            checked: lodash.isEqual(options?.font, f.color) ? true : false
+                        }
+                    })
+                },
+                {
+                    type: MenuItemType.divide
+                },
+                {
+                    text: lst('背景颜色'),
+                    type: MenuItemType.text
+                },
+                {
+                    type: MenuItemType.color,
+                    name: name + 'fillColor',
+                    options: BackgroundColorList().map(f => {
+                        return {
+                            text: f.text,
+                            value: f.color,
+                            checked: options?.fill == f.color ? true : false
+                        }
+                    })
+                },
+            ]
+        }
+        var items = [
+            { icon: ArrowUpSvg, text: lst('在上方插入一行'), name: 'up' },
+            { icon: ArrowDownSvg, text: lst('在下方插入一行'), name: 'down' },
+            { type: MenuItemType.divide },
+            {
+                text: lst('所在行颜色'),
+                icon: BlockcolorSvg,
+                childs: getColors()
+            },
+            { type: MenuItemType.divide },
+            { name: 'delRow', disabled: this.childs.length > 1 ? false : true, icon: DeleteRowSvg, text: lst('删除行'), },
+            { type: MenuItemType.divide },
+            { icon: ClearCellSvg, text: lst('清空单元格'), name: 'clear' }
+        ]
+        var result = await useSelectMenuItem({ roundPoint: Point.from(event).move(10, 10) },
+            items
+        );
+        if (result) {
+            switch (result.item.name) {
+                case 'up':
+                    await this.page.onAction('table.' + result.item.name, async () => {
+                        var at = rowIndex;
+                        var cs = this.cols.map(c => {
+                            return {
+                                url: '/table/cell'
+                            }
+                        })
+                        await this.page.createBlock('/table/row', { blocks: { childs: cs } }, this, at);
+                    });
+                    break;
+                case 'down':
+                    await this.page.onAction('table.' + result.item.name, async () => {
+                        var at = rowIndex;
+                        var cs = this.cols.map(c => {
+                            return {
+                                url: '/table/cell'
+                            }
+                        })
+                        await this.page.createBlock('/table/row', { blocks: { childs: cs } }, this, at + 1);
+                    });
+                    break;
+                case 'delRow':
+                    await this.page.onAction('table.' + result.item.name, async () => {
+                        await this.childs[rowIndex].delete()
+                    })
+                    break;
+                case 'clear':
+                    await this.page.onAction('table.' + result.item.name, async () => {
+                        var cs = this.childs[rowIndex].childs.map(c => c.childs).flat(2);
+                        await cs.eachAsync(async (c) => await c.delete())
+                    })
+                    break;
+                case 'fontColor':
+                    await this.page.onAction('setFontStyle', async () => {
+                        var cs = this.childs[rowIndex].childs;
+                        await cs.eachAsync(async c => {
+                            c.pattern.setFontStyle({ color: result.item.value });
+                        })
+                    })
+                    break;
+                case 'fillColor':
+                    await this.page.onAction('setFillStyle', async () => {
+                        var cs = this.childs[rowIndex].childs;
+                        await cs.eachAsync(async c => {
+                            c.pattern.setFillStyle({ mode: 'color', color: result.item.value })
+                        })
+                    })
+                    break;
+            }
+        }
+    }
     async getHtml() {
         return `<table>
 <tbody>${await this.getChildsHtml()}</tbody>
@@ -226,12 +464,13 @@ export class Table extends Block {
         return ps.join("\n");
     }
     getBlockBoardSelector(this: Block, types?: BoardPointType[]): BoardBlockSelector[] {
-
+        // var pickers = super.getBlockBoardSelector([BoardPointType.path]);
+        // lodash.remove(pickers, c => c.type == BoardPointType.rotatePort)
+        // return pickers
         return []
     }
     get visibleStyle() {
         var style = super.visibleStyle;
-        style.backgroundColor = '#fff';
         return style;
     }
     get fixedSize(): { width: number; height: number; } {
@@ -249,6 +488,7 @@ export class Table extends Block {
         }
     }
 }
+
 @view('/table')
 export class TableView extends BlockView<Table>{
     mousemove(event: MouseEvent) {
@@ -260,7 +500,7 @@ export class TableView extends BlockView<Table>{
         var tds = Array.from(firstTr.children) as HTMLElement[];
         var scrollLeft = this.box.scrollLeft;
         var tableLeft = boxRect.left - scrollLeft;
-        var w = 5;
+        var w = 0;
         var gap = 5;
         var index = -1;
         for (let i = 0; i < tds.length; i++) {
@@ -276,7 +516,7 @@ export class TableView extends BlockView<Table>{
 
         if (index > -1) {
             this.subline.style.display = 'block';
-            this.subline.style.left = (w + 1) + 'px';
+            this.subline.style.left = (w - scrollLeft + 1) + 'px';
             this.subline.style.height = tableRect.height + 'px';
             this.subline.setAttribute('data-index', index.toString());
         }
@@ -342,7 +582,7 @@ export class TableView extends BlockView<Table>{
             this.leftDrag.style.display = 'none';
         }
         var isShowDragColumn: boolean = false;
-        var cw = tableLeft + 5;
+        var cw = tableLeft + 0;
         var firstRow = trs[0];
         var firstRowRect = Rect.fromEle(firstRow as HTMLElement);
         if (event.clientY <= firstRowRect.bottom) {
@@ -350,10 +590,9 @@ export class TableView extends BlockView<Table>{
                 var tdRect = Rect.fromEle(tds[i]);
                 if (event.clientX > cw && event.clientX <= cw + tdRect.width) {
                     this.topDrag.style.display = 'flex';
-                    this.topDrag.style.left = (cw - tableLeft) + 'px';
+                    this.topDrag.style.left = (cw - tableLeft - scrollLeft) + 'px';
                     this.topDrag.style.width = tdRect.width + 'px';
                     this.topDrag.setAttribute('data-index', i.toString());
-
                     isShowDragColumn = true;
                     break;
                 }
@@ -362,12 +601,16 @@ export class TableView extends BlockView<Table>{
         }
         if (!isShowDragColumn) {
             this.topDrag.style.display = 'none';
-
         }
+        if (this.tableOperator)
+            this.tableOperator.style.display = 'flex';
     }
     onMousedownLine(event: React.MouseEvent) {
         this.topDrag.style.display = 'none';
         this.leftDrag.style.display = 'none';
+        this.bottomPlus.style.display = 'none';
+        this.rightPlus.style.display = 'none';
+        this.resizePlus.style.display = 'none';
         var self = this;
         self.isMoveLine = true;
         event.stopPropagation();
@@ -376,6 +619,7 @@ export class TableView extends BlockView<Table>{
         var gm = this.block.globalWindowMatrix;
         var s = gm.getScaling().x;
         var p = gm.inverseTransform(Point.from(event));
+        var scrollLeft = this.box.scrollLeft;
         MouseDragger<{ colIndex: number, colWidth: number, colEle: HTMLElement }>({
             event,
             cursor: 'col-resize',
@@ -384,6 +628,7 @@ export class TableView extends BlockView<Table>{
                 data.colEle = self.table.querySelector('colgroup').children[data.colIndex] as HTMLElement;
                 var tdRect = Rect.fromEle(tds[data.colIndex] as HTMLElement)
                 data.colWidth = tdRect.width;
+                self.isMoveLine = true;
             },
             moving: (ev, data, isend, isM) => {
                 if (!isM) return;
@@ -397,7 +642,7 @@ export class TableView extends BlockView<Table>{
                 var tdRect = Rect.fromEle(tds[data.colIndex] as HTMLElement)
                 w = tdRect.width;
                 var left = self.block.cols.findAll((g, i) => i < data.colIndex).sum(g => g.width) * s + (w) + 1;
-                self.subline.style.left = ((left + 5)) + 'px';
+                self.subline.style.left = ((left - scrollLeft)) + 'px';
                 var tableRect = Rect.fromEle(self.table);
                 self.subline.style.height = (tableRect.height) + 'px';
                 if (isend) {
@@ -570,7 +815,7 @@ export class TableView extends BlockView<Table>{
                     if (isend) return;
                     if (!isM) return;
                     ghostView.move(Point.from(ev));
-                    var w = 5;
+                    var w = 0;
                     var index = -1;
                     var isFind: boolean = false;
                     for (let i = 0; i < tds.length; i++) {
@@ -593,7 +838,7 @@ export class TableView extends BlockView<Table>{
                     }
                     if (index > -1) {
                         this.subline.style.display = 'block';
-                        this.subline.style.left = (w + 1) + 'px';
+                        this.subline.style.left = (w - scrollLeft + 1) + 'px';
                         this.subline.style.height = tableRect.height + 'px';
                     }
                     else {
@@ -601,7 +846,7 @@ export class TableView extends BlockView<Table>{
                         this.subline.removeAttribute('data-index');
                     }
                 },
-                moveEnd: (ev, isMove) => {
+                moveEnd: async (ev, isMove) => {
                     if (isMove) {
                         var newColIndex = parseInt(this.subline.getAttribute('data-index'));
                         if (!isNaN(newColIndex) && newColIndex != colIndex)
@@ -612,6 +857,12 @@ export class TableView extends BlockView<Table>{
                         ghostView.unload();
                     }
                     else {
+                        try {
+                            await self.block.onColContextMenu(colIndex, ev);
+                        }
+                        catch (e) {
+                            self.block.page.onError(e);
+                        }
                         self.isMoveLine = false;
                     }
                 }
@@ -659,14 +910,19 @@ export class TableView extends BlockView<Table>{
                         this.sublineX.removeAttribute('data-index');
                     }
                 },
-                moveEnd: () => {
-                    self.isMoveLine = false;
-                    var newRowIndex = parseInt(this.sublineX.getAttribute('data-index'));
-                    if (!isNaN(newRowIndex) && rowIndex != newRowIndex) {
-                        self.block.onChangeRowIndex(rowIndex, newRowIndex);
+                moveEnd: async (ev, isMove) => {
+                    if (isMove) {
+                        var newRowIndex = parseInt(this.sublineX.getAttribute('data-index'));
+                        ghostView.unload();
+                        if (!isNaN(newRowIndex) && rowIndex != newRowIndex) {
+                            self.block.onChangeRowIndex(rowIndex, newRowIndex);
+                        }
                     }
+                    if (!isMove) {
+                        self.block.onRowContextmenu(rowIndex, ev);
+                    }
+                    self.isMoveLine = false;
                     this.sublineX.style.display = 'none';
-                    ghostView.unload();
                 }
             })
         }
@@ -683,6 +939,7 @@ export class TableView extends BlockView<Table>{
                 this.leftDrag.style.display = 'none';
             }
         }
+        if (this.tableOperator) this.tableOperator.style.display = 'none';
     }
     table: HTMLElement;
     box: HTMLElement;
@@ -693,25 +950,60 @@ export class TableView extends BlockView<Table>{
     resizePlus: HTMLElement;
     topDrag: HTMLElement;
     leftDrag: HTMLElement;
+    tableOperator: HTMLElement;
     private isMoveLine: boolean = false;
+    onBoardDrag(event: React.MouseEvent) {
+        event.stopPropagation();
+        BoardDrag(this.block.page.kit, this.block, event, {
+            moveEnd: (ev, isM, d) => {
+                if (!isM) {
+                    this.block.onContextmenu(ev)
+                }
+            }
+        });
+    }
     renderView() {
         var s = this.block.globalMatrix.getScaling().x;
-        return <div style={this.block.visibleStyle}><div className='sy-block-table'
-            style={this.block.contentStyle}
-            onMouseMove={e => this.mousemove(e.nativeEvent)} onMouseLeave={e => this.onMouseleave()}>
-            <div className='sy-block-table-box'
-                style={{ overflow: this.block.isFreeBlock ? "visible" : undefined }}
-                ref={e => this.box = e}>
-                <table ref={e => this.table = e}>
-                    <colgroup>
-                        {this.block.cols.map((col, index) => {
-                            return <col key={index} style={{ minWidth: col.width, width: col.width }}></col>
-                        })}
-                    </colgroup>
-                    <tbody>
-                        <ChildsArea childs={this.block.childs}></ChildsArea>
-                    </tbody>
-                </table>
+        var contentStyle: CSSProperties = this.block.contentStyle;
+        if (this.block.isFreeBlock) {
+            contentStyle = Object.assign(contentStyle, {
+                paddingTop: '0rem',
+                paddingLeft: '0rem',
+                paddingRight: '0rem',
+                paddingBottom: '0rem',
+                margin: '2rem',
+                backgroundColor: '#fff'
+            })
+        }
+        else {
+            contentStyle = Object.assign(contentStyle, {
+                paddingTop: '0rem',
+                paddingLeft: '0rem',
+                paddingRight: '0rem',
+                paddingBottom: '0rem',
+                margin: '2rem 0.2rem'
+            })
+        }
+        return <div style={this.block.visibleStyle}
+            onMouseMove={e => this.mousemove(e.nativeEvent)}
+            onMouseLeave={e => this.onMouseleave()}
+        ><div className='sy-block-table relative'
+            style={contentStyle}
+        >
+                <div className='sy-block-table-box'
+                    style={{ overflow: this.block.isFreeBlock ? "visible" : undefined }}
+                    ref={e => this.box = e}>
+                    <table ref={e => this.table = e}>
+                        <colgroup>
+                            {this.block.cols.map((col, index) => {
+                                return <col key={index} style={{ minWidth: col.width, width: col.width }}></col>
+                            })}
+                        </colgroup>
+                        <tbody>
+                            <ChildsArea childs={this.block.childs}></ChildsArea>
+                        </tbody>
+                    </table>
+                </div>
                 {this.block.isCanEdit() && <div
                     style={this.block.isFreeBlock ? {
                         transform: `scale(${1 / s})`,
@@ -726,19 +1018,40 @@ export class TableView extends BlockView<Table>{
                 >
                     <div className='sy-block-table-subline' onMouseDown={e => this.onMousedownLine(e)} ref={e => this.subline = e}></div>
                     <div className='sy-block-table-subline-x' ref={e => this.sublineX = e}></div>
-                    <div onMouseDown={e => this.onMousedownDrag(e, 'top')} ref={e => this.topDrag = e} className="sy-block-table-top-drag"><span>
-                    </span>
+                    <div onMouseDown={e => this.onMousedownDrag(e, 'top')} ref={e => this.topDrag = e} className="sy-block-table-top-drag ">
+                        <span className="flex-center cursor round padding-h-5 padding-w-2 rotate-90 pos-center item-hover-button" >
+                            <Icon size={10} icon={DragHandleSvg}></Icon>
+                        </span>
                     </div>
-                    <div onMouseDown={e => this.onMousedownDrag(e, 'left')} ref={e => this.leftDrag = e} className="sy-block-table-left-drag"><span>
-                    </span>
+                    <div onMouseDown={e => this.onMousedownDrag(e, 'left')} ref={e => this.leftDrag = e} className="sy-block-table-left-drag">
+                        <span className="flex-center cursor round padding-w-2 padding-h-5 pos-center item-hover-button">
+                            <Icon size={10} icon={DragHandleSvg}></Icon>
+                        </span>
                     </div>
-                    <ToolTip overlay={<div><S>点击添加行</S><br /><S>拖动批量创建行</S></div>}><div onMouseDown={e => this.onMousedownResize(e, 'bottom')} ref={e => this.bottomPlus = e} className="sy-block-table-bottom-plus"><span className="size-20 round flex-center item-hover-focus"><Icon size={14} icon={PlusSvg}></Icon></span></div></ToolTip>
-                    <ToolTip overlay={<div><S>点击添加列</S><br /><S>拖动批量创建列</S></div>}><div onMouseDown={e => this.onMousedownResize(e, 'right')} ref={e => this.rightPlus = e} className="sy-block-table-right-plus"><span className="size-20 round  flex-center item-hover-focus"><Icon size={14} icon={PlusSvg}></Icon></span></div></ToolTip>
-                    <ToolTip overlay={<div><S>点击添加行列</S><br /><S>拖动批量创建行列</S></div>}><div onMouseDown={e => this.onMousedownResize(e, 'resize')} ref={e => this.resizePlus = e} className="sy-block-table-resize-plus"><span className="size-20 round  flex-center item-hover-focus"><Icon size={14} icon={PlusSvg}></Icon></span></div></ToolTip>
+                    <ToolTip overlay={<div><S>点击添加行</S><br /><S>拖动批量创建行</S></div>}><div onMouseDown={e => this.onMousedownResize(e, 'bottom')} ref={e => this.bottomPlus = e} className="sy-block-table-bottom-plus"><span className="size-20 round flex-center item-hover-button"><Icon size={14} icon={PlusSvg}></Icon></span></div></ToolTip>
+                    <ToolTip overlay={<div><S>点击添加列</S><br /><S>拖动批量创建列</S></div>}><div onMouseDown={e => this.onMousedownResize(e, 'right')} ref={e => this.rightPlus = e} className="sy-block-table-right-plus"><span className="size-20 round  flex-center item-hover-button"><Icon size={14} icon={PlusSvg}></Icon></span></div></ToolTip>
+                    <ToolTip overlay={<div><S>点击添加行列</S><br /><S>拖动批量创建行列</S></div>}><div onMouseDown={e => this.onMousedownResize(e, 'resize')} ref={e => this.resizePlus = e} className="sy-block-table-resize-plus"><span className="size-20 round  flex-center item-hover-button"><Icon size={14} icon={PlusSvg}></Icon></span></div></ToolTip>
+                    {this.block.isFreeBlock && <div
+                        ref={e => this.tableOperator = e}
+                        style={{ pointerEvents: 'none' }}
+                        className='sy-block-table-box-dots flex'>
+                        <span
+                            onMouseDown={e => {
+                                this.onBoardDrag(e)
+                            }}
+                            style={this.block.isFreeBlock ? {
+                                // transform: `scale(${1 / s})`,
+                                // transformOrigin: '0 0',
+                                zIndex: 10,
+                                pointerEvents: 'visible'
+                            } : {}}
+                            className="flex-center size-20 round flex-center cursor item-hover-button">
+                            <Icon size={12} icon={DragHandleSvg}></Icon>
+                        </span>
+                    </div>}
                 </div>}
 
             </div>
-        </div>
         </div>
     }
 }

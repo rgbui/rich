@@ -2,13 +2,8 @@
     display: block;
 
     &-box {
-        position      : relative;
-        overflow-y    : visible;
-        overflow-x    : auto;
-        padding-right : 20px;
-        padding-bottom: 20px;
-        padding-left  : 5px;
-        padding-top   : 5px;
+        overflow-y: visible;
+        overflow-x: auto;
     }
 
     table {
@@ -36,6 +31,7 @@
         position      : absolute;
         z-index       : 1;
         top           : 5px;
+        top           : 0px;
         left          : 0px;
         width         : 10px;
         margin-left   : -5px;
@@ -61,6 +57,7 @@
         z-index       : 1;
         top           : 0px;
         left          : 5px;
+        left          : 0px;
         height        : 10px;
         margin-top    : -5px;
         cursor        : row-resize;
@@ -114,77 +111,64 @@
         z-index       : 1;
         cursor        : pointer;
         display       : none;
+        // >span {
+        //     box-shadow: var(--shadow-s);
+        //     background: #fff;
+        //     display   : inline-flex;
 
-        >span {
-            background-color: #ddd;
-            background-color: rgba(55, 53, 47, 0.1);
-            box-shadow      : rgba(15, 15, 15, 0.1) 0px 0px 0px 1px,
-                rgba(15, 15, 15, 0.1) 0px 2px 4px;
-
-            &:hover {
-                background: rgb(116, 182, 219);
-            }
-        }
+        //     &:hover {
+        //         background-color: rgb(116, 182, 219);
+        //         color           : #fff;
+        //     }
+        // }
     }
 
     &-top-drag {
         pointer-events: visible;
-        height        : 10px;
-        top           : -5px;
-
-        >span {
-            position     : absolute;
-            top          : 50%;
-            left         : 50%;
-            transform    : translate(-50%, -50%);
-            border-radius: 4px 4px 0px 0px;
-            width        : inherit;
-            height       : 8px;
-        }
+        height        : 30px;
+        top           : -32px;
     }
 
     &-left-drag {
         pointer-events: visible;
-        left          : -5px;
-        width         : 10px;
-        position      : absolute;
-        z-index       : 1;
-
-        >span {
-            position     : absolute;
-            top          : 50%;
-            left         : 50%;
-            transform    : translate(-50%, -50%);
-            border-radius: 4px 0px 0px 4px;
-            width        : 8px;
-            height       : inherit;
-        }
+        left          : -18px;
+        width         : 20px;
     }
 
     &-bottom-plus,
     &-right-plus,
     &-resize-plus {
-        pointer-events     : visible;
-        position           : absolute;
-        z-index            : 1;
-        // background-color: rgba(55, 53, 47, 0.06);
-        // color           : rgba(55, 53, 47, 0.45);
-        // fill            : currentColor;
-        display            : none;
-        justify-content    : center;
-        align-items        : center;
-        cursor             : pointer;
+        pointer-events : visible;
+        position       : absolute;
+        z-index        : 1;
+        display        : none;
+        justify-content: center;
+        align-items    : center;
+        cursor         : pointer;
+
+        // >span {
+        //     box-shadow: var(--shadow-s);
+        //     background: #fff;
+        //     display   : inline-flex;
+
+        //     &:hover {
+        //         background-color: rgb(116, 182, 219);
+        //         color           : #fff;
+        //     }
+        // }
     }
 
     &-bottom-plus {
         pointer-events: visible;
         left          : 5px;
+        left          : 0px;
         height        : 20px;
     }
 
     &-right-plus {
         pointer-events: visible;
         top           : 5px;
+        top           : 0px;
         width         : 20px;
     }
 
@@ -192,5 +176,23 @@
         pointer-events: visible;
         width         : 20px;
         height        : 20px;
+    }
+
+    .sy-block-table-box-dots {
+        display : none;
+        position: absolute;
+        left    : 0px;
+        right   : 0px;
+        height  : 30px;
+        top     : -30px;
+        >span {
+            box-shadow: var(--shadow-s);
+            background: #fff;
+            display   : inline-flex;
+            &:hover {
+                background-color: rgb(116, 182, 219);
+                color           : #fff;
+            }
+        }
     }
 }
