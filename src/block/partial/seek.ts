@@ -322,11 +322,10 @@ export class Block$Seek {
      */
     findFramesByIntersect(this: Block) {
         var blocks = this.page.findAll(g => g.isFrame);
-        // this.page.gridMap.findBlocksByRect(Rect.from(this.el.getBoundingClientRect()), g => g.isFrame);
         var poly = this.getVisiblePolygon();
         return blocks.findAll(g => {
             var vp = g.getVisiblePolygon();
-            return poly.points.some(s => vp.bound.contain(s)) || poly.isIntersect(vp);
+            return vp.bound.isCross(poly.bound)
         })
     }
     isBefore(this: Block, block: Block) {
