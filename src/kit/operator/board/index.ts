@@ -11,7 +11,11 @@ import { CheckBoardTool } from "./selector";
 export function BoardDrag(
     kit: Kit,
     block: Block,
-    event: React.MouseEvent) {
+    event: React.MouseEvent,
+    options?: {
+        moveEnd?(ev, isMove, data): void
+    }
+) {
     /**
      * 先判断toolBoard工具栏有没有被使用，
      * 如果有使用，则根据工具栏来进行下一步操作
@@ -21,10 +25,9 @@ export function BoardDrag(
         return;
     }
     var downPoint = Point.from(event);
-    var gm = block ? block.panelGridMap : kit.page.gridMap;
-    if (block?.isLine) block = block.closest(x =>!x.isLine);
+    var gm = block?.panelGridMap;
+    if (block?.isLine) block = block.closest(x => !x.isLine);
     var beforeIsPicked = kit.picker.blocks.some(s => s == block);
-
     var hasBlock: boolean = block ? true : false;
     var isCopy: boolean = false;
     if (kit.page.keyboardPlate.isShift() && block?.isFreeBlock) {
@@ -37,7 +40,6 @@ export function BoardDrag(
     }
     else kit.picker.onCancel();
     if (kit.page.keyboardPlate.isAlt()) isCopy = true;
-
     async function createCopyBlocks() {
         await kit.page.onAction('createAltCopyBlocks', async () => {
             var bs = await kit.picker.blocks.asyncMap(async c => await c.clone());
@@ -85,11 +87,9 @@ export function BoardDrag(
                             }
                             else {
                                 var s = kit.page.matrix.getScaling();
-                                var nox = ox * s.x;
-                                var noy = oy * s.y;
-                                kit.page.matrix.translate(nox, noy);
-                                downPoint.x += ox;
-                                downPoint.y += oy;
+                                kit.page.matrix.translate(ox, oy);
+                                downPoint.x += ox * s.x;
+                                downPoint.y += oy * s.y;
                                 kit.picker.onMove(downPoint, ed, gm);
                                 kit.page.forceUpdate();
                             }
@@ -121,12 +121,12 @@ export function BoardDrag(
                 else {
                     kit.anchorCursor.selector.close();
                 }
-                gm.over();
+                if (gm) gm.over();
                 if (kit.picker.blocks.length > 0)
                     await openBoardEditTool(kit);
             }
             else {
-                gm.over();
+                if (gm) gm.over();
                 /**
                  * 这里说明是点击选择board块，那么判断是否有shift连选操作
                  * 
@@ -152,6 +152,7 @@ export function BoardDrag(
                 else if (kit.picker.blocks.length > 0) await openBoardEditTool(kit);
                 else forceCloseBoardEditTool()
             }
+            if (options?.moveEnd) options.moveEnd(ev, isMove, data);
         }
     })
 }

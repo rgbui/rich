@@ -152,7 +152,7 @@ export class PageCardView extends BlockView<PageCard>{
                                 await this.block.openCardStyle()
                                 el.classList.add('visible')
 
-                            }} className="size-24 round flex-center bg-hover cursor shadow gap-r-5">
+                            }} className="size-24 round flex-center bg-hover cursor shadow-s gap-r-5">
                                 <Icon size={18} icon={PlatteSvg}></Icon>
                             </span>
                             <span onMouseDown={async e => {
@@ -162,7 +162,7 @@ export class PageCardView extends BlockView<PageCard>{
                                 await this.block.onContextmenu(e.nativeEvent)
                                 el.classList.add('visible')
 
-                            }} className="size-24 round flex-center bg-hover cursor shadow ">
+                            }} className="size-24 round flex-center bg-hover cursor shadow-s ">
                                 <Icon size={18} icon={DotsSvg}></Icon>
                             </span>
                         </div>
