@@ -553,7 +553,27 @@ item-selected:选中的效果
 
     &:hover {
         background-color: #eee;
+    }
+}
 
+.bg-hover-light,
+.item-bg-hover-light,
+.r-bg-hover-light>*,
+.r-item-bg-hover-light>* {
+    background-color: #fff;
+    &:hover {
+        background-color: #fefefe;
+    }
+}
+
+.item-hover-button,
+.r-item-hover-button>* {
+    box-shadow: var(--shadow-s);
+    background: #fff;
+    display   : inline-flex;
+    &:hover {
+        background-color: rgb(116, 182, 219);
+        color           : #fff;
     }
 }
 
@@ -1517,6 +1537,11 @@ each(@ops, {
 .shadow-light,
 .r-shadow-light>* {
     box-shadow: var(--shadow-light)
+}
+
+.shadow-s,
+.r-shadow-s>* {
+    box-shadow: var(--shadow-s)
 }
 
 .border {

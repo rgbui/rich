@@ -57,6 +57,7 @@ import { BlockButton } from "../../../blocks/form/button";
 import { Block } from "../../block";
 import { RobotInfo } from "../../../types/user";
 import { usePageTheme } from "../../../extensions/theme";
+import { getAiDefaultModel } from "../../../net/ai/cost";
 
 export class PageContextmenu {
     async onGetContextMenus(this: Page) {
@@ -645,7 +646,7 @@ export class PageContextmenu {
                             url: '/robot/doc/embedding/stream',
                             data: {
                                 id: r.data.doc.id,
-                                model: robot.embeddingModel || (window.shyConfig.isUS ? "gpt" : "ERNIE-Bot-turbo")
+                                model: getAiDefaultModel(robot.embeddingModel, 'embedding')
                             },
                             method: 'post',
                             callback: (str, done) => {

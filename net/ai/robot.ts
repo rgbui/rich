@@ -1,6 +1,6 @@
 
 import { ResourceArguments } from "../../extensions/icon/declare";
-import { RobotInfo} from "../../types/user";
+import { RobotInfo } from "../../types/user";
 
 import { channel } from "../channel";
 
@@ -9,7 +9,7 @@ import { lst } from "../../i18n/store";
 import { parseElementUrl } from "../element.type";
 import lodash from "lodash";
 import { LinkPageItem } from "../../src/page/declare";
-import { WsConsumeType } from "./cost";
+import { WsConsumeType, getAiDefaultModel } from "./cost";
 
 /**
  *  获取robot wikit基于ask的相关上下文参考资料
@@ -26,7 +26,7 @@ export async function getRobotWikiContext(robot: RobotInfo,
     ask: string, minRank?: number) {
     if (typeof minRank == 'undefined') minRank = 0.45;
     var g = await channel.get('/query/wiki/answer', {
-        model: robot.embeddingModel || (window.shyConfig.isUS ?WsConsumeType.gpt_embedding : WsConsumeType.baidu_embedding),
+        model: getAiDefaultModel(robot.embeddingModel, 'embedding'),
         robotId: robot.robotId,
         ask,
         contextSize: robot.wikiConfig?.fragmentContextSize || 10,
@@ -146,7 +146,7 @@ export async function AgentRequest(robot: RobotInfo,
             await channel.post('/text/ai/stream', {
                 question: content,
                 role: robot.instructions || undefined,
-                model: robot.model || (window.shyConfig.isUS ? WsConsumeType.gpt_35_turbo :WsConsumeType.ERNIE_Bot_turbo),
+                model: getAiDefaultModel(robot.model),
                 callback(str, done) {
                     if (typeof str == 'string') text += str;
                     callback({ msg: marked.parse(text + (done ? "" : "<span class='typed-print'></span>")), done, content: marked.parse(text) })

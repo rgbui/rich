@@ -5,7 +5,6 @@ import { LinkWs } from "../../src/page/declare";
 import { util } from "../../util/util";
 
 export enum WsConsumeType {
-
     apiAccess = 1,//api访问量
     bookmark = 2,//生成书签
 
@@ -18,6 +17,14 @@ export enum WsConsumeType {
 
     picHandle = 7,//图片处理
     screenshotFile = 8,//截图产生的文件
+
+
+    /**
+  * 需要每天计算磁盘的使用量,文档的数量，数据表的数量，数据的总行数
+  */
+    diskSpace = 20,
+    docCount = 21,//文档数量（文档长度大于1000字节，算两个）
+    rowCount = 22,//数据行数
 
     greenContent = 30,//绿色内容 审核
     greenImage = 31,//绿色图片 审核
@@ -57,11 +64,15 @@ export enum WsConsumeType {
     pen_6 = 91,//6pen
 
     /**
-     * 需要每天计算磁盘的使用量,文档的数量，数据表的数量，数据的总行数
-     */
-    diskSpace = 20,
-    docCount = 21,//文档数量（文档长度大于1000字节，算两个）
-    rowCount = 22,//数据行数
+     * 智谱AI模型
+     * https://open.bigmodel.cn/dev/api#characterglm
+    */
+    glm_3_turbo = 100,
+    glm_4 = 101,
+    glm_4v = 102,
+    charglm_3 = 103,
+    cogview_3 = 110,
+    glm_embedding_2 = 111
 
 }
 
@@ -138,6 +149,18 @@ export function getWsConsumeType(type: WsConsumeType) {
             return lst('百度-Stable-Diffusion-XL')
         case WsConsumeType.pen_6:
             return ('6pen')
+        case WsConsumeType.glm_3_turbo:
+            return 'glm-3-turbo';
+        case WsConsumeType.glm_4:
+            return 'glm-4';
+        case WsConsumeType.glm_4v:
+            return 'glm-4v';
+        case WsConsumeType.cogview_3:
+            return 'cogview-3';
+        case WsConsumeType.charglm_3:
+            return 'charglm-3';
+        case WsConsumeType.glm_embedding_2:
+            return 'embedding-2'
         case WsConsumeType.diskSpace:
             return lst('空间')
         case WsConsumeType.docCount:
@@ -146,18 +169,21 @@ export function getWsConsumeType(type: WsConsumeType) {
             return lst('数据行数')
         default:
             return lst('未知')
-
     }
 }
 
 
-export function getModelOptions() {
+export function getAiModelOptions() {
     return window.shyConfig.isUS ? [
         { text: 'OpenAI', type: MenuItemType.text },
         { text: 'GPT-3.5', value: WsConsumeType.gpt_35_turbo },
         { text: 'GPT-4', value: WsConsumeType.gpt_4 },
         { text: 'GPT-4V', value: WsConsumeType.gpt_4_vision },
     ] : [
+        { text: lst('智谱'), type: MenuItemType.text, label: '智谱' },
+        { text: 'glm-3-turbo', value: WsConsumeType.glm_3_turbo },
+        { text: 'glm-4', value: WsConsumeType.glm_4 },
+        { text: 'glm-4V', value: WsConsumeType.glm_4v },
         { text: lst('百度千帆'), type: MenuItemType.text, label: '文言一心' },
         { text: 'ERNIE-Bot-turbo', value: WsConsumeType.ERNIE_Bot_turbo },
         { text: 'ERNIE-Bot', value: WsConsumeType.ERNIE_Bot },
@@ -169,11 +195,54 @@ export function getModelOptions() {
     ]
 }
 
+export function getAiImageModelOptions() {
+    return window.shyConfig.isUS ? [
+        { text: 'DALLE-2', value: WsConsumeType.dall_2 },
+        { text: 'DALLE-3', value: WsConsumeType.dall_3 },
+        { text: 'Stability', value: WsConsumeType.stability }
+    ] : [
+        { text: '', value: WsConsumeType.cogview_3 },
+        { text: 'Stable Diffusion XL', value: WsConsumeType.badiu_Stable_Diffusion_XL },
+        { text: '6pen', value: WsConsumeType.pen_6 },
+        { text: 'Stability', value: WsConsumeType.stability, label: '仅用于体验' },
+        { text: 'DALLE-2', value: WsConsumeType.dall_2, label: '仅用于体验' },
+        { text: 'DALLE-3', value: WsConsumeType.dall_3, label: '仅用于体验' },
+    ]
+}
+
+export function getAiDefaultModel(model: WsConsumeType, type?: 'text' | 'image' | 'embedding') {
+    if (typeof model != 'undefined') return model;
+    if (!type) type = 'text'
+    if (window.shyConfig.isUS) {
+        switch (type) {
+            case 'text':
+                return WsConsumeType.gpt_35_turbo
+            case 'image':
+                return WsConsumeType.dall_3
+            case 'embedding':
+                return WsConsumeType.gpt_embedding
+        }
+    }
+    else {
+        switch (type) {
+            case 'text':
+                return WsConsumeType.glm_3_turbo
+            case 'image':
+                return WsConsumeType.cogview_3
+            case 'embedding':
+                return WsConsumeType.baidu_embedding
+        }
+    }
+}
+
 export async function checkModelPay(e: WsConsumeType, ws: LinkWs) {
     return await CanSupportFeature(![
         WsConsumeType.gpt_4,
         WsConsumeType.gpt_4_vision,
-        WsConsumeType.ERNIE_Bot_4
+        WsConsumeType.ERNIE_Bot_4,
+        WsConsumeType.glm_4,
+        WsConsumeType.glm_4v,
+
     ].includes(e) ? PayFeatureCheck.cheapAI : PayFeatureCheck.expensiveAI, ws)
 }
 

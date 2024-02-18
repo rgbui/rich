@@ -45,7 +45,7 @@ import { S } from "../../i18n/view";
 import { KeyboardCode } from "../../src/common/keys";
 
 import lodash from "lodash";
-import { WsConsumeType } from "../../net/ai/cost";
+import { WsConsumeType, getAiDefaultModel } from "../../net/ai/cost";
 
 /**
  * The type of the options object that can be passed to the AITool component.
@@ -616,7 +616,7 @@ export class AITool extends EventsComponent {
     async aiText(options: { prompt?: string, model?: WsConsumeType, isNotFound?: boolean }) {
         this.controller = null;
         if (!options) options = {} as any;
-        if (!options?.model) options.model = this?.page?.ws?.aiConfig?.text || (window.shyConfig.isUS ? WsConsumeType.gpt_35_turbo : WsConsumeType.ERNIE_Bot_turbo);
+        if (!options?.model) options.model = getAiDefaultModel(this?.page?.ws?.aiConfig?.text)
         this.lastCommand = { ask: this.ask, command: 'text', options: lodash.cloneDeep(options) };
         var self = this;
         this.status = AIAskStatus.asking;
@@ -678,7 +678,7 @@ export class AITool extends EventsComponent {
     async aiSelection(options: { prompt?: string, model?: WsConsumeType, isNotFound?: boolean }) {
         this.controller = null;
         this.lastCommand = { ask: this.ask, command: 'selection', options: lodash.cloneDeep(options) };
-        if (!options?.model) options.model = this?.page?.ws?.aiConfig?.text || (window.shyConfig.isUS ? WsConsumeType.gpt_35_turbo : WsConsumeType.ERNIE_Bot_turbo);
+        if (!options?.model) options.model = getAiDefaultModel(this?.page?.ws?.aiConfig?.text);
         var self = this;
         this.status = AIAskStatus.selectionAsking;
         self.anwser = '';
@@ -716,7 +716,7 @@ export class AITool extends EventsComponent {
     }
     async aiImage(options: { prompt?: string, model?: WsConsumeType, isNotFound?: boolean, genImageProp?: boolean }) {
         this.controller = null;
-        if (typeof options.model == 'undefined') options.model = this?.page?.ws?.aiConfig?.image
+        options.model = getAiDefaultModel(this?.page?.ws?.aiConfig?.image, 'image');
         this.lastCommand = { ask: this.ask, command: 'image', options: lodash.cloneDeep(options) };
         var ask = options?.prompt;
         if (!ask) return;
