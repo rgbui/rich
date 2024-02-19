@@ -252,7 +252,7 @@ export class TableFieldView extends EventsComponent {
                 <span className="flex-auto error">{this.error}</span>
                 <div className="flex-fix flex-end">
                     <Button size="small" className="gap-r-10" ghost onClick={e => this.emit('close')}><S>取消</S></Button>
-                    <Button size="small" onClick={e => self.onSave()}>{this.fieldId ? <S>保存</S> : <S>创建</S>} <S>保存</S></Button>
+                    <Button size="small" onClick={e => self.onSave()}>{this.fieldId ? <S>保存</S> : <S>创建</S>}</Button>
                 </div>
             </div>
         </div>
