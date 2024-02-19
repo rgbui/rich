@@ -228,7 +228,7 @@ export function getPageIcon(item: LinkPageItem, defaultIcon?: SvgrComponent) {
 
 export function getPageText(item: LinkPageItem) {
     if (item?.text) return item.text;
-    if (!item) return '';
+    if (!item) return lst('新页面')
     if (item.pageType == PageLayoutType.doc) {
         return lst('新页面')
     }
