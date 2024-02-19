@@ -112,6 +112,7 @@ export class TableSchema {
     get defaultViewFields() {
         return this.fields.findAll(g => g.text && ![
             FieldType.modifyDate,
+            FieldType.modifyer,
             FieldType.createDate,
             FieldType.creater,
             FieldType.cover,
@@ -186,6 +187,10 @@ export class TableSchema {
     }
     getViewFields() {
         var fs = this.defaultViewFields;
+        fs.sort((x, y) => {
+            if (x.type === FieldType.title) return -1;
+            else return 1;
+        })
         return fs.map(f => {
             return this.createViewField(f);
         })
