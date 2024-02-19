@@ -250,7 +250,7 @@ export class AiWrite {
                             await new Promise((resolve: (block: Block) => void, reject) => {
                                 this.page.onTurn(this.block, BlockUrlConstant.Head, async (newBlock: Block, oldBlock) => {
                                     if (oldBlock) lodash.remove(this.writedBlocks, g => g == oldBlock)
-                                    await newBlock.updateProps({ content: c.slice(d.length), level: level })
+                                    await newBlock.updateProps({ content: c.slice(d.length).trim(), level: level })
                                     newBlock.mounted(() => {
                                         this.block = newBlock;
                                         this.aa = newBlock.appearAnchors.last()
@@ -368,7 +368,7 @@ export class AiWrite {
                             return {
                                 url: BlockUrlConstant.Head,
                                 level: level,
-                                content: t.slice(d.length)
+                                content: t.slice(d.length).trim()
                             }
                         }
                         else if (t.match(/^(\*[^\*]|\+[^\+])/)) {
