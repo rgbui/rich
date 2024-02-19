@@ -174,12 +174,12 @@ export class TitleView extends BlockView<Title>{
             {pd && <div className='sy-block-page-info-head'>
                 <span className='sy-block-page-info-head-title'><TextArea
                     block={this.block}
-                    placeholder={lst('输入标题')}
+                    placeholder={getPageText({ pageType: this.block?.pageInfo?.pageType })}
                     prop='pageInfo.text'
                     className={'shy-text-empty-font-inherit'}
                     placeholderEmptyVisible
                     plain
-                    html={getPageText(this.block.pageInfo)}
+                    html={this.block.pageInfo?.text}
                 ></TextArea></span>
             </div>}
         </div>
