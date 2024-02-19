@@ -119,8 +119,8 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
         var files: File[] = Array.from(event.clipboardData.files);
         var html = event.clipboardData.getData('text/html');
         kit.operator.onClearPage();
-        console.log(text, html);
         if (!html && text || text && html && html.endsWith(text)) {
+            console.log('paste text');
             event.preventDefault();
             if (isUrl(text)) {
                 await onPasteUrl(kit, aa, text);
@@ -171,12 +171,14 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
                 }
             }
             try {
+                console.log('like html...');
                 event.preventDefault();
                 if (aa.block.url == BlockUrlConstant.Code) {
                     await onPasteInsertText(kit, aa, text);
                     return;
                 }
                 if (!aa.block.isSupportTextStyle) {
+                    console.log(' not support text style')
                     await onPasteInsertPlainText(kit, aa, text);
                     return;
                 }
@@ -184,7 +186,7 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
                     return '\\' + $
                 })
                 if (html.indexOf(text) > -1 && html.match(new RegExp('([\\s]*<[^>]+>[\\s]*)?<[^>]+>' + regexText + '</[^>]+>'))) {
-
+                    console.log('html---text');
                     /**
                      * 这里表示当前的文本就仅仅在外面包一层html，没有多个块
                      * 列如:
@@ -200,6 +202,7 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
                     return;
                 }
                 var blocks = parseHtml(html);
+                //console.log(html,blocks);
                 if (blocks?.length > 0) {
                     if (blocks.length == 1 && blocks[0].url == BlockUrlConstant.TextSpan) {
                         var cs = blocks[0].blocks.childs
@@ -338,6 +341,15 @@ async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
 async function onPasteInsertPlainText(kit: Kit, aa: AppearAnchor, text: string) {
     var content = aa.textContent;
     var sel = window.getSelection();
+    if (aa.block.url == BlockUrlConstant.Title) {
+        var t = text.indexOf('\n');
+        if (t > -1) {
+            text = text.slice(0, t);
+        }
+        if (text.length > 20) {
+            text = text.slice(0, 20);
+        }
+    }
     if (sel.isCollapsed) {
         var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
         aa.setContent(content.slice(0, offset) + text + content.slice(offset))
