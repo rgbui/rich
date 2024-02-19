@@ -171,8 +171,8 @@ export class AiWrite {
                 if (typeof ts[0] != 'undefined') {
                     var c = ts[0];
                     if (this.block.isContentEmpty) {
-                        if (c.match(/^[\d]+[\.、]?/)) {
-                            var d = c.match(/^[\d]+[\.、]?/)[0]
+                        if (c.match(/^[\d]+[\.、 ]/)) {
+                            var d = c.match(/^[\d]+[\.、 ]/)[0]
                             isWillSave = true;
                             var nb = await new Promise((resolve: (block: Block) => void, reject) => {
                                 this.page.onTurn(this.block, BlockUrlConstant.List, async (newBlock: Block, oldBlock) => {
@@ -292,8 +292,8 @@ export class AiWrite {
                                 content: t.slice(ma[0].length).trimStart()
                             }
                         }
-                        else if (t.match(/^[\d]+[\.、]?/)) {
-                            var ma = t.match(/^[\d]+[\.、]?/)
+                        else if (t.match(/^[\d]+[\.、 ]/)) {
+                            var ma = t.match(/^[\d]+[\.、 ]/)
                             return {
                                 url: BlockUrlConstant.List,
                                 listType: ListType.number,

@@ -603,7 +603,7 @@ export class AITool extends EventsComponent {
         this.options = options;
         this.page.setPaddingBottom(500);
         if (this.textarea) this.textarea.innerText = '';
-        this.updateView(() =>{
+        this.updateView(() => {
             if (this.textarea)
                 this.textarea.focus()
             if (options.isRun) {
@@ -646,6 +646,7 @@ export class AITool extends EventsComponent {
                 model: options?.model,
                 async callback(str, done, contoller) {
                     if (contoller) { self.controller = contoller; return }
+                    console.log(str,done);
                     if (typeof str == 'string') {
                         self.anwser += str;
                         scope += str;
@@ -661,12 +662,14 @@ export class AITool extends EventsComponent {
                     if (done) {
                         //console.log('answer', JSON.stringify(self.anwser))
                         var bs = self.writer.writedBlocks;
-                        var p = bs.first().parent;
-                        if (bs.some(s => s.url == BlockUrlConstant.List && (s as List).listType == ListType.number)) {
-                            await onMergeListBlocks(self.page, bs);
-                            bs = bs.findAll(g => g.parent == p);
+                        if (bs.length > 0) {
+                            var p = bs.first().parent;
+                            if (bs.some(s => s.url == BlockUrlConstant.List && (s as List).listType == ListType.number)) {
+                                await onMergeListBlocks(self.page, bs);
+                                bs = bs.findAll(g => g.parent == p);
+                            }
+                            self.writer.page.kit.anchorCursor.onSelectBlocks(bs, { render: true })
                         }
-                        self.writer.page.kit.anchorCursor.onSelectBlocks(bs, { render: true })
                         self.status = AIAskStatus.asked;
                         self.updateView();
                     }
