@@ -15,13 +15,14 @@ import { BlockDirective } from "../../src/block/enum";
 import { PopoverPosition } from "../../component/popover/position";
 import { FixedViewScroll } from "../../src/common/scroll";
 import { blockStore } from "../block/store";
-import { AiStartSvg,  ChevronDownSvg, CodeSvg, CommentSvg, DoubleLinkSvg, EquationSvg, FontStyleSvg,  LinkSvg, SearchSvg } from "../../component/svgs";
+import { AiStartSvg, ChevronDownSvg, CodeSvg, DoubleLinkSvg, EquationSvg, FontStyleSvg, LinkSvg, SearchSvg } from "../../component/svgs";
 import { dom } from "../../src/common/dom";
 import { util } from "../../util/util";
 import { useSearchBox } from "../search/keyword";
 import { Page } from "../../src/page";
 import { lst } from "../../i18n/store";
-import { popoverLayer, tipLayer } from "../../component/lib/zindex";
+import { popoverLayer } from "../../component/lib/zindex";
+import { isUrl } from "../../src/kit/write/declare";
 
 export type TextToolStyle = {
     link: string,
@@ -90,7 +91,7 @@ class TextTool extends EventsComponent {
         var style: CSSProperties = {
             top: this.point.y,
             left: this.point.x,
-            zIndex:popoverLayer.zoom(this)
+            zIndex: popoverLayer.zoom(this)
         };
         return <div tabIndex={1} onMouseUp={e => e.stopPropagation()} ref={el => this.el = el}>
             {this.selection.rects.length > 0 &&
@@ -131,7 +132,7 @@ class TextTool extends EventsComponent {
                 </Tip>*/}
                 <Tip text='加粗'>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.bold == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.bold == true ? TextCommand.cancelBold : TextCommand.bold, e)}>
-                        <span className="size-20 flex-center"><Icon size={16} icon={{name:'byte',code:'text-bold'}}></Icon></span>
+                        <span className="size-20 flex-center"><Icon size={16} icon={{ name: 'byte', code: 'text-bold' }}></Icon></span>
                     </div>
                 </Tip>
                 <Tip text='斜体'>
@@ -222,31 +223,26 @@ class TextTool extends EventsComponent {
                 this.textStyle.code = true;
                 this.emit('setProp', { code: true });
                 return this.forceUpdate();
-                break;
             case TextCommand.cancelCode:
                 this.textStyle.code = false;
                 this.emit('setProp', { code: false });
                 return this.forceUpdate();
-                break;
             case TextCommand.equation:
                 this.textStyle.equation = true;
                 this.emit('setEquation', { equation: true })
                 return this.forceUpdate();
-                break;
             case TextCommand.cancelEquation:
                 this.textStyle.equation = false;
                 this.emit('setProp', { equation: false });
                 return this.forceUpdate();
-                break;
             case TextCommand.doubleLink:
                 this.textStyle.page = false;
                 this.emit('setProp', { link: { name: 'create' } });
                 return this.forceUpdate();
-                break;
+
             case TextCommand.askAI:
                 this.emit('askAI');
                 return this.forceUpdate();
-                break;
         }
         this.emit('setStyle', { [BlockCssName.font]: font } as any);
         this.forceUpdate();
@@ -299,7 +295,7 @@ class TextTool extends EventsComponent {
         if (text.indexOf('\n') > -1) {
             text = text.split(/\n/g)[0];
         }
-        if (text.length > 10) text = text.slice(0, 10);
+        if (text.length > 10 && !isUrl(text)) text = text.slice(0, 10);
         var pageLink = await useLinkPicker({ roundArea: Rect.fromEvent(event) }, { text: text });
         this.selection.rects = [];
         this.blocked = false;
