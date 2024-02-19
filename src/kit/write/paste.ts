@@ -346,8 +346,8 @@ async function onPasteInsertPlainText(kit: Kit, aa: AppearAnchor, text: string) 
         if (t > -1) {
             text = text.slice(0, t);
         }
-        if (text.length > 20) {
-            text = text.slice(0, 20);
+        if (text.length > 80) {
+            text = text.slice(0, 80);
         }
     }
     if (sel.isCollapsed) {

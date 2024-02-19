@@ -652,7 +652,7 @@ export class PageWrite {
                 aa.lastTextNode.textContent = '';
             }
             var c = forceText ? forceText : text;
-            console.log('ggg', JSON.stringify(text), JSON.stringify(c));
+            // console.log('ggg', JSON.stringify(text), JSON.stringify(c));
             var newBlock = await aa.block.parent.appendBlock({
                 url: BlockUrlConstant.Text,
                 content: c

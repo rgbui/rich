@@ -575,7 +575,6 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
             if (deleteText)
                 CopyText(deleteText);
         }
-        console.log('fb', focusB, isStartDelete, preAppear, write.kit.anchorCursor);
         write.kit.page.addUpdateEvent(async () => {
             forceCloseTextTool()
             if (focusB) write.kit.anchorCursor.onFocusBlockAnchor(focusB, { last: true, render: true, merge: true });
