@@ -165,7 +165,6 @@ export class AiWrite {
                 }
             }
             ts = mergeCode(ts);
-            // console.log('gggg', ts, this.aa);
             if (this.aa) {
                 var isWillSave = false;
                 if (typeof ts[0] != 'undefined') {
@@ -174,7 +173,7 @@ export class AiWrite {
                         if (c.match(/^[\d]+[\.、 ]/)) {
                             var d = c.match(/^[\d]+[\.、 ]/)[0]
                             isWillSave = true;
-                            var nb = await new Promise((resolve: (block: Block) => void, reject) => {
+                            await new Promise((resolve: (block: Block) => void, reject) => {
                                 this.page.onTurn(this.block, BlockUrlConstant.List, async (newBlock: Block, oldBlock) => {
                                     if (oldBlock) lodash.remove(this.writedBlocks, g => g == oldBlock)
                                     await newBlock.updateProps({ listType: ListType.number, content: c.slice(d.length) })
@@ -187,7 +186,6 @@ export class AiWrite {
                                     })
                                 })
                             })
-                            //console.log(nb);
                         }
                         else if (c.startsWith('```')) {
                             var d = c.match(/^```/)[0]
@@ -201,7 +199,7 @@ export class AiWrite {
                                 code = code.slice(0, -4)
                             }
                             isWillSave = true;
-                            var nb = await new Promise((resolve: (block: Block) => void, reject) => {
+                            await new Promise((resolve: (block: Block) => void, reject) => {
                                 this.page.onTurn(this.block, BlockUrlConstant.Code, async (newBlock: Block, oldBlock) => {
                                     if (oldBlock) lodash.remove(this.writedBlocks, g => g == oldBlock)
                                     await newBlock.updateProps({ language: lang, content: code.trimStart() });
@@ -214,11 +212,10 @@ export class AiWrite {
                                     })
                                 })
                             })
-                            //console.log('nb', nb);
                         }
-                        else if (c.match(/^[一二三四五六七八九十]+[\.、]/)) {
+                        else if (c.match(/^[一二三四五六七八九十]+[\.、 ]/)) {
                             isWillSave = true;
-                            var nb = await new Promise((resolve: (block: Block) => void, reject) => {
+                            await new Promise((resolve: (block: Block) => void, reject) => {
                                 this.page.onTurn(this.block, BlockUrlConstant.Head, async (newBlock: Block, oldBlock) => {
                                     if (oldBlock) lodash.remove(this.writedBlocks, g => g == oldBlock)
                                     await newBlock.updateProps({ content: c })
@@ -231,13 +228,60 @@ export class AiWrite {
                                 })
                             })
                         }
-                        else if (c.startsWith('-') || c.startsWith('*') || c.startsWith('+')) {
-                            var d = c.match(/^[\-\*\+]/)[0]
+                        else if (c.startsWith('---')) {
                             isWillSave = true;
-                            var nb = await new Promise((resolve: (block: Block) => void, reject) => {
-                                this.page.onTurn(this.block, BlockUrlConstant.List, async (newBlock: Block, oldBlock) => {
+                            await new Promise((resolve: (block: Block) => void, reject) => {
+                                this.page.onTurn(this.block, BlockUrlConstant.Divider, async (newBlock: Block, oldBlock) => {
                                     if (oldBlock) lodash.remove(this.writedBlocks, g => g == oldBlock)
                                     await newBlock.updateProps({ listType: ListType.circle, content: c.slice(d.length) })
+                                    newBlock.mounted(() => {
+                                        this.block = newBlock;
+                                        this.aa = newBlock.appearAnchors.last()
+                                        if (!this.writedBlocks.includes(newBlock)) this.writedBlocks.push(newBlock);
+                                        resolve(newBlock)
+                                    })
+                                })
+                            })
+                        }
+                        else if (c.match(/^[#]+/)) {
+                            isWillSave = true;
+                            var d = c.match(/^[#]+/)[0];
+                            var level = 'h' + (d.length >= 4 ? 4 : d.length);
+                            await new Promise((resolve: (block: Block) => void, reject) => {
+                                this.page.onTurn(this.block, BlockUrlConstant.Head, async (newBlock: Block, oldBlock) => {
+                                    if (oldBlock) lodash.remove(this.writedBlocks, g => g == oldBlock)
+                                    await newBlock.updateProps({ content: c.slice(d.length), level: level })
+                                    newBlock.mounted(() => {
+                                        this.block = newBlock;
+                                        this.aa = newBlock.appearAnchors.last()
+                                        if (!this.writedBlocks.includes(newBlock)) this.writedBlocks.push(newBlock);
+                                        resolve(newBlock)
+                                    })
+                                })
+                            })
+                        }
+                        else if (c.match(/^\-[^\-]/)) {
+                            isWillSave = true;
+                            await new Promise((resolve: (block: Block) => void, reject) => {
+                                this.page.onTurn(this.block, BlockUrlConstant.List, async (newBlock: Block, oldBlock) => {
+                                    if (oldBlock) lodash.remove(this.writedBlocks, g => g == oldBlock)
+                                    await newBlock.updateProps({ listType: ListType.circle, content: c.slice(1) })
+                                    newBlock.mounted(() => {
+                                        this.block = newBlock;
+                                        this.aa = newBlock.appearAnchors.last()
+                                        if (!this.writedBlocks.includes(newBlock)) this.writedBlocks.push(newBlock);
+                                        resolve(newBlock)
+                                    })
+                                })
+                            })
+                        }
+                        else if (c.match(/^(\*[^\*]|\+[^\+])/)) {
+                            var d = c.match(/^[\-\*\+]/)[0]
+                            isWillSave = true;
+                            await new Promise((resolve: (block: Block) => void, reject) => {
+                                this.page.onTurn(this.block, BlockUrlConstant.List, async (newBlock: Block, oldBlock) => {
+                                    if (oldBlock) lodash.remove(this.writedBlocks, g => g == oldBlock)
+                                    await newBlock.updateProps({ listType: ListType.circle, content: c.slice(1) })
                                     newBlock.mounted(() => {
                                         // console.log('gggg');
                                         this.block = newBlock;
@@ -300,7 +344,34 @@ export class AiWrite {
                                 content: t.slice(ma[0].length)
                             }
                         }
-                        else if (t.startsWith("*") || t.startsWith('+') || t.startsWith('-')) {
+                        else if (t.startsWith('---')) {
+                            return {
+                                url: BlockUrlConstant.Divider
+                            }
+                        }
+                        else if (t.match(/^[一二三四五六七八九十]+[\.、 ]/)) {
+                            return {
+                                url: BlockUrlConstant.Head,
+                                content: t
+                            }
+                        }
+                        else if (t.match(/^\-[^\-]/)) {
+                            return {
+                                url: BlockUrlConstant.List,
+                                listType: ListType.circle,
+                                content: t.slice(1)
+                            }
+                        }
+                        else if (t.match(/^[#]+/)) {
+                            var d = t.match(/^[#]+/)[0];
+                            var level = 'h' + (d.length >= 4 ? 4 : d.length);
+                            return {
+                                url: BlockUrlConstant.Head,
+                                level: level,
+                                content: t.slice(d.length)
+                            }
+                        }
+                        else if (t.match(/^(\*[^\*]|\+[^\+])/)) {
                             return {
                                 url: BlockUrlConstant.List,
                                 listType: ListType.circle,
@@ -419,4 +490,5 @@ export class AiWrite {
         })
     }
 }
+
 

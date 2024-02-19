@@ -119,7 +119,7 @@ export class AITool extends EventsComponent {
      * Renders the AITool component.
      * @returns The rendered AITool component.
      */
-    render(): ReactNode {
+    render() {
         var style: CSSProperties = {
             minWidth: 300
         }
@@ -646,7 +646,7 @@ export class AITool extends EventsComponent {
                 model: options?.model,
                 async callback(str, done, contoller) {
                     if (contoller) { self.controller = contoller; return }
-                    console.log(str,done);
+                    console.log(str, done);
                     if (typeof str == 'string') {
                         self.anwser += str;
                         scope += str;
@@ -676,7 +676,6 @@ export class AITool extends EventsComponent {
                 }
             });
         }
-
     }
     async aiSelection(options: { prompt?: string, model?: WsConsumeType, isNotFound?: boolean }) {
         this.controller = null;
