@@ -1,12 +1,12 @@
 import { CSSProperties, ReactNode } from "react";
 import { EventsComponent } from "../../component/lib/events.component";
 import React from "react";
-import { AiStartSvg, CheckSvg, ChevronDownSvg, CloseSvg, Edit1Svg, PicSvg, PublishSvg, RefreshSvg, TrashSvg } from "../../component/svgs";
+import { AiStartSvg, CheckSvg, CloseSvg, Edit1Svg, PicSvg, PublishSvg, RefreshSvg, TrashSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { Singleton } from "../../component/lib/Singleton";
 import { PopoverPosition } from "../../component/popover/position";
 import { Block } from "../../src/block";
-import { riseLayer } from "../../component/lib/zindex";
+import { popoverLayer } from "../../component/lib/zindex";
 import { channel } from "../../net/channel";
 import { Loading1, Spin } from "../../component/view/spin";
 import { FixedViewScroll } from "../../src/common/scroll";
@@ -132,7 +132,7 @@ export class AITool extends EventsComponent {
         return <div
             className="pos-t-r pn vw100 vh100 overflow-hidden"
             style={{
-                zIndex: riseLayer.zoom(this)
+                zIndex: popoverLayer.zoom(this)
             }}><div
                 ref={e => this.el = e}
                 className="pos"
