@@ -85,7 +85,7 @@ function parseTextBlock(element: HTMLElement[] | HTMLElement) {
                 }
             }
         }
-        
+
     }
     if (Array.isArray(element)) {
         for (let j = 0; j < element.length; j++) {
@@ -222,9 +222,11 @@ function getTextBlock(element: HTMLElement) {
 function isLineElement(element: HTMLElement) {
     var name = element?.tagName?.toLowerCase();
     if (['span', 'a', 'label', 'i', 'u', 'del', 'b', 'em', 'font', 'strong'].includes(name)) {
+        var r = element.querySelector('div,p,ul,ol,li,table,figure,img,video,audio,iframe,h1,h2,h3,h4,h5,h6,blockquote,hr,pre,code,input,select,textarea');
+        if (r) return false;
         return true;
     }
-    else return false;
+    return false;
 }
 
 function parseBlock(element: HTMLElement) {

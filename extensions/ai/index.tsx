@@ -603,7 +603,7 @@ export class AITool extends EventsComponent {
         this.options = options;
         this.page.setPaddingBottom(500);
         if (this.textarea) this.textarea.innerText = '';
-        this.updateView(() => {
+        this.updateView(() =>{
             if (this.textarea)
                 this.textarea.focus()
             if (options.isRun) {
