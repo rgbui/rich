@@ -149,6 +149,9 @@ export class DataGridItemRecord extends Block {
     get elementUrl(){
         return getElementUrl(ElementType.SchemaData, this.schema.id, this.dataId)
     }
+    get dataLink() {
+        return this.page.ws.resolve({ elementUrl: this.elementUrl });
+    }
 }
 @view('/data-grid/record')
 export class DataGridItemRecordView extends BlockView<DataGridItemRecord>{

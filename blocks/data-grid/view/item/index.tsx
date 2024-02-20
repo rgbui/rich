@@ -34,6 +34,9 @@ export class TableStoreItem extends Block {
         if (Array.isArray(this.dataGrid.data)) return this.dataGrid.data.find(g => g.id == this.dataId);
         else return null;
     }
+    get dataLink() {
+        return this.page.ws.resolve({ elementUrl: this.elementUrl });
+    }
     get dataIndex() {
         if (Array.isArray(this.dataGrid.data))
             return this.dataGrid.data.findIndex(g => g.id == this.dataId);

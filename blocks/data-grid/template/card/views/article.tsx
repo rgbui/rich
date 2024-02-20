@@ -196,7 +196,11 @@ export class CardPin extends CardView {
                     <img className="w-180 h-120 block round  object-center" src={autoImageUrl(pics[0].url, 250)} />
                 </div>}
                 <div className={"flex flex-col flex-full " + (hasPic ? "flex-auto gap-l-10" : "")}>
-                    <div className="f-16 bold flex-fixed">{title}</div>
+                    <div className="f-16 bold flex-fixed">
+                        <a href={this.props.item.dataLink} onClick={e => {
+                            e.preventDefault()
+                        }} style={{ color: 'inherit', textDecoration: 'none' }}>{title}</a>
+                    </div>
                     <div className="flex-auto">
                         {remark && <div className="f-12 remark rows-3">{remark}</div>}
                         {tags.length > 0 && <div className="flex gap-h-5">{tags.map((tag, i) => {
