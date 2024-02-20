@@ -19,6 +19,7 @@ import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import lodash from "lodash";
 import { lst } from "../../../i18n/store";
 import { Block } from "../../block";
+import { Title } from "../../../blocks/page/title";
 
 export class PageEvent {
     /**
@@ -309,7 +310,7 @@ export class PageEvent {
     }
     async onContextmenu(this: Page, event: React.MouseEvent) {
         if (!this.isCanEdit) return;
-       // event.preventDefault();
+        // event.preventDefault();
     }
     async onAddCover(this: Page, toggle = true) {
         if (!this.isCanEdit) return;
@@ -343,6 +344,11 @@ export class PageEvent {
         })
     }
     async onUpdatePageData(this: Page, data: Record<string, any>) {
+        for (let n in data) {
+            if (lodash.isNull(data[n]) || lodash.isUndefined(data[n])) {
+                delete data[n];
+            }
+        }
         if ([
             ElementType.SchemaData,
             ElementType.SchemaRecordView,
@@ -350,6 +356,12 @@ export class PageEvent {
         ].includes(this.pe.type) && !this.isSchemaRecordViewTemplate) {
             Object.assign(this.formRowData, data);
             this.forceUpdate();
+            this.view.pageBar?.forceUpdate();
+            var tb = this.find(c => c.url == BlockUrlConstant.Title);
+            if (tb) {
+                await (tb as Title).loadPageInfo();
+                tb.forceUpdate()
+            }
         }
         else if (this.isSchemaRecordViewTemplate) {
             var sr = this.schema.views.find(g => g.id == this.pe.id1);

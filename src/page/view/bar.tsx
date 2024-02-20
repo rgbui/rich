@@ -50,7 +50,7 @@ export class PageBar extends React.Component<{ page: Page }>{
         if (this.props.page.openSource !== 'page') return;
         var r = await useInputIconAndText({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, options);
         if (r) {
-            this.props.page.onUpdatePageData(r)
+            this.props.page.onUpdatePageData({ title: r.text || undefined, icon: r.icon || undefined });
         }
     }
     renderTitle() {
