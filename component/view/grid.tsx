@@ -102,12 +102,12 @@ export class Divider extends React.Component<{
     align?: 'left' | 'center' | 'right'
     children?: React.ReactNode,
     style?: CSSProperties,
-    hidden?:boolean
+    hidden?: boolean
 }>{
     render() {
         var style: CSSProperties = this.props.style || {};
         var align = this.props.align || 'left';
-        if(this.props.hidden)style.visibility='hidden';
+        if (this.props.hidden) style.visibility = 'hidden';
         return <div style={style} className='shy-divider'>
             <div className='shy-divider-line'></div>
             {this.props.children && <div className={'shy-divider-title' + " " + align}>
@@ -141,7 +141,10 @@ export class Dialoug extends React.Component<{
         }
         return <div className={classList.join(" ")} style={this.props.style || {}}>
             {this.props.head && <div className="shy-dialoug-head">{this.props.head}</div>}
-            <div className={contentClassList.join(' ')}>
+            <div style={{
+                paddingTop: this.props.head ? undefined : 0,
+                paddingBottom: this.props.footer ? undefined : 0
+            }} className={contentClassList.join(' ')}>
                 {this.props.children}
             </div>
             {this.props.footer && <div className="shy-dialoug-footer">{this.props.footer}</div>}

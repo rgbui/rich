@@ -24,7 +24,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
     contentEl: HTMLElement;
     async openEdit(event: React.MouseEvent) {
         var pd = this.block.page.getPageDataInfo();
-        var model = { text: pd?.text || lst('新话题'), description: pd?.description }
+        var model = { text: pd?.text || '', description: pd?.description }
         var f = await useForm({
             head: false,
             fields: [{ name: 'text', text: lst('频道名称'), type: 'input' }, { name: 'description', text: lst('频道描述'), type: 'textarea' }],

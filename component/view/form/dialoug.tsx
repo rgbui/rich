@@ -53,7 +53,7 @@ class FormDialoug extends EventsComponent {
             </> : undefined}
         >
             {this.remark && <div className=" f-14 remark flex-center gap-10">{this.remark}</div>}
-            <div className="padding-b-10 f-14">
+            <div className={"f-14 " + (this.footer ? "padding-b-10" : "")}>
                 {this.fields.map(f => {
                     return <div key={f.name} className="gap-h-10">
                         <div className="flex gap-h-5 f-12 remark"><label>{f.text}</label>{f.tip && <HelpTip overlay={f.tip}></HelpTip>}</div>
