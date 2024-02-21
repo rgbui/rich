@@ -132,7 +132,7 @@ export class ChannelText extends Block {
             this.view.forceUpdate();
         }
     }
-    async didUnmounted(): Promise<void> {
+    async didUnmounted() {
         channel.off('/ws/channel/notify', this.channelNotify);
         this.page.keyboardPlate.off(this.id);
     }
