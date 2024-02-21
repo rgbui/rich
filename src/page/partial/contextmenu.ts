@@ -294,12 +294,12 @@ export class PageContextmenu {
         }
         else if (this.pageLayout.type == PageLayoutType.board) {
             items = [
-                {
-                    text: lst('主题'),
-                    icon: PlatteSvg,
-                    name: 'theme',
-                },
-                { type: MenuItemType.divide },
+                // {
+                //     text: lst('主题'),
+                //     icon: PlatteSvg,
+                //     name: 'theme',
+                // },
+                // { type: MenuItemType.divide },
                 { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? lst("除消编辑保护") : lst("编辑保护"), icon: this.locker?.lock ? LockSvg : UnlockSvg },
                 { name: 'copy', text: lst('拷贝'), icon: DuplicateSvg },
                 { name: 'move', text: lst('移动'), icon: MoveToSvg },
