@@ -270,7 +270,12 @@ export class PageView extends Component<{ page: Page }>{
         if (this.props.page.bar === false) {
             pageStyle.top = 0;
         }
-        if (this.page.pageLayout?.type == PageLayoutType.textChannel || this.page.pageLayout?.type == PageLayoutType.board) {
+        if (this.page.pageLayout?.type == PageLayoutType.textChannel) {
+            pageStyle.overflowY = 'visible';
+            pageStyle.overflowX = 'visible';
+            pageStyle.overflow = 'visible';
+        }
+        if (this.page.pageLayout?.type == PageLayoutType.board) {
             pageStyle.overflowY = 'hidden';
             pageStyle.overflowX = 'hidden';
         }
