@@ -452,7 +452,16 @@ export class Page extends Events<PageDirective>{
         this.onUpdateProps(props, isUpdate);
     }, 1000)
     public isSchemaRecordViewTemplate: boolean
-    public schemaInitRecordData?: Record<string, any>
+    public openPageData?: {
+        pre?: {
+            id: any;
+            text: any;
+            icon: any;
+            cover: any;
+            description: any;
+        },
+        formData?: Record<string, any>
+    }
     get pageUrl() {
         if (this._pageItem) return this._pageItem.url;
         else {

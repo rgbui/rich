@@ -32,6 +32,8 @@ export class DataGridViewData {
             url = '/page/slide';
         }
         if (forceUrl) url = forceUrl;
+        if (typeof initData == 'undefined') initData = {};
+        initData.pre = this.page.getPageDataInfo();
         await this.onDataGridTool(async () => {
             await channel.air(url, {
                 elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, vid),
@@ -60,12 +62,15 @@ export class DataGridViewData {
                 elementUrl = getElementUrl(ElementType.SchemaRecordViewData, this.schema.id, view.id, id)
             }
         }
+        var initData: Record<string, any> = {};
+        initData.pre = this.page.getPageDataInfo();
         await this.onDataGridTool(async () => {
             await channel.air(url, {
                 elementUrl: elementUrl,
                 config: {
                     force: true,
-                    isCanEdit: true
+                    isCanEdit: true,
+                    initData
                 }
             })
             await this.loadDataGrid();

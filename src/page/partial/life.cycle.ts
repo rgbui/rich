@@ -112,7 +112,7 @@ export class Page$Cycle {
             console.error(ex);
             console.log(JSON.stringify(data));
         }
-        
+
     }
     async loadViews(this: Page, data?: Record<string, any>) {
         this.views = [];
@@ -654,7 +654,7 @@ export class Page$Cycle {
     async onAction(this: Page,
         directive: ActionDirective | string,
         fn: () => Promise<void>,
-        options?: { disabledStore?: boolean,immediate?:boolean }
+        options?: { disabledStore?: boolean, immediate?: boolean }
     ) {
         if (typeof this.onActionQueue == 'undefined') this.onActionQueue = new QueueHandle();
         await this.onActionQueue.create(
@@ -914,7 +914,7 @@ export class Page$Cycle {
                 if (typeof this.formRowData == 'undefined') {
                     this.formRowData = {};
                 }
-                if (typeof this.schemaInitRecordData != 'undefined') Object.assign(this.formRowData, this.schemaInitRecordData)
+                if (typeof this.openPageData?.formData != 'undefined') Object.assign(this.formRowData, this.openPageData.formData)
                 this.each(g => {
                     if (g instanceof OriginFormField) {
                         var f = g.field;

@@ -362,6 +362,11 @@ export class PageEvent {
                 await (tb as Title).loadPageInfo();
                 tb.forceUpdate()
             }
+            if (this.pe.type == ElementType.SchemaData) {
+                if (!this.openPageData?.pre && this.formRowData?.id) {
+                    await this.schema.rowUpdate({ dataId: this.formRowData?.id, data: this.formRowData })
+                }
+            }
         }
         else if (this.isSchemaRecordViewTemplate) {
             var sr = this.schema.views.find(g => g.id == this.pe.id1);
