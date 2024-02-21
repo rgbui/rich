@@ -135,7 +135,7 @@ export class CardView extends React.Component<{
                 if (updateFileName) {
                     var uf = this.schema.fields.find(c => c.name == updateFileName);
                     var filename = resource.filename;
-                    var filename = filename.slice(0, filename.lastIndexOf('.'))
+                    var filename = filename ? filename.slice(0, filename.lastIndexOf('.')) : lst('图片') as string;
                     await this.props.item.onUpdateCellProps({
                         [field.name]: [resource],
                         [uf.name]: filename
