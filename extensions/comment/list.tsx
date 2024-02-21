@@ -263,7 +263,7 @@ export class CommentListView extends React.Component<{
             }
         }
     }
-    renderComments(comments, deep: number = 0) {
+    renderAllComments(comments, deep: number = 0) {
         return <div onMouseDown={e => this.onMentionUser(e)}>{comments.map(l => {
             return <div key={l.id} className={"flex-top gap-b-15"}>
                 <UserBox userid={l.creater}>{(user) => <>
@@ -287,7 +287,7 @@ export class CommentListView extends React.Component<{
                             <span className={"remark cursor f-12  gap-r-3  "}><Sp text={'{count}条回复'} data={{ count: l.replyCount }}>{l.replyCount}条回复</Sp></span>
                             {l.replys && <span className="remark flex-center size-20 "><Icon size={14} icon={{ name: 'bytedance-icon', code: l.spread == true ? 'right' : 'down' }}></Icon></span>}
                         </div>}
-                        {l.replys && l.spread == true && <div className="gap-t-10">{this.renderComments(l.replys.list, deep + 1)}</div>}
+                        {l.replys && l.spread == true && <div className="gap-t-10">{this.renderAllComments(l.replys.list, deep + 1)}</div>}
                     </div></>}
                 </UserBox>
             </div>
@@ -302,14 +302,13 @@ export class CommentListView extends React.Component<{
                     <em onMouseDown={e => this.onSet('date')} className={"h-24 flex-center cursor round padding-w-5" + (this.sort == 'date' ? " item-hover-focus" : "")}><S>最新</S></em>
                 </div>
             </div>
-            <Divider></Divider>
-            <div className="padding-h-10  round min-h-30 overflow-y">
-                <SpinBox spin={this.loading}>
-                    {this.renderComments(this.list)}
-                    <Pagination size={this.size} total={this.total} index={this.index}></Pagination>
-                    {this.list.length == 0 && <div className="remark min-50 flex-center f-12"><S>暂无评论</S></div>}
-                </SpinBox>
-            </div>
+            {this.list.length > 0 && <><Divider></Divider>
+                <div className="padding-h-10  round min-h-30 overflow-y">
+                    <SpinBox spin={this.loading}>
+                        {this.renderAllComments(this.list)}
+                        <Pagination size={this.size} total={this.total} index={this.index}></Pagination>
+                    </SpinBox>
+                </div></>}
             <div className="gap-b-15">
                 <Divider></Divider>
                 {this.renderSendComment()}
@@ -386,7 +385,7 @@ export class CommentListView extends React.Component<{
                         {l.replys && l.spread == true && <div>
                             <div>{this.renderSendComment(l)}</div>
                             <div className="border-light gap-t-10 padding-10 round">
-                                {this.renderComments(l.replys.list)}
+                                {this.renderAllComments(l.replys.list)}
                             </div>
                         </div>}
                     </div>
@@ -406,14 +405,14 @@ export class CommentListView extends React.Component<{
                     <em onMouseDown={e => this.onSet('date')} className={"h-24 flex-center cursor round padding-w-5" + (this.sort == 'date' ? " item-hover-focus" : "")}><S>最新</S></em>
                 </div>
             </div>
-            <Divider></Divider>
-            <div className="padding-h-10  round min-h-30 overflow-y">
-                <SpinBox spin={this.loading}>
-                    {this.renderAnswerList(this.list)}
-                    <Pagination size={this.size} total={this.total} index={this.index}></Pagination>
-                    {this.list.length == 0 && <div className="remark min-50 flex-center f-12"><S>暂无评论</S></div>}
-                </SpinBox>
-            </div>
+            {this.list.length > 0 && <> <Divider></Divider>
+                <div className="padding-h-10  round min-h-30 overflow-y">
+                    <SpinBox spin={this.loading}>
+                        {this.renderAnswerList(this.list)}
+                        <Pagination size={this.size} total={this.total} index={this.index}></Pagination>   {/* {this.list.length == 0 && <div className="remark min-50 flex-center f-12"><S>暂无评论</S></div>} */}
+                    </SpinBox>
+                </div>
+            </>}
         </div>
     }
     render() {
