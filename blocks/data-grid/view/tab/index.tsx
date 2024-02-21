@@ -80,15 +80,16 @@ export class DataGridTab extends Block {
                 tableId: this.dataGridBlock.schema.id,
                 viewId: this.dataGridBlock.syncBlockId,
                 selectView: true,
-                editTable: true
+                createView: true
             });
             if (g) {
                 if (typeof g != 'string' && g.type == 'view') {
-                    var s = this.refTables.find(s => s.id == (g as any).tableId)
-                    if (!s) {
-                        s = await TableSchema.loadTableSchema(g.tableId, this.page.ws);
-                        this.refTables.push(s)
+                    //console.log('gggg', g);
+                    var s = await TableSchema.loadTableSchema(g.tableId, this.page.ws);
+                    if (this.refTables.some(c => c.id == s.id)) {
+                        lodash.remove(this.refTables, c => c.id == s.id);
                     }
+                    this.refTables.push(s)
                     var view = s.listViews.find(c => c.id == (g as any).viewId);
                     await this.page.onAction('onTabAddItem', async () => {
                         var items = lodash.cloneDeep(this.tabItems);
@@ -297,6 +298,9 @@ export class DataGridTab extends Block {
                 else if (um.item.name == 'link') {
                     await self.dataGridBlock.onCopyLink();
                 }
+                else if (um.item.name == 'addView') {
+                    await self.dataGridBlock.onAddCreateTableView();
+                }
             }
             var props: Record<string, any> = {};
             var rn = items.find(g => g.name == 'name');
@@ -415,6 +419,10 @@ export class DataGridTab extends Block {
     onOver(isOver: boolean) {
         if (this.renderToolOperators && this.renderToolOperators.isOpenTool) return;
         this.isOver = isOver;
+        if (this.refPlus) {
+            if (this.isOver) this.refPlus.style.display = 'flex';
+            else this.refPlus.style.display = 'none';
+        }
         if (this.renderToolOperators) this.renderToolOperators.forceUpdate();
     }
     renderToolOperators: RenderToolOperators;
@@ -475,6 +483,7 @@ export class DataGridTab extends Block {
             return pos;
         }
     }
+    refPlus: HTMLElement;
 }
 
 @view('/data-grid/tab')
@@ -504,6 +513,7 @@ export class DataGridTabView extends BlockView<DataGridTab>{
                             </div>
                         })}
                         {this.block.isCanEdit() && <Tip text="添加视图"><div
+                            ref={e => this.block.refPlus = e}
                             style={{ display: this.block.isOver ? "flex" : "none" }}
                             onMouseDown={e => {
                                 this.block.onOpenAddTabView(e)

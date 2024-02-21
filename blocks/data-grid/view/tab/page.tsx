@@ -45,6 +45,7 @@ export class TabPage extends Block {
         return this.myTab.tabPages;
     }
 }
+
 @view('/data-grid/tab/page')
 export class TabPageView extends BlockView<TabPage>{
     async mousedown(event: React.MouseEvent) {
