@@ -35,26 +35,26 @@ export var util = {
         if (dayjs(now).isSame(dayjs(date), 'day')) {
             var hour = date.getHours();
             if (hour >= 0 && hour < 6) {
-                return lst('今天') + dayjs(date).format('HH:mm')
+                return lst('今天')+" " + dayjs(date).format('HH:mm')
             }
             else if (hour >= 6 && hour < 11) {
-                return lst('上午') + dayjs(date).format('HH:mm')
+                return lst('上午')+" " + dayjs(date).format('HH:mm')
             }
             else if (hour >= 11 && hour < 13) {
-                return lst('中午') + dayjs(date).format('HH:mm')
+                return lst('中午')+" " + dayjs(date).format('HH:mm')
             }
             else if (hour >= 13 && hour < 18) {
-                return lst('下午') + dayjs(date).format('HH:mm')
+                return lst('下午')+" " + dayjs(date).format('HH:mm')
             }
             else if (hour >= 18 && hour <= 23) {
-                return lst('晚上') + dayjs(date).format('HH:mm')
+                return lst('晚上')+" " + dayjs(date).format('HH:mm')
             }
         }
         else if (dayjs(now).isSame(dayjs(date).add(1, 'day'), 'day')) {
-            return lst('昨天') + dayjs(date).format('HH:mm')
+            return lst('昨天')+" " + dayjs(date).format('HH:mm')
         }
         else if (dayjs(now).isSame(dayjs(date).add(2, 'day'), 'day')) {
-            return lst('前天') + dayjs(date).format('HH:mm')
+            return lst('前天')+" " + dayjs(date).format('HH:mm')
         }
         else {
             return dayjs(date).format('YYYY/MM/DD');
