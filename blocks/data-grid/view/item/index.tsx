@@ -255,9 +255,9 @@ export class TableStoreItemView extends BlockView<TableStoreItem>{
             <div className="r-gap-b-10">
                 <ChildsArea childs={this.block.childs}></ChildsArea>
             </div>
-            <div onMouseDown={e => this.block.onOpenMenu(e)} className="pos visible top-5 right-5 flex-center  size-24 round item-hover bg-white cursor">
+            {this.block.isCanEdit() && <div onMouseDown={e => this.block.onOpenMenu(e)} className="pos visible top-5 right-5 flex-center  size-24 round item-hover bg-white cursor">
                 <Icon size={20} icon={DotsSvg}></Icon>
-            </div>
+            </div>}
         </div>
     }
     renderCards() {
@@ -274,9 +274,9 @@ export class TableStoreItemView extends BlockView<TableStoreItem>{
                 <div className="sy-data-grid-card-items r-gap-b-10">
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                 </div>
-                <div onMouseDown={e => this.block.onOpenMenu(e)} className="pos visible top-5 right-5 flex-center size-24 round item-hover bg-white cursor">
+                {this.block.isCanEdit() && <div onMouseDown={e => this.block.onOpenMenu(e)} className="pos visible top-5 right-5 flex-center size-24 round item-hover bg-white cursor">
                     <Icon size={20} icon={DotsSvg}></Icon>
-                </div>
+                </div>}
             </div>
         }
         else {
@@ -284,9 +284,10 @@ export class TableStoreItemView extends BlockView<TableStoreItem>{
                 <div className="r-gap-b-10">
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                 </div>
-                <div onMouseDown={e => this.block.onOpenMenu(e)} className="pos visible top-5 right-5 flex-center size-24 visible round item-hover bg-white cursor">
+                {this.block.isCanEdit() && <div onMouseDown={e => this.block.onOpenMenu(e)} className="pos visible top-5 right-5 flex-center size-24 visible round item-hover bg-white cursor">
                     <Icon size={20} icon={DotsSvg}></Icon>
                 </div>
+                }
             </div>
         }
     }
