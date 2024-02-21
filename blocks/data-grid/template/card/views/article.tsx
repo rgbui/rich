@@ -22,6 +22,7 @@ import { BlockRenderRange } from "../../../../../src/block/enum";
 import { util } from "../../../../../util/util";
 import { loadPageUrlData } from "../../create";
 import { OptionBackgroundColorList } from "../../../../../extensions/color/data";
+import { Divider } from "../../../../../component/view/grid";
 
 /**
  * 
@@ -191,7 +192,7 @@ export class CardPin extends CardView {
         var cs = this.cardSettings<{ align: 'left' | 'right' }>({ align: 'left' });
         var browse = this.getValue<{ count: number, users: string[] }>('browse', FieldType.browse);
         if (cs.align == 'left' || !cs.align) {
-            return <div onMouseDown={e => this.openEdit()} className={"relative gap-h-10 visible-hover " + (hasPic ? "flex  flex-full  " : "")}>
+            return <div><div onMouseDown={e => this.openEdit()} className={"relative gap-h-10 visible-hover " + (hasPic ? "flex  flex-full  " : "")}>
                 {hasPic && <div className="flex-fixed">
                     <img className="w-180 h-120 block round  object-center" src={autoImageUrl(pics[0].url, 250)} />
                 </div>}
@@ -229,13 +230,15 @@ export class CardPin extends CardView {
                     </span>}
                 </div>
             </div>
-
+                <Divider></Divider>
+            </div>
         }
         else {
-
-            return <div onMouseDown={e => this.openEdit(e)} className={"relative  gap-h-10  visible-hover " + (hasPic ? "flex  flex-full  " : "")}>
+            return <div><div onMouseDown={e => this.openEdit(e)} className={"relative  gap-h-10  visible-hover " + (hasPic ? "flex  flex-full  " : "")}>
                 <div className={" " + (hasPic ? "flex-auto gap-r-10" : "")}>
-                    <div className="f-16 bold">{title}</div>
+                    <div className="f-16 bold"> <a href={this.props.item.dataLink} onClick={e => {
+                        e.preventDefault()
+                    }} style={{ color: 'inherit', textDecoration: 'none' }}>{title}</a></div>
                     <div className="f-12 remark min-h-60 rows-3">{remark}</div>
                     {tags.length > 0 && <div className="flex gap-h-5">{tags.map((tag, i) => {
                         return <span className="item-light-hover-focus f-12 remark flex-center round padding-w-5 h-20" key={i}>#{tag.text}</span>
@@ -258,8 +261,8 @@ export class CardPin extends CardView {
                     </span>}
                 </div>
             </div>
-
-
+                <Divider></Divider>
+            </div>
         }
     }
 }
