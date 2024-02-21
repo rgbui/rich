@@ -338,8 +338,7 @@ export class DataGridView extends Block {
             { schema: this.schema }
         );
         if (dg) {
-            if (dg.source == 'dataView') await this.onSchemaViewCreateByTemplate(dg.text, dg.url)
-            else await this.onSchemaViewCreate(dg.text, dg.url);
+            await this.onSchemaViewCreate(dg.text, dg.url);
         }
     }
     willCreateSchema: boolean = false;

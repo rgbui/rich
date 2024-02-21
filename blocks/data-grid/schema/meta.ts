@@ -9,6 +9,9 @@ import { ViewField } from "./view";
 import { AtomPermission } from "../../../src/page/permission";
 import { Page } from "../../../src/page";
 import { LinkWs } from "../../../src/page/declare";
+import { CardFactory } from "../template/card/factory/factory";
+import { lst } from "../../../i18n/store";
+import { on } from "events";
 
 export interface TableSchemaView {
     id: string,
@@ -397,6 +400,71 @@ export class TableSchema {
             }
         })
         return result;
+    }
+    async createSchemaView(text: string, url: string) {
+        var cm = CardFactory.CardModels.get(url)?.model;
+        var viewUrl = url;
+        var viewProps: Record<string, any>;
+        if (cm) {
+            viewUrl = cm.forUrls[0];
+            var ps = cm.props.toArray(pro => {
+                var f = this.fields.find(x => x.text == pro.text && x.type == pro.types[0]);
+                if (f) {
+                    return {
+                        name: pro.name,
+                        visible: true,
+                        bindFieldId: f.id
+                    }
+                }
+            })
+            viewProps = ({
+                openRecordSource: 'page',
+                cardConfig: {
+                    auto: false,
+                    showCover: false,
+                    coverFieldId: "",
+                    coverAuto: false,
+                    showMode: 'define',
+                    templateProps: {
+                        url: url,
+                        props: ps
+                    }
+                }
+            });
+        }
+        var actions: any[] = [{ name: 'createSchemaView', text: text, url: url }];
+        if (url == '/data-grid/board' && !this.fields.some(f => f.type == FieldType.option || f.type == FieldType.options)) {
+            actions.push({
+                name: 'addField',
+                field: {
+                    text: lst('状态'),
+                    type: FieldType.option,
+                    config: {
+                        options: []
+                    }
+                }
+            })
+        }
+        var result = await this.onSchemaOperate(actions)
+        var oneAction = result.data.actions.first();
+        if (result.data.actions.length > 1) {
+            var action = result.data.actions[1];
+            var f = new Field();
+            f.load({
+                id: action.id,
+                name: action.name,
+                text: lst('状态'),
+                type: FieldType.option,
+                config: {
+                    options: []
+                }
+            });
+            this.fields.push(f);
+        }
+        return {
+            props: viewProps,
+            view: this.views.find(c => c.id == oneAction.id)
+        }
     }
     static schemas: Map<string, TableSchema> = new Map();
     static isLoadAll: boolean = false;

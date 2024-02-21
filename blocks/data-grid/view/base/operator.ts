@@ -406,7 +406,6 @@ export class DataGridViewOperator {
                 await bs[i].forceUpdate();
             }
         })
-
         if (dt) {
             await dt.updateView(newBlock);
         }
@@ -429,66 +428,9 @@ export class DataGridViewOperator {
             data: { from, to }
         }]);
     }
-    async onSchemaViewCreate(this: DataGridView, text: string, url: string, viewProps?: Record<string, any>) {
-        var actions: any[] = [{ name: 'createSchemaView', text: text, url: url }];
-        if (url == '/data-grid/board' && !this.schema.fields.some(f => f.type == FieldType.option || f.type == FieldType.options)) {
-            actions.push({
-                name: 'addField',
-                field: {
-                    text: lst('状态'),
-                    type: FieldType.option,
-                    config: {
-                        options: []
-                    }
-                }
-            })
-        }
-        var result = await this.schema.onSchemaOperate(actions)
-        var oneAction = result.data.actions.first();
-        if (result.data.actions.length > 1) {
-            var action = result.data.actions[1];
-            var f = new Field();
-            f.load({
-                id: action.id,
-                name: action.name,
-                text: lst('状态'),
-                type: FieldType.option,
-                config: {
-                    options: []
-                }
-            });
-            this.schema.fields.push(f);
-        }
-        await this.onDataGridTurnView(oneAction.id, viewProps);
-    }
-    async onSchemaViewCreateByTemplate(this: DataGridView, text: string, url: string) {
-        var cm = CardFactory.CardModels.get(url)?.model;
-        var viewUrl = cm.forUrls[0];
-        var ps = cm.props.toArray(pro => {
-            var f = this.schema.fields.find(x => x.text == pro.text && x.type == pro.types[0]);
-            if (f) {
-                return {
-                    name: pro.name,
-                    visible: true,
-                    bindFieldId: f.id
-                }
-            }
-        })
-        var viewProps = ({
-            openRecordSource: 'page',
-            cardConfig: {
-                auto: false,
-                showCover: false,
-                coverFieldId: "",
-                coverAuto: false,
-                showMode: 'define',
-                templateProps: {
-                    url: url,
-                    props: ps
-                }
-            }
-        });
-        await this.onSchemaViewCreate(text, viewUrl, viewProps);
+    async onSchemaViewCreate(this: DataGridView, text: string, url: string) {
+        var sv = await this.schema.createSchemaView(text, url);
+        await this.onDataGridTurnView(sv.view.id, sv.props);
     }
     async onSchemaViewUpdate(this: DataGridView, viewId: string, data: { text?: string, icon?: IconValueType }) {
         var self = this;
