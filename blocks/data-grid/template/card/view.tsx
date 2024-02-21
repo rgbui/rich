@@ -57,9 +57,10 @@ export class CardView extends React.Component<{
     getFieldRowValue(name: string) {
         var fs = this.getFields(name);
         if (fs.length > 0) {
-            for (let f of fs) {
-                if (typeof this.props.item.dataRow[f.name] != 'undefined') return { field: f, value: this.props.item.dataRow[f.name] };
-            }
+            if (typeof this.props.item?.dataRow != 'undefined')
+                for (let f of fs) {
+                    if (typeof this.props.item.dataRow[f.name] != 'undefined') return { field: f, value: this.props.item.dataRow[f.name] };
+                }
         }
         return { field: null, value: undefined };
     }

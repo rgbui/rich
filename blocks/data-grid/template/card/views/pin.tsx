@@ -92,14 +92,13 @@ export class CardPin extends CardView {
         var self = this;
         var pics = this.getValue<ResourceArguments[]>('pic');
         if (pics && !Array.isArray(pics)) pics = [pics];
-        var author = this.getValue<string[]>('author',FieldType.user)[0];
+        var author = this.getValue<string[]>('author', FieldType.user)[0];
         var title = this.getValue<string>('title');
         var remark = this.getValue<string>('remark');
         var hasPic = Array.isArray(pics) && pics.length > 0;
         var like = this.getValue<{ count: number, users: string[] }>('like', FieldType.like);
         var isLike = this.isEmoji('like')
         var tags = this.getValue<{ text: string, color: string }[]>('tags', FieldType.options);
-        console.log(tags,author,like);
         return <div className="w100" onMouseDown={e => self.openEdit(e)}>
             <div className="visible-hover max-h-600 overflow-hidden round-bottom-8 relative">
                 {hasPic && <img className="w100 block round-8 object-center" src={autoImageUrl(pics[0].url, 500)} style={{ backgroundColor: BackgroundColorList().randomOf().color }} />}
@@ -120,7 +119,7 @@ export class CardPin extends CardView {
                     </span>}
                 </div>
             </div>
-            {tags&&tags.length > 0 && <div className="padding-w-10  gap-h-5 flex">
+            {tags && tags.length > 0 && <div className="padding-w-10  gap-h-5 flex">
                 {tags.map((t, i) => {
                     return <span className="round-16 padding-w-10 item-light-hover-focus h-24 flex-center f-12 gap-r-10" key={i}>{t.text}</span>
                 })}
