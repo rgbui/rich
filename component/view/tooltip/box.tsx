@@ -142,7 +142,8 @@ export class BoxTip extends React.Component<{
     /**
      * 禁用鼠标按下关闭
      */
-    disableMousedownClose?: boolean
+    disableMousedownClose?: boolean,
+    mousedownOpen?:boolean
 }>{
     el: HTMLElement;
     componentDidMount() {
@@ -165,6 +166,10 @@ export class BoxTip extends React.Component<{
         }
     }
     mousedown = (event: MouseEvent) => {
+        if(this.props.mousedownOpen==true){
+            this.mouseenter(event);
+            return;
+        }
         if (this.props.disableMousedownClose == true) return;
         this.close();
     }
