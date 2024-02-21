@@ -63,8 +63,8 @@ export class PageBar extends React.Component<{ page: Page }>{
                 }
                 {this.props.page.openSource == 'page' && <>
                     {this.props.page?.openPageData?.pre && <><span onMouseDown={e => this.props.page.onBack()} className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5">
-                        {this.props.page.schema?.icon && <Icon className={'text-1'} size={20} icon={this.props.page.schema?.icon || CollectTableSvg}></Icon>}
-                        <span className="gap-l-5">{this.props.page.schema?.text}</span>
+                        {this.props.page?.openPageData?.pre?.icon && <Icon className={'text-1'} size={20} icon={getPageIcon(this.props.page?.openPageData?.pre)}></Icon>}
+                        <span className="gap-l-5">{getPageText(this.props.page?.openPageData?.pre)}</span>
                     </span>
                         <span className="flex-center desk-no-drag "><Icon className={'text-1'} icon={ChevronRightSvg} size={20}></Icon></span></>}
                     <span onMouseDown={e => this.onRenamePage(e, { text: this.props.page?.formRowData?.title, icon: this.props.page?.formRowData?.icon, defaultIcon: PageSvg })} className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5">
@@ -78,11 +78,11 @@ export class PageBar extends React.Component<{ page: Page }>{
         else if ([ElementType.SchemaView, ElementType.SchemaRecordView].includes(this.props.page.pe.type) && !this.props.page.isSchemaRecordViewTemplate) {
             return <div className="flex-auto flex desk-drag">
                 {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onPageClose()} className="desk-no-drag item-hover size-24 round cursor flex-center "><Icon className={'text-1'} size={20} icon={DoubleRightSvg}></Icon></span>}
-                <span onMouseDown={e => this.props.page.onBack()} className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5">
-                    {this.props.page.schema?.icon && <Icon size={18} className={'text-1'} icon={this.props.page.schema?.icon || CollectTableSvg}></Icon>}
-                    <span className="gap-l-5">{this.props.page.schema?.text}</span>
+                {this.props.page.openSource == 'page'&&this.props.page?.openPageData?.pre && <><span onMouseDown={e => this.props.page.onBack()} className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5">
+                    {this.props.page?.openPageData?.pre?.icon && <Icon className={'text-1'} size={20} icon={getPageIcon(this.props.page?.openPageData?.pre)}></Icon>}
+                    <span className="gap-l-5">{getPageText(this.props.page?.openPageData?.pre)}</span>
                 </span>
-                <span className="desk-no-drag flex-center"><Icon className={'text-1'} icon={ChevronRightSvg} size={18}></Icon></span>
+                    <span className="flex-center desk-no-drag "><Icon className={'text-1'} icon={ChevronRightSvg} size={20}></Icon></span></>}
                 <span onMouseDown={e => { this.onRenamePage(e, { text: this.props.page?.formRowData?.title, icon: this.props.page?.formRowData?.icon, defaultIcon: CollectTableSvg }) }} className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5">
                     <Icon className={'text-1'} size={18} icon={this.props.page?.formRowData?.icon || PageSvg}></Icon>
                     <span className="gap-l-5">{this.props.page?.formRowData?.title || lst('新页面')}</span>
