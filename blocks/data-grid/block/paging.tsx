@@ -83,7 +83,7 @@ export class Paging extends Block {
 export class PagingView extends BlockView<Paging>{
     async onDropSize(event: React.MouseEvent) {
         var items: MenuItem[] = [
-            { text: lst('选择每页的条数'), type: MenuItemType.text },
+            // { text: lst('选择每页的条数'), type: MenuItemType.text },
             { text: '20' + lst('条/页'), value: 20 },
             { text: '50' + lst('条/页'), value: 50 },
             { text: '80' + lst('条/页'), value: 80 },
