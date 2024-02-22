@@ -84,26 +84,26 @@ export class DataGridViewLife {
     }
     async loadData(this: DataGridView) {
         if (this.schema) {
-            this.isLoadingData = true;
-            var r = await this.schema.list({
-                page: this.pageIndex,
-                size: this.size,
-                filter: this.getSearchFilter(),
-                sorts: this.getSearchSorts()
-            }, this.page.ws);
-            if (r.data) {
-                this.data = Array.isArray(r.data.list) ? r.data.list : [];
-                this.total = r.data?.total || 0;
-                this.size = r.data.size;
-                this.pageIndex = r.data.page;
-                this.isLoadingData = false;
-            }
+            await this.onLoadingAction(async () => {
+                var r = await this.schema.list({
+                    page: this.pageIndex,
+                    size: this.size,
+                    filter: this.getSearchFilter(),
+                    sorts: this.getSearchSorts()
+                }, this.page.ws);
+                if (r.data) {
+                    this.data = Array.isArray(r.data.list) ? r.data.list : [];
+                    this.total = r.data?.total || 0;
+                    this.size = r.data.size;
+                    this.pageIndex = r.data.page;
+                }
+            })
         }
     }
     async loadDataInteraction(this: DataGridView) {
         if (!this.page.isSign) return;
         if (this.schema) {
-            var fs = this.schema.fields.findAll(g => [FieldType.like, FieldType.oppose,FieldType.vote,FieldType.love].includes(g.type))
+            var fs = this.schema.fields.findAll(g => [FieldType.like, FieldType.oppose, FieldType.vote, FieldType.love].includes(g.type))
             if (fs.length > 0) {
                 var ds = this.data.findAll(g => {
                     return fs.some(f => typeof g[f.name]?.count == 'number' && g[f.name]?.count > 0)

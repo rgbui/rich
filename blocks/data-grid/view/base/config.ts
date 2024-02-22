@@ -280,13 +280,14 @@ export class DataGridViewConfig {
                 tableId: this.schema.id,
                 viewId: this.syncBlockId,
                 selectView: true,
-                editTable: true
+                // editTable: true,
+                createView: true
             });
             if (g) {
                 if (typeof g != 'string' && g.type == 'view') {
                     var s = this.schemaId == g.tableId ? this.schema : await TableSchema.loadTableSchema(g.tableId, this.page.ws);
                     var sv = s.listViews.find(c => c.id == (g as any).viewId)
-                    this.page.onReplace(this, {
+                    await this.page.onReplace(this, {
                         url: BlockUrlConstant.DataGridTab,
                         tabIndex: 1,
                         tabItems: [

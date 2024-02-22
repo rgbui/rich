@@ -424,7 +424,6 @@ export var GalleryPics = () => [
             }
         ]
     },
-
     {
         "group": lst("台湾省故宫博物院"),
         "childs": [

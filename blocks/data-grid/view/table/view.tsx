@@ -11,7 +11,6 @@ import { DataGridTool } from "../components/tool"
 import { CheckSvg, CollectTableSvg, DotsSvg, PlusSvg, TypesNumberSvg } from "../../../../component/svgs"
 import { ghostView } from "../../../../src/common/ghost"
 import { ViewField } from "../../schema/view"
-import lodash from "lodash"
 import { Spin, SpinBox } from "../../../../component/view/spin"
 import { ToolTip } from "../../../../component/view/tooltip"
 import { lst } from "../../../../i18n/store"
@@ -69,10 +68,6 @@ export class TableStoreView extends BlockView<TableStore>{
         var self = this;
         self.isMoveLine = true;
         event.stopPropagation();
-        var oldFields = this.block.fields.map(f => {
-            if (typeof f.get == 'function') return f.get()
-            else return lodash.cloneDeep(f)
-        });
         var head = self.block.el.querySelector('.sy-dg-table-head');
         var cs = Array.from(head.querySelectorAll('.sy-dg-table-head-th')) as HTMLElement[];
         MouseDragger<{ colIndex: number, colWidth: number, colEles: HTMLElement[] }>({
@@ -208,7 +203,6 @@ export class TableStoreView extends BlockView<TableStore>{
     renderBody() {
         var self = this;
         if (this.block.data) {
-            var ids = this.block.childs.map(c => c.id)
             return <SpinBox spin={this.block.isLoadingData}><div className='sy-dg-table-body'>
                 <ChildsArea childs={this.block.childs}></ChildsArea>
                 {this.block.isCanAddRow() && <div
@@ -225,14 +219,15 @@ export class TableStoreView extends BlockView<TableStore>{
         else return <Spin block></Spin>
     }
     renderCreateTable() {
+        if (this.block.isLoading) return <></>
+        if (this.block.isLoadingData) return <></>
         return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus padding-h-5 padding-w-10 cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
             {this.block.willCreateSchema && <Spin></Spin>}
-            <span className="size-24 flex-center remark"><Icon size={16} icon={CollectTableSvg}></Icon></span>
-            <span className="remark"><S>创建数据表格</S></span>
+            {!this.block.willCreateSchema && <> <span className="size-24 flex-center remark"><Icon size={16} icon={CollectTableSvg}></Icon></span>
+                <span className="remark"><S>创建数据表格</S></span></>}
         </div>
     }
     renderView() {
-        var self = this;
         return <div className={"sy-dg-table" +
             (this.block.noBorder ? " sy-dg-table-no-border" : "") +
             (this.block.noHead ? " sy-dg-table-no-header" : "")
@@ -240,6 +235,7 @@ export class TableStoreView extends BlockView<TableStore>{
             onMouseEnter={e => this.block.onOver(true)}
             onMouseLeave={e => this.block.onOver(false)}
         >
+            {this.block.isLoading && <Spin block></Spin>}
             {this.block.schema && <DataGridTool block={this.block}></DataGridTool>}
             {this.block.schema && <div className="sy-dg-table-content" >
                 {this.block.noHead !== true && this.renderHead()}

@@ -134,13 +134,13 @@ export class CardPin extends CardView {
                             useUserCard({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) }, { user, ws: this.dataGrid.page.ws })
                         }} className="flex" >
                             <Avatar user={user}></Avatar>
-                            <a className="cursor gap-l-5 underline-hover text ">{user.name}</a>
+                            <a className="cursor gap-l-5 underline-hover text-1 ">{user.name}</a>
                         </div>
                     }}</UserBox>
                 </div>
                 <div className="flex-auto flex-end">
                     <span onMouseDown={e => self.onUpdateCellInteractive(e, 'like')} className={"circle flex-center cursor" + (isLike ? " text-p" : " text-1")}>
-                        <Icon icon={isLike ? LoveFillSvg : LoveSvg}></Icon>
+                        <Icon size={16} icon={isLike ? LoveFillSvg : LoveSvg}></Icon>
                     </span>
                     {like.count > 0 && <span className="text-1 cursor gap-l-5">{like.count}</span>}
                 </div>

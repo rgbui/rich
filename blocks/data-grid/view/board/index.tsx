@@ -239,6 +239,8 @@ export class TableStoreBoardView extends BlockView<TableStoreBoard>{
         return <itemBlock.viewComponent block={itemBlock}></itemBlock.viewComponent>
     }
     renderCreateTable() {
+        if (this.block.isLoading) return <></>
+        if (this.block.isLoadingData) return <></>
         return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus padding-h-5 padding-w-10 cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
             {this.block.willCreateSchema && <Spin></Spin>}
             <span className="size-24 flex-center remark"><Icon size={16} icon={CollectTableSvg}></Icon></span>

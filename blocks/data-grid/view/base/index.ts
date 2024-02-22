@@ -32,6 +32,8 @@ import { FieldType } from "../../schema/type";
 import { Input } from "../../../../component/view/input";
 import { onCreateDataGridTemplate } from "../../template/create";
 import { DataGridTab } from "../tab";
+import { util } from "../../../../util/util";
+
 
 /**
  * 
@@ -316,19 +318,32 @@ export class DataGridView extends Block {
     async didMounted(force: boolean = true) {
         await this.loadDataGrid(force);
     }
+    isLoading: boolean = false;
     async loadDataGrid(force: boolean = true) {
-        await this.loadSchema();
-        if (this.schema) {
-            await this.loadViewFields();
-            await this.loadData();
-            await this.loadRelationSchemas();
-            await this.loadRelationDatas();
-            await this.loadDataInteraction();
-            await this.createItem();
-            await this.onNotifyReferenceBlocks();
-            if (this.view && force) this.view.forceUpdate();
+        try {
+            this.isLoading = true;
+            if (this.view) this.view.forceUpdate();
+            // await util.delay(1000 * 30);
+            await this.loadSchema();
+            if (this.schema) {
+                await this.loadViewFields();
+                await this.loadData();
+                await this.loadRelationSchemas();
+                await this.loadRelationDatas();
+                await this.loadDataInteraction();
+                await this.createItem();
+                await this.onNotifyReferenceBlocks();
+                if (this.view && force) this.view.forceUpdate();
+            }
+            this.emit('loadDataGrided');
         }
-        this.emit('loadDataGrided');
+        catch (ex) {
+
+        }
+        finally {
+            this.isLoading = false;
+            if (this.view) this.view.forceUpdate();
+        }
     }
     async onAddCreateTableView() {
         var r = Rect.fromEle(this.el);
@@ -343,52 +358,60 @@ export class DataGridView extends Block {
     }
     willCreateSchema: boolean = false;
     async onCreateTableSchema() {
-        if (!this.schemaId) {
-            var dg = await useDataGridCreate({ roundArea: Rect.fromEle(this.el) });
-            if (dg) {
-                this.willCreateSchema = true;
-                if (this.view) this.view.forceUpdate();
-                var viewUrl: string = '';
-                if (dg.schemaId) {
-                    viewUrl = dg.url;
-                    if (viewUrl == dg.url) await this.page.onAction('SelectTableSchema', async () => {
-                        await this.updateProps({
+        if (this.willCreateSchema) return;
+        this.willCreateSchema = true;
+        try {
+            if (!this.schemaId) {
+                var dg = await useDataGridCreate({ roundArea: Rect.fromEle(this.el) });
+                if (dg) {
+                    if (this.view) this.view.forceUpdate();
+                    var viewUrl: string = '';
+                    if (dg.schemaId) {
+                        viewUrl = dg.url;
+                        if (viewUrl == dg.url) await this.page.onAction('SelectTableSchema', async () => {
+                            await this.updateProps({
+                                schemaId: dg.schemaId,
+                                syncBlockId: dg.syncBlockId
+                            })
+                        })
+                        else await this.page.onReplace(this, {
+                            url: dg.url,
                             schemaId: dg.schemaId,
                             syncBlockId: dg.syncBlockId
                         })
-                    })
-                    else await this.page.onReplace(this, {
-                        url: dg.url,
-                        schemaId: dg.schemaId,
-                        syncBlockId: dg.syncBlockId
-                    })
-                }
-                else if (dg.source == 'dataView') {
-                    var view = await onCreateDataGridTemplate(dg.text, this, dg.url)
-                    viewUrl = view.url;
-                }
-                else {
-                    this.schema = await TableSchema.onCreate({ text: dg.text, url: this.url });
-                    var view = this.schema.listViews.first();
-                    viewUrl = view.url;
-                    if (viewUrl == this.url) await this.page.onAction(ActionDirective.onCreateTableSchema, async () => {
-                        await this.updateProps({
+                    }
+                    else if (dg.source == 'dataView') {
+                        var view = await onCreateDataGridTemplate(dg.text, this, dg.url)
+                        viewUrl = view.url;
+                    }
+                    else {
+                        this.schema = await TableSchema.onCreate({ text: dg.text, url: this.url });
+                        var view = this.schema.listViews.first();
+                        viewUrl = view.url;
+                        if (viewUrl == this.url) await this.page.onAction(ActionDirective.onCreateTableSchema, async () => {
+                            await this.updateProps({
+                                schemaId: this.schema.id,
+                                syncBlockId: view.id
+                            })
+                        });
+                        else await this.page.onReplace(this, {
+                            url: viewUrl,
                             schemaId: this.schema.id,
                             syncBlockId: view.id
                         })
-                    });
-                    else await this.page.onReplace(this, {
-                        url: viewUrl,
-                        schemaId: this.schema.id,
-                        syncBlockId: view.id
-                    })
-                }
-                if (viewUrl == this.url) {
-                    await this.loadDataGrid();
-                    this.willCreateSchema = false;
-                    if (this.view) this.view.forceUpdate();
+                    }
+                    if (viewUrl == this.url) {
+                        await this.loadDataGrid();
+                        if (this.view) this.view.forceUpdate();
+                    }
                 }
             }
+        }
+        catch (ex) {
+
+        }
+        finally {
+            this.willCreateSchema = false;
         }
     }
     dataGridTool: DataGridTool;
