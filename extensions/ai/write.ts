@@ -71,7 +71,7 @@ export class AiWrite {
                 var head = (table_lines[0] || '').trim();
                 var row = (table_lines[1] || '').trim()
                 if (head.match(/^\|([^\|]+\|)+$/)) isH = true
-                if (row.match(/^\|( *[\-]+ *\|)+$/)) isR = true;
+                if (row.match(/^\|( *[\-:]+ *\|)+$/)) isR = true;
                 var isNotLikeTable = false;
                 if (isH && isR) {
                     //说明满足表格的条件
