@@ -23,13 +23,10 @@ import {
     ArticleContinue,
     ExplainPrompt,
     FixSpellingGrammar,
-    ImagePrompt,
     MakeLonger,
     MakeSmall,
     PolishTemplate,
-
     SelectionPrompt,
-
     SummarizeTemplate,
     TranslateTemplate,
     WritingAssistant,
