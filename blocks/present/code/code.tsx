@@ -91,7 +91,7 @@ export class TextCode extends Block {
     }
     async onGetContextMenus() {
         var rs = await super.onGetContextMenus();
-        rs = rs.splice(2);
+        // rs = rs.splice(2);
         lodash.remove(rs, g => g.name == 'text-align');
         var at = rs.findIndex(g => g.name == 'color');
         var ns: MenuItem<string | BlockDirective>[] = [];
