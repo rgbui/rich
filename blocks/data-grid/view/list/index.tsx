@@ -9,7 +9,6 @@ import { ChildsArea } from "../../../../src/block/view/appear";
 import { DataGridView } from "../base";
 import { DataGridTool } from "../components/tool";
 import { TableStoreListItem } from "./row";
-import "./style.less";
 import { CardConfig } from "../item/service";
 import { S } from "../../../../i18n/view";
 
@@ -33,7 +32,7 @@ export class TableStoreList extends DataGridView {
         showMode: 'default',
         showField: 'none',
         templateProps: {}
-    };
+    }
     get isCardAuto() {
         return this.cardConfig?.auto || this.cardConfig.showMode == 'define'
     }
@@ -43,6 +42,7 @@ export class TableStoreList extends DataGridView {
         }
     }
 }
+
 @view('/data-grid/list')
 export class TableStoreListView extends BlockView<TableStoreList>{
     renderCreateTable() {

@@ -5,6 +5,7 @@ import { OriginField } from "../../element/field/origin.field";
 import { TableStoreItem } from "../item";
 import { TableStoreList } from ".";
 import { CardFactory } from "../../template/card/factory/factory";
+import { Rect } from "../../../../src/common/vector/point";
 
 @url('/data-grid/list/row')
 export class TableStoreListItem extends TableStoreItem {
@@ -15,13 +16,18 @@ export class TableStoreListItem extends TableStoreItem {
     get tableStoreList() {
         return this.parent as TableStoreList;
     }
+    getVisibleHandleCursorPoint() {
+        var rect = Rect.fromEle(this.el);
+        var point = rect.leftMiddle;
+        return point;
+    }
 }
 @view('/data-grid/list/row')
 export class TableStoreListItemView extends BlockView<TableStoreListItem>{
     renderRows() {
         var title = this.block.childs.find(g => (g as OriginField).url == '/field/title');
         var cs = this.block.childs.findAll(g => g !== title);
-        return <div className="flex item-light-hover round padding-5 ">
+        return <div className="flex item-light-hover round padding-5 visible-hover ">
             <div className="flex-fixed bold cursor">
                 {title && <title.viewComponent block={title}></title.viewComponent>}
             </div>

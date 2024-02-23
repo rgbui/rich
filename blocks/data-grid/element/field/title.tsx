@@ -23,6 +23,7 @@ export class FieldText extends OriginField {
         }
     }
 }
+
 @view('/field/title')
 export class FieldTextView extends OriginFileView<FieldText>{
     span: HTMLElement;
@@ -48,16 +49,27 @@ export class FieldTextView extends OriginFileView<FieldText>{
     renderFieldValue() {
         var isCard = [
             BlockUrlConstant.DataGridBoard,
-            BlockUrlConstant.DataGridGallery].includes(this.block.dataGrid.url as any);
+            BlockUrlConstant.DataGridGallery
+        ].includes(this.block.dataGrid.url as any);
+        console.log(this.block.dataGrid.url);
         return <div className={'flex l-20 flex-top sy-field-title  ' + (isCard ? " f-14 bold" : " f-14")} onKeyDown={e => this.keydown(e)} onMouseMove={e => this.move(e)}>
             {!(!this.block.item?.dataRow?.icon && isCard) && <span className="size-20 flex-center inline-flex remark gap-r-3"><Icon size={isCard ? 24 : 18} icon={getPageIcon({
                 pageType: PageLayoutType.doc,
                 icon: this.block.item?.dataRow?.icon
             })}></Icon></span>}
             <TextArea plain block={this.block} prop='value' placeholder={lst("标题")} ></TextArea>
-            {this.block.dataGrid.url == BlockUrlConstant.DataGridTable && <span ref={e => this.span = e} onClick={e => this.block.openPage()} className="sy-field-title-button visible flex-center f-12 text-1 border-light  round padding-w-5 padding-h-1 cursor">
-                <em><S>打开</S></em>
-            </span>}
+            {([
+                BlockUrlConstant.DataGridTable,
+                BlockUrlConstant.DataGridList
+            ].includes(this.block.dataGrid.url as any)) && <span ref={e => this.span = e}
+                style={{
+                    position: this.block.dataGrid.url != BlockUrlConstant.DataGridList ? "absolute" : 'static',
+                    marginLeft: this.block.dataGrid.url != BlockUrlConstant.DataGridList ? undefined : 10
+                }}
+                onClick={e => this.block.openPage()}
+                className="sy-field-title-button visible flex-center f-12 text-1 border-light  round padding-w-5 padding-h-1 cursor">
+                    <em><S>打开</S></em>
+                </span>}
         </div>
     }
 }
