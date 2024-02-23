@@ -65,7 +65,7 @@ export class TableFieldView extends EventsComponent {
         return <>
             <div className="gap-h-10 padding-w-14">
                 <div className="flex gap-b-5 remark f-12"><S>关联表格</S>:</div>
-                <div className="flex h-30 padding-w-5 round item-hover cursor" onClick={e => this.openSelectRelationTable(e)}>
+                <div className="flex h-28 border-light padding-w-5 round item-hover cursor" onClick={e => this.openSelectRelationTable(e)}>
                     {rt?.text}
                 </div>
             </div>
@@ -89,7 +89,7 @@ export class TableFieldView extends EventsComponent {
         var ts = this.relationDatas.findAll(g => rs.some(r => r.config.relationTableId == g.id));
         if (ts.length == 0) return <>
             <div className="flex-center gap-h-10 remark">
-                <S>没有关联的表，无法聚合统计</S>
+                <S text="没有关联的表无法聚合统计">没有关联的表，无法聚合统计</S>
             </div>
         </>
         async function selectRelationTable(event: React.MouseEvent) {
@@ -152,21 +152,21 @@ export class TableFieldView extends EventsComponent {
         return <>
             <div className="gap-h-10 padding-w-14">
                 <div className="flex gap-b-5 remark f-12"><S>关联表格</S>:</div>
-                <div onClick={e => selectRelationTable(e)} className="flex h-30 padding-w-5 round item-hover cursor">
+                <div onClick={e => selectRelationTable(e)} className="flex h-28  border-light   padding-w-5 round item-hover cursor">
                     {ts.find(g => g.id == this.config.rollupTableId)?.text}
                 </div>
             </div>
             {self.rollTableSchema?.visibleFields && <>
                 <div className="gap-h-10 padding-w-14">
                     <label className="flex gap-b-5 remark f-12"><S>统计表格列</S>:</label>
-                    <div onClick={e => selectField(e)} className="flex h-30 padding-w-5 round item-hover cursor">
+                    <div onClick={e => selectField(e)} className="flex h-28  border-light  padding-w-5 round item-hover cursor">
                         <Icon size={16} className={'text-1'} icon={GetFieldTypeSvg(self.rollTableSchema.visibleFields.find(g => g.id == this.config.rollupFieldId)?.type)}></Icon>
                         {self.rollTableSchema.visibleFields.find(g => g.id == this.config.rollupFieldId)?.text}
                     </div>
                 </div>
                 {this.config.rollupFieldId && <div className="gap-h-10 padding-w-14">
                     <label className="flex gap-b-5 remark f-12"><S>对数据进行统计</S>:</label>
-                    <div onClick={e => selectS(e)} className="flex h-30 padding-w-5 round item-hover cursor">
+                    <div onClick={e =>selectS(e)} className="flex h-28 border-light padding-w-5 round item-hover cursor">
                         {[
                             { text: lst('平均值'), value: '$agv' },
                             { text: lst('求和'), value: '$sum' },
@@ -233,7 +233,7 @@ export class TableFieldView extends EventsComponent {
                 </div>
                 <div className="gap-h-10 padding-w-14">
                     <div className="flex gap-b-5 remark f-12"><S>字段类型</S>:</div>
-                    <div className="flex h-30 round item-hover cursor" onClick={e => this.openSelectType(e)}>
+                    <div className="flex h-28 round item-hover cursor" onClick={e => this.openSelectType(e)}>
                         <span className="flex-center  size-24  flex-fix cursor item-hover round "><Icon size={14} icon={GetFieldTypeSvg(this.type)}></Icon></span>
                         <span className="flex-auto ">{tm?.text}</span>
                         <span className="flex-fixed size-24 round item-hover flex-center">
