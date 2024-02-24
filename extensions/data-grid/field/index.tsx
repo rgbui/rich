@@ -6,7 +6,7 @@ import React from "react";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
 import { EventsComponent } from "../../../component/lib/events.component";
-import { ChevronDownSvg } from "../../../component/svgs";
+import { ChevronDownSvg, CollectTableSvg } from "../../../component/svgs";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { Point, Rect } from "../../../src/common/vector/point";
 import { useOpenEmoji } from "../../emoji";
@@ -65,8 +65,12 @@ export class TableFieldView extends EventsComponent {
         return <>
             <div className="gap-h-10 padding-w-14">
                 <div className="flex gap-b-5 remark f-12"><S>关联表格</S>:</div>
-                <div className="flex h-28 border-light padding-w-5 round item-hover cursor" onClick={e => this.openSelectRelationTable(e)}>
-                    {rt?.text}
+                <div className="flex h-26 border-light  round item-hover-light cursor" onClick={e => this.openSelectRelationTable(e)}>
+                    <span className="flex-center  size-24  flex-fix cursor  round "><Icon size={14} icon={rt?.icon || CollectTableSvg}></Icon></span>
+                    <span className="flex-auto ">{rt?.text}</span>
+                    <span className="flex-fixed size-24 round  flex-center">
+                        <Icon size={14} icon={ChevronDownSvg}></Icon>
+                    </span>
                 </div>
             </div>
             <div className="flex gap-h-10 padding-w-14 ">
@@ -92,6 +96,14 @@ export class TableFieldView extends EventsComponent {
                 <S text="没有关联的表无法聚合统计">没有关联的表，无法聚合统计</S>
             </div>
         </>
+        var sums = [
+            { text: lst('数量'), value: '$count', icon: { name: 'byte', code: 'preschool' } },
+            { text: lst('聚合'), type: MenuItemType.text },
+            { text: lst('平均'), value: '$agv', icon: { name: 'byte', code: 'average' } },
+            { text: lst('求和'), value: '$sum', icon: { name: 'byte', code: 'formula' } },
+            { text: lst('最小'), value: '$min', icon: { name: 'byte', code: 'min' } },
+            { text: lst('最大'), value: '$max', icon: { name: 'byte', code: 'maximum' } }
+        ]
         async function selectRelationTable(event: React.MouseEvent) {
             var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, ts.map(r => {
                 return {
@@ -113,26 +125,23 @@ export class TableFieldView extends EventsComponent {
                     icon: GetFieldTypeSvg(r.type),
                     checkLabel: r.id == self.config.rollupFieldId
                 }
-            }));
+            }).reverse());
             if (r?.item) {
                 self.config.rollupFieldId = r.item.value;
+                var f = self.rollTableSchema.visibleFields.find(g => g.id == self.config.rollupFieldId);
+                if (f && ![FieldType.number, FieldType.autoIncrement].includes(f.type)) {
+                    self.config.rollupStatistic = '$count';
+                }
                 self.loadTypeDatas(true)
             }
         }
         async function selectS(event: React.MouseEvent) {
-            var menus = [
-                { text: lst('数量'), value: '$count', icon: { name: 'byte', code: 'sum' } },
-                { text: lst('聚合'), type: MenuItemType.text },
-                { text: lst('平均值'), value: '$agv', icon: { name: 'byte', code: 'average' } },
-                { text: lst('求和'), value: '$sum', icon: { name: 'byte', code: 'formula' } },
-                { text: lst('最小值'), value: '$min', icon: { name: 'byte', code: 'min' } },
-                { text: lst('最大值'), value: '$max', icon: { name: 'byte', code: 'maximum' } },
-            ];
+            var menus = sums;
             var f = self.rollTableSchema.visibleFields.find(g => g.id == self.config.rollupFieldId);
             if (f) {
                 if (![FieldType.number, FieldType.autoIncrement].includes(f.type)) {
                     menus = [
-                        { text: lst('数量'), value: '$count', icon: { name: 'byte', code: 'sum' } }
+                        { text: lst('数量'), value: '$count', icon: { name: 'byte', code: 'preschool' } }
                     ];
                 }
             }
@@ -140,6 +149,7 @@ export class TableFieldView extends EventsComponent {
                 return {
                     text: r.text,
                     value: r.value,
+                    icon: r.icon as any,
                     type: r.type,
                     checkLabel: self.config.rollupStatistic == r.value
                 }
@@ -149,32 +159,42 @@ export class TableFieldView extends EventsComponent {
                 self.forceUpdate()
             }
         }
+        var tt = ts.find(g => g.id == this.config.rollupTableId)
         return <>
             <div className="gap-h-10 padding-w-14">
                 <div className="flex gap-b-5 remark f-12"><S>关联表格</S>:</div>
-                <div onClick={e => selectRelationTable(e)} className="flex h-28  border-light   padding-w-5 round item-hover cursor">
-                    {ts.find(g => g.id == this.config.rollupTableId)?.text}
+                <div onClick={e => selectRelationTable(e)}
+                    className="flex h-26  border-light  round item-hover-light cursor">
+
+                    <span className="flex-center  size-24  flex-fix cursor  round "><Icon size={14} icon={tt?.icon || CollectTableSvg}></Icon></span>
+                    <span className="flex-auto ">{tt?.text}</span>
+                    <span className="flex-fixed size-24 round  flex-center">
+                        <Icon size={14} icon={ChevronDownSvg}></Icon>
+                    </span>
+
                 </div>
             </div>
             {self.rollTableSchema?.visibleFields && <>
                 <div className="gap-h-10 padding-w-14">
-                    <label className="flex gap-b-5 remark f-12"><S>统计表格列</S>:</label>
-                    <div onClick={e => selectField(e)} className="flex h-28  border-light  padding-w-5 round item-hover cursor">
-                        <Icon size={16} className={'text-1'} icon={GetFieldTypeSvg(self.rollTableSchema.visibleFields.find(g => g.id == this.config.rollupFieldId)?.type)}></Icon>
-                        {self.rollTableSchema.visibleFields.find(g => g.id == this.config.rollupFieldId)?.text}
+                    <label className="flex gap-b-5 remark f-12"><S>统计列</S>:</label>
+                    <div onClick={e => selectField(e)} className="flex h-26  border-light   round item-hover-light cursor">
+
+                        <span className="flex-center  size-24  flex-fix cursor  round "> <Icon size={16} className={'text-1'} icon={GetFieldTypeSvg(self.rollTableSchema.visibleFields.find(g => g.id == this.config.rollupFieldId)?.type)}></Icon></span>
+                        <span className="flex-auto ">{self.rollTableSchema.visibleFields.find(g => g.id == this.config.rollupFieldId)?.text}</span>
+                        <span className="flex-fixed size-24 round  flex-center">
+                            <Icon size={14} icon={ChevronDownSvg}></Icon>
+                        </span>
+
                     </div>
                 </div>
                 {this.config.rollupFieldId && <div className="gap-h-10 padding-w-14">
-                    <label className="flex gap-b-5 remark f-12"><S>对数据进行统计</S>:</label>
-                    <div onClick={e =>selectS(e)} className="flex h-28 border-light padding-w-5 round item-hover cursor">
-                        {[
-                            { text: lst('平均值'), value: '$agv' },
-                            { text: lst('求和'), value: '$sum' },
-                            { text: lst('最小值'), value: '$min' },
-                            { text: lst('最大值'), value: '$max' },
-                            { text: lst('数量'), value: '$count' }
-
-                        ].find(g => g.value == this.config.rollupStatistic)?.text}
+                    <label className="flex gap-b-5 remark f-12"><S>统计</S>:</label>
+                    <div onClick={e => selectS(e)} className="flex h-26 border-light  round item-hover-light cursor">
+                        <span className="flex-center  size-24  flex-fix cursor  round "> <Icon icon={sums.find(g => g.value == this.config.rollupStatistic)?.icon as any} size={16} className={'text-1'} ></Icon></span>
+                        <span className="flex-auto ">{sums.find(g => g.value == this.config.rollupStatistic)?.text}</span>
+                        <span className="flex-fixed size-24 round  flex-center">
+                            <Icon size={14} icon={ChevronDownSvg}></Icon>
+                        </span>
                     </div>
                 </div>}
             </>
@@ -233,10 +253,10 @@ export class TableFieldView extends EventsComponent {
                 </div>
                 <div className="gap-h-10 padding-w-14">
                     <div className="flex gap-b-5 remark f-12"><S>字段类型</S>:</div>
-                    <div className="flex h-28 round item-hover cursor" onClick={e => this.openSelectType(e)}>
-                        <span className="flex-center  size-24  flex-fix cursor item-hover round "><Icon size={14} icon={GetFieldTypeSvg(this.type)}></Icon></span>
+                    <div className="flex h-26 border-light round item-hover-light cursor" onClick={e => this.openSelectType(e)}>
+                        <span className="flex-center  size-24  flex-fix cursor  round "><Icon size={14} icon={GetFieldTypeSvg(this.type)}></Icon></span>
                         <span className="flex-auto ">{tm?.text}</span>
-                        <span className="flex-fixed size-24 round item-hover flex-center">
+                        <span className="flex-fixed size-24 round  flex-center">
                             <Icon size={14} icon={ChevronDownSvg}></Icon>
                         </span>
                     </div>
@@ -251,8 +271,8 @@ export class TableFieldView extends EventsComponent {
             <div className="flex padding-w-14 gap-h-10">
                 <span className="flex-auto error">{this.error}</span>
                 <div className="flex-fix flex-end">
-                    <Button size="small" className="gap-r-10" ghost onClick={e => this.emit('close')}><S>取消</S></Button>
-                    <Button size="small" onClick={e => self.onSave()}>{this.fieldId ? <S>保存</S> : <S>创建</S>}</Button>
+                    <Button className="gap-r-10" ghost onClick={e => this.emit('close')}><S>取消</S></Button>
+                    <Button onClick={e => self.onSave()}>{this.fieldId ? <S>保存</S> : <S>创建</S>}</Button>
                 </div>
             </div>
         </div>
@@ -296,6 +316,16 @@ export class TableFieldView extends EventsComponent {
                 await TableSchema.onLoadAll()
                 this.relationDatas = await TableSchema.getSchemas()
                 isUpdate = true;
+            }
+        }
+        if (this.type == FieldType.rollup) {
+            var rs = this.dataGrid.schema.fields.findAll(g => g.type == FieldType.relation);
+            var ts = this.relationDatas.findAll(g => rs.some(r => r.config.relationTableId == g.id));
+            if (ts.length > 0) {
+                if (ts.some(tt => tt.id == this.config.rollupTableId) == false) {
+                    this.config.rollupTableId = ts[0].id;
+                    isUpdate = true;
+                }
             }
         }
         if (force == true || isUpdate) {
