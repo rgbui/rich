@@ -22,12 +22,13 @@ export class TableStoreListItem extends TableStoreItem {
         return point;
     }
 }
+
 @view('/data-grid/list/row')
 export class TableStoreListItemView extends BlockView<TableStoreListItem>{
     renderRows() {
         var title = this.block.childs.find(g => (g as OriginField).url == '/field/title');
         var cs = this.block.childs.findAll(g => g !== title);
-        return <div className="flex item-light-hover round padding-5 visible-hover ">
+        return <div className="flex item-light-hover round padding-l-5 padding-r-10 padding-h-5 visible-hover ">
             <div className="flex-fixed bold cursor">
                 {title && <title.viewComponent block={title}></title.viewComponent>}
             </div>
