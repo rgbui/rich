@@ -13,6 +13,16 @@ import { Rect } from "../../../src/common/vector/point";
 
 @url('/shape')
 export class Shape extends Block {
+    async created() {
+        this.pattern.setSvgStyle({
+            strokeWidth: 3,
+            stroke: 'rgb(0,198,145)'
+        });
+        this.pattern.setFontStyle({
+            fontSize: 20,
+            color: 'rgb(0,198,145)',
+        });
+    }
     @prop()
     fixedWidth: number = 200;
     @prop()
