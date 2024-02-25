@@ -18,6 +18,12 @@ export class Pen extends Block {
     viewBox: string = '';
     @prop()
     pathString: string = '';
+    async created() {
+        this.pattern.setSvgStyle({
+            strokeWidth: 3,
+            stroke: 'rgb(0,198,145)'
+        });
+    }
     async getBoardEditCommand(this: Block): Promise<{ name: string; value?: any; }[]> {
         var cs: { name: string; value?: any; }[] = [];
         cs.push({ name: 'tickness', value: this.pattern.getSvgStyle()?.strokeWidth || 2 });
