@@ -25,7 +25,7 @@ export function BoardDrag(
         return;
     }
     var downPoint = Point.from(event);
-    var gm = block?.panelGridMap;
+    var gm = block?.panelGridMap || kit.page.gridMap;
     if (block?.isLine) block = block.closest(x => !x.isLine);
     var beforeIsPicked = kit.picker.blocks.some(s => s == block);
     var hasBlock: boolean = block ? true : false;
