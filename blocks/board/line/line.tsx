@@ -21,6 +21,12 @@ export type PortLocation = {
 
 @url('/line')
 export class Line extends Block {
+    async created() {
+        this.pattern.setSvgStyle({
+            strokeWidth: 3,
+            stroke: 'rgb(0,198,145)'
+        });
+    }
     getBlockBoardSelector(types: BoardPointType[] = [
         BoardPointType.path,
         BoardPointType.resizePort,
@@ -111,7 +117,7 @@ export class Line extends Block {
                     var pi = ps.find(g => g.arrows.every(s => [pl.x, pl.y].includes(s)));
                     if (pi) {
                         var point = this.globalMatrix.inverseTransform(pi.point);
-                        return { point, pi,block };
+                        return { point, pi, block };
                     }
                 }
             }
