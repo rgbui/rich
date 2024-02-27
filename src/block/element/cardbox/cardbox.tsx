@@ -339,7 +339,7 @@ export class ViewComponent extends BlockView<CardBox>{
         var coverStyle = getBgStyle(cs?.bgStyle);
 
         return <div style={style}>
-            <div className="visible-hover sy-block-view-card" style={screenStyle}>
+            <div className={"visible-hover sy-block-view-card" + (this.block.isCanEdit() ? " allow-hover" : "")} style={screenStyle}>
                 <div style={gapStyle}>
                     <div
                         ref={e => this.contentEl = e}
