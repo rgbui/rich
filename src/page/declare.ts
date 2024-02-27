@@ -183,6 +183,7 @@ export interface LinkWs {
     isPubSite: boolean
     isPubSiteDefineBarMenu: boolean
     isPubSiteHideMenu: boolean
+    slnSpread: boolean
 }
 
 export type WorkspaceNavMenuItem = {

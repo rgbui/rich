@@ -50,7 +50,7 @@ export class PageBar extends React.Component<{ page: Page }>{
         if (this.props.page.openSource !== 'page') return;
         var r = await useInputIconAndText({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, options);
         if (r) {
-            await this.props.page.onUpdatePageData({ text: r.text || undefined,  icon: r.icon || undefined });
+            await this.props.page.onUpdatePageData({ text: r.text || undefined, icon: r.icon || undefined });
         }
     }
     renderTitle() {
@@ -243,21 +243,12 @@ export class PageBar extends React.Component<{ page: Page }>{
     render(): React.ReactNode {
         if (this.props.page.bar === false) return <></>
         if (this.props.page.ws.isPubSite && this.props.page.ws.isPubSiteDefineBarMenu) return <></>
-        //var isFormData = this.props.page.pe.type == ElementType.SchemaData && this.props.page.openSource != 'page'
-        // if (this.props.page.ws.isPubSiteDefineBarMenu && !isFormData) {
-        //     return this.renderDefineBar();
-        // }
-        // var isDocCard = this.props.page.pageLayout?.type == PageLayoutType.docCard;
         var style: CSSProperties = {}
-        // if (isDocCard) {
-        //     style.backdropFilter = `blur(20px) saturate(170%)`;
-        //     style.backgroundColor = 'rgba(255, 252, 248, 0.75)';
-        // }
         return <div style={style} className={"shy-page-bar flex visible-hover relative " + (isMobileOnly ? "" : "padding-l-10")}>
             {isMobileOnly && <span onClick={e => this.onSpreadMenu()} className="flex-fixed size-20 flex-center item-hover round cursor ">
                 <Icon icon={ChevronLeftSvg} size={18}></Icon>
             </span>}
-            {!isMobileOnly && this.props.page.openSource == 'page' && !this.props.page.ws.isPubSiteHideMenu && <ToolTip placement="bottom" overlay={lst('折叠侧边栏')}><span onClick={e => this.onSpreadMenu()} className="flex-fixed size-24 flex-center item-hover round cursor ">
+            {!isMobileOnly && this.props.page.openSource == 'page' && !this.props.page.ws.isPubSiteHideMenu && this.props.page.ws.slnSpread == false && <ToolTip placement="bottom" overlay={lst('展开')}><span onClick={e => { this.onSpreadMenu() }} className="flex-fixed size-24 flex-center item-hover round cursor ">
                 <Icon icon={{ name: 'bytedance-icon', code: 'hamburger-button' }} size={18}></Icon>
             </span></ToolTip>}
             {this.renderTitle()}
