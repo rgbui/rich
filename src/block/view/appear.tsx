@@ -6,7 +6,7 @@ import { lst } from '../../../i18n/store';
 export function TextArea(props: {
     block: Block,
     placeholderEmptyVisible?: boolean,
-    placeholderSmallFont?:boolean,
+    placeholderSmallFont?: boolean,
     prop?: string,
     html?: string,
     /**是否为纯文本 */
@@ -21,7 +21,7 @@ export function TextArea(props: {
     var prop = props.prop;
     if (typeof prop == 'undefined') prop = 'content';
     var ps: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> = {
-        style: props.style,
+        style: props.style || {},
         placeholder: props.placeholder,
         ref: (e) => props.block.elementAppear({
             el: e,
@@ -35,7 +35,7 @@ export function TextArea(props: {
         ps = {
             ref: ps.ref,
             suppressContentEditableWarning: true,
-            style: props.style,
+            style: props.style || {},
             placeholder: props.placeholder,
             contentEditable: true,
             spellCheck: false,
@@ -61,7 +61,12 @@ export function TextArea(props: {
         else classList.push(props.className)
     }
     if (props.placeholderEmptyVisible) classList.push('shy-text-empy-visible');
-    if(props.placeholderSmallFont) classList.push('shy-text-placeholder-small-font');
+    if (props.placeholderSmallFont) classList.push('shy-text-placeholder-small-font');
+    if (props.isBlock) {
+        ps.style.display = 'block';
+        // ps.style.whiteSpace = 'nowrap';
+        // props.style = { ...props.style, display: 'block' }
+    }
     if (props.isBlock) {
         if (props.isHtml) return <div className={classList.join(" ")} dangerouslySetInnerHTML={{ __html: html }} {...(ps as any)}></div>
         return <div className={classList.join(" ")} {...(ps as any)}>{html}</div>
@@ -139,11 +144,11 @@ export function TextLineChilds(props: {
     })}</div>
 }
 
-export function TextSpanArea(props: { block: Block, className?: string | string[], placeholderEmptyVisible?: boolean, prop?: string, placeholder?: string }) {
+export function TextSpanArea(props: { block: Block, isBlock?: boolean, className?: string | string[], placeholderEmptyVisible?: boolean, prop?: string, placeholder?: string }) {
     var isAi = props.block.page.ws?.aiConfig?.disabled == true ? false : true;
     if (props.block.childs.length > 0)
         return <TextLineChilds className={props.className} childs={props.block.childs}></TextLineChilds>
     else
-        return <TextArea className={props.className} placeholderEmptyVisible={props.placeholderEmptyVisible} block={props.block} prop={props.prop || 'content'} placeholder={props.placeholder || (!isAi ? lst('输入文本') : lst('空格唤起AI或选择'))}></TextArea>
+        return <TextArea className={props.className} isBlock={props.isBlock} placeholderEmptyVisible={props.placeholderEmptyVisible} block={props.block} prop={props.prop || 'content'} placeholder={props.placeholder || (!isAi ? lst('输入文本') : lst('空格唤起AI或选择'))}></TextArea>
 }
 
