@@ -225,6 +225,10 @@ export class ToolTip extends React.Component<{
     }
     close() {
         if (!this.props.overlay) return;
+        if (this.enterTime) {
+            clearTimeout(this.enterTime);
+            this.enterTime = null;
+        }
         if (toolTipOverlay) {
             toolTipOverlay.close()
         }
