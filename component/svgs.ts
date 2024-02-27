@@ -29,6 +29,7 @@ import BoardFramePadSvg from "../src/assert/svg/board.frame.pad.svg";
 import BoardFramePhoneSvg from "../src/assert/svg/board.frame.phone.svg";
 import BoardFrameWebSvg from "../src/assert/svg/board.frame.web.svg";
 import BoardIconSvg from "../src/assert/svg/board.icon.svg";
+import BoardIconTextStylesSvg from "../src/assert/svg/board.icon.text.styles.svg";
 import BoardMoveBottomSvg from "../src/assert/svg/board.move.bottom.svg";
 import BoardMoveTopSvg from "../src/assert/svg/board.move.top.svg";
 import BoardRefreshSvg from "../src/assert/svg/board.refresh.svg";
@@ -269,6 +270,7 @@ BoardFramePadSvg,
 BoardFramePhoneSvg,
 BoardFrameWebSvg,
 BoardIconSvg,
+BoardIconTextStylesSvg,
 BoardMoveBottomSvg,
 BoardMoveTopSvg,
 BoardRefreshSvg,

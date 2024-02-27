@@ -272,7 +272,7 @@ export class Block$Board {
             this.pattern.setFontStyle({ fontFamily: value })
         }
         else if (name == 'fontStyle') {
-            this.pattern.setFontStyle({ fontStyle: value ? 'italic' : 'normal' });
+            this.pattern.setFontStyle({ fontStyle: value == true || value == 'italic' ? 'italic' : 'normal' });
         }
         else if (name == 'textDecoration') {
             this.pattern.setFontStyle({ textDecoration: value });

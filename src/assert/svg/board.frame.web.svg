@@ -2,5 +2,5 @@
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 32 32"  id="icon-frame-web">
             <path fill-rule="evenodd" clip-rule="evenodd"
                 d="M23 9.5H9a.5.5 0 0 0-.5.5v4h15v-4a.5.5 0 0 0-.5-.5Zm.5 6h-15V22a.5.5 0 0 0 .5.5h14a.5.5 0 0 0 .5-.5v-6.5ZM9 8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2H9Zm1.023 3.787a.75.75 0 1 1 1.5 0 .75.75 0 0 1-1.5 0Zm3.75-.75a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm2.25.75a.75.75 0 1 1 1.5 0 .75.75 0 0 1-1.5 0Z"
-                fill="#414142"></path>
+               fill="currentColor"></path>
         </svg>

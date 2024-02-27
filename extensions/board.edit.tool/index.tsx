@@ -2,16 +2,7 @@ import React, { CSSProperties } from "react";
 import { EventsComponent } from "../../component/lib/events.component";
 import { Singleton } from "../../component/lib/Singleton";
 import {
-    BoardFrame11Svg,
-    BoardFrame169Svg,
-    BoardFrame34Svg,
-    BoardFrame43Svg,
-    BoardFrameA4Svg,
-    BoardFramePadSvg,
-    BoardFramePhoneSvg,
-    BoardFrameWebSvg,
     BoardRefreshSvg,
-    BoardToolFrameSvg,
     BrokenLineSvg,
     CureSvg,
     DotsSvg,
@@ -27,9 +18,7 @@ import { Block } from "../../src/block";
 import { Point, Rect } from "../../src/common/vector/point";
 import { Polygon } from "../../src/common/vector/polygon";
 import { BlockCache } from "../../src/page/common/cache";
-import { BackgroundColor } from "./background";
-import { ShapeFill } from "./fill";
-import { FontColor, LineColor, MindLineColor } from "./fontColor";
+import { FillFontColor, FontTextStyle, LineColor, MindLineColor, FontTextAlign } from "./fontColor";
 import { FontFamily } from "./fontfamily";
 import { LineArrow, LineTypes } from "./line.arrow";
 import { TurnShapes } from "./shapes";
@@ -39,8 +28,8 @@ import lodash from "lodash";
 import { popoverLayer } from "../../component/lib/zindex";
 import { MouseDragger } from "../../src/common/dragger";
 import { SelectBox } from "../../component/view/select/box";
-import { MenuItemType } from "../../component/view/menu/declare";
 import { BlockUrlConstant } from "../../src/block/constant";
+import { canvasOptions } from "./util";
 import "./style.less";
 
 export class BoardEditTool extends EventsComponent {
@@ -75,7 +64,10 @@ export class BoardEditTool extends EventsComponent {
         var self = this;
         function getValue(name: string) {
             var command = self.commands.find(g => g.name == name);
-            if (command) return command.value;
+            if (command) return command?.value;
+        }
+        function has(name) {
+            return self.commands.some(g => g.name == name);
         }
         if (name == 'divider') return <div key={at} className={'shy-board-edit-tool-devide'}></div>
         else if (name == 'mindDirection') {
@@ -140,245 +132,7 @@ export class BoardEditTool extends EventsComponent {
                         iconHidden
                         dropWidth={180}
                         options={
-                            [
-                                {
-                                    text: lst('画板'),
-                                    renderIcon() {
-                                        return <span className="flex-center flex-line  text-1 size-32"><Icon icon={BoardToolFrameSvg}></Icon></span>
-                                    },
-                                    value: 'none'
-                                },
-                                { text: '3:4', value: '3:4', iconSize: 32, icon: BoardFrame34Svg },
-                                { text: '4:3', value: '4:3', iconSize: 32, icon: BoardFrame43Svg },
-                                { text: '1:1', value: '1:1', iconSize: 32, icon: BoardFrame11Svg },
-                                { text: '16:9', value: '16:9', iconSize: 32, icon: BoardFrame169Svg },
-                                { text: 'A4', value: 'A4', iconSize: 32, icon: BoardFrameA4Svg },
-                                { text: lst('原型'), type: MenuItemType.text },
-                                {
-                                    text: ('Phone'),
-                                    value: 'phone',
-                                    iconSize: 32,
-                                    icon: BoardFramePhoneSvg,
-                                    childs: [
-                                        {
-                                            "text": "iPhone 14",
-                                            "value": {
-                                                "name": "phone",
-                                                "width": 390,
-                                                "height": 844
-                                            },
-                                            "label": "390 x 844"
-                                        },
-                                        {
-                                            "text": "iPhone 14 Pro",
-                                            "value": {
-                                                "name": "phone",
-                                                "width": 393,
-                                                "height": 852
-                                            },
-                                            "label": "393 x 852"
-                                        },
-                                        {
-                                            "text": "iPhone 14 Plus",
-                                            "value": {
-                                                "name": "phone",
-                                                "width": 428,
-                                                "height": 926
-                                            },
-                                            "label": "428 x 926"
-                                        },
-                                        {
-                                            "text": "iPhone 14 Pro Max",
-                                            "value": {
-                                                "name": "phone",
-                                                "width": 430,
-                                                "height": 932
-                                            },
-                                            "label": "430 x 932"
-                                        },
-                                        {
-                                            "text": "iPhone 13 Pro Max",
-                                            "value": {
-                                                "name": "phone",
-                                                "width": 428,
-                                                "height": 926
-                                            },
-                                            "label": "428 x 926"
-                                        },
-                                        {
-                                            "text": "iPhone 13 / 13 Pro",
-                                            "value": {
-                                                "name": "phone",
-                                                "width": 390,
-                                                "height": 844
-                                            },
-                                            "label": "390 x 844"
-                                        },
-                                        {
-                                            "text": "iPhone 13 mini",
-                                            "value": {
-                                                "name": "phone",
-                                                "width": 375,
-                                                "height": 812
-                                            },
-                                            "label": "375 x 812"
-                                        },
-                                        {
-                                            "text": "iPhone SE",
-                                            "value": {
-                                                "name": "phone",
-                                                "width": 320,
-                                                "height": 568
-                                            },
-                                            "label": "320 x 568"
-                                        },
-                                        {
-                                            "text": "iPhone 8 Plus",
-                                            "value": {
-                                                "name": "phone",
-                                                "width": 414,
-                                                "height": 736
-                                            },
-                                            "label": "414 x 736"
-                                        },
-                                        {
-                                            "text": "iPhone 8",
-                                            "value": {
-                                                "name": "phone",
-                                                "width": 375,
-                                                "height": 667
-                                            },
-                                            "label": "375 x 667"
-                                        },
-                                        {
-                                            "text": "Android Small",
-                                            "value": {
-                                                "name": "phone",
-                                                "width": 360,
-                                                "height": 640
-                                            },
-                                            "label": "360 x 640"
-                                        },
-                                        {
-                                            "text": "Android Large",
-                                            "value": {
-                                                "name": "phone",
-                                                "width": 360,
-                                                "height": 800
-                                            },
-                                            "label": "360 x 800"
-                                        }
-                                    ]
-
-                                },
-                                {
-                                    text: ('Pad'), value: 'pad', iconSize: 32, icon: BoardFramePadSvg, childs: [
-                                        {
-                                            "text": "iPad mini",
-                                            "value": {
-                                                "name": "pad",
-                                                "width": 768,
-                                                "height": 1024
-                                            },
-                                            "label": "768 x 1024"
-                                        },
-                                        {
-                                            "text": "iPad Pro 11",
-                                            "value": {
-                                                "name": "pad",
-                                                "width": 834,
-                                                "height": 1194
-                                            },
-                                            "label": "834 x 1194"
-                                        },
-                                        {
-                                            "text": "iPad Pro 12.9",
-                                            "value": {
-                                                "name": "pad",
-                                                "width": 1024,
-                                                "height": 1366
-                                            },
-                                            "label": "1024 x 1366"
-                                        },
-                                        {
-                                            "text": "Surface Pro 8",
-                                            "value": {
-                                                "name": "pad",
-                                                "width": 1440,
-                                                "height": 960
-                                            },
-                                            "label": "1440 x 960"
-                                        }
-                                    ]
-                                },
-                                {
-                                    text: ('Web'), value: 'web', iconSize: 32, icon: BoardFrameWebSvg, childs: [
-                                        {
-                                            "text": "FHD",
-                                            "value": {
-                                                "name": "web",
-                                                "width": 1920,
-                                                "height": 1080
-                                            },
-                                            "label": "1920 x 1080"
-                                        },
-                                        {
-                                            "text": "Desktop",
-                                            "value": {
-                                                "name": "web",
-                                                "width": 1440,
-                                                "height": 1024
-                                            },
-                                            "label": "1440 x 1024"
-                                        },
-                                        {
-                                            "text": "Macbook Air",
-                                            "value": {
-                                                "name": "web",
-                                                "width": 1280,
-                                                "height": 832
-                                            },
-                                            "label": "1280 x 832"
-                                        },
-                                        {
-                                            "text": "Macbook Pro 14",
-                                            "value": {
-                                                "name": "web",
-                                                "width": 1512,
-                                                "height": 982
-                                            },
-                                            "label": "1512 x 982"
-                                        },
-                                        {
-                                            "text": "Macbook Pro 16",
-                                            "value": {
-                                                "name": "web",
-                                                "width": 1728,
-                                                "height": 1117
-                                            },
-                                            "label": "1728 x 1117"
-                                        },
-                                        {
-                                            "text": "Surface Book",
-                                            "value": {
-                                                "name": "web",
-                                                "width": 1500,
-                                                "height": 1000
-                                            },
-                                            "label": "1500 x 1000"
-                                        },
-                                        {
-                                            "text": "TV",
-                                            "value": {
-                                                "name": "web",
-                                                "width": 1280,
-                                                "height": 720
-                                            },
-                                            "label": "1280 x 720"
-                                        }
-                                    ]
-                                }
-                            ]
+                            canvasOptions()
                         }
                     ></SelectBox>
                 </div>
@@ -466,7 +220,7 @@ export class BoardEditTool extends EventsComponent {
                         onDrop={e => {
                             if (e) self.showDrop('');
                         }}
-                        dropWidth={60}
+                        dropWidth={100}
                         placeholder={lst('大小')}
                         value={getValue('stickerSize')}
                         onChange={e => this.onChange('stickerSize', e)} options={[
@@ -477,69 +231,80 @@ export class BoardEditTool extends EventsComponent {
                 </div>
             </Tip>
         }
-        else if (name == 'fontWeight') {
-            return <Tip key={at} placement="top" text='加粗'>
-                <div className={'shy-board-edit-tool-item' + ((getValue('fontWeight') == 'bold' || getValue('fontWeight') == true || getValue('fontWeight') > 500) ? " hover" : "")}
-                    onMouseDown={e => this.onChange('fontWeight', (getValue('fontWeight') == 'bold' || getValue('fontWeight') == true || getValue('fontWeight') > 500) ? "normal" : 'bold')}
-                ><span className="size-20 flex-center"><Icon size={16} icon={{ name: 'byte', code: 'text-bold' }}></Icon></span>
-                </div>
-            </Tip>
-        }
         else if (name == 'tickness') {
             return <div key={at} style={{ width: 90 }} className={'shy-board-edit-tool-item'}>
                 <MeasureView theme="light" min={1} max={40} showValue={false} value={getValue('tickness')} inputting={false} onChange={e => { this.onChange('tickness', e) }}></MeasureView>
             </div>
         }
-        else if (name == 'itailc') {
-            return <Tip key={at} placement="top" text='斜体'>
-                <div className={'shy-board-edit-tool-item' + (getValue('itailc') == 'itailc' ? " hover" : "")}
-                    onMouseDown={e => this.onChange('itailc', getValue('itailc') == 'itailc' ? false : true)}
-                ><span className="size-20 flex-center"><Icon size={16} icon={{ name: 'byte', code: 'text-italic' }} ></Icon></span>
+        else if (name == 'fontWeight') {
+            return <Tip key={at} placement="top" text='加粗'>
+                <div onMouseEnter={e => {
+                    this.showDrop('text-font-style');
+                }} onMouseLeave={e => {
+                    this.showDrop('');
+                }} className={'shy-board-edit-tool-item'}>
+                    <FontTextStyle
+                        tool={this}
+                        fontWeight={getValue('fontWeight')}
+                        fontStyle={getValue('fontStyle')}
+                        textDecoration={getValue('textDecoration')}
+                        change={e => {
+                            var key = Object.keys(e)[0];
+                            if (key) {
+                                this.onChange(key, e[key])
+                            }
+                        }}
+                    ></FontTextStyle>
                 </div>
             </Tip>
         }
-        else if (name == 'textDecoration') {
-            return <div key={at} className="flex r-item-hover no-item-hover">
-                <Tip placement="top" text={'删除线'}>
-                    <div className={'shy-board-edit-tool-item' + (getValue('textDecoration') == 'line-through' ? " hover" : "")}
-                        onMouseDown={e => this.onChange('textDecoration', getValue('textDecoration') == 'line-through' ? "none" : "line-through")}
-                    ><span className="size-20 flex-center"><Icon size={16} icon={{ name: 'byte', code: 'strikethrough' }}></Icon></span>
-                    </div>
-                </Tip>
-                <Tip placement="top" text={'下划线'}>
-                    <div
-                        className={'shy-board-edit-tool-item' + (getValue('textDecoration') == 'underline' ? " hover" : "")}
-                        onMouseDown={e => this.onChange('textDecoration', getValue('textDecoration') == 'underline' ? "none" : "underline")}
-                    ><span className="size-20 flex-center"><Icon size={16} icon={{ name: 'byte', code: 'text-underline' }}></Icon></span>
-                    </div>
-                </Tip>
-            </div>
+        else if (name == 'align') {
+            return <Tip key={at} placement="top" text='对齐'>
+                <div onMouseEnter={e => {
+                    this.showDrop('text-align');
+                }} onMouseLeave={e => {
+                    this.showDrop('');
+                }} className="shy-board-edit-tool-item">
+                    <FontTextAlign
+                        align={getValue('align')}
+                        tool={this}
+                        change={e => {
+                            this.onChange('align', e)
+                        }}
+                    ></FontTextAlign>
+                </div>
+            </Tip>
         }
         else if (name == 'fontColor') {
-            return <Tip key={at} placement="top" text={'字体颜色'}>
+            return <Tip key={at} placement="top" text={'颜色'}>
                 <div className={'shy-board-edit-tool-item'}>
-                    <FontColor tool={this} value={getValue('fontColor')} change={e => { this.onChange('fontColor', e) }}></FontColor>
+                    <FillFontColor
+                        tool={this}
+                        noTransparent={has('backgroundNoTransparentColor')}
+                        name={has('backgroundColor') ? 'backgroundColor' : (has('backgroundNoTransparentColor') ? 'backgroundNoTransparentColor' : "fillColor")}
+                        fontColor={getValue('fontColor')}
+                        fillColor={getValue(has('backgroundColor') ? 'backgroundColor' : (has('backgroundNoTransparentColor') ? 'backgroundNoTransparentColor' : "fillColor"))}
+                        change={(e, f, o) => {
+                            if (typeof e != 'undefined') this.onChange('fontColor', e)
+                            if (typeof f != 'undefined') this.onChange(has('backgroundColor') ? 'backgroundColor' : (has('backgroundNoTransparentColor') ? 'backgroundNoTransparentColor' : "fillColor"), f)
+                            if (typeof o != 'undefined') this.onChange('fillOpacity', o)
+                        }}
+                        showOpacity={
+                            has('fillColor')
+                        }
+                        fillOpacity={getValue('fillOpacity')}
+                    ></FillFontColor>
                 </div>
             </Tip>
         }
         else if (name == 'backgroundColor') {
-            if (this.blocks.first().url == BlockUrlConstant.Line) {
+            var url = this.blocks.first().url
+            if (url == BlockUrlConstant.Line || url == BlockUrlConstant.Pen) {
                 return <Tip key={at} placement="top" text={'线条颜色'}>
                     <div className={'shy-board-edit-tool-item'}><LineColor name='backgroundColor' tool={this} value={getValue('backgroundColor')} change={e => { this.onChange('backgroundColor', e) }}></LineColor></div>
                 </Tip >
             }
-            return <Tip key={at} placement="top" text={'背景'}>
-                <div className={'shy-board-edit-tool-item'}>
-                    <BackgroundColor tool={this} value={getValue('backgroundColor')} change={e => { this.onChange('backgroundColor', e) }}></BackgroundColor>
-                </div>
-            </Tip>
-        }
-        else if (name == 'backgroundNoTransparentColor') {
-            return <Tip key={at} placement="top" text={'背景'}>
-                <div className={'shy-board-edit-tool-item'}>
-                    <BackgroundColor noTransparent tool={this} value={getValue('backgroundNoTransparentColor')} change={e => { this.onChange('backgroundNoTransparentColor', e) }}></BackgroundColor>
-                </div>
-            </Tip>
+            return <div key={at}></div>
         }
         else if (name == 'borderWidth') {
             return <Tip key={at} placement="top" text={'边框'}>
@@ -567,18 +332,6 @@ export class BoardEditTool extends EventsComponent {
                 </div>
             </Tip>
         }
-        else if (name == 'fillColor') {
-            return <Tip key={at} placement="top" text={'填充'}>
-                <div className={'shy-board-edit-tool-item'}>
-                    <ShapeFill
-                        tool={this}
-                        fillColor={getValue('fillColor')}
-                        fillOpacity={getValue('fillOpacity')}
-                        change={(name, e, isLazy) => this.onChange(name, e, isLazy)}
-                    ></ShapeFill>
-                </div>
-            </Tip>
-        }
     }
     getItems() {
         if (this.blocks.first().url == BlockUrlConstant.Mind) {
@@ -588,10 +341,6 @@ export class BoardEditTool extends EventsComponent {
                 "mindLineType",
                 "mindLineColor",
                 "divider",
-                "backgroundColor",
-                "backgroundNoTransparentColor",
-                "divider",
-                "fillColor",
                 "borderWidth",
                 "stroke",
                 "divider",
@@ -610,9 +359,13 @@ export class BoardEditTool extends EventsComponent {
                 "fontSize",
                 "divider",
                 "fontWeight",
-                "itailc",
-                "textDecoration",
-                "fontColor"
+                "align",
+                // "itailc",
+                // "textDecoration",
+                "fontColor",
+                "backgroundColor",
+                "backgroundNoTransparentColor",
+                "fillColor",
             ]
         }
         return [
@@ -636,17 +389,16 @@ export class BoardEditTool extends EventsComponent {
             "fontSize",
             "divider",
             "fontWeight",
-            "itailc",
-            "textDecoration",
+            "align",
+            // "itailc",
+            // "textDecoration",
             "fontColor",
-            "divider",
+            "fillColor",
             "backgroundColor",
             "backgroundNoTransparentColor",
             "divider",
             "borderWidth",
-            "fillColor",
-            "stroke",
-
+            "stroke"
         ]
     }
     renderItems() {
