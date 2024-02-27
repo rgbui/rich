@@ -100,7 +100,7 @@ export class SelectBox<T = any> extends React.Component<{
             {this.props.children && <>{this.props.children}<Icon className={'gap-l-3 remark'} size={14} icon={ChevronDownSvg}></Icon></>}
             {!this.props.children && <div style={{ width: '100%' }} className="flex">
                 {this.props.prefix}
-                {this.props.multiple != true && <span style={{ justifyContent: this.props.textAlign == 'right' ? "flex-end" : undefined }} className={'flex f-14 ' + (this.props.border ? "flex-auto " : "flex-fixed")}>{op?.icon && this.props.iconHidden !== true && <Icon size={op?.iconSize || 14} className={'gap-r-3'} icon={op.icon}></Icon>}{op?.text}</span>}
+                {this.props.multiple != true && <span style={{ justifyContent: this.props.textAlign == 'right' ? "flex-end" : undefined }} className={'flex f-14 ' + (this.props.border ? "flex-auto " : "flex-fixed") + (op?.text ? "" : " remark")}>{op?.icon && this.props.iconHidden !== true && <Icon size={op?.iconSize || 14} className={'gap-r-3'} icon={op.icon}></Icon>}{op?.text || this.props.placeholder}</span>}
                 {this.props.multiple == true && <span className={'f-14 flex ' + (this.props.border ? "flex-auto" : "flex-fixed")}><span>{ops.map((op, i) => {
                     return <span className={'round padding-h-2 ' + (i == 0 && this.props.prefix ? "gap-l-5" : (i == 0 ? "" : "padding-l-5 "))} key={op.value}><span className={"flex " + (i < ops.length - 1 ? "gap-r-3" : "")}>{op?.icon && <Icon size={op?.iconSize || 14} className={'gap-r-3'} icon={op.icon}></Icon>}{op?.text}</span>{i < ops.length - 1 ? "," : ""}</span>
                 })}</span></span>}
