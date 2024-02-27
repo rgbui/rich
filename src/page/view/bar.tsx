@@ -50,7 +50,7 @@ export class PageBar extends React.Component<{ page: Page }>{
         if (this.props.page.openSource !== 'page') return;
         var r = await useInputIconAndText({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, options);
         if (r) {
-            this.props.page.onUpdatePageData({ title: r.text || undefined, icon: r.icon || undefined });
+            await this.props.page.onUpdatePageData({ text: r.text || undefined,  icon: r.icon || undefined });
         }
     }
     renderTitle() {
@@ -78,7 +78,7 @@ export class PageBar extends React.Component<{ page: Page }>{
         else if ([ElementType.SchemaView, ElementType.SchemaRecordView].includes(this.props.page.pe.type) && !this.props.page.isSchemaRecordViewTemplate) {
             return <div className="flex-auto flex desk-drag">
                 {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onPageClose()} className="desk-no-drag item-hover size-24 round cursor flex-center "><Icon className={'text-1'} size={20} icon={DoubleRightSvg}></Icon></span>}
-                {this.props.page.openSource == 'page'&&this.props.page?.openPageData?.pre && <><span onMouseDown={e => this.props.page.onBack()} className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5">
+                {this.props.page.openSource == 'page' && this.props.page?.openPageData?.pre && <><span onMouseDown={e => this.props.page.onBack()} className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5">
                     {this.props.page?.openPageData?.pre?.icon && <Icon className={'text-1'} size={20} icon={getPageIcon(this.props.page?.openPageData?.pre)}></Icon>}
                     <span className="gap-l-5">{getPageText(this.props.page?.openPageData?.pre)}</span>
                 </span>

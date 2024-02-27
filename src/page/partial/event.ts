@@ -354,6 +354,8 @@ export class PageEvent {
             ElementType.SchemaRecordView,
             ElementType.SchemaView
         ].includes(this.pe.type) && !this.isSchemaRecordViewTemplate) {
+            data.title=data.text;
+            delete data.text;
             Object.assign(this.formRowData, data);
             this.forceUpdate();
             this.view.pageBar?.forceUpdate();
@@ -369,6 +371,7 @@ export class PageEvent {
             }
         }
         else if (this.isSchemaRecordViewTemplate) {
+            
             var sr = this.schema.views.find(g => g.id == this.pe.id1);
             if (sr) {
                 await this.schema.onSchemaOperate([{
