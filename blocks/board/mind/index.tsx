@@ -18,6 +18,7 @@ import { lst } from "../../../i18n/store";
 import { VR } from "../../../src/common/render";
 import { Polygon } from "../../../src/common/vector/polygon";
 import { AppearAnchor } from "../../../src/block/appear";
+import { ColorUtil } from "../../../util/color";
 import './style.less';
 
 @url('/flow/mind')
@@ -57,6 +58,8 @@ export class FlowMind extends Block {
             BlockChildKey.otherChilds
         ];
     }
+    @prop()
+    align: 'left' | 'center' | 'right' = 'left';
     @prop()
     subMindSpread: boolean = true;
     @prop()
@@ -418,6 +421,8 @@ export class FlowMind extends Block {
     async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
         var bold = this.pattern.css(BlockCssName.font)?.fontWeight;
         var cs: { name: string; value?: any; }[] = [];
+        var svgStyle = this.pattern.getSvgStyle();
+        var ft = this.pattern.css(BlockCssName.font);
         if (this.isMindRoot) {
             cs.push({ name: 'mindDirection', value: this.direction });
             cs.push({ name: 'mindLineType', value: this.lineType });
@@ -426,16 +431,20 @@ export class FlowMind extends Block {
         cs.push({ name: 'fontFamily', value: this.pattern.css(BlockCssName.font)?.fontFamily });
         cs.push({ name: 'fontSize', value: Math.round(this.pattern.css(BlockCssName.font)?.fontSize || 14) });
         cs.push({ name: 'fontWeight', value: bold == 'bold' || bold == 500 ? true : false });
-        cs.push({ name: 'fontStyle', value: this.pattern.css(BlockCssName.font)?.fontStyle == 'italic' ? true : false });
+        cs.push({
+            name: 'fontStyle',
+            value: ft?.fontStyle === 'italic' || (ft?.fontStyle as any) === true ? true : false
+        });
         cs.push({ name: 'textDecoration', value: this.pattern.css(BlockCssName.font)?.textDecoration });
         cs.push({ name: 'fontColor', value: this.pattern.css(BlockCssName.font)?.color });
-        cs.push({ name: 'fillColor', value: this.pattern.getSvgStyle()?.fill || '#000' });
-        cs.push({ name: 'fillOpacity', value: this.pattern.getSvgStyle()?.fillOpacity || 1 });
+        cs.push({ name: 'fillColor', value: this.pattern.getSvgStyle()?.fill });
+        cs.push({ name: 'fillOpacity', value: typeof svgStyle?.fillOpacity == 'number' ? svgStyle.fillOpacity : 1 });
 
         cs.push({ name: 'borderWidth', value: this.minBoxStyle.width });
         cs.push({ name: 'borderType', value: this.minBoxStyle.type });
         cs.push({ name: 'borderColor', value: this.minBoxStyle.borderColor });
         cs.push({ name: 'borderRadius', value: this.minBoxStyle.radius });
+        cs.push({ name: 'align', value: this.align });
 
         return cs;
     }
@@ -470,6 +479,9 @@ export class FlowMind extends Block {
         else if (name == 'borderRadius') {
             await this.updateProps({ 'minBoxStyle.radius': value }, BlockRenderRange.self);
         }
+        else if (name == 'align') {
+            await this.updateProps({ 'align': value }, BlockRenderRange.self);
+        }
         await super.setBoardEditCommand(name, value)
     }
     get contentStyle() {
@@ -477,6 +489,11 @@ export class FlowMind extends Block {
         };
         var s = this.pattern.style;
         if (s.fill) style.backgroundColor = s.fill;
+        if (typeof s.fillOpacity == 'number' && s.fill) {
+            var c = ColorUtil.parseColor(s.fill);
+            c.a = s.fillOpacity * 100;
+            style.backgroundColor = ColorUtil.toRGBA(c);
+        }
         Object.assign(style, s);
         style.width = this.fixedWidth;
         style.borderRadius = this.minBoxStyle.radius;
@@ -893,18 +910,26 @@ export class FlowMindView extends BlockView<FlowMind>{
         var cs = this.block.contentStyle;
         if (this.block.isDragSize == false) {
             delete cs.width;
+            cs.maxWidth = 250;
         }
+        if (this.block.align == 'left')
+            cs.justifyContent = 'flex-start';
+        else if (this.block.align == 'center')
+            cs.justifyContent = 'center';
+        else if (this.block.align == 'right')
+            cs.justifyContent = 'flex-end';
         return <div className={'sy-flow-mind-text ' + (this.block.subMindSpread === false || this.block.otherMindSpread == false ? "relative" : "")}
             style={cs}
             ref={e => this.mindEl = e} >
             <div style={{ margin: '5px 10px' }}>
-                <TextSpanArea placeholderEmptyVisible placeholder={text} block={this.block}></TextSpanArea>
+                <TextSpanArea isBlock placeholderEmptyVisible placeholder={text} block={this.block}></TextSpanArea>
             </div>
             {this.renderSpread()}
         </div>
     }
     renderSpread() {
         var s = 16;
+        if (this.block.otherChilds.length == 0 && this.block.subChilds.length == 0) return <></>
         if (this.block.mindRoot.direction == 'x') {
             return <div>
 
