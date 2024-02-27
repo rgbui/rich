@@ -29,6 +29,7 @@ export class Shape extends Block {
     fixedHeight: number = 200;
     async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
         var bold = this.pattern.css(BlockCssName.font)?.fontWeight;
+        var ft = this.pattern.css(BlockCssName.font);
         var cs: { name: string; value?: any; }[] = [];
         cs.push({ name: 'fontSize', value: Math.round(this.pattern.css(BlockCssName.font)?.fontSize || 14) });
         cs.push({ name: 'fontWeight', value: bold == 'bold' || bold == 500 ? true : false });

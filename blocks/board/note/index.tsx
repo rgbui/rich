@@ -51,6 +51,7 @@ export class Note extends Block {
     }
     async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
         var bold = this.pattern.css(BlockCssName.font)?.fontWeight;
+        var ft = this.pattern.css(BlockCssName.font);
         var cs: { name: string; value?: any; }[] = [];
         cs.push({ name: 'fontSize', value: Math.round(this.pattern.css(BlockCssName.font)?.fontSize || 14) });
         cs.push({ name: 'fontWeight', value: bold == 'bold' || bold == 500 ? true : false });
@@ -58,7 +59,10 @@ export class Note extends Block {
         cs.push({ name: 'textDecoration', value: this.pattern.css(BlockCssName.font)?.textDecoration });
         cs.push({ name: 'fontColor', value: this.pattern.css(BlockCssName.font)?.color });
         cs.push({ name: 'fontFamily', value: this.pattern.css(BlockCssName.font)?.fontFamily });
-
+        cs.push({
+            name: 'fontStyle',
+            value: ft?.fontStyle === 'italic' || (ft?.fontStyle as any) === true ? true : false
+        });
         // cs.push({ name: 'link' });
         var stickerSize = 'none';
         if (this.fixedWidth == 400) stickerSize = 'big'
