@@ -23,11 +23,17 @@ export class S extends React.Component<{ text?: string, data?: Record<string, an
     }
 }
 
-export class Sp extends React.Component<{ text: string, data?: Record<string, any>, children: React.ReactNode }>{
+export class Sp extends React.Component<{ block?: boolean, text: string, data?: Record<string, any>, children: React.ReactNode }>{
     render(): React.ReactNode {
         var text = lst(this.props.text, this.props.data || undefined, true);
-        if (text) return <span dangerouslySetInnerHTML={{ __html: text }}></span>;
-        else return <span>{this.props.children}</span>
+        if (this.props.block) {
+            if (text) return <div dangerouslySetInnerHTML={{ __html: text }}></div>;
+            else return <div>{this.props.children}</div>
+        }
+        else {
+            if (text) return <span dangerouslySetInnerHTML={{ __html: text }}></span>;
+            else return <span>{this.props.children}</span>
+        }
     }
     componentDidMount(): void {
         ls.sps.push(this);
