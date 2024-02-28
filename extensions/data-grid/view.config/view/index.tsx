@@ -91,7 +91,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 ]
             },
             { type: MenuItemType.divide },
-            { text: lst('表格标题'), name: 'noTitle', type: MenuItemType.switch, checked: (this.block as TableStore).noTitle ? false : true },
+            { text: lst('显示标题'), name: 'noTitle', type: MenuItemType.switch, checked: (this.block as TableStore).noTitle ? false : true },
             {
                 text: lst('每页加载的数量'),
                 value: this.block.size,
@@ -120,8 +120,8 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 type: MenuItemType.select,
                 options: [
                     { text: lst('页面'), value: 'page' },
-                    { text: lst('对话框居中'), value: 'dialog' },
-                    { text: lst('侧栏右侧'), value: 'slide' },
+                    { text: lst('对话框'), value: 'dialog' },
+                    { text: lst('右侧栏'), value: 'slide' },
                 ]
             },
             {
@@ -131,8 +131,8 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 type: MenuItemType.select,
                 options: [
                     { text: lst('页面'), value: 'page' },
-                    { text: lst('对话框居中'), value: 'dialog' },
-                    { text: lst('侧栏右侧'), value: 'slide' },
+                    { text: lst('对话框'), value: 'dialog' },
+                    { text: lst('右侧栏'), value: 'slide' },
                 ]
             },
             {

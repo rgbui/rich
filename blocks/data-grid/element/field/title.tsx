@@ -51,7 +51,7 @@ export class FieldTextView extends OriginFileView<FieldText>{
             BlockUrlConstant.DataGridBoard,
             BlockUrlConstant.DataGridGallery
         ].includes(this.block.dataGrid.url as any);
-        console.log(this.block.dataGrid.url);
+        
         return <div className={'flex l-20 flex-top sy-field-title  ' + (isCard ? " f-14 bold" : " f-14")} onKeyDown={e => this.keydown(e)} onMouseMove={e => this.move(e)}>
             {!(!this.block.item?.dataRow?.icon && isCard) && <span className="size-20 flex-center inline-flex remark gap-r-3"><Icon size={isCard ? 24 : 18} icon={getPageIcon({
                 pageType: PageLayoutType.doc,

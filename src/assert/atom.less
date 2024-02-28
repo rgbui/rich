@@ -561,6 +561,7 @@ item-selected:选中的效果
 .r-bg-hover-light>*,
 .r-item-bg-hover-light>* {
     background-color: #fff;
+
     &:hover {
         background-color: #fefefe;
     }
@@ -571,6 +572,7 @@ item-selected:选中的效果
     box-shadow: var(--shadow-s);
     background: #fff;
     display   : inline-flex;
+
     &:hover {
         background-color: rgb(116, 182, 219);
         color           : #fff;
@@ -728,7 +730,8 @@ body {
     --text-color   : rgba(55, 53, 47);
     --text-p-color : rgb(225, 98, 89);
     --text-p1-color: #64a1df;
-    --text-b-color : #64a1df;
+    --text-b-color : rgb(100, 161, 223);
+    --text-g-color : rgb(33, 175, 90);
     --shadow       : rgba(15, 15, 15, 0.05) 0rem 0rem 0rem 1px, rgba(15, 15, 15, 0.1) 0rem 3px 6px, rgba(15, 15, 15, 0.2) 0rem 9px 24px;
     --shadow-light : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
     --shadow-s     : 0px 2px 8px rgba(25, 25, 26, .12), 0px 0px 1px rgba(25, 25, 26, .08);
@@ -768,12 +771,12 @@ body {
 }
 
 .green {
-    color: #21af5a;
-    fill : #21af5a;
+    color: var(--text-g-color);
+    fill : var(--text-g-color);
 }
 
 .bg-green {
-    background-color: #21af5a;
+    background-color: var(--text-g-color);
 }
 
 .code {
