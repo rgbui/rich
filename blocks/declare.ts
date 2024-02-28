@@ -5,6 +5,7 @@ import "./general/head";
 import "./general/callout";
 import "./general/emoji";
 import "./general/quote";
+import "./general/icon";
 import "./media/image";
 import "./media/embed";
 import "./media/file";

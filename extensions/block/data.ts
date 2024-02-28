@@ -88,8 +88,9 @@ export function getBlockSelectData() {
         {
             text: lst('媒体与附件'),
             childs: [
+                { text: lst("图标"), icon: PicSvg, url: '/icon', description: '', label: lst('/图标'), labels: ['/tb', '/tubiao', '/logo'] },
                 { text: lst("图片"), icon: PicSvg, url: '/image', description: '', label: lst('/图片'), labels: ['/tp', '/tupian', '/img', '/image', '/picture'] },
-                { text: lst('图片轮播'), icon: PicSvg, url: '/carousel/image', description: '', label: lst('/图片轮播'), labels: ['/tplb', '/tupianlunbo', '/carousel','/images','/pics'] },
+                { text: lst('图片轮播'), icon: PicSvg, url: '/carousel/image', description: '', label: lst('/图片轮播'), labels: ['/tplb','/轮播', '/tupianlunbo', '/carousel','/images','/pics'] },
                 { text: lst("音频"), icon: AudioSvg, url: '/audio', description: "", label: lst('/音频'), labels: ['/yp', '/audio'] },
                 { text: lst("视频"), icon: VideoSvg, url: '/video', description: "", label: lst('/视频'), labels: ['/sp', '/video'] },
                 { text: lst("文件"), icon: FileSvg, url: '/file', description: "", label: lst('/文件'), labels: ['/wj', '/wenjian', '/file'] },
