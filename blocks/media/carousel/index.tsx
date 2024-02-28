@@ -64,6 +64,9 @@ export class Carousel extends Block {
     contentWidthPercent: number = 100;
     @prop()
     contentHeight = 200;
+    @prop()
+    autoCarousel: number = 2;
+
     async onGetContextMenus() {
         if (this.isFreeBlock) {
             return await this.onGetBoardContextMenus()
@@ -125,8 +128,24 @@ export class Carousel extends Block {
             ]
         });
         items.push({
+            name: 'append',
+            text: lst('添加图片'),
+            icon: UploadSvg
+        })
+        items.push({
             type: MenuItemType.divide
         });
+        items.push({
+            text: lst('自动播放'),
+            icon: { name: 'byte', code: 'play' },
+            childs: [
+                { name: "autoCarousel", text: '0.5s', value: 1, checkLabel: this.autoCarousel == 0.5 },
+                { name: "autoCarousel", text: '1s', value: 1, checkLabel: this.autoCarousel == 1 },
+                { name: "autoCarousel", text: '2s', value: 2, checkLabel: this.autoCarousel == 2 },
+                { name: "autoCarousel", text: '5s', value: 5, checkLabel: this.autoCarousel == 5 },
+                { name: "autoCarousel", text: '10s', value: 10, checkLabel: this.autoCarousel == 10 },
+            ]
+        })
         items.push({
             name: 'origin',
             text: lst('原图'),
@@ -194,6 +213,9 @@ export class Carousel extends Block {
                 return;
             case 'align':
                 await this.onUpdateProps({ align: item.value }, { range: BlockRenderRange.self })
+                return;
+            case 'autoCarousel':
+                await this.onUpdateProps({ autoCarousel: item.value }, { range: BlockRenderRange.self })
                 return;
         }
         await super.onClickContextMenu(item, event);
@@ -303,7 +325,7 @@ export class CarouselView extends BlockView<Carousel>{
             infinite: true,
             speed: 500,
             autoplay: true,
-            autoplaySpeed: 2000,
+            autoplaySpeed:this.block.autoCarousel * 1000,
             slidesToShow: 1,
             slidesToScroll: 1,
             pauseOnHover: true
