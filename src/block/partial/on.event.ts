@@ -70,6 +70,9 @@ export class Block$Event {
         if (this.isPanel) {
             hasAi = false;
         }
+        if (this.isComposite) {
+            hasAi = false;
+        }
         if (hasAi) {
             items.push({
                 name: 'askAi',
