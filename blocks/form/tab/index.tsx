@@ -42,7 +42,11 @@ export class Tab extends Block {
 
     @prop()
     border: 'border' | 'none' = 'none';
+
+    @prop()
+    autoCarousel: number = 0;
     async didMounted(): Promise<void> {
+        var isf = false;
         if (this.tabItems.length == 0) {
             if (this.childs.length > 0) {
                 var cs = await this.childs.asyncMap(async c => {
@@ -50,13 +54,15 @@ export class Tab extends Block {
                 })
                 this.tabItems = cs;
                 this.blocks.childs = [];
-                this.forceUpdate()
+                isf = true;
             }
             else {
                 await this.createInitTabItems();
-                this.forceUpdate()
+                isf = true;
             }
         }
+        this.createCarouselTime();
+        if (isf) this.forceUpdate()
     }
     async createInitTabItems() {
         this.blocks.childs = [];
@@ -140,12 +146,7 @@ export class Tab extends Block {
                     items[at - 1] = items[at];
                     items[at] = current;
                     await this.updateProps({ tabItems: items }, BlockRenderRange.self)
-                    // var pre = this.blocks.childs[at];
-                    // await this.blocks.childs[at].insertBefore(this.blocks.childs[at - 1], BlockChildKey.childs);
                     await this.blocks.otherChilds[at].insertBefore(this.blocks.otherChilds[at - 1], BlockChildKey.otherChilds);
-                    // this.page.addUpdateEvent(async () => {
-                    //     this.page.kit.anchorCursor.onFocusBlockAnchor(pre, { merge: true, render: true, last: true })
-                    // })
                 })
             }
         }
@@ -223,7 +224,7 @@ export class Tab extends Block {
                             await self.updateProps({ tabItems: items }, BlockRenderRange.self)
                             var sb = self.blocks.otherChilds[at];
                             await sb.move(currentAt);
-                            console.log(self.tabIndex, currentAt, at, JSON.stringify(self.tabItems));
+                            //console.log(self.tabIndex, currentAt, at, JSON.stringify(self.tabItems));
                             // await util.delay(50);
                             // self.forceUpdate();
                         })
@@ -289,6 +290,16 @@ export class Tab extends Block {
                 text: lst('边框'),
                 icon: { name: "byte", code: 'rectangle-one' }
             })
+            ns.push({
+                text: lst('自动播放'),
+                icon: { name: 'byte', code: 'play' },
+                childs: [
+                    { name: "autoCarousel", text: lst('关闭'), value: 0, checkLabel: this.autoCarousel == 0 },
+                    { name: "autoCarousel", text: '1s', value: 1, checkLabel: this.autoCarousel == 1 },
+                    { name: "autoCarousel", text: '2s', value: 2, checkLabel: this.autoCarousel == 2 },
+                    { name: "autoCarousel", text: '5s', value: 5, checkLabel: this.autoCarousel == 5 },
+                ]
+            })
             ns.push({ type: MenuItemType.divide })
             ns.push(
                 {
@@ -321,13 +332,35 @@ export class Tab extends Block {
         return rs;
     }
     async onClickContextMenu(item: MenuItem<string | BlockDirective>, e) {
-        var at = this.tabIndex;
         switch (item.name) {
             case 'displayMode':
                 await this.onUpdateProps({ displayMode: item.value }, { range: BlockRenderRange.self })
                 return;
+            case 'autoCarousel':
+                await this.onUpdateProps({ autoCarousel: item.value }, { range: BlockRenderRange.self })
+                this.createCarouselTime();
+                return;
         }
         return await super.onClickContextMenu(item, e);
+    }
+    autoCarouselTime;
+    isOver: boolean = false;
+    createCarouselTime() {
+        if (this.autoCarousel > 0) {
+            this.autoCarouselTime = setInterval(() => {
+                if (this.isOver == false) {
+                    this.tabIndex = this.tabIndex + 1;
+                    if (this.tabIndex >= this.tabItems.length) this.tabIndex = 0;
+                    this.forceUpdate()
+                }
+            }, this.autoCarousel * 1000);
+        }
+        else {
+            if (this.autoCarouselTime) {
+                clearInterval(this.autoCarouselTime);
+                this.autoCarouselTime = null;
+            }
+        }
     }
     async onContextMenuInput(this: Block, item: MenuItem<BlockDirective | string>) {
         if (item?.name == 'border') {
@@ -388,7 +421,13 @@ export class TabView extends BlockView<Tab>{
         var classList: string[] = ['sy-block-tab'];
         if (this.block.isCanEdit()) classList.push('visible-hover');
         classList.push('sy-block-tab-' + this.block.displayMode)
-        return <div className={classList.join(' ')}
+        return <div onMouseEnter={e => {
+            this.block.isOver = true;
+        }}
+            onMouseLeave={e => {
+                this.block.isOver = false;
+            }}
+            className={classList.join(' ')}
             style={this.block.visibleStyle}>
             <div className="relative" style={contentStyle}>
                 <div className="sy-block-tab-items relative" style={itemStyle}>
