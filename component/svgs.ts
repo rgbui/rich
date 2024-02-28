@@ -197,7 +197,6 @@ import SquareplusSvg from "../src/assert/svg/squareplus.svg";
 import SuccessSvg from "../src/assert/svg/success.svg";
 import SwitchArrowSvg from "../src/assert/svg/switchArrow.svg";
 import TableSvg from "../src/assert/svg/table.svg";
-import TextSvg from "../src/assert/svg/text.svg";
 import ThemeSvg from "../src/assert/svg/theme.svg";
 import TimeSvg from "../src/assert/svg/time.svg";
 import TodoSvg from "../src/assert/svg/todo.svg";
@@ -438,7 +437,6 @@ SquareplusSvg,
 SuccessSvg,
 SwitchArrowSvg,
 TableSvg,
-TextSvg,
 ThemeSvg,
 TimeSvg,
 TodoSvg,
