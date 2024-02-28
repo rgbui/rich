@@ -1,3 +1,4 @@
+import { IconValueType } from "../../component/view/icon";
 
 
 export type BlockGroup = {
@@ -8,7 +9,7 @@ export type BlockGroup = {
 export type BlockSelectorItem = {
     text?: string,
     pic?: JSX.Element,
-    icon?: SvgrComponent,
+    icon?: IconValueType,
     url?: string;
     description?: string,
     label?: string,

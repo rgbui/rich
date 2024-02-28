@@ -121,7 +121,7 @@ export class Block$Event {
                 name: 'text-center',
                 type: MenuItemType.select,
                 value: (this as any).align,
-                text: lst('文字居中'),
+                text: lst('文字对齐'),
                 options: [
                     {
                         text: lst('左对齐'),
@@ -139,7 +139,7 @@ export class Block$Event {
                         icon: { name: 'byte', code: 'align-text-right' },
                     }
                 ],
-                icon: AlignTextCenterSvg
+                icon: (this as any).align=='left'?{ name: 'byte', code: 'align-text-left' }:(this as any).align=='center'?{ name: 'byte', code: 'align-text-center' }:{ name: 'byte', code: 'align-text-right' }
             });
         }
 

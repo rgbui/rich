@@ -2,11 +2,11 @@
 import React, { CSSProperties } from 'react';
 import { prop, url, view } from '../factory/observable';
 import { TextSpanArea } from '../view/appear';
-import { BlockDisplay } from '../enum';
+import { BlockDirective, BlockDisplay, BlockRenderRange } from '../enum';
 import { BlockView } from '../view';
 import { Block } from '..';
 import { TextTurns } from '../turn/text';
-import { Point, PointArrow } from '../../common/vector/point';
+import { Point, PointArrow, Rect } from '../../common/vector/point';
 import { Matrix } from '../../common/matrix';
 import { ActionDirective } from '../../history/declare';
 import { FontCss, BlockCssName } from '../pattern/css';
@@ -16,6 +16,7 @@ import { forceCloseBoardEditTool } from '../../../extensions/board.edit.tool';
 import { openBoardEditTool } from '../../kit/operator/board/edit';
 import { lst } from '../../../i18n/store';
 import { BlockUrlConstant } from '../constant';
+import { MenuItem, MenuItemType } from '../../../component/view/menu/declare';
 
 @url("/textspan")
 export class TextSpan extends Block {
@@ -24,6 +25,8 @@ export class TextSpan extends Block {
     display = BlockDisplay.block;
     @prop()
     fontScale = 1;
+    @prop()
+    smallFont = false;
     get visibleStyle() {
         if (this.isFreeBlock) {
             var style: CSSProperties = {};
@@ -246,16 +249,48 @@ export class TextSpan extends Block {
         if (this.isFreeBlock) return false;
         else return true;
     }
+    async onGetContextMenus() {
+        var rs = await super.onGetContextMenus();
+        var at = rs.findIndex(g => g.name == 'color');
+        var ns: MenuItem<string | BlockDirective>[] = [];
+        ns.push({
+            name: 'smallFont',
+            type: MenuItemType.switch,
+            checked: this.smallFont ? true : false,
+            text: lst('小字号'),
+            icon: { name: 'byte', code: 'add-text' }
+        });
+        rs.splice(at, 0, ...ns)
+        return rs;
+    }
+    async onContextMenuInput(this: Block, item: MenuItem<BlockDirective | string>) {
+        if (item?.name == 'smallFont') {
+            this.onUpdateProps({ smallFont: item.checked }, { range: BlockRenderRange.self });
+        }
+        else await super.onContextMenuInput(item);
+    }
+    getVisibleHandleCursorPoint(): Point {
+        var ele = this.el.querySelector('.shy-appear-texts') as HTMLElement;
+        if (!ele) ele = this.el.querySelector('.shy-appear-text') as HTMLElement;
+        if(!ele)ele=this.el;
+        var rect = Rect.fromEle(ele);
+        return rect.leftTop.move(0,10);
+    }
 }
 @view("/textspan")
 export class TextSpanView extends BlockView<TextSpan>{
     renderView() {
         var style = this.block.contentStyle;
         if (this.block.align == 'center') style.textAlign = 'center';
-        var pa = this.block.parent
+        else if (this.block.align == 'left') style.textAlign = 'left';
+        else style.textAlign = 'right';
+        var pa = this.block.parent;
+        if (this.block.smallFont) {
+            style.fontSize = this.block.page.smallFont ? '12px' : '14px';
+        }
         return <div className='sy-block-text-span' style={this.block.visibleStyle}>
             <div style={style}>
-                <TextSpanArea placeholderEmptyVisible={this.block.isFreeBlock?true:false} placeholder={this.block.isFreeBlock || pa?.url == BlockUrlConstant.Cell ? lst("输入文本") : undefined} block={this.block}></TextSpanArea>
+                <TextSpanArea placeholderEmptyVisible={this.block.isFreeBlock ? true : false} placeholder={this.block.isFreeBlock || pa?.url == BlockUrlConstant.Cell ? lst("输入文本") : undefined} block={this.block}></TextSpanArea>
             </div>
         </div>
     }

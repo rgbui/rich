@@ -25,14 +25,12 @@ import {
     LinkSvg,
     ListSvg,
     MentionSvg,
-
     NumberListSvg,
     PageSvg,
     PicSvg,
     ProgressSvg,
     QuoteSvg,
     TableSvg,
-    TextSvg,
     TimeSvg,
     TodoSvg,
     ToggleListSvg,
@@ -47,7 +45,7 @@ export function getBlockSelectData() {
         {
             text: lst('基本'),
             childs: [
-                { text: lst('文本'), icon: TextSvg, url: '/textspan', description: lst('文本'), label: lst('/文本'), labels: ['/wb', '/wenben', '/text', '/plain'] },
+                { text: lst('文本'), icon: { name: 'byte', code: 'font-size' }, url: '/textspan', description: lst('文本'), label: lst('/文本'), labels: ['/wb', '/wenben', '/text', '/plain'] },
                 { text: lst('一级标题'), icon: H1Svg, url: '/head', description: lst('大标题'), label: lst('/大标题'), labels: ['/bt', lst('/标题'), '/biaoti', '/head', '/h1'] },
                 { text: lst('二级标题'), icon: H2Svg, url: '/head?{level:"h2"}', description: '', label: lst('/四级标题'), labels: ['/bt', lst('/标题'), '/biaoti', '/head', '/h2'] },
                 { text: lst('三级标题'), icon: H3Svg, url: '/head?{level:"h3"}', description: '', label: lst('/三级标题'), labels: ['/bt', lst('/标题'), '/biaoti', '/head', '/h3'] },
@@ -62,7 +60,7 @@ export function getBlockSelectData() {
                 { text: lst("数学公式"), icon: EquationSvg, url: "/katex", description: "", label: lst("/数学公式"), labels: ['/sxgs', lst('/公式'), '/shuxuegongshi', '/latex', '/math'] },
                 { text: lst('链接页面'), icon: LinkSvg, url: '/link', description: "", label: lst("/链接"), labels: ['/link', '/wz'] },
                 { text: lst('进度条'), icon: ProgressSvg, url: '/measure', description: "", label: lst("/进度条"), labels: ['/jdt', '/jindutiao', '/progressbar'] },
-                { text: lst('按钮'), icon: ButtonSvg,  url: '/button', description: '', label: '/按钮', labels: ['/button', '/al'] }
+                { text: lst('按钮'), icon: ButtonSvg, url: '/button', description: '', label: '/按钮', labels: ['/button', '/al'] }
             ]
         },
         {
@@ -90,7 +88,7 @@ export function getBlockSelectData() {
             childs: [
                 { text: lst("图标"), icon: PicSvg, url: '/icon', description: '', label: lst('/图标'), labels: ['/tb', '/tubiao', '/logo'] },
                 { text: lst("图片"), icon: PicSvg, url: '/image', description: '', label: lst('/图片'), labels: ['/tp', '/tupian', '/img', '/image', '/picture'] },
-                { text: lst('图片轮播'), icon: PicSvg, url: '/carousel/image', description: '', label: lst('/图片轮播'), labels: ['/tplb','/轮播', '/tupianlunbo', '/carousel','/images','/pics'] },
+                { text: lst('图片轮播'), icon: PicSvg, url: '/carousel/image', description: '', label: lst('/图片轮播'), labels: ['/tplb', '/轮播', '/tupianlunbo', '/carousel', '/images', '/pics'] },
                 { text: lst("音频"), icon: AudioSvg, url: '/audio', description: "", label: lst('/音频'), labels: ['/yp', '/audio'] },
                 { text: lst("视频"), icon: VideoSvg, url: '/video', description: "", label: lst('/视频'), labels: ['/sp', '/video'] },
                 { text: lst("文件"), icon: FileSvg, url: '/file', description: "", label: lst('/文件'), labels: ['/wj', '/wenjian', '/file'] },
