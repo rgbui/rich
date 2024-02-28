@@ -12,9 +12,12 @@ import { DotsSvg, PlatteSvg } from "../../../component/svgs";
 import { Rect } from "../../../src/common/vector/point";
 import { useCardTheme } from "../../../extensions/theme/card";
 import lodash from "lodash";
-import { MenuItem } from "../../../component/view/menu/declare";
-import { BlockDirective } from "../../../src/block/enum";
+import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
+import { BlockDirective, BlockRenderRange } from "../../../src/block/enum";
 import { getCardStyle } from "../../../extensions/theme/themes";
+import { Tip } from "../../../component/view/tooltip/tip";
+import "./style.less";
+import { MouseDragger } from "../../../src/common/dragger";
 
 @url('/card')
 export class PageCard extends Block {
@@ -66,8 +69,21 @@ export class PageCard extends Block {
             icon: PlatteSvg,
             name: 'cardStyle'
         });
+        ns.push({
+            name: 'autoContentHeight',
+            type: MenuItemType.switch,
+            checked: this.autoContentHeight,
+            text: lst('自适应高度'),
+            icon: { name: 'byte', code: 'auto-height-one' }
+        });
         rs.splice(at, 0, ...ns)
         return rs;
+    }
+    async onContextMenuInput(this: Block, item: MenuItem<BlockDirective | string>) {
+        if (item?.name == 'autoContentHeight') {
+            this.onUpdateProps({ autoContentHeight: item.checked }, { range: BlockRenderRange.self });
+        }
+        else await super.onContextMenuInput(item);
     }
     async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent): Promise<void> {
         if (item.name == 'cardStyle') {
@@ -81,16 +97,46 @@ export class PageCard extends Block {
         if (p) return p.getScrollDiv()
         else return this.page.getScrollDiv();
     }
+    @prop()
+    autoContentHeight: boolean = true;
+    @prop()
+    contentHeight: number = 200;
+
 }
 
 @view('/card')
 export class PageCardView extends BlockView<PageCard>{
+    onResize(event: React.MouseEvent) {
+        event.stopPropagation();
+        var height = this.block.contentHeight;
+        MouseDragger({
+            event,
+            moving: (e, d, end) => {
+                var dy = e.clientY - event.clientY;
+                var h = height + dy;
+                if (h < 60) h = 60;
+                this.block.contentHeight = h;
+                if (end) {
+                    this.block.onManualUpdateProps(
+                        { contentHeight: height },
+                        { contentHeight: h }
+                    );
+                }
+                else this.forceUpdate()
+            }
+        })
+    }
     renderCard() {
         var s = this.block.cardStyle;
         var { bgStyle, contentStyle, coverStyle } = getCardStyle(s);
         if (s.coverStyle?.display == 'none') {
             return <div >
-                <div className="padding-10" style={contentStyle}>
+                <div className="padding-10" style={{
+                    ...contentStyle,
+                    height: this.block.autoContentHeight !== true ? this.block.contentHeight : undefined,
+                    overflowY: (this.block.autoContentHeight !== true ? "overlay" : "hidden") as any,
+                }
+                }>
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                 </div>
             </div>
@@ -105,8 +151,14 @@ export class PageCardView extends BlockView<PageCard>{
                 delete contentStyle.backgroundColor;
                 delete contentStyle.backdropFilter;
             }
-            return <div className="relative" style={{ ...coverStyle, ...contentStyle }}>
-                <div className="padding-10" style={style}>
+            var boxStyle = { ...coverStyle, ...contentStyle }
+            style.borderRadius = boxStyle.borderRadius;
+            return <div className="relative" style={boxStyle}>
+                <div className="padding-10" style={{
+                    ...style,
+                    height: this.block.autoContentHeight !== true ? this.block.contentHeight : undefined,
+                    overflowY: (this.block.autoContentHeight !== true ? "overlay" : "hidden") as any,
+                }}>
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                 </div>
             </div>
@@ -115,23 +167,35 @@ export class PageCardView extends BlockView<PageCard>{
             return <div style={contentStyle} >
                 <div className="h-120" style={{ ...coverStyle }}>
                 </div>
-                <div className="padding-10" >
+                <div className="padding-10" style={{
+                    height: this.block.autoContentHeight !== true ? this.block.contentHeight : undefined,
+                    overflowY: (this.block.autoContentHeight !== true ? "overlay" : "hidden") as any,
+                }} >
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                 </div>
             </div>
         }
         else if (s.coverStyle.display == 'inside-cover-left') {
             return <div className="flex flex-full" style={contentStyle} >
-                <div className="flex-fixed" style={{ ...coverStyle, width: '33.3%' }}>
+                <div className="flex-fixed" style={{
+                    ...coverStyle,
+                    width: '33.3%'
+                }}>
                 </div>
-                <div className="padding-10 flex-auto" >
+                <div className="padding-10 flex-auto" style={{
+                    height: this.block.autoContentHeight !== true ? this.block.contentHeight : undefined,
+                    overflowY: (this.block.autoContentHeight !== true ? "overlay" : "hidden") as any,
+                }} >
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                 </div>
             </div>
         }
         else if (s.coverStyle.display == 'inside-cover-right') {
             return <div className="flex flex-full" style={contentStyle} >
-                <div className="padding-10 flex-auto">
+                <div className="padding-10 flex-auto" style={{
+                    height: this.block.autoContentHeight !== true ? this.block.contentHeight : undefined,
+                    overflowY: (this.block.autoContentHeight !== true ? "overlay" : "hidden") as any,
+                }}>
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                 </div>
                 <div className="flex-fixed" style={{ ...coverStyle, width: '33.3%' }}>
@@ -141,7 +205,7 @@ export class PageCardView extends BlockView<PageCard>{
     }
     renderView() {
         return <div style={this.block.visibleStyle}>
-            <div style={this.block.contentStyle}>
+            <div className="relative" style={this.block.contentStyle}>
                 <div className='min-h-60 relative visible-hover' >
                     {this.block.isCanEdit() && <>
                         <div style={{ zIndex: 1000, top: -30 }} className="h-30 visible  pos-top-right flex">
@@ -169,6 +233,7 @@ export class PageCardView extends BlockView<PageCard>{
                     </>}
                     <div>{this.renderCard()}</div>
                 </div>
+                {this.block.isCanEdit() && this.block.autoContentHeight !== true && <Tip text={'拖动标签页高度'}><div className="sy-block-card-resize visible" onMouseDown={e => this.onResize(e)}></div></Tip>}
             </div>
         </div>
     }

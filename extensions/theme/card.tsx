@@ -27,12 +27,16 @@ export class CardTheme extends EventsComponent {
         lodash.set(this.pageTheme, key, value)
         if (key == 'coverStyle.display') {
             if (this.pageTheme.coverStyle?.display != 'none') {
-                if (!this.pageTheme.bgStyle) {
-                    this.pageTheme.bgStyle = { mode: 'color', color: '#fff' }
+                if (!this.pageTheme?.coverStyle?.bgStyle) {
+                    this.pageTheme.coverStyle.bgStyle = { mode: 'color', color: '#fff' }
                 }
-                if (this.pageTheme.bgStyle.mode == 'none') {
-                    this.pageTheme.bgStyle.mode = 'color';
-                    this.pageTheme.bgStyle.color = '#fff';
+                if (this.pageTheme?.coverStyle?.bgStyle?.mode == 'none') {
+                    this.pageTheme.coverStyle.bgStyle.mode = 'color';
+                    this.pageTheme.coverStyle.bgStyle.color = '#fff';
+                }
+                if (this.pageTheme?.contentStyle?.transparency == 'solid') {
+                    if (!this.pageTheme.contentStyle) this.pageTheme.contentStyle = { color: 'light', transparency: 'noborder' }
+                    this.pageTheme.contentStyle.transparency = 'noborder';
                 }
             }
         }

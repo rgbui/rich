@@ -254,7 +254,6 @@ export function GetPageThemes(page: Page) {
     }
     return []
 }
-
 export function GetPageBgs() {
     return [
         { color: 'inherit', text: lst('默认') },
@@ -287,11 +286,10 @@ export function GetPageBgs() {
         }
     })
 }
-
 export function getCardThemes() {
     return [
         {
-            text: lst('风格'),
+            text: lst('边框'),
             name: 'style',
             childs: [
                 {
@@ -413,37 +411,7 @@ export function getCardThemes() {
                             display: 'none'
                         }
                     }
-                },
-                {
-                    text: '',
-                    name: 'style-13',
-                    pageTheme: {
-                        name: 'style-13',
-                        contentStyle: {
-                            border: '1px solid #eee',
-                            round: '0px 50%  0px 50%',
-                            shadow: 'rgba(0, 0, 0, 0.1) 0px 4.5px 6.75px -1.125px, rgba(0, 0, 0, 0.06) 0px 2.25px 4.5px -1.125px, rgb(229, 224, 223) 0px 0px 0px 1.125px'
-                        },
-                        coverStyle: {
-                            display: 'none'
-                        }
-                    }
-                },
-                {
-                    text: '',
-                    name: 'style-12',
-                    pageTheme: {
-                        name: 'style-12',
-                        contentStyle: {
-                            border: '1px solid #eee',
-                            round: '50%',
-                            shadow: 'rgba(0, 0, 0, 0.1) 0px 4.5px 6.75px -1.125px, rgba(0, 0, 0, 0.06) 0px 2.25px 4.5px -1.125px, rgb(229, 224, 223) 0px 0px 0px 1.125px'
-                        },
-                        coverStyle: {
-                            display: 'none'
-                        }
-                    }
-                },
+                }
             ]
         }
     ]
@@ -458,7 +426,7 @@ export function getBgStyle(s: PageThemeStyle['bgStyle']) {
         bgStyle.backgroundSize = 'cover';
         bgStyle.backgroundRepeat = 'no-repeat';
         bgStyle.backgroundPosition = 'center center';
-        bgStyle.backgroundAttachment='scroll'
+        bgStyle.backgroundAttachment = 'scroll'
     }
     else if (s.mode == 'grad') {
         bgStyle.backgroundImage = s.grad?.bg;
@@ -466,7 +434,7 @@ export function getBgStyle(s: PageThemeStyle['bgStyle']) {
         bgStyle.backgroundRepeat = 'no-repeat';
         bgStyle.backgroundPosition = 'center center';
         // bgStyle.backgroundAttachment = 'fixed';
-        bgStyle.backgroundAttachment='scroll'
+        bgStyle.backgroundAttachment = 'scroll'
     }
     return bgStyle;
 }
