@@ -57,7 +57,7 @@ export enum DropDirection {
  * @returns 
  * 
  */
-export function cacDragDirection(kit: Kit,dragBlocks: Block[],dropBlock: Block, event: MouseEvent) {
+export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block, event: MouseEvent) {
     var fr: 'left' | 'right' | 'bottom' | 'none' = 'none';
     var ele = event.target as HTMLElement;
     var point = Point.from(event);
@@ -171,11 +171,19 @@ export function cacDragDirection(kit: Kit,dragBlocks: Block[],dropBlock: Block, 
                 }
             }
             else {
-                if (point.y <= bound.top + bound.height / 2)
-                    direction = DropDirection.top;
-                else if (point.y >= bound.top + bound.height / 2)
-                    direction = DropDirection.bottom;
+                if (point.y <= bound.top + 10) direction = DropDirection.top;
+                else direction = DropDirection.bottom;
+                var cols = (Array.from(dropBlock.el.children) as HTMLElement[]).filter(c => c.classList.contains('sy-block-col'));
+                for (let i = 0; i < cols.length; i++) {
+                    var cr = Rect.fromEle(cols[i]);
+                    if (point.x > cr.left && point.x < cr.right && point.y < cr.bottom + 20) {
+                        dropBlock = dropBlock.childs[i].childs.last();
+                        direction = DropDirection.bottom;
+                        break;
+                    }
+                }
             }
+            drs = dropBlock.canDropDirections();
             if (Array.isArray(drs) && drs.length > 0 && !drs.includes(direction)) {
                 direction = DropDirection.none
             }
