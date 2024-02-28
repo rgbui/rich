@@ -1,7 +1,5 @@
 .sy-button {
-    // display        : inline-flex;
-    // align-items    : center;
-    // justify-content: flex-start;
+   
     padding      : 0px 12px;
     height       : 32px;
     border-radius: 6px;
@@ -11,11 +9,8 @@
     color        : #fff;
     cursor       : pointer;
     outline      : none;
-    border       : 0px;
     box-sizing   : border-box;
-
     &:hover {
-        // opacity: .7;
         background-color: rgba(225, 98, 89, .7);
     }
 
@@ -25,13 +20,11 @@
         font-size    : 14px;
         border-radius: 4px;
     }
-
     &-larger {
         height       : 40px;
         padding      : 0px 16px;
         border-radius: 6px;
     }
-
     &-ghost {
         background-color: transparent;
         color           : rgb(55, 53, 47, .65);
@@ -49,9 +42,47 @@
         border          : 1px solid #000;
 
         &:hover {
-            background-color   : rgba(0, 0, 0, .7);
-            // background-color: #333;
-            border             : 1px solid #333;
+            background-color: rgba(0, 0, 0, .7);
+            border          : 1px solid rgba(0, 0, 0, .7);
+        }
+    }
+
+    &-blue {
+        background-color: var(--text-b-color);
+        color           : #fff;
+        border          : 1px solid var(--text-b-color);
+
+        &:hover {
+            background-color: rgba(100, 161, 223, .7);
+            border          : 1px solid rgba(100, 161, 223, .7);
+        }
+    }
+
+    &-green {
+        background-color: var(--text-g-color);
+        color           : #fff;
+        border          : 1px solid var(--text-g-color);
+
+        &:hover {
+            background-color: rgba(33, 175, 90, .7);
+            border          : 1px solid rgba(33, 175, 90, .7);
+        }
+    }
+
+    &-link {
+        background-color: transparent;
+        color           : var(--text-b-color);
+        border          : 0px;
+        font-weight     : normal;
+        cursor          : pointer;
+        box-shadow      : none;
+        border-bottom   : 1px solid transparent;
+        border-radius   : 0px;
+
+        &:hover {
+            border-bottom   : 1px solid var(--text-b-color);
+            background-color: transparent;
+            border-radius   : 0px;
         }
     }
 }

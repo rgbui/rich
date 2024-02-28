@@ -29,7 +29,7 @@ export class BlockButton extends Block {
     @prop()
     buttonText: string = '';
     @prop()
-    buttonStyle: 'primary' | 'ghost' | 'dark' = 'primary'
+    buttonStyle: 'primary' | 'ghost' | 'dark' | 'green' | 'blue' = 'primary'
     @prop()
     buttonSize: 'default' | 'larger' | 'small' = 'default';
     @prop()
@@ -37,7 +37,7 @@ export class BlockButton extends Block {
     async getMd() {
         return '<button>' + this.buttonText + '</button>'
     }
-    init(): void {
+    init() {
         this.registerPropMeta('flow', Flow, false, async (v) => {
             var flow = new Flow(this, this.page.ws);
             if (v) await flow.load(v);
@@ -53,7 +53,7 @@ export class BlockButton extends Block {
             }
         })
     }
-    isEditFlow: boolean = false;
+    isOpenFlow: boolean = false;
     mousedown(event: React.MouseEvent) { }
     @prop()
     flow: Flow = new Flow(this, this.page.ws);
@@ -67,31 +67,35 @@ export class BlockButton extends Block {
     }
     @prop()
     align: 'left' | 'center' | 'right' = 'left';
+    @prop()
+    iconAlign: 'left' | 'right' = 'left';
     async onGetContextMenus() {
         var rs = await super.onGetContextMenus();
         var rg = rs.find(g => g.name == 'text-center');
         if (rg) {
             rg.text = lst('对齐');
             rg.name = undefined;
-            rg.icon = { name: 'bytedance-icon', code: 'align-text-both' }
+            rg.icon = { name: 'byte', code: 'align-text-both' }
             rg.type = undefined;
             rg.childs = [
                 {
                     name: 'text-center',
-                    icon: { name: 'bytedance-icon', code: 'align-text-left' },
+                    icon: { name: 'byte', code: 'align-text-left' },
                     text: lst('居左'),
                     value: 'left',
                     checkLabel: this.align == 'left'
                 },
                 {
                     name: 'text-center',
-                    icon: { name: 'bytedance-icon', code: 'align-text-center' },
-                    text: lst('居中'), value: 'center', checkLabel: this.align == 'center'
+                    icon: { name: 'byte', code: 'align-text-center' },
+                    text: lst('居中'),
+                    value: 'center',
+                    checkLabel: this.align == 'center'
                 },
                 {
                     name: 'text-center',
                     icon: {
-                        name: 'bytedance-icon',
+                        name: 'byte',
                         code: 'align-text-right'
                     },
                     text: lst('居右'),
@@ -103,10 +107,17 @@ export class BlockButton extends Block {
             var ns: MenuItem<string | BlockDirective>[] = [];
             ns.push({
                 type: MenuItemType.switch,
-                icon: { name: 'bytedance-icon', code: 'auto-width' },
+                icon: { name: 'byte', code: 'auto-width' },
                 text: lst('充满'),
                 name: 'buttonIsBlock',
                 checked: this.buttonIsBlock
+            })
+            ns.push({
+                type: MenuItemType.switch,
+                icon: { name: 'byte', code: 'align-right' },
+                text: lst('图标在右边'),
+                name: 'iconAlign',
+                checked: this.iconAlign == 'right' ? true : false
             })
             ns.push({ type: MenuItemType.divide })
             ns.push({
@@ -119,12 +130,16 @@ export class BlockButton extends Block {
                 ]
             })
             ns.push({
-                text: lst('按钮主题'),
+                text: lst('主题'),
                 icon: { name: 'bytedance-icon', code: 'link-four' },
                 childs: [
                     { name: 'buttonStyle', text: lst('红色'), value: 'primary', checkLabel: this.buttonStyle == 'primary' },
+                    { name: 'buttonStyle', text: lst('蓝色'), value: 'blue', checkLabel: this.buttonStyle == 'blue' },
+                    { name: 'buttonStyle', text: lst('绿色'), value: 'green', checkLabel: this.buttonStyle == 'green' },
                     { name: 'buttonStyle', text: lst('黑色'), value: 'dark', checkLabel: this.buttonStyle == 'dark' },
                     { name: 'buttonStyle', text: lst('白色'), value: 'ghost', checkLabel: this.buttonStyle == 'ghost' },
+                    { type: MenuItemType.divide },
+                    { name: 'buttonStyle', text: lst('链接'), value: 'link' }
                 ]
             })
             rs.splice(pos + 1, 0, ...ns)
@@ -135,6 +150,10 @@ export class BlockButton extends Block {
     async onContextMenuInput(this: Block, item: MenuItem<BlockDirective | string>) {
         if (['buttonIsBlock'].includes(item.name as string)) {
             await this.onUpdateProps({ [item.name]: item.checked }, { range: BlockRenderRange.self });
+            return;
+        }
+        else if (['iconAlign'].includes(item.name as string)) {
+            await this.onUpdateProps({ 'iconAlign': item.checked ? "right" : 'left' }, { range: BlockRenderRange.self });
             return;
         }
         else await super.onContextMenuInput(item);
@@ -172,6 +191,26 @@ export class BlockButton extends Block {
             }
         }
     }
+    async didUnmounted() {
+        document.body.addEventListener('mousedown', this.unClick, true)
+    }
+    async didMounted() {
+        document.body.addEventListener('mousedown', this.unClick, true)
+    }
+    unClick = async (event: MouseEvent) => {
+        var ele = event.target as HTMLElement;
+        if (!this.el) return;
+        if (this.isOpenFlow == false) return;
+        if (this.el && ele && this.el.contains(ele)) {
+            return;
+        }
+        var pe = document.querySelector('.shy-surface');
+        if (pe && pe.contains(ele)) {
+            this.isOpenFlow = false;
+            await (this.view as any).onSave();
+            this.forceUpdate()
+        }
+    }
 }
 
 @view('/button')
@@ -182,11 +221,11 @@ export class BlockButtonView extends BlockView<BlockButton>{
     }
     oldFlow: Flow;
     async openEdit(event: React.MouseEvent) {
-        this.block.isEditFlow = !this.block.isEditFlow;
-        if (this.block.isEditFlow) {
+        this.block.isOpenFlow = !this.block.isOpenFlow;
+        if (this.block.isOpenFlow) {
             this.oldFlow = await this.block.flow.clone();
         }
-        if (this.block.isEditFlow == false) return await this.onSave()
+        if (this.block.isOpenFlow == false) return await this.onSave()
         this.forceUpdate()
     }
     renderView() {
@@ -196,18 +235,25 @@ export class BlockButtonView extends BlockView<BlockButton>{
         if (!this.block.buttonIsBlock) classList.push('flex-inline');
         var style: React.CSSProperties = {};
         if (this.block.align == 'center') style.justifyContent = 'center';
-        else if (this.block.align == 'right') style.justifyContent = 'flex-end'
+        else if (this.block.align == 'right') style.justifyContent = 'flex-end';
         return <div className="visible-hover" style={this.block.visibleStyle}>
             <div className={"flex"} style={style}>
-                <div className="relative" style={{ display: this.block.buttonIsBlock ? "block" : 'inline-block', width: this.block.buttonIsBlock ? "100%" : undefined }}>
+                <div className="relative"
+                    style={{ display: this.block.buttonIsBlock ? "block" : 'inline-block', width: this.block.buttonIsBlock ? "100%" : undefined }}>
                     <div
                         data-button={'true'}
                         onMouseDown={e => { e.stopPropagation(); this.block.onExcute() }}
                         className={" flex-center  " + classList.join(" ")}
                         style={{ width: this.block.buttonIsBlock ? "100%" : undefined }}
                     >
-                        {this.block.buttonIcon && <Icon size={18} className={this.block.buttonText ? 'gap-r-5' : ""} icon={this.block.buttonIcon}></Icon>}
-                        {this.block.buttonText && <span>{this.block.buttonText}</span>}
+                        {this.block.iconAlign == 'left' && <> {this.block.buttonIcon && <Icon size={18} className={this.block.buttonText ? 'gap-r-5' : ""} icon={{ ...this.block.buttonIcon, color: 'inherit' }}></Icon>}
+                            {this.block.buttonText && <>{this.block.buttonText}</>}
+                        </>}
+                        {this.block.iconAlign == 'right' && <>
+                            {this.block.buttonText && <>{this.block.buttonText}</>}
+                            {this.block.buttonIcon && <Icon size={18} className={this.block.buttonText ? 'gap-l-5' : ""} icon={{ ...this.block.buttonIcon, color: 'inherit' }}></Icon>}
+                        </>}
+
                         {!this.block.buttonText && !this.block.buttonIcon && <span><S>按钮</S></span>}
                     </div>
                     {this.block.isCanEdit() && <span className="visible flex-center  pos-center-right-outside" onMouseDown={async e => {
@@ -217,7 +263,7 @@ export class BlockButtonView extends BlockView<BlockButton>{
                     </span>}
                 </div>
             </div>
-            {this.block.isEditFlow && <div className="relative" style={{ zIndex: 10 }}>
+            {this.block.isOpenFlow && <div className="relative" style={{ zIndex: 10 }}>
                 {this.renderFlow()}
             </div>}
         </div>
