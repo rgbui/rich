@@ -151,9 +151,6 @@ export class Image extends Block {
             icon: DuplicateSvg
         });
         items.push({
-            type: MenuItemType.divide
-        });
-        items.push({
             name: BlockDirective.link,
             text: lst('复制块链接'),
             icon: LinkSvg
