@@ -14,6 +14,7 @@ import { ls, lst } from '../../../i18n/store';
 import { MenuItem, MenuItemType } from '../../../component/view/menu/declare';
 import { useSelectMenuItem } from '../../../component/view/menu';
 import lodash from 'lodash';
+import { Col } from './col';
 
 /**
  * 分区中会有很多行，每行存在于一个或多个block
@@ -78,6 +79,17 @@ export class RowView extends BlockView<Row>{
         var gap = this.block.gaps.find(c => c.at == index);
         var ns: MenuItem<string | BlockDirective>[] = [];
         ns.push({
+            name: 'agvCols',
+            text: lst('平均所有列'),
+            icon: { name: 'bytedance-icon', code: 'align-text-both' }
+        })
+        ns.push({
+            name: 'agvLeftRightCols',
+            text: lst('平均左右列'),
+            icon: { name: 'bytedance-icon', code: 'one-to-one' }
+        })
+        ns.push({ type: MenuItemType.divide });
+        ns.push({
             name: 'open',
             text: lst('显示分栏线'),
             icon: { name: 'bytedance-icon', code: 'auto-height-one' },
@@ -121,19 +133,19 @@ export class RowView extends BlockView<Row>{
                 childs: [
                     {
                         name: 'lineWidth',
-                        text: ('1px'),
+                        text: '1',
                         value: 1,
                         checkLabel: gap?.width == 1
                     },
                     {
                         name: 'lineWidth',
-                        text: ('2px'),
+                        text: '2',
                         value: 2,
                         checkLabel: gap?.width == 2
                     },
                     {
                         name: 'lineWidth',
-                        text: ('4px'),
+                        text: '4',
                         value: 4,
                         checkLabel: gap?.width == 4
                     }
@@ -219,10 +231,27 @@ export class RowView extends BlockView<Row>{
                 await this.block.onManualUpdateProps({ gaps: oldGaps }, { gaps: this.block.gaps }, { range: BlockRenderRange.self })
 
             }
+            else if (r?.item.name == 'agvCols') {
+                await this.agvCols()
+            }
+            else if (r?.item.name == 'agvLeftRightCols') {
+                await this.leftRightCols(index)
+            }
         }
     }
-    async agvCols(event: React.MouseEvent) {
-        event.stopPropagation();
+    async leftRightCols(index: number, event?: React.MouseEvent) {
+        var self = this;
+        await self.block.page.onAction(ActionDirective.onUpdateProps, async () => {
+            var cs = self.block.childs;
+            var c = cs[index - 1];
+            var n = cs[index];
+            var agv = (c as Col).widthPercent + (n as Col).widthPercent;
+            await c.updateProps({ widthPercent: Math.round(agv / 2) });
+            await n.updateProps({ widthPercent: Math.round(agv / 2) });
+        });
+    }
+    async agvCols(event?: React.MouseEvent) {
+        if (event) event.stopPropagation();
         var self = this;
         await self.block.page.onAction(ActionDirective.onUpdateProps, async () => {
             var cs = self.block.childs;
