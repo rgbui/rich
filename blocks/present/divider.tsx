@@ -74,19 +74,19 @@ export class Divider extends Block {
             childs: [
                 {
                     name: 'lineWidth',
-                    text: lst('1px'),
+                    text: '1',
                     value: 1,
                     checkLabel: this.lineWidth == 1
                 },
                 {
                     name: 'lineWidth',
-                    text: lst('2px'),
+                    text: '2',
                     value: 2,
                     checkLabel: this.lineWidth == 2
                 },
                 {
                     name: 'lineWidth',
-                    text: lst('4px'),
+                    text: '4',
                     value: 4,
                     checkLabel: this.lineWidth == 4
                 }
@@ -138,6 +138,7 @@ export class Divider extends Block {
         return await super.onClickContextMenu(item, event);
     }
 }
+
 @view('/divider')
 export class DividerView extends BlockView<Divider>{
     renderView() {
