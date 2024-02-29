@@ -167,6 +167,7 @@ export class Block$Operator {
                 await this.delete();
             }
         }
+        this.page.addBlockUpdate(this);
     }
     async insertBefore(this: Block, to: Block, childsKey?: string) {
         await to.parent.append(this,
@@ -290,6 +291,12 @@ export class Block$Operator {
         }
         return cs;
     }
+    /**
+     * 在当前集合中移动元素
+     * @param this 
+     * @param at 
+     * @returns 
+     */
     async move(this: Block, at: number) {
         var currentAt = this.at;
         if (currentAt == at) return;
