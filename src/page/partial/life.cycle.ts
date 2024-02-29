@@ -388,6 +388,7 @@ export class Page$Cycle {
      */
     private notifyUpdateBlock(this: Page) {
         var ups = this.willUpdateBlocks.map(c => c);
+        ups = lodash.uniq(ups);
         var fns = this.updatedFns.map(f => f);
         var cos = Object.assign({}, this.recordSyncRowBlocks);
         var cgs = Object.assign({}, this.recordOutlineChanges);
@@ -404,14 +405,26 @@ export class Page$Cycle {
                     await self.forceUpdate();
                 }
                 else await ups.eachAsync(async (up) => {
-                    await up.forceUpdate();
+                    try {
+                        if (up) await up.forceUpdate();
+                    }
+                    catch (ex) {
+                        console.error(ex);
+                    }
                 })
             }
             catch (ex) {
                 console.error(ex);
                 self.onError(ex);
             }
-            await fns.eachAsync(async g => await g());
+            await fns.eachAsync(async g => {
+                try {
+                    await g()
+                }
+                catch (ex) {
+                    console.error(ex);
+                }
+            });
             try {
                 self.onNotifyChanged(cos, cgs)
             }

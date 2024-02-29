@@ -55,6 +55,7 @@ export enum BoardPointType {
      */
     mindSpread
 }
+
 export type BoardBlockSelector = {
     type: BoardPointType;
     arrows: PointArrow[];
@@ -66,6 +67,7 @@ export type BoardBlockSelector = {
     fillOpacity?: number;
     data?: Record<string, any>
 }
+
 export class Block$Board {
     getBlockBoardSelector(this: Block, types: BoardPointType[] = [
         BoardPointType.path,

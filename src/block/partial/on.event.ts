@@ -10,7 +10,6 @@ import { CopyText } from "../../../component/copy";
 import { ShyAlert } from "../../../component/lib/alert";
 import {
     AiStartSvg,
-    AlignTextCenterSvg,
     BlockcolorSvg,
     BoardMoveBottomSvg,
     BoardMoveTopSvg,
@@ -88,11 +87,12 @@ export class Block$Event {
             icon: DuplicateSvg
         });
         var menus = await this.onGetTurnMenus();
-        if (menus.length > 0) {
+        if (menus.length > 0)
+        {
             items.push({
                 text: lst('切换'),
-                icon: LoopSvg,
-                childs: menus.map(m => {
+                icon:LoopSvg,
+                childs:menus.map(m => {
                     return {
                         ...m,
                     }

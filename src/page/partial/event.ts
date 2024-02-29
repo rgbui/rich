@@ -507,8 +507,8 @@ export class PageEvent {
         if ([
             ElementType.SchemaRecordView,
             ElementType.SchemaView
-        ].includes(this.pe.type) && !this.isSchemaRecordViewTemplate) {
-            console.log(this.schema, 'sss', this.elementUrl, this.pe);
+        ].includes(this.pe.type) && !this.isSchemaRecordViewTemplate)
+        {
             var sv = this.schema.views.find(g => g.id == this.pe.id1);
             return {
                 share: sv.share,
