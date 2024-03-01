@@ -125,6 +125,9 @@ export class Input extends React.Component<{
                         if (props.onBlur)
                             props?.onBlur(e)
                     }}
+                    onPaste={e => {
+                        e.stopPropagation();
+                    }}
                     onKeyDown={e => keydown(e)}
                     readOnly={props.readonly}
                     maxLength={props.maxLength || undefined}
