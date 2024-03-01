@@ -27,7 +27,7 @@ export class Head extends Block {
         return false;
     }
     @prop()
-    align: 'left' | 'center' = 'left';
+    align: 'left' | 'center' | 'right' = 'left';
     @prop()
     level: 'h1' | 'h2' | 'h3' | 'h4' = 'h1';
     @prop()
@@ -165,9 +165,6 @@ export class Head extends Block {
 export class HeadView extends BlockView<Head>{
     renderView() {
         var style: Record<string, any> = { fontWeight: 600 };
-        // if (this.block.toggle !== true) {
-        //     if (this.props.block.align == 'center') style.textAlign = 'center';
-        // }
         Object.assign(style, this.block.contentStyle);
         var pt: string = '';
         var ns: string[] = [];
@@ -223,6 +220,7 @@ export class HeadView extends BlockView<Head>{
             var alignStyle: CSSProperties = {};
             if (self.block.toggle != true) {
                 if (self.block.align == 'center') alignStyle.justifyContent = 'center';
+                else if (self.block.align == 'right') alignStyle.justifyContent = 'flex-end';
             }
             var content = <>
                 <div style={{ left: self.block.toggle ? 24 : 0 }} className="sy-block-text-head-tips pos flex-center h-10 visible r-size-3 r-gap-r-5 r-circle ">{ns.map((n, i) => <em key={i}></em>)}</div>
