@@ -1,5 +1,5 @@
 import { BlockView } from "../../src/block/view";
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { url, view } from "../../src/block/factory/observable";
 import { ChildsArea, TextArea, TextLineChilds } from "../../src/block/view/appear";
 import { TextSpan } from "../../src/block/element/textspan";
@@ -88,8 +88,12 @@ export class Quote extends TextSpan {
 @view('/quote')
 export class QuoteView extends BlockView<Quote>{
     renderView() {
+        var style: CSSProperties = {};
+        if (this.block.smallFont) {
+            style.fontSize = this.block.page.smallFont ? '12px' : '14px';
+        }
         return <div style={this.block.visibleStyle}><div className='sy-block-quote'
-            style={{ ...this.block.contentStyle }}
+            style={{ ...this.block.contentStyle, ...style }}
         ><div className="gap-h-5 relative">
                 <div className='sy-block-quote-bar'></div>
                 <div className='sy-block-quote-content'>

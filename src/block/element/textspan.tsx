@@ -260,6 +260,9 @@ export class TextSpan extends Block {
             text: lst('小字号'),
             icon: { name: 'byte', code: 'add-text' }
         });
+        ns.push({
+            type: MenuItemType.divide
+        })
         rs.splice(at, 0, ...ns)
         return rs;
     }
@@ -272,9 +275,9 @@ export class TextSpan extends Block {
     getVisibleHandleCursorPoint(): Point {
         var ele = this.el.querySelector('.shy-appear-texts') as HTMLElement;
         if (!ele) ele = this.el.querySelector('.shy-appear-text') as HTMLElement;
-        if(!ele)ele=this.el;
+        if (!ele) ele = this.el;
         var rect = Rect.fromEle(ele);
-        return rect.leftTop.move(0,10);
+        return rect.leftTop.move(0, 10);
     }
 }
 @view("/textspan")
