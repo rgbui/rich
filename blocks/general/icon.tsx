@@ -63,6 +63,7 @@ export class BlockIcon extends Block {
         var point = rect.leftMiddle;
         return point;
     }
+
 }
 
 @view('/icon')
@@ -90,11 +91,12 @@ export class BlockIconView extends BlockView<BlockIcon>{
         else if (this.block.align == 'right') cs.justifyContent = 'flex-end';
         return <div style={this.block.visibleStyle}>
             <div className="flex" style={cs}>
-                <div className="flex-center" style={{
+                <div className="flex-center" onMouseDown={e => this.openEdit(e)} style={{
                     backgroundColor: bg,
                     width: this.block.size + 10,
                     height: this.block.size + 10,
                     borderRadius: 5,
+                    cursor: 'pointer'
                 }}>
                     <Icon icon={{ ...icon, color: 'inherit' }} size={this.block.size}></Icon>
                 </div>
