@@ -15,6 +15,7 @@ import { MenuItem, MenuItemType } from '../../../component/view/menu/declare';
 import { useSelectMenuItem } from '../../../component/view/menu';
 import lodash from 'lodash';
 import { Col } from './col';
+import { BoxTip } from '../../../component/view/tooltip/box';
 
 /**
  * 分区中会有很多行，每行存在于一个或多个block
@@ -282,32 +283,49 @@ export class RowView extends BlockView<Row>{
                         style.borderRight = gapLine.width + 'px dashed ' + gapLine.color;
                         style.width = 3;
                     }
-                    ps.push(<div
-                        onMouseDown={e => {
-                            this.mousedown(i, e);
+                    ps.push(<BoxTip
+                        onVisible={e => {
+                            e.classList.add('hover')
                         }}
-                        key={block.id + 'gap'}
-                        data-index={i}
-                        style={{ opacity: 1, visibility: this.block.isCanEdit() ? undefined : "hidden" }}
-                        className='sy-block-row-gap visible-hover'>
-                        <i className='flex-center visible'>
-                            <ToolTip overlay={lst('平均分栏')}><span onMouseDown={e => this.agvCols(e)} style={{ background: '#eee' }} className={'size-24 remark  flex-center round cursor '}><Icon size={16} icon={HorizontalDistributionSvg}></Icon></span></ToolTip>
-                        </i>
-                        <em style={style}></em>
-                    </div>)
+                        onClose={e => {
+                            e.classList.remove('hover')
+                        }}
+                        placement='top' overlay={
+                            <div className='flex bg-white h-30 round r-gap-w-5 r-item-hover'>
+                                <ToolTip overlay={lst('平均所有列')}><span onMouseDown={e => this.agvCols(e)} style={{ background: '#eee' }} className={'size-24 remark  flex-center round cursor '}><Icon size={16} icon={HorizontalDistributionSvg}></Icon></span></ToolTip>
+                                <ToolTip overlay={lst('平均左右列')}><span onMouseDown={e => this.leftRightCols(i)} style={{ background: '#eee' }} className={'size-24 remark  flex-center round cursor '}><Icon size={16} icon={{ name: 'bytedance-icon', code: 'one-to-one' }}></Icon></span></ToolTip>
+                            </div>
+                        }><div
+                            onMouseDown={e => {
+                                this.mousedown(i, e);
+                            }}
+                            key={block.id + 'gap'}
+                            data-index={i}
+                            style={{ opacity: 1, visibility: this.block.isCanEdit() ? undefined : "hidden" }}
+                            className='sy-block-row-gap visible-hover'>
+                            <em style={style}></em>
+                        </div></BoxTip>)
                 }
                 else {
-                    ps.push(<div
-                        onMouseDown={e => { this.mousedown(i, e); }}
-                        key={block.id + 'gap'}
-                        data-index={i}
-                        style={{ visibility: this.block.isCanEdit() ? "visible" : "hidden" }}
-                        className='sy-block-row-gap'>
-                        <i className='flex-center'>
-                            <ToolTip overlay={lst('平均分栏')}><span onMouseDown={e => this.agvCols(e)} style={{ background: '#eee' }} className={'size-24 remark  flex-center round cursor '}><Icon size={16} icon={HorizontalDistributionSvg}></Icon></span></ToolTip>
-                        </i>
-                        <em></em>
-                    </div>)
+                    ps.push(<BoxTip onVisible={e => {
+                        e.classList.add('hover')
+                    }}
+                        onClose={e => {
+                            e.classList.remove('hover')
+                        }}
+                        placement='top' overlay={
+                            <div className='flex bg-white h-30 round r-gap-w-5 r-item-hover'>
+                                <ToolTip overlay={lst('平均所有列')}><span onMouseDown={e => this.agvCols(e)} className={'size-24 remark  flex-center round cursor '}><Icon size={16} icon={HorizontalDistributionSvg}></Icon></span></ToolTip>
+                                <ToolTip overlay={lst('平均左右列')}><span onMouseDown={e => this.leftRightCols(i)} className={'size-24 remark  flex-center round cursor '}><Icon size={16} icon={{ name: 'bytedance-icon', code: 'one-to-one' }}></Icon></span></ToolTip>
+                            </div>
+                        }><div
+                            onMouseDown={e => { this.mousedown(i, e); }}
+                            key={block.id + 'gap'}
+                            data-index={i}
+                            style={{ visibility: this.block.isCanEdit() ? "visible" : "hidden" }}
+                            className='sy-block-row-gap'>
+                            <em></em>
+                        </div></BoxTip>)
                 }
             }
 

@@ -197,12 +197,16 @@ export class BoxTip extends React.Component<{
      * 禁用鼠标离开时自动关闭
      */
     disabledMouseEnterOrLeave?: boolean,
-    onClose?: () => void,
+    onVisible?: (el: HTMLElement) => void,
+    onClose?: (el: HTMLElement) => void,
+    onMouseEnter?: (el: HTMLElement) => void,
+    onMouseLeave?: (el: HTMLElement) => void,
     cacOverEle?: (el: HTMLElement) => HTMLElement,
     align?: 'left' | 'right' | 'center',
 }>{
     el: HTMLElement;
-    componentDidMount() {
+    componentDidMount()
+    {
         if (!this.props.overlay) return;
         if (this.props.disabled) return;
         this.el = ReactDOM.findDOMNode(this) as HTMLElement;
@@ -234,6 +238,9 @@ export class BoxTip extends React.Component<{
         if (this.props.disabledMouseEnterOrLeave == true) return;
         if (!this.props.overlay) return;
         if (this.props.disabled) return;
+        if (this.props.onMouseEnter) {
+            this.props.onMouseEnter(this.el);
+        }
         if (this.enterTime) {
             clearTimeout(this.enterTime);
             this.enterTime = null;
@@ -247,6 +254,9 @@ export class BoxTip extends React.Component<{
         if (this.props.disabledMouseEnterOrLeave == true) return;
         if (!this.props.overlay) return;
         if (this.props.disabled) return;
+        if (this.props.onMouseLeave) {
+            this.props.onMouseLeave(this.el);
+        }
         if (this.enterTime) {
             clearTimeout(this.enterTime);
             this.enterTime = null;
@@ -267,6 +277,9 @@ export class BoxTip extends React.Component<{
         if (this.props.cacOverEle) el = this.props.cacOverEle(el);
         this.currentVisible = true;
         var self = this;
+        if (this.props.onVisible) {
+            this.props.onVisible(this.el);
+        }
         await openOverlay(el, {
             overlay: this.props.overlay,
             placement: this.props.placement,
@@ -299,7 +312,7 @@ export class BoxTip extends React.Component<{
             toolTipOverlay.onClose()
         }
         if (this.currentVisible == true && this.props.onClose) {
-            this.props.onClose();
+            this.props.onClose(this.el);
         }
         this.currentVisible = false;
     }
