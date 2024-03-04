@@ -39,10 +39,8 @@ export class Tab extends Block {
     autoContentHeight: boolean = true;
     @prop()
     displayMode: 'border' | 'top-line' | 'button' = 'top-line';
-
     @prop()
     border: 'border' | 'none' = 'none';
-
     @prop()
     autoCarousel: number = 0;
     async didMounted(): Promise<void> {
@@ -268,8 +266,7 @@ export class Tab extends Block {
                 text: lst('显示'),
                 icon: BrowserSvg,
                 childs: [
-                    // { name: 'displayMode', text: lst('卡片'), value: 'border', checkLabel: this.displayMode == 'border' },
-                    { name: 'displayMode', text: lst('线型'), value: 'top-line', checkLabel: this.displayMode == 'top-line' },
+                    { name: 'displayMode', text: lst('默认'), value: 'top-line', checkLabel: this.displayMode == 'top-line' },
                     { name: 'displayMode', text: lst('按钮'), value: 'button', checkLabel: this.displayMode == 'button' }
                 ]
             })
@@ -438,7 +435,6 @@ export class TabView extends BlockView<Tab>{
                                     e.preventDefault();
                                 }}
                                 onMouseDown={e => {
-                                    //e.preventDefault();
                                     e.stopPropagation();
                                     this.block.onDraggerItem(e, i)
                                 }}
