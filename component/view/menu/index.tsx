@@ -8,19 +8,25 @@ import { popoverLayer } from "../../lib/zindex";
 import "./style.less";
 
 export class MenuPanel<T> extends EventsComponent {
+    mask: boolean = true;
     open(pos: PopoverPosition,
         menus: MenuItem<T>[],
         options?: {
             height?: number,
             width?: number,
-            overflow?: 'auto' | 'visible'
+            overflow?: 'auto' | 'visible',
+            mask?: boolean,
+            ele?: HTMLElement
         }) {
         this.menus = menus;
         this.visible = true;
         this.options = {};
         if (options) {
             Object.assign(this.options, options);
+            if (typeof options.mask == 'boolean') this.mask = options.mask;
+            else this.mask = true;
         }
+
         this.forceUpdate(() => {
             if (this.mb) this.mb.open(pos);
         })
@@ -64,7 +70,7 @@ export class MenuPanel<T> extends EventsComponent {
     mb: MenuBox;
     render() {
         return this.visible && <div className='shy-menu-panel' onContextMenu={e => { e.preventDefault() }}>
-            <div className='shy-menu-mask' style={{ zIndex: popoverLayer.zoom(this) }} onMouseDown={e => this.onClose(e)}></div>
+            {this.mask && <div className='shy-menu-mask' style={{ zIndex: popoverLayer.zoom(this) }} onMouseDown={e => this.onClose(e)}></div>}
             <MenuBox parent={this}
                 style={{ height: this.options.height, width: this.options.width, maxHeight: this.options.height, overflow: this.options.overflow }}
                 ref={e => this.mb = e}
@@ -72,6 +78,21 @@ export class MenuPanel<T> extends EventsComponent {
                 click={(item, ev, name) => this.onClick(item as any, ev, name)}
                 select={(item, event) => this.onSelect(item as any, event)} items={this.menus as any} deep={0}></MenuBox>
         </div>
+    }
+    componentDidMount(): void {
+        document.addEventListener('mousedown', this.otherClose);
+    }
+    componentWillUnmount(): void {
+        document.removeEventListener('mousedown', this.otherClose);
+    }
+    otherClose = (e: MouseEvent) => {
+        if (this.mask !== true) {
+            var ele = e.target as HTMLElement;
+            var sp = ele.closest('.shy-menu-panel');
+            if (sp) return;
+            this.close();
+            this.emit('close');
+        }
     }
 }
 export interface MenuPanel<T> {
@@ -92,9 +113,11 @@ export async function useSelectMenuItem<T = string>(pos: PopoverPosition, menus:
     height?: number,
     width?: number,
     overflow?: 'auto' | 'visible',
+    mask?: boolean,
     input?: (item: MenuItem<T>) => void,
     click?: (item: MenuItem<T>, event: React.MouseEvent, clickName: string, mp: MenuPanel<T>) => void,
-    nickName?: 'second' | 'three' | 'selectBox'
+    nickName?: 'second' | 'three' | 'selectBox',
+    range?: HTMLElement
 }) {
     var menuPanel = await Singleton<MenuPanel<T>>(MenuPanel, options?.nickName);
     return new Promise((resolve: (data: { item: MenuItem<T>, event: MouseEvent }) => void, reject) => {
