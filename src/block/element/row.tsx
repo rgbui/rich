@@ -299,10 +299,20 @@ export class RowView extends BlockView<Row>{
                             onMouseDown={e => {
                                 this.mousedown(i, e);
                             }}
+                            onMouseLeave={e => {
+                                var ele = e.currentTarget as HTMLElement;
+                                var re = e.nativeEvent.relatedTarget as HTMLElement;
+                                if (re && re.closest('.shy-box-tip')) return;
+                                ele.classList.remove('hover')
+                            }}
+                            onMouseEnter={e => {
+                                var ele = e.currentTarget as HTMLElement;
+                                ele.classList.add('hover')
+                            }}
                             key={block.id + 'gap'}
                             data-index={i}
                             style={{ opacity: 1, visibility: this.block.isCanEdit() ? undefined : "hidden" }}
-                            className='sy-block-row-gap visible-hover'>
+                            className='sy-block-row-gap'>
                             <em style={style}></em>
                         </div></BoxTip>)
                 }
@@ -311,6 +321,7 @@ export class RowView extends BlockView<Row>{
                         e.classList.add('hover')
                     }}
                         onClose={e => {
+                            console.log('ggeeexxx');
                             e.classList.remove('hover')
                         }}
                         placement='top' overlay={
@@ -320,6 +331,16 @@ export class RowView extends BlockView<Row>{
                             </div>
                         }><div
                             onMouseDown={e => { this.mousedown(i, e); }}
+                            onMouseLeave={e => {
+                                var ele = e.currentTarget as HTMLElement;
+                                var re = e.nativeEvent.relatedTarget as HTMLElement;
+                                if (re && re.closest('.shy-box-tip')) return;
+                                ele.classList.remove('hover')
+                            }}
+                            onMouseEnter={e => {
+                                var ele = e.currentTarget as HTMLElement;
+                                ele.classList.add('hover')
+                            }}
                             key={block.id + 'gap'}
                             data-index={i}
                             style={{ visibility: this.block.isCanEdit() ? "visible" : "hidden" }}
