@@ -80,14 +80,14 @@ export class RowView extends BlockView<Row>{
         var gap = this.block.gaps.find(c => c.at == index);
         var ns: MenuItem<string | BlockDirective>[] = [];
         ns.push({
-            name: 'agvCols',
-            text: lst('平均所有列'),
-            icon: { name: 'bytedance-icon', code: 'align-text-both' }
-        })
-        ns.push({
             name: 'agvLeftRightCols',
             text: lst('平均左右列'),
             icon: { name: 'bytedance-icon', code: 'one-to-one' }
+        })
+        ns.push({
+            name: 'agvCols',
+            text: lst('平均所有列'),
+            icon: HorizontalDistributionSvg
         })
         ns.push({ type: MenuItemType.divide });
         ns.push({
@@ -292,8 +292,8 @@ export class RowView extends BlockView<Row>{
                         }}
                         placement='top' overlay={
                             <div className='flex bg-white h-30 round r-gap-w-5 r-item-hover'>
-                                <ToolTip overlay={lst('平均所有列')}><span onMouseDown={e => this.agvCols(e)} style={{ background: '#eee' }} className={'size-24 remark  flex-center round cursor '}><Icon size={16} icon={HorizontalDistributionSvg}></Icon></span></ToolTip>
                                 <ToolTip overlay={lst('平均左右列')}><span onMouseDown={e => this.leftRightCols(i)} style={{ background: '#eee' }} className={'size-24 remark  flex-center round cursor '}><Icon size={16} icon={{ name: 'bytedance-icon', code: 'one-to-one' }}></Icon></span></ToolTip>
+                                <ToolTip overlay={lst('平均所有列')}><span onMouseDown={e => this.agvCols(e)} style={{ background: '#eee' }} className={'size-24 remark  flex-center round cursor '}><Icon size={16} icon={HorizontalDistributionSvg}></Icon></span></ToolTip>
                             </div>
                         }><div
                             onMouseDown={e => {
@@ -315,8 +315,8 @@ export class RowView extends BlockView<Row>{
                         }}
                         placement='top' overlay={
                             <div className='flex bg-white h-30 round r-gap-w-5 r-item-hover'>
-                                <ToolTip overlay={lst('平均所有列')}><span onMouseDown={e => this.agvCols(e)} className={'size-24 remark  flex-center round cursor '}><Icon size={16} icon={HorizontalDistributionSvg}></Icon></span></ToolTip>
                                 <ToolTip overlay={lst('平均左右列')}><span onMouseDown={e => this.leftRightCols(i)} className={'size-24 remark  flex-center round cursor '}><Icon size={16} icon={{ name: 'bytedance-icon', code: 'one-to-one' }}></Icon></span></ToolTip>
+                                <ToolTip overlay={lst('平均所有列')}><span onMouseDown={e => this.agvCols(e)} className={'size-24 remark  flex-center round cursor '}><Icon size={16} icon={HorizontalDistributionSvg}></Icon></span></ToolTip>
                             </div>
                         }><div
                             onMouseDown={e => { this.mousedown(i, e); }}
@@ -328,7 +328,6 @@ export class RowView extends BlockView<Row>{
                         </div></BoxTip>)
                 }
             }
-
             ps.push(<block.viewComponent key={block.id} block={block}></block.viewComponent>)
         }
         return ps;
