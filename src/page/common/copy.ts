@@ -15,3 +15,28 @@ export async function storeCopyBlocks(blocks: Block[]) {
 export function readCopyBlocks(id: string) {
     return GlobalBlocks.get(id);
 }
+
+var GlobalData: Map<string, any> = new Map();
+var GlobalDataTime: Map<string, any> = new Map();
+export function memoryCopyData(key: string, data: any) {
+    GlobalData.set(key, data);
+    var d = GlobalDataTime.get(key);
+    if (d) {
+        clearTimeout(d);
+    }
+    GlobalDataTime.set(key, setTimeout(() => {
+        GlobalData.delete(key);
+        GlobalDataTime.delete(key);
+    }, 5 * 1000 * 60));
+}
+export function memoryReadData(key: string) {
+    var d = GlobalDataTime.get(key);
+    if (d) {
+        clearTimeout(d);
+        GlobalDataTime.set(key, setTimeout(() => {
+            GlobalData.delete(key);
+            GlobalDataTime.delete(key);
+        }, 5 * 1000 * 60));
+    }
+    return GlobalData.get(key);
+}

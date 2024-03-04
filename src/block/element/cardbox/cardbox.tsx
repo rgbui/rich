@@ -31,6 +31,7 @@ import { useImagePicker } from "../../../../extensions/image/picker";
 import lodash from "lodash";
 import "./style.less";
 import { util } from "../../../../util/util";
+import { memoryCopyData, memoryReadData } from "../../../page/common/copy";
 
 @url('/card/box')
 export class CardBox extends Block {
@@ -41,6 +42,7 @@ export class CardBox extends Block {
         var el = event.currentTarget?.parentNode as HTMLElement;
         el.classList.remove('visible');
         try {
+            var d = memoryReadData('cardBox.cardThemeStyle');
             var r = await useSelectMenuItem(
                 { roundArea: Rect.fromEvent(event) },
                 [
@@ -68,6 +70,19 @@ export class CardBox extends Block {
                     },
                     { type: MenuItemType.divide },
                     {
+                        name: 'copyStyle',
+                        icon: { name: 'byte', code: 'format-brush' },
+                        text: lst("复制卡片样式")
+                    },
+                    {
+                        name: 'pasteStyle',
+                        icon: { name: 'byte', code: 'magic-wand' },
+                        value: lodash.cloneDeep(d),
+                        disabled: d ? false : true,
+                        text: lst("粘贴卡片样式")
+                    },
+                    { type: MenuItemType.divide },
+                    {
                         name: 'delete',
                         icon: TrashSvg,
                         text: lst("删除卡片")
@@ -91,6 +106,17 @@ export class CardBox extends Block {
                             await this.delete()
                         })
                     }
+                }
+                else if (r.item.name == 'copyStyle') {
+                    memoryCopyData('cardBox.cardThemeStyle', lodash.cloneDeep(this.cardThemeStyle))
+                }
+                else if (r.item.name == 'pasteStyle') {
+                    var value = r.item.value;
+                    await this.onUpdateProps({
+                        cardThemeStyle: value
+                    }, {
+                        range: BlockRenderRange.self
+                    })
                 }
                 else if (r.item.name == 'delete') {
                     this.onDelete()
@@ -344,7 +370,7 @@ export class ViewComponent extends BlockView<CardBox>{
                     <div
                         ref={e => this.contentEl = e}
                         className={"relative"}>
-                        {this.block.isCanEdit() &&<div style={{ zIndex: 12 }} className="flex sy-block-view-card-ops pos-top-right gap-r-10 gap-t-10 r-gap-r-10">
+                        {this.block.isCanEdit() && <div style={{ zIndex: 12 }} className="flex sy-block-view-card-ops pos-top-right gap-r-10 gap-t-10 r-gap-r-10">
                             <span className={"flex-center cursor round  size-24 bg-hover"} onMouseDown={e => { e.stopPropagation(); this.block.onOpenCardStyle(e) }}><Icon size={18} icon={PlatteSvg}></Icon></span>
                             <span className={"flex-center cursor round  size-24 bg-hover"} onMouseDown={e => { e.stopPropagation(); this.block.openContextmenu(e) }}><Icon size={18} icon={DotsSvg}></Icon></span>
                         </div>}

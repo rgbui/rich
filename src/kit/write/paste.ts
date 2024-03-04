@@ -167,7 +167,6 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
                         await onPasteCreateBlocks(kit, aa, bs);
                         return;
                     }
-
                 }
             }
             try {
@@ -315,7 +314,7 @@ async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
         kit.writer.onSolidInputCreateTextBlock(aa, undefined, text);
     }
     else if ((aa.isText && aa.block.isLine && !(aa.block.isTextContent && aa.block.asTextContent.isBlankPlain) && !aa.block.next)) {
-        this.onRowLastLineBlockCreateTextBlock(aa, undefined, text);
+        kit.writer.onRowLastLineBlockCreateTextBlock(aa, undefined, text);
         return;
     }
     else {

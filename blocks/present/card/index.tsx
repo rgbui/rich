@@ -16,8 +16,9 @@ import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { BlockDirective, BlockRenderRange } from "../../../src/block/enum";
 import { getCardStyle } from "../../../extensions/theme/themes";
 import { Tip } from "../../../component/view/tooltip/tip";
-import "./style.less";
 import { MouseDragger } from "../../../src/common/dragger";
+import { memoryCopyData, memoryReadData } from "../../../src/page/common/copy";
+import "./style.less";
 
 @url('/card')
 export class PageCard extends Block {
@@ -29,7 +30,7 @@ export class PageCard extends Block {
     async initPageCard() {
         this.blocks.childs.push(await BlockFactory.createBlock('/textspan',
             this.page,
-            { content: lst('描述') },
+            { content: '', placeholder: lst('添加卡片内容') },
             this
         ));
         this.forceUpdate();
@@ -76,6 +77,24 @@ export class PageCard extends Block {
             text: lst('自适应高度'),
             icon: { name: 'byte', code: 'auto-height-one' }
         });
+        var d = memoryReadData('PageCard.cardStyle');
+        ns.push(...[
+            {
+                type: MenuItemType.divide
+            },
+            {
+                name: 'copyStyle',
+                icon: { name: 'byte', code: 'format-brush' } as any,
+                text: lst("复制卡片样式")
+            },
+            {
+                name: 'pasteStyle',
+                icon: { name: 'byte', code: 'magic-wand' } as any,
+                value: lodash.cloneDeep(d),
+                disabled: d ? false : true,
+                text: lst("粘贴卡片样式")
+            }
+        ])
         rs.splice(at, 0, ...ns)
         return rs;
     }
@@ -89,6 +108,17 @@ export class PageCard extends Block {
         if (item.name == 'cardStyle') {
             this.openCardStyle();
             return;
+        }
+        else if (item.name == 'copyStyle') {
+            memoryCopyData('PageCard.cardStyle', lodash.cloneDeep(this.cardStyle))
+        }
+        else if (item.name == 'pasteStyle') {
+            var value = item.value;
+            await this.onUpdateProps({
+                cardStyle: value
+            }, {
+                range: BlockRenderRange.self
+            })
         }
         return await super.onClickContextMenu(item, event);
     }
@@ -153,8 +183,13 @@ export class PageCardView extends BlockView<PageCard>{
             }
             var boxStyle = { ...coverStyle, ...contentStyle }
             style.borderRadius = boxStyle.borderRadius;
+            if (s.contentStyle?.transparency == 'solid') {
+                delete style.background;
+                delete style.backdropFilter;
+                delete style.backgroundColor;
+            }
             return <div className="relative" style={boxStyle}>
-                <div className="padding-10" style={{
+                <div className="padding-10 min-h-60" style={{
                     ...style,
                     height: this.block.autoContentHeight !== true ? this.block.contentHeight : undefined,
                     overflowY: (this.block.autoContentHeight !== true ? "overlay" : "hidden") as any,
@@ -167,7 +202,7 @@ export class PageCardView extends BlockView<PageCard>{
             return <div style={contentStyle} >
                 <div className="h-120" style={{ ...coverStyle }}>
                 </div>
-                <div className="padding-10" style={{
+                <div className="padding-10 min-h-60" style={{
                     height: this.block.autoContentHeight !== true ? this.block.contentHeight : undefined,
                     overflowY: (this.block.autoContentHeight !== true ? "overlay" : "hidden") as any,
                 }} >
@@ -182,7 +217,7 @@ export class PageCardView extends BlockView<PageCard>{
                     width: '33.3%'
                 }}>
                 </div>
-                <div className="padding-10 flex-auto" style={{
+                <div className="padding-10 flex-auto min-h-60" style={{
                     height: this.block.autoContentHeight !== true ? this.block.contentHeight : undefined,
                     overflowY: (this.block.autoContentHeight !== true ? "overlay" : "hidden") as any,
                 }} >
@@ -192,7 +227,7 @@ export class PageCardView extends BlockView<PageCard>{
         }
         else if (s.coverStyle.display == 'inside-cover-right') {
             return <div className="flex flex-full" style={contentStyle} >
-                <div className="padding-10 flex-auto" style={{
+                <div className="padding-10 flex-auto min-h-60" style={{
                     height: this.block.autoContentHeight !== true ? this.block.contentHeight : undefined,
                     overflowY: (this.block.autoContentHeight !== true ? "overlay" : "hidden") as any,
                 }}>
@@ -206,7 +241,7 @@ export class PageCardView extends BlockView<PageCard>{
     renderView() {
         return <div style={this.block.visibleStyle}>
             <div className="relative" style={this.block.contentStyle}>
-                <div className='min-h-60 relative visible-hover' >
+                <div className=' relative visible-hover' >
                     {this.block.isCanEdit() && <>
                         <div style={{ zIndex: 1000, top: -30 }} className="h-30 visible  pos-top-right flex">
                             <span onMouseDown={async e => {

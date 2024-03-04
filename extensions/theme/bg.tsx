@@ -116,13 +116,13 @@ export class PageFillStyle extends React.Component<{
     dropEle: HTMLElement;
     getItems() {
         var items = [
-            { icon: { name: 'bytedance-icon', code: 'square' }, name: 'none', value: "none", stext: lst('无背景'), text: lst('无背景'), checkLabel: this.bgStyle?.mode == 'none' },
+            { icon: { name: 'byte', code: 'square' }, name: 'none', value: "none", stext: lst('无背景'), text: lst('无背景'), checkLabel: this.bgStyle?.mode == 'none' },
             { type: MenuItemType.divide },
-            { icon: PicSvg, name: 'image', text: lst('选择图片'), stext: lst('图片'), value: 'image', checkLabel: this.bgStyle?.mode == 'image' },
-            { icon: UploadSvg, name: 'uploadImage', text: lst('上传图片'), stext: lst('图片'), value: 'uploadImage', checkLabel: this.bgStyle?.mode == 'uploadImage' },
+            { icon: { name: 'byte', code: 'pic' }, name: 'image', text: lst('选择图片'), stext: lst('图片'), value: 'image', checkLabel: this.bgStyle?.mode == 'image' },
+            { icon: { name: 'byte', code: 'upload-one' }, name: 'uploadImage', text: lst('上传图片'), stext: lst('图片'), value: 'uploadImage', checkLabel: this.bgStyle?.mode == 'uploadImage' },
             { type: MenuItemType.divide },
-            { icon: { name: 'bytedance-icon', code: 'background-color' }, stext: lst('背景色'), name: 'color', text: lst('颜色'), value: 'color', checkLabel: this.bgStyle?.mode == 'color' },
-            { icon: { name: 'bytedance-icon', code: 'color-filter' }, stext: lst('渐变色'), name: 'grad', text: lst('渐变色'), value: 'grad', checkLabel: this.bgStyle?.mode == 'grad' }
+            { icon: { name: 'byte', code: 'background-color' }, stext: lst('背景色'), name: 'color', text: lst('颜色'), value: 'color', checkLabel: this.bgStyle?.mode == 'color' },
+            { icon: { name: 'byte', code: 'color-filter' }, stext: lst('渐变色'), name: 'grad', text: lst('渐变色'), value: 'grad', checkLabel: this.bgStyle?.mode == 'grad' }
         ] as MenuItem<string>[];
         if (this.props.isNotEmpty == true)
             items = items.slice(2);
@@ -141,10 +141,10 @@ export class PageFillStyle extends React.Component<{
             }}>
             {!this.props.isFill && <div className="pos size-24 round item-hover flex-center cursor" onMouseDown={e => {
                 this.spread = false;
-                setTimeout(()=>{
+                setTimeout(() => {
                     if (this.props.openSpread)
                         this.props.openSpread(this.spread);
-                },10);
+                }, 10);
                 this.forceUpdate();
             }} style={{ top: 0, right: 0 }}>
                 <Icon icon={CloseSvg} size={14}></Icon>
