@@ -8,7 +8,7 @@ import { PopoverPosition } from "../../../component/popover/position";
 import DragHandle from "../../../src/assert/svg/dragHandle.svg";
 import Dots from "../../../src/assert/svg/dots.svg";
 import { MenuItemType } from "../../../component/view/menu/declare";
-import { CheckSvg, CloseTickSvg, TrashSvg } from "../../../component/svgs";
+import { CheckSvg, ChevronRightSvg, CloseSvg, CloseTickSvg, TrashSvg } from "../../../component/svgs";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { Point } from "../../../src/common/vector/point";
 import { Icon } from "../../../component/view/icon";
@@ -63,17 +63,20 @@ export class TableStoreOption extends EventsComponent {
         return <div className="shy-tablestore-option-selector">
             <div className="shy-tablestore-option-selector-input">
                 {this.ovs.map(ov => {
-                    return <a key={ov.value} style={{ backgroundColor: ov.color }}>
+                    return <a key={ov.value} className="gap-r-5 gap-b-5" style={{ backgroundColor: ov.color }}>
                         <span className="max-w-80 text-overflow inline-block">{ov.text}</span>
-                        <Icon icon={CloseTickSvg} className={'gap-l-5 cursor remark'} size={8}
-                            onClick={e => {
-                                if (self.multiple) {
-                                    lodash.remove(self.ovs, o => o.value == ov.value);
-                                    self.forceUpdate()
-                                }
-                                else self.onlyClearOption();
-                            }}
-                        ></Icon>
+                        <span className={'gap-l-5 cursor remark flex-center item-hover round'} >
+                            <Icon icon={CloseSvg} size={10}
+                                onClick={e => {
+                                    if (self.multiple) {
+                                        lodash.remove(self.ovs, o => o.value == ov.value);
+                                        self.forceUpdate()
+                                    }
+                                    else self.onlyClearOption();
+                                }}
+                            ></Icon>
+                        </span>
+
                     </a>
                 })}
                 <div className={(this.ovs.length > 0 ? "gap-l-5" : "")}><input
@@ -93,6 +96,7 @@ export class TableStoreOption extends EventsComponent {
                         return <div className="shy-tablestore-option-item" key={op.text} onClick={e => this.setOption(op)} >
                             {this.isEdit && <span className="shy-tablestore-option-item-icon"><DragHandle></DragHandle></span>}
                             <span className="shy-tablestore-option-item-text text-overflow"><em className=" f-14 padding-h-2  l-16 " style={{ backgroundColor: op.color }}>{op.text}</em></span>
+                            {this.ovs.some(c => c.value == op.value) && <span className="flex-fixed size-20 flex-center gap-r-3"><Icon size={16} icon={CheckSvg}></Icon></span>}
                             {this.isEdit && <span className="shy-tablestore-option-item-property" onClick={e => this.configOption(op, e)}><Dots></Dots></span>}
                         </div>
                     })}
@@ -130,6 +134,7 @@ export class TableStoreOption extends EventsComponent {
     setOption(option: DataGridOptionType) {
         if (this.multiple) {
             if (!this.ovs.includes(option)) this.ovs.push(option);
+            else lodash.remove(this.ovs, o => o.value == option.value);
         }
         else this.ovs = [option];
         this.forceUpdate();
