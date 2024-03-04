@@ -15,7 +15,7 @@ export class BlockIcon extends Block {
     @prop()
     src: IconArguments = { name: 'byte', code: 'hamburger-button' };
     @prop()
-    size: number = 48;
+    size: number = 32;
     display = BlockDisplay.block;
     async getHtml() {
         if (this.src && this.src.code) {
@@ -98,7 +98,7 @@ export class BlockIconView extends BlockView<BlockIcon>{
                     borderRadius: 5,
                     cursor: 'pointer'
                 }}>
-                    <Icon icon={{ ...icon, color: 'inherit' }} size={this.block.size}></Icon>
+                    <Icon icon={{ ...icon}} size={this.block.size}></Icon>
                 </div>
             </div>
         </div>
