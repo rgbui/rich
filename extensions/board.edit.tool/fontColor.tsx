@@ -173,7 +173,10 @@ export function FontTextStyle(props: {
     >
         <div className="shy-board-edit-background-color-current size-20 flex-center">
             <div className="size-20">
-                <Icon className={'pos pos-center text-1'} icon={BoardIconTextStylesSvg} size={32}></Icon>
+                <Icon className={'pos pos-center text-1'} icon={
+                    { name: 'byte', code: 'text-style' }
+                    // BoardIconTextStylesSvg
+                } size={16}></Icon>
             </div>
         </div>
         {props.tool.isShowDrop(name) && <div style={{ top: 25, height: 30, width: 120, minHeight: 'auto', padding: '5px 0px' }} className=" shy-board-edit-background-color-drops flex r-item-hover r-round r-cursor r-gap-w-5">
