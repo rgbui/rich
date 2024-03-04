@@ -1,4 +1,4 @@
-import React from "react";
+import React, { HtmlHTMLAttributes } from "react";
 import { SettingsSvg, } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { BoxTip } from "../../../component/view/tooltip/box";
@@ -20,6 +20,7 @@ import { lst } from "../../../i18n/store";
 import lodash from "lodash";
 import { util } from "../../../util/util";
 import "./style.less";
+import { popoverLayer } from "../../../component/lib/zindex";
 
 
 @url('/button')
@@ -191,24 +192,22 @@ export class BlockButton extends Block {
             }
         }
     }
-    async didUnmounted() {
-        document.body.addEventListener('mousedown', this.unClick, true)
-    }
     async didMounted() {
-        document.body.addEventListener('mousedown', this.unClick, true)
+        document.body.addEventListener('mousedown', this.otherClick, true)
     }
-    unClick = async (event: MouseEvent) => {
+    async didUnmounted() {
+        popoverLayer.clear(this);
+        document.body.removeEventListener('mousedown', this.otherClick, true)
+    }
+    otherClick = async (event: MouseEvent) => {
         var ele = event.target as HTMLElement;
         if (!this.el) return;
-        if (this.isOpenFlow == false) return;
         if (this.el && ele && this.el.contains(ele)) {
             return;
         }
         var pe = document.querySelector('.shy-surface');
         if (pe && pe.contains(ele)) {
-            this.isOpenFlow = false;
-            await (this.view as any).onSave();
-            this.forceUpdate()
+            await (this.view as any).boxTip.close();
         }
     }
 }
@@ -221,12 +220,9 @@ export class BlockButtonView extends BlockView<BlockButton>{
     }
     oldFlow: Flow;
     async openEdit(event: React.MouseEvent) {
-        this.block.isOpenFlow = !this.block.isOpenFlow;
-        if (this.block.isOpenFlow) {
-            this.oldFlow = await this.block.flow.clone();
+        if (this.boxTip) {
+            this.boxTip.toggle();
         }
-        if (this.block.isOpenFlow == false) return await this.onSave()
-        this.forceUpdate()
     }
     renderView() {
         var classList: string[] = ['sy-button'];
@@ -237,38 +233,52 @@ export class BlockButtonView extends BlockView<BlockButton>{
         if (this.block.align == 'center') style.justifyContent = 'center';
         else if (this.block.align == 'right') style.justifyContent = 'flex-end';
         return <div className="visible-hover" style={this.block.visibleStyle}>
-            <div className={"flex"} style={style}>
-                <div className="relative"
-                    style={{ display: this.block.buttonIsBlock ? "block" : 'inline-block', width: this.block.buttonIsBlock ? "100%" : undefined }}>
-                    <div
-                        data-button={'true'}
-                        onMouseDown={e => { e.stopPropagation(); this.block.onExcute() }}
-                        className={" flex-center  " + classList.join(" ")}
-                        style={{ width: this.block.buttonIsBlock ? "100%" : undefined }}
-                    >
-                        {this.block.iconAlign == 'left' && <> {this.block.buttonIcon && <Icon size={18} className={this.block.buttonText ? 'gap-r-5' : ""} icon={{ ...this.block.buttonIcon, color: 'inherit' }}></Icon>}
-                            {this.block.buttonText && <>{this.block.buttonText}</>}
-                        </>}
-                        {this.block.iconAlign == 'right' && <>
-                            {this.block.buttonText && <>{this.block.buttonText}</>}
-                            {this.block.buttonIcon && <Icon size={18} className={this.block.buttonText ? 'gap-l-5' : ""} icon={{ ...this.block.buttonIcon, color: 'inherit' }}></Icon>}
-                        </>}
-
-                        {!this.block.buttonText && !this.block.buttonIcon && <span><S>按钮</S></span>}
+            <BoxTip ref={e => this.boxTip = e}
+                disableMousedownClose
+                disabledMouseEnterOrLeave
+                boxStyle={{ zIndex: popoverLayer.zoom(this.block) }}
+                overlay={this.renderFlow()}
+                align={this.block.align}
+                onClose={async () => {
+                    await this.onSave()
+                }}
+                cacOverEle={e => {
+                    return (e.querySelector('[data-button]') as HTMLElement).parentNode as HTMLElement;
+                }}
+            >
+                <div className={"flex"} style={style}>
+                    <div className="relative"
+                        style={{ zIndex: 1000, display: this.block.buttonIsBlock ? "block" : 'inline-block', width: this.block.buttonIsBlock ? "100%" : undefined }}>
+                        <div
+                            data-button={'true'}
+                            onMouseDown={e => {
+                                e.stopPropagation();
+                                this.block.onExcute()
+                            }}
+                            className={" flex-center  " + classList.join(" ")}
+                            style={{ width: this.block.buttonIsBlock ? "100%" : undefined }}
+                        >
+                            {this.block.iconAlign == 'left' && <> {this.block.buttonIcon && <Icon size={18} className={this.block.buttonText ? 'gap-r-5' : ""} icon={{ ...this.block.buttonIcon, color: 'inherit' }}></Icon>}
+                                {this.block.buttonText && <>{this.block.buttonText}</>}
+                            </>}
+                            {this.block.iconAlign == 'right' && <>
+                                {this.block.buttonText && <>{this.block.buttonText}</>}
+                                {this.block.buttonIcon && <Icon size={18} className={this.block.buttonText ? 'gap-l-5' : ""} icon={{ ...this.block.buttonIcon, color: 'inherit' }}></Icon>}
+                            </>}
+                            {!this.block.buttonText && !this.block.buttonIcon && <span><S>按钮</S></span>}
+                        </div>
+                        {this.block.isCanEdit() && <span className="visible flex-center  pos-center-right-outside" onMouseDown={async e => {
+                            e.stopPropagation();
+                            this.openEdit(e)
+                        }}><span className="cursor flex-center gap-l-5 size-20"><Icon size={16} icon={SettingsSvg}></Icon></span>
+                        </span>}
                     </div>
-                    {this.block.isCanEdit() && <span className="visible flex-center  pos-center-right-outside" onMouseDown={async e => {
-                        e.stopPropagation();
-                        this.openEdit(e)
-                    }}><span className="cursor flex-center gap-l-5 size-20"><Icon size={16} icon={SettingsSvg}></Icon></span>
-                    </span>}
                 </div>
-            </div>
-            {this.block.isOpenFlow && <div className="relative" style={{ zIndex: 10 }}>
-                {this.renderFlow()}
-            </div>}
+            </BoxTip>
         </div>
     }
     async onSave() {
+        if (lodash.isEqual(this.oldFlow, this.block.flow)) return;
         await this.block.onManualUpdateProps({
             flow: this.oldFlow
         }, { flow: this.block.flow })
@@ -287,19 +297,15 @@ export class BlockButtonView extends BlockView<BlockButton>{
         var style: React.CSSProperties = {};
         if (this.block.align == 'center') style.justifyContent = 'center';
         else if (this.block.align == 'right') style.justifyContent = 'flex-end'
-        return <div className="pos flex" style={{ top: 0, left: 0, right: 0, ...style }}>
-            <div className='min-w-400 max-w-600 round-6 padding-14 gap-h-10'
-                style={{
-                    top: 0,
-                    background: 'rgb(251, 251, 250)',
-                    border: '1px solid rgba(55, 53, 47, 0.09)'
-                }}>
+        return <div className="flex" style={{ top: 0, left: 0, right: 0, ...style }}>
+            <div className='min-w-400 max-w-600 round-6 padding-14 gap-h-10' >
                 <div className="flex" onMouseDown={e => { e.stopPropagation() }}>
                     <span className="border size-24 round cursor flex-center"><Icon size={18} onMousedown={e => this.changeIcon(e)} icon={this.block.buttonIcon || { name: 'bytedance-icon', code: 'smiling-face' }}></Icon></span>
                     <span className="flex-auto gap-w-10"><Input value={this.block.buttonText} onChange={e => {
                         this.block.buttonText = e;
-                    }} onEnter={e => {
-                        this.onSave()
+                    }} onEnter={async e => {
+                        await this.onSave()
+                        this.boxTip.close()
                     }}></Input></span>
                     <span className="flex-fixed"><Button onClick={async (e, b) => {
                         this.openEdit(e)
