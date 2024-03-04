@@ -941,17 +941,19 @@ export class Page$Cycle {
             var es = fs.map(f => {
                 return getElementUrl(ElementType.SchemaFieldNameData, this.schema.id, f.name, this.formRowData.id)
             })
-            var rgc = await channel.get('/user/interactives',
-                {
+            if (this.formRowData) {
+                var rgc = await channel.get('/user/interactives',
+                    {
 
-                    schemaId: this.schema?.id,
-                    ids: [this.formRowData.id],
-                    ws: this.ws,
-                    es: es
-                });
-            if (rgc.ok) {
-                this.formUserEmojis = rgc.data.list;
-                this.forceUpdate();
+                        schemaId: this.schema?.id,
+                        ids: [this.formRowData.id],
+                        ws: this.ws,
+                        es: es
+                    });
+                if (rgc.ok) {
+                    this.formUserEmojis = rgc.data.list;
+                    this.forceUpdate();
+                }
             }
         }
     }

@@ -22,7 +22,7 @@ export type InptIconAndTextOptions = {
 class InputIconAndText extends EventsComponent {
     async onChangeIcon(event: React.MouseEvent) {
         var icon = await useIconPicker({ roundArea: Rect.fromEle(this.el) });
-        if (icon) {
+        if (typeof icon != 'undefined') {
             this.icon = icon;
             this.forceUpdate();
         }

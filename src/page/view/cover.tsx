@@ -25,14 +25,14 @@ export class PageCover extends React.Component<{ page: Page }>{
                 event.stopPropagation();
                 var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) }, pd.icon);
                 if (typeof icon != 'undefined') {
-                    page.onUpdatePageData({ icon });
+                    await page.onUpdatePageData({ icon });
                 }
             }
             async function changeCover(event: React.MouseEvent) {
                 event.stopPropagation();
                 var r = await useImagePicker({ roundArea: Rect.fromEvent(event) }, { gallery: true });
                 if (r) {
-                    page.onUpdatePageCover({ cover: { url: r.url, thumb: r.thumb, top: 50, abled: true } }, true)
+                    await page.onUpdatePageCover({ cover: { url: r.url, thumb: r.thumb, top: 50, abled: true } }, true)
                 }
             }
             function startPosition(event: React.MouseEvent) {

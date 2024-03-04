@@ -102,7 +102,7 @@ export class MenuItemView extends React.Component<{
         var r = await useIconPicker({
             roundArea: Rect.fromEle(event.currentTarget as HTMLElement)
         });
-        if (r) {
+        if (typeof r != 'undefined') {
             item.icon = r;
             if (item.updateMenuPanel) this.props.parent.forceUpdate()
             else this.forceUpdate();

@@ -101,7 +101,7 @@ export class DataGridFields extends EventsComponent {
         }
         return <div>
             <div className="max-h-200 overflow-y">
-                <div className="flex padding-w-10 " >
+                <div className="flex padding-w-10 " style={{ paddingLeft: 5 }}>
                     <span className="remark flex-auto f-12 gap-l-6"><S>显示的字段</S></span>
                     <span onClick={e => onHideAll()} className="size-24 flex-center round ">
                         <Icon size={14} icon={EyeSvg}></Icon>
@@ -120,7 +120,7 @@ export class DataGridFields extends EventsComponent {
                         </div>
                     })}</DragList>
                 {fs.length > 0 && <>
-                    <div className="flex padding-w-10 " >
+                    <div className="flex padding-w-10 " style={{ paddingLeft: 5 }}>
                         <span className="remark flex-auto f-12 gap-l-6"><S>未显示的字段</S></span>
                         <span onClick={e => onShowAll()} className="size-24 flex-center round item-hover ">
                             <Icon size={14} icon={EyeHideSvg}></Icon>

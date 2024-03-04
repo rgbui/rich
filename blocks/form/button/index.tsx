@@ -278,7 +278,7 @@ export class BlockButtonView extends BlockView<BlockButton>{
         var r = await useIconPicker({
             roundArea: Rect.fromEle(event.currentTarget as HTMLElement)
         });
-        if (r) {
+        if (typeof r != 'undefined') {
             await this.block.onUpdateProps({ buttonIcon: r })
             this.forceUpdate();
         }

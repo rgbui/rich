@@ -17,7 +17,6 @@ import {
     EmojiSvg,
     FontawesomeSvg,
     LinkSvg,
-    RandomSvg,
     TrashSvg,
     UploadSvg
 } from "../../component/svgs";
