@@ -27,6 +27,7 @@ export class TextSpan extends Block {
     fontScale = 1;
     @prop()
     smallFont = false;
+    placeholder: string;
     get visibleStyle() {
         if (this.isFreeBlock) {
             var style: CSSProperties = {};
@@ -280,6 +281,7 @@ export class TextSpan extends Block {
         return rect.leftTop.move(0, 10);
     }
 }
+
 @view("/textspan")
 export class TextSpanView extends BlockView<TextSpan>{
     renderView() {
@@ -291,9 +293,14 @@ export class TextSpanView extends BlockView<TextSpan>{
         if (this.block.smallFont) {
             style.fontSize = this.block.page.smallFont ? '12px' : '14px';
         }
-        return <div className='sy-block-text-span' style={this.block.visibleStyle}>
+        var placeholder = this.block.isFreeBlock || pa?.url == BlockUrlConstant.Cell ? lst("输入文本") : undefined;
+        if (this.block.placeholder)
+            placeholder = this.block.placeholder;
+        var visibleStyle = this.block.visibleStyle;
+        visibleStyle.minHeight = 40;
+        return <div className='sy-block-text-span' style={visibleStyle}>
             <div style={style}>
-                <TextSpanArea placeholderEmptyVisible={this.block.isFreeBlock ? true : false} placeholder={this.block.isFreeBlock || pa?.url == BlockUrlConstant.Cell ? lst("输入文本") : undefined} block={this.block}></TextSpanArea>
+                <TextSpanArea placeholderEmptyVisible={this.block.isFreeBlock ? true : false} placeholder={placeholder} block={this.block}></TextSpanArea>
             </div>
         </div>
     }
