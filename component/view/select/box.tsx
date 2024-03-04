@@ -104,7 +104,7 @@ export class SelectBox<T = any> extends React.Component<{
                 {this.props.multiple == true && <span className={'f-14 flex ' + (this.props.border ? "flex-auto" : "flex-fixed")}><span>{ops.map((op, i) => {
                     return <span className={'round padding-h-2 ' + (i == 0 && this.props.prefix ? "gap-l-5" : (i == 0 ? "" : "padding-l-5 "))} key={op.value}><span className={"flex " + (i < ops.length - 1 ? "gap-r-3" : "")}>{op?.icon && <Icon size={op?.iconSize || 14} className={'gap-r-3'} icon={op.icon}></Icon>}{op?.text}</span>{i < ops.length - 1 ? "," : ""}</span>
                 })}</span></span>}
-                <span className="flex-fixed size-14 gap-l-3 remark flex-center">
+                <span className={"flex-fixed gap-l-3 remark flex-center " + (this.props.border ? "size-20" : "size-14")}>
                     <Icon size={14} icon={ChevronDownSvg}></Icon>
                 </span>
             </div>}
