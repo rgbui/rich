@@ -366,12 +366,11 @@ export class DataGridViewField {
                             childs: [
                                 ...(viewField.field.config?.options || []).map(op => {
                                     return {
-                                        // text: op.text,
                                         value: op.value,
                                         name: 'optionItem',
                                         type: MenuItemType.drag,
                                         renderContent() {
-                                            return <span className="flex round padding-w-5 f-14 padding-h-2  l-16" style={{ backgroundColor: op.color }}>{op.text}</span>
+                                            return <span className="round padding-w-5 f-14 padding-h-2  l-16" style={{ backgroundColor: op.color }}>{op.text}</span>
                                         },
                                         btns: [{ name: 'editOptionOption', icon: DotsSvg }]
                                     }
