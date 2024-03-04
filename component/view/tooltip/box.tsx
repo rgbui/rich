@@ -205,8 +205,7 @@ export class BoxTip extends React.Component<{
     align?: 'left' | 'right' | 'center',
 }>{
     el: HTMLElement;
-    componentDidMount()
-    {
+    componentDidMount() {
         if (!this.props.overlay) return;
         if (this.props.disabled) return;
         this.el = ReactDOM.findDOMNode(this) as HTMLElement;
@@ -288,6 +287,7 @@ export class BoxTip extends React.Component<{
             align: this.props.align,
             close() {
                 self.currentVisible = false;
+                if (self.props.onClose) self.props.onClose(self.el);
             }
         })
     }
