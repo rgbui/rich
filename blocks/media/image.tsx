@@ -323,6 +323,7 @@ export class Image extends Block {
         items.push({
             text: lst('关联网址'),
             icon: { name: 'bytedance-icon', code: 'link-one' },
+            name: this.link ? undefined : "imageLink",
             childs: this.link ? [
                 {
                     name: 'imageLink',
@@ -331,13 +332,15 @@ export class Image extends Block {
                     icon: pageLink ? getPageIcon(pageLink) : GlobalLinkSvg,
                     btns: [{ icon: Edit1Svg, name: 'editImageLink' }]
                 }
-            ] : [
-                {
-                    name: 'imageLink',
-                    icon: PlusSvg,
-                    text: lst('添加网址')
-                }
-            ]
+            ] : undefined
+
+            // [
+            //     {
+            //         name: 'imageLink',
+            //         icon: PlusSvg,
+            //         text: lst('添加网址')
+            //     }
+            // ]
         });
         items.push({
             type: MenuItemType.divide
