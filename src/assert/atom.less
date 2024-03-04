@@ -190,11 +190,19 @@ position的布局
     transform: translate(100%, -50%);
 }
 
+
 .pos-center-left {
     position : absolute;
     top      : 50%;
     left     : 0rem;
     transform: translate(0%, -50%);
+}
+
+.pos-center-left-outside {
+    position : absolute;
+    top      : 50%;
+    left     : 0rem;
+    transform: translate(-100%, -50%);
 }
 
 .pos-center-top {
@@ -985,6 +993,7 @@ body {
 
 .overflow-y {
     overflow-y: auto;
+    overflow-y: overlay;
 }
 
 .overlay-y {

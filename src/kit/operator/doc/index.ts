@@ -18,8 +18,7 @@ import lodash from "lodash";
  * 否在编辑中，实际改变了元素的物理坐标，但没有同步到grid中
  * 
  */
-export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent)
-{
+export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
     kit.anchorCursor.renderSelectBlocks([]);
     var downPoint = Point.from(event);
     var gm = block ? block.panelGridMap : kit.page.gridMap;
@@ -97,7 +96,9 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent)
                     /**这里得找页面的最末尾块 */
                     var lastBlock = kit.page.getViewLastBlock();
                     if (lastBlock && lastBlock.isContentEmpty && lastBlock.appearAnchors.some(s => s.isText)) {
-                        kit.anchorCursor.onFocusBlockAnchor(lastBlock, { last: true, render: true });
+                        var r = lastBlock.getVisibleBound();
+                        if (r.isCross(new Rect(0, 0, window.innerWidth, window.innerHeight)))
+                            kit.anchorCursor.onFocusBlockAnchor(lastBlock, { last: true, render: true });
                     }
                     else {
                         if ([PageLayoutType.doc, PageLayoutType.recordView].includes(kit.page.pageLayout.type))

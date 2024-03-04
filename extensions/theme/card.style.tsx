@@ -48,8 +48,8 @@ export class CardBoxStyle extends EventsComponent {
                 <Tip text='Left布局'><div className="cursor flex" onMouseDown={e => this.setTheme('coverStyle.display', 'inside-cover-left')} style={{ border: this.cardThemeStyle.coverStyle?.display == 'inside-cover-left' ? solid : '2px solid #cac5c4', width: 30, height: 20 }} ><div style={{ background: this.cardThemeStyle?.coverStyle?.display == 'inside-cover-left' ? textp : '#cac5c4', width: 10, height: 20 }}></div></div></Tip>
                 <Tip text='Right布局' ><div className="cursor flex-end" onMouseDown={e => this.setTheme('coverStyle.display', 'inside-cover-right')} style={{ border: this.cardThemeStyle?.coverStyle?.display == 'inside-cover-right' ? solid : '2px solid #cac5c4', width: 30, height: 20 }} ><div style={{ background: this.cardThemeStyle?.coverStyle?.display == 'inside-cover-right' ? textp : '#cac5c4', width: 10, height: 20 }}></div></div></Tip>
             </div>
-            {(this.cardThemeStyle?.coverStyle?.display || 'none') != 'none' && <div>
-                <div className="remark  gap-t-10 gap-b-5 f-12"><S>强调</S></div>
+            {(this.cardThemeStyle?.coverStyle?.display || 'none') != 'none' && <div className="gap-h-10">
+                <div className="remark gap-b-5 f-12"><S>强调</S></div>
                 <div>
                     <PageFillStyle
                         openSpread={e => {
@@ -66,28 +66,29 @@ export class CardBoxStyle extends EventsComponent {
                     ></PageFillStyle>
                 </div>
             </div>}
-            
+            <div className="gap-h-10">
+                <div className="remark gap-b-5 f-12">
+                    <S>透明性</S>
+                </div>
+                <div>
+                    <SelectBox
+                        border
+                        dropAlign="full"
+                        value={this.cardThemeStyle?.contentStyle?.transparency || 'noborder'}
+                        onChange={e=>{
+                            this.setTheme('contentStyle.transparency', e)
+                        }}
+                        options={[
+                            { text: lst('透明'), value: 'noborder' },
+                            { text: lst('渐变'), value: 'faded' },
+                            { text: lst('毛玻璃'), value: 'frosted' },
+                            { text: lst('不透明'), value: 'solid' },
+                        ]}></SelectBox>
+                </div>
+            </div>
             <Divider></Divider>
-            <div className="remark gap-b-5 f-12">
-                <S>透明性</S>
-            </div>
-            <div>
-                <SelectBox
-                    border
-                    dropAlign="full"
-                    value={this.cardThemeStyle?.contentStyle?.transparency || 'noborder'}
-                    onChange={e => {
-                        this.setTheme('contentStyle.transparency', e)
-                    }}
-                    options={[
-                        { text: lst('透明'), value: 'noborder' },
-                        { text: lst('渐变'), value: 'faded' },
-                        { text: lst('毛玻璃'), value: 'frosted' },
-                        { text: lst('不透明'), value: 'solid' },
-                    ]}></SelectBox>
-            </div>
-            <div>
-                <div className="remark  gap-t-10 gap-b-5 f-12"><S>背景</S></div>
+            <div className="gap-h-10">
+                <div className="emark gap-b-5 f-12"><S>背景</S></div>
                 <div>
                     <PageFillStyle openSpread={e => {
                         if (e == true) {

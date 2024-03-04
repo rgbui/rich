@@ -302,7 +302,7 @@ export class ViewComponent extends BlockView<CardBox>{
                     <div className="h-120" style={{ borderRadius: '16px 16px 0px 0px', ...coverStyle }}>
                         {hasCover == false && <Icon onMousedown={e => {
                             self.block.openSetBg(e);
-                        }} className={'cursor'} size={24} icon={PicSvg}></Icon>}
+                        }} className={'cursor remark'} size={24} icon={PicSvg}></Icon>}
                     </div>
                     <div className="gap-w-50 gap-h-30"><ChildsArea childs={self.block.childs}></ChildsArea></div>
                 </div>
@@ -317,7 +317,7 @@ export class ViewComponent extends BlockView<CardBox>{
                     <div className="min-h-60 flex-fixed" style={{ borderRadius: '16px 0px 0px 16px ', width: '33.3%', ...coverStyle }}>
                         {hasCover == false && <Icon onMousedown={e => {
                             self.block.openSetBg(e);
-                        }} className={'cursor'} size={24} icon={PicSvg}></Icon>}
+                        }} className={'cursor remark'} size={24} icon={PicSvg}></Icon>}
                     </div>
                     <div className="flex-auto gap-w-50 gap-h-30"><ChildsArea childs={self.block.childs}></ChildsArea></div>
                 </div>
@@ -328,7 +328,7 @@ export class ViewComponent extends BlockView<CardBox>{
                     <div className="min-h-60 flex-fixed" style={{ borderRadius: '0px 16px 16px 0px ', width: '33.3%', ...coverStyle }}>
                         {hasCover == false && <Icon onMousedown={e => {
                             self.block.openSetBg(e);
-                        }} className={'cursor'} size={24} icon={PicSvg}></Icon>}
+                        }} className={'cursor remark'} size={24} icon={PicSvg}></Icon>}
                     </div>
                 </div>
             }
@@ -344,7 +344,7 @@ export class ViewComponent extends BlockView<CardBox>{
                     <div
                         ref={e => this.contentEl = e}
                         className={"relative"}>
-                        {this.block.isCanEdit() && <div style={{ zIndex: 12 }} className="flex sy-block-view-card-ops pos-top-right gap-r-10 gap-t-10 r-gap-r-10">
+                        {this.block.isCanEdit() &&<div style={{ zIndex: 12 }} className="flex sy-block-view-card-ops pos-top-right gap-r-10 gap-t-10 r-gap-r-10">
                             <span className={"flex-center cursor round  size-24 bg-hover"} onMouseDown={e => { e.stopPropagation(); this.block.onOpenCardStyle(e) }}><Icon size={18} icon={PlatteSvg}></Icon></span>
                             <span className={"flex-center cursor round  size-24 bg-hover"} onMouseDown={e => { e.stopPropagation(); this.block.openContextmenu(e) }}><Icon size={18} icon={DotsSvg}></Icon></span>
                         </div>}
@@ -361,7 +361,7 @@ export class ViewComponent extends BlockView<CardBox>{
                     </div>
                     <div className="sy-block-view-card-ops flex-center gap-t-20 gap-w-50 gap-b-30">
                         {this.block.isCanEdit() && <ToolTip overlay={lst('添加卡片')}>
-                            <div onMouseDown={e => this.block.onAddCardBox(e)} className="size-30 bg-white shadow flex-center cursor border circle text-1 link-hover"> <Icon size={18} icon={PlusSvg}></Icon></div>
+                            <div onMouseDown={e => this.block.onAddCardBox(e)} className="size-30 bg-white shadow-s flex-center cursor border circle text-1 link-hover"> <Icon size={18} icon={PlusSvg}></Icon></div>
                         </ToolTip>}
                     </div>
                 </div>
