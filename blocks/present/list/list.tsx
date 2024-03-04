@@ -17,6 +17,7 @@ import { MenuItemView } from "../../../component/view/menu/item";
 import "./style.less";
 import { lst } from "../../../i18n/store";
 import { Point } from "../../../src/common/vector/point";
+import lodash from "lodash";
 
 export enum ListType {
     circle = 0,
@@ -181,6 +182,7 @@ export class List extends Block {
                 }, { type: MenuItemType.divide }]
             items.splice(at, 0, ...newItems)
         }
+        lodash.remove(items, c => c.name == 'text-center');
 
         return items;
     }
@@ -197,7 +199,6 @@ export class List extends Block {
                 });
                 this.page.addBlockUpdate(this.parent);
             })
-            // await this.onUpdateProps({ listView: item.value as ListTypeView })
         }
         else await super.onClickContextMenu(item, event);
     }

@@ -8,6 +8,7 @@ import { lst } from "../../../i18n/store";
 import { BlockDirective, BlockRenderRange } from "../../../src/block/enum";
 import { Point } from "../../../src/common/vector/point";
 import { util } from "../../../util/util";
+import lodash from "lodash";
 
 @url('/comments')
 export class Comment extends Block {
@@ -37,6 +38,7 @@ export class Comment extends Block {
         }, { type: MenuItemType.divide })
         var at = rs.findIndex(g => g.name == 'color');
         rs.splice(at, 0, ...ns);
+        lodash.remove(rs, g => g.name == BlockDirective.copy);
         return rs;
     }
     async onContextMenuInput(item: MenuItem<BlockDirective | string>) {
@@ -65,7 +67,7 @@ export class CommentView extends BlockView<Comment>{
             <div style={this.block.contentStyle}>
                 <CommentListView
                     page={this.props.block.page}
-                    displayFormat={this.props.block.displayFormat||"comment"}
+                    displayFormat={this.props.block.displayFormat || "comment"}
                     userid={this.props.block.page.user.id}
                     elementUrl={this.props.block.getCommentElementUrl()}
                     sort={this.props.block.sort as any}

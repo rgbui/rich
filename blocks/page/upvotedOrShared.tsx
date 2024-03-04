@@ -14,6 +14,7 @@ import { S } from "../../i18n/view";
 import { CopyAlert } from "../../component/copy";
 import { lst } from "../../i18n/store";
 import { QR } from "../../component/view/qr";
+import { BlockDirective } from "../../src/block/enum";
 
 /***
  * 点赞或分享
@@ -22,6 +23,11 @@ import { QR } from "../../component/view/qr";
 export class UpvotedOrShared extends Block {
     async didMounted() {
         await this.loadEmojis();
+    }
+    async onGetContextMenus() {
+        var rs = await super.onGetContextMenus();
+        lodash.remove(rs, g => g.name == BlockDirective.copy);
+        return rs;
     }
     async loadEmojis() {
         var elementUrl: string;
