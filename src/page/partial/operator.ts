@@ -3,7 +3,7 @@ import { Page } from "..";
 import { CopyText } from "../../../component/copy";
 import { CloseShyAlert, ShyAlert } from "../../../component/lib/alert";
 import { useSelectMenuItem } from "../../../component/view/menu";
-import { MenuItem } from "../../../component/view/menu/declare";
+import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { channel } from "../../../net/channel";
 import { AnimatedScrollTo } from "../../../util/animatedScrollTo";
 import { Block } from "../../block";
@@ -22,6 +22,7 @@ import { lst } from "../../../i18n/store";
 import { Matrix } from "../../common/matrix";
 import { useImportFile } from "../../../extensions/import-file";
 import { buildPage } from "../common/create";
+import { AiStartSvg, DuplicateSvg } from "../../../component/svgs";
 
 export class Page$Operator {
     /**
@@ -232,8 +233,7 @@ export class Page$Operator {
      * @param event 
      */
     async onOpenMenu(this: Page, blocks: Block[], event: MouseEvent | Point) {
-        if (!(event instanceof Point))
-            event.preventDefault();
+        if (!(event instanceof Point)) event.preventDefault();
         if (blocks.length == 1) {
             try {
                 return await blocks[0].onContextmenu(event);
@@ -243,21 +243,39 @@ export class Page$Operator {
                 return;
             }
         }
+        var isSameUrl = blocks.every(b => b.url == blocks[0].url);
+        var menus = await blocks[0].onGetContextMenus();
+        if (!isSameUrl) {
+            lodash.remove(menus, c => c.name == BlockDirective.link);
+            var ns = await blocks[0].onGetTurnMenus();
+            await blocks.eachAsync(async (b, i) => {
+                if (i == 0) return;
+                var ms = await b.onGetContextMenus();
+                lodash.remove(menus, c => !ms.some(m => m.name == c.name));
+                if (menus.some(s => s.name == BlockDirective.trun)) {
+                    var ts = await b.onGetTurnMenus();
+                    if (!lodash.isEqual(ns.map(n => n.url), ts.map(c => c.url))) {
+                        lodash.remove(menus, c => c.name == BlockDirective.trun)
+                    }
+                }
+            })
+        }
         var re = await useSelectMenuItem(
             {
                 roundPoint: event instanceof Point ? event : Point.from(event),
                 direction: 'left'
             },
-            await blocks[0].onGetContextMenus(),
+            menus,
             {
-                input: (e) => {
-                    blocks[0].onContextMenuInput(e)
+                input: async (e) => {
+                    await blocks.eachAsync(async b => {
+                        await b.onContextMenuInput(e, { merge: true })
+                    })
                 }
             }
         );
         if (re) {
-            if (blocks.length == 1) await blocks[0].onClickContextMenu(re.item, re.event);
-            else await this.onClickBatchBlocksContextMenu(blocks, re.item, re.event)
+            await this.onClickBatchBlocksContextMenu(blocks, re.item, re.event)
         }
     }
     async onClickBatchBlocksContextMenu(this: Page, blocks: Block[], item: MenuItem<BlockDirective | string>, event: MouseEvent) {
@@ -308,6 +326,10 @@ export class Page$Operator {
             case 'askAi':
                 this.kit.writer.onAskAi(blocks)
                 break;
+            default:
+                await blocks.eachAsync(async (block) => {
+                    await block.onClickContextMenu(item, event, { merge: true });
+                })
         }
     }
     async onToggleOutline(this: Page, d: { nav: boolean }) {

@@ -87,12 +87,11 @@ export class Block$Event {
             icon: DuplicateSvg
         });
         var menus = await this.onGetTurnMenus();
-        if (menus.length > 0)
-        {
+        if (menus.length > 0) {
             items.push({
                 text: lst('切换'),
-                icon:LoopSvg,
-                childs:menus.map(m => {
+                icon: LoopSvg,
+                childs: menus.map(m => {
                     return {
                         ...m,
                     }
@@ -119,27 +118,32 @@ export class Block$Event {
         if (typeof (this as any).align != 'undefined') {
             items.push({
                 name: 'text-center',
-                type: MenuItemType.select,
                 value: (this as any).align,
                 text: lst('文字对齐'),
-                options: [
+                childs: [
                     {
+                        name: 'text-center',
                         text: lst('左对齐'),
                         value: 'left',
                         icon: { name: 'byte', code: 'align-text-left' },
+                        checkLabel: (this as any).align == 'left' ? true : false
                     },
                     {
+                        name: 'text-center',
                         text: lst('居中'),
                         value: 'center',
                         icon: { name: 'byte', code: 'align-text-center' },
+                        checkLabel: (this as any).align == 'center' ? true : false
                     },
                     {
+                        name: 'text-center',
                         text: lst('右对齐'),
                         value: 'right',
                         icon: { name: 'byte', code: 'align-text-right' },
+                        checkLabel: (this as any).align == 'right' ? true : false
                     }
                 ],
-                icon: (this as any).align=='left'?{ name: 'byte', code: 'align-text-left' }:(this as any).align=='center'?{ name: 'byte', code: 'align-text-center' }:{ name: 'byte', code: 'align-text-right' }
+                icon: (this as any).align == 'left' ? { name: 'byte', code: 'align-text-left' } : (this as any).align == 'center' ? { name: 'byte', code: 'align-text-center' } : { name: 'byte', code: 'align-text-right' }
             });
         }
 
@@ -270,15 +274,15 @@ export class Block$Event {
             await this.onClickContextMenu(re.item, re.event);
         }
     }
-    async onContextMenuInput(this: Block, item: MenuItem<BlockDirective | string>) {
+    async onContextMenuInput(this: Block, item: MenuItem<BlockDirective | string>, options?: { merge?: boolean }) {
         if (item?.name == 'text-center') {
-            this.onUpdateProps({ align: item.value }, { range: BlockRenderRange.self });
+            this.onUpdateProps({ align: item.value }, { range: BlockRenderRange.self, merge: options?.merge ? true : undefined });
         }
     }
     async onContextMenuClick(this: Block, item: MenuItem<string | BlockDirective>, event: React.MouseEvent<Element, MouseEvent>, clickName: string, mp: MenuPanel<any>) {
 
     }
-    async onClickContextMenu(this: Block, item: MenuItem<BlockDirective | string>, event: MouseEvent) {
+    async onClickContextMenu(this: Block, item: MenuItem<BlockDirective | string>, event: MouseEvent, options?: { merge?: boolean }) {
         if (this.isFreeBlock) {
             return await this.onClickBoardContextMenu(item, event);
         }
@@ -302,18 +306,20 @@ export class Block$Event {
                 break;
             case 'fontColor':
                 this.page.onAction('setFontStyle', async () => {
+                    if (options?.merge) this.page.snapshoot.merge();
                     this.pattern.setFontStyle({ color: item.value });
                     this.page.addBlockUpdate(this);
                 })
                 break;
             case 'fillColor':
                 this.page.onAction('setFillStyle', async () => {
+                    if (options?.merge) this.page.snapshoot.merge();
                     this.pattern.setFillStyle({ mode: 'color', color: item.value })
                     this.page.addBlockUpdate(this);
                 })
                 break;
             case 'text-center':
-                this.onUpdateProps({ align: item.value }, { range: BlockRenderRange.self });
+                this.onUpdateProps({ align: item.value }, { range: BlockRenderRange.self, merge: options?.merge ? true : undefined });
                 break;
         }
     }
@@ -414,8 +420,8 @@ export class Block$Event {
         })
     }
     async onLock(this: Block, locked: boolean) {
-        this.page.onAction(ActionDirective.onLock, async () => {
-            this.updateProps({
+        await this.page.onAction(ActionDirective.onLock, async () => {
+            await this.updateProps({
                 locker: {
                     lock: locked,
                     date: Date.now(),
