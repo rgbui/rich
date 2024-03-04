@@ -14,8 +14,8 @@ class ToolTipOverlay extends React.Component {
         })
     }
     render() {
-        if (this.visible !== true) return <div ref={e => this.el = e} className="shy-box-tip" style={{ display: 'none' }}></div>
-        return <div className="shy-box-tip" ref={e => this.el = e} style={{ top: this.point.y, left: this.point.x }}>
+        if (this.visible !== true) return <div ref={e => this.el = e} className="shy-box-tip" style={{ display: 'none', ...this.boxStyle }}></div>
+        return <div className="shy-box-tip" ref={e => this.el = e} style={{ top: this.point.y, left: this.point.x, ...this.boxStyle }}>
             <div className="shy-box-tip-overlay" style={this.overlayStyle} ref={e => this.overlayEl = e}>{this.overlay}</div>
         </div>
     }
@@ -28,33 +28,45 @@ class ToolTipOverlay extends React.Component {
     visible: boolean;
     point: Point = new Point(0, 0);
     mouseLeaveDelay?: number;
-    placement: OverlayPlacement = 'top';
+    placement: OverlayPlacement;
     overlayStyle?: CSSProperties = {};
+    boxStyle?: CSSProperties = {};
+    disabledAutoClose = false;
+    align: 'left' | 'right' | 'center' = 'center';
+    close: () => void;
     open(el: HTMLElement,
         options: {
             overlay: React.ReactNode,
             placement?: OverlayPlacement,
-            mouseLeaveDelay?: number;
+            mouseLeaveDelay?: number,
+            disabledAutoClose?: boolean,
+            boxStyle?: CSSProperties,
+            align?: 'left' | 'right' | 'center',
+            close?: () => void
         }) {
         this.tipEl = el;
         this.fvs.bind(this.tipEl);
+        this.close = options?.close || undefined;
         this.el.style.transform = 'none';
+        this.align = options?.align || 'center';
         this.mouseLeaveDelay = options.mouseLeaveDelay;
         this.overlay = options.overlay;
         this.placement = options.placement;
-        if (!this.placement) this.placement = 'top';
+        this.boxStyle = options.boxStyle || {};
+        this.disabledAutoClose = typeof options?.disabledAutoClose == 'boolean' ? options.disabledAutoClose : false;
         this.visible = true;
         this.forceUpdate(() => {
             this.adjustmentPosition();
         })
     }
-    close() {
+    onClose() {
         this.fvs.unbind();
         if (this.leaveTime) {
             clearTimeout(this.leaveTime);
             this.leaveTime = null;
         }
         this.visible = false;
+        if (this.close) this.close();
         this.forceUpdate();
     }
     adjustmentPosition() {
@@ -63,24 +75,50 @@ class ToolTipOverlay extends React.Component {
             var overlayRect = Rect.fromEle(this.overlayEl);
             var size = 10;
             this.overlayStyle = {};
-            switch (this.placement) {
+            var place = this.placement;
+            if (!place) {
+                if (overlayRect.top < 0) place = 'bottom'
+                else if (overlayRect.bottom > window.innerHeight) place = 'top'
+                else place = 'bottom'
+            }
+            switch (place) {
                 case 'top':
                     this.point.y = tipRect.top - size - overlayRect.height;
-                    this.point.x = tipRect.center - overlayRect.width / 2;
+                    if (this.align == 'center')
+                        this.point.x = tipRect.center - overlayRect.width / 2;
+                    else if (this.align == 'left')
+                        this.point.x = tipRect.x;
+                    else if (this.align == 'right')
+                        this.point.x = tipRect.right - overlayRect.width;
                     this.overlayStyle.marginBottom = size;
                     break;
                 case 'bottom':
                     this.point.y = tipRect.bottom;
-                    this.point.x = tipRect.center - overlayRect.width / 2;
+                    if (this.align == 'center')
+                        this.point.x = tipRect.center - overlayRect.width / 2;
+                    else if (this.align == 'left')
+                        this.point.x = tipRect.x;
+                    else if (this.align == 'right')
+                        this.point.x = tipRect.right - overlayRect.width;
                     this.overlayStyle.marginTop = size;
                     break;
                 case 'left':
-                    this.point.y = tipRect.middle - overlayRect.height / 2;
+                    if (this.align == 'center')
+                        this.point.y = tipRect.middle - overlayRect.height / 2;
+                    else if (this.align == 'left')
+                        this.point.y = tipRect.y;
+                    else if (this.align == 'right')
+                        this.point.y = tipRect.bottom - overlayRect.height;
                     this.point.x = tipRect.x - (overlayRect.width + size);
                     this.overlayStyle.marginRight = size;
                     break;
                 case 'right':
-                    this.point.y = tipRect.middle - overlayRect.height / 2;
+                    if (this.align == 'center')
+                        this.point.y = tipRect.middle - overlayRect.height / 2;
+                    else if (this.align == 'left')
+                        this.point.y = tipRect.y;
+                    else if (this.align == 'right')
+                        this.point.y = tipRect.bottom - overlayRect.height;
                     this.point.x = tipRect.right;
                     this.overlayStyle.marginLeft = size;
                     break;
@@ -97,6 +135,7 @@ class ToolTipOverlay extends React.Component {
     leaveTime;
     mousemove = (event: MouseEvent) => {
         if (this.visible == true) {
+            if (this.disabledAutoClose == true) return;
             var e = event.target as HTMLElement;
             if (this.el && this.tipEl) {
                 if (this.el.contains(e) || this.tipEl.contains(e)) {
@@ -107,7 +146,7 @@ class ToolTipOverlay extends React.Component {
                 this.leaveTime = setTimeout(() => {
                     clearTimeout(this.leaveTime);
                     this.leaveTime = null;
-                    this.close();
+                    this.onClose();
                 }, (this.mouseLeaveDelay || 0.1) * 1000);
         }
     }
@@ -120,7 +159,11 @@ var sc = new SyncLoad<ToolTipOverlay>()
 async function openOverlay(el: HTMLElement,
     options: {
         overlay: React.ReactNode,
-        placement?: OverlayPlacement
+        placement?: OverlayPlacement,
+        disabledAutoClose?: boolean,
+        boxStyle?: CSSProperties,
+        align?: 'left' | 'right' | 'center',
+        close?: () => void;
     }) {
     toolTipOverlay = await sc.create((c) => {
         ReactDOM.render(<ToolTipOverlay ref={e => c(e)}></ToolTipOverlay>,
@@ -139,11 +182,24 @@ export class BoxTip extends React.Component<{
     /**0.1s */
     mouseLeaveDelay?: number;
     placement?: OverlayPlacement,
+
+    boxStyle?: CSSProperties,
+    /**
+     * 支持鼠标点击时打开
+     */
+    mousedownOpen?: boolean,
     /**
      * 禁用鼠标按下关闭
      */
     disableMousedownClose?: boolean,
-    mousedownOpen?:boolean
+    /**
+     * 禁用鼠标进入时自动打开
+     * 禁用鼠标离开时自动关闭
+     */
+    disabledMouseEnterOrLeave?: boolean,
+    onClose?: () => void,
+    cacOverEle?: (el: HTMLElement) => HTMLElement,
+    align?: 'left' | 'right' | 'center',
 }>{
     el: HTMLElement;
     componentDidMount() {
@@ -166,8 +222,8 @@ export class BoxTip extends React.Component<{
         }
     }
     mousedown = (event: MouseEvent) => {
-        if(this.props.mousedownOpen==true){
-            this.mouseenter(event);
+        if (this.props.mousedownOpen == true) {
+            this.open()
             return;
         }
         if (this.props.disableMousedownClose == true) return;
@@ -175,6 +231,7 @@ export class BoxTip extends React.Component<{
     }
     enterTime;
     mouseenter = (event: MouseEvent) => {
+        if (this.props.disabledMouseEnterOrLeave == true) return;
         if (!this.props.overlay) return;
         if (this.props.disabled) return;
         if (this.enterTime) {
@@ -182,12 +239,12 @@ export class BoxTip extends React.Component<{
             this.enterTime = null;
         }
         this.enterTime = setTimeout(async () => {
-            clearTimeout(this.enterTime);
-            this.enterTime = null;
-            await openOverlay(this.el, { overlay: this.props.overlay, placement: this.props.placement })
+            this.open()
         }, (this.props.mouseEnterDelay || 0.6) * 1000);
     }
+
     mouseleave = async (event: MouseEvent) => {
+        if (this.props.disabledMouseEnterOrLeave == true) return;
         if (!this.props.overlay) return;
         if (this.props.disabled) return;
         if (this.enterTime) {
@@ -198,6 +255,37 @@ export class BoxTip extends React.Component<{
     render() {
         return this.props.children;
     }
+    /**
+     * 表示toolTipOverlay相对于当前元素是否可见
+     * toolTipOverlay只有一个实例，而currentVisible是针对当前元素的
+     */
+    currentVisible = false;
+    async open() {
+        clearTimeout(this.enterTime);
+        this.enterTime = null;
+        var el = this.el;
+        if (this.props.cacOverEle) el = this.props.cacOverEle(el);
+        this.currentVisible = true;
+        var self = this;
+        await openOverlay(el, {
+            overlay: this.props.overlay,
+            placement: this.props.placement,
+            disabledAutoClose: this.props.disabledMouseEnterOrLeave == true ? true : false,
+            boxStyle: this.props.boxStyle,
+            align: this.props.align,
+            close() {
+                self.currentVisible = false;
+            }
+        })
+    }
+    async toggle() {
+        if (toolTipOverlay?.visible) {
+            this.close()
+        }
+        else {
+            this.open()
+        }
+    }
     close() {
         if (!this.props.overlay) return;
         if (this.props.disabled) return;
@@ -205,8 +293,14 @@ export class BoxTip extends React.Component<{
             clearTimeout(this.enterTime);
             this.enterTime = null;
         }
-        if (toolTipOverlay) {
-            toolTipOverlay.close()
+        if (!toolTipOverlay) return;
+        if (toolTipOverlay?.visible == false) return;
+        if (this.currentVisible == true && toolTipOverlay) {
+            toolTipOverlay.onClose()
         }
+        if (this.currentVisible == true && this.props.onClose) {
+            this.props.onClose();
+        }
+        this.currentVisible = false;
     }
 }
