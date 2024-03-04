@@ -106,6 +106,9 @@ export class Head extends Block {
             type: MenuItemType.switch,
             checked: this.toggle
         })
+        rs.splice(at + (this.toggle == true ? 1 : 2), 0, {
+            type: MenuItemType.divide
+        })
         return rs;
     }
     async onContextMenuInput(item: MenuItem<BlockDirective | string>) {
