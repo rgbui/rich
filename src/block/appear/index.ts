@@ -53,6 +53,7 @@ export class AppearAnchor {
             var c = this.textContent;
             return c.length > 0 ? false : true;
         }
+        return false;
     }
     get at() {
         return this.block.appearAnchors.findIndex(g => g == this);
