@@ -61,8 +61,7 @@ export class Tab extends Block {
         this.createCarouselTime();
         if (isf) this.forceUpdate()
     }
-    async createInitTabItems()
-    {
+    async createInitTabItems() {
         this.blocks.childs = [];
         this.blocks.otherChilds = [];
         this.tabItems.push({ text: lst('选项卡1') })
@@ -384,8 +383,7 @@ export class Tab extends Block {
 
 @view('/tab')
 export class TabView extends BlockView<Tab>{
-    onResize(event: React.MouseEvent)
-    {
+    onResize(event: React.MouseEvent) {
         event.stopPropagation();
         var height = this.block.contentHeight;
         MouseDragger({
@@ -450,7 +448,18 @@ export class TabView extends BlockView<Tab>{
                         })}
                     </div>
                     {this.block.isCanEdit() && <><Tip text={'添加标签页'}><div className="sy-block-tab-plus visible flex-center round size-24  cursor item-hover" onMouseDown={e => this.block.onAddTabItem()}><Icon size={18} icon={PlusSvg}></Icon></div></Tip>
-                        <Tip text={'标签页菜单'}><div className="visible flex-center round size-24  cursor item-hover" onMouseDown={e => { e.stopPropagation(); this.block.onContextmenu(e.nativeEvent) }}>
+                        <Tip text={'标签页菜单'}><div className="visible flex-center round size-24  cursor item-hover" onMouseDown={async e => {
+                            e.stopPropagation();
+                            var ele = e.currentTarget as HTMLElement;
+                            ele.classList.remove('visible');
+                            try {
+                                await this.block.onContextmenu(e.nativeEvent)
+                            }
+                            catch (e) { }
+                            finally {
+                                ele.classList.add('visible');
+                            }
+                        }}>
                             <Icon size={18} icon={DotsSvg}></Icon></div></Tip>
                     </>}
                 </div>
