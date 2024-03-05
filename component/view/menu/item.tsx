@@ -241,9 +241,9 @@ export class MenuItemView extends React.Component<{
                             <span className="gap-l-10 f-12 text-1 inline-block ">{t.text}</span>
                         </a>
                     }
-                    return <a key={t.value} className={"flex-center flex-col cursor padding-5 gap-w-5 round item-hover " + (t.checked ? "item-hover-focus" : "")}
+                    return <a key={t.value} className={"flex-center flex-col cursor padding-5 gap-w-3  round item-hover " + (t.checked ? "item-hover-focus" : "")}
                         onMouseDown={e => { e.stopPropagation(); item.value = t.value; this.select(item, e.nativeEvent) }}>
-                        {item.name && item.name.indexOf('font') > -1 && <span className="size-24 flex-center circle  border" style={{ color: t.value }}>
+                        {item.name && item.name.indexOf('font') > -1 && <span className="size-20 flex-center circle  border" style={{ color: t.value }}>
                             A
                         </span>}
                         {!(item.name && item.name.indexOf('font') > -1) && <span className="size-20 circle   border" style={{ backgroundColor: t.value }}>
