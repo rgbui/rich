@@ -1,6 +1,6 @@
 import React from "react";
 import { BoardEditTool } from ".";
-import { BoardIconTextStylesSvg, FontcolorSvg } from "../../component/svgs";
+import { FontStyleSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { BoardBackgroundColorList, BoardTextFontColorList } from "../color/data";
 import { ColorListBox } from "../color/list";
@@ -8,7 +8,6 @@ import { lst } from "../../i18n/store";
 import { MeasureView } from "../../component/view/progress";
 import { S } from "../../i18n/view";
 import { Divider } from "../../component/view/grid";
-
 
 export function MindLineColor(props: {
     tool: BoardEditTool,
@@ -56,7 +55,6 @@ export function LineColor(props: { name: string, tool: BoardEditTool, value: str
     </div>
 }
 
-
 export function FillFontColor(props: {
     tool: BoardEditTool,
     fontColor: string,
@@ -72,12 +70,13 @@ export function FillFontColor(props: {
     var bgcolors = BoardBackgroundColorList();
     colors.splice(0, 0, { color: 'transparent', text: lst('透明') });
     var cs = props.noTransparent ? bgcolors.filter(g => g.color != 'transparent') : bgcolors;
-    console.log('props.fill', props.fillColor);
-    return <div className="shy-board-edit-font-color" >
-        <div className="shy-board-edit-font-color-current flex-center size-18 round" style={{
-            backgroundColor: props.fillColor
+    return <div className="shy-board-edit-font-color size-20" >
+        <div className="shy-board-edit-font-color-current flex-center size-20 round" style={{
+            // backgroundColor: props.fillColor
         }} onMouseDown={e => props.tool.showDrop('fontColor')}>
-            <Icon style={{ color: props.fontColor }} size={14} icon={FontcolorSvg}></Icon>
+            <Icon style={{
+                // color: props.fontColor
+            }} size={16} icon={FontStyleSvg}></Icon>
         </div>
         {props.tool.isShowDrop('fontColor') && <div
             style={{ width: 230 }}
@@ -148,8 +147,8 @@ export function FontTextAlign(props: {
                 {aligns.map((g, i) => {
                     return <span onMouseDown={e => {
                         props.change(g.value);
-                    }} key={i} className={"flex-center size-20 round" + (props.align == g.value ? " item-hover-focus link" : "item-hover-light")}>
-                        <Icon icon={g.icon as any} size={14}></Icon>
+                    }} key={i} className={"flex-center size-24 round" + (props.align == g.value ? " item-hover-focus link" : "item-hover-light")}>
+                        <Icon icon={g.icon as any} size={16}></Icon>
                     </span>
                 })}
             </div>
@@ -174,37 +173,37 @@ export function FontTextStyle(props: {
         <div className="shy-board-edit-background-color-current size-20 flex-center">
             <div className="size-20">
                 <Icon className={'pos pos-center text-1'} icon={
-                    { name: 'byte', code: 'text-style' }
+                    // { name: 'byte', code: 'text-style' }
+                    { name: 'byte', code: 'font-size-two' }
                     // BoardIconTextStylesSvg
-                } size={16}></Icon>
+                } size={15}></Icon>
             </div>
         </div>
-        {props.tool.isShowDrop(name) && <div style={{ top: 25, height: 30, width: 120, minHeight: 'auto', padding: '5px 0px' }} className=" shy-board-edit-background-color-drops flex r-item-hover r-round r-cursor r-gap-w-5">
+        {props.tool.isShowDrop(name) && <div style={{ top: 25, height: 30, width: 'auto', minHeight: 'auto',padding: '5px 0px' }} className=" shy-board-edit-background-color-drops flex r-item-hover r-round r-cursor r-gap-w-5">
             <span onMouseDown={e => {
                 props.change({
                     fontWeight: props.fontWeight == 'bold' || props.fontWeight == true || props.fontWeight > 500 ? "normal" : 'bold'
                 })
-            }} className={"size-20 flex-center " + (props.fontWeight == 'bold' || props.fontWeight == true || props.fontWeight > 500 ? " item-hover-focus link" : "")}><Icon size={14} icon={{ name: 'byte', code: 'text-bold' }}></Icon></span>
+            }} className={"size-24 flex-center " + (props.fontWeight == 'bold' || props.fontWeight == true || props.fontWeight > 500 ? " item-hover-focus link" : "")}><Icon size={16} icon={{ name: 'byte', code: 'text-bold' }}></Icon></span>
 
             <span onMouseDown={e => {
                 props.change({
                     fontStyle: props.fontStyle == 'itailc' || props.fontStyle == true ? false : true
                 })
-            }} className={"size-20 flex-center " + (props.fontStyle == 'itailc' || props.fontStyle == true ? " item-hover-focus link" : "")}><Icon size={14} icon={{ name: 'byte', code: 'text-italic' }} ></Icon></span>
+            }} className={"size-24 flex-center " + (props.fontStyle == 'itailc' || props.fontStyle == true ? " item-hover-focus link" : "")}><Icon size={16} icon={{ name: 'byte', code: 'text-italic' }} ></Icon></span>
 
             <span onMouseDown={e => {
                 props.change({
                     textDecoration: props.textDecoration == 'line-through' ? 'none' : 'line-through'
                 })
-            }} className={"size-20 flex-center " + (props.textDecoration == 'line-through' ? " item-hover-focus link" : "")}><Icon size={14} icon={{ name: 'byte', code: 'strikethrough' }}></Icon></span>
-
+            }} className={"size-24 flex-center " + (props.textDecoration == 'line-through' ? " item-hover-focus link" : "")}><Icon size={16} icon={{ name: 'byte', code: 'strikethrough' }}></Icon></span>
             <span
                 onMouseDown={e => {
                     props.change({
                         textDecoration: props.textDecoration == 'underline' ? 'none' : 'underline'
                     })
                 }}
-                className={"size-20 flex-center " + (props.textDecoration == 'underline' ? " item-hover-focus link" : "")}><Icon size={14} icon={{ name: 'byte', code: 'text-underline' }}></Icon></span>
+                className={"size-24 flex-center " + (props.textDecoration == 'underline' ? " item-hover-focus link" : "")}><Icon size={16} icon={{ name: 'byte', code: 'text-underline' }}></Icon></span>
         </div>}
     </div>
 }

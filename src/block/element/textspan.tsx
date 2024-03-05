@@ -297,7 +297,6 @@ export class TextSpanView extends BlockView<TextSpan>{
         if (this.block.placeholder)
             placeholder = this.block.placeholder;
         var visibleStyle = this.block.visibleStyle;
-        visibleStyle.minHeight = 40;
         return <div className='sy-block-text-span' style={visibleStyle}>
             <div style={style}>
                 <TextSpanArea placeholderEmptyVisible={this.block.isFreeBlock ? true : false} placeholder={placeholder} block={this.block}></TextSpanArea>
