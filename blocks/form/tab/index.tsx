@@ -258,7 +258,7 @@ export class Tab extends Block {
         var rs = await super.onGetContextMenus();
         var rg = rs.find(g => g.name == 'text-center');
         if (rg) {
-            rg.text = lst('标签项')
+            rg.text = lst('对齐');
             var pos = rs.findIndex(g => g == rg);
             var at = this.tabIndex;
             var ns: MenuItem<string | BlockDirective>[] = [];
