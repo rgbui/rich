@@ -56,16 +56,16 @@ export class Head extends Block {
             return await this.getChildsPlain();
         else return this.content;
     }
-    getVisibleHandleCursorPoint() {
-        var h = this.el.querySelector('.relative') as HTMLElement;
-        var bound = Rect.fromEle(h);
-        if (bound) {
-            var pos = Point.from(bound);
-            var lh = parseFloat(dom(h).style('lineHeight'));
-            pos = pos.move(0, 3 + lh / 2);
-            return pos;
-        }
-    }
+    // getVisibleHandleCursorPoint() {
+    //     var h = this.el.querySelector('.relative') as HTMLElement;
+    //     var bound = Rect.fromEle(h);
+    //     if (bound) {
+    //         var pos = Point.from(bound);
+    //         var lh = parseFloat(dom(h).style('lineHeight'));
+    //         pos = pos.move(0, 3 + lh / 2);
+    //         return pos;
+    //     }
+    // }
     async getHtml() {
         var tag = this.level;
         if (this.childs.length > 0) return `<${tag}>${this.getChildsHtml()}</${tag}>`
@@ -162,6 +162,14 @@ export class Head extends Block {
     dropLeave(this: Block) {
         var el = this.contentEl;
         dom(el).removeClass(g => g.startsWith('shy-block-drag-over'));
+    }
+    getVisibleHandleCursorPoint(): Point {
+        var ele = this.el.querySelector('.shy-appear-texts') as HTMLElement;
+        if (!ele) ele = this.el.querySelector('.shy-appear-text') as HTMLElement;
+        if (!ele) ele = this.el;
+        var rect = Rect.fromEle(ele);
+        var lh = dom(ele).lineHeight(20);
+        return rect.leftTop.move(0, lh / 2);
     }
 }
 @view("/head")

@@ -17,6 +17,7 @@ import { openBoardEditTool } from '../../kit/operator/board/edit';
 import { lst } from '../../../i18n/store';
 import { BlockUrlConstant } from '../constant';
 import { MenuItem, MenuItemType } from '../../../component/view/menu/declare';
+import { dom } from '../../common/dom';
 
 @url("/textspan")
 export class TextSpan extends Block {
@@ -211,20 +212,20 @@ export class TextSpan extends Block {
     }
     async setBoardEditCommand(name: string, value: any) {
         if (name == 'backgroundColor')
-          await  this.pattern.setFillStyle({ color: value, mode: 'color' });
+            await this.pattern.setFillStyle({ color: value, mode: 'color' });
         else if (name == 'fontColor')
-        await  this.pattern.setFontStyle({ color: value });
+            await this.pattern.setFontStyle({ color: value });
         else if (name == 'fontSize') {
             await this.updateProps({ fontScale: value / 14 })
             // this.pattern.setFontStyle({ fontSize: value, lineHeight: (value * 1.2) + 'px' });
         }
         else if (name == 'fontFamily') {
-            await   this.pattern.setFontStyle({ fontFamily: value })
+            await this.pattern.setFontStyle({ fontFamily: value })
         }
         else if (name == 'fontWeight')
-        await   this.pattern.setFontStyle({ fontWeight: value })
+            await this.pattern.setFontStyle({ fontWeight: value })
         else if (name == 'textDecoration')
-        await   this.pattern.setFontStyle({ textDecoration: value });
+            await this.pattern.setFontStyle({ textDecoration: value });
     }
     async onInputed(): Promise<void> {
         this.page.kit.picker.onRePicker();
@@ -277,8 +278,9 @@ export class TextSpan extends Block {
         var ele = this.el.querySelector('.shy-appear-texts') as HTMLElement;
         if (!ele) ele = this.el.querySelector('.shy-appear-text') as HTMLElement;
         if (!ele) ele = this.el;
+        var lh = dom(ele).lineHeight(20);
         var rect = Rect.fromEle(ele);
-        return rect.leftTop.move(0, 10);
+        return rect.leftTop.move(0, lh / 2);
     }
 }
 
