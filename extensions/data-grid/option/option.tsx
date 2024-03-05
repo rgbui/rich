@@ -96,7 +96,7 @@ export class TableStoreOption extends EventsComponent {
                         return <div className="shy-tablestore-option-item" key={op.text} onClick={e => this.setOption(op)} >
                             {this.isEdit && <span className="shy-tablestore-option-item-icon"><DragHandle></DragHandle></span>}
                             <span className="shy-tablestore-option-item-text text-overflow"><em className=" f-14 padding-h-2  l-16 " style={{ backgroundColor: op.color }}>{op.text}</em></span>
-                            {this.ovs.some(c => c.value == op.value) && <span className="flex-fixed size-20 flex-center gap-r-3"><Icon size={16} icon={CheckSvg}></Icon></span>}
+                            {this.ovs.some(c => c.value == op.value) && <span className="flex-fixed size-20 flex-center gap-r-3 text-1"><Icon size={16} icon={CheckSvg}></Icon></span>}
                             {this.isEdit && <span className="shy-tablestore-option-item-property" onClick={e => this.configOption(op, e)}><Dots></Dots></span>}
                         </div>
                     })}
