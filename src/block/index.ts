@@ -41,6 +41,14 @@ export abstract class Block extends Events {
         if (typeof this._init == 'function') this._init();
         if (typeof this.init == 'function') this.init();
     }
+    @prop()
+    creater: string;
+    @prop()
+    createDate: number;
+    @prop()
+    editor: string;
+    @prop()
+    editorDate: number;
     /**
      * 建立栅格索引
      */
@@ -662,7 +670,7 @@ export abstract class Block extends Events {
         if (this.url == BlockUrlConstant.BoardPageCard) return true;
         if (this.closest(g => g.url == BlockUrlConstant.BoardPageCard)) return false;
         var table = this.closest(x => x.url == BlockUrlConstant.Table);
-        if (table&&table!==this) return false;
+        if (table && table !== this) return false;
         if (this.page.pageLayout.type == PageLayoutType.board) return true;
         return this.closest(x => x.isFrame || x.isBoardBlock) ? true : false;
     }
