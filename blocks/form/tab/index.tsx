@@ -18,7 +18,6 @@ import { Tip } from "../../../component/view/tooltip/tip";
 import lodash from "lodash";
 import { BackgroundColorList } from "../../../extensions/color/data";
 import { ghostView } from "../../../src/common/ghost";
-import { util } from "../../../util/util";
 import "./style.less";
 
 @url('/tab')
@@ -36,7 +35,7 @@ export class Tab extends Block {
     @prop()
     contentHeight: number = 200;
     @prop()
-    autoContentHeight: boolean = true;
+    autoContentHeight: boolean = false;
     @prop()
     displayMode: 'border' | 'top-line' | 'button' = 'top-line';
     @prop()
@@ -62,7 +61,8 @@ export class Tab extends Block {
         this.createCarouselTime();
         if (isf) this.forceUpdate()
     }
-    async createInitTabItems() {
+    async createInitTabItems()
+    {
         this.blocks.childs = [];
         this.blocks.otherChilds = [];
         this.tabItems.push({ text: lst('选项卡1') })
@@ -73,7 +73,6 @@ export class Tab extends Block {
 
         this.tabItems.push({ text: lst('选项卡3') })
         this.blocks.otherChilds.push(await BlockFactory.createBlock('/tab/page', this.page, { blocks: { childs: [{ url: BlockUrlConstant.TextSpan, content: '' }] } }, this));
-        
 
     }
     async onAddTabItem() {
@@ -254,7 +253,7 @@ export class Tab extends Block {
         return this.otherChilds[this.tabIndex];
     }
     @prop()
-    align: 'left' | 'center' = 'left';
+    align: 'left' | 'center' | 'right' = 'left';
     async onGetContextMenus() {
         var rs = await super.onGetContextMenus();
         var rg = rs.find(g => g.name == 'text-center');
@@ -373,18 +372,20 @@ export class Tab extends Block {
         return (this.view as any).tabPages as HTMLElement;
     }
     getVisibleHandleCursorPoint() {
-        var bound = this.getVisibleContentBound()
-        if (bound) {
-            var pos = Point.from(bound);
-            pos = pos.move(0, 3 + 4 + util.remToPx(this.page.lineHeight) / 2);
-            return pos;
+        if (this.el) {
+            var e = this.el.querySelector('.sy-block-tab-items-panel') as HTMLElement;
+            if (e) {
+                var rect = Rect.fromEle(e);
+                return rect.leftMiddle
+            }
         }
     }
 }
 
 @view('/tab')
 export class TabView extends BlockView<Tab>{
-    onResize(event: React.MouseEvent) {
+    onResize(event: React.MouseEvent)
+    {
         event.stopPropagation();
         var height = this.block.contentHeight;
         MouseDragger({
@@ -410,6 +411,9 @@ export class TabView extends BlockView<Tab>{
         }
         if (this.props.block.align == 'center') {
             itemStyle.justifyContent = 'center'
+        }
+        else if (this.props.block.align == 'right') {
+            itemStyle.justifyContent = 'flex-end'
         }
         var innerStyle: CSSProperties = {
             backgroundColor: this.block.contentStyle.backgroundColor,
@@ -446,10 +450,9 @@ export class TabView extends BlockView<Tab>{
                         })}
                     </div>
                     {this.block.isCanEdit() && <><Tip text={'添加标签页'}><div className="sy-block-tab-plus visible flex-center round size-24  cursor item-hover" onMouseDown={e => this.block.onAddTabItem()}><Icon size={18} icon={PlusSvg}></Icon></div></Tip>
-                        <div className="pos-right-full">
-                            <Tip text={'标签页菜单'}><div className="visible flex-center round size-24  cursor item-hover" onMouseDown={e => { e.stopPropagation(); this.block.onContextmenu(e.nativeEvent) }}>
-                                <Icon size={18} icon={DotsSvg}></Icon></div></Tip>
-                        </div></>}
+                        <Tip text={'标签页菜单'}><div className="visible flex-center round size-24  cursor item-hover" onMouseDown={e => { e.stopPropagation(); this.block.onContextmenu(e.nativeEvent) }}>
+                            <Icon size={18} icon={DotsSvg}></Icon></div></Tip>
+                    </>}
                 </div>
                 <div ref={e => this.tabPages = e} className={"sy-block-tab-pages " + (this.block.border == "border" ? "sy-block-tab-pages-border" : "")} style={{
                     ...innerStyle,

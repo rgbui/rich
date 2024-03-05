@@ -1,6 +1,5 @@
 import React from "react";
 import { Icon } from "../../component/view/icon";
-import { BoxTip } from "../../component/view/tooltip/box";
 import { useIconPicker } from "../../extensions/icon";
 import { IconArguments } from "../../extensions/icon/declare";
 import { Block } from "../../src/block";
@@ -70,14 +69,13 @@ export class BlockIcon extends Block {
 export class BlockIconView extends BlockView<BlockIcon>{
     async openEdit(event: React.MouseEvent) {
         event.stopPropagation();
-        if (this.boxTip) this.boxTip.close()
         var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) }, this.block.src);
         if (typeof icon != 'undefined') {
             if (icon == null) this.block.onDelete()
             else this.block.onUpdateProps({ src: icon }, { range: BlockRenderRange.self });
         }
     }
-    boxTip: BoxTip;
+    
     renderView() {
         var icon = this.block.src;
         if (icon.code && (icon as any).mime) {
