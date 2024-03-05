@@ -81,6 +81,7 @@ export class LangStore {
         }
     }
     get isCn() {
+        // return false;
         return this.lang == 'Chinese';
     }
     is(lang: Langs) {

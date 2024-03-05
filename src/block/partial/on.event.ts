@@ -151,6 +151,7 @@ export class Block$Event {
             text: lst('颜色'),
             icon: BlockcolorSvg,
             name: 'color',
+          
             childs: [
                 {
                     text: lst('文字颜色'),

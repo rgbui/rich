@@ -266,21 +266,21 @@ export class Block$Board {
     }
     async setBoardEditCommand(this: Block, name: string, value: any): Promise<boolean | void> {
         if (name == 'fontSize') {
-            await   this.pattern.setFontStyle({ fontSize: value });
+            await this.pattern.setFontStyle({ fontSize: value });
         }
         else if (name == 'fontWeight') {
-            await   this.pattern.setFontStyle({ fontWeight: value });
+            await this.pattern.setFontStyle({ fontWeight: value });
         } else if (name == 'fontFamily') {
-            await  this.pattern.setFontStyle({ fontFamily: value })
+            await this.pattern.setFontStyle({ fontFamily: value })
         }
         else if (name == 'fontStyle') {
-            await  this.pattern.setFontStyle({ fontStyle: value == true || value == 'italic' ? 'italic' : 'normal' });
+            await this.pattern.setFontStyle({ fontStyle: value == true || value == 'italic' ? 'italic' : 'normal' });
         }
         else if (name == 'textDecoration') {
-            await  this.pattern.setFontStyle({ textDecoration: value });
+            await this.pattern.setFontStyle({ textDecoration: value });
         }
         else if (name == 'fontColor') {
-            await  this.pattern.setFontStyle({ color: value });
+            await this.pattern.setFontStyle({ color: value });
         }
         else if (name == 'fillColor') {
 

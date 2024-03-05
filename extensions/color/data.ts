@@ -60,47 +60,6 @@ export var OptionBackgroundColorList = () => {
 
 
 export var BoardBackgroundColorList = () => {
-    // var colors: ColorType[] = [
-    //     { color: 'rgb(255,255,255)' },
-    //     { color: 'rgb(254,244,69)' },
-    //     { color: 'rgb(250,199,16)' },
-    //     { color: 'rgb(242,71,38)' },
-    //     { color: 'rgb(230,230,230)' },
-    //     { color: 'rgb(206,231,65)' },
-    //     { color: 'rgb(143,209,79)' },
-    //     { color: 'rgb(218,0,99)' },
-    //     { color: 'rgb(128,128,128)' },
-    //     { color: 'rgb(18,205,212)' },
-    //     { color: 'rgb(12,167,137)' },
-    //     { color: 'rgb(149,16,172)' },
-    //     { color: 'rgb(26,26,26)' },
-    //     { color: 'rgb(45,155,240)' },
-    //     { color: 'rgb(101,44,179)' },
-    //     { color: 'rgb(255,249,177)' }
-    // ]
-    // return colors;
-    // return [
-    //     // { "color": "#ffffff", "text": "No color" },
-    //     { "color": "#ffffff", "text": "White" },
-    //     { "color": "#fef445", "text": "Light Yellow" },
-    //     { "color": "#fac710", "text": "Yellow" },
-    //     { "color": "#f24726", "text": "Red" },
-    //     { "color": "#e6e6e6", "text": "Light Gray" },
-    //     { "color": "#cee741", "text": "Light Green" },
-    //     { "color": "#8fd14f", "text": "Green" },
-    //     { "color": "#da0063", "text": "Magenta" },
-    //     { "color": "#808080", "text": "Gray" },
-    //     { "color": "#12cdd4", "text": "Cyan" },
-    //     { "color": "#0ca789", "text": "Dark Green" },
-    //     { "color": "#652cb3", "text": "Purple" },
-    //     { "color": "#1a1a1a", "text": "Black" },
-    //     { "color": "#2d9bf0", "text": "Blue" },
-    //     { "color": "#414bb2", "text": "Dark Blue" },
-    //     { "color": "#9510ac", "text": "Violet" },
-    //     { "color": "#fff9b1", "text": "Light Yellow" },
-    //     { "color": "#883e3e", "text": "#883e3e" },
-    //     { "color": "#2d9bf0", "text": "Blue" }
-    // ] as ColorType[]
     return [
         { "color": "rgb(0,0,0)" },
         { "color": "rgb(50,50,50)" },
