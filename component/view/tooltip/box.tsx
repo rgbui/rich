@@ -90,6 +90,9 @@ class ToolTipOverlay extends React.Component {
                         this.point.x = tipRect.x;
                     else if (this.align == 'right')
                         this.point.x = tipRect.right - overlayRect.width;
+                    if (this.point.x < 0) this.point.x = 20;
+                    else if (this.point.x + overlayRect.width > window.innerWidth) this.point.x = window.innerWidth - overlayRect.width - 20;
+
                     this.overlayStyle.marginBottom = size;
                     break;
                 case 'bottom':
@@ -100,6 +103,8 @@ class ToolTipOverlay extends React.Component {
                         this.point.x = tipRect.x;
                     else if (this.align == 'right')
                         this.point.x = tipRect.right - overlayRect.width;
+                    if (this.point.x < 0) this.point.x = 20;
+                    else if (this.point.x + overlayRect.width > window.innerWidth) this.point.x = window.innerWidth - overlayRect.width - 20;
                     this.overlayStyle.marginTop = size;
                     break;
                 case 'left':
