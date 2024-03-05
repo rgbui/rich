@@ -171,7 +171,7 @@ class TextTool extends EventsComponent {
                         <Icon className={'remark'} size={12} icon={ChevronDownSvg}></Icon>
                     </div>
                 </Tip>
-
+                <div className="shy-tool-text-menu-devide"></div>
                 <Tip text={'双链'} >
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.page == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.page != true ? TextCommand.doubleLink : undefined, e)}>
                         <span className="size-20 flex-center">  <Icon size={22} icon={DoubleLinkSvg}></Icon></span>
