@@ -33,6 +33,7 @@ export class Block$Operator {
             catch (ex) {
                 this.page.onError(ex)
             }
+            await this.page.onNotifyEditBlock(this);
             this.page.snapshoot.record(OperatorDirective.$delete, {
                 pos: this.pos,
                 data: await this.get()
@@ -82,12 +83,14 @@ export class Block$Operator {
         var data = await this.getWillTurnData(url);
         if (da) Object.assign(data, da);
         var newBlock = await BlockFactory.createBlock(url, this.page, data, this.parent);
+        await this.page.onNotifyCreateBlock(newBlock);
         var bs = this.parent.blocks[this.parentKey];
         bs.insertAt(this.at, newBlock);
         bs.remove(g => g == this);
         newBlock.id = this.id;
         this.page.monitorBlockOperator(newBlock, 'turn');
         this.page.addBlockUpdate(newBlock.parent);
+        await this.page.onNotifyEditBlock(this);
         this.page.snapshoot.record(OperatorDirective.$turn, {
             pos: newBlock.pos,
             from: oldUrl,
@@ -229,6 +232,7 @@ export class Block$Operator {
         block.parent = this;
         this.page.monitorBlockOperator(block.parent, 'to', block);
         this.page.addBlockChange(block.parent);
+        await this.page.onNotifyEditBlock(this);
         this.page.snapshoot.record(OperatorDirective.$move, {
             from,
             to: block.pos
@@ -303,6 +307,7 @@ export class Block$Operator {
         var from = this.pos;
         var ps = this.parentBlocks;
         ps.move(this, at);
+        await this.page.onNotifyEditBlock(this);
         this.page.snapshoot.record(OperatorDirective.$move, {
             from,
             to: this.pos
@@ -556,13 +561,17 @@ export class Block$Operator {
                 if (this.__props.some(p => n == p || n.startsWith(p + "."))) continue
                 else { delete newValue[n]; delete oldValue[n] }
             }
-            if (Object.keys(newValue).length > 0)
+            if (Object.keys(newValue).length > 0) {
+                var keys = Object.keys(newValue);
+                if (!(keys.includes('editor') || keys.includes('editDate')))
+                    await this.page.onNotifyEditBlock(this);
                 this.page.snapshoot.record(OperatorDirective.$update, {
                     pos: this.pos,
                     old_value: oldValue,
                     new_value: newValue,
                     range
                 }, this);
+            }
         }
     }
     /**

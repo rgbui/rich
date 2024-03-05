@@ -22,7 +22,7 @@ import { lst } from "../../../i18n/store";
 import { Matrix } from "../../common/matrix";
 import { useImportFile } from "../../../extensions/import-file";
 import { buildPage } from "../common/create";
-import { AiStartSvg, DuplicateSvg } from "../../../component/svgs";
+
 
 export class Page$Operator {
     /**
@@ -35,6 +35,7 @@ export class Page$Operator {
     */
     async createBlock(this: Page, url: string, data: Record<string, any>, parent: Block, at?: number, childKey?: string) {
         var block = await BlockFactory.createBlock(url, this, data, parent);
+        await this.onNotifyCreateBlock(block);
         if (parent) {
             if (typeof childKey == 'undefined') childKey = block.isLine ? BlockChildKey.childs : (parent?.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
             if (!parent.allBlockKeys.some(s => s == childKey)) {
@@ -310,7 +311,7 @@ export class Page$Operator {
             case 'fontColor':
                 this.onAction('setFontStyle', async () => {
                     await blocks.eachAsync(async (block) => {
-                        block.pattern.setFontStyle({ color: item.value });
+                        await  block.pattern.setFontStyle({ color: item.value });
                         this.addBlockUpdate(block);
                     })
                 })
@@ -318,7 +319,7 @@ export class Page$Operator {
             case 'fillColor':
                 this.onAction('setFillStyle', async () => {
                     await blocks.eachAsync(async (block) => {
-                        block.pattern.setFillStyle({ mode: 'color', color: item.value })
+                        await  block.pattern.setFillStyle({ mode: 'color', color: item.value })
                         this.addBlockUpdate(block);
                     })
                 })

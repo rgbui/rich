@@ -20,7 +20,7 @@ import { GridMap } from '../../../page/grid';
 @url('/frame')
 export class Frame extends Block {
     async created(this: Block): Promise<void> {
-        this.pattern.setFillStyle({ color: '#fff' });
+        await  this.pattern.setFillStyle({ color: '#fff' });
     }
     get isEnterCreateNewLine(): boolean {
         return false;
@@ -108,7 +108,7 @@ export class Frame extends Block {
     }
     async setBoardEditCommand(this: Block, name: string, value: any) {
         if (name == 'backgroundColor')
-            this.pattern.setFillStyle({ color: value, mode: 'color' });
+        await  this.pattern.setFillStyle({ color: value, mode: 'color' });
         else if (name == 'frameFormat') {
             var props: Record<string, any> = {}
             if (value == '1:1') {

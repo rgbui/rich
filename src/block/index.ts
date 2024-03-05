@@ -48,7 +48,7 @@ export abstract class Block extends Events {
     @prop()
     editor: string;
     @prop()
-    editorDate: number;
+    editDate: number;
     /**
      * 建立栅格索引
      */

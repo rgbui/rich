@@ -310,7 +310,7 @@ export class Table extends Block {
                         await this.page.onAction('setFontStyle', async () => {
                             var cs = this.blocks.childs.map(c => c.childs[colIndex]);
                             await cs.eachAsync(async c => {
-                                c.pattern.setFontStyle({ color: result.item.value });
+                              await  c.pattern.setFontStyle({ color: result.item.value });
                             })
                         })
                         break;
@@ -318,7 +318,7 @@ export class Table extends Block {
                         await this.page.onAction('setFillStyle', async () => {
                             var cs = this.blocks.childs.map(c => c.childs[colIndex]);
                             await cs.eachAsync(async c => {
-                                c.pattern.setFillStyle({ mode: 'color', color: result.item.value })
+                               await c.pattern.setFillStyle({ mode: 'color', color: result.item.value })
                             })
                         })
                         break;
@@ -427,7 +427,7 @@ export class Table extends Block {
                     await this.page.onAction('setFontStyle', async () => {
                         var cs = this.childs[rowIndex].childs;
                         await cs.eachAsync(async c => {
-                            c.pattern.setFontStyle({ color: result.item.value });
+                          await  c.pattern.setFontStyle({ color: result.item.value });
                         })
                     })
                     break;
@@ -435,7 +435,7 @@ export class Table extends Block {
                     await this.page.onAction('setFillStyle', async () => {
                         var cs = this.childs[rowIndex].childs;
                         await cs.eachAsync(async c => {
-                            c.pattern.setFillStyle({ mode: 'color', color: result.item.value })
+                          await  c.pattern.setFillStyle({ mode: 'color', color: result.item.value })
                         })
                     })
                     break;

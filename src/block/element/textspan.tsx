@@ -211,20 +211,20 @@ export class TextSpan extends Block {
     }
     async setBoardEditCommand(name: string, value: any) {
         if (name == 'backgroundColor')
-            this.pattern.setFillStyle({ color: value, mode: 'color' });
+          await  this.pattern.setFillStyle({ color: value, mode: 'color' });
         else if (name == 'fontColor')
-            this.pattern.setFontStyle({ color: value });
+        await  this.pattern.setFontStyle({ color: value });
         else if (name == 'fontSize') {
             await this.updateProps({ fontScale: value / 14 })
             // this.pattern.setFontStyle({ fontSize: value, lineHeight: (value * 1.2) + 'px' });
         }
         else if (name == 'fontFamily') {
-            this.pattern.setFontStyle({ fontFamily: value })
+            await   this.pattern.setFontStyle({ fontFamily: value })
         }
         else if (name == 'fontWeight')
-            this.pattern.setFontStyle({ fontWeight: value })
+        await   this.pattern.setFontStyle({ fontWeight: value })
         else if (name == 'textDecoration')
-            this.pattern.setFontStyle({ textDecoration: value });
+        await   this.pattern.setFontStyle({ textDecoration: value });
     }
     async onInputed(): Promise<void> {
         this.page.kit.picker.onRePicker();

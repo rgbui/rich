@@ -496,7 +496,7 @@ export class PageWrite {
                         nstart = rs[1];
                         nend = rs[1]
                     }
-                    if (styles) { nstart.pattern.setStyles(styles); }
+                    if (styles) { await  nstart.pattern.setStyles(styles); }
                     if (props) { await nstart.updateProps(props); }
                     so = 0;
                     no = nend.content.length;
@@ -542,8 +542,8 @@ export class PageWrite {
                     no = 0;
                 }
                 if (styles) {
-                    if (na) na.pattern.setStyles(styles);
-                    if (ea) ea.pattern.setStyles(styles);
+                    if (na) await  na.pattern.setStyles(styles);
+                    if (ea) await  ea.pattern.setStyles(styles);
                 }
                 if (props) {
                     if (na) await na.updateProps(props);

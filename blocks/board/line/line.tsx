@@ -22,7 +22,7 @@ export type PortLocation = {
 @url('/line')
 export class Line extends Block {
     async created() {
-        this.pattern.setSvgStyle({
+        await   this.pattern.setSvgStyle({
             strokeWidth: 3,
             stroke: 'rgb(0,198,145)'
         });
@@ -309,7 +309,7 @@ export class Line extends Block {
     }
     async setBoardEditCommand(name: string, value: any) {
         if (name == 'backgroundColor') {
-            this.pattern.setSvgStyle({ stroke: value })
+            await  this.pattern.setSvgStyle({ stroke: value })
         }
         else if (name == 'lineType') {
             await this.updateProps({ [name]: value }, BlockRenderRange.self);
@@ -318,7 +318,7 @@ export class Line extends Block {
             await this.updateProps({ [name]: value }, BlockRenderRange.self);
         }
         else if (['strokeWidth', 'strokeDasharray'].includes(name)) {
-            this.pattern.setSvgStyle({ [name]: value });
+            await  this.pattern.setSvgStyle({ [name]: value });
         }
     }
     getVisiblePolygon() {

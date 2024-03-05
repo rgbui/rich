@@ -69,28 +69,31 @@ export class Pattern {
         var st = this.styles.find(x => x.name == name);
         return st;
     }
-    setStyle(cssName: BlockCssName, style: Record<string, any>) {
+    async setStyle(cssName: BlockCssName, style: Record<string, any>) {
         var name = this.block.patternState;
         var st = this.styles.find(x => x.name == name);
         if (st) {
             var old = st.get();
             st.merge(BlockCss.createBlockCss(Object.assign({ cssName }, style)));
-            if (this.block.page.snapshoot.canRecord)
+            if (this.block.page.snapshoot.canRecord) {
+                await this.block.page.onNotifyEditBlock(this.block);
                 this.block.page.snapshoot.record(OperatorDirective.$merge_style, {
                     pos: st.pos,
                     old_value: old,
                     new_value: st.get()
                 }, this.block)
+            }
             this.block.page.addBlockUpdate(this.block);
         }
         else {
-            this.createStyle({ name: name, cssList: [Object.assign({ cssName }, style)] });
+            await this.createStyle({ name: name, cssList: [Object.assign({ cssName }, style)] });
         }
     }
-    updateStyle(styleId: string, styleData: Record<string, any>) {
+    async updateStyle(styleId: string, styleData: Record<string, any>) {
         var style = this.styles.find(g => g.id == styleId);
         var old = style.get();
         style.load(styleData);
+        await this.block.page.onNotifyEditBlock(this.block);
         this.block.page.snapshoot.record(OperatorDirective.$merge_style, {
             pos: style.pos,
             old_value: old,
@@ -98,9 +101,10 @@ export class Pattern {
         }, this.block)
         this.block.page.addBlockUpdate(this.block);
     }
-    deleteStyle(styleId: string) {
+    async deleteStyle(styleId: string) {
         var style = this.styles.find(g => g.id == styleId);
         if (style) {
+            await this.block.page.onNotifyEditBlock(this.block);
             this.block.page.snapshoot.record(OperatorDirective.$delete_style, {
                 pos: style.pos,
                 data: style.get()
@@ -109,29 +113,30 @@ export class Pattern {
         }
         this.block.page.addBlockUpdate(this.block);
     }
-    createStyle(styleData: Record<string, any>) {
+    async createStyle(styleData: Record<string, any>) {
         var sty = new BlockStyleCss(styleData, this);
         this.styles.push(sty);
+        await this.block.page.onNotifyEditBlock(this.block);
         this.block.page.snapshoot.record(OperatorDirective.$insert_style, {
             pos: sty.pos,
             data: sty.get()
         }, this.block);
         this.block.page.addBlockUpdate(this.block);
     }
-    setFontStyle(style: Partial<FontCss>) {
-        this.setStyle(BlockCssName.font, style);
+    async setFontStyle(style: Partial<FontCss>) {
+        await this.setStyle(BlockCssName.font, style);
     }
-    setFillStyle(style: Partial<FillCss>) {
-        this.setStyle(BlockCssName.fill, style);
+    async setFillStyle(style: Partial<FillCss>) {
+        await this.setStyle(BlockCssName.fill, style);
     }
-    setSvgStyle(style: Partial<SvgCss>) {
-        this.setStyle(BlockCssName.svg, style);
+    async setSvgStyle(style: Partial<SvgCss>) {
+        await this.setStyle(BlockCssName.svg, style);
     }
-    setStyles(styles: Record<BlockCssName, Record<string, any>>) {
+    async setStyles(styles: Record<BlockCssName, Record<string, any>>) {
         if (!styles || lodash.isObject(styles) && Object.keys(styles).length == 0) return;
         for (var n in styles) {
             var name = typeof n == 'string' ? BlockCssName[n] : n;
-            this.setStyle(name, styles[n]);
+            await this.setStyle(name, styles[n]);
         }
     }
     css(cssName: BlockCssName) {

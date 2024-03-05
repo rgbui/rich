@@ -200,7 +200,7 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                         await rowBlock.updateProps({ content: '' });
                     }
                     var newBlock = await rowBlock.appendBlock({ url: BlockUrlConstant.Text, content: mr.matchValue });
-                    if (rule.style) newBlock.pattern.setStyles(rule.style);
+                    if (rule.style)  await newBlock.pattern.setStyles(rule.style);
                     if (rule.props) newBlock.updateProps(rule.props);
                     if (rest) await rowBlock.appendBlock({ url: BlockUrlConstant.Text, pattern, content: rest });
                     write.kit.page.addUpdateEvent(async () => {

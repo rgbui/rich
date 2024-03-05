@@ -19,7 +19,7 @@ export class Pen extends Block {
     @prop()
     pathString: string = '';
     async created() {
-        this.pattern.setSvgStyle({
+        await  this.pattern.setSvgStyle({
             strokeWidth: 3,
             stroke: 'rgb(0,198,145)'
         });
@@ -32,10 +32,10 @@ export class Pen extends Block {
     }
     async setBoardEditCommand(name: string, value: any) {
         if (name == 'tickness') {
-            this.pattern.setSvgStyle({ strokeWidth: value })
+            await   this.pattern.setSvgStyle({ strokeWidth: value })
         }
         else if (name == 'backgroundColor') {
-            this.pattern.setSvgStyle({ stroke: value })
+            await   this.pattern.setSvgStyle({ stroke: value })
         }
     }
     getVisibleBound(): Rect {

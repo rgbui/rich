@@ -474,13 +474,31 @@ export class PageEvent {
         event.stopPropagation();
         var pd = this.getPageDataInfo();
         var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) }, pd.icon);
-        console.log('ggg', icon);
         if (typeof icon != 'undefined') {
             await this.onUpdatePageData({ icon })
         }
     }
     async onSaveAndPublish(this: Page) {
 
+    }
+    /**
+     * 这里表示刚创建的block,是新的
+     * 不是通过load创建
+     * @param block 
+     */
+    async onNotifyCreateBlock(this: Page, block: Block) {
+        block.creater = this.user?.id;
+        block.createDate = Date.now();
+        block.editor = this.user?.id;
+        block.editDate = Date.now();
+    }
+    async onNotifyEditBlock(this: Page, block: Block) {
+        if (this.user) {
+            await block.updateProps({
+                editor: this.user.id,
+                editDate: Date.now()
+            })
+        }
     }
     async onUpdatePermissions(this: Page, data: Record<string, any>) {
         if ([

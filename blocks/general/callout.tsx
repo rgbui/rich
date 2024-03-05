@@ -23,7 +23,7 @@ export class Callout extends TextSpan {
     }
     async initialedLoad(this: Block): Promise<void> {
         if (!this.pattern.getFillStyle()?.color) {
-            this.pattern.setFillStyle({ color: 'rgba(237,233,235,0.5)' })
+            await  this.pattern.setFillStyle({ color: 'rgba(237,233,235,0.5)' })
         }
     }
     get appearAnchors() {

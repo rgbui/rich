@@ -33,15 +33,15 @@ export class BlockCache {
 export async function setBoardBlockCache(block: Block, defaultData?: Record<string, any>) {
     var url = block.url;
     async function setFontStyle() {
-        var ps = await BlockCache.getJSON(url,'fontSize', 'fontWeight', 'fontFamily', 'textDecoration');
-        block.pattern.setFontStyle(ps);
+        var ps = await BlockCache.getJSON(url, 'fontSize', 'fontWeight', 'fontFamily', 'textDecoration');
+        await block.pattern.setFontStyle(ps);
         var fs = await BlockCache.get(url, 'fontStyle');
         if (!lodash.isUndefined(fs)) {
-            block.pattern.setFontStyle({ fontStyle: fs ? 'italic' : 'normal' });
+            await block.pattern.setFontStyle({ fontStyle: fs ? 'italic' : 'normal' });
         }
         var fc = await BlockCache.get(url, 'fontColor');
         if (!lodash.isUndefined(fc)) {
-            block.pattern.setFontStyle({ color: fc });
+            await block.pattern.setFontStyle({ color: fc });
         }
     }
     function removeDefault(d) {
@@ -55,33 +55,33 @@ export async function setBoardBlockCache(block: Block, defaultData?: Record<stri
         case BlockUrlConstant.Line:
             var bg = await BlockCache.get(url, 'backgroundColor');
             if (!lodash.isUndefined(bg)) {
-                block.pattern.setSvgStyle({ stroke: bg })
+                await block.pattern.setSvgStyle({ stroke: bg })
             }
             var ps = await BlockCache.getJSON(url, 'lineStart', 'lineEnd', 'lineType');
             removeDefault(ps);
             await block.updateProps(ps, BlockRenderRange.self);
             var svg = await BlockCache.getJSON(url, 'strokeWidth', 'strokeDasharray');
             removeDefault(svg);
-            block.pattern.setSvgStyle(svg);
+            await block.pattern.setSvgStyle(svg);
             break;
         case BlockUrlConstant.Shape:
             var svg = await BlockCache.getJSON(url, 'stroke', 'strokeDasharray', 'strokeOpacity', 'strokeWidth', 'fillOpacity');
             removeDefault(svg);
-            block.pattern.setSvgStyle(svg);
+            await  block.pattern.setSvgStyle(svg);
             var g = await BlockCache.get(url, 'fillColor');
             if (!lodash.isUndefined(g)) {
-                block.pattern.setSvgStyle({ fill: g })
+                await block.pattern.setSvgStyle({ fill: g })
             }
             await setFontStyle();
             break;
         case BlockUrlConstant.Pen:
             var g = await BlockCache.get(url, 'tickness');
             if (typeof g != 'undefined') {
-                block.pattern.setSvgStyle({ strokeWidth: g })
+                await block.pattern.setSvgStyle({ strokeWidth: g })
             }
             var bg = await BlockCache.get(url, 'backgroundColor');
             if (!lodash.isUndefined(bg)) {
-                block.pattern.setSvgStyle({ stroke: bg })
+                await block.pattern.setSvgStyle({ stroke: bg })
             }
             break;
         case BlockUrlConstant.Note:
@@ -103,24 +103,24 @@ export async function setBoardBlockCache(block: Block, defaultData?: Record<stri
         case BlockUrlConstant.Frame:
             var bg = await BlockCache.get(url, 'backgroundColor');
             if (!lodash.isUndefined(bg)) {
-                block.pattern.setFillStyle({ color: bg, mode: 'color' });
+                await block.pattern.setFillStyle({ color: bg, mode: 'color' });
             }
             break;
         case BlockUrlConstant.TextSpan:
             var bg = await BlockCache.get(url, 'backgroundColor');
             if (!lodash.isUndefined(bg)) {
-                block.pattern.setFillStyle({ color: bg, mode: 'color' });
+                await  block.pattern.setFillStyle({ color: bg, mode: 'color' });
             }
-            var ps = await BlockCache.getJSON(url,'fontWeight', 'fontFamily', 'textDecoration');
+            var ps = await BlockCache.getJSON(url, 'fontWeight', 'fontFamily', 'textDecoration');
             removeDefault(ps);
-            block.pattern.setFontStyle(ps);
+            await block.pattern.setFontStyle(ps);
             var fs = await BlockCache.get(url, 'fontStyle');
             if (!lodash.isUndefined(fs)) {
-                block.pattern.setFontStyle({ fontStyle: fs ? 'italic' : 'normal' });
+                await block.pattern.setFontStyle({ fontStyle: fs ? 'italic' : 'normal' });
             }
             var fc = await BlockCache.get(url, 'fontColor');
             if (!lodash.isUndefined(fc)) {
-                block.pattern.setFontStyle({ color: fc });
+                await block.pattern.setFontStyle({ color: fc });
             }
             var fss = await BlockCache.get(url, 'fontSize');
             if (typeof fss != 'undefined') {

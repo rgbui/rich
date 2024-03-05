@@ -14,11 +14,11 @@ import { Rect } from "../../../src/common/vector/point";
 @url('/shape')
 export class Shape extends Block {
     async created() {
-        this.pattern.setSvgStyle({
+        await this.pattern.setSvgStyle({
             strokeWidth: 3,
             stroke: 'rgb(0,198,145)'
         });
-        this.pattern.setFontStyle({
+        await this.pattern.setFontStyle({
             fontSize: 20,
             color: 'rgb(0,198,145)',
         });
@@ -58,7 +58,7 @@ export class Shape extends Block {
         if (['stroke', 'strokeDasharray', 'strokeOpacity', 'strokeWidth', 'fillColor', 'fillOpacity',].includes(name)) {
             var key = name;
             if (name == 'fillColor') key = 'fill';
-            this.pattern.setSvgStyle({ [key]: value })
+            await   this.pattern.setSvgStyle({ [key]: value })
         }
         else if ((await super.setBoardEditCommand(name, value))) {
 

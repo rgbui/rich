@@ -15,6 +15,7 @@ import { ArrowDownSvg, ArrowLeftSvg, ArrowRightSvg, ArrowUpSvg, BlockcolorSvg, C
 import { BackgroundColorList, FontColorList } from "../../extensions/color/data";
 import { GridMap } from "../../src/page/grid";
 import { lst } from "../../i18n/store";
+import { AiWrite } from "../../extensions/ai/write";
 
 @url('/table/cell')
 export class TableCell extends Block {
@@ -213,41 +214,41 @@ export class TableCellView extends BlockView<TableCell>{
                         break;
                     case 'fontColor':
                         this.block.page.onAction('setFontStyle', async () => {
-                            this.block.pattern.setFontStyle({ color: result.item.value });
+                            await this.block.pattern.setFontStyle({ color: result.item.value });
                         })
                         break;
                     case 'fillColor':
                         this.block.page.onAction('setFillStyle', async () => {
-                            this.block.pattern.setFillStyle({ mode: 'color', color: result.item.value })
+                            await this.block.pattern.setFillStyle({ mode: 'color', color: result.item.value })
                         })
                         break;
                     case 'row-fontColor':
                         this.block.page.onAction('setFontStyle', async () => {
                             await this.block.parent.blocks.childs.eachAsync(async c => {
-                                c.pattern.setFontStyle({ color: result.item.value })
+                                await c.pattern.setFontStyle({ color: result.item.value })
                             })
                         })
                         break;
                     case 'row-fillColor':
                         this.block.page.onAction('setFillStyle', async () => {
                             await this.block.parent.blocks.childs.eachAsync(async c => {
-                                c.pattern.setFillStyle({ mode: 'color', color: result.item.value })
+                                await c.pattern.setFillStyle({ mode: 'color', color: result.item.value })
                             })
                         })
                         break;
                     case 'col-fontColor':
                         var at = this.block.at;
                         this.block.page.onAction('setFontStyle', async () => {
-                            this.block.parent.parent.childs.forEach(row => {
-                                row.childs[at].pattern.setFontStyle({ color: result.item.value });
+                            await this.block.parent.parent.childs.eachAsync(async row => {
+                                await row.childs[at].pattern.setFontStyle({ color: result.item.value });
                             })
                         })
                         break;
                     case 'col-fillColor':
                         var at = this.block.at;
                         this.block.page.onAction('setFillStyle', async () => {
-                            this.block.parent.parent.childs.forEach(row => {
-                                row.childs[at].pattern.setFillStyle({ mode: 'color', color: result.item.value })
+                            await this.block.parent.parent.childs.eachAsync(async row => {
+                                await row.childs[at].pattern.setFillStyle({ mode: 'color', color: result.item.value })
                             })
                         })
                         break;

@@ -27,6 +27,7 @@ import { List } from "../../../blocks/present/list/list";
 import { BlockFactory } from "../factory/block.factory";
 import { util } from "../../../util/util";
 import { ls, lst } from "../../../i18n/store";
+import { channel } from "../../../net/channel";
 
 export class Block$Event {
     /**
@@ -57,7 +58,6 @@ export class Block$Event {
         }
         var items: MenuItem<BlockDirective | string>[] = [];
         var hasAi: boolean = true;
-
         if (this.page.ws.aiConfig?.disabled == true) {
             hasAi = false;
         }
@@ -199,6 +199,20 @@ export class Block$Event {
             text: lst('删除'),
             label: "Del"
         });
+        if (this.editor) {
+            items.push({
+                type: MenuItemType.divide,
+            });
+            if (this.editDate) items.push({
+                type: MenuItemType.text,
+                text: lst('编辑于 ') + util.showTime(new Date(this.editDate))
+            });
+            var r = await channel.get('/user/basic', { userid: this.editor });
+            if (r?.data?.user) items.push({
+                type: MenuItemType.text,
+                text: lst('编辑人 ') + r.data.user.name
+            });
+        }
         return items;
     }
     async onGetBoardContextMenus(this: Block) {
@@ -276,7 +290,7 @@ export class Block$Event {
     }
     async onContextMenuInput(this: Block, item: MenuItem<BlockDirective | string>, options?: { merge?: boolean }) {
         if (item?.name == 'text-center') {
-            this.onUpdateProps({ align: item.value }, { range: BlockRenderRange.self, merge: options?.merge ? true : undefined });
+            await this.onUpdateProps({ align: item.value }, { range: BlockRenderRange.self, merge: options?.merge ? true : undefined });
         }
     }
     async onContextMenuClick(this: Block, item: MenuItem<string | BlockDirective>, event: React.MouseEvent<Element, MouseEvent>, clickName: string, mp: MenuPanel<any>) {
@@ -288,60 +302,60 @@ export class Block$Event {
         }
         switch (item.name) {
             case BlockDirective.delete:
-                this.page.onBatchDelete([this]);
+                await this.page.onBatchDelete([this]);
                 break;
             case BlockDirective.copy:
-                this.onClone()
+                await this.onClone()
                 break;
             case BlockDirective.link:
-                this.onCopyLink();
+                await this.onCopyLink();
                 break;
             case BlockDirective.trun:
-                this.page.onBatchTurn([this], (item as any).url);
+                await this.page.onBatchTurn([this], (item as any).url);
                 break;
             case BlockDirective.comment:
                 break;
             case 'askAi':
-                this.page.kit.writer.onAskAi([this])
+                await this.page.kit.writer.onAskAi([this])
                 break;
             case 'fontColor':
-                this.page.onAction('setFontStyle', async () => {
+                await this.page.onAction('setFontStyle', async () => {
                     if (options?.merge) this.page.snapshoot.merge();
-                    this.pattern.setFontStyle({ color: item.value });
+                    await this.pattern.setFontStyle({ color: item.value });
                     this.page.addBlockUpdate(this);
                 })
                 break;
             case 'fillColor':
-                this.page.onAction('setFillStyle', async () => {
+                await this.page.onAction('setFillStyle', async () => {
                     if (options?.merge) this.page.snapshoot.merge();
-                    this.pattern.setFillStyle({ mode: 'color', color: item.value })
+                    await this.pattern.setFillStyle({ mode: 'color', color: item.value })
                     this.page.addBlockUpdate(this);
                 })
                 break;
             case 'text-center':
-                this.onUpdateProps({ align: item.value }, { range: BlockRenderRange.self, merge: options?.merge ? true : undefined });
+                await this.onUpdateProps({ align: item.value }, { range: BlockRenderRange.self, merge: options?.merge ? true : undefined });
                 break;
         }
     }
     async onClickBoardContextMenu(this: Block, item: MenuItem<BlockDirective | string>, event: MouseEvent) {
         switch (item.name) {
             case BlockDirective.lock:
-                this.onLock(true);
+                await this.onLock(true);
                 break;
             case BlockDirective.unlock:
-                this.onLock(false);
+                await this.onLock(false);
                 break;
             case BlockDirective.bringToFront:
-                this.onZIndex('top');
+                await this.onZIndex('top');
                 break;
             case BlockDirective.sendToBack:
-                this.onZIndex('bottom');
+                await this.onZIndex('bottom');
                 break;
             case BlockDirective.delete:
-                this.page.onBatchDelete([this]);
+                await this.page.onBatchDelete([this]);
                 break;
             case BlockDirective.copy:
-                this.onClone();
+                await this.onClone();
                 break;
         }
     }
@@ -367,7 +381,7 @@ export class Block$Event {
         /**
         *复制块
         */
-        this.page.onAction(ActionDirective.onCopyBlock, async () => {
+        await this.page.onAction(ActionDirective.onCopyBlock, async () => {
             var nb = await this.clone();
             if (this.isFreeBlock) {
                 var ma = nb.matrix.clone();
@@ -440,7 +454,7 @@ export class Block$Event {
         });
     }
     async onZIndex(this: Block, layer: 'top' | 'bottom') {
-        this.page.onAction(ActionDirective.onZIndex, async () => {
+        await this.page.onAction(ActionDirective.onZIndex, async () => {
             var zindex = this.zindex;
             if (layer == 'top') zindex = this.parent.childs.max(g => g.zindex) + 1;
             else zindex = this.parent.childs.min(g => g.zindex) - 1;
@@ -522,6 +536,7 @@ export class Block$Event {
                     }
                 }
                 this.page.addBlockChange(this);
+                await this.page.onNotifyEditBlock(this);
                 this.page.snapshoot.record(OperatorDirective.$array_update, {
                     pos: this.getArrayItemPos(options.prop, ar),
                     old_value: oldValue,
@@ -564,6 +579,7 @@ export class Block$Event {
                 else cd = lodash.cloneDeep(options.data);
             } else cd = lodash.cloneDeep(options.data);
             this.page.addBlockChange(this);
+            await this.page.onNotifyEditBlock(this);
             this.page.snapshoot.record(OperatorDirective.$array_create, {
                 pos,
                 data: cd
@@ -597,6 +613,7 @@ export class Block$Event {
                 else cd = lodash.cloneDeep(currentData);
             } else cd = lodash.cloneDeep(currentData);
             this.page.addBlockChange(this);
+            await this.page.onNotifyEditBlock(this);
             this.page.snapshoot.record(OperatorDirective.$array_delete, {
                 pos,
                 data: cd
@@ -627,6 +644,7 @@ export class Block$Event {
             arr.splice(to, 0, item);
             var to = options.to;
             this.page.addBlockChange(this);
+            await this.page.onNotifyEditBlock(this);
             this.page.snapshoot.record(OperatorDirective.$array_move, {
                 pos,
                 from,

@@ -25,7 +25,7 @@ import './style.less';
 export class FlowMind extends Block {
     async created() {
         if (this.isMindRoot) {
-            this.pattern.setFontStyle({
+            await this.pattern.setFontStyle({
                 fontSize: 20,
                 fontWeight: 'bold',
                 color: 'rgb(0,198,145)',
@@ -33,7 +33,7 @@ export class FlowMind extends Block {
         }
         else {
             this.minBoxStyle.type = 'none'
-            this.pattern.setFillStyle({ color: 'rgb(122,122,122)' });
+            await this.pattern.setFillStyle({ color: 'rgb(122,122,122)' });
         }
     }
     @prop()
@@ -465,7 +465,7 @@ export class FlowMind extends Block {
         else if (['fillColor', 'fillOpacity',].includes(name)) {
             var key = name;
             if (name == 'fillColor') key = 'fill';
-            this.pattern.setSvgStyle({ [key]: value })
+            await this.pattern.setSvgStyle({ [key]: value })
         }
         else if (name == 'borderWidth') {
             await this.updateProps({ 'minBoxStyle.width': value }, BlockRenderRange.self);

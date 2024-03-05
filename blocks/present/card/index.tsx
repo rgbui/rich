@@ -28,11 +28,12 @@ export class PageCard extends Block {
         }
     }
     async initPageCard() {
-        this.blocks.childs.push(await BlockFactory.createBlock('/textspan',
+        var newBlock = await BlockFactory.createBlock('/textspan',
             this.page,
             { content: '', placeholder: lst('添加卡片内容') },
             this
-        ));
+        );
+        this.blocks.childs.push(newBlock);
         this.forceUpdate();
     }
     init() {

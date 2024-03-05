@@ -73,6 +73,7 @@ export class Tab extends Block {
 
         this.tabItems.push({ text: lst('选项卡3') })
         this.blocks.otherChilds.push(await BlockFactory.createBlock('/tab/page', this.page, { blocks: { childs: [{ url: BlockUrlConstant.TextSpan, content: '' }] } }, this));
+        
 
     }
     async onAddTabItem() {
