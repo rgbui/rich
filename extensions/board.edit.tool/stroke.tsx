@@ -22,22 +22,21 @@ export function ShapeStroke(props: {
     colors.splice(0, 0, { color: 'transparent', text: lst('透明') })
     return <div className="shy-shape-stroke flex-center">
         <div className="shy-shape-stroke-current flex-center circle" style={{
-            width: 16, boxSizing: 'border-box', height: 16
-            // , border: '1px solid rgba(0,0,0,0.1)' 
+            width: 16,
+            boxSizing: 'border-box',
+            height: 16
         }} onMouseDown={e => props.tool.showDrop('stroke')}>
             {(props.stroke == 'transparent' || props.strokeOpacity == 0) && <Icon size={16} icon={TransparentSvg}></Icon>}
             {props.stroke != 'transparent' && <a className="size-16 circle" style={{ backgroundColor: props.stroke || '#000', opacity: props.strokeOpacity }}></a>}
         </div>
         {props.tool.isShowDrop('stroke') && <div style={{ width: 230 }} className="shy-shape-stroke-drops padding-w-10 text-1">
             <div className="gap-h-10">
-
                 <div ><label className="remark f-12"><S>透明度</S></label><span className="f-12" style={{ float: 'right' }}>{props.strokeOpacity}</span></div>
                 <MeasureView theme="light" ratio={0.1} min={0} max={1} showValue={false} inputting={false} value={props.strokeOpacity} onChange={e => { props.change('strokeOpacity', e) }}></MeasureView>
             </div>
             <div className="gap-h-10">
                 <div ><label className="remark f-12"><S>边框</S></label><span className="f-12" style={{ float: 'right' }}>{Math.round(props.strokeWidth)}</span></div>
                 <MeasureView theme="light" min={1} max={30} showValue={false} inputting={false} value={props.strokeWidth} onChange={e => { props.change('strokeWidth', e) }}></MeasureView>
-
             </div>
             <div className="gap-h-10">
                 <div className="remark f-12"><S>边框样式</S></div>
@@ -50,7 +49,7 @@ export function ShapeStroke(props: {
                             </g>
                         </svg>
                     </span>
-
+                    
                     <span onMouseDown={e => props.change('strokeDasharray', 'dash-larger')} className={props.strokeDasharray == 'dash-larger' ? "item-hover-focus" : ""}>
                         <svg style={{ width: 24, height: 24 }} viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
                             <path d="M0 14h6v2H0zm9 0h6v2H9zm9 0h6v2h-6z" fill="currentColor" fillRule="evenodd"></path>

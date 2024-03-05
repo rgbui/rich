@@ -214,7 +214,7 @@ export class BoardEditTool extends EventsComponent {
             </Tip>
         }
         else if (name == 'stickerSize') {
-            return <Tip key={at} placement="top" text='便利贴尺寸大小'>
+            return <Tip key={at} placement="top" text='便利贴大小'>
                 <div className={'shy-board-edit-tool-item'} >
                     <SelectBox
                         onDrop={e => {
@@ -232,7 +232,7 @@ export class BoardEditTool extends EventsComponent {
             </Tip>
         }
         else if (name == 'tickness') {
-            return <div key={at} style={{ width: 90 }} className={'shy-board-edit-tool-item'}>
+            return <div key={at} style={{ width: 90 }} className={'shy-board-edit-tool-item no-item-hover'}>
                 <MeasureView theme="light" min={1} max={40} showValue={false} value={getValue('tickness')} inputting={false} onChange={e => { this.onChange('tickness', e) }}></MeasureView>
             </div>
         }
