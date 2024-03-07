@@ -15,7 +15,6 @@ import { ArrowDownSvg, ArrowLeftSvg, ArrowRightSvg, ArrowUpSvg, BlockcolorSvg, C
 import { BackgroundColorList, FontColorList } from "../../extensions/color/data";
 import { GridMap } from "../../src/page/grid";
 import { lst } from "../../i18n/store";
-import { AiWrite } from "../../extensions/ai/write";
 
 @url('/table/cell')
 export class TableCell extends Block {

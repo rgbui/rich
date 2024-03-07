@@ -118,9 +118,9 @@ class TextTool extends EventsComponent {
                     </div>
                 </Tip><div className="shy-tool-text-menu-devide"></div></>}
 
-                <Tip text='链接'>
-                    <div className='shy-tool-text-menu-item ' onMouseDown={e => this.onOpenLink(e)}>
-                        <Icon size={16} icon={LinkSvg}></Icon>
+                <Tip text='颜色'>
+                    <div className='shy-tool-text-menu-item' onMouseDown={e => this.onOpenFontColor(e)}>
+                        <Icon size={18} icon={FontStyleSvg}></Icon>
                         <Icon className={'remark'} size={12} icon={ChevronDownSvg}></Icon>
                     </div>
                 </Tip>
@@ -152,7 +152,13 @@ class TextTool extends EventsComponent {
                         <span className="size-20 flex-center">  <Icon size={16} icon={{ name: 'byte', code: 'strikethrough' }}></Icon></span>
                     </div>
                 </Tip>
-
+                <div className="shy-tool-text-menu-devide"></div>
+                <Tip text='链接'>
+                    <div className='shy-tool-text-menu-item ' onMouseDown={e => this.onOpenLink(e)}>
+                        <Icon size={16} icon={LinkSvg}></Icon>
+                        <Icon className={'remark'} size={12} icon={ChevronDownSvg}></Icon>
+                    </div>
+                </Tip>
                 <Tip text='行内代码'>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.code == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.code == true ? TextCommand.cancelCode : TextCommand.code, e)}>
                         <span className="size-20 flex-center">  <Icon size={18} icon={CodeSvg}></Icon></span>
@@ -165,12 +171,7 @@ class TextTool extends EventsComponent {
                     </div>
                 </Tip>
 
-                <Tip text='颜色'>
-                    <div className='shy-tool-text-menu-item' onMouseDown={e => this.onOpenFontColor(e)}>
-                        <Icon size={18} icon={FontStyleSvg}></Icon>
-                        <Icon className={'remark'} size={12} icon={ChevronDownSvg}></Icon>
-                    </div>
-                </Tip>
+
                 <div className="shy-tool-text-menu-devide"></div>
                 <Tip text={'双链'} >
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.page == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.page != true ? TextCommand.doubleLink : undefined, e)}>

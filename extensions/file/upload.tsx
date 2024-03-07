@@ -90,7 +90,7 @@ export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audi
         if (this.props.mine == 'image') { text = lst('上传图片'); mineText = lst('图片'); }
         else if (this.props.mine == 'video') { text = lst('上传视频'); mineText = lst('视频'); }
         else if (this.props.mine == 'audio') { text = lst('上传音频'); mineText = lst('音频'); }
-        return <div className='shy-upload padding-w-10'>
+        return <div className='shy-upload'>
             <div className="dashed gap-h-10 round flex-center min-h-80  padding-10" tabIndex={1} onPaste={this.onPaste} onDragOverCapture={e => { e.preventDefault() }} onDrop={this.onDrop}>
                 <span className="remark">
                     <Sp data={{ content: mineText }} text="拖动{content}或粘贴{content}或粘贴网址">拖动{text}或粘贴{text}或粘贴网址</Sp>
