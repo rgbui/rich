@@ -215,16 +215,16 @@ export class HeadView extends BlockView<Head>{
         }
         textLineHeight *= parseFloat(style.fontSize.replace('em', ''));
         var pa = this.block.parent;
-        if (pa.url == BlockUrlConstant.CardBox) {
+        if (pa?.url == BlockUrlConstant.CardBox) {
             style.fontSize = (parseFloat(style.fontSize.replace('em', '')) * 1.4) + 'em';
             if (this.block.at == 0)
                 style.marginTop = 0;
         }
-        else if (pa.url == BlockUrlConstant.BoardPageCard || pa.url == BlockUrlConstant.Card) {
+        else if (pa?.url == BlockUrlConstant.BoardPageCard || pa?.url == BlockUrlConstant.Card) {
             if (this.block.at == 0)
                 style.marginTop = 0;
         }
-        else if (this.block?.prev?.url == BlockUrlConstant.Title && pa.url == BlockUrlConstant.View && this.block.page.hideDocTitle == true) {
+        else if (this.block?.prev?.url == BlockUrlConstant.Title && pa?.url == BlockUrlConstant.View && this.block.page.hideDocTitle == true) {
             style.marginTop = 0;
         }
         function renderHead() {
