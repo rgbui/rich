@@ -1,7 +1,7 @@
 import React from "react";
 import { SettingsSvg, } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
-import { BoxTip } from "../../../component/view/tooltip/box";
+// import { BoxTip } from "../../../component/view/tooltip/box";
 import { IconArguments } from "../../../extensions/icon/declare";
 import { Block } from "../../../src/block";
 import { prop, url, view } from "../../../src/block/factory/observable";
