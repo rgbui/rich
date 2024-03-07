@@ -230,7 +230,6 @@ export class RowView extends BlockView<Row>{
             else if (r?.item.name == 'hideAll') {
                 this.block.gaps = [];
                 await this.block.onManualUpdateProps({ gaps: oldGaps }, { gaps: this.block.gaps }, { range: BlockRenderRange.self })
-
             }
             else if (r?.item.name == 'agvCols') {
                 await this.agvCols()
@@ -283,7 +282,7 @@ export class RowView extends BlockView<Row>{
                         style.borderRight = gapLine.width + 'px dashed ' + gapLine.color;
                         style.width = 3;
                     }
-                    ps.push(<BoxTip
+                    ps.push(<BoxTip key={block.id + 'gap'}
                         onVisible={e => {
                             e.classList.add('hover')
                         }}
@@ -309,7 +308,7 @@ export class RowView extends BlockView<Row>{
                                 var ele = e.currentTarget as HTMLElement;
                                 ele.classList.add('hover')
                             }}
-                            key={block.id + 'gap'}
+                            key={block.id + 'ga'}
                             data-index={i}
                             style={{ opacity: 1, visibility: this.block.isCanEdit() ? undefined : "hidden" }}
                             className='sy-block-row-gap'>
@@ -317,7 +316,7 @@ export class RowView extends BlockView<Row>{
                         </div></BoxTip>)
                 }
                 else {
-                    ps.push(<BoxTip onVisible={e => {
+                    ps.push(<BoxTip key={block.id + 'gap'} onVisible={e => {
                         e.classList.add('hover')
                     }}
                         onClose={e => {
@@ -341,7 +340,7 @@ export class RowView extends BlockView<Row>{
                                 var ele = e.currentTarget as HTMLElement;
                                 ele.classList.add('hover')
                             }}
-                            key={block.id + 'gap'}
+                            key={block.id + 'ga'}
                             data-index={i}
                             style={{ visibility: this.block.isCanEdit() ? "visible" : "hidden" }}
                             className='sy-block-row-gap'>
