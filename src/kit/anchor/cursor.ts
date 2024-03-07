@@ -370,7 +370,7 @@ export class AnchorCursor {
         this.renderSelectBlocks(this.currentSelectedBlocks);
     }
     renderSelectBlocks(blocks: Block[]) {
-        var currentEls = Array.from(this.kit.page.root.querySelectorAll(".shy-block-selected"));
+        var currentEls = Array.from(document.body.querySelectorAll(".shy-block-selected"));
         blocks.each(sel => {
             var el = sel.addBlockSelect();
             currentEls.remove(el);

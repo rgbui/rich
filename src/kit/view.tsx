@@ -19,13 +19,18 @@ export class KitView extends React.Component<{ kit: Kit }>{
     el: HTMLElement;
     render() {
         return <div className='shy-kit' ref={e => this.el = e}>
+            <div className="shy-kit-tool"></div>
             <BlockPickerView picker={this.kit.picker}></BlockPickerView>
             <SelectorView selector={this.kit.anchorCursor.selector}></SelectorView>
             <HandleView handle={this.kit.handle}></HandleView>
             <BoardScale kit={this.props.kit}></BoardScale>
             <Collaboration kit={this.props.kit} ref={e => this.kit.collaboration = e}></Collaboration>
             <BoardBlockHover ref={e => this.kit.boardBlockHover = e} kit={this.kit}></BoardBlockHover>
-            <BoardSelector ref={e=>this.kit.boardSelector=e} kit={this.kit}></BoardSelector>
+            <BoardSelector ref={e => this.kit.boardSelector = e} kit={this.kit}></BoardSelector>
+
         </div>
+    }
+    get toolEl() {
+        return this.el.querySelector('.shy-kit-tool') as HTMLElement;
     }
 }

@@ -533,6 +533,14 @@ item-selected:选中的效果
     background-color: rgba(55, 53, 47, 0.06);
 }
 
+.item-hover-input-focus,
+.item-input-hover-focus,
+.r-item-hover-input-focus>*,
+.r-item-input-hover-focus>* {
+    box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
+    background: rgba(242, 241, 238, 0.6);
+}
+
 .item-selected {
     background-color: rgba(55, 53, 47, 0.08);
 }
@@ -1650,7 +1658,8 @@ each(@ops, {
     border-left: 0.1rem solid rgba(55, 53, 47, 0.08);
 }
 
-.border-t {
+.border-t,
+.border-0,.border-transparent {
     border: 0.1rem solid transparent;
 }
 
