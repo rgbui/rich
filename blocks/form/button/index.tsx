@@ -1,7 +1,6 @@
 import React from "react";
 import { SettingsSvg, } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
-// import { BoxTip } from "../../../component/view/tooltip/box";
 import { IconArguments } from "../../../extensions/icon/declare";
 import { Block } from "../../../src/block";
 import { prop, url, view } from "../../../src/block/factory/observable";
@@ -23,6 +22,7 @@ import { popoverLayer } from "../../../component/lib/zindex";
 import "./style.less";
 import { FixBoxTip } from "../../../component/view/tooltip/fix";
 import { assyDivPanel } from "../../../component/types";
+import { Tip } from "../../../component/view/tooltip/tip";
 
 @url('/button')
 export class BlockButton extends Block {
@@ -280,11 +280,14 @@ export class BlockButtonView extends BlockView<BlockButton>{
                             </>}
                             {!this.block.buttonText && !this.block.buttonIcon && <span><S>按钮</S></span>}
                         </div>
-                        {this.block.isCanEdit() && <span className="visible flex-center  pos-center-right-outside" onMouseDown={async e => {
-                            e.stopPropagation();
-                            this.openEdit(e)
-                        }}><span className="cursor flex-center gap-l-5 size-20"><Icon size={16} icon={SettingsSvg}></Icon></span>
-                        </span>}
+                        {
+                            this.block.isCanEdit() && <Tip text='编辑动作'><span
+                                className="visible flex-center  pos-center-right-outside" onMouseDown={async e => {
+                                    e.stopPropagation();
+                                    this.openEdit(e)
+                                }}><span className="cursor flex-center gap-l-5 size-20 item-hover round text-1"><Icon size={16} icon={SettingsSvg}></Icon></span>
+                            </span></Tip>
+                        }
                     </div>
                 </div>
             </FixBoxTip>
