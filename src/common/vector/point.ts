@@ -93,9 +93,9 @@ export class Point {
     move(x: number, y: number) {
         return new Point(this.x + x, this.y + y);
     }
-    moved(x:number,y:number){
-        this.x+=x;
-        this.y+=y;
+    moved(x: number, y: number) {
+        this.x += x;
+        this.y += y;
     }
     join(joinChar?: string) {
         return this.x + (joinChar || ',') + this.y
@@ -256,8 +256,8 @@ export class Rect {
         return this.from(ele.getBoundingClientRect())
     }
     static fromEle(el: HTMLElement | Range) {
-        if(el)
-        return this.from(el.getBoundingClientRect())
+        if (el)
+            return this.from(el.getBoundingClientRect())
     }
     contain(point: Point) {
         if (point.x >= this.left && point.x <= this.left + this.width) {
@@ -336,13 +336,19 @@ export class Rect {
         rect.height = this.height;
         return rect;
     }
-    moveTo(point: Point) {
-        this.left = point.x;
-        this.top = point.y;
+    moveTo(point: Point | number, y?: number) {
+        if (typeof y == 'number') {
+            this.left = point as number;
+            this.top = y;
+        }
+        else {
+            this.left = (point as Point).x;
+            this.top = (point as Point).y;
+        }
     }
-    move(dx:number,dy:number){
-        this.left+=dx;
-        this.top+=dy;
+    move(dx: number, dy: number) {
+        this.left += dx;
+        this.top += dy;
     }
     /**
      * 矩形到点point的距离
@@ -381,6 +387,10 @@ export class Rect {
     }
     transformToPoints(matrix: Matrix) {
         return this.points.map(t => matrix.transform(t));
+    }
+    static fromWindow() {
+        return new Rect(0, 0, window.innerWidth, window.innerHeight);
+
     }
 }
 
