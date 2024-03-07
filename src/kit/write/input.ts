@@ -485,6 +485,7 @@ async function combineTextBlock(write: PageWrite, rowBlock: Block, preBlock?: Bl
     if (!lastPreBlock) lastPreBlock = preBlock;
     return lastPreBlock;
 }
+
 /**
  * 删除选区，
  * @param write 
@@ -492,7 +493,14 @@ async function combineTextBlock(write: PageWrite, rowBlock: Block, preBlock?: Bl
  * @param event 
  * @param insertContent  删除选区并插入内容
  */
-export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent, options?: { cut?: boolean, insertContent?: string }) {
+export async function inputBackspaceDeleteContent(write: PageWrite,
+    aa: AppearAnchor,
+    event: React.KeyboardEvent,
+    options?: {
+        cut?: boolean,
+        insertContent?: string,
+        insertBlocks?: any[]
+    }) {
     if (event) event.preventDefault();
     await InputForceStore(aa, async () => {
         var sel = window.getSelection();
@@ -538,7 +546,8 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
                 }
                 await write.kit.anchorCursor.startAnchor.block.updateAppear(write.kit.anchorCursor.startAnchor, write.kit.anchorCursor.startAnchor.textContent, BlockRenderRange.self);
                 if (sb.isContentEmpty && sb.url != BlockUrlConstant.Title) {
-                    await sb.delete(); isStartDelete = true;
+                    await sb.delete();
+                    isStartDelete = true;
                 }
             }
         }

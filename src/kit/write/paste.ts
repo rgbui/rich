@@ -296,15 +296,18 @@ async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
             if (firstBlock.isContentEmpty) {
                 blocks[0].url = firstBlock.url;
             }
+            var rs: Block[] = [];
             for (let i = 0; i < blocks.length; i++) {
                 var bd = blocks[i];
                 rowBlock = await rowBlock.visibleDownCreateBlock(bd.url, bd);
+                rs.push(rowBlock);
             }
             if (firstBlock.isContentEmpty) {
                 await firstBlock.delete();
             }
             kit.page.addUpdateEvent(async () => {
-                kit.anchorCursor.onFocusBlockAnchor(rowBlock, { last: true, render: true, merge: true });
+                kit.anchorCursor.onSelectBlocks(rs, { render: true, merge: true });
+                // kit.anchorCursor.onFocusBlockAnchor(rowBlock, { last: true, render: true, merge: true });
             })
         }
     })
