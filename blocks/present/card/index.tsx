@@ -133,6 +133,12 @@ export class PageCard extends Block {
     @prop()
     contentHeight: number = 200;
 
+    @prop()
+    cardCoverHeight = 120;
+
+    @prop()
+    cardCoverWidth = 33.3;
+
 }
 
 @view('/card')
@@ -157,8 +163,72 @@ export class PageCardView extends BlockView<PageCard>{
             }
         })
     }
+    dragSize(arrow: 'top' | 'left' | 'right', event: React.MouseEvent) {
+        event.stopPropagation();
+        var h = this.block.cardCoverHeight;
+        var self = this;
+        if (arrow == 'top') {
+            MouseDragger({
+                event,
+                moving(ev, data, isEnd, isMove) {
+                    if (isMove) {
+                        var dx = ev.clientX - event.clientX;
+                        var dy = ev.clientY - event.clientY;
+                        var nh = h;
+                        nh += dy;
+                        nh = Math.max(60, nh);
+                        self.block.cardCoverHeight = nh;
+                        if (isEnd) {
+                            self.block.onManualUpdateProps({
+                                cardCoverHeight: h
+                            }, {
+                                cardCoverHeight: nh
+                            }, { range: BlockRenderRange.self })
+                        }
+                        else self.forceUpdate();
+                    }
+                },
+            })
+        }
+        else {
+            var t = event.currentTarget as HTMLElement;
+            var div = t.parentNode as HTMLElement;
+            var p = div.parentNode as HTMLElement;
+            var pr = Rect.fromEle(p);
+            var dr = Rect.fromEle(div);
+            var ow = this.block.cardCoverWidth;
+            MouseDragger({
+                event,
+                moving(ev, data, isEnd, isMove) {
+                    if (isMove) {
+                        var dx = ev.clientX - event.clientX;
+                        var nw = dr.width;
+                        if (arrow == 'left') {
+                            nw += dx;
+                        }
+                        else if (arrow == 'right') {
+                            nw -= dx;
+                        }
+                        nw = Math.max(30, nw);
+                        nw = Math.min(pr.width - 100, nw);
+                        if (isEnd) {
+                            self.block.onManualUpdateProps({
+                                cardCoverWidth: ow
+                            }, {
+                                cardCoverWidth: nw / pr.width * 100
+                            }, { range: BlockRenderRange.self })
+                        }
+                        else {
+                            div.style.width = nw + 'px';
+                        }
+                    }
+                },
+            })
+        }
+    }
     renderCard() {
         var s = this.block.cardStyle;
+        var self = this;
         var { bgStyle, contentStyle, coverStyle } = getCardStyle(s);
         if (s.coverStyle?.display == 'none') {
             return <div >
@@ -167,8 +237,7 @@ export class PageCardView extends BlockView<PageCard>{
                     height: this.block.autoContentHeight !== true ? this.block.contentHeight : undefined,
                     overflowY: (this.block.autoContentHeight !== true ? "overlay" : "hidden") as any,
                 }
-                }>
-                    <ChildsArea childs={this.block.childs}></ChildsArea>
+                }><ChildsArea childs={this.block.childs}></ChildsArea>
                 </div>
             </div>
         }
@@ -194,14 +263,26 @@ export class PageCardView extends BlockView<PageCard>{
                     ...style,
                     height: this.block.autoContentHeight !== true ? this.block.contentHeight : undefined,
                     overflowY: (this.block.autoContentHeight !== true ? "overlay" : "hidden") as any,
-                }}>
-                    <ChildsArea childs={this.block.childs}></ChildsArea>
+                }}><ChildsArea childs={this.block.childs}></ChildsArea>
                 </div>
             </div>
         }
         else if (s.coverStyle.display == 'inside-cover') {
             return <div style={contentStyle} >
-                <div className="h-120" style={{ ...coverStyle }}>
+                <div className="relative" style={{
+                    ...coverStyle,
+                    height: self.block.cardCoverHeight
+                }}>
+                    {self.block.isCanEdit() && <div className="item-hover" onMouseDown={e => {
+                        self.dragSize('top', e);
+                    }} style={{
+                        position: 'absolute',
+                        bottom: -3,
+                        left: 0,
+                        height: 6,
+                        right: 0,
+                        cursor: 'row-resize'
+                    }}></div>}
                 </div>
                 <div className="padding-10 min-h-60" style={{
                     height: this.block.autoContentHeight !== true ? this.block.contentHeight : undefined,
@@ -213,10 +294,25 @@ export class PageCardView extends BlockView<PageCard>{
         }
         else if (s.coverStyle.display == 'inside-cover-left') {
             return <div className="flex flex-full" style={contentStyle} >
-                <div className="flex-fixed" style={{
+                <div className="flex-fixed relative" style={{
                     ...coverStyle,
-                    width: '33.3%'
+                    width: (self.block.cardCoverWidth) + '%',
                 }}>
+                    {self.block.isCanEdit() && <div
+                        className="item-hover"
+                        onMouseDown={e => {
+                            self.dragSize('left', e);
+                        }}
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            bottom: 0,
+                            right: -3,
+                            width: 6,
+                            cursor: 'col-resize',
+                            borderRadius: 3,
+                        }}
+                    ></div>}
                 </div>
                 <div className="padding-10 flex-auto min-h-60" style={{
                     height: this.block.autoContentHeight !== true ? this.block.contentHeight : undefined,
@@ -234,7 +330,22 @@ export class PageCardView extends BlockView<PageCard>{
                 }}>
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                 </div>
-                <div className="flex-fixed" style={{ ...coverStyle, width: '33.3%' }}>
+                <div className="flex-fixed relative" style={{ ...coverStyle, width: (self.block.cardCoverWidth) + '%', }}>
+                    {self.block.isCanEdit() && <div
+                        className="item-hover"
+                        onMouseDown={e => {
+                            self.dragSize('right', e);
+                        }}
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            bottom: 0,
+                            left: -3,
+                            width: 6,
+                            cursor: 'col-resize',
+                            borderRadius: 3
+                        }}
+                    ></div>}
                 </div>
             </div>
         }
