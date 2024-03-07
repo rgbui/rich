@@ -4,11 +4,10 @@ import { EventsComponent } from "../../../component/lib/events.component";
 import { PopoverSingleton } from "../../../component/popover/popover";
 import { PopoverPosition } from "../../../component/popover/position";
 
-
 import DragHandle from "../../../src/assert/svg/dragHandle.svg";
 import Dots from "../../../src/assert/svg/dots.svg";
 import { MenuItemType } from "../../../component/view/menu/declare";
-import { CheckSvg, ChevronRightSvg, CloseSvg, CloseTickSvg, TrashSvg } from "../../../component/svgs";
+import { CheckSvg, CloseSvg, TrashSvg } from "../../../component/svgs";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { Point } from "../../../src/common/vector/point";
 import { Icon } from "../../../component/view/icon";
@@ -20,18 +19,15 @@ import { DragList } from "../../../component/view/drag.list";
 import { DataGridOptionType } from "../../../blocks/data-grid/schema/field";
 import { lst } from "../../../i18n/store";
 import { S } from "../../../i18n/view";
-import './style.less';
 import { OptionBackgroundColorList } from "../../color/data";
-
-
+import './style.less';
 
 export class TableStoreOption extends EventsComponent {
     render() {
         var self = this;
         function keydown(event: KeyboardEvent) {
             if (event.key == 'Enter') {
-                if (self.isEdit)
-                    self.onCreateOption();
+                if (self.isEdit) self.onCreateOption();
             }
             else if (event.key.toLowerCase() == 'backspace') {
                 if (!self.value) {
@@ -61,7 +57,7 @@ export class TableStoreOption extends EventsComponent {
             self.emit('changeOptions', lodash.cloneDeep(self.options))
         }
         return <div className="shy-tablestore-option-selector">
-            <div className="shy-tablestore-option-selector-input">
+            {!(this.isEdit == false && this.multiple == false) && <div className="shy-tablestore-option-selector-input">
                 {this.ovs.map(ov => {
                     return <a key={ov.value} className="gap-r-5 gap-b-5" style={{ backgroundColor: ov.color }}>
                         <span className="max-w-80 text-overflow inline-block">{ov.text}</span>
@@ -76,7 +72,6 @@ export class TableStoreOption extends EventsComponent {
                                 }}
                             ></Icon>
                         </span>
-
                     </a>
                 })}
                 <div className={(this.ovs.length > 0 ? "gap-l-5" : "")}><input
@@ -86,9 +81,9 @@ export class TableStoreOption extends EventsComponent {
                     value={this.value}
                     className="input-placeholder-remark"
                     onInput={e => changeInput(e)} onKeyDown={e => keydown(e.nativeEvent)} /></div>
-            </div>
+            </div>}
             <div className="shy-tablestore-option-selector-drop overflow-y max-h-180">
-                <div className="remark gap-h-8 padding-w-10 h-20 f-12">{this.filterOptions.length > 0 ? lst('选择或创建一个选项') : lst('暂无选项')}</div>
+                {this.isEdit && <div className="remark gap-h-8 padding-w-10 h-20 f-12">{this.filterOptions.length > 0 ? lst('选择或创建一个选项') : lst('暂无选项')}</div>}
                 <DragList
                     onChange={change}
                     isDragBar={e => e.closest('.shy-tablestore-option-item-icon') ? true : false}>
@@ -228,13 +223,17 @@ export class TableStoreOption extends EventsComponent {
     }
 }
 
+/***
+ * 返回的是选项
+ * [{option}...]
+ */
 export async function useTableStoreOption(pos: PopoverPosition,
     value: any,
     options: {
         isEdit: boolean,
         multiple: boolean,
         options: DataGridOptionType[],
-        changeOptions: (options: DataGridOptionType[]) => void,
+        changeOptions?: (options: DataGridOptionType[]) => void,
         input?: (value: DataGridOptionType[]) => void
     }) {
     let popover = await PopoverSingleton(TableStoreOption, { mask: true });
@@ -253,7 +252,8 @@ export async function useTableStoreOption(pos: PopoverPosition,
 
         });
         fv.only('changeOptions', (ops: DataGridOptionType[]) => {
-            options.changeOptions(ops);
+            if (options.changeOptions)
+                options.changeOptions(ops);
         });
         fv.only('close', () => {
             popover.close();
