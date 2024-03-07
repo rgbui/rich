@@ -200,7 +200,7 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                         await rowBlock.updateProps({ content: '' });
                     }
                     var newBlock = await rowBlock.appendBlock({ url: BlockUrlConstant.Text, content: mr.matchValue });
-                    if (rule.style)  await newBlock.pattern.setStyles(rule.style);
+                    if (rule.style) await newBlock.pattern.setStyles(rule.style);
                     if (rule.props) newBlock.updateProps(rule.props);
                     if (rest) await rowBlock.appendBlock({ url: BlockUrlConstant.Text, pattern, content: rest });
                     write.kit.page.addUpdateEvent(async () => {
@@ -521,6 +521,9 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
         var sb = write.kit.anchorCursor.startAnchor.block;
         var eb = write.kit.anchorCursor.endAnchor.block;
         var isStartDelete: boolean = false;
+        var insertSelection: { from: number, to: number, anchor: AppearAnchor } = {
+            from: null, to: null, anchor: null
+        }
         var focusB;
         var preAppear = write.kit.anchorCursor.endAnchor.block.prevFind(g => g.isVisible && g.appearAnchors.length > 0)?.appearAnchors.last();
         if (!preAppear) preAppear = write.kit.anchorCursor.endAnchor.block.nextFind(g => g.isVisible && g.appearAnchors.length > 0)?.appearAnchors.last();
@@ -528,6 +531,11 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
             if (write.kit.anchorCursor.startAnchor.isText) {
                 var tc = write.kit.anchorCursor.startAnchor.textContent;
                 write.kit.anchorCursor.startAnchor.setContent(tc.slice(0, write.kit.anchorCursor.startOffset) + (options?.insertContent || '') + tc.slice(write.kit.anchorCursor.endOffset))
+                if (options?.insertContent) {
+                    insertSelection.from = write.kit.anchorCursor.startOffset;
+                    insertSelection.to = write.kit.anchorCursor.startOffset + options.insertContent.length;
+                    insertSelection.anchor = write.kit.anchorCursor.startAnchor;
+                }
                 await write.kit.anchorCursor.startAnchor.block.updateAppear(write.kit.anchorCursor.startAnchor, write.kit.anchorCursor.startAnchor.textContent, BlockRenderRange.self);
                 if (sb.isContentEmpty && sb.url != BlockUrlConstant.Title) {
                     await sb.delete(); isStartDelete = true;
@@ -535,10 +543,8 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
             }
         }
         else {
-
             var startBlock = sb.closest(x => x.isBlock);
             var endBlock = eb.closest(c => c.isBlock);
-
             if (write.kit.anchorCursor.startAnchor.isText) {
                 write.kit.anchorCursor.startAnchor.setContent(write.kit.anchorCursor.startAnchor.textContent.slice(0, write.kit.anchorCursor.startOffset));
                 await sb.updateAppear(write.kit.anchorCursor.startAnchor, write.kit.anchorCursor.startAnchor.textContent, BlockRenderRange.self);
@@ -554,6 +560,11 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
             }
             if (write.kit.anchorCursor.endAnchor.isText) {
                 write.kit.anchorCursor.endAnchor.setContent((options?.insertContent || '') + write.kit.anchorCursor.endAnchor.textContent.slice(write.kit.anchorCursor.endOffset));
+                if (options?.insertContent) {
+                    insertSelection.from = 0;
+                    insertSelection.to = options.insertContent.length;
+                    insertSelection.anchor = write.kit.anchorCursor.endAnchor;
+                }
                 await eb.updateAppear(write.kit.anchorCursor.endAnchor, write.kit.anchorCursor.endAnchor.textContent, BlockRenderRange.self);
                 if (eb.isContentEmpty && eb.url != BlockUrlConstant.Title) {
                     var isLine = eb.isLine;
@@ -577,9 +588,19 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
         }
         write.kit.page.addUpdateEvent(async () => {
             forceCloseTextTool()
-            if (focusB) write.kit.anchorCursor.onFocusBlockAnchor(focusB, { last: true, render: true, merge: true });
-            else if (isStartDelete) write.kit.anchorCursor.onFocusAppearAnchor(preAppear, { merge: true, last: true })
-            else write.kit.anchorCursor.onFocusAppearAnchor(write.kit.anchorCursor.startAnchor, { merge: true, at: write.kit.anchorCursor.startOffset + (options?.insertContent || '').length });
+            if (insertSelection.from != null) {
+                write.kit.anchorCursor.onSetTextSelection({
+                    startAnchor: insertSelection.anchor,
+                    startOffset: insertSelection.from,
+                    endAnchor: insertSelection.anchor,
+                    endOffset: insertSelection.to
+                }, { merge: true, render: true });
+            }
+            else {
+                if (focusB) write.kit.anchorCursor.onFocusBlockAnchor(focusB, { last: true, render: true, merge: true });
+                else if (isStartDelete) write.kit.anchorCursor.onFocusAppearAnchor(preAppear, { merge: true, last: true })
+                else write.kit.anchorCursor.onFocusAppearAnchor(write.kit.anchorCursor.startAnchor, { merge: true, at: write.kit.anchorCursor.startOffset + (options?.insertContent || '').length });
+            }
         })
     });
 }
