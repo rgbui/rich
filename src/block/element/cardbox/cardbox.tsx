@@ -32,6 +32,7 @@ import lodash from "lodash";
 import "./style.less";
 import { util } from "../../../../util/util";
 import { memoryCopyData, memoryReadData } from "../../../page/common/copy";
+import { MouseDragger } from "../../../common/dragger";
 
 @url('/card/box')
 export class CardBox extends Block {
@@ -154,6 +155,12 @@ export class CardBox extends Block {
         rect = rect.rightTop.move(-20, -20).toRect(20, 20);
         await useCardBoxStyle({ roundArea: rect }, this);
     }
+    @prop()
+    cardCoverHeight = 120;
+
+    @prop()
+    cardCoverWidth = 33.3;
+
     @prop()
     cardThemeStyle: PageThemeStyle = {
         bgStyle: {
@@ -287,6 +294,69 @@ export class CardBox extends Block {
 @view('/card/box')
 export class ViewComponent extends BlockView<CardBox>{
     contentEl: HTMLElement;
+    dragSize(arrow: 'top' | 'left' | 'right', event: React.MouseEvent) {
+        event.stopPropagation();
+        var h = this.block.cardCoverHeight;
+        var self = this;
+        if (arrow == 'top') {
+            MouseDragger({
+                event,
+                moving(ev, data, isEnd, isMove) {
+                    if (isMove) {
+                        var dx = ev.clientX - event.clientX;
+                        var dy = ev.clientY - event.clientY;
+                        var nh = h;
+                        nh += dy;
+                        nh = Math.max(60, nh);
+                        self.block.cardCoverHeight = nh;
+                        if (isEnd) {
+                            self.block.onManualUpdateProps({
+                                cardCoverHeight: h
+                            }, {
+                                cardCoverHeight: nh
+                            }, { range: BlockRenderRange.self })
+                        }
+                        else self.forceUpdate();
+                    }
+                },
+            })
+        }
+        else {
+            var t = event.currentTarget as HTMLElement;
+            var div = t.parentNode as HTMLElement;
+            var p = div.parentNode as HTMLElement;
+            var pr = Rect.fromEle(p);
+            var dr = Rect.fromEle(div);
+            var ow = this.block.cardCoverWidth;
+            MouseDragger({
+                event,
+                moving(ev, data, isEnd, isMove) {
+                    if (isMove) {
+                        var dx = ev.clientX - event.clientX;
+                        var nw = dr.width;
+                        if (arrow == 'left') {
+                            nw += dx;
+                        }
+                        else if (arrow == 'right') {
+                            nw -= dx;
+                        }
+                        nw = Math.max(30, nw);
+                        nw = Math.min(pr.width - 100, nw);
+                        if (isEnd) {
+                            self.block.onManualUpdateProps({
+                                cardCoverWidth: ow
+                            }, {
+                                cardCoverWidth: nw / pr.width * 100
+                            }, { range: BlockRenderRange.self })
+                        }
+                        else {
+                            div.style.width = nw + 'px';
+                        }
+                    }
+                },
+            })
+        }
+    }
     renderView() {
         var style: CSSProperties = {};
         var bg = this.block.cardThemeStyle.bgStyle;
@@ -324,12 +394,26 @@ export class ViewComponent extends BlockView<CardBox>{
                 hasCover = false;
             }
             if (cs?.display == 'inside-cover') {
-                return <div>
-                    <div className="h-120" style={{ borderRadius: '16px 16px 0px 0px', ...coverStyle }}>
+                return <div className="relative">
+                    <div className="h-120" style={{
+                        borderRadius: '16px 16px 0px 0px',
+                        ...coverStyle,
+                        height: self.block.cardCoverHeight
+                    }}>
                         {hasCover == false && <Icon onMousedown={e => {
                             self.block.openSetBg(e);
                         }} className={'cursor remark'} size={24} icon={PicSvg}></Icon>}
                     </div>
+                    {self.block.isCanEdit() && <div className="item-hover" onMouseDown={e => {
+                        self.dragSize('top', e);
+                    }} style={{
+                        position: 'absolute',
+                        top: self.block.cardCoverHeight - 3,
+                        left: 0,
+                        height: 6,
+                        right: 0,
+                        cursor: 'row-resize'
+                    }}></div>}
                     <div className="gap-w-50 gap-h-30"><ChildsArea childs={self.block.childs}></ChildsArea></div>
                 </div>
             }
@@ -340,10 +424,29 @@ export class ViewComponent extends BlockView<CardBox>{
             }
             else if (cs?.display == 'inside-cover-left') {
                 return <div className="flex flex-full">
-                    <div className="min-h-60 flex-fixed" style={{ borderRadius: '16px 0px 0px 16px ', width: '33.3%', ...coverStyle }}>
+                    <div className="min-h-60 flex-fixed relative" style={{
+                        borderRadius: '16px 0px 0px 16px ',
+                        width: (self.block.cardCoverWidth) + '%',
+                        ...coverStyle
+                    }}>
                         {hasCover == false && <Icon onMousedown={e => {
                             self.block.openSetBg(e);
                         }} className={'cursor remark'} size={24} icon={PicSvg}></Icon>}
+                        {self.block.isCanEdit() && <div
+                            className="item-hover"
+                            onMouseDown={e => {
+                                self.dragSize('left', e);
+                            }}
+                            style={{
+                                position: 'absolute',
+                                top: 0,
+                                bottom: 0,
+                                right: -3,
+                                width: 6,
+                                cursor: 'col-resize',
+                                borderRadius: 3,
+                            }}
+                        ></div>}
                     </div>
                     <div className="flex-auto gap-w-50 gap-h-30"><ChildsArea childs={self.block.childs}></ChildsArea></div>
                 </div>
@@ -351,10 +454,29 @@ export class ViewComponent extends BlockView<CardBox>{
             else if (cs?.display == 'inside-cover-right') {
                 return <div className="flex flex-full">
                     <div className="flex-auto gap-w-50 gap-h-30"><ChildsArea childs={self.block.childs}></ChildsArea></div>
-                    <div className="min-h-60 flex-fixed" style={{ borderRadius: '0px 16px 16px 0px ', width: '33.3%', ...coverStyle }}>
+                    <div className="min-h-60 flex-fixed relative" style={{
+                        borderRadius: '0px 16px 16px 0px ',
+                        width: self.block.cardCoverWidth + "%",
+                        ...coverStyle
+                    }}>
                         {hasCover == false && <Icon onMousedown={e => {
                             self.block.openSetBg(e);
                         }} className={'cursor remark'} size={24} icon={PicSvg}></Icon>}
+                        {self.block.isCanEdit() && <div
+                            className="item-hover"
+                            onMouseDown={e => {
+                                self.dragSize('right', e);
+                            }}
+                            style={{
+                                position: 'absolute',
+                                top: 0,
+                                bottom: 0,
+                                left: -3,
+                                width: 6,
+                                cursor: 'col-resize',
+                                borderRadius: 3
+                            }}
+                        ></div>}
                     </div>
                 </div>
             }
