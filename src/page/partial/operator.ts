@@ -22,6 +22,7 @@ import { lst } from "../../../i18n/store";
 import { Matrix } from "../../common/matrix";
 import { useImportFile } from "../../../extensions/import-file";
 import { buildPage } from "../common/create";
+import { util } from "../../../util/util";
 
 
 export class Page$Operator {
@@ -261,6 +262,7 @@ export class Page$Operator {
                 }
             })
         }
+        menus = util.neighborDeWeight(menus, c => (c.name + "") + c.type);
         var re = await useSelectMenuItem(
             {
                 roundPoint: event instanceof Point ? event : Point.from(event),
@@ -311,7 +313,7 @@ export class Page$Operator {
             case 'fontColor':
                 this.onAction('setFontStyle', async () => {
                     await blocks.eachAsync(async (block) => {
-                        await  block.pattern.setFontStyle({ color: item.value });
+                        await block.pattern.setFontStyle({ color: item.value });
                         this.addBlockUpdate(block);
                     })
                 })
@@ -319,7 +321,7 @@ export class Page$Operator {
             case 'fillColor':
                 this.onAction('setFillStyle', async () => {
                     await blocks.eachAsync(async (block) => {
-                        await  block.pattern.setFillStyle({ mode: 'color', color: item.value })
+                        await block.pattern.setFillStyle({ mode: 'color', color: item.value })
                         this.addBlockUpdate(block);
                     })
                 })

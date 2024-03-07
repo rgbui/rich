@@ -11,7 +11,7 @@ import { Page } from "../../../src/page";
 import { LinkWs } from "../../../src/page/declare";
 import { CardFactory } from "../template/card/factory/factory";
 import { lst } from "../../../i18n/store";
-import { on } from "events";
+
 
 export interface TableSchemaView {
     id: string,
