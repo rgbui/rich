@@ -307,7 +307,7 @@ export class PageTheme extends EventsComponent {
                 <div className="remark   gap-t-10 gap-b-5 f-12">
                     <S>透明性</S>
                 </div>
-                <div >
+                <div className="gap-h-10">
                     <SelectBox
                         border
                         value={this.page.pageTheme.contentStyle?.transparency}

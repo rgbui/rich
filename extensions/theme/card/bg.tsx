@@ -150,9 +150,6 @@ export class PageFillStyle extends React.Component<{
                 <Icon icon={CloseSvg} size={14}></Icon>
             </div>}
             <div className={this.props.isFill ? "" : "max-h-400 overflow-y"}>
-                {/* {!this.props.isFill && <div className="h-16 hidden">
-                    <span className="remark f-12"><S>设置背景</S></span>
-                </div>} */}
                 {this.props.isFill && <div className="gap-b-10 padding-w-15">
                     <SelectBox dropAlign="full" border value={this.bgStyle.mode} onChange={(r, item) => {
                         self.setProps({ mode: item.value })

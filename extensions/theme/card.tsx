@@ -85,7 +85,7 @@ export class CardTheme extends EventsComponent {
                         options={[
                             { text: lst('纯色'), value: 'solid' },
                             { text: lst('渐变'), value: 'faded' },
-                            { text: lst('毛玻璃'), value: 'frosted' }
+                            { text: lst('玻璃'), value: 'frosted' }
                         ]}></SelectBox>
                 </div>
             </>}

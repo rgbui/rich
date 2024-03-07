@@ -81,7 +81,7 @@ export class CardBoxStyle extends EventsComponent {
                         options={[
                             { text: lst('透明'), value: 'noborder' },
                             { text: lst('渐变'), value: 'faded' },
-                            { text: lst('毛玻璃'), value: 'frosted' },
+                            { text: lst('玻璃'), value: 'frosted' },
                             { text: lst('纯色'), value: 'solid' },
                         ]}></SelectBox>
                 </div>
