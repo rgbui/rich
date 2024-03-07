@@ -81,7 +81,8 @@
     flex-wrap      : nowrap;
     cursor         : pointer;
 
-    &.border {
+    &.border,
+    &.border-t {
         border       : 1px solid rgba(55, 53, 47, 0.16);
         border-radius: 4px;
         padding      : 0px 10px;
@@ -97,11 +98,11 @@
         }
     }
 
+    &.border-t {
+        border: 1px solid transparent;
+    }
+
     &.disabled {
         color: rgb(55, 53, 47, 0.3);
-
-        svg {
-            // fill: rgb(55, 53, 47, 0.3);
-        }
     }
 }

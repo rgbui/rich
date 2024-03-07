@@ -11,7 +11,7 @@ export class SelectBox<T = any> extends React.Component<{
     children?: JSX.Element | string | React.ReactNode,
     disabled?: boolean,
     inline?: boolean,
-    value?: T|(T[]),
+    value?: T | (T[]),
     className?: string | (string[]),
     options?: MenuItem<string>[],
     computedOptions?: () => Promise<MenuItem<string>[]>,
@@ -29,7 +29,9 @@ export class SelectBox<T = any> extends React.Component<{
     textAlign?: 'left' | 'center' | 'right',
     placeholder?: string,
     checkChange?: (value: any, item?: MenuItem<string>) => Promise<boolean>,
-    onDrop?: (spread?: boolean, e?: React.MouseEvent) => void
+    onDrop?: (spread?: boolean, e?: React.MouseEvent) => void,
+    bg?: boolean,
+    hover?: boolean
 }>{
     el: HTMLElement;
     render() {
@@ -84,9 +86,20 @@ export class SelectBox<T = any> extends React.Component<{
                 self.props.onDrop(false, event)
         }
         var classList: string[] = ['shy-select-box'];
-        if (this.props.disabled) classList.push("disabled")
-        if (this.props.border) classList.push('border')
-        if (this.props.small) classList.push('small')
+        if (this.props.disabled) classList.push("disabled");
+        if (this.props.border && !this.props.bg) classList.push('border');
+        if (this.props.small) classList.push('small');
+        if (this.props.bg) {
+            classList.push('item-hover-input-focus');
+            classList.push('border-t')
+        }
+        if (this.props.hover) {
+            classList.push('item-hover')
+            classList.push('remark')
+            classList.push('padding-l-5')
+            classList.push('padding-r-3')
+            classList.push('round')
+        }
         if (Array.isArray(this.props.className)) this.props.className.each(c => { classList.push(c) })
         else if (this.props.className) classList.push(this.props.className)
         var ops = this.props.options.arrayJsonFindAll('childs', g => Array.isArray(this.props.value) && this.props.value.includes(g.value))
@@ -98,8 +111,8 @@ export class SelectBox<T = any> extends React.Component<{
             ref={e => { this.el = e; }}
             style={style}
             className={classList.join(" ")}
-            onMouseDown={e =>mousedown(e)}
-            >
+            onMouseDown={e => mousedown(e)}
+        >
             {this.props.children && <>{this.props.children}<Icon className={'gap-l-3 remark'} size={14} icon={ChevronDownSvg}></Icon></>}
             {!this.props.children && <div style={{ width: '100%' }} className="flex">
                 {this.props.prefix}
