@@ -131,11 +131,16 @@ export class InsertBlocksCommandView extends FlowCommandView<InsertBlocksCommand
         var self = this;
         return <div>
             {this.renderHead(<Icon size={16} icon={DuplicateSvg}></Icon>,
-                <><S>插入块至</S><div className="flex max-w-120 remark gap-l-5 item-hover round"><SelectBox iconHidden small onChange={e => this.command.onUpdateProps({ direction: e })} value={this.command.direction} options={[
-                    { icon: { name: 'bytedance-icon', code: 'up-one' }, text: lst('按钮上面'), value: 'above' },
-                    { icon: { name: 'bytedance-icon', code: 'down-one' }, text: lst('按钮下面'), value: 'below' }
-                ]
-                }></SelectBox></div>
+                <><S>插入块至</S><div className="flex max-w-120 remark gap-l-5 padding-w-5 item-hover round"><SelectBox
+                    iconHidden
+                    small
+                    onChange={e => this.command.onUpdateProps({ direction: e })}
+                    value={this.command.direction}
+                    options={[
+                        { icon: { name: 'bytedance-icon', code: 'up-one' }, text: lst('按钮上面'), value: 'above' },
+                        { icon: { name: 'bytedance-icon', code: 'down-one' }, text: lst('按钮下面'), value: 'below' }
+                    ]
+                    }></SelectBox></div>
                 </>)}
             <div className="round border bg-white">
                 {self.command.block && <self.command.block.viewComponent block={self.command.block}></self.command.block.viewComponent >}

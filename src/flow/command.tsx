@@ -79,7 +79,7 @@ export class FlowCommand {
                         this.flow.commands.splice(at - 1, 0, this);
                         if (this.flow.view)
                             this.flow.view.forceUpdate()
-                        await this.flow.saveFlow();
+                        await this.flow.view.onChange();
                     }
                     break;
                 case 'below':
@@ -89,7 +89,7 @@ export class FlowCommand {
                         this.flow.commands.splice(at + 1, 0, this);
                         if (this.flow.view)
                             this.flow.view.forceUpdate()
-                        await this.flow.saveFlow();
+                        await this.flow.view.onChange();
                     }
                     break;
                 case 'clone':
@@ -98,13 +98,13 @@ export class FlowCommand {
                     var nc = await FlowCommandFactory.createCommand(d.url, this.flow, d);
                     this.flow.commands.splice(at + 1, 0, nc);
                     if (this.flow.view) this.flow.view.forceUpdate()
-                    await this.flow.saveFlow();
+                    await this.flow.view.onChange();
                     break;
                 case 'trash':
                     var at = this.flow.commands.indexOf(this);
                     this.flow.commands.splice(at, 1);
                     if (this.flow.view) this.flow.view.forceUpdate();
-                    await this.flow.saveFlow();
+                    await this.flow.view.onChange();
                     break;
                 case 'add':
                     await this.flow.openAddStep(rect, this.flow.commands.indexOf(this) + 1);
@@ -126,7 +126,7 @@ export abstract class FlowCommandView<T extends FlowCommand> extends React.Compo
         this.props.command.view = this;
     }
     renderHead(icon: React.ReactNode, title: React.ReactNode) {
-        return <div className="flex gap-b-5">
+        return <div className="flex gap-b-5 text-1">
             <div className="flex-fixed flex">
                 <Tip text='拖动它'><span className="hover-toggle drag flex-center size-24 item-hover round cursor">
                     <Icon size={16} icon={DragHandleSvg}></Icon>{icon}

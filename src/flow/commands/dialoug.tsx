@@ -37,7 +37,7 @@ export class ConfirmCommand extends FlowCommand {
         return json;
     }
     async excute() {
-        if (!await Confirm(this.confirmMessage,'', this.continueButtonMessage, this.cancelButtonMessage)) {
+        if (!await Confirm(this.confirmMessage, '', this.continueButtonMessage, this.cancelButtonMessage)) {
             return false;
         }
     }
@@ -50,14 +50,21 @@ export class ConfirmCommandView extends FlowCommandView<ConfirmCommand> {
             {this.renderHead(<Icon size={16} icon={{ name: 'bytedance-icon', code: 'helpcenter' }}></Icon>,
                 <><S>显示确认框</S>
                 </>)}
-            <div className="r-gap-h-10">
-                <div><Textarea value={this.command.confirmMessage}
-                    onChange={e => this.command.onUpdateProps({ confirmMessage: e })
-                    }></Textarea></div>
-                <div><Input value={this.command.continueButtonMessage}
-                    onChange={e => this.command.onUpdateProps({ continueButtonMessage: e })}></Input></div>
-                <div><Input value={this.command.cancelButtonMessage}
-                    onChange={e => this.command.onUpdateProps({ cancelButtonMessage: e })}></Input></div>
+            <div className="r-gap-h-10 r-gap-h-10">
+                <div>
+                    <div className="f-12 remark gap-b-3"><S>确认信息</S></div>
+                    <Textarea value={this.command.confirmMessage}
+                        onChange={e => this.command.onUpdateProps({ confirmMessage: e })
+                        }></Textarea></div>
+                <div>
+                    <div className="f-12 remark gap-b-3"><S>继续按钮文本</S></div>
+                    <Input value={this.command.continueButtonMessage}
+                        onChange={e => this.command.onUpdateProps({ continueButtonMessage: e })}></Input></div>
+                <div>
+                    <div className="f-12 remark gap-b-3"><S>取消按钮文本</S></div>
+                    <Input value={this.command.cancelButtonMessage}
+                        onChange={e => this.command.onUpdateProps({ cancelButtonMessage: e })}></Input></div>
+
             </div>
         </div>
     }

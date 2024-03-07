@@ -6,10 +6,14 @@ import { PlusSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { DragList } from "../../component/view/drag.list";
 
-export class FlowView extends React.Component<{ flow: Flow }> {
+export class FlowView extends React.Component<{ flow: Flow, onChange: () => Promise<void> }> {
     constructor(props) {
         super(props)
         this.props.flow.view = this;
+    }
+    async onChange() {
+        if (this.props.onChange)
+            await this.props.onChange()
     }
     renderCommands() {
         return <DragList isDragBar={e => { return e.closest('.drag') ? true : false }}

@@ -3,7 +3,6 @@ import { util } from "../../util/util";
 import { FlowCommand } from "./command";
 import { FlowCommandFactory } from "./factory/block.factory";
 import { LinkWs } from "../page/declare";
-import { channel } from "../../net/channel";
 import { Block } from "../block";
 import { FlowView } from "./view";
 import { DuplicateSvg, PlusSvg, Edit1Svg, LinkSvg } from "../../component/svgs";
@@ -35,21 +34,6 @@ export class Flow {
                 }
             }
             else this[n] = lodash.cloneDeep(data[n])
-        }
-    }
-    async loadFlow() {
-        var r = await channel.get('/ws/flow/get', { flowId: this.id, ws: this.ws });
-        if (r.ok) {
-            await this.load(r.data.flow);
-        }
-    }
-    async saveFlow() {
-        var r = await channel.put('/ws/flow', {
-            ws: this.ws,
-            flow: await this.get()
-        });
-        if (r.ok) {
-
         }
     }
     async get() {
@@ -97,9 +81,9 @@ export class Flow {
                 data.block = { url: '/template' }
             }
             if (typeof at == 'undefined') at = this.commands.length;
-           
             this.commands.splice(at, 0, await FlowCommandFactory.createCommand(r.item.value, this, data));
             this.view.forceUpdate()
+            await this.view.onChange();
         }
     }
 }

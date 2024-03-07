@@ -28,6 +28,7 @@ import { getElementUrl, ElementType } from "../../../net/element.type";
 import { Page } from "../../page";
 import { SchemaFilter } from "../../../blocks/data-grid/schema/filter";
 import { useCustomTableFilter } from "../../../extensions/data-grid/view.config/filter/custom";
+import { useTableStoreOption } from "../../../extensions/data-grid/option/option";
 
 @flow('/addRecords')
 export class AddRecordsCommand extends FlowCommand {
@@ -110,10 +111,130 @@ export class AddRecordsCommand extends FlowCommand {
     }
 }
 
+
+function renderFieldInput(view: AddRecordsCommandView | EditRecordsCommandView, field) {
+    var fe = view.command.schema.fields.find(g => g.id == field.fieldId);
+    switch (fe.type) {
+        case FieldType.email:
+        case FieldType.link:
+        case FieldType.phone:
+        case FieldType.title:
+            return <Input value={field.value} onChange={e => field.value = e}></Input>
+        case FieldType.date:
+            var dateMaps = [
+                { text: lst('具体时间'), value: null },
+                { type: MenuItemType.divide },
+                { text: lst('今天'), value: '0D' },
+                { text: lst('昨天'), value: '-1D' },
+                { text: lst('明天'), value: '1D' },
+                { text: lst('一周前'), value: '-7D' },
+                { text: lst('一周后'), value: '7D' },
+                { text: lst('一月前'), value: '-30D' },
+                { text: lst('一月后'), value: '30D' },
+                { type: MenuItemType.divide },
+                { name: 'delete', icon: TrashSvg, text: lst('删除') }
+            ]
+            return <span
+                className="item-hover remark round padding-w-5 padding-h-3 cursor"
+                onMouseDown={async e => {
+                    var rect = Rect.fromEle(e.currentTarget as HTMLElement);
+                    var dm = await useSelectMenuItem({ roundArea: rect }, dateMaps);
+                    if (dm) {
+                        if (dm.item.name == 'delete') {
+                            field.value = '';
+                            view.forceUpdate();
+                        }
+                        else if (dm.item.value === null) {
+                            var r = await useDatePicker({ roundArea: rect },
+                                typeof field.value == 'number' ? new Date(field.value) : undefined, { includeTime: true });
+                            if (r) {
+                                field.value = r.getTime();
+                                view.forceUpdate();
+                            }
+                        }
+                        else {
+                            field.value = dm.item.value;
+                            view.forceUpdate();
+                        }
+                    }
+                }}>{field.value && (typeof field.value == 'string' ? dateMaps.find(c => c.value == field.value)?.text : dayjs(field.value).format('YYYY-MM-DD HH:mm:ss')) || <S>添加日期</S>}</span>
+        case FieldType.number:
+            return <InputNumber value={field.value} onChange={e => { field.value = e; this.forceUpdate() }}></InputNumber>
+        case FieldType.user:
+            var openUser = async (e: React.MouseEvent) => {
+                var ru = await useUserPicker({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) }, this.command.flow.ws, { ignoreUserAll: true });
+                if (ru) {
+                    field.value = ru.id;
+                    view.forceUpdate();
+                }
+            }
+            return field.value && <span onMouseDown={e => openUser(e)}>
+                {field.value && <Avatar userid={field.value}></Avatar>}
+                {!field.value && <span className="item-hover remark round padding-w-5" ><S>添加用户</S></span>}
+            </span>
+        case FieldType.option:
+            var op = (fe.config?.options || []).find(g => g.value == field.value);
+            var selectOp = async (event) => {
+                var r = await useTableStoreOption({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, op?.value, {
+                    isEdit: false,
+                    options: (fe.config?.options || []),
+                    multiple: false
+                })
+                if (typeof r != 'undefined') {
+                    field.value = r[0].value;
+                    view.forceUpdate()
+                }
+            }
+            if (!op) return <span className="item-hover remark round padding-h-3 padding-w-5 cursor" onMouseDown={e => selectOp(e)}><S>选择项</S></span>
+            return <span className="padding-w-5 round cursor  f-14 padding-h-2  l-16 " onMouseDown={e => selectOp(e)} style={{ background: op.color }}>{op?.text}</span>
+        case FieldType.options:
+            var ops = (fe.config?.options || []).findAll(g => Array.isArray(field.value) && field.value.includes(g.value));
+            var selectOp = async (event) => {
+                var r = await useTableStoreOption({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, ops.map(c => c.value), {
+                    isEdit: false,
+                    options: (fe.config?.options || []),
+                    multiple: true
+                })
+                if (Array.isArray(r)) {
+                    field.value = r.map(c => c.value);
+                    view.forceUpdate()
+                }
+            }
+            if (ops.length == 0) return <span className="item-hover remark round padding-h-3 padding-w-5" onMouseDown={e => selectOp(e)}><S>选择项</S></span>
+            return <span className="flex ">{
+                ops.map((op, index) => {
+                    return <span key={op.value}
+                        className="padding-w-5 round cursor flex"
+                        onMouseDown={e => selectOp(e)}
+                        style={{ background: op.color }}>
+                        <em className="gap-r-3  f-14 padding-h-2  l-16 ">{op?.text}</em>
+                        <Icon
+                            size={12}
+                            className={'remark'}
+                            icon={CloseSvg}
+                            onMousedown={e => {
+                                e.stopPropagation();
+                                lodash.remove(field.value, g => g == op.value);
+                                this.forceUpdate();
+                            }}
+                        ></Icon>
+                    </span>
+                })}</span>
+        case FieldType.bool:
+            return <span><Switch checked={field.value} onChange={e => {
+                field.value = e;
+                this.forceUpdate();
+            }}></Switch></span>
+    }
+}
+
+
 @flowView('/addRecords')
 export class AddRecordsCommandView extends FlowCommandView<AddRecordsCommand>{
     componentDidMount(): void {
-        this.command.loadSchema();
+        this.command.loadSchema().then(() => {
+            this.forceUpdate();
+        })
     }
     async openSelectTable(event: React.MouseEvent) {
         var r = await useDataSourceView({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, { selectView: false, tableId: this.command.schemaId || undefined })
@@ -169,136 +290,17 @@ export class AddRecordsCommandView extends FlowCommandView<AddRecordsCommand>{
             this.forceUpdate()
         }
     }
-    renderFieldInput(field) {
-        var fe = this.command.schema.fields.find(g => g.id == field.fieldId);
-        switch (fe.type) {
-            case FieldType.email:
-            case FieldType.link:
-            case FieldType.phone:
-            case FieldType.title:
-                return <Input value={field.value} onChange={e => field.value = e}></Input>
-            case FieldType.date:
-                var dateMaps = [
-                    { text: lst('具体时间'), value: null },
-                    { type: MenuItemType.divide },
-                    { text: lst('今天'), value: '0D' },
-                    { text: lst('昨天'), value: '-1D' },
-                    { text: lst('明天'), value: '1D' },
-                    { text: lst('一周前'), value: '-7D' },
-                    { text: lst('一周后'), value: '7D' },
-                    { text: lst('一月前'), value: '-30D' },
-                    { text: lst('一月后'), value: '30D' },
-                    { type: MenuItemType.divide },
-                    { name: 'delete', icon: TrashSvg, text: lst('删除') }
-                ]
-                return <span className="item-hover remark round padding-w-5" onMouseDown={async e => {
-                    var rect = Rect.fromEle(e.currentTarget as HTMLElement);
-                    var dm = await useSelectMenuItem({ roundArea: rect }, dateMaps);
-                    if (dm) {
-                        if (dm.item.name == 'delete') {
-                            field.value = '';
-                            this.forceUpdate();
-                        }
-                        else if (dm.item.value === null) {
-                            var r = await useDatePicker({ roundArea: rect },
-                                typeof field.value == 'number' ? new Date(field.value) : undefined, { includeTime: true });
-                            if (r) {
-                                field.value = r.getTime();
-                                this.forceUpdate();
-                            }
-                        }
-                        else {
-                            field.value = dm.item.value;
-                            this.forceUpdate();
-                        }
-                    }
-                }}>{field.value && (typeof field.value == 'string' ? dateMaps.find(c => c.value == field.value)?.text : dayjs(field.value).format('YYYY-MM-DD HH:mm:ss')) || <S>添加日期</S>}</span>
-            case FieldType.number:
-                return <InputNumber value={field.value} onChange={e => { field.value = e; this.forceUpdate() }}></InputNumber>
-            case FieldType.user:
-                var openUser = async (e: React.MouseEvent) => {
-                    var ru = await useUserPicker({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) }, this.command.flow.ws, { ignoreUserAll: true });
-                    if (ru) {
-                        field.value = ru.id;
-                        this.forceUpdate();
-                    }
-                }
-                return field.value && <span onMouseDown={e => openUser(e)}>
-                    {field.value && <Avatar userid={field.value}></Avatar>}
-                    {!field.value && <span className="item-hover remark round padding-w-5" ><S>添加用户</S></span>}
-                </span>
-            case FieldType.option:
-                var op = (fe.config?.options || []).find(g => g.value == field.value);
-                var selectOp = async (event) => {
-                    var r = await useSelectMenuItem({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, ([...(fe.config?.options || []).map(n => {
-                        return {
-                            text: n.text,
-                            value: n.value
-                        }
-                    }), { type: MenuItemType.divide }, { name: 'delete', icon: TrashSvg, text: lst('删除') }]));
-                    if (r?.item) {
-                        if (r?.item.name == 'delete') field.value = '';
-                        else field.value = r.item.value;
-                        this.forceUpdate()
-                    }
-                }
-                if (!op) return <span className="item-hover remark round padding-w-5" onMouseDown={e => selectOp(e)}><S>选择项</S></span>
-                return <span className="padding-w-5 round cursor" onMouseDown={e => selectOp(e)} style={{ background: op.color }}>{op?.text}</span>
-            case FieldType.options:
-                var ops = (fe.config?.options || []).findAll(g => Array.isArray(field.value) && field.value.includes(g.value));
-                var selectOp = async (event) => {
-                    var r = await useSelectMenuItem({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, ([...(fe.config?.options || []).map(n => {
-                        return {
-                            text: n.text,
-                            value: n.value
-                        }
-                    }), { type: MenuItemType.divide }, { name: 'delete', icon: TrashSvg, text: lst('清空') }]));
-                    if (r?.item) {
-                        if (r?.item.name == 'delete') field.value = [];
-                        else {
-                            if (!Array.isArray(field.value)) field.value = [];
-                            if (!field.value.includes(r.item.value)) field.value.push(r.item.value);
-                            else lodash.remove(field.value, g => g == r.item.value);
-                        }
-                        this.forceUpdate()
-                    }
-                }
-                if (ops.length == 0) return <span className="item-hover remark round padding-w-5" onMouseDown={e => selectOp(e)}><S>选择项</S></span>
-                return <>{ops.map((op, index) => {
-                    return <span key={op.value}
-                        className="padding-w-5 round cursor"
-                        onMouseDown={e => selectOp(e)}
-                        style={{ background: op.color }}>
-                        <em>{op?.text}</em>
-                        <Icon
-                            icon={CloseSvg}
-                            onMousedown={e => {
-                                e.stopPropagation();
-                                lodash.remove(field.value, g => g == op.value);
-                                this.forceUpdate();
-                            }}
-                        ></Icon>
-                    </span>
-                })}</>
-            case FieldType.bool:
-                return <span><Switch checked={field.value} onChange={e => {
-                    field.value = e;
-                    this.forceUpdate();
-                }}></Switch></span>
-
-        }
-    }
     renderView() {
         return <div>
             {this.renderHead(<Icon size={18} icon={PlusSvg}></Icon>,
                 <><S>添加数据至</S>
-                    {this.command.schema && <span className="item-hover remark item-hover-light-focus padding-w-5 round cursor flex" onMouseDown={e => this.openSelectTable(e)}><Icon size={16} icon={this.command.schema.icon || CollectTableSvg}></Icon>{this.command.schema?.text}</span>}
-                    {!this.command.schema && <span className="item-hover remark item-hover-light-focus padding-w-5 round cursor " onMouseDown={e => this.openSelectTable(e)}><S>数据表</S></span>}
+                    {this.command.schema && <span className="item-hover remark  padding-w-5 round cursor flex" onMouseDown={e => this.openSelectTable(e)}><Icon size={16} icon={this.command.schema.icon || CollectTableSvg}></Icon>{this.command.schema?.text}</span>}
+                    {!this.command.schema && <span className="item-hover remark  padding-w-5 round cursor " onMouseDown={e => this.openSelectTable(e)}><S>选择数据表</S></span>}
                 </>)}
             <div>
                 {this.command.schema && <div className="flex gap-h-10">
                     <span className="flex-auto gap-l-10"><S>打开视图模板</S></span>
-                    <SelectBox className={'flex-fixed item-hover remark item-hover-light-focus round padding-l-5'} onChange={e => this.command.onUpdateProps({ schemaViewId: e })} value={this.command.schemaViewId} options={[
+                    <SelectBox className={'flex-fixed item-hover remark  round padding-l-5'} onChange={e => this.command.onUpdateProps({ schemaViewId: e })} value={this.command.schemaViewId} options={[
                         { text: lst('关闭'), value: '' },
                         { type: MenuItemType.divide, visible: this.command.schema.views.findAll(g => [BlockUrlConstant.RecordPageView].includes(g.url as any)).length > 0 },
                         ...this.command.schema.views.findAll(g => [BlockUrlConstant.RecordPageView].includes(g.url as any)).map(n => ({
@@ -320,19 +322,15 @@ export class AddRecordsCommandView extends FlowCommandView<AddRecordsCommand>{
                             </span>
                         </span>
                         <span className="flex-auto gap-l-10">
-                            {this.renderFieldInput(f)}
+                            {renderFieldInput(this, f)}
                         </span>
                     </div>
                 })}
-                <div onMouseDown={e => this.addField(e)}><span className="gap-l-10 item-hover remark  item-hover-light-focus round padding-w-5 cursor h-24 flex flex-line"><S>添加字段值</S><Icon icon={ChevronDownSvg}></Icon></span></div>
+                {this.command.schema && <div onMouseDown={e => this.addField(e)}><span className="gap-l-10 item-hover remark   round padding-w-5 cursor h-24 flex flex-line"><Icon icon={PlusSvg} size={16} className={'flex-center size-20'}></Icon><S>添加字段值</S><Icon icon={ChevronDownSvg}></Icon></span></div>}
             </div>
         </div>
     }
 }
-
-
-
-
 
 @flow('/editRecords')
 export class EditRecordsCommand extends FlowCommand {
@@ -406,8 +404,7 @@ export class EditRecordsCommand extends FlowCommand {
             if (dialougPage) {
                 dialougPage.onPageSave();
                 var newRow = await dialougPage.getSchemaRow();
-                if (newRow)
-                    await this.schema.rowUpdateAll({ data: newRow, filter: this.filter }, this.flow.ws);
+                if (newRow) await this.schema.rowUpdateAll({ data: newRow, filter: this.filter }, this.flow.ws);
             }
             await channel.air('/page/dialog', { elementUrl: null });
         }
@@ -426,180 +423,184 @@ export class EditRecordsCommand extends FlowCommand {
 @flowView('/editRecords')
 export class EditRecordsCommandView extends FlowCommandView<EditRecordsCommand> {
     async openSelectTable(event: React.MouseEvent) {
-        var r = await useDataSourceView({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, { selectView: false, tableId: this.command.schemaId || undefined })
-        if (r) {
-            this.command.schemaId = r as any;
-            this.command.schema = await TableSchema.loadTableSchema(this.command.schemaId,
-                this.command.flow.ws
-            );
-            this.command.fields = [];
-            this.forceUpdate();
-        }
+        await AddRecordsCommandView.prototype.openSelectTable.call(this, event);
+        // var r = await useDataSourceView({
+        //     roundArea: Rect.fromEle(event.currentTarget as HTMLElement)
+        // }, {
+        //     selectView: false,
+        //     tableId: this.command.schemaId || undefined
+        // })
+        // if (r) {
+        //     this.command.schemaId = r as any;
+        //     this.command.schema = await TableSchema.loadTableSchema(this.command.schemaId,
+        //         this.command.flow.ws
+        //     );
+        //     this.command.fields = [];
+        //     this.command.schemaViewId = '';
+        //     this.forceUpdate();
+        // }
     }
     async addField(event: React.MouseEvent) {
-        if (!this.command.schema) return;
-        var vfs = this.command.editFields.findAll(g => !this.command.fields.some(s => s.fieldId == g.id));
-        if (vfs.length > 0) {
-            var r = await useSelectMenuItem({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, [
-                ...vfs.map(n => {
-                    return {
-                        icon: GetFieldTypeSvg(n.type),
-                        text: n.text,
-                        value: n.id
-                    }
-                })
-            ]);
-            if (r?.item) {
-                this.command.fields.push({ fieldId: r.item.value, id: util.guid(), value: '', operator: '' })
-                this.forceUpdate()
-            }
-        }
+        await AddRecordsCommandView.prototype.addField.call(this, event);
+        // if (!this.command.schema) return;
+        // var vfs = this.command.editFields.findAll(g => !this.command.fields.some(s => s.fieldId == g.id));
+        // if (vfs.length > 0) {
+        //     var r = await useSelectMenuItem({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, [
+        //         ...vfs.map(n => {
+        //             return {
+        //                 icon: GetFieldTypeSvg(n.type),
+        //                 text: n.text,
+        //                 value: n.id
+        //             }
+        //         })
+        //     ]);
+        //     if (r?.item) {
+        //         this.command.fields.push({ fieldId: r.item.value, id: util.guid(), value: '', operator: '' })
+        //         this.forceUpdate()
+        //     }
+        // }
     }
     async changeField(event: React.MouseEvent, field) {
-        var vfs = this.command.editFields.findAll(g => !this.command.fields.some(s => s.fieldId == g.id));
-        var r = await useSelectMenuItem({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, [
-            ...vfs.map(n => {
-                return {
-                    icon: GetFieldTypeSvg(n.type),
-                    text: n.text,
-                    value: n.id
-                }
-            }),
-            { type: MenuItemType.divide, visible: vfs.length > 0 },
-            { name: 'delete', text: lst('删除'), icon: TrashSvg }
-        ]);
-        if (r?.item) {
-            if (r.item.name == 'delete') {
-                lodash.remove(this.command.fields, g => g.id == field.id)
-            }
-            else {
-                field.fieldId = r.item.value;
-                field.value = '';
-            }
-            this.forceUpdate()
-        }
-    }
-    renderFieldInput(field) {
-        var fe = this.command.schema.fields.find(g => g.id == field.fieldId);
-        switch (fe.type) {
-            case FieldType.email:
-            case FieldType.link:
-            case FieldType.phone:
-            case FieldType.title:
-                return <Input value={field.value} onChange={e => field.value = e}></Input>
-            case FieldType.date:
-                var dateMaps = [
-                    { text: lst('具体时间'), value: null },
-                    { type: MenuItemType.divide },
-                    { text: lst('今天'), value: '0D' },
-                    { text: lst('昨天'), value: '-1D' },
-                    { text: lst('明天'), value: '1D' },
-                    { text: lst('一周前'), value: '-7D' },
-                    { text: lst('一周后'), value: '7D' },
-                    { text: lst('一月前'), value: '-30D' },
-                    { text: lst('一月后'), value: '30D' },
-                    { type: MenuItemType.divide },
-                    { name: 'delete', icon: TrashSvg, text: lst('删除') }
-                ]
-                return <span className="item-hover remark round padding-w-5" onMouseDown={async e => {
-                    var rect = Rect.fromEle(e.currentTarget as HTMLElement);
-                    var dm = await useSelectMenuItem({ roundArea: rect }, dateMaps);
-                    if (dm) {
-                        if (dm.item.name == 'delete') {
-                            field.value = '';
-                            this.forceUpdate();
-                        }
-                        else if (dm.item.value === null) {
-                            var r = await useDatePicker({ roundArea: rect },
-                                typeof field.value == 'number' ? new Date(field.value) : undefined, { includeTime: true });
-                            if (r) {
-                                field.value = r.getTime();
-                                this.forceUpdate();
-                            }
-                        }
-                        else {
-                            field.value = dm.item.value;
-                            this.forceUpdate();
-                        }
-                    }
-                }}>{field.value && (typeof field.value == 'string' ? dateMaps.find(c => c.value == field.value)?.text : dayjs(field.value).format('YYYY-MM-DD HH:mm:ss')) || <S>添加日期</S>}</span>
-            case FieldType.number:
-                return <InputNumber value={field.value} onChange={e => { field.value = e; this.forceUpdate() }}></InputNumber>
-            case FieldType.user:
-                var openUser = async (e: React.MouseEvent) => {
-                    var ru = await useUserPicker({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) }, this.command.flow.ws, { ignoreUserAll: true });
-                    if (ru) {
-                        field.value = ru.id;
-                        this.forceUpdate();
-                    }
-                }
-                return field.value && <span onMouseDown={e => openUser(e)}>
-                    {field.value && <Avatar userid={field.value}></Avatar>}
-                    {!field.value && <span className="item-hover remark round padding-w-5" ><S>添加用户</S></span>}
-                </span>
-            case FieldType.option:
-                var op = (fe.config?.options || []).find(g => g.value == field.value);
-                var selectOp = async (event) => {
-                    var r = await useSelectMenuItem({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, ([...(fe.config?.options || []).map(n => {
-                        return {
-                            text: n.text,
-                            value: n.value
-                        }
-                    }), { type: MenuItemType.divide }, { name: 'delete', icon: TrashSvg, text: lst('删除') }]));
-                    if (r?.item) {
-                        if (r?.item.name == 'delete') field.value = '';
-                        else field.value = r.item.value;
-                        this.forceUpdate()
-                    }
-                }
-                if (!op) return <span className="item-hover remark round padding-w-5" onMouseDown={e => selectOp(e)}><S>选择项</S></span>
-                return <span className="padding-w-5 round cursor" onMouseDown={e => selectOp(e)} style={{ background: op.color }}>{op?.text}</span>
-            case FieldType.options:
-                var ops = (fe.config?.options || []).findAll(g => Array.isArray(field.value) && field.value.includes(g.value));
-                var selectOp = async (event) => {
-                    var r = await useSelectMenuItem({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, ([...(fe.config?.options || []).map(n => {
-                        return {
-                            text: n.text,
-                            value: n.value
-                        }
-                    }), { type: MenuItemType.divide }, { name: 'delete', icon: TrashSvg, text: lst('清空') }]));
-                    if (r?.item) {
-                        if (r?.item.name == 'delete') field.value = [];
-                        else {
-                            if (!Array.isArray(field.value)) field.value = [];
-                            if (!field.value.includes(r.item.value)) field.value.push(r.item.value);
-                            else lodash.remove(field.value, g => g == r.item.value);
-                        }
-                        this.forceUpdate()
-                    }
-                }
-                if (ops.length == 0) return <span className="item-hover remark round padding-w-5" onMouseDown={e => selectOp(e)}><S>选择项</S></span>
-                return <>{ops.map((op, index) => {
-                    return <span key={op.value}
-                        className="padding-w-5 round cursor"
-                        onMouseDown={e => selectOp(e)}
-                        style={{ background: op.color }}>
-                        <em>{op?.text}</em>
-                        <Icon
-                            icon={CloseSvg}
-                            onMousedown={e => {
-                                e.stopPropagation();
-                                lodash.remove(field.value, g => g == op.value);
-                                this.forceUpdate();
-                            }}
-                        ></Icon>
-                    </span>
-                })}</>
-            case FieldType.bool:
-                return <span><Switch checked={field.value} onChange={e => {
-                    field.value = e;
-                    this.forceUpdate();
-                }}></Switch></span>
+        await AddRecordsCommandView.prototype.changeField.call(this, event, field);
 
-        }
+        // var vfs = this.command.editFields.findAll(g => !this.command.fields.some(s => s.fieldId == g.id));
+        // var r = await useSelectMenuItem({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, [
+        //     ...vfs.map(n => {
+        //         return {
+        //             icon: GetFieldTypeSvg(n.type),
+        //             text: n.text,
+        //             value: n.id
+        //         }
+        //     }),
+        //     { type: MenuItemType.divide, visible: vfs.length > 0 },
+        //     { name: 'delete', text: lst('删除'), icon: TrashSvg }
+        // ]);
+        // if (r?.item) {
+        //     if (r.item.name == 'delete') {
+        //         lodash.remove(this.command.fields, g => g.id == field.id)
+        //     }
+        //     else {
+        //         field.fieldId = r.item.value;
+        //         field.value = '';
+        //     }
+        //     this.forceUpdate()
+        // }
     }
+    // renderFieldInput(field) {
+    //     var fe = this.command.schema.fields.find(g => g.id == field.fieldId);
+    //     switch (fe.type) {
+    //         case FieldType.email:
+    //         case FieldType.link:
+    //         case FieldType.phone:
+    //         case FieldType.title:
+    //             return <Input value={field.value} onChange={e => field.value = e}></Input>
+    //         case FieldType.date:
+    //             var dateMaps = [
+    //                 { text: lst('具体时间'), value: null },
+    //                 { type: MenuItemType.divide },
+    //                 { text: lst('今天'), value: '0D' },
+    //                 { text: lst('昨天'), value: '-1D' },
+    //                 { text: lst('明天'), value: '1D' },
+    //                 { text: lst('一周前'), value: '-7D' },
+    //                 { text: lst('一周后'), value: '7D' },
+    //                 { text: lst('一月前'), value: '-30D' },
+    //                 { text: lst('一月后'), value: '30D' },
+    //                 { type: MenuItemType.divide },
+    //                 { name: 'delete', icon: TrashSvg, text: lst('删除') }
+    //             ]
+    //             return <span className="item-hover remark round padding-w-5" onMouseDown={async e => {
+    //                 var rect = Rect.fromEle(e.currentTarget as HTMLElement);
+    //                 var dm = await useSelectMenuItem({ roundArea: rect }, dateMaps);
+    //                 if (dm) {
+    //                     if (dm.item.name == 'delete') {
+    //                         field.value = '';
+    //                         this.forceUpdate();
+    //                     }
+    //                     else if (dm.item.value === null) {
+    //                         var r = await useDatePicker({ roundArea: rect },
+    //                             typeof field.value == 'number' ? new Date(field.value) : undefined, { includeTime: true });
+    //                         if (r) {
+    //                             field.value = r.getTime();
+    //                             this.forceUpdate();
+    //                         }
+    //                     }
+    //                     else {
+    //                         field.value = dm.item.value;
+    //                         this.forceUpdate();
+    //                     }
+    //                 }
+    //             }}>{field.value && (typeof field.value == 'string' ? dateMaps.find(c => c.value == field.value)?.text : dayjs(field.value).format('YYYY-MM-DD HH:mm:ss')) || <S>添加日期</S>}</span>
+    //         case FieldType.number:
+    //             return <InputNumber value={field.value} onChange={e => { field.value = e; this.forceUpdate() }}></InputNumber>
+    //         case FieldType.user:
+    //             var openUser = async (e: React.MouseEvent) => {
+    //                 var ru = await useUserPicker({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) }, this.command.flow.ws, { ignoreUserAll: true });
+    //                 if (ru) {
+    //                     field.value = ru.id;
+    //                     this.forceUpdate();
+    //                 }
+    //             }
+    //             return field.value && <span onMouseDown={e => openUser(e)}>
+    //                 {field.value && <Avatar userid={field.value}></Avatar>}
+    //                 {!field.value && <span className="item-hover remark round padding-w-5" ><S>添加用户</S></span>}
+    //             </span>
+    //         case FieldType.option:
+    //             var op = (fe.config?.options || []).find(g => g.value == field.value);
+    //             var selectOp = async (event) => {
+    //                 var r = await useTableStoreOption({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, op?.value, {
+    //                     isEdit: false,
+    //                     options: (fe.config?.options || []),
+    //                     multiple: false
+    //                 })
+    //                 if (typeof r != 'undefined') {
+    //                     field.value = r[0];
+    //                     this.forceUpdate()
+    //                 }
+    //             }
+    //             if (!op) return <span className="item-hover remark round padding-w-5" onMouseDown={e => selectOp(e)}><S>选择项</S></span>
+    //             return <span className="padding-w-5 round cursor" onMouseDown={e => selectOp(e)} style={{ background: op.color }}>{op?.text}</span>
+    //         case FieldType.options:
+    //             var ops = (fe.config?.options || []).findAll(g => Array.isArray(field.value) && field.value.includes(g.value));
+    //             var selectOp = async (event) => {
+    //                 var r = await useTableStoreOption({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, ops.map(c => c.value), {
+    //                     isEdit: false,
+    //                     options: (fe.config?.options || []),
+    //                     multiple: true
+    //                 })
+    //                 if (Array.isArray(r)) {
+    //                     field.value = r;
+    //                     this.forceUpdate()
+    //                 }
+    //             }
+    //             if (ops.length == 0) return <span className="item-hover remark round padding-w-5" onMouseDown={e => selectOp(e)}><S>选择项</S></span>
+    //             return <span className="flex ">{
+    //                 ops.map((op, index) => {
+    //                     return <span key={op.value}
+    //                         className="padding-w-5 round cursor"
+    //                         onMouseDown={e => selectOp(e)}
+    //                         style={{ background: op.color }}>
+    //                         <em className="gap-r-3">{op?.text}</em>
+    //                         <Icon
+    //                             size={12}
+    //                             className={'remark'}
+    //                             icon={CloseSvg}
+    //                             onMousedown={e => {
+    //                                 e.stopPropagation();
+    //                                 lodash.remove(field.value, g => g == op.value);
+    //                                 this.forceUpdate();
+    //                             }}
+    //                         ></Icon>
+    //                     </span>
+    //                 })}</span>
+    //         case FieldType.bool:
+    //             return <span><Switch checked={field.value} onChange={e => {
+    //                 field.value = e;
+    //                 this.forceUpdate();
+    //             }}></Switch></span>
+    //     }
+    // }
     async onFilter(event: React.MouseEvent) {
-        await useCustomTableFilter({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
+        await useCustomTableFilter({ align: 'end', roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
             schema: this.command.schema,
             filter: this.command.filter || {},
             ws: this.command.flow.ws,
@@ -607,7 +608,6 @@ export class EditRecordsCommandView extends FlowCommandView<EditRecordsCommand> 
             onChange: async (filter: SchemaFilter) => {
                 this.command.filter = lodash.cloneDeep(filter);
                 this.forceUpdate();
-                //console.log('filter',this.command.filter)
             }
         })
     }
@@ -615,13 +615,13 @@ export class EditRecordsCommandView extends FlowCommandView<EditRecordsCommand> 
         return <div>
             {this.renderHead(<Icon size={18} icon={Edit1Svg}></Icon>,
                 <><S>编辑数据</S>
-                    {this.command.schema && <span className="item-hover remark item-hover-light-focus padding-w-5 round cursor flex" onMouseDown={e => this.openSelectTable(e)}><Icon size={16} icon={this.command.schema.icon || CollectTableSvg}></Icon>{this.command.schema?.text}</span>}
-                    {!this.command.schema && <span className="item-hover remark item-hover-light-focus padding-w-5 round cursor " onMouseDown={e => this.openSelectTable(e)}><S>数据表</S></span>}
+                    {this.command.schema && <span className="item-hover remark  padding-w-5 round cursor flex" onMouseDown={e => this.openSelectTable(e)}><Icon size={16} className={'gap-r-3'} icon={this.command.schema.icon || CollectTableSvg}></Icon>{this.command.schema?.text}</span>}
+                    {!this.command.schema && <span className="item-hover remark  padding-w-5 round cursor " onMouseDown={e => this.openSelectTable(e)}><S>选择数据表</S></span>}
                 </>)}
             <div>
                 {this.command.schema && <div className="flex gap-h-10">
-                    <span className="flex-auto gap-l-10"><S>打开编辑视图模板</S></span>
-                    <SelectBox className={'flex-fixed item-hover remark item-hover-light-focus round padding-l-5'} onChange={e => this.command.onUpdateProps({ schemaViewId: e })} value={this.command.schemaViewId} options={[
+                    <span className="flex-auto gap-l-10"><S>是否打开编辑视图</S></span>
+                    <SelectBox className={'flex-fixed item-hover remark  round padding-l-5'} onChange={e => this.command.onUpdateProps({ schemaViewId: e })} value={this.command.schemaViewId} options={[
                         { text: lst('关闭'), value: '' },
                         { type: MenuItemType.divide, visible: this.command.schema.views.length > 0 },
                         ...this.command.schema.views.findAll(g => [BlockUrlConstant.RecordPageView].includes(g.url as any)).map(n => ({
@@ -632,11 +632,11 @@ export class EditRecordsCommandView extends FlowCommandView<EditRecordsCommand> 
                 </div>}
                 {this.command.schema && <div className="flex gap-h-10 ">
                     <span className="flex-auto  gap-l-10"><S>编辑满足</S></span>
-                    <span onMouseDown={e => this.onFilter(e)} className="flex-fixed item-hover remark item-hover-light-focus padding-w-5 round cursor">
-                        {this.command.filter?.items?.length || 0}<S>条件</S>
+                    <span onMouseDown={e => this.onFilter(e)} className="flex-fixed item-hover remark  padding-w-5 round cursor">
+                        {this.command.filter?.items?.length || ''}<S>条件</S>
                     </span>
                 </div>}
-                {this.command.fields.map(f => {
+                {this.command.schema && this.command.fields.map(f => {
                     var fe = this.command.schema.fields.find(g => g.id == f.fieldId);
                     return <div className="flex gap-h-10" key={f.id}>
                         <span className="flex-fixed w-120 flex-end " onMouseDown={e => this.changeField(e, f)}>
@@ -649,11 +649,11 @@ export class EditRecordsCommandView extends FlowCommandView<EditRecordsCommand> 
                             </span>
                         </span>
                         <span className="flex-auto gap-l-10">
-                            {this.renderFieldInput(f)}
+                            {renderFieldInput(this, f)}
                         </span>
                     </div>
                 })}
-                <div onMouseDown={e => this.addField(e)}><span className="gap-l-10 item-hover remark  item-hover-light-focus round padding-w-5 cursor h-24 flex flex-line"><S>添加字段值</S><Icon icon={ChevronDownSvg}></Icon></span></div>
+                {this.command.schema && <div onMouseDown={e => this.addField(e)}><span className="gap-l-10 item-hover remark  round padding-w-5 cursor h-24 flex flex-line"><Icon icon={PlusSvg} size={16} className={'flex-center size-20'}></Icon><S>添加字段值</S><Icon className={'gap-l-3'} icon={ChevronDownSvg} size={14}></Icon></span></div>}
             </div>
         </div>
     }
