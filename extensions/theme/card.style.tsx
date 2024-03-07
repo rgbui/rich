@@ -9,7 +9,7 @@ import { S } from "../../i18n/view";
 import { CardBox } from "../../src/block/element/cardbox/cardbox";
 import { Tip } from "../../component/view/tooltip/tip";
 import { BlockRenderRange } from "../../src/block/enum";
-import { PageFillStyle } from "./bg";
+import { PageFillStyle } from "./card/bg";
 import { SelectBox } from "../../component/view/select/box";
 import { PageThemeStyle } from "../../src/page/declare";
 import { Divider } from "../../component/view/grid";
@@ -41,11 +41,11 @@ export class CardBoxStyle extends EventsComponent {
         var textp = 'var(--text-p-color)';
         var solid = '2px solid var(--text-p-color)'
         return <div ref={e => this.el = e} className="round padding-10">
-            <div className="flex r-gap-r-10 r-round-2">
-                <Tip text='无布局'><div className="cursor" onMouseDown={e => this.setTheme('coverStyle.display', 'none')} style={{ border: (this.cardThemeStyle?.coverStyle?.display || 'none') == 'none' ? solid : '2px solid #cac5c4', width: 30, height: 20 }}></div></Tip>
-                <Tip text='背景布局' ><div className="cursor" onMouseDown={e => this.setTheme('coverStyle.display', 'inside')} style={{ border: this.cardThemeStyle?.coverStyle?.display == 'inside' ? solid : '2px solid #cac5c4', width: 30, height: 20, background: this.cardThemeStyle?.coverStyle?.display == 'inside' ? textp : '#cac5c4' }}></div></Tip>
-                <Tip text='Top布局' ><div className="cursor" onMouseDown={e => this.setTheme('coverStyle.display', 'inside-cover')} style={{ border: this.cardThemeStyle?.coverStyle?.display == 'inside-cover' ? solid : '2px solid #cac5c4', width: 30, height: 20 }}><div style={{ background: this.cardThemeStyle?.coverStyle?.display == 'inside-cover' ? textp : '#cac5c4', height: 6 }}></div></div></Tip>
-                <Tip text='Left布局'><div className="cursor flex" onMouseDown={e => this.setTheme('coverStyle.display', 'inside-cover-left')} style={{ border: this.cardThemeStyle.coverStyle?.display == 'inside-cover-left' ? solid : '2px solid #cac5c4', width: 30, height: 20 }} ><div style={{ background: this.cardThemeStyle?.coverStyle?.display == 'inside-cover-left' ? textp : '#cac5c4', width: 10, height: 20 }}></div></div></Tip>
+            <div className="flex  r-round-2" >
+                <Tip text='无布局'><div className="cursor gap-r-10" onMouseDown={e => this.setTheme('coverStyle.display', 'none')} style={{ border: (this.cardThemeStyle?.coverStyle?.display || 'none') == 'none' ? solid : '2px solid #cac5c4', width: 30, height: 20 }}></div></Tip>
+                <Tip text='背景布局' ><div className="cursor gap-r-10" onMouseDown={e => this.setTheme('coverStyle.display', 'inside')} style={{ border: this.cardThemeStyle?.coverStyle?.display == 'inside' ? solid : '2px solid #cac5c4', width: 30, height: 20, background: this.cardThemeStyle?.coverStyle?.display == 'inside' ? textp : '#cac5c4' }}></div></Tip>
+                <Tip text='Top布局' ><div className="cursor gap-r-10" onMouseDown={e => this.setTheme('coverStyle.display', 'inside-cover')} style={{ border: this.cardThemeStyle?.coverStyle?.display == 'inside-cover' ? solid : '2px solid #cac5c4', width: 30, height: 20 }}><div style={{ background: this.cardThemeStyle?.coverStyle?.display == 'inside-cover' ? textp : '#cac5c4', height: 6 }}></div></div></Tip>
+                <Tip text='Left布局'><div className="cursor flex  gap-r-10" onMouseDown={e => this.setTheme('coverStyle.display', 'inside-cover-left')} style={{ border: this.cardThemeStyle.coverStyle?.display == 'inside-cover-left' ? solid : '2px solid #cac5c4', width: 30, height: 20 }} ><div style={{ background: this.cardThemeStyle?.coverStyle?.display == 'inside-cover-left' ? textp : '#cac5c4', width: 10, height: 20 }}></div></div></Tip>
                 <Tip text='Right布局' ><div className="cursor flex-end" onMouseDown={e => this.setTheme('coverStyle.display', 'inside-cover-right')} style={{ border: this.cardThemeStyle?.coverStyle?.display == 'inside-cover-right' ? solid : '2px solid #cac5c4', width: 30, height: 20 }} ><div style={{ background: this.cardThemeStyle?.coverStyle?.display == 'inside-cover-right' ? textp : '#cac5c4', width: 10, height: 20 }}></div></div></Tip>
             </div>
             {(this.cardThemeStyle?.coverStyle?.display || 'none') != 'none' && <div className="gap-h-10">
@@ -75,7 +75,7 @@ export class CardBoxStyle extends EventsComponent {
                         border
                         dropAlign="full"
                         value={this.cardThemeStyle?.contentStyle?.transparency || 'noborder'}
-                        onChange={e=>{
+                        onChange={e => {
                             this.setTheme('contentStyle.transparency', e)
                         }}
                         options={[

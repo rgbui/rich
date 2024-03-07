@@ -1,19 +1,19 @@
 import React from "react";
-import { PageThemeStyle } from "../../src/page/declare";
-import { CheckSvg, ChevronDownSvg, CloseSvg, PicSvg, UploadSvg } from "../../component/svgs";
-import { ColorInput } from "../../component/view/color/input";
-import { Icon } from "../../component/view/icon";
-import { S } from "../../i18n/view";
-import { UploadView } from "../file/upload";
-import { GalleryBgs } from "../image/gellery";
-import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
-import { lst } from "../../i18n/store";
-import { Rect } from "../../src/common/vector/point";
+import { PageThemeStyle } from "../../../src/page/declare";
+import { CheckSvg, ChevronDownSvg, CloseSvg, PicSvg, UploadSvg } from "../../../component/svgs";
+import { ColorInput } from "../../../component/view/color/input";
+import { Icon } from "../../../component/view/icon";
+import { S } from "../../../i18n/view";
+import { UploadView } from "../../file/upload";
+import { GalleryBgs } from "../../image/gellery";
+import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
+import { lst } from "../../../i18n/store";
+import { Rect } from "../../../src/common/vector/point";
 import lodash from "lodash";
-import { SelectBox } from "../../component/view/select/box";
+import { SelectBox } from "../../../component/view/select/box";
 import { GradColor } from "./grad";
-import { GetPageBgs } from "./themes";
-import { useSelectMenuItem } from "../../component/view/menu";
+import { GetPageBgs } from "../themes";
+import { useSelectMenuItem } from "../../../component/view/menu";
 
 export class PageFillStyle extends React.Component<{
     bgStyle: PageThemeStyle['bgStyle'],

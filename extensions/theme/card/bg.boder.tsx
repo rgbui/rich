@@ -1,8 +1,7 @@
 import React from "react";
-import { PageThemeStyle } from "../../src/page/declare";
-import { Input } from "../../component/view/input";
-import { InputNumber } from "../../component/view/input/number";
-import { S } from "../../i18n/view";
+import { PageThemeStyle } from "../../../src/page/declare";
+import { Input } from "../../../component/view/input";
+import { S } from "../../../i18n/view";
 import lodash from "lodash";
 
 export class BgBorder extends React.Component<{

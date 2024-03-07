@@ -1,15 +1,15 @@
 import React from "react";
-import { PageThemeStyle } from "../../src/page/declare";
-import { ColorUtil } from "../../util/color";
-import { DiceSvg } from "../../component/svgs";
-import { Icon } from "../../component/view/icon";
-import { SelectBox } from "../../component/view/select/box";
-import { lst } from "../../i18n/store";
-import { Point } from "../../src/common/vector/point";
-import { Matrix } from "../../src/common/matrix";
-import { MouseDragger } from "../../src/common/dragger";
+import { PageThemeStyle } from "../../../src/page/declare";
+import { ColorUtil } from "../../../util/color";
+import { DiceSvg } from "../../../component/svgs";
+import { Icon } from "../../../component/view/icon";
+import { SelectBox } from "../../../component/view/select/box";
+import { lst } from "../../../i18n/store";
+import { Point } from "../../../src/common/vector/point";
+import { Matrix } from "../../../src/common/matrix";
+import { MouseDragger } from "../../../src/common/dragger";
 import lodash from "lodash";
-import { util } from "../../util/util";
+import { util } from "../../../util/util";
 
 export class GradColor extends React.Component<{
     grad: PageThemeStyle['bgStyle']['grad'],

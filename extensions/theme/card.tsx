@@ -9,13 +9,13 @@ import { S } from "../../i18n/view";
 import { PageThemeStyle } from "../../src/page/declare";
 import { SelectBox } from "../../component/view/select/box";
 import { lst } from "../../i18n/store";
-import { PageFillStyle } from "./bg";
+import { PageFillStyle } from "./card/bg";
 import { getCardThemes } from "./themes";
 import { Rect } from "../../src/common/vector/point";
 import lodash from "lodash";
 import { BlockRenderRange } from "../../src/block/enum";
 import { Tip } from "../../component/view/tooltip/tip";
-import { BgBorder } from "./bg.boder";
+import { BgBorder } from "./card/bg.boder";
 
 export class CardTheme extends EventsComponent {
     popover: Popover<CardTheme>;

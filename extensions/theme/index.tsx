@@ -6,7 +6,7 @@ import { PopoverPosition } from "../../component/popover/position";
 import { Popover, PopoverSingleton } from "../../component/popover/popover";
 import { Icon } from "../../component/view/icon";
 import { CardBrushSvg, CheckSvg, CloseSvg, PlatteSvg } from "../../component/svgs";
-import { PageFillStyle } from "./bg";
+import { PageFillStyle } from "./card/bg";
 import { lst } from "../../i18n/store";
 import lodash from "lodash";
 import { PageLayoutType, PageThemeStyle } from "../../src/page/declare";
@@ -95,7 +95,7 @@ export class PageTheme extends EventsComponent {
             <div className="padding-w-15">
                 <SelectBox border value={this.page.pageTheme.contentStyle.transparency} options={[
                     { text: lst('无透明'), value: 'solid' },
-                    { text: lst('毛玻璃'), value: 'frosted' },
+                    { text: lst('玻璃'), value: 'frosted' },
                     { text: lst('渐近'), value: 'faded' },
                     { text: lst('透明'), value: 'noborder' },
                 ]} onChange={e => {
@@ -103,7 +103,7 @@ export class PageTheme extends EventsComponent {
                 }}></SelectBox>
             </div>
             <div className="remark padding-w-15 gap-t-10 gap-b-5 f-12"><S>页面背景</S></div>
-            <div><PageFillStyle isFill openSpread={e => {
+            <div className="gap-b-50"><PageFillStyle isFill openSpread={e => {
                 if (e == true) this.el.classList.remove('overflow-y')
                 else this.el.classList.add('overflow-y')
                 if (this.popover) this.popover.stopMousedownClose(e);
@@ -111,6 +111,7 @@ export class PageTheme extends EventsComponent {
                 onChange={e => this.setTheme('pageTheme.bgStyle', e)}
                 bgStyle={this.page.pageTheme.bgStyle}></PageFillStyle>
             </div>
+
         </div>
     }
     renderSys() {
@@ -256,11 +257,11 @@ export class PageTheme extends EventsComponent {
                         <a onClick={e => {
                             this.tab = 'sys';
                             this.forceUpdate()
-                        }} className={"cursor gap-r-10 flex-auto padding-w-10 flex-center h-30 round-8 " + (this.tab == 'sys' ? " bg-primary text-white" : "")}><span className="flex-center size-20"><Icon size={18} icon={PlatteSvg}></Icon></span><span><S>标准主题</S></span></a>
+                        }} className={"cursor gap-r-10 flex-auto padding-w-10 flex-center h-30 round-8 " + (this.tab == 'sys' ? " bg-primary bg-p-hover text-white" : "")}><span className="flex-center size-20"><Icon size={18} icon={PlatteSvg}></Icon></span><span><S>标准主题</S></span></a>
                         <a onClick={e => {
                             this.tab = 'custom';
                             this.forceUpdate()
-                        }} className={"cursor gap-l-10 flex-auto  padding-w-10 flex-center h-30 round-8 " + (this.tab == 'custom' ? " bg-primary text-white" : "")}><span className="flex-center size-20"><Icon size={18} icon={CardBrushSvg}></Icon></span><span><S>自定义主题</S></span></a>
+                        }} className={"cursor gap-l-10 flex-auto  padding-w-10 flex-center h-30 round-8 " + (this.tab == 'custom' ? " bg-primary bg-p-hover text-white" : "")}><span className="flex-center size-20"><Icon size={18} icon={CardBrushSvg}></Icon></span><span><S>自定义主题</S></span></a>
                     </div>
                     <div>
                         {this.tab == 'custom' && this.page && this.renderCustom()}
@@ -271,13 +272,14 @@ export class PageTheme extends EventsComponent {
         </div>
     }
     renderBoardBg() {
-        return <div><div className="remark padding-w-15  gap-t-10 gap-b-5 f-12">
-            <S>透明性</S>
-        </div>
+        return <div>
+            <div className="remark padding-w-15  gap-t-10 gap-b-5 f-12">
+                <S>透明性</S>
+            </div>
             <div className="padding-w-15">
                 <SelectBox border value={this.page.pageTheme.contentStyle.transparency} options={[
                     { text: lst('默认'), value: 'solid' },
-                    { text: lst('毛玻璃'), value: 'frosted' },
+                    { text: lst('玻璃'), value: 'frosted' },
                     { text: lst('渐近'), value: 'faded' },
                     { text: lst('透明'), value: 'noborder' },
                 ]} onChange={e => {
@@ -306,23 +308,24 @@ export class PageTheme extends EventsComponent {
                     <S>透明性</S>
                 </div>
                 <div >
-                    <SelectBox border value={this.page.pageTheme.contentStyle?.transparency} options={[
-                        { text: lst('无透明'), value: 'solid' },
-                        { text: lst('毛玻璃'), value: 'frosted' },
-                        { text: lst('渐近'), value: 'faded' },
-                    ]} onChange={async e => {
-                        await this.setTheme('pageTheme.contentStyle.transparency', e)
-                    }}></SelectBox>
+                    <SelectBox
+                        border
+                        value={this.page.pageTheme.contentStyle?.transparency}
+                        options={[
+                            { text: lst('无透明'), value: 'solid' },
+                            { text: lst('毛玻璃'), value: 'frosted' },
+                            { text: lst('渐近'), value: 'faded' },
+                        ]} onChange={async e => {
+                            await this.setTheme('pageTheme.contentStyle.transparency', e)
+                        }}></SelectBox>
                 </div>
             </div>}
-
             <PageFillStyle isFill onChange={async e => {
                 var pt = lodash.cloneDeep(this.page.pageTheme);
                 pt.bgStyle = e;
                 await this.updateTheme({ pageTheme: pt })
             }} bgStyle={this.page.pageTheme.bgStyle}>
             </PageFillStyle>
-
         </div>
     }
 }
