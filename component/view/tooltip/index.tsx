@@ -44,6 +44,7 @@ class ToolTipOverlay extends React.Component {
         this.mouseLeaveDelay = options.mouseLeaveDelay;
         this.overlay = options.overlay;
         this.placement = options.placement;
+
         if (!this.placement) this.placement = 'top';
         this.visible = true;
         this.forceUpdate(() => {

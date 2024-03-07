@@ -4,18 +4,25 @@ import { FixedViewScroll } from "../../../src/common/scroll";
 import { Point, Rect } from "../../../src/common/vector/point";
 import { SyncLoad } from "../../lib/sync";
 import "./style.less";
+import { dom } from "../../../src/common/dom";
 export type OverlayPlacement = 'top' | 'left' | 'right' | 'bottom';
-class ToolTipOverlay extends React.Component {
+
+export class ToolTipOverlay extends React.Component {
     constructor(props) {
         super(props);
         this.fvs.on('change', (offset: Point) => {
+            if (this.panel) return;
             if (this.visible == true && this.el)
                 this.el.style.transform = `translate(${offset.x}px,${offset.y}px)`
         })
     }
     render() {
         if (this.visible !== true) return <div ref={e => this.el = e} className="shy-box-tip" style={{ display: 'none', ...this.boxStyle }}></div>
-        return <div className="shy-box-tip" ref={e => this.el = e} style={{ top: this.point.y, left: this.point.x, ...this.boxStyle }}>
+        return <div className="shy-box-tip" ref={e => this.el = e} style={{
+            top: this.point.y,
+            left: this.point.x, ...this.boxStyle,
+            zIndex: this.zindex ? this.zindex.toString() : undefined
+        }}>
             <div className="shy-box-tip-overlay" style={this.overlayStyle} ref={e => this.overlayEl = e}>{this.overlay}</div>
         </div>
     }
@@ -34,15 +41,19 @@ class ToolTipOverlay extends React.Component {
     disabledAutoClose = false;
     align: 'left' | 'right' | 'center' = 'center';
     close: () => void;
+    zindex: number;
+    panel?: HTMLElement;
     open(el: HTMLElement,
         options: {
             overlay: React.ReactNode,
+            panel?: HTMLElement,
             placement?: OverlayPlacement,
             mouseLeaveDelay?: number,
             disabledAutoClose?: boolean,
             boxStyle?: CSSProperties,
             align?: 'left' | 'right' | 'center',
-            close?: () => void
+            close?: () => void,
+            zindex?: number
         }) {
         this.tipEl = el;
         this.fvs.bind(this.tipEl);
@@ -51,10 +62,12 @@ class ToolTipOverlay extends React.Component {
         this.align = options?.align || 'center';
         this.mouseLeaveDelay = options.mouseLeaveDelay;
         this.overlay = options.overlay;
+        this.panel = options.panel;
         this.placement = options.placement;
         this.boxStyle = options.boxStyle || {};
         this.disabledAutoClose = typeof options?.disabledAutoClose == 'boolean' ? options.disabledAutoClose : false;
         this.visible = true;
+        this.zindex = options.zindex || undefined
         this.forceUpdate(() => {
             this.adjustmentPosition();
         })
@@ -73,47 +86,52 @@ class ToolTipOverlay extends React.Component {
         if (this.visible && this.overlayEl) {
             var tipRect = Rect.fromEle(this.tipEl);
             var overlayRect = Rect.fromEle(this.overlayEl);
+            var windowRect = Rect.fromWindow();
+            if (this.panel) {
+                var r = dom(this.panel).closest(x => dom(x).style('position') == 'absolute');
+                if (r) {
+                    var rt = Rect.fromEle(r as HTMLElement);
+                    rt.move(0, 0 - (r as HTMLElement).scrollTop);
+                    console.log(rt, tipRect, r);
+                    tipRect.moveTo(tipRect.x - rt.x, tipRect.y - rt.y);
+                    windowRect.moveTo(windowRect.x - rt.x, windowRect.y - rt.y);
+                    overlayRect.moveTo(overlayRect.x - rt.x, overlayRect.y - rt.y);
+                }
+            }
+            console.log(tipRect, windowRect, overlayRect)
             var size = 10;
             this.overlayStyle = {};
             var place = this.placement;
             if (!place) {
-                if (overlayRect.top < 0) place = 'bottom'
-                else if (overlayRect.bottom > window.innerHeight) place = 'top'
+                if (tipRect.top - overlayRect.height - size < windowRect.top) place = 'bottom'
+                else if (tipRect.bottom + overlayRect.height + size > windowRect.bottom) place = 'top'
                 else place = 'bottom'
             }
+            console.log('place', place)
             switch (place) {
                 case 'top':
                     this.point.y = tipRect.top - size - overlayRect.height;
-                    if (this.align == 'center')
-                        this.point.x = tipRect.center - overlayRect.width / 2;
-                    else if (this.align == 'left')
-                        this.point.x = tipRect.x;
-                    else if (this.align == 'right')
-                        this.point.x = tipRect.right - overlayRect.width;
-                    if (this.point.x < 0) this.point.x = 20;
-                    else if (this.point.x + overlayRect.width > window.innerWidth) this.point.x = window.innerWidth - overlayRect.width - 20;
-
+                    if (this.align == 'center') this.point.x = tipRect.center - overlayRect.width / 2;
+                    else if (this.align == 'left') this.point.x = tipRect.x;
+                    else if (this.align == 'right') this.point.x = tipRect.right - overlayRect.width;
+                    if (this.point.x < windowRect.left) this.point.x = 20;
+                    else if (this.point.x + overlayRect.width > windowRect.right) this.point.x = windowRect.right - overlayRect.width - 20;
+                    console.log(this.point);
                     this.overlayStyle.marginBottom = size;
                     break;
                 case 'bottom':
                     this.point.y = tipRect.bottom;
-                    if (this.align == 'center')
-                        this.point.x = tipRect.center - overlayRect.width / 2;
-                    else if (this.align == 'left')
-                        this.point.x = tipRect.x;
-                    else if (this.align == 'right')
-                        this.point.x = tipRect.right - overlayRect.width;
-                    if (this.point.x < 0) this.point.x = 20;
-                    else if (this.point.x + overlayRect.width > window.innerWidth) this.point.x = window.innerWidth - overlayRect.width - 20;
+                    if (this.align == 'center') this.point.x = tipRect.center - overlayRect.width / 2;
+                    else if (this.align == 'left') this.point.x = tipRect.x;
+                    else if (this.align == 'right') this.point.x = tipRect.right - overlayRect.width;
+                    if (this.point.x < windowRect.left) this.point.x = 20;
+                    else if (this.point.x + overlayRect.width > windowRect.right) this.point.x = windowRect.right - overlayRect.width - 20;
                     this.overlayStyle.marginTop = size;
                     break;
                 case 'left':
-                    if (this.align == 'center')
-                        this.point.y = tipRect.middle - overlayRect.height / 2;
-                    else if (this.align == 'left')
-                        this.point.y = tipRect.y;
-                    else if (this.align == 'right')
-                        this.point.y = tipRect.bottom - overlayRect.height;
+                    if (this.align == 'center') this.point.y = tipRect.middle - overlayRect.height / 2;
+                    else if (this.align == 'left') this.point.y = tipRect.y;
+                    else if (this.align == 'right') this.point.y = tipRect.bottom - overlayRect.height;
                     this.point.x = tipRect.x - (overlayRect.width + size);
                     this.overlayStyle.marginRight = size;
                     break;
