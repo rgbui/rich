@@ -1,4 +1,4 @@
-import React, { HtmlHTMLAttributes } from "react";
+import React from "react";
 import { SettingsSvg, } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { BoxTip } from "../../../component/view/tooltip/box";
@@ -19,9 +19,10 @@ import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { lst } from "../../../i18n/store";
 import lodash from "lodash";
 import { util } from "../../../util/util";
-import "./style.less";
 import { popoverLayer } from "../../../component/lib/zindex";
-
+import "./style.less";
+import { FixBoxTip } from "../../../component/view/tooltip/fix";
+import { assyDivPanel } from "../../../component/types";
 
 @url('/button')
 export class BlockButton extends Block {
@@ -30,7 +31,7 @@ export class BlockButton extends Block {
     @prop()
     buttonText: string = '';
     @prop()
-    buttonStyle: 'primary' | 'ghost' | 'dark' | 'green' | 'blue' = 'primary'
+    buttonStyle: 'primary' | 'ghost' | 'dark' | 'green' | 'blue' | 'purple' = 'primary'
     @prop()
     buttonSize: 'default' | 'larger' | 'small' = 'default';
     @prop()
@@ -137,6 +138,7 @@ export class BlockButton extends Block {
                     { name: 'buttonStyle', text: lst('红色'), value: 'primary', checkLabel: this.buttonStyle == 'primary' },
                     { name: 'buttonStyle', text: lst('蓝色'), value: 'blue', checkLabel: this.buttonStyle == 'blue' },
                     { name: 'buttonStyle', text: lst('绿色'), value: 'green', checkLabel: this.buttonStyle == 'green' },
+                    { name: 'buttonStyle', text: lst('紫色'), value: 'purple', checkLabel: this.buttonStyle == 'purple' },
                     { name: 'buttonStyle', text: lst('黑色'), value: 'dark', checkLabel: this.buttonStyle == 'dark' },
                     { name: 'buttonStyle', text: lst('白色'), value: 'ghost', checkLabel: this.buttonStyle == 'ghost' },
                     { type: MenuItemType.divide },
@@ -194,6 +196,7 @@ export class BlockButton extends Block {
     }
     async didMounted() {
         document.body.addEventListener('mousedown', this.otherClick, true)
+
     }
     async didUnmounted() {
         popoverLayer.clear(this);
@@ -202,21 +205,26 @@ export class BlockButton extends Block {
     otherClick = async (event: MouseEvent) => {
         var ele = event.target as HTMLElement;
         if (!this.el) return;
-        if (this.el && ele && this.el.contains(ele)) {
+        if (this.el && ele && this.el.contains(ele))
             return;
-        }
-        var pe = document.querySelector('.shy-surface');
-        if (pe && pe.contains(ele)) {
-            await (this.view as any).boxTip.close();
-        }
+        if (this.page.kit.view?.el.contains(ele))
+            return;
+        if (assyDivPanel().contains(ele)) return;
+        await (this.view as any).boxTip.close();
     }
 }
 
 @view('/button')
 export class BlockButtonView extends BlockView<BlockButton>{
-    boxTip: BoxTip;
+    boxTip: FixBoxTip;
     dragBlock(event: React.MouseEvent) {
         DragBlockLine(this.block, event);
+    }
+    didMount(): void {
+        this.load()
+    }
+    async load() {
+        this.oldFlow = await this.block.flow.clone();
     }
     oldFlow: Flow;
     async openEdit(event: React.MouseEvent) {
@@ -233,7 +241,12 @@ export class BlockButtonView extends BlockView<BlockButton>{
         if (this.block.align == 'center') style.justifyContent = 'center';
         else if (this.block.align == 'right') style.justifyContent = 'flex-end';
         return <div className="visible-hover" style={this.block.visibleStyle}>
-            <BoxTip ref={e => this.boxTip = e}
+            <FixBoxTip
+                cacPanel={() => {
+                    return this.block.page.kit.view.toolEl;
+                }}
+                zindex={1000}
+                ref={e => this.boxTip = e}
                 disableMousedownClose
                 disabledMouseEnterOrLeave
                 boxStyle={{ zIndex: popoverLayer.zoom(this.block) }}
@@ -274,14 +287,17 @@ export class BlockButtonView extends BlockView<BlockButton>{
                         </span>}
                     </div>
                 </div>
-            </BoxTip>
+            </FixBoxTip>
         </div>
     }
     async onSave() {
-        if (lodash.isEqual(this.oldFlow, this.block.flow)) return;
+        var od = await this.oldFlow.get();
+        var nf = await this.block.flow.get();
+        if (lodash.isEqual(od, nf)) return;
         await this.block.onManualUpdateProps({
             flow: this.oldFlow
-        }, { flow: this.block.flow })
+        }, { flow: this.block.flow });
+        this.oldFlow = await this.block.flow.clone();
         this.forceUpdate();
     }
     async changeIcon(event: React.MouseEvent) {
@@ -298,8 +314,8 @@ export class BlockButtonView extends BlockView<BlockButton>{
         if (this.block.align == 'center') style.justifyContent = 'center';
         else if (this.block.align == 'right') style.justifyContent = 'flex-end'
         return <div className="flex" style={{ top: 0, left: 0, right: 0, ...style }}>
-            <div className='min-w-400 max-w-600 round-6 padding-14 gap-h-10' >
-                <div className="flex" onMouseDown={e => { e.stopPropagation() }}>
+            <div className='w-500 round-6 padding-h-14  text' >
+                <div className="flex padding-w-14" onMouseDown={e => { e.stopPropagation() }}>
                     <span className="border size-24 round cursor flex-center"><Icon size={18} onMousedown={e => this.changeIcon(e)} icon={this.block.buttonIcon || { name: 'bytedance-icon', code: 'smiling-face' }}></Icon></span>
                     <span className="flex-auto gap-w-10"><Input value={this.block.buttonText} onChange={e => {
                         this.block.buttonText = e;
@@ -311,8 +327,10 @@ export class BlockButtonView extends BlockView<BlockButton>{
                         this.openEdit(e)
                     }}><S>保存</S></Button></span>
                 </div>
-                <div>
-                    {this.block.flow && <FlowView flow={this.block.flow}></FlowView>}
+                <div className="max-h-300 padding-w-14 overflow-y">
+                    {this.block.flow && <FlowView onChange={async () => {
+                        await this.onSave()
+                    }} flow={this.block.flow}></FlowView>}
                 </div>
             </div>
         </div>
