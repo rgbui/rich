@@ -16,6 +16,7 @@ import "./media/carousel/index";
 import "./form/todo";
 import "./form/measure";
 import "./form/button/index";
+import "./form/button/template";
 
 import "./form/tab/index";
 import "./form/tab/page";

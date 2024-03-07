@@ -5,6 +5,7 @@ import { EventsComponent } from "../lib/events.component";
 import { PopoverPosition } from "./position";
 import './style.less';
 import { popoverLayer } from "../lib/zindex";
+import { assyDiv } from "../types";
 export class Popover<T extends React.Component> extends EventsComponent<{
     component: { new(...args: any[]): T },
     shadow?: boolean,
@@ -181,8 +182,7 @@ export async function PopoverSingleton<T extends React.Component>(CP: { new(...a
     props?: { slow?: boolean, mask?: boolean, frame?: boolean, style?: CSSProperties, visible?: 'hidden' | "none", shadow?: boolean }, args?: Record<string, any>) {
     return new Promise((resolve: (data: Popover<T>) => void, reject) => {
         if (maps.has(CP)) return resolve(maps.get(CP) as any)
-        var ele = document.createElement('div');
-        document.body.appendChild(ele);
+        var ele = assyDiv();
         ReactDOM.render(<Popover<T> {...(props || {})} args={args || {}} component={CP} ref={e => {
 
             maps.set(CP, e);

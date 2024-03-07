@@ -1,10 +1,11 @@
+import { assyDiv } from "../types";
 
 
 var alertEle: HTMLElement;
 var time;
 export function ShyAlert(msg: string, level?: 'success' | 'info' | 'fail' | 'warn' | 'load', ti?: number) {
     if (!alertEle) {
-        alertEle = document.createElement('div');
+        alertEle = assyDiv();
         alertEle.classList.add('shy-alert');
         alertEle.innerHTML = `<div class='shy-alert-msg'>${msg}</div>`;
         document.body.appendChild(alertEle);
@@ -16,7 +17,7 @@ export function ShyAlert(msg: string, level?: 'success' | 'info' | 'fail' | 'war
     time = setTimeout(() => {
         alertEle.style.display = 'none';
         alertEle.setAttribute('class', 'shy-alert')
-    },ti || 3e3);
+    }, ti || 3e3);
 }
 
 export function CloseShyAlert() {
