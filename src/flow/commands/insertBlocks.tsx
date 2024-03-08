@@ -13,6 +13,8 @@ import { PageBlockUtil } from "../../page/common/util";
 import dayjs from "dayjs";
 import { channel } from "../../../net/channel";
 import { getPageText } from "../../page/declare";
+import weekOfYear from "dayjs/plugin/weekOfYear"
+dayjs.extend(weekOfYear);
 
 @flow('/insertBlocks')
 export class InsertBlocksCommand extends FlowCommand {
