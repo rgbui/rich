@@ -2,11 +2,13 @@ import { CSSProperties } from "react";
 import { lst } from "../../i18n/store";
 import { Page } from "../../src/page";
 import { PageLayoutType, PageThemeStyle } from "../../src/page/declare";
+
 export function GetPageThemes(page: Page) {
     if ([
         PageLayoutType.doc,
         PageLayoutType.db,
-        PageLayoutType.recordView].includes(page?.pageLayout?.type)) {
+        PageLayoutType.recordView
+    ].includes(page?.pageLayout?.type)) {
         var groups = [
             {
                 text: lst('风格'),
@@ -246,7 +248,7 @@ export function GetPageThemes(page: Page) {
                                 display: 'outside'
                             }
                         }
-                    },
+                    }
                 ]
             }
         ]
@@ -254,9 +256,11 @@ export function GetPageThemes(page: Page) {
     }
     return []
 }
+
 export function GetPageBgs() {
     return [
-        { color: 'inherit', text: lst('默认') },
+        // { color: 'inherit', text: lst('默认') },
+        { color: '#fff', text: lst('白色') },
         { color: 'rgba(237,233,235,0.5)', text: lst('白灰') },
         { color: '#EDF2F7', text: lst('冷灰') },
         { color: '#F2F2F2', text: lst('浅灰') },
@@ -286,6 +290,7 @@ export function GetPageBgs() {
         }
     })
 }
+
 export function getCardThemes() {
     return [
         {

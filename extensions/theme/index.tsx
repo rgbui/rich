@@ -31,8 +31,7 @@ export class PageTheme extends EventsComponent {
             await this.updateTheme({ 'pageTheme.coverStyle.display': pageTheme.coverStyle.display })
             if (pageTheme.coverStyle.display == 'none') {
                 var pd = this.page.getPageDataInfo();
-                if (pd?.cover?.abled)
-                    this.page.onAddCover()
+                if (pd?.cover?.abled) this.page.onAddCover()
             }
             else {
                 this.page.onAddCover(false)
@@ -59,27 +58,36 @@ export class PageTheme extends EventsComponent {
                 <Tip text={lst('无')}>
                     <div onMouseDown={e => {
                         this.setPageTheme({ coverStyle: { display: 'none' } }, 'layout')
-                    }} style={{ width: 30, height: 20, border: (this.page.pageTheme?.coverStyle?.display || 'none') == "none" ? solid : '2px solid #cac5c4' }}></div>
+                    }} className={"round  padding-5 " + ((this.page.pageTheme?.coverStyle?.display || 'none') == "none" ? "item-hover-focus" : " item-hover")}>
+                        <div className="round" style={{ width: 30, height: 20, border: (this.page.pageTheme?.coverStyle?.display || 'none') == "none" ? solid : '2px solid #cac5c4' }}>
+                        </div>
+                    </div>
                 </Tip>
                 <Tip text={lst('封面')}>
                     <div onMouseDown={e => {
                         this.setPageTheme({ coverStyle: { display: 'outside' } }, 'layout')
-                    }} style={{ width: 30, height: 20, border: this.page.pageTheme?.coverStyle?.display == 'outside' ? solid : '2px solid #cac5c4' }}>
-                        <div style={{ width: 30, height: 10, backgroundColor: this.page.pageTheme?.coverStyle?.display == 'outside' ? textp : '#cac5c4' }}></div>
+                    }} className={"round padding-5 " + ((this.page.pageTheme?.coverStyle?.display == 'outside' ? "item-hover-focus" : " item-hover"))}>
+                        <div className="round" style={{ width: 30, height: 20, border: this.page.pageTheme?.coverStyle?.display == 'outside' ? solid : '2px solid #cac5c4' }}>
+                            <div style={{ width: 30, height: 10, backgroundColor: this.page.pageTheme?.coverStyle?.display == 'outside' ? textp : '#cac5c4' }}></div>
+                        </div>
                     </div>
                 </Tip>
                 <Tip text={lst('横幅')}>
                     <div onMouseDown={e => {
                         this.setPageTheme({ coverStyle: { display: 'inside' } }, 'layout')
-                    }} style={{ width: 30, height: 20, border: this.page.pageTheme?.coverStyle?.display == 'inside' ? solid : '2px solid #cac5c4' }}>
-                        <div style={{ width: 20, marginLeft: 5, height: 10, backgroundColor: this.page.pageTheme?.coverStyle?.display == 'inside' ? textp : '#cac5c4' }}></div>
+                    }} className={"round padding-5 " + (this.page.pageTheme?.coverStyle?.display == 'inside' ? "item-hover-focus" : " item-hover")}>
+                        <div className="round" style={{ width: 30, height: 20, border: this.page.pageTheme?.coverStyle?.display == 'inside' ? solid : '2px solid #cac5c4' }}>
+                            <div style={{ width: 20, marginLeft: 5, height: 10, backgroundColor: this.page.pageTheme?.coverStyle?.display == 'inside' ? textp : '#cac5c4' }}></div>
+                        </div>
                     </div>
                 </Tip>
                 <Tip text={lst('内横幅')}>
                     <div onMouseDown={e => {
                         this.setPageTheme({ coverStyle: { display: 'inside-cover' } }, 'layout')
-                    }} style={{ width: 30, height: 20, border: this.page.pageTheme?.coverStyle?.display == 'inside-cover' ? solid : '2px solid #cac5c4' }}>
-                        <div style={{ width: 20, marginLeft: 5, marginTop: 5, height: 10, backgroundColor: this.page.pageTheme?.coverStyle?.display == 'inside-cover' ? textp : '#cac5c4' }}></div>
+                    }} className={"round padding-5 " + (this.page.pageTheme?.coverStyle?.display == 'inside-cover' ? "item-hover-focus" : " item-hover")}>
+                        <div className="round" style={{ width: 30, height: 20, border: this.page.pageTheme?.coverStyle?.display == 'inside-cover' ? solid : '2px solid #cac5c4' }}>
+                            <div style={{ width: 20, marginLeft: 5, marginTop: 5, height: 10, backgroundColor: this.page.pageTheme?.coverStyle?.display == 'inside-cover' ? textp : '#cac5c4' }}></div>
+                        </div>
                     </div>
                 </Tip>
             </div>
@@ -103,15 +111,16 @@ export class PageTheme extends EventsComponent {
                 }}></SelectBox>
             </div>
             <div className="remark padding-w-15 gap-t-10 gap-b-5 f-12"><S>页面背景</S></div>
-            <div className="gap-b-50"><PageFillStyle isFill openSpread={e => {
-                if (e == true) this.el.classList.remove('overflow-y')
-                else this.el.classList.add('overflow-y')
-                if (this.popover) this.popover.stopMousedownClose(e);
-            }}
+            <div className="gap-b-50"><PageFillStyle
+                isFill
+                openSpread={e => {
+                    if (e == true) this.el.classList.remove('overflow-y')
+                    else this.el.classList.add('overflow-y')
+                    if (this.popover) this.popover.stopMousedownClose(e);
+                }}
                 onChange={e => this.setTheme('pageTheme.bgStyle', e)}
                 bgStyle={this.page.pageTheme.bgStyle}></PageFillStyle>
             </div>
-
         </div>
     }
     renderSys() {
