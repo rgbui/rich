@@ -38,7 +38,10 @@ export class MenuPanel<T> extends EventsComponent {
     visible: boolean = false;
     private options: { height?: number, width?: number, overflow?: 'auto' | 'visible' } = {};
     onClose(e: React.MouseEvent) {
-        if (e) { e.stopPropagation(); e.preventDefault(); }
+        if (e) {
+            e.stopPropagation();
+            e.preventDefault();
+        }
         setTimeout(() => {
             this.close();
             this.emit('close');

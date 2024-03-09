@@ -39,7 +39,7 @@ class ImagePicker extends EventsComponent {
                     <GalleryView onChange={e => this.onChange(e as any)}></GalleryView>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' text={'上传图片'}><Icon size={20} icon={Upload}></Icon></Tip>}>
-                    <UploadView mine='image' change={e => this.onChange(e)}></UploadView>
+                    <div className="padding-14"><UploadView mine='image' change={e => this.onChange(e)}></UploadView></div>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' text={'图片网址'}><Icon size={18} icon={Link}></Icon></Tip>}>
                     <OutsideUrl change={e => this.onChange({ url: e })}></OutsideUrl>
