@@ -253,6 +253,20 @@ export class Block$Event {
             text: lst('删除'),
             label: "delete"
         });
+        if (this.editor) {
+            items.push({
+                type: MenuItemType.divide,
+            });
+            if (this.editDate) items.push({
+                type: MenuItemType.text,
+                text: lst('编辑于 ') + util.showTime(new Date(this.editDate))
+            });
+            var r = await channel.get('/user/basic', { userid: this.editor });
+            if (r?.data?.user) items.push({
+                type: MenuItemType.text,
+                text: lst('编辑人 ') + r.data.user.name
+            });
+        }
         return items;
     }
     async onContextmenu(this: Block, event: MouseEvent | Point | Rect) {

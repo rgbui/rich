@@ -24,6 +24,7 @@ import "slick-carousel/slick/slick-theme.css";
 import "./style.less";
 import { lst } from "../../../i18n/store";
 import { S } from "../../../i18n/view";
+import { channel } from "../../../net/channel";
 
 @url('/carousel/image')
 export class Carousel extends Block {
@@ -196,6 +197,20 @@ export class Carousel extends Block {
             text: lst('删除'),
             label: "Del"
         });
+        if (this.editor) {
+            items.push({
+                type: MenuItemType.divide,
+            });
+            if (this.editDate) items.push({
+                type: MenuItemType.text,
+                text: lst('编辑于 ') + util.showTime(new Date(this.editDate))
+            });
+            var r = await channel.get('/user/basic', { userid: this.editor });
+            if (r?.data?.user) items.push({
+                type: MenuItemType.text,
+                text: lst('编辑人 ') + r.data.user.name
+            });
+        }
         return items;
     }
     async onClickContextMenu(item, event) {
