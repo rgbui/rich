@@ -318,6 +318,34 @@ export class PageContextmenu {
 
             ];
         }
+        if (this.pageInfo?.editor) {
+            items.push({
+                type: MenuItemType.divide,
+            });
+            if (this.pageInfo.editDate) items.push({
+                type: MenuItemType.text,
+                text: lst('编辑于 ') + util.showTime(new Date(this.pageInfo.editDate))
+            });
+            var re = await channel.get('/user/basic', { userid: this.pageInfo.editor });
+            if (re?.data?.user) items.push({
+                type: MenuItemType.text,
+                text: lst('编辑人 ') + re.data.user.name
+            });
+        }
+        else if (this.pageInfo?.creater) {
+            items.push({
+                type: MenuItemType.divide,
+            });
+            if (this.pageInfo?.createDate) items.push({
+                type: MenuItemType.text,
+                text: lst('创建于 ') + util.showTime(new Date(this.pageInfo.createDate))
+            });
+            var re = await channel.get('/user/basic', { userid: this.pageInfo.creater });
+            if (re?.data?.user) items.push({
+                type: MenuItemType.text,
+                text: lst('创建人 ') + re.data.user.name
+            });
+        }
         if (items.length == 0) return;
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, items, {
             overflow: 'visible',

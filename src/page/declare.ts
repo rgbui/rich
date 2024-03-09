@@ -57,6 +57,7 @@ export interface LinkPageItem<T = {}> {
     },
     share?: 'net' | 'nas' | 'local';
     createDate?: Date,
+    creater?:string,
     editDate?: Date,
     editor?: string,
     mime?: any,
