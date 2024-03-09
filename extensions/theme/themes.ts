@@ -159,7 +159,6 @@ export function GetPageThemes(page: Page) {
                         }
                     },
                     {
-
                         text: lst('鼠尾草'),
                         name: 'style-9',
                         pageTheme: {
@@ -181,7 +180,6 @@ export function GetPageThemes(page: Page) {
                         }
                     },
                     {
-
                         text: lst('赤土'),
                         name: 'style-10',
                         pageTheme: {
@@ -223,32 +221,32 @@ export function GetPageThemes(page: Page) {
                             }
                         }
                     },
-                    {
-                        text: lst('火红'),
-                        name: 'style-2',
-                        pageTheme: {
-                            name: 'style-2',
-                            bgStyle: {
-                                "mode": "grad",
-                                "grad": {
-                                    "name": "soft",
-                                    "x": 4,
-                                    "y": 109.5,
-                                    "bg": "radial-gradient(circle at 0% 0%, rgba(255,9,32,0.5) 0px, rgba(255,9,32,0) 50%),radial-gradient(circle at 12.700117292409608% 19.41763171368182%, rgba(255,170,9,0.5) 0px, rgba(255,170,9,0) 87.2998827075904%),radial-gradient(circle at 19.41763171368182% 87.2998827075904%, rgba(255,9,217,0.5) 0px, rgba(255,9,217,0) 80.58236828631817%),linear-gradient(0deg, rgba(255,9,32,0.5) 0%, rgba(255,9,32,0.5) 100%)"
-                                }
-                            },
-                            contentStyle: {
-                                color: 'light',
-                                transparency: 'solid',
-                                border: '1px solid #eee',
-                                round: 16,
-                                shadow: 'rgba(18, 18, 18, 0.1) 0px 1px 3px 0px'
-                            },
-                            coverStyle: {
-                                display: 'outside'
-                            }
-                        }
-                    }
+                    // {
+                    //     text: lst('火红'),
+                    //     name: 'style-2',
+                    //     pageTheme: {
+                    //         name: 'style-2',
+                    //         bgStyle: {
+                    //             "mode": "grad",
+                    //             "grad": {
+                    //                 "name": "soft",
+                    //                 "x": 4,
+                    //                 "y": 109.5,
+                    //                 "bg": "radial-gradient(circle at 0% 0%, rgba(255,9,32,0.5) 0px, rgba(255,9,32,0) 50%),radial-gradient(circle at 12.700117292409608% 19.41763171368182%, rgba(255,170,9,0.5) 0px, rgba(255,170,9,0) 87.2998827075904%),radial-gradient(circle at 19.41763171368182% 87.2998827075904%, rgba(255,9,217,0.5) 0px, rgba(255,9,217,0) 80.58236828631817%),linear-gradient(0deg, rgba(255,9,32,0.5) 0%, rgba(255,9,32,0.5) 100%)"
+                    //             }
+                    //         },
+                    //         contentStyle: {
+                    //             color: 'light',
+                    //             transparency: 'solid',
+                    //             border: '1px solid #eee',
+                    //             round: 16,
+                    //             shadow: 'rgba(18, 18, 18, 0.1) 0px 1px 3px 0px'
+                    //         },
+                    //         coverStyle: {
+                    //             display: 'outside'
+                    //         }
+                    //     }
+                    // }
                 ]
             }
         ]

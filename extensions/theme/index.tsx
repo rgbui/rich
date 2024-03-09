@@ -8,11 +8,11 @@ import { Icon } from "../../component/view/icon";
 import { CardBrushSvg, CheckSvg, CloseSvg, PlatteSvg } from "../../component/svgs";
 import { PageFillStyle } from "./card/bg";
 import { lst } from "../../i18n/store";
-import lodash from "lodash";
 import { PageLayoutType, PageThemeStyle } from "../../src/page/declare";
 import { GetPageThemes } from "./themes";
 import { Tip } from "../../component/view/tooltip/tip";
 import { SelectBox } from "../../component/view/select/box";
+import lodash from "lodash";
 
 export class PageTheme extends EventsComponent {
     page: Page;
@@ -225,7 +225,7 @@ export class PageTheme extends EventsComponent {
             }
             return <div onMouseDown={e => {
                 self.setPageTheme(s, name as any);
-            }} className="item-hover cursor padding-w-5 padding-t-5 round" key={i} style={{ width: 150 }}>
+            }} className="item-hover cursor padding-w-10 padding-t-10 round" key={i} style={{ width: 140 }}>
                 <div style={pageContentStyle} className="h-130 round-16 bg-white border-box shadow border">{renderContent()}</div>
                 <div className="flex-center h-30 f-12">{(name == 'layout' && self.page.pageTheme.coverStyle.display == s.name || name == 'style' && self.page.pageTheme?.name == s.name) && <span className="flex-center size-20"><Icon size={18} icon={CheckSvg}></Icon></span>}<span>{g.text}</span></div>
             </div>

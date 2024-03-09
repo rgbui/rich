@@ -273,7 +273,7 @@ export class PageCardView extends BlockView<PageCard>{
                     ...coverStyle,
                     height: self.block.cardCoverHeight
                 }}>
-                    {self.block.isCanEdit() && <div className="item-hover" onMouseDown={e => {
+                    {self.block.isCanEdit() && <div className="item-hover-define" onMouseDown={e => {
                         self.dragSize('top', e);
                     }} style={{
                         position: 'absolute',
@@ -281,8 +281,9 @@ export class PageCardView extends BlockView<PageCard>{
                         left: 0,
                         height: 6,
                         right: 0,
-                        cursor: 'row-resize'
-                    }}></div>}
+                        cursor: 'row-resize',
+                        color: 'rgba(55, 53, 47, 0.16)',
+                    } as any}></div>}
                 </div>
                 <div className="padding-10 min-h-60" style={{
                     height: this.block.autoContentHeight !== true ? this.block.contentHeight : undefined,
@@ -299,7 +300,7 @@ export class PageCardView extends BlockView<PageCard>{
                     width: (self.block.cardCoverWidth) + '%',
                 }}>
                     {self.block.isCanEdit() && <div
-                        className="item-hover"
+                        className="item-hover-define"
                         onMouseDown={e => {
                             self.dragSize('left', e);
                         }}
@@ -311,6 +312,7 @@ export class PageCardView extends BlockView<PageCard>{
                             width: 6,
                             cursor: 'col-resize',
                             borderRadius: 3,
+                            color: 'rgba(55, 53, 47, 0.16)',
                         }}
                     ></div>}
                 </div>
@@ -332,7 +334,7 @@ export class PageCardView extends BlockView<PageCard>{
                 </div>
                 <div className="flex-fixed relative" style={{ ...coverStyle, width: (self.block.cardCoverWidth) + '%', }}>
                     {self.block.isCanEdit() && <div
-                        className="item-hover"
+                        className="item-hover-define"
                         onMouseDown={e => {
                             self.dragSize('right', e);
                         }}
@@ -343,7 +345,8 @@ export class PageCardView extends BlockView<PageCard>{
                             left: -3,
                             width: 6,
                             cursor: 'col-resize',
-                            borderRadius: 3
+                            borderRadius: 3,
+                            color: 'rgba(55, 53, 47, 0.16)',
                         }}
                     ></div>}
                 </div>

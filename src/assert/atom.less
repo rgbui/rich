@@ -473,6 +473,13 @@ item-selected:选中的效果
     }
 }
 
+.item-hover-define,
+.r-item-hover-color>* {
+    &:hover {
+        background-color: currentColor;
+    }
+}
+
 .no-item-hover {
     &:hover {
         background-color: transparent !important;
@@ -1659,7 +1666,8 @@ each(@ops, {
 }
 
 .border-t,
-.border-0,.border-transparent {
+.border-0,
+.border-transparent {
     border: 0.1rem solid transparent;
 }
 

@@ -404,7 +404,7 @@ export class ViewComponent extends BlockView<CardBox>{
                             self.block.openSetBg(e);
                         }} className={'cursor remark'} size={24} icon={PicSvg}></Icon>}
                     </div>
-                    {self.block.isCanEdit() && <div className="item-hover" onMouseDown={e => {
+                    {self.block.isCanEdit() && <div className="item-hover-define" onMouseDown={e => {
                         self.dragSize('top', e);
                     }} style={{
                         position: 'absolute',
@@ -412,7 +412,8 @@ export class ViewComponent extends BlockView<CardBox>{
                         left: 0,
                         height: 6,
                         right: 0,
-                        cursor: 'row-resize'
+                        cursor: 'row-resize',
+                        color: 'rgba(55, 53, 47, 0.16)',
                     }}></div>}
                     <div className="gap-w-50 gap-h-30"><ChildsArea childs={self.block.childs}></ChildsArea></div>
                 </div>
@@ -433,7 +434,7 @@ export class ViewComponent extends BlockView<CardBox>{
                             self.block.openSetBg(e);
                         }} className={'cursor remark'} size={24} icon={PicSvg}></Icon>}
                         {self.block.isCanEdit() && <div
-                            className="item-hover"
+                            className="item-hover-define"
                             onMouseDown={e => {
                                 self.dragSize('left', e);
                             }}
@@ -445,6 +446,7 @@ export class ViewComponent extends BlockView<CardBox>{
                                 width: 6,
                                 cursor: 'col-resize',
                                 borderRadius: 3,
+                                color: 'rgba(55, 53, 47, 0.16)',
                             }}
                         ></div>}
                     </div>
@@ -463,7 +465,7 @@ export class ViewComponent extends BlockView<CardBox>{
                             self.block.openSetBg(e);
                         }} className={'cursor remark'} size={24} icon={PicSvg}></Icon>}
                         {self.block.isCanEdit() && <div
-                            className="item-hover"
+                            className="item-hover-define"
                             onMouseDown={e => {
                                 self.dragSize('right', e);
                             }}
@@ -474,7 +476,8 @@ export class ViewComponent extends BlockView<CardBox>{
                                 left: -3,
                                 width: 6,
                                 cursor: 'col-resize',
-                                borderRadius: 3
+                                borderRadius: 3,
+                                color: 'rgba(55, 53, 47, 0.16)'
                             }}
                         ></div>}
                     </div>
