@@ -20,6 +20,7 @@ import "./form/button/template";
 
 import "./form/tab/index";
 import "./form/tab/page";
+import "./form/search";
 
 
 import "./present/katex/katex";

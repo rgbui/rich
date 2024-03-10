@@ -84,11 +84,11 @@ export function getBlockSelectData() {
             ]
         },
         {
-            text: lst('媒体与附件'),
-            childs: [
+            text:lst('媒体与附件'),
+            childs:[
                 { text: lst("图标"), icon: PicSvg, url: '/icon', description: '', label: lst('/图标'), labels: ['/tb', '/tubiao', '/logo'] },
                 { text: lst("图片"), icon: PicSvg, url: '/image', description: '', label: lst('/图片'), labels: ['/tp', '/tupian', '/img', '/image', '/picture'] },
-                { text: lst('图片轮播'), icon: PicSvg, url: '/carousel/image', description: '', label: lst('/图片轮播'), labels: ['/tplb', '/轮播', '/tupianlunbo', '/carousel', '/images', '/pics'] },
+                { text: lst('图片轮播'), icon: PicSvg, url: '/carousel/image', description: '', label: lst('/图片轮播'), labels: ['/tplb', '/轮播','/lunbo', '/tupianlunbo', '/carousel', '/images', '/pics'] },
                 { text: lst("音频"), icon: AudioSvg, url: '/audio', description: "", label: lst('/音频'), labels: ['/yp', '/audio'] },
                 { text: lst("视频"), icon: VideoSvg, url: '/video', description: "", label: lst('/视频'), labels: ['/sp', '/video'] },
                 { text: lst("文件"), icon: FileSvg, url: '/file', description: "", label: lst('/文件'), labels: ['/wj', '/wenjian', '/file'] },
@@ -101,6 +101,7 @@ export function getBlockSelectData() {
             text: lst('数据'),
             childs: [
                 { text: lst('数据表格'), icon: CollectTableSvg, url: "/data-grid/table", label: lst('/数据表格'), labels: [] },
+                { text: lst('搜索'), icon: { name: 'byte', code: 'search' }, url: '/search', label: lst('/搜索'), labels: ['/search', '/so', '/sosearch', '/shousuo', '/ss'] }
                 // { text: lst('看板'), icon: CollectionBoardSvg, url: "/data-grid/board", label: lst('/看板'), labels: [] },
                 // { text: lst('画廊'), icon: CollectionGallerySvg, url: "/data-grid/gallery", label: lst('/画廊'), labels: [] },
                 // { text: lst('日历'), icon: CollectionCalendarSvg, url: "/data-grid/calendar", label: lst('/日历'), labels: [] },
