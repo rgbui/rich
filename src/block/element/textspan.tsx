@@ -251,7 +251,8 @@ export class TextSpan extends Block {
         if (this.isFreeBlock) return false;
         else return true;
     }
-    async onGetContextMenus() {
+    async onGetContextMenus()
+    {
         var rs = await super.onGetContextMenus();
         var at = rs.findIndex(g => g.name == 'color');
         var ns: MenuItem<string | BlockDirective>[] = [];
@@ -274,7 +275,7 @@ export class TextSpan extends Block {
         }
         else await super.onContextMenuInput(item);
     }
-    getVisibleHandleCursorPoint(): Point {
+    getVisibleHandleCursorPoint() {
         var ele = this.el.querySelector('.shy-appear-texts') as HTMLElement;
         if (!ele) ele = this.el.querySelector('.shy-appear-text') as HTMLElement;
         if (!ele) ele = this.el;

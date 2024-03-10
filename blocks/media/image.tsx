@@ -333,14 +333,6 @@ export class Image extends Block {
                     btns: [{ icon: Edit1Svg, name: 'editImageLink' }]
                 }
             ] : undefined
-
-            // [
-            //     {
-            //         name: 'imageLink',
-            //         icon: PlusSvg,
-            //         text: lst('添加网址')
-            //     }
-            // ]
         });
         items.push({
             type: MenuItemType.divide
