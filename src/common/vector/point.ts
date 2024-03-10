@@ -87,8 +87,8 @@ export class Point {
         else if (typeof event == 'object') return new Point(event as any)
         else return new Point(event, y);
     }
-    toRect(width: number = 0, height: number = 0) {
-        return new Rect(this, width, height);
+    toSize(width: number = 0, height: number = 0) {
+        return new Rect(this.x, this.y, width, height);
     }
     move(x: number, y: number) {
         return new Point(this.x + x, this.y + y);

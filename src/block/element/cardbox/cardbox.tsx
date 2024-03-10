@@ -29,19 +29,20 @@ import { BlockUrlConstant } from "../../constant";
 import { getBgStyle } from "../../../../extensions/theme/themes";
 import { useImagePicker } from "../../../../extensions/image/picker";
 import lodash from "lodash";
-import "./style.less";
 import { util } from "../../../../util/util";
 import { memoryCopyData, memoryReadData } from "../../../page/common/copy";
 import { MouseDragger } from "../../../common/dragger";
+import "./style.less";
 
 @url('/card/box')
 export class CardBox extends Block {
+
     init() {
         this.gridMap = new GridMap(this)
     }
     async openContextmenu(event: React.MouseEvent) {
-        var el = event.currentTarget?.parentNode as HTMLElement;
-        el.classList.remove('visible');
+        var el = this.el.querySelector('.sy-block-view-card-ops') as HTMLElement;
+        el.style.visibility = 'visible';
         try {
             var d = memoryReadData('cardBox.cardThemeStyle');
             var r = await useSelectMenuItem(
@@ -128,7 +129,7 @@ export class CardBox extends Block {
             console.error(ex)
         }
         finally {
-            el.classList.add('visible');
+            el.style.visibility = '';
         }
     }
     async onAddCardBox(event: React.MouseEvent) {
@@ -151,16 +152,24 @@ export class CardBox extends Block {
         });
     }
     async onOpenCardStyle(event?: React.MouseEvent) {
-        var rect = Rect.fromEle(this.contentEl);
-        rect = rect.rightTop.move(-20, -20).toRect(20, 20);
-        await useCardBoxStyle({ roundArea: rect }, this);
+        var el = this.el.querySelector('.sy-block-view-card-ops') as HTMLElement;
+        el.style.visibility = 'visible';
+        try {
+            var rect = Rect.fromEle(this.contentEl);
+            rect = rect.rightTop.move(-20, 20).toSize(20, 20);
+            await useCardBoxStyle({ roundArea: rect }, this);
+        }
+        catch (ex) {
+
+        }
+        finally {
+            el.style.visibility = '';
+        }
     }
     @prop()
     cardCoverHeight = 120;
-
     @prop()
     cardCoverWidth = 33.3;
-
     @prop()
     cardThemeStyle: PageThemeStyle = {
         bgStyle: {
@@ -280,7 +289,7 @@ export class CardBox extends Block {
             var t = lodash.cloneDeep(this.cardThemeStyle);
             t.coverStyle.bgStyle.mode = 'uploadImage';
             t.coverStyle.bgStyle.src = r.url;
-            this.onUpdateProps({
+            await this.onUpdateProps({
                 cardThemeStyle: t
             }, { range: BlockRenderRange.self })
         }
@@ -490,7 +499,7 @@ export class ViewComponent extends BlockView<CardBox>{
         var coverStyle = getBgStyle(cs?.bgStyle);
 
         return <div style={style}>
-            <div className={"visible-hover sy-block-view-card" + (this.block.isCanEdit() ? " allow-hover" : "")} style={screenStyle}>
+            <div className={"sy-block-view-card" + (this.block.isCanEdit() ? " allow-hover" : "")} style={screenStyle}>
                 <div style={gapStyle}>
                     <div
                         ref={e => this.contentEl = e}
