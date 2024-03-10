@@ -27,15 +27,19 @@ export function SwitchText(props: {
     text?: string,
     checked: boolean,
     onChange: (checked: boolean) => void,
-    style?: CSSProperties, className?: string | (string[]),
+    style?: CSSProperties,
+    className?: string | (string[]),
     disabled?: boolean,
     size?: 'small',
     children?: React.ReactNode,
-    align?: 'right' | 'left'
+    align?: 'right' | 'left',
+    block?: boolean
 }) {
-    var classList: string[] = ['inline-flex'];
+    var classList: string[] = [props.block ? "flex" : 'inline-flex'];
+    if (Array.isArray(props.className)) classList.push(...props.className)
+    else classList.push(props.className)
     var style: CSSProperties = {
-        // display: 'inline-block'
+
     }
     if (props.align == 'left' || !props.align)
         return <div className={classList.join(' ')} style={style}>

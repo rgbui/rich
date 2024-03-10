@@ -22,7 +22,7 @@ import { Rect } from "../../src/common/vector/point";
 import { getWsContext } from "../../net/ai/robot";
 import "./style.less";
 import { CopyAlert } from "../../component/copy";
-import { WsConsumeType, getAiDefaultModel } from "../../net/ai/cost";
+import { getAiDefaultModel } from "../../net/ai/cost";
 
 var messages: { id: string, userid?: string, date: Date, content: string, refs?: { blockIds: string[], page: LinkPageItem, elementUrl: string }[] }[] = [];
 

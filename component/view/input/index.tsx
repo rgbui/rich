@@ -7,6 +7,7 @@ import "./style.less";
 
 export class Input extends React.Component<{
     style?: CSSProperties,
+    inputStyle?: CSSProperties,
     disabled?: boolean,
     noborder?: boolean,
     value?: string,
@@ -109,7 +110,10 @@ export class Input extends React.Component<{
         else if (this.props.className) classList.push(this.props.className)
         if (this.props.noborder) classList.push('shy-input-noborder');
 
-        return <div onMouseDown={e => { props.onMousedown && props.onMousedown(e) }} className={classList.join(" ")} style={props.style || {}}>
+        return <div
+            onMouseDown={e => { props.onMousedown && props.onMousedown(e) }}
+            className={classList.join(" ")}
+            style={props.style || {}}>
             {props.prefix && <div className="shy-input-prefix flex-center flex-fixed">
                 {props.prefix}
             </div>}
@@ -132,7 +136,10 @@ export class Input extends React.Component<{
                     readOnly={props.readonly}
                     maxLength={props.maxLength || undefined}
                     name={props.name}
-                    style={{ textIndent: props.prefix ? 0 : 4 }}
+                    style={{
+                        textIndent: props.prefix ? 0 : 4,
+                        ...(props.inputStyle || {})
+                    }}
                 ></input>
             </div>
             {props.clear && this.props.value && <div className="shy-input-clear flex-fixed" onClick={e => this.onClear()}>

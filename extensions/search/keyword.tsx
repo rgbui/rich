@@ -7,10 +7,9 @@ import { Input } from "../../component/view/input";
 import { channel } from "../../net/channel";
 import { PopoverSingleton } from "../../component/popover/popover";
 import { PopoverPosition } from "../../component/popover/position";
-import "./style.less";
 import { LinkPageItem, getPageIcon, getPageText } from "../../src/page/declare";
 import { Spin } from "../../component/view/spin";
-import {SearchSvg } from "../../component/svgs";
+import { SearchSvg } from "../../component/svgs";
 import { SearchListType } from "../../component/types";
 import { util } from "../../util/util";
 import { SwitchText } from "../../component/view/switch";
@@ -19,6 +18,7 @@ import { useAISearchBox } from "./ai";
 import { isMobileOnly } from "react-device-detect";
 import { lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
+import "./style.less";
 
 export class SearchBox extends EventsComponent {
     render() {
@@ -26,10 +26,13 @@ export class SearchBox extends EventsComponent {
         return <div className={"bg-white  round" + (isMobileOnly ? " vw100-c20" : " w-800 ")}>
             <div className="padding-10 flex">
                 <div className="flex-auto">
-                    <Input clear noborder
+                    <Input
+                        clear
+                        noborder
                         prefix={<span className="flex cursor">
-                            <span className="flex-center size-20  text-1"><Icon className={'text-1'} size={18} icon={SearchSvg}></Icon></span>
+                            <span className="flex-center size-20  text-1"><Icon className={'remark'} size={16} icon={SearchSvg}></Icon></span>
                         </span>}
+                        inputStyle={{ fontSize: '18px' }}
                         size='larger'
                         onClear={() => { this.searchList.word = ''; this.onForceSearch() }}
                         placeholder={lst('在{text}中搜索', { text: ws?.text || lst('空间') })}
@@ -40,19 +43,26 @@ export class SearchBox extends EventsComponent {
             </div>
             <Divider></Divider>
             <div className="flex f-12 remark padding-w-10 padding-t-5">
-                <SwitchText className={'flex-fixed'} checked={this.searchList.isOnlySearchTitle} onChange={e => {
+                <SwitchText size="small" className={'flex-fixed item-hover round padding-w-3 '} checked={this.searchList.isOnlySearchTitle} onChange={e => {
                     this.searchList.isOnlySearchTitle = e;
                     this.onForceSearch()
-                }}><S>仅区配标题</S></SwitchText>
+                }}><S>仅匹配标题</S></SwitchText>
                 <span className="flex-auto flex-end">
-                    <span className="gap-r-5"><S>编辑时间</S></span>
-                    <SelectBox inline value={this.searchList.editDate} onChange={e => { this.searchList.editDate = e; this.onForceSearch() }} options={[
-                        { text: lst('升序'), value: 1, icon: { name: 'bytedance-icon', code: 'sort-amount-up' } },
-                        { text: lst('降序'), value: -1, icon: { name: 'bytedance-icon', code: 'sort-amount-down' } },
-                    ]}></SelectBox>
+                    <span className="padding-w-3 round cursor item-hover"><span className="gap-r-3"><S>编辑时间</S></span>
+                        <SelectBox
+                            className={'f-12'}
+                            inline
+                            value={this.searchList.editDate}
+                            iconHidden={true}
+                            onChange={e => { this.searchList.editDate = e; this.onForceSearch() }}
+                            options={[
+                                { text: lst('升序'), value: 1, icon: { name: 'bytedance-icon', code: 'sort-amount-up' } },
+                                { text: lst('降序'), value: -1, icon: { name: 'bytedance-icon', code: 'sort-amount-down' } },
+                            ]}></SelectBox>
+                    </span>
                 </span>
             </div>
-            <div className="padding-h-10 overflow-y max-h-300 min-h-120">
+            <div className="padding-h-10 overflow-y max-h-300">
                 {this.searchList.loading && <Spin block></Spin>}
                 {!this.searchList.loading && this.renderList()}
             </div>
@@ -64,7 +74,7 @@ export class SearchBox extends EventsComponent {
             return this.searchList.pages.map(r => {
                 return <div key={r.id} className="padding-10 item-hover round cursor" onMouseDown={e => this.onSelect(r)}>
                     <div className="flex">
-                        <span className="flex-fixed flex-line flex-center size-20 round text gap-r-5"><Icon size={16} icon={getPageIcon(r)}></Icon></span>
+                        <span className="flex-fixed flex-line flex-center size-20 round remark gap-r-5"><Icon size={16} icon={getPageIcon(r)}></Icon></span>
                         <span className="text f-14 flex-auto">{getPageText(r)}</span>
                         <span className="flex-fixed remark f-14">{util.showTime(r.editDate || r.createDate)}</span>
                     </div>
@@ -74,7 +84,7 @@ export class SearchBox extends EventsComponent {
         return this.searchList.list.map(r => {
             return <div key={r.id} className="padding-10 item-hover round cursor" onMouseDown={e => this.onSelect(r)}>
                 <div className="flex">
-                    <span className="flex-line flex-center size-20 round text gap-r-5"><Icon size={16} icon={getPageIcon(r)}></Icon></span>
+                    <span className="flex-line flex-center size-20 round remark gap-r-5"><Icon size={16} icon={getPageIcon(r)}></Icon></span>
                     <span className="text f-14">{getPageText(r)}</span>
                 </div>
                 <div className="remark f-14">{r.content}</div>
