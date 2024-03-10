@@ -7,7 +7,8 @@ export function GetPageThemes(page: Page) {
     if ([
         PageLayoutType.doc,
         PageLayoutType.db,
-        PageLayoutType.recordView
+        PageLayoutType.recordView,
+        PageLayoutType.docCard
     ].includes(page?.pageLayout?.type)) {
         var groups = [
             {
