@@ -504,7 +504,7 @@ export class ViewComponent extends BlockView<CardBox>{
                     <div
                         ref={e => this.contentEl = e}
                         className={"relative"}>
-                        {this.block.isCanEdit() && <div style={{ zIndex: 12 }} className="flex sy-block-view-card-ops pos-top-right gap-r-10 gap-t-10 r-gap-r-10">
+                        {this.block.isCanEdit() && <div style={{ zIndex: 12 }} className="flex sy-block-view-card-ops pos-top-right gap-r-10 gap-t-10 r-gap-r-10 remark">
                             <span className={"flex-center cursor round  size-24 bg-hover"} onMouseDown={e => { e.stopPropagation(); this.block.onOpenCardStyle(e) }}><Icon size={18} icon={PlatteSvg}></Icon></span>
                             <span className={"flex-center cursor round  size-24 bg-hover"} onMouseDown={e => { e.stopPropagation(); this.block.openContextmenu(e) }}><Icon size={18} icon={DotsSvg}></Icon></span>
                         </div>}
