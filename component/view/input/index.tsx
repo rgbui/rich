@@ -24,6 +24,7 @@ export class Input extends React.Component<{
     name?: string,
     size?: 'small' | 'default' | 'larger',
     className?: string | (string[]),
+    inputClassName?: string | (string[]),
     onMousedown?: (event: React.MouseEvent) => void,
     prefix?: React.ReactNode,
     onSearchDrop?: (value: string) => Promise<MenuItem[]>,
@@ -97,7 +98,7 @@ export class Input extends React.Component<{
                     return;
                 }
             }
-            if (e.key == KeyboardCode.Enter && props.onEnter) {
+            if(e.key == KeyboardCode.Enter && props.onEnter) {
                 props.onEnter(filterValue((e.target as HTMLInputElement).value), e);
             }
             else if (props.onKeydown) props.onKeydown(e);
@@ -110,8 +111,14 @@ export class Input extends React.Component<{
         else if (this.props.className) classList.push(this.props.className)
         if (this.props.noborder) classList.push('shy-input-noborder');
 
+        var inputClassList: string[] = [];
+        if (Array.isArray(this.props.inputClassName)) this.props.inputClassName.each(c => { inputClassList.push(c) })
+        else if (this.props.inputClassName) inputClassList.push(this.props.inputClassName)
+
         return <div
-            onMouseDown={e => { props.onMousedown && props.onMousedown(e) }}
+            onMouseDown={e => {
+                props.onMousedown && props.onMousedown(e)
+            }}
             className={classList.join(" ")}
             style={props.style || {}}>
             {props.prefix && <div className="shy-input-prefix flex-center flex-fixed">
@@ -119,6 +126,7 @@ export class Input extends React.Component<{
             </div>}
             <div className="shy-input-wrapper flex-auto">
                 <input
+                    className={inputClassList.join(" ")}
                     ref={e => this.inputEl = e}
                     type={props.type || 'text'}
                     defaultValue={props.value || ''}

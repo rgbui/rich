@@ -2,6 +2,7 @@
     display        : flex;
     justify-content: flex-start;
     align-items    : flex-start;
+
     .sy-block-todo-checkbox-wrapper {
         display        : inline-flex;
         justify-content: center;
@@ -63,4 +64,43 @@
         margin-left: 10px;
         color      : rgba(55, 53, 47, 0.4);
     }
+}
+
+.sy-search-block {
+    &-primary {
+        background: rgb(225, 98, 89);
+        border    : 1px solid rgb(190, 86, 67);
+        color     : #fff;
+    }
+
+    &-ghost {
+        background-color   : transparent;
+        color              : rgb(55, 53, 47, .65);
+        border             : 1px solid #ddd;
+    }
+
+    &-dark {
+        background-color: #000;
+        color           : #fff;
+        border          : 1px solid #000;
+    }
+
+    &-blue {
+        background-color: var(--text-b-color);
+        color           : #fff;
+        border          : 1px solid var(--text-b-color);
+    }
+
+    &-green {
+        background-color: var(--text-g-color);
+        color           : #fff;
+        border          : 1px solid var(--text-g-color);
+    }
+
+    &-purple {
+        background-color: rgb(157, 52, 218);
+        color           : #fff;
+        border          : 1px solid rgb(157, 52, 218);
+    }
+
 }
