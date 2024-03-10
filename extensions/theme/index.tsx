@@ -495,11 +495,7 @@ export class PageTheme extends EventsComponent {
                 var c = cs[i] as CardBox;
                 var pt = lodash.cloneDeep(c.cardThemeStyle);
                 pt.contentStyle = lodash.cloneDeep(s.contentStyle);
-                // console.log('ggeexxx',pt);
-                // delete pt.coverStyle;
-                // if (this.page.pageTheme?.coverStyle) pt.coverStyle = {
-                //     ...c.cardThemeStyle.coverStyle
-                // };
+                console.log('ggeexxx',pt);
                 await c.updateProps({
                     cardThemeStyle: pt
                 }, BlockRenderRange.self);

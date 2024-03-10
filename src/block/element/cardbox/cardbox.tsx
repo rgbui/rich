@@ -26,7 +26,7 @@ import { ToolTip } from "../../../../component/view/tooltip";
 import { DropDirection } from "../../../kit/handle/direction";
 import { lst } from "../../../../i18n/store"
 import { BlockUrlConstant } from "../../constant";
-import { getBgStyle } from "../../../../extensions/theme/themes";
+import { getBgStyle, getCardStyle } from "../../../../extensions/theme/themes";
 import { useImagePicker } from "../../../../extensions/image/picker";
 import lodash from "lodash";
 import { util } from "../../../../util/util";
@@ -492,12 +492,12 @@ export class ViewComponent extends BlockView<CardBox>{
                     </div>
                 </div>
             }
-            return <div className="gap-w-50 gap-h-30"><ChildsArea childs={self.block.childs}></ChildsArea></div>
+            return <div className="gap-w-50 padding-h-30"><ChildsArea childs={self.block.childs}></ChildsArea></div>
         }
 
         var cs = self.block.cardThemeStyle.coverStyle
         var coverStyle = getBgStyle(cs?.bgStyle);
-
+        var { contentStyle } = getCardStyle(self.block.cardThemeStyle);
         return <div style={style}>
             <div className={"sy-block-view-card" + (this.block.isCanEdit() ? " allow-hover" : "")} style={screenStyle}>
                 <div style={gapStyle}>
@@ -511,11 +511,11 @@ export class ViewComponent extends BlockView<CardBox>{
                         {cs?.display == 'inside' && <div className="round-16" style={{
                             ...coverStyle
                         }}>
-                            <div className={"round-16 sy-block-card-box" + (" sy-block-card-box-" + this.block.cardThemeStyle.contentStyle?.color) + (" sy-block-card-box-" + this.block.cardThemeStyle?.contentStyle?.transparency)}>
+                            <div style={{ ...contentStyle }} className={"round-16 sy-block-card-box" + (" sy-block-card-box-" + this.block.cardThemeStyle.contentStyle?.color) + (" sy-block-card-box-" + this.block.cardThemeStyle?.contentStyle?.transparency)}>
                                 {renderContent()}
                             </div>
                         </div>}
-                        {cs?.display !== 'inside' && <div className={"round-16 sy-block-card-box" + (" sy-block-card-box-" + this.block.cardThemeStyle.contentStyle?.color) + (" sy-block-card-box-" + this.block.cardThemeStyle?.contentStyle?.transparency)}>
+                        {cs?.display !== 'inside' && <div style={{ ...contentStyle }} className={"round-16 sy-block-card-box" + (" sy-block-card-box-" + this.block.cardThemeStyle.contentStyle?.color) + (" sy-block-card-box-" + this.block.cardThemeStyle?.contentStyle?.transparency)}>
                             {renderContent()}
                         </div>}
                     </div>
