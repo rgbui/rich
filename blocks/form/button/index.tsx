@@ -196,7 +196,6 @@ export class BlockButton extends Block {
     }
     async didMounted() {
         document.body.addEventListener('mousedown', this.otherClick, true)
-
     }
     async didUnmounted() {
         popoverLayer.clear(this);
@@ -225,8 +224,12 @@ export class BlockButtonView extends BlockView<BlockButton>{
     }
     async load() {
         this.oldFlow = await this.block.flow.clone();
+        this.oldText = this.block.buttonText;
+        this.oldIcon = lodash.cloneDeep(this.block.buttonIcon);
     }
     oldFlow: Flow;
+    oldText: string;
+    oldIcon: IconArguments;
     async openEdit(event: React.MouseEvent) {
         if (this.boxTip) {
             this.boxTip.toggle();
@@ -268,7 +271,7 @@ export class BlockButtonView extends BlockView<BlockButton>{
                                 e.stopPropagation();
                                 this.block.onExcute()
                             }}
-                            className={" flex-center  " + classList.join(" ")}
+                            className={"text-overflow flex-center  " + classList.join(" ")}
                             style={{ width: this.block.buttonIsBlock ? "100%" : undefined }}
                         >
                             {this.block.iconAlign == 'left' && <> {this.block.buttonIcon && <Icon size={18} className={this.block.buttonText ? 'gap-r-5' : ""} icon={{ ...this.block.buttonIcon, color: 'inherit' }}></Icon>}
@@ -285,7 +288,9 @@ export class BlockButtonView extends BlockView<BlockButton>{
                                 className="visible flex-center  pos-center-right-outside" onMouseDown={async e => {
                                     e.stopPropagation();
                                     this.openEdit(e)
-                                }}><span className="cursor flex-center gap-l-5 size-20 item-hover round text-1"><Icon size={16} icon={SettingsSvg}></Icon></span>
+                                }}><span className="cursor flex-center gap-l-5 size-20 item-hover round text-1"><Icon
+                                    size={16}
+                                    icon={{ name: 'byte', code: 'lightning' }}></Icon></span>
                             </span></Tip>
                         }
                     </div>
@@ -296,11 +301,22 @@ export class BlockButtonView extends BlockView<BlockButton>{
     async onSave() {
         var od = await this.oldFlow.get();
         var nf = await this.block.flow.get();
-        if (lodash.isEqual(od, nf)) return;
-        await this.block.onManualUpdateProps({
-            flow: this.oldFlow
-        }, { flow: this.block.flow });
+        var isUpdate = false;
+        if (!lodash.isEqual(od, nf)) isUpdate = true;
+        if (this.oldText != this.block.buttonText) isUpdate = true;
+        if (!lodash.isEqual(this.oldIcon, this.block.buttonIcon)) isUpdate = true;
+        if (!isUpdate) return;
+        await this.block.page.onAction('updateBlock', async () => {
+            if (!lodash.isEqual(od, nf))
+                await this.block.manualUpdateProps({ flow: this.oldFlow }, { flow: this.block.flow })
+            if ((this.oldText != this.block.buttonText))
+                await this.block.manualUpdateProps({ buttonText: this.oldText }, { buttonText: this.block.buttonText })
+            if (!lodash.isEqual(this.oldIcon, this.block.buttonIcon))
+                await this.block.manualUpdateProps({ buttonIcon: this.oldIcon }, { buttonIcon: this.block.buttonIcon })
+        })
         this.oldFlow = await this.block.flow.clone();
+        this.oldText = this.block.buttonText;
+        this.oldIcon = lodash.cloneDeep(this.block.buttonIcon);
         this.forceUpdate();
     }
     async changeIcon(event: React.MouseEvent) {
