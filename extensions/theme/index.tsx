@@ -230,7 +230,7 @@ export class PageTheme extends EventsComponent {
             }
             return <div onMouseDown={e => {
                 self.setPageTheme(s, name as any);
-            }} className="item-hover cursor padding-w-10 padding-t-10 round" key={i} style={{ width: 140 }}>
+            }} className="item-hover-light cursor padding-w-10 padding-t-10 round" key={i} style={{ width: 140 }}>
                 <div style={pageContentStyle} className="h-130 round-16 bg-white border-box shadow border">{renderContent()}</div>
                 <div className="flex-center h-30 f-12">{(name == 'layout' && self.page.pageTheme.coverStyle.display == s.name || name == 'style' && self.page.pageTheme?.name == s.name) && <span className="flex-center size-20"><Icon size={18} icon={CheckSvg}></Icon></span>}<span>{g.text}</span></div>
             </div>
@@ -495,7 +495,6 @@ export class PageTheme extends EventsComponent {
                 var c = cs[i] as CardBox;
                 var pt = lodash.cloneDeep(c.cardThemeStyle);
                 pt.contentStyle = lodash.cloneDeep(s.contentStyle);
-                console.log('ggeexxx',pt);
                 await c.updateProps({
                     cardThemeStyle: pt
                 }, BlockRenderRange.self);
