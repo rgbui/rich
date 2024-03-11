@@ -1,4 +1,5 @@
 import { Page } from "..";
+import { useSearchBox } from "../../../extensions/search/keyword";
 import { UA } from "../../../util/ua";
 import { findBlockAppear } from "../../block/appear/visible.seek";
 import { KeyboardCode, KeyboardPlate } from "../../common/keys";
@@ -15,6 +16,12 @@ export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
             page.onPageSave();
         }
     );
+    keyboardPlate.listener(kt => kt.isMeta(KeyboardCode.P) || UA.isMacOs && kt.isMeta(KeyboardCode.P),
+        (event, kt) => {
+            event.preventDefault()
+            useSearchBox({ ws: page.ws })
+        }
+    )
     keyboardPlate.listener(kt => {
         var r = UA.isMacOs && kt.is(KeyboardCode.Backspace, KeyboardCode.Delete) || !UA.isMacOs && kt.is(KeyboardCode.Delete);
         return r;
