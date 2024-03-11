@@ -358,15 +358,15 @@ export class PageCardView extends BlockView<PageCard>{
             <div className="relative" style={this.block.contentStyle}>
                 <div className=' relative visible-hover' >
                     {this.block.isCanEdit() && <>
-                        <div style={{ zIndex: 1000, top: -30 }} className="h-30 visible  pos-top-right flex">
+                        <div style={{ zIndex: 1000, top: -24 }}
+                            className="h-24 visible  pos-top-right flex round bg-white shadow-s">
                             <span onMouseDown={async e => {
                                 e.stopPropagation();
                                 var el = (e.currentTarget as HTMLElement).parentNode as HTMLElement;
                                 el?.classList.remove('visible')
                                 await this.block.openCardStyle()
                                 el.classList.add('visible')
-
-                            }} className="size-24 round flex-center bg-hover cursor shadow-s gap-r-5">
+                            }} className="size-24 round flex-center item-hover cursor remark">
                                 <Icon size={18} icon={PlatteSvg}></Icon>
                             </span>
                             <span onMouseDown={async e => {
@@ -375,8 +375,7 @@ export class PageCardView extends BlockView<PageCard>{
                                 el?.classList.remove('visible')
                                 await this.block.onContextmenu(e.nativeEvent)
                                 el.classList.add('visible')
-
-                            }} className="size-24 round flex-center bg-hover cursor shadow-s ">
+                            }} className="size-24 round flex-center item-hover cursor  remark ">
                                 <Icon size={18} icon={DotsSvg}></Icon>
                             </span>
                         </div>

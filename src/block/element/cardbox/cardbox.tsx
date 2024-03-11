@@ -11,7 +11,7 @@ import {
     PlusSvg,
     TrashSvg
 } from "../../../../component/svgs";
-import { Icon } from "../../../../component/view/icon";
+import { Icon, IconValueType } from "../../../../component/view/icon";
 import { useSelectMenuItem } from "../../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import { useCardBoxStyle } from "../../../../extensions/theme/card.style";
@@ -39,98 +39,98 @@ export class CardBox extends Block {
     init() {
         this.gridMap = new GridMap(this)
     }
-    async openContextmenu(event: React.MouseEvent) {
-        var el = this.el.querySelector('.sy-block-view-card-ops') as HTMLElement;
-        el.style.visibility = 'visible';
-        try {
-            var d = memoryReadData('cardBox.cardThemeStyle');
-            var r = await useSelectMenuItem(
-                { roundArea: Rect.fromEvent(event) },
-                [
-                    {
-                        name: 'copylink',
-                        icon: LinkSvg,
-                        text: lst("复制链接")
-                    },
-                    {
-                        name: 'cloneCard',
-                        icon: DuplicateSvg,
-                        text: lst("复制卡片")
-                    },
-                    { type: MenuItemType.divide },
-                    {
-                        name: 'style',
-                        icon: PlatteSvg,
-                        text: lst("卡片样式")
-                    },
-                    {
-                        name: 'merge',
-                        disabled: this.prev && this.prev instanceof CardBox ? false : true,
-                        icon: ArrowUpSvg,
-                        text: lst("合并内容到上一个")
-                    },
-                    { type: MenuItemType.divide },
-                    {
-                        name: 'copyStyle',
-                        icon: { name: 'byte', code: 'format-brush' },
-                        text: lst("复制卡片样式")
-                    },
-                    {
-                        name: 'pasteStyle',
-                        icon: { name: 'byte', code: 'magic-wand' },
-                        value: lodash.cloneDeep(d),
-                        disabled: d ? false : true,
-                        text: lst("粘贴卡片样式")
-                    },
-                    { type: MenuItemType.divide },
-                    {
-                        name: 'delete',
-                        icon: TrashSvg,
-                        text: lst("删除卡片")
-                    }
-                ]
-            );
-            if (r?.item) {
-                if (r.item.name == 'copylink') {
-                    this.onCopyLink();
-                }
-                else if (r.item.name == 'cloneCard') {
-                    this.onClone()
-                } else if (r.item.name == 'style') {
-                    this.onOpenCardStyle()
-                } else if (r.item.name == 'merge') {
-                    var prev = this.prev as CardBox;
-                    if (prev instanceof CardBox) {
-                        var cs = this.childs;
-                        this.page.onAction('onCardMerge', async () => {
-                            await prev.appendArray(cs, prev.childs.length, prev.parentKey);
-                            await this.delete()
-                        })
-                    }
-                }
-                else if (r.item.name == 'copyStyle') {
-                    memoryCopyData('cardBox.cardThemeStyle', lodash.cloneDeep(this.cardThemeStyle))
-                }
-                else if (r.item.name == 'pasteStyle') {
-                    var value = r.item.value;
-                    await this.onUpdateProps({
-                        cardThemeStyle: value
-                    }, {
-                        range: BlockRenderRange.self
-                    })
-                }
-                else if (r.item.name == 'delete') {
-                    this.onDelete()
-                }
-            }
-        }
-        catch (ex) {
-            console.error(ex)
-        }
-        finally {
-            el.style.visibility = '';
-        }
-    }
+    // async openContextmenu(event: React.MouseEvent) {
+    //     var el = this.el.querySelector('.sy-block-view-card-ops') as HTMLElement;
+    //     el.style.visibility = 'visible';
+    //     try {
+    //         var d = memoryReadData('cardBox.cardThemeStyle');
+    //         var r = await useSelectMenuItem(
+    //             { roundArea: Rect.fromEvent(event) },
+    //             [
+    //                 {
+    //                     name: 'copylink',
+    //                     icon: LinkSvg,
+    //                     text: lst("复制链接")
+    //                 },
+    //                 {
+    //                     name: 'cloneCard',
+    //                     icon: DuplicateSvg,
+    //                     text: lst("复制卡片")
+    //                 },
+    //                 { type: MenuItemType.divide },
+    //                 {
+    //                     name: 'style',
+    //                     icon: PlatteSvg,
+    //                     text: lst("卡片样式")
+    //                 },
+    //                 {
+    //                     name: 'merge',
+    //                     disabled: this.prev && this.prev instanceof CardBox ? false : true,
+    //                     icon: ArrowUpSvg,
+    //                     text: lst("合并内容到上一个")
+    //                 },
+    //                 { type: MenuItemType.divide },
+    //                 {
+    //                     name: 'copyStyle',
+    //                     icon: { name: 'byte', code: 'format-brush' },
+    //                     text: lst("复制卡片样式")
+    //                 },
+    //                 {
+    //                     name: 'pasteStyle',
+    //                     icon: { name: 'byte', code: 'magic-wand' },
+    //                     value: lodash.cloneDeep(d),
+    //                     disabled: d ? false : true,
+    //                     text: lst("粘贴卡片样式")
+    //                 },
+    //                 { type: MenuItemType.divide },
+    //                 {
+    //                     name: 'delete',
+    //                     icon: TrashSvg,
+    //                     text: lst("删除卡片")
+    //                 }
+    //             ]
+    //         );
+    //         if (r?.item) {
+    //             if (r.item.name == 'copylink') {
+    //                 this.onCopyLink();
+    //             }
+    //             else if (r.item.name == 'cloneCard') {
+    //                 this.onClone()
+    //             } else if (r.item.name == 'style') {
+    //                 this.onOpenCardStyle()
+    //             } else if (r.item.name == 'merge') {
+    //                 var prev = this.prev as CardBox;
+    //                 if (prev instanceof CardBox) {
+    //                     var cs = this.childs;
+    //                     this.page.onAction('onCardMerge', async () => {
+    //                         await prev.appendArray(cs, prev.childs.length, prev.parentKey);
+    //                         await this.delete()
+    //                     })
+    //                 }
+    //             }
+    //             else if (r.item.name == 'copyStyle') {
+    //                 memoryCopyData('cardBox.cardThemeStyle', lodash.cloneDeep(this.cardThemeStyle))
+    //             }
+    //             else if (r.item.name == 'pasteStyle') {
+    //                 var value = r.item.value;
+    //                 await this.onUpdateProps({
+    //                     cardThemeStyle: value
+    //                 }, {
+    //                     range: BlockRenderRange.self
+    //                 })
+    //             }
+    //             else if (r.item.name == 'delete') {
+    //                 this.onDelete()
+    //             }
+    //         }
+    //     }
+    //     catch (ex) {
+    //         console.error(ex)
+    //     }
+    //     finally {
+    //         el.style.visibility = '';
+    //     }
+    // }
     async onAddCardBox(event: React.MouseEvent) {
         this.page.onAction('onAddCardBox', async () => {
             var d = {
@@ -226,13 +226,8 @@ export class CardBox extends Block {
     async onGetContextMenus() {
         var items = await super.onGetContextMenus();
         var at = items.findIndex(g => g.name == BlockDirective.copy);
+        var d = memoryReadData('cardBox.cardThemeStyle');
         items.splice(at + 2, 0, ...[
-            { type: MenuItemType.divide },
-            {
-                name: 'cloneCard',
-                icon: DuplicateSvg,
-                text: lst("复制卡片")
-            },
             { type: MenuItemType.divide },
             {
                 name: 'style',
@@ -240,11 +235,43 @@ export class CardBox extends Block {
                 text: lst("卡片样式")
             },
             {
+                name: 'cloneCard',
+                icon: DuplicateSvg,
+                text: lst("复制卡片")
+            },
+            { type: MenuItemType.divide },
+            {
+                name: 'up',
+                icon: { name: 'byte', code: 'arrow-up' } as IconValueType,
+                text: lst("上移"),
+                disabled: this.prev ? false : true
+            },
+            {
+                name: 'down',
+                icon: { name: 'byte', code: 'arrow-down' } as IconValueType,
+                text: lst("下移"),
+                disabled: this.next ? false : true
+            },
+            { type: MenuItemType.divide },
+            {
                 name: 'merge',
                 disabled: this.prev && this.prev instanceof CardBox ? false : true,
-                icon: ArrowUpSvg,
+                icon: { name: 'byte', code: 'sum' } as IconValueType,
                 text: lst("合并内容到上一个")
-            }])
+            },
+            {
+                name: 'copyStyle',
+                icon: { name: 'byte', code: 'format-brush' } as IconValueType,
+                text: lst("复制卡片样式")
+            },
+            {
+                name: 'pasteStyle',
+                icon: { name: 'byte', code: 'magic-wand' } as IconValueType,
+                value: lodash.cloneDeep(d),
+                disabled: d ? false : true,
+                text: lst("粘贴卡片样式")
+            }
+        ])
         var at = items.findIndex(g => g.name == 'color');
         items.splice(at, 2);
         return items;
@@ -267,7 +294,29 @@ export class CardBox extends Block {
             }
             return;
         }
-        return await super.onClickContextMenu(item, event);
+        else if (item.name == 'down') {
+            await this.page.onAction('onCardMove', async () => {
+                await this.move(this.at + 1);
+            });
+        }
+        else if (item.name == 'up') {
+            await this.page.onAction('onCardMove', async () => {
+                await this.move(this.at - 1);
+            });
+        }
+        else if (item.name == 'copyStyle') {
+            memoryCopyData('cardBox.cardThemeStyle', lodash.cloneDeep(this.cardThemeStyle))
+        }
+        else if (item.name == 'pasteStyle') {
+            var value = item.value;
+            await this.onUpdateProps({
+                cardThemeStyle: value
+            }, {
+                range: BlockRenderRange.self
+            })
+        }
+        else
+            return await super.onClickContextMenu(item, event);
     }
     getVisiblePanelBound(): Rect {
         var r = Rect.fromEle(this.contentEl);
@@ -503,9 +552,9 @@ export class ViewComponent extends BlockView<CardBox>{
                     <div
                         ref={e => this.contentEl = e}
                         className={"relative"}>
-                        {this.block.isCanEdit() && <div style={{ zIndex: 12, top: -40, right: -20 }} className="flex sy-block-view-card-ops pos-top-right gap-r-10 gap-t-10 r-gap-r-10 remark">
-                            <span className={"flex-center cursor round  size-24 bg-hover border-light"} onMouseDown={e => { e.stopPropagation(); this.block.onOpenCardStyle(e) }}><Icon size={18} icon={PlatteSvg}></Icon></span>
-                            <span className={"flex-center cursor round  size-24 bg-hover border-light"} onMouseDown={e => { e.stopPropagation(); this.block.openContextmenu(e) }}><Icon size={18} icon={DotsSvg}></Icon></span>
+                        {this.block.isCanEdit() && <div style={{ zIndex: 12, top: -40 }} className="flex sy-block-view-card-ops bg-white shadow-s round pos-top-right  gap-t-10 remark">
+                            <span className={"flex-center cursor round  size-24 item-hover "} onMouseDown={e => { e.stopPropagation(); this.block.onOpenCardStyle(e) }}><Icon size={18} icon={PlatteSvg}></Icon></span>
+                            <span className={"flex-center cursor round  size-24 item-hover "} onMouseDown={e => { e.stopPropagation(); this.block.onContextmenu(e.nativeEvent) }}><Icon size={18} icon={DotsSvg}></Icon></span>
                         </div>}
                         {cs?.display == 'inside' && <div className="round-16" style={{
                             ...coverStyle
