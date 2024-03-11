@@ -240,7 +240,7 @@ export class BlockButtonView extends BlockView<BlockButton>{
         if (this.block.buttonSize) classList.push('sy-button-' + this.block.buttonSize);
         if (this.block.buttonStyle) classList.push('sy-button-' + this.block.buttonStyle);
         if (!this.block.buttonIsBlock) classList.push('flex-inline');
-        var style: React.CSSProperties = {};
+        var style: React.CSSProperties = this.block.contentStyle;
         if (this.block.align == 'center') style.justifyContent = 'center';
         else if (this.block.align == 'right') style.justifyContent = 'flex-end';
         return <div className="visible-hover" style={this.block.visibleStyle}>
