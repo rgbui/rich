@@ -452,7 +452,7 @@ export class Image extends Block {
     getVisibleHandleCursorPoint(): Point {
         var el = this.el.querySelector('.sy-block-image-content-view-wrapper') as HTMLElement;
         if (el) {
-            return Rect.fromEle(el).leftTop;
+            return Rect.fromEle(el).leftTop.move(0,10);
         }
         return super.getVisibleHandleCursorPoint();
     }
