@@ -3,7 +3,7 @@ import { prop, url, view } from "../../src/block/factory/observable";
 import React, { CSSProperties } from 'react';
 import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { TextArea } from "../../src/block/view/appear";
-import { Rect } from "../../src/common/vector/point";
+import { Point, Rect } from "../../src/common/vector/point";
 import { ResourceArguments } from "../../extensions/icon/declare";
 import { Block } from "../../src/block";
 import { MouseDragger } from "../../src/common/dragger";
@@ -448,6 +448,13 @@ export class Image extends Block {
                 mp.updateItems(await this.onGetContextMenus())
             }
         }
+    }
+    getVisibleHandleCursorPoint(): Point {
+        var el = this.el.querySelector('.sy-block-image-content-view-wrapper') as HTMLElement;
+        if (el) {
+            return Rect.fromEle(el).leftTop;
+        }
+        return super.getVisibleHandleCursorPoint();
     }
 }
 

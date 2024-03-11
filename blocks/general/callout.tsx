@@ -23,7 +23,7 @@ export class Callout extends TextSpan {
     }
     async initialedLoad(this: Block): Promise<void> {
         if (!this.pattern.getFillStyle()?.color) {
-            await  this.pattern.setFillStyle({ color: 'rgba(237,233,235,0.5)' })
+            await this.pattern.setFillStyle({ color: 'rgba(237,233,235,0.5)' })
         }
     }
     get appearAnchors() {
@@ -84,6 +84,13 @@ export class Callout extends TextSpan {
         var rs = await super.onGetContextMenus();
         lodash.remove(rs, g => g.name == 'text-center');
         return rs;
+    }
+    getVisibleHandleCursorPoint() {
+        var el = this.el;
+        if (el) {
+            var rect = Rect.fromEle(el);
+            return rect.leftTop.move(0, 16);
+        }
     }
 }
 @view('/callout')

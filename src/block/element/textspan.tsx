@@ -279,9 +279,8 @@ export class TextSpan extends Block {
         var ele = this.el.querySelector('.shy-appear-texts') as HTMLElement;
         if (!ele) ele = this.el.querySelector('.shy-appear-text') as HTMLElement;
         if (!ele) ele = this.el;
-        var lh = dom(ele).lineHeight(20);
         var rect = Rect.fromEle(ele);
-        return rect.leftTop.move(0, lh / 2);
+        return rect.leftTop.move(0,this.smallFont?8:10);
     }
 }
 
