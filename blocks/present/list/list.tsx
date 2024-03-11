@@ -231,11 +231,11 @@ export class List extends Block {
 @view('/list')
 export class ListView extends BlockView<List>{
     renderListType() {
-        if (this.block.listType == ListType.circle) return <span style={{ height: this.block.page.lineHeight }} className='sy-block-list-text-type'>
-            {this.block.listView == ListTypeView.none && <i className="flex size-6 circle" style={{ backgroundColor: 'rgb(55,53,47)' }}></i>}
-            {this.block.listView == ListTypeView.circleEmpty && <i className="flex size-5 circle" style={{ border: '1px solid rgb(55,53,47)' }}></i>}
-            {this.block.listView == ListTypeView.rhombus && <i className="flex size-4 " style={{ transformOrigin: '50% 50%', transform: 'rotate(45deg)', border: '1px solid rgb(55,53,47)' }}></i>}
-            {this.block.listView == ListTypeView.solidRhombus && <i className="flex size-6 " style={{ transformOrigin: '50% 50%', transform: 'rotate(45deg)', backgroundColor: 'rgb(55,53,47)' }}></i>}
+        if (this.block.listType == ListType.circle) return <span style={{ height: this.block.page.lineHeight,marginTop:this.block.page.smallFont||this.block.smallFont?-3:-3 }} className='sy-block-list-text-type'>
+            {this.block.listView == ListTypeView.none && <i className="flex size-6 circle" style={{ backgroundColor: 'currentColor' }}></i>}
+            {this.block.listView == ListTypeView.circleEmpty && <i className="flex size-5 circle" style={{ border: '1px solid currentColor' }}></i>}
+            {this.block.listView == ListTypeView.rhombus && <i className="flex size-4 " style={{ transformOrigin: '50% 50%', transform: 'rotate(45deg)', border: '1px solid currentColor' }}></i>}
+            {this.block.listView == ListTypeView.solidRhombus && <i className="flex size-6 " style={{ transformOrigin: '50% 50%', transform: 'rotate(45deg)', backgroundColor: 'currentColor' }}></i>}
         </span>
         else if (this.block.listType == ListType.toggle) {
             return <span className='sy-block-list-text-type text ts-transform round item-hover'
@@ -243,6 +243,7 @@ export class ListView extends BlockView<List>{
                     cursor: 'pointer',
                     transform: this.block.expand ? 'rotateZ(180deg)' : 'rotateZ(90deg)',
                     height: this.block.page.lineHeight,
+                    color:'currentcolor'
                 }} onMouseDown={e => {
                     e.stopPropagation();
                     this.block.onExpand();
