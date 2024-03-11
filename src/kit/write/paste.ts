@@ -184,7 +184,15 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
                 var regexText = text.replace(/[\(\)\\\.\[\]\*\?]/g, ($, $1) => {
                     return '\\' + $
                 })
-                if (html.indexOf(text) > -1 && html.match(new RegExp('([\\s]*<[^>]+>[\\s]*)?<[^>]+>' + regexText + '</[^>]+>'))) {
+
+                var mr: RegExp;
+                try {
+                    mr = new RegExp('([\\s]*<[^>]+>[\\s]*)?<[^>]+>' + regexText + '</[^>]+>')
+                }
+                catch (ex) {
+                    mr = null;
+                }
+                if (mr && html.indexOf(text) > -1 && html.match(mr)) {
                     console.log('html---text');
                     /**
                      * 这里表示当前的文本就仅仅在外面包一层html，没有多个块
