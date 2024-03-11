@@ -1,5 +1,6 @@
 import lodash from "lodash";
 import { lst } from "../../i18n/store";
+import { channel } from "../../net/channel";
 export type ColorType = { color: string, text?: string };
 
 /**
@@ -40,7 +41,7 @@ export var BackgroundColorList = () => {
         { color: 'rgba(239,218,251,0.5)', text: lst('轻紫') },
         { color: 'rgba(234,202,220,0.5)', text: lst('熏粉') },
         { color: 'rgba(253,198,200,0.5)', text: lst('将红') },
-    ].map(c =>{
+    ].map(c => {
         return {
             color: c.color.replace('0.5', '1'),
             text: c.text
@@ -171,4 +172,21 @@ export var BoardBorderColorList = () => {
         { "color": "rgb(238,73,214)" }
     ] as ColorType[]
 
+}
+
+
+
+const Key = 'last.text.cache.font.color';
+export var SetTextCacheFontColor = async (name: string, color: any) => {
+    await channel.act('/cache/set', {
+        key: Key,
+        value: { name, color }
+    })
+}
+export var GetTextCacheFontColor = async () => {
+    var r = await channel.query('/cache/get', { key: Key });
+    if (r) return {
+        name: r.name,
+        color: r.color as any
+    }
 }

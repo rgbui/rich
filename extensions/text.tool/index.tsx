@@ -15,14 +15,16 @@ import { BlockDirective } from "../../src/block/enum";
 import { PopoverPosition } from "../../component/popover/position";
 import { FixedViewScroll } from "../../src/common/scroll";
 import { blockStore } from "../block/store";
-import { AiStartSvg, ChevronDownSvg, CodeSvg, DoubleLinkSvg, EquationSvg, FontStyleSvg, LinkSvg, SearchSvg } from "../../component/svgs";
+import { AiStartSvg, ChevronDownSvg, CodeSvg, DoubleLinkSvg, EquationSvg, FontStyleSvg, FontcolorSvg, LinkSvg, SearchSvg } from "../../component/svgs";
 import { dom } from "../../src/common/dom";
 import { util } from "../../util/util";
 import { useSearchBox } from "../search/keyword";
 import { Page } from "../../src/page";
-import { lst } from "../../i18n/store";
 import { popoverLayer } from "../../component/lib/zindex";
 import { isUrl } from "../../src/kit/write/declare";
+import { UA } from "../../util/ua";
+import { S } from "../../i18n/view";
+import { SetTextCacheFontColor } from "../color/data";
 
 export type TextToolStyle = {
     link: string,
@@ -106,7 +108,7 @@ class TextTool extends EventsComponent {
                 })
             }
             {this.visible == true && <div className='shy-tool-text-menu' ref={e => this.boxEl = e} style={style}>
-                {!(this.page.ws.aiConfig.disabled == true) && <> <Tip overlay={lst('让诗云AI帮你写作', '让诗云AI帮你写作、润色、生成内容')} >
+                {!(this.page.ws.aiConfig.disabled == true) && <><Tip overlay={<div><S>诗云AI</S><span style={{ color: '#bbb' }}>{UA.isMacOs ? "⌘+J" : 'Ctrl+J'}</span></div>} >
                     <div className='shy-tool-text-menu-item' onMouseDown={e => this.onExcute(TextCommand.askAI, e)}>
                         <Icon icon={AiStartSvg}></Icon><span>AI</span>
                     </div>
@@ -118,7 +120,7 @@ class TextTool extends EventsComponent {
                     </div>
                 </Tip><div className="shy-tool-text-menu-devide"></div></>}
 
-                <Tip text='颜色'>
+                <Tip overlay={<div><S>字体颜色</S><span style={{ color: '#bbb' }}>字体色与背景色</span></div>}>
                     <div className='shy-tool-text-menu-item' onMouseDown={e => this.onOpenFontColor(e)}>
                         <Icon size={18} icon={FontStyleSvg}></Icon>
                         <Icon className={'remark'} size={12} icon={ChevronDownSvg}></Icon>
@@ -130,42 +132,45 @@ class TextTool extends EventsComponent {
                         <Icon size={16} icon={CommentSvg}></Icon>
                     </div>
                 </Tip>*/}
-                <Tip text='加粗'>
+                <Tip overlay={<div><S>加粗</S><br /><span style={{ color: '#bbb' }}>{UA.isMacOs ? "⌘+B" : 'Ctrl+B'}</span></div>}>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.bold == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.bold == true ? TextCommand.cancelBold : TextCommand.bold, e)}>
                         <span className="size-20 flex-center"><Icon size={16} icon={{ name: 'byte', code: 'text-bold' }}></Icon></span>
                     </div>
                 </Tip>
-                <Tip text='斜体'>
+
+                <Tip overlay={<div><S>斜体</S><br /><span style={{ color: '#bbb' }}>{UA.isMacOs ? "⌘+I" : 'Ctrl+I'}</span></div>}>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.italic == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.italic == true ? TextCommand.cancelItalic : TextCommand.italic, e)}>
                         <span className="size-20 flex-center"> <Icon size={16} icon={{ name: 'byte', code: 'text-italic' }}></Icon></span>
                     </div>
                 </Tip>
 
-                <Tip text='下划线'>
+                <Tip overlay={<div><S>下划线</S><br /><span style={{ color: '#bbb' }}>{UA.isMacOs ? "⌘+U" : 'Ctrl+U'}</span></div>}>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.underline == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.underline == true ? TextCommand.cancelLine : TextCommand.underline, e)}>
                         <span className="size-20 flex-center"><Icon size={16} icon={{ name: 'byte', code: 'text-underline' }}></Icon></span>
                     </div>
                 </Tip>
 
-                <Tip text='删除线'>
+                <Tip overlay={<div><S>删除线</S><br /><span style={{ color: '#bbb' }}>{UA.isMacOs ? "⌘+S" : 'Ctrl+S'}</span></div>}>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.deleteLine == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.deleteLine == true ? TextCommand.cancelLine : TextCommand.deleteLine, e)}>
                         <span className="size-20 flex-center">  <Icon size={16} icon={{ name: 'byte', code: 'strikethrough' }}></Icon></span>
                     </div>
                 </Tip>
                 <div className="shy-tool-text-menu-devide"></div>
-                <Tip text='链接'>
-                    <div className='shy-tool-text-menu-item ' onMouseDown={e => this.onOpenLink(e)}>
+
+                <Tip overlay={<div><S>超链接</S><br /><span style={{ color: '#bbb' }}>{UA.isMacOs ? "⌘+K" : 'Ctrl+K'}</span></div>}>
+                    <div className='shy-tool-text-menu-item ' ref={e => this.linkEl = e} onMouseDown={e => this.onOpenLink(e)}>
                         <Icon size={16} icon={LinkSvg}></Icon>
                         <Icon className={'remark'} size={12} icon={ChevronDownSvg}></Icon>
                     </div>
                 </Tip>
-                <Tip text='行内代码'>
+
+                <Tip overlay={<div><S>代码</S><br /><span style={{ color: '#bbb' }}>{UA.isMacOs ? "⌘+E" : 'Ctrl+E'}</span></div>}>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.code == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.code == true ? TextCommand.cancelCode : TextCommand.code, e)}>
                         <span className="size-20 flex-center">  <Icon size={18} icon={CodeSvg}></Icon></span>
                     </div>
                 </Tip>
 
-                <Tip text='行内公式'>
+                <Tip overlay={<div><S>行内公式</S><br /><span style={{ color: '#bbb' }}>{UA.isMacOs ? "⌘+Shift+X" : 'Ctrl+Shift+X'}</span></div>}>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.equation == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.equation == true ? TextCommand.cancelEquation : TextCommand.equation, e)}>
                         <span className="size-20 flex-center"> <Icon size={16} icon={EquationSvg}></Icon></span>
                     </div>
@@ -173,17 +178,18 @@ class TextTool extends EventsComponent {
 
 
                 <div className="shy-tool-text-menu-devide"></div>
-                <Tip text={'双链'} >
+                <Tip overlay={<div><S>双链</S><br /><span style={{ color: '#bbb' }}>{UA.isMacOs ? "⌘+Shift+R" : 'Ctrl+Shift+R'}</span></div>} >
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.page == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.page != true ? TextCommand.doubleLink : undefined, e)}>
-                        <span className="size-20 flex-center">  <Icon size={22} icon={DoubleLinkSvg}></Icon></span>
+                        <span className="size-20 flex-center"><Icon size={22} icon={DoubleLinkSvg}></Icon></span>
                     </div>
                 </Tip>
 
-                <Tip text={'搜索'}>
+                <Tip overlay={<div><S>搜索</S><br /><span style={{ color: '#bbb' }}>{UA.isMacOs ? "⌘+P" : 'Ctrl+P'}</span></div>}>
                     <div className="shy-tool-text-menu-item" onMouseDown={e => this.onSearch(e)}>
-                        <span className="size-20 flex-center"> <Icon size={16} icon={SearchSvg}></Icon></span>
+                        <span className="size-20 flex-center"><Icon size={16} icon={SearchSvg}></Icon></span>
                     </div>
                 </Tip>
+
             </div>}
         </div>;
     }
@@ -228,6 +234,14 @@ class TextTool extends EventsComponent {
                 this.textStyle.code = false;
                 this.emit('setProp', { code: false });
                 return this.forceUpdate();
+            case TextCommand.toggleCode:
+                this.textStyle.code = !this.textStyle.code;
+                this.emit('setProp', { code: this.textStyle.code });
+                return this.forceUpdate();
+            case TextCommand.toggleEquation:
+                this.textStyle.equation = !this.textStyle.equation;
+                this.emit('setEquation', { equation: this.textStyle.equation });
+                return this.forceUpdate();
             case TextCommand.equation:
                 this.textStyle.equation = true;
                 this.emit('setEquation', { equation: true })
@@ -257,21 +271,27 @@ class TextTool extends EventsComponent {
         });
         this.blocked = false;
         if (fontColor) {
-            var font: Record<string, any> = {};
-            if (fontColor.color) {
-                this.textStyle.color = fontColor.color;
-                font.color = fontColor.color;
-                this.emit('setStyle', { [BlockCssName.font]: font } as any);
-            }
-            else if (fontColor.backgroundColor) {
-                this.textStyle.fill = { mode: 'color', color: fontColor.backgroundColor }
-                this.emit('setStyle', { [BlockCssName.fill]: this.textStyle.fill } as any);
-            }
+            this.onSetFontColor(fontColor);
+        }
+    }
+    async onSetFontColor(fontColor) {
+        var font: Record<string, any> = {};
+        if (fontColor.color) {
+            this.textStyle.color = fontColor.color;
+            font.color = fontColor.color;
+            await SetTextCacheFontColor('font', fontColor.color);
+            this.emit('setStyle', { [BlockCssName.font]: font } as any);
+        }
+        else if (fontColor.backgroundColor) {
+            this.textStyle.fill = { mode: 'color', color: fontColor.backgroundColor }
+            await SetTextCacheFontColor('fill', fontColor.backgroundColor);
+            this.emit('setStyle', { [BlockCssName.fill]: this.textStyle.fill } as any);
         }
     }
     selection: { rects: Rect[] } = { rects: [] };
+    linkEl: HTMLElement;
     async onOpenLink(event: React.MouseEvent) {
-        event.stopPropagation();
+        if (event) event.stopPropagation();
         this.blocked = true;
         var sel = window.getSelection();
         var range: Range;
@@ -281,7 +301,6 @@ class TextTool extends EventsComponent {
         catch (ex) {
             console.error(ex);
         }
-        range = sel.getRangeAt(0);
         var text = '';
         if (range) {
             var lineHeight = dom(sel.focusNode.parentNode).lineHeight(20);
@@ -297,7 +316,7 @@ class TextTool extends EventsComponent {
             text = text.split(/\n/g)[0];
         }
         if (text.length > 10 && !isUrl(text)) text = text.slice(0, 10);
-        var pageLink = await useLinkPicker({ roundArea: Rect.fromEvent(event) }, { text: text });
+        var pageLink = await useLinkPicker({ roundArea: Rect.fromEle(this.linkEl) }, { text: text });
         this.selection.rects = [];
         this.blocked = false;
         this.forceUpdate()
@@ -349,6 +368,7 @@ class TextTool extends EventsComponent {
     }
     page: Page
 }
+
 interface TextTool {
     emit(name: 'setStyle', styles: Record<BlockCssName, Record<string, any>>);
     emit(name: 'setProp', props: Record<string, any>);
@@ -363,6 +383,7 @@ interface TextTool {
     emit(name: 'askAI');
     only(name: 'askAI', fn: () => void);
 }
+
 export type textToolResult = { command: 'setStyle', styles: Record<BlockCssName, Record<string, any>> }
     | { command: 'turn', item: MenuItem<BlockDirective>, event: MouseEvent }
     | { command: "setProp", props: Record<string, any> }
@@ -398,11 +419,25 @@ export async function useTextTool(point: PopoverPosition, options: { page: Page,
         })
     })
 }
+
 export function forceCloseTextTool() {
-    if (textTool)
-        textTool.close();
+    if (textTool) textTool.close();
 }
+
 export function isBlockedTextTool() {
     if (textTool) return textTool.blocked;
+    return false;
+}
+
+export function onTextToolExcute(name: string | TextCommand, value?: any) {
+    if (textTool) {
+        if (textTool.visible == true) {
+            if (name == 'search') textTool.onSearch(null)
+            else if (name == 'link') textTool.onOpenLink(null)
+            else if (name == TextCommand.setColor) textTool.onSetFontColor(value)
+            else textTool.onExcute(name as TextCommand, null)
+            return true;
+        }
+    }
     return false;
 }

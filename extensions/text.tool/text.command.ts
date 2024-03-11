@@ -14,5 +14,8 @@ export enum TextCommand {
     cancelEquation,
     mention,
     doubleLink,
-    askAI
+    askAI,
+    toggleEquation,
+    toggleCode,
+    setColor
 }

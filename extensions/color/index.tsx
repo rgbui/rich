@@ -2,11 +2,12 @@ import React from "react";
 import { EventsComponent } from "../../component/lib/events.component";
 import { PopoverSingleton } from "../../component/popover/popover";
 import { PopoverPosition } from "../../component/popover/position";
-import { BackgroundColorList, FontColorList } from "./data";
+import { BackgroundColorList, FontColorList, GetTextCacheFontColor } from "./data";
 import { S } from "../../i18n/view";
 import { ToolTip } from "../../component/view/tooltip";
 import { ls } from "../../i18n/store";
 import { Divider } from "../../component/view/grid";
+import { UA } from "../../util/ua";
 import "./style.less";
 
 export type ColorValue = {
@@ -50,10 +51,46 @@ class ColorSelector extends EventsComponent {
             </div>
         </div>;
     }
+    private renderLastColor() {
+        if (this.lastColor && this.lastColor?.color != 'inherit' && this.lastColor?.color != 'rgba(255,255,255,0)') {
+            return <div>
+                <div className='shy-color-selector-box'>
+                    <div className=' remark f-12 padding-w-10 gap-b-3 flex'>
+                        <span className="flex-auto"><S>上次颜色</S></span>
+                        <span className="flex-fixed">{UA.isMacOs ? "⌘+Shift+H" : "Ctrl+Shift+H"}</span>
+                    </div>
+                    <div className={'shy-color-selector-box-content flex flex-wrap padding-w-5 ' + (ls.isCn ? "" : " lang-en")}>
+
+                        {this.lastColor.name == 'fill' && <a className="size-24 flex-center round  item-hover cursor gap-w-5"
+                            style={{ backgroundColor: this.lastColor.color}}
+                            onMouseDown={e => {
+                                this.onChange({
+                                    ["backgroundColor"]: this.lastColor.color
+                                })
+                            }}>A</a>}
+                        {this.lastColor.name == 'font' && <div
+                            className="size-24 flex-center round  item-hover cursor gap-w-5"
+                            style={{
+                                color: this.lastColor.color
+                            }}
+                            onMouseDown={e => {
+                                this.onChange({
+                                    ['color']: this.lastColor.color
+                                })
+                            }}>A</div>}
+
+                    </div>
+                </div>
+                <Divider></Divider>
+            </div>
+        }
+        else return <></>
+    }
     render() {
         return <div style={{
             width: ls.isCn ? 240 : 200
         }} className={'shy-color-selector   padding-t-10 ' + (ls.isCn ? " " : " max-h-300 overflow-y")}>
+            {this.renderLastColor()}
             {this.renderFontColor()}
             <Divider></Divider>
             {this.renderBackgroundColor()}</div>
@@ -62,8 +99,14 @@ class ColorSelector extends EventsComponent {
         this.emit('change', value);
     }
     cv: ColorValue;
-    open(cv?: ColorValue) {
+    lastColor: { name: string, color: any } = null;
+    async open(cv?: ColorValue) {
         this.cv = cv;
+        var r = await GetTextCacheFontColor();
+        if (r) {
+            this.lastColor = r;
+        }
+        else this.lastColor = null;
         this.forceUpdate();
     }
 }
@@ -75,7 +118,7 @@ interface ColorSelector {
 export async function useColorSelector(pos: PopoverPosition, options?: ColorValue) {
     let popover = await PopoverSingleton(ColorSelector, { mask: true });
     let colorSelector = await popover.open(pos);
-    colorSelector.open(options);
+    await colorSelector.open(options);
     return new Promise((resolve: (data: ColorValue) => void, reject) => {
         colorSelector.only('change', (data) => {
             popover.close();
