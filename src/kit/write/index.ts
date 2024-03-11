@@ -2,7 +2,7 @@ import lodash from "lodash";
 import React from "react";
 import { Kit } from "..";
 import { InputTextPopSelector, InputTextPopSelectorType } from "../../../extensions/common/input.pop";
-import { forceCloseTextTool, useTextTool } from "../../../extensions/text.tool";
+import { forceCloseTextTool, onTextToolExcute, useTextTool } from "../../../extensions/text.tool";
 import { UA } from "../../../util/ua";
 import { util } from "../../../util/util";
 import { Block } from "../../block";
@@ -40,6 +40,9 @@ import { useAITool } from "../../../extensions/ai";
 import { channel } from "../../../net/channel";
 import { BlockSelectorItem } from "../../../extensions/block/delcare";
 import { BlockRenderRange } from "../../block/enum";
+import { readCopyBlocks } from "../../page/common/copy";
+import { TextCommand } from "../../../extensions/text.tool/text.command";
+import { GetTextCacheFontColor } from "../../../extensions/color/data";
 
 /**
  * https://blog.csdn.net/mafan121/article/details/78519348
@@ -227,8 +230,15 @@ export class PageWrite {
                 break;
             case KeyboardCode.X.toLowerCase():
                 if (UA.isMacOs && this.kit.page.keyboardPlate.isMeta() || !UA.isMacOs && this.kit.page.keyboardPlate.isCtrl()) {
-                    inputBackspaceDeleteContent(this, aa, event, { cut: true })
-                    forceCloseTextTool();
+                    if (this.kit.page.keyboardPlate.isShift()) {
+                        var rc = onTextToolExcute(TextCommand.toggleEquation);
+                        if (rc) event.preventDefault()
+                    }
+                    else {
+                        inputBackspaceDeleteContent(this, aa, event, { cut: true })
+                        forceCloseTextTool();
+                    }
+
                 }
                 break;
             case KeyboardCode.A.toLowerCase():
@@ -240,6 +250,102 @@ export class PageWrite {
                 break;
             case KeyboardCode.Space:
                 onSpaceInputUrl(this, aa, event);
+                break;
+            case KeyboardCode.D.toLowerCase():
+                if (UA.isMacOs && this.kit.page.keyboardPlate.isMeta() || !UA.isMacOs && this.kit.page.keyboardPlate.isCtrl()) {
+                    var b = aa.block.closest(x => !x.isLine);
+                    if (b) {
+                        event.preventDefault();
+                        await b.onClone();
+                    }
+                }
+                break;
+            case KeyboardCode.J.toLowerCase():
+                if (UA.isMacOs && this.kit.page.keyboardPlate.isMeta() || !UA.isMacOs && this.kit.page.keyboardPlate.isCtrl()) {
+                    if (hasSelectionRange) {
+                        if (this.kit.anchorCursor.currentSelectedBlocks.length > 0) {
+                            event.preventDefault();
+                            await this.kit.writer.onAskAi(this.kit.anchorCursor.currentSelectedBlocks)
+                        }
+                        else {
+                            var rc = onTextToolExcute(TextCommand.askAI);
+                            if (rc) event.preventDefault()
+                        }
+                    }
+                    else {
+                        var b = aa.block.closest(x => !x.isLine);
+                        if (b) {
+                            event.preventDefault();
+                            await this.kit.writer.onAskAi([b])
+                        }
+                    }
+                }
+                break;
+            case KeyboardCode.H.toLowerCase():
+                if (this.kit.page.keyboardPlate.isMeta() || this.kit.page.keyboardPlate.isCtrl()) {
+                    event.preventDefault()
+                    if (this.kit.page.keyboardPlate.isShift()) {
+                        if (hasSelectionRange && this.kit.anchorCursor.currentSelectedBlocks.length == 0) {
+                            var rcc = await GetTextCacheFontColor();
+                            if (rcc) {
+                                var rc = onTextToolExcute(TextCommand.setColor, {
+                                    color: rcc.name == 'font' ? rcc.color : undefined,
+                                    backgroundColor: rcc.name == 'fill' ? rcc.color : undefined
+                                });
+                            }
+                        }
+                        else {
+                            var bs: Block[] = [];
+                            var block = aa.block.closest(x => !x.isLine);
+                            if (this.kit.anchorCursor.currentSelectedBlocks.length > 0) {
+                                bs = this.kit.anchorCursor.currentSelectedBlocks;
+                            }
+                            else bs.push(block)
+                            var rcc = await GetTextCacheFontColor();
+                            if (rcc) {
+                                this.kit.page.onAction('onUpdatePattern', async () => {
+                                    await bs.eachAsync(async b => {
+                                        if (rcc.name == 'fill') {
+                                            await b.pattern.setStyles({ [BlockCssName.fill]: {mode: 'color', color: rcc.color } } as any);
+                                        }
+                                        else {
+                                            await b.pattern.setStyles({ [BlockCssName.font]: {  color: rcc.color } } as any);
+                                        }
+                                    });
+                                })
+                            }
+                        }
+                    }
+                }
+                break;
+            case KeyboardCode.B.toLowerCase():
+            case KeyboardCode.I.toLowerCase():
+            case KeyboardCode.U.toLowerCase():
+            case KeyboardCode.K.toLowerCase():
+            case KeyboardCode.S.toLowerCase():
+            case KeyboardCode.E.toLowerCase():
+            case KeyboardCode.R.toLowerCase():
+                if (this.kit.page.keyboardPlate.isMeta() || this.kit.page.keyboardPlate.isCtrl()) {
+                    var name: TextCommand | string;
+                    if (event.key.toLowerCase() == KeyboardCode.B.toLowerCase())
+                        name = TextCommand.bold;
+                    else if (event.key.toLowerCase() == KeyboardCode.I.toLowerCase())
+                        name = TextCommand.italic;
+                    else if (event.key.toLowerCase() == KeyboardCode.U.toLowerCase())
+                        name = TextCommand.underline;
+                    else if (event.key.toLowerCase() == KeyboardCode.S.toLocaleLowerCase())
+                        name = TextCommand.deleteLine
+                    else if (event.key.toLowerCase() == KeyboardCode.K.toLowerCase())
+                        name = 'link';
+                    else if (event.key.toLowerCase() == KeyboardCode.E.toLowerCase())
+                        name = TextCommand.toggleCode;
+                    else if (event.key.toLowerCase() == KeyboardCode.R.toLowerCase() && this.kit.page.keyboardPlate.isShift())
+                        name = TextCommand.doubleLink;
+                    if (typeof name != 'undefined') {
+                        var rc = onTextToolExcute(name);
+                        if (rc) event.preventDefault()
+                    }
+                }
                 break;
         }
         var r = aa.block.closest(x => !x.isLine);

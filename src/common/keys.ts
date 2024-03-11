@@ -12,9 +12,18 @@ export enum KeyboardCode {
     Tab = 'Tab',
     A = 'A',
     B = 'B',
+    D = 'D',
+    E='E',
+    J = 'J',
+    L = 'L',
+    I='I',
+    U='U',
+    K='K',
+    H='H',
     Z = 'Z',
     Y = 'Y',
     S = 'S',
+    P='P',
     Esc = 'Escape',
     X = 'X',
     C = 'C',
@@ -113,12 +122,22 @@ export class KeyboardPlate {
         }
         return false;
     }
+
     isMeta(code?: KeyboardCode) {
         if (this.metaKey == true) {
             if (typeof code != 'undefined') { if (this.is(code)) return true; }
             else return true;
         }
         return false;
+    }
+    isMix(shift?: boolean, ctrl?: boolean, alt?: boolean, meta?: boolean, code?: KeyboardCode) {
+        console.log(this.shiftKey, this.ctrlKey, this.altKey, this.metaKey, code, shift, ctrl, alt, meta)
+        if (shift == true && this.shiftKey == false) return;
+        if (ctrl == true && this.ctrlKey == false) return;
+        if (alt == true && this.altKey == false) return;
+        if (meta == true && this.metaKey == false) return;
+        if (typeof code != 'undefined') { if (this.is(code)) return true; }
+        else return true;
     }
     private listeners: {
         predict: (kbp: KeyboardPlate) => boolean,

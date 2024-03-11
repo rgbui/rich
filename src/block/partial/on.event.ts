@@ -21,13 +21,14 @@ import {
     UnlockSvg
 } from "../../../component/svgs";
 import lodash from "lodash";
-import { FontColorList, BackgroundColorList } from "../../../extensions/color/data";
+import { FontColorList, BackgroundColorList, GetTextCacheFontColor, SetTextCacheFontColor } from "../../../extensions/color/data";
 import { BlockUrlConstant } from "../constant";
 import { List } from "../../../blocks/present/list/list";
 import { BlockFactory } from "../factory/block.factory";
 import { util } from "../../../util/util";
 import { ls, lst } from "../../../i18n/store";
 import { channel } from "../../../net/channel";
+import { UA } from "../../../util/ua";
 
 export class Block$Event {
     /**
@@ -52,13 +53,8 @@ export class Block$Event {
             }
         })
     }
-    async onGetContextMenus(this: Block) {
-        if (this.isFreeBlock) {
-            return await this.onGetBoardContextMenus()
-        }
-        var items: MenuItem<BlockDirective | string>[] = [];
-        var hasAi: boolean = true;
-        if (this.page.ws.aiConfig?.disabled == true) {
+    isHasAI(this: Block) {
+        var hasAi: boolean = true; if (this.page.ws.aiConfig?.disabled == true) {
             hasAi = false;
         }
         else {
@@ -72,18 +68,27 @@ export class Block$Event {
         if (this.isComposite) {
             hasAi = false;
         }
+        return hasAi;
+    }
+    async onGetContextMenus(this: Block) {
+        if (this.isFreeBlock) {
+            return await this.onGetBoardContextMenus()
+        }
+        var items: MenuItem<BlockDirective | string>[] = [];
+        var hasAi: boolean = this.isHasAI();
         if (hasAi) {
             items.push({
                 name: 'askAi',
                 icon: AiStartSvg,
                 text: lst("诗云AI"),
+                label: UA.isMacOs ? "⌘+J" : "Ctrl+J"
             });
             items.push({ type: MenuItemType.divide });
         }
         items.push({
             name: BlockDirective.copy,
             text: lst('拷贝副本'),
-            label: "Ctrl+D",
+            label: UA.isMacOs ? "⌘+D" : "Ctrl+D",
             icon: DuplicateSvg
         });
         var menus = await this.onGetTurnMenus();
@@ -101,7 +106,8 @@ export class Block$Event {
         items.push({
             name: BlockDirective.link,
             text: lst('复制块链接'),
-            icon: LinkSvg
+            icon: LinkSvg,
+            label: UA.isMacOs ? "⌥+Shift+L" : "Alt+Shift+L"
         });
         // items.push({
         //     type: MenuItemTypeValue.divide
@@ -147,12 +153,33 @@ export class Block$Event {
             });
         }
 
+        var lastFontItems: any[] = [];
+        var lastColor = await GetTextCacheFontColor();
+        if (lastColor) {
+            lastFontItems.push({
+                text: lst('上次颜色'),
+                type: MenuItemType.text,
+                label: UA.isMacOs ? "⌘+Shift+H" : "Ctrl+Shift+H"
+            });
+            lastFontItems.push({
+                type: MenuItemType.color,
+                name: lastColor.name == 'font' ? 'fontColor' : 'fillColor',
+                block: ls.isCn ? false : true,
+                options: [
+                    {
+                        text: '',
+                        value: lastColor.color
+                    }
+                ]
+            });
+        }
+
         items.push({
             text: lst('颜色'),
             icon: BlockcolorSvg,
             name: 'color',
-          
             childs: [
+                ...lastFontItems,
                 {
                     text: lst('文字颜色'),
                     type: MenuItemType.text
@@ -337,6 +364,7 @@ export class Block$Event {
                 await this.page.onAction('setFontStyle', async () => {
                     if (options?.merge) this.page.snapshoot.merge();
                     await this.pattern.setFontStyle({ color: item.value });
+                    await SetTextCacheFontColor('font', item.value)
                     this.page.addBlockUpdate(this);
                 })
                 break;
@@ -344,6 +372,7 @@ export class Block$Event {
                 await this.page.onAction('setFillStyle', async () => {
                     if (options?.merge) this.page.snapshoot.merge();
                     await this.pattern.setFillStyle({ mode: 'color', color: item.value })
+                    await SetTextCacheFontColor('fill', item.value);
                     this.page.addBlockUpdate(this);
                 })
                 break;
