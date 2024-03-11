@@ -146,15 +146,18 @@ export class List extends Block {
     }
     async onGetContextMenus() {
         var items = await super.onGetContextMenus();
+        var linkAt = items.findIndex(g => g.name == BlockDirective.link);
+        items.splice(linkAt + 1+1 , 0,
+            {
+                name: 'smallFont',
+                type: MenuItemType.switch,
+                checked: this.smallFont ? true : false,
+                text: lst('小字号'),
+                icon:{ name: 'byte', code: 'add-text' }
+            }
+        );
+        
         var at = items.findIndex(g => g.name == 'color');
-        items.splice(items.findIndex(g => g.name == BlockDirective.link), 0, {
-            name: 'smallFont',
-            type: MenuItemType.switch,
-            checked: this.smallFont ? true : false,
-            text: lst('小字号'),
-            icon: { name: 'byte', code: 'add-text' }
-        });
-
         if (this.listType == ListType.circle || this.listType == ListType.number) {
             var rc = (item: MenuItem<string>, view?: MenuItemView) => {
                 if (this.listType == ListType.circle) {
