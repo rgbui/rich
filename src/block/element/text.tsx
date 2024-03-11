@@ -129,6 +129,7 @@ export class TextContentView extends BlockView<TextContent>{
         e.stopPropagation();
         e.preventDefault();
         if (this.boxTip) this.boxTip.close();
+        if (this.block.page.keyboardPlate.isShift()) return;
         var r = Array.isArray(this.block.refLinks) ? this.block.refLinks[0] : undefined;
         if (r) {
             channel.air('/page/open', { item: r.pageId });
@@ -209,15 +210,21 @@ export class TextContentView extends BlockView<TextContent>{
                     <Tip overlay={url}><span className="max-w-160 padding-w-3 text-overflow " style={{ width: 'auto', justifyContent: 'flex-start' }}>{url}</span></Tip>
                     <Tip text={'复制网址'}><span className="item-hover" onMouseDown={e => this.copyLink(url)} ><Icon size={16} icon={DuplicateSvg}></Icon></span></Tip>
                     {this.block.isCanEdit() && <Tip text={'编辑'}><span className="item-hover" onMouseDown={e => this.openLink(e)}><Icon size={14} icon={Edit1Svg}></Icon></span></Tip>}
-                </div>}><a className="sy-block-text-content-link" onClick={e => this.openPage(e)} href={url}>{ta}</a></BoxTip>
+                </div>}><a className="sy-block-text-content-link" onClick={e => {
+                    this.openPage(e)
+                }} href={url}>{ta}</a></BoxTip>
             }
             else if (this.block.link?.url) {
-                ta = <BoxTip ref={e => this.boxTip = e} placement="bottom" align="left"  overlay={<div className="flex-center  padding-5  r-flex-center r-size-24 r-round  r-cursor remark">
+                ta = <BoxTip ref={e => this.boxTip = e} placement="bottom" align="left" overlay={<div className="flex-center  padding-5  r-flex-center r-size-24 r-round  r-cursor remark">
                     {this.block.isCanEdit() && <Tip text={'拖动'}><span className="item-hover" onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>}
                     <Tip overlay={this.block.link.url}><span className="padding-w-3" style={{ width: 'auto' }}><Icon className={'gap-r-3'} icon={GlobalLinkSvg} size={14}></Icon><span className="max-w-160 text-overflow">{this.block.link?.url}</span></span></Tip>
                     <Tip text={'复制网址'}><span className="item-hover" onMouseDown={e => this.copyLink(this.block.link?.url)} ><Icon size={16} icon={DuplicateSvg}></Icon></span></Tip>
                     {this.block.isCanEdit() && <Tip text={'编辑'}><span className="item-hover" onMouseDown={e => this.openLink(e)}><Icon size={14} icon={Edit1Svg}></Icon></span></Tip>}
-                </div>}><a className="sy-block-text-content-link" target='_blank' href={this.block.link.url}>{ta}</a></BoxTip>
+                </div>}><a className="sy-block-text-content-link" onClick={e => {
+                    if (this.block.page.keyboardPlate.isShift()) {
+                        e.preventDefault();
+                    }
+                }} target='_blank' href={this.block.link.url}>{ta}</a></BoxTip>
             }
         }
         else if (this.block.code) {

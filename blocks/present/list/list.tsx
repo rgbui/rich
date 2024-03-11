@@ -1,5 +1,5 @@
 import { Block } from "../../../src/block";
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { Icon } from "../../../component/view/icon";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
@@ -41,6 +41,8 @@ export class List extends Block {
     get allBlockKeys() {
         return [BlockChildKey.childs, BlockChildKey.subChilds];
     }
+    @prop()
+    smallFont = false;
     @prop()
     listType: ListType = ListType.circle;
     @prop()
@@ -144,7 +146,15 @@ export class List extends Block {
     }
     async onGetContextMenus() {
         var items = await super.onGetContextMenus();
-        var at = items.findIndex(g => g.text == lst('颜色'));
+        var at = items.findIndex(g => g.name == 'color');
+        items.splice(items.findIndex(g => g.name == BlockDirective.link), 0, {
+            name: 'smallFont',
+            type: MenuItemType.switch,
+            checked: this.smallFont ? true : false,
+            text: lst('小字号'),
+            icon: { name: 'byte', code: 'add-text' }
+        });
+
         if (this.listType == ListType.circle || this.listType == ListType.number) {
             var rc = (item: MenuItem<string>, view?: MenuItemView) => {
                 if (this.listType == ListType.circle) {
@@ -207,6 +217,12 @@ export class List extends Block {
         point = point.move(0, -3);
         return point;
     }
+    async onContextMenuInput(this: Block, item: MenuItem<BlockDirective | string>) {
+        if (item?.name == 'smallFont') {
+            await this.onUpdateProps({ smallFont: item.checked }, { range: BlockRenderRange.self });
+        }
+        else await super.onContextMenuInput(item);
+    }
 }
 
 @view('/list')
@@ -265,15 +281,21 @@ export class ListView extends BlockView<List>{
         }
     }
     renderText() {
+
         var text = this.block.listType == ListType.circle ? lst("列表") : lst("数字列表");
         if (this.block.listType == ListType.toggle) text = lst('折叠列表');
         if (this.block.childs.length > 0) return <TextLineChilds childs={this.block.childs}></TextLineChilds>
         else return <TextArea block={this.block} placeholderEmptyVisible prop='content' placeholder={text}></TextArea>
     }
     renderView() {
+        var contentStyle: CSSProperties = this.block.contentStyle;
+        if (this.block.smallFont) {
+            contentStyle.fontSize = this.block.page.smallFont ? '12px' : '14px';
+        }
         return <div className='sy-block-list'>
             <div style={this.block.visibleStyle}>
-                <div className='sy-block-list-text' data-block-content style={this.block.contentStyle}> {this.renderListType()}
+                <div className='sy-block-list-text' data-block-content style={contentStyle}>
+                    {this.renderListType()}
                     <div className='sy-block-list-text-content'>{this.renderText()}</div>
                 </div>
             </div>
