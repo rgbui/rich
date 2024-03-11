@@ -36,7 +36,6 @@ import "./style.less";
 
 @url('/card/box')
 export class CardBox extends Block {
-
     init() {
         this.gridMap = new GridMap(this)
     }
@@ -156,7 +155,7 @@ export class CardBox extends Block {
         el.style.visibility = 'visible';
         try {
             var rect = Rect.fromEle(this.contentEl);
-            rect = rect.rightTop.move(-20, 20).toSize(20, 20);
+            rect = rect.rightTop.move(-20, -20).toSize(20, 20);
             await useCardBoxStyle({ roundArea: rect }, this);
         }
         catch (ex) {
@@ -504,9 +503,9 @@ export class ViewComponent extends BlockView<CardBox>{
                     <div
                         ref={e => this.contentEl = e}
                         className={"relative"}>
-                        {this.block.isCanEdit() && <div style={{ zIndex: 12 }} className="flex sy-block-view-card-ops pos-top-right gap-r-10 gap-t-10 r-gap-r-10 remark">
-                            <span className={"flex-center cursor round  size-24 bg-hover"} onMouseDown={e => { e.stopPropagation(); this.block.onOpenCardStyle(e) }}><Icon size={18} icon={PlatteSvg}></Icon></span>
-                            <span className={"flex-center cursor round  size-24 bg-hover"} onMouseDown={e => { e.stopPropagation(); this.block.openContextmenu(e) }}><Icon size={18} icon={DotsSvg}></Icon></span>
+                        {this.block.isCanEdit() && <div style={{ zIndex: 12, top: -40, right: -20 }} className="flex sy-block-view-card-ops pos-top-right gap-r-10 gap-t-10 r-gap-r-10 remark">
+                            <span className={"flex-center cursor round  size-24 bg-hover border-light"} onMouseDown={e => { e.stopPropagation(); this.block.onOpenCardStyle(e) }}><Icon size={18} icon={PlatteSvg}></Icon></span>
+                            <span className={"flex-center cursor round  size-24 bg-hover border-light"} onMouseDown={e => { e.stopPropagation(); this.block.openContextmenu(e) }}><Icon size={18} icon={DotsSvg}></Icon></span>
                         </div>}
                         {cs?.display == 'inside' && <div className="round-16" style={{
                             ...coverStyle
