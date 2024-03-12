@@ -303,9 +303,14 @@ export class Image extends Block {
             text: lst('添加说明文字'),
             icon: { name: 'bytedance-icon', code: 'doc-detail' },
             type: MenuItemType.switch,
-            checked: this.allowCaption
+            checked: this.allowCaption,
+            updateMenuPanel: true
         });
         items.push({
+            visible: (items) => {
+                var r = items.find(g => g.name == 'allowCaption');
+                return r?.checked
+            },
             name: 'captionAlign',
             icon: AlignTextCenterSvg,
             text: lst('说明文字居中'),
@@ -452,7 +457,7 @@ export class Image extends Block {
     getVisibleHandleCursorPoint(): Point {
         var el = this.el.querySelector('.sy-block-image-content-view-wrapper') as HTMLElement;
         if (el) {
-            return Rect.fromEle(el).leftTop.move(0,10);
+            return Rect.fromEle(el).leftTop.move(0, 10);
         }
         return super.getVisibleHandleCursorPoint();
     }
