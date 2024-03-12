@@ -12,7 +12,6 @@ import {
     TrashSvg
 } from "../../../../component/svgs";
 import { Icon, IconValueType } from "../../../../component/view/icon";
-import { useSelectMenuItem } from "../../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import { useCardBoxStyle } from "../../../../extensions/theme/card.style";
 import { Point, Rect } from "../../../common/vector/point";
@@ -39,98 +38,6 @@ export class CardBox extends Block {
     init() {
         this.gridMap = new GridMap(this)
     }
-    // async openContextmenu(event: React.MouseEvent) {
-    //     var el = this.el.querySelector('.sy-block-view-card-ops') as HTMLElement;
-    //     el.style.visibility = 'visible';
-    //     try {
-    //         var d = memoryReadData('cardBox.cardThemeStyle');
-    //         var r = await useSelectMenuItem(
-    //             { roundArea: Rect.fromEvent(event) },
-    //             [
-    //                 {
-    //                     name: 'copylink',
-    //                     icon: LinkSvg,
-    //                     text: lst("复制链接")
-    //                 },
-    //                 {
-    //                     name: 'cloneCard',
-    //                     icon: DuplicateSvg,
-    //                     text: lst("复制卡片")
-    //                 },
-    //                 { type: MenuItemType.divide },
-    //                 {
-    //                     name: 'style',
-    //                     icon: PlatteSvg,
-    //                     text: lst("卡片样式")
-    //                 },
-    //                 {
-    //                     name: 'merge',
-    //                     disabled: this.prev && this.prev instanceof CardBox ? false : true,
-    //                     icon: ArrowUpSvg,
-    //                     text: lst("合并内容到上一个")
-    //                 },
-    //                 { type: MenuItemType.divide },
-    //                 {
-    //                     name: 'copyStyle',
-    //                     icon: { name: 'byte', code: 'format-brush' },
-    //                     text: lst("复制卡片样式")
-    //                 },
-    //                 {
-    //                     name: 'pasteStyle',
-    //                     icon: { name: 'byte', code: 'magic-wand' },
-    //                     value: lodash.cloneDeep(d),
-    //                     disabled: d ? false : true,
-    //                     text: lst("粘贴卡片样式")
-    //                 },
-    //                 { type: MenuItemType.divide },
-    //                 {
-    //                     name: 'delete',
-    //                     icon: TrashSvg,
-    //                     text: lst("删除卡片")
-    //                 }
-    //             ]
-    //         );
-    //         if (r?.item) {
-    //             if (r.item.name == 'copylink') {
-    //                 this.onCopyLink();
-    //             }
-    //             else if (r.item.name == 'cloneCard') {
-    //                 this.onClone()
-    //             } else if (r.item.name == 'style') {
-    //                 this.onOpenCardStyle()
-    //             } else if (r.item.name == 'merge') {
-    //                 var prev = this.prev as CardBox;
-    //                 if (prev instanceof CardBox) {
-    //                     var cs = this.childs;
-    //                     this.page.onAction('onCardMerge', async () => {
-    //                         await prev.appendArray(cs, prev.childs.length, prev.parentKey);
-    //                         await this.delete()
-    //                     })
-    //                 }
-    //             }
-    //             else if (r.item.name == 'copyStyle') {
-    //                 memoryCopyData('cardBox.cardThemeStyle', lodash.cloneDeep(this.cardThemeStyle))
-    //             }
-    //             else if (r.item.name == 'pasteStyle') {
-    //                 var value = r.item.value;
-    //                 await this.onUpdateProps({
-    //                     cardThemeStyle: value
-    //                 }, {
-    //                     range: BlockRenderRange.self
-    //                 })
-    //             }
-    //             else if (r.item.name == 'delete') {
-    //                 this.onDelete()
-    //             }
-    //         }
-    //     }
-    //     catch (ex) {
-    //         console.error(ex)
-    //     }
-    //     finally {
-    //         el.style.visibility = '';
-    //     }
-    // }
     async onAddCardBox(event: React.MouseEvent) {
         this.page.onAction('onAddCardBox', async () => {
             var d = {
@@ -154,8 +61,7 @@ export class CardBox extends Block {
         var el = this.el.querySelector('.sy-block-view-card-ops') as HTMLElement;
         el.style.visibility = 'visible';
         try {
-            var rect = Rect.fromEle(this.contentEl);
-            rect = rect.rightTop.move(-20, -20).toSize(20, 20);
+            var rect = Rect.fromEle(el);
             await useCardBoxStyle({ roundArea: rect }, this);
         }
         catch (ex) {
@@ -439,6 +345,7 @@ export class ViewComponent extends BlockView<CardBox>{
             gapStyle.paddingTop = '8rem';
             gapStyle.paddingBottom = '8rem';
         }
+
         function renderContent() {
             var cs = self.block.cardThemeStyle.coverStyle
             var coverStyle = getBgStyle(cs?.bgStyle);
@@ -546,6 +453,11 @@ export class ViewComponent extends BlockView<CardBox>{
         var cs = self.block.cardThemeStyle.coverStyle
         var coverStyle = getBgStyle(cs?.bgStyle);
         var { contentStyle } = getCardStyle(self.block.cardThemeStyle);
+        if (self.block.cardThemeStyle?.contentStyle?.transparency == 'noborder') {
+            contentStyle.border = 'none';
+            contentStyle.boxShadow = 'none';
+            contentStyle.backgroundColor = 'transparent';
+        }
         return <div style={style}>
             <div className={"sy-block-view-card" + (this.block.isCanEdit() ? " allow-hover" : "")} style={screenStyle}>
                 <div style={gapStyle}>
@@ -554,7 +466,20 @@ export class ViewComponent extends BlockView<CardBox>{
                         className={"relative"}>
                         {this.block.isCanEdit() && <div style={{ zIndex: 12, top: -40 }} className="flex sy-block-view-card-ops bg-white shadow-s round pos-top-right  gap-t-10 remark">
                             <span className={"flex-center cursor round  size-24 item-hover "} onMouseDown={e => { e.stopPropagation(); this.block.onOpenCardStyle(e) }}><Icon size={18} icon={PlatteSvg}></Icon></span>
-                            <span className={"flex-center cursor round  size-24 item-hover "} onMouseDown={e => { e.stopPropagation(); this.block.onContextmenu(e.nativeEvent) }}><Icon size={18} icon={DotsSvg}></Icon></span>
+                            <span className={"flex-center cursor round  size-24 item-hover "} onMouseDown={async e => {
+                                e.stopPropagation();
+                                var el = (e.currentTarget as HTMLElement).closest('.sy-block-view-card-ops') as HTMLElement;
+                                try {
+                                    el.style.visibility = 'visible';
+                                    await this.block.onContextmenu(e.nativeEvent)
+                                }
+                                catch (ex) {
+
+                                }
+                                finally {
+                                    el.style.visibility = '';
+                                }
+                            }}><Icon size={18} icon={DotsSvg}></Icon></span>
                         </div>}
                         {cs?.display == 'inside' && <div className="round-16" style={{
                             ...coverStyle
