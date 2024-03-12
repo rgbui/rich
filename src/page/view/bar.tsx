@@ -238,18 +238,18 @@ export class PageBar extends React.Component<{ page: Page }>{
         </div>
         else return <></>
     }
-    onSpreadMenu() {
-        this.props.page.emit(PageDirective.spreadSln)
-    }
+
     render(): React.ReactNode {
         if (this.props.page.bar === false) return <></>
         if (this.props.page.ws.isPubSite && this.props.page.ws.isPubSiteDefineBarMenu) return <></>
         var style: CSSProperties = {}
         return <div style={style} className={"shy-page-bar flex visible-hover relative " + (isMobileOnly ? "" : "padding-l-10")}>
-            {isMobileOnly && <span onClick={e => this.onSpreadMenu()} className="flex-fixed size-20 flex-center item-hover round cursor ">
+            {isMobileOnly && <span onClick={e => this.props.page.onSpreadMenu()} className="flex-fixed size-20 flex-center item-hover round cursor ">
                 <Icon icon={ChevronLeftSvg} size={18}></Icon>
             </span>}
-            {!isMobileOnly && this.props.page.openSource == 'page' && !this.props.page.ws.isPubSiteHideMenu && this.props.page.ws.slnSpread == false && <ToolTip placement="bottom" overlay={<div>{lst('展开')}<br/><span style={{color:'#aaa'}}>{UA.isMacOs ? "⌘+\\" : "Ctrl+\\"}</span></div>}><span onClick={e => { this.onSpreadMenu() }} className="flex-fixed size-24 flex-center item-hover round cursor ">
+            {!isMobileOnly && this.props.page.openSource == 'page' && !this.props.page.ws.isPubSiteHideMenu && this.props.page.ws.slnSpread == false && <ToolTip placement="bottom" overlay={<div>{lst('展开')}<br /><span style={{ color: '#aaa' }}>{UA.isMacOs ? "⌘+\\" : "Ctrl+\\"}</span></div>}><span onClick={e => {
+                this.props.page.onSpreadMenu()
+            }} className="flex-fixed size-24 flex-center item-hover round cursor ">
                 <Icon icon={{ name: 'bytedance-icon', code: 'hamburger-button' }} size={18}></Icon>
             </span></ToolTip>}
             {this.renderTitle()}

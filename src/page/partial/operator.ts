@@ -695,4 +695,7 @@ export class Page$Operator {
             }
         });
     }
+    onSpreadMenu(this: Page,) {
+        this.emit(PageDirective.spreadSln)
+    }
 }
