@@ -13,17 +13,17 @@ export enum KeyboardCode {
     A = 'A',
     B = 'B',
     D = 'D',
-    E='E',
+    E = 'E',
     J = 'J',
     L = 'L',
-    I='I',
-    U='U',
-    K='K',
-    H='H',
+    I = 'I',
+    U = 'U',
+    K = 'K',
+    H = 'H',
     Z = 'Z',
     Y = 'Y',
     S = 'S',
-    P='P',
+    P = 'P',
     Esc = 'Escape',
     X = 'X',
     C = 'C',
@@ -84,7 +84,8 @@ export class KeyboardPlate {
         this.altKey = event.altKey;
         this.shiftKey = event.shiftKey;
         this.ctrlKey = event.ctrlKey;
-        lodash.remove(this.keys, g => g == event.key || g == event.code);
+        this.keys=[];
+        //lodash.remove(this.keys, g => g == event.key || g == event.code);
     }
     is(...codes: KeyboardCode[]) {
         return this.keys.exists(g => codes.exists(c => c.toLowerCase() == g.toLowerCase()));
@@ -122,7 +123,6 @@ export class KeyboardPlate {
         }
         return false;
     }
-
     isMeta(code?: KeyboardCode) {
         if (this.metaKey == true) {
             if (typeof code != 'undefined') { if (this.is(code)) return true; }

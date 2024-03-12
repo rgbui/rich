@@ -10,18 +10,24 @@ export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
     keyboardPlate.listener(kt => UA.isMacOs && kt.isMeta(KeyboardCode.Y) || !UA.isMacOs && kt.isCtrl(KeyboardCode.Y), (event, kt) => {
         page.onRedo();
     });
-    keyboardPlate.listener(kt => kt.isCtrl(KeyboardCode.S) || UA.isMacOs && kt.isMeta(KeyboardCode.S),
+    keyboardPlate.listener(kt =>!UA.isMacOs &&  kt.isCtrl(KeyboardCode.S) || UA.isMacOs && kt.isMeta(KeyboardCode.S),
         (event, kt) => {
             event.preventDefault()
             page.onPageSave();
         }
     );
-    keyboardPlate.listener(kt => kt.isMeta(KeyboardCode.P) || UA.isMacOs && kt.isMeta(KeyboardCode.P),
+    keyboardPlate.listener(kt => !UA.isMacOs && kt.isCtrl(KeyboardCode.P) || UA.isMacOs && kt.isMeta(KeyboardCode.P),
         (event, kt) => {
             event.preventDefault()
             useSearchBox({ ws: page.ws })
         }
     )
+    keyboardPlate.listener(kt => !UA.isMacOs &&  kt.isCtrl(KeyboardCode["\\"]) || UA.isMacOs && kt.isMeta(KeyboardCode["\\"]),
+    (event, kt) => {
+        event.preventDefault()
+        page.onSpreadMenu()
+    }
+)
     keyboardPlate.listener(kt => {
         var r = UA.isMacOs && kt.is(KeyboardCode.Backspace, KeyboardCode.Delete) || !UA.isMacOs && kt.is(KeyboardCode.Delete);
         return r;
