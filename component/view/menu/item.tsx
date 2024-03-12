@@ -162,7 +162,10 @@ export class MenuItemView extends React.Component<{
             </div></ToolTip>}
             {item.type == MenuItemType.divide && <div className='shy-menu-box-item-divide'></div>}
             {item.type == MenuItemType.gap && <div className="h-10"></div>}
-            {item.type == MenuItemType.text && <div className='shy-menu-box-item-text'>{item.text}</div>}
+            {item.type == MenuItemType.text && <div className='shy-menu-box-item-text flex'>
+                <span className="flex-auto">{item.text}</span>
+                {item.label && <label className="flex-fixed">{item.label}</label>}
+            </div>}
             {item.type == MenuItemType.user && <div onMouseDown={e => this.select(item, e.nativeEvent)} className="shy-menu-box-item-user"><Avatar userid={item.userid} showName size={item.size || 30}></Avatar></div>}
             {item.type == MenuItemType.switch && <div className='shy-menu-box-item-switch'>
                 {item.icon && <i className="flex-center flex-inline size-20 text-1"><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
