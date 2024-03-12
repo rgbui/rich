@@ -12,7 +12,7 @@ import { Tab } from "../../component/view/tab";
 import { IconArguments } from "./declare";
 import { PopoverSingleton } from "../../component/popover/popover";
 import { PopoverPosition } from "../../component/popover/position";
-import './style.less';
+
 import {
     EmojiSvg,
     FontawesomeSvg,
@@ -23,6 +23,7 @@ import {
 
 import { Icon } from "../../component/view/icon";
 import { ToolTip } from "../../component/view/tooltip";
+import './style.less';
 
 class IconPicker extends EventsComponent {
     onChange(data: IconArguments) {
@@ -37,7 +38,14 @@ class IconPicker extends EventsComponent {
     render() {
         return <div className='shy-icon-picker' >
             <Tab keeplive rightBtns={<>
-                <ToolTip overlay={'清理图标'}><span className="flex-center item-hover size-30 round cursor gap-l-10"><Icon size={16} onMousedown={e => this.onClearIcon()} icon={TrashSvg}></Icon>
+                <ToolTip overlay={'清理图标'}><span
+                    className="flex-center item-hover size-30 round cursor gap-l-10"><Icon
+                        size={16}
+                        onMousedown={e => {
+                            this.onClearIcon();
+                        }}
+                        icon={TrashSvg}
+                    ></Icon>
                 </span>
                 </ToolTip>
             </>}>
@@ -51,7 +59,9 @@ class IconPicker extends EventsComponent {
                     <FontAwesomeView ref={e => this.fav = e} onChange={e => this.onChange({ name: "font-awesome", ...e })}></FontAwesomeView>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' text='上传图标'><Icon icon={UploadSvg} size={20}></Icon></Tip>}>
-                    <UploadView mine='image' change={e => this.onChange({ name: 'image', url: e.url })}></UploadView>
+                    <div className="padding-14">
+                        <UploadView mine='image' change={e => this.onChange({ name: 'image', url: e.url })}></UploadView>
+                    </div>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' text='图片链接'><Icon icon={LinkSvg} size={18}></Icon></Tip>}>
                     <OutsideUrl change={e => this.onChange({ name: 'link', url: e })}></OutsideUrl>

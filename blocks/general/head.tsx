@@ -15,6 +15,7 @@ import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import lodash from "lodash";
 import { DropDirection } from "../../src/kit/handle/direction";
 import { lst } from "../../i18n/store";
+import { PageLayoutType } from "../../src/page/declare";
 
 @url('/head')
 export class Head extends Block {
@@ -169,7 +170,12 @@ export class Head extends Block {
         if (!ele) ele = this.el;
         var rect = Rect.fromEle(ele);
         var lh = dom(ele).lineHeight(20);
-        return rect.leftTop.move(0, lh / 2);
+        console.log(lh);
+        var offset = 0;
+        if (this.page.pageLayout?.type == PageLayoutType.docCard) {
+            offset = -5;
+        }
+        return rect.leftTop.move(0, lh / 2 + offset);
     }
 }
 @view("/head")

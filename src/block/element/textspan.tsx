@@ -17,7 +17,7 @@ import { openBoardEditTool } from '../../kit/operator/board/edit';
 import { lst } from '../../../i18n/store';
 import { BlockUrlConstant } from '../constant';
 import { MenuItem, MenuItemType } from '../../../component/view/menu/declare';
-import { dom } from '../../common/dom';
+import { PageLayoutType } from '../../page/declare';
 
 @url("/textspan")
 export class TextSpan extends Block {
@@ -280,7 +280,8 @@ export class TextSpan extends Block {
         if (!ele) ele = this.el.querySelector('.shy-appear-text') as HTMLElement;
         if (!ele) ele = this.el;
         var rect = Rect.fromEle(ele);
-        return rect.leftTop.move(0,this.smallFont?8:10);
+        var offset = this.page.pageLayout.type == PageLayoutType.docCard ? 2 : 0;
+        return rect.leftTop.move(0, (this.smallFont ? 8 : 10) + offset);
     }
 }
 

@@ -7,7 +7,8 @@ import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../src/block/
 import { url, prop, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
 import { Rect } from "../../src/common/vector/point";
-import { MenuItem } from "../../component/view/menu/declare";
+import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
+import { lst } from "../../i18n/store";
 
 @url('/icon')
 export class BlockIcon extends Block {
@@ -30,6 +31,10 @@ export class BlockIcon extends Block {
             return await this.onGetBoardContextMenus()
         }
         var rs = await super.onGetContextMenus();
+        var alignItem = rs.find(g => g.name == 'text-center');
+        if (alignItem) {
+            alignItem.text = lst('对齐')
+        }
         var at = rs.findIndex(c => c.name == 'color');
         var ns = [8, 12, 16, 24, 32, 48, 64, 72, 96, 128, 144, 180, 256];
         rs.splice(at, 0, ...[
@@ -42,6 +47,9 @@ export class BlockIcon extends Block {
                     }
                 })
             },
+            {
+                type: MenuItemType.divide
+            }
         ]);
         return rs;
     }
@@ -75,7 +83,7 @@ export class BlockIconView extends BlockView<BlockIcon>{
             else this.block.onUpdateProps({ src: icon }, { range: BlockRenderRange.self });
         }
     }
-    
+
     renderView() {
         var icon = this.block.src;
         if (icon.code && (icon as any).mime) {
@@ -96,7 +104,7 @@ export class BlockIconView extends BlockView<BlockIcon>{
                     borderRadius: 5,
                     cursor: 'pointer'
                 }}>
-                    <Icon icon={{ ...icon}} size={this.block.size}></Icon>
+                    <Icon icon={{ ...icon }} size={this.block.size}></Icon>
                 </div>
             </div>
         </div>
