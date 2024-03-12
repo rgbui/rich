@@ -40,8 +40,8 @@ export class TemplateView extends EventsComponent {
             style={{
                 backgroundColor: 'rgb(251,251,250)'
             }}
-            className="flex-fixed w-200 overflow-y border-right">
-            <div className="gap-h-10 gap-w-10">
+            className="flex-fixed flex flex-col flex-full w-200 border-right">
+            <div className="flex-fixed gap-h-10 gap-w-10">
                 <Input placeholder={lst('搜索模板')} clear value={this.templateList.word} onEnter={e => {
                     this.templateList.word = e;
                     this.forceUpdate();
@@ -54,39 +54,48 @@ export class TemplateView extends EventsComponent {
                 }}
                 ></Input>
             </div>
-            {!this.templateList.word && this.typeGroups.map((tg, i) => {
-                var ts = this.templateList.list.findAll(g => g.classify == tg.text);
-                if (ts.length == 0) return <div key={i}></div>
-                return <div className="gap-b-10 gap-t-10" key={i}>
-                    <div onClick={e => {
-                        tg.spread = tg.spread ? false : true;
-                        this.forceUpdate();
-                    }} className="f-12 flex  cursor padding-w-5 item-hover-light">
-                        <span className={"ts size-24 flex-center flex-fixed " + (tg.spread == true ? "" : "angle-90-")}>
-                            <Icon className={'text-1'} size={16} icon={ChevronDownSvg}></Icon>
-                        </span>
-                        <span className="flex-auto">{tg.text}</span>
+            <div className="flex-auto overflow-y " >
+                {!this.templateList.word && this.typeGroups.map((tg, i) => {
+                    var ts = this.templateList.list.findAll(g => g.classify == tg.text);
+                    if (ts.length == 0) return <div key={i}></div>
+                    return <div className="gap-b-10 gap-t-10" key={i}>
+                        <div onClick={e => {
+                            tg.spread = tg.spread ? false : true;
+                            this.forceUpdate();
+                        }} className="f-12 flex  cursor padding-w-5 item-hover-light">
+                            <span className={"ts size-24 flex-center flex-fixed " + (tg.spread == true ? "" : "angle-90-")}>
+                                <Icon className={'text-1'} size={16} icon={ChevronDownSvg}></Icon>
+                            </span>
+                            <span className="flex-auto">{tg.text}</span>
+                        </div>
+                        {tg.spread !== false && <div>
+                            {ts.map((tl, j) => {
+                                return <div onMouseDown={e => {
+                                    this.onSetTemplate(tl);
+                                }} className={"h-30 gap-h-3 flex round cursor item-hover-light padding-w-10 " + (this.currentPageTemplate === tl ? " item-hover-focus" : "")} key={tl.id}>
+                                    <span className="flex-center size-24 rounc cursor flex-fixed"><Icon size={18} icon={tl.icon || PageSvg}></Icon></span>
+                                    <span className="gap-l-5 text-overflow flex-auto">{tl.text}</span>
+                                </div>
+                            })}
+                        </div>}
                     </div>
-                    {tg.spread !== false && <div>
-                        {ts.map((tl, j) => {
-                            return <div onMouseDown={e => {
-                                this.onSetTemplate(tl);
-                            }} className={"h-30 gap-h-3 flex round cursor item-hover-light padding-w-10 " + (this.currentPageTemplate === tl ? " item-hover-focus" : "")} key={tl.id}>
-                                <span className="flex-center size-24 rounc cursor flex-fixed"><Icon size={18} icon={tl.icon || PageSvg}></Icon></span>
-                                <span className="gap-l-5 text-overflow flex-auto">{tl.text}</span>
-                            </div>
-                        })}
-                    </div>}
+                })}
+                {this.templateList.word && this.getSearchList().map((tl, i) => {
+                    return <div onMouseDown={e => {
+                        this.onSetTemplate(tl);
+                    }} className={"h-30 gap-h-3 flex round cursor item-hover-light padding-w-10 " + (this.currentPageTemplate === tl ? " item-hover-focus" : "")} key={tl.id}>
+                        <span className="flex-center size-24 rounc cursor flex-fixed"><Icon size={18} icon={tl.icon || PageSvg}></Icon></span>
+                        <span className="gap-l-5 text-overflow flex-auto">{tl.text}</span>
+                    </div>
+                })}
+            </div>
+            <div className="border-top padding-10">
+                <div className="flex gap-h-3">
+                    <span className="f-14"><S>更多的用户模板</S></span>
+                    <a target={'_blank'} href={window.shyConfig?.isUS ? "https://template.shy.red/" : "https://template.shy.live/"} className="gap-l-3"><Icon size={14} icon={{ name: 'byte', code: 'arrow-right-up' }}></Icon></a>
                 </div>
-            })}
-            {this.templateList.word && this.getSearchList().map((tl, i) => {
-                return <div onMouseDown={e => {
-                    this.onSetTemplate(tl);
-                }} className={"h-30 gap-h-3 flex round cursor item-hover-light padding-w-10 " + (this.currentPageTemplate === tl ? " item-hover-focus" : "")} key={tl.id}>
-                    <span className="flex-center size-24 rounc cursor flex-fixed"><Icon size={18} icon={tl.icon || PageSvg}></Icon></span>
-                    <span className="gap-l-5 text-overflow flex-auto">{tl.text}</span>
-                </div>
-            })}
+                <div className="remark f-12"><S>发现更多诗云用户创建的模板</S></div>
+            </div>
         </div>
     }
     typeGroups = PageTemplateTypeGroups;
@@ -680,10 +689,7 @@ export class TemplateView extends EventsComponent {
     }
     render() {
         var w = window.innerWidth;
-        var classList: string[] = ['h-700', 'max-vh80', 'user-none'];
-        if (w > 1400) classList.push('min-w-1200')
-        else classList.push('min-ww80');
-
+        var classList: string[] = ['vh90', 'vw90', 'user-none'];
         return <div className={classList.join(" ")}>
             <div className="flex flex-full h100">
                 {this.renderSide()}
@@ -692,8 +698,7 @@ export class TemplateView extends EventsComponent {
         </div>
     }
     open() {
-        // this.templateList = { type: '', mime: 'page', loading: false, tags: [], total: 0, list: [], page: 1, size: 20 }
-        // this.onSearch()
+
     }
     currentPageTemplate: PageTemplateType = null;
     componentDidMount(): void {
