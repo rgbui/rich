@@ -147,16 +147,16 @@ export class List extends Block {
     async onGetContextMenus() {
         var items = await super.onGetContextMenus();
         var linkAt = items.findIndex(g => g.name == BlockDirective.link);
-        items.splice(linkAt + 1+1 , 0,
+        items.splice(linkAt + 1 + 1, 0,
             {
                 name: 'smallFont',
                 type: MenuItemType.switch,
                 checked: this.smallFont ? true : false,
                 text: lst('小字号'),
-                icon:{ name: 'byte', code: 'add-text' }
+                icon: { name: 'byte', code: 'add-text' }
             }
         );
-        
+
         var at = items.findIndex(g => g.name == 'color');
         if (this.listType == ListType.circle || this.listType == ListType.number) {
             var rc = (item: MenuItem<string>, view?: MenuItemView) => {
@@ -217,7 +217,7 @@ export class List extends Block {
     }
     getVisibleHandleCursorPoint(): Point {
         var point = super.getVisibleHandleCursorPoint()
-        point = point.move(0, -3);
+        point = point.move(0, 0);
         return point;
     }
     async onContextMenuInput(this: Block, item: MenuItem<BlockDirective | string>) {
@@ -231,7 +231,7 @@ export class List extends Block {
 @view('/list')
 export class ListView extends BlockView<List>{
     renderListType() {
-        if (this.block.listType == ListType.circle) return <span style={{ height: this.block.page.lineHeight,marginTop:this.block.page.smallFont||this.block.smallFont?-3:-3 }} className='sy-block-list-text-type'>
+        if (this.block.listType == ListType.circle) return <span style={{ height: this.block.page.lineHeight, marginTop: this.block.page.smallFont || this.block.smallFont ? -3 : -3 }} className='sy-block-list-text-type'>
             {this.block.listView == ListTypeView.none && <i className="flex size-6 circle" style={{ backgroundColor: 'currentColor' }}></i>}
             {this.block.listView == ListTypeView.circleEmpty && <i className="flex size-5 circle" style={{ border: '1px solid currentColor' }}></i>}
             {this.block.listView == ListTypeView.rhombus && <i className="flex size-4 " style={{ transformOrigin: '50% 50%', transform: 'rotate(45deg)', border: '1px solid currentColor' }}></i>}
@@ -243,7 +243,7 @@ export class ListView extends BlockView<List>{
                     cursor: 'pointer',
                     transform: this.block.expand ? 'rotateZ(180deg)' : 'rotateZ(90deg)',
                     height: this.block.page.lineHeight,
-                    color:'currentcolor'
+                    color: 'currentcolor'
                 }} onMouseDown={e => {
                     e.stopPropagation();
                     this.block.onExpand();
