@@ -91,8 +91,8 @@ export class TemplateView extends EventsComponent {
             </div>
             <div className="border-top padding-10">
                 <div className="flex gap-h-3">
-                    <span className="f-14"><S>更多的用户模板</S></span>
-                    <a target={'_blank'} href={window.shyConfig?.isUS ? "https://template.shy.red/" : "https://template.shy.live/"} className="gap-l-3"><Icon size={14} icon={{ name: 'byte', code: 'arrow-right-up' }}></Icon></a>
+                    <span className="f-14"><S>更多模板</S></span>
+                    <a target={'_blank'} href={window.shyConfig?.isUS ? "https://template.shy.red/" : "https://template.shy.live/"} className="gap-l-3 size-14 flex-center flex-fixed"><Icon size={14} icon={{ name: 'byte', code: 'arrow-right-up' }}></Icon></a>
                 </div>
                 <div className="remark f-12"><S>发现更多诗云用户创建的模板</S></div>
             </div>
