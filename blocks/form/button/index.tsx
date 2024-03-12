@@ -264,21 +264,29 @@ export class BlockButtonView extends BlockView<BlockButton>{
             >
                 <div className={"flex"} style={style}>
                     <div className="relative"
-                        style={{ zIndex: 1000, display: this.block.buttonIsBlock ? "block" : 'inline-block', width: this.block.buttonIsBlock ? "100%" : undefined }}>
+                        style={{
+                            zIndex: 1000,
+                            maxWidth: '100%',
+                            display: this.block.buttonIsBlock ? "block" : 'inline-block',
+                            width: this.block.buttonIsBlock ? "100%" : undefined
+                        }}>
                         <div
                             data-button={'true'}
                             onMouseDown={e => {
                                 e.stopPropagation();
                                 this.block.onExcute()
                             }}
-                            className={"text-overflow flex-center  " + classList.join(" ")}
-                            style={{ width: this.block.buttonIsBlock ? "100%" : undefined }}
+                            className={"flex-center  " + classList.join(" ")}
+                            style={{
+                                width: this.block.buttonIsBlock ? "100%" : undefined,
+                                maxWidth: this.block.buttonIsBlock ? undefined : '100%'
+                            }}
                         >
                             {this.block.iconAlign == 'left' && <> {this.block.buttonIcon && <Icon size={18} className={this.block.buttonText ? 'gap-r-5' : ""} icon={{ ...this.block.buttonIcon, color: 'inherit' }}></Icon>}
-                                {this.block.buttonText && <>{this.block.buttonText}</>}
+                                {this.block.buttonText && <span className="text-overflow">{this.block.buttonText}</span>}
                             </>}
                             {this.block.iconAlign == 'right' && <>
-                                {this.block.buttonText && <>{this.block.buttonText}</>}
+                                {this.block.buttonText && <span className="text-overflow">{this.block.buttonText}</span>}
                                 {this.block.buttonIcon && <Icon size={18} className={this.block.buttonText ? 'gap-l-5' : ""} icon={{ ...this.block.buttonIcon, color: 'inherit' }}></Icon>}
                             </>}
                             {!this.block.buttonText && !this.block.buttonIcon && <span><S>按钮</S></span>}
