@@ -2,14 +2,11 @@
 import React, { CSSProperties } from "react";
 import { Block } from "../..";
 import {
-    ArrowUpSvg,
     DotsSvg,
     DuplicateSvg,
-    LinkSvg,
     PicSvg,
     PlatteSvg,
-    PlusSvg,
-    TrashSvg
+    PlusSvg
 } from "../../../../component/svgs";
 import { Icon, IconValueType } from "../../../../component/view/icon";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
@@ -145,6 +142,12 @@ export class CardBox extends Block {
                 icon: DuplicateSvg,
                 text: lst("复制卡片")
             },
+            {
+                name: 'merge',
+                disabled: this.prev && this.prev instanceof CardBox ? false : true,
+                icon: { name: 'byte', code: 'sum' } as IconValueType,
+                text: lst("合并内容到上一个")
+            },
             { type: MenuItemType.divide },
             {
                 name: 'up',
@@ -159,12 +162,6 @@ export class CardBox extends Block {
                 disabled: this.next ? false : true
             },
             { type: MenuItemType.divide },
-            {
-                name: 'merge',
-                disabled: this.prev && this.prev instanceof CardBox ? false : true,
-                icon: { name: 'byte', code: 'sum' } as IconValueType,
-                text: lst("合并内容到上一个")
-            },
             {
                 name: 'copyStyle',
                 icon: { name: 'byte', code: 'format-brush' } as IconValueType,
@@ -338,8 +335,8 @@ export class ViewComponent extends BlockView<CardBox>{
         var screenStyle = this.block.page.getScreenStyle();
         var hasPic = this.block.cardThemeStyle.bgStyle.mode == 'image' || this.block.cardThemeStyle.bgStyle.mode == 'uploadImage';
         var gapStyle: CSSProperties = {
-            paddingTop: '2rem',
-            paddingBottom: '2rem'
+            paddingTop: '4rem',
+            paddingBottom: '4rem'
         }
         if (hasPic) {
             gapStyle.paddingTop = '8rem';
@@ -454,9 +451,12 @@ export class ViewComponent extends BlockView<CardBox>{
         var coverStyle = getBgStyle(cs?.bgStyle);
         var { contentStyle } = getCardStyle(self.block.cardThemeStyle);
         if (self.block.cardThemeStyle?.contentStyle?.transparency == 'noborder') {
-            contentStyle.border = 'none';
-            contentStyle.boxShadow = 'none';
-            contentStyle.backgroundColor = 'transparent';
+            // contentStyle.border = 'none';
+            delete contentStyle.border;
+            delete contentStyle.boxShadow;
+            delete contentStyle.backgroundColor;
+            // contentStyle.boxShadow = 'none';
+            // contentStyle.backgroundColor = 'transparent';
         }
         return <div style={style}>
             <div className={"sy-block-view-card" + (this.block.isCanEdit() ? " allow-hover" : "")} style={screenStyle}>
@@ -465,7 +465,10 @@ export class ViewComponent extends BlockView<CardBox>{
                         ref={e => this.contentEl = e}
                         className={"relative"}>
                         {this.block.isCanEdit() && <div style={{ zIndex: 12, top: -40 }} className="flex sy-block-view-card-ops bg-white shadow-s round pos-top-right  gap-t-10 remark">
-                            <span className={"flex-center cursor round  size-24 item-hover "} onMouseDown={e => { e.stopPropagation(); this.block.onOpenCardStyle(e) }}><Icon size={18} icon={PlatteSvg}></Icon></span>
+                            <span className={"flex-center cursor round  size-24 item-hover "} onMouseDown={e => {
+                                e.stopPropagation();
+                                this.block.onOpenCardStyle(e);
+                            }}><Icon size={18} icon={PlatteSvg}></Icon></span>
                             <span className={"flex-center cursor round  size-24 item-hover "} onMouseDown={async e => {
                                 e.stopPropagation();
                                 var el = (e.currentTarget as HTMLElement).closest('.sy-block-view-card-ops') as HTMLElement;
@@ -492,7 +495,7 @@ export class ViewComponent extends BlockView<CardBox>{
                             {renderContent()}
                         </div>}
                     </div>
-                    <div className="sy-block-view-card-ops flex-center gap-t-20 gap-w-50 gap-b-30">
+                    <div className="sy-block-view-card-ops flex-center gap-h-10 gap-w-50 ">
                         {this.block.isCanEdit() && <ToolTip overlay={lst('添加卡片')}>
                             <div onMouseDown={e => this.block.onAddCardBox(e)} className="size-30 bg-white shadow-s flex-center cursor border circle text-1 link-hover"> <Icon size={18} icon={PlusSvg}></Icon></div>
                         </ToolTip>}
