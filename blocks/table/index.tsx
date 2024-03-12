@@ -3,7 +3,7 @@ import { BlockView } from "../../src/block/view";
 import React, { CSSProperties } from "react";
 import { prop, url, view } from "../../src/block/factory/observable";
 import "./style.less";
-import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
+import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { ChildsArea } from "../../src/block/view/appear";
 import { ActionDirective } from "../../src/history/declare";
 import { Point, Rect } from "../../src/common/vector/point";
@@ -17,7 +17,7 @@ import { S } from "../../i18n/view";
 import { BoardBlockSelector, BoardPointType } from "../../src/block/partial/board";
 import { BoardDrag } from "../../src/kit/operator/board";
 import { useSelectMenuItem } from "../../component/view/menu";
-import { MenuItemType } from "../../component/view/menu/declare";
+import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { FontColorList, BackgroundColorList } from "../../extensions/color/data";
 import { lst } from "../../i18n/store";
 
@@ -310,7 +310,7 @@ export class Table extends Block {
                         await this.page.onAction('setFontStyle', async () => {
                             var cs = this.blocks.childs.map(c => c.childs[colIndex]);
                             await cs.eachAsync(async c => {
-                              await  c.pattern.setFontStyle({ color: result.item.value });
+                                await c.pattern.setFontStyle({ color: result.item.value });
                             })
                         })
                         break;
@@ -318,7 +318,7 @@ export class Table extends Block {
                         await this.page.onAction('setFillStyle', async () => {
                             var cs = this.blocks.childs.map(c => c.childs[colIndex]);
                             await cs.eachAsync(async c => {
-                               await c.pattern.setFillStyle({ mode: 'color', color: result.item.value })
+                                await c.pattern.setFillStyle({ mode: 'color', color: result.item.value })
                             })
                         })
                         break;
@@ -427,7 +427,7 @@ export class Table extends Block {
                     await this.page.onAction('setFontStyle', async () => {
                         var cs = this.childs[rowIndex].childs;
                         await cs.eachAsync(async c => {
-                          await  c.pattern.setFontStyle({ color: result.item.value });
+                            await c.pattern.setFontStyle({ color: result.item.value });
                         })
                     })
                     break;
@@ -435,7 +435,7 @@ export class Table extends Block {
                     await this.page.onAction('setFillStyle', async () => {
                         var cs = this.childs[rowIndex].childs;
                         await cs.eachAsync(async c => {
-                          await  c.pattern.setFillStyle({ mode: 'color', color: result.item.value })
+                            await c.pattern.setFillStyle({ mode: 'color', color: result.item.value })
                         })
                     })
                     break;
@@ -486,6 +486,23 @@ export class Table extends Block {
                 height: this.fixedHeight
             }
         }
+    }
+    async onGetContextMenus(this: Block) {
+        var rs = await super.onGetContextMenus();
+        var c = rs.findIndex(c => c.name == 'color');
+        if (c > -1) {
+            rs.splice(c, 2);
+        }
+        return rs;
+    }
+    getVisibleHandleCursorPoint(): Point {
+        if (!this.el) return
+        var c = this.el.querySelector('.sy-block-table-box') as HTMLElement;
+        if (!c) return
+        var r = Rect.fromEle(c);
+        var p = r.leftTop;
+        p = p.move(-5,3);
+        return p;
     }
 }
 
