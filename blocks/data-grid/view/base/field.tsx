@@ -150,7 +150,7 @@ export class DataGridViewField {
                     icon: { name: "bytedance-icon", code: 'time' },
                     checked: viewField?.field?.config?.includeTime ? true : false
                 });
-                items.insertAt(6, { type: MenuItemType.divide })
+                // items.insertAt(6, { type: MenuItemType.divide })
             }
             else if (viewField.field?.type == FieldType.number) {
                 var dateItems: MenuItem<BlockDirective | string>[] = [];
