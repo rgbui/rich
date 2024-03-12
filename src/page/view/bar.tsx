@@ -36,6 +36,7 @@ import { useSearchBox } from "../../../extensions/search/keyword";
 import { useInputIconAndText } from "../../../component/view/input/iconAndText";
 import { IconArguments } from "../../../extensions/icon/declare";
 import { Rect } from "../../common/vector/point";
+import { UA } from "../../../util/ua";
 
 export class PageBar extends React.Component<{ page: Page }>{
     preTip: Tip;
@@ -248,7 +249,7 @@ export class PageBar extends React.Component<{ page: Page }>{
             {isMobileOnly && <span onClick={e => this.onSpreadMenu()} className="flex-fixed size-20 flex-center item-hover round cursor ">
                 <Icon icon={ChevronLeftSvg} size={18}></Icon>
             </span>}
-            {!isMobileOnly && this.props.page.openSource == 'page' && !this.props.page.ws.isPubSiteHideMenu && this.props.page.ws.slnSpread == false && <ToolTip placement="bottom" overlay={lst('展开')}><span onClick={e => { this.onSpreadMenu() }} className="flex-fixed size-24 flex-center item-hover round cursor ">
+            {!isMobileOnly && this.props.page.openSource == 'page' && !this.props.page.ws.isPubSiteHideMenu && this.props.page.ws.slnSpread == false && <ToolTip placement="bottom" overlay={<div>{lst('展开')}<br/><span style={{color:'#aaa'}}>{UA.isMacOs ? "⌘+\\" : "Ctrl+\\"}</span></div>}><span onClick={e => { this.onSpreadMenu() }} className="flex-fixed size-24 flex-center item-hover round cursor ">
                 <Icon icon={{ name: 'bytedance-icon', code: 'hamburger-button' }} size={18}></Icon>
             </span></ToolTip>}
             {this.renderTitle()}
