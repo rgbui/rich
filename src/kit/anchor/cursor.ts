@@ -212,6 +212,33 @@ export class AnchorCursor {
             return findBlocksBetweenAppears(this.startAnchor.el, this.endAnchor.el);
         else return []
     }
+    /**
+     * 获取当前选中的行块
+     * 包括批量选择，光标选择
+     * @returns 
+     */
+    getAppearBlocks(appear?: AppearAnchor) {
+        var bs: Block[] = [];
+        if (this.currentSelectedBlocks.length > 0) {
+            this.currentSelectedBlocks.each(c => { bs.push(c) })
+        }
+        else {
+            if (this.startAnchor && this.endAnchor) {
+                var list = this.kit.anchorCursor.getAppears();
+                var blocks = lodash.identity(list.map(l => l.block));
+                bs.push(...blocks);
+            }
+            else {
+                if (appear) {
+                    bs.push(appear.block)
+                }
+                else if (this.startAnchor) {
+                    bs.push(this.startAnchor.block.closest(x => !x.isLine))
+                }
+            }
+        }
+        return bs;
+    }
     adjustAnchorSorts() {
         if (this.endAnchor === this.startAnchor && this.endOffset < this.startOffset || TextEle.isBefore(this.endAnchor.el, this.startAnchor.el)) {
             [this.startAnchor, this.endAnchor] = [this.endAnchor, this.startAnchor];

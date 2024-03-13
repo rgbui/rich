@@ -80,6 +80,10 @@ export class Block$Operator {
             await this.updateProps(pb.data.listType ? Object.assign(pb.data, da || {}) : { listType: 0, ...(da || {}) }, BlockRenderRange.self);
             return this;
         }
+        /**
+         * 这里可能会存在自转换 
+         */
+        if (this.url == url) return this;
         var data = await this.getWillTurnData(url);
         if (da) Object.assign(data, da);
         var newBlock = await BlockFactory.createBlock(url, this.page, data, this.parent);

@@ -14,11 +14,11 @@ export var TextTurns = {
         { url: '/head?{level:"h2",toggle:true}', label: UA.isMacOs ? '⌘+⌥+2' : 'Ctrl+Alt+2' },
         { url: '/head?{level:"h3",toggle:true}', label: UA.isMacOs ? '⌘+⌥+3' : 'Ctrl+Alt+3' },
         { url: '/head?{level:"h4",toggle:true}', label: UA.isMacOs ? '⌘+⌥+4' : 'Ctrl+Alt+4' },
-        { url: '/list?{listType:1}', label: UA.isMacOs ? '⌘+⌥+6' : 'Ctrl+Alt+6' },
-        { url: '/list?{listType:0}', label: UA.isMacOs ? '⌘+⌥+7' : 'Ctrl+Alt+7' },
+        { url: '/list?{listType:0}', label: UA.isMacOs ? '⌘+⌥+7' : 'Ctrl+Alt+6' },
+        { url: '/list?{listType:1}', label: UA.isMacOs ? '⌘+⌥+6' : 'Ctrl+Alt+7' },
         { url: '/list?{listType:2}', label: UA.isMacOs ? '⌘+⌥+8' : 'Ctrl+Alt+8' },
         { url: '/quote' },
-        { url: '/callout'}
+        { url: '/callout' }
     ],
     async turn(block: Block, turnToUrl) {
         switch (turnToUrl) {

@@ -3,6 +3,7 @@ import { useSearchBox } from "../../../extensions/search/keyword";
 import { UA } from "../../../util/ua";
 import { findBlockAppear } from "../../block/appear/visible.seek";
 import { KeyboardCode, KeyboardPlate } from "../../common/keys";
+import { MoveSelectBlocks } from "../../kit/write/keydown";
 export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
     keyboardPlate.listener(kt => UA.isMacOs && kt.isMeta(KeyboardCode.Z) || !UA.isMacOs && kt.isCtrl(KeyboardCode.Z), (event, kt) => {
         page.onUndo();
@@ -10,7 +11,7 @@ export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
     keyboardPlate.listener(kt => UA.isMacOs && kt.isMeta(KeyboardCode.Y) || !UA.isMacOs && kt.isCtrl(KeyboardCode.Y), (event, kt) => {
         page.onRedo();
     });
-    keyboardPlate.listener(kt =>!UA.isMacOs &&  kt.isCtrl(KeyboardCode.S) || UA.isMacOs && kt.isMeta(KeyboardCode.S),
+    keyboardPlate.listener(kt => !UA.isMacOs && kt.isCtrl(KeyboardCode.S) || UA.isMacOs && kt.isMeta(KeyboardCode.S),
         (event, kt) => {
             event.preventDefault()
             page.onPageSave();
@@ -21,13 +22,24 @@ export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
             event.preventDefault()
             useSearchBox({ ws: page.ws })
         }
-    )
-    keyboardPlate.listener(kt => !UA.isMacOs &&  kt.isCtrl(KeyboardCode["\\"]) || UA.isMacOs && kt.isMeta(KeyboardCode["\\"]),
-    (event, kt) => {
-        event.preventDefault()
-        page.onSpreadMenu()
-    }
-)
+    );
+    keyboardPlate.listener(kt => !UA.isMacOs && kt.isCtrl(KeyboardCode["\\"]) || UA.isMacOs && kt.isMeta(KeyboardCode["\\"]),
+        (event, kt) => {
+            event.preventDefault()
+            page.onSpreadMenu()
+        }
+    );
+    keyboardPlate.listener(kt => kt.is(KeyboardCode.ArrowDown), (event, kt) => {
+        if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
+            MoveSelectBlocks(page.kit.writer, page.kit.anchorCursor.currentSelectHandleBlocks, event)
+        }
+    });
+    keyboardPlate.listener(kt => kt.is(KeyboardCode.ArrowUp), (event, kt) => {
+        if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
+            MoveSelectBlocks(page.kit.writer, page.kit.anchorCursor.currentSelectHandleBlocks, event)
+        }
+    });
+
     keyboardPlate.listener(kt => {
         var r = UA.isMacOs && kt.is(KeyboardCode.Backspace, KeyboardCode.Delete) || !UA.isMacOs && kt.is(KeyboardCode.Delete);
         return r;

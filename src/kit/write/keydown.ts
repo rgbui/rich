@@ -129,6 +129,27 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
     }
 }
 
+export function MoveSelectBlocks(write: PageWrite, blocks: Block[], event: KeyboardEvent) {
+    if (event.key == KeyboardCode.ArrowUp) {
+        var block = blocks.last();
+        var pre = block.prevFind(x => !x.isLine && !x.isLayout && !x.isCell);
+        if (pre) {
+            event.preventDefault();
+            onceAutoScroll({ el: pre.el, feelDis: 60, dis: 120 })
+            write.kit.anchorCursor.onSelectBlocks([pre], { render: true })
+        }
+    }
+    else if (event.key == KeyboardCode.ArrowDown) {
+        var block = blocks.first();
+        var next = block.nextFind(x => !x.isLine && !x.isLayout && !x.isCell);
+        if (next) {
+            event.preventDefault();
+            onceAutoScroll({ el: next.el, feelDis: 60, dis: 120 })
+            write.kit.anchorCursor.onSelectBlocks([next], { render: true })
+        }
+    }
+}
+
 export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
     var sel = window.getSelection();
     var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
