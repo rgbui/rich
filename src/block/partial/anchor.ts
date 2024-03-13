@@ -7,13 +7,16 @@ import { BlockChildKey, BlockUrlConstant } from "../constant";
  */
 export class Block$Anchor {
 
-    async visibleDownCreateBlock(this: Block, url: string, data: Record<string, any> = {}) {
+    async visibleDownCreateBlock(this: Block,
+        url: string,
+        data: Record<string, any> = {}
+    ) {
         var row = this.closest(x => x.isBlock);
-        if (row)  return await this.page.createBlock(url, { ...data }, row.parent, row.at + 1, row.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
+        if (row) return await this.page.createBlock(url, { ...data }, row.parent, row.at + 1, row.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
     }
     async visibleUpCreateBlock(this: Block, url: string, data: Record<string, any>) {
         var row = this.closest(x => x.isBlock);
-        if (row)  return await this.page.createBlock(url, { ...data }, row.parent, row.at, row.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
+        if (row) return await this.page.createBlock(url, { ...data }, row.parent, row.at, row.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
     }
     async visibleRightCreateBlock(this: Block, at: number, url: string, data: Record<string, any>) {
         if (this.isTextContent) {
@@ -52,6 +55,33 @@ export class Block$Anchor {
             if (latterContent) await this.page.createBlock(BlockUrlConstant.Text, { content: latterContent }, this, index++);
             return newBlock;
         }
+    }
+    async createBlockCol(this: Block, col: number) {
+        var b = this.closest(x => !x.isLine);
+        var pa = b.closest(x => x.url != BlockUrlConstant.List);
+        var pr = pa.closest(x => x.url == BlockUrlConstant.Row);
+        if (pr) {
+            pa = pr;
+        }
+        var cs = [];
+        for (let i = 0; i < col; i++) {
+            cs.push({
+                url: BlockUrlConstant.Col,
+                blocks: {
+                    childs: i == 0 && !pr && pa === b ? [] : [{ url: BlockUrlConstant.TextSpan }]
+                }
+            })
+        }
+        var rb = await this.page.createBlock(BlockUrlConstant.Row, {
+            blocks: {
+                childs: cs
+            }
+        }, pa.parent, pa.at + 1);
+        if (!pr && pa === b) {
+            var c = rb.childs[0];
+            await c.append(b);
+        }
+        return rb;
     }
     focusAnchor(this: Block, anchor: AppearAnchor) {
 

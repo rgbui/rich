@@ -124,11 +124,6 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
                 dropBlock: undefined
             }
         }
-        // if (!dropBlock) {
-        //     if (oldDropBlock?.isPanel) dropBlock = oldDropBlock.findReverse(g => g.isOnlyBlock)
-        //     dropBlock = kit.page.getViewLastBlock();
-        //     if (dropBlock) fr = 'bottom';
-        // }
         /**
          * 这里需要通过dropBlock来重新计算一下fr，
          * 当前的fr也只是表示从那查找的方位，并不代表真实的方位
@@ -267,6 +262,18 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
             dropBlock: undefined
         }
     }
-    return { direction: direction, dropBlock };
+    if (direction == DropDirection.left || direction == DropDirection.right) {
+        var pa = dropBlock.parent;
+        if (pa.url == BlockUrlConstant.List) {
+            var r = dropBlock.closest(x => x.url != BlockUrlConstant.List);
+            if (r) {
+                dropBlock = r;
+            }
+        }
+    }
+    return {
+        direction: direction,
+        dropBlock
+    };
 }
 
