@@ -17,13 +17,13 @@ class ImportFile extends EventsComponent {
         return <div className="bg-white shadow w-350 round padding-10">
             <div className="h4"><S>导入</S></div>
             <div className="r-round r-flex r-padding-w-10 r-cursor r-item-hover r-padding-h-5 text-1 r-gap-10">
-                <div onMouseDown={e => { this.onImport('markdown') }} className=" border shadow">
+                <div onMouseDown={e => { this.onImport('markdown') }} className=" border shadow-s">
                     <Icon icon={{ name: 'bytedance-icon', code: 'file-txt' }}></Icon><span className="gap-l-5"><S>TXT或Markdown文件</S></span>
                 </div>
-                <div onMouseDown={e => { this.onImport('html') }} className=" border shadow">
+                <div onMouseDown={e => { this.onImport('html') }} className=" border shadow-s">
                     <Icon icon={{ name: 'bytedance-icon', code: 'source-code' }}></Icon><span className="gap-l-5">HTML</span>
                 </div>
-                <div onMouseDown={e => { this.onImport('word') }} className=" border shadow">
+                <div onMouseDown={e => { this.onImport('word') }} className=" border shadow-s">
                     <Icon icon={{ name: 'bytedance-icon', code: 'word' }}></Icon><span className="gap-l-5">Word</span>
                 </div>
             </div>

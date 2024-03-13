@@ -18,7 +18,7 @@ import { S } from "../../i18n/view";
 
 export class TrashBox extends EventsComponent {
     render() {
-        return <div className="w-600 min-h-200 bg-white round ">
+        return <div className="w-600  bg-white round ">
             <div className="gap-w-14 padding-h-10">
                 <div >
                     <Input
@@ -57,7 +57,7 @@ export class TrashBox extends EventsComponent {
                         </span>
                     </div>
                 })}
-                {this.search.total == 0 && !this.search.loading && <div className="flex-center gap-h-10 f-12 remark"><S>无删除记录</S></div>}
+                {this.search.total == 0 && !this.search.loading && <div className="flex-center gap-t-10 padding-b-30 f-12 remark"><S>无删除记录</S></div>}
             </div>
         </div>
     }

@@ -38,7 +38,8 @@ export class TemplateView extends EventsComponent {
     renderSide() {
         return <div
             style={{
-                backgroundColor: 'rgb(251,251,250)'
+                backgroundColor: 'rgb(251,251,250)',
+                borderRadius: '3px 0px 0px 3px'
             }}
             className="flex-fixed flex flex-col flex-full w-200 border-right">
             <div className="flex-fixed gap-h-10 gap-w-10">
@@ -92,7 +93,7 @@ export class TemplateView extends EventsComponent {
             <div className="border-top padding-10">
                 <div className="flex gap-h-3">
                     <span className="f-14"><S>更多模板</S></span>
-                    <a target={'_blank'} href={window.shyConfig?.isUS ? "https://template.shy.red/" : "https://template.shy.live/"} className="gap-l-3 size-14 flex-center flex-fixed"><Icon size={14} icon={{ name: 'byte', code: 'arrow-right-up' }}></Icon></a>
+                    <a target={'_blank'} href={window.shyConfig?.isUS ? "https://template.shy.red/" : "https://template.shy.live/"} className="gap-l-3 size-14 round flex-center flex-fixed item-hover"><Icon size={14} icon={{ name: 'byte', code: 'arrow-right-up' }}></Icon></a>
                 </div>
                 <div className="remark f-12"><S>发现更多诗云用户创建的模板</S></div>
             </div>
