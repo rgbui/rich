@@ -149,7 +149,7 @@ export class MenuItemView extends React.Component<{
                 {item.icon && <i className={"flex-center flex-line  text-1 " + (item.iconSize > 20 ? "" : "size-20")}><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
                 {item.renderIcon && item.renderIcon(item, this)}
                 <span className='shy-menu-box-item-option-text text-overflow'>{item.text}{item.remark && <i className="remark padding-l-5">{item.remark}</i>}</span>
-                {item.checkLabel && <Icon className={'shy-menu-box-item-option-label-icon'} size={16} icon={CheckSvg}></Icon>}
+                {item.checkLabel && <Icon className={'shy-menu-box-item-option-label-icon gap-r-8'} size={16} icon={CheckSvg}></Icon>}
                 {item.label && !item.checkLabel && <label>{item.label}</label>}
                 {Array.isArray(item.btns) && item.btns.map(btn => {
                     return <ToolTip key={btn.name} overlay={btn.overlay} placement={btn.placement || 'top'} ><em className="flex-center flex-line size-20" onMouseDown={e => { e.stopPropagation(); this.click(item, e, btn.name) }}><Icon size={16} icon={btn.icon}></Icon></em></ToolTip>
@@ -232,9 +232,8 @@ export class MenuItemView extends React.Component<{
                 })}
             </div></ToolTip>}
             {item.type == MenuItemType.color && <div className={"shy-menu-box-item-colors  gap-h-10" + (item.block ? "" : " flex-top flex-wrap")}>
-                {item.options.map(t=>{
-                    if (item.block)
-                    {
+                {item.options.map(t => {
+                    if (item.block) {
                         return <a key={t.value} className={"flex  cursor padding-w-10 padding-h-3 round item-hover " + (t.checked ? "item-hover-focus" : "")}
                             onMouseDown={e => { e.stopPropagation(); item.value = t.value; this.select(item, e.nativeEvent) }}>
                             {item.name && item.name.indexOf('font') > -1 && <span className="size-24 flex-center circle  border" style={{ color: t.value }}>
