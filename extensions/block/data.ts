@@ -75,20 +75,22 @@ export function getBlockSelectData() {
         {
             text: lst('展示'),
             childs: [
+
                 { text: lst('卡片'), icon: CardSvg, url: "/card", label: lst('/卡片'), labels: ['/card', '/kp', '/kaipian'] },
-                // { text: '画板', pic: <img src={embed} />, url: '/board', label: '/画板', labels: ['/canvas', '/huaban', '/hb'] },
                 { text: lst('标签页'), icon: BrowserSvg, url: "/tab", label: lst('/标签页'), labels: ['/tab', '/bjy', '/bianqianye'] },
-                //  { text: '轮播', pic: <img src={embed} />, url: "/carousel", label: '/轮播', labels: ['/carousel', '/lb', '/lunbo'] },
-                // { text: lst('模板按钮'), icon: ButtonTemplateSvg, url: '/button/template', label: lst('/模板按钮'), labels: ['/mban', '/mubananniu', '/template'] },
-                //{ text: '目录大纲', pic: <img src={embed} />, url: '/outline', label: '/目录', labels: ['/outline', '/note', '/mulu', '/dagang'] }
+                { text: lst('2列'), icon: { name: 'byte', code: 'two-key' }, url: '/2', label: '/2', labels: ['/2', '/2lie', '/2column', '/2col'] },
+                { text: lst('3列'), icon: { name: 'byte', code: 'three-key' }, url: '/3', label: '/3', labels: ['/3', '/3lie', '/3column', '/3col'] },
+                { text: lst('4列'), icon: { name: 'byte', code: 'four-key' }, url: '/4', label: '/4', labels: ['/4', '/4lie', '/4column', '/3col'] },
+                { text: lst('5列'), icon: { name: 'byte', code: 'five-key' }, url: '/5', label: '/5', labels: ['/5', '/5lie', '/5column', '/3col'] }
+
             ]
         },
         {
-            text:lst('媒体与附件'),
-            childs:[
+            text: lst('媒体与附件'),
+            childs: [
                 { text: lst("图标"), icon: PicSvg, url: '/icon', description: '', label: lst('/图标'), labels: ['/tb', '/tubiao', '/logo'] },
                 { text: lst("图片"), icon: PicSvg, url: '/image', description: '', label: lst('/图片'), labels: ['/tp', '/tupian', '/img', '/image', '/picture'] },
-                { text: lst('图片轮播'), icon: PicSvg, url: '/carousel/image', description: '', label: lst('/图片轮播'), labels: ['/tplb', '/轮播','/lunbo', '/tupianlunbo', '/carousel', '/images', '/pics'] },
+                { text: lst('图片轮播'), icon: PicSvg, url: '/carousel/image', description: '', label: lst('/图片轮播'), labels: ['/tplb', '/轮播', '/lunbo', '/tupianlunbo', '/carousel', '/images', '/pics'] },
                 { text: lst("音频"), icon: AudioSvg, url: '/audio', description: "", label: lst('/音频'), labels: ['/yp', '/audio'] },
                 { text: lst("视频"), icon: VideoSvg, url: '/video', description: "", label: lst('/视频'), labels: ['/sp', '/video'] },
                 { text: lst("文件"), icon: FileSvg, url: '/file', description: "", label: lst('/文件'), labels: ['/wj', '/wenjian', '/file'] },

@@ -582,12 +582,18 @@ export class PageWrite {
                         newBlock = await aa.block.visibleRightCreateBlock(offset, blockData.url, { ...bd, createSource: 'InputBlockSelector' });
                     }
                     else {
-                        /**
-                         * 判断是否为空行块，如果是空行块，则将当前的块转用
-                         * 否则创建一个换行块
-                         */
-                        newBlock = await aa.block.visibleDownCreateBlock(blockData.url, { ...bd, createSource: 'InputBlockSelector' });
-                        await aa.block.clearEmptyBlock();
+                        if (['/2', '/3', '/4', '/5'].includes(blockData.url)) {
+                            var rb = aa.block.closest(x => !x.isLine);
+                            newBlock = await rb.createBlockCol(parseInt(blockData.url.slice(1)));
+                        }
+                        else {
+                            /**
+                                                   * 判断是否为空行块，如果是空行块，则将当前的块转用
+                                                   * 否则创建一个换行块
+                                                   */
+                            newBlock = await aa.block.visibleDownCreateBlock(blockData.url, { ...bd, createSource: 'InputBlockSelector' });
+                            await aa.block.clearEmptyBlock();
+                        }
                     }
                     if (newBlock)
                         newBlock.mounted(async () => {
