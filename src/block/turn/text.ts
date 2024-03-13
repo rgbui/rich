@@ -1,23 +1,24 @@
 import { Block } from "..";
+import { UA } from "../../../util/ua";
 import { BlockChildKey, BlockUrlConstant } from "../constant";
 
 export var TextTurns = {
-    urls: [
-        '/textspan',
-        '/todo',
-        '/head',
-        '/head?{level:"h2"}',
-        '/head?{level:"h3"}',
-        '/head?{level:"h4"}',
-        '/head?{toggle:true}',
-        '/head?{level:"h2",toggle:true}',
-        '/head?{level:"h3",toggle:true}',
-        '/head?{level:"h4",toggle:true}',
-        '/list?{listType:1}',
-        '/list?{listType:0}',
-        '/list?{listType:2}',
-        '/quote',
-        '/callout'
+    blockDatas: [
+        { url: '/textspan', label: UA.isMacOs ? '⌘+⌥+0' : 'Ctrl+Alt+0' },
+        { url: '/todo', label: UA.isMacOs ? '⌘+⌥+5' : 'Ctrl+Alt+5' },
+        { url: '/head', label: UA.isMacOs ? '⌘+⌥+1' : 'Ctrl+Alt+1' },
+        { url: '/head?{level:"h2"}', label: UA.isMacOs ? '⌘+⌥+2' : 'Ctrl+Alt+2' },
+        { url: '/head?{level:"h3"}', label: UA.isMacOs ? '⌘+⌥+3' : 'Ctrl+Alt+3' },
+        { url: '/head?{level:"h4"}', label: UA.isMacOs ? '⌘+⌥+4' : 'Ctrl+Alt+4' },
+        { url: '/head?{toggle:true}', label: UA.isMacOs ? '⌘+⌥+1' : 'Ctrl+Alt+1' },
+        { url: '/head?{level:"h2",toggle:true}', label: UA.isMacOs ? '⌘+⌥+2' : 'Ctrl+Alt+2' },
+        { url: '/head?{level:"h3",toggle:true}', label: UA.isMacOs ? '⌘+⌥+3' : 'Ctrl+Alt+3' },
+        { url: '/head?{level:"h4",toggle:true}', label: UA.isMacOs ? '⌘+⌥+4' : 'Ctrl+Alt+4' },
+        { url: '/list?{listType:1}', label: UA.isMacOs ? '⌘+⌥+6' : 'Ctrl+Alt+6' },
+        { url: '/list?{listType:0}', label: UA.isMacOs ? '⌘+⌥+7' : 'Ctrl+Alt+7' },
+        { url: '/list?{listType:2}', label: UA.isMacOs ? '⌘+⌥+8' : 'Ctrl+Alt+8' },
+        { url: '/quote' },
+        { url: '/callout'}
     ],
     async turn(block: Block, turnToUrl) {
         switch (turnToUrl) {

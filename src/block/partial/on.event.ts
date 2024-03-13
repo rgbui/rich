@@ -39,8 +39,8 @@ export class Block$Event {
         return [];
     }
     async onGetTurnMenus(this: Block) {
-        var urls = await this.onGetTurnUrls();
-        var its = blockStore.findFitTurnBlocks(urls);
+        var turnBlockDatas = await this.onGetTurnUrls();
+        var its = blockStore.findFitTurnBlocks(turnBlockDatas);
         return its.map(it => {
             return {
                 name: BlockDirective.trun,
@@ -49,7 +49,8 @@ export class Block$Event {
                 url: it.url,
                 checkLabel: lodash.isEqual(BlockFactory.parseBlockUrl(it.url),
                     BlockFactory.parseBlockUrl(this.getUrl())) ? true : false,
-                iconSize: 16
+                iconSize: 16,
+                label: it.label
             }
         })
     }

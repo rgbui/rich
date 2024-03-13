@@ -31,7 +31,7 @@ export class Callout extends TextSpan {
         return this.__appearAnchors;
     }
     async onGetTurnUrls() {
-        return TextTurns.urls
+        return TextTurns.blockDatas
     }
     async getWillTurnData(url: string) {
         return await TextTurns.turn(this, url);

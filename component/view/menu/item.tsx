@@ -150,11 +150,11 @@ export class MenuItemView extends React.Component<{
                 {item.renderIcon && item.renderIcon(item, this)}
                 <span className='shy-menu-box-item-option-text text-overflow'>{item.text}{item.remark && <i className="remark padding-l-5">{item.remark}</i>}</span>
                 {item.checkLabel && <Icon className={'shy-menu-box-item-option-label-icon'} size={16} icon={CheckSvg}></Icon>}
-                {item.label && <label>{item.label}</label>}
+                {item.label && !item.checkLabel && <label>{item.label}</label>}
                 {Array.isArray(item.btns) && item.btns.map(btn => {
                     return <ToolTip key={btn.name} overlay={btn.overlay} placement={btn.placement || 'top'} ><em className="flex-center flex-line size-20" onMouseDown={e => { e.stopPropagation(); this.click(item, e, btn.name) }}><Icon size={16} icon={btn.icon}></Icon></em></ToolTip>
                 })}
-                {(item.childs && item.childs.length > 0 || item.forceHasChilds) && <Icon size={18} className={'shy-menu-box-item-option-spread'} icon={ChevronRightSvg}></Icon>}
+                {(item.childs && item.childs.length > 0 || item.forceHasChilds) && <Icon size={18} className={'shy-menu-box-item-option-spread remark'} icon={ChevronRightSvg}></Icon>}
             </div></ToolTip>}
             {(item.type == MenuItemType.custom) && <ToolTip overlay={item.overlay} placement={'right'} ><div className={'shy-menu-box-item-custom' + (item.disabled == true ? " disabled" : "")}
                 onMouseDown={e => this.select(item, e.nativeEvent)}>
@@ -232,8 +232,9 @@ export class MenuItemView extends React.Component<{
                 })}
             </div></ToolTip>}
             {item.type == MenuItemType.color && <div className={"shy-menu-box-item-colors  gap-h-10" + (item.block ? "" : " flex-top flex-wrap")}>
-                {item.options.map(t => {
-                    if (item.block) {
+                {item.options.map(t=>{
+                    if (item.block)
+                    {
                         return <a key={t.value} className={"flex  cursor padding-w-10 padding-h-3 round item-hover " + (t.checked ? "item-hover-focus" : "")}
                             onMouseDown={e => { e.stopPropagation(); item.value = t.value; this.select(item, e.nativeEvent) }}>
                             {item.name && item.name.indexOf('font') > -1 && <span className="size-24 flex-center circle  border" style={{ color: t.value }}>

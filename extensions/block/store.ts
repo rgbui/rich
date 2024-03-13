@@ -44,12 +44,15 @@ class BlockStore extends Events {
         });
         return cs;
     }
-    findFitTurnBlocks(urls: string[]): BlockSelectorItem[] {
+    findFitTurnBlocks(blocks: { url: string, label?: string }[]): BlockSelectorItem[] {
         var cs: BlockSelectorItem[] = [];
         this._blockGroups.each(bg => {
             bg.childs.each(c => {
-                if (urls.some(s => s == c.url))
-                    cs.push(c);
+                var bl = blocks.find(s => s.url == c.url);
+                if (bl)
+                    cs.push({
+                        url: c.url, label: bl.label, text: c.text, icon: c.icon
+                    });
             })
         });
         return cs;

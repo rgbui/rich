@@ -24,7 +24,6 @@ import {
     RedoSvg,
     RefreshOneSvg,
     RefreshSvg,
-
     TrashSvg,
     UndoSvg,
     UnlockSvg,
@@ -58,6 +57,7 @@ import { Block } from "../../block";
 import { RobotInfo } from "../../../types/user";
 import { usePageTheme } from "../../../extensions/theme";
 import { getAiDefaultModel } from "../../../net/ai/cost";
+import { UA } from "../../../util/ua";
 
 export class PageContextmenu {
     async onGetContextMenus(this: Page) {
@@ -74,7 +74,7 @@ export class PageContextmenu {
             name: 'lock'
         });
         items.push({ type: MenuItemType.divide });
-        items.push({ name: 'copy-link', text: lst('复制链接') })
+        items.push({ name: 'copy-link', text: lst('复制链接'), label: UA.isMacOs ? "⌥+Shift+L" : "Alt+Shift+L" })
         items.push({ type: MenuItemType.divide });
         items.push({ name: 'show-all', text: lst('显示所有内容') });
         // items.push({ name: 'show-grid', text: '显示网格' })
@@ -160,20 +160,32 @@ export class PageContextmenu {
                 },
                 { type: MenuItemType.divide },
                 { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? lst("除消编辑保护") : lst("编辑保护"), icon: this.locker?.lock ? LockSvg : UnlockSvg },
-                { name: 'copy', text: lst('拷贝'), icon: DuplicateSvg },
-                { name: 'move', text: lst('移动'), icon: MoveToSvg },
+                {
+                    name: 'copy', text: lst('拷贝'), icon: DuplicateSvg,
+                    label: UA.isMacOs ? "⌘+D" : "Ctrl+D"
+                },
+                {
+                    name: 'move', text: lst('移动'), icon: MoveToSvg,
+                    label: UA.isMacOs ? "⌘+Shift+P" : "Ctrl+Shift+P"
+                },
                 { name: 'export', iconSize: 16, text: lst('导出'), icon: { name: 'bytedance-icon', code: 'download-one' } },
-                { name: 'delete', icon: TrashSvg, text: lst('删除') },
+                {
+                    name: 'delete', icon: TrashSvg, text: lst('删除'),
+                    label: "Del"
+                },
                 { type: MenuItemType.divide },
-                { name: 'undo', text: lst('撤消'), icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
-                { name: 'redo', text: lst('重做'), icon: RedoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
+                { name: 'undo', text: lst('撤消'), icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: UA.isMacOs ? "⌘+Z" : 'Ctrl+Z' },
+                { name: 'redo', text: lst('重做'), icon: RedoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: UA.isMacOs ? "⌘+Y" : 'Ctrl+Y' },
 
                 ...(window.shyConfig.isDev || window.shyConfig.isBeta || this.ws?.sn == 19 ? [
                     { type: MenuItemType.divide },
                     { name: 'requireTemplate', icon: { name: 'byte', code: 'graphic-stitching' } as any, text: lst('申请模板') },
                 ] : []),
                 { type: MenuItemType.divide },
-                { name: 'copylink', icon: LinkSvg, text: lst('复制链接') },
+                {
+                    name: 'copylink', icon: LinkSvg, text: lst('复制链接'),
+                    label: UA.isMacOs ? "⌥+Shift+L" : "Alt+Shift+L"
+                },
                 { name: 'history', icon: VersionHistorySvg, text: lst('页面历史') },
             ];
         }
@@ -198,15 +210,24 @@ export class PageContextmenu {
                 },
                 { type: MenuItemType.divide },
                 { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? lst("除消编辑保护") : lst("编辑保护"), icon: this.locker?.lock ? LockSvg : UnlockSvg },
-                { name: 'copy', text: lst('拷贝'), icon: DuplicateSvg },
-                { name: 'move', text: lst('移动'), icon: MoveToSvg },
+                {
+                    name: 'copy', text: lst('拷贝'), icon: DuplicateSvg,
+                    label: UA.isMacOs ? "⌘+D" : "Ctrl+D"
+                },
+                {
+                    name: 'move', text: lst('移动'), icon: MoveToSvg,
+                    label: UA.isMacOs ? "⌘+Shift+P" : "Ctrl+Shift+P"
+                },
                 { name: 'export', iconSize: 16, text: lst('导出'), icon: { name: 'bytedance-icon', code: 'download-one' } },
-                { name: 'delete', icon: TrashSvg, text: lst('删除') },
+                { name: 'delete', icon: TrashSvg, text: lst('删除'), label: "Del" },
                 { type: MenuItemType.divide },
-                { name: 'undo', text: lst('撤消'), icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
-                { name: 'redo', text: lst('重做'), icon: RedoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
+                { name: 'undo', text: lst('撤消'), icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: UA.isMacOs ? "⌘+Z" : 'Ctrl+Z' },
+                { name: 'redo', text: lst('重做'), icon: RedoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: UA.isMacOs ? "⌘+Y" : 'Ctrl+Y' },
                 { type: MenuItemType.divide },
-                { name: 'copylink', icon: LinkSvg, text: lst('复制链接') },
+                {
+                    name: 'copylink', icon: LinkSvg, text: lst('复制链接'),
+                    label: UA.isMacOs ? "⌥+Shift+L" : "Alt+Shift+L"
+                },
                 { name: 'history', icon: VersionHistorySvg, text: lst('页面历史') },
             ];
         }
@@ -238,19 +259,28 @@ export class PageContextmenu {
                 },
                 { type: MenuItemType.divide },
                 { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? lst("除消编辑保护") : lst("编辑保护"), icon: this.locker?.lock ? LockSvg : UnlockSvg },
-                { name: 'copy', text: lst('拷贝'), icon: DuplicateSvg },
-                { name: 'move', text: lst('移动'), icon: MoveToSvg },
+                {
+                    name: 'copy', text: lst('拷贝'), icon: DuplicateSvg,
+                    label: UA.isMacOs ? "⌘+D" : "Ctrl+D"
+                },
+                {
+                    name: 'move', text: lst('移动'), icon: MoveToSvg,
+                    label: UA.isMacOs ? "⌘+Shift+P" : "Ctrl+Shift+P"
+                },
                 { name: 'export', iconSize: 16, text: lst('导出'), icon: { name: 'bytedance-icon', code: 'download-one' } },
-                { name: 'delete', icon: TrashSvg, text: lst('删除') },
+                { name: 'delete', icon: TrashSvg, text: lst('删除'), label: "Del" },
                 { type: MenuItemType.divide },
-                { name: 'undo', text: lst('撤消'), icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
-                { name: 'redo', text: lst('重做'), icon: RedoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
+                { name: 'undo', text: lst('撤消'), icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: UA.isMacOs ? "⌘+Z" : 'Ctrl+Z' },
+                { name: 'redo', text: lst('重做'), icon: RedoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: UA.isMacOs ? "⌘+Y" : 'Ctrl+Y' },
                 ...(window.shyConfig.isDev || window.shyConfig.isBeta || this.ws?.sn == 19 ? [
                     { type: MenuItemType.divide },
                     { name: 'requireTemplate', icon: { name: 'byte', code: 'graphic-stitching' } as any, text: lst('申请模板') },
                 ] : []),
                 { type: MenuItemType.divide },
-                { name: 'copylink', icon: LinkSvg, text: lst('复制链接') },
+                {
+                    name: 'copylink', icon: LinkSvg, text: lst('复制链接'),
+                    label: UA.isMacOs ? "⌥+Shift+L" : "Alt+Shift+L"
+                },
                 { name: 'history', icon: VersionHistorySvg, text: lst('页面历史') },
             ];
         }
@@ -285,11 +315,22 @@ export class PageContextmenu {
                     ]
                 },
                 { type: MenuItemType.divide },
-                { name: 'copy', text: lst('拷贝'), icon: DuplicateSvg },
-                { name: 'move', text: lst('移动'), icon: MoveToSvg },
-                { name: 'delete', icon: TrashSvg, text: lst('删除') },
+                {
+                    name: 'copy', text: lst('拷贝'),
+                    icon: DuplicateSvg,
+                    label: UA.isMacOs ? "⌘+D" : "Ctrl+D"
+                },
+                {
+                    name: 'move', text: lst('移动'),
+                    icon: MoveToSvg,
+                    label: UA.isMacOs ? "⌘+Shift+P" : "Ctrl+Shift+P"
+                },
+                { name: 'delete', icon: TrashSvg, text: lst('删除'), label: "Del" },
                 { type: MenuItemType.divide },
-                { name: 'copylink', icon: LinkSvg, text: lst('复制链接') },
+                {
+                    name: 'copylink', icon: LinkSvg, text: lst('复制链接'),
+                    label: UA.isMacOs ? "⌥+Shift+L" : "Alt+Shift+L"
+                },
             ];
         }
         else if (this.pageLayout.type == PageLayoutType.board) {
@@ -301,10 +342,16 @@ export class PageContextmenu {
                 // },
                 // { type: MenuItemType.divide },
                 { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? lst("除消编辑保护") : lst("编辑保护"), icon: this.locker?.lock ? LockSvg : UnlockSvg },
-                { name: 'copy', text: lst('拷贝'), icon: DuplicateSvg },
-                { name: 'move', text: lst('移动'), icon: MoveToSvg },
+                {
+                    name: 'copy', text: lst('拷贝'), icon: DuplicateSvg,
+                    label: UA.isMacOs ? "⌘+D" : "Ctrl+D"
+                },
+                {
+                    name: 'move', text: lst('移动'), icon: MoveToSvg,
+                    label: UA.isMacOs ? "⌘+Shift+P" : "Ctrl+Shift+P"
+                },
                 { name: 'export', iconSize: 16, text: lst('导出'), icon: { name: 'bytedance-icon', code: 'download-one' } },
-                { name: 'delete', icon: TrashSvg, text: lst('删除') },
+                { name: 'delete', icon: TrashSvg, text: lst('删除'), label: "Del" },
                 { type: MenuItemType.divide },
                 { name: 'undo', text: lst('撤消'), icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
                 { name: 'redo', text: lst('重做'), icon: RedoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
@@ -313,7 +360,10 @@ export class PageContextmenu {
                     { name: 'requireTemplate', icon: { name: 'byte', code: 'graphic-stitching' } as any, text: lst('申请模板') },
                 ] : []),
                 { type: MenuItemType.divide },
-                { name: 'copylink', icon: LinkSvg, text: lst('复制链接') },
+                {
+                    name: 'copylink', icon: LinkSvg, text: lst('复制链接'),
+                    label: UA.isMacOs ? "⌥+Shift+L" : "Alt+Shift+L"
+                },
                 { name: 'history', icon: VersionHistorySvg, text: lst('页面历史') }
 
             ];
