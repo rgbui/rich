@@ -1,4 +1,3 @@
-import lodash from "lodash";
 
 export enum KeyboardCode {
     ArrowDown = 'ArrowDown',
@@ -25,6 +24,17 @@ export enum KeyboardCode {
     S = 'S',
     P = 'P',
     Esc = 'Escape',
+    K0 = '0',
+    K1 = '1',
+    K2 = '2',
+    K3 = '3',
+    K4 = '4',
+    K5 = '5',
+    K6 = '6',
+    K7 = '7',
+    K8 = '8',
+    K9 = '9',
+
     X = 'X',
     C = 'C',
     "\\" = '\\',
@@ -84,7 +94,7 @@ export class KeyboardPlate {
         this.altKey = event.altKey;
         this.shiftKey = event.shiftKey;
         this.ctrlKey = event.ctrlKey;
-        this.keys=[];
+        this.keys = [];
         //lodash.remove(this.keys, g => g == event.key || g == event.code);
     }
     is(...codes: KeyboardCode[]) {

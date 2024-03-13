@@ -151,7 +151,6 @@ export class PageWrite {
      */
     async keydown(aa: AppearAnchor, event: React.KeyboardEvent) {
         var sel = window.getSelection();
-
         /**
         * 
         * 这里需要判断是否触发了AI输入
@@ -175,7 +174,13 @@ export class PageWrite {
         var hasSelectionRange: boolean = false;
         if (this.kit.anchorCursor.currentSelectedBlocks.length > 0) hasSelectionRange = true;
         else if (!sel.isCollapsed) hasSelectionRange = true;
-        switch (event.key.toLowerCase()) {
+        var ek = event.key.toLowerCase();
+        if (typeof event.nativeEvent.keyCode == 'number') {
+            if (event.nativeEvent.keyCode >= 48 && event.nativeEvent.keyCode <= 57) {
+                ek = (event.nativeEvent.keyCode - 48).toString()
+            }
+        }
+        switch (ek) {
             case KeyboardCode.ArrowDown.toLowerCase():
             case KeyboardCode.ArrowUp.toLowerCase():
             case KeyboardCode.ArrowLeft.toLowerCase():
@@ -306,10 +311,10 @@ export class PageWrite {
                                 this.kit.page.onAction('onUpdatePattern', async () => {
                                     await bs.eachAsync(async b => {
                                         if (rcc.name == 'fill') {
-                                            await b.pattern.setStyles({ [BlockCssName.fill]: {mode: 'color', color: rcc.color } } as any);
+                                            await b.pattern.setStyles({ [BlockCssName.fill]: { mode: 'color', color: rcc.color } } as any);
                                         }
                                         else {
-                                            await b.pattern.setStyles({ [BlockCssName.font]: {  color: rcc.color } } as any);
+                                            await b.pattern.setStyles({ [BlockCssName.font]: { color: rcc.color } } as any);
                                         }
                                     });
                                 })
@@ -344,6 +349,47 @@ export class PageWrite {
                     if (typeof name != 'undefined') {
                         var rc = onTextToolExcute(name);
                         if (rc) event.preventDefault()
+                    }
+                }
+                break;
+            case KeyboardCode.K0:
+            case KeyboardCode.K1:
+            case KeyboardCode.K2:
+            case KeyboardCode.K3:
+            case KeyboardCode.K4:
+            case KeyboardCode.K5:
+            case KeyboardCode.K6:
+            case KeyboardCode.K7:
+            case KeyboardCode.K8:
+                // case KeyboardCode.K9:
+                if (this.kit.page.keyboardPlate.isAlt() && (this.kit.page.keyboardPlate.isMeta() || this.kit.page.keyboardPlate.isCtrl())) {
+                    var bs: Block[] = this.kit.anchorCursor.getAppearBlocks(aa);
+                    var url;
+                    if (ek == KeyboardCode.K0) url = BlockUrlConstant.TextSpan;
+                    else if (ek == KeyboardCode.K1) url = BlockUrlConstant.Head;
+                    else if (ek == KeyboardCode.K2) url = '/head?{level:"h2"}';
+                    else if (ek == KeyboardCode.K3) url = '/head?{level:"h3"}';
+                    else if (ek == KeyboardCode.K4) url = '/head?{level:"h4"}';
+                    else if (ek == KeyboardCode.K5) url = '/todo';
+                    else if (ek == KeyboardCode.K6) url = '/list?{listType:0}';
+                    else if (ek == KeyboardCode.K7) url = '/list?{listType:1}';
+                    else if (ek == KeyboardCode.K8) url = '/list?{listType:2}';
+                    if (url) {
+                        event.preventDefault();
+                        this.kit.page.onBatchTurn(bs, url).then(rs => {
+                            this.kit.anchorCursor.onFocusBlockAnchor(rs.last(),
+                                { last: true, render: true }
+                            )
+                        })
+                    }
+                }
+                break;
+            case KeyboardCode.Esc.toLowerCase():
+                if (!hasSelectionRange) {
+                    var block = aa.block.closest(x => !x.isLine);
+                    if (block) {
+                        event.preventDefault();
+                        this.kit.anchorCursor.onSelectBlocks([block], { render: true });
                     }
                 }
                 break;
