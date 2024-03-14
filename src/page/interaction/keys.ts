@@ -1,34 +1,17 @@
 import { Page } from "..";
-import { useSearchBox } from "../../../extensions/search/keyword";
 import { UA } from "../../../util/ua";
 import { findBlockAppear } from "../../block/appear/visible.seek";
 import { KeyboardCode, KeyboardPlate } from "../../common/keys";
 import { MoveSelectBlocks } from "../../kit/write/keydown";
-export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
+
+export function PageKeys(page: Page, keyboardPlate: KeyboardPlate)
+{
     keyboardPlate.listener(kt => UA.isMacOs && kt.isMeta(KeyboardCode.Z) || !UA.isMacOs && kt.isCtrl(KeyboardCode.Z), (event, kt) => {
         page.onUndo();
     });
     keyboardPlate.listener(kt => UA.isMacOs && kt.isMeta(KeyboardCode.Y) || !UA.isMacOs && kt.isCtrl(KeyboardCode.Y), (event, kt) => {
         page.onRedo();
     });
-    keyboardPlate.listener(kt => !UA.isMacOs && kt.isCtrl(KeyboardCode.S) || UA.isMacOs && kt.isMeta(KeyboardCode.S),
-        (event, kt) => {
-            event.preventDefault()
-            page.onPageSave();
-        }
-    );
-    keyboardPlate.listener(kt => !UA.isMacOs && kt.isCtrl(KeyboardCode.P) || UA.isMacOs && kt.isMeta(KeyboardCode.P),
-        (event, kt) => {
-            event.preventDefault()
-            useSearchBox({ ws: page.ws })
-        }
-    );
-    keyboardPlate.listener(kt => !UA.isMacOs && kt.isCtrl(KeyboardCode["\\"]) || UA.isMacOs && kt.isMeta(KeyboardCode["\\"]),
-        (event, kt) => {
-            event.preventDefault()
-            page.onSpreadMenu()
-        }
-    );
     keyboardPlate.listener(kt => kt.is(KeyboardCode.ArrowDown), (event, kt) => {
         if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
             MoveSelectBlocks(page.kit.writer, page.kit.anchorCursor.currentSelectHandleBlocks, event)
