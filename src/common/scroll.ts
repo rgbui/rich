@@ -45,6 +45,7 @@ export function onceAutoScroll(options: {
     dis?: number,
     callback?(scrollDisY: number, scrollDisX?: number): void
 }) {
+    if (!options.point && !options.el) return;
     if (typeof options.point == 'undefined')
         options.point = Rect.fromEle(options.el).leftMiddle;
     if (typeof options.dis == 'undefined') options.dis = 30;

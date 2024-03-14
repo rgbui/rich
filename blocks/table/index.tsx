@@ -2,8 +2,7 @@ import { Block } from "../../src/block";
 import { BlockView } from "../../src/block/view";
 import React, { CSSProperties } from "react";
 import { prop, url, view } from "../../src/block/factory/observable";
-import "./style.less";
-import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../src/block/enum";
+import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { ChildsArea } from "../../src/block/view/appear";
 import { ActionDirective } from "../../src/history/declare";
 import { Point, Rect } from "../../src/common/vector/point";
@@ -17,9 +16,10 @@ import { S } from "../../i18n/view";
 import { BoardBlockSelector, BoardPointType } from "../../src/block/partial/board";
 import { BoardDrag } from "../../src/kit/operator/board";
 import { useSelectMenuItem } from "../../component/view/menu";
-import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
+import { MenuItemType } from "../../component/view/menu/declare";
 import { FontColorList, BackgroundColorList } from "../../extensions/color/data";
 import { lst } from "../../i18n/store";
+import "./style.less";
 
 const COL_WIDTH = 150;
 const CELL_HEIGHT = 30;
@@ -501,7 +501,7 @@ export class Table extends Block {
         if (!c) return
         var r = Rect.fromEle(c);
         var p = r.leftTop;
-        p = p.move(-5,3);
+        p = p.move(-5, 8);
         return p;
     }
 }
