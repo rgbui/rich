@@ -172,10 +172,10 @@ export class PageView extends Component<{ page: Page }>{
     componentWillUnmount() {
         channel.off('/page/update/info', this.updatePageInfo);
         document.removeEventListener('keydown', this._keydown, true);
+        document.removeEventListener('keyup', this._keyup, true);
         document.removeEventListener('mousedown', this._mousedown);
         document.removeEventListener('mouseup', this._mouseup);
         document.removeEventListener('mousemove', this._mousemove);
-        document.removeEventListener('keyup', this._keyup, true);
         document.removeEventListener('wheel', this._wheel);
         document.removeEventListener('paste', this._paste);
         delete this.el.shy_drop_move;

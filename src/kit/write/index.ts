@@ -11,7 +11,7 @@ import { findBlockAppear } from "../../block/appear/visible.seek";
 import { BlockUrlConstant } from "../../block/constant";
 import { BlockCssName } from "../../block/pattern/css";
 import { MouseDragger } from "../../common/dragger";
-import { KeyboardCode } from "../../common/keys";
+import { KeyboardCode, KeyboardPlate } from "../../common/keys";
 import { TextEle } from "../../common/text.ele";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
@@ -174,12 +174,7 @@ export class PageWrite {
         var hasSelectionRange: boolean = false;
         if (this.kit.anchorCursor.currentSelectedBlocks.length > 0) hasSelectionRange = true;
         else if (!sel.isCollapsed) hasSelectionRange = true;
-        var ek = event.key.toLowerCase();
-        if (typeof event.nativeEvent.keyCode == 'number') {
-            if (event.nativeEvent.keyCode >= 48 && event.nativeEvent.keyCode <= 57) {
-                ek = (event.nativeEvent.keyCode - 48).toString()
-            }
-        }
+        var ek = KeyboardPlate.getKeyString(event.nativeEvent).toLowerCase();
         switch (ek) {
             case KeyboardCode.ArrowDown.toLowerCase():
             case KeyboardCode.ArrowUp.toLowerCase():
