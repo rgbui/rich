@@ -7,7 +7,6 @@ import { Pattern } from "./pattern/index";
 import { BlockView } from "./view";
 import { Block$Seek } from "./partial/seek";
 import { prop } from "./factory/observable";
-import "./style.less";
 import { Block$Event } from "./partial/on.event";
 import { Block$Anchor } from "./partial/anchor";
 import { Block$LifeCycle } from "./partial/left.cycle";
@@ -29,6 +28,7 @@ import lodash from "lodash";
 import { AtomPermission } from "../page/permission";
 import { util } from "../../util/util";
 import { dom } from "../common/dom";
+import "./style.less";
 
 export abstract class Block extends Events {
     constructor(page: Page) {

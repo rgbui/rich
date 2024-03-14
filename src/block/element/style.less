@@ -18,17 +18,19 @@
         flex-shrink     : 0;
 
         em {
-            display   : block;
-            height    : 100%;
-            width     : 4px;
-            content   : ' ';
-            background: rgba(55, 53, 47, 0.16);
-            cursor    : col-resize;
+            display      : block;
+            height       : 100%;
+            width        : 4px;
+            content      : ' ';
+            background   : rgba(55, 53, 47, 0.16);
+            cursor       : col-resize;
             border-radius: 2px;
         }
-        &:hover,&.hover {
+
+        &:hover,
+        &.hover {
             opacity: 1;
-          
+
         }
     }
 }
@@ -39,17 +41,13 @@
     line-height: inherit;
 
     a {
-        text-decoration: none;
+        text-decoration: underline;
         color          : inherit;
         display        : inline !important;
         font-size      : inherit;
         line-height    : inherit;
-        opacity        : 0.7;
         word-wrap      : break-word;
-        font-weight    : 500;
         cursor         : pointer;
-        color          : rgb(55, 53, 47);
-        border-bottom  : 1px solid rgb(55, 53, 47, .4);
 
         i {
             opacity    : .4;
@@ -65,11 +63,11 @@
         line-height     : inherit;
         font-weight     : inherit;
         text-decoration : inherit;
-        background-color: rgba(31, 34, 37, 0.03);
-        border-radius   : 3px;
+        background-color: rgb(246, 245, 244);
+        border-radius   : 0.5rem;
         font-size       : 85%;
         border          : 0.1em solid transparent;
-        border-color    : rgba(31, 34, 37, 0.1);
+        border-color    : rgba(0, 0, 0, 0.1);
         border-width    : 0.1em;
         padding-top     : 0.2em;
         padding-bottom  : 0.2em;
