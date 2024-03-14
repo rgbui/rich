@@ -23,6 +23,7 @@ export class Input extends React.Component<{
     ignoreFilterWhitespace?: boolean,
     name?: string,
     size?: 'small' | 'default' | 'larger',
+    theme?: 'default' | 'focus',
     className?: string | (string[]),
     inputClassName?: string | (string[]),
     onMousedown?: (event: React.MouseEvent) => void,
@@ -98,7 +99,7 @@ export class Input extends React.Component<{
                     return;
                 }
             }
-            if(e.key == KeyboardCode.Enter && props.onEnter) {
+            if (e.key == KeyboardCode.Enter && props.onEnter) {
                 props.onEnter(filterValue((e.target as HTMLInputElement).value), e);
             }
             else if (props.onKeydown) props.onKeydown(e);
@@ -107,6 +108,9 @@ export class Input extends React.Component<{
         if (this.props.onSearchDrop) classList.push('relative');
         if (this.props.size == 'small') classList.push('small')
         else if (this.props.size == 'larger') classList.push('larger')
+        if (this.props.theme) {
+            classList.push('shy-input-' + this.props.theme);
+        }
         if (Array.isArray(this.props.className)) this.props.className.each(c => { classList.push(c) })
         else if (this.props.className) classList.push(this.props.className)
         if (this.props.noborder) classList.push('shy-input-noborder');

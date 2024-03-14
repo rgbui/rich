@@ -18,6 +18,7 @@ export class Textarea extends React.Component<{
     round?: boolean,
     transparent?: boolean,
     autoHeight?: boolean,
+    theme?: 'default' | 'focus',
 }>{
     updateValue(value) {
         this.inputEl.value = value;
@@ -44,7 +45,12 @@ export class Textarea extends React.Component<{
         }
         var style = Object.assign({}, props.style || {});
         if (props.autoHeight) { style.height = 'auto'; style.minHeight = 80 }
-        return <div className='shy-textarea' style={style}>
+        var classList: string[] = ['shy-textarea'];
+        if (this.props.theme) {
+            classList.push('shy-textarea-' + this.props.theme)
+        }
+
+        return <div className={classList.join(" ")} style={style}>
             <textarea
                 ref={e => this.inputEl = e}
                 maxLength={props.maxLength || undefined}

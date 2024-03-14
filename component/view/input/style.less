@@ -20,9 +20,11 @@
         box-sizing      : border-box;
         box-shadow      : none;
         background-color: transparent;
+        border-radius   : 4px;
 
         &:focus {
             box-shadow: rgba(46 170 220, 0.7) 0px 0px 0px 1px inset, rgba(46 170 220, 0.4) 0px 0px 0px 2px;
+            // box-shadow: rgb(234, 234, 234) 0px 0px 0px 2px
         }
 
         &::placeholder {
@@ -59,6 +61,15 @@
             }
         }
     }
+
+    &-focus {
+        input {
+            &:focus {
+                // box-shadow: rgba(46 170 220, 0.7) 0px 0px 0px 1px inset, rgba(46 170 220, 0.4) 0px 0px 0px 2px;
+                box-shadow: rgb(234, 234, 234) 0px 0px 0px 2px
+            }
+        }
+    }
 }
 
 .shy-textarea {
@@ -91,6 +102,14 @@
 
         &:focus {
             box-shadow: rgba(46 170 220, 0.7) 0px 0px 0px 1px inset, rgba(46 170 220, 0.4) 0px 0px 0px 2px !important;
+        }
+    }
+    &-focus {
+        textarea {
+            &:focus {
+                // box-shadow: rgba(46 170 220, 0.7) 0px 0px 0px 1px inset, rgba(46 170 220, 0.4) 0px 0px 0px 2px;
+                box-shadow: rgb(234, 234, 234) 0px 0px 0px 2px
+            }
         }
     }
 }
