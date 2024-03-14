@@ -57,16 +57,6 @@ export class Head extends Block {
             return await this.getChildsPlain();
         else return this.content;
     }
-    // getVisibleHandleCursorPoint() {
-    //     var h = this.el.querySelector('.relative') as HTMLElement;
-    //     var bound = Rect.fromEle(h);
-    //     if (bound) {
-    //         var pos = Point.from(bound);
-    //         var lh = parseFloat(dom(h).style('lineHeight'));
-    //         pos = pos.move(0, 3 + lh / 2);
-    //         return pos;
-    //     }
-    // }
     async getHtml() {
         var tag = this.level;
         if (this.childs.length > 0) return `<${tag}>${this.getChildsHtml()}</${tag}>`
@@ -170,14 +160,14 @@ export class Head extends Block {
         if (!ele) ele = this.el;
         var rect = Rect.fromEle(ele);
         var lh = dom(ele).lineHeight(20);
-        console.log(lh);
-        var offset = 0;
+        var offset = -2;
         if (this.page.pageLayout?.type == PageLayoutType.docCard) {
-            offset = -5;
+            offset += -5;
         }
         return rect.leftTop.move(0, lh / 2 + offset);
     }
 }
+
 @view("/head")
 export class HeadView extends BlockView<Head>{
     renderView() {
@@ -240,37 +230,39 @@ export class HeadView extends BlockView<Head>{
                 else if (self.block.align == 'right') alignStyle.justifyContent = 'flex-end';
             }
             var content = <>
-                <div style={{ left: self.block.toggle ? 24 : 0 }} className="sy-block-text-head-tips pos flex-center h-10 visible r-size-3 r-gap-r-5 r-circle ">{ns.map((n, i) => <em key={i}></em>)}</div>
-                <div className="flex flex-top" style={{ ...alignStyle, ...self.block.contentStyle }}>
-                    {self.block.toggle && <span
-                        className='w-24 flex-center flex-inline'
-                        style={{ height: textLineHeight }}
-                    >
-                        <span onMouseDown={e => {
-                            e.stopPropagation();
-                            self.block.onExpand();
-                        }}
-                            className="flex-center size-20 round item-hover cursor  text ts-transform"
-                            style={{
-                                transform: self.block.expand ? 'rotateZ(180deg)' : 'rotateZ(90deg)',
+                <div className="flex flex-top " style={{ ...alignStyle, ...self.block.contentStyle }}>
+                    <span className="relative">
+                        <div style={{ left: self.block.toggle ? 24 : 0 }} className="sy-block-text-head-tips pos flex-center h-10 visible r-size-3 r-gap-r-5 r-circle ">{ns.map((n, i) => <em key={i}></em>)}</div>
+                        {self.block.toggle && <span
+                            className='w-24 flex-center flex-inline'
+                            style={{ height: textLineHeight }}
+                        >
+                            <span onMouseDown={e => {
+                                e.stopPropagation();
+                                self.block.onExpand();
                             }}
-                        ><Icon size={10} icon={TriangleSvg}></Icon>
-                        </span>
-                    </span>}
-                    <span><TextSpanArea className={'shy-text-empty-font-inherit'} placeholder={pt} block={self.block}></TextSpanArea></span>
+                                className="flex-center size-20 round item-hover cursor  text ts-transform"
+                                style={{
+                                    transform: self.block.expand ? 'rotateZ(180deg)' : 'rotateZ(90deg)',
+                                }}
+                            ><Icon size={10} icon={TriangleSvg}></Icon>
+                            </span>
+                        </span>}
+                        <span><TextSpanArea className={'shy-text-empty-font-inherit'} placeholder={pt} block={self.block}></TextSpanArea></span>
+                    </span>
                 </div>
             </>
             if (self.block.level == 'h4') {
-                return <h4 style={style} className="relative">{content}</h4>
+                return <h4 style={style} >{content}</h4>
             }
             if (self.block.level == 'h3') {
-                return <h3 style={style} className="relative">{content}</h3>
+                return <h3 style={style} >{content}</h3>
             }
             if (self.block.level == 'h2') {
-                return <h2 style={style} className="relative">{content}</h2>
+                return <h2 style={style} >{content}</h2>
             }
             if (self.block.level == 'h1') {
-                return <h1 style={style} className="relative">{content}</h1>
+                return <h1 style={style} >{content}</h1>
             }
         }
         return <div className='sy-block-text-head'>
