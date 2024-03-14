@@ -43,7 +43,7 @@ export class TemplateView extends EventsComponent {
             }}
             className="flex-fixed flex flex-col flex-full w-200 border-right">
             <div className="flex-fixed gap-h-10 gap-w-10">
-                <Input placeholder={lst('搜索模板')} clear value={this.templateList.word} onEnter={e => {
+                <Input theme="focus" placeholder={lst('搜索模板')} clear value={this.templateList.word} onEnter={e => {
                     this.templateList.word = e;
                     this.forceUpdate();
                 }} onClear={() => {
