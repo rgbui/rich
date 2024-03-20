@@ -14,11 +14,11 @@ export class ButtonTemplate extends Block {
 @view('/button/template')
 export class ButtonTemplateView extends BlockView<ButtonTemplate>{
     renderView() {
-        return <div className="bg-error round flex" onClick={e => {
+        return <div className="bg-error round flex cursor padding-w-5" onClick={e => {
             this.block.onDelete();
         }}>
             <span>已废弃</span>
-            <span className="size-20 flex-center" >
+            <span className="size-20 flex-center gap-r-3 text-1" >
                 <Icon icon={TrashSvg}></Icon>
             </span>
         </div>
