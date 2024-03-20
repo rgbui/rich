@@ -158,6 +158,7 @@ export class Head extends Block {
         var ele = this.el.querySelector('.shy-appear-texts') as HTMLElement;
         if (!ele) ele = this.el.querySelector('.shy-appear-text') as HTMLElement;
         if (!ele) ele = this.el;
+        if (this.toggle == true) ele = ele.closest('.relative') as HTMLElement;
         var rect = Rect.fromEle(ele);
         var lh = dom(ele).lineHeight(20);
         var offset = -2;
@@ -230,17 +231,19 @@ export class HeadView extends BlockView<Head>{
                 else if (self.block.align == 'right') alignStyle.justifyContent = 'flex-end';
             }
             var content = <>
-                <div className="flex flex-top " style={{ ...alignStyle, ...self.block.contentStyle }}>
+                <div className="flex flex-top " onMouseDown={e => {
+                    if (self.block.toggle == true) {
+                        e.stopPropagation();
+                        self.block.onExpand();
+                    }
+                }} style={{ ...alignStyle, ...self.block.contentStyle }}>
                     <span className="relative">
                         <div style={{ left: self.block.toggle ? 24 : 0 }} className="sy-block-text-head-tips pos flex-center h-10 visible r-size-3 r-gap-r-5 r-circle ">{ns.map((n, i) => <em key={i}></em>)}</div>
                         {self.block.toggle && <span
                             className='w-24 flex-center flex-inline'
                             style={{ height: textLineHeight }}
                         >
-                            <span onMouseDown={e => {
-                                e.stopPropagation();
-                                self.block.onExpand();
-                            }}
+                            <span
                                 className="flex-center size-20 round item-hover cursor  text ts-transform"
                                 style={{
                                     transform: self.block.expand ? 'rotateZ(180deg)' : 'rotateZ(90deg)',
