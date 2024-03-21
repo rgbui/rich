@@ -139,7 +139,7 @@ class LinkPicker extends EventsComponent {
                         onEnter={(e, g) => { g.preventDefault(); g.stopPropagation(); this.onEnter(e); }}
                         value={this.url}></Input>
                 </div>
-                <Tip text='清空链接'><div onMouseDown={e => this.onClear()} className="cursor gap-w-5 flex-fixed size-24 item-hover round flex-center">
+                <Tip text='清空链接'><div onMouseDown={e => this.onClear()} className="cursor gap-l-5 flex-fixed size-24 item-hover round flex-center">
                     <Icon size={18} icon={TrashSvg}></Icon>
                 </div></Tip>
             </div>
