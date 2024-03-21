@@ -1,5 +1,4 @@
 import React from "react";
-import { SettingsSvg, } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { IconArguments } from "../../../extensions/icon/declare";
 import { Block } from "../../../src/block";

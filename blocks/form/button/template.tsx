@@ -28,10 +28,6 @@ export class TemplatePanel extends Block {
         return false
     }
 
-
-
-
-
 }
 
 @view('/template')
@@ -46,6 +42,9 @@ export class TemplatePanelView extends BlockView<TemplatePanel>{
                     this.block.page.kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
                 })
             });
+        }
+        else {
+            this.block.page.kit.anchorCursor.onFocusBlockAnchor(this.block.childs.last(), { render: true });
         }
     }
     renderView() {
