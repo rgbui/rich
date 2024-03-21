@@ -17,13 +17,15 @@ export class ToolTipOverlay extends React.Component {
         })
     }
     render() {
+      
         if (this.visible !== true) return <div ref={e => this.el = e} className="shy-box-tip" style={{ display: 'none', ...this.boxStyle }}></div>
+        var ov = typeof this.overlay == 'function' ? this.overlay() : this.overlay;
         return <div className="shy-box-tip" ref={e => this.el = e} style={{
             top: this.point.y,
             left: this.point.x, ...this.boxStyle,
             zIndex: this.zindex ? this.zindex.toString() : undefined
         }}>
-            <div className="shy-box-tip-overlay" style={this.overlayStyle} ref={e => this.overlayEl = e}>{this.overlay}</div>
+            <div className="shy-box-tip-overlay" style={this.overlayStyle} ref={e => this.overlayEl = e}>{ov}</div>
         </div>
     }
     private fvs: FixedViewScroll = new FixedViewScroll();
@@ -31,7 +33,7 @@ export class ToolTipOverlay extends React.Component {
     el: HTMLElement;
     tipEl: HTMLElement;
     overlayEl: HTMLElement;
-    overlay: React.ReactNode;
+    overlay: React.ReactNode | (() => React.ReactNode);
     visible: boolean;
     point: Point = new Point(0, 0);
     mouseLeaveDelay?: number;
@@ -45,7 +47,7 @@ export class ToolTipOverlay extends React.Component {
     panel?: HTMLElement;
     open(el: HTMLElement,
         options: {
-            overlay: React.ReactNode,
+            overlay: React.ReactNode | (() => React.ReactNode),
             panel?: HTMLElement,
             placement?: OverlayPlacement,
             mouseLeaveDelay?: number,
@@ -98,7 +100,6 @@ export class ToolTipOverlay extends React.Component {
                     overlayRect.moveTo(overlayRect.x - rt.x, overlayRect.y - rt.y);
                 }
             }
-            console.log(tipRect, windowRect, overlayRect)
             var size = 10;
             this.overlayStyle = {};
             var place = this.placement;
@@ -107,7 +108,6 @@ export class ToolTipOverlay extends React.Component {
                 else if (tipRect.bottom + overlayRect.height + size > windowRect.bottom) place = 'top'
                 else place = 'bottom'
             }
-            console.log('place', place)
             switch (place) {
                 case 'top':
                     this.point.y = tipRect.top - size - overlayRect.height;
@@ -116,7 +116,6 @@ export class ToolTipOverlay extends React.Component {
                     else if (this.align == 'right') this.point.x = tipRect.right - overlayRect.width;
                     if (this.point.x < windowRect.left) this.point.x = 20;
                     else if (this.point.x + overlayRect.width > windowRect.right) this.point.x = windowRect.right - overlayRect.width - 20;
-                    console.log(this.point);
                     this.overlayStyle.marginBottom = size;
                     break;
                 case 'bottom':

@@ -252,7 +252,7 @@ export class BlockButtonView extends BlockView<BlockButton>{
                 disableMousedownClose
                 disabledMouseEnterOrLeave
                 boxStyle={{ zIndex: popoverLayer.zoom(this.block) }}
-                overlay={this.renderFlow()}
+                overlay={() => this.renderFlow()}
                 align={this.block.align}
                 onClose={async () => {
                     await this.onSave()
@@ -332,6 +332,8 @@ export class BlockButtonView extends BlockView<BlockButton>{
         });
         if (typeof r != 'undefined') {
             await this.block.onUpdateProps({ buttonIcon: r })
+            console.log(r, this.block.buttonIcon);
+            if (this.boxTip) this.boxTip.updateToolTipOverlay();
             this.forceUpdate();
         }
     }

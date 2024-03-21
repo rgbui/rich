@@ -9,13 +9,13 @@ var ms = new Map<HTMLElement, ToolTipOverlay>();
 async function openOverlay(el: HTMLElement,
     options: {
         panel: HTMLElement,
-        overlay: React.ReactNode,
+        overlay: React.ReactNode|(()=>React.ReactNode),
         placement?: OverlayPlacement,
         disabledAutoClose?: boolean,
         boxStyle?: CSSProperties,
         align?: 'left' | 'right' | 'center',
         close?: () => void;
-        zindex?:number
+        zindex?: number
     }) {
     var toolTipOverlay = await sc.create((c) => {
         var t = ms.get(options.panel);
@@ -35,7 +35,7 @@ async function openOverlay(el: HTMLElement,
 
 export class FixBoxTip extends React.Component<{
     disabled?: boolean,
-    overlay?: React.ReactNode,
+    overlay?: React.ReactNode|(()=>React.ReactNode),
     children?: React.ReactNode,
     /**0.1s */
     mouseEnterDelay?: number;
@@ -65,7 +65,7 @@ export class FixBoxTip extends React.Component<{
     panel?: HTMLElement;
     cacPanel?: () => HTMLElement,
     align?: 'left' | 'right' | 'center',
-    zindex?:number
+    zindex?: number
 }>{
     el: HTMLElement;
     componentDidMount() {
@@ -127,6 +127,10 @@ export class FixBoxTip extends React.Component<{
     render() {
         return this.props.children;
     }
+    updateToolTipOverlay() {
+        console.log('update tool tip overlay');
+        if (this.toolTipOverlay) this.toolTipOverlay.forceUpdate()
+    }
     /**
      * 表示toolTipOverlay相对于当前元素是否可见
      * toolTipOverlay只有一个实例，而currentVisible是针对当前元素的
@@ -144,14 +148,14 @@ export class FixBoxTip extends React.Component<{
         }
         var panel = this.props.panel;
         if (typeof this.props.cacPanel == 'function') panel = this.props.cacPanel();
-        this.toolTipOverlay = await openOverlay(el,{
+        this.toolTipOverlay = await openOverlay(el, {
             panel,
             overlay: this.props.overlay,
             placement: this.props.placement,
             disabledAutoClose: this.props.disabledMouseEnterOrLeave == true ? true : false,
             boxStyle: this.props.boxStyle,
             align: this.props.align,
-            zindex:this.props.zindex,
+            zindex: this.props.zindex,
             close() {
                 self.currentVisible = false;
                 if (self.props.onClose) self.props.onClose(self.el);
