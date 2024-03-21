@@ -259,6 +259,13 @@ export class Rect {
         if (el)
             return this.from(el.getBoundingClientRect())
     }
+    update(x?: number, y?: number, width?: number, height?: number) {
+        if (typeof x == 'number') this.left = x;
+        if (typeof y == 'number') this.top = y;
+        if (typeof width == 'number') this.width = width;
+        if (typeof height == 'number') this.height = height;
+        return this;
+    }
     contain(point: Point) {
         if (point.x >= this.left && point.x <= this.left + this.width) {
             if (point.y >= this.top && point.y <= this.top + this.height) return true;
