@@ -247,7 +247,7 @@ export class Carousel extends Block {
         }
         super.onContextMenuInput(item)
     }
-    async onContextMenuClick(item: MenuItem<string | BlockDirective>, event: React.MouseEvent<Element, MouseEvent>, clickName: string, mp: MenuPanel<any>) {
+    async onContextMenuBtnClick(item: MenuItem<string | BlockDirective>, event: React.MouseEvent<Element, MouseEvent>, clickName: string, mp: MenuPanel<any>) {
         if (item.name == 'srcItem') {
             var rg = await useSelectMenuItem(
                 { roundArea: Rect.fromEvent(event) },

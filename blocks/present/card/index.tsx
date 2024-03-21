@@ -6,9 +6,9 @@ import { BlockView } from "../../../src/block/view";
 import { ChildsArea } from "../../../src/block/view/appear";
 import { GridMap } from "../../../src/page/grid";
 import { lst } from "../../../i18n/store";
-import { PageThemeStyle } from "../../../src/page/declare";
+import { LinkPageItem, PageThemeStyle, getPageIcon } from "../../../src/page/declare";
 import { Icon } from "../../../component/view/icon";
-import { DotsSvg, PlatteSvg } from "../../../component/svgs";
+import { DotsSvg, Edit1Svg, GlobalLinkSvg, PlatteSvg } from "../../../component/svgs";
 import { Rect } from "../../../src/common/vector/point";
 import { useCardTheme } from "../../../extensions/theme/card";
 import lodash from "lodash";
@@ -19,6 +19,10 @@ import { Tip } from "../../../component/view/tooltip/tip";
 import { MouseDragger } from "../../../src/common/dragger";
 import { memoryCopyData, memoryReadData } from "../../../src/page/common/copy";
 import "./style.less";
+import { PageLink } from "../../../extensions/link/declare";
+import { channel } from "../../../net/channel";
+import { MenuPanel } from "../../../component/view/menu";
+import { useLinkPicker } from "../../../extensions/link/picker";
 
 @url('/card')
 export class PageCard extends Block {
@@ -56,12 +60,19 @@ export class PageCard extends Block {
             display: 'none'
         }
     }
+    @prop()
+    link: PageLink = null;
     async openCardStyle() {
         var rect = Rect.fromEle(this.el);
         var nRect = new Rect(rect.rightTop, rect.rightTop.move(-30, 30))
         await useCardTheme(this, nRect)
     }
     async onGetContextMenus() {
+        var pageLink: LinkPageItem;
+        if (this.link?.pageId) {
+            var pa = await channel.get('/page/item', { id: this.link.pageId });
+            if (pa?.ok) { pageLink = pa.data.item; }
+        }
         var rs = await super.onGetContextMenus();
         var at = rs.findIndex(g => g.name == 'color');
         lodash.remove(rs, g => g.name == 'color');
@@ -94,7 +105,24 @@ export class PageCard extends Block {
                 value: lodash.cloneDeep(d),
                 disabled: d ? false : true,
                 text: lst("粘贴卡片样式")
-            }
+            },
+            {
+                type: MenuItemType.divide
+            },
+            {
+                text: lst('关联网址'),
+                icon: { name: 'bytedance-icon', code: 'link-one' },
+                name: this.link ? undefined : "imageLink",
+                childs: this.link ? [
+                    {
+                        name: 'imageLink',
+                        text: pageLink?.text || this.link?.url,
+                        value: pageLink,
+                        icon: pageLink ? getPageIcon(pageLink) : GlobalLinkSvg,
+                        btns: [{ icon: Edit1Svg, name: 'editImageLink' }]
+                    }
+                ] : undefined
+            } as any,
         ])
         rs.splice(at, 0, ...ns)
         return rs;
@@ -121,7 +149,29 @@ export class PageCard extends Block {
                 range: BlockRenderRange.self
             })
         }
-        return await super.onClickContextMenu(item, event);
+        else if (item?.name == 'imageLink') {
+            var rgc = await useLinkPicker({ roundArea: Rect.fromEle(this.el).update(null,null,null,10) }, {
+            }, { allowCreate: false });
+            if (rgc) {
+                var link = Array.isArray(rgc.refLinks) ? rgc.refLinks[0] : rgc.link;
+                await this.onUpdateProps({ link: link }, { range: BlockRenderRange.self });
+            }
+        }
+        else return await super.onClickContextMenu(item, event);
+    }
+    async onContextMenuBtnClick(item: MenuItem<string | BlockDirective>, event: React.MouseEvent<Element, MouseEvent>, clickName: string, mp: MenuPanel<any>) {
+        if (item.name == 'imageLink') {
+            var r = await useLinkPicker({ roundArea: Rect.fromEvent(event).update(null,null,null,10) }, {
+                url: this.link?.url,
+                pageId: this.link?.pageId,
+                text: (item?.value as PageLink)?.text
+            }, { allowCreate: false });
+            if (r) {
+                var link = Array.isArray(r.refLinks) ? r.refLinks[0] : r.link;
+                await this.onUpdateProps({ link: link }, { range: BlockRenderRange.self });
+                mp.updateItems(await this.onGetContextMenus())
+            }
+        }
     }
     getScrollDiv(): HTMLElement {
         var p = this.parentPanel;
@@ -143,6 +193,18 @@ export class PageCard extends Block {
 
 @view('/card')
 export class PageCardView extends BlockView<PageCard>{
+    mousedownLink(event: React.MouseEvent) {
+        if (this.block.link) {
+            if (this.block.link.url) {
+                window.open(this.block.link.url)
+                event.stopPropagation();
+            }
+            else if (this.block.link.pageId) {
+                event.stopPropagation();
+                channel.air('/page/open', { item: this.block.link.pageId })
+            }
+        }
+    }
     onResize(event: React.MouseEvent) {
         event.stopPropagation();
         var height = this.block.contentHeight;

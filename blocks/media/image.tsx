@@ -440,7 +440,7 @@ export class Image extends Block {
         }
         return super.onContextMenuInput(item);
     }
-    async onContextMenuClick(item: MenuItem<string | BlockDirective>, event: React.MouseEvent<Element, MouseEvent>, clickName: string, mp: MenuPanel<any>) {
+    async onContextMenuBtnClick(item: MenuItem<string | BlockDirective>, event: React.MouseEvent<Element, MouseEvent>, clickName: string, mp: MenuPanel<any>) {
         if (item.name == 'imageLink') {
             var r = await useLinkPicker({ roundArea: Rect.fromEvent(event) }, {
                 url: this.link?.url,
