@@ -16,7 +16,7 @@ import { KeyboardCode } from "../../src/common/keys";
 import { util } from "../../util/util";
 import { Block } from "../../src/block";
 import { SearchListType } from "../../component/types";
-import {  lst } from "../../i18n/store";
+import { lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
 import { Tip } from "../../component/view/tooltip/tip";
 import "./style.less";
@@ -155,7 +155,7 @@ class LinkPicker extends EventsComponent {
                 </span></Tip>
             </div><Divider></Divider></>}
             {this.name == 'page' && <div>
-                {this.loading && <Spin></Spin>}
+                {this.loading && <div className="flex-center"><Spin></Spin></div>}
                 {!this.loading && this.links.map((link, i) => {
                     return <div onClick={e => this.onSelect(link)} className={"h-30 cursor item-hover round padding-w-5 flex" + (this.selectIndex == (i + 1) ? " item-hover-focus" : "")} key={link.id}>
                         <span className="size-20 flex-fixed flex-center item-hover round"><Icon icon={getPageIcon(link)}></Icon></span>
