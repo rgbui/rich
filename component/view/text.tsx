@@ -21,13 +21,20 @@ export function HelpText(props: {
     text?: string,
     children?: React.ReactNode,
     url: string,
-    className?: string | (string[])
+    className?: string | (string[]),
+    align?: 'left' | 'right'
 }) {
     var c = util.covertToArray(props.className);
+    if (props.align == 'left') {
+        return <a
+            className={"padding-w-3 remark f-12 cursor item-hover round l-20 flex flex-inline " + (c.join(" "))}
+            target="_blank"
+            href={props.url}><Icon size={14} icon={HelpSvg}></Icon><span className="gap-l-3" >{props.text || props.children}</span></a>
+    }
     return <a
-        className={"padding-w-3 remark f-12 cursor item-hover round l-20 flex flex-inline" + (c.join(" "))}
+        className={"padding-w-3 remark f-12 cursor item-hover round l-20 flex flex-inline " + (c.join(" "))}
         target="_blank"
-        href={props.url}><Icon size={14} icon={HelpSvg}></Icon><span >{props.text || props.children}</span></a>
+        href={props.url}><span className="gap-r-3">{props.text || props.children}</span><Icon size={14} icon={HelpSvg}></Icon></a>
 }
 
 export function HelpTip(props: { overlay: React.ReactNode }) {
