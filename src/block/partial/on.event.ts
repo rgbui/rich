@@ -316,7 +316,7 @@ export class Block$Event {
                 async click(item, ev, name, mp) {
                     mp.onFree();
                     try {
-                        await self.onContextMenuClick(item, ev, name, mp);
+                        await self.onContextMenuBtnClick(item, ev, name, mp);
                     }
                     catch (ex) {
 
@@ -336,7 +336,7 @@ export class Block$Event {
             await this.onUpdateProps({ align: item.value }, { range: BlockRenderRange.self, merge: options?.merge ? true : undefined });
         }
     }
-    async onContextMenuClick(this: Block, item: MenuItem<string | BlockDirective>, event: React.MouseEvent<Element, MouseEvent>, clickName: string, mp: MenuPanel<any>) {
+    async onContextMenuBtnClick(this: Block, item: MenuItem<string | BlockDirective>, event: React.MouseEvent<Element, MouseEvent>, clickName: string, mp: MenuPanel<any>) {
 
     }
     async onClickContextMenu(this: Block, item: MenuItem<BlockDirective | string>, event: MouseEvent, options?: { merge?: boolean }) {
