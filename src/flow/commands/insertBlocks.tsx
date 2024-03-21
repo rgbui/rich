@@ -14,6 +14,7 @@ import dayjs from "dayjs";
 import { channel } from "../../../net/channel";
 import { getPageText } from "../../page/declare";
 import weekOfYear from "dayjs/plugin/weekOfYear"
+import { HelpText } from "../../../component/view/text";
 dayjs.extend(weekOfYear);
 
 @flow('/insertBlocks')
@@ -143,6 +144,7 @@ export class InsertBlocksCommandView extends FlowCommandView<InsertBlocksCommand
                         { icon: { name: 'bytedance-icon', code: 'down-one' }, text: lst('按钮下面'), value: 'below' }
                     ]
                     }></SelectBox></div>
+                    <HelpText url={window.shyConfig.isUS ? "https://help.shy.live/page/1831#84fR6G8fevzTjHf56tZnJ9" : "https://help.shy.live/page/1831#84fR6G8fevzTjHf56tZnJ9"}><S>模板变量</S></HelpText>
                 </>)}
             <div className="round border bg-white">
                 {self.command.block && <self.command.block.viewComponent block={self.command.block}></self.command.block.viewComponent >}
