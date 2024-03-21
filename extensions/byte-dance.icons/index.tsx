@@ -23,6 +23,7 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
     icons: ByteDanceType[] = [];
     color: string = '#000';
     loading: boolean = true;
+    colorVisible: boolean = true;
     private scrollIndex = 4;
     private scrollOver: boolean = false;
     componentDidMount() {
@@ -95,6 +96,7 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
         this.forceUpdate()
     }
     renderFontColors() {
+        if (!this.colorVisible) return <div></div>
         return <div className='shy-font-awesome-colors'>
             {FontColorList().map((c, i) => {
                 return <ToolTip overlay={c.text} key={i} ><a className={'flex-center text-white ' + (lodash.isEqual(this.color, c.color) ? "hover" : "")} onMouseDown={e => this.onSetFont(c)} style={{
@@ -108,7 +110,7 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
         return byteDanceStore.renderSvg(icon.name, this.color == 'inherit' ? "var(--text-color)" : this.color);
     }
     renderSearch() {
-        if (this.searchEmojis.length == 0) return <div className="flex-center remark f-12"><S>没有搜索图标</S></div>
+        if (this.searchEmojis.length == 0) return <div className="flex-center remark f-12 gap-h-10"><S>没有搜索图标</S></div>
         return <div className='shy-font-awesome-category'><div className="shy-font-awesome-category-content">
             {this.searchEmojis.map(ic => {
                 return <Tip overlay={ls.isCn ? ic.title : ic.name} key={ic.name}><a onMouseDown={e => this.onChange(ic)} dangerouslySetInnerHTML={{ __html: this.renderSvg(ic) }}>
@@ -173,9 +175,11 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
             this.forceUpdate()
         }
     }, 800)
-    onClear() {
+    onClear(colorVisible?:boolean) {
+        this.colorVisible=colorVisible==false?false:true;
         if (this.word) {
             this.loadSearch('')
         }
+        else this.forceUpdate();
     }
 }

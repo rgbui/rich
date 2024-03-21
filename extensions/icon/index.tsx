@@ -69,23 +69,24 @@ class IconPicker extends EventsComponent {
             </Tab>
         </div>
     }
-    open(d: IconArguments) {
-        if (d && d.name == 'font-awesome') {
-            if (this.fav) this.fav.open(d)
+    open(d: IconArguments, options?: { visibleColor: boolean }) {
+        if (d) {
+            if (d.name == 'font-awesome' && this.fav) this.fav.open(d)
+            if (d.name == 'byte' && this.byte) this.byte.open(d)
         }
-        if (this.fav) this.fav.onClear()
+        if (this.fav) this.fav.onClear(options?.visibleColor)
         if (this.ev) this.ev.onClear()
-        if (this.byte) this.byte.onClear()
+        if (this.byte) this.byte.onClear(options?.visibleColor)
     }
 }
 interface IconPicker {
     emit(name: 'change', data: IconArguments);
     only(name: 'change', fn: (data: IconArguments) => void);
 }
-export async function useIconPicker(pos: PopoverPosition, data?: IconArguments) {
+export async function useIconPicker(pos: PopoverPosition, data?: IconArguments, options?: { visibleColor: boolean }) {
     let popover = await PopoverSingleton(IconPicker, { mask: true, visible: 'hidden' });
     let filePicker = await popover.open(pos);
-    filePicker.open(data)
+    filePicker.open(data,options)
     return new Promise((resolve: (data: IconArguments) => void, reject) => {
         filePicker.only('change', (data) => {
             popover.close();
