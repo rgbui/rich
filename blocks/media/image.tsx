@@ -25,6 +25,7 @@ import { PageLink } from "../../extensions/link/declare";
 import { LinkPageItem, getPageIcon } from "../../src/page/declare";
 import { useLinkPicker } from "../../extensions/link/picker";
 import { MenuPanel } from "../../component/view/menu";
+import "./style.less";
 
 @url('/image')
 export class Image extends Block {

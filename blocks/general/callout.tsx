@@ -13,7 +13,7 @@ import { useIconPicker } from "../../extensions/icon";
 import { Rect } from "../../src/common/vector/point";
 import lodash from "lodash";
 import { lst } from "../../i18n/store";
-
+import "./style.less";
 @url('/callout')
 export class Callout extends TextSpan {
     display = BlockDisplay.block;

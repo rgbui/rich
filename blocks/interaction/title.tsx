@@ -14,7 +14,7 @@ import { S } from "../../i18n/view";
 import { lst } from "../../i18n/store";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { Rect } from "../../src/common/vector/point";
-
+import "./style.less";
 @url('/title')
 export class Title extends Block {
     display = BlockDisplay.block;

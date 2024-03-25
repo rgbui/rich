@@ -16,7 +16,7 @@ import { LinkPageItem, getPageIcon } from "../../src/page/declare";
 import { useLinkPicker } from "../../extensions/link/picker";
 import { MenuPanel } from "../../component/view/menu";
 import { ToolTip } from "../../component/view/tooltip";
-
+import "./style.less";
 @url('/icon')
 export class BlockIcon extends Block {
     @prop()

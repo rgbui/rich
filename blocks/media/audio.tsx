@@ -13,7 +13,7 @@ import { Icon } from "../../component/view/icon";
 import { util } from "../../util/util";
 import { Remark } from "../../component/view/text";
 import { lst } from "../../i18n/store";
-
+import "./style.less";
 /*
  * https://howlerjs.com/
  */

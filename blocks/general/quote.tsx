@@ -11,7 +11,7 @@ import lodash from "lodash";
 import { Point, Rect } from "../../src/common/vector/point";
 import { dom } from "../../src/common/dom";
 import { lst } from "../../i18n/store";
-
+import "./style.less";
 @url('/quote')
 export class Quote extends TextSpan {
     display = BlockDisplay.block;

@@ -13,7 +13,7 @@ import { util } from "../../util/util";
 import { lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
 import { Tip } from "../../component/view/tooltip/tip";
-
+import "./style.less";
 @url('/file')
 export class File extends Block {
     @prop()

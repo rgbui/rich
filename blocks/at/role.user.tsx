@@ -8,6 +8,7 @@ import { channel } from "../../net/channel";
 import { Spin } from "../../component/view/spin";
 import { Avatar } from "../../component/view/avator/face";
 import { Pagination } from "../../component/view/pagination";
+import "./style.less";
 
 @url('/role/users')
 export class RoleUsers extends Block {

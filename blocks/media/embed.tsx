@@ -29,7 +29,7 @@ import { Rect } from "../../src/common/vector/point";
 import { BlockRenderRange } from "../../src/block/enum";
 import { lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
-
+import "./style.less";
 @url('/embed')
 export class Embed extends Block {
     @prop()

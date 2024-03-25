@@ -16,7 +16,7 @@ import { CloseSvg } from "../../component/svgs";
 import { MenuItem } from "../../component/view/menu/declare";
 import { BlockDirective, BlockRenderRange } from "../../src/block/enum";
 import { Point, Rect } from "../../src/common/vector/point";
-
+import "./style.less";
 @url('/search')
 export class SearchWorkspace extends Block {
     @prop()

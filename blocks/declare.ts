@@ -1,5 +1,6 @@
 /***
  * import component
+ * 
  */
 import "./general/head";
 import "./general/callout";
@@ -13,28 +14,28 @@ import "./media/video";
 import './media/audio';
 import "./media/carousel/index";
 
-import "./form/todo";
-import "./form/measure";
-import "./form/button/index";
-import "./form/button/template";
+import "./general/todo";
+import "./general/measure";
+import "./interaction/button/index";
+import "./interaction/button/template";
 
-import "./form/tab/index";
-import "./form/tab/page";
-import "./form/search";
+import "./layout/tab/index";
+import "./layout/tab/page";
+import "./interaction/search";
 
 
 import "./present/katex/katex";
 import "./present/katex/line";
-import "./present/bookmark";
+import "./navigation/bookmark";
 import "./present/list/list";
 import "./present/code/code";
-import "./present/divider";
+import "./general/divider";
 import "./present/button-template/index";
-import "./present/card/index";
+import "./layout/card/index";
 
-import './table/cell';
-import './table/row';
-import './table';
+import './layout/table/cell';
+import './layout/table/row';
+import './layout/table';
 
 
 import "./data-grid/template/card/declare";
@@ -105,27 +106,27 @@ import "./data-grid/block/paging";
 import "./data-grid/block/preOrNext";
 import "./data-grid/block/latestOrHot"
 
-
 import "./at/date";
 import './at/mention';
 import "./at/now";
 
-import './page/link';
-import './page/title';
-import "./page/outline/index";
-import './page/ref.links';
-import './page/sub.links';
-import './page/comment/index';
-import "./page/tag";
-import "./page/author";
-import "./page/upvotedOrShared";
+import './navigation/link';
+import './interaction/title';
+import "./navigation/outline/index";
+import './navigation/ref.links';
+import './navigation/links';
+import "./navigation/qr";
+import './interaction/comment/index';
+import "./navigation/tag";
+import "./interaction/author";
+import "./interaction/upvotedOrShared";
 import "./map/amap";
 
 import './board/note/index';
 import "./board/line/line";
 import "./board/pen/index";
 import "./board/shape/index";
-import "./board/board/index";
+import "./layout/board/index";
 import "./board/image/index";
 import "./board/mind/index";
 import "./board/page/index";
@@ -136,8 +137,8 @@ import "./channel/text/view/view";
 /***
  * import component style
  */
-import "./general/style.less";
-import "./present/style.less";
-import "./at/style.less";
-import "./media/style.less";
+// import "./general/style.less";
+// import "./present/style.less";
+// import "./at/style.less";
+// import "./media/style.less";
 

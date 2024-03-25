@@ -117,7 +117,7 @@ export class UpvotedOrSharedView extends BlockView<UpvotedOrShared>{
             }
         }
         return <div style={this.block.visibleStyle}>
-            <div className="flex">
+            <div className="flex" style={this.block.contentStyle}>
                 <div className="flex-fixed flex">
                     <span onMouseDown={e => this.onLike()} className={"cursor flex-center  padding-w-10 h-30 round  f-14" + (isLike ? " border-primary bg-primary text-white" : " bg-p-light text-p")}><Icon size={16} icon={LikeSvg}></Icon>{likeCount > 0 && <span>{likeCount}</span>}</span>
                     <span className="gap-l-10"><UserAvatars size={24} users={users}></UserAvatars></span>

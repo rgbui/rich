@@ -16,7 +16,7 @@ import lodash from "lodash";
 import { DropDirection } from "../../src/kit/handle/direction";
 import { lst } from "../../i18n/store";
 import { PageLayoutType } from "../../src/page/declare";
-
+import "./style.less";
 @url('/head')
 export class Head extends Block {
     blocks: { childs: Block[], subChilds: Block[] } = { childs: [], subChilds: [] };
