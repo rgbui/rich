@@ -38,7 +38,7 @@ export class ToDo extends Block {
     }
     display = BlockDisplay.block;
     async onGetTurnUrls() {
-        return TextTurns.blockDatas
+        return TextTurns.blockDatas()
     }
     async getWillTurnData(url: string) {
         return await TextTurns.turn(this, url);

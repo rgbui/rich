@@ -82,7 +82,7 @@ export class List extends Block {
         return super.isVisibleKey(key);
     }
     async onGetTurnUrls() {
-        var urls = TextTurns.blockDatas;
+        var urls = TextTurns.blockDatas();
         // if (this.listType == ListType.arrow) urls.remove('/list?{listType:2}')
         // else if (this.listType == ListType.number) urls.remove('/list?{listType:1}')
         // else if (this.listType == ListType.circle) urls.remove('/list?{listType:0}')

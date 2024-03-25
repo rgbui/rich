@@ -1,9 +1,9 @@
 
-import { BlockView } from "../../src/block/view";
+import { BlockView } from "../../../src/block/view";
 import React from 'react';
-import { Block } from "../../src/block";
-import { url, view } from "../../src/block/factory/observable";
-import { BlockDisplay } from "../../src/block/enum";
+import { Block } from "../../../src/block";
+import { url, view } from "../../../src/block/factory/observable";
+import { BlockDisplay } from "../../../src/block/enum";
 import { Table } from "./index";
 
 @url('/table/row')

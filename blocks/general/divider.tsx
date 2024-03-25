@@ -8,6 +8,7 @@ import lodash from "lodash";
 import { BlockcolorSvg } from "../../component/svgs";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { ls, lst } from "../../i18n/store";
+import "./style.less";
 
 @url('/divider')
 export class Divider extends Block {

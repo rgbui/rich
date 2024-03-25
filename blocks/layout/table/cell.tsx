@@ -1,20 +1,20 @@
-import { BlockView } from "../../src/block/view";
+import { BlockView } from "../../../src/block/view";
 import React from 'react';
-import { prop, url, view } from "../../src/block/factory/observable";
-import { ChildsArea } from "../../src/block/view/appear";
-import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
-import { Block } from "../../src/block";
-import { ActionDirective } from "../../src/history/declare";
-import { BlockUrlConstant } from "../../src/block/constant";
-import { useSelectMenuItem } from "../../component/view/menu";
-import { Point } from "../../src/common/vector/point";
+import { prop, url, view } from "../../../src/block/factory/observable";
+import { ChildsArea } from "../../../src/block/view/appear";
+import { BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
+import { Block } from "../../../src/block";
+import { ActionDirective } from "../../../src/history/declare";
+import { BlockUrlConstant } from "../../../src/block/constant";
+import { useSelectMenuItem } from "../../../component/view/menu";
+import { Point } from "../../../src/common/vector/point";
 import { TableRow } from "./row";
-import { MenuItemType } from "../../component/view/menu/declare";
+import { MenuItemType } from "../../../component/view/menu/declare";
 import lodash from "lodash";
-import { ArrowDownSvg, ArrowLeftSvg, ArrowRightSvg, ArrowUpSvg, BlockcolorSvg, ClearCellSvg, CloseTickSvg, DeleteColSvg, DeleteRowSvg, TrashSvg } from "../../component/svgs";
-import { BackgroundColorList, FontColorList } from "../../extensions/color/data";
-import { GridMap } from "../../src/page/grid";
-import { lst } from "../../i18n/store";
+import { ArrowDownSvg, ArrowLeftSvg, ArrowRightSvg, ArrowUpSvg, BlockcolorSvg, ClearCellSvg, CloseTickSvg, DeleteColSvg, DeleteRowSvg, TrashSvg } from "../../../component/svgs";
+import { BackgroundColorList, FontColorList } from "../../../extensions/color/data";
+import { GridMap } from "../../../src/page/grid";
+import { lst } from "../../../i18n/store";
 
 @url('/table/cell')
 export class TableCell extends Block {

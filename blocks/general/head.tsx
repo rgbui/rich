@@ -44,9 +44,7 @@ export class Head extends Block {
     }
     display = BlockDisplay.block;
     async onGetTurnUrls() {
-        var urls = TextTurns.blockDatas;
-        //if (this.level == 'h2') urls.remove('/head?{level:"h2"}')
-        //else if (this.level == 'h3') urls.remove('/head?{level:"h3"}')
+        var urls = TextTurns.blockDatas();
         return urls;
     }
     async getWillTurnData(url: string) {

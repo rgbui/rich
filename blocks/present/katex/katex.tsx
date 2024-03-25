@@ -5,15 +5,14 @@ import { Block } from "../../../src/block";
 import { BlockDirective, BlockDisplay } from "../../../src/block/enum";
 import { useKatexInput } from "../../../extensions/katex";
 import { Rect } from "../../../src/common/vector/point";
-import "./style.less";
 import { lst } from "../../../i18n/store";
 import { CopyAlert } from "../../../component/copy";
 import { Katex } from "../../../component/view/katex";
+import "./style.less";
 
 @url('/katex')
 export class KatexBlock extends Block {
     display = BlockDisplay.block;
-    katexContent = '';
     opened: boolean = false;
     async open(event: React.MouseEvent) {
         event.stopPropagation();
@@ -62,14 +61,17 @@ export class KatexBlock extends Block {
         await super.onClickContextMenu(item, event);
     }
 }
+
 @view('/katex')
 export class KatexView extends BlockView<KatexBlock>{
     renderView() {
         var style = this.block.contentStyle;
         if (this.block.align == 'left') style.textAlign = 'left';
+        else if (this.block.align == 'right') style.textAlign = 'right';
+        else style.textAlign = 'center';
         return <div style={this.block.visibleStyle}><div
             className={'sy-block-katex' + (this.block.opened ? " sy-block-katex-opened" : "")}
-           style={style}   onMouseDown={e => this.block.open(e)}>
+            style={style} onMouseDown={e => this.block.open(e)}>
             <Katex block className='sy-block-katex-content' latex={this.block.content}></Katex>
         </div>
         </div>

@@ -24,7 +24,7 @@ export class Quote extends TextSpan {
         return this.__appearAnchors;
     }
     async onGetTurnUrls() {
-        return TextTurns.blockDatas
+        return TextTurns.blockDatas();
     }
     async getWillTurnData(url: string) {
         return await TextTurns.turn(this, url);
@@ -77,12 +77,6 @@ export class Quote extends TextSpan {
         var bound = Rect.fromEle(h);
         pos.y = bound.y + lh / 2;
         return pos;
-        // if (bound) {
-        //     var pos = Point.from(bound);
-        //    
-        //     pos = pos.move(0, 3 + lh / 2);
-        //     return pos;
-        // }
     }
 }
 @view('/quote')
