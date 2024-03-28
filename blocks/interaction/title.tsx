@@ -6,7 +6,7 @@ import { TextArea } from "../../src/block/view/appear";
 import { BlockView } from "../../src/block/view";
 import { channel } from "../../net/channel";
 import { Icon } from "../../component/view/icon";
-import { AlignTextCenterSvg, EmojiSvg, HideSvg, PicSvg } from "../../component/svgs";
+import { AlignTextCenterSvg, EmojiSvg, HideSvg, LinkSvg, MoveToSvg, PicSvg } from "../../component/svgs";
 import lodash from "lodash";
 import { Spin } from "../../component/view/spin";
 import { LinkPageItem, getPageText } from "../../src/page/declare";
@@ -14,7 +14,10 @@ import { S } from "../../i18n/view";
 import { lst } from "../../i18n/store";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { Rect } from "../../src/common/vector/point";
+import { UA } from "../../util/ua";
+import { util } from "../../util/util";
 import "./style.less";
+
 @url('/title')
 export class Title extends Block {
     display = BlockDisplay.block;
@@ -54,32 +57,74 @@ export class Title extends Block {
         var rs = await super.onGetContextMenus();
         var rs: MenuItem<string | BlockDirective>[] = [];
         rs.push({
+            name: BlockDirective.link,
+            text: lst('复制块链接'),
+            icon: LinkSvg,
+            label: UA.isMacOs ? "⌥+Shift+L" : "Alt+Shift+L"
+        })
+       
+        rs.push({ type: MenuItemType.divide })
+        rs.push({
             name: 'addIcon',
-            text: lst('添加图标'),
+            text: lst('图标'),
             type: MenuItemType.switch,
             checked: pd?.icon?.abled ? false : true,
             icon: EmojiSvg
         })
         rs.push({
             name: 'addCover',
-            text: lst('添加封面'),
+            text: lst('封面'),
             type: MenuItemType.switch,
             checked: pd?.cover?.abled ? false : true,
             icon: PicSvg
         })
-        rs.push({ type: MenuItemType.divide })
         rs.push({
             name: 'text-center',
             type: MenuItemType.switch,
             checked: (this as any).align == 'center',
-            text: lst('标题居中'),
+            text: lst('居中'),
             icon: AlignTextCenterSvg
         });
         rs.push({
-            text: lst('隐藏'),
+            text: lst('隐藏标题'),
             name: 'hidden',
             icon: HideSvg
-        })
+        });
+        rs.push({ type: MenuItemType.divide })
+        rs.push({
+            name: 'move',
+            text: lst('移动'),
+            icon: MoveToSvg,
+            label: UA.isMacOs ? "⌘+Shift+P" : "Ctrl+Shift+P"
+        });
+        rs.push({
+            name: 'export',
+            iconSize: 16,
+            text: lst('导出'),
+            icon: { name: 'bytedance-icon', code: 'export' }
+        });
+        rs.push({
+            type: MenuItemType.divide
+        });
+        rs.push({
+            type: MenuItemType.help,
+            text: lst('了解如何使用页面标题'),
+            url: window.shyConfig?.isUS ? "https://help.shy.live/page/1835" : "https://help.shy.live/page/1835"
+        });
+        if (this.page.pageInfo?.editor) {
+            rs.push({
+                type: MenuItemType.divide,
+            });
+            var r = await channel.get('/user/basic', { userid: this.page.pageInfo?.editor });
+            if (r?.data?.user) rs.push({
+                type: MenuItemType.text,
+                text: lst('编辑人 ') + r.data.user.name
+            });
+            if (this.page.pageInfo?.editDate) rs.push({
+                type: MenuItemType.text,
+                text: lst('编辑于 ') + util.showTime(new Date(this.page.pageInfo?.editDate))
+            });
+        }
         return rs;
     }
     async onContextMenuInput(item: MenuItem<BlockDirective | string>) {
@@ -104,6 +149,12 @@ export class Title extends Block {
         switch (item.name) {
             case 'hidden':
                 this.page.onUpdateProps({ hideDocTitle: this.page.hideDocTitle ? false : true }, true)
+                return;
+            case 'move':
+                await this.page.onPageMove();
+                return;
+            case 'export':
+                await this.page.onExport();
                 return;
         }
         return await super.onClickContextMenu(item, e);

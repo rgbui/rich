@@ -91,16 +91,22 @@ export class TextCode extends Block {
     }
     async onGetContextMenus() {
         var rs = await super.onGetContextMenus();
-        // rs = rs.splice(2);
         lodash.remove(rs, g => g.name == 'text-align');
         var at = rs.findIndex(g => g.name == 'color');
         var ns: MenuItem<string | BlockDirective>[] = [];
-        // ns.push({ type: MenuItemType.divide });
         ns.push({ name: 'lineNumbers', type: MenuItemType.switch, text: lst('行号'), checked: this.lineNumbers, icon: { name: 'bytedance-icon', code: 'list-numbers' } });
         ns.push({ name: 'lineWrapping', type: MenuItemType.switch, text: lst('自动换号'), checked: this.lineWrapping, icon: { name: 'bytedance-icon', code: 'corner-down-left' } });
-        //ns.push({ type: MenuItemType.divide });
         rs.splice(at, 0, ...ns)
         lodash.remove(rs, g => g.name == 'color')
+        var dat = rs.findIndex(g => g.name == BlockDirective.delete);
+        rs.splice(dat + 1, 0,
+            { type: MenuItemType.divide },
+            {
+                type: MenuItemType.help,
+                text: lst('了解如何使用代码块'),
+                url: window.shyConfig.isUS ? "https://help.shy.live/page/262#4bAJobT4wGWjPg2aLtQti7" : "https://help.shy.live/page/262#4bAJobT4wGWjPg2aLtQti7"
+            }
+        )
         return rs;
     }
     async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent): Promise<void> {
@@ -180,33 +186,37 @@ export class TextCodeView extends BlockView<TextCode>{
         var s = {
             '--code-mirror-font-size': this.block.page.fontSize + 'px',
             '--code-mirror-line-height': this.block.page.lineHeight + 'px'
-        } as any
-        return <div style={this.block.visibleStyle}><div
-            className='sy-block-code'
-            style={{
-                ...s
-            }}
-            onMouseDown={e => e.stopPropagation()}>
-            <div className='sy-block-code-box' >
-                <div className='sy-block-code-head'>
-                    {this.props.block.isCanEdit() && <div className='sy-block-code-head-lang' onMouseDown={e => e.stopPropagation()} onMouseUp={e => this.changeLang(e)}>
-                        <span>{label}</span>
-                        <Icon size={14} icon={ChevronDownSvg}></Icon>
-                    </div>}
-                    <ToolTip overlay={lst('复制')}><div onMouseDown={e => this.onCopy()} className="size-24 flex-center cursor item-hover round">
-                        <Icon size={18} icon={DuplicateSvg}></Icon>
-                    </div></ToolTip>
-                    {this.props.block.isCanEdit() && <ToolTip overlay={lst('菜单')}><div onMouseDown={e => {
-                        e.stopPropagation();
-                        this.block.onContextmenu(e.nativeEvent);
-                    }} className="size-24 flex-center cursor item-hover round">
-                        <Icon size={18} icon={DotsSvg}></Icon>
-                    </div></ToolTip>}
-                </div>
-                <div className={'sy-block-code-content ' + (this.block.lineNumbers ? "padding-h-10" : "padding-10")}>
+        } as any;
+        
+        return <div style={this.block.visibleStyle}>
+            <div style={this.block.contentStyle}>
+                <div
+                    className='sy-block-code'
+                    style={{
+                        ...s
+                    }}
+                    onMouseDown={e => e.stopPropagation()}>
+                    <div className='sy-block-code-box' >
+                        <div className='sy-block-code-head'>
+                            {this.props.block.isCanEdit() && <div className='sy-block-code-head-lang' onMouseDown={e => e.stopPropagation()} onMouseUp={e => this.changeLang(e)}>
+                                <span>{label}</span>
+                                <Icon size={14} icon={ChevronDownSvg}></Icon>
+                            </div>}
+                            <ToolTip overlay={lst('复制')}><div onMouseDown={e => this.onCopy()} className="size-24 flex-center cursor item-hover round">
+                                <Icon size={18} icon={DuplicateSvg}></Icon>
+                            </div></ToolTip>
+                            {this.props.block.isCanEdit() && <ToolTip overlay={lst('菜单')}><div onMouseDown={e => {
+                                e.stopPropagation();
+                                this.block.onContextmenu(e.nativeEvent);
+                            }} className="size-24 flex-center cursor item-hover round">
+                                <Icon size={18} icon={DotsSvg}></Icon>
+                            </div></ToolTip>}
+                        </div>
+                        <div className={'sy-block-code-content ' + (this.block.lineNumbers ? "padding-h-10" : "padding-10")}>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
     }
 }

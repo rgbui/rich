@@ -13,6 +13,7 @@ import { IconArguments } from "../../extensions/icon/declare";
 import { DragBlockLine } from "../../src/kit/handle/line";
 import { Tip } from "../../component/view/tooltip/tip";
 import "./style.less";
+
 @url('/emoji')
 export class Emoji extends Block {
     @prop()
@@ -28,6 +29,7 @@ export class Emoji extends Block {
         return this.src?.code || '';
     }
 }
+
 @view('/emoji')
 export class EmojiView extends BlockView<Emoji>{
     async openEdit(event: React.MouseEvent) {

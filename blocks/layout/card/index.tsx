@@ -110,8 +110,8 @@ export class PageCard extends Block {
                 type: MenuItemType.divide
             },
             {
-                text: lst('关联网址'),
-                icon: { name: 'bytedance-icon', code: 'link-one' },
+                text: lst('添加链接...'),
+                icon: { name: 'bytedance-icon', code: 'link-two' },
                 name: this.link ? undefined : "imageLink",
                 childs: this.link ? [
                     {
@@ -125,6 +125,15 @@ export class PageCard extends Block {
             } as any,
         ])
         rs.splice(at, 0, ...ns)
+
+        var dat = rs.findIndex(c => c.name == BlockDirective.delete);
+        if (dat > -1) {
+            rs.splice(dat + 1, 0, { type: MenuItemType.divide }, {
+                type: MenuItemType.help,
+                text: lst('了解如何使用卡片块'),
+                url: window.shyConfig?.isUS ? "https://help.shy.live/page/281" : "https://help.shy.live/page/281"
+            })
+        }
         return rs;
     }
     async onContextMenuInput(this: Block, item: MenuItem<BlockDirective | string>) {
@@ -150,7 +159,7 @@ export class PageCard extends Block {
             })
         }
         else if (item?.name == 'imageLink') {
-            var rgc = await useLinkPicker({ roundArea: Rect.fromEle(this.el).update(null,null,null,10) }, {
+            var rgc = await useLinkPicker({ roundArea: Rect.fromEle(this.el).update(null, null, null, 10) }, {
             }, { allowCreate: false });
             if (rgc) {
                 var link = Array.isArray(rgc.refLinks) ? rgc.refLinks[0] : rgc.link;
@@ -161,7 +170,7 @@ export class PageCard extends Block {
     }
     async onContextMenuBtnClick(item: MenuItem<string | BlockDirective>, event: React.MouseEvent<Element, MouseEvent>, clickName: string, mp: MenuPanel<any>) {
         if (item.name == 'imageLink') {
-            var r = await useLinkPicker({ roundArea: Rect.fromEvent(event).update(null,null,null,10) }, {
+            var r = await useLinkPicker({ roundArea: Rect.fromEvent(event).update(null, null, null, 10) }, {
                 url: this.link?.url,
                 pageId: this.link?.pageId,
                 text: (item?.value as PageLink)?.text

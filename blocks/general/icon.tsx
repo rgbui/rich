@@ -70,8 +70,8 @@ export class BlockIcon extends Block {
                 type: MenuItemType.divide
             },
             {
-                text: lst('关联网址'),
-                icon: { name: 'bytedance-icon', code: 'link-one' },
+                text: lst('添加链接...'),
+                icon: { name: 'bytedance-icon', code: 'link-two' },
                 name: this.link ? undefined : "imageLink",
                 childs: this.link ? [
                     {

@@ -10,7 +10,7 @@ import { BlockFactory } from "../../src/block/factory/block.factory";
 import { dom } from "../../src/common/dom";
 import { Icon } from "../../component/view/icon";
 import { TriangleSvg } from "../../component/svgs";
-import { BlockChildKey, BlockUrlConstant } from "../../src/block/constant";
+import { BlockChildKey, BlockUrlConstant, BlockUrlResolve } from "../../src/block/constant";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import lodash from "lodash";
 import { DropDirection } from "../../src/kit/handle/direction";
@@ -61,7 +61,7 @@ export class Head extends Block {
         else return `<${tag}>${this.content}</${tag}>`
     }
     getUrl(): string {
-        return BlockFactory.stringBlockUrl(this.url, { level: this.level });
+        return BlockUrlResolve(this.url as any, { level: this.level });
     }
     async getMd() {
         var tag = '#';
@@ -94,9 +94,6 @@ export class Head extends Block {
             icon: { name: 'bytedance-icon', code: 'handle-right' },
             type: MenuItemType.switch,
             checked: this.toggle
-        })
-        rs.splice(at + (this.toggle == true ? 1 : 2), 0, {
-            type: MenuItemType.divide
         })
         return rs;
     }
@@ -235,14 +232,14 @@ export class HeadView extends BlockView<Head>{
                         self.block.onExpand();
                     }
                 }} style={{ ...alignStyle, ...self.block.contentStyle }}>
-                    <span className="relative">
+                    <span className={"relative " + (self.block.toggle ? " flex flex-top " : " ")}>
                         <div style={{ left: self.block.toggle ? 24 : 0 }} className="sy-block-text-head-tips pos flex-center h-10 visible r-size-3 r-gap-r-5 r-circle ">{ns.map((n, i) => <em key={i}></em>)}</div>
                         {self.block.toggle && <span
                             className='w-24 flex-center flex-inline'
                             style={{ height: textLineHeight }}
                         >
                             <span
-                                className="flex-center size-20 round item-hover cursor  text ts-transform"
+                                className="flex-center size-24 round item-hover cursor   ts-transform"
                                 style={{
                                     transform: self.block.expand ? 'rotateZ(180deg)' : 'rotateZ(90deg)',
                                 }}

@@ -145,7 +145,8 @@ export class BlockButton extends Block {
                 ]
             })
             rs.splice(pos + 1, 0, ...ns)
-            lodash.remove(rs, g => g.name == 'color');
+            var cat = rs.findIndex(g => g.name == 'color');
+            rs.splice(cat,2);
         }
         return rs;
     }

@@ -259,7 +259,6 @@ export class Tab extends Block {
         if (rg) {
             rg.text = lst('对齐');
             var pos = rs.findIndex(g => g == rg);
-            var at = this.tabIndex;
             var ns: MenuItem<string | BlockDirective>[] = [];
             ns.push({
                 text: lst('显示'),
@@ -322,8 +321,17 @@ export class Tab extends Block {
                     ]
                 }
             )
-            lodash.remove(rs, g => g.name == 'color');
-            rs.splice(pos + 1, 0, ...ns)
+            var at = rs.findIndex(g => g.name == 'color');
+            rs.splice(at, 2);
+            rs.splice(pos + 1, 0, ...ns);
+            var dat = rs.findIndex(c => c.name == BlockDirective.delete);
+            if (dat > -1) {
+                rs.splice(dat + 1, 0, { type: MenuItemType.divide }, {
+                    type: MenuItemType.help,
+                    text: lst('了解如何使用标签页'),
+                    url: window.shyConfig?.isUS ? "https://help.shy.live/page/280" : "https://help.shy.live/page/280"
+                })
+            }
         }
         return rs;
     }

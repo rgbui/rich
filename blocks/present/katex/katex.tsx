@@ -9,6 +9,7 @@ import { lst } from "../../../i18n/store";
 import { CopyAlert } from "../../../component/copy";
 import { Katex } from "../../../component/view/katex";
 import "./style.less";
+import { MenuItemType } from "../../../component/view/menu/declare";
 
 @url('/katex')
 export class KatexBlock extends Block {
@@ -44,12 +45,23 @@ export class KatexBlock extends Block {
     align: 'left' | 'right' | 'center' = 'center';
     async onGetContextMenus() {
         var items = await super.onGetContextMenus();
-        var align = items.find(g => g.name == 'text-align');
+        console.log('sss', items.map(i => ({ name: i.name, type: i.type })))
+        var align = items.find(g => g.name == 'text-center');
         if (align) {
-            align.text = lst('公式居中');
+            align.text = lst('公式对齐');
         }
         var at = items.findIndex(g => g.name == BlockDirective.copy);
-        items.splice(at + 2, 0, { icon: { name: 'bytedance-icon', code: 'formula' }, name: 'copyCode', text: lst('复制公式代码') })
+        items.splice(at + 3, 0, { icon: { name: 'bytedance-icon', code: 'formula' }, name: 'copyCode', text: lst('复制公式代码') })
+        var dat = items.findIndex(g => g.name == BlockDirective.delete);
+        items.splice(dat + 1, 0,
+            { type: MenuItemType.divide },
+            {
+                type: MenuItemType.help,
+                text: lst('了解如何使用公式'),
+                url: window.shyConfig.isUS ? "https://help.shy.live/page/261#v9GuKKnhQ1oZEAwoDeDBPi" : "https://help.shy.live/page/261#v9GuKKnhQ1oZEAwoDeDBPi"
+            }
+        )
+        console.log('ssssssrrr', items.map(i => ({ name: i.name, type: i.type })))
         return items;
     }
     async onClickContextMenu(item, event) {

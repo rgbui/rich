@@ -7,7 +7,7 @@ import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../../src/blo
 import { ChildsArea, TextArea, TextLineChilds } from "../../../src/block/view/appear";
 import { TextTurns } from "../../../src/block/turn/text";
 import { ListSvg, NumberListSvg, TriangleSvg } from "../../../component/svgs";
-import { BlockChildKey } from "../../../src/block/constant";
+import { BlockChildKey, BlockUrlResolve } from "../../../src/block/constant";
 import { DropDirection } from "../../../src/kit/handle/direction";
 import { dom } from "../../../src/common/dom";
 import { BlockFactory } from "../../../src/block/factory/block.factory";
@@ -116,7 +116,7 @@ export class List extends Block {
         dom(el).removeClass(g => g.startsWith('shy-block-drag-over'));
     }
     getUrl() {
-        return BlockFactory.stringBlockUrl(this.url, { listType: this.listType });
+        return BlockUrlResolve(this.url as any, { listType: this.listType });
     }
     async getHtml() {
         return `${await this.getChildsHtml()}`
@@ -195,6 +195,9 @@ export class List extends Block {
                 }, { type: MenuItemType.divide }]
             items.splice(at, 0, ...newItems)
         }
+        else items.splice(at, 0, {
+            type: MenuItemType.divide
+        })
         lodash.remove(items, c => c.name == 'text-center');
 
         return items;
