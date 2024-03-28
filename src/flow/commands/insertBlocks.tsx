@@ -15,6 +15,7 @@ import { channel } from "../../../net/channel";
 import { getPageText } from "../../page/declare";
 import weekOfYear from "dayjs/plugin/weekOfYear"
 import { HelpText } from "../../../component/view/text";
+import { PageLink } from "../../../extensions/link/declare";
 dayjs.extend(weekOfYear);
 
 @flow('/insertBlocks')
@@ -58,13 +59,16 @@ export class InsertBlocksCommand extends FlowCommand {
         var newBlocks = await this.flow.buttonBlock.parent.appendArrayBlockData(bs, at + 1, this.flow.buttonBlock.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
         await PageBlockUtil.eachBlockDatas(newBlocks, async (block: Block) => {
             if (block.url == BlockUrlConstant.Link) {
-                var r = await channel.post('/clone/page', {
-                    pageId: (block as any).pageId,
-                    parentId: this.block.page.pageInfo?.id,
-                    text: block.content
-                });
-                if (r?.data?.items?.length > 0) {
-                    await block.updateProps({ pageId: r.data.items[0].id });
+                var la = await (block as any).getLink() as PageLink;
+                if (la?.pageId) {
+                    var r = await channel.post('/clone/page', {
+                        pageId: la?.pageId,
+                        parentId: this.block.page.pageInfo?.id,
+                        text: block.content
+                    });
+                    if (r?.data?.items?.length > 0) {
+                        await block.updateProps({ pageId: r.data.items[0].id });
+                    }
                 }
             }
         })
@@ -117,8 +121,11 @@ export class InsertBlocksCommand extends FlowCommand {
                     }
                 if (typeof b.content == 'string') {
                     if (b.url == BlockUrlConstant.Link) {
-                        var r = await channel.get('/page/query/info', { id: b.pageId });
-                        b.content = getPageText(r.data);
+                        var lb = await b.getLink() as PageLink;
+                        if (lb?.pageId) {
+                            var r = await channel.get('/page/query/info', { id: lb?.pageId });
+                            b.content = getPageText(r.data);
+                        }
                     }
                     b.content = getC(b.content)
                 }
