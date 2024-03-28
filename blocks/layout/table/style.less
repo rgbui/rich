@@ -17,7 +17,7 @@
             >tr {
                 >td {
                     padding       : 5px 13px;
-                    border        : 1px solid #ddd;
+                    border        : var(--table-border);
                     min-height    : 20px;
                     vertical-align: top;
                 }
@@ -106,11 +106,11 @@
 
     &-top-drag,
     &-left-drag {
-        pointer-events: visible;
-        position      : absolute;
-        z-index       : 1;
-        cursor        : pointer;
-        display       : none;
+        pointer-events   : visible;
+        position         : absolute;
+        z-index          : 1;
+        cursor           : pointer;
+        display          : none;
         // >span {
         //     box-shadow: var(--shadow-s);
         //     background: #fff;
@@ -185,10 +185,12 @@
         right   : 0px;
         height  : 30px;
         top     : -30px;
+
         >span {
             box-shadow: var(--shadow-s);
             background: #fff;
             display   : inline-flex;
+
             &:hover {
                 background-color: rgb(116, 182, 219);
                 color           : #fff;

@@ -11,7 +11,7 @@ import { Point } from "../../../src/common/vector/point";
 import { TableRow } from "./row";
 import { MenuItemType } from "../../../component/view/menu/declare";
 import lodash from "lodash";
-import { ArrowDownSvg, ArrowLeftSvg, ArrowRightSvg, ArrowUpSvg, BlockcolorSvg, ClearCellSvg, CloseTickSvg, DeleteColSvg, DeleteRowSvg, TrashSvg } from "../../../component/svgs";
+import {  BlockcolorSvg, TableBottomInsertSvg, TableClearCellSvg, TableDeleteColSvg, TableDeleteRowSvg, TableLeftInsertSvg, TableRightInsertSvg, TableTopInsertSvg } from "../../../component/svgs";
 import { BackgroundColorList, FontColorList } from "../../../extensions/color/data";
 import { GridMap } from "../../../src/page/grid";
 import { lst } from "../../../i18n/store";
@@ -111,14 +111,14 @@ export class TableCellView extends BlockView<TableCell>{
                 ]
             }
             var items = [
-                { icon: ArrowUpSvg, text: lst('在上方插入一行'), name: 'up' },
-                { icon: ArrowDownSvg, text: lst('在下方插入一行'), name: 'down' },
-                { icon: ArrowLeftSvg, text: lst('在左边插入一列'), name: 'left' },
-                { icon: ArrowRightSvg, text: lst('在右侧插入一列'), name: 'right' },
+                { icon: TableTopInsertSvg, text: lst('在上方插入一行'), name: 'up' },
+                { icon: TableBottomInsertSvg, text: lst('在下方插入一行'), name: 'down' },
+                { icon: TableLeftInsertSvg, text: lst('在左边插入一列'), name: 'left' },
+                { icon: TableRightInsertSvg, text: lst('在右侧插入一列'), name: 'right' },
                 { type: MenuItemType.divide },
                 {
                     text: lst('所在行颜色'),
-                    icon: BlockcolorSvg,
+                    icon: { name: 'byte', code: 'rectangle-one' } as any,
                     childs: getColors('row', {
                         font: this.block.parent?.pattern?.getFontStyle()?.color,
                         fill: this.block.parent?.pattern?.getFillStyle()?.color
@@ -126,17 +126,17 @@ export class TableCellView extends BlockView<TableCell>{
                 },
                 {
                     text: lst('所在列颜色'),
-                    icon: BlockcolorSvg,
+                    icon: { name: 'byte', code: 'rectangle' } as any,
                     childs: getColors('col', {
                         font: this.block?.pattern?.getFontStyle()?.color,
                         fill: this.block?.pattern?.getFillStyle()?.color
                     })
                 },
                 { type: MenuItemType.divide },
-                { name: 'delRow', icon: DeleteRowSvg, text: lst('删除所在行'), },
-                { name: 'delCol', icon: DeleteColSvg, text: lst('删除所在列') },
+                { name: 'delRow', icon: TableDeleteRowSvg, text: lst('删除所在行'), },
+                { name: 'delCol', icon: TableDeleteColSvg, text: lst('删除所在列') },
                 { type: MenuItemType.divide },
-                { icon: ClearCellSvg, text: lst('清空单元格'), name: 'clear' },
+                { icon: TableClearCellSvg, text: lst('清空单元格'), name: 'clear' },
                 {
                     text: lst('单元格颜色'),
                     icon: BlockcolorSvg,

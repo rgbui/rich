@@ -2,13 +2,13 @@ import { Block } from "../../../src/block";
 import { BlockView } from "../../../src/block/view";
 import React, { CSSProperties } from "react";
 import { prop, url, view } from "../../../src/block/factory/observable";
-import { BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
+import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
 import { ChildsArea } from "../../../src/block/view/appear";
 import { ActionDirective } from "../../../src/history/declare";
 import { Point, Rect } from "../../../src/common/vector/point";
 import lodash from 'lodash';
 import { MouseDragger } from "../../../src/common/dragger";
-import { ArrowDownSvg, ArrowLeftSvg, ArrowRightSvg, ArrowUpSvg, BlockcolorSvg, ClearCellSvg, DeleteColSvg, DeleteRowSvg, DotsSvg, DragHandleSvg, PlusSvg } from "../../../component/svgs";
+import { BlockcolorSvg, DragHandleSvg, HorizontalDistributionSvg, PlusSvg, TableBottomInsertSvg, TableClearCellSvg, TableDeleteColSvg, TableDeleteRowSvg, TableLeftInsertSvg, TableRightInsertSvg, TableTopInsertSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { ghostView } from "../../../src/common/ghost";
 import { ToolTip } from "../../../component/view/tooltip";
@@ -16,9 +16,10 @@ import { S } from "../../../i18n/view";
 import { BoardBlockSelector, BoardPointType } from "../../../src/block/partial/board";
 import { BoardDrag } from "../../../src/kit/operator/board";
 import { useSelectMenuItem } from "../../../component/view/menu";
-import { MenuItemType } from "../../../component/view/menu/declare";
+import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { FontColorList, BackgroundColorList } from "../../../extensions/color/data";
-import { lst } from "../../../i18n/store";
+import { ls, lst } from "../../../i18n/store";
+import { BlockUrlConstant } from "../../../src/block/constant";
 import "./style.less";
 
 const COL_WIDTH = 150;
@@ -254,18 +255,18 @@ export class Table extends Block {
                 ]
             }
             var items = [
-                { icon: ArrowLeftSvg, text: lst('在左边插入一列'), name: 'left' },
-                { icon: ArrowRightSvg, text: lst('在右侧插入一列'), name: 'right' },
+                { icon: TableLeftInsertSvg, text: lst('在左边插入一列'), name: 'left' },
+                { icon: TableRightInsertSvg, text: lst('在右侧插入一列'), name: 'right' },
                 { type: MenuItemType.divide },
                 {
                     text: lst('颜色'),
-                    icon: BlockcolorSvg,
+                    icon: { name: 'byte', code: 'rectangle' } as any,
                     childs: getColors()
                 },
                 { type: MenuItemType.divide },
-                { name: 'delCol', disabled: this.childs.first().childs.length > 0 ? false : true, icon: DeleteColSvg, text: lst('删除列') },
+                { name: 'delCol', disabled: this.childs.first().childs.length > 0 ? false : true, icon: TableDeleteColSvg, text: lst('删除列') },
                 { type: MenuItemType.divide },
-                { icon: ClearCellSvg, text: lst('清空单元格'), name: 'clear' }
+                { icon: TableClearCellSvg, text: lst('清空单元格'), name: 'clear' }
             ]
             var result = await useSelectMenuItem({ roundPoint: Point.from(event).move(10, 10) },
                 items
@@ -372,18 +373,18 @@ export class Table extends Block {
             ]
         }
         var items = [
-            { icon: ArrowUpSvg, text: lst('在上方插入一行'), name: 'up' },
-            { icon: ArrowDownSvg, text: lst('在下方插入一行'), name: 'down' },
+            { icon: TableTopInsertSvg, text: lst('在上方插入一行'), name: 'up' },
+            { icon: TableBottomInsertSvg, text: lst('在下方插入一行'), name: 'down' },
             { type: MenuItemType.divide },
             {
                 text: lst('所在行颜色'),
-                icon: BlockcolorSvg,
+                icon: { name: 'byte', code: 'rectangle-one' } as any,
                 childs: getColors()
             },
             { type: MenuItemType.divide },
-            { name: 'delRow', disabled: this.childs.length > 1 ? false : true, icon: DeleteRowSvg, text: lst('删除行'), },
+            { name: 'delRow', disabled: this.childs.length > 1 ? false : true, icon: TableDeleteRowSvg, text: lst('删除行'), },
             { type: MenuItemType.divide },
-            { icon: ClearCellSvg, text: lst('清空单元格'), name: 'clear' }
+            { icon: TableClearCellSvg, text: lst('清空单元格'), name: 'clear' }
         ]
         var result = await useSelectMenuItem({ roundPoint: Point.from(event).move(10, 10) },
             items
@@ -487,13 +488,221 @@ export class Table extends Block {
             }
         }
     }
-    async onGetContextMenus(this: Block) {
+    @prop()
+    lineType: 'solid' | 'dashed' | 'double' | 'dotted' = 'solid';
+    @prop()
+    lineColor: string = '#ddd';
+    @prop()
+    lineWidth = 1;
+    async onGetContextMenus() {
         var rs = await super.onGetContextMenus();
         var c = rs.findIndex(c => c.name == 'color');
         if (c > -1) {
             rs.splice(c, 2);
         }
+        var borderItems = [];
+        borderItems.push({
+            text: lst('线类型'),
+            icon: { name: 'bytedance-icon', code: 'align-text-both' },
+            childs: [
+                {
+                    name: 'lineType',
+                    text: lst('实线'),
+                    value: 'solid',
+                    checkLabel: this.lineType == 'solid'
+                },
+                {
+                    name: 'lineType',
+                    text: lst('虚线'),
+                    value: 'dashed',
+                    checkLabel: this.lineType == 'dashed'
+                },
+                {
+                    name: 'lineType',
+                    text: lst('双线'),
+                    value: 'double',
+                    checkLabel: this.lineType == 'double'
+                },
+                {
+                    name: 'lineType',
+                    text: lst('点状虚线'),
+                    value: 'dotted',
+                    checkLabel: this.lineType == 'dotted'
+                }
+            ]
+        });
+        borderItems.push({
+            text: lst('线宽'),
+            icon: { name: 'bytedance-icon', code: 'auto-height-one', rotate: 90, },
+            childs: [
+                {
+                    name: 'lineWidth',
+                    text: '1',
+                    value: 1,
+                    checkLabel: this.lineWidth == 1
+                },
+                {
+                    name: 'lineWidth',
+                    text: '2',
+                    value: 2,
+                    checkLabel: this.lineWidth == 2
+                },
+                {
+                    name: 'lineWidth',
+                    text: '4',
+                    value: 4,
+                    checkLabel: this.lineWidth == 4
+                },
+                {
+                    name: 'lineWidth',
+                    text: '8',
+                    value: 8,
+                    checkLabel: this.lineWidth == 8
+                },
+                {
+                    name: 'lineWidth',
+                    text: '16',
+                    value: 16,
+                    checkLabel: this.lineWidth == 16
+                }
+            ]
+        });
+        borderItems.push({
+            text: lst('颜色'),
+            icon: { name: 'byte', code: 'background-color' },
+            childs: [
+                {
+                    text: lst('线颜色'),
+                    type: MenuItemType.text
+                },
+                {
+                    name: 'lineColor',
+                    type: MenuItemType.color,
+                    block: ls.isCn ? false : true,
+                    options: [
+                        { color: 'inherit', text: lst('默认') },
+                        { color: 'rgba(55,53,47,0.2)', text: lst('浅灰色') },
+                        { color: 'rgba(55,53,47,0.6)', text: lst('灰色') },
+                        { color: 'rgb(100,71,58)', text: lst('棕色') },
+                        { color: 'rgb(217,115,13)', text: lst('橙色') },
+                        { color: 'rgb(223,171,1)', text: lst('黄色') },
+                        { color: 'rgb(15,123,108)', text: lst('绿色') },
+                        { color: 'rgb(11,110,153)', text: lst('蓝色') },
+                        { color: 'rgb(105,64,165)', text: lst('紫色') },
+                        { color: 'rgb(173,26,114)', text: lst('粉色') },
+                        { color: 'rgb(224,62,62)', text: lst('红色') },
+                    ].map(f => {
+                        return {
+                            text: f.text,
+                            overlay: f.text,
+                            value: f.color,
+                            checked: this.lineColor == f.color ? true : false
+                        }
+                    })
+                }
+            ]
+        });
+        var dat = rs.findIndex(c => c.name == BlockDirective.delete);
+        rs.splice(dat - 1, 0, { type: MenuItemType.divide }, {
+            text: lst('表格操作'),
+            icon: { name: 'byte', code: 'pencil' },
+            childs: [
+                { icon: TableLeftInsertSvg, text: lst('在左边插入一列'), name: 'left' },
+                { icon: TableRightInsertSvg, text: lst('在右侧插入一列'), name: 'right' },
+                { icon: TableTopInsertSvg, text: lst('在上方插入一行'), name: 'up' },
+                { icon: TableBottomInsertSvg, text: lst('在下方插入一行'), name: 'down' },
+                { type: MenuItemType.divide },
+                { icon: TableClearCellSvg, text: lst('清空单元格内容'), name: 'clearAll' }
+            ]
+        },
+            {
+                text: lst('边框'),
+                childs: borderItems,
+                icon: {
+                    name: 'byte',
+                    code: 'rectangle-one'
+                }
+            },
+            {
+
+                text: lst('均分列宽'),
+                name: 'agvCols',
+                icon: HorizontalDistributionSvg
+            },
+            {
+                text: lst('行列转换'),
+                name: 'rowColTurn',
+                icon: { name: 'bytedance-icon', code: 'pivot-table' }
+            }
+        )
+        dat = rs.findIndex(c => c.name == BlockDirective.delete);
+        if (dat > -1) {
+            rs.splice(dat + 1, 0, { type: MenuItemType.divide }, {
+                type: MenuItemType.help,
+                text: lst('了解如何使用简单表格'),
+                url: window.shyConfig?.isUS ? "https://help.shy.live/page/257" : "https://help.shy.live/page/257"
+            })
+        }
         return rs;
+    }
+    async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent): Promise<void> {
+        if (item.name == 'lineType' || item.name == 'lineWidth' || item.name == 'lineColor') {
+            await this.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self })
+            return;
+        }
+        else if (item.name == 'clearAll') {
+            await this.page.onAction('clearAll', async () => {
+                await this.childs.eachAsync(async row => {
+                    await row.childs.eachAsync(async cell => {
+                        await cell.childs.eachReverseAsync(async c => await c.delete())
+                    })
+                })
+            })
+            return;
+        }
+        else if (item.name == 'agvCols') {
+            await this.page.onAction('agvCols', async () => {
+                var width = this.cols.sum(c => c.width);
+                var w = width / this.cols.length;
+                await this.updateProps({
+                    cols: this.cols.map(c => {
+                        return {
+                            width: w
+                        }
+                    })
+                }, BlockRenderRange.self)
+            })
+            return;
+        }
+        else if (item.name == 'rowColTurn') {
+            await this.page.onAction('rowColTurn', async () => {
+                var t = {
+                    url: BlockUrlConstant.Table,
+                    cols: [],
+                    lineColor: this.lineColor,
+                    lineWidth: this.lineWidth,
+                    lineType: this.lineType,
+                    blocks: {
+                        childs: []
+                    }
+                }
+                for (let i = 0; i < this.cols.length; i++) {
+                    var row = { url: BlockUrlConstant.TableRow, blocks: { childs: [] } };
+                    for (let j = 0; j < this.childs.length; j++) {
+                        row.blocks.childs.push(await this.childs[j].childs[i].cloneData());
+                        if (i == 0) {
+                            t.cols.push({
+                                width: COL_WIDTH
+                            })
+                        }
+                    }
+                    t.blocks.childs.push(row);
+                };
+                var newTable = await this.replaceDatas([t]);
+            })
+            return;
+        }
+        return await super.onClickContextMenu(item, event);
     }
     getVisibleHandleCursorPoint(): Point {
         if (!this.el) return
@@ -514,6 +723,7 @@ export class TableView extends BlockView<Table>{
         var boxRect = Rect.fromEle(this.box);
         var tableRect = Rect.fromEle(this.table);
         var firstTr = this.table.querySelector('tr');
+        if (!firstTr) return;
         var tds = Array.from(firstTr.children) as HTMLElement[];
         var scrollLeft = this.box.scrollLeft;
         var tableLeft = boxRect.left - scrollLeft;
@@ -775,7 +985,7 @@ export class TableView extends BlockView<Table>{
                         rx = columnCount + Math.ceil(dx / COL_WIDTH);
                         if (rx < columnCount - endEmptyColumnCount) rx = columnCount - endEmptyColumnCount;
                     }
-                    this.block.onDragAdd({
+                    await this.block.onDragAdd({
                         save: true,
                         row: rowCount,
                         column: columnCount,
@@ -1001,6 +1211,7 @@ export class TableView extends BlockView<Table>{
                 margin: '2rem 0.2rem'
             })
         }
+        contentStyle['--table-border'] = `${this.block.lineWidth}px ${this.block.lineType} ${this.block.lineColor}`;
         return <div style={this.block.visibleStyle}
             onMouseMove={e => this.mousemove(e.nativeEvent)}
             onMouseLeave={e => this.onMouseleave()}
