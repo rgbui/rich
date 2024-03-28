@@ -22,16 +22,19 @@ export function HelpText(props: {
     children?: React.ReactNode,
     url: string,
     className?: string | (string[]),
-    align?: 'left' | 'right'
+    align?: 'left' | 'right',
+    block?: boolean
 }) {
     var c = util.covertToArray(props.className);
     if (props.align == 'left') {
         return <a
+            style={{ display: props.block ? 'flex' : 'inline-flex' }}
             className={"padding-w-3 remark f-12 cursor item-hover round l-20 flex flex-inline " + (c.join(" "))}
             target="_blank"
             href={props.url}><Icon size={14} icon={HelpSvg}></Icon><span className="gap-l-3" >{props.text || props.children}</span></a>
     }
     return <a
+        style={{ display: props.block ? 'flex' : 'inline-flex' }}
         className={"padding-w-3 remark f-12 cursor item-hover round l-20 flex flex-inline " + (c.join(" "))}
         target="_blank"
         href={props.url}><span className="gap-r-3">{props.text || props.children}</span><Icon size={14} icon={HelpSvg}></Icon></a>
