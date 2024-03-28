@@ -8,12 +8,10 @@ import { Rect } from "../../src/common/vector/point";
 import { useTagViewer } from "../../extensions/tag/view";
 import { channel } from "../../net/channel";
 import { BoxTip } from "../../component/view/tooltip/box";
-import { DragHandleSvg, DuplicateSvg, EditSvg, TopicSvg, TrashSvg } from "../../component/svgs";
+import { DragHandleSvg, TrashSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
-import { CopyAlert } from "../../component/copy";
 import { DragBlockLine } from "../../src/kit/handle/line";
 import { BlockUrlConstant } from "../../src/block/constant";
-import { lst } from "../../i18n/store";
 import { Tip } from "../../component/view/tooltip/tip";
 
 @url('/tag')
@@ -41,10 +39,12 @@ export class ShyTag extends Block {
         this.loadTag();
     }
     async loadTag() {
-        var g = await channel.get('/tag/query', { id: this.refLinks[0].tagId, ws: this.page.ws });
-        if (g.ok) {
-            this.refLinks[0].tagText = g.data?.tag?.tag;
-            this.forceUpdate()
+        if (Array.isArray(this.refLinks)) {
+            var g = await channel.get('/tag/query', { id: this.refLinks[0].tagId, ws: this.page.ws });
+            if (g.ok) {
+                this.refLinks[0].tagText = g.data?.tag?.tag;
+                this.forceUpdate()
+            }
         }
     }
     async getHtml() {
@@ -61,9 +61,6 @@ export class ShyTag extends Block {
 @view('/tag')
 export class ShyMentionView extends BlockView<ShyTag>{
     boxTip: BoxTip;
-    copyLink(url: string) {
-        CopyAlert(url, lst('复制成功'))
-    }
     async onClearLink() {
         if (this.boxTip) this.boxTip.close();
         var ref = Array.isArray(this.block.refLinks) ? this.block.refLinks[0] : undefined;
@@ -75,13 +72,12 @@ export class ShyMentionView extends BlockView<ShyTag>{
     dragBlock(event: React.MouseEvent) {
         DragBlockLine(this.block, event);
     }
-    renderView()  {
+    renderView() {
         var ref = Array.isArray(this.block.refLinks) ? this.block.refLinks[0] : undefined;
         return <span className="sy-block-tag" onMouseDown={e => this.block.openTag(e)}>
             <BoxTip ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center  padding-5 r-flex-center r-size-24 r-round r-item-hover r-cursor text">
                 {this.block.isCanEdit() && <Tip text={'拖动'}><span onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>}
-                {/* <Tip overlay={'复制网址'}><span onMouseDown={e => this.copyLink(url)} ><Icon size={16} icon={DuplicateSvg}></Icon></span></Tip> */}
-                <Tip text={'打开'}><span onMouseDown={e => this.block.openTag(e)}><Icon size={16} icon={TopicSvg}></Icon></span></Tip>
+                <Tip text={'打开标签引用'}><span onMouseDown={e => this.block.openTag(e)}><Icon size={16} icon={{name:'byte',code:'hashtag-key'}}></Icon></span></Tip>
                 {this.block.isCanEdit() && <Tip text={'取消'}><span onMouseDown={e => this.onClearLink()}><Icon size={16} icon={TrashSvg}></Icon></span></Tip>}
             </div>}>
                 <SolidArea block={this.block} prop={'userid'} >#{ref?.tagText}</SolidArea>

@@ -63,8 +63,17 @@ export class LinkPaths extends Block {
             type: MenuItemType.switch,
             checked: this.hiddenSelection
         },
-        { type: MenuItemType.divide }
-        ])
+        // { type: MenuItemType.divide }
+        ]);
+        var dat = rs.findIndex(g => g.name == BlockDirective.delete);
+        rs.splice(dat+1, 0, {
+            type: MenuItemType.divide
+        },
+        {
+            type: MenuItemType.help,
+            text: lst('了解如何使用面包屑导航'),
+            url: window.shyConfig?.isUS ? "https://help.shy.live/page/1833" : "https://help.shy.live/page/1833"
+        })
         return rs;
     }
     async onContextMenuInput(item: MenuItem<BlockDirective | string>) {
@@ -96,11 +105,11 @@ export class LinkPathsView extends BlockView<LinkPaths>{
             return <Icon className={'remark flex-center '} size={20} icon={{ name: "byte", code: 'right' }}></Icon>
         return <span className="padding-w-5 padding-h-2 remark f-20">/</span>
     }
-    renderItem(item: LinkPageItem, index: number) {
+    renderItem(item: LinkPageItem, index: number, items: LinkPageItem[]) {
         if (item.mime == 20 || item.mime == 'pages')
             return <span className="flex-center" key={item.id}>
                 <span>{item.text}</span>
-                {index == this.block.items.length - 1 ? "" : this.renderJoin()}
+                {index == items.length - 1 ? "" : this.renderJoin()}
             </span>
         else return <span className="flex-center" key={item.id}>
             <span
@@ -108,21 +117,25 @@ export class LinkPathsView extends BlockView<LinkPaths>{
                 className="flex item-hover cursor round padding-w-5 padding-h-2  "><Icon className={'remark gap-r-3'} size={16} icon={getPageIcon(item)}></Icon>
                 <span>{getPageText(item)}</span>
             </span>
-            {index == this.block.items.length - 1 ? "" : this.renderJoin()}
+            {index == items.length - 1 ? "" : this.renderJoin()}
         </span>
     }
-    renderView() {
+    getItems() {
         var items = this.block.items;
         if (this.block.hiddenSelection) {
             items = items.filter(item => !(item.mime == 20 || item.mime == 'pages'))
         }
+        return items;
+    }
+    renderView() {
+        var items = this.getItems();
         var cs = this.block.contentStyle;
         if (this.block.align == 'center') cs.justifyContent = 'center';
         else if (this.block.align == 'right') cs.justifyContent = 'flex-end';
         return <div className="sy-block-sub-links" style={this.block.visibleStyle}>
             <div className="flex" style={cs}>
                 {items.map((item, i) => {
-                    return this.renderItem(item, i)
+                    return this.renderItem(item, i, items)
                 })}
             </div>
         </div>
