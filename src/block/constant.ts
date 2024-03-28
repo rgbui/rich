@@ -1,4 +1,5 @@
 
+
 export enum BlockUrlConstant {
     TextSpan = '/textspan',
     Text = '/text',
@@ -33,8 +34,8 @@ export enum BlockUrlConstant {
     DataGridList = '/data-grid/list',
     DataGridCalendar = '/data-grid/calendar',
     DataGridBoard = '/data-grid/board',
-    DataGridTab='/data-grid/tab',
-    DataGridTabPage='/data-grid/tab/page',
+    DataGridTab = '/data-grid/tab',
+    DataGridTabPage = '/data-grid/tab/page',
     RefLinks = '/ref/links',
     Link = '/link',
     Todo = '/todo',
@@ -52,13 +53,47 @@ export enum BlockUrlConstant {
     BoardImage = '/board/image',
     RecordPageView = '/data-grid/page/record',
     Table = '/table',
-    Cell = '/table/cell',
+    TableRow='/table/row',
+    TableCell = '/table/cell',
     BoardPageCard = '/board/page/card',
     PagePreOrNext = '/page/preOrNext',
     Card = '/card',
     PageAuthor = '/page/author',
     PageUpvotedOrShared = '/page/UpvotedOrShared'
 }
+
+export function BlockUrlResolve(url: BlockUrlConstant, data?: Record<string, any>) {
+    if (data) {
+        var parms = JSON.stringify(data);
+        return url + '?' + parms;
+    }
+    else return url;
+}
+
+export function ParseBlockUrl(url: string) {
+    if (url.indexOf('?') > -1) {
+        var us = url.split('?');
+        var parms = us[1];
+        var data: Record<string, any> = {};
+        if (typeof parms == 'string' && parms.startsWith('{')) {
+            try {
+                data = window.eval('(' + parms + ')');
+            }
+            catch (ex) {
+                console.error(ex);
+            }
+        }
+        return {
+            url: us[0],
+            data
+        }
+    }
+    else return {
+        url,
+        data: {}
+    }
+}
+
 export enum BlockChildKey {
     childs = 'childs',
     subChilds = 'subChilds',
