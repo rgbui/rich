@@ -14,6 +14,7 @@ import { lst } from "../../../i18n/store";
 import { Page } from "../../../src/page";
 import { channel } from "../../../net/channel";
 import "./style.less";
+import { BlockUrlConstant } from "../../../src/block/constant";
 
 class InputUrlSelector extends InputTextPopSelector {
     onClose(): void {
@@ -57,14 +58,14 @@ class InputUrlSelector extends InputTextPopSelector {
                                 var sv = ts.views.find(c => c.id == pe.id1);
                                 this.urlTexts = [
                                     { icon: TableSvg, text: lst('引用数据表格'), name: 'data-grid', url: sv.url, data: { schemaId: ts.id, syncBlockId: pe.id1 } },
-                                    { icon: LinkSvg, text: lst('保持网址'), name: 'url', url: '/text', isLine: true },
-                                    { icon: { name: 'bytedance-icon', code: 'text' }, text: lst('纯文本'), name: 'text', url: '/text', isLine: true },
+                                    { icon: LinkSvg, text: lst('保持网址'), name: 'url', url: BlockUrlConstant.Text, isLine: true },
+                                    { icon: { name: 'bytedance-icon', code: 'text' }, text: lst('纯文本'), name: 'text', url: BlockUrlConstant.Text, isLine: true },
                                 ]
                             }
                             else if (pe.type == ElementType.SchemaData || pe.type == ElementType.SchemaRecordView) {
                                 this.urlTexts = [
-                                    { icon: LinkSvg, text: lst('保持网址'), name: 'url', url: '/text', isLine: true },
-                                    { icon: { name: 'bytedance-icon', code: 'text' }, text: lst('纯文本'), name: 'text', url: '/text', isLine: true },
+                                    { icon: LinkSvg, text: lst('保持网址'), name: 'url', url: BlockUrlConstant.Text, isLine: true },
+                                    { icon: { name: 'bytedance-icon', code: 'text' }, text: lst('纯文本'), name: 'text', url: BlockUrlConstant.Text, isLine: true },
                                 ]
                             }
                         }
@@ -89,15 +90,15 @@ class InputUrlSelector extends InputTextPopSelector {
                 }
                 if (item) {
                     this.urlTexts = [
-                        { icon: PageSvg, text: lst('页面'), name: 'page', url: '/link', data: { pageId: item.id, refBlockId: blockId || undefined } },
-                        { icon: LinkSvg, text: lst('保持网址'), name: 'url', url: '/text', isLine: true },
-                        { icon: { name: 'bytedance-icon', code: 'text' }, text: lst('纯文本'), name: 'text', url: '/text', isLine: true },
+                        { icon: PageSvg, text: lst('页面'), name: 'page', url: BlockUrlConstant.Link, data: { link: { pageId: item.id, blockId: blockId } || undefined } },
+                        { icon: LinkSvg, text: lst('保持网址'), name: 'url', url: BlockUrlConstant.Text, isLine: true },
+                        { icon: { name: 'bytedance-icon', code: 'text' }, text: lst('纯文本'), name: 'text', url: BlockUrlConstant.Text, isLine: true },
                     ]
                 }
                 else
                     this.urlTexts = [
-                        { icon: LinkSvg, text: lst('保持网址'), name: 'url', url: '/text', isLine: true },
-                        { icon: { name: 'bytedance-icon', code: 'text' }, text: lst('纯文本'), name: 'text', url: '/text', isLine: true },
+                        { icon: LinkSvg, text: lst('保持网址'), name: 'url', url: BlockUrlConstant.Text, isLine: true },
+                        { icon: { name: 'bytedance-icon', code: 'text' }, text: lst('纯文本'), name: 'text', url: BlockUrlConstant.Text, isLine: true },
                     ]
             }
         }
@@ -113,7 +114,7 @@ class InputUrlSelector extends InputTextPopSelector {
             if (typeof this._select == 'function') {
                 var ut = this.urlTexts.find(c => c.name == item.name);
                 var props: Record<string, any> = {};
-                if (item.url == '/text') {
+                if (item.url == BlockUrlConstant.Text) {
                     props.content = this.url;
                     if (item.name != 'text')
                         props.link = { url: this.url }

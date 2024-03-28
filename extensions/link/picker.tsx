@@ -149,7 +149,7 @@ class LinkPicker extends EventsComponent {
                 <span className="text-overflow flex-auto">{this.url}</span>
             </div>}
             {this.name == 'page' && this.url && this.allowCreate && <><div onClick={e => this.onCreate()} className={'h-30  cursor  item-hover round padding-w-5 flex' + (this.selectIndex == 0 ? " item-hover-focus" : "")}>
-                <span className="flex-auto"><S>创建</S><em className="bold">{this.url}</em></span>
+                <span className="flex-auto text-overflow"><S>创建</S><em className="bold">{this.url}</em></span>
                 <Tip text='创建新页面'><span className="flex-fixed size-24 flex-center item-hover cursor round">
                     <Icon icon={PlusSvg} size={20}></Icon>
                 </span></Tip>

@@ -17,3 +17,5 @@ export function ConvertEmbed(url: string) {
         return { origin: url, url, embedType: '' }
     }
 }
+
+export type EmbedType= 'music.163' | 'bilibili' | 'amap'|"bookmark" | ''; 

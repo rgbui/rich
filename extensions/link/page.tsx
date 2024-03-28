@@ -6,11 +6,11 @@ import { Divider } from "../../component/view/grid";
 import { Icon } from "../../component/view/icon";
 import { BlockUrlConstant } from "../../src/block/constant";
 import { InputTextPopSelector } from "../common/input.pop";
-import "./style.less";
 import { LinkPageItem, getPageIcon } from "../../src/page/declare";
 import { Spin } from "../../component/view/spin";
 import { util } from "../../util/util";
 import { channel } from "../../net/channel";
+import "./style.less";
 
 /**
  * 用户输入[[触发
@@ -23,13 +23,13 @@ class PageLinkSelector extends InputTextPopSelector<LinkPageItem> {
             return this.allList.list.findAll(g => g.text && g.text.startsWith(word) || g.text.indexOf(word) > -1);
         }
         else {
-            var r = (await channel.get('/page/word/query', { word: word,ws:this.page.ws })).data.list;
+            var r = (await channel.get('/page/word/query', { word: word, ws: this.page.ws })).data.list;
             return r;
         }
     }
     async searchAll() {
         if (this.allList.lastDate && Date.now() - this.allList.lastDate.getTime() > 5000) {
-            var r = await channel.get('/page/word/query', { size: this.allList.size,ws:this.page.ws });
+            var r = await channel.get('/page/word/query', { size: this.allList.size, ws: this.page.ws });
             this.allList = r.data;
             this.allList.lastDate = new Date();
         }
@@ -63,14 +63,16 @@ class PageLinkSelector extends InputTextPopSelector<LinkPageItem> {
     }
     onSelect(block) {
         if (block.name == 'create') {
-            this._select({ url: BlockUrlConstant.Text, isLine: true, content: this.text || "新页面", link: { name: "create", text: this.text || "新页面" } })
+            this._select({ url: BlockUrlConstant.Text, isLine: true, data: { content: this.text || "新页面" }, operator: { name: "create", text: this.text || "新页面" } })
         }
         else {
             this._select({
                 url: BlockUrlConstant.Text,
                 isLine: true,
-                content: block.text,
-                refLinks: [{ id: util.guid(), type: 'page', pageId: block.id }]
+                data: {
+                    content: block.text,
+                    refLinks: [{ id: util.guid(), type: 'page', pageId: block.id }]
+                }
             })
         }
         this.close();
@@ -82,7 +84,7 @@ class PageLinkSelector extends InputTextPopSelector<LinkPageItem> {
                     url: BlockUrlConstant.Text,
                     isLine: true,
                     content: this.text || "新页面",
-                    link: { name: "create", text: this.text || "新页面" }
+                    operator: { name: "create", text: this.text || "新页面" }
                 }
             }
         }
