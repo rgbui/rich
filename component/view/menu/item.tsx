@@ -174,7 +174,7 @@ export class MenuItemView extends React.Component<{
                 <Switch size='small' onChange={e => this.checked(e, item)} checked={item.checked ? item.checked : false}></Switch>
             </div>}
             {item.type == MenuItemType.help && <div className="shy-menu-box-item-help">
-                <HelpText url={item.url}>{item.text}</HelpText>
+                <HelpText className={'padding-w-5'} align="left" block url={item.url}>{item.text}</HelpText>
             </div>}
             {item.type == MenuItemType.input && !item.label && <div className="shy-menu-box-item-input"><Input size={'small'} value={item.value} onEnter={e => { item.value = e; this.select(item) }} onChange={e => { item.value = e; this.input(e, item) }} placeholder={item.placeholder || item.text}></Input></div>}
             {item.type == MenuItemType.input && item.label && <div className="flex shy-menu-box-item-input">
