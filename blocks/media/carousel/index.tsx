@@ -4,7 +4,7 @@ import { prop, url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
 import { ResourceArguments } from "../../../extensions/icon/declare";
 import { Icon } from "../../../component/view/icon";
-import { DotsSvg, DownloadSvg, DuplicateSvg, LinkSvg, PicSvg, TrashSvg, UploadSvg } from "../../../component/svgs";
+import { DotsSvg, DownloadSvg, DuplicateSvg, LinkSvg, PicSvg, RefreshSvg, TrashSvg, UploadSvg } from "../../../component/svgs";
 import { MouseDragger } from "../../../src/common/dragger";
 import { useImagePicker } from "../../../extensions/image/picker";
 import { Rect } from "../../../src/common/vector/point";
@@ -25,6 +25,7 @@ import "./style.less";
 import { lst } from "../../../i18n/store";
 import { S } from "../../../i18n/view";
 import { channel } from "../../../net/channel";
+import { UA } from "../../../util/ua";
 
 @url('/carousel/image')
 export class Carousel extends Block {
@@ -67,7 +68,6 @@ export class Carousel extends Block {
     contentHeight = 200;
     @prop()
     autoCarousel: number = 2;
-
     async onGetContextMenus() {
         if (this.isFreeBlock) {
             return await this.onGetBoardContextMenus()
@@ -76,15 +76,13 @@ export class Carousel extends Block {
         items.push({
             name: BlockDirective.copy,
             text: '拷贝副本',
-            label: "Ctrl+D",
+            label: UA.isMacOs ? "⌘+D" : "Ctrl+D",
             icon: DuplicateSvg
         });
         items.push({
-            type: MenuItemType.divide
-        });
-        items.push({
             name: BlockDirective.link,
-            text: lst('拷贝块链接'),
+            text: lst('复制块链接'),
+            label: UA.isMacOs ? "⌥+Shift+L" : "Alt+Shift+L",
             icon: LinkSvg
         });
         items.push({
@@ -131,7 +129,7 @@ export class Carousel extends Block {
         items.push({
             name: 'append',
             text: lst('添加图片'),
-            icon: UploadSvg
+            icon: { name: 'byte', code: 'add-picture' }
         })
         items.push({
             type: MenuItemType.divide
@@ -140,11 +138,11 @@ export class Carousel extends Block {
             text: lst('自动播放'),
             icon: { name: 'byte', code: 'play' },
             childs: [
-                { name: "autoCarousel", text: '0.5s', value: 1, checkLabel: this.autoCarousel == 0.5 },
-                { name: "autoCarousel", text: '1s', value: 1, checkLabel: this.autoCarousel == 1 },
-                { name: "autoCarousel", text: '2s', value: 2, checkLabel: this.autoCarousel == 2 },
-                { name: "autoCarousel", text: '5s', value: 5, checkLabel: this.autoCarousel == 5 },
-                { name: "autoCarousel", text: '10s', value: 10, checkLabel: this.autoCarousel == 10 },
+                { name: "autoCarousel", text: '0.7 s', value: 0.7, checkLabel: this.autoCarousel == 0.7 },
+                { name: "autoCarousel", text: '1 s', value: 1, checkLabel: this.autoCarousel == 1 },
+                { name: "autoCarousel", text: '2 s', value: 2, checkLabel: this.autoCarousel == 2 },
+                { name: "autoCarousel", text: '5 s', value: 5, checkLabel: this.autoCarousel == 5 },
+                { name: "autoCarousel", text: '10 s', value: 10, checkLabel: this.autoCarousel == 10 },
             ]
         })
         items.push({
@@ -197,18 +195,27 @@ export class Carousel extends Block {
             text: lst('删除'),
             label: "Del"
         });
+        items.push({
+            type: MenuItemType.divide
+        });
+        items.push({
+            type: MenuItemType.help,
+            text: lst('了解如何使用轮播图'),
+            url: window.shyConfig?.isUS ? "https://help.shy.live/page/1533#jAPeVcVVjLbP1m8jFXhFDw" : "https://help.shy.live/page/1533#jAPeVcVVjLbP1m8jFXhFDw"
+        })
         if (this.editor) {
             items.push({
                 type: MenuItemType.divide,
             });
-            if (this.editDate) items.push({
-                type: MenuItemType.text,
-                text: lst('编辑于 ') + util.showTime(new Date(this.editDate))
-            });
+           
             var r = await channel.get('/user/basic', { userid: this.editor });
             if (r?.data?.user) items.push({
                 type: MenuItemType.text,
                 text: lst('编辑人 ') + r.data.user.name
+            });
+            if (this.editDate) items.push({
+                type: MenuItemType.text,
+                text: lst('编辑于 ') + util.showTime(new Date(this.editDate))
             });
         }
         return items;
@@ -252,7 +259,7 @@ export class Carousel extends Block {
             var rg = await useSelectMenuItem(
                 { roundArea: Rect.fromEvent(event) },
                 [
-                    { name: 'replace', icon: UploadSvg, text: lst('替换') },
+                    { name: 'replace', icon: RefreshSvg, text: lst('替换') },
                     { type: MenuItemType.divide },
                     { name: 'download', icon: DownloadSvg, text: lst('下载') },
                     { name: 'origin', icon: { name: 'bytedance-icon', code: 'arrow-right-up' }, text: lst('原图') },
@@ -340,7 +347,7 @@ export class CarouselView extends BlockView<Carousel>{
             infinite: true,
             speed: 500,
             autoplay: true,
-            autoplaySpeed:this.block.autoCarousel * 1000,
+            autoplaySpeed: this.block.autoCarousel * 1000,
             slidesToShow: 1,
             slidesToScroll: 1,
             pauseOnHover: true

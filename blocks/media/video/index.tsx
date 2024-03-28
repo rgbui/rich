@@ -8,7 +8,7 @@ import { useVideoPicker } from "../../../extensions/file/video.picker";
 import { Block } from "../../../src/block";
 import { channel } from "../../../net/channel";
 import { Icon } from "../../../component/view/icon";
-import { DotsSvg, DownloadSvg, DuplicateSvg, LinkSvg, RefreshSvg, TrashSvg, VideoSvg } from "../../../component/svgs";
+import { DotsSvg, DownloadSvg, DuplicateSvg, LinkSvg, TrashSvg, UploadSvg, VideoSvg } from "../../../component/svgs";
 import { MouseDragger } from "../../../src/common/dragger";
 import { util } from "../../../util/util";
 
@@ -20,6 +20,7 @@ import { getVideoSize } from "../../../component/file";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { MenuItemView } from "../../../component/view/menu/item";
 import { ls, lst } from "../../../i18n/store";
+import { UA } from "../../../util/ua";
 // 启用中文
 I18N.use(ZH)
 /**
@@ -138,44 +139,110 @@ export class Video extends Block {
         items.push({
             name: BlockDirective.copy,
             text: lst('拷贝副本'),
-            label: "Ctrl+D",
+            label: UA.isMacOs ? "⌘+D" : "Ctrl+D",
             icon: DuplicateSvg
         });
         items.push({
-            type: MenuItemType.divide
-        });
-        items.push({
             name: BlockDirective.link,
-            text: lst('拷贝块链接'),
-            icon: LinkSvg
+            text: lst('复制块链接'),
+            icon: LinkSvg,
+            label: UA.isMacOs ? "⌥+Shift+L" : "Alt+Shift+L"
         });
         items.push({
             type: MenuItemType.divide
         });
         items.push({
-            name: 'replace',
-            text: lst('替换'),
-            icon: RefreshSvg
-        });
-        items.push({
-            name: 'origin',
-            text: lst('原视频'),
-            icon: { name: 'bytedance-icon', code: 'arrow-right-up' }
-        });
-        items.push({
-            name: 'download',
-            text: lst('下载'),
-            icon: DownloadSvg
-        });
-        items.push({
-            type: MenuItemType.divide
-        });
+            text: lst('视频操作'),
+            icon: { name: 'byte', code: 'pencil' },
+            childs: [
+                {
+                    name: 'origin',
+                    text: lst('打开原视频'),
+                    icon: { name: 'bytedance-icon', code: 'arrow-right-up' },
+                    disabled: this.src?.url ? false : true
+                },
+                {
+                    name: 'replace',
+                    text: this.src?.url ? lst('重新上传视频') : lst('上传视频'),
+                    icon: UploadSvg
+                },
+                {
+                    name: 'download',
+                    text: lst('下载'),
+                    disabled: this.src?.url ? false : true,
+                    icon: DownloadSvg
+                }
+            ]
+        })
         items.push({
             name: 'autoplayMuted',
             text: lst('自动播放'),
             type: MenuItemType.switch,
             icon: { name: 'bytedance-icon', code: 'play' },
-            checked: this.autoplayMuted
+            checked: this.autoplayMuted,
+            disabled: this.src?.url ? false : true
+        });
+
+        items.push({
+
+            text: lst('蒙板'),
+            icon: { name: 'bytedance-icon', code: 'mask-two' },
+            childs: [
+                {
+                    name: 'mask',
+                    icon: {
+                        name: 'bytedance-icon',
+                        code: 'rectangle'
+                    },
+                    text: lst('无'),
+                    value: 'rect',
+                    checkLabel: this.mask == 'rect',
+                    disabled: this.src?.url ? false : true
+                },
+                {
+                    name: 'mask',
+                    renderIcon: rc,
+                    text: lst('圆角'),
+                    value: 'radius',
+                    checkLabel: this.mask == 'radius',
+                    disabled: this.src?.url ? false : true
+                },
+                {
+                    name: 'mask',
+                    icon: {
+                        name: 'bytedance-icon',
+                        code: 'oval-one'
+                    },
+                    text: lst('圆'),
+                    value: 'circle',
+                    checkLabel: this.mask == 'circle',
+                    disabled: this.src?.url ? false : true
+                },
+                {
+                    name: 'mask',
+                    icon: { name: 'bytedance-icon', code: 'diamond-three' },
+                    text: lst('菱形'),
+                    value: 'rhombus',
+                    checkLabel: this.mask == 'rhombus',
+                    disabled: this.src?.url ? false : true
+                },
+                {
+                    name: 'mask',
+                    icon: { name: 'bytedance-icon', code: 'pentagon-one' },
+                    text: lst('五边形'),
+                    value: 'pentagon',
+                    checkLabel: this.mask == 'pentagon',
+                    disabled: this.src?.url ? false : true
+                },
+                {
+                    name: 'mask',
+                    icon: { name: 'bytedance-icon', code: 'star' },
+                    text: lst('星形'),
+                    value: 'star',
+                    checkLabel: this.mask == 'star',
+                    disabled: this.src?.url ? false : true
+                }
+            ]
         });
         items.push({
             text: lst('对齐'),
@@ -206,60 +273,6 @@ export class Video extends Block {
             ]
         });
         items.push({
-            text: lst('蒙板'),
-            icon: { name: 'bytedance-icon', code: 'mask-two' },
-            childs: [
-                {
-                    name: 'mask',
-                    icon: {
-                        name: 'bytedance-icon',
-                        code: 'rectangle'
-                    },
-                    text: lst('无'),
-                    value: 'rect',
-                    checkLabel: this.mask == 'rect'
-                },
-                {
-                    name: 'mask',
-                    renderIcon: rc,
-                    text: lst('圆角'),
-                    value: 'radius',
-                    checkLabel: this.mask == 'radius'
-                },
-                {
-                    name: 'mask',
-                    icon: {
-                        name: 'bytedance-icon',
-                        code: 'oval-one'
-                    },
-                    text: lst('圆'),
-                    value: 'circle',
-                    checkLabel: this.mask == 'circle'
-                },
-                {
-                    name: 'mask',
-                    icon: { name: 'bytedance-icon', code: 'diamond-three' },
-                    text: lst('菱形'),
-                    value: 'rhombus',
-                    checkLabel: this.mask == 'rhombus'
-                },
-                {
-                    name: 'mask',
-                    icon: { name: 'bytedance-icon', code: 'pentagon-one' },
-                    text: lst('五边形'),
-                    value: 'pentagon',
-                    checkLabel: this.mask == 'pentagon'
-                },
-                {
-                    name: 'mask',
-                    icon: { name: 'bytedance-icon', code: 'star' },
-                    text: lst('星形'),
-                    value: 'star',
-                    checkLabel: this.mask == 'star'
-                }
-            ]
-        });
-        items.push({
             type: MenuItemType.divide
         });
         items.push({
@@ -268,6 +281,29 @@ export class Video extends Block {
             text: lst('删除'),
             label: "Del"
         });
+        items.push({
+            type: MenuItemType.divide
+        });
+        items.push({
+            type: MenuItemType.help,
+            text: lst('了解如何使用视频'),
+            url: window.shyConfig?.isUS ? "https://help.shy.live/page/1128#6qpZBQmUuiY2BZCisM66j1" : "https://help.shy.live/page/1128#6qpZBQmUuiY2BZCisM66j1"
+        })
+        if (this.editor) {
+            items.push({
+                type: MenuItemType.divide,
+            });
+
+            var r = await channel.get('/user/basic', { userid: this.editor });
+            if (r?.data?.user) items.push({
+                type: MenuItemType.text,
+                text: lst('编辑人 ') + r.data.user.name
+            });
+            if (this.editDate) items.push({
+                type: MenuItemType.text,
+                text: lst('编辑于 ') + util.showTime(new Date(this.editDate))
+            });
+        }
         return items;
     }
     async onContextMenuInput(this: Block, item: MenuItem<BlockDirective | string>) {
@@ -358,7 +394,7 @@ export class VideoView extends BlockView<Video>{
         })
     }
     contentWrapper: HTMLDivElement;
-    renderView()  {
+    renderView() {
         var style: CSSProperties = {
             justifyContent: 'center'
         }
@@ -387,7 +423,7 @@ export class VideoView extends BlockView<Video>{
         else if (this.block.mask == 'rect') imageMaskStyle.borderRadius = '0%';
         return <div className='sy-block-video' style={this.block.visibleStyle}>
             {!this.block.src?.url && this.block.isCanEdit() && <div onMouseDown={e => this.block.addVideo(e)} className='sy-block-video-nofile flex'>
-                <Icon icon={VideoSvg} size={24}></Icon>
+                <Icon icon={VideoSvg} size={16}></Icon>
                 {!this.block.speed && <span className="gap-w-10">添加视频</span>}
                 {this.block.speed && <span>{this.block.speed}</span>}
             </div>}

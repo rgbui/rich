@@ -13,7 +13,7 @@ import { getImageSize } from "../../component/file";
 import { channel } from "../../net/channel";
 import { autoImageUrl } from "../../net/element.type";
 import { util } from "../../util/util";
-import { AlignTextCenterSvg, DotsSvg, DownloadSvg, DuplicateSvg, Edit1Svg, EditSvg, GlobalLinkSvg, ImageErrorSvg, LinkSvg, PicSvg, PlusSvg, RefreshSvg, TrashSvg } from "../../component/svgs";
+import { AlignTextCenterSvg, DotsSvg, DownloadSvg, DuplicateSvg, Edit1Svg, GlobalLinkSvg, ImageErrorSvg, LinkSvg, PicSvg, PlusSvg, RefreshSvg, TrashSvg } from "../../component/svgs";
 import { Spin } from "../../component/view/spin";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { MenuItemView } from "../../component/view/menu/item";
@@ -26,6 +26,7 @@ import { LinkPageItem, getPageIcon } from "../../src/page/declare";
 import { useLinkPicker } from "../../extensions/link/picker";
 import { MenuPanel } from "../../component/view/menu";
 import "./style.less";
+import { UA } from "../../util/ua";
 
 @url('/image')
 export class Image extends Block {
@@ -144,72 +145,125 @@ export class Image extends Block {
         var rc = (item: MenuItem<string>, view?: MenuItemView) => {
             return <span className="flex-inline flex-center size-20"><span style={{ border: '1px solid var(--text-color)' }} className="round w-10 h-12 inline-block"></span></span>
         }
+        var pageLink: LinkPageItem;
+        if (this.link?.pageId) {
+            var pa = await channel.get('/page/item', { id: this.link.pageId });
+            if (pa?.ok) { pageLink = pa.data.item; }
+        }
         var items: MenuItem<BlockDirective | string>[] = [];
         items.push({
             name: BlockDirective.copy,
             text: lst('拷贝副本'),
-            label: "Ctrl+D",
+            label: UA.isMacOs ? "⌘+D" : "Ctrl+D",
             icon: DuplicateSvg
         });
         items.push({
             name: BlockDirective.link,
             text: lst('复制块链接'),
-            icon: LinkSvg
+            icon: LinkSvg,
+            label: UA.isMacOs ? "⌥+Shift+L" : "Alt+Shift+L"
         });
         items.push({
             type: MenuItemType.divide
         });
         items.push({
-            name: 'preview',
-            text: lst('查看'),
-            icon: { name: 'bytedance-icon', code: "zoom-in" }
-        })
-        items.push({
-            name: 'replace',
-            text: lst('替换'),
-            icon: RefreshSvg
-        });
-        items.push({
-            name: 'origin',
-            text: lst('原图'),
-            icon: { name: 'bytedance-icon', code: 'arrow-right-up' }
-        });
-        items.push({
-            name: 'download',
-            text: lst('下载'),
-            icon: DownloadSvg
-        });
-        items.push({
-            type: MenuItemType.divide
-        });
-        items.push({
-            text: lst('对齐'),
-            icon: { name: 'bytedance-icon', code: 'align-text-both' },
+            text: lst('图片操作'),
+            icon: { name: 'byte', code: 'pencil' },
             childs: [
                 {
-                    name: 'align',
-                    icon: { name: 'bytedance-icon', code: 'align-text-left' },
-                    text: lst('居左'),
-                    value: 'left',
-                    checkLabel: this.align == 'left'
+                    name: 'preview',
+                    text: lst('查看'),
+                    icon: { name: 'bytedance-icon', code: "zoom-in" }
+                    ,
+            disabled:this.src?.url?false:true
                 },
                 {
-                    name: 'align',
-                    icon: { name: 'bytedance-icon', code: 'align-text-center' },
-                    text: lst('居中'), value: 'center', checkLabel: this.align == 'center'
+                    name: 'origin',
+                    text: lst('原图'),
+                    icon: { name: 'bytedance-icon', code: 'arrow-right-up' },
+                    disabled:this.src?.url?false:true
                 },
                 {
-                    name: 'align',
-                    icon: {
-                        name: 'bytedance-icon',
-                        code: 'align-text-right'
+                    text: lst('尺寸'),
+                    icon: { name: 'bytedance-icon', code: 'full-screen' },
+                    childs: [
+                        {
+                            name: 'resetSize50',
+                            text: '50%',
+                            value: '50%',
+                            icon: { name: 'bytedance-icon', code: 'zoom-out' },
+                            checkLabel: this.imageSizeMode == '50%'
+                        },
+                        {
+                            name: 'resetSize',
+                            text: lst('原图大小'),
+                            icon: { name: 'bytedance-icon', code: 'equal-ratio' },
+                            value: '100%',
+                            checkLabel: this.imageSizeMode == '100%'
+                        },
+                        {
+                            name: 'resetSize50',
+                            text: '150%',
+                            value: '150%',
+                            icon: { name: 'bytedance-icon', code: 'zoom-in' },
+                            checkLabel: this.imageSizeMode == '150%'
+                        },
+                        {
+                            name: 'autoSize',
+                            text: lst('自适应'),
+                            icon: { name: 'bytedance-icon', code: 'auto-width-one' },
+                        }
+                    ]
+                },
+                {
+                    name: 'allowCaption',
+                    text: lst('添加说明文字'),
+                    icon: { name: 'bytedance-icon', code: 'doc-detail' },
+                    type: MenuItemType.switch,
+                    checked: this.allowCaption,
+                    updateMenuPanel: true,
+                    disabled:this.src?.url?false:true
+                },
+                {
+                    visible: (items) => {
+                        var r = items.find(g => g.name == 'allowCaption');
+                        return r?.checked
                     },
-                    text: lst('居右'),
-                    value: 'right',
-                    checkLabel: this.align == 'right'
+                    name: 'captionAlign',
+                    icon: AlignTextCenterSvg,
+                    text: lst('说明文字居中'),
+                    type: MenuItemType.switch,
+                    checked: this.captionAlign == 'center',
+                    disabled:this.src?.url?false:true
+                },
+                {
+                    name: 'replace',
+                    text: lst('替换'),
+                    icon: RefreshSvg
+                },
+                {
+                    name: 'download',
+                    text: lst('下载'),
+                    icon: DownloadSvg,
+                    disabled:this.src?.url?false:true
                 }
             ]
-        });
+        })
+        items.push({
+            text: lst('添加链接...'),
+            icon: { name: 'bytedance-icon', code: 'link-two' },
+            name: this.link ? undefined : "imageLink",
+            childs: this.link ? [
+                {
+                    name: 'imageLink',
+                    text: pageLink?.text || this.link?.url,
+                    value: pageLink,
+                    icon: pageLink ? getPageIcon(pageLink) : GlobalLinkSvg,
+                    btns: [{ icon: Edit1Svg, name: 'editImageLink' }]
+                }
+            ] : undefined,
+            disabled:this.src?.url?false:true
+        })
         items.push({
             text: lst('蒙板'),
             icon: { name: 'bytedance-icon', code: 'mask-two' },
@@ -265,80 +319,32 @@ export class Image extends Block {
             ]
         });
         items.push({
-            text: lst('尺寸'),
-            icon: { name: 'bytedance-icon', code: 'full-screen' },
+            text: lst('对齐'),
+            icon: { name: 'bytedance-icon', code: 'align-text-both' },
             childs: [
                 {
-                    name: 'resetSize50',
-                    text: '50%',
-                    value: '50%',
-                    icon: { name: 'bytedance-icon', code: 'zoom-out' },
-                    checkLabel: this.imageSizeMode == '50%'
+                    name: 'align',
+                    icon: { name: 'bytedance-icon', code: 'align-text-left' },
+                    text: lst('居左'),
+                    value: 'left',
+                    checkLabel: this.align == 'left'
                 },
                 {
-                    name: 'resetSize',
-                    text: lst('原图大小'),
-                    icon: { name: 'bytedance-icon', code: 'equal-ratio' },
-                    value: '100%',
-                    checkLabel: this.imageSizeMode == '100%'
+                    name: 'align',
+                    icon: { name: 'bytedance-icon', code: 'align-text-center' },
+                    text: lst('居中'), value: 'center', checkLabel: this.align == 'center'
                 },
                 {
-                    name: 'resetSize50',
-                    text: '150%',
-                    value: '150%',
-                    icon: { name: 'bytedance-icon', code: 'zoom-in' },
-                    checkLabel: this.imageSizeMode == '150%'
-                },
-                {
-                    name: 'autoSize',
-                    text: lst('自适应'),
-                    icon: { name: 'bytedance-icon', code: 'auto-width-one' },
+                    name: 'align',
+                    icon: {
+                        name: 'bytedance-icon',
+                        code: 'align-text-right'
+                    },
+                    text: lst('居右'),
+                    value: 'right',
+                    checkLabel: this.align == 'right'
                 }
             ]
-        });
-        items.push({
-            type: MenuItemType.divide
-        });
-        items.push({
-            name: 'allowCaption',
-            text: lst('添加说明文字'),
-            icon: { name: 'bytedance-icon', code: 'doc-detail' },
-            type: MenuItemType.switch,
-            checked: this.allowCaption,
-            updateMenuPanel: true
-        });
-        items.push({
-            visible: (items) => {
-                var r = items.find(g => g.name == 'allowCaption');
-                return r?.checked
-            },
-            name: 'captionAlign',
-            icon: AlignTextCenterSvg,
-            text: lst('说明文字居中'),
-            type: MenuItemType.switch,
-            checked: this.captionAlign == 'center'
-        })
-        items.push({
-            type: MenuItemType.divide
-        });
-        var pageLink: LinkPageItem;
-        if (this.link?.pageId) {
-            var pa = await channel.get('/page/item', { id: this.link.pageId });
-            if (pa?.ok) { pageLink = pa.data.item; }
-        }
-        items.push({
-            text: lst('关联网址'),
-            icon: { name: 'bytedance-icon', code: 'link-one' },
-            name: this.link ? undefined : "imageLink",
-            childs: this.link ? [
-                {
-                    name: 'imageLink',
-                    text: pageLink?.text || this.link?.url,
-                    value: pageLink,
-                    icon: pageLink ? getPageIcon(pageLink) : GlobalLinkSvg,
-                    btns: [{ icon: Edit1Svg, name: 'editImageLink' }]
-                }
-            ] : undefined
         });
         items.push({
             type: MenuItemType.divide
@@ -349,18 +355,26 @@ export class Image extends Block {
             text: lst('删除'),
             label: "Del"
         });
+        items.push({
+            type: MenuItemType.divide
+        });
+        items.push({
+            type: MenuItemType.help,
+            text: lst('了解如何使用图片'),
+            url: window.shyConfig?.isUS ? "https://help.shy.live/page/43#uYGXg2kxrBEe3FsLiP4fUm" : "https://help.shy.live/page/43#uYGXg2kxrBEe3FsLiP4fUm"
+        })
         if (this.editor) {
             items.push({
                 type: MenuItemType.divide,
-            });
-            if (this.editDate) items.push({
-                type: MenuItemType.text,
-                text: lst('编辑于 ') + util.showTime(new Date(this.editDate))
             });
             var r = await channel.get('/user/basic', { userid: this.editor });
             if (r?.data?.user) items.push({
                 type: MenuItemType.text,
                 text: lst('编辑人 ') + r.data.user.name
+            });
+            if (this.editDate) items.push({
+                type: MenuItemType.text,
+                text: lst('编辑于 ') + util.showTime(new Date(this.editDate))
             });
         }
         return items;
@@ -520,7 +534,7 @@ export class ImageView extends BlockView<Image>{
             </div>
         }
         return <div className='sy-block-image-empty item-hover cursor' onMouseDown={e => this.block.onOpenUploadImage(e)}>
-            <Icon size={24} icon={PicSvg}></Icon>
+            <Icon size={16} icon={PicSvg}></Icon>
             <span><S>添加图片</S></span>
         </div>
     }
