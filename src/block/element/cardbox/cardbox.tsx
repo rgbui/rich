@@ -96,7 +96,7 @@ export class CardBox extends Block {
             var bound = Rect.fromEle(c);
             if (bound) {
                 var pos = Point.from(bound);
-                pos = pos.move(0, 5);
+                pos = pos.move(0,10);
                 return pos;
             }
         }
@@ -177,6 +177,17 @@ export class CardBox extends Block {
         ])
         var at = items.findIndex(g => g.name == 'color');
         items.splice(at, 2);
+
+        var dat = items.findIndex(g => g.name == BlockDirective.delete);
+        items.splice(dat + 1, 0, {
+            type: MenuItemType.divide
+        },
+            {
+                type: MenuItemType.help,
+                text: lst('了解如何使用PPT卡片'),
+                url: window.shyConfig?.isUS ? "https://help.shy.live/page/1868#crndmtofuMqgvadrzwmjvy" : "https://help.shy.live/page/1868#crndmtofuMqgvadrzwmjvy"
+            }
+        )
         return items;
     }
     async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent): Promise<void> {
