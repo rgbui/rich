@@ -370,6 +370,7 @@ export class AnchorCursor {
     get currentSelectHandleBlocks(): Block[] {
         var ds: Block[] = [];
         var cs = this.currentSelectedBlocks.map(c => c.handleBlock);
+        lodash.remove(cs, c => lodash.isNull(c) || lodash.isUndefined(c))
         cs.each(c => { if (!ds.some(s => s == c)) ds.push(c) });
         return ds;
     }
