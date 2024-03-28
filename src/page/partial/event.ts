@@ -19,7 +19,7 @@ import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import lodash from "lodash";
 import { lst } from "../../../i18n/store";
 import { Block } from "../../block";
-import { Title } from "../../../blocks/page/title";
+import { Title } from "../../../blocks/interaction/title";
 
 export class PageEvent {
     /**

@@ -24,7 +24,7 @@ import { PageContextmenu } from './partial/contextmenu';
 import { Kit } from '../kit';
 import { channel } from '../../net/channel';
 import { TableSchema } from '../../blocks/data-grid/schema/meta';
-import { Title } from '../../blocks/page/title';
+import { Title } from '../../blocks/interaction/title';
 import { AppearAnchor } from '../block/appear';
 
 import { ElementType, parseElementUrl } from '../../net/element.type';
@@ -34,7 +34,7 @@ import { ActionDirective } from '../history/declare';
 import { isMobileOnly } from "react-device-detect";
 import { dom } from '../common/dom';
 import { DataGridView } from '../../blocks/data-grid/view/base';
-import { Link } from '../../blocks/page/link';
+import { Link } from '../../blocks/navigation/link';
 import { AtomPermission } from './permission';
 import { forceCloseBoardEditTool } from '../../extensions/board.edit.tool';
 import "./style.less";

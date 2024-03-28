@@ -19,7 +19,7 @@ import {
     PageSvg
 } from "../../../component/svgs";
 
-import { PageOutLine } from "../../../blocks/page/outline";
+import { PageOutLine } from "../../../blocks/navigation/outline";
 import { ActionDirective } from "../../history/declare";
 import { Block } from "../../block";
 import { PageDirective } from "../directive";
@@ -124,7 +124,7 @@ export class PageView extends Component<{ page: Page }>{
                             var ds = util.covertToArray(data);
                             await self.page.onBatchDragCreateBlocks(ds.map(d => {
                                 return {
-                                    url: '/link',
+                                    url: BlockUrlConstant.Link,
                                     icon: d.icon,
                                     pageId: d.id,
                                     sn: d.sn,
@@ -335,13 +335,13 @@ export class PageView extends Component<{ page: Page }>{
                     this.page.addedSubPages = items.map(it => it.id);
                     var view = this.page.views[0];
                     oldSubPages.removeAll(c => items.exists(t => t.id == c));
-                    items.removeAll(r => view.exists(c => c.url == BlockUrlConstant.Link && (c as any).pageId == r.id))
+                    items.removeAll(r => view.exists(c => c.url == BlockUrlConstant.Link && (c as any).getLink()?.pageId == r.id))
                     await items.eachAsync(async item => {
-                        await this.page.createBlock(BlockUrlConstant.Link, { pageId: item.id }, view, view.blocks.childs.length, BlockChildKey.childs);
+                        await this.page.createBlock(BlockUrlConstant.Link, { link: { name: 'page', pageId: item.id } }, view, view.blocks.childs.length, BlockChildKey.childs);
                         isForceUpdate = true;
                     });
                     if (oldSubPages.length > 0) {
-                        var willRemoveItems = view.findAll(c => c.url == BlockUrlConstant.Link && oldSubPages.includes((c as any).pageId));
+                        var willRemoveItems = view.findAll(c => c.url == BlockUrlConstant.Link && oldSubPages.includes((c as any).getLink()?.pageId));
                         if (willRemoveItems.length > 0) {
                             //这些链接需要自动清理掉
                             await willRemoveItems.eachAsync(async r => {
@@ -359,9 +359,9 @@ export class PageView extends Component<{ page: Page }>{
                         type: PageLayoutType.doc
                     })
                     var view = this.page.views[0];
-                    items.removeAll(r => view.exists(c => c.url == BlockUrlConstant.Link && (c as any).pageId == r.id))
+                    items.removeAll(r => view.exists(c => c.url == BlockUrlConstant.Link && (c as any).getLink()?.pageId == r.id))
                     await items.eachAsync(async item => {
-                        await this.page.createBlock(BlockUrlConstant.Link, { pageId: item.id }, view, view.blocks.childs.length, BlockChildKey.childs);
+                        await this.page.createBlock(BlockUrlConstant.Link, { link: { name: 'page', pageId: item.id } }, view, view.blocks.childs.length, BlockChildKey.childs);
                     })
                     isForceUpdate = true;
                 }

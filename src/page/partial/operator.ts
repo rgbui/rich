@@ -263,6 +263,8 @@ export class Page$Operator {
             })
         }
         menus = util.neighborDeWeight(menus, c => (c.name + "") + c.type);
+        if (menus[0]?.type == MenuItemType.divide) menus = menus.slice(1);
+        else if (menus.last()?.type == MenuItemType.divide) menus = menus.slice(0, -1);
         var re = await useSelectMenuItem(
             {
                 roundPoint: event instanceof Point ? event : Point.from(event),

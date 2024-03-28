@@ -8,7 +8,7 @@ import { MouseDragger } from "../../common/dragger";
 import { Rect } from "../../common/vector/point";
 import { S } from "../../../i18n/view";
 import { BlockUrlConstant } from "../../block/constant";
-import { Title } from "../../../blocks/page/title";
+import { Title } from "../../../blocks/interaction/title";
 
 export class PageCover extends React.Component<{ page: Page }>{
     private startPos: boolean = false;

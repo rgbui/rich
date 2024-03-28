@@ -15,7 +15,7 @@ import { Matrix } from "../../common/matrix";
 import lodash from "lodash";
 import JSZip from 'jszip';
 import { util } from "../../../util/util";
-import { PageOutLine } from "../../../blocks/page/outline";
+import { PageOutLine } from "../../../blocks/navigation/outline";
 import { channel } from "../../../net/channel";
 import { ElementType, getElementUrl } from "../../../net/element.type";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
@@ -561,7 +561,7 @@ export class Page$Cycle {
                 case 'content':
                     if (block.isLine) {
                         var row = block.closest(x => x.isOnlyBlock);
-                        if (row.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)) {
+                        if (row && row.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)) {
                             rs = [row];
                         }
                     }
