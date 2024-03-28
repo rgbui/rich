@@ -15,6 +15,6 @@ export type BlockSelectorItem = {
     label?: string,
     labels?: string[],
     isLine?: boolean,
-    operator?: 'openDataGridTemplate',
-    link?:{name:'create',text:string}
+    operator?: { name: 'create', text: string },
+    data?: Record<string, any>
 }

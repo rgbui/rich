@@ -37,7 +37,7 @@ class AtUserSelector extends InputTextPopSelector<UserBasic> {
         }
     }
     onSelect(block) {
-        this._select({ url: '/user/mention', isLine: true, userid: (block as any).userid, })
+        this._select({ url: '/user/mention', isLine: true,data:{userid: (block as any).userid }  })
         this.close();
     }
     getSelectBlockData() {

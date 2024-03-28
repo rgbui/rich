@@ -26,18 +26,20 @@ class BlockSelector extends InputTextPopSelector<{
             </div>
         }
         return this.list.map((group, g) => {
-            return <div key={group.text}>
-                <div className="remark flex f-12  padding-w-10 h-24">{group.text}</div>
-                <div>
+            return <div key={group.text + g.toString()}>
+                <div className="remark flex f-12  padding-w-14 h-24">{group.text}</div>
+                <div className="gap-b-10">
                     {group.childs.map((child, index) => {
                         i += 1;
                         let j = i;
-                        return <div key={child.url} onMouseDown={e => this.onSelect(child)} className={'cursor flex h-30 round item-hover padding-w-10 ' + (j == this.selectIndex ? 'item-hover-focus' : '')}>
-                            <div className="flex-center size-24 text-1 gap-r-5">
+                        return <div key={child.url + (index.toString())}
+                            onMouseDown={e => this.onSelect(child)}
+                            className={'cursor flex h-30 round item-hover-light padding-w-5 gap-w-5 ' + (j == this.selectIndex ? 'item-hover-light-focus' : '')}>
+                            <div className="flex-center size-24 text gap-r-5">
                                 <Icon size={16} icon={child.icon}></Icon>
                             </div>
                             <div className="f-14 flex-auto text">{child.text}</div>
-                            <div className="remark f-14 flex-fixed">{child.label}</div>
+                            <div className="remark f-12 flex-fixed gap-r-3">{child.label}</div>
                         </div>
                     })}
                 </div>
@@ -98,6 +100,7 @@ class BlockSelector extends InputTextPopSelector<{
         return i;
     }
 }
+
 export async function useBlockSelector() {
     return await Singleton(BlockSelector);
 }

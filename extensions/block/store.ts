@@ -1,4 +1,5 @@
 
+import { IconValueType } from "../../component/view/icon";
 import { Events } from "../../util/events";
 import { getBlockSelectData } from "./data";
 import { BlockGroup, BlockSelectorItem } from "./delcare";
@@ -44,17 +45,21 @@ class BlockStore extends Events {
         });
         return cs;
     }
-    findFitTurnBlocks(blocks: { url: string, label?: string }[]): BlockSelectorItem[] {
+    findFitTurnBlocks(blocks: { url: string, icon?: IconValueType, text?: string, label?: string }[]): BlockSelectorItem[] {
         var cs: BlockSelectorItem[] = [];
-        this._blockGroups.each(bg => {
-            bg.childs.each(c => {
-                var bl = blocks.find(s => s.url == c.url);
-                if (bl)
-                    cs.push({
-                        url: c.url, label: bl.label, text: c.text, icon: c.icon
-                    });
-            })
-        });
+        blocks.forEach(bl => {
+            this._blockGroups.each(bg => {
+                bg.childs.each(c => {
+                    if (bl.url == c.url && c.isLine !== true)
+                        cs.push({
+                            url: c.url,
+                            label: bl.label,
+                            text: bl.text || c.text,
+                            icon: bl.icon || c.icon
+                        });
+                })
+            });
+        })
         return cs;
     }
 }

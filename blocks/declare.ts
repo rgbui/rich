@@ -26,7 +26,7 @@ import "./interaction/search";
 
 import "./present/katex/katex";
 import "./present/katex/line";
-import "./navigation/bookmark";
+import "./media/bookmark";
 import "./present/list/list";
 import "./present/code/code";
 import "./general/divider";
