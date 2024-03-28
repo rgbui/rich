@@ -74,6 +74,9 @@ export function Icon(props: {
     }
     else if (typeof props.icon == 'object' && (props.icon as IconArguments).name) {
         var pc = props.icon as IconArguments;
+        if (typeof pc.rotate == 'number') {
+            style.transform = `rotate(${pc.rotate}deg)`
+        }
         switch (pc.name) {
             case 'font-awesome':
                 Object.assign(style, {
