@@ -55,7 +55,6 @@ import CheckboxSquareSvg from "../src/assert/svg/checkbox.square.svg";
 import ChevronDownSvg from "../src/assert/svg/chevronDown.svg";
 import ChevronLeftSvg from "../src/assert/svg/chevronLeft.svg";
 import ChevronRightSvg from "../src/assert/svg/chevronRight.svg";
-import ClearCellSvg from "../src/assert/svg/clearCell.svg";
 import CloseSvg from "../src/assert/svg/close.svg";
 import CloseSmallSvg from "../src/assert/svg/closeSmall.svg";
 import CloseTickSvg from "../src/assert/svg/closeTick.svg";
@@ -78,8 +77,6 @@ import CustomizePageSvg from "../src/assert/svg/customizePage.svg";
 import CutSvg from "../src/assert/svg/cut.svg";
 import DatasourceSvg from "../src/assert/svg/datasource.svg";
 import DebugSvg from "../src/assert/svg/debug.svg";
-import DeleteColSvg from "../src/assert/svg/deleteCol.svg";
-import DeleteRowSvg from "../src/assert/svg/deleteRow.svg";
 import DetailSvg from "../src/assert/svg/detail.svg";
 import DiceSvg from "../src/assert/svg/dice.svg";
 import DiscoverySvg from "../src/assert/svg/discovery.svg";
@@ -196,7 +193,14 @@ import SortSvg from "../src/assert/svg/sort.svg";
 import SquareplusSvg from "../src/assert/svg/squareplus.svg";
 import SuccessSvg from "../src/assert/svg/success.svg";
 import SwitchArrowSvg from "../src/assert/svg/switchArrow.svg";
+import TableBottomInsertSvg from "../src/assert/svg/table.bottom.insert.svg";
+import TableClearCellSvg from "../src/assert/svg/table.clear.cell.svg";
+import TableDeleteColSvg from "../src/assert/svg/table.delete.col.svg";
+import TableDeleteRowSvg from "../src/assert/svg/table.delete.row.svg";
+import TableLeftInsertSvg from "../src/assert/svg/table.left.insert.svg";
+import TableRightInsertSvg from "../src/assert/svg/table.right.insert.svg";
 import TableSvg from "../src/assert/svg/table.svg";
+import TableTopInsertSvg from "../src/assert/svg/table.top.insert.svg";
 import ThemeSvg from "../src/assert/svg/theme.svg";
 import TimeSvg from "../src/assert/svg/time.svg";
 import TodoSvg from "../src/assert/svg/todo.svg";
@@ -295,7 +299,6 @@ CheckboxSquareSvg,
 ChevronDownSvg,
 ChevronLeftSvg,
 ChevronRightSvg,
-ClearCellSvg,
 CloseSvg,
 CloseSmallSvg,
 CloseTickSvg,
@@ -318,8 +321,6 @@ CustomizePageSvg,
 CutSvg,
 DatasourceSvg,
 DebugSvg,
-DeleteColSvg,
-DeleteRowSvg,
 DetailSvg,
 DiceSvg,
 DiscoverySvg,
@@ -436,7 +437,14 @@ SortSvg,
 SquareplusSvg,
 SuccessSvg,
 SwitchArrowSvg,
+TableBottomInsertSvg,
+TableClearCellSvg,
+TableDeleteColSvg,
+TableDeleteRowSvg,
+TableLeftInsertSvg,
+TableRightInsertSvg,
 TableSvg,
+TableTopInsertSvg,
 ThemeSvg,
 TimeSvg,
 TodoSvg,
