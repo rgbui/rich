@@ -9,6 +9,7 @@ import { onAutoScroll, onAutoScrollStop } from "../../common/scroll";
 import { DragHandleSvg, PlusSvg } from "../../../component/svgs";
 import { UA } from "../../../util/ua";
 import { Sp } from "../../../i18n/view";
+import lodash from "lodash";
 
 export class HandleView extends React.Component<{ handle: Handle }>{
     constructor(props) {
@@ -42,6 +43,7 @@ export class HandleView extends React.Component<{ handle: Handle }>{
             self.handle.dragBlocks = [];
             if (self.handle.kit.anchorCursor.currentSelectedBlocks.exists(c => c.find(g => g == self.handle.handleBlock, true) ? true : false)) {
                 var cs = self.handle.kit.anchorCursor.currentSelectedBlocks.map(c => c.handleBlock);
+                lodash.remove(cs, c => lodash.isNull(c) || lodash.isUndefined(c));
                 cs.each(c => {
                     if (!self.handle.dragBlocks.some(s => s == c))
                         self.handle.dragBlocks.push(c)
@@ -84,7 +86,7 @@ export class HandleView extends React.Component<{ handle: Handle }>{
                         }
                     },
                     async moveEnd(ev, isMove, data) {
-                        if (isCanDrag)  onAutoScrollStop();
+                        if (isCanDrag) onAutoScrollStop();
                         try {
                             if (self.handle.isDrag == true) await self.handle.onDropBlock()
                             else await self.handle.onClickBlock(ev);
@@ -113,7 +115,7 @@ export class HandleView extends React.Component<{ handle: Handle }>{
             <div className='shy-selector-bar'
                 ref={e => this.handleEle = e}
             >
-                <Tip placement='bottom' ref={e => { this.plusToolTip = e; }} overlay={<Sp  block  text={'鼠标点击插入块'} data={{ key: UA.isMacOs ? "option" : "alt" }}>鼠标点击插入块<br />{UA.isMacOs ? "option" : "alt"}点击上面插入块</Sp>} >
+                <Tip placement='bottom' ref={e => { this.plusToolTip = e; }} overlay={<Sp block text={'鼠标点击插入块'} data={{ key: UA.isMacOs ? "option" : "alt" }}>鼠标点击插入块<br />{UA.isMacOs ? "option" : "alt"}点击上面插入块</Sp>} >
                     <span className="remark size-24 round flex-center flex-inline" onMouseDown={e => { e.stopPropagation(); this.onPlus(e) }}>
                         <Icon icon={PlusSvg} size={20}></Icon>
                     </span>

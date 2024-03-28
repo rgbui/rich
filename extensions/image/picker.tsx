@@ -14,9 +14,9 @@ import { GalleryType } from "./declare";
 import { ThirdGallery } from "./third.gallery";
 import { Icon } from "../../component/view/icon";
 import { Tab } from "../../component/view/tab";
-import "./style.less";
 import { GalleryView } from "./gellery";
 import { PicSvg } from "../../component/svgs";
+import "./style.less";
 
 class ImagePicker extends EventsComponent {
     onChange(data: ResourceArguments) {
@@ -39,7 +39,10 @@ class ImagePicker extends EventsComponent {
                     <GalleryView onChange={e => this.onChange(e as any)}></GalleryView>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' text={'上传图片'}><Icon size={20} icon={Upload}></Icon></Tip>}>
-                    <div className="padding-14"><UploadView mine='image' change={e => this.onChange(e)}></UploadView></div>
+                    <div className="padding-14"><UploadView
+                        fileClassify="cover"
+                        mine='image'
+                        change={e => this.onChange(e)}></UploadView></div>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' text={'图片网址'}><Icon size={18} icon={Link}></Icon></Tip>}>
                     <OutsideUrl change={e => this.onChange({ url: e })}></OutsideUrl>

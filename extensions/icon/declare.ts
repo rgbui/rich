@@ -10,7 +10,8 @@ export type IconArguments = {
     color?: string,
     url?: string,
     text?: string,
-    size?: number
+    size?: number,
+    rotate?:90|180|270
 }
 
 export type CoverMask = {

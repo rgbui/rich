@@ -6,6 +6,7 @@ import { SearchListType } from "../../component/types";
 import lodash from "lodash";
 import ReactDOM from "react-dom";
 import { Page } from "../../src/page";
+import { BlockSelectorItem } from "../block/delcare";
 
 export enum InputTextPopSelectorType {
     BlockSelector,
@@ -32,7 +33,7 @@ export class InputTextPopSelector<T = any> extends React.Component {
     list: T[] = [];
     allList: SearchListType<T> = { list: [], total: 0, page: 1, size: 500 };
     itemHoverSelector = '.item-hover-focus';
-    _select: (...args: any[]) => void;
+    _select: (item: BlockSelectorItem, args1?: any) => void;
     page: Page;
     async open(round: Rect, text: string, callback: (...args: any[]) => void, page: Page) {
         this.page = page;
@@ -110,7 +111,7 @@ export class InputTextPopSelector<T = any> extends React.Component {
         this._select(item);
         this.close()
     }
-    onKeydown(event: KeyboardEvent): boolean | { blockData: Record<string, any> } {
+    onKeydown(event: KeyboardEvent): boolean | { blockData: BlockSelectorItem } {
         if (this.visible == true) {
             switch (event.key) {
                 case KeyboardCode.ArrowDown:

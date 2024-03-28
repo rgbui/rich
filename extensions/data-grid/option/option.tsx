@@ -59,7 +59,7 @@ export class TableStoreOption extends EventsComponent {
         return <div className="shy-tablestore-option-selector">
             {!(this.isEdit == false && this.multiple == false) && <div className="shy-tablestore-option-selector-input">
                 {this.ovs.map(ov => {
-                    return <a key={ov.value} className="gap-r-5 gap-b-5" style={{ backgroundColor: ov.color }}>
+                    return <a key={ov.value} className="gap-r-5 gap-h-3" style={{ backgroundColor: ov.color }}>
                         <span className="max-w-80 text-overflow inline-block">{ov.text}</span>
                         <span className={'gap-l-5 cursor remark flex-center item-hover round'} >
                             <Icon icon={CloseSvg} size={10}

@@ -34,25 +34,26 @@ class TagSelector extends InputTextPopSelector<{ id: string, tag: string }> {
             this.allList.lastDate = new Date();
         }
     }
-    private renderLinks() {
+    private renderLinks()
+    {
         return <div>
-            <a className={"h-30 gap-l-10 text item-hover cursor round padding-w-10 flex" + (0 == this.selectIndex ? " item-hover-focus" : "")} onMouseDown={e => this.onSelect({ name: 'create' })}>
-                <span className="flex flex-inline size-24 item-hover round"> <Icon size={18} icon={TopicSvg}></Icon></span>
+            <a className={"h-30 gap-w-10 text item-hover cursor round padding-w-10 flex" + (0 == this.selectIndex ? " item-hover-focus" : "")} onMouseDown={e => this.onSelect({ name: 'create' })}>
+                <span className="flex flex-inline size-24 item-hover round flex-center"> <Icon size={18} icon={TopicSvg}></Icon></span>
                 <span className="f-14 flex-auto flex">
                     <S>创建</S><b className="bold gap-l-5">{this.text || lst('标签')}</b>
                 </span>
-                <span className="flex-fixed flex flex-inline size-24 item-hover round">
+                <span className="flex-fixed flex flex-inline size-24 item-hover round flex-center">
                     <Icon size={18} icon={PlusSvg}></Icon>
                 </span>
             </a>
             <Divider></Divider>
             {this.loading && <div className="flex-center gap-h-30"><Spin></Spin></div>}
             {!this.loading && this.list.map((link, i) => {
-                return <a onMouseDown={e => this.onSelect(link)} className={"h-30 gap-l-10 text  item-hover cursor round padding-w-10 flex" + ((i + 1) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
+                return <a onMouseDown={e => this.onSelect(link)} className={"h-30 gap-w-10 text  item-hover cursor round padding-w-10 flex" + ((i + 1) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
                     <span className="flex flex-inline size-24 item-hover round"><Icon size={18} icon={TopicSvg}></Icon></span>
                     <span className="f-14">{link.tag || lst('标签')}</span></a>
             })}
-            {this.loading && this.list.length == 0 && this.searchWord && <div className="remark flex-center gap-h-10 f-14"><S>没有搜索到</S></div>}
+            {!this.loading && this.list.length == 0 && this.searchWord && <div className="remark flex-center gap-h-10 f-14"><S>没有搜索到标签</S></div>}
         </div>
     }
     render() {
@@ -64,7 +65,7 @@ class TagSelector extends InputTextPopSelector<{ id: string, tag: string }> {
         }
         return <div ref={e => this.el = e}
             style={style}
-            className='pos w-250 max-h-200 bg-white overlay-y  round shadow '>{this.renderLinks()}
+            className='pos w-250 max-h-200 bg-white padding-h-10 overlay-y  round shadow '>{this.renderLinks()}
         </div>
     }
     onSelect(block) {
@@ -72,19 +73,21 @@ class TagSelector extends InputTextPopSelector<{ id: string, tag: string }> {
             this._select({
                 url: BlockUrlConstant.Tag,
                 isLine: true,
-                link: { name: 'create', text: this.text || '标签' }
+                operator: { name: 'create', text: this.text || '标签' }
             })
         }
         else {
             this._select({
                 url: BlockUrlConstant.Tag,
                 isLine: true,
-                refLinks: [{
-                    id: util.guid(),
-                    type: 'tag',
-                    tagText: block.tag,
-                    tagId: block.id
-                }]
+                data: {
+                    refLinks: [{
+                        id: util.guid(),
+                        type: 'tag',
+                        tagText: block.tag,
+                        tagId: block.id
+                    }]
+                }
             })
         }
         this.close();
@@ -95,7 +98,7 @@ class TagSelector extends InputTextPopSelector<{ id: string, tag: string }> {
                 blockData: {
                     url: BlockUrlConstant.Tag,
                     isLine: true,
-                    link: { name: 'create', text: this.text || lst('标签') }
+                    operator: { name: 'create', text: this.text || lst('标签') }
                 }
             }
         }
@@ -106,12 +109,14 @@ class TagSelector extends InputTextPopSelector<{ id: string, tag: string }> {
                 blockData: {
                     url: BlockUrlConstant.Tag,
                     isLine: true,
-                    refLinks: [{
-                        id: util.guid(),
-                        type: 'tag',
-                        tagText: b.tag,
-                        tagId: b.id
-                    }]
+                    data: {
+                        refLinks: [{
+                            id: util.guid(),
+                            type: 'tag',
+                            tagText: b.tag,
+                            tagId: b.id
+                        }]
+                    }
                 }
             }
         }

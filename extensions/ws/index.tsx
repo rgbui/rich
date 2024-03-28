@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import { EventsComponent } from "../../component/lib/events.component";
 import { LinkWs } from "../../src/page/declare";
 import { PopoverSingleton } from "../../component/popover/popover";
@@ -8,13 +7,14 @@ import { S } from "../../i18n/view";
 import { channel } from "../../net/channel";
 import { autoImageUrl } from "../../net/element.type";
 import { util } from "../../util/util";
+
 export class WsPicker extends EventsComponent {
     async onOpen() {
         await this.Search();
         this.forceUpdate();
     }
-    render(): ReactNode {
-        return <div className="bg-white w-200  ">
+    render() {
+        return <div className="bg-white w-350">
             <div className="gap-h-5 padding-w-10"><span className="f-12 remark"><S>选择空间</S></span></div>
             <div className="max-h-250 overflow-y">
                 {this.wss.map(ws => {
@@ -30,13 +30,15 @@ export class WsPicker extends EventsComponent {
                         <span className="flex-auto gap-l-10">{ws.text}</span>
                     </div>
                 })}
+                {this.wss.length == 0 && <div className="flex-center f-12 remark gap-h-10">
+                    <S>没有可选择的空间</S></div>
+                }
             </div>
         </div>
     }
     wss: LinkWs[] = [];
     async Search() {
         var r = await channel.query('/query/my/wss');
-        console.log('r', r);
         this.wss = r.wss || [];
         this.forceUpdate();
     }

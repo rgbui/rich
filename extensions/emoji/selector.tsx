@@ -90,7 +90,7 @@ class EmojiSelector extends InputTextPopSelector<EmojiCode> {
         }
     }
     onSelect(block: EmojiCode) {
-        this._select({ url: '/emoji', isLine: true, src: { name: 'emoji', code: block.code } })
+        this._select({ url: '/emoji', isLine: true, data: { src: { name: 'emoji', code: block.code } } })
         this.close();
     }
     close() {

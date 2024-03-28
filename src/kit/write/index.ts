@@ -40,7 +40,6 @@ import { useAITool } from "../../../extensions/ai";
 import { channel } from "../../../net/channel";
 import { BlockSelectorItem } from "../../../extensions/block/delcare";
 import { BlockRenderRange } from "../../block/enum";
-import { readCopyBlocks } from "../../page/common/copy";
 import { TextCommand } from "../../../extensions/text.tool/text.command";
 import { GetTextCacheFontColor } from "../../../extensions/color/data";
 
@@ -520,7 +519,6 @@ export class PageWrite {
                     else if (result.command == 'askAI') {
                         var rowBlocks = this.kit.page.getAtomBlocks(blocks.map(c => c.closest(x => x.isBlock)));
                         this.onAskAi(rowBlocks)
-
                         break;
                     }
                     else break;
@@ -545,60 +543,53 @@ export class PageWrite {
             await InputForceStore(this.inputPop.aa, async () => {
                 var aa = this.inputPop.aa;
                 var newBlock: Block;
-                var bd = lodash.cloneDeep(blockData);
-                if (!blockData.operator) {
-                    delete bd.isLine;
-                    delete bd.url;
-                    if (blockData.isLine) {
-                        /**
-                         * 说明创建的是行内块
-                         */
-                        if (bd.link?.name == 'create') {
-                            if (blockData.url == BlockUrlConstant.Text) {
-                                //说明是[[创建双链
-                                var currentPage = await channel.query('/current/page');
-                                var r = await channel.air('/page/create/sub', {
-                                    pageId: currentPage.id,
-                                    text: bd.link.text,
-                                });
-                                if (r.id) Object.assign(bd, {
-                                    refLinks: [{ type: 'page', id: util.guid(), pageId: r.id }],
-                                })
-                                delete bd.link;
-                            }
-                            else if (blockData.url == BlockUrlConstant.Tag) {
-                                var rg = await channel.put('/tag/create', { tag: bd.link.text });
-                                if (rg.ok) Object.assign(bd, {
-                                    refLinks: [{ type: 'tag', id: util.guid(), tagId: rg.data.id, tagText: bd.link.text }],
-                                })
-                                delete bd.link;
-                            }
+                var bd = lodash.cloneDeep(blockData.data || {});
+                if (blockData.isLine) {
+                    /**
+                     * 说明创建的是行内块
+                     */
+                    if (blockData.operator?.name == 'create') {
+                        if (blockData.url == BlockUrlConstant.Text) {
+                            //说明是[[创建双链
+                            var currentPage = await channel.query('/current/page');
+                            var r = await channel.air('/page/create/sub', {
+                                pageId: currentPage.id,
+                                text: blockData.operator.text,
+                            });
+                            if (r.id) Object.assign(bd, {
+                                refLinks: [{ type: 'page', id: util.guid(), pageId: r.id }],
+                            })
                         }
-                        newBlock = await aa.block.visibleRightCreateBlock(offset, blockData.url, { ...bd, createSource: 'InputBlockSelector' });
+                        else if (blockData.url == BlockUrlConstant.Tag) {
+                            var rg = await channel.put('/tag/create', { tag: blockData.operator.text });
+                            if (rg.ok) Object.assign(bd, {
+                                refLinks: [{ type: 'tag', id: util.guid(), tagId: rg.data.id, tagText: blockData.operator.text }],
+                            })
+                        }
+                    }
+                    newBlock = await aa.block.visibleRightCreateBlock(offset, blockData.url, { ...bd, createSource: 'InputBlockSelector' });
+                }
+                else {
+                    if (['/2', '/3', '/4', '/5'].includes(blockData.url)) {
+                        var rb = aa.block.closest(x => !x.isLine);
+                        newBlock = await rb.createBlockCol(parseInt(blockData.url.slice(1)));
                     }
                     else {
-                        if (['/2', '/3', '/4', '/5'].includes(blockData.url)) {
-                            var rb = aa.block.closest(x => !x.isLine);
-                            newBlock = await rb.createBlockCol(parseInt(blockData.url.slice(1)));
-                        }
-                        else {
-                            /**
-                                                   * 判断是否为空行块，如果是空行块，则将当前的块转用
-                                                   * 否则创建一个换行块
-                                                   */
-                            newBlock = await aa.block.visibleDownCreateBlock(blockData.url, { ...bd, createSource: 'InputBlockSelector' });
-                            await aa.block.clearEmptyBlock();
-                        }
+                        /**
+                                               * 判断是否为空行块，如果是空行块，则将当前的块转用
+                                               * 否则创建一个换行块
+                                               */
+                        newBlock = await aa.block.visibleDownCreateBlock(blockData.url, { ...bd, createSource: 'InputBlockSelector' });
+                        await aa.block.clearEmptyBlock();
                     }
-                    if (newBlock)
-                        newBlock.mounted(async () => {
-                            await this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true })
-                            await util.delay(50);
-                            await this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true })
-                        });
                 }
+                if (newBlock)
+                    newBlock.mounted(async () => {
+                        await this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true })
+                        await util.delay(50);
+                        await this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true })
+                    });
             });
-
 
         }
         var blockData = args[0];
