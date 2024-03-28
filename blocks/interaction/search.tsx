@@ -17,6 +17,7 @@ import { MenuItem } from "../../component/view/menu/declare";
 import { BlockDirective, BlockRenderRange } from "../../src/block/enum";
 import { Point, Rect } from "../../src/common/vector/point";
 import "./style.less";
+
 @url('/search')
 export class SearchWorkspace extends Block {
     @prop()
@@ -85,7 +86,8 @@ export class SearchWorkspace extends Block {
                 ]
             })
             rs.splice(pos + 1, 0, ...ns)
-            lodash.remove(rs, g => g.name == 'color');
+            var cat = rs.findIndex(g => g.name == 'color');
+            rs.splice(cat, 2);
         }
         return rs;
     }
@@ -104,9 +106,7 @@ export class SearchWorkspace extends Block {
             var db = this.el.querySelector('.sy-search-block') as HTMLElement;
             var bound = Rect.fromEle(db);
             if (bound) {
-                var pos = Point.from(bound);
-                pos = pos.move(0, 3 + util.remToPx(this.page.lineHeight) / 2);
-                return pos;
+                return bound.leftMiddle;
             }
         }
     }

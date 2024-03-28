@@ -3,11 +3,11 @@ import { BlockView } from "../../src/block/view";
 import React from 'react';
 import { prop, url, view } from "../../src/block/factory/observable";
 import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../src/block/enum";
-import "./style.less";
 import { MouseDragger } from "../../src/common/dragger";
 import { Rect } from "../../src/common/vector/point";
 import { lst } from "../../i18n/store";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
+import "./style.less";
 
 @url('/measure')
 export class Measure extends Block {
@@ -25,13 +25,15 @@ export class Measure extends Block {
     async onGetContextMenus() {
         var items = await super.onGetContextMenus();
         var at = items.findIndex(g => g.name == BlockDirective.copy);
-        items.splice(at + 2, 0, {
-            icon: { name: 'bytedance-icon', code: 'percentage' },
-            name: 'hideValue',
-            checked: this.hideValue,
-            text: lst('隐藏数值'),
-            type:MenuItemType.switch
-        })
+        items.splice(at + 2, 0,
+            { type: MenuItemType.divide },
+            {
+                icon: { name: 'bytedance-icon', code: 'percentage' },
+                name: 'hideValue',
+                checked: this.hideValue,
+                text: lst('隐藏数值'),
+                type: MenuItemType.switch
+            })
         return items;
     }
     async onContextMenuInput(this: Block, item: MenuItem<string | BlockDirective>): Promise<void> {
@@ -67,7 +69,7 @@ export class MeasureView extends BlockView<Measure>{
             }
         })
     }
-    renderView()  {
+    renderView() {
         var style = this.block.contentStyle;
         var bg = (style.backgroundColor || '')?.replace(/ /g, '')
         if (!bg || bg == 'rgba(255,255,255,0)' || bg == 'rgb(255,255,255,0)') style.backgroundColor = 'var(--text-p-color)';

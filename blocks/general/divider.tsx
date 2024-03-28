@@ -3,12 +3,11 @@ import React, { CSSProperties } from 'react';
 import { prop, url, view } from "../../src/block/factory/observable";
 import { Block } from "../../src/block";
 import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../src/block/enum";
-import { Point, Rect } from "../../src/common/vector/point";
+import {  Rect } from "../../src/common/vector/point";
 import lodash from "lodash";
 import { BlockcolorSvg } from "../../component/svgs";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { ls, lst } from "../../i18n/store";
-import "./style.less";
 
 @url('/divider')
 export class Divider extends Block {
@@ -20,18 +19,16 @@ export class Divider extends Block {
         return '----------------------'
     }
     @prop()
-    lineType: 'solid' | 'dashed' | 'double' | 'double-dashed' = 'solid';
+    lineType: 'solid' | 'dashed' | 'double' | 'double-dashed' | 'dotted' = 'solid';
     @prop()
     lineColor: string = 'rgba(55,53,47,0.2)';
     @prop()
     lineWidth = 1;
     getVisibleHandleCursorPoint() {
-        var h = this.el.querySelector('.sy-block-divider-line') as HTMLElement;
+        var h = this.el.querySelector('div') as HTMLElement;
         var bound = Rect.fromEle(h);
         if (bound) {
-            var pos = Point.from(bound);
-            pos = pos.move(0, 1);
-            return pos;
+            return bound.leftMiddle;
         }
     }
     async onGetContextMenus() {
@@ -57,6 +54,12 @@ export class Divider extends Block {
                 },
                 {
                     name: 'lineType',
+                    text: lst('点虚线'),
+                    value: 'dotted',
+                    checkLabel: this.lineType == 'dotted'
+                },
+                {
+                    name: 'lineType',
                     text: lst('双线'),
                     value: 'double',
                     checkLabel: this.lineType == 'double'
@@ -71,7 +74,7 @@ export class Divider extends Block {
         });
         ns.push({
             text: lst('线宽'),
-            icon: { name: 'bytedance-icon', code: 'auto-height-one' },
+            icon: { name: 'bytedance-icon', code: 'auto-height-one', rotate: 90 },
             childs: [
                 {
                     name: 'lineWidth',
@@ -90,6 +93,12 @@ export class Divider extends Block {
                     text: '4',
                     value: 4,
                     checkLabel: this.lineWidth == 4
+                },
+                {
+                    name: 'lineWidth',
+                    text: '8',
+                    value: 8,
+                    checkLabel: this.lineWidth == 8
                 }
             ]
         });
@@ -109,6 +118,7 @@ export class Divider extends Block {
                         { color: 'inherit', text: lst('默认') },
                         { color: 'rgba(55,53,47,0.2)', text: lst('浅灰色') },
                         { color: 'rgba(55,53,47,0.6)', text: lst('灰色') },
+                        { color: 'rgb(33,33,33)', text: lst('黑色') },
                         { color: 'rgb(100,71,58)', text: lst('棕色') },
                         { color: 'rgb(217,115,13)', text: lst('橙色') },
                         { color: 'rgb(223,171,1)', text: lst('黄色') },
@@ -129,6 +139,12 @@ export class Divider extends Block {
             ]
         });
         rs.splice(at, 0, ...ns)
+        var at = rs.findIndex(c => c.name == BlockDirective.delete);
+        rs.splice(at + 1, 0, { type: MenuItemType.divide }, {
+            type: MenuItemType.help,
+            text: lst('了解如何使用分割线'),
+            url: window.shyConfig?.isUS ? "https://help.shy.live/page/258" : "https://help.shy.live/page/258"
+        })
         return rs;
     }
     async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent): Promise<void> {
@@ -143,8 +159,13 @@ export class Divider extends Block {
 @view('/divider')
 export class DividerView extends BlockView<Divider>{
     renderView() {
-        var style: CSSProperties = {};
+        var style: CSSProperties = {
+            height: '1px',
+            width: '100%',
+            borderBottom: '1px solid rgba(55, 53, 47, 0.09)'
+        };
         if (this.block.lineType == 'dashed') style.borderBottom = this.block.lineWidth + 'px dashed ' + this.block.lineColor;
+        else if (this.block.lineType == 'dotted') style.borderBottom = this.block.lineWidth + 'px dotted ' + this.block.lineColor;
         else if (this.block.lineType == 'solid') style.borderBottom = this.block.lineWidth + 'px solid ' + this.block.lineColor;
         else if (this.block.lineType == 'double') {
             style.borderTop = this.block.lineWidth + 'px solid ' + this.block.lineColor;
@@ -156,8 +177,8 @@ export class DividerView extends BlockView<Divider>{
             style.borderBottom = this.block.lineWidth + 'px dashed ' + this.block.lineColor;
             style.height = '3px';
         }
-        return <div className='sy-block-divider' style={this.block.visibleStyle}>
-            <div className='sy-block-divider-line' style={style}></div>
+        return <div className='h-16 flex-center' style={this.block.visibleStyle}>
+            <div style={style}></div>
         </div>
     }
 }
