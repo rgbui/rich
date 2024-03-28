@@ -8,13 +8,19 @@ import { channel } from "../../net/channel";
 import { util } from "../../util/util";
 import { lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
+import { HelpText } from "../../component/view/text";
 
 class ExportFile extends EventsComponent {
     render() {
-        return <div className="w-180 round padding-14 ">
-            <div className="h4"><S>导出</S></div>
-            <div>
-                <SelectBox options={[
+        return <div className="w-300 round padding-14">
+            <div className="flex">
+                <span className="flex-auto remark f-12 "><S>仅支持单文件导出</S></span>
+                <div className="flex-fixed ">
+                    <HelpText url={window.shyConfig?.isUS ? "https://help.shy.live/page/1869#9jTtjTXApVBuTjZTwBHR88" : "https://help.shy.live/page/1869#9jTtjTXApVBuTjZTwBHR88"}><S>了解数据导出</S></HelpText>
+                </div>
+            </div>
+            <div className="gap-b-10 gap-t-5">
+                <SelectBox dropAlign="full" border options={[
                     { text: 'Markdown', value: "markdown" },
                     // { text: 'HTML', value: 'html' },
                     { text: 'PDF', value: 'pdf' },
@@ -22,8 +28,7 @@ class ExportFile extends EventsComponent {
                     { text: 'JSON', value: 'json' }
                 ]} value={this.type} onChange={e => { this.type = e; this.forceUpdate() }}></SelectBox>
             </div>
-            <div className="remark f-12 gap-h-10"><S>仅支持单文件导出</S></div>
-            <div className="flex">
+            <div>
                 <Button block onClick={(e, b) => this.onExport(b)}><S>导出</S></Button>
             </div>
         </div>

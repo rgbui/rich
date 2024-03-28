@@ -2,9 +2,7 @@
 import { EventsComponent } from "../../component/lib/events.component";
 import React from "react";
 import { Tip } from "../../component/view/tooltip/tip";
-import Link from "../../src/assert/svg/link.svg";
 import Upload from "../../src/assert/svg/upload.svg";
-import { OutsideUrl } from "../link/outside";
 import { UploadView } from "./upload";
 import { ResourceArguments } from "../icon/declare";
 import { PopoverSingleton } from "../../component/popover/popover";
@@ -17,16 +15,8 @@ class FilePicker extends EventsComponent {
         this.emit('select', { ...data });
     }
     render() {
-        return <div className='shy-file-picker' >
+        return <div className='shy-file-picker gap-w-10' >
             <UploadView mine={this.mime} change={e => this.onChange({ name: 'upload', ...e })}></UploadView>
-            {/* <Tab keeplive>
-                <Tab.Page item={<Tip placement='bottom' text={'上传文件'}><Icon size={20} icon={Upload}></Icon></Tip>}>
-                    <UploadView mine={this.mime} change={e => this.onChange({ name: 'upload', ...e })}></UploadView>
-                </Tab.Page>
-                <Tab.Page item={<Tip placement='bottom' text={'网址链接'}><Icon size={18} icon={Link}></Icon></Tip>}>
-                    <OutsideUrl change={e => this.onChange({ name: 'link', url: e })}></OutsideUrl>
-                </Tab.Page>
-            </Tab> */}
         </div>
     }
     mime: 'image' | 'file' | 'audio' | 'video' = 'file';

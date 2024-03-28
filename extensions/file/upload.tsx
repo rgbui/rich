@@ -7,23 +7,26 @@ import { util } from "../../util/util";
 import { lst } from "../../i18n/store";
 import { OpenFileDialoug } from "../../component/file";
 
-export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audio' | 'video', warn?: boolean, change: (file: ResourceArguments) => void }> {
+export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audio' | 'video', fileClassify?: 'cover', warn?: boolean, change: (file: ResourceArguments) => void }> {
     async onUpload(file: File) {
         if (!file) return;
         if (this.button) this.button.loading = true;
         try {
             var isUpload: boolean = true;
             if (this.props.mine == 'image' && file.size > 1024 * 1024 * 20) {
-                this.error = lst('图片过大，不支持20M以上的图片');
+                this.error = lst('不支持20M以上的图片');
                 isUpload = false;
             }
             if (file.size > 1024 * 1024 * 100) {
-                this.error = lst('文件过大，暂时不支持100G以上的文件');
+                this.error = lst('暂时不支持2G以上的文件');
                 isUpload = false;
             }
             if (isUpload) {
                 var r = await channel.post('/ws/upload/file', {
                     file,
+                    data: this.props.fileClassify ? {
+                        fileClassify: this.props.fileClassify
+                    } : undefined,
                     uploadProgress: (event) => {
                         // console.log(event, 'ev');
                         if (event.lengthComputable) {
@@ -93,7 +96,7 @@ export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audi
         return <div className='shy-upload'>
             <div className="dashed gap-h-10 round flex-center min-h-80  padding-10" tabIndex={1} onPaste={this.onPaste} onDragOverCapture={e => { e.preventDefault() }} onDrop={this.onDrop}>
                 <span className="remark">
-                    <Sp data={{ content: mineText }} text="拖动{content}或粘贴{content}或粘贴网址">拖动{text}或粘贴{text}或粘贴网址</Sp>
+                    <Sp data={{ content: mineText }} text="拖放{content}或粘贴{content}或粘贴{content}网址">拖放{text}或粘贴{text}或粘贴网址</Sp>
                 </span>
             </div>
             <Button onClick={e => this.onOpenFile()} ref={e => this.button = e} block>{text}</Button>
