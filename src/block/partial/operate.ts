@@ -2,7 +2,7 @@
 import { Block } from "..";
 import { OperatorDirective } from "../../history/declare";
 import { DropDirection } from "../../kit/handle/direction";
-import { BlockChildKey, BlockUrlConstant } from "../constant";
+import { BlockChildKey, BlockUrlConstant, ParseBlockUrl } from "../constant";
 import { Col } from "../element/col";
 import { BlockRenderRange } from "../enum";
 import lodash from 'lodash';
@@ -10,10 +10,10 @@ import { AppearAnchor } from "../appear";
 import { Matrix } from "../../common/matrix";
 import { Point } from "../../common/vector/point";
 import { BlockFactory } from "../factory/block.factory";
-import { Tab } from "../../../blocks/form/tab";
+import { Tab } from "../../../blocks/layout/tab";
+import { channel } from "../../../net/channel";
 
 export class Block$Operator {
-
     isDeleted(this: Block) {
         return this.closest(x => x.deleted == true) ? true : false
     }
@@ -70,22 +70,34 @@ export class Block$Operator {
         this.page.monitorBlockOperator(this, 'turn');
         if (this.url == BlockUrlConstant.Head && url.startsWith(BlockUrlConstant.Head)) {
             //这里只是大标题的切换，不需要做任何的处理，更新一些属性即可
-            var pb = BlockFactory.parseBlockUrl(url);
+            var pb = ParseBlockUrl(url);
             await this.updateProps(pb.data.level ? Object.assign(pb.data, da || {}) : { level: 'h1', ...(da || {}) }, BlockRenderRange.self);
             this.page.monitorBlockOperator(this, 'turn');
             return this;
         }
         if (this.url == BlockUrlConstant.List && url.startsWith(BlockUrlConstant.List)) {
-            var pb = BlockFactory.parseBlockUrl(url);
+            var pb = ParseBlockUrl(url);
             await this.updateProps(pb.data.listType ? Object.assign(pb.data, da || {}) : { listType: 0, ...(da || {}) }, BlockRenderRange.self);
             return this;
+        }
+        else if (url == BlockUrlConstant.Link) {
+            var content = (await this.getPlain()) || '';
+            content = content.slice(0, content.indexOf('\n') > -1 ? content.indexOf('\n') : content.length);
+            var r = await channel.air('/page/create/sub', {
+                pageId: this.page.pageInfo?.id,
+                text: content
+            });
+            if (r) {
+                da = Object.assign(da || {}, { link: { name: 'page', pageId: r.id } })
+            }
         }
         /**
          * 这里可能会存在自转换 
          */
         if (this.url == url) return this;
+
         var data = await this.getWillTurnData(url);
-        if (da) Object.assign(data, da);
+        if (da) data = Object.assign(data || {}, da);
         var newBlock = await BlockFactory.createBlock(url, this.page, data, this.parent);
         await this.page.onNotifyCreateBlock(newBlock);
         var bs = this.parent.blocks[this.parentKey];
