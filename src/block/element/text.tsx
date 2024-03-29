@@ -103,7 +103,6 @@ export class TextContent extends Block {
             return `<span>${this.content}</span>`
         }
     }
-
     async getMd() {
         if (this.link) {
             if (!this.link.url) {
@@ -172,7 +171,7 @@ export class TextContentView extends BlockView<TextContent>{
             lc.pageId = this.block.refLinks[0].pageId;
             lc.text = this.block.content;
         }
-        var pageLink = await useLinkPicker({ roundArea: Rect.fromEvent(e) }, lc);
+        var pageLink = await useLinkPicker({ roundArea: Rect.fromEle(this.block.el) }, lc);
         if (pageLink) {
             if (lodash.isNull(pageLink.link)) {
                 this.onClearLink();

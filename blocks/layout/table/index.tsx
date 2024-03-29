@@ -264,7 +264,7 @@ export class Table extends Block {
                     childs: getColors()
                 },
                 { type: MenuItemType.divide },
-                { name: 'delCol', disabled: this.childs.first().childs.length > 0 ? false : true, icon: TableDeleteColSvg, text: lst('删除列') },
+                { name: 'delCol', iconSize: 18, disabled: this.childs.first().childs.length > 0 ? false : true, icon: TableDeleteColSvg, text: lst('删除列') },
                 { type: MenuItemType.divide },
                 { icon: TableClearCellSvg, iconSize: 18, text: lst('清空单元格'), name: 'clear' }
             ]
@@ -382,7 +382,7 @@ export class Table extends Block {
                 childs: getColors()
             },
             { type: MenuItemType.divide },
-            { name: 'delRow', disabled: this.childs.length > 1 ? false : true, icon: TableDeleteRowSvg, text: lst('删除行'), },
+            { name: 'delRow', iconSize: 18, disabled: this.childs.length > 1 ? false : true, icon: TableDeleteRowSvg, text: lst('删除行'), },
             { type: MenuItemType.divide },
             { icon: TableClearCellSvg, iconSize: 18, text: lst('清空单元格'), name: 'clear' }
         ]

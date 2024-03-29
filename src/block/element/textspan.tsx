@@ -54,7 +54,7 @@ export class TextSpan extends Block {
         else return this.__appearAnchors;
     }
     async onGetTurnUrls() {
-        return TextTurns.blockDatas
+        return TextTurns.blockDatas();
     }
     async getWillTurnData(url: string) {
         return await TextTurns.turn(this, url);
@@ -227,7 +227,7 @@ export class TextSpan extends Block {
         else if (name == 'textDecoration')
             await this.pattern.setFontStyle({ textDecoration: value });
     }
-    async onInputed(): Promise<void> {
+    async onInputed() {
         this.page.kit.picker.onRePicker();
     }
     get isEnterCreateNewLine(): boolean {
@@ -253,7 +253,7 @@ export class TextSpan extends Block {
     }
     async onGetContextMenus() {
         var rs = await super.onGetContextMenus();
-        var at = rs.findIndex(g => g.name == 'color');
+        var at = rs.findIndex(g => g.name == 'text-center');
         var ns: MenuItem<string | BlockDirective>[] = [];
         ns.push({
             name: 'smallFont',
@@ -262,9 +262,6 @@ export class TextSpan extends Block {
             text: lst('小字号'),
             icon: { name: 'byte', code: 'add-text' }
         });
-        ns.push({
-            type: MenuItemType.divide
-        })
         rs.splice(at, 0, ...ns)
         return rs;
     }
@@ -296,7 +293,7 @@ export class TextSpanView extends BlockView<TextSpan>{
         if (this.block.smallFont) {
             style.fontSize = this.block.page.smallFont ? '12px' : '14px';
         }
-        var placeholder = this.block.isFreeBlock || pa?.url == BlockUrlConstant.Cell ? lst("输入文本") : undefined;
+        var placeholder = this.block.isFreeBlock || pa?.url == BlockUrlConstant.TableCell ? lst("输入文本") : undefined;
         if (this.block.placeholder)
             placeholder = this.block.placeholder;
         var visibleStyle = this.block.visibleStyle;

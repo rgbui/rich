@@ -146,8 +146,8 @@ export class List extends Block {
     }
     async onGetContextMenus() {
         var items = await super.onGetContextMenus();
-        var linkAt = items.findIndex(g => g.name == BlockDirective.link);
-        items.splice(linkAt + 1 + 1, 0,
+        var at = items.findIndex(g => g.name == BlockDirective.link) + 2;
+        items.splice(at, 0,
             {
                 name: 'smallFont',
                 type: MenuItemType.switch,
@@ -156,8 +156,6 @@ export class List extends Block {
                 icon: { name: 'byte', code: 'add-text' }
             }
         );
-
-        var at = items.findIndex(g => g.name == 'color');
         if (this.listType == ListType.circle || this.listType == ListType.number) {
             var rc = (item: MenuItem<string>, view?: MenuItemView) => {
                 if (this.listType == ListType.circle) {
@@ -193,9 +191,9 @@ export class List extends Block {
                         { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.roman, text: lst('罗马'), value: ListTypeView.roman }
                     ]
                 }, { type: MenuItemType.divide }]
-            items.splice(at, 0, ...newItems)
+            items.splice(at + 1, 0, ...newItems)
         }
-        else items.splice(at, 0, {
+        else items.splice(at + 1, 0, {
             type: MenuItemType.divide
         })
         lodash.remove(items, c => c.name == 'text-center');

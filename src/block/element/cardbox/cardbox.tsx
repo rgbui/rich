@@ -96,7 +96,7 @@ export class CardBox extends Block {
             var bound = Rect.fromEle(c);
             if (bound) {
                 var pos = Point.from(bound);
-                pos = pos.move(0,10);
+                pos = pos.move(0, 10);
                 return pos;
             }
         }
@@ -138,46 +138,46 @@ export class CardBox extends Block {
                 text: lst("卡片样式")
             },
             {
-                name: 'cloneCard',
-                icon: DuplicateSvg,
-                text: lst("复制卡片")
-            },
-            {
-                name: 'merge',
-                disabled: this.prev && this.prev instanceof CardBox ? false : true,
-                icon: { name: 'byte', code: 'sum' } as IconValueType,
-                text: lst("合并内容到上一个")
-            },
-            { type: MenuItemType.divide },
-            {
-                name: 'up',
-                icon: { name: 'byte', code: 'arrow-up' } as IconValueType,
-                text: lst("上移"),
-                disabled: this.prev ? false : true
-            },
-            {
-                name: 'down',
-                icon: { name: 'byte', code: 'arrow-down' } as IconValueType,
-                text: lst("下移"),
-                disabled: this.next ? false : true
-            },
-            { type: MenuItemType.divide },
-            {
-                name: 'copyStyle',
-                icon: { name: 'byte', code: 'format-brush' } as IconValueType,
-                text: lst("复制卡片样式")
-            },
-            {
-                name: 'pasteStyle',
-                icon: { name: 'byte', code: 'magic-wand' } as IconValueType,
-                value: lodash.cloneDeep(d),
-                disabled: d ? false : true,
-                text: lst("粘贴卡片样式")
+                text: lst('卡片操作'),
+                icon: { name: 'byte', code: 'write' } as any,
+                childs: [
+                    {
+                        name: 'merge',
+                        disabled: this.prev && this.prev instanceof CardBox ? false : true,
+                        icon: { name: 'byte', code: 'sum' } as IconValueType,
+                        text: lst("合并内容到上一个")
+                    },
+                    // { type: MenuItemType.divide },
+                    {
+                        name: 'up',
+                        icon: { name: 'byte', code: 'arrow-up' } as IconValueType,
+                        text: lst("上移"),
+                        disabled: this.prev ? false : true
+                    },
+                    {
+                        name: 'down',
+                        icon: { name: 'byte', code: 'arrow-down' } as IconValueType,
+                        text: lst("下移"),
+                        disabled: this.next ? false : true
+                    },
+                    // { type: MenuItemType.divide },
+                    {
+                        name: 'copyStyle',
+                        icon: { name: 'byte', code: 'format-brush' } as IconValueType,
+                        text: lst("复制卡片样式")
+                    },
+                    {
+                        name: 'pasteStyle',
+                        icon: { name: 'byte', code: 'magic-wand' } as IconValueType,
+                        value: lodash.cloneDeep(d),
+                        disabled: d ? false : true,
+                        text: lst("粘贴卡片样式")
+                    }
+                ]
             }
         ])
         var at = items.findIndex(g => g.name == 'color');
         items.splice(at, 2);
-
         var dat = items.findIndex(g => g.name == BlockDirective.delete);
         items.splice(dat + 1, 0, {
             type: MenuItemType.divide
