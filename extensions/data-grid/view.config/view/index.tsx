@@ -14,7 +14,7 @@ import { TableStoreBoard } from "../../../../blocks/data-grid/view/board";
 import { MenuView } from "../../../../component/view/menu/menu";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import lodash from "lodash";
-import { CheckSvg, DetailSvg, LoopSvg } from "../../../../component/svgs";
+import { CheckSvg, DetailSvg, GridPageDialougSvg, GridPagePageSvg, GridPageSlideSvg, LoopSvg } from "../../../../component/svgs";
 import { Rect } from "../../../../src/common/vector/point";
 import { DataGridConfig } from "..";
 import { lst } from "../../../../i18n/store";
@@ -118,10 +118,11 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 value: this.block.createRecordSource,
                 name: 'createRecordSource',
                 type: MenuItemType.select,
+                optionIconSize: 18,
                 options: [
-                    { text: lst('页面'), value: 'page' },
-                    { text: lst('对话框'), value: 'dialog' },
-                    { text: lst('右侧栏'), value: 'slide' },
+                    { text: lst('页面'), value: 'page', icon: GridPagePageSvg, iconSize: 18 },
+                    { text: lst('对话框'), value: 'dialog', icon: GridPageDialougSvg, iconSize: 18 },
+                    { text: lst('右侧栏'), value: 'slide', icon: GridPageSlideSvg, iconSize: 18 },
                 ]
             },
             {
@@ -129,10 +130,11 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 value: this.block.openRecordSource,
                 name: 'openRecordSource',
                 type: MenuItemType.select,
+                optionIconSize: 18,
                 options: [
-                    { text: lst('页面'), value: 'page' },
-                    { text: lst('对话框'), value: 'dialog' },
-                    { text: lst('右侧栏'), value: 'slide' },
+                    { text: lst('页面'), value: 'page', icon: GridPagePageSvg, iconSize: 18 },
+                    { text: lst('对话框'), value: 'dialog', icon: GridPageDialougSvg, iconSize: 18 },
+                    { text: lst('右侧栏'), value: 'slide', icon: GridPageSlideSvg, iconSize: 18 },
                 ]
             },
             {

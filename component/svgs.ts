@@ -123,6 +123,9 @@ import ForbidSvg from "../src/assert/svg/forbid.svg";
 import FourLeavesSvg from "../src/assert/svg/four.leaves.svg";
 import FriendsSvg from "../src/assert/svg/friends.svg";
 import GlobalLinkSvg from "../src/assert/svg/globalLink.svg";
+import GridPageDialougSvg from "../src/assert/svg/grid.page.dialoug.svg";
+import GridPagePageSvg from "../src/assert/svg/grid.page.page.svg";
+import GridPageSlideSvg from "../src/assert/svg/grid.page.slide.svg";
 import HSvg from "../src/assert/svg/h.svg";
 import H1Svg from "../src/assert/svg/h1.svg";
 import H2Svg from "../src/assert/svg/h2.svg";
@@ -367,6 +370,9 @@ ForbidSvg,
 FourLeavesSvg,
 FriendsSvg,
 GlobalLinkSvg,
+GridPageDialougSvg,
+GridPagePageSvg,
+GridPageSlideSvg,
 HSvg,
 H1Svg,
 H2Svg,
