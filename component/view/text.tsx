@@ -26,18 +26,21 @@ export function HelpText(props: {
     block?: boolean
 }) {
     var c = util.covertToArray(props.className);
+    var pc = props.text || props.children;
+    if (pc) c.push('padding-w-3')
+    else c.push('gap-w-3')
     if (props.align == 'left') {
         return <a
             style={{ display: props.block ? 'flex' : 'inline-flex' }}
-            className={"padding-w-3 remark f-12 cursor item-hover round l-20 flex flex-inline " + (c.join(" "))}
+            className={"remark f-12 cursor item-hover round l-20 flex flex-inline " + (c.join(" "))}
             target="_blank"
-            href={props.url}><Icon size={14} icon={HelpSvg}></Icon><span className="gap-l-3" >{props.text || props.children}</span></a>
+            href={props.url}><Icon size={14} icon={HelpSvg}></Icon>{pc && <span className="gap-l-3" >{pc}</span>}</a>
     }
     return <a
         style={{ display: props.block ? 'flex' : 'inline-flex' }}
-        className={"padding-w-3 remark f-12 cursor item-hover round l-20 flex flex-inline " + (c.join(" "))}
+        className={"remark f-12 cursor item-hover round l-20 flex flex-inline " + (c.join(" "))}
         target="_blank"
-        href={props.url}><span className="gap-r-3">{props.text || props.children}</span><Icon size={14} icon={HelpSvg}></Icon></a>
+        href={props.url}>{pc && <span className="gap-r-3">{pc}</span>}<Icon size={14} icon={HelpSvg}></Icon></a>
 }
 
 export function HelpTip(props: { overlay: React.ReactNode }) {
