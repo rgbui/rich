@@ -22,9 +22,8 @@ import {
 } from "../../../component/svgs";
 import lodash from "lodash";
 import { FontColorList, BackgroundColorList, GetTextCacheFontColor, SetTextCacheFontColor } from "../../../extensions/color/data";
-import { BlockUrlConstant } from "../constant";
+import { BlockUrlConstant, ParseBlockUrl } from "../constant";
 import { List } from "../../../blocks/present/list/list";
-import { BlockFactory } from "../factory/block.factory";
 import { util } from "../../../util/util";
 import { ls, lst } from "../../../i18n/store";
 import { channel } from "../../../net/channel";
@@ -47,8 +46,8 @@ export class Block$Event {
                 text: it.text,
                 icon: it.icon,
                 url: it.url,
-                checkLabel: lodash.isEqual(BlockFactory.parseBlockUrl(it.url),
-                    BlockFactory.parseBlockUrl(this.getUrl())) ? true : false,
+                checkLabel: lodash.isEqual(ParseBlockUrl(it.url),
+                    ParseBlockUrl(this.getUrl())) ? true : false,
                 iconSize: 16,
                 label: it.label
             }
@@ -110,15 +109,6 @@ export class Block$Event {
             icon: LinkSvg,
             label: UA.isMacOs ? "⌥+Shift+L" : "Alt+Shift+L"
         });
-        // items.push({
-        //     type: MenuItemTypeValue.divide
-        // });
-        // items.push({
-        //     name: BlockDirective.comment,
-        //     text: langProvider.getText(LangID.menuComment),
-        //     icon: comment,
-        //     disabled: true
-        // });
         items.push({
             type: MenuItemType.divide
         });
@@ -130,7 +120,7 @@ export class Block$Event {
                 childs: [
                     {
                         name: 'text-center',
-                        text: lst('左对齐'),
+                        text: lst('居左'),
                         value: 'left',
                         icon: { name: 'byte', code: 'align-text-left' },
                         checkLabel: (this as any).align == 'left' ? true : false
@@ -144,13 +134,16 @@ export class Block$Event {
                     },
                     {
                         name: 'text-center',
-                        text: lst('右对齐'),
+                        text: lst('居右'),
                         value: 'right',
                         icon: { name: 'byte', code: 'align-text-right' },
                         checkLabel: (this as any).align == 'right' ? true : false
                     }
                 ],
                 icon: (this as any).align == 'left' ? { name: 'byte', code: 'align-text-left' } : (this as any).align == 'center' ? { name: 'byte', code: 'align-text-center' } : { name: 'byte', code: 'align-text-right' }
+            });
+            items.push({
+                type: MenuItemType.divide
             });
         }
 
@@ -174,7 +167,14 @@ export class Block$Event {
                 ]
             });
         }
-
+        items.push({ type: MenuItemType.divide })
+        items.push({
+            name: BlockDirective.comment,
+            text: lst('评论'),
+            icon: { name: 'byte', code: 'message' },
+            label: UA.isMacOs ? "⌘+Opt+M" : "Ctrl+Alt+M"
+        });
+        items.push({ type: MenuItemType.divide })
         items.push({
             text: lst('颜色'),
             icon: BlockcolorSvg,
@@ -232,14 +232,14 @@ export class Block$Event {
             items.push({
                 type: MenuItemType.divide,
             });
-            if (this.editDate) items.push({
-                type: MenuItemType.text,
-                text: lst('编辑于 ') + util.showTime(new Date(this.editDate))
-            });
             var r = await channel.get('/user/basic', { userid: this.editor });
             if (r?.data?.user) items.push({
                 type: MenuItemType.text,
-                text: lst('编辑人 ') + r.data.user.name
+                text: lst('编辑人') + ' ' + r.data.user.name
+            });
+            if (this.editDate) items.push({
+                type: MenuItemType.text,
+                text: lst('编辑于') + ' ' + util.showTime(new Date(this.editDate))
             });
         }
         return items;
@@ -276,6 +276,13 @@ export class Block$Event {
             type: MenuItemType.divide
         });
         items.push({
+            name: BlockDirective.comment,
+            text: lst('评论'),
+            icon: { name: 'byte', code: 'message' },
+            label: UA.isMacOs ? "⌘+Opt+M" : "Ctrl+Alt+M"
+        });
+        items.push({ type: MenuItemType.divide })
+        items.push({
             name: BlockDirective.delete,
             icon: TrashSvg,
             text: lst('删除'),
@@ -287,18 +294,27 @@ export class Block$Event {
             });
             if (this.editDate) items.push({
                 type: MenuItemType.text,
-                text: lst('编辑于 ') + util.showTime(new Date(this.editDate))
+                text: lst('编辑于') + " " + util.showTime(new Date(this.editDate))
             });
             var r = await channel.get('/user/basic', { userid: this.editor });
             if (r?.data?.user) items.push({
                 type: MenuItemType.text,
-                text: lst('编辑人 ') + r.data.user.name
+                text: lst('编辑人') + " " + r.data.user.name
             });
         }
         return items;
     }
     async onContextmenu(this: Block, event: MouseEvent | Point | Rect) {
         var self = this;
+        var ms = await this.onGetContextMenus();
+        ms = util.neighborDeWeight(ms, c => {
+            if (c.type == MenuItemType.text) return 'text.' + c.text;
+            else if (c.type == MenuItemType.divide)
+                return (c.name || '') + (c.type || 0).toString()
+            else return 'l.' + c.text
+        });
+        if (ms[0]?.type == MenuItemType.divide) ms = ms.slice(1);
+        if (ms.last()?.type == MenuItemType.divide) ms = ms.slice(0, -1);
         var re = await useSelectMenuItem(
             this.isFreeBlock ? {
                 roundPoint: event instanceof Rect ? undefined : (event instanceof Point ? event : Point.from(event)),
@@ -308,7 +324,7 @@ export class Block$Event {
                 roundPoint: event instanceof Point ? event : undefined,
                 direction: 'left'
             },
-            await this.onGetContextMenus(),
+            ms,
             {
                 async input(item) {
                     await self.onContextMenuInput(item);
@@ -357,6 +373,7 @@ export class Block$Event {
                 await this.page.onBatchTurn([this], (item as any).url);
                 break;
             case BlockDirective.comment:
+                await this.onInputComment();
                 break;
             case 'askAi':
                 await this.page.kit.writer.onAskAi([this])
@@ -447,6 +464,9 @@ export class Block$Event {
     async onCopyLink(this: Block) {
         CopyText(this.blockUrl);
         ShyAlert(lst('块的链接已复制'))
+    }
+    async onInputComment(this: Block) {
+
     }
     async onUpdateProps(this: Block, props: Record<string, any>, options?: {
         range?: BlockRenderRange,

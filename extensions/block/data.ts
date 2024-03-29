@@ -62,7 +62,7 @@ export function getBlockSelectData() {
             childs: [
 
                 { text: lst('页面链接'), url: '/link', icon: LinkSvg, label: lst("/链接"), labels: ['/link', '/lianjie', '/lj', '/wz'] },
-                { text: lst('面包屑导航'), url: '/links', icon: { name: 'byte', code: "relational-graph" }, label: lst("/面包屑"), labels: ['/links', '/urls', '/mbx', '/mianbaoxie', '/breadcrumb'] },
+                { text: lst('面包屑导航'), url: '/links', icon: { name: 'byte', code: "navigation",rotate:90, }, label: lst("/面包屑"), labels: ['/links', '/urls', '/mbx', '/mianbaoxie', '/breadcrumb'] },
                 { text: lst('标签'), url: '/tag', icon: { name: "byte", code: 'hashtag-key' }, label: lst('/标签'), labels: ['/tag', '/biaoqian', '/bq'] },
                 { text: lst("书签"), url: '/bookmark', icon: BookSvg, label: lst('/书签'), labels: ['/wzsq', '/shuqian', '/sq', '/bookmark'] },
                 // { text: lst('二维码'), url: '/qr', icon: MentionSvg, label: lst("/二维码"), labels: ['/qr', '/wz', '/ewm'] },
@@ -138,7 +138,7 @@ export function getBlockSelectData() {
 
                 { text: lst("日期"), icon: TimeSvg, isLine: true, url: '/mention/date', label: lst('/日期'), labels: ['/date', '/rq', '/riqi'] },
                 { text: lst("提及"), icon: MentionSvg, isLine: true, url: '/user/mention', label: lst('/@'), labels: ['/mention', '/2', '/at'] },
-                { text: lst("行内公式"), icon: EquationSvg, data: { content: 'a+b' }, url: "/katex/line", label: lst("/公式"), labels: ['/sxgs', lst("/行内公式"), lst("/行内数学公式"), lst('/公式'), '/shuxuegongshi', '/latex', '/math'] },
+                { text: lst("行内公式"), icon: { name: 'byte', code: 'block' }, data: { content: 'a+b' }, url: "/katex/line", label: lst("/公式"), labels: ['/sxgs', lst("/行内公式"), lst("/行内数学公式"), lst('/公式'), '/shuxuegongshi', '/latex', '/math'] },
                 { text: lst("行内表情"), icon: EmojiSvg, isLine: true, url: "/emoji", label: lst("/表情"), labels: ['/bq', '/biaoqing', '/emoji'] },
                 { text: lst("行内图标"), data: { src: { name: 'byte', code: 'hamburger-button' } }, icon: { name: 'bytedance-icon', code: 'oval-love-two' }, isLine: true, url: "/emoji", label: lst("/图标"), labels: ['/tubiao', '/tb', '/biaoqing', '/emoji'] },
             ]

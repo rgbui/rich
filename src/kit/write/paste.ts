@@ -1,6 +1,6 @@
 import { marked } from "marked";
 import { Kit } from "..";
-import { TextCode } from "../../../blocks/present/code/code";
+import { TextCode } from "../../../blocks/media/code/code";
 import { getImageSize } from "../../../component/file";
 import { InputTextPopSelectorType } from "../../../extensions/common/input.pop";
 import { useInputUrlSelector } from "../../../extensions/link/url";

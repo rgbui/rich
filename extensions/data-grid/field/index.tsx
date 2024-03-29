@@ -25,6 +25,7 @@ import { MenuItemType } from "../../../component/view/menu/declare";
 import { lst } from "../../../i18n/store";
 import { S } from "../../../i18n/view";
 import './style.less';
+import { HelpText } from "../../../component/view/text";
 
 export class TableFieldView extends EventsComponent {
     onSave() {
@@ -242,6 +243,7 @@ export class TableFieldView extends EventsComponent {
         return <div className="w-300 f-14 text">
             <div className="flex  h-20 gap-t-5 f-12 padding-w-14 text-1 bold">
                 <span>{this.fieldId ? lst("编辑字段") : lst("新增字段")}</span>
+                <HelpText url={window.shyConfig?.isUS ? "https://help.shy.red/page/43#2PRKjiNkLmU6w4xciiy1t1" : "https://help.shy.live/page/1871#gVnf6Ar2iF5wa2fS2KpLws"}></HelpText>
             </div>
             <Divider></Divider>
             <div className="max-h-250 overflow-y">

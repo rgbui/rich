@@ -333,14 +333,14 @@ export class Block$LifeCycle {
         return JSON.stringify(await this.get());
     }
     async getPlain(this: Block) {
-        var text = '';
+        var text = this.content || '';
         return text + await this.getChildsPlain();
     }
     async getChildsPlain(this: Block) {
         var text = '';
         for (let b in this.blocks) {
             if (this.allBlockKeys.some(s => s == b))
-                text += (await this.blocks[b].asyncMap(async x => await x.getPlain())).join(" ");
+                text += (await this.blocks[b].asyncMap(async x => await x.getPlain())).join("");
         };
         return text;
     }

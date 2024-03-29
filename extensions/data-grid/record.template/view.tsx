@@ -14,6 +14,7 @@ import {
     DetailSvg,
     DotsSvg,
     DragHandleSvg,
+    DuplicateSvg,
     Edit1Svg,
     OrderSvg,
     PlusSvg,
@@ -27,6 +28,7 @@ import { Icon, IconValueType } from "../../../component/view/icon";
 import { lst } from "../../../i18n/store";
 import { S } from "../../../i18n/view";
 import { TableSchemaView } from "../../../blocks/data-grid/schema/meta";
+import { HelpText } from "../../../component/view/text";
 import lodash from "lodash";
 
 class TabelSchemaFormDrop extends EventsComponent {
@@ -84,8 +86,9 @@ class TabelSchemaFormDrop extends EventsComponent {
             },
             { type: MenuItemType.divide },
             { text: lst('编辑'), name: 'edit', icon: Edit1Svg },
+            { text: lst('复制数据模板'), name: 'clone', icon: DuplicateSvg },
             { type: MenuItemType.divide },
-            { text: lst('默认新增时打开'), name: 'defaultCollect', checkLabel: this.schema.defaultCollectFormId == view.id ? true : false, icon: OrderSvg },
+            { text: lst('设为新增时打开'), name: 'defaultCollect', checkLabel: this.schema.defaultCollectFormId == view.id ? true : false, icon: OrderSvg },
             { type: MenuItemType.divide },
             { text: lst('删除'), name: 'delete', icon: TrashSvg, disabled: this.schema.views.findAll(g => [BlockUrlConstant.RecordPageView].includes(g.url as any)).length == 1 ? true : false }
         ]
@@ -93,6 +96,11 @@ class TabelSchemaFormDrop extends EventsComponent {
         if (um) {
             if (um.item.name == 'delete') {
                 this.schema.onSchemaOperate([{ name: 'removeSchemaView', id: view.id }])
+                this.forceUpdate();
+                return;
+            }
+            else if (um.item.name == 'clone') {
+                this.schema.onSchemaOperate([{ name: 'duplicateSchemaView', id: view.id }])
                 this.forceUpdate();
                 return;
             }
@@ -128,32 +136,30 @@ class TabelSchemaFormDrop extends EventsComponent {
             this.forceUpdate();
             return;
         }
-
     }
     render(): ReactNode {
         if (!this.schema) return <div></div>
         var views = this.schema.views.filter(g => [BlockUrlConstant.RecordPageView].includes(g.url as any));
         if (!Array.isArray(views)) views = [];
-        return <div className="shadow w-250 padding-h-10">
-            <div className="bold padding-w-10 "><S>模板列表</S></div>
+        return <div className="shadow-s w-250 padding-h-10">
+            <div className="bold padding-w-10 flex"><S>模板列表</S><HelpText url={window.shyConfig?.isUS ? "https://help.shy.red/page/42#vQh5qaxCEC3aPjuFisoRh5" : "https://help.shy.live/page/1870#3Fgw3UNGQErf8tZdJnhjru"}></HelpText></div>
             {views.length > 0 && <Divider></Divider>}
             {views.map(v => {
-                return <div className="item-hover padding-w-5 gap-w-5 h-30 round flex cursor text-1 f-14" key={v.id} onClick={e => this.onOpenTemplate(v)}>
-                    <span className="size-24 flex-center flex-fixed round item-hover"><Icon size={12} className={'drag'} icon={DragHandleSvg}></Icon></span>
+                return <div className="item-hover padding-w-5 gap-w-5 h-30 round flex cursor f-14" key={v.id} onClick={e => this.onOpenTemplate(v)}>
+                    <span className="size-24 flex-center flex-fixed round item-hover text-1"><Icon size={14} className={'drag'} icon={DragHandleSvg}></Icon></span>
                     <span className="flex-fixed size-24 flex-center item-hover round">
                         <Icon size={16} icon={v.icon || (DetailSvg)}></Icon>
                     </span>
-                    <span className="flex-auto">{v.text}</span>
-                    <span className="size-24 flex-center flex-fixed item-hover round">
-                        <Icon size={14} className={'property'} icon={DotsSvg} onClick={e => this.onProperty(v, e)}></Icon>
+                    <span className="flex-auto text-overflow">{v.text}</span>
+                    <span className="size-24 flex-center flex-fixed  item-hover round">
+                        <Icon size={16} className={'property'} icon={DotsSvg} onClick={e => this.onProperty(v, e)}></Icon>
                     </span>
                 </div>
             })}
             <Divider></Divider>
             <div className="item-hover padding-w-5 gap-w-5  h-30 round flex item-hover cursor  text-1 f-14" onClick={e => this.onAdd(e, BlockUrlConstant.RecordPageView)}>
-                <span className="size-24 flex-center "><Icon size={16} icon={DetailSvg}></Icon></span>
+                <span className="size-24 flex-center item-hover round"><Icon size={18} icon={PlusSvg}></Icon></span>
                 <span className="flex-auto"><S>新增数据模板</S></span>
-                <span className="size-24 flex-center round item-hover "><Icon size={16} icon={PlusSvg}></Icon></span>
             </div>
         </div>
     }

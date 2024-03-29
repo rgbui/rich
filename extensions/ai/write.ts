@@ -6,7 +6,7 @@ import { AppearAnchor } from "../../src/block/appear";
 import { AITool } from ".";
 import { InputForceStore, InputStore } from "../../src/kit/write/store";
 import { ListType } from "../../blocks/present/list/list";
-import { TextCode } from "../../blocks/present/code/code";
+import { TextCode } from "../../blocks/media/code/code";
 import { util } from "../../util/util";
 import { mergeCode } from "./util";
 import { ResourceArguments } from "../icon/declare";

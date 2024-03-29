@@ -614,8 +614,11 @@ export abstract class Block extends Events {
         }
         if (this.isLine) {
             var c = this.closest(x => x.isBlock && !x.isLayout)
-            c = c.closest(g => g.handleBlock ? true : false);
-            if (c) return c.handleBlock;
+            if (c) {
+                c = c.closest(g => g.handleBlock ? true : false);
+                if (c) return c.handleBlock;
+            }
+            return null;
         }
         else if (this.isLayout) {
             return this.find(g => g.isBlock && !g.isLayout)
