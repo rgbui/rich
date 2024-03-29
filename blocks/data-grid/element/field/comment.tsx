@@ -9,7 +9,7 @@ import { S } from "../../../../i18n/view";
 
 @url('/field/comment')
 export class FieldComment extends OriginField {
-    async onOpenComment(event: React.MouseEvent) {
+    async onOpenCommentView(event: React.MouseEvent) {
         if (this.checkSign() === false) return;
         var fn = async () => {
             var r = await useCommentListView({
@@ -42,7 +42,7 @@ export class FieldCommentView extends OriginFileView<FieldComment>{
         if (lodash.isNull(v) || lodash.isUndefined(v)) v = 0;
         var countStr = v > 0 ? `(${v})` : '';
         return <div className='sy-field-text  f-14' >
-            <span onMouseDown={e => this.block.onOpenComment(e)} className="flex-center flex-inline  text-1 padding-w-5 h-30 round item-hover"><S>评论</S><em>{countStr}</em></span>
+            <span onMouseDown={e => this.block.onOpenCommentView(e)} className="flex-center flex-inline  text-1 padding-w-5 h-30 round item-hover"><S>评论</S><em>{countStr}</em></span>
         </div>
     }
 }

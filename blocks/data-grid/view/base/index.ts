@@ -145,6 +145,26 @@ export class DataGridView extends Block {
         }
         return json;
     }
+    async cloneData(options?: { isButtonTemplate?: boolean; }) {
+        var json: Record<string, any> = {
+            // id: this._id,
+            syncBlockId: this.syncBlockId,
+            url: this.url,
+            schemaId: this.schemaId,
+            matrix: this.matrix ? this.matrix.getValues() : undefined
+        };
+        if (typeof this.pattern.get == 'function')
+            json.pattern = await this.pattern.cloneData();
+        json.blocks = {};
+        if (Array.isArray(this.__props)) {
+            var ss = super.getCurrentProps();
+            await this.__props.eachAsync(async pro => {
+                if (ss.includes(pro) || this.viewProps.includes(pro))
+                    json[pro] = await this.clonePropData(pro, this[pro]);
+            })
+        }
+        return json;
+    }
     async getSync() {
         var json: Record<string, any> = { url: this.url };
         if (typeof this.pattern.get == 'function')

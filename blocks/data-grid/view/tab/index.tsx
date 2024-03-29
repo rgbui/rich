@@ -39,7 +39,7 @@ export class DataGridTab extends Block {
     @prop()
     displayMode: 'border' | 'top-line' | 'button' = 'top-line';
     @prop()
-    align: 'left' | 'center' = 'left';
+    align: 'left' | 'center' | 'right' = 'left';
     tabIndex: number = 0;
     blocks: { childs: Block[], otherChilds: Block[] } = { childs: [], otherChilds: [] };
     async didMounted() {
@@ -167,12 +167,18 @@ export class DataGridTab extends Block {
                 { type: MenuItemType.divide },
                 { text: lst('数据源'), name: 'datasource', icon: DatasourceSvg },
                 { type: MenuItemType.divide },
-                { name: 'link', icon: LinkSvg, text: lst('复制视图链接') },
-                { type: MenuItemType.divide },
                 { name: 'prev', text: lst('前移'), disabled: at == 0 ? true : false, icon: ArrowLeftSvg },
                 { name: 'after', text: lst('后移'), disabled: at == this.childs.length - 1 ? true : false, icon: ArrowRightSvg },
                 { type: MenuItemType.divide },
+                { name: 'link', icon: LinkSvg, text: lst('复制视图链接') },
+                { type: MenuItemType.divide },
                 { name: 'delete', icon: TrashSvg, text: lst('移除视图') },
+                { type: MenuItemType.divide },
+                {
+                    type: MenuItemType.help,
+                    text: lst('了解如何使用数据表格'),
+                    url: window.shyConfig?.isUS ? "https://help.shy.red/page/38#3qfPYqnTJCwwQ6P9zYx8Q8" : "https://shy.live/ws/help/page/286"
+                }
             ];
             var um = await useSelectMenuItem(
                 { roundArea: rect },
@@ -392,8 +398,16 @@ export class DataGridTab extends Block {
     get dataGridBlock() {
         var ocs = this.blocks.otherChilds;
         var item = this.tabItems[this.tabIndex];
-        var oc = ocs.find(g => g.exists(c => (c as DataGridView).schemaId == item.schemaId && c.syncBlockId == item.viewId) ? true : false)
-        if (oc) return oc.find(c => (c as DataGridView).schemaId == item.schemaId && c.syncBlockId == item.viewId) as DataGridView;
+        for (let i = 0; i < ocs.length; i++) {
+            var oc = ocs[i];
+            var g = oc.find(c => (c as DataGridView).schemaId == item.schemaId && c.syncBlockId == item.viewId);
+            var og = oc.find(c => (c as DataGridView).schemaId ? true : false) as DataGridView
+            console.log(g, item, og, og?.schemaId, og?.syncBlockId)
+            if (g) return g as DataGridView;
+        }
+        //var oc = ocs.find(g => g.exists(c => (c as DataGridView).schemaId == item.schemaId && c.syncBlockId == item.viewId) ? true : false)
+        // console.log(this.tabItems, ocs.map(c => c.blocks.childs).flat(5), item, this.tabIndex, ocs, ocs.find(g => (g as any).schemaId ? g : undefined), oc, '....x');
+        //if (oc) return oc.find(c => (c as DataGridView).schemaId == item.schemaId && c.syncBlockId == item.viewId) as DataGridView;
     }
     async updateView(dg: DataGridView) {
         var items = lodash.cloneDeep(this.tabItems);
@@ -443,31 +457,43 @@ export class DataGridTab extends Block {
             }
         }
     }
+    isHasAI() {
+        return false;
+    }
     async onGetContextMenus() {
         var rs = await super.onGetContextMenus();
-        var rg = rs.find(g => g.name == 'text-center');
-        if (rg) {
-            // rg.text = lst('标签项')
-            var pos = rs.findIndex(g => g == rg);
-            var at = this.tabIndex;
-            var ns: MenuItem<string | BlockDirective>[] = [];
-            ns.push({
-                text: lst('显示'),
-                icon: BrowserSvg,
-                childs: [
-                    // { name: 'displayMode', text: lst('卡片'), value: 'border', checkLabel: this.displayMode == 'border' },
-                    { name: 'displayMode', text: lst('线型'), value: 'top-line', checkLabel: this.displayMode == 'top-line' },
-                    { name: 'displayMode', text: lst('按钮'), value: 'button', checkLabel: this.displayMode == 'button' }
-                ]
-            })
-            lodash.remove(rs, g => g.name == 'color');
-            rs.splice(pos + 1, 0, ...ns)
-            lodash.remove(rs, g => g === rg);
+        var tg = rs.find(g => g.name == 'text-center');
+        if (tg) {
+            tg.text = lst('对齐');
         }
+        var ns: MenuItem<string | BlockDirective>[] = [];
+        ns.push({
+            text: lst('主题'),
+            icon: { name: 'bytedance-icon', code: 'platte' },
+            childs: [
+                // { name: 'displayMode', text: lst('卡片'), value: 'border', checkLabel: this.displayMode == 'border' },
+                { name: 'displayMode', text: lst('线型'), value: 'top-line', checkLabel: this.displayMode == 'top-line' },
+                { name: 'displayMode', text: lst('按钮'), value: 'button', checkLabel: this.displayMode == 'button' }
+            ]
+        })
+        ns.push({ type: MenuItemType.divide });
+
+        rs.splice(rs.findIndex(c => c.name == 'text-center'), 0, ...ns);
+        lodash.remove(rs, g => g.name == 'color');
+        var dat = rs.findIndex(g => g.name == BlockDirective.delete);
+        rs.splice(dat + 1, 0,
+            {
+                type: MenuItemType.divide
+            },
+            {
+                type: MenuItemType.help,
+                text: lst('了解如何使用数据表格'),
+                url: window.shyConfig?.isUS ? "https://help.shy.red/page/38#3qfPYqnTJCwwQ6P9zYx8Q8" : "https://shy.live/ws/help/page/286"
+            }
+        )
         return rs;
     }
     async onClickContextMenu(item: MenuItem<string | BlockDirective>, e) {
-        var at = this.tabIndex;
         switch (item.name) {
             case 'displayMode':
                 await this.onUpdateProps({ displayMode: item.value }, { range: BlockRenderRange.self })
@@ -489,16 +515,17 @@ export class DataGridTab extends Block {
 @view('/data-grid/tab')
 export class DataGridTabView extends BlockView<DataGridTab>{
     renderView(): React.ReactNode {
+        var tabClassList: string[] = ['flex'];
+        if (this.block.align == 'center') tabClassList.push('flex-center');
+        else if (this.block.align == 'right') tabClassList.push('flex-end');
         return <div
-
             className="sy-data-grid-tab"
             onMouseEnter={e => this.block.onOver(true)}
             onMouseLeave={e => this.block.onOver(false)}
-
             style={this.block.visibleStyle}>
             <div style={this.block.contentStyle}>
                 <div className={"flex sy-data-grid-tab-items " + (" sy-data-grid-tab-" + this.block.displayMode + " ") + (this.block.align == 'center' ? "flex-center" : "")}>
-                    <div className=" flex-auto flex">
+                    <div className={"flex-auto " + tabClassList.join(" ")}>
                         {this.block.tabItems.map((item, index) => {
                             var tr = this.block.refTables.find(c => c.id == item.schemaId);
                             var v = tr?.listViews.find(c => c.id == item.viewId);

@@ -88,14 +88,15 @@ export function GetFieldTypeSvg(type: FieldType): IconValueType {
         case FieldType.modifyDate:
             return TypesCreateAtSvg
         case FieldType.creater:
+            return { name: 'byte', code: 'people' }
         case FieldType.modifyer:
-            return TypesCreateBySvg
+            return { name: 'byte', code: 'edit-name' }
         case FieldType.relation:
             return TypesRelationSvg;
         case FieldType.rollup:
             return TypesRollupSvg;
         case FieldType.comment:
-            return CommentSvg;
+            return { name: 'byte', code: 'message' };
         case FieldType.button:
             return TypesButtonSvg;
         case FieldType.emoji:
@@ -109,7 +110,7 @@ export function GetFieldTypeSvg(type: FieldType): IconValueType {
         case FieldType.vote:
             return { name: 'byte', code: 'ticket-one' }
         case FieldType.autoIncrement:
-            return RowNoSvg
+            return { name: "byte", code: 'ordered-list' }
         case FieldType.title:
             return TypesTitleSvg
         case FieldType.browse:

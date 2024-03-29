@@ -4,7 +4,22 @@ import React from "react";
 import { DataGridView } from ".";
 
 import { ShyAlert } from "../../../../component/lib/alert";
-import { ArrowLeftSvg, ArrowRightSvg, HideSvg, ArrowDownSvg, ArrowUpSvg, FilterSvg, DuplicateSvg, TrashSvg, SettingsSvg, EditSvg, EmojiSvg, TypesSelectSvg, DotsSvg, PlusSvg, CheckSvg, MaximizeSvg } from "../../../../component/svgs";
+import {
+    ArrowLeftSvg,
+    ArrowRightSvg,
+    HideSvg,
+    FilterSvg,
+    DuplicateSvg,
+    TrashSvg,
+    SettingsSvg,
+    EditSvg,
+    EmojiSvg,
+    TypesSelectSvg,
+    DotsSvg,
+    PlusSvg,
+    CheckSvg,
+    MaximizeSvg
+} from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import { useSelectMenuItem } from "../../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
@@ -19,6 +34,7 @@ import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
 import { lst } from "../../../../i18n/store";
 import { BackgroundColorList, OptionBackgroundColorList } from "../../../../extensions/color/data";
+import { TableSchema } from "../../schema/meta";
 
 export class DataGridViewField {
     private getFieldMenuItems(this: DataGridView, viewField: ViewField) {
@@ -32,8 +48,8 @@ export class DataGridViewField {
                     text: lst('编辑列名'),
                 },
                 { type: MenuItemType.divide },
-                { name: 'leftInsert', icon: ArrowLeftSvg, text: lst('左侧插入') },
-                { name: 'rightInsert', icon: ArrowRightSvg, text: lst('右侧插入') },
+                { name: 'leftInsert', icon: ArrowLeftSvg, text: lst('在左侧添加字段') },
+                { name: 'rightInsert', icon: ArrowRightSvg, text: lst('在右侧添加字段') },
                 { type: MenuItemType.divide },
                 {
                     name: 'hide',
@@ -43,9 +59,9 @@ export class DataGridViewField {
             ]);
             if (viewField?.field?.type == FieldType.autoIncrement) {
                 items.addRange(4, [
-                    { name: 'sortDesc', icon: ArrowDownSvg, text: lst('降序') },
-                    { name: 'sortAsc', icon: ArrowUpSvg, text: lst('升序') },
-                    { name: 'filter', icon: FilterSvg, text: lst('过滤') },
+                    { name: 'sortAsc', icon: { name: 'byte', code: 'sort-amount-up' } as any, text: lst('按 1 → 10 升序排序') },
+                    { name: 'sortDesc', icon: { name: 'byte', code: 'sort-amount-down' } as any, text: lst('按 10 → 1 降序排序') },
+                    { name: 'filter', icon: FilterSvg, text: lst('按该字段筛选') },
                 ])
                 items.push(...[
                     {
@@ -77,12 +93,12 @@ export class DataGridViewField {
                     text: lst('编辑字段')
                 },
                 { type: MenuItemType.divide },
-                { name: 'leftInsert', icon: ArrowLeftSvg, text: lst('左侧插入') },
-                { name: 'rightInsert', icon: ArrowRightSvg, text: lst('右侧插入') },
-                { name: 'sortDesc', icon: ArrowDownSvg, text: lst('降序') },
-                { name: 'sortAsc', icon: ArrowUpSvg, text: lst('升序') },
-                { name: 'filter', icon: FilterSvg, text: lst('过滤') },
+                { name: 'sortAsc', icon: { name: 'byte', code: 'sort-amount-up' } as any, text: lst('按 A → Z 升序排序') },
+                { name: 'sortDesc', icon: { name: 'byte', code: 'sort-amount-down' } as any, text: lst('按 Z → A 降序排序') },
+                { name: 'filter', icon: FilterSvg, text: lst('按该字段筛选') },
                 { type: MenuItemType.divide },
+                { name: 'leftInsert', icon: ArrowLeftSvg, text: lst('在左侧添加字段') },
+                { name: 'rightInsert', icon: ArrowRightSvg, text: lst('在右侧添加字段') },
                 {
                     name: 'hide',
                     icon: HideSvg,
@@ -91,9 +107,12 @@ export class DataGridViewField {
                 {
                     name: 'clone',
                     icon: DuplicateSvg,
+                    disabled: TableSchema.isSystemField(viewField.field),
                     text: lst('复制列')
                 },
                 { name: 'deleteProperty', icon: TrashSvg, text: lst('删除字段') },
+                { type: MenuItemType.divide },
+                { type: MenuItemType.help, text: lst('了解如何使用数据字段'), url: window.shyConfig?.isUS ? "https://help.shy.red/page/43#2PRKjiNkLmU6w4xciiy1t1" : "https://help.shy.live/page/1871#gVnf6Ar2iF5wa2fS2KpLws" }
             ]);
             if (viewField.field?.type == FieldType.date) {
                 var dateItems: MenuItem<BlockDirective | string>[] = [];
