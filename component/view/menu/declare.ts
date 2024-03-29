@@ -22,6 +22,7 @@ export type MenuItem<T = string> = {
     childsPos?: PopoverPosition,
     childsStyle?: CSSProperties,
     options?: MenuItem<T>[],
+    optionIconSize?:number,
     block?: boolean,
     value?: any,
     iconName?: string,

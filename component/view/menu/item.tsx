@@ -203,6 +203,7 @@ export class MenuItemView extends React.Component<{
                 {item.renderIcon && item.renderIcon(item, this)}
                 <span className='shy-menu-box-item-option-text flex-auto'>{item.text}</span>
                 <span className="shy-menu-box-item-select-value flex  flex-fixed" onMouseDown={e => this.openSelectMenu(item, e)}>
+                    {item?.options?.find(g => g.value == item.value)?.icon && <span className="flex-center flex-inline size-20 flex-fixed text-1"><Icon size={item.optionIconSize ? item.optionIconSize : 16} icon={item?.options?.find(g => g.value == item.value)?.icon}></Icon></span>}
                     <em className="text-over flex-auto max-w-100">{item?.options?.find(g => g.value == item.value)?.text}</em>
                     <Icon className={'flex-fixed'} size={16} icon={ChevronDownSvg}></Icon>
                 </span>
