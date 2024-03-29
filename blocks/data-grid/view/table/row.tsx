@@ -24,7 +24,7 @@ export class DataGridTableItemView extends BlockView<DataGridTableItem>{
             }
         }
         return <div className='sy-dg-table-row visible-hover' style={rowStyle}>
-            {this.block.childs.map((block: OriginField, i) => {
+            {this.block.childs.map((block: OriginField,i)=>{
                 var w = block?.viewField?.colWidth || 120;
                 var style: CSSProperties = {
                     width: w

@@ -482,7 +482,7 @@ export class DataGridViewOperator {
         }
         await this.page.onAction(ActionDirective.onDataGridShowRowNum, async () => {
             this.page.addBlockChange(this);
-            if (visible == true) await this.arrayPush({ prop: 'fields', data: new ViewField({ type: 'rowNum', text: lst('序号') }, this.schema), at: 0 })
+            if (visible == true) await this.arrayPush({ prop: 'fields', data: new ViewField({ type: 'rowNum', colWidth: 80, text: "No." }, this.schema), at: 0 })
             else await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.type == 'rowNum' });
             await this.updateProps({ showRowNum: visible });
             await this.createItem();
