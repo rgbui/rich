@@ -11,6 +11,7 @@ export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audi
     async onUpload(file: File) {
         if (!file) return;
         if (this.button) this.button.loading = true;
+        this.error = '';
         try {
             var isUpload: boolean = true;
             if (this.props.mine == 'image' && file.size > 1024 * 1024 * 20) {
@@ -22,6 +23,8 @@ export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audi
                 isUpload = false;
             }
             if (isUpload) {
+                this.progress = '';
+                this.forceUpdate();
                 var r = await channel.post('/ws/upload/file', {
                     file,
                     data: this.props.fileClassify ? {
@@ -41,6 +44,10 @@ export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audi
                     if (r.data?.file?.url) {
                         this.props.change(r.data?.file as any);
                     }
+                }
+                else {
+                    this.error = lst('上传失败');
+                    this.forceUpdate();
                 }
             }
             else {
