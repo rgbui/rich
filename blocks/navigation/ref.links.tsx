@@ -52,7 +52,7 @@ export class RefLinks extends Block {
     }
     async onGetContextMenus() {
         var rs = await super.onGetContextMenus();
-        var at = rs.findIndex(g => g.text == lst('颜色'));
+        var at = rs.findIndex(g => g.name == BlockDirective.comment);
         rs.splice(at, 1, {
             name: 'reload',
             text: lst('重新加载引用'),
@@ -103,7 +103,7 @@ export class RefLinksView extends BlockView<RefLinks>{
         e.stopPropagation();
         this.block.onUpdateProps({ expand: this.block.expand ? false : true }, { range: BlockRenderRange.self })
     }
-    renderView()  {
+    renderView() {
         return <div style={this.block.visibleStyle}>
             <div className="flex h-24 visible-hover">
                 <span onMouseDown={e => this.onToggle(e)} className="flex-fixed remark ts-transform flex-center size-16 cursor  round"

@@ -74,7 +74,7 @@ export class PageCard extends Block {
             if (pa?.ok) { pageLink = pa.data.item; }
         }
         var rs = await super.onGetContextMenus();
-        var at = rs.findIndex(g => g.name == 'color');
+        var at = rs.findIndex(g => g.name == BlockDirective.comment);
         lodash.remove(rs, g => g.name == 'color');
         var ns: MenuItem<string | BlockDirective>[] = [];
         ns.push({
@@ -82,50 +82,53 @@ export class PageCard extends Block {
             icon: PlatteSvg,
             name: 'cardStyle'
         });
-        ns.push({
-            name: 'autoContentHeight',
-            type: MenuItemType.switch,
-            checked: this.autoContentHeight,
-            text: lst('自适应高度'),
-            icon: { name: 'byte', code: 'auto-height-one' }
-        });
         var d = memoryReadData('PageCard.cardStyle');
-        ns.push(...[
+        ns.push({
+            text: lst('卡片操作'),
+            icon: { name: 'byte', code: 'write' },
+            childs: [
+                {
+                    name: 'copyStyle',
+                    icon: { name: 'byte', code: 'format-brush' } as any,
+                    text: lst("复制卡片样式")
+                },
+                {
+                    name: 'pasteStyle',
+                    icon: { name: 'byte', code: 'magic-wand' } as any,
+                    value: lodash.cloneDeep(d),
+                    disabled: d ? false : true,
+                    text: lst("粘贴卡片样式")
+                },
+                {
+                    type: MenuItemType.divide
+                },
+                {
+                    text: lst('添加链接...'),
+                    icon: { name: 'bytedance-icon', code: 'link-two' },
+                    name: this.link ? undefined : "imageLink",
+                    childs: this.link ? [
+                        {
+                            name: 'imageLink',
+                            text: pageLink?.text || this.link?.url,
+                            value: pageLink,
+                            icon: pageLink ? getPageIcon(pageLink) : GlobalLinkSvg,
+                            btns: [{ icon: Edit1Svg, name: 'editImageLink' }]
+                        }
+                    ] : undefined
+                } as any,
+            ]
+        })
+        ns.push(
             {
-                type: MenuItemType.divide
-            },
-            {
-                name: 'copyStyle',
-                icon: { name: 'byte', code: 'format-brush' } as any,
-                text: lst("复制卡片样式")
-            },
-            {
-                name: 'pasteStyle',
-                icon: { name: 'byte', code: 'magic-wand' } as any,
-                value: lodash.cloneDeep(d),
-                disabled: d ? false : true,
-                text: lst("粘贴卡片样式")
-            },
-            {
-                type: MenuItemType.divide
-            },
-            {
-                text: lst('添加链接...'),
-                icon: { name: 'bytedance-icon', code: 'link-two' },
-                name: this.link ? undefined : "imageLink",
-                childs: this.link ? [
-                    {
-                        name: 'imageLink',
-                        text: pageLink?.text || this.link?.url,
-                        value: pageLink,
-                        icon: pageLink ? getPageIcon(pageLink) : GlobalLinkSvg,
-                        btns: [{ icon: Edit1Svg, name: 'editImageLink' }]
-                    }
-                ] : undefined
-            } as any,
-        ])
+                name: 'autoContentHeight',
+                type: MenuItemType.switch,
+                checked: this.autoContentHeight,
+                text: lst('自适应高度'),
+                icon: { name: 'byte', code: 'auto-height-one' }
+            }
+        )
+        ns.push({ type: MenuItemType.divide })
         rs.splice(at, 0, ...ns)
-
         var dat = rs.findIndex(c => c.name == BlockDirective.delete);
         if (dat > -1) {
             rs.splice(dat + 1, 0, { type: MenuItemType.divide }, {

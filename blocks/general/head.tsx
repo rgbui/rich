@@ -6,7 +6,6 @@ import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../src/block/
 import { Block } from "../../src/block";
 import { TextTurns } from "../../src/block/turn/text";
 import { Point, Rect } from "../../src/common/vector/point";
-import { BlockFactory } from "../../src/block/factory/block.factory";
 import { dom } from "../../src/common/dom";
 import { Icon } from "../../component/view/icon";
 import { TriangleSvg } from "../../component/svgs";
@@ -17,6 +16,7 @@ import { DropDirection } from "../../src/kit/handle/direction";
 import { lst } from "../../i18n/store";
 import { PageLayoutType } from "../../src/page/declare";
 import "./style.less";
+
 @url('/head')
 export class Head extends Block {
     blocks: { childs: Block[], subChilds: Block[] } = { childs: [], subChilds: [] };
@@ -154,6 +154,8 @@ export class Head extends Block {
         if (!ele) ele = this.el.querySelector('.shy-appear-text') as HTMLElement;
         if (!ele) ele = this.el;
         if (this.toggle == true) ele = ele.closest('.relative') as HTMLElement;
+        if (!ele && this.toggle) ele = this.el.querySelector('.relative') as HTMLElement;
+        if (!ele) return;
         var rect = Rect.fromEle(ele);
         var lh = dom(ele).lineHeight(20);
         var offset = -2;

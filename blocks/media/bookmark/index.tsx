@@ -116,17 +116,17 @@ export class Bookmark extends Block {
             icon: RefreshSvg
         });
         ns.push({ type: MenuItemType.divide });
-        var at = rs.findIndex(g => g.name == 'color');
-        rs.splice(at, 0, ...ns);
+        var at = rs.findIndex(g => g.name == BlockDirective.comment);
+        rs.splice(at - 1, 0, ...ns);
         var dat = rs.findIndex(g => g.name == BlockDirective.delete);
-        rs.splice(dat+1, 0, {
+        rs.splice(dat + 1, 0, {
             type: MenuItemType.divide
         },
-        {
-            type: MenuItemType.help,
-            text: lst('了解如何使用书签'),
-            url: window.shyConfig?.isUS ? "https://help.shy.live/page/269#gxcRqJXWfdDa1TUKzvp5yo" : "https://help.shy.live/page/269#gxcRqJXWfdDa1TUKzvp5yo"
-        })
+            {
+                type: MenuItemType.help,
+                text: lst('了解如何使用书签'),
+                url: window.shyConfig?.isUS ? "https://help.shy.live/page/269#gxcRqJXWfdDa1TUKzvp5yo" : "https://help.shy.live/page/269#gxcRqJXWfdDa1TUKzvp5yo"
+            })
         return rs;
     }
     async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent): Promise<void> {

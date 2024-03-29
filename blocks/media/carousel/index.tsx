@@ -190,6 +190,13 @@ export class Carousel extends Block {
             type: MenuItemType.divide
         });
         items.push({
+            name: BlockDirective.comment,
+            text: lst('评论'),
+            icon: { name: 'byte', code: 'message' },
+            label: UA.isMacOs ? "⌘+Opt+M" : "Ctrl+Alt+M"
+        })
+        items.push({ type: MenuItemType.divide })
+        items.push({
             name: BlockDirective.delete,
             icon: TrashSvg,
             text: lst('删除'),
@@ -207,7 +214,7 @@ export class Carousel extends Block {
             items.push({
                 type: MenuItemType.divide,
             });
-           
+
             var r = await channel.get('/user/basic', { userid: this.editor });
             if (r?.data?.user) items.push({
                 type: MenuItemType.text,

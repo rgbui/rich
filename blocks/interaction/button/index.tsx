@@ -104,25 +104,36 @@ export class BlockButton extends Block {
                     checkLabel: this.align == 'right'
                 }
             ]
-            var pos = rs.findIndex(g => g == rg);
             var ns: MenuItem<string | BlockDirective>[] = [];
+            var pos = rs.findIndex(g => g == rg);
+            var bts = [
+                { name: 'buttonStyle', text: lst('红色'), value: 'primary', checkLabel: this.buttonStyle == 'primary' },
+                { name: 'buttonStyle', text: lst('蓝色'), value: 'blue', checkLabel: this.buttonStyle == 'blue' },
+                { name: 'buttonStyle', text: lst('绿色'), value: 'green', checkLabel: this.buttonStyle == 'green' },
+                { name: 'buttonStyle', text: lst('紫色'), value: 'purple', checkLabel: this.buttonStyle == 'purple' },
+                { name: 'buttonStyle', text: lst('黑色'), value: 'dark', checkLabel: this.buttonStyle == 'dark' },
+                { name: 'buttonStyle', text: lst('白色'), value: 'ghost', checkLabel: this.buttonStyle == 'ghost' },
+                { name: 'buttonStyle', text: lst('链接'), value: 'link' }
+            ];
             ns.push({
-                type: MenuItemType.switch,
-                icon: { name: 'byte', code: 'auto-width' },
-                text: lst('充满'),
-                name: 'buttonIsBlock',
-                checked: this.buttonIsBlock
-            })
+                text: lst('按钮主题'),
+                icon: { name: 'bytedance-icon', code: 'platte' },
+                childs: bts.map(b => {
+                    return {
+                        name: 'buttonStyle',
+                        value: b.value,
+                        text: b.text,
+                        type: MenuItemType.custom,
+                        render(item, view) {
+                            return <div className={"gap-w-20 flex-center gap-h-5 sy-button sy-button-" + item.value}>{item.text}</div>
+                        },
+                        checkLabel: this.buttonStyle == b.value
+                    }
+                })
+            });
+
             ns.push({
-                type: MenuItemType.switch,
-                icon: { name: 'byte', code: 'align-right' },
-                text: lst('图标在右边'),
-                name: 'iconAlign',
-                checked: this.iconAlign == 'right' ? true : false
-            })
-            ns.push({ type: MenuItemType.divide })
-            ns.push({
-                text: lst('尺寸'),
+                text: lst('按钮大小'),
                 icon: { name: 'bytedance-icon', code: 'zoom-in' },
                 childs: [
                     { name: 'buttonSize', text: lst('大'), value: 'larger', checkLabel: this.buttonSize == 'larger' },
@@ -131,23 +142,34 @@ export class BlockButton extends Block {
                 ]
             })
             ns.push({
-                text: lst('主题'),
-                icon: { name: 'bytedance-icon', code: 'link-four' },
-                childs: [
-                    { name: 'buttonStyle', text: lst('红色'), value: 'primary', checkLabel: this.buttonStyle == 'primary' },
-                    { name: 'buttonStyle', text: lst('蓝色'), value: 'blue', checkLabel: this.buttonStyle == 'blue' },
-                    { name: 'buttonStyle', text: lst('绿色'), value: 'green', checkLabel: this.buttonStyle == 'green' },
-                    { name: 'buttonStyle', text: lst('紫色'), value: 'purple', checkLabel: this.buttonStyle == 'purple' },
-                    { name: 'buttonStyle', text: lst('黑色'), value: 'dark', checkLabel: this.buttonStyle == 'dark' },
-                    { name: 'buttonStyle', text: lst('白色'), value: 'ghost', checkLabel: this.buttonStyle == 'ghost' },
-                    { type: MenuItemType.divide },
-                    { name: 'buttonStyle', text: lst('链接'), value: 'link' }
-                ]
+                type: MenuItemType.switch,
+                icon: { name: 'byte', code: 'align-right' },
+                text: lst('图标居右'),
+                name: 'iconAlign',
+                checked: this.iconAlign == 'right' ? true : false
             })
-            rs.splice(pos + 1, 0, ...ns)
+            ns.push({
+                type: MenuItemType.switch,
+                icon: { name: 'byte', code: 'auto-width' },
+                text: lst('宽100%'),
+                name: 'buttonIsBlock',
+                checked: this.buttonIsBlock
+            })
+            ns.push({ type: MenuItemType.divide })
+
+            rs.splice(pos, 0, ...ns)
             var cat = rs.findIndex(g => g.name == 'color');
-            rs.splice(cat,2);
+            rs.splice(cat, 2);
         }
+        var dat = rs.findIndex(c => c.name == BlockDirective.delete);
+        rs.splice(dat + 1, 0,
+            { type: MenuItemType.divide },
+            {
+                type: MenuItemType.help,
+                text: lst('了解如何使用按钮'),
+                url: window.shyConfig.isUS ? "https://help.shy.red/page/41#eY58L79NKRU2enhDrcCXU3" : "https://help.shy.live/page/279#ehnzXsxZVipxCaQPAgs6Qm"
+            }
+        )
         return rs;
     }
     async onContextMenuInput(this: Block, item: MenuItem<BlockDirective | string>) {

@@ -3,9 +3,8 @@ import React, { CSSProperties } from 'react';
 import { prop, url, view } from "../../src/block/factory/observable";
 import { Block } from "../../src/block";
 import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../src/block/enum";
-import {  Rect } from "../../src/common/vector/point";
+import { Rect } from "../../src/common/vector/point";
 import lodash from "lodash";
-import { BlockcolorSvg } from "../../component/svgs";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { ls, lst } from "../../i18n/store";
 
@@ -33,90 +32,92 @@ export class Divider extends Block {
     }
     async onGetContextMenus() {
         var rs = await super.onGetContextMenus();
-        var at = rs.findIndex(g => g.name == 'color');
+        var at = rs.findIndex(g => g.name == BlockDirective.comment);
         lodash.remove(rs, g => g.name == 'color');
         var ns: MenuItem<string | BlockDirective>[] = [];
         ns.push({
-            text: lst('线类型'),
-            icon: { name: 'bytedance-icon', code: 'align-text-both' },
+            text: lst('分割线'),
+            icon: { name: 'byte', code: "dividing-line-one" },
             childs: [
                 {
-                    name: 'lineType',
-                    text: lst('实线'),
-                    value: 'solid',
-                    checkLabel: this.lineType == 'solid'
+                    text: lst('线类型'),
+                    icon: { name: 'bytedance-icon', code: 'align-text-both' },
+                    childs: [
+                        {
+                            name: 'lineType',
+                            text: lst('实线'),
+                            value: 'solid',
+                            checkLabel: this.lineType == 'solid'
+                        },
+                        {
+                            name: 'lineType',
+                            text: lst('虚线'),
+                            value: 'dashed',
+                            checkLabel: this.lineType == 'dashed'
+                        },
+                        {
+                            name: 'lineType',
+                            text: lst('点虚线'),
+                            value: 'dotted',
+                            checkLabel: this.lineType == 'dotted'
+                        },
+                        {
+                            name: 'lineType',
+                            text: lst('双线'),
+                            value: 'double',
+                            checkLabel: this.lineType == 'double'
+                        },
+                        {
+                            name: 'lineType',
+                            text: lst('双虚线'),
+                            value: 'double-dashed',
+                            checkLabel: this.lineType == 'double-dashed'
+                        }
+                    ]
                 },
                 {
-                    name: 'lineType',
-                    text: lst('虚线'),
-                    value: 'dashed',
-                    checkLabel: this.lineType == 'dashed'
+                    text: lst('线宽'),
+                    icon: { name: 'bytedance-icon', code: 'auto-height-one', rotate: 90 },
+                    childs: [
+                        {
+                            name: 'lineWidth',
+                            text: '1',
+                            value: 1,
+                            checkLabel: this.lineWidth == 1
+                        },
+                        {
+                            name: 'lineWidth',
+                            text: '2',
+                            value: 2,
+                            checkLabel: this.lineWidth == 2
+                        },
+                        {
+                            name: 'lineWidth',
+                            text: '4',
+                            value: 4,
+                            checkLabel: this.lineWidth == 4
+                        },
+                        {
+                            name: 'lineWidth',
+                            text: '8',
+                            value: 8,
+                            checkLabel: this.lineWidth == 8
+                        }
+                    ]
                 },
+                { type: MenuItemType.divide },
                 {
-                    name: 'lineType',
-                    text: lst('点虚线'),
-                    value: 'dotted',
-                    checkLabel: this.lineType == 'dotted'
-                },
-                {
-                    name: 'lineType',
-                    text: lst('双线'),
-                    value: 'double',
-                    checkLabel: this.lineType == 'double'
-                },
-                {
-                    name: 'lineType',
-                    text: lst('双虚线'),
-                    value: 'double-dashed',
-                    checkLabel: this.lineType == 'double-dashed'
-                }
-            ]
-        });
-        ns.push({
-            text: lst('线宽'),
-            icon: { name: 'bytedance-icon', code: 'auto-height-one', rotate: 90 },
-            childs: [
-                {
-                    name: 'lineWidth',
-                    text: '1',
-                    value: 1,
-                    checkLabel: this.lineWidth == 1
-                },
-                {
-                    name: 'lineWidth',
-                    text: '2',
-                    value: 2,
-                    checkLabel: this.lineWidth == 2
-                },
-                {
-                    name: 'lineWidth',
-                    text: '4',
-                    value: 4,
-                    checkLabel: this.lineWidth == 4
-                },
-                {
-                    name: 'lineWidth',
-                    text: '8',
-                    value: 8,
-                    checkLabel: this.lineWidth == 8
-                }
-            ]
-        });
-        ns.push({
-            text: lst('颜色'),
-            icon: BlockcolorSvg,
-            childs: [
-                {
-                    text: lst('线颜色'),
+                    text: lst('颜色'),
                     type: MenuItemType.text
                 },
+                { type: MenuItemType.gap },
                 {
                     name: 'lineColor',
                     type: MenuItemType.color,
                     block: ls.isCn ? false : true,
                     options: [
                         { color: 'inherit', text: lst('默认') },
-                        { color: 'rgba(55,53,47,0.2)', text: lst('浅灰色') },
+                        { color: 'rgba(55,53,47,0.2)', text: lst('浅灰') },
                         { color: 'rgba(55,53,47,0.6)', text: lst('灰色') },
                         { color: 'rgb(33,33,33)', text: lst('黑色') },
                         { color: 'rgb(100,71,58)', text: lst('棕色') },
@@ -137,8 +138,8 @@ export class Divider extends Block {
                     })
                 }
             ]
-        });
-        rs.splice(at, 0, ...ns)
+        })
+        rs.splice(at - 1, 0, ...ns)
         var at = rs.findIndex(c => c.name == BlockDirective.delete);
         rs.splice(at + 1, 0, { type: MenuItemType.divide }, {
             type: MenuItemType.help,
@@ -177,8 +178,11 @@ export class DividerView extends BlockView<Divider>{
             style.borderBottom = this.block.lineWidth + 'px dashed ' + this.block.lineColor;
             style.height = '3px';
         }
-        return <div className='h-16 flex-center' style={this.block.visibleStyle}>
-            <div style={style}></div>
+
+        return <div style={this.block.visibleStyle}>
+            <div className='h-16 flex-center' style={this.block.contentStyle}>
+                <div style={style}></div>
+            </div>
         </div>
     }
 }

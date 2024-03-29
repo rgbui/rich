@@ -54,7 +54,6 @@ export class Title extends Block {
     }
     async onGetContextMenus() {
         var pd = this.page.getPageDataInfo();
-        var rs = await super.onGetContextMenus();
         var rs: MenuItem<string | BlockDirective>[] = [];
         rs.push({
             name: BlockDirective.link,
@@ -62,18 +61,18 @@ export class Title extends Block {
             icon: LinkSvg,
             label: UA.isMacOs ? "⌥+Shift+L" : "Alt+Shift+L"
         })
-       
+
         rs.push({ type: MenuItemType.divide })
         rs.push({
             name: 'addIcon',
-            text: lst('图标'),
+            text: lst('添加图标...'),
             type: MenuItemType.switch,
             checked: pd?.icon?.abled ? false : true,
             icon: EmojiSvg
         })
         rs.push({
             name: 'addCover',
-            text: lst('封面'),
+            text: lst('添加封面...'),
             type: MenuItemType.switch,
             checked: pd?.cover?.abled ? false : true,
             icon: PicSvg
@@ -82,27 +81,33 @@ export class Title extends Block {
             name: 'text-center',
             type: MenuItemType.switch,
             checked: (this as any).align == 'center',
-            text: lst('居中'),
+            text: lst('标题居中'),
             icon: AlignTextCenterSvg
         });
         rs.push({
-            text: lst('隐藏标题'),
+            text: lst('标题隐藏'),
             name: 'hidden',
             icon: HideSvg
         });
         rs.push({ type: MenuItemType.divide })
         rs.push({
-            name: 'move',
-            text: lst('移动'),
-            icon: MoveToSvg,
-            label: UA.isMacOs ? "⌘+Shift+P" : "Ctrl+Shift+P"
-        });
-        rs.push({
-            name: 'export',
-            iconSize: 16,
-            text: lst('导出'),
-            icon: { name: 'bytedance-icon', code: 'export' }
-        });
+            name: BlockDirective.comment,
+            text: lst('评论'),
+            icon: { name: 'byte', code: 'message' },
+            label: UA.isMacOs ? "⌘+Opt+M" : "Ctrl+Alt+M"
+        })
+        // rs.push({
+        //     name: 'move',
+        //     text: lst('移动页面'),
+        //     icon: MoveToSvg,
+        //     label: UA.isMacOs ? "⌘+Shift+P" : "Ctrl+Shift+P"
+        // });
+        // rs.push({
+        //     name: 'export',
+        //     iconSize: 16,
+        //     text: lst('导出页面'),
+        //     icon: { name: 'bytedance-icon', code: 'export' }
+        // });
         rs.push({
             type: MenuItemType.divide
         });

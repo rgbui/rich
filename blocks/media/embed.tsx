@@ -101,6 +101,7 @@ export class Embed extends Block {
             text: this.src?.url ? lst('更换嵌入网页') : lst('添加嵌入网页'),
             icon: RefreshSvg
         });
+        items.push({ type: MenuItemType.divide })
         items.push({
             text: lst('对齐'),
             icon: { name: 'bytedance-icon', code: 'align-text-both' },
@@ -131,8 +132,8 @@ export class Embed extends Block {
         });
 
         items.push({ type: MenuItemType.divide })
-        var at = rs.findIndex(g => g.name == 'color');
-        rs.splice(at, 0, ...items)
+        var at = rs.findIndex(g => g.name == BlockDirective.comment);
+        rs.splice(at - 1, 0, ...items)
         var dat = rs.findIndex(g => g.name == BlockDirective.delete);
         rs.splice(dat + 1, 0,
             { type: MenuItemType.divide },

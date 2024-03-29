@@ -102,8 +102,8 @@ export class Link extends Block {
             icon: RefreshSvg
         });
         ns.push({ type: MenuItemType.divide });
-        var at = rs.findIndex(g => g.name == 'color');
-        rs.splice(at, 0, ...ns);
+        var at = rs.findIndex(g => g.name == BlockDirective.comment);
+        rs.splice(at - 1, 0, ...ns);
         return rs;
     }
     async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent): Promise<void> {
@@ -154,7 +154,9 @@ export class LinkView extends BlockView<Link>{
     }
     renderView() {
         var link = this.block.getLink();
-        return <div style={this.block.visibleStyle}><div className='sy-block-link'>
+        return <div style={this.block.visibleStyle}><div
+            style={this.block.contentStyle}
+            className='sy-block-link'>
             {this.block.pageInfo &&
                 <a style={this.block.contentStyle} href={this.block.pageInfo.url + (this.block.refBlockId ? "#" + this.block.refBlockId : "")} onClick={e => this.block.openPage(e)}>
                     <SolidArea block={this.block} prop='text'>

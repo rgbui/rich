@@ -4,7 +4,7 @@ import React from 'react';
 import { Block } from "../../../src/block";
 import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
 import { useSelectMenuItem } from "../../../component/view/menu";
-import { Rect } from "../../../src/common/vector/point";
+import { Point, Rect } from "../../../src/common/vector/point";
 import { ChevronDownSvg, DotsSvg, DuplicateSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import "../../../src/assert/codemirror/lib/codemirror.css"
@@ -92,11 +92,11 @@ export class TextCode extends Block {
     async onGetContextMenus() {
         var rs = await super.onGetContextMenus();
         lodash.remove(rs, g => g.name == 'text-align');
-        var at = rs.findIndex(g => g.name == 'color');
+        var at = rs.findIndex(g => g.name == BlockDirective.comment);
         var ns: MenuItem<string | BlockDirective>[] = [];
         ns.push({ name: 'lineNumbers', type: MenuItemType.switch, text: lst('行号'), checked: this.lineNumbers, icon: { name: 'bytedance-icon', code: 'list-numbers' } });
         ns.push({ name: 'lineWrapping', type: MenuItemType.switch, text: lst('自动换号'), checked: this.lineWrapping, icon: { name: 'bytedance-icon', code: 'corner-down-left' } });
-        rs.splice(at, 0, ...ns)
+        rs.splice(at - 1, 0, ...ns)
         lodash.remove(rs, g => g.name == 'color')
         var dat = rs.findIndex(g => g.name == BlockDirective.delete);
         rs.splice(dat + 1, 0,
@@ -124,7 +124,13 @@ export class TextCode extends Block {
         }
         return await super.onContextMenuInput(item)
     }
+    getVisibleHandleCursorPoint(): Point {
+        if (!this.el) return;
+        var r = Rect.fromEle(this.el);
+        return r.leftTop.move(0,22);
+    }
 }
+
 @view('/code')
 export class TextCodeView extends BlockView<TextCode>{
     async changeLang(e: React.MouseEvent) {
@@ -187,7 +193,7 @@ export class TextCodeView extends BlockView<TextCode>{
             '--code-mirror-font-size': this.block.page.fontSize + 'px',
             '--code-mirror-line-height': this.block.page.lineHeight + 'px'
         } as any;
-        
+
         return <div style={this.block.visibleStyle}>
             <div style={this.block.contentStyle}>
                 <div

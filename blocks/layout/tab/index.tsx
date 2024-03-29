@@ -258,18 +258,24 @@ export class Tab extends Block {
         var rg = rs.find(g => g.name == 'text-center');
         if (rg) {
             rg.text = lst('对齐');
-            var pos = rs.findIndex(g => g == rg);
             var ns: MenuItem<string | BlockDirective>[] = [];
             ns.push({
-                text: lst('显示'),
-                icon: BrowserSvg,
+                text: lst('主题'),
+                icon: { name: 'bytedance-icon', code: 'platte' },
                 childs: [
                     { name: 'displayMode', text: lst('默认'), value: 'top-line', checkLabel: this.displayMode == 'top-line' },
                     { name: 'displayMode', text: lst('按钮'), value: 'button', checkLabel: this.displayMode == 'button' }
                 ]
             })
             ns.push({
-                type: MenuItemType.divide
+                text: lst('自动播放'),
+                icon: { name: 'byte', code: 'play' },
+                childs: [
+                    { name: "autoCarousel", text: lst('关闭'), value: 0, checkLabel: this.autoCarousel == 0 },
+                    { name: "autoCarousel", text: '1s', value: 1, checkLabel: this.autoCarousel == 1 },
+                    { name: "autoCarousel", text: '2s', value: 2, checkLabel: this.autoCarousel == 2 },
+                    { name: "autoCarousel", text: '5s', value: 5, checkLabel: this.autoCarousel == 5 },
+                ]
             })
             ns.push({
                 name: 'autoContentHeight',
@@ -285,45 +291,38 @@ export class Tab extends Block {
                 text: lst('边框'),
                 icon: { name: "byte", code: 'rectangle-one' }
             })
-            ns.push({
-                text: lst('自动播放'),
-                icon: { name: 'byte', code: 'play' },
+            ns.push({ type: MenuItemType.divide })
+
+            var at = rs.findIndex(g => g.name == 'text-center');
+            rs.splice(at, 2);
+            lodash.remove(rs, c => c.name == 'color');
+            var pp = rs.findIndex(c => c.name == BlockDirective.comment);
+            rs.splice(pp, 0, ...ns);
+            pp = rs.findIndex(c => c.name == BlockDirective.comment);
+            rs.splice(pp + 1, 0, { type: MenuItemType.divide }, {
+                text: lst('颜色'),
+                icon: BlockcolorSvg,
+                name: 'color',
                 childs: [
-                    { name: "autoCarousel", text: lst('关闭'), value: 0, checkLabel: this.autoCarousel == 0 },
-                    { name: "autoCarousel", text: '1s', value: 1, checkLabel: this.autoCarousel == 1 },
-                    { name: "autoCarousel", text: '2s', value: 2, checkLabel: this.autoCarousel == 2 },
-                    { name: "autoCarousel", text: '5s', value: 5, checkLabel: this.autoCarousel == 5 },
+                    {
+                        text: lst('背景颜色'),
+                        type: MenuItemType.text
+                    },
+                    { type: MenuItemType.gap },
+                    {
+                        type: MenuItemType.color,
+                        name: 'fillColor',
+                        block: ls.isCn ? false : true,
+                        options: BackgroundColorList().map(f => {
+                            return {
+                                text: f.text,
+                                value: f.color,
+                                checked: this.pattern?.getFillStyle()?.color == f.color ? true : false
+                            }
+                        })
+                    },
                 ]
             })
-            ns.push({ type: MenuItemType.divide })
-            ns.push(
-                {
-                    text: lst('颜色'),
-                    icon: BlockcolorSvg,
-                    name: 'color',
-                    childs: [
-                        {
-                            text: lst('背景颜色'),
-                            type: MenuItemType.text
-                        },
-                        {
-                            type: MenuItemType.color,
-                            name: 'fillColor',
-                            block: ls.isCn ? false : true,
-                            options: BackgroundColorList().map(f => {
-                                return {
-                                    text: f.text,
-                                    value: f.color,
-                                    checked: this.pattern?.getFillStyle()?.color == f.color ? true : false
-                                }
-                            })
-                        },
-                    ]
-                }
-            )
-            var at = rs.findIndex(g => g.name == 'color');
-            rs.splice(at, 2);
-            rs.splice(pos + 1, 0, ...ns);
             var dat = rs.findIndex(c => c.name == BlockDirective.delete);
             if (dat > -1) {
                 rs.splice(dat + 1, 0, { type: MenuItemType.divide }, {

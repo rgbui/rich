@@ -99,7 +99,7 @@ export class Audio extends Block {
             disabled: this.src?.url ? false : true
         });
         items.push({ type: MenuItemType.divide })
-        var at = rs.findIndex(g => g.name == 'color');
+        var at = rs.findIndex(g => g.name == BlockDirective.comment);
         rs.splice(at, 0, ...items)
         at = rs.findIndex(g => g.name == 'color');
         rs.splice(at,2);

@@ -153,8 +153,17 @@ export class Video extends Block {
         });
         items.push({
             text: lst('视频操作'),
-            icon: { name: 'byte', code: 'pencil' },
+            icon: { name: 'byte', code: 'write' },
             childs: [
+                {
+                    name: 'autoplayMuted',
+                    text: lst('自动播放'),
+                    type: MenuItemType.switch,
+                    icon: { name: 'bytedance-icon', code: 'play' },
+                    checked: this.autoplayMuted,
+                    disabled: this.src?.url ? false : true
+                },
+                { type: MenuItemType.divide },
                 {
                     name: 'origin',
                     text: lst('打开原视频'),
@@ -175,16 +184,6 @@ export class Video extends Block {
             ]
         })
         items.push({
-            name: 'autoplayMuted',
-            text: lst('自动播放'),
-            type: MenuItemType.switch,
-            icon: { name: 'bytedance-icon', code: 'play' },
-            checked: this.autoplayMuted,
-            disabled: this.src?.url ? false : true
-        });
-
-        items.push({
-
             text: lst('蒙板'),
             icon: { name: 'bytedance-icon', code: 'mask-two' },
             childs: [
@@ -276,6 +275,15 @@ export class Video extends Block {
             type: MenuItemType.divide
         });
         items.push({
+            name: BlockDirective.comment,
+            text: lst('评论'),
+            icon: { name: 'byte', code: 'message' },
+            label: UA.isMacOs ? "⌘+Opt+M" : "Ctrl+Alt+M"
+        })
+        items.push({
+            type: MenuItemType.divide
+        });
+        items.push({
             name: BlockDirective.delete,
             icon: TrashSvg,
             text: lst('删除'),
@@ -293,7 +301,6 @@ export class Video extends Block {
             items.push({
                 type: MenuItemType.divide,
             });
-
             var r = await channel.get('/user/basic', { userid: this.editor });
             if (r?.data?.user) items.push({
                 type: MenuItemType.text,

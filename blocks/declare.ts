@@ -28,7 +28,7 @@ import "./present/katex/katex";
 import "./present/katex/line";
 import "./media/bookmark";
 import "./present/list/list";
-import "./present/code/code";
+import "./media/code/code";
 import "./general/divider";
 import "./present/button-template/index";
 import "./layout/card/index";

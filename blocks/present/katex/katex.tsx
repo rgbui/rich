@@ -45,7 +45,6 @@ export class KatexBlock extends Block {
     align: 'left' | 'right' | 'center' = 'center';
     async onGetContextMenus() {
         var items = await super.onGetContextMenus();
-        console.log('sss', items.map(i => ({ name: i.name, type: i.type })))
         var align = items.find(g => g.name == 'text-center');
         if (align) {
             align.text = lst('公式对齐');
@@ -61,7 +60,6 @@ export class KatexBlock extends Block {
                 url: window.shyConfig.isUS ? "https://help.shy.live/page/261#v9GuKKnhQ1oZEAwoDeDBPi" : "https://help.shy.live/page/261#v9GuKKnhQ1oZEAwoDeDBPi"
             }
         )
-        console.log('ssssssrrr', items.map(i => ({ name: i.name, type: i.type })))
         return items;
     }
     async onClickContextMenu(item, event) {

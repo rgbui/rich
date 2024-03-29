@@ -39,6 +39,7 @@ export class Comment extends Block {
         var at = rs.findIndex(g => g.name == 'color');
         rs.splice(at, 0, ...ns);
         lodash.remove(rs, g => g.name == BlockDirective.copy);
+        lodash.remove(rs, g => g.name == BlockDirective.comment);
         return rs;
     }
     async onContextMenuInput(item: MenuItem<BlockDirective | string>) {

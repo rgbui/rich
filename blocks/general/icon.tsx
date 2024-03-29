@@ -49,11 +49,14 @@ export class BlockIcon extends Block {
         if (alignItem) {
             alignItem.text = lst('对齐')
         }
-        var at = rs.findIndex(c => c.name == 'color');
+        var at = rs.findIndex(g => g.name == 'text-center') - 1;
         var ns = [8, 12, 16, 24, 32, 48, 64, 72, 96, 128, 144, 180, 256];
         rs.splice(at, 0, ...[
             {
-                text: '大小',
+                type: MenuItemType.divide
+            },
+            {
+                text: lst('图标大小'),
                 icon: { name: 'byte', code: 'zoom-in' } as any,
                 childs: ns.map(n => {
                     return {
@@ -69,6 +72,9 @@ export class BlockIcon extends Block {
             {
                 type: MenuItemType.divide
             },
+        ]);
+        at = rs.findIndex(g => g.name == 'text-center');
+        rs.splice(at, 0, ...[
             {
                 text: lst('添加链接...'),
                 icon: { name: 'bytedance-icon', code: 'link-two' },
@@ -86,7 +92,7 @@ export class BlockIcon extends Block {
             {
                 type: MenuItemType.divide
             }
-        ]);
+        ])
         return rs;
     }
     async onContextMenuBtnClick(item: MenuItem<string | BlockDirective>, event: React.MouseEvent<Element, MouseEvent>, clickName: string, mp: MenuPanel<any>) {

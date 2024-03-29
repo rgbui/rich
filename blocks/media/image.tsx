@@ -168,20 +168,20 @@ export class Image extends Block {
         });
         items.push({
             text: lst('图片操作'),
-            icon: { name: 'byte', code: 'pencil' },
+            icon: { name: 'byte', code: 'write' },
             childs: [
                 {
                     name: 'preview',
                     text: lst('查看'),
                     icon: { name: 'bytedance-icon', code: "zoom-in" }
                     ,
-            disabled:this.src?.url?false:true
+                    disabled: this.src?.url ? false : true
                 },
                 {
                     name: 'origin',
                     text: lst('原图'),
                     icon: { name: 'bytedance-icon', code: 'arrow-right-up' },
-                    disabled:this.src?.url?false:true
+                    disabled: this.src?.url ? false : true
                 },
                 {
                     text: lst('尺寸'),
@@ -222,7 +222,7 @@ export class Image extends Block {
                     type: MenuItemType.switch,
                     checked: this.allowCaption,
                     updateMenuPanel: true,
-                    disabled:this.src?.url?false:true
+                    disabled: this.src?.url ? false : true
                 },
                 {
                     visible: (items) => {
@@ -234,7 +234,7 @@ export class Image extends Block {
                     text: lst('说明文字居中'),
                     type: MenuItemType.switch,
                     checked: this.captionAlign == 'center',
-                    disabled:this.src?.url?false:true
+                    disabled: this.src?.url ? false : true
                 },
                 {
                     name: 'replace',
@@ -245,24 +245,9 @@ export class Image extends Block {
                     name: 'download',
                     text: lst('下载'),
                     icon: DownloadSvg,
-                    disabled:this.src?.url?false:true
+                    disabled: this.src?.url ? false : true
                 }
             ]
-        })
-        items.push({
-            text: lst('添加链接...'),
-            icon: { name: 'bytedance-icon', code: 'link-two' },
-            name: this.link ? undefined : "imageLink",
-            childs: this.link ? [
-                {
-                    name: 'imageLink',
-                    text: pageLink?.text || this.link?.url,
-                    value: pageLink,
-                    icon: pageLink ? getPageIcon(pageLink) : GlobalLinkSvg,
-                    btns: [{ icon: Edit1Svg, name: 'editImageLink' }]
-                }
-            ] : undefined,
-            disabled:this.src?.url?false:true
         })
         items.push({
             text: lst('蒙板'),
@@ -346,6 +331,33 @@ export class Image extends Block {
                 }
             ]
         });
+        items.push({
+            type: MenuItemType.divide
+        });
+        items.push({
+            text: lst('添加链接...'),
+            icon: { name: 'bytedance-icon', code: 'link-two' },
+            name: this.link ? undefined : "imageLink",
+            childs: this.link ? [
+                {
+                    name: 'imageLink',
+                    text: pageLink?.text || this.link?.url,
+                    value: pageLink,
+                    icon: pageLink ? getPageIcon(pageLink) : GlobalLinkSvg,
+                    btns: [{ icon: Edit1Svg, name: 'editImageLink' }]
+                }
+            ] : undefined,
+            disabled: this.src?.url ? false : true
+        })
+        items.push({
+            type: MenuItemType.divide
+        });
+        items.push({
+            name: BlockDirective.comment,
+            text: lst('评论'),
+            icon: { name: 'byte', code: 'message' },
+            label: UA.isMacOs ? "⌘+Opt+M" : "Ctrl+Alt+M"
+        })
         items.push({
             type: MenuItemType.divide
         });
