@@ -17,6 +17,7 @@ import { Tab } from "../../component/view/tab";
 import { GalleryView } from "./gellery";
 import { PicSvg } from "../../component/svgs";
 import "./style.less";
+import { LastUploadFiles } from "./lasterUpload";
 
 class ImagePicker extends EventsComponent {
     onChange(data: ResourceArguments) {
@@ -32,17 +33,27 @@ class ImagePicker extends EventsComponent {
         this.forceUpdate();
     }
     tab: Tab;
+    onChangeIndex(index: number) {
+        this.emit('change', index);
+        if (this.lastUpdateFiles) this.lastUpdateFiles.load(this.showGallery ? "cover" : undefined)
+    }
+    lastUpdateFiles: LastUploadFiles;
     render() {
         return <div className='shy-image-picker' >
-            <Tab ref={e => this.tab = e} change={e => this.emit('change', e)} keeplive>
+            <Tab ref={e => this.tab = e} change={e => this.onChangeIndex(e)} keeplive>
                 <Tab.Page visible={this.showGallery} item={<Tip placement='bottom' text={'画廊'}><Icon size={18} icon={PicSvg}></Icon></Tip>}>
                     <GalleryView onChange={e => this.onChange(e as any)}></GalleryView>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' text={'上传图片'}><Icon size={20} icon={Upload}></Icon></Tip>}>
                     <div className="padding-14"><UploadView
-                        fileClassify="cover"
+                        fileClassify={this.showGallery ? "cover" : undefined}
                         mine='image'
                         change={e => this.onChange(e)}></UploadView></div>
+                </Tab.Page>
+                <Tab.Page item={<Tip placement='bottom' text={'最近上传的图片'}><Icon
+                    size={18}
+                    icon={{ name: 'byte', code: 'history' }}></Icon></Tip>}>
+                    <LastUploadFiles ref={e => this.lastUpdateFiles = e} fileClassify={this.showGallery ? "cover" : undefined} onChange={e => this.onChange({ url: e.url })}></LastUploadFiles>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' text={'图片网址'}><Icon size={18} icon={Link}></Icon></Tip>}>
                     <OutsideUrl change={e => this.onChange({ url: e })}></OutsideUrl>

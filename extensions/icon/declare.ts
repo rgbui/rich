@@ -35,5 +35,6 @@ export type ResourceArguments = {
     mime?: string,
     ext?: string,
     width?:number,
-    height?:number
+    height?:number,
+    createDate?:number
 }
