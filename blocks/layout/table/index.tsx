@@ -8,7 +8,7 @@ import { ActionDirective } from "../../../src/history/declare";
 import { Point, Rect } from "../../../src/common/vector/point";
 import lodash from 'lodash';
 import { MouseDragger } from "../../../src/common/dragger";
-import { BlockcolorSvg, DragHandleSvg, HorizontalDistributionSvg, PlusSvg, TableBottomInsertSvg, TableClearCellSvg, TableDeleteColSvg, TableDeleteRowSvg, TableLeftInsertSvg, TableRightInsertSvg, TableTopInsertSvg } from "../../../component/svgs";
+import { DragHandleSvg, PlusSvg, TableBottomInsertSvg, TableClearCellSvg, TableDeleteColSvg, TableDeleteRowSvg, TableLeftInsertSvg, TableRightInsertSvg, TableTopInsertSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { ghostView } from "../../../src/common/ghost";
 import { ToolTip } from "../../../component/view/tooltip";
@@ -46,7 +46,7 @@ export class Table extends Block {
     }
     async didMounted() {
         if (this.childs.length == 0) {
-            this.page.onAction(ActionDirective.onErrorRepairDidMounte, async () => {
+            await this.page.onAction(ActionDirective.onErrorRepairDidMounte, async () => {
                 await this.updateProps({ cols: [{ width: COL_WIDTH }] });
                 await this.page.createBlock('/table/row',
                     { blocks: { childs: [{ url: '/table/cell' }] } },
@@ -87,7 +87,7 @@ export class Table extends Block {
         });
     }
     async onDragAdd(options: { save?: boolean, row: number, column: number, newRow: number, newColumn: number }) {
-        this.page.onAction('onDragAdd', async () => {
+        await this.page.onAction('onDragAdd', async () => {
             this.page.snapshoot.pause();
             var ds: Block[] = [];
             await this.childs.eachReverseAsync(async (b, r) => {
@@ -168,7 +168,7 @@ export class Table extends Block {
         });
     }
     async onChangeRowIndex(rowIndx: number, newRowIndex: number) {
-        this.page.onAction('onChangeRowIndex', async () => {
+        await this.page.onAction('onChangeRowIndex', async () => {
             var row = this.childs[rowIndx];
             var newRow = this.childs[newRowIndex];
             if (newRow) await row.insertBefore(newRow);
@@ -176,7 +176,7 @@ export class Table extends Block {
         });
     }
     async onChangeColumnIndex(columnIndex: number, newColumnIndex: number) {
-        this.page.onAction('onChangeColumnIndex', async () => {
+        await this.page.onAction('onChangeColumnIndex', async () => {
             var cs = lodash.cloneDeep(this.cols);
             await this.childs.eachAsync(async row => {
                 var c = row.childs[columnIndex];
@@ -199,7 +199,7 @@ export class Table extends Block {
         });
     }
     async onRemoveColumn(columnIndex: number) {
-        this.page.onAction('table.columnIndex', async () => {
+        await this.page.onAction('table.columnIndex', async () => {
             var cs = lodash.cloneDeep(this.cols);
             cs.splice(columnIndex, 1);
             var rows = this.childs;
@@ -255,18 +255,18 @@ export class Table extends Block {
                 ]
             }
             var items = [
-                { icon: TableLeftInsertSvg, text: lst('在左边插入一列'), name: 'left' },
-                { icon: TableRightInsertSvg, text: lst('在右侧插入一列'), name: 'right' },
+                { icon: TableLeftInsertSvg, iconSize: 18, text: lst('在左边插入一列'), name: 'left' },
+                { icon: TableRightInsertSvg, iconSize: 18, text: lst('在右侧插入一列'), name: 'right' },
                 { type: MenuItemType.divide },
                 {
-                    text: lst('颜色'),
+                    text: lst('当前列颜色'),
                     icon: { name: 'byte', code: 'rectangle' } as any,
                     childs: getColors()
                 },
                 { type: MenuItemType.divide },
                 { name: 'delCol', disabled: this.childs.first().childs.length > 0 ? false : true, icon: TableDeleteColSvg, text: lst('删除列') },
                 { type: MenuItemType.divide },
-                { icon: TableClearCellSvg, text: lst('清空单元格'), name: 'clear' }
+                { icon: TableClearCellSvg, iconSize: 18, text: lst('清空单元格'), name: 'clear' }
             ]
             var result = await useSelectMenuItem({ roundPoint: Point.from(event).move(10, 10) },
                 items
@@ -373,18 +373,18 @@ export class Table extends Block {
             ]
         }
         var items = [
-            { icon: TableTopInsertSvg, text: lst('在上方插入一行'), name: 'up' },
-            { icon: TableBottomInsertSvg, text: lst('在下方插入一行'), name: 'down' },
+            { icon: TableTopInsertSvg, iconSize: 18, text: lst('在上方插入一行'), name: 'up' },
+            { icon: TableBottomInsertSvg, iconSize: 18, text: lst('在下方插入一行'), name: 'down' },
             { type: MenuItemType.divide },
             {
-                text: lst('所在行颜色'),
+                text: lst('当前行颜色'),
                 icon: { name: 'byte', code: 'rectangle-one' } as any,
                 childs: getColors()
             },
             { type: MenuItemType.divide },
             { name: 'delRow', disabled: this.childs.length > 1 ? false : true, icon: TableDeleteRowSvg, text: lst('删除行'), },
             { type: MenuItemType.divide },
-            { icon: TableClearCellSvg, text: lst('清空单元格'), name: 'clear' }
+            { icon: TableClearCellSvg, iconSize: 18, text: lst('清空单元格'), name: 'clear' }
         ]
         var result = await useSelectMenuItem({ roundPoint: Point.from(event).move(10, 10) },
             items
@@ -567,52 +567,48 @@ export class Table extends Block {
                 }
             ]
         });
+        borderItems.push({ type: MenuItemType.divide });
         borderItems.push({
-            text: lst('颜色'),
-            icon: { name: 'byte', code: 'background-color' },
-            childs: [
-                {
-                    text: lst('线颜色'),
-                    type: MenuItemType.text
-                },
-                {
-                    name: 'lineColor',
-                    type: MenuItemType.color,
-                    block: ls.isCn ? false : true,
-                    options: [
-                        { color: 'inherit', text: lst('默认') },
-                        { color: 'rgba(55,53,47,0.2)', text: lst('浅灰色') },
-                        { color: 'rgba(55,53,47,0.6)', text: lst('灰色') },
-                        { color: 'rgb(100,71,58)', text: lst('棕色') },
-                        { color: 'rgb(217,115,13)', text: lst('橙色') },
-                        { color: 'rgb(223,171,1)', text: lst('黄色') },
-                        { color: 'rgb(15,123,108)', text: lst('绿色') },
-                        { color: 'rgb(11,110,153)', text: lst('蓝色') },
-                        { color: 'rgb(105,64,165)', text: lst('紫色') },
-                        { color: 'rgb(173,26,114)', text: lst('粉色') },
-                        { color: 'rgb(224,62,62)', text: lst('红色') },
-                    ].map(f => {
-                        return {
-                            text: f.text,
-                            overlay: f.text,
-                            value: f.color,
-                            checked: this.lineColor == f.color ? true : false
-                        }
-                    })
+            text: lst('线颜色'),
+            type: MenuItemType.text
+        })
+        borderItems.push({ type: MenuItemType.gap })
+        borderItems.push({
+            name: 'lineColor',
+            type: MenuItemType.color,
+            block: ls.isCn ? false : true,
+            options: [
+                { color: 'inherit', text: lst('默认') },
+                { color: 'rgba(55,53,47,0.2)', text: lst('浅灰') },
+                { color: 'rgba(55,53,47,0.6)', text: lst('灰色') },
+                { color: 'rgb(100,71,58)', text: lst('棕色') },
+                { color: 'rgb(217,115,13)', text: lst('橙色') },
+                { color: 'rgb(223,171,1)', text: lst('黄色') },
+                { color: 'rgb(15,123,108)', text: lst('绿色') },
+                { color: 'rgb(11,110,153)', text: lst('蓝色') },
+                { color: 'rgb(105,64,165)', text: lst('紫色') },
+                { color: 'rgb(173,26,114)', text: lst('粉色') },
+                { color: 'rgb(224,62,62)', text: lst('红色') },
+            ].map(f => {
+                return {
+                    text: f.text,
+                    overlay: f.text,
+                    value: f.color,
+                    checked: this.lineColor == f.color ? true : false
                 }
-            ]
-        });
-        var dat = rs.findIndex(c => c.name == BlockDirective.delete);
+            })
+        })
+        var dat = rs.findIndex(c => c.name == BlockDirective.comment);
         rs.splice(dat - 1, 0, { type: MenuItemType.divide }, {
             text: lst('表格操作'),
-            icon: { name: 'byte', code: 'pencil' },
+            icon: { name: 'byte', code: 'write' },
             childs: [
-                { icon: TableLeftInsertSvg, text: lst('在左边插入一列'), name: 'left' },
-                { icon: TableRightInsertSvg, text: lst('在右侧插入一列'), name: 'right' },
-                { icon: TableTopInsertSvg, text: lst('在上方插入一行'), name: 'up' },
-                { icon: TableBottomInsertSvg, text: lst('在下方插入一行'), name: 'down' },
+                { icon: TableLeftInsertSvg, iconSize: 18, text: lst('在左边插入一列'), name: 'left' },
+                { icon: TableRightInsertSvg, iconSize: 18, text: lst('在右侧插入一列'), name: 'right' },
+                { icon: TableTopInsertSvg, iconSize: 18, text: lst('在上方插入一行'), name: 'up' },
+                { icon: TableBottomInsertSvg, iconSize: 18, text: lst('在下方插入一行'), name: 'down' },
                 { type: MenuItemType.divide },
-                { icon: TableClearCellSvg, text: lst('清空单元格内容'), name: 'clearAll' }
+                { icon: TableClearCellSvg, iconSize: 18, text: lst('清空单元格内容'), name: 'clearAll' }
             ]
         },
             {
@@ -627,7 +623,7 @@ export class Table extends Block {
 
                 text: lst('均分列宽'),
                 name: 'agvCols',
-                icon: HorizontalDistributionSvg
+                icon: { name: 'byte', code: 'horizontal-tidy-up' }
             },
             {
                 text: lst('行列转换'),

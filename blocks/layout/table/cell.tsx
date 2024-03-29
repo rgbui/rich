@@ -11,7 +11,7 @@ import { Point } from "../../../src/common/vector/point";
 import { TableRow } from "./row";
 import { MenuItemType } from "../../../component/view/menu/declare";
 import lodash from "lodash";
-import {  BlockcolorSvg, TableBottomInsertSvg, TableClearCellSvg, TableDeleteColSvg, TableDeleteRowSvg, TableLeftInsertSvg, TableRightInsertSvg, TableTopInsertSvg } from "../../../component/svgs";
+import { BlockcolorSvg, TableBottomInsertSvg, TableClearCellSvg, TableDeleteColSvg, TableDeleteRowSvg, TableLeftInsertSvg, TableRightInsertSvg, TableTopInsertSvg } from "../../../component/svgs";
 import { BackgroundColorList, FontColorList } from "../../../extensions/color/data";
 import { GridMap } from "../../../src/page/grid";
 import { lst } from "../../../i18n/store";
@@ -111,10 +111,10 @@ export class TableCellView extends BlockView<TableCell>{
                 ]
             }
             var items = [
-                { icon: TableTopInsertSvg, text: lst('在上方插入一行'), name: 'up' },
-                { icon: TableBottomInsertSvg, text: lst('在下方插入一行'), name: 'down' },
-                { icon: TableLeftInsertSvg, text: lst('在左边插入一列'), name: 'left' },
-                { icon: TableRightInsertSvg, text: lst('在右侧插入一列'), name: 'right' },
+                { icon: TableTopInsertSvg, iconSize: 18, text: lst('在上方插入一行'), name: 'up' },
+                { icon: TableBottomInsertSvg, iconSize: 18, text: lst('在下方插入一行'), name: 'down' },
+                { icon: TableLeftInsertSvg, iconSize: 18, text: lst('在左边插入一列'), name: 'left' },
+                { icon: TableRightInsertSvg, iconSize: 18, text: lst('在右侧插入一列'), name: 'right' },
                 { type: MenuItemType.divide },
                 {
                     text: lst('所在行颜色'),
@@ -133,10 +133,10 @@ export class TableCellView extends BlockView<TableCell>{
                     })
                 },
                 { type: MenuItemType.divide },
-                { name: 'delRow', icon: TableDeleteRowSvg, text: lst('删除所在行'), },
-                { name: 'delCol', icon: TableDeleteColSvg, text: lst('删除所在列') },
+                { name: 'delRow', icon: TableDeleteRowSvg, iconSize: 18, text: lst('删除所在行'), },
+                { name: 'delCol', icon: TableDeleteColSvg, iconSize: 18, text: lst('删除所在列') },
                 { type: MenuItemType.divide },
-                { icon: TableClearCellSvg, text: lst('清空单元格'), name: 'clear' },
+                { icon: TableClearCellSvg, iconSize: 18, text: lst('清空单元格'), name: 'clear' },
                 {
                     text: lst('单元格颜色'),
                     icon: BlockcolorSvg,
