@@ -170,9 +170,10 @@ export class TableStoreView extends BlockView<TableStore>{
         return <div style={{ minWidth: this.block.sumWidth }} onMouseLeave={e => this.mouseleaveHead(e)} className="sy-dg-table-head" onMouseMove={e => this.mousemove(e.nativeEvent)}>
             <div className='sy-dg-table-subline' onMouseDown={e => this.onMousedownLine(e)} ref={e => this.subline = e}></div>
             {this.block.fields.map((f, i) => {
+                var text = f.field?.text || f.text;
                 var icon: IconValueType;
                 if (f.type == 'check') icon = CheckSvg;
-                else if (f.type == 'rowNum') icon = TypesNumberSvg;
+                else if (f.type == 'rowNum') { icon = undefined; }
                 else if (f.field) icon = GetFieldTypeSvg(f.field.type);
                 var style: CSSProperties = {
                     width: f.colWidth || 120
@@ -187,10 +188,10 @@ export class TableStoreView extends BlockView<TableStore>{
                 return <div className="sy-dg-table-head-th  text-1 f-14" onMouseDown={e => this.onDragMouseField(e, f)}
                     style={style}
                     key={f?.field?.id || i}>
-                    <div className={'sy-dg-table-head-th-icon remark flex-fix size-16 flex-center gap-r-5 '} >
+                    {icon && <div className={'sy-dg-table-head-th-icon remark flex-fix size-16 flex-center gap-r-5 '} >
                         <Icon icon={icon} size={16}></Icon>
-                    </div>
-                    <label>{f.field?.text || f.text}</label>
+                    </div>}
+                    <label>{text}</label>
                     {this.block.dataGridIsCanEdit() && <div className={'sy-dg-table-head-th-property remark'} onMouseDown={e => this.block.onOpenFieldConfig(e, f)}><Icon icon={DotsSvg}></Icon></div>}
                 </div>
             })}

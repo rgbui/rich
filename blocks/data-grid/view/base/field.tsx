@@ -39,45 +39,86 @@ import { TableSchema } from "../../schema/meta";
 export class DataGridViewField {
     private getFieldMenuItems(this: DataGridView, viewField: ViewField) {
         var items: MenuItem<BlockDirective | string>[] = [];
+        var tips: MenuItem<BlockDirective | string>[] = [{ type: MenuItemType.divide },
+        { type: MenuItemType.help, text: lst('了解如何使用数据字段'), url: window.shyConfig?.isUS ? "https://help.shy.red/page/43#2PRKjiNkLmU6w4xciiy1t1" : "https://help.shy.live/page/1871#gVnf6Ar2iF5wa2fS2KpLws" }]
         if (viewField.type || viewField?.field?.type == FieldType.autoIncrement) {
-            items.push(...[
-                {
-                    name: 'name',
-                    type: MenuItemType.input,
-                    value: viewField?.text,
-                    text: lst('编辑列名'),
-                },
-                { type: MenuItemType.divide },
-                { name: 'leftInsert', icon: ArrowLeftSvg, text: lst('在左侧添加字段') },
-                { name: 'rightInsert', icon: ArrowRightSvg, text: lst('在右侧添加字段') },
-                { type: MenuItemType.divide },
-                {
-                    name: 'hide',
-                    icon: HideSvg,
-                    text: lst('隐藏列')
-                }
-            ]);
-            if (viewField?.field?.type == FieldType.autoIncrement) {
-                items.addRange(4, [
-                    { name: 'sortAsc', icon: { name: 'byte', code: 'sort-amount-up' } as any, text: lst('按 1 → 10 升序排序') },
-                    { name: 'sortDesc', icon: { name: 'byte', code: 'sort-amount-down' } as any, text: lst('按 10 → 1 降序排序') },
-                    { name: 'filter', icon: FilterSvg, text: lst('按该字段筛选') },
-                ])
+            if (viewField.type == 'rowNum') {
                 items.push(...[
                     {
-                        name: 'clone',
-                        icon: DuplicateSvg,
-                        text: lst('复制列')
+                        name: 'name',
+                        type: MenuItemType.input,
+                        value: viewField?.text,
+                        text: lst('编辑列名'),
                     },
+                    { type: MenuItemType.divide },
+                    { name: 'leftInsert', icon: ArrowLeftSvg, text: lst('在左侧添加字段') },
+                    { name: 'rightInsert', icon: ArrowRightSvg, text: lst('在右侧添加字段') },
+                    { type: MenuItemType.divide },
                     {
-                        name: 'deleteProperty',
-                        icon: TrashSvg,
-                        text: lst('删除字段')
+                        name: 'hide',
+                        icon: HideSvg,
+                        text: lst('隐藏列')
+                    }, ...tips
+                ]);
+            }
+            else {
+                items.push(...[
+                    {
+                        name: 'name',
+                        type: MenuItemType.input,
+                        value: viewField?.text,
+                        text: lst('编辑列名'),
+                    },
+                    { type: MenuItemType.divide },
+                    { name: 'leftInsert', icon: ArrowLeftSvg, text: lst('在左侧添加字段') },
+                    { name: 'rightInsert', icon: ArrowRightSvg, text: lst('在右侧添加字段') },
+                    { type: MenuItemType.divide },
+                    {
+                        name: 'hide',
+                        icon: HideSvg,
+                        text: lst('隐藏列')
                     }
-                ])
+                ]);
+                if (viewField?.field?.type == FieldType.autoIncrement) {
+                    items.addRange(4, [
+                        { name: 'sortAsc', icon: { name: 'byte', code: 'sort-amount-up' } as any, text: lst('按 1 → 10 升序排序') },
+                        { name: 'sortDesc', icon: { name: 'byte', code: 'sort-amount-down' } as any, text: lst('按 10 → 1 降序排序') },
+                        { name: 'filter', icon: FilterSvg, text: lst('按该字段筛选') },
+                    ])
+                    items.push(...[
+                        {
+                            name: 'clone',
+                            icon: DuplicateSvg,
+                            text: lst('复制列')
+                        },
+                        {
+                            name: 'deleteProperty',
+                            icon: TrashSvg,
+                            text: lst('删除字段')
+                        }
+                    ])
+                }
+                items.push(...tips)
             }
         }
         else {
+            var descText = lst('按 Z → A 降序排序');
+            var ascText = lst('按 A → Z 升序排序');
+            if (TableSchema.fieldIsDate(viewField.field)) {
+                descText = lst('按时间降序排序');
+                ascText = lst('按时间升序排序');
+            }
+            else if ([
+                FieldType.number,
+                FieldType.price,
+                FieldType.comment,
+                FieldType.browse,
+                FieldType.like,
+                FieldType.vote
+            ].includes(viewField.field.type)) {
+                descText = lst('按 10 → 1 降序排序');
+                ascText = lst('按 1 → 10 升序排序');
+            }
             items.push(...[
                 {
                     name: 'name',
@@ -89,12 +130,12 @@ export class DataGridViewField {
                 {
                     name: 'editProperty',
                     disabled: viewField.field.type == FieldType.title ? true : false,
-                    icon: { name: "bytedance-icon", code: 'list-two' } as any,
+                    icon: { name: "bytedance-icon", code: 'write' } as any,
                     text: lst('编辑字段')
                 },
                 { type: MenuItemType.divide },
-                { name: 'sortAsc', icon: { name: 'byte', code: 'sort-amount-up' } as any, text: lst('按 A → Z 升序排序') },
-                { name: 'sortDesc', icon: { name: 'byte', code: 'sort-amount-down' } as any, text: lst('按 Z → A 降序排序') },
+                { name: 'sortAsc', icon: { name: 'byte', code: 'sort-amount-up' } as any, text: ascText },
+                { name: 'sortDesc', icon: { name: 'byte', code: 'sort-amount-down' } as any, text: descText },
                 { name: 'filter', icon: FilterSvg, text: lst('按该字段筛选') },
                 { type: MenuItemType.divide },
                 { name: 'leftInsert', icon: ArrowLeftSvg, text: lst('在左侧添加字段') },
@@ -110,10 +151,15 @@ export class DataGridViewField {
                     disabled: TableSchema.isSystemField(viewField.field),
                     text: lst('复制列')
                 },
-                { name: 'deleteProperty', icon: TrashSvg, text: lst('删除字段') },
-                { type: MenuItemType.divide },
-                { type: MenuItemType.help, text: lst('了解如何使用数据字段'), url: window.shyConfig?.isUS ? "https://help.shy.red/page/43#2PRKjiNkLmU6w4xciiy1t1" : "https://help.shy.live/page/1871#gVnf6Ar2iF5wa2fS2KpLws" }
+                {
+                    name: 'deleteProperty',
+                    icon: TrashSvg,
+                    disabled: TableSchema.isSystemField(viewField.field),
+                    text: lst('删除字段')
+                },
+                ...tips
             ]);
+
             if (viewField.field?.type == FieldType.date) {
                 var dateItems: MenuItem<BlockDirective | string>[] = [];
                 var day = dayjs(new Date());
@@ -316,10 +362,7 @@ export class DataGridViewField {
                 });
                 items.insertAt(7, { type: MenuItemType.divide });
             }
-            else if ([
-                FieldType.file,
-                FieldType.user
-            ].includes(viewField.field?.type)) {
+            else if ([FieldType.file, FieldType.user].includes(viewField.field?.type)) {
                 var text = lst('允许多文件');
                 if (viewField.field.type == FieldType.user)
                     text = lst('允许多用用户');
@@ -415,8 +458,6 @@ export class DataGridViewField {
         var menus = [
             { text: lst('标签'), name: 'name', value: option.text, type: MenuItemType.input },
             { type: MenuItemType.divide },
-            { name: 'delete', icon: TrashSvg, text: lst('删除') },
-            { type: MenuItemType.divide },
             { type: MenuItemType.text, text: lst('颜色') },
             ...OptionBackgroundColorList().map(b => {
                 return {
@@ -434,7 +475,9 @@ export class DataGridViewField {
                         </div>
                     }
                 }
-            })
+            }),
+            { type: MenuItemType.divide },
+            { name: 'delete', icon: TrashSvg, text: lst('删除') },
         ]
         if (!option.text) {
             menus.remove(g => g.name == 'delete');

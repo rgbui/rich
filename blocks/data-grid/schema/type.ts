@@ -178,7 +178,7 @@ export enum FieldType {
     like = 7071,
     /**
      * 投票
-     * 弃用
+     * 
      */
     vote = 7072,
     /**
