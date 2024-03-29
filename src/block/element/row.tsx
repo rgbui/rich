@@ -28,7 +28,7 @@ export class Row extends Block {
         return true;
     }
     @prop()
-    gaps: { at: number, width: number, type: 'solid' | 'double' | 'double-dashed' | 'dashed' | 'none', color: string }[] = [];
+    gaps: { at: number, width: number, type: 'solid' | 'double' | 'double-dashed' | 'dashed' | 'dotted' | 'none', color: string }[] = [];
 }
 
 @view('/row')
@@ -87,86 +87,102 @@ export class RowView extends BlockView<Row>{
         ns.push({
             name: 'agvCols',
             text: lst('平均所有列'),
-            icon: HorizontalDistributionSvg
+            icon: { name: 'byte', code: 'horizontal-tidy-up' }
         })
         ns.push({ type: MenuItemType.divide });
         ns.push({
             name: 'open',
             text: lst('显示分栏线'),
-            icon: { name: 'bytedance-icon', code: 'auto-height-one' },
+            icon: { name: 'bytedance-icon', code: 'auto-height-one', rotate: 90 },
             checkLabel: gap?.type && gap?.type != 'none'
         })
         ns.push({ type: MenuItemType.divide });
         if (gap?.type && gap?.type != 'none') {
             ns.push({
-                text: lst('线类型'),
-                icon: { name: 'bytedance-icon', code: 'align-text-both' },
+                text: lst('分栏线'),
+                icon: { name: "byte", code: 'distribute-horizontally' },
                 childs: [
                     {
-                        name: 'lineType',
-                        text: lst('实线'),
-                        value: 'solid',
-                        checkLabel: gap?.type == 'solid'
+                        text: lst('线类型'),
+                        icon: { name: 'bytedance-icon', code: 'align-text-both' },
+                        childs: [
+                            {
+                                name: 'lineType',
+                                text: lst('实线'),
+                                value: 'solid',
+                                checkLabel: gap?.type == 'solid'
+                            },
+                            {
+                                name: 'lineType',
+                                text: lst('虚线'),
+                                value: 'dashed',
+                                checkLabel: gap?.type == 'dashed'
+                            },
+                            {
+                                name: 'lineType',
+                                text: lst('点虚线'),
+                                value: 'dotted',
+                                checkLabel: gap?.type == 'dotted'
+                            },
+                            {
+                                name: 'lineType',
+                                text: lst('双线'),
+                                value: 'double',
+                                checkLabel: gap?.type == 'double'
+                            },
+                            {
+                                name: 'lineType',
+                                text: lst('双虚线'),
+                                value: 'double-dashed',
+                                checkLabel: gap?.type == 'double-dashed'
+                            }
+                        ]
                     },
                     {
-                        name: 'lineType',
-                        text: lst('虚线'),
-                        value: 'dashed',
-                        checkLabel: gap?.type == 'dashed'
+                        text: lst('线宽'),
+                        icon: { name: 'bytedance-icon', code: 'dividing-line' },
+                        childs: [
+                            {
+                                name: 'lineWidth',
+                                text: '1',
+                                value: 1,
+                                checkLabel: gap?.width == 1
+                            },
+                            {
+                                name: 'lineWidth',
+                                text: '2',
+                                value: 2,
+                                checkLabel: gap?.width == 2
+                            },
+                            {
+                                name: 'lineWidth',
+                                text: '4',
+                                value: 4,
+                                checkLabel: gap?.width == 4
+                            },
+                            {
+                                name: 'lineWidth',
+                                text: '6',
+                                value: 6,
+                                checkLabel: gap?.width == 6
+                            }
+                        ]
                     },
                     {
-                        name: 'lineType',
-                        text: lst('双线'),
-                        value: 'double',
-                        checkLabel: gap?.type == 'double'
+                        type: MenuItemType.divide
                     },
                     {
-                        name: 'lineType',
-                        text: lst('双虚线'),
-                        value: 'double-dashed',
-                        checkLabel: gap?.type == 'double-dashed'
-                    }
-                ]
-            });
-            ns.push({
-                text: lst('线宽'),
-                icon: { name: 'bytedance-icon', code: 'dividing-line' },
-                childs: [
-                    {
-                        name: 'lineWidth',
-                        text: '1',
-                        value: 1,
-                        checkLabel: gap?.width == 1
-                    },
-                    {
-                        name: 'lineWidth',
-                        text: '2',
-                        value: 2,
-                        checkLabel: gap?.width == 2
-                    },
-                    {
-                        name: 'lineWidth',
-                        text: '4',
-                        value: 4,
-                        checkLabel: gap?.width == 4
-                    }
-                ]
-            });
-            ns.push({
-                text: lst('颜色'),
-                icon: BlockcolorSvg,
-                childs: [
-                    {
-                        text: lst('线颜色'),
+                        text: lst('颜色'),
                         type: MenuItemType.text
                     },
+                    { type: MenuItemType.gap },
                     {
                         name: 'color',
                         type: MenuItemType.color,
                         block: ls.isCn ? false : true,
                         options: [
-                            { color: 'rgba(55, 53, 47, 0.16)', text: lst('灰白色') },
-                            { color: 'rgba(55,53,47,0.2)', text: lst('浅灰色') },
+                            { color: 'rgba(55, 53, 47, 0.16)', text: lst('灰白') },
+                            { color: 'rgba(55,53,47,0.2)', text: lst('浅灰') },
                             { color: 'rgba(55,53,47,0.6)', text: lst('灰色') },
                             { color: 'rgb(100,71,58)', text: lst('棕色') },
                             { color: 'rgb(217,115,13)', text: lst('橙色') },
@@ -185,20 +201,137 @@ export class RowView extends BlockView<Row>{
                             }
                         })
                     }
+                    // {
+                    //     text: lst('颜色'),
+                    //     icon: { name: 'byte', code: 'background-color' },
+                    //     childs: [
+
+                    //     ]
+                    // }
                 ]
-            });
+            })
+            // ns.push({
+            //     text: lst('线类型'),
+            //     // name: 'lineType',
+            //     icon: { name: 'bytedance-icon', code: 'align-text-both' },
+            //     // type: MenuItemType.select,
+            //     // value: gap?.type,
+            //     options: [
+            //         {
+            //             name: 'lineType',
+            //             text: lst('实线'),
+            //             value: 'solid',
+            //             checkLabel: gap?.type == 'solid'
+            //         },
+            //         {
+            //             name: 'lineType',
+            //             text: lst('虚线'),
+            //             value: 'dashed',
+            //             checkLabel: gap?.type == 'dashed'
+            //         },
+            //         {
+            //             name: 'lineType',
+            //             text: lst('点虚线'),
+            //             value: 'dotted',
+            //             checkLabel: gap?.type == 'dotted'
+            //         },
+            //         {
+            //             name: 'lineType',
+            //             text: lst('双线'),
+            //             value: 'double',
+            //             checkLabel: gap?.type == 'double'
+            //         },
+            //         {
+            //             name: 'lineType',
+            //             text: lst('双虚线'),
+            //             value: 'double-dashed',
+            //             checkLabel: gap?.type == 'double-dashed'
+            //         }
+            //     ]
+            // });
+            // ns.push({
+            //     text: lst('线宽'),
+            //     icon: { name: 'bytedance-icon', code: 'dividing-line' },
+            //     childs: [
+            //         {
+            //             name: 'lineWidth',
+            //             text: '1',
+            //             value: 1,
+            //             checkLabel: gap?.width == 1
+            //         },
+            //         {
+            //             name: 'lineWidth',
+            //             text: '2',
+            //             value: 2,
+            //             checkLabel: gap?.width == 2
+            //         },
+            //         {
+            //             name: 'lineWidth',
+            //             text: '4',
+            //             value: 4,
+            //             checkLabel: gap?.width == 4
+            //         },
+            //         {
+            //             name: 'lineWidth',
+            //             text: '6',
+            //             value: 6,
+            //             checkLabel: gap?.width == 6
+            //         }
+            //     ]
+            // });
+            // ns.push({ type: MenuItemType.divide })
+            // ns.push({
+            //     text: lst('颜色'),
+            //     icon: { name: 'byte', code: 'background-color' },
+            //     childs: [
+            //         {
+            //             text: lst('线颜色'),
+            //             type: MenuItemType.text
+            //         },
+            //         {
+            //             name: 'color',
+            //             type: MenuItemType.color,
+            //             block: ls.isCn ? false : true,
+            //             options: [
+            //                 { color: 'rgba(55, 53, 47, 0.16)', text: lst('灰白色') },
+            //                 { color: 'rgba(55,53,47,0.2)', text: lst('浅灰色') },
+            //                 { color: 'rgba(55,53,47,0.6)', text: lst('灰色') },
+            //                 { color: 'rgb(100,71,58)', text: lst('棕色') },
+            //                 { color: 'rgb(217,115,13)', text: lst('橙色') },
+            //                 { color: 'rgb(223,171,1)', text: lst('黄色') },
+            //                 { color: 'rgb(15,123,108)', text: lst('绿色') },
+            //                 { color: 'rgb(11,110,153)', text: lst('蓝色') },
+            //                 { color: 'rgb(105,64,165)', text: lst('紫色') },
+            //                 { color: 'rgb(173,26,114)', text: lst('粉色') },
+            //                 { color: 'rgb(224,62,62)', text: lst('红色') },
+            //             ].map(f => {
+            //                 return {
+            //                     text: f.text,
+            //                     overlay: f.text,
+            //                     value: f.color,
+            //                     checked: gap?.color == f.color ? true : false
+            //                 }
+            //             })
+            //         }
+            //     ]
+            // });
         }
         if (gap?.type && gap?.type != 'none') {
             ns.push({ type: MenuItemType.divide });
         }
         ns.push({ icon: TrashSvg, name: 'hideAll', text: lst('隐藏所有分栏线'), checkLabel: this.block.gaps.every(c => c.type == 'none') });
-        var r = await useSelectMenuItem({ roundPoint: p }, ns);
+        ns.push({ type: MenuItemType.divide });
+        ns.push({ type: MenuItemType.help, text: lst('了解如何使用分栏线'), url: window.shyConfig?.isUS ? "https://help.shy.red/page/40#oaUQGGbmdsAbd7BTmSAE3V" : "https://help.shy.live/page/1838#iRLc3r6MQGU5x3jD7wBDgM" })
+        var r = await useSelectMenuItem({ roundPoint: p }, ns, {
+            input(item) {
+                console.log('item', item)
+            }
+        });
         if (r?.item) {
             if (r.item.name == 'open') {
                 var isOpen = false;
                 if (gap) {
-                    if (gap.type != 'none')
-                        gap.type = 'none'
+                    if (gap.type != 'none') gap.type = 'none'
                     else { gap.type = 'solid'; isOpen = true; }
                 }
                 else {
@@ -206,8 +339,7 @@ export class RowView extends BlockView<Row>{
                     this.block.gaps.push({ type: 'solid', at: index, width: 1, color: 'rgba(55, 53, 47, 0.16)' })
                 }
                 await this.block.onManualUpdateProps({ gaps: oldGaps }, { gaps: this.block.gaps }, { range: BlockRenderRange.self })
-                if (isOpen)
-                    await this.contextmenu(index, p);
+                if (isOpen) await this.contextmenu(index, p);
             }
             else if (r.item.name == 'lineType') {
                 if (gap) {
@@ -268,19 +400,24 @@ export class RowView extends BlockView<Row>{
                 var gapLine = this.block.gaps.find(g => g.at == i);
                 if (gapLine?.type && gapLine?.type != 'none') {
                     var style: CSSProperties = {
-                        backgroundColor: 'transparent'
+                        // backgroundColor: 'transparent'
                     };
-                    if (gapLine?.type == 'dashed') { style.width = 0; style.borderLeft = gapLine.width + 'px dashed ' + gapLine.color; }
-                    else if (gapLine?.type == 'solid') { style.width = 0; style.borderLeft = gapLine.width + 'px solid ' + gapLine.color; }
+                    if (gapLine?.type == 'dashed') { style.width = 0; style.borderRadius = '0px'; style.backgroundColor = 'transparent'; style.borderLeft = gapLine.width + 'px dashed ' + gapLine.color; }
+                    else if (gapLine?.type == 'solid') { style.width = 0; style.backgroundColor = 'transparent'; style.borderLeft = gapLine.width + 'px solid ' + gapLine.color; }
+                    else if (gapLine?.type == 'dotted') { style.width = 0; style.borderRadius = '0px'; style.backgroundColor = 'transparent'; style.borderLeft = gapLine.width + 'px dotted ' + gapLine.color; }
                     else if (gapLine?.type == 'double') {
                         style.borderLeft = gapLine.width + 'px solid ' + gapLine.color;
                         style.borderRight = gapLine.width + 'px solid ' + gapLine.color;
                         style.width = 3;
+                        style.backgroundColor = 'transparent';
+                        style.borderRadius = '0px';
                     }
                     else if (gapLine?.type == 'double-dashed') {
                         style.borderLeft = gapLine.width + 'px dashed ' + gapLine.color;
                         style.borderRight = gapLine.width + 'px dashed ' + gapLine.color;
                         style.width = 3;
+                        style.backgroundColor = 'transparent';
+                        style.borderRadius = '0px';
                     }
                     ps.push(<BoxTip key={block.id + 'gap'}
                         onVisible={e => {
@@ -291,8 +428,8 @@ export class RowView extends BlockView<Row>{
                         }}
                         placement='top' overlay={
                             <div className='flex bg-white h-30 round r-gap-w-5 r-item-hover'>
-                                <ToolTip overlay={lst('平均左右列')}><span onMouseDown={e => this.leftRightCols(i)} style={{ background: '#eee' }} className={'size-24 remark  flex-center round cursor '}><Icon size={16} icon={{ name: 'bytedance-icon', code: 'one-to-one' }}></Icon></span></ToolTip>
-                                <ToolTip overlay={lst('平均所有列')}><span onMouseDown={e => this.agvCols(e)} style={{ background: '#eee' }} className={'size-24 remark  flex-center round cursor '}><Icon size={16} icon={HorizontalDistributionSvg}></Icon></span></ToolTip>
+                                <ToolTip overlay={lst('平均左右列')}><span onMouseDown={e => this.leftRightCols(i)} className={'size-24 remark  flex-center round cursor '}><Icon size={16} icon={{ name: 'bytedance-icon', code: 'one-to-one' }}></Icon></span></ToolTip>
+                                <ToolTip overlay={lst('平均所有列')}><span onMouseDown={e => this.agvCols(e)} className={'size-24 remark  flex-center round cursor '}><Icon size={16} icon={{ name: 'byte', code: 'horizontal-tidy-up' }}></Icon></span></ToolTip>
                             </div>
                         }><div
                             onMouseDown={e => {
@@ -326,7 +463,7 @@ export class RowView extends BlockView<Row>{
                         placement='top' overlay={
                             <div className='flex bg-white h-30 round r-gap-w-5 r-item-hover'>
                                 <ToolTip overlay={lst('平均左右列')}><span onMouseDown={e => this.leftRightCols(i)} className={'size-24 remark  flex-center round cursor '}><Icon size={16} icon={{ name: 'bytedance-icon', code: 'one-to-one' }}></Icon></span></ToolTip>
-                                <ToolTip overlay={lst('平均所有列')}><span onMouseDown={e => this.agvCols(e)} className={'size-24 remark  flex-center round cursor '}><Icon size={16} icon={HorizontalDistributionSvg}></Icon></span></ToolTip>
+                                <ToolTip overlay={lst('平均所有列')}><span onMouseDown={e => this.agvCols(e)} className={'size-24 remark  flex-center round cursor '}><Icon size={16} icon={{ name: 'byte', code: 'horizontal-tidy-up' }}></Icon></span></ToolTip>
                             </div>
                         }><div
                             onMouseDown={e => { this.mousedown(i, e); }}
