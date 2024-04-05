@@ -23,24 +23,29 @@ export function HelpText(props: {
     url: string,
     className?: string | (string[]),
     align?: 'left' | 'right',
-    block?: boolean
+    block?: boolean,
+    onMouseDown?: (event: React.MouseEvent) => void,
 }) {
-    var c = util.covertToArray(props.className);
+
+    var cs = util.covertToArray(props.className);
     var pc = props.text || props.children;
-    if (pc) c.push('padding-w-3')
-    else c.push('gap-w-3')
-    if (props.align == 'left') {
+    if (pc) { if (!cs.some(s => s.startsWith('padding-w'))) cs.push('padding-w-3') }
+    else cs.push('gap-w-3')
+    var pa = props.align || 'left';
+    if (pa) {
         return <a
+            onMouseDown={e => props.onMouseDown && props.onMouseDown(e)}
             style={{ display: props.block ? 'flex' : 'inline-flex' }}
-            className={"remark f-12 cursor item-hover round l-20 flex flex-inline " + (c.join(" "))}
+            className={"remark f-12 cursor item-hover round l-20 flex flex-inline " + (cs.join(" "))}
             target="_blank"
-            href={props.url}><Icon size={14} icon={HelpSvg}></Icon>{pc && <span className="gap-l-3" >{pc}</span>}</a>
+            href={props.url}><Icon size={14} icon={HelpSvg}></Icon>{pc && <span className="gap-l-1" >{pc}</span>}</a>
     }
     return <a
+        onMouseDown={e => props.onMouseDown && props.onMouseDown(e)}
         style={{ display: props.block ? 'flex' : 'inline-flex' }}
-        className={"remark f-12 cursor item-hover round l-20 flex flex-inline " + (c.join(" "))}
+        className={"remark f-12 cursor item-hover round l-20 flex flex-inline " + (cs.join(" "))}
         target="_blank"
-        href={props.url}>{pc && <span className="gap-r-3">{pc}</span>}<Icon size={14} icon={HelpSvg}></Icon></a>
+        href={props.url}>{pc && <span className="gap-r-1">{pc}</span>}<Icon size={14} icon={HelpSvg}></Icon></a>
 }
 
 export function HelpTip(props: { overlay: React.ReactNode }) {
