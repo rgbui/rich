@@ -17,6 +17,8 @@ import { Point, Rect } from "../../../../src/common/vector/point";
 import { MenuItemType } from "../../../../component/view/menu/declare";
 import lodash from "lodash";
 import { useCustomTableFilter } from "./custom";
+import { HelpText } from "../../../../component/view/text";
+import { IconArguments } from "../../../icon/declare";
 
 export class DataGridFilterList extends EventsComponent {
     open(options: {
@@ -28,7 +30,16 @@ export class DataGridFilterList extends EventsComponent {
         this.forceUpdate();
     }
     onAddRule(e) {
-        this.filters.push({ id: util.guid(), text: lst('新建规则'), filter: {}, visible: true });
+        this.filters.push({
+            id: util.guid(),
+            text: util.getListName(this.filters, lst('规则'), x => x.text),
+            filter: {
+                id: util.guid(),
+                logic: 'and',
+                items: []
+            },
+            visible: true
+        });
         this.forceUpdate();
     }
     async openEdit(e: React.MouseEvent | Point, item: SchemaFilterItem) {
@@ -46,9 +57,9 @@ export class DataGridFilterList extends EventsComponent {
     async openProperty(e: React.MouseEvent, item: SchemaFilterItem) {
         var self = this;
         var items = [
-            { type: MenuItemType.input, name: 'text', value: item.text },
+            { type: MenuItemType.inputTitleAndIcon, name: 'text', value: item.text, icon: item.icon || { name: 'bytedance-icon', code: 'association' } },
             { type: MenuItemType.divide },
-            { name: 'edit', text: lst('编辑'), icon: EditSvg },
+            { name: 'edit', text: lst('编辑'), icon: { name: "byte", code: "write" } as any },
             { name: 'copy', text: lst('复制'), icon: DuplicateSvg },
             { type: MenuItemType.divide },
             { name: 'remove', text: lst('删除'), icon: TrashSvg }
@@ -58,7 +69,12 @@ export class DataGridFilterList extends EventsComponent {
             items,
             {
                 input(it) {
-                    if (it.name == 'text') { item.text = it.value; self.forceUpdate(); }
+                    if (it.name == 'text') {
+                        item.text = it.value;
+                        if (it.icon) item.icon = lodash.cloneDeep(it.icon) as IconArguments;
+                        else item.icon = null;
+                        self.forceUpdate();
+                    }
                 }
             }
         );
@@ -93,28 +109,34 @@ export class DataGridFilterList extends EventsComponent {
             self.forceUpdate()
         }
         return <div className="bg-white shadow round padding-5 w-250">
-            <div className="f-12 remark"><S>规则列表</S></div>
+            <div className="f-12 remark gap-b-10"><S>查询条件列表</S></div>
             <DragList onChange={change} isDragBar={e => e.closest('.drag-item') && !e.closest('[item-btn]') ? true : false}>
                 {this.filters.map(f => {
                     return <div className="flex item-hover padding-w-5 h-30  round drag-item" key={f.id}>
-                        <span className="flex-center size-24 round item-hover  cursor"><Icon size={16} icon={DragHandleSvg}></Icon></span>
+                        <span className="flex-fixed flex-center size-24 round item-hover  cursor"><Icon size={16} icon={DragHandleSvg}></Icon></span>
+                        <span className="flex-fixed flex-center size-24"><Icon size={16} icon={f.icon || { name: 'bytedance-icon', code: 'association' }}></Icon></span>
                         <span className="flex-auto">{f.text}</span>
-                        {/* <span className="flex-center size-24 round item-hover"><Icon size={18} icon={{ name: 'bytedance-icon', code: f.visible ? 'preview-open' : "preview-close-one" }}></Icon></span> */}
-                        <span className="flex-center size-24 round item-hover cursor" item-btn={'true'} onMouseDown={e => this.openEdit(e, f)}><Icon size={18} icon={Edit1Svg}></Icon></span>
+                        <span className="flex-center size-24 round item-hover cursor" item-btn={'true'} onMouseDown={e => this.openEdit(e, f)}><Icon size={16} icon={Edit1Svg}></Icon></span>
                         <span className="flex-center size-24 round item-hover cursor" item-btn={'true'} onMouseDown={e => this.openProperty(e, f)}><Icon size={18} icon={DotsSvg}></Icon></span>
                     </div>
                 })}
             </DragList>
             {this.filters.length > 0 && <Divider></Divider>}
-            <div className="flex item-hover padding-w-5 h-30 round" onMouseDown={e => this.onAddRule(e)}>
-                <Icon icon={PlusSvg}></Icon><span className="gap-l-5">添加规则</span>
+            <div className="flex item-hover padding-w-5 h-30 round cursor" onMouseDown={e => this.onAddRule(e)}>
+                <Icon size={18} icon={PlusSvg}></Icon><span className="gap-l-5">添加查询条件</span>
+            </div>
+            <Divider></Divider>
+            <div className="h-30 flex">
+                <HelpText url={window.shyConfig?.isUS ? "https://help.shy.red/page/50" : "https://shy.live/ws/help/page/1878"}>了解添加查询条件制做成查询按钮</HelpText>
             </div>
         </div>
     }
 }
 
 export type SchemaFilterItem = {
-    id: string, text: string,
+    id: string,
+    text: string,
+    icon?: IconArguments,
     filter: SchemaFilter,
     visible: boolean
 }

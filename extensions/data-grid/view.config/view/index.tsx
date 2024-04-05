@@ -42,7 +42,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
             },
             { type: MenuItemType.divide },
             {
-                text: lst('视图'),
+                text: lst('视图类型'),
                 icon: LoopSvg,
                 childs: [
                     ...getSchemaViews().map(v => {
@@ -91,9 +91,8 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 ]
             },
             { type: MenuItemType.divide },
-            { text: lst('显示标题'), name: 'noTitle', type: MenuItemType.switch, checked: (this.block as TableStore).noTitle ? false : true },
             {
-                text: lst('每页加载的数量'),
+                text: lst('每次加载的数量'),
                 value: this.block.size,
                 name: 'size',
                 type: MenuItemType.select,
@@ -114,40 +113,44 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
             },
             { type: MenuItemType.divide },
             {
-                text: lst('创建记录'),
+                text: lst('新增打开方式'),
                 value: this.block.createRecordSource,
                 name: 'createRecordSource',
                 type: MenuItemType.select,
                 optionIconSize: 18,
                 options: [
-                    { text: lst('页面'), value: 'page', icon: GridPagePageSvg, iconSize: 18 },
                     { text: lst('对话框'), value: 'dialog', icon: GridPageDialougSvg, iconSize: 18 },
                     { text: lst('右侧栏'), value: 'slide', icon: GridPageSlideSvg, iconSize: 18 },
+                    { text: lst('页面'), value: 'page', icon: GridPagePageSvg, iconSize: 18 },
                 ]
             },
             {
-                text: lst('打开记录'),
+                text: lst('浏览打开方式'),
                 value: this.block.openRecordSource,
                 name: 'openRecordSource',
                 type: MenuItemType.select,
                 optionIconSize: 18,
                 options: [
-                    { text: lst('页面'), value: 'page', icon: GridPagePageSvg, iconSize: 18 },
                     { text: lst('对话框'), value: 'dialog', icon: GridPageDialougSvg, iconSize: 18 },
                     { text: lst('右侧栏'), value: 'slide', icon: GridPageSlideSvg, iconSize: 18 },
+                    { text: lst('页面'), value: 'page', icon: GridPagePageSvg, iconSize: 18 },
                 ]
             },
             {
-                text: lst('打开记录模板'),
+                text: lst('浏览打开模板'),
                 value: this.block.openRecordViewId,
                 name: 'openRecordViewId',
                 type: MenuItemType.select,
+                selectDropWidth: 240,
                 options: [
                     {
                         text: lst('原始记录'),
                         value: '',
-                        icon: { name: 'bytedance-icon', code: 'rectangle-one' }
+                        icon: { name: 'bytedance-icon', code: 'notes' },
+                        helpText: lst('了解原始记录'),
+                        helpUrl: window.shyConfig?.isUS ? "https://help.shy.red/page/42#6HAcf3LaXVpVtWnGU4LwuR" : "https://help.shy.live/page/1870#miDzBhMDdknUCHNkZvQbaM"
                     },
+                    { type: MenuItemType.divide },
                     ...this.schema.recordViews.map(rd => {
                         return {
                             text: rd.text,
@@ -159,16 +162,19 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
             }
         ]
         if (this.block.url == BlockUrlConstant.DataGridTable) {
-            baseItems.splice(baseItems.length, 0, ...[
-                { type: MenuItemType.divide },
-                { text: lst('行号'), type: MenuItemType.switch, checked: (this.block as TableStore).showRowNum, name: 'showRowNum' },
-                // { text: lst('显示表头'), name: 'noHead', type: MenuItemType.switch, checked: (this.block as TableStore).noHead ? false : true },
-            ])
+            if (!this.block.isDefineViewTemplate)
+                baseItems.splice(baseItems.length, 0, ...[
+                    { type: MenuItemType.divide },
+                    { text: lst('显示行号'), type: MenuItemType.switch, checked: (this.block as TableStore).showRowNum, name: 'showRowNum' },
+                    { text: lst('批量选择行'), helpText: lst('了解批量选择行'), helpUrl: window.shyConfig?.isUS ? "https://help.shy.red/page/44#2FEd5Tdmxzq89YYsBekSYE" : "https://help.shy.live/page/288#sGSUeWF8nocf2ZaTqsQK2F", type: MenuItemType.switch, checked: (this.block as TableStore).checkRow == 'checkbox', name: 'checkRow' }
+                ])
         }
         else if (this.block.url == BlockUrlConstant.DataGridList) {
-            baseItems.splice(baseItems.length, 0, ...[{ type: MenuItemType.divide },
-            { text: lst('行号'), type: MenuItemType.switch, checked: (this.block as TableStore).showRowNum, name: 'showRowNum' },
-            ])
+            if (!this.block.isDefineViewTemplate)
+                baseItems.splice(baseItems.length, 0, ...[
+                    { type: MenuItemType.divide },
+                    { text: lst('显示行号'), type: MenuItemType.switch, checked: (this.block as TableStore).showRowNum, name: 'showRowNum' },
+                ])
         }
         else if (this.block.url == BlockUrlConstant.DataGridGallery) {
             baseItems.splice(baseItems.length, 0, ...[
@@ -245,9 +251,24 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                             value: g.id
                         }
                     })
-                },
+                }
             ])
         }
+        if (!(this.block as DataGridView).dataGridTab)
+            baseItems.push({
+                text: lst('显示数据视图标题'),
+                name: 'noTitle',
+                type: MenuItemType.switch,
+                checked: (this.block as TableStore).noTitle ? false : true,
+                helpUrl: window.shyConfig?.isUS ? "https://help.shy.red/page/44#89hYGiP93L9HA319pJXRsa" : "https://help.shy.live/page/288#bkz71T3eQwAGH3q4s71hCo"
+            })
+        baseItems.push({ type: MenuItemType.divide });
+        baseItems.push({
+            type: MenuItemType.help,
+            helpInline: true,
+            text: lst('了解如何使用数据视图'),
+            url: window.shyConfig?.isUS ? "https://help.shy.red/page/44#p6dtzzCsUHUrhyfNdrfkXh" : "https://help.shy.live/page/288#eNk3NZZyXWMCgMEMCyJRcG"
+        });
         return baseItems
     }
     renderItems() {
@@ -296,7 +317,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
 
         }
         return <MenuView input={input} select={select} click={click} style={{
-            maxHeight: 300,
+            maxHeight: 400,
             paddingTop: 10,
             paddingBottom: 5,
             overflowY: 'auto'
