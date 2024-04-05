@@ -14,7 +14,7 @@ export class SelectButtons extends React.Component<{
     size?: 'small' | 'normal' | 'large',
     gap?: number
 }>{
-    render(): React.ReactNode {
+    render() {
         var vs = util.covertToArray(this.props.value);
         var mousedown = (e, g) => {
             if (this.props.disabled) return;
@@ -50,7 +50,9 @@ export class SelectButtons extends React.Component<{
                     else if (size == 'large') classList.push('padding-w-12 padding-h-4');
                     return <div
                         style={{ marginRight: this.props.gap }}
-                        className={classList.join(" ")} key={i} onMouseDown={e => mousedown(e, g)}>{g.icon && <Icon className={'flex-fixed'} icon={g.icon}></Icon>}
+                        className={classList.join(" ")} key={i} onMouseDown={e => mousedown(e, g)}>{g.icon && <Icon className={'flex-fixed'}
+                            icon={{ ...(g.icon as any), color: 'inherit' }}
+                        ></Icon>}
                         <span className={'flex-fixed'}>{g.text}</span></div>
                 })}
             </div>
@@ -72,12 +74,11 @@ export class SelectButtons extends React.Component<{
                 if (i == 0 && i == this.props.options.length - 1) style.borderRadius = '4px';
                 else if (i == 0) style.borderRadius = '4px 0 0 4px';
                 else if (i == this.props.options.length - 1) style.borderRadius = '0 4px 4px 0';
-
                 return <div className="flex" key={i}><div
                     style={style}
                     onMouseDown={e => mousedown(e, g)}
                     className={classList.join(" ")} >
-                    {g.icon && <Icon icon={g.icon}></Icon>}
+                    {g.icon && <Icon icon={{ ...(g.icon || {} as any), color: 'inherit' }}></Icon>}
                     <span>{g.text}</span>
                 </div>
                     {i < this.props.options.length - 1 && <div className="flex-fixed" style={{
