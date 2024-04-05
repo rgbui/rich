@@ -47,7 +47,6 @@ export class PageAuthorView extends BlockView<PageAuthor>{
             contentStyle.justifyContent = 'center';
         else if (this.block.align == 'right')
             contentStyle.justifyContent = 'flex-end';
-
         return <div style={this.block.visibleStyle}>
             <div className={'flex'} style={contentStyle}>
                 <span className="sy-page-author-avatars flex-fixed gap-r-10 flex-center"><UserAvatars size={24} users={authors}></UserAvatars></span>
