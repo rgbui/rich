@@ -27,9 +27,9 @@ export class UserPicker extends EventsComponent {
             <Divider></Divider>
             <div className="max-h-300 overflow-y">
                 {this.loading && <Spin></Spin>}
-                {!this.loading && this.links.map((link, i) => {
-                    return <div onMouseDown={e => this.onSelect(link)} className={"h-40 padding-w-14 flex item-hover round cursor" + ((i) == this.selectIndex ? " item-hover-light-focus" : "")} key={link.id}>
-                        <Avatar size={30} showName userid={(link as any).id}></Avatar>
+                {!this.loading && this.links.map((link,i)=>{
+                    return <div onMouseDown={e => this.onSelect(link)} className={"h-30 gap-h-5 padding-w-14 flex item-hover round cursor" + ((i) == this.selectIndex ? " item-hover-light-focus" : "")} key={link.id}>
+                        <Avatar size={24} showName userid={(link as any).id}></Avatar>
                         <span className="gap-l-10">{link.name}</span>
                     </div>
                 })}
