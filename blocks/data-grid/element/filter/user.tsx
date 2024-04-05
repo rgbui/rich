@@ -39,7 +39,7 @@ export class SearchUser extends OriginFilterField {
     }
     async onGetContextMenus() {
         var rs = await super.onGetContextMenus();
-        var pos = rs.findIndex(g => g.name == 'fieldTextDisplay');
+        var pos = rs.findIndex(g => g.name == BlockDirective.link);
         if (pos > -1) {
             var ns: MenuItem<string | BlockDirective>[] = [];
             ns.push({
@@ -49,7 +49,7 @@ export class SearchUser extends OriginFilterField {
                 checked: this.isMultiple,
                 type: MenuItemType.switch,
             })
-            rs.splice(pos + 1, 0, ...ns)
+            rs.splice(pos + 3, 0, ...ns)
         }
         return rs;
     }
@@ -62,11 +62,6 @@ export class SearchUser extends OriginFilterField {
         super.onContextMenuInput(item)
     }
     async onClickContextMenu(item: MenuItem<string | BlockDirective>, e) {
-        // switch (item.name) {
-        //     case 'text-center':
-        //         await this.onUpdateProps({ align: item.value }, { range: BlockRenderRange.self })
-        //         return
-        // }
         return await super.onClickContextMenu(item, e);
     }
 }
@@ -80,12 +75,13 @@ export class SearchTextView extends BlockView<SearchUser>{
         }
     }
     renderView() {
-        return <div style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle}
+        return <div style={this.block.visibleStyle}><OriginFilterFieldView
+            style={this.block.contentStyle}
             filterField={this.block}
         >
-            <div onMouseDown={e => this.mousedown(e)}>
-                {!(this.block.selectUsers?.length > 0) && <em className="remark cursor item-hover round padding-w-5 padding-h-2 f-14 "><S>所有人</S></em>}
-                <UserAvatars size={24} users={this.block.selectUsers}></UserAvatars>
+            <div className={"h-24 " + (this.block.selectUsers.length > 0 ? "flex" : "")} onMouseDown={e => this.mousedown(e)}>
+                {!(this.block.selectUsers?.length > 0) && <em className="remark cursor item-hover border round-8 padding-w-5 padding-h-2 f-14 "><S>所有人</S></em>}
+                {this.block.selectUsers.length > 0 && <UserAvatars size={24} users={this.block.selectUsers}></UserAvatars>}
             </div>
         </OriginFilterFieldView ></div>
     }

@@ -28,7 +28,7 @@ export class FilterRelation extends OriginFilterField {
     }
     async onGetContextMenus() {
         var rs = await super.onGetContextMenus();
-        var pos = rs.findIndex(g => g.name == 'fieldTextDisplay');
+        var pos = rs.findIndex(g => g.name == BlockDirective.link);
         if (pos > -1) {
             var ns: MenuItem<string | BlockDirective>[] = [];
             ns.push({
@@ -38,7 +38,7 @@ export class FilterRelation extends OriginFilterField {
                 checked: this.isMultiple,
                 type: MenuItemType.switch,
             })
-            rs.splice(pos + 1, 0, ...ns)
+            rs.splice(pos + 3, 0, ...ns)
         }
         return rs;
     }

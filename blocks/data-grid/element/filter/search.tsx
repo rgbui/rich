@@ -31,12 +31,12 @@ export class SearchText extends OriginFilterField {
     }
     async onGetContextMenus() {
         var rs = await super.onGetContextMenus();
-        var pos = rs.findIndex(g => g.name == 'fieldTextDisplay');
+        var pos = rs.findIndex(g => g.name == BlockDirective.link);
         if (pos > -1) {
             var ns: MenuItem<string | BlockDirective>[] = [];
             ns.push({
                 name: 'InputSize',
-                text: lst('大小 '),
+                text: lst('搜索大小 '),
                 icon: { name: 'bytedance-icon', code: 'zoom-in' },
                 value: this.InputSize,
                 type: MenuItemType.select,
@@ -45,7 +45,7 @@ export class SearchText extends OriginFilterField {
                     { text: lst('大'), value: 'larger', checkLabel: this.InputSize == 'larger' },
                 ]
             })
-            rs.splice(pos + 1, 0, ...ns)
+            rs.splice(pos + 3, 0, ...ns)
         }
         return rs;
     }

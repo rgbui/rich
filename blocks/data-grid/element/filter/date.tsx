@@ -150,22 +150,19 @@ export class FilterFieldDate extends OriginFilterField {
     }
     async onGetContextMenus() {
         var rs = await super.onGetContextMenus();
-        var pos = rs.findIndex(g => g.name == 'fieldTextDisplay');
+        var pos = rs.findIndex(g => g.name == BlockDirective.link);
         var ns: MenuItem<string | BlockDirective>[] = [];
         ns.push({ type: MenuItemType.divide });
         ns.push({
-            name: 'filterType',
             text: lst('日期类型'),
-            type: MenuItemType.select,
-            value: this.filterType,
             icon: { name: 'bytedance-icon', code: 'config' },
-            options: [
-                { text: lst('范围日期'), value: 'dateRange' },
-                { text: lst('固定选择'), value: 'dateSelect' },
-                { text: lst('固定分组'), value: 'dateButtons' },
+            childs: [
+                { name: 'filterType', icon: { name: 'byte', code: 'calendar' }, text: lst('范围日期'), value: 'dateRange', checkLabel: this.filterType == 'dateRange' },
+                { name: 'filterType', icon: { name: 'byte', code: 'drop-down-list' }, text: lst('固定选择'), value: 'dateSelect', checkLabel: this.filterType == 'dateSelect' },
+                { name: 'filterType', icon: { name: 'byte', code: "link-four" }, text: lst('固定分组'), value: 'dateButtons', checkLabel: this.filterType == 'dateButtons' },
             ]
         })
-        rs.splice(pos + 1, 0, ...ns)
+        rs.splice(pos + 3, 0, ...ns)
         return rs;
     }
     async onContextMenuInput(item: MenuItem<string | BlockDirective>): Promise<void> {
@@ -175,6 +172,10 @@ export class FilterFieldDate extends OriginFilterField {
                 return;
         }
         super.onContextMenuInput(item)
+    }
+    async onClickContextMenu(item: MenuItem<string | BlockDirective>, e: any): Promise<void> {
+        if (item.name == 'filterType') return await this.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self });
+        else return await super.onClickContextMenu(item, e);
     }
 }
 
@@ -202,13 +203,13 @@ export class FilterFieldDateView extends BlockView<FilterFieldDate>{
         ]
         return <div style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle} filterField={this.block}>
             {this.block.filterType == 'dateButtons' && <div>
-                <SelectButtons value={this.block.dateSelectValue} onChange={e => {
+                <SelectButtons style={{display:'inline-flex'}} value={this.block.dateSelectValue} onChange={e => {
                     this.block.dateSelectValue = e;
                     if (this.block.refBlock) this.block.refBlock.onSearch()
                     this.forceUpdate()
                 }} options={dateOptions.filter(g => g?.type != MenuItemType.divide) as any}></SelectButtons>
             </div>}
-            {this.block.filterType == 'dateSelect' && <SelectBox inline border options={dateOptions} value={this.block.dateSelectValue} onChange={e => {
+            {this.block.filterType == 'dateSelect' && <SelectBox small inline border options={dateOptions} value={this.block.dateSelectValue} onChange={e => {
                 this.block.dateSelectValue = e;
                 if (this.block.refBlock) this.block.refBlock.onSearch()
                 this.forceUpdate()

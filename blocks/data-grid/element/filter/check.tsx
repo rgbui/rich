@@ -22,15 +22,17 @@ export class FilterFieldCheck extends OriginFilterField {
     }
     get filters() {
         if (this.checked)
-            return [{
-                field: this.field.name,
-                value: this.checked,
-                operator: '$eq'
-            }]
+            return [
+                {
+                    field: this.field.name,
+                    value: this.checked,
+                    operator: '$eq'
+                }
+            ]
     }
     async onGetContextMenus() {
         var rs = await super.onGetContextMenus();
-        var pos = rs.findIndex(g => g.name == 'fieldTextDisplay');
+        var pos = rs.findIndex(g => g.name == BlockDirective.link);
         if (pos > -1) {
             var ns: MenuItem<string | BlockDirective>[] = [];
             ns.push({ type: MenuItemType.divide })
@@ -40,12 +42,12 @@ export class FilterFieldCheck extends OriginFilterField {
                 icon: { name: 'bytedance-icon', code: 'config' },
                 type: MenuItemType.select,
                 options: [
-                    { text: lst('复选框'), value: 'checkbox' },
-                    { text: lst('开关'), value: 'toggle' }
+                    { text: lst('复选框'), value: 'checkbox', icon: { name: "byte", code: 'check-correct' } },
+                    { text: lst('开关'), value: 'toggle', icon: { name: 'byte', code: 'switch-button' } }
                 ],
                 value: this.format
             })
-            rs.splice(pos + 1, 0, ...ns)
+            rs.splice(pos + 3, 0, ...ns)
         }
         return rs;
     }

@@ -16,6 +16,7 @@ export class FieldCheck extends OriginField {
         this.dataGrid.onBatchDelete([this.item.dataRow.id]);
     }
 }
+
 @view('/field/button')
 export class FieldCheckView extends OriginFileView<FieldCheck>{
     renderFieldValue() {
