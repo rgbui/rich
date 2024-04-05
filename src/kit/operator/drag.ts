@@ -14,7 +14,7 @@ export async function PageDrag(kit: Kit, event: React.MouseEvent) {
     kit.operator.onClearPage();
     if (!kit.page.pageLayout?.type || ![
         PageLayoutType.board,
-        PageLayoutType.docCard,
+        PageLayoutType.ppt,
         PageLayoutType.doc
     ].includes(kit.page.pageLayout.type)
     ) return;

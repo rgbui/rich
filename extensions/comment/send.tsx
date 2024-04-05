@@ -50,7 +50,7 @@ class UserComments extends EventsComponent {
         }
     }
     render() {
-        return <div className={"padding-14 round "+(this.options?.format=='answer'?"min-w-500":"min-w-350")}>
+        return <div className={"padding-14 round " + (this.options?.format == 'answer' ? "min-w-500" : "min-w-350")}>
             {this.options && <div className="flex-top">
                 <Avatar className="flex-fixed" size={32} userid={this.options.userid}></Avatar>
                 <div

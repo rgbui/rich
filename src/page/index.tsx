@@ -364,7 +364,7 @@ export class Page extends Events<PageDirective>{
     get isSupportScreen() {
         return [
             PageLayoutType.db,
-            PageLayoutType.docCard,
+            PageLayoutType.ppt,
             PageLayoutType.doc,
             PageLayoutType.textChannel
         ].includes(this.pageLayout?.type || PageLayoutType.doc)
@@ -389,7 +389,7 @@ export class Page extends Events<PageDirective>{
         if (this.ws?.isPubSite) {
             sf = this.ws.publishConfig.smallFont;
         }
-        if (this.pageLayout?.type == PageLayoutType.docCard) return sf ? '1.6rem' : '1.8rem'
+        if (this.pageLayout?.type == PageLayoutType.ppt) return sf ? '1.6rem' : '1.8rem'
         else if (this.pageLayout?.type == PageLayoutType.textChannel) return sf ? '1.2rem' : '1.4rem'
         return sf ? '1.4rem' : '1.6rem'
     }
@@ -398,7 +398,7 @@ export class Page extends Events<PageDirective>{
         if (this.ws?.isPubSite) {
             sf = this.ws.publishConfig.smallFont;
         }
-        if (this.pageLayout?.type == PageLayoutType.docCard) return sf ? '2.6rem' : '3.0rem'
+        if (this.pageLayout?.type == PageLayoutType.ppt) return sf ? '2.6rem' : '3.0rem'
         else if (this.pageLayout?.type == PageLayoutType.textChannel) return sf ? '1.8rem' : '2.2rem'
         return sf ? '2.2rem' : '2.6rem'
     }

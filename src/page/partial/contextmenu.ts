@@ -161,11 +161,21 @@ export class PageContextmenu {
                 { type: MenuItemType.divide },
                 { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? lst("除消编辑保护") : lst("编辑保护"), icon: this.locker?.lock ? LockSvg : UnlockSvg },
                 {
-                    name: 'copy', text: lst('拷贝'), icon: DuplicateSvg,
+                    name: 'turnToPPT',
+                    text: lst('转换为PPT'),
+                    icon: { name: 'byte', code: 'cycle-one' },
+                    // label: UA.isMacOs ? "⌘+Shift+P" : "Ctrl+Shift+P"
+                },
+                {
+                    name: 'copy',
+                    text: lst('拷贝'),
+                    icon: DuplicateSvg,
                     label: UA.isMacOs ? "⌘+D" : "Ctrl+D"
                 },
                 {
-                    name: 'move', text: lst('移动'), icon: MoveToSvg,
+                    name: 'move',
+                    text: lst('移动'),
+                    icon: MoveToSvg,
                     label: UA.isMacOs ? "⌘+Shift+P" : "Ctrl+Shift+P"
                 },
                 { name: 'export', iconSize: 16, text: lst('导出'), icon: { name: 'bytedance-icon', code: 'export' } },
@@ -231,7 +241,7 @@ export class PageContextmenu {
                 { name: 'history', icon: VersionHistorySvg, text: lst('页面历史') },
             ];
         }
-        else if (this.pageLayout.type == PageLayoutType.docCard) {
+        else if (this.pageLayout.type == PageLayoutType.ppt) {
             items = [
                 { name: 'smallText', icon: { name: 'bytedance-icon', code: 'add-text' }, text: lst('小字号'), checked: this.smallFont ? true : false, type: MenuItemType.switch },
                 { name: 'fullWidth', icon: { name: 'bytedance-icon', code: 'fullwidth' }, text: lst('宽版'), checked: this.isFullWidth ? true : false, type: MenuItemType.switch },
@@ -259,6 +269,12 @@ export class PageContextmenu {
                 },
                 { type: MenuItemType.divide },
                 { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? lst("除消编辑保护") : lst("编辑保护"), icon: this.locker?.lock ? LockSvg : UnlockSvg },
+                {
+                    name: 'turnToDoc',
+                    text: lst('转换为文档'),
+                    icon: { name: 'byte', code: 'cycle-one' },
+                    // label: UA.isMacOs ? "⌘+Shift+P" : "Ctrl+Shift+P"
+                },
                 {
                     name: 'copy', text: lst('拷贝'), icon: DuplicateSvg,
                     label: UA.isMacOs ? "⌘+D" : "Ctrl+D"
@@ -408,6 +424,12 @@ export class PageContextmenu {
                 }
                 else if (item.name == 'isPageContent') {
                     this.onUpdateProps({ isPageContent: item.checked }, true);
+                }
+                else if (item.name == 'turnToPPT') {
+                    this.onTurnToPPT();
+                }
+                else if (item.name == 'turnToDoc') {
+                    this.onTurnToDoc();
                 }
                 else if (item.name == 'onlyDisplayContent') {
                     this.onAction('onlyDisplayContent', async () => {

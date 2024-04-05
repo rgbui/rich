@@ -54,7 +54,7 @@ export class PageTheme extends EventsComponent {
     }
     renderCover() {
         var hasCover = true;
-        if (this.page?.pageLayout.type == PageLayoutType.textChannel || this.page?.pageLayout?.type == PageLayoutType.docCard) hasCover = false;
+        if (this.page?.pageLayout.type == PageLayoutType.textChannel || this.page?.pageLayout?.type == PageLayoutType.ppt) hasCover = false;
         var textp = 'var(--text-p-color)';
         var solid = '2px solid var(--text-p-color)';
         if (hasCover) return <div><div className="padding-w-15 remark gap-t-10 gap-b-5 f-12"><S>封面</S></div>
@@ -256,7 +256,7 @@ export class PageTheme extends EventsComponent {
     render() {
         var isRenderBg = this.page?.pageLayout?.type == PageLayoutType.textChannel;
         var isBoard = this.page?.pageLayout?.type == PageLayoutType.board;
-        var isPPT = this.page?.pageLayout?.type == PageLayoutType.docCard
+        var isPPT = this.page?.pageLayout?.type == PageLayoutType.ppt
         return <div ref={e => this.el = e} className="padding-h-15 bg-white round w-310 h100 overflow-y" style={{ width: 360 }}>
             <div className="flex flex-top padding-w-15">
                 <span className="flex-auto h1"><S>主题</S></span>

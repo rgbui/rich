@@ -12,7 +12,7 @@ export enum PageLayoutType {
      * 文档
      */
     doc = 1,
-    docCard = 2,
+    ppt = 2,
     //#region db
     db = 20,
     // formView = 21,
@@ -214,7 +214,7 @@ export function getPageIcon(item: LinkPageItem, defaultIcon?: SvgrComponent) {
     else if (item.pageType == PageLayoutType.doc) {
         return PageSvg
     }
-    else if (item.pageType == PageLayoutType.docCard) {
+    else if (item.pageType == PageLayoutType.ppt) {
         return DocCardsSvg
     }
     else if (item.pageType == PageLayoutType.textChannel) {
@@ -234,7 +234,7 @@ export function getPageText(item: LinkPageItem) {
     if (item.pageType == PageLayoutType.doc) {
         return lst('新页面')
     }
-    else if (item.pageType == PageLayoutType.docCard) {
+    else if (item.pageType == PageLayoutType.ppt) {
         return lst('宣传页')
     }
     else if (item.pageType == PageLayoutType.board) {

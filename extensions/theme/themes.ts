@@ -8,7 +8,7 @@ export function GetPageThemes(page: Page) {
         PageLayoutType.doc,
         PageLayoutType.db,
         PageLayoutType.recordView,
-        PageLayoutType.docCard
+        PageLayoutType.ppt
     ].includes(page?.pageLayout?.type)) {
         var groups = [
             {

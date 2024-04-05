@@ -76,7 +76,8 @@ interface Array<T> {
         fn: (item: T, index?: number, arr?: T[]) => any,
         toArrayJsonName?: string): void
 
-    arrayJsonClosest(arrayJsonName: string, item: any, fn: any): void
+    arrayJsonClosest(arrayJsonName: string, item: T, fn: (t: T) => boolean): T
+    arrayJsonParents(arrayJsonName: string, item: T, fn: (t: T) => boolean): T[]
 
     randomOf(): T
 
@@ -993,30 +994,30 @@ if (typeof Array.prototype.eachAsync == 'undefined') {
     //     fc(this, maxDeep, AR);
     //     return AR;
     // }
-    // Array.prototype.arrayJsonParents = function (arrayJsonName, item, fn) {
-    //     var arr = [];
-    //     var it = item;
-    //     while (true) {
-    //         var p = this.arrayJsonFind(arrayJsonName, function (x) {
-    //             var ss = x[arrayJsonName];
-    //             if (Array.isArray(ss) && ss.exists(it)) {
-    //                 return true;
-    //             }
-    //             return false;
-    //         });
-    //         if (!p) break;
-    //         if (typeof fn == 'function') {
-    //             if (fn(p) == true) {
-    //                 arr.push(p);
-    //                 it = p;
-    //             } else break;
-    //         } else if (typeof fn == 'undefined' && p) {
-    //             arr.push(p);
-    //             it = p;
-    //         }
-    //     }
-    //     return arr;
-    // }
+    Array.prototype.arrayJsonParents = function (arrayJsonName, item, fn) {
+        var arr = [];
+        var it = item;
+        while (true) {
+            var p = this.arrayJsonFind(arrayJsonName, function (x) {
+                var ss = x[arrayJsonName];
+                if (Array.isArray(ss) && ss.exists(it)) {
+                    return true;
+                }
+                return false;
+            });
+            if (!p) break;
+            if (typeof fn == 'function') {
+                if (fn(p) == true) {
+                    arr.push(p);
+                    it = p;
+                } else break;
+            } else if (typeof fn == 'undefined' && p) {
+                arr.push(p);
+                it = p;
+            }
+        }
+        return arr;
+    }
     Array.prototype.arrayJsonClosest = function (arrayJsonName, item, fn) {
         //判断自身
         if (fn(item)) { return item; }

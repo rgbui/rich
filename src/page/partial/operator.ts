@@ -385,7 +385,7 @@ export class Page$Operator {
             }
             else {
                 var view = this.views[0];
-                if (this.pageLayout.type == PageLayoutType.docCard) {
+                if (this.pageLayout.type == PageLayoutType.ppt) {
                     view = view.childs.last();
                     if (!view) view = await this.createBlock(BlockUrlConstant.CardBox, { url: BlockUrlConstant.CardBox }, view);
                 }
@@ -402,7 +402,7 @@ export class Page$Operator {
             if (toggle == true) {
                 if (cs.length == 0) {
                     var view = this.views[0];
-                    if (this.pageLayout.type == PageLayoutType.docCard) {
+                    if (this.pageLayout.type == PageLayoutType.ppt) {
                         view = view.childs.last();
                         if (!view) view = await this.createBlock(BlockUrlConstant.CardBox, { url: BlockUrlConstant.CardBox }, view);
                     }
@@ -430,7 +430,7 @@ export class Page$Operator {
                         await title.visibleDownCreateBlock(BlockUrlConstant.PageAuthor, {})
                     }
                     else {
-                        if (this.pageLayout.type == PageLayoutType.docCard) {
+                        if (this.pageLayout.type == PageLayoutType.ppt) {
                             view = view.childs.last();
                             if (!view) view = await this.createBlock(BlockUrlConstant.CardBox, { url: BlockUrlConstant.CardBox }, view);
                         } await this.createBlock(BlockUrlConstant.PageAuthor, {}, view);
@@ -458,7 +458,7 @@ export class Page$Operator {
                         await comment.visibleUpCreateBlock(BlockUrlConstant.PageUpvotedOrShared, {})
                     }
                     else {
-                        if (this.pageLayout.type == PageLayoutType.docCard) {
+                        if (this.pageLayout.type == PageLayoutType.ppt) {
                             view = view.childs.last();
                             if (!view) view = await this.createBlock(BlockUrlConstant.CardBox, { url: BlockUrlConstant.CardBox }, view);
                         } await this.createBlock(BlockUrlConstant.PageUpvotedOrShared, {}, view);
@@ -481,7 +481,7 @@ export class Page$Operator {
             if (toggle == true) {
                 if (cs.length == 0) {
                     var view = this.views[0];
-                    if (this.pageLayout.type == PageLayoutType.docCard) {
+                    if (this.pageLayout.type == PageLayoutType.ppt) {
                         view = view.childs.last();
                         if (!view) view = await this.createBlock(BlockUrlConstant.CardBox, { url: BlockUrlConstant.CardBox }, view);
                     }

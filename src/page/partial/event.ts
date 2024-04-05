@@ -179,7 +179,7 @@ export class PageEvent {
                     syncBlockId: schema.views.find(g => ![BlockUrlConstant.RecordPageView].includes(g.url as any))?.id
                 }, view);
                 break;
-            case PageLayoutType.docCard:
+            case PageLayoutType.ppt:
                 this.pageLayout.type = layoutType;
                 this.views = [];
                 await this.loadDefaultData();

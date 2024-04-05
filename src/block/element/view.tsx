@@ -27,7 +27,7 @@ export class ViewComponent extends BlockView<View>{
         if (this.block.page.isCanOutline || this.block.page?.pageLayout?.type == PageLayoutType.textChannel) layoutStyle = {};
         var WrapperStyle: CSSProperties = {};
         var isTextChannel = this.block.page.pageLayout?.type == PageLayoutType.textChannel;
-        var isDocCard = this.block.page.pageLayout?.type == PageLayoutType.docCard;
+        var isDocCard = this.block.page.pageLayout?.type == PageLayoutType.ppt;
         if (isMainView) {
             WrapperStyle.paddingTop = 50;
         }

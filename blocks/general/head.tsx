@@ -159,7 +159,7 @@ export class Head extends Block {
         var rect = Rect.fromEle(ele);
         var lh = dom(ele).lineHeight(20);
         var offset = -2;
-        if (this.page.pageLayout?.type == PageLayoutType.docCard) {
+        if (this.page.pageLayout?.type == PageLayoutType.ppt) {
             offset += -5;
         }
         return rect.leftTop.move(0, lh / 2 + offset);

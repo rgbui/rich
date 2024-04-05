@@ -103,7 +103,6 @@ export class CommentListView extends React.Component<{
                     this.total += 1;
                     this.count += 1;
                 }
-
                 await this.onExpends(l);
             }
         }

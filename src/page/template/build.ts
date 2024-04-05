@@ -5,7 +5,7 @@ import { PageLayoutType } from "../declare";
 
 export function BuildTemplate(page: Page) {
     var dr: Record<string, any>;
-    if (page.pageLayout?.type == PageLayoutType.docCard) {
+    if (page.pageLayout?.type == PageLayoutType.ppt) {
         var docs = {
             url: '/page',
             views: [

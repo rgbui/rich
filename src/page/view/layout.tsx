@@ -43,7 +43,7 @@ export class PageLayoutView extends React.Component<{
                 {props.children}
             </div>
         }
-        else if (type == PageLayoutType.docCard) {
+        else if (type == PageLayoutType.ppt) {
             var style: CSSProperties = { minHeight: mh, width: '100%', ...pageContentStyle };
             return <div className='shy-page-layout shy-page-layout-doc-card' style={style}>
                 {props.children}

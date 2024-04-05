@@ -277,7 +277,7 @@ export class TextSpan extends Block {
         if (!ele) ele = this.el.querySelector('.shy-appear-text') as HTMLElement;
         if (!ele) ele = this.el;
         var rect = Rect.fromEle(ele);
-        var offset = this.page.pageLayout.type == PageLayoutType.docCard ? 2 : 0;
+        var offset = this.page.pageLayout.type == PageLayoutType.ppt ? 2 : 0;
         return rect.leftTop.move(0, (this.smallFont ? 8 : 10) + offset);
     }
 }

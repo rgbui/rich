@@ -241,7 +241,7 @@ export class PageView extends Component<{ page: Page }>{
 
                     <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={18} icon={PageSvg} ></Icon><span><S>页面</S></span></a>
                     <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.db)}><Icon size={18} icon={CollectTableSvg} ></Icon><span><S>表格</S></span></a>
-                    <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.docCard)}><Icon size={18} icon={DocCardsSvg} ></Icon><span><S>宣传页</S></span></a>
+                    <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.ppt)}><Icon size={18} icon={DocCardsSvg} ></Icon><span><S>宣传页</S></span></a>
                     <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.board)}><Icon size={18} icon={{ name: 'bytedance-icon', code: 'enter-the-keyboard' }}></Icon><span><S>白板</S></span></a>
                     <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.textChannel)}><Icon size={18} icon={BoardToolFrameSvg}></Icon><span><S>频道</S></span></a>
                 </div>
@@ -283,7 +283,7 @@ export class PageView extends Component<{ page: Page }>{
         if ([PageLayoutType.doc, PageLayoutType.db].includes(this.props.page?.pageLayout?.type)) {
             gap = 60
         }
-        else if ([PageLayoutType.docCard, PageLayoutType.textChannel, PageLayoutType.board].includes(this.props.page?.pageLayout?.type)) {
+        else if ([PageLayoutType.ppt, PageLayoutType.textChannel, PageLayoutType.board].includes(this.props.page?.pageLayout?.type)) {
             gap = 0
         }
 

@@ -8,7 +8,7 @@ import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { PageDirective } from "../directive";
 import { PageHistory } from "../interaction/history";
 import { PageKeys } from "../interaction/keys";
-import { BlockUrlConstant } from "../../block/constant";
+import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
 import { PageLayoutType } from "../declare";
 import { GridMap } from "../grid";
 import { Matrix } from "../../common/matrix";
@@ -28,6 +28,7 @@ import { Image } from "../../../blocks/media/image";
 import { FieldType } from "../../../blocks/data-grid/schema/type";
 import { ls } from "../../../i18n/store";
 import { BuildTemplate } from "../template/build";
+import { Head } from "../../../blocks/general/head";
 
 export class Page$Cycle {
     async init(this: Page) {
@@ -998,6 +999,72 @@ export class Page$Cycle {
                 if (f) await f.delete()
             }
         });
+    }
+    async onTurnToPPT(this: Page) {
+        await this.onAction('onTrunToPPT', async () => {
+            var cs = this.views.map(v => v);
+            var ns: any[] = [];
+            var lastLevel = -1;
+            var lastRs: any[] = [];
+            for (let i = 0; i < cs.length; i++) {
+                if (cs[i].url == BlockUrlConstant.Title || cs[i].url == BlockUrlConstant.Head) {
+                    if (cs[i].url == BlockUrlConstant.Title) {
+                        lastLevel = -1;
+                        lastRs.push(cs[i]);
+                    }
+                    else {
+                        var level = parseFloat((cs[i] as Head).level.replace('h', ''));;
+                        if (lastLevel == -1 || level >= lastLevel) {
+                            lastLevel = level;
+                            ns.push(lastRs);
+                            lastRs = [];
+                            lastRs.push(cs[i]);
+                        }
+                        else {
+                            lastRs.push(cs[i])
+                        }
+                    }
+                }
+                else {
+                    lastRs.push(cs[i])
+                }
+            }
+            if (lastRs.length > 0) {
+                ns.push(lastRs);
+            }
+            var ds = ns.map(c => ({ url: BlockUrlConstant.CardBox }));
+            var view = this.views.first();
+            var bs = await view.appendArrayBlockData(ds, view.childs.length, BlockChildKey.childs);
+            for (let j = 0; j < bs.length; j++) {
+                await bs[j].appendArray(ns[j], 0, BlockChildKey.childs);
+            }
+            await this.updateProps({
+                pageLayout: {
+                    type: PageLayoutType.ppt
+                }
+            })
+            await channel.air('/page/update/info', { id: this.pageInfo?.id, pageInfo: { pageType: this.pageLayout.type } });
+            this.addPageUpdate();
+        }, { immediate: true })
+    }
+    async onTurnToDoc(this: Page) {
+        await this.onAction('onTurnToDoc', async () => {
+            var view = this.views[0];
+            var cs = view.childs.findAll(c => c.url == BlockUrlConstant.CardBox);
+            for (let i = 0; i < cs.length; i++) {
+                await view.appendArray(cs[i].childs, view.childs.length, BlockChildKey.childs);
+            }
+            for (let j = 0; j < cs.length; j++) {
+                await cs[j].delete();
+            }
+            await this.updateProps({
+                pageLayout: {
+                    type: PageLayoutType.doc
+                }
+            })
+            await channel.air('/page/update/info', { id: this.pageInfo?.id, pageInfo: { pageType: this.pageLayout.type } });
+            this.addPageUpdate();
+        }, { immediate: true })
     }
 }
 

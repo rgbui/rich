@@ -332,7 +332,7 @@ export class ViewComponent extends BlockView<CardBox>{
         var style: CSSProperties = {};
         var bg = this.block.cardThemeStyle.bgStyle;
         var self = this;
-        if (this.block.page?.pageLayout?.type == PageLayoutType.docCard) {
+        if (this.block.page?.pageLayout?.type == PageLayoutType.ppt) {
             style.display = 'block';
             style.width = '100%';
             style.boxSizing = 'border-box';

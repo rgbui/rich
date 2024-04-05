@@ -115,7 +115,7 @@ export function getAllAtomPermission() {
 }
 
 export function getAtomPermissionComputedChanges(pageType: PageLayoutType, vs: AtomPermission[], v: AtomPermission) {
-    if ([PageLayoutType.board, PageLayoutType.doc, PageLayoutType.docCard].includes(pageType)) {
+    if ([PageLayoutType.board, PageLayoutType.doc, PageLayoutType.ppt].includes(pageType)) {
         if ([AtomPermission.docComment, AtomPermission.docExport, AtomPermission.dbAddRow, AtomPermission.dbEditRow].includes(v)) lodash.remove(vs, g => ![AtomPermission.docExport, AtomPermission.dbEditRow, AtomPermission.dbAddRow, AtomPermission.docComment].includes(g))
         else vs = []
         if (!vs.includes(v)) vs.push(v)
@@ -135,7 +135,7 @@ export function getAtomPermissionComputedChanges(pageType: PageLayoutType, vs: A
 }
 
 export function getAtomPermissionOptions(pageType: PageLayoutType): MenuItem[] {
-    if ([PageLayoutType.board, PageLayoutType.doc, PageLayoutType.docCard].includes(pageType)) {
+    if ([PageLayoutType.board, PageLayoutType.doc, PageLayoutType.ppt].includes(pageType)) {
         return [
             { text: lst('所有权限'), value: AtomPermission.all },
             { type: MenuItemType.divide },
