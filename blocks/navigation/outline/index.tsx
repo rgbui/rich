@@ -1,32 +1,49 @@
 import { BlockView } from "../../../src/block/view";
 import React, { CSSProperties } from 'react';
-import { url, view } from "../../../src/block/factory/observable";
+import { prop, url, view } from "../../../src/block/factory/observable";
 import { Block } from "../../../src/block";
-import { BlockDisplay } from "../../../src/block/enum";
-import "./style.less";
+import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
 import { BlockUrlConstant } from "../../../src/block/constant";
 import { Rect } from "../../../src/common/vector/point";
 import lodash from "lodash";
 import { dom } from "../../../src/common/dom";
 import { AnimatedScrollTo } from "../../../util/animatedScrollTo";
-
+import { DotsSvg, OutlineSvg, TriangleSvg } from "../../../component/svgs";
+import { Icon } from "../../../component/view/icon";
+import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
+import { lst } from "../../../i18n/store";
+import "./style.less";
 
 type OutLineItemType = {
     id: string,
-    deep: number,
+    parentId?: string,
+    level?: number,
+    hLevel?: number,
     block: Block,
     hover?: boolean,
     text?: string,
     html?: string,
+    spread?: boolean,
     childs?: OutLineItemType[]
 }
 
-
+/**
+ * 目录大纲
+ * 标题
+ * 靠右或者靠左
+ * 是否紧挨着内容
+ * 支持大纲的背景色及背景框
+ * 支持大纲的拆叠或展开
+ * 
+ */
 @url('/outline')
 export class PageOutLine extends Block {
     display = BlockDisplay.block;
     outlines: OutLineItemType[] = [];
     hoverId = '';
+    spreadCaches: { [key: string]: boolean } = {};
+    @prop()
+    outlineTitle = '';
     updateOutlinesHover() {
         var hoverId = '';
         if (this.outlines.length > 0) {
@@ -48,33 +65,63 @@ export class PageOutLine extends Block {
     }
     cacOutLines() {
         var outlines: OutLineItemType[] = [];
-        var bs = this.page.findAll(x => x.url == BlockUrlConstant.Head && x.el && (x.closest(c => c.isPart) ? false : true));
+        var bs = this.page.findAll(x => x.url == BlockUrlConstant.Head && x.el && (x.closest(c => c.isPanel) ? false : true) && (x.closest(c => c.isPart) ? false : true));
         lodash.sortBy(bs, g => Rect.fromEle(g.el).top);
-        var currentDeep = 0, lastLevel;
+        var lastItem: OutLineItemType;
         if (this.page.view) {
             for (let i = 0; i < bs.length; i++) {
                 var b = bs[i];
                 var level = parseInt((b as any).level.replace('h', ''));
-                var deep = currentDeep;
-                if (typeof lastLevel == 'number' && level < lastLevel) {
-                    deep -= 1;
-                    var dx = deep + (level - lastLevel);
-                    var minLevel = outlines.min(g => g.deep);
-                    deep = Math.max(minLevel, dx, 0);
+                var sc = this.spreadCaches[b.id];
+                if (typeof sc !== 'boolean') {
+                    sc = true;
+                    this.spreadCaches[b.id] = sc;
                 }
-                else if (typeof lastLevel == 'number' && level > lastLevel) deep += 1;
-                currentDeep = deep;
-                lastLevel = level;
-                outlines.push({
+                var itemData: OutLineItemType = ({
                     id: b.id,
-                    deep,
                     block: b,
+                    hLevel: level,
                     text: b.getBlockContent(),
-                    html: b.el ? b.el.innerText : undefined
-                })
+                    html: b.el ? b.el.innerText : undefined,
+                    spread: sc
+                });
+                if (lastItem) {
+                    if (level > lastItem.hLevel) {
+                        itemData.parentId = lastItem.id;
+                        itemData.level = lastItem.level + 1;
+                        lastItem.childs.push(itemData);
+                    }
+                    else if (level == lastItem.hLevel) {
+                        var pa = lastItem.parentId ? outlines.arrayJsonFind('childs', c => c.id == lastItem.parentId) : undefined;
+                        if (pa) { itemData.parentId = pa.id; itemData.level = pa.level + 1; pa.childs.push(itemData); }
+                        else {
+                            itemData.level = 0;
+                            outlines.push(itemData);
+                        }
+                    }
+                    else {
+                        var rcs = outlines.arrayJsonParents('childs', lastItem, c => true);
+                        rcs.reverse();
+                        var rr = rcs.find(c => (c.hLevel) < level);
+                        if (rr) {
+                            itemData.parentId = rr.id;
+                            itemData.level = rr.level + 1;
+                            rr.childs.push(itemData);
+                        }
+                        else {
+                            itemData.level = 0;
+                            outlines.push(itemData);
+                        }
+                    }
+                    lastItem = itemData;
+                }
+                else {
+                    lastItem = itemData;
+                    itemData.level = 0;
+                    outlines.push(itemData);
+                }
             }
         }
-
         this.outlines = outlines;
     }
     updateOutLine() {
@@ -95,7 +142,65 @@ export class PageOutLine extends Block {
     async getMd() {
         return '';
     }
+    async onGetContextMenus() {
+        var rs: MenuItem[] = [];
+        rs.push({
+            type: MenuItemType.input,
+            value: this.outlineTitle,
+            name: 'outlineTitle',
+            placeholder: lst('文档目录标题'),
+        });
+        rs.push({
+            type: MenuItemType.divide
+        });
+        rs.push({ text: lst('全部展开'), name: 'spreadOpen', icon: { name: 'byte', code: 'expand-down' } })
+        rs.push({ text: lst('全部收起'), name: 'spreadClose', icon: { name: 'byte', code: 'expand-left' } })
+        rs.push({ type: MenuItemType.divide })
+        rs.push({
+            text: lst('刷新文档目录'),
+            name: 'refresh',
+            icon: { name: 'byte', code: 'refresh' },
+        });
+        rs.push({
+            text: lst('关闭文档目录'),
+            name: 'close',
+            icon: OutlineSvg
+        });
+        return rs;
+    }
+    async onContextMenuInput(item: MenuItem<string | BlockDirective>, options?: { merge?: boolean; }): Promise<void> {
+        if (item.name == 'outlineTitle') {
+            await this.onUpdateProps({ outlineTitle: item.value }, { range: BlockRenderRange.self })
+        }
+        else super.onContextMenuInput(item, options)
+    }
+    async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent, options?: { merge?: boolean; }): Promise<void> {
+        if (item.name == 'refresh') {
+            this.updateOutLine();
+        }
+        else if (item.name == 'close') {
+            this.page.onToggleOutline({ nav: false })
+        }
+        else if (item.name == 'spreadOpen') {
+            this.outlines.arrayJsonEach(
+                'childs', c => { c.spread = true });
+            for (var d in this.spreadCaches) {
+                this.spreadCaches[d] = true;
+            };
+            this.forceUpdate();
+        }
+        else if (item.name == 'spreadClose') {
+            this.outlines.arrayJsonEach(
+                'childs', c => { c.spread = false });
+            for (var d in this.spreadCaches) {
+                this.spreadCaches[d] = false;
+            };
+            this.forceUpdate();
+        }
+        else super.onClickContextMenu(item, event, options)
+    }
 }
+
 @view('/outline')
 export class PageOutLineView extends BlockView<PageOutLine>{
     mousedownLine(line, event: React.MouseEvent) {
@@ -117,14 +222,44 @@ export class PageOutLineView extends BlockView<PageOutLine>{
     height: number = null;
     renderView() {
         var style: CSSProperties = { ...this.block.visibleStyle };
-        if (typeof this.height == 'number')
-            style.height = this.height;
-        return <div className='sy-block-outline' style={style}>
+        if (typeof this.height == 'number') style.height = this.height;
+        return <div className='sy-block-outline relative visible-hover' style={style}>
+            <div className="sy-block-outline-head pos flex-end"
+                style={{ top: this.block.outlineTitle ? 0 : -30, right: 0, height: 30 }}>
+                <span className="size-24 round item-hover cursor visible" onMouseDown={async e => {
+                    var ele = e.currentTarget as HTMLElement;
+                    try {
+                        ele.classList.remove('visible')
+                        await this.block.onContextmenu(Rect.fromEle(e.currentTarget as HTMLElement))
+                    }
+                    catch (ex) {
+
+                    }
+                    finally {
+                        ele.classList.add('visible')
+                    }
+                }}><Icon icon={DotsSvg}></Icon></span>
+            </div>
             <div className="sy-block-outline-line">
+                {this.block.outlineTitle && <div className="item text-over remark f-14" style={{ paddingLeft: 20 }}>{this.block.outlineTitle}</div>}
                 {this.block.outlines.map(line => {
-                    return <div className={"item text-over" + (this.block.hoverId == line.block.id ? " hover" : "")} key={line.id}><a key={line.id} style={{ paddingLeft: 20 + line.deep * 15 }} onMouseDown={e => this.mousedownLine(line, e)}>{line.text}</a></div>
+                    return this.renderItem(line, 0)
                 })}
             </div>
+        </div>
+    }
+    renderItem(item: OutLineItemType, deep: number) {
+        return <div key={item.id}><div className={"item text-over" + (this.block.hoverId == item.block.id ? " hover" : "")}>
+            <a className="flex" style={{ paddingLeft: 20 + deep * 15 }} onMouseDown={e => this.mousedownLine(item, e)}>
+                <span
+                    className={"size-20 round item-hover cursor flex-center ts " + (item.spread ? "angel-90" : "")}
+                    onMouseDown={e => { e.stopPropagation(); item.spread = item.spread ? false : true; this.forceUpdate() }} style={{ visibility: item.childs && item.childs.length > 0 ? "visible" : 'hidden' }}><Icon icon={TriangleSvg}></Icon></span>
+                <span dangerouslySetInnerHTML={{ __html: item.html || item.text }}></span>
+            </a>
+        </div>
+            {item.spread && item.childs && item.childs.length > 0 && <div>
+                {item.childs.map(c => this.renderItem(c, deep + 1))}
+            </div>}
         </div>
     }
 }
