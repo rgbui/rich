@@ -352,10 +352,9 @@ export class BlockButtonView extends BlockView<BlockButton>{
     async changeIcon(event: React.MouseEvent) {
         var r = await useIconPicker({
             roundArea: Rect.fromEle(event.currentTarget as HTMLElement)
-        });
+        }, this.oldIcon, { visibleColor: false });
         if (typeof r != 'undefined') {
             await this.block.onUpdateProps({ buttonIcon: r })
-            console.log(r, this.block.buttonIcon);
             if (this.boxTip) this.boxTip.updateToolTipOverlay();
             this.forceUpdate();
         }
