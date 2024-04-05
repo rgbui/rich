@@ -242,7 +242,7 @@ export class PageBar extends React.Component<{ page: Page }>{
     render(): React.ReactNode {
         if (this.props.page.bar === false) return <></>
         if (this.props.page.ws.isPubSite && this.props.page.ws.isPubSiteDefineBarMenu) return <></>
-        var style: CSSProperties = {}
+        var style: CSSProperties = {zIndex:1}
         return <div style={style} className={"shy-page-bar flex visible-hover relative " + (isMobileOnly ? "" : "padding-l-10")}>
             {isMobileOnly && <span onClick={e => this.props.page.onSpreadMenu()} className="flex-fixed size-20 flex-center item-hover round cursor ">
                 <Icon icon={ChevronLeftSvg} size={18}></Icon>

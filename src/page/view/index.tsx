@@ -276,8 +276,8 @@ export class PageView extends Component<{ page: Page }>{
             pageStyle.overflow = 'visible';
         }
         if (this.page.pageLayout?.type == PageLayoutType.board) {
-            pageStyle.overflowY = 'hidden';
-            pageStyle.overflowX = 'hidden';
+            pageStyle.overflowY = 'visible';
+            pageStyle.overflowX = 'visible';
         }
         var gap = 60;
         if ([PageLayoutType.doc, PageLayoutType.db].includes(this.props.page?.pageLayout?.type)) {
