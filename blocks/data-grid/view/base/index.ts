@@ -32,7 +32,7 @@ import { FieldType } from "../../schema/type";
 import { Input } from "../../../../component/view/input";
 import { onCreateDataGridTemplate } from "../../template/create";
 import { DataGridTab } from "../tab";
-import { util } from "../../../../util/util";
+
 
 
 /**
@@ -254,7 +254,8 @@ export class DataGridView extends Block {
         }
         var ef = (g: SchemaFilter) => {
             if (typeof g.value != 'undefined') {
-                var gf = this.schema.fields.find(c => c.id == g.field)
+                var name = g.field?.indexOf('.') > -1 ? g.field.split('.')[0] : g.field;
+                var gf = this.schema.fields.find(c => c.id == name)
                 if (Array.isArray(g.value)) {
                     if (g.value.some(s => typeof s == 'string' && s.startsWith('@'))) {
                         g.value = g.value.map(s => {
@@ -295,15 +296,18 @@ export class DataGridView extends Block {
             }
         }
         ef(f);
+        console.log('return files', f);
         return f
     }
     getSearchSorts() {
         var sorts: Record<string, any> = { createDate: -1 };
         if (Array.isArray(this.sorts) && this.sorts.length > 0) {
             this.sorts.forEach(s => {
-                var f = this.schema.fields.find(g => g.id == s.field);
+                var sn = s.field.indexOf('.') > -1 ? s.field.split('.')[0] : s.field;
+                var sub = s.field.indexOf('.') > -1 ? s.field.split('.')[1] : '';
+                var f = this.schema.fields.find(g => g.id == sn);
                 if (f) {
-                    sorts[f.name] = s.sort;
+                    sorts[f.name + (sub ? "." + sub : "")] = s.sort;
                 }
             })
         }
@@ -454,8 +458,20 @@ export class DataGridView extends Block {
     get elementUrl() {
         return getElementUrl(ElementType.SchemaView, this.schemaId, this.syncBlockId);
     }
+    /**
+     * 获取自定义视图的卡片模板
+     * @returns 
+     */
     getCardUrl() {
         return undefined;
+    }
+    /**
+     * 是否是定义视图模板
+     */
+    get isDefineViewTemplate() {
+        var url = this.getCardUrl();
+        if (url) return true;
+        else return false;
     }
     isCanLocker() {
         if (this.schema?.locker?.lock == true) return true;

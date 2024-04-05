@@ -1,5 +1,5 @@
 import React from "react";
-import { ChevronDownSvg, ChevronLeftSvg, ChevronRightSvg } from "../../../component/svgs";
+import { ChevronDownSvg, ChevronLeftSvg, ChevronRightSvg, TrashSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
@@ -12,6 +12,7 @@ import { DataGridView } from "../view/base";
 import { lst } from "../../../i18n/store";
 import { S, Sp } from "../../../i18n/view";
 import lodash from "lodash";
+import { Tip } from "../../../component/view/tooltip/tip";
 
 
 @url('/data-grid/paging')
@@ -21,10 +22,12 @@ export class Paging extends Block {
         return super.refBlock as DataGridView;
     }
     async onChangeIndex(index: number) {
-        var totalPage = Math.ceil(this.refBlock.total / this.refBlock.size);
-        if (index >= 1 && index <= totalPage) {
-            if (typeof index == 'number') {
-                await this.refBlock.onListPageIndex(index);
+        if (this.refBlock) {
+            var totalPage = Math.ceil(this.refBlock.total / this.refBlock.size);
+            if (index >= 1 && index <= totalPage) {
+                if (typeof index == 'number') {
+                    await this.refBlock.onListPageIndex(index);
+                }
             }
         }
     }
@@ -68,7 +71,16 @@ export class Paging extends Block {
                 ]
             }
         }
+        var at = rs.findIndex(g => g.name == 'text-center');
+        var items: MenuItem<string | BlockDirective>[] = [];
+        items.push({
+            name: 'relationTable',
+            text: lst('关联数据表'),
+            icon: { name: 'bytedance-icon', code: 'right-c' },
+        }, { type: MenuItemType.divide })
+        rs.splice(at, 0, ...items)
         lodash.remove(rs, g => g.name == 'color');
+        lodash.remove(rs, g => g.name == BlockDirective.copy);
         return rs;
     }
     async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent): Promise<void> {
@@ -76,7 +88,21 @@ export class Paging extends Block {
             await this.onUpdateProps({ align: item.value }, { range: BlockRenderRange.self })
             return;
         }
+        else if (item.name == 'relationTable') {
+            var rb = this.refBlock;
+            if (rb) this.page.onHighlightBlock(rb);
+            return
+        }
         return await super.onClickContextMenu(item, event);
+    }
+    getVisibleHandleCursorPoint() {
+        var el = this.el;
+        if (el) {
+            el = this.el.querySelector('div>span') as HTMLElement;
+            if (!el) el = this.el;
+            var rect = Rect.fromEle(el);
+            return rect.leftMiddle;
+        }
     }
 }
 @view('/data-grid/paging')
@@ -128,6 +154,18 @@ export class PagingView extends BlockView<Paging>{
         return []
     }
     renderView() {
+        if (!this.block.refBlock) {
+            return <div style={this.block.visibleStyle}>
+                <div style={this.block.contentStyle}>
+                    <div className="error-bg flex">
+                        <span className="text-white flex-fixed"><S>无法找到关联的数据表</S></span>
+                        <Tip text='删除'><Icon onClick={e => {
+                            this.block.onDelete()
+                        }} icon={TrashSvg}></Icon></Tip>
+                    </div>
+                </div>
+            </div>
+        }
         var totalPage = -1;
         if (this.block.refBlock) totalPage = Math.ceil(this.block.refBlock.total / this.block.refBlock.size);
         var classList: string[] = ['min-h-24 f-14'];
@@ -146,6 +184,7 @@ export class PagingView extends BlockView<Paging>{
                     <span onMouseDown={e => this.onDropSize(e)} className="gap-l-10 border h-24 padding-w-10 round flex-center">{this.block.refBlock.size}<S>条/页</S><Icon size={16} icon={ChevronDownSvg}></Icon></span>
                 </>}
                 {!this.block.refBlock && <div></div>}
-            </div></div>
+            </div>
+        </div>
     }
 }

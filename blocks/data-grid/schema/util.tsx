@@ -6,18 +6,16 @@ import {
     CollectionGallerySvg,
     CollectionListSvg,
     CollectTableSvg,
-    CommentSvg,
+
     EmojiSvg,
     EyeSvg,
     LikeSvg,
     LoveSvg,
     OpposeSvg,
     PicSvg,
-    RowNoSvg,
     TypesButtonSvg,
     TypesCheckboxSvg,
     TypesCreateAtSvg,
-    TypesCreateBySvg,
     TypesDateSvg,
     TypesEmailSvg,
     TypesFileSvg,
@@ -121,6 +119,8 @@ export function GetFieldTypeSvg(type: FieldType): IconValueType {
             return { name: 'byte', code: 'arrow-right-up' }
         case FieldType.subs:
             return { name: 'byte', code: 'list-two' }
+        case FieldType.thumb:
+            return { name: 'byte', code: 'pic-one' }
         default:
             return TypesStringSvg
     }
@@ -317,6 +317,20 @@ export function getSchemaFieldMenus(map: (list: any) => any) {
         ])
     ];
     return menus;
+}
+
+
+export function searchFieldItems(types: FieldType[]) {
+    var list: any[] = [];
+    function map(arr) {
+        return arr.map(a => {
+            if (a.value && types.includes(a.value))
+                list.push(a);
+            return
+        })
+    }
+    getSchemaFieldMenus(map);
+    return list;
 }
 
 export function getFieldMenus() {

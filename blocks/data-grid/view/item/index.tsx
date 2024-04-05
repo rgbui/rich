@@ -19,10 +19,14 @@ import { channel } from "../../../../net/channel";
 import { FieldType } from "../../schema/type";
 import lodash from "lodash";
 import { OriginField } from "../../element/field/origin.field";
-import { DotsSvg, DuplicateSvg, Edit1Svg } from "../../../../component/svgs";
+import { DotsSvg, DuplicateSvg, Edit1Svg, EmojiSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import "./style.less";
 import { lst } from "../../../../i18n/store";
+
+import { CopyAlert } from "../../../../component/copy";
+import { useIconPicker } from "../../../../extensions/icon";
+import { Rect } from "../../../../src/common/vector/point";
 
 @url('/data-grid/item')
 export class TableStoreItem extends Block {
@@ -154,13 +158,34 @@ export class TableStoreItem extends Block {
         items.push({
             name: 'open',
             icon: Edit1Svg,
-            text: lst('编辑'),
+            text: lst('打开'),
+        })
+        items.push({
+            name: 'openSlide',
+            icon: { name: 'byte', code: 'logout' },
+            text: lst('右侧边栏打开'),
         })
         items.push({ type: MenuItemType.divide })
         items.push({
             name: 'duplicate',
             icon: DuplicateSvg,
             text: lst('复制'),
+        })
+        items.push({
+            name: 'copyID',
+            text: lst('复制数据ID'),
+            icon: { name: 'byte', code: 'adobe-indesign' }
+        })
+        items.push({
+            name: 'copyUrl',
+            text: lst('复制数据网址'),
+            icon: { name: 'byte', code: 'copy-link' }
+        })
+        items.push({ type: MenuItemType.divide })
+        items.push({
+            name: 'addIcon',
+            text: lst('添加图标...'),
+            icon: EmojiSvg
         })
         items.push({ type: MenuItemType.divide })
         items.push({
@@ -169,6 +194,20 @@ export class TableStoreItem extends Block {
             text: lst('删除'),
             label: "Delete"
         });
+        if (this.dataRow.modifyer) {
+            items.push({
+                type: MenuItemType.divide,
+            });
+            var r = await channel.get('/user/basic', { userid: this.dataRow.modifyer });
+            if (r?.data?.user) items.push({
+                type: MenuItemType.text,
+                text: lst('编辑人') + ' ' + r.data.user.name
+            });
+            if (this.dataRow.modifyDate) items.push({
+                type: MenuItemType.text,
+                text: lst('编辑于') + ' ' + util.showTime(new Date(this.dataRow.modifyDate))
+            });
+        }
         return items;
     }
     async onClickContextMenu(item: MenuItem<BlockDirective | string>, event: MouseEvent) {
@@ -179,8 +218,20 @@ export class TableStoreItem extends Block {
             case 'open':
                 await this.dataGrid.onOpenEditForm(this.dataRow.id);
                 break;
+            case 'openSlide':
+                await this.dataGrid.onOpenEditForm(this.dataRow.id, '/page/slide');
+                break;
             case 'duplicate':
                 await this.dataGrid.onCloneRow(this.dataRow);
+                break;
+            case 'copyID':
+                CopyAlert(this.dataRow.id, lst('复制ID成功'));
+                break;
+            case 'copyUrl':
+                CopyAlert(this.page.ws.resolve({ elementUrl: this.elementUrl }), lst('复制网址成功'));
+                break;
+            case 'addIcon':
+                await this.openAddIcon();
                 break;
         }
     }
@@ -246,6 +297,13 @@ export class TableStoreItem extends Block {
         this.dataGrid.onDataGridTool(async () => {
             await this.page.onOpenMenu([this], event.nativeEvent);
         })
+    }
+    async openAddIcon() {
+        var icon = await useIconPicker({ roundArea: Rect.fromEle(this.el) }, this.dataRow.icon);
+        if (typeof icon != 'undefined') {
+            await this.dataGrid.onRowUpdate(this.dataRow.id, { icon })
+            this.forceUpdate();
+        }
     }
 }
 @view('/data-grid/item')

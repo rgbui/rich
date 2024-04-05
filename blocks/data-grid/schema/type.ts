@@ -1,3 +1,4 @@
+import { IconArguments, ResourceArguments } from "../../../extensions/icon/declare"
 
 /**
  * 这里定义字段类型 
@@ -234,6 +235,20 @@ export var SysFieldTypes: FieldType[] = [
 ]
 
 /**
+ * 系统字段，
+ * 用户不可感知的字段
+ */
+export var SysHiddenFieldTypes: FieldType[] = [
+    FieldType.icon,
+    FieldType.cover,
+    FieldType.description,
+    FieldType.plain,
+    FieldType.thumb,
+    FieldType.deleted,
+    FieldType.sort
+]
+
+/**
  * 只能创建一次性的字段
  * 不能创建多个
  */
@@ -259,3 +274,87 @@ export var OnlyFieldTypes: FieldType[] = [
     FieldType.parentId,
     FieldType.subs
 ]
+
+/**
+ * 禁用排序的字段
+ */
+export var DisabledSortFieldTypes: FieldType[] = [
+    FieldType.formula,
+    FieldType.rollup,
+    FieldType.cover,
+    FieldType.icon,
+    FieldType.plain,
+    FieldType.description,
+    FieldType.thumb,
+    FieldType.sort,
+    FieldType.deleted
+]
+/**
+ * 禁用表单的字段
+ */
+export var DisabledFormFieldTypes: FieldType[] = [
+    FieldType.formula,
+    FieldType.rollup,
+    FieldType.modifyDate,
+    FieldType.createDate,
+    FieldType.creater,
+    FieldType.cover,
+    FieldType.icon,
+    FieldType.comment,
+    FieldType.browse,
+    FieldType.plain,
+    FieldType.description,
+    FieldType.thumb,
+    FieldType.autoIncrement,
+    FieldType.sort,
+    FieldType.id,
+    FieldType.deleted
+]
+
+export var IsArrayValueFieldTypes: FieldType[] = [
+    FieldType.option,
+    FieldType.options,
+    FieldType.user,
+    FieldType.image,
+    FieldType.video,
+    FieldType.file,
+    FieldType.relation
+]
+
+/***
+ * 字段的取值示例
+ */
+export type FieldTypeExample = {
+    [FieldType.id]: string,
+    [FieldType.deleted]: boolean,
+    [FieldType.title]: string,
+    [FieldType.icon]: IconArguments,
+    [FieldType.description]: string,
+    [FieldType.cover]: ResourceArguments,
+    [FieldType.plain]: string,
+    [FieldType.thumb]: ResourceArguments[],
+    [FieldType.autoIncrement]: number,
+    [FieldType.date]: Date,
+    [FieldType.number]: number,
+    [FieldType.price]: number,
+    [FieldType.text]: string,
+    [FieldType.email]: string,
+    [FieldType.createDate]: Date,
+    [FieldType.creater]: string,
+    [FieldType.modifyer]: string,
+    [FieldType.modifyDate]: Date,
+    [FieldType.option]: string[],
+    [FieldType.options]: string[],
+    [FieldType.image]: ResourceArguments[],
+    [FieldType.file]: ResourceArguments[],
+    [FieldType.video]: ResourceArguments[],
+    [FieldType.audio]: ResourceArguments[],
+    [FieldType.user]: string[],
+    [FieldType.bool]: boolean,
+    [FieldType.browse]: { users: string[], count: number },
+    [FieldType.like]: { users: string[], count: number },
+    [FieldType.love]: { users: string[], count: number },
+    [FieldType.vote]: { users: string[], count: number },
+    [FieldType.emoji]: { users: string[], count: number },
+    [FieldType.comment]: { users: string[], count: number },
+}

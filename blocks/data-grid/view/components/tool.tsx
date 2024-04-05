@@ -112,7 +112,7 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
         if (props.block.noTitle) {
             if (props.block.isCanEdit())
                 return <div className='h-20 relative'>
-                    {(props.block.isOver || props.block.searchTitle.focus == true) && <div className="flex h-40 pos shadow bg-white round padding-w-10 padding-h-0" style={{
+                    {(props.block.isOver || props.block.searchTitle.focus == true) && <div className="flex h-40 pos shadow-s bg-white round padding-w-10 padding-h-0" style={{
                         top: -30,
                         left: 0,
                         right: 0,

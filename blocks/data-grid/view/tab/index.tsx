@@ -401,13 +401,8 @@ export class DataGridTab extends Block {
         for (let i = 0; i < ocs.length; i++) {
             var oc = ocs[i];
             var g = oc.find(c => (c as DataGridView).schemaId == item.schemaId && c.syncBlockId == item.viewId);
-            var og = oc.find(c => (c as DataGridView).schemaId ? true : false) as DataGridView
-            console.log(g, item, og, og?.schemaId, og?.syncBlockId)
             if (g) return g as DataGridView;
         }
-        //var oc = ocs.find(g => g.exists(c => (c as DataGridView).schemaId == item.schemaId && c.syncBlockId == item.viewId) ? true : false)
-        // console.log(this.tabItems, ocs.map(c => c.blocks.childs).flat(5), item, this.tabIndex, ocs, ocs.find(g => (g as any).schemaId ? g : undefined), oc, '....x');
-        //if (oc) return oc.find(c => (c as DataGridView).schemaId == item.schemaId && c.syncBlockId == item.viewId) as DataGridView;
     }
     async updateView(dg: DataGridView) {
         var items = lodash.cloneDeep(this.tabItems);

@@ -4,7 +4,7 @@ import { CoverMask, IconArguments } from "../../../extensions/icon/declare";
 import { channel } from "../../../net/channel";
 import { BlockUrlConstant } from "../../../src/block/constant";
 import { Field } from "./field";
-import { FieldType, SysFieldTypes } from "./type";
+import { DisabledFormFieldTypes, DisabledSortFieldTypes, FieldType, IsArrayValueFieldTypes, SysFieldTypes, SysHiddenFieldTypes } from "./type";
 import { ViewField } from "./view";
 import { AtomPermission } from "../../../src/page/permission";
 import { Page } from "../../../src/page";
@@ -99,74 +99,51 @@ export class TableSchema {
      * 用户可以选择显示的字段
      */
     get visibleFields(): Field[] {
-        return this.fields.findAll(g => g.text && ![
-            FieldType.icon,
-            FieldType.cover,
-            FieldType.description,
-            FieldType.plain,
-            FieldType.thumb,
-            FieldType.deleted,
-            FieldType.sort
-        ].includes(g.type))
+        var fs = this.fields.findAll(g => g.text && !SysHiddenFieldTypes.includes(g.type));
+        var ns = fs.findAll(g => !SysFieldTypes.includes(g.type));
+        fs = fs.findAll(g => SysFieldTypes.includes(g.type));
+        fs.sort((x, y) => {
+            if (x.type === FieldType.title) return -1;
+            else return 1;
+        })
+        fs.splice(1, 0, ...ns);
+        return fs;
     }
     /**
      * 系统创建表格时，默认创建显示的字段
      */
     get defaultViewFields() {
-        return this.fields.findAll(g => g.text && ![
-            FieldType.modifyDate,
-            FieldType.modifyer,
-            FieldType.createDate,
-            FieldType.creater,
-            FieldType.cover,
-            FieldType.icon,
-            FieldType.comment,
-            FieldType.browse,
-            FieldType.plain,
-            FieldType.description,
-            FieldType.thumb,
-            FieldType.autoIncrement,
-            FieldType.sort,
-            FieldType.id,
-            FieldType.deleted
-        ].includes(g.type))
+        var fs= this.fields.findAll(g => g.text && (g.type == FieldType.title || !SysFieldTypes.includes(g.type)))
+        var ns = fs.findAll(g => !SysFieldTypes.includes(g.type));
+        fs = fs.findAll(g => SysFieldTypes.includes(g.type));
+        fs.sort((x, y) => {
+            if (x.type === FieldType.title) return -1;
+            else return 1;
+        })
+        fs.splice(1, 0, ...ns);
+        return fs;
     }
     get allowSortFields() {
-        return this.fields.findAll(x => x.text && ![
-            FieldType.formula,
-            FieldType.image,
-            FieldType.file,
-            FieldType.audio,
-            FieldType.video,
-            FieldType.cover,
-            FieldType.icon,
-            FieldType.plain,
-            FieldType.description,
-            FieldType.thumb,
-            FieldType.sort,
-            FieldType.id,
-            FieldType.deleted
-        ].includes(x.type) ? true : false)
+        var fs = this.fields.findAll(x => x.text && !DisabledSortFieldTypes.includes(x.type) ? true : false)
+        var ns = fs.findAll(g => !SysFieldTypes.includes(g.type));
+        fs = fs.findAll(g => SysFieldTypes.includes(g.type));
+        fs.sort((x, y) => {
+            if (x.type === FieldType.title) return -1;
+            else return 1;
+        })
+        fs.splice(1, 0, ...ns);
+        return fs;
     }
     get allowFormFields() {
-        return this.fields.findAll(g => ![
-            FieldType.formula,
-            FieldType.rollup,
-            FieldType.modifyDate,
-            FieldType.createDate,
-            FieldType.creater,
-            FieldType.cover,
-            FieldType.icon,
-            FieldType.comment,
-            FieldType.browse,
-            FieldType.plain,
-            FieldType.description,
-            FieldType.thumb,
-            FieldType.autoIncrement,
-            FieldType.sort,
-            FieldType.id,
-            FieldType.deleted
-        ].includes(g.type))
+        var fs = this.fields.findAll(g => !DisabledFormFieldTypes.includes(g.type))
+        var ns = fs.findAll(g => !SysFieldTypes.includes(g.type));
+        fs = fs.findAll(g => SysFieldTypes.includes(g.type));
+        fs.sort((x, y) => {
+            if (x.type === FieldType.title) return -1;
+            else return 1;
+        })
+        fs.splice(1, 0, ...ns);
+        return fs;
     }
     isType(fieldId: string, ...types: FieldType[]) {
         var f = this.fields.find(c => c.id == fieldId);
@@ -547,7 +524,7 @@ export class TableSchema {
         return [FieldType.date, FieldType.modifyDate, FieldType.createDate].includes(field.type);
     }
     static fieldValueIsArray(field: Field) {
-        return [FieldType.option, FieldType.options, FieldType.user].includes(field.type)
+        return IsArrayValueFieldTypes.includes(field.type)
     }
     static isSystemField(field: Field) {
         return SysFieldTypes.includes(field.type)

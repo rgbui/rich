@@ -7,7 +7,7 @@ import { ActionDirective } from "../../../../src/history/declare";
 import { PageDirective } from "../../../../src/page/directive";
 import { SchemaFilter, SchemaFilterJoin } from "../../schema/filter";
 import { Field } from "../../schema/field";
-import { FieldType } from "../../schema/type";
+import { FieldType, SysHiddenFieldTypes } from "../../schema/type";
 import { ViewField } from "../../schema/view";
 import { DataGridView } from ".";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
@@ -202,9 +202,12 @@ export class DataGridViewOperator {
     async onShowAllField(this: DataGridView) {
         await this.page.onAction(ActionDirective.onSchemaShowField, async () => {
             this.page.addBlockChange(this);
-            var fs = this.schema.fields.map(g => this.schema.createViewField(g));
+            var fs = this.schema.fields.filter(c => c.text && !SysHiddenFieldTypes.includes(c.type)).map(g => this.schema.createViewField(g));
             var oss = this.fields.map(f => f.clone()).filter(g => g.type ? true : false);
-            fs.each(f => { oss.push(f) });
+            fs.each(f => {
+                if (!oss.exists(c => c.id == f.fieldId))
+                    oss.push(f)
+            });
             await this.changeFields(this.fields, oss);
             await this.createItem();
             this.forceUpdate();
@@ -496,7 +499,7 @@ export class DataGridViewOperator {
         await this.page.onAction(ActionDirective.onDataGridShowCheck, async () => {
             this.page.addBlockChange(this);
             await this.updateProps({ checkRow: value });
-            if (value == 'checkbox') await this.arrayPush({ prop: 'fields', at: 0, data: new ViewField({ type: 'check', text: lst('选择') }, this.schema) })
+            if (value == 'checkbox') await this.arrayPush({ prop: 'fields', at: 0, data: new ViewField({ colWidth: 80, type: 'check', text: lst('选择') }, this.schema) })
             else await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.type == 'check' })
             await this.createItem();
             this.forceUpdate();
