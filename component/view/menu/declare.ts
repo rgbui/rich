@@ -22,7 +22,11 @@ export type MenuItem<T = string> = {
     childsPos?: PopoverPosition,
     childsStyle?: CSSProperties,
     options?: MenuItem<T>[],
-    optionIconSize?:number,
+    optionIconSize?: number,
+    /**
+     * 当type为 MenuItemType.select 时有效
+     */
+    selectDropWidth?: number;
     block?: boolean,
     value?: any,
     iconName?: string,
@@ -33,7 +37,19 @@ export type MenuItem<T = string> = {
      */
     remark?: string,
     param?: any,
+    /**
+     * 只有在type为 MenuItemType.help 时才有效
+     */
     url?: string,
+    /**
+     * 只有在type为 MenuItemType.help 时才有效
+     */
+    helpInline?:boolean,
+    /**
+     * 增加一个tip
+     */
+    helpText?: string,
+    helpUrl?: string,
     visible?: boolean | ((items: MenuItem[], item: MenuItem) => boolean),
     drag?: boolean,
     btns?: {

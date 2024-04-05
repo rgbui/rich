@@ -83,18 +83,18 @@ export class MenuItemView extends React.Component<{
                     ...op,
                     checkLabel: item.value == op.value
                 }
-            }), {
-            nickName: 'selectBox'
-        }
+            }),
+            {
+                nickName: 'selectBox',
+                width: item.selectDropWidth || undefined
+            }
         );
         if (r) {
             item.value = r.item.value;
             if (item.updateMenuPanel) this.props.parent.forceUpdate()
             else this.forceUpdate();
-            if (item.buttonClick == 'select')
-                this.props.select(item)
-            else
-                this.props?.input(item);
+            if (item.buttonClick == 'select') this.props.select(item)
+            else this.props?.input(item);
         }
     }
     async changeIcon(item: MenuItem, event: React.MouseEvent) {
@@ -148,7 +148,10 @@ export class MenuItemView extends React.Component<{
                 onMouseDown={e => this.select(item, e.nativeEvent)}>
                 {item.icon && <i className={"flex-center flex-line  text-1 " + (item.iconSize > 20 ? "" : "size-20")}><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
                 {item.renderIcon && item.renderIcon(item, this)}
-                <span className='shy-menu-box-item-option-text text-overflow'>{item.text}{item.remark && <i className="remark padding-l-5">{item.remark}</i>}</span>
+                <span className='shy-menu-box-item-option-text text-overflow flex'>
+                    {item.text}{item.remark && <i className="remark padding-l-5">{item.remark}</i>}
+                    {item.helpUrl && <span className="flex-fixed h-20 flex"><HelpText  onMouseDown={e => e.stopPropagation()} url={item.helpUrl}>{item.helpText}</HelpText></span>}
+                </span>
                 {item.checkLabel && <Icon className={'shy-menu-box-item-option-label-icon gap-r-8'} size={16} icon={CheckSvg}></Icon>}
                 {item.label && !item.checkLabel && <label>{item.label}</label>}
                 {Array.isArray(item.btns) && item.btns.map(btn => {
@@ -170,11 +173,15 @@ export class MenuItemView extends React.Component<{
             {item.type == MenuItemType.switch && <div className='shy-menu-box-item-switch'>
                 {item.icon && <i className="flex-center flex-inline size-20 text-1"><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
                 {item.renderIcon && item.renderIcon(item, this)}
-                <span className="shy-menu-box-item-switch-text">{item.text}</span>
+                <span className="shy-menu-box-item-switch-text  flex">
+                    {item.text}
+                    {item.remark && <i className="remark padding-l-5">{item.remark}</i>}
+                    {item.helpUrl && <span className="flex-fixed h-20 flex"><HelpText onMouseDown={e => e.stopPropagation()} url={item.helpUrl}>{item.helpText}</HelpText></span>}
+                </span>
                 <Switch size='small' onChange={e => this.checked(e, item)} checked={item.checked ? item.checked : false}></Switch>
             </div>}
             {item.type == MenuItemType.help && <div className="shy-menu-box-item-help">
-                <HelpText className={'padding-w-5'} align="left" block url={item.url}>{item.text}</HelpText>
+                <HelpText className={'padding-w-5'} align="left" block={item.helpInline?false:true} url={item.url}>{item.text}</HelpText>
             </div>}
             {item.type == MenuItemType.input && !item.label && <div className="shy-menu-box-item-input"><Input size={'small'} value={item.value} onEnter={e => { item.value = e; this.select(item) }} onChange={e => { item.value = e; this.input(e, item) }} placeholder={item.placeholder || item.text}></Input></div>}
             {item.type == MenuItemType.input && item.label && <div className="flex shy-menu-box-item-input">
@@ -201,7 +208,10 @@ export class MenuItemView extends React.Component<{
             {item.type == MenuItemType.select && <div className="shy-menu-box-item-select">
                 {item.icon && <i className="flex-center flex-inline size-20 flex-fixed text-1"><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
                 {item.renderIcon && item.renderIcon(item, this)}
-                <span className='shy-menu-box-item-option-text flex-auto'>{item.text}</span>
+                <span className='shy-menu-box-item-option-text flex-auto'>{item.text}
+                    {item.remark && <i className="remark padding-l-5">{item.remark}</i>}
+                    {item.helpUrl && <span className="flex-fixed h-20 flex"><HelpText onMouseDown={e => e.stopPropagation()} url={item.helpUrl}>{item.helpText}</HelpText></span>}
+                </span>
                 <span className="shy-menu-box-item-select-value flex  flex-fixed" onMouseDown={e => this.openSelectMenu(item, e)}>
                     {item?.options?.find(g => g.value == item.value)?.icon && <span className="flex-center flex-inline size-20 flex-fixed text-1"><Icon size={item.optionIconSize ? item.optionIconSize : 16} icon={item?.options?.find(g => g.value == item.value)?.icon}></Icon></span>}
                     <em className="text-over flex-auto max-w-100">{item?.options?.find(g => g.value == item.value)?.text}</em>
