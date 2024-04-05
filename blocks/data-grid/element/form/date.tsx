@@ -27,13 +27,6 @@ class FieldText extends OriginFormField {
         var dateItems: MenuItem<BlockDirective | string>[] = [];
         var day = dayjs(new Date());
         dateItems.push(...[
-            // {
-            //     name: 'dateCustomFormat',
-            //     type: MenuItemType.input,
-            //     value: this.dateFormat || lst('YYYY年MM月DD日'),
-            //     text: lst('编辑日期格式'),
-            // },
-            // { type: MenuItemType.divide },
             {
                 name: 'dateFormat',
                 text: lst('年月日'),
@@ -65,14 +58,13 @@ class FieldText extends OriginFormField {
                 label: day.format('HH:mm')
             }
         ]);
-        items.push({
-            type: MenuItemType.divide
-        })
-        items.push({
-            text: lst('日期格式'),
-            childs: dateItems,
-            icon: { name: 'bytedance-icon', code: 'calendar-thirty' }
-        });
+        var at = items.findIndex(c => c.name == BlockDirective.copy);
+        items.splice(at + 1, 0,
+            {
+                text: lst('日期格式'),
+                childs: dateItems,
+                icon: { name: 'bytedance-icon', code: 'calendar-thirty' }
+            }, { type: MenuItemType.divide })
         return items;
     }
     async onClickContextMenu(this: Block, item: MenuItem<string | BlockDirective>, event: MouseEvent): Promise<void> {
@@ -96,7 +88,7 @@ class FieldTextView extends BlockView<FieldText>{
     }
     renderView() {
         return <FieldView block={this.block}>
-            {this.block.fieldType == 'doc-detail' && <div className={this.block.dateString?"":'f-14 remark'}>{this.block.dateString}</div>}
+            {this.block.fieldType == 'doc-detail' && <div className={this.block.dateString ? "" : 'f-14 remark'}>{this.block.dateString}</div>}
             {this.block.fieldType == 'doc-add' && <DateInput value={this.block.value} onChange={e => { this.block.onChange(e) }}></DateInput>}
             {this.block.fieldType == 'doc' && <div className="item-hover-light padding-w-10 rounc padding-h-2 flex text" onMouseDown={e => this.mousedown(e)}>{this.block.dateString}</div>}
         </FieldView>

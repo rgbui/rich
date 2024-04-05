@@ -11,6 +11,7 @@ class FieldText extends OriginFormField {
     @prop()
     checkLabel: string = '';
 }
+
 @view('/form/check')
 class FieldTextView extends BlockView<FieldText>{
     renderView() {

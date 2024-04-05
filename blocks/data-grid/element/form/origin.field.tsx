@@ -116,6 +116,7 @@ export class OriginFormField extends Block {
     fieldRemark: string = '';
     fieldError: string = '';
     async onGetContextMenus() {
+        var rs = await super.onGetContextMenus();
         var items: MenuItem<BlockDirective | string>[] = [];
         if (this.fieldType == 'doc-add') {
             items.push({
@@ -143,12 +144,9 @@ export class OriginFormField extends Block {
             type: MenuItemType.switch,
             checked: this.hidePropTitle
         })
-        items.push({
-            name: 'hide',
-            icon: TrashSvg,
-            text: lst('删除')
-        });
-        return items;
+        var cat = rs.findIndex(c => c.name == BlockDirective.comment);
+        rs.splice(cat - 1, 0, ...items);
+        return rs;
     }
     async onContextMenuInput(this: Block, item: MenuItem<BlockDirective | string>) {
         if (['required', 'allowRemark', 'hidePropTitle'].includes(item.name as string)) {

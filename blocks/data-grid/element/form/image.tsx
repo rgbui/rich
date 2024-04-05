@@ -63,7 +63,8 @@ class FormFieldImage extends OriginFormField {
             });
         }
         newItems.push({ type: MenuItemType.divide })
-        items.splice(2, 0, ...newItems);
+        var at = items.findIndex(c => c.name == BlockDirective.copy);
+        items.splice(at+1, 0, ...newItems);
         return items;
     }
     async onContextMenuInput(item: MenuItem<BlockDirective | string>) {

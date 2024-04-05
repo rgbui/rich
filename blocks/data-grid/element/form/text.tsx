@@ -16,7 +16,8 @@ class FieldText extends OriginFormField {
     async onGetContextMenus() {
         var items = await super.onGetContextMenus();
         if (this.fieldType == 'doc-add' && [FieldType.text].includes(this.field.type)) {
-            items.splice(0, 0, {
+            var at = items.findIndex(c => c.name == BlockDirective.copy);
+            items.splice(at+1, 0, {
                 name: 'inputType',
                 text: lst('多行文本'),
                 type: MenuItemType.switch,
