@@ -8,7 +8,7 @@ import { GetFieldTypeSvg } from "../../schema/util"
 import { Point, Rect } from "../../../../src/common/vector/point"
 import { MouseDragger } from "../../../../src/common/dragger"
 import { DataGridTool } from "../components/tool"
-import { CheckSvg, CollectTableSvg, DotsSvg, PlusSvg, TypesNumberSvg } from "../../../../component/svgs"
+import { CheckSvg, CollectTableSvg, DotsSvg, PlusSvg } from "../../../../component/svgs"
 import { ghostView } from "../../../../src/common/ghost"
 import { ViewField } from "../../schema/view"
 import { Spin, SpinBox } from "../../../../component/view/spin"
@@ -29,7 +29,7 @@ export class TableStoreView extends BlockView<TableStore>{
         if (!this.block.schema) return;
         if (this.isDragMouseField) return;
         var box = (this.block.el as HTMLElement).querySelector('.sy-dg-table-content') as HTMLElement;
-        var head = box.querySelector('.sy-dg-table-head') as HTMLElement;
+        var head = (this.block.el as HTMLElement).querySelector('.sy-dg-table-head') as HTMLElement;
         if (!head) return;
         var boxRect = Rect.fromEle(box);
         var tableHeadRect = Rect.fromEle(head);
@@ -166,8 +166,12 @@ export class TableStoreView extends BlockView<TableStore>{
     }
     subline: HTMLElement;
     isMoveLine: boolean = false;
+    headEl: HTMLElement;
+    headScrollEl: HTMLElement;
     renderHead() {
-        return <div style={{ minWidth: this.block.sumWidth }} onMouseLeave={e => this.mouseleaveHead(e)} className="sy-dg-table-head" onMouseMove={e => this.mousemove(e.nativeEvent)}>
+        return <div className="h-36"><div style={{
+            minWidth: this.block.sumWidth
+        }} ref={e => this.headEl = e} onMouseLeave={e => this.mouseleaveHead(e)} className="sy-dg-table-head" onMouseMove={e => this.mousemove(e.nativeEvent)}>
             <div className='sy-dg-table-subline' onMouseDown={e => this.onMousedownLine(e)} ref={e => this.subline = e}></div>
             {this.block.fields.map((f, i) => {
                 var text = f.field?.text || f.text;
@@ -199,6 +203,7 @@ export class TableStoreView extends BlockView<TableStore>{
                 style={{ minWidth: 40, flexGrow: 1, flexShrink: 1 }}>
                 <ToolTip overlay={lst('添加新列')}><span onMouseDown={e => { e.stopPropagation(); this.block.onAddField(Rect.fromEvent(e)) }} className="size-24 item-hover round cursor flex-center text-1"><Icon icon={PlusSvg}></Icon></span></ToolTip>
             </div>}
+        </div>
         </div>
     }
     renderBody() {
@@ -238,11 +243,63 @@ export class TableStoreView extends BlockView<TableStore>{
         >
             {this.block.isLoading && <Spin block></Spin>}
             {this.block.schema && <DataGridTool block={this.block}></DataGridTool>}
-            {this.block.schema && <div className="sy-dg-table-content" >
-                {this.block.noHead !== true && this.renderHead()}
-                {this.renderBody()}
+            {this.block.schema && this.block.noHead !== true && <div
+                ref={e => this.headScrollEl = e}
+                style={{
+                    overflowX: 'auto',
+                    zIndex: 1,
+                    background: '#fff',
+                    position: 'sticky',
+                    top: 0,
+                    display: 'none'
+                }}>
             </div>}
+            <div className="sy-dg-table-content" >
+                {this.block.schema && this.block.noHead !== true && this.renderHead()}
+                {this.block.schema && this.renderBody()}
+            </div>
             {this.renderCreateTable()}
         </div>
+    }
+    async didMount() {
+        var sd = this.props.block.page.getScrollDiv() as HTMLElement;
+        if (sd) sd.addEventListener('scroll', this._scroll)
+        var box = this.block.el.querySelector('.sy-dg-table-content');
+        console.log('box', this.block.el, box);
+        if (box) {
+            box.addEventListener('scroll', this.content_scroll);
+        }
+    }
+    willUnmount() {
+        var sd = this.props.block.page.getScrollDiv() as HTMLElement;
+        if (sd) sd.removeEventListener('scroll', this._scroll);
+        var box = this.block.el.querySelector('.sy-dg-table-content');
+        if (box) {
+            box.removeEventListener('scroll', this.content_scroll);
+        }
+    }
+    _scroll = (e) => {
+        if (this.block.schema && this.block.noHead != true) {
+            var div = this.props.block.page.getScrollDiv() as HTMLElement;
+            if (div) {
+                var el = this.block.el;
+                var eb = Rect.fromEle(el);
+                var db = Rect.fromEle(div);
+                if (db.top > eb.top && db.top < eb.bottom) {
+                    this.headScrollEl.style.display = 'block'
+                    this.headScrollEl.appendChild(this.headEl);
+                }
+                else {
+                    this.headScrollEl.style.display = 'none';
+                    this.block.el.querySelector('.h-36').appendChild(this.headEl);
+                }
+            }
+        }
+    }
+    content_scroll = (e) => {
+        var box = this.block.el.querySelector('.sy-dg-table-content');
+        if (box) {
+            this.headScrollEl.scrollLeft = box.scrollLeft;
+        }
     }
 }
