@@ -103,7 +103,7 @@ import "./data-grid/element/filter/option";
 
 import "./data-grid/block/optionRule";
 import "./data-grid/block/paging";
-import "./data-grid/block/preOrNext";
+import "./interaction/preOrNext";
 import "./data-grid/block/latestOrHot"
 
 import "./at/date";
