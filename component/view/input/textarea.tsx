@@ -4,6 +4,7 @@ import "./style.less";
 
 export class Textarea extends React.Component<{
     style?: CSSProperties,
+    textInputStyle?: CSSProperties,
     disabled?: boolean,
     value?: string,
     placeholder?: string,
@@ -19,7 +20,7 @@ export class Textarea extends React.Component<{
     transparent?: boolean,
     autoHeight?: boolean,
     theme?: 'default' | 'focus',
-}>{
+}> {
     updateValue(value) {
         this.inputEl.value = value;
     }
@@ -49,7 +50,7 @@ export class Textarea extends React.Component<{
         if (this.props.theme) {
             classList.push('shy-textarea-' + this.props.theme)
         }
-
+        var textInputStyle = Object.assign({}, props.textInputStyle || {});
         return <div className={classList.join(" ")} style={style}>
             <textarea
                 ref={e => this.inputEl = e}
@@ -63,7 +64,8 @@ export class Textarea extends React.Component<{
                     backgroundColor: props.transparent ? 'transparent' : undefined,
                     height: props.autoHeight ? 'auto' : undefined,
                     resize: props.autoHeight ? 'vertical' : undefined,
-                    minHeight: props.autoHeight ? 80 : undefined
+                    minHeight: props.autoHeight ? 80 : undefined,
+                    ...textInputStyle
                 }}
                 onInput={e => props.onChange && props.onChange(filterValue((e.target as HTMLInputElement).value))}
                 onKeyDown={e => keydown(e)}></textarea>
