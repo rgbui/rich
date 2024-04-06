@@ -4,7 +4,7 @@ import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { FieldType } from "../../../blocks/data-grid/schema/type";
 import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
 import { EventsComponent } from "../../../component/lib/events.component";
-import { ChevronRightSvg, TypesNumberSvg } from "../../../component/svgs";
+import { ChevronRightSvg, FxSvg, TypesNumberSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { Textarea } from "../../../component/view/input/textarea";
 import { Markdown } from "../../../component/view/markdown";
@@ -12,10 +12,12 @@ import { Express } from "../../../src/express";
 import { util } from "../../../util/util";
 import { PopoverSingleton } from "../../../component/popover/popover";
 import { PopoverPosition } from "../../../component/popover/position";
-import { constLangs, formulaLangs, funLangs, logcLangs } from "./data";
+import { constLangs, GetFormulaLangs, funLangs, logcLangs } from "./data";
 import { Field } from "../../../blocks/data-grid/schema/field";
 import { S } from "../../../i18n/view";
 import { lst } from "../../../i18n/store";
+import { HelpText } from "../../../component/view/text";
+import { Button } from "../../../component/view/button";
 
 class FormulaSelector extends EventsComponent {
     schema: TableSchema;
@@ -67,9 +69,19 @@ class FormulaSelector extends EventsComponent {
         }
     })
     textarea: Textarea = null
+    formulaLangs: ({
+        text: any;
+        types: FieldType[];
+        spread: boolean;
+        childs: {
+            text: string;
+            url: string;
+        }[];
+    }[]) = [];
     render(): React.ReactNode {
-        return <div className="w-500">
+        return <div className="w-700">
             <div className="h-80"><Textarea textInputStyle={{ borderRadius: '4px 4px 0px 0px' }} ref={e => this.textarea = e} value={this.formula} onChange={e => this.onInput(e)} ></Textarea></div>
+            {this.error && <div className="error min-h-30 padding-w-14">{this.error}</div>}
             <div className="flex-full h-300">
                 <div className="overflow-y w-150 bg-light  padding-b-100 flex-fixed">
                     <div className="gap-h-10">
@@ -85,7 +97,7 @@ class FormulaSelector extends EventsComponent {
                                 }}
                                 key={f.id}
                                 className="gap-w-5 padding-w-5 item-hover round cursor flex h-30">
-                                <span className="flex-center size-24 flex-fixed"><Icon size={16} icon={GetFieldTypeSvg(f.type)}></Icon></span>
+                                <span className="flex-center size-24 flex-fixed "><Icon size={14} icon={GetFieldTypeSvg(f.type)}></Icon></span>
                                 <span className="f-14 inline-block text-overflow flex-auto">@{f.text}</span>
                             </div>
                         })}
@@ -94,7 +106,7 @@ class FormulaSelector extends EventsComponent {
                         <div className="remark font-12 padding-l-10"><S>常量</S></div>
                         {constLangs.map((fl, k) => {
                             return <div onMouseEnter={e => this.openData(fl)} key={k} className="gap-w-5 padding-w-5 item-hover round cursor flex h-30">
-                                <span className="flex-fixed flex-center size-24"><Icon size={16} icon={TypesNumberSvg}></Icon></span>
+                                <span className="flex-fixed flex-center size-24"><Icon size={14} icon={TypesNumberSvg}></Icon></span>
                                 <span className="flex-auto text-overflow">{fl.text}</span>
                             </div>
                         })}
@@ -115,18 +127,18 @@ class FormulaSelector extends EventsComponent {
                             return <div key={k}
                                 onMouseEnter={e => this.openData(fl)}
                                 className="gap-w-5 padding-w-5 item-hover round cursor flex h-30">
-                                <span className="flex-fixed flex-center size-24"><Icon size={16} icon={TypesNumberSvg}></Icon></span>
+                                <span className="flex-fixed flex-center size-24"><Icon size={18} icon={FxSvg}></Icon></span>
                                 <span className="flex-auto text-overflow">{fl.text}</span>
                             </div>
                         })}
                     </div>
                     <div className="gap-h-10">
                         <div className="remark font-12 padding-l-10"><S>类型</S></div>
-                        {formulaLangs().map((fl, k) => {
+                        {this.formulaLangs.map((fl, k) => {
                             return <div className="gap-h-10" key={k}>
                                 <div onClick={e => { fl.spread = fl.spread ? false : true; this.forceUpdate() }}
                                     className="flex text-1 font-14 padding-l-10">
-                                    <span className="flex-fixed size-24 item-hover flex-center round cursor" style={{ transform: fl.spread ? 'rotateZ(90deg)' : 'rotateZ(0deg)' }}><Icon size={16} icon={ChevronRightSvg}></Icon></span>
+                                    <span className="flex-fixed size-20 item-hover flex-center round cursor ts" style={{ transform: fl.spread ? 'rotateZ(90deg)' : 'rotateZ(0deg)' }}><Icon size={16} icon={ChevronRightSvg}></Icon></span>
                                     <span className="flex-fixed flex-center size-24"><Icon size={16} icon={GetFieldTypeSvg(fl.types[0])}></Icon></span>
                                     <span className="flex-auto text-overflow">{fl.text}</span>
                                 </div>
@@ -144,7 +156,15 @@ class FormulaSelector extends EventsComponent {
                     {this.md && <Markdown md={this.md}></Markdown>}
                 </div>
             </div>
-            {this.error && <div className="error min-h-30 padding-w-14">{this.error}</div>}
+            <div className="flex h-40 padding-w-10 border-top">
+                <div className="flex-fixed">
+                    <HelpText url={window.shyConfig?.isUS ? "https://shy.red/ws/help/page/52" : "https://shy.live/ws/help/page/1889"}><S>了解更多数据表格公式列使用方法</S></HelpText>
+                </div>
+                <div className="flex-auto flex-end">
+                    <Button onMouseDown={e => this.onSave()}>保存</Button>
+                </div>
+            </div>
+
         </div>
     }
     getFields() {
@@ -211,7 +231,16 @@ class FormulaSelector extends EventsComponent {
         this.error = '';
         this.forceUpdate()
     }
+    onSave() {
+        if (!this.error) {
+            this.emit('save')
+        }
+    }
+    componentDidMount(): void {
+        this.formulaLangs = GetFormulaLangs();
+    }
 }
+
 export async function useFormula(pos: PopoverPosition, options: {
     schema: TableSchema,
     formula: string
@@ -222,10 +251,14 @@ export async function useFormula(pos: PopoverPosition, options: {
     return new Promise((resolve: (data: { formula: string, jsCode: string, exp: any }) => void, reject) => {
         fv.only('close', () => {
             popover.close();
+            resolve(undefined);
+        })
+        fv.only('save', () => {
+            popover.close();
             resolve(fv.result);
         })
         popover.only('close', () => {
-            resolve(fv.result)
+            resolve(undefined)
         })
     })
 }

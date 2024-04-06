@@ -636,7 +636,7 @@ export class DataGridViewField {
                         schema: this.schema,
                         formula: viewField.field.config.formula?.formula || ''
                     });
-                    if (formula) await this.onUpdateFieldConfig(viewField.field, { formula });
+                    if (!lodash.isUndefined(formula)) await this.onUpdateFieldConfig(viewField.field, { formula });
                 }
                 else if (re.item.name == 'emoji') {
                     var rc = await useOpenEmoji({ roundArea: rp });

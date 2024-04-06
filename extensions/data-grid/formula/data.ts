@@ -8,6 +8,7 @@ export var constLangs = [
     { text: 'true', url: '/const/true.md' },
     { text: 'false', url: '/const/false.md' }
 ]
+
 export var logcLangs = [
     { text: '+', url: '/logic/plus.md' },
     { text: '-', url: '/logic/sub.md' },
@@ -52,7 +53,7 @@ export var funLangs = [
 
 
 
-export var formulaLangs =()=> [
+export var GetFormulaLangs =()=> [
     {
         text: lst('文本'),
         types: [FieldType.text, FieldType.title],
