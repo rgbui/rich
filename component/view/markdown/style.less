@@ -1,17 +1,41 @@
 .md {
     pre {
         display      : block;
-        margin       : 0 1px;
-        padding      : 20px;
+        margin       : 5px 1px;
+        padding      : 10px;
         background   : #f2f4f5;
         border       : 1px solid rgba(0, 0, 0, .06);
         border-radius: 8px;
+        word-break   : break-all;
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    code {
+        word-wrap    : break-word;
+        overflow-wrap: break-word;
+        text-wrap    : wrap;
+    }
+
+    pre code {
+        margin : 0px;
+        padding: 0px;
+        display: block;
+        font-size: 14px;
+        line-height: 20px;
     }
 
     ol,
-    li,
     ul {
         margin : 0px;
         padding: 0px;
+    }
+
+    p {
+        margin: 10px 0px;
+    }
+
+    li {
+        margin-left: 20px;
     }
 }

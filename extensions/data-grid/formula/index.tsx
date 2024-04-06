@@ -69,11 +69,11 @@ class FormulaSelector extends EventsComponent {
     textarea: Textarea = null
     render(): React.ReactNode {
         return <div className="w-500">
-            <div className="h-80"><Textarea ref={e => this.textarea = e} value={this.formula} onChange={e => this.onInput(e)} ></Textarea></div>
+            <div className="h-80"><Textarea textInputStyle={{ borderRadius: '4px 4px 0px 0px' }} ref={e => this.textarea = e} value={this.formula} onChange={e => this.onInput(e)} ></Textarea></div>
             <div className="flex-full h-300">
                 <div className="overflow-y w-150 bg-light  padding-b-100 flex-fixed">
                     <div className="gap-h-10">
-                        <div className="remark font-12 padding-l-10"><S>属性</S></div>
+                        <div className="remark font-12 padding-l-10"><S>字段</S></div>
                         {this.schema && this.getFields().map(f => {
                             return <div
                                 onMouseEnter={e => {
@@ -84,7 +84,7 @@ class FormulaSelector extends EventsComponent {
                                     this.textarea.updateValue(this.formula);
                                 }}
                                 key={f.id}
-                                className="padding-w-10 item-hover round cursor flex h-30">
+                                className="gap-w-5 padding-w-5 item-hover round cursor flex h-30">
                                 <span className="flex-center size-24 flex-fixed"><Icon size={16} icon={GetFieldTypeSvg(f.type)}></Icon></span>
                                 <span className="f-14 inline-block text-overflow flex-auto">@{f.text}</span>
                             </div>
@@ -93,7 +93,7 @@ class FormulaSelector extends EventsComponent {
                     <div className="gap-h-10">
                         <div className="remark font-12 padding-l-10"><S>常量</S></div>
                         {constLangs.map((fl, k) => {
-                            return <div onMouseEnter={e => this.openData(fl)} key={k} className="padding-w-10 item-hover round cursor flex h-30">
+                            return <div onMouseEnter={e => this.openData(fl)} key={k} className="gap-w-5 padding-w-5 item-hover round cursor flex h-30">
                                 <span className="flex-fixed flex-center size-24"><Icon size={16} icon={TypesNumberSvg}></Icon></span>
                                 <span className="flex-auto text-overflow">{fl.text}</span>
                             </div>
@@ -104,7 +104,7 @@ class FormulaSelector extends EventsComponent {
                         {logcLangs.map((fl, k) => {
                             return <div key={k}
                                 onMouseEnter={e => this.openData(fl)}
-                                className="padding-w-10 item-hover round cursor flex h-30">
+                                className="gap-w-5 padding-w-5 item-hover round cursor flex h-30">
                                 <span className="gap-l-10 flex-auto text-overflow">{fl.text}</span>
                             </div>
                         })}
@@ -114,7 +114,7 @@ class FormulaSelector extends EventsComponent {
                         {funLangs.map((fl, k) => {
                             return <div key={k}
                                 onMouseEnter={e => this.openData(fl)}
-                                className="padding-w-10 item-hover round cursor flex h-30">
+                                className="gap-w-5 padding-w-5 item-hover round cursor flex h-30">
                                 <span className="flex-fixed flex-center size-24"><Icon size={16} icon={TypesNumberSvg}></Icon></span>
                                 <span className="flex-auto text-overflow">{fl.text}</span>
                             </div>
@@ -134,13 +134,13 @@ class FormulaSelector extends EventsComponent {
                                     return <div
                                         onMouseEnter={e => this.openData(f)}
                                         key={g}
-                                        className="padding-w-10 padding-l-30 item-hover round cursor flex h-30"><span className="f-14 inline-block gap-l-10">{f.text}</span></div>
+                                        className="gap-w-5 padding-r-5 padding-l-30 item-hover round cursor flex h-30"><span className="f-14 inline-block gap-l-10">{f.text}</span></div>
                                 })}</div>}
                             </div>
                         })}
                     </div>
                 </div>
-                <div className="padding-10 overflow-y flex-auto md">
+                <div className="padding-10 overflow-y flex-auto md" style={{ paddingBottom: 50 }}>
                     {this.md && <Markdown md={this.md}></Markdown>}
                 </div>
             </div>
