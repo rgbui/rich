@@ -12,7 +12,6 @@ import {
     DuplicateSvg,
     TrashSvg,
     SettingsSvg,
-    EditSvg,
     EmojiSvg,
     TypesSelectSvg,
     DotsSvg,
@@ -382,11 +381,8 @@ export class DataGridViewField {
                 items.insertAt(4, {
                     text: lst('编辑公式'),
                     name: 'formula',
-                    icon: EditSvg
+                    icon: { name: 'byte', code: 'formula' }
                 });
-                items.insertAt(5, {
-                    type: MenuItemType.divide
-                })
                 items.removeAll(g => ['sortDesc', 'sortAsc', 'filter'].includes((g as any).name));
             }
             else if (viewField.field?.type == FieldType.relation) {
