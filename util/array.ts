@@ -60,7 +60,7 @@ interface Array<T> {
     average(predict?: ((t: T) => number)): number;
     avg(predict?: ((t: T) => number) | string): number;
 
-    arrayJsonEach(arrayJsonName: string, fn: (item: T, deep: number, index: number, sort: number, parent: T, thisArray: T[]) => (void | { break?: boolean, continue?: boolean })): void
+    arrayJsonEach(arrayJsonName: string, fn: (item: T, deep: number, gIndex: number, at: number, parent: T, thisArray: T[]) => (void | { break?: boolean, continue?: boolean })): void
     arrayJsonFind(arrayJsonName: string,
         fn: (item: T, index?: number, arr?: T[]) => boolean): T;
     arrayJsonMax(arrayJsonName: string, predict: ((t: T) => number) | string): number | undefined;

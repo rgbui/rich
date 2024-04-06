@@ -28,6 +28,7 @@ import { util } from "../../../util/util";
 import { ls, lst } from "../../../i18n/store";
 import { channel } from "../../../net/channel";
 import { UA } from "../../../util/ua";
+import { PageOutLine } from "../../../blocks/navigation/outline";
 
 export class Block$Event {
     /**
@@ -432,6 +433,18 @@ export class Block$Event {
             await this.manualUpdateProps({ [appear.prop]: oldValue }, { [appear.prop]: newValue }, BlockRenderRange.none, { isOnlyRecord: true });
             if (typeof action == 'function') await action();
             await this.changeAppear(appear);
+
+            /**
+             * 如果是大标题进行编辑更行，
+             * 此时需要将标题的内容同步至大纲
+             */
+            var c = this.closest(x => !x.isLine);
+            if (c?.url == BlockUrlConstant.Head) {
+                var outline = this.page.find(x => x.url == BlockUrlConstant.Outline) as PageOutLine;
+                if (outline) {
+                    outline.updateHeadBlock(this, true);
+                }
+            }
         })
     }
     async onDelete(this: Block) {

@@ -47,21 +47,27 @@ export class PageOutLine extends Block {
     updateOutlinesHover() {
         var hoverId = '';
         if (this.outlines.length > 0) {
-            for (let i = 0; i < this.outlines.length - 1; i++) {
-                var r = Rect.fromEle(this.outlines[i].block.el);
-                var n = Rect.fromEle(this.outlines[i + 1].block.el);
+            var rs: OutLineItemType[] = []
+            this.outlines.arrayJsonEach('childs', c => {
+                rs.push(c)
+            })
+            for (let i = 0; i < rs.length - 1; i++) {
+                var r = Rect.fromEle(rs[i].block.el);
+                var n = Rect.fromEle(rs[i + 1].block.el);
                 if (r.top < 50 && n.top > 50) {
-                    hoverId = this.outlines[i].block.id;
+                    hoverId = rs[i].block.id;
                     break;
                 }
             }
             if (!hoverId) {
-                var r = Rect.fromEle(this.outlines[this.outlines.length - 1].block.el);
-                if (r.top <= 50) hoverId = this.outlines[this.outlines.length - 1].block.id;
+                var r = Rect.fromEle(rs[rs.length - 1].block.el);
+                if (r.top <= 50) hoverId = rs[rs.length - 1].block.id;
             }
         }
-        this.hoverId = hoverId;
-        this.forceUpdate();
+        if (this.hoverId !== hoverId) {
+            this.hoverId = hoverId;
+            this.forceUpdate();
+        }
     }
     cacOutLines() {
         var outlines: OutLineItemType[] = [];
@@ -83,7 +89,8 @@ export class PageOutLine extends Block {
                     hLevel: level,
                     text: b.getBlockContent(),
                     html: b.el ? b.el.innerText : undefined,
-                    spread: sc
+                    spread: sc,
+                    childs: []
                 });
                 if (lastItem) {
                     if (level > lastItem.hLevel) {
@@ -129,7 +136,7 @@ export class PageOutLine extends Block {
         this.updateOutlinesHover()
     }
     updateHeadBlock(block: Block, forceUpdate?: boolean) {
-        var ou = this.outlines.find(c => c.id == block.id);
+        var ou = this.outlines.arrayJsonFind('childs', c => c.id == block.id);
         if (ou) {
             ou.html = block.el ? block.el.innerText : undefined;
             ou.text = block.getBlockContent();
@@ -161,6 +168,7 @@ export class PageOutLine extends Block {
             name: 'refresh',
             icon: { name: 'byte', code: 'refresh' },
         });
+        rs.push({ type: MenuItemType.divide })
         rs.push({
             text: lst('关闭文档目录'),
             name: 'close',
@@ -202,7 +210,7 @@ export class PageOutLine extends Block {
 }
 
 @view('/outline')
-export class PageOutLineView extends BlockView<PageOutLine>{
+export class PageOutLineView extends BlockView<PageOutLine> {
     mousedownLine(line, event: React.MouseEvent) {
         var block = this.block.page.find(g => g.id == line.id);
         if (block) {
@@ -224,16 +232,17 @@ export class PageOutLineView extends BlockView<PageOutLine>{
         var style: CSSProperties = { ...this.block.visibleStyle };
         if (typeof this.height == 'number') style.height = this.height;
         return <div className='sy-block-outline relative visible-hover' style={style}>
-            <div className="sy-block-outline-head pos flex-end"
-                style={{ top: this.block.outlineTitle ? 0 : -30, right: 0, height: 30 }}>
-                <span className="size-24 round item-hover cursor visible" onMouseDown={async e => {
+            <div className="sy-block-outline-head pos flex-end z-1"
+                style={{ top: 0, right: 0, height: 30 }}>
+                <span className="size-24 flex-center gap-r-5 round item-hover cursor visible" onMouseDown={async e => {
+                    e.stopPropagation();
                     var ele = e.currentTarget as HTMLElement;
                     try {
                         ele.classList.remove('visible')
                         await this.block.onContextmenu(Rect.fromEle(e.currentTarget as HTMLElement))
                     }
                     catch (ex) {
-
+                        console.log(ex)
                     }
                     finally {
                         ele.classList.add('visible')
@@ -241,7 +250,7 @@ export class PageOutLineView extends BlockView<PageOutLine>{
                 }}><Icon icon={DotsSvg}></Icon></span>
             </div>
             <div className="sy-block-outline-line">
-                {this.block.outlineTitle && <div className="item text-over remark f-14" style={{ paddingLeft: 20 }}>{this.block.outlineTitle}</div>}
+                {this.block.outlineTitle && <div className="item text-over remark f-14" style={{ paddingLeft: 10 }}>{this.block.outlineTitle}</div>}
                 {this.block.outlines.map(line => {
                     return this.renderItem(line, 0)
                 })}
@@ -249,14 +258,15 @@ export class PageOutLineView extends BlockView<PageOutLine>{
         </div>
     }
     renderItem(item: OutLineItemType, deep: number) {
-        return <div key={item.id}><div className={"item text-over" + (this.block.hoverId == item.block.id ? " hover" : "")}>
-            <a className="flex" style={{ paddingLeft: 20 + deep * 15 }} onMouseDown={e => this.mousedownLine(item, e)}>
-                <span
-                    className={"size-20 round item-hover cursor flex-center ts " + (item.spread ? "angel-90" : "")}
-                    onMouseDown={e => { e.stopPropagation(); item.spread = item.spread ? false : true; this.forceUpdate() }} style={{ visibility: item.childs && item.childs.length > 0 ? "visible" : 'hidden' }}><Icon icon={TriangleSvg}></Icon></span>
-                <span dangerouslySetInnerHTML={{ __html: item.html || item.text }}></span>
-            </a>
-        </div>
+        return <div key={item.id}>
+            <div className={"item text-over" + (this.block.hoverId == item.block.id ? " hover" : "")}>
+                <a className="flex" style={{ paddingLeft: 10 + deep * 15 }} onMouseDown={e => this.mousedownLine(item, e)}>
+                    <span
+                        className={"size-16 round  cursor flex-center ts " + (item.spread ? "rotate-180" : "rotate-90")}
+                        onMouseDown={e => { e.stopPropagation(); item.spread = item.spread ? false : true; this.forceUpdate() }} style={{ visibility: item.childs && item.childs.length > 0 ? "visible" : 'hidden' }}><Icon size={9} icon={TriangleSvg}></Icon></span>
+                    <span dangerouslySetInnerHTML={{ __html: item.html || item.text }}></span>
+                </a>
+            </div>
             {item.spread && item.childs && item.childs.length > 0 && <div>
                 {item.childs.map(c => this.renderItem(c, deep + 1))}
             </div>}
