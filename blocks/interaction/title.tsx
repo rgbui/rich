@@ -9,7 +9,7 @@ import { Icon } from "../../component/view/icon";
 import { AlignTextCenterSvg, EmojiSvg, HideSvg, LinkSvg, MoveToSvg, PicSvg } from "../../component/svgs";
 import lodash from "lodash";
 import { Spin } from "../../component/view/spin";
-import { LinkPageItem, getPageText } from "../../src/page/declare";
+import { LinkPageItem, PageLayoutType, getPageText } from "../../src/page/declare";
 import { S } from "../../i18n/view";
 import { lst } from "../../i18n/store";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
@@ -96,18 +96,6 @@ export class Title extends Block {
             icon: { name: 'byte', code: 'message' },
             label: UA.isMacOs ? "⌘+Opt+M" : "Ctrl+Alt+M"
         })
-        // rs.push({
-        //     name: 'move',
-        //     text: lst('移动页面'),
-        //     icon: MoveToSvg,
-        //     label: UA.isMacOs ? "⌘+Shift+P" : "Ctrl+Shift+P"
-        // });
-        // rs.push({
-        //     name: 'export',
-        //     iconSize: 16,
-        //     text: lst('导出页面'),
-        //     icon: { name: 'bytedance-icon', code: 'export' }
-        // });
         rs.push({
             type: MenuItemType.divide
         });
@@ -164,9 +152,6 @@ export class Title extends Block {
         }
         return await super.onClickContextMenu(item, e);
     }
-    get isCanDrag() {
-        return false;
-    }
     getVisibleHandleCursorPoint() {
         var r = super.getVisibleHandleCursorPoint();
         var el = this.el.querySelector('.sy-block-page-info-head-title');
@@ -176,9 +161,26 @@ export class Title extends Block {
         }
         return r;
     }
+    /**
+    * 当页面是数据表格时，数据表格页面不能插入其它块，
+    * 所以+号图标不在显示
+    * @returns 
+    */
+    isVisiblePlus() {
+        if (this.page.pageLayout?.type == PageLayoutType.db) {
+            return false;
+        }
+        else return super.isVisiblePlus();
+    }
+    get isCanDrag() {
+        if (this.page.pageLayout?.type == PageLayoutType.db) {
+            return false;
+        }
+        else return false;
+    }
 }
 @view('/title')
-export class TitleView extends BlockView<Title>{
+export class TitleView extends BlockView<Title> {
     async didMount() {
         channel.sync('/page/update/info', this.updatePageInfo);
         await this.block.loadPageInfo();

@@ -518,7 +518,7 @@ export class DataGridView extends Block {
         if (this.page.pageLayout?.type == PageLayoutType.db) {
             return false;
         }
-        else return true;
+        else return super.isVisiblePlus();
     }
     get isCanDrag() {
         if (this.page.pageLayout?.type == PageLayoutType.db) {
