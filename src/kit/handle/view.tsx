@@ -11,7 +11,7 @@ import { UA } from "../../../util/ua";
 import { Sp } from "../../../i18n/view";
 import lodash from "lodash";
 
-export class HandleView extends React.Component<{ handle: Handle }>{
+export class HandleView extends React.Component<{ handle: Handle }> {
     constructor(props) {
         super(props);
         this.handle.view = this;
@@ -116,12 +116,12 @@ export class HandleView extends React.Component<{ handle: Handle }>{
                 ref={e => this.handleEle = e}
             >
                 <Tip placement='bottom' ref={e => { this.plusToolTip = e; }} overlay={<Sp block text={'鼠标点击插入块'} data={{ key: UA.isMacOs ? "option" : "alt" }}>鼠标点击插入块<br />{UA.isMacOs ? "option" : "alt"}点击上面插入块</Sp>} >
-                    <span className="remark size-24 round flex-center flex-inline" onMouseDown={e => { e.stopPropagation(); this.onPlus(e) }}>
+                    <span className="shy-selector-bar-plus remark size-24 round flex-center flex-inline" onMouseDown={e => { e.stopPropagation(); this.onPlus(e) }}>
                         <Icon icon={PlusSvg} size={20}></Icon>
                     </span>
                 </Tip>
                 <Tip placement='bottom' ref={e => { this.toolTip = e; }} overlay={<Sp block text='点击打开菜单'><span><b>点击</b>打开菜单</span><span><b>拖拽</b>可移动位置</span></Sp>}>
-                    <span className="remark round w-18 h-24 flex-center flex-inline" onMouseDown={e => { e.stopPropagation(); this.onMousedown(e.nativeEvent) }}>
+                    <span className="shy-selector-bar-plus-drag remark round w-18 h-24 flex-center flex-inline" onMouseDown={e => { e.stopPropagation(); this.onMousedown(e.nativeEvent) }}>
                         <Icon icon={DragHandleSvg} size={16}></Icon>
                     </span>
                 </Tip>

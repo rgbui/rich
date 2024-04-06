@@ -442,6 +442,9 @@ export abstract class Block extends Events {
             return pos;
         }
     }
+    isVisiblePlus(){
+        return true;
+    }
     getVisibleContentBound() {
         var e = this.contentEl;
         if (e) return Rect.fromEle(e);

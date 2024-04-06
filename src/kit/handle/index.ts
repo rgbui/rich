@@ -16,9 +16,11 @@ export class Handle extends Events {
         if (!this.kit.page.isCanEdit) return;
         this.handleBlock = hoverBlock.handleBlock;
         if (this.handleBlock && this.handleBlock.isShowHandleBlock != true) return;
+        var plusEl = this.view.handleEle.querySelector('.shy-selector-bar-plus') as HTMLElement;
         if (this.isDown) {
             var handleEl = this.view.handleEle;
             handleEl.style.display = 'none';
+            plusEl.style.visibility = 'visible';
         }
         else if (this.handleBlock && !this.handleBlock.isFreeBlock) {
             var pos = this.handleBlock.getVisibleHandleCursorPoint();
@@ -29,11 +31,18 @@ export class Handle extends Events {
                 handleEl.style.top = top + 'px';
                 handleEl.style.left = pos.x + 'px';
                 handleEl.style.display = 'flex';
+                if (this.handleBlock.isVisiblePlus()) {
+                    plusEl.style.visibility = 'visible';
+                }
+                else {
+                    plusEl.style.visibility = 'hidden';
+                }
             }
         }
         else {
             var handleEl = this.view.handleEle;
             handleEl.style.display = 'none';
+            plusEl.style.visibility = 'visible';
         }
         if (this.handleBlock?.isFreeBlock) {
             if (this.kit.boardLine.isConnectOther && this.kit.boardLine.line) this.kit.boardBlockHover.block = this.handleBlock;

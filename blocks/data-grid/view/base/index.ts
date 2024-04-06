@@ -32,8 +32,7 @@ import { FieldType } from "../../schema/type";
 import { Input } from "../../../../component/view/input";
 import { onCreateDataGridTemplate } from "../../template/create";
 import { DataGridTab } from "../tab";
-
-
+import { PageLayoutType } from "../../../../src/page/declare";
 
 /**
  * 
@@ -509,6 +508,23 @@ export class DataGridView extends Block {
         if (this.parent?.url == BlockUrlConstant.DataGridTabPage) {
             return this.parent.parent as DataGridTab;
         }
+    }
+    /**
+     * 当页面是数据表格时，数据表格下面不能插入其它块，
+     * 所以+号图标不在显示
+     * @returns 
+     */
+    isVisiblePlus() {
+        if (this.page.pageLayout?.type == PageLayoutType.db) {
+            return false;
+        }
+        else return true;
+    }
+    get isCanDrag() {
+        if (this.page.pageLayout?.type == PageLayoutType.db) {
+            return false;
+        }
+        else return super.isCanDrag;
     }
 }
 
