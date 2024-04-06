@@ -2,7 +2,6 @@ import React from "react";
 import { Block } from "../../src/block";
 import { url, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
-import { DoubleLeftSvg, DoubleRightSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { S } from "../../i18n/view";
 import { ElementType } from "../../net/element.type";
@@ -32,74 +31,69 @@ export class PageOrNext extends Block {
 }
 
 @view('/page/preOrNext')
-export class PageOrNextView extends BlockView<PageOrNext>{
+export class PageOrNextView extends BlockView<PageOrNext> {
     renderContent() {
         var arrowSize = 20;
+        var s = <S>没有了</S>;
+        var e = <S>没有了</S>;
+        var ss = false;
+        var se = false;
         if (this.block.page.pe.type == ElementType.SchemaRecordView) {
-            return <div className='flex flex-top' ><a className="w50 gap-r-20 flex flex-top"
-                style={{ cursor: 'default' }}>
-                <span className="flex-center flex-fixed" style={{ height: this.block.page.lineHeight }}><Icon className={'remark-im'} size={arrowSize} icon={DoubleLeftSvg}></Icon></span>
-                <span className="gap-w-5  remark-im  flex-fixed"><S>上一篇</S></span>
-                <span className={'flex-auto ' + ("remark-im")}><S>没有了</S></span>
-            </a>
-                <a className="w50 gap-l-20  flex-end flex-top"
-                    style={{ cursor: 'default' }}>
-                    <span className={"gap-w-5 flex-auto flex-end " + "remark-im"}><S>没有了</S></span>
-                    <span className={'flex-fixed remark-im  f-14'} ><S>下一篇</S></span>
-                    <span className="flex-fixed flex-center" style={{ height: this.block.page.lineHeight }}><Icon className={'remark-im'} size={arrowSize} icon={DoubleRightSvg}></Icon></span>
-                </a>
-            </div>
+
         }
         else if (this.props.block.page.formPreRow) {
-            return <div className='flex flex-top' >
-                <a className="w50 gap-r-20 flex flex-top"
-                    style={{ cursor: this.block.page.formPreRow ? 'pointer' : 'default' }}
-                    onClick={e => {
-                        this.block.page.onFormOpen('prev')
-                    }}>
-                    <span className="flex-center flex-fixed" style={{ height: this.block.page.lineHeight }}><Icon className={'remark-im'} size={arrowSize} icon={DoubleLeftSvg}></Icon></span>
-                    <span className="gap-w-5  remark-im  flex-fixed"><S>上一篇</S></span>
-                    <span className={'flex-auto' + (this.block.page.formPreRow ? "" : "remark-im")}>{this.block.page.formPreRow ? this.block.page.formPreRow?.title : <S>没有了</S>}</span>
-                </a>
-                <a className="w50 gap-l-20  flex-end flex-top"
-                    style={{ cursor: this.block.page.formNextRow ? 'pointer' : 'default' }}
-                    onClick={e => {
-                        this.block.page.onFormOpen('next')
-                    }}>
-                    <span className={"gap-w-5 flex-auto flex-end " + (this.block.page.formNextRow ? "" : "remark-im")}>{this.block.page.formNextRow ? this.block.page.formNextRow?.title : <S>没有了</S>}</span>
-                    <span className={'flex-fixed remark-im '}><S>下一篇</S></span>
-                    <span className="flex-fixed flex-center" style={{ height: this.block.page.lineHeight }} ><Icon className={'remark-im'} size={arrowSize} icon={DoubleRightSvg}></Icon></span>
-                </a>
-            </div>
+            if (this.block.page.formPreRow?.title) { s = this.block.page.formPreRow?.title; }
+            if (this.block.page.formNextRow?.title) { e = this.block.page.formNextRow?.title; }
+            if (this.block.page.formPreRow) ss = true;
+            if (this.block.page.formNextRow) se = true;
         }
         else {
-            return <div className='flex flex-top' >
-                <a className="w50 gap-r-20 flex flex-top"
-                    style={{ cursor: this.block.prePageInfo ? 'pointer' : 'default' }}
-                    onClick={e => {
-                        if (this.block.prePageInfo)
-                            channel.air('/page/open', { item: this.block.prePageInfo?.pageId })
-                    }}>
-                    <span className="flex-center flex-fixed" style={{ height: this.block.page.lineHeight }}><Icon className={'remark-im'} size={arrowSize} icon={DoubleLeftSvg}></Icon></span>
-                    <span className="gap-w-5  remark-im  flex-fixed"><S>上一篇</S></span>
-                    <span className={'flex-auto' + (this.props.block.prePageInfo ? "" : "remark-im")}>{this.props.block.prePageInfo ? getPageText(this.block.prePageInfo) : <S>没有了</S>}</span>
-                </a>
-                <a className="w50 gap-l-20  flex-end flex-top"
-                    style={{ cursor: this.block.nextPageInfo ? 'pointer' : 'default' }}
-                    onClick={e => {
-                        if (this.block.nextPageInfo)
-                            channel.air('/page/open', { item: this.block.nextPageInfo?.pageId })
-                    }}>
-                    <span className={"gap-w-5 flex-auto flex-end " + (this.block.nextPageInfo ? "" : "remark-im")}>{this.block.nextPageInfo ? getPageText(this.block.nextPageInfo) : <S>没有了</S>}</span>
-                    <span className={'flex-fixed remark-im '}><S>下一篇</S></span>
-                    <span className="flex-fixed flex-center" style={{ height: this.block.page.lineHeight }} ><Icon className={'remark-im'} size={arrowSize} icon={DoubleRightSvg}></Icon></span>
-                </a>
-            </div>
+            if (this.block.prePageInfo) { s = getPageText(this.block.prePageInfo); ss = true; }
+            if (this.block.nextPageInfo) { e = getPageText(this.block.nextPageInfo); se = true; }
         }
+
+        var cs = this.block.contentStyle;
+        var bg = { backgroundColor: cs.backgroundColor, backround: cs.background };
+
+        return <div className='flex flex-top' >
+            <a className="w50 border gap-r-10 round padding-10 flex "
+                style={{ cursor: ss ? 'pointer' : 'default', ...bg }}
+                onClick={e => {
+                    if (this.block.prePageInfo)
+                        channel.air('/page/open', { item: this.block.prePageInfo?.pageId })
+                    else if (this.block.page.formPreRow)
+                        this.block.page.onFormOpen('prev')
+                }}>
+                <span className={"flex-center flex-fixed " + (ss ? "flex-center size-20 cursor item-hover round" : "")} ><Icon className={'remark-im'} size={arrowSize} icon={{ name: 'byte', code: 'left' }}></Icon></span>
+                <div className="flex-auto ">
+                    <span className="flex-end gap-w-5  remark-im   f-14   flex-fixed"><S>上一篇</S></span>
+                    <span className={'flex-end f-14 ' + (ss ? "" : "remark-im")}>{s}</span>
+                </div>
+            </a>
+            <a className="w50  border gap-l-10 round padding-10  flex "
+                style={{ cursor: se ? 'pointer' : 'default', ...bg }}
+                onClick={e => {
+                    if (this.block.nextPageInfo)
+                        channel.air('/page/open', { item: this.block.nextPageInfo?.pageId })
+                    else if (this.block.page.formNextRow)
+                        this.block.page.onFormOpen('next')
+                }}>
+                <div className="flex-auto">
+                    <span className={'block flex remark-im  f-14   '}><S>下一篇</S></span>
+                    <span className={"gap-w-5 flex f-14 " + (se ? "" : "remark-im")}>{e}</span>
+                </div>
+                <span className={"flex-fixed flex-center " + (se == true ? " round item-hover size-20 cursor" : "")} ><Icon className={'remark-im'} size={arrowSize} icon={{ name: 'byte', code: 'right' }}></Icon></span>
+
+            </a>
+        </div>
     }
+
     renderView() {
+        var cs = this.block.contentStyle;
+        delete cs.background;
+        delete cs.backgroundColor;
         return <div style={this.block.visibleStyle}>
-            <div style={this.block.contentStyle}>{this.renderContent()}</div>
+            <div style={{ ...cs }}>{this.renderContent()}</div>
         </div>
     }
 }
