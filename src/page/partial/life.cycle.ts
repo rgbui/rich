@@ -1002,10 +1002,12 @@ export class Page$Cycle {
     }
     async onTurnToPPT(this: Page) {
         await this.onAction('onTrunToPPT', async () => {
-            var cs = this.views.map(v => v);
-            var ns: any[] = [];
+
+            var view = this.views.first();
+            var cs = view.childs.map(v => v);
+            var ns: (Block[])[] = [];
             var lastLevel = -1;
-            var lastRs: any[] = [];
+            var lastRs: Block[] = [];
             for (let i = 0; i < cs.length; i++) {
                 if (cs[i].url == BlockUrlConstant.Title || cs[i].url == BlockUrlConstant.Head) {
                     if (cs[i].url == BlockUrlConstant.Title) {
@@ -1033,7 +1035,6 @@ export class Page$Cycle {
                 ns.push(lastRs);
             }
             var ds = ns.map(c => ({ url: BlockUrlConstant.CardBox }));
-            var view = this.views.first();
             var bs = await view.appendArrayBlockData(ds, view.childs.length, BlockChildKey.childs);
             for (let j = 0; j < bs.length; j++) {
                 await bs[j].appendArray(ns[j], 0, BlockChildKey.childs);

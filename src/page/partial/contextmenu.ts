@@ -495,6 +495,12 @@ export class PageContextmenu {
             else if (r.item.name == 'history') {
                 this.onOpenHistory()
             }
+            else if (r.item.name == 'turnToPPT') {
+                this.onTurnToPPT();
+            }
+            else if (r.item.name == 'turnToDoc') {
+                this.onTurnToDoc();
+            }
             else if (r.item.name == 'theme') {
                 this.onOpenTheme()
             }
