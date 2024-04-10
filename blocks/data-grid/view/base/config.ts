@@ -84,10 +84,16 @@ export class DataGridViewConfig {
                     { type: MenuItemType.divide },
                     { name: 'clone', icon: DuplicateSvg, text: lst('复制视图') },
                     { name: 'delete', icon: TrashSvg, text: lst('移除视图') },
+                    { type: MenuItemType.divide },
+                    {
+                        type: MenuItemType.help,
+                        text: lst('了解如何使用数据表格'),
+                        url: window.shyConfig?.isUS ? "https://help.shy.red/page/38#3qfPYqnTJCwwQ6P9zYx8Q8" : "https://shy.live/ws/help/page/286"
+                    }
                 ]);
                 if (self.page.pe.type == ElementType.Schema) {
-                    items.splice(-7, 2);
-                    items.splice(-1, 1);
+                    items.splice(-7 - 2, 2);
+                    items.splice(-3, 1);
                 }
                 return items;
             }
@@ -231,6 +237,12 @@ export class DataGridViewConfig {
                 },
                 { type: MenuItemType.divide },
                 { text: lst('导出'), icon: { name: 'byte', code: 'download-one' }, name: 'export' },
+                { type: MenuItemType.divide },
+                {
+                    type: MenuItemType.help,
+                    text: lst('了解如何使用数据表格'),
+                    url: window.shyConfig?.isUS ? "https://help.shy.red/page/38#3qfPYqnTJCwwQ6P9zYx8Q8" : "https://shy.live/ws/help/page/286"
+                }
             ]
             var um = await useSelectMenuItem({ roundArea: rect }, menus, {
                 async input(item) {
