@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import React from "react";
 import { Confirm } from "../../component/lib/confirm";
 import { EventsComponent } from "../../component/lib/events.component";
-import { ImportSvg, RenameSvg, TrashSvg } from "../../component/svgs";
+import { DotsSvg, TrashSvg } from "../../component/svgs";
 import { Button } from "../../component/view/button";
 import { useForm } from "../../component/view/form/dialoug";
 import { Icon } from "../../component/view/icon";
@@ -19,6 +19,7 @@ import { S, Sp } from "../../i18n/view";
 import { lst } from "../../i18n/store";
 import "./style.less";
 import { Spin } from "../../component/view/spin";
+import { HelpText } from "../../component/view/text";
 
 export class PageHistoryStore extends EventsComponent {
     render() {
@@ -28,19 +29,24 @@ export class PageHistoryStore extends EventsComponent {
                     <div className="shy-page-history-list-record"><span><Sp text={'{total}条历史记录'} data={{ total: this.total }}>{this.total}条历史记录</Sp></span></div>
                     {this.loadList && <Spin block></Spin>}
                     {this.list.map(r => {
-                        return <a className={r.id == this.currentId ? "hover" : ""} onMouseDown={e => this.loadPageContent(r.id)} key={r.id}>
+                        return <a className={"visible-hover " + (r.id == this.currentId ? "hover" : "")} onMouseDown={e => this.loadPageContent(r.id)} key={r.id}>
                             <span>{r.bakeTitle || (r.createDate ? util.showTime(r.createDate ? r.createDate : new Date()) : r.seq)}</span>
-                            <div onMouseDown={e => this.openProperty(e, r)} className="operate"><Icon icon={'elipsis:sy'}></Icon></div>
+                            <div onMouseDown={e => this.openProperty(e, r)} className="operate visible flex-center"><Icon size={16} icon={DotsSvg}></Icon></div>
                         </a>
                     })}
                 </div>
                 <div className="shy-page-history-view relative">
-                    {this.loadContent &&<Spin block></Spin>}
+                    {this.loadContent && <Spin block></Spin>}
                     <div ref={e => this.el = e} className="shy-page-history-view-content"></div>
                 </div>
             </div>
             <div className="shy-page-history-footer flex">
-                <div className="remark flex-fixed"><Sp text={'诗云将自动保留60天的历史记录'}>诗云将自动保留60天的历史记录<br />被重命名的版本,诗云将不在自动清理,需要手动清理</Sp></div>
+                <div className="remark flex-fixed f-14">
+                    <Sp text={'诗云将自动保留60天的历史记录'}>诗云将自动保留60天的历史记录<br />被重命名的版本,诗云将不在自动清理,需要手动清理</Sp>
+                </div>
+                <div className="flex-fixed">
+                    <HelpText url={window.shyConfig?.isUS ? "https://shy.red/ws/help/page/53" : "https://help.shy.live/page/1891"}><S>了解页面历史</S></HelpText>
+                </div>
                 <div className="flex-auto flex-end"><Button ref={e => this.button = e} onClick={e => this.onBake()} disabled={this.currentId ? false : true}><S>恢复</S></Button></div>
 
             </div>
@@ -51,45 +57,81 @@ export class PageHistoryStore extends EventsComponent {
     button: Button;
     async openProperty(e: React.MouseEvent, data) {
         e.stopPropagation();
-        var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(e) },
-            [
-                { name: 'delete', icon: TrashSvg, text: lst('删除') },
-                { name: 'rename', icon: RenameSvg, text: lst('备份重命名') },
+        var c = e.currentTarget as HTMLElement;
+        c.classList.remove('visible');
+        try {
+            var rs = [
+                { name: 'onBake', icon: { name: 'byte', code: "return" }, text: lst('恢复') },
+                { name: 'rename', icon: { name: 'byte', code: 'write' }, text: lst('重命名备份') },
+                // { type: MenuItemType.divide },
+                // { name: 'export', icon: { name: "byte", code: 'download-one' }, text: lst('导出'), disabled: true },
                 { type: MenuItemType.divide },
-                { name: 'export', icon: ImportSvg, text: lst('导出'), disabled: true }
-            ]
-        );
-        if (r?.item) {
-            if (r.item.name == 'delete') {
-                if (await Confirm(lst('确认要删除吗'))) {
-                    await channel.del('/view/snap/del', { id: data.id });
-                    this.list.remove(g => g.id == data.id);
-                    this.total -= 1;
-                    if (this.total < 10) {
-                        await this.load();
-                    } else this.forceUpdate()
-                }
-            }
-            else if (r.item.name == 'rename') {
-                var d = await useForm({
-                    title: lst('重命版本'),
-                    model: { name: data.bakeTitle || '' },
-                    remark: lst('被重命名的版本,系统将不在自动清理'),
-                    fields: [{ name: 'name', text: lst('版本名称'), type: 'input' }],
-                    checkModel: async (d) => {
-                        if (!d.name) return lst('名称不能为空');
-                    }
+                { name: 'delete', icon: TrashSvg, text: lst('删除') },
+                { type: MenuItemType.divide },
+                { type: MenuItemType.help, text: lst('了解页面历史'), url: window.shyConfig?.isUS ? "https://shy.red/ws/help/page/53" : "https://help.shy.live/page/1891" }
+            ] as any;
+            if (data.createDate) {
+                rs.push({
+                    type: MenuItemType.divide,
                 });
-                if (d) {
-                    await channel.patch('/view/snap/patch', { id: data.id, data: { bakeTitle: d.name } });
-                    var g = this.list.find(c => c.id == data.id);
-                    if (g) {
-                        g.bakeTitle = d.name;
+                if (data?.createDate) rs.push({
+                    type: MenuItemType.text,
+                    text: lst('创建于 ') + util.showTime(new Date(data.createDate))
+                });
+                var re = await channel.get('/user/basic', { userid: data.creater });
+                if (re?.data?.user) rs.push({
+                    type: MenuItemType.text,
+                    text: lst('创建人 ') + re.data.user.name
+                })
+            }
+            var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(e) },
+                rs as any
+            );
+            if (r?.item) {
+                if (r.item.name == 'delete') {
+                    if (await Confirm(lst('确认要删除吗'))) {
+                        await channel.del('/view/snap/del', { id: data.id });
+                        this.list.remove(g => g.id == data.id);
+                        this.total -= 1;
+                        if (this.total < 10) await this.load();
+                        else this.forceUpdate()
                     }
-                    this.forceUpdate()
+                }
+                else if (r.item.name == 'onBake') {
+                    if (await Confirm(lst('确认要恢复吗'))) {
+                        this.currentId = data.id;
+                        await this.onBake();
+                    }
+                }
+                else if (r.item.name == 'rename') {
+                    var d = await useForm({
+                        title: lst('重命版本'),
+                        head: false,
+                        model: { name: data.bakeTitle || '' },
+                        remark: lst('被重命名的版本系统将不在自动清理', '被重命名的版本,系统将不在自动清理'),
+                        fields: [{ name: 'name', text: lst('版本名称'), type: 'input' }],
+                        checkModel: async (d) => {
+                            if (!d.name) return lst('名称不能为空');
+                        }
+                    });
+                    if (d) {
+                        await channel.patch('/view/snap/patch', { id: data.id, data: { bakeTitle: d.name } });
+                        var g = this.list.find(c => c.id == data.id);
+                        if (g) {
+                            g.bakeTitle = d.name;
+                        }
+                        this.forceUpdate()
+                    }
                 }
             }
         }
+        catch (ex) {
+
+        }
+        finally {
+            c.classList.add('visible');
+        }
+
     }
     shyPage: Page;
     async open(page: Page) {
@@ -111,7 +153,7 @@ export class PageHistoryStore extends EventsComponent {
             this.total = r.data.total;
             this.page = r.data.page;
             this.size = r.data.size;
-            this.list = r.data.list.filter(g => g.createDate ? true : true);
+            this.list = r.data.list;
         }
         this.loadList = false;
         this.forceUpdate();
