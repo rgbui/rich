@@ -29,9 +29,9 @@ export var util = {
             }, time);
         })
     },
-    showTime(date: Date) {
+    showTime(date: Date, e?: Date) {
         if (!date) return '';
-        var now = new Date();
+        var now = e ? e : new Date();
         if (dayjs(now).isSame(dayjs(date), 'day')) {
             var hour = date.getHours();
             if (hour >= 0 && hour < 6) {

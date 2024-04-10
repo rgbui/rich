@@ -36,5 +36,6 @@ export type ResourceArguments = {
     ext?: string,
     width?:number,
     height?:number,
-    createDate?:number
+    createDate?:number,
+    creater?:string,
 }

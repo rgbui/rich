@@ -295,7 +295,6 @@ export class DataGridView extends Block {
             }
         }
         ef(f);
-        console.log('return files', f);
         return f
     }
     getSearchSorts() {

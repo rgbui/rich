@@ -265,7 +265,6 @@ export class TableStoreView extends BlockView<TableStore>{
         var sd = this.props.block.page.getScrollDiv() as HTMLElement;
         if (sd) sd.addEventListener('scroll', this._scroll)
         var box = this.block.el.querySelector('.sy-dg-table-content');
-        console.log('box', this.block.el, box);
         if (box) {
             box.addEventListener('scroll', this.content_scroll);
         }
