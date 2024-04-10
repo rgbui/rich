@@ -14,11 +14,11 @@ import { S } from "../../i18n/view";
 import { PopoverPosition } from "../../component/popover/position";
 import { useLinkPicker } from "../../extensions/link/picker";
 import { PageLink } from "../../extensions/link/declare";
-import "./style.less";
 import { CopyAlert } from "../../component/copy";
 import { RefreshSvg } from "../../component/svgs";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { lst } from "../../i18n/store";
+import "./style.less";
 
 
 @url('/link')
@@ -129,9 +129,14 @@ export class Link extends Block {
         }
         return await super.onClickContextMenu(item, event);
     }
+    getVisibleHandleCursorPoint() {
+        var el = this.el;
+        var rect = Rect.fromEle(el);
+        return rect.leftMiddle;
+    }
 }
 @view('/link')
-export class LinkView extends BlockView<Link>{
+export class LinkView extends BlockView<Link> {
     async didMount() {
         channel.sync('/page/update/info', this.updatePageInfo);
         await this.block.loadPageInfo();
