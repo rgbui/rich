@@ -17,9 +17,9 @@ import { PopoverPosition } from "../../component/popover/position";
 import { createFormPage } from "./page";
 import { S, Sp } from "../../i18n/view";
 import { lst } from "../../i18n/store";
-import "./style.less";
 import { Spin } from "../../component/view/spin";
 import { HelpText } from "../../component/view/text";
+import "./style.less";
 
 export class PageHistoryStore extends EventsComponent {
     render() {
@@ -63,8 +63,6 @@ export class PageHistoryStore extends EventsComponent {
             var rs = [
                 { name: 'onBake', icon: { name: 'byte', code: "return" }, text: lst('恢复') },
                 { name: 'rename', icon: { name: 'byte', code: 'write' }, text: lst('重命名备份') },
-                // { type: MenuItemType.divide },
-                // { name: 'export', icon: { name: "byte", code: 'download-one' }, text: lst('导出'), disabled: true },
                 { type: MenuItemType.divide },
                 { name: 'delete', icon: TrashSvg, text: lst('删除') },
                 { type: MenuItemType.divide },
@@ -98,18 +96,24 @@ export class PageHistoryStore extends EventsComponent {
                     }
                 }
                 else if (r.item.name == 'onBake') {
-                    if (await Confirm(lst('确认要恢复吗'))) {
-                        this.currentId = data.id;
-                        await this.onBake();
-                    }
+                    this.currentId = data.id;
+                    await this.onBake();
                 }
                 else if (r.item.name == 'rename') {
                     var d = await useForm({
                         title: lst('重命版本'),
                         head: false,
                         model: { name: data.bakeTitle || '' },
-                        remark: lst('被重命名的版本系统将不在自动清理', '被重命名的版本,系统将不在自动清理'),
-                        fields: [{ name: 'name', text: lst('版本名称'), type: 'input' }],
+                        remark: lst('被重命名的页面历史记录需要手动清理'),
+                        maskCloseNotSave: true,
+                        fields: [
+                            {
+                                name: 'name',
+                                placeholder: lst('版本名称'),
+                                type: 'input'
+                            }
+                        ],
+
                         checkModel: async (d) => {
                             if (!d.name) return lst('名称不能为空');
                         }
@@ -131,7 +135,6 @@ export class PageHistoryStore extends EventsComponent {
         finally {
             c.classList.add('visible');
         }
-
     }
     shyPage: Page;
     async open(page: Page) {
@@ -180,14 +183,16 @@ export class PageHistoryStore extends EventsComponent {
         this.button.loading = true;
         this.forceUpdate();
         var d = await useForm({
+
             title: '历史版本恢复',
             head: false,
             model: { name: dayjs().format('YYYY-MM-DD HH:mm') + lst('版本恢复') },
             remark: lst('将创建一个新的版本'),
-            fields: [{ name: 'name', text: lst('恢复版本名称'), type: 'input' }],
+            fields: [{ name: 'name', placeholder: lst('恢复版本名称'), type: 'input' }],
             checkModel: async (d) => {
                 if (!d.name) return lst('恢复版本名称');
             },
+            saveText: lst('恢复'),
             maskCloseNotSave: true
         });
         if (d) {

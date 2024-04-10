@@ -19,13 +19,14 @@ export type FormDialougType = {
     footer?: boolean,
     fields: {
         name: string,
-        text: string,
+        text?: string,
         tip?: string,
         type: 'input' | 'textarea' | 'switch' | 'select' | 'file',
         options?: MenuItem<string>[],
         default?: any,
         multiple?: boolean,
-        mime?: 'image' | 'file' | 'audio' | 'video'
+        mime?: 'image' | 'file' | 'audio' | 'video',
+        placeholder?: string
     }[],
     title: string,
     remark?: string,
@@ -36,7 +37,9 @@ export type FormDialougType = {
      * 关闭对话框时，通过mask，仍然返回数据，但实际没有修改，也不需要保存
      */
     maskCloseNotSave?: boolean,
-    deleteButton?: boolean
+    deleteButton?: boolean,
+    deleteText?: string,
+    saveText?: string
 }
 
 class FormDialoug extends EventsComponent {
@@ -47,8 +50,8 @@ class FormDialoug extends EventsComponent {
                 <div className="flex-auto">{this.error && <span className="error">{this.error}</span>}&nbsp;</div>
                 <div className="flex-fixed flex r-gap-l-10">
                     <Button onClick={e => this.onClose()} ghost><S>取消</S></Button>
-                    {this.deleteButton && <Button onClick={e => this.emit('delete')} ghost><S>删除</S></Button>}
-                    <Button onClick={e => this.onSave()} ref={e => this.button = e}><S>确定</S></Button>
+                    {this.deleteButton && <Button onClick={e => this.emit('delete')} ghost>{this.deleteText ? this.deleteText : <S>删除</S>}</Button>}
+                    <Button onClick={e => this.onSave()} ref={e => this.button = e}>{this.saveText ? this.saveText : <S>确定</S>}</Button>
                 </div>
             </> : undefined}
         >
@@ -56,10 +59,10 @@ class FormDialoug extends EventsComponent {
             <div className={"f-14 " + (this.footer ? "padding-b-10" : "")}>
                 {this.fields.map(f => {
                     return <div key={f.name} className="gap-h-10">
-                        <div className="flex gap-h-5 f-12 remark"><label>{f.text}</label>{f.tip && <HelpTip overlay={f.tip}></HelpTip>}</div>
+                        {f.text && <div className="flex gap-h-5 f-12 remark"><label>{f.text}</label>{f.tip && <HelpTip overlay={f.tip}></HelpTip>}</div>}
                         <div>
-                            {f.type == 'input' && <Input onEnter={e => this.onSave()} onChange={e => this.model[f.name] = e} value={this.model[f.name] || ''}></Input>}
-                            {f.type == 'textarea' && <Textarea onEnter={e => this.onSave()} onChange={e => this.model[f.name] = e} value={this.model[f.name] || ''}></Textarea>}
+                            {f.type == 'input' && <Input placeholder={f.placeholder || undefined} onEnter={e => this.onSave()} onChange={e => this.model[f.name] = e} value={this.model[f.name] || ''}></Input>}
+                            {f.type == 'textarea' && <Textarea placeholder={f.placeholder || undefined} onEnter={e => this.onSave()} onChange={e => this.model[f.name] = e} value={this.model[f.name] || ''}></Textarea>}
                             {f.type == 'select' && <SelectBox border multiple={f.multiple ? true : false} onChange={e => { this.model[f.name] = e; this.forceUpdate(); }} value={this.model[f.name] || (f.multiple ? [] : '')} options={f.options || []}></SelectBox>}
                             {f.type == 'file' && <FileInput mime={f.mime} value={this.model[f.name]} onChange={e => { this.model[f.name] = e; this.forceUpdate(); }}></FileInput>}
                         </div>
@@ -101,6 +104,8 @@ class FormDialoug extends EventsComponent {
     head: boolean = true;
     footer: boolean = true;
     deleteButton = false;
+    deleteText = '';
+    saveText = '';
     open(options: FormDialougType) {
         this.fields = options.fields;
         this.head = options.head;
@@ -109,6 +114,11 @@ class FormDialoug extends EventsComponent {
         this.remark = options.remark || "";
         this.model = options.model ? lodash.cloneDeep(options.model) : {};
         this.button.loading = false;
+        if (options.deleteText) this.deleteText = options.deleteText;
+        else this.deleteText = '';
+        if (options.saveText) this.saveText = options.saveText;
+        else this.saveText = '';
+
         this.head = typeof options.head == 'undefined' ? true : options.head;
         if (typeof options.footer != 'undefined') this.footer = options.footer;
         else this.footer = true;
@@ -122,7 +132,7 @@ class FormDialoug extends EventsComponent {
 }
 
 export async function useForm(options: FormDialougType) {
-    let popover = await PopoverSingleton(FormDialoug);
+    let popover = await PopoverSingleton(FormDialoug, { mask: true });
     let fv = await popover.open({ center: true, centerTop: 100 });
     fv.open(options);
     return new Promise((resolve: (data: Record<string, any>) => void, reject) => {
