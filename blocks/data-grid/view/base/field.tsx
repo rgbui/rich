@@ -462,8 +462,8 @@ export class DataGridViewField {
                     text: b.text,
                     type: MenuItemType.custom,
                     render(item) {
-                        return <div className="flex padding-w-14 h-30 item-hover round cursor">
-                            <span className="flex-fixed size-20 round gap-r-10 border" style={{ backgroundColor: item.value }}></span>
+                        return <div className="flex padding-w-5 gap-w-5 h-30 item-hover round cursor">
+                            <span className="flex-fixed size-20 gap-l-3 round gap-r-10 border" style={{ backgroundColor: item.value }}></span>
                             <span className="flex-auto text f-14">{b.text}</span>
                             {option.color == item.value &&
                                 <span className="flex-fixed size-24 flex-center"><Icon size={16} icon={CheckSvg}></Icon></span>
@@ -490,7 +490,7 @@ export class DataGridViewField {
         var name = menus[0].value;
         if (name && name != option.text) {
             if (options.some(s => s.text == name && s !== option)) {
-                ShyAlert(lst('当前标签项已存在。'));
+                ShyAlert(lst('当前标签项已存在'));
             }
             else {
                 option.text = name;
@@ -567,11 +567,13 @@ export class DataGridViewField {
                             ops.insertAt(to, f);
                             await self.onUpdateFieldConfig(viewField.field, { options: ops });
                         }
-                        else if (['config.numberDisplay.showNumber',
+                        else if ([
+                            'config.numberDisplay.showNumber',
                             'config.numberDisplay.display',
                             'config.imageFormat.display',
                             'config.imageFormat.multipleDisplay',
-                            'config.numberDisplay.color'].includes(item.name as string)) {
+                            'config.numberDisplay.color'
+                        ].includes(item.name as string)) {
                             var n = (item.name as string).replace('config.', '');
                             await self.onUpdateFieldConfig(viewField.field, { [n]: item.value });
                         }

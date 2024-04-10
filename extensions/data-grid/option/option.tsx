@@ -183,8 +183,8 @@ export class TableStoreOption extends EventsComponent {
                     text: b.text,
                     type: MenuItemType.custom,
                     render(item) {
-                        return <div className="flex padding-w-14 h-30 item-hover cursor">
-                            <span className="flex-fixed size-20 round gap-r-10 border" style={{ backgroundColor: item.value }}></span>
+                        return <div className="flex gap-w-5 padding-w-5 round h-30 item-hover cursor">
+                            <span className="flex-fixed size-20 gap-l-3 round gap-r-10 border" style={{ backgroundColor: item.value }}></span>
                             <span className="flex-auto text f-14 text-overflow">{b.text}</span>
                             {option.color == item.value &&
                                 <span className="flex-fixed size-24 flex-center"><Icon size={16} icon={CheckSvg}></Icon></span>
