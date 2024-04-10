@@ -178,7 +178,7 @@ export class PageContextmenu {
                     icon: MoveToSvg,
                     label: UA.isMacOs ? "⌘+Shift+P" : "Ctrl+Shift+P"
                 },
-                { name: 'export', iconSize: 16, text: lst('导出'), icon: { name: 'bytedance-icon', code: 'export' } },
+                { name: 'export', iconSize: 16, text: lst('导出'), icon: { name: 'bytedance-icon', code: 'download-one' } },
                 {
                     name: 'delete', icon: TrashSvg, text: lst('删除'),
                     label: "Del"
@@ -228,7 +228,7 @@ export class PageContextmenu {
                     name: 'move', text: lst('移动'), icon: MoveToSvg,
                     label: UA.isMacOs ? "⌘+Shift+P" : "Ctrl+Shift+P"
                 },
-                { name: 'export', iconSize: 16, text: lst('导出'), icon: { name: 'bytedance-icon', code: 'export' } },
+                { name: 'export', iconSize: 16, text: lst('导出'), icon: { name: 'bytedance-icon', code: 'download-one' } },
                 { name: 'delete', icon: TrashSvg, text: lst('删除'), label: "Del" },
                 { type: MenuItemType.divide },
                 { name: 'undo', text: lst('撤消'), icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: UA.isMacOs ? "⌘+Z" : 'Ctrl+Z' },
@@ -283,7 +283,7 @@ export class PageContextmenu {
                     name: 'move', text: lst('移动'), icon: MoveToSvg,
                     label: UA.isMacOs ? "⌘+Shift+P" : "Ctrl+Shift+P"
                 },
-                { name: 'export', iconSize: 16, text: lst('导出'), icon: { name: 'bytedance-icon', code: 'export' } },
+                { name: 'export', iconSize: 16, text: lst('导出'), icon: { name: 'bytedance-icon', code: 'download-one' } },
                 { name: 'delete', icon: TrashSvg, text: lst('删除'), label: "Del" },
                 { type: MenuItemType.divide },
                 { name: 'undo', text: lst('撤消'), icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: UA.isMacOs ? "⌘+Z" : 'Ctrl+Z' },
@@ -366,7 +366,7 @@ export class PageContextmenu {
                     name: 'move', text: lst('移动'), icon: MoveToSvg,
                     label: UA.isMacOs ? "⌘+Shift+P" : "Ctrl+Shift+P"
                 },
-                { name: 'export', iconSize: 16, text: lst('导出'), icon: { name: 'bytedance-icon', code: 'export' } },
+                { name: 'export', iconSize: 16, text: lst('导出'), icon: { name: 'bytedance-icon', code: 'download-one' } },
                 { name: 'delete', icon: TrashSvg, text: lst('删除'), label: "Del" },
                 { type: MenuItemType.divide },
                 { name: 'undo', text: lst('撤消'), icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },

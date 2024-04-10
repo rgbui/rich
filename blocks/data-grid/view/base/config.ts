@@ -230,8 +230,7 @@ export class DataGridViewConfig {
                     icon: this.schema.locker?.lock ? UnlockSvg : LockSvg
                 },
                 { type: MenuItemType.divide },
-                // { text: '导入', disabled: true, icon: ImportSvg, name: 'import' },
-                { text: lst('导出'), icon: FileSvg, name: 'export' },
+                { text: lst('导出'), icon: { name: 'byte', code: 'download-one' }, name: 'export' },
             ]
             var um = await useSelectMenuItem({ roundArea: rect }, menus, {
                 async input(item) {
