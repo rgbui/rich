@@ -39,7 +39,7 @@ import { AtomPermission } from './permission';
 import { forceCloseBoardEditTool } from '../../extensions/board.edit.tool';
 import "./style.less";
 
-export class Page extends Events<PageDirective>{
+export class Page extends Events<PageDirective> {
     root: HTMLElement;
     viewEl: HTMLElement;
     contentEl: HTMLElement;
@@ -451,6 +451,9 @@ export class Page extends Events<PageDirective>{
     onLazyUpdateProps = lodash.debounce(async (props: Record<string, any>, isUpdate?: boolean) => {
         this.onUpdateProps(props, isUpdate);
     }, 1000)
+    onLazyHistory = lodash.debounce(async (u) => {
+        this.emit(PageDirective.history, u)
+    }, 700);
     public isSchemaRecordViewTemplate: boolean
     public openPageData?: {
         pre?: {

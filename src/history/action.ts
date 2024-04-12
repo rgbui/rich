@@ -61,6 +61,19 @@ export class UserAction {
     get isEmpty() {
         return this.operators.length > 0 ? false : true
     }
+    /**
+     * 
+     * @returns 是否是光标操作,如果是光标操作，光标并没有改变页面的数据，只是改变了光标的位置
+     */
+    isCursorOperator() {
+        return [
+            'onCollapse',
+            'onFocusAppearAnchor',
+            'onSetTextSelection',
+            'onSelectBlocks',
+            'onCatchWindowSelection'
+        ].includes(typeof this.directive == 'number' ? UserAction[this.directive] : this.directive)
+    }
 }
 
 export type ViewOperate = {

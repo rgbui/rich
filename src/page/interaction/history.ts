@@ -6,30 +6,27 @@ import { Matrix } from "../../common/matrix";
 import { OperatorDirective } from "../../history/declare";
 import { AppearCursorPos, HistorySnapshoot, SnapshootBlockPos, SnapshootBlockPropPos, SnapshootBlockStylePos, SnapshootDataGridViewPos } from "../../history/snapshoot";
 import { PageDirective } from "../directive";
-import { UserAction } from "../../history/action";
 import { ElementType } from "../../../net/element.type";
 
 export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     snapshoot.on('history', (action) => {
-
         /**
-         * 如果是表单视图，且不是模板，那么就不应该保存快照 ，
-         * 只要做为模板时，才保存快照
+         * 判断是否是光标操作
+         * 仅仅是光标操作，页面没有编辑
          */
-        if (![
-            'onCollapse',
-            'onFocusAppearAnchor',
-            'onSetTextSelection',
-            'onSelectBlocks',
-            'onCatchWindowSelection'
-        ].includes(typeof action.directive == 'number' ? UserAction[action.directive] : action.directive)) {
+        if (!action.isCursorOperator()) {
             page.pageModifiedOrNot = true;
             page.emit(PageDirective.change);
         }
+        /**
+        * 如果是表单视图，且不是模板，那么就不应该保存快照 ，
+        * 只要做为模板时，才保存快照
+        */
         if (page.pe.type == ElementType.SchemaRecordView && !page.isSchemaRecordViewTemplate) {
             return
         }
-        page.emit(PageDirective.history, action);
+        if (action.isCursorOperator()) page.onLazyHistory(action)
+        else page.emit(PageDirective.history, action);
     });
     snapshoot.on('error', err => page.onError(err));
     snapshoot.on('warn', (error) => page.onWarn(error));
@@ -422,7 +419,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         } = operator.data as any;
         var block = page.find(g => g.id == oc.pos.blockId);
         if (block) {
-          await  block.pattern.updateStyle(oc.pos.styleId, oc.new_value);
+            await block.pattern.updateStyle(oc.pos.styleId, oc.new_value);
         }
     }, async (operator) => {
         var oc: {
@@ -432,7 +429,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         } = operator.data as any;
         var block = page.find(g => g.id == oc.pos.blockId);
         if (block) {
-          await  block.pattern.updateStyle(oc.pos.styleId, oc.old_value);
+            await block.pattern.updateStyle(oc.pos.styleId, oc.old_value);
         }
     });
     snapshoot.registerOperator(OperatorDirective.$array_update, async (operator, source) => {
