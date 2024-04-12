@@ -714,7 +714,7 @@ item-selected:选中的效果
 }
 
 .text-white {
-    color: #fff;
+    color: var(--white);
 }
 
 .text-primary,
@@ -746,11 +746,18 @@ item-selected:选中的效果
 }
 
 .text-black {
-    color: #000;
+    color: var(--black);
 }
 
 body {
-    --text-color   : rgba(55, 53, 47);
+    --white            : #fff;
+    --black            : #000;
+    --text-color       : rgba(55, 53, 47);
+    --text             : var(--text-color);
+    --text-color-1     : rgba(55, 53, 47, 0.8);
+    --text-color-remark: rgba(55, 53, 47, 0.5);
+    --remark           : var(--text-color-remark);
+
     --text-p-color : rgb(225, 98, 89);
     --text-p1-color: #64a1df;
     --text-b-color : rgb(100, 161, 223);
@@ -762,7 +769,6 @@ body {
 
 .text {
     color   : var(--text-color);
-    // fill : currentColor;
 }
 
 .text-1 {
@@ -2042,7 +2048,7 @@ z-index
 @zs: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 100, 200, 300, 1000, 2000, 3000, 10000, 20000, 50000, 60000;
 
 each(@zs, {
-        .z-@{value},.z@{value} {
+        .z-@{value}, .z@{value} {
             z-index:@value;
         }
     }

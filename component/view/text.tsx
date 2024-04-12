@@ -25,6 +25,7 @@ export function HelpText(props: {
     align?: 'left' | 'right',
     block?: boolean,
     onMouseDown?: (event: React.MouseEvent) => void,
+    style?: CSSProperties
 }) {
 
     var cs = util.covertToArray(props.className);
@@ -35,14 +36,14 @@ export function HelpText(props: {
     if (pa) {
         return <a
             onMouseDown={e => props.onMouseDown && props.onMouseDown(e)}
-            style={{ display: props.block ? 'flex' : 'inline-flex' }}
+            style={{ display: props.block ? 'flex' : 'inline-flex', ...(props.style || {}) }}
             className={"remark f-12 cursor item-hover round l-20 flex flex-inline " + (cs.join(" "))}
             target="_blank"
             href={props.url}><Icon size={14} icon={HelpSvg}></Icon>{pc && <span className="gap-l-1" >{pc}</span>}</a>
     }
     return <a
         onMouseDown={e => props.onMouseDown && props.onMouseDown(e)}
-        style={{ display: props.block ? 'flex' : 'inline-flex' }}
+        style={{ display: props.block ? 'flex' : 'inline-flex', ...(props.style || {}) }}
         className={"remark f-12 cursor item-hover round l-20 flex flex-inline " + (cs.join(" "))}
         target="_blank"
         href={props.url}>{pc && <span className="gap-r-1">{pc}</span>}<Icon size={14} icon={HelpSvg}></Icon></a>

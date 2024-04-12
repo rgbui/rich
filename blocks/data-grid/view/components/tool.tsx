@@ -10,6 +10,7 @@ import {
     FilterSvg,
     MaximizeSvg,
     PlusSvg,
+    SearchSvg,
     SortSvg
 } from "../../../../component/svgs";
 import { PageLayoutType } from "../../../../src/page/declare";
@@ -44,7 +45,7 @@ export class RenderToolOperators extends React.Component<{ block: DataGridView, 
                             }
                         }
                         self.forceUpdate();
-                    }} className="flex-fixed text-1 size-24 item-hover round flex-center cursor"><Icon size={16} icon={{ name: 'byte', code: 'search' }}></Icon></span>
+                    }} className="flex-fixed text-1 size-24 item-hover round flex-center cursor"><Icon size={16} icon={SearchSvg}></Icon></span>
                     <input
                         style={{
                             width: props.block.searchTitle.focus ? '100px' : '0px',
