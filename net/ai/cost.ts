@@ -179,8 +179,10 @@ export function getAiModelOptions() {
         { text: 'GPT-3.5', value: WsConsumeType.gpt_35_turbo },
         { text: 'GPT-4', value: WsConsumeType.gpt_4 },
         { text: 'GPT-4V', value: WsConsumeType.gpt_4_vision },
+        { type: MenuItemType.divide },
+        { type: MenuItemType.help, helpInline: true, text: 'Learn about GPT supported by Shy', url: 'https://help.shy.red/page/62#9MZQerw5daPi4YuNpAK39u' }
     ] : [
-        { text: lst('智谱'), type: MenuItemType.text, label: '智谱' },
+        { text: lst('智谱'), type: MenuItemType.text },
         { text: 'Glm-3-turbo', value: WsConsumeType.glm_3_turbo },
         { text: 'Glm-4', value: WsConsumeType.glm_4 },
         { text: 'Glm-4V', value: WsConsumeType.glm_4v },
@@ -189,9 +191,11 @@ export function getAiModelOptions() {
         { text: 'ERNIE-Bot', value: WsConsumeType.ERNIE_Bot },
         { text: 'ERNIE-Bot-4', value: WsConsumeType.ERNIE_Bot_4 },
         { text: 'OpenAI', type: MenuItemType.text, label: '仅限体验' },
-        { text: 'GPT-3.5', value: WsConsumeType.gpt_35_turbo, label: '仅限体验' },
-        { text: 'GPT-4', value: WsConsumeType.gpt_4, label: '仅限体验' },
-        { text: 'GPT-4V', value: WsConsumeType.gpt_4_vision, label: '仅限体验' }
+        { text: 'GPT-3.5', value: WsConsumeType.gpt_35_turbo },
+        { text: 'GPT-4', value: WsConsumeType.gpt_4 },
+        { text: 'GPT-4V', value: WsConsumeType.gpt_4_vision },
+        { type: MenuItemType.divide },
+        { type: MenuItemType.help, helpInline: true, text: '了解诗云支持的语言大模型', url: 'https://help.shy.live/page/1554#msZje9gVt73jYtWbWMLScn' }
     ]
 }
 
@@ -199,14 +203,18 @@ export function getAiImageModelOptions() {
     return window.shyConfig.isUS ? [
         { text: 'DALLE-3', value: WsConsumeType.dall_3 },
         { text: 'DALLE-2', value: WsConsumeType.dall_2 },
-        { text: 'Stability', value: WsConsumeType.stability }
+        { text: 'Stability', value: WsConsumeType.stability },
+        { type: MenuItemType.divide },
+        { type: MenuItemType.help, helpInline: true, text: 'Learn about the image generation model supported by Shy', url: 'https://help.shy.red/page/62#ujoyjqu7jFUorT6Y6qJvhZ' }
     ] : [
         { text: '智谱CogView-3', value: WsConsumeType.cogview_3 },
         { text: 'Stable Diffusion XL', value: WsConsumeType.badiu_Stable_Diffusion_XL },
         { text: '6pen', value: WsConsumeType.pen_6 },
-        { text: 'Stability', value: WsConsumeType.stability, label: '仅用于体验' },
-        { text: 'DALLE-3', value: WsConsumeType.dall_3, label: '仅用于体验' },
-        { text: 'DALLE-2', value: WsConsumeType.dall_2, label: '仅用于体验' },
+        { text: 'Stability', value: WsConsumeType.stability, label: '仅限体验' },
+        { text: 'DALLE-3', value: WsConsumeType.dall_3, label: '仅限体验' },
+        { text: 'DALLE-2', value: WsConsumeType.dall_2, label: '仅限体验' },
+        { type: MenuItemType.divide },
+        { type: MenuItemType.help, helpInline: true, text: '了解诗云支持的图像生成模型', url: 'https://help.shy.live/page/1554#b5gBWSCWnLf9QRG7izYAsq' }
     ]
 }
 
