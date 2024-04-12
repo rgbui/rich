@@ -131,39 +131,39 @@ export var rules: DetectorRule[] = [
         url: '/text',
         props: { code: true }
     },
-    {
-        operator: DetectorOperator.inputCharReplace,
-        match: [/[\!！]\=$/],
-        handle(value) {
-            return value.replace(/[\!！]\=$/, '≠');
-        }
-    },
-    {
-        operator: DetectorOperator.inputCharReplace,
-        match: [/[\<《]\=$/],
-        handle(value) {
-            return value.replace(/[\<《]\=$/, '≤');
-        }
-    },
-    {
-        operator: DetectorOperator.inputCharReplace,
-        match: [/[\>》]\=$/],
-        handle(value) {
-            return value.replace(/[\>》]\=$/, '≥');
-        }
-    },
-    {
-        operator: DetectorOperator.inputCharReplace,
-        match: [/[\<《]\-$/],
-        handle(value) {
-            return value.replace(/[\<《]\-$/, '←');
-        }
-    },
-    {
-        operator: DetectorOperator.inputCharReplace,
-        match: [/\-[\>》]$/],
-        handle(value) {
-            return value.replace(/\-[\>》]$/, '→');
-        }
-    }
+    // {
+    //     operator: DetectorOperator.inputCharReplace,
+    //     match: [/[\!！]\=$/],
+    //     handle(value) {
+    //         return value.replace(/[\!！]\=$/, '≠');
+    //     }
+    // },
+    // {
+    //     operator: DetectorOperator.inputCharReplace,
+    //     match: [/[\<《]\=$/],
+    //     handle(value) {
+    //         return value.replace(/[\<《]\=$/, '≤');
+    //     }
+    // },
+    // {
+    //     operator: DetectorOperator.inputCharReplace,
+    //     match: [/[\>》]\=$/],
+    //     handle(value) {
+    //         return value.replace(/[\>》]\=$/, '≥');
+    //     }
+    // },
+    // {
+    //     operator: DetectorOperator.inputCharReplace,
+    //     match: [/[\<《]\-$/],
+    //     handle(value) {
+    //         return value.replace(/[\<《]\-$/, '←');
+    //     }
+    // },
+    // {
+    //     operator: DetectorOperator.inputCharReplace,
+    //     match: [/\-[\>》]$/],
+    //     handle(value) {
+    //         return value.replace(/\-[\>》]$/, '→');
+    //     }
+    // }
 ];
