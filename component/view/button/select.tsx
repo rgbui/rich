@@ -12,8 +12,9 @@ export class SelectButtons extends React.Component<{
     onChange?: (value: any) => void,
     style?: CSSProperties,
     size?: 'small' | 'normal' | 'large',
-    gap?: number
-}>{
+    gap?: number,
+    theme?: 'default' | 'ghost'
+}> {
     render() {
         var vs = util.covertToArray(this.props.value);
         var mousedown = (e, g) => {
@@ -57,14 +58,37 @@ export class SelectButtons extends React.Component<{
                 })}
             </div>
         }
+        if (this.props?.theme == 'ghost') {
+            var bgStyle: CSSProperties = {
+                backgroundColor: 'rgba(55, 53, 47, 0.06)',
+            };
+            return <div className="flex round h-30 padding-w-5" style={bgStyle}>
+                {this.props.options.map((g, i) => {
+                    var classList: string[] = ['cursor', 'flex-center', 'f-14', 'padding-w-12', 'h-24'];
+                    if (vs.includes(g.value)) {
+                        classList.push(...['shadow-s', 'bg-white', 'text', 'round'])
+                    }
+                    var style: CSSProperties = {};
+                    return <div key={i}
+                        style={style}
+                        onMouseDown={e => mousedown(e, g)}
+                        className={classList.join(" ")} >
+                        {g.icon && <Icon icon={{ ...(g.icon || {} as any), color: 'inherit' }}></Icon>}
+                        <span>{g.text}</span>
+                    </div>
+                })}
+            </div>
+        }
         return <div className="flex flex-wrap border round f-14" style={this.props.style}>
             {this.props.options.map((g, i) => {
                 var classList: string[] = ['cursor'];
-                if (vs.includes(g.value)) classList.push(...['text-white', 'bg-primary'])
+                if (vs.includes(g.value)) {
+                    if (this.props.theme == 'ghost') classList.push(...['shadow-s', 'text'])
+                    else classList.push(...['text-white', 'bg-primary'])
+                }
                 else {
                     classList.push(...['text'])
                     if (!this.props.gap) {
-                        // classList.push('item-hover-light-focus')
                     }
                 }
                 var size = this.props.size || 'normal';
