@@ -63,59 +63,59 @@ export class LinkPaths extends Block {
             type: MenuItemType.switch,
             checked: this.hiddenSelection
         },
-        // { type: MenuItemType.divide }
+            // { type: MenuItemType.divide }
         ]);
         var dat = rs.findIndex(g => g.name == BlockDirective.delete);
-        rs.splice(dat+1, 0, {
+        rs.splice(dat + 1, 0, {
             type: MenuItemType.divide
         },
-        {
-            type: MenuItemType.help,
-            text: lst('了解如何使用面包屑导航'),
-            url: window.shyConfig?.isUS ? "https://help.shy.live/page/1833" : "https://help.shy.live/page/1833"
-        })
+            {
+                type: MenuItemType.help,
+                text: lst('了解如何使用面包屑导航'),
+                url: window.shyConfig?.isUS ? "https://help.shy.live/page/1833" : "https://help.shy.live/page/1833"
+            })
         return rs;
     }
     async onContextMenuInput(item: MenuItem<BlockDirective | string>) {
         if (item?.name == 'hiddenSelection') {
-            return this.onUpdateProps({ hiddenSelection: item.checked }, { range: BlockRenderRange.self })
+            return await this.onUpdateProps({ hiddenSelection: item.checked }, { range: BlockRenderRange.self })
         }
         else if (item?.name == 'joinChar') {
-            return this.onUpdateProps({ joinChar: item.value }, { range: BlockRenderRange.self })
+            return await this.onUpdateProps({ joinChar: item.value }, { range: BlockRenderRange.self })
         }
         await super.onContextMenuInput(item);
     }
     async onClickContextMenu(this: Block, item: MenuItem<string | BlockDirective>, event: MouseEvent, options?: { merge?: boolean; }): Promise<void> {
         if (item?.name == 'joinChar') {
-            return this.onUpdateProps({ joinChar: item.value }, { range: BlockRenderRange.self })
-            return;
+            return await this.onUpdateProps({ joinChar: item.value }, { range: BlockRenderRange.self })
         }
         await super.onClickContextMenu(item, event, options);
     }
 }
 
 @view('/links')
-export class LinkPathsView extends BlockView<LinkPaths>{
+export class LinkPathsView extends BlockView<LinkPaths> {
     mousedown(item: LinkPageItem) {
         if (item.id == this.block.page.getPageDataInfo()?.id) return;
         channel.air('/page/open', { item: item.id });
     }
     renderJoin() {
         if (this.block.joinChar == '>')
-            return <Icon className={'remark flex-center '} size={20} icon={{ name: "byte", code: 'right' }}></Icon>
-        return <span className="padding-w-5 padding-h-2 remark f-20">/</span>
+            return <Icon className={'remark flex-fixed flex-center '} size={20} icon={{ name: "byte", code: 'right' }}></Icon>
+        return <span className="padding-w-5 flex-fixed padding-h-2 remark f-20">/</span>
     }
     renderItem(item: LinkPageItem, index: number, items: LinkPageItem[]) {
         if (item.mime == 20 || item.mime == 'pages')
-            return <span className="flex-center" key={item.id}>
-                <span>{item.text}</span>
+            return <span className="flex-center flex-fixed" key={item.id}>
+                <span className="text-over flex-auto">{item.text}</span>
                 {index == items.length - 1 ? "" : this.renderJoin()}
             </span>
-        else return <span className="flex-center" key={item.id}>
+        else return <span className="flex-center flex-fixed" key={item.id}>
             <span
                 onMouseDown={e => this.mousedown(item)}
-                className="flex item-hover cursor round padding-w-5 padding-h-2  "><Icon className={'remark gap-r-3'} size={16} icon={getPageIcon(item)}></Icon>
-                <span>{getPageText(item)}</span>
+                className="flex item-hover cursor round padding-w-5 padding-h-2  ">
+                <Icon className={'remark gap-r-3  flex-fixed'} size={16} icon={getPageIcon(item)}></Icon>
+                <span className="text-over flex-auto">{getPageText(item)}</span>
             </span>
             {index == items.length - 1 ? "" : this.renderJoin()}
         </span>
@@ -133,7 +133,7 @@ export class LinkPathsView extends BlockView<LinkPaths>{
         if (this.block.align == 'center') cs.justifyContent = 'center';
         else if (this.block.align == 'right') cs.justifyContent = 'flex-end';
         return <div className="sy-block-sub-links" style={this.block.visibleStyle}>
-            <div className="flex" style={cs}>
+            <div className="flex flex-wrap" style={cs}>
                 {items.map((item, i) => {
                     return this.renderItem(item, i, items)
                 })}
