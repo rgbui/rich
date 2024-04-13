@@ -10,7 +10,7 @@ export class DragList extends React.Component<{
     onChange?: (to: number, from?: number) => void,
     className?: string | string[],
     style?: CSSProperties,
-}>{
+}> {
     el: HTMLElement;
     render() {
         var self = this;
@@ -34,20 +34,24 @@ export class DragList extends React.Component<{
                                 if (newItem !== item) {
                                     var rect = Rect.fromEle(newItem);
                                     if (ev.clientY > rect.middle) {
-                                        self.el.insertBefore(item, newItem);
+                                        if (self.el)
+                                            self.el.insertBefore(item, newItem);
                                     }
                                     else {
-                                        self.el.insertBefore(newItem, item);
+                                        if (self.el)
+                                            self.el.insertBefore(newItem, item);
                                     }
                                 }
                             }
                             if (isEnd) {
                                 ghostView.unload();
-                                cs = Array.from(self.el.children);
-                                var at = cs.findIndex(c => c === item);
-                                if (self.props.onChange)
-                                    self.props.onChange(at, oldAt);
-                                item.style.visibility = 'visible';
+                                if (self.el) {
+                                    cs = Array.from(self.el.children);
+                                    var at = cs.findIndex(c => c === item);
+                                    if (self.props.onChange)
+                                        self.props.onChange(at, oldAt);
+                                    item.style.visibility = 'visible';
+                                }
                             }
                             else ghostView.move(Point.from(ev))
                         }
