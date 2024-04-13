@@ -112,23 +112,25 @@ export class DataGridViewConfig {
                     try {
                         if (item.name == 'turn') {
                             var rs: MenuItem<BlockDirective | string>[] = [];
+                            var itemView = self.schema.listViews.find(c => c.id == item.value);
                             if (item.value == view?.id) {
                                 rs.push(...[
                                     { name: 'duplicate', icon: DuplicateSvg, text: lst('复制') }
                                 ])
                             }
-                            else
+                            else {
                                 rs.push(...[
                                     {
                                         name: 'name',
                                         type: MenuItemType.inputTitleAndIcon,
-                                        icon: getSchemaViewIcon(view),
+                                        icon: itemView.icon,
                                         value: item.text,
                                         text: lst('编辑视图名'),
                                     },
                                     { type: MenuItemType.divide },
                                     { name: 'delete', disabled: item.value == view?.id, icon: TrashSvg, text: lst('删除') }
                                 ])
+                            }
                             var rg = await useSelectMenuItem({ roundArea: Rect.fromEvent(ev) },
                                 rs,
                                 { nickName: 'second' }
@@ -144,7 +146,7 @@ export class DataGridViewConfig {
                             var rn = rs.find(g => g.name == 'name');
                             if (!lodash.isEqual(rn.value, item.text))
                                 props.text = rn.value;
-                            if (!lodash.isEqual(rn.icon, item.icon)) {
+                            if (!lodash.isEqual(rn.icon, itemView.icon)) {
                                 props.icon = rn.icon;
                             }
                             if (Object.keys(props).length > 0) {
