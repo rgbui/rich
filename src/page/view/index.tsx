@@ -37,7 +37,7 @@ import { Loading1 } from "../../../component/view/spin";
  * mousedown -> blur->mouseup->click
  * 
  **/
-export class PageView extends Component<{ page: Page }>{
+export class PageView extends Component<{ page: Page }> {
     constructor(props) {
         super(props);
         this.page.view = this;
@@ -276,8 +276,9 @@ export class PageView extends Component<{ page: Page }>{
             pageStyle.overflow = 'visible';
         }
         if (this.page.pageLayout?.type == PageLayoutType.board) {
-            pageStyle.overflowY = 'visible';
-            pageStyle.overflowX = 'visible';
+            pageStyle.overflowY = 'hidden';
+            pageStyle.overflowX = 'hidden';
+            pageStyle.overflow = 'hidden';
         }
         var gap = 60;
         if ([PageLayoutType.doc, PageLayoutType.db].includes(this.props.page?.pageLayout?.type)) {
