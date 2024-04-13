@@ -732,7 +732,7 @@ export class Block$Event {
     }
     async onHandlePlus(this: Block) {
         await this.page.onAction('handle.plus.create', async () => {
-            var url = BlockUrlConstant.TextSpan;
+            var url: BlockUrlConstant = BlockUrlConstant.TextSpan;
             var data: Record<string, any> = {};
             if (this.url == BlockUrlConstant.CardBox) url = BlockUrlConstant.CardBox;
             if (this.url == BlockUrlConstant.List) {
@@ -747,6 +747,7 @@ export class Block$Event {
             }
             var isBlow = true;
             if (this.page.keyboardPlate.isAlt()) isBlow = false;
+            if (this.url == BlockUrlConstant.Title) isBlow = true
             var block = isBlow ? await this.visibleDownCreateBlock(url, data) : await this.visibleUpCreateBlock(url, data);
             await util.delay(20);
             if (block) {
