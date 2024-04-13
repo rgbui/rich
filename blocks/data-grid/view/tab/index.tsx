@@ -3,7 +3,7 @@ import { Icon, IconValueType } from "../../../../component/view/icon";
 import { Block } from "../../../../src/block";
 import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
-import { ArrowLeftSvg, ArrowRightSvg, BrowserSvg, DatasourceSvg, DotsSvg, DuplicateSvg, LinkSvg, LoopSvg, PlusSvg, TrashSvg } from "../../../../component/svgs";
+import { ArrowLeftSvg, ArrowRightSvg, DatasourceSvg, DotsSvg, DuplicateSvg, LinkSvg, LoopSvg, PlusSvg, TrashSvg } from "../../../../component/svgs";
 import { TableSchema } from "../../schema/meta";
 import { Tip } from "../../../../component/view/tooltip/tip";
 import { getSchemaViewIcon } from "../../schema/util";
@@ -73,7 +73,6 @@ export class DataGridTab extends Block {
         this.forceUpdate();
     }
     async onOpenAddTabView(event: React.MouseEvent) {
-        var self = this;
         await this.onDataGridTool(async () => {
             var rect = Rect.fromEle(event.currentTarget as HTMLElement);
             var g = await useDataSourceView({ roundArea: rect }, {
@@ -84,7 +83,6 @@ export class DataGridTab extends Block {
             });
             if (g) {
                 if (typeof g != 'string' && g.type == 'view') {
-                    //console.log('gggg', g);
                     var s = await TableSchema.loadTableSchema(g.tableId, this.page.ws);
                     if (this.refTables.some(c => c.id == s.id)) {
                         lodash.remove(this.refTables, c => c.id == s.id);
@@ -508,7 +506,7 @@ export class DataGridTab extends Block {
 }
 
 @view('/data-grid/tab')
-export class DataGridTabView extends BlockView<DataGridTab>{
+export class DataGridTabView extends BlockView<DataGridTab> {
     renderView(): React.ReactNode {
         var tabClassList: string[] = ['flex'];
         if (this.block.align == 'center') tabClassList.push('flex-center');

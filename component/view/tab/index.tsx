@@ -12,7 +12,7 @@ export class Tab extends React.Component<{
     keeplive?: boolean,
     show?: 'text' | 'icon',
     change?: (index: number) => void
-}>{
+}> {
     constructor(props) {
         super(props);
         if (typeof this.props.index == 'number')
@@ -21,7 +21,6 @@ export class Tab extends React.Component<{
     static get Page(): typeof TabPage {
         return TabPage;
     }
-
     componentDidMount(): void {
         if (typeof this.props.index == 'number' && this.focusIndex !== this.props.index) { this.focusIndex = this.props.index; this.forceUpdate() }
     }
