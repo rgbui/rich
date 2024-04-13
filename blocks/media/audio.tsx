@@ -136,7 +136,7 @@ export class AudioView extends BlockView<Audio>{
                 {this.block.speed && <Remark>{this.block.speed}</Remark>}
             </div>}
             {this.block.src.name != 'none' && <div className='sy-block-audio-content'>
-                <audio controls style={{ width: 'inherit', height: 'inherit' }} src={this.block.src.url}></audio>
+                <audio  draggable={false} controls style={{ width: 'inherit', height: 'inherit' }} src={this.block.src.url}></audio>
             </div>}
         </div>
     }

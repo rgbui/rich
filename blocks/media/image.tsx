@@ -491,7 +491,7 @@ export class Image extends Block {
 }
 
 @view('/image')
-export class ImageView extends BlockView<Image>{
+export class ImageView extends BlockView<Image> {
     errorUrl: string;
     isLoadError: boolean = false;
     onError(e: React.SyntheticEvent<HTMLImageElement, Event>) {
@@ -599,7 +599,10 @@ export class ImageView extends BlockView<Image>{
         </div>}
             {!this.isLoadError && <div className='sy-block-image-content-view flex-center' style={style}>
                 <div className='sy-block-image-content-view-wrapper visible-hover' ref={e => this.imageWrapper = e} style={wStyle}>
-                    {this.block.src.name != 'none' && <img onMouseDown={e => { this.mousedown(e) }} style={imageMaskStyle} onError={e => this.onError(e)}
+                    {this.block.src.name != 'none' && <img
+                        draggable={false}
+                        onMouseDown={e => { this.mousedown(e) }}
+                        style={imageMaskStyle} onError={e => this.onError(e)}
                         src={autoImageUrl(this.block?.src?.url, this.block.originSize?.width > 1200 ? 1200 : undefined)}
                     />}
                     {this.block.isCanEdit() && <>

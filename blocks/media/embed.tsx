@@ -269,7 +269,7 @@ export class EmbedView extends BlockView<Embed>{
             </div>}
             {this.block.src.name != 'none' && <div className="flex w100" style={contentStyle}><div className='sy-block-embed-wrapper' ref={e => this.imageWrapper = e} style={{ height, width: this.block.contentWidthPercent ? this.block.contentWidthPercent + "%" : undefined }}>
                 <div style={{ ...getIframeStyle(), pointerEvents: this.isResize ? "none" : 'auto' }}>
-                    <iframe referrerPolicy="origin" src={this.block.src.url} ></iframe>
+                    <iframe  draggable={false} referrerPolicy="origin" src={this.block.src.url} ></iframe>
                 </div>
                 {this.block.isCanEdit() && <>
                     <div className='sy-block-embed-left-resize' onMouseDown={e => this.onMousedown(e, 'left')}></div>

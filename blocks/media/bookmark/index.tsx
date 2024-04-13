@@ -185,14 +185,14 @@ export class BookmarkView extends BlockView<Bookmark>{
             className='sy-block-bookmark relative'
             style={this.block.contentStyle}
         >
-            <a className='sy-block-bookmark-link visible-hover' href={this.block.bookmarkUrl} target='_blank' >
+            <a className='sy-block-bookmark-link visible-hover'  draggable={false} href={this.block.bookmarkUrl} target='_blank' >
                 <div className="sy-block-bookmark-content" style={{ marginRight: this.block.imageWidth > 180 && this.block.imageWidth < 250 ? this.block.imageWidth : 0 }}>
                     {this.block.bookmarkInfo.title && <div className="sy-block-bookmark-title">{this.block.bookmarkInfo.title}</div>}
                     {this.block.bookmarkInfo.description && <div className="sy-block-bookmark-description">{this.block.bookmarkInfo.description}</div>}
                     <div className="sy-block-bookmark-iconurl"> {this.block.bookmarkInfo.icon?.url && <img src={this.block.bookmarkInfo.icon.url || this.block.bookmarkInfo.icon.origin} />}<span>{this.block.bookmarkUrl}</span></div>
                 </div>
                 {this.block.bookmarkInfo.image && this.block.imageWidth > 180 && this.block.imageWidth < 250 && <div style={{ width: this.block.imageWidth }} className='sy-block-bookmark-image'>
-                    <img src={autoImageUrl(this.block.bookmarkInfo.image.url, 250)} />
+                    <img  draggable={false} src={autoImageUrl(this.block.bookmarkInfo.image.url, 250)} />
                 </div>}
             </a>
             {this.block.isCanEdit() && <div onMouseDown={e => {

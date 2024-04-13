@@ -360,7 +360,7 @@ export class CarouselView extends BlockView<Carousel>{
             pauseOnHover: true
         };
         return <div onMouseDown={e => { e.stopPropagation() }}><Slider {...settings}>{this.block.srcs.map((img, i) => {
-            return <div key={i} ><img className="round" src={img.src?.url} style={style} /></div>
+            return <div key={i} ><img  draggable={false} className="round" src={img.src?.url} style={style} /></div>
         })}</Slider></div>
     }
     renderView() {

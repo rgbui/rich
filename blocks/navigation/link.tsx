@@ -163,7 +163,7 @@ export class LinkView extends BlockView<Link> {
             style={this.block.contentStyle}
             className='sy-block-link'>
             {this.block.pageInfo &&
-                <a style={this.block.contentStyle} href={this.block.pageInfo.url + (this.block.refBlockId ? "#" + this.block.refBlockId : "")} onClick={e => this.block.openPage(e)}>
+                <a  draggable={false} style={this.block.contentStyle} href={this.block.pageInfo.url + (this.block.refBlockId ? "#" + this.block.refBlockId : "")} onClick={e => this.block.openPage(e)}>
                     <SolidArea block={this.block} prop='text'>
                         <div className="flex">
                             <i className="flex-fixed text flex-inline flex-center size-24 gap-r-5"><Icon size={20} icon={getPageIcon(this.block.pageInfo)}></Icon></i>
@@ -175,7 +175,7 @@ export class LinkView extends BlockView<Link> {
                     </SolidArea>
                 </a>
             }
-            {link?.url && <a style={this.block.contentStyle} href={link?.url}><SolidArea line block={this.block} prop='outsideUrl'><span>{link?.url}</span></SolidArea></a>}
+            {link?.url && <a  draggable={false} style={this.block.contentStyle} href={link?.url}><SolidArea line block={this.block} prop='outsideUrl'><span>{link?.url}</span></SolidArea></a>}
             {!link && <div
                 onMouseDown={e => { this.block.onSelectPage({ roundArea: Rect.fromEle((e.currentTarget as HTMLElement)) }) }}
                 className="item-hover-light-focus remark cursor item-hover round padding-h-3 padding-w-5 flex" style={this.block.contentStyle}>
