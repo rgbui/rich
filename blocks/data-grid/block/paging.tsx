@@ -106,7 +106,7 @@ export class Paging extends Block {
     }
 }
 @view('/data-grid/paging')
-export class PagingView extends BlockView<Paging>{
+export class PagingView extends BlockView<Paging> {
     async onDropSize(event: React.MouseEvent) {
         var items: MenuItem[] = [
             // { text: lst('选择每页的条数'), type: MenuItemType.text },
@@ -155,14 +155,15 @@ export class PagingView extends BlockView<Paging>{
     }
     renderView() {
         if (!this.block.refBlock) {
+            if (!this.block.isCanEdit()) return <div></div>
             return <div style={this.block.visibleStyle}>
                 <div style={this.block.contentStyle}>
-                    <div className="error-bg flex">
-                        <span className="text-white flex-fixed"><S>无法找到关联的数据表</S></span>
-                        <Tip text='删除'><Icon onClick={e => {
+                    <Tip text='删除'><div className="error-bg flex padding-w-10 round">
+                        <Icon size={16} onClick={e => {
                             this.block.onDelete()
-                        }} icon={TrashSvg}></Icon></Tip>
-                    </div>
+                        }} icon={TrashSvg}></Icon>
+                        <span className="text-white flex-fixed"><S>无法找到关联的数据表</S></span>
+                    </div></Tip>
                 </div>
             </div>
         }
