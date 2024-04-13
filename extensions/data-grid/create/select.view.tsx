@@ -4,16 +4,19 @@ import { Input } from "../../../component/view/input";
 import { PopoverSingleton } from "../../../component/popover/popover";
 import { PopoverPosition } from "../../../component/popover/position";
 import { getSchemaViewIcon, getSchemaViews } from "../../../blocks/data-grid/schema/util";
-import { CheckSvg, CollectTableSvg } from "../../../component/svgs";
+import { CheckSvg, CollectTableSvg, TriangleSvg } from "../../../component/svgs";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import lodash from "lodash";
-import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
-import { MenuView } from "../../../component/view/menu/menu";
-import { util } from "../../../util/util";
 import { lst } from "../../../i18n/store";
 import { BlockUrlConstant } from "../../../src/block/constant";
 import { CardFactory } from "../../../blocks/data-grid/template/card/factory/factory";
 import { Icon } from "../../../component/view/icon";
+import { Button } from "../../../component/view/button";
+import { Tab } from "../../../component/view/tab";
+import { Tip } from "../../../component/view/tooltip/tip";
+import { HelpText } from "../../../component/view/text";
+import { S } from "../../../i18n/view";
+import { util } from "../../../util/util";
 
 /**
  * 
@@ -25,166 +28,144 @@ import { Icon } from "../../../component/view/icon";
  */
 export class DataGridCreate extends EventsComponent {
     url: string = BlockUrlConstant.DataGridTable;
-    source: 'tableView' | 'dataView' = 'tableView';
+    source: 'createView' | 'tableView' | 'dataView' = 'createView';
     viewText: string = '';
-    renderItems() {
+    inputViewText: string = '';
+    schemaId: string;
+    syncBlockId: string;
+    render() {
+        return <div className="w-400 ">
+            <Tab change={e => {
+                this.emit('changeIndex')
+            }}>
+                <Tab.Page item={<Tip placement='bottom' text={'新建数据表'}><Icon size={18} icon={CollectTableSvg}></Icon></Tip>}>
+                    {this.renderCreate()}
+                </Tab.Page>
+                <Tab.Page item={<Tip placement='bottom' text={'数据表模板'}><Icon size={20} icon={{ name: 'byte', code: 'application-two' }}></Icon></Tip>}>
+                    {this.renderCms()}
+                </Tab.Page>
+                <Tab.Page item={<Tip placement='bottom' text={'已创建的数据表'}><Icon size={18} icon={{ name: 'byte', code: 'history' }}></Icon></Tip>}>
+                    {this.renderTables()}
+                </Tab.Page>
+            </Tab>
+        </div>
+    }
+    renderCms() {
         var self = this;
-        var items: MenuItem[] = [];
         var cms = CardFactory.getCardModels();
-        var cmsPanel: MenuItem = {
-            type: MenuItemType.container,
-            containerHeight: 180,
-            childs: []
-        }
-        items.push({ text: lst('创建新表格'), type: MenuItemType.text })
-        items.push({
-            text: lst('表格'),
-            value: BlockUrlConstant.DataGridTable,
-            name: 'tableView',
-            icon: getSchemaViewIcon({ url: BlockUrlConstant.DataGridTable } as any),
-            checkLabel: BlockUrlConstant.DataGridTable == self.url,
-        })
-        items.push({ text: lst('数据模板'), type: MenuItemType.text })
-        cms.map(c => {
-            {
-                cmsPanel.childs.push(
-                    {
-                        type: MenuItemType.custom,
-                        name: 'dataView',
-                        value: c.model.url,
-                        render(item, view) {
-                            return <div className="flex-full relative item-hover round padding-w-10 padding-h-5">
-                                <div className="flex-fixed">
-                                    <img src={c.model.image} className="obj-center h-40 w-80" />
-                                </div>
-                                <div className="flex-auto gap-l-10 f-14">
-                                    <div>{c.model.title}</div>
-                                    <div className="remark">{c.model.remark}</div>
-                                </div>
-                                {self.source == 'dataView' && self.url == c.model.url && <div className="pos pos-right pos-t-5 pos-r-5 size-20 cursor round">
-                                    <Icon size={16} icon={CheckSvg}></Icon>
-                                </div>}
-                            </div>
-                        }
-                    })
-            }
-        })
-        items.push(cmsPanel)
-        items.push({ type: MenuItemType.gap })
-        items.push({
-            type: MenuItemType.input,
-            name: "table",
-            text: lst('输入表格名称'),
-        })
-        items.push({ type: MenuItemType.gap })
-        items.push({
-            type: MenuItemType.button,
-            text: lst('创建表格'),
-            name: 'createTable',
-            buttonClick: 'click'
-        })
-        var itemPanel: MenuItem = {
-            type: MenuItemType.container,
-            containerHeight: 180,
-            childs: []
-        }
+        return <div className="gap-t-10">
+            <div className="f-12 gap-w-10 remark flex"><span className="flex-auto">选择数据表模板</span>
+            </div>
+            <div className="max-h-200   gap-w-10 overflow-y">
+                {cms.map((c, i) => {
+                    return <div key={i} onMouseDown={e => {
+                        self.url = c.model.url;
+                        self.source = 'dataView';
+                        self.viewText = c.model.title;
+                        self.forceUpdate()
+                    }} className="flex-full relative item-hover round padding-w-10 padding-h-5">
+                        <div className="flex-fixed">
+                            <img src={c.model.image} className="obj-center h-40 w-80" />
+                        </div>
+                        <div className="flex-auto gap-l-10 f-14">
+                            <div>{c.model.title}</div>
+                            <div className="remark">{c.model.remark}</div>
+                        </div>
+                        {self.source == 'dataView' && self.url == c.model.url && <div className="pos pos-right pos-t-5 pos-r-5 size-20 cursor round">
+                            <Icon size={16} icon={CheckSvg}></Icon>
+                        </div>}
+                    </div>
+                })}
+            </div>
+            <div className="border-top  padding-w-10  flex">
+                <div className="flex-auto"> <HelpText className={'flex-fixed'} url={window.shyConfig?.isUS ? "https://help.shy.red/page/45#uQnBXa9C8oL491JK26T2QK" : 'https://help.shy.live/page/1872#4pY1nM2HnuvhZtZQWyrG5v'}><S>了解什么是数据表模板</S></HelpText></div>
+                <Button className="gap-h-5 flex-fixed" onMouseDown={e => this.onSave()}>确定</Button>
+            </div>
+        </div>
+    }
+    rsSpreads: { [key: string]: boolean } = {};
+    renderTables() {
         var list = Array.from(TableSchema.schemas.values());
         list = lodash.sortBy(list, g => 0 - g.createDate.getTime())
-        list.forEach((rd) => {
-            var btns = undefined
-            var cs: MenuItem[] = [];
-            if (Array.isArray(rd.views) && rd.views.length > 0) {
-                cs.push({ type: MenuItemType.text, text: lst('视图') })
-                var srs = getSchemaViews();
-                cs.push(...rd.views.findAll(g => srs.some(s => s.url == g.url)).map(rv => {
-                    return {
-                        text: rv.text,
-                        value: {
-                            tableId: rd.id,
-                            viewUrl: rv.url,
-                            type: 'view',
-                            viewId: rv.id
-                        },
-                        name: 'view',
-                        // checkLabel: rv.id == self.currentViewId,
-                        icon: getSchemaViewIcon(rv),
-                    }
-                }))
-            }
-            itemPanel.childs.push({
-                text: rd.text,
-                value: rd.id,
-                remark: util.showTime(rd.createDate),
-                icon: (rd as any).icon || CollectTableSvg,
-                forceHasChilds: true,
-                childs: cs
-            })
-        })
-        if (list.length > 0) {
-            items.push({ type: MenuItemType.gap })
-            items.push({ text: lst('选择已创建表格'), type: MenuItemType.text })
-            items.push(itemPanel);
-        }
-        async function input(item) {
-            if (item.name == 'name') {
-
-            }
-        }
-        async function select(item) {
-            if (item?.name == 'table') {
-
-            }
-            else if (item?.name == 'view') {
-                self.emit('save', {
-                    schemaId: item.value.tableId,
-                    syncBlockId: item.value.viewId,
-                    url: item.value.viewUrl
-                });
-            }
-            else if (item.name == 'tableView') {
-                self.url = item.value;
-                self.source = item.name;
-                self.viewText = '';
-                self.forceUpdate()
-            }
-            else if (item.name == 'dataView') {
-                self.url = item.value;
-                self.source = item.name;
-                self.viewText = item.text;
-                self.forceUpdate()
-            }
-        }
-        function click(item, e) {
-            if (e) e.stopPropagation();
-            if (item.name == 'createTable') {
-                var it = items.find(c => c.name == 'table');
-                if (it.value) {
-                    self.emit('save', {
-                        text: it.value || self.viewText || lst('未命名表格'),
-                        url: self.url,
-                        source: self.source
-                    })
-                }
-            }
-        }
-        return <MenuView
-            ref={e => this.mv = e}
-            input={input}
-            select={select}
-            click={click}
-            style={{
-                width: 300,
-                // maxHeight: 300,
-                paddingTop: 0,
-                paddingBottom: 0,
-                overflowY: 'auto'
-            }}
-            items={items}></MenuView>
+        var self = this;
+        var srs = getSchemaViews()
+        return <div className="gap-t-10">
+            <div className="f-12 gap-w-10 remark flex">
+                <span className="gap-l-3"><S>选择已创建的数据表视图</S></span>
+            </div>
+            <div className="max-h-200 gap-w-10  overflow-y">
+                {list.map((rd, r) => {
+                    var vs = rd.views.filter(c => srs.some(s => s.url == c.url));
+                    return <div key={r} className="gap-b-5">
+                        <div className="flex cursor" onMouseDown={e => {
+                            self.rsSpreads[rd.id] = self.rsSpreads[rd.id] !== false ? false : true;
+                            self.forceUpdate();
+                        }}>
+                            <span className={"flex-fixed item-hover cursor round  size-16 flex-center ts " + (this.rsSpreads[rd.id] !== false ? "angle-180 " : "angle-90 ")}><Icon size={8} icon={TriangleSvg}></Icon></span>
+                            <span className="flex-auto f-12">{rd.text}</span>
+                            <span className="flex-fixed f-12 remark">{util.showTime(rd.createDate)}</span>
+                        </div>
+                        {this.rsSpreads[rd.id] !== false && <div>{vs.map((view, c) => {
+                            return <div className="flex gap-w-5 h-24 gap-h-5 item-hover round cursor padding-l-10" onMouseDown={e => {
+                                self.source = 'tableView';
+                                self.schemaId = rd.id;
+                                self.syncBlockId = view.id;
+                                self.url = view.url;
+                                self.forceUpdate()
+                            }} key={c}>
+                                <span className="size-20 flex-center flex-fixed text-1"><Icon size={16} icon={getSchemaViewIcon(view)}></Icon></span>
+                                <span className="flex-auto text-1">{view.text}</span>
+                                {self.source == 'tableView' && self.syncBlockId == view.id && <span className="flex-fixed size-16 flex-center gap-r-10"><Icon size={16} icon={CheckSvg}></Icon></span>}
+                            </div>
+                        })}</div>}
+                    </div>
+                })}
+            </div>
+            <div className="border-top  padding-w-10  flex-end">
+                <Button className="gap-h-5" onMouseDown={e => this.onSave()}>确定</Button>
+            </div>
+        </div>
     }
-    private mv: MenuView;
-    render() {
-        return <div className="gap-h-10">
-            {this.renderItems()}
+    onCreateTable() {
+        this.url = BlockUrlConstant.DataGridTable;
+        this.source = 'createView';
+        this.onSave();
+    }
+    onSave() {
+        var self = this;
+        if (this.source == 'createView') {
+            self.emit('save', {
+                text: self.inputViewText || lst('未命名数据表'),
+                url: this.url,
+                source: this.source
+            })
+        }
+        else if (this.source == 'tableView') {
+            self.emit('save', {
+                schemaId: this.schemaId,
+                syncBlockId: this.syncBlockId,
+                text: self.viewText || lst('未命名数据表'),
+                url: this.url,
+                source: this.source
+            })
+        }
+        else if (this.source == 'dataView') {
+            self.emit('save', {
+                text: self.viewText || lst('未命名数据表'),
+                url: this.url,
+                source: this.source
+            })
+        }
+
+    }
+    renderCreate() {
+        return <div className="gap-10">
+            <div><Input placeholder={lst('数据表名称')} value={this.inputViewText} onChange={e => { this.inputViewText = e }} onEnter={e => {
+                this.inputViewText = e;
+                this.onCreateTable();
+            }} ></Input></div>
+            <div className="gap-h-10"><Button block onMouseDown={e => this.onCreateTable()}><S>创建</S></Button></div>
+            <div><HelpText url={window.shyConfig?.isUS ? "https://help.shy.red/page/38#3qfPYqnTJCwwQ6P9zYx8Q8" : 'https://help.shy.live/page/285#xcmSsiEKkYt3pgKVwyDHxJ'}>了解如何创建数据表</HelpText></div>
         </div>
     }
     input: Input;
@@ -203,7 +184,7 @@ export async function useDataGridCreate(pos: PopoverPosition) {
         syncBlockId?: string,
         url?: string,
         text?: string,
-        source?: 'tableView' | 'dataView'
+        source?: 'tableView' | 'dataView' | 'createView'
 
     }) => void, reject) => {
         fv.only('save', (value) => {
@@ -214,6 +195,9 @@ export async function useDataGridCreate(pos: PopoverPosition) {
             popover.close();
             resolve(null);
         });
+        fv.only('changeIndex', () => {
+            popover.updateLayout();
+        })
         popover.only('close', () => {
             resolve(null)
         });
