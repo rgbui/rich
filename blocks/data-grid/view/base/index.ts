@@ -406,7 +406,7 @@ export class DataGridView extends Block {
                         var view = await onCreateDataGridTemplate(dg.text, this, dg.url)
                         viewUrl = view.url;
                     }
-                    else {
+                    else if (dg.source == 'createView') {
                         this.schema = await TableSchema.onCreate({ text: dg.text, url: this.url });
                         var view = this.schema.listViews.first();
                         viewUrl = view.url;

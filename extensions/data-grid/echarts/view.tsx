@@ -225,7 +225,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                         options={charts.map(c => {
                             if (c.type == MenuItemType.divide) return c as any;
                             return {
-                                text: c.title,
+                                text: c.text,
                                 icon: c.icon,
                                 type: MenuItemType.item,
                                 value: c.name
@@ -431,11 +431,10 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
             </div>}
         </div>
     }
-    
+
     renderAggs() {
         var bc = (this.block as any) as DataGridChart;
-        function getSOptions()
-        {
+        function getSOptions() {
             return [
                 { text: lst('求和'), value: '$sum', icon: { name: 'byte', code: 'formula' } },
                 { text: lst('平均'), value: '$avg', icon: { name: 'byte', code: 'average' } },

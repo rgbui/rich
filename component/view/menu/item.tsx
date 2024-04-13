@@ -15,6 +15,7 @@ import { MenuView } from "./menu";
 import { Avatar } from "../avator/face";
 import { HelpText } from "../text";
 import { useIconPicker } from "../../../extensions/icon";
+import { IconArguments } from "../../../extensions/icon/declare";
 
 export class MenuItemView extends React.Component<{
     item: MenuItem,
@@ -23,7 +24,7 @@ export class MenuItemView extends React.Component<{
     select: (item: MenuItem, event?: MouseEvent) => void,
     input: (item: MenuItem) => void,
     click: (item: MenuItem, event?: React.MouseEvent, clickName?: string) => void
-}>{
+}> {
     el: HTMLElement;
     select(item: MenuItem, event?: MouseEvent) {
         if (item.disabled != true) this.props?.select(item, event);
@@ -101,7 +102,7 @@ export class MenuItemView extends React.Component<{
         if (item.disabled) return;
         var r = await useIconPicker({
             roundArea: Rect.fromEle(event.currentTarget as HTMLElement)
-        });
+        }, item.icon as IconArguments);
         if (typeof r != 'undefined') {
             item.icon = r;
             if (item.updateMenuPanel) this.props.parent.forceUpdate()
@@ -150,7 +151,7 @@ export class MenuItemView extends React.Component<{
                 {item.renderIcon && item.renderIcon(item, this)}
                 <span className='shy-menu-box-item-option-text text-overflow flex'>
                     {item.text}{item.remark && <i className="remark padding-l-5">{item.remark}</i>}
-                    {item.helpUrl && <span className="flex-fixed h-20 flex"><HelpText  onMouseDown={e => e.stopPropagation()} url={item.helpUrl}>{item.helpText}</HelpText></span>}
+                    {item.helpUrl && <span className="flex-fixed h-20 flex"><HelpText onMouseDown={e => e.stopPropagation()} url={item.helpUrl}>{item.helpText}</HelpText></span>}
                 </span>
                 {item.checkLabel && <Icon className={'shy-menu-box-item-option-label-icon gap-r-8'} size={16} icon={CheckSvg}></Icon>}
                 {item.label && !item.checkLabel && <label>{item.label}</label>}
@@ -181,7 +182,7 @@ export class MenuItemView extends React.Component<{
                 <Switch size='small' onChange={e => this.checked(e, item)} checked={item.checked ? item.checked : false}></Switch>
             </div>}
             {item.type == MenuItemType.help && <div className="shy-menu-box-item-help">
-                <HelpText className={'padding-w-5'} align="left" block={item.helpInline?false:true} url={item.url}>{item.text}</HelpText>
+                <HelpText className={'padding-w-5'} align="left" block={item.helpInline ? false : true} url={item.url}>{item.text}</HelpText>
             </div>}
             {item.type == MenuItemType.input && !item.label && <div className="shy-menu-box-item-input"><Input size={'small'} value={item.value} onEnter={e => { item.value = e; this.select(item) }} onChange={e => { item.value = e; this.input(e, item) }} placeholder={item.placeholder || item.text}></Input></div>}
             {item.type == MenuItemType.input && item.label && <div className="flex shy-menu-box-item-input">

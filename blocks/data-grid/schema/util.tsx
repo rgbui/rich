@@ -6,7 +6,6 @@ import {
     CollectionGallerySvg,
     CollectionListSvg,
     CollectTableSvg,
-
     EmojiSvg,
     EyeSvg,
     LikeSvg,
@@ -33,9 +32,7 @@ import {
     VideoSvg
 } from "../../../component/svgs";
 import { MenuItemType } from "../../../component/view/menu/declare";
-import { TableSchema, TableSchemaView } from "./meta";
-import { Field } from "./field";
-import dayjs from "dayjs";
+import { TableSchemaView } from "./meta";
 import lodash from "lodash";
 import { lst } from "../../../i18n/store";
 import { IconValueType } from "../../../component/view/icon";
@@ -127,8 +124,7 @@ export function GetFieldTypeSvg(type: FieldType): IconValueType {
 }
 
 export function getSchemaViewIcon(view: TableSchemaView): IconValueType {
-    if (view?.icon) return view.icon;
-
+    if (view?.icon) return lodash.cloneDeep(view.icon);
     var url = view?.url;
     if (!url) return CollectTableSvg
     if (url.indexOf('?') > 0) url = url.substring(0, url.indexOf('?'))
@@ -154,7 +150,7 @@ export function getSchemaViewIcon(view: TableSchemaView): IconValueType {
 export function getChartViews() {
     var menus = [
         {
-            title: lst('折线图'),
+            text: lst('折线图'),
             url: '/data-grid/charts?{"chart_type":"line"}',
             remark: '',
             name: 'line',
@@ -162,7 +158,7 @@ export function getChartViews() {
             icon: { name: 'byte', code: 'chart-line' }
         },
         {
-            title: lst('柱状图'),
+            text: lst('柱状图'),
             url: '/data-grid/charts?{"chart_type":"bar"}',
             remark: 'bar',
             name: 'bar',
@@ -170,7 +166,7 @@ export function getChartViews() {
             icon: { name: 'byte', code: 'chart-histogram' }
         },
         {
-            title: lst('饼图'),
+            text: lst('饼图'),
             url: '/data-grid/charts?{"chart_type":"pie"}',
             remark: '',
             name: 'pie',
@@ -178,7 +174,7 @@ export function getChartViews() {
             image: Pie.default
         },
         {
-            title: lst('漏斗图'),
+            text: lst('漏斗图'),
             url: '/data-grid/charts?{"chart_type":"funnel"}',
             remark: '',
             name: 'funnel',
@@ -187,7 +183,7 @@ export function getChartViews() {
         },
         { type: MenuItemType.divide },
         {
-            title: lst('散点图'),
+            text: lst('散点图'),
             url: '/data-grid/charts?{"chart_type":"scatter"}',
             remark: '',
             name: 'scatter',
@@ -195,7 +191,7 @@ export function getChartViews() {
             icon: { name: 'byte', code: 'chart-scatter' }
         },
         {
-            title: lst('雷达图'),
+            text: lst('雷达图'),
             url: '/data-grid/charts?{"chart_type":"radar"}',
             remark: '',
             name: 'radar',
@@ -213,7 +209,7 @@ export function getChartViews() {
         // },
         { type: MenuItemType.divide },
         {
-            title: lst('关系图'),
+            text: lst('关系图'),
             url: '/data-grid/charts?{"chart_type":"graph"}',
             remark: '',
             name: 'graph',
@@ -222,7 +218,7 @@ export function getChartViews() {
         },
         { type: MenuItemType.divide },
         {
-            title: lst('仪表盘'),
+            text: lst('仪表盘'),
             url: '/data-grid/charts?{"chart_type":"gauge"}',
             remark: '',
             name: 'gauge',
@@ -230,7 +226,7 @@ export function getChartViews() {
             icon: { name: 'byte', code: 'speed-one' }
         },
         {
-            title: lst('统计与指标'),
+            text: lst('统计与指标'),
             url: '/data-grid/charts?{"chart_type":"summary"}',
             name: 'summary',
             remark: '',
@@ -239,7 +235,7 @@ export function getChartViews() {
         },
         { type: MenuItemType.divide },
         {
-            title: lst('字符云'),
+            text: lst('字符云'),
             url: '/data-grid/charts?{"chart_type":"wordCloud"}',
             name: 'wordCloud',
             remark: '',
