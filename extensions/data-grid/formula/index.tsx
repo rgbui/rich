@@ -118,7 +118,8 @@ class FormulaSelector extends EventsComponent {
                     <div className="gap-h-10">
                         <div onMouseDown={e => { this.fieldSpread = !this.fieldSpread; this.forceUpdate() }}
                             className="gap-t-5 cursor  font-12 padding-l-5 flex">
-                            <span className={" flex-fixed item-hover round text-1 size-16 flex-center ts " + (this.fieldSpread ? "angle-180 " : "angle-90 ")}><Icon size={8} icon={TriangleSvg}></Icon></span><S>字段</S>
+                            <span className={"flex-fixed item-hover round text-1 size-16 flex-center ts " + (this.fieldSpread ? "angle-180 " : "angle-90 ")}><Icon size={8} icon={TriangleSvg}></Icon></span>
+                            <S>字段</S>
                         </div>
                         {this.schema && this.fieldSpread && this.getFields().map(f => {
                             return <div

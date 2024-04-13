@@ -39,61 +39,68 @@ export class DataGridViewConfig {
         await this.onDataGridTool(async () => {
             function getMenuItems() {
                 var items: MenuItem<BlockDirective | string>[] = [];
-                items.push(...[
-                    {
-                        name: 'name',
-                        type: MenuItemType.inputTitleAndIcon,
-                        value: self.schemaView?.text,
-                        icon: getSchemaViewIcon(self.schemaView),
-                        text: lst('编辑视图名'),
-                    },
-                    { type: MenuItemType.divide },
-                    {
-                        text: lst("切换视图"),
-                        icon: LoopSvg,
-                        childs: [
-                            {
-                                type: MenuItemType.container,
-                                drag: true,
-                                name: 'viewContainer',
-                                childs: [
-                                    ...self.schema.views.findAll(g => ![BlockUrlConstant.RecordPageView].includes(g.url as any)).map(v => {
-                                        return {
-                                            name: 'turn',
-                                            text: v.text,
-                                            type: MenuItemType.drag,
-                                            value: v.id,
-                                            icon: getSchemaViewIcon(v),
-                                            checkLabel: v.id == self.schemaView?.id,
-                                            btns: [
-                                                { icon: DotsSvg, name: 'property' }
-                                            ]
-                                        }
-                                    }),
-                                    { type: MenuItemType.divide },
-                                    { name: 'addView', type: MenuItemType.button, text: lst('创建视图') }
-                                ]
-                            }
-                        ]
-                    },
-                    { text: lst('配置视图'), name: 'viewConfig', icon: { name: 'byte', code: 'setting-one' } as IconValueType },
-                    { type: MenuItemType.divide },
-                    { text: lst('数据源'), name: 'datasource', icon: DatasourceSvg },
-                    { type: MenuItemType.divide },
-                    { name: 'link', icon: LinkSvg, text: lst('复制视图链接') },
-                    { type: MenuItemType.divide },
-                    { name: 'clone', icon: DuplicateSvg, text: lst('复制视图') },
-                    { name: 'delete', icon: TrashSvg, text: lst('移除视图') },
-                    { type: MenuItemType.divide },
-                    {
-                        type: MenuItemType.help,
-                        text: lst('了解如何使用数据表格'),
-                        url: window.shyConfig?.isUS ? "https://help.shy.red/page/38#3qfPYqnTJCwwQ6P9zYx8Q8" : "https://shy.live/ws/help/page/286"
+                if (self.schema) {
+                    items.push(...[
+                        {
+                            name: 'name',
+                            type: MenuItemType.inputTitleAndIcon,
+                            value: self.schemaView?.text,
+                            icon: getSchemaViewIcon(self.schemaView),
+                            text: lst('编辑视图名'),
+                        },
+                        { type: MenuItemType.divide },
+                        {
+                            text: lst("切换视图"),
+                            icon: LoopSvg,
+                            childs: [
+                                {
+                                    type: MenuItemType.container,
+                                    drag: true,
+                                    name: 'viewContainer',
+                                    childs: [
+                                        ...self.schema.views.findAll(g => ![BlockUrlConstant.RecordPageView].includes(g.url as any)).map(v => {
+                                            return {
+                                                name: 'turn',
+                                                text: v.text,
+                                                type: MenuItemType.drag,
+                                                value: v.id,
+                                                icon: getSchemaViewIcon(v),
+                                                checkLabel: v.id == self.schemaView?.id,
+                                                btns: [
+                                                    { icon: DotsSvg, name: 'property' }
+                                                ]
+                                            }
+                                        }),
+                                        { type: MenuItemType.divide },
+                                        { name: 'addView', type: MenuItemType.button, text: lst('创建视图') }
+                                    ]
+                                }
+                            ]
+                        },
+                        { text: lst('配置视图'), name: 'viewConfig', icon: { name: 'byte', code: 'setting-one' } as IconValueType },
+                        { type: MenuItemType.divide },
+                        { text: lst('数据源'), name: 'datasource', icon: DatasourceSvg },
+                        { type: MenuItemType.divide },
+                        { name: 'link', icon: LinkSvg, text: lst('复制视图链接') },
+                        { type: MenuItemType.divide },
+                        { name: 'clone', icon: DuplicateSvg, text: lst('复制视图') },
+                        { name: 'delete', icon: TrashSvg, text: lst('移除视图') },
+                        { type: MenuItemType.divide },
+                        {
+                            type: MenuItemType.help,
+                            text: lst('了解如何使用数据表格'),
+                            url: window.shyConfig?.isUS ? "https://help.shy.red/page/38#3qfPYqnTJCwwQ6P9zYx8Q8" : "https://shy.live/ws/help/page/286"
+                        }
+                    ]);
+                    if (self.page.pe.type == ElementType.Schema) {
+                        items.splice(-7 - 2, 2);
+                        items.splice(-3, 1);
                     }
-                ]);
-                if (self.page.pe.type == ElementType.Schema) {
-                    items.splice(-7 - 2, 2);
-                    items.splice(-3, 1);
+                }
+                else {
+                    items.push(
+                        { text: lst('数据源'), name: 'datasource', icon: DatasourceSvg }
+                    )
                 }
                 return items;
             }
@@ -135,9 +142,8 @@ export class DataGridViewConfig {
                             }
                             var props: Record<string, any> = {};
                             var rn = rs.find(g => g.name == 'name');
-                            if (rn.value != item.text && rn.value) {
+                            if (!lodash.isEqual(rn.value, item.text))
                                 props.text = rn.value;
-                            }
                             if (!lodash.isEqual(rn.icon, item.icon)) {
                                 props.icon = rn.icon;
                             }
@@ -145,8 +151,8 @@ export class DataGridViewConfig {
                                 await self.schema.onSchemaOperate([
                                     { name: 'updateSchemaView', id: item.value, data: props }
                                 ]);
-                                if (props.text) item.text = props.text || item.text;
-                                if (props.icon) item.icon = props.icon || item.icon;
+                                if (typeof props.text != 'undefined') item.text = lodash.cloneDeep(props.text);
+                                if (typeof props.icon != 'undefined') item.icon = lodash.cloneDeep(props.icon);
                                 mp.updateItems(items);
                                 if (props.text && view.url.startsWith('/data-grid/charts')) {
                                     await (self as DataGridChart).renderEcharts();
