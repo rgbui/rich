@@ -58,27 +58,27 @@ export class FilterView extends React.Component<{
             var text = fe.text;
             var value = fe.id;
             if (fe.type == FieldType.browse) {
-                text += '.' + lst('浏览量')
+                text += '(' + lst('浏览量') + ")"
                 value = fe.id + '.count'
             }
             else if (fe.type == FieldType.vote) {
-                text += '.' + lst('投票数')
+                text += '(' + lst('投票数') + ")"
                 value = fe.id + '.count'
             }
             else if (fe.type == FieldType.love) {
-                text += '.' + lst('喜欢数')
+                text += '(' + lst('喜欢数') + ")"
                 value = fe.id + '.count'
             }
             else if (fe.type == FieldType.comment) {
-                text += '.' + lst('评论数')
+                text += '(' + lst('评论数') + ")"
                 value = fe.id + '.count'
             }
             else if (fe.type == FieldType.like) {
-                text += '.' + lst('点赞数')
+                text += '(' + lst('点赞数') + ")"
                 value = fe.id + '.count'
             }
             else if (fe.type == FieldType.emoji) {
-                text += '.' + lst('表情数')
+                text += '(' + lst('表情数') + ")"
                 value = fe.id + '.count'
             }
             else if ([FieldType.audio, FieldType.image, FieldType.file, FieldType.video].includes(fe.type)) {
@@ -92,12 +92,12 @@ export class FilterView extends React.Component<{
                         },
                         {
                             icon: GetFieldTypeSvg(fe.type),
-                            text: fe.text + '.' + lst('数量'),
+                            text: fe.text + '(' + lst('数量') + ")",
                             value: fe.id + ".$size"
                         },
                         {
                             icon: GetFieldTypeSvg(fe.type),
-                            text: fe.text + '.' + lst('大小'),
+                            text: fe.text + '(' + lst('大小') + ")",
                             value: fe.id + ".$element.size"
                         },
                         { type: MenuItemType.divide }
@@ -113,7 +113,7 @@ export class FilterView extends React.Component<{
                         },
                         {
                             icon: GetFieldTypeSvg(fe.type),
-                            text: fe.text + '.' + lst('大小'),
+                            text: fe.text + '(' + lst('大小') + ")",
                             value: fe.id + ".$element.size"
                         },
                         { type: MenuItemType.divide }
@@ -130,7 +130,7 @@ export class FilterView extends React.Component<{
                     },
                     {
                         icon: GetFieldTypeSvg(fe.type),
-                        text: fe.text + '.' + lst('选项数'),
+                        text: fe.text + '(' + lst('选项数') + ")",
                         value: fe.id + ".$size"
                     },
                     { type: MenuItemType.divide }
@@ -146,7 +146,7 @@ export class FilterView extends React.Component<{
                     },
                     {
                         icon: GetFieldTypeSvg(fe.type),
-                        text: fe.text + '.' + lst('关联数'),
+                        text: fe.text + '(' + lst('关联数') + ")",
                         value: fe.id + ".$size"
                     },
                     { type: MenuItemType.divide }
@@ -158,7 +158,11 @@ export class FilterView extends React.Component<{
                 value
             }
         });
-        return fs.flat(3);
+        var vs = fs.flat(3);
+        vs = util.neighborDeWeight(vs, v => ((v as any).type || '') + (v.value || ""))
+        if ((vs.first() as any).type == MenuItemType.divide) vs = vs.slice(1)
+        if ((vs.last() as any).type == MenuItemType.divide) vs = vs.slice(0, vs.length - 1)
+        return vs;
     }
     getComputedFields(fieldId: string) {
         var fe = fieldId.indexOf('.') > -1 ? fieldId.split('.')[0] : fieldId;
@@ -382,13 +386,13 @@ export class FilterView extends React.Component<{
                     return {
                         text: op.text,
                         value: op.value,
-                        checkLabel: item.value == op.value,
+                        checkLabel: util.covertToArray(item.value).includes(op.value),
                         type: MenuItemType.custom,
                         render(it) {
-                            return <div className="flex padding-w-14 h-30 item-hover round cursor">
+                            return <div className="flex padding-w-5 gap-w-5 h-30 item-hover round cursor">
                                 <span className="flex-fixed size-20 round gap-r-10 border" style={{ backgroundColor: op.color }}></span>
                                 <span className="flex-auto text f-14">{op.text}</span>
-                                {it.value == item.value && <span className="flex-fixed size-24 flex-center"><Icon size={16} icon={CheckSvg}></Icon></span>}
+                                {util.covertToArray(item.value).includes(it.value) && <span className="flex-fixed size-24 flex-center"><Icon size={16} icon={CheckSvg}></Icon></span>}
                             </div>
                         }
                     }
@@ -401,9 +405,9 @@ export class FilterView extends React.Component<{
                     self.onForceStore();
                 }
             }
-            return <div onMouseDown={e => mousedown(item, e)} className="border box-border round h-26 padding-w-14 flex-center gap-r-10">
+            return <div onMouseDown={e => mousedown(item, e)} className="border box-border round h-26 max-w-120 text-overflow padding-w-10 flex-center gap-r-10">
                 {ops.map(op => {
-                    return <span className="gap-r-5" key={op.value} style={{ background: op?.color ? op.color : undefined }}>{op?.text || lst('请选择一项')}</span>
+                    return <span className="text-overflow round padding-w-6  f-14 padding-h-2  l-16 gap-r-5" key={op.value} style={{ background: op?.color ? op.color : undefined }}>{op?.text || lst('请选择一项')}</span>
                 })}
                 {ops.length == 0 && <span>{lst('请选择一项')}</span>}
             </div>
