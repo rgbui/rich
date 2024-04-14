@@ -21,7 +21,6 @@ import {
     TrashSvg
 } from "../../../component/svgs";
 import { getElementUrl, ElementType } from "../../../net/element.type";
-
 import { DataGridView } from "../../../blocks/data-grid/view/base";
 import { BlockUrlConstant } from "../../../src/block/constant";
 import { Icon, IconValueType } from "../../../component/view/icon";
@@ -79,7 +78,7 @@ class TabelSchemaFormDrop extends EventsComponent {
         var menus = [
             {
                 type: MenuItemType.inputTitleAndIcon,
-                text: lst('重命名模板'),
+                text: lst('重命名数据模板'),
                 value: view.text,
                 icon: view.icon || DetailSvg,
                 name: 'rename'
@@ -88,7 +87,7 @@ class TabelSchemaFormDrop extends EventsComponent {
             { text: lst('编辑'), name: 'edit', icon: Edit1Svg },
             { text: lst('复制数据模板'), name: 'clone', icon: DuplicateSvg },
             { type: MenuItemType.divide },
-            { text: lst('设为新增时打开'), name: 'defaultCollect', checkLabel: this.schema.defaultCollectFormId == view.id ? true : false, icon: OrderSvg },
+            { text: lst('设为新增数据时打开'), name: 'defaultCollect', checkLabel: this.schema.defaultCollectFormId == view.id ? true : false, icon: OrderSvg },
             { type: MenuItemType.divide },
             { text: lst('删除'), name: 'delete', icon: TrashSvg, disabled: this.schema.views.findAll(g => [BlockUrlConstant.RecordPageView].includes(g.url as any)).length == 1 ? true : false }
         ]
@@ -137,12 +136,12 @@ class TabelSchemaFormDrop extends EventsComponent {
             return;
         }
     }
-    render(): ReactNode {
+    render() {
         if (!this.schema) return <div></div>
         var views = this.schema.views.filter(g => [BlockUrlConstant.RecordPageView].includes(g.url as any));
         if (!Array.isArray(views)) views = [];
         return <div className="shadow-s w-250 padding-h-10">
-            <div className="bold padding-w-10 flex"><S>模板列表</S><HelpText url={window.shyConfig?.isUS ? "https://help.shy.red/page/42#vQh5qaxCEC3aPjuFisoRh5" : "https://help.shy.live/page/1870#3Fgw3UNGQErf8tZdJnhjru"}></HelpText></div>
+            <div className="bold padding-w-10 flex"><span className="flex-auto"><S>数据模板列表</S></span><HelpText className={'flex-fixed'} url={window.shyConfig?.isUS ? "https://help.shy.red/page/42#vQh5qaxCEC3aPjuFisoRh5" : "https://help.shy.live/page/1870#3Fgw3UNGQErf8tZdJnhjru"}>了解数据模板</HelpText></div>
             {views.length > 0 && <Divider></Divider>}
             {views.map(v => {
                 return <div className="item-hover padding-w-5 gap-w-5 h-30 round flex cursor f-14" key={v.id} onClick={e => this.onOpenTemplate(v)}>

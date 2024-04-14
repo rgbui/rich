@@ -30,7 +30,7 @@ export class FilterView extends React.Component<{
     ws?: LinkWs,
     onInput: (filter: SchemaFilter) => void,
     onChange: (filter: SchemaFilter) => void
-}>{
+}> {
     filter: SchemaFilter = { id: util.guid(), logic: 'and', items: [] }
     schema: TableSchema;
     formSchema: TableSchema;
@@ -54,7 +54,7 @@ export class FilterView extends React.Component<{
         this.forceUpdate();
     }
     getFields() {
-        var fs = this.schema.visibleFields.findAll(g => g.text && ![FieldType.formula].includes(g.type)).map(fe => {
+        var fs = this.schema.visibleFields.findAll(g => g.text && ![FieldType.formula, FieldType.rollup].includes(g.type)).map(fe => {
             var text = fe.text;
             var value = fe.id;
             if (fe.type == FieldType.browse) {
@@ -84,6 +84,7 @@ export class FilterView extends React.Component<{
             else if ([FieldType.audio, FieldType.image, FieldType.file, FieldType.video].includes(fe.type)) {
                 if (fe.config?.isMultiple) {
                     return [
+                        { type: MenuItemType.divide },
                         {
                             icon: GetFieldTypeSvg(fe.type),
                             text,
@@ -98,11 +99,13 @@ export class FilterView extends React.Component<{
                             icon: GetFieldTypeSvg(fe.type),
                             text: fe.text + '.' + lst('大小'),
                             value: fe.id + ".$element.size"
-                        }
+                        },
+                        { type: MenuItemType.divide }
                     ]
                 }
                 else {
                     return [
+                        { type: MenuItemType.divide },
                         {
                             icon: GetFieldTypeSvg(fe.type),
                             text,
@@ -112,12 +115,14 @@ export class FilterView extends React.Component<{
                             icon: GetFieldTypeSvg(fe.type),
                             text: fe.text + '.' + lst('大小'),
                             value: fe.id + ".$element.size"
-                        }
+                        },
+                        { type: MenuItemType.divide }
                     ]
                 }
             }
             else if (fe.type == FieldType.options) {
                 return [
+                    { type: MenuItemType.divide },
                     {
                         icon: GetFieldTypeSvg(fe.type),
                         text,
@@ -127,11 +132,13 @@ export class FilterView extends React.Component<{
                         icon: GetFieldTypeSvg(fe.type),
                         text: fe.text + '.' + lst('选项数'),
                         value: fe.id + ".$size"
-                    }
+                    },
+                    { type: MenuItemType.divide }
                 ]
             }
             else if (fe.type == FieldType.relation) {
                 return [
+                    { type: MenuItemType.divide },
                     {
                         icon: GetFieldTypeSvg(fe.type),
                         text,
@@ -141,7 +148,8 @@ export class FilterView extends React.Component<{
                         icon: GetFieldTypeSvg(fe.type),
                         text: fe.text + '.' + lst('关联数'),
                         value: fe.id + ".$size"
-                    }
+                    },
+                    { type: MenuItemType.divide }
                 ]
             }
             return {
@@ -528,54 +536,6 @@ export class FilterView extends React.Component<{
             return <Switch className={'gap-r-10'} checked={item.value ? true : false} onChange={e => { item.value = e; self.onForceStore() }}></Switch>
         else if ([FieldType.creater, FieldType.modifyer, FieldType.user].includes(type) && !['$isNull', '$isNotNull'].includes(item.operator))
             return self.renderUserInput(item)
-        // return <>
-        //     {/* {
-        //         (
-        //             ['$notContain', '$contain', '$startWith', '$endWith'].includes(item.operator)
-        //             ||
-        //             ([
-        //                 FieldType.text,
-        //                 FieldType.textarea,
-        //                 FieldType.title,
-        //                 FieldType.link,
-        //                 FieldType.phone,
-        //                 FieldType.email
-        //             ].includes(fe.type) && ['$ne', '$eq'].includes(item.operator))
-        //         )
-        //         &&
-        //         <Input onSearchDrop={async (v) => {
-        //             if (!v) return []
-        //             if (this.formSchema) {
-        //                 var fs = this.formSchema.fields.findAll(g => [
-        //                     FieldType.text,
-        //                     FieldType.textarea,
-        //                     FieldType.title,
-        //                     FieldType.link,
-        //                     FieldType.phone,
-        //                     FieldType.email
-        //                 ].includes(g.type) && ('@' + g.text).startsWith(v));
-        //                 return fs.map(f => {
-        //                     return {
-        //                         value: '@' + f.text,
-        //                         text: '@' + f.text,
-        //                         type: GetFieldTypeSvg(f.type)
-        //                     }
-        //                 })
-        //             }
-        //             return [] as any
-        //         }} className={'gap-r-10'} style={{ width: 120 }} placeholder={lst('值')} value={item.value} onEnter={e => {
-        //             item.value = e;
-        //             self.onForceStore();
-        //         }} onChange={e => {
-        //             item.value = e;
-        //             self.onStore();
-        //         }}></Input>} */}
-        //     {/* {[FieldType.number, FieldType.autoIncrement].includes(fe.type) && !['$isNull', '$isNotNull'].includes(item.operator) && <Input className={'gap-r-10'} type='number' style={{ width: 120 }} placeholder={lst('值')} value={item.value} onChange={e => { item.value = e; self.onStore(); }}></Input>} */}
-        //     {/* {[FieldType.date, FieldType.modifyDate, FieldType.createDate].includes(fe.type) && !['$isNull', '$isNotNull'].includes(item.operator) && self.renderDateInput(item)}
-        //     {[FieldType.option, FieldType.options].includes(fe.type) && !['$isNull', '$isNotNull'].includes(item.operator) && self.renderOptionInput(item)} */}
-        //     {/* {[FieldType.bool].includes(fe.type) && !['$isNull', '$isNotNull'].includes(item.operator) && <Switch className={'gap-r-10'} checked={item.value ? true : false} onChange={e => { item.value = e; self.onForceStore() }}></Switch>}
-        //     {[FieldType.creater, FieldType.modifyer, FieldType.user].includes(fe.type) && !['$isNull', '$isNotNull'].includes(item.operator) && self.renderUserInput(item)} */}
-        // </>
     }
     render() {
         if (!this.schema) return <></>
@@ -628,7 +588,7 @@ export class FilterView extends React.Component<{
             </div>
             <Divider></Divider>
             <div className="h-30 padding-w-14 flex">
-                <HelpText align="left" url={window.shyConfig?.isUS ? "https://shy.red/ws/help/page/46" : "https://shy.live/ws/help/page/1873"}>了解数据表格筛选</HelpText>
+                <HelpText align="left" url={window.shyConfig?.isUS ? "https://shy.red/ws/help/page/46" : "https://shy.live/ws/help/page/1873"}>了解数据表筛选</HelpText>
             </div>
         </div>
     }

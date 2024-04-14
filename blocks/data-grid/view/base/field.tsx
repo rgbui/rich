@@ -17,7 +17,8 @@ import {
     DotsSvg,
     PlusSvg,
     CheckSvg,
-    MaximizeSvg
+    MaximizeSvg,
+    TypesNumberSvg
 } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import { useSelectMenuItem } from "../../../../component/view/menu";
@@ -39,7 +40,7 @@ export class DataGridViewField {
     private getFieldMenuItems(this: DataGridView, viewField: ViewField) {
         var items: MenuItem<BlockDirective | string>[] = [];
         var tips: MenuItem<BlockDirective | string>[] = [{ type: MenuItemType.divide },
-        { type: MenuItemType.help, text: lst('了解如何使用数据字段'), url: window.shyConfig?.isUS ? "https://help.shy.red/page/43#2PRKjiNkLmU6w4xciiy1t1" : "https://help.shy.live/page/1871#gVnf6Ar2iF5wa2fS2KpLws" }]
+        { type: MenuItemType.help, text: lst('了解如何使用数据表字段'), url: window.shyConfig?.isUS ? "https://help.shy.red/page/43#2PRKjiNkLmU6w4xciiy1t1" : "https://help.shy.live/page/1871#gVnf6Ar2iF5wa2fS2KpLws" }]
         if (viewField.type || [FieldType.autoIncrement].includes(viewField?.field?.type)) {
             if (viewField.type == 'rowNum') {
                 items.push(...[
@@ -213,7 +214,6 @@ export class DataGridViewField {
                     icon: { name: "bytedance-icon", code: 'time' },
                     checked: viewField?.field?.config?.includeTime ? true : false
                 });
-                // items.insertAt(6, { type: MenuItemType.divide })
             }
             else if (viewField.field?.type == FieldType.number) {
                 var dateItems: MenuItem<BlockDirective | string>[] = [];
@@ -223,9 +223,6 @@ export class DataGridViewField {
                     { name: 'numberFormat', text: lst('千分位'), value: '1000', checkLabel: viewField.field.config?.numberFormat == '1000' },
                     { name: 'numberFormat', text: lst('两位小数'), value: '0.00', checkLabel: viewField.field.config?.numberFormat == '0.00' },
                     { name: 'numberFormat', text: lst('百分比'), value: '%', checkLabel: viewField.field.config?.numberFormat == '%' },
-                    //{ name: 'numberFormat', type: MenuItemType.divide },
-                    //{ name: 'numberFormat', text: '进度条', value: 'progress', checkLabel: viewField.field.config?.numberFormat == 'progress' },
-                    // { text: '评分', value: 'score' },
                     { type: MenuItemType.divide },
                     { name: 'numberFormat', text: lst('人民币'), value: '￥', checkLabel: viewField.field.config?.numberFormat == '￥' },
                     { name: 'numberFormat', text: lst('美元'), value: '$', checkLabel: viewField.field.config?.numberFormat == '$' },
@@ -263,9 +260,9 @@ export class DataGridViewField {
                     name: 'config.numberDisplay.display',
                     value: viewField.field.config?.numberDisplay?.display || 'auto',
                     options: [
-                        { text: lst('数字'), value: 'auto' },
-                        { text: lst('进度条'), value: 'percent' },
-                        { text: lst('圆环'), value: 'ring' }
+                        { text: lst('数字'), value: 'auto', icon: TypesNumberSvg },
+                        { text: lst('进度条'), value: 'percent', icon: { name: 'byte', code: 'percentage' } },
+                        { text: lst('圆环'), value: 'ring', icon: { name: 'byte', code: 'chart-ring' } }
                     ]
                 })
                 items.insertAt(5, {
@@ -328,8 +325,8 @@ export class DataGridViewField {
                     icon: { name: 'bytedance-icon', code: 'picture-one' },
                     value: viewField.field.config?.imageFormat?.display || "thumb",
                     options: [
-                        { text: lst('略缩图'), value: 'thumb' },
-                        { text: lst('自适应'), value: 'auto' }
+                        { text: lst('略缩图'), value: 'thumb', icon: { name: 'byte', code: 'new-picture' } },
+                        { text: lst('自适应'), value: 'auto', icon: { name: 'byte', code: 'moving-picture' } }
                     ],
                     buttonClick: 'select'
                 });
@@ -353,8 +350,8 @@ export class DataGridViewField {
                     name: 'config.imageFormat.multipleDisplay',
                     value: viewField.field.config?.imageFormat?.multipleDisplay || "tile",
                     options: [
-                        { text: lst('平铺'), value: 'tile' },
-                        { text: lst('轮播'), value: 'carousel' }
+                        { text: lst('平铺'), value: 'tile' ,icon:{name:'byte',code:'all-application'}},
+                        { text: lst('轮播'), value: 'carousel',icon:{name:'byte',code:'multi-picture-carousel'} }
                     ],
                     buttonClick: 'select'
                 });

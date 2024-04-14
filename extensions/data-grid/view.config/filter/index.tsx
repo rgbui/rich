@@ -18,6 +18,7 @@ export class TableFilterView extends EventsComponent {
     onOpen(block: DataGridView): void {
         this.block = block;
         this.oldFilters = lodash.cloneDeep(this.block.filter || { id: util.guid(), logic: 'and', items: [] });
+        if (!Array.isArray(this.oldFilters.items)) this.oldFilters = { id: util.guid(), logic: 'and', items: [] }
         this.forceUpdate();
     }
 
@@ -32,7 +33,7 @@ export class TableFilterView extends EventsComponent {
         await this.block.onReloadData();
         this.oldFilters = lodash.cloneDeep(this.block.filter);
     }
-    
+
     render() {
         if (!this.block?.page) return <></>
         return <FilterView

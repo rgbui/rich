@@ -54,7 +54,7 @@ export class DataGridFields extends EventsComponent {
             </div>
             <Divider></Divider>
             <div className="h-30 padding-w-10 flex">
-                <HelpText align="left" block url={window.shyConfig?.isUS ? "https://help.shy.red/page/43#2PRKjiNkLmU6w4xciiy1t1" : "https://help.shy.live/page/1871#gVnf6Ar2iF5wa2fS2KpLws"}><S>了解如何使用数据字段</S></HelpText>
+                <HelpText align="left" block url={window.shyConfig?.isUS ? "https://help.shy.red/page/43#2PRKjiNkLmU6w4xciiy1t1" : "https://help.shy.live/page/1871#gVnf6Ar2iF5wa2fS2KpLws"}><S>了解如何使用数据表字段</S></HelpText>
             </div>
         </div>
     }
@@ -252,7 +252,7 @@ export class DataGridFields extends EventsComponent {
             </div>
             <Divider></Divider>
             <div className="h-30 padding-w-10 flex">
-                <HelpText align="left" url={window.shyConfig?.isUS ? "https://shy.red/ws/help/page/45" : "https://shy.live/ws/help/page/1872"}><S>了解如何使用数据卡片模板</S></HelpText>
+                <HelpText align="left" url={window.shyConfig?.isUS ? "https://shy.red/ws/help/page/45" : "https://shy.live/ws/help/page/1872"}><S>了解如何使用数据表卡片模板</S></HelpText>
             </div>
         </div >
     }

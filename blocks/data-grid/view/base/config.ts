@@ -86,7 +86,7 @@ export class DataGridViewConfig {
                         { type: MenuItemType.divide },
                         {
                             type: MenuItemType.help,
-                            text: lst('了解如何使用数据表格'),
+                            text: lst('了解如何使用数据表'),
                             url: window.shyConfig?.isUS ? "https://help.shy.red/page/38#3qfPYqnTJCwwQ6P9zYx8Q8" : "https://shy.live/ws/help/page/286"
                         }
                     ]);
@@ -235,7 +235,7 @@ export class DataGridViewConfig {
                 { text: lst('排序设置...'), icon: SortSvg, name: 'sort' },
                 { type: MenuItemType.divide },
                 {
-                    text: lst('锁定数据表格'),
+                    text: lst('锁定数据表'),
                     name: 'lock',
                     checked: this.schema.locker?.lock ? true : false,
                     type: MenuItemType.switch,
@@ -246,7 +246,7 @@ export class DataGridViewConfig {
                 { type: MenuItemType.divide },
                 {
                     type: MenuItemType.help,
-                    text: lst('了解如何使用数据表格'),
+                    text: lst('了解如何使用数据表'),
                     url: window.shyConfig?.isUS ? "https://help.shy.red/page/38#3qfPYqnTJCwwQ6P9zYx8Q8" : "https://shy.live/ws/help/page/286"
                 }
             ]

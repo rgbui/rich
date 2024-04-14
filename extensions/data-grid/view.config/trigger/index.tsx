@@ -54,6 +54,9 @@ export class DataGridTrigger extends EventsComponent {
         if (!this.schema) return <div></div>
         return <div className="f-14 ">
             <div className="max-h-300 overflow-y">
+                <div className="h-30 flex padding-w-10 gap-w-5 gap-h-10 text-1 f-14">
+                    <S text="拖动视图触发器至页面">拖动视图触发器至页面，对数据表进行管理</S>
+                </div>
                 <div className="remark f-12 padding-w-10 gap-w-5 gap-t-10"><S text='查询按钮'>查询按钮</S></div>
                 <div>
                     <div className="flex item-hover round h-30 padding-w-5 gap-w-5   ">
@@ -154,7 +157,7 @@ export class DataGridTrigger extends EventsComponent {
             </div>
             <Divider></Divider>
             <div className="h-30 padding-w-10 flex">
-                <HelpText align="left" block url={window.shyConfig?.isUS ? "https://shy.red/ws/help/page/48" : "https://help.shy.live/page/1875"}><S>了解如何使用数据视图触发器</S></HelpText>
+                <HelpText align="left" block url={window.shyConfig?.isUS ? "https://shy.red/ws/help/page/48" : "https://help.shy.live/page/1875"}><S>了解如何使用数据表视图触发器</S></HelpText>
             </div>
         </div>
     }

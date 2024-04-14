@@ -174,7 +174,7 @@ export class TableSortView extends EventsComponent {
             </div>
             <Divider></Divider>
             <div className="h-30 padding-w-10 flex">
-                <HelpText align="left" block url={window.shyConfig?.isUS ? "https://shy.red/ws/help/page/47" : "https://shy.live/ws/help/page/1874"}><S>了解如何使用数据字段排序</S></HelpText>
+                <HelpText align="left" block url={window.shyConfig?.isUS ? "https://shy.red/ws/help/page/47" : "https://shy.live/ws/help/page/1874"}><S>了解如何使用数据表排序</S></HelpText>
             </div>
         </div>
     }

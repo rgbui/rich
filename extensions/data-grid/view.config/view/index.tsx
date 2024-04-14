@@ -144,10 +144,10 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 selectDropWidth: 240,
                 options: [
                     {
-                        text: lst('原始记录'),
+                        text: lst('原始数据记录'),
                         value: '',
                         icon: { name: 'bytedance-icon', code: 'notes' },
-                        helpText: lst('了解原始记录'),
+                        helpText: lst('了解原始数据记录'),
                         helpUrl: window.shyConfig?.isUS ? "https://help.shy.red/page/42#6HAcf3LaXVpVtWnGU4LwuR" : "https://help.shy.live/page/1870#miDzBhMDdknUCHNkZvQbaM"
                     },
                     { type: MenuItemType.divide },
@@ -256,7 +256,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
         }
         if (!(this.block as DataGridView).dataGridTab)
             baseItems.push({
-                text: lst('显示数据视图标题'),
+                text: lst('显示数据表视图标题'),
                 name: 'noTitle',
                 type: MenuItemType.switch,
                 checked: (this.block as TableStore).noTitle ? false : true,
@@ -266,7 +266,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
         baseItems.push({
             type: MenuItemType.help,
             helpInline: true,
-            text: lst('了解如何使用数据视图'),
+            text: lst('了解如何使用数据表视图'),
             url: window.shyConfig?.isUS ? "https://help.shy.red/page/44#p6dtzzCsUHUrhyfNdrfkXh" : "https://help.shy.live/page/288#eNk3NZZyXWMCgMEMCyJRcG"
         });
         return baseItems
