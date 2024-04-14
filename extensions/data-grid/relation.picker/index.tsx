@@ -62,7 +62,7 @@ class RelationPicker extends EventsComponent {
                         <span>{this.relationSchema.text}</span>
                     </span>
                     <span><S>中选择</S></span>
-                    <HelpText url={window.shyConfig?.isUS ? "" : ""}><S>了解如何关联数据表</S></HelpText>
+                    <HelpText url={window.shyConfig?.isUS ? "https://help.shy.red/page/69#8se82Vo9ub2CVdQfA4CGEw" : "https://help.shy.live/page/1989#bMYCF1q5T1EDj9QArqCZMj"}><S>了解如何关联数据表</S></HelpText>
                 </div>
                 <div >
                     <div className="gap-w-10 gap-t-10 gap-b-5">
