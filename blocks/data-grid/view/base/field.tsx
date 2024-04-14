@@ -40,7 +40,7 @@ export class DataGridViewField {
         var items: MenuItem<BlockDirective | string>[] = [];
         var tips: MenuItem<BlockDirective | string>[] = [{ type: MenuItemType.divide },
         { type: MenuItemType.help, text: lst('了解如何使用数据字段'), url: window.shyConfig?.isUS ? "https://help.shy.red/page/43#2PRKjiNkLmU6w4xciiy1t1" : "https://help.shy.live/page/1871#gVnf6Ar2iF5wa2fS2KpLws" }]
-        if (viewField.type || [FieldType.autoIncrement, FieldType.rollup].includes(viewField?.field?.type)) {
+        if (viewField.type || [FieldType.autoIncrement].includes(viewField?.field?.type)) {
             if (viewField.type == 'rowNum') {
                 items.push(...[
                     {
@@ -158,7 +158,6 @@ export class DataGridViewField {
                 },
                 ...tips
             ]);
-
             if (viewField.field?.type == FieldType.date) {
                 var dateItems: MenuItem<BlockDirective | string>[] = [];
                 var day = dayjs(new Date());
@@ -445,6 +444,9 @@ export class DataGridViewField {
                         }
                     ]
                 });
+            }
+            else if (viewField.field?.type == FieldType.rollup) {
+                items.splice(items.findIndex(c => c.name == 'sortAsc'), 4);
             }
         }
         return items;
