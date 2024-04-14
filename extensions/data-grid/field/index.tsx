@@ -126,7 +126,7 @@ export class TableFieldView extends EventsComponent {
                     icon: GetFieldTypeSvg(r.type),
                     checkLabel: r.id == self.config.rollupFieldId
                 }
-            }).reverse());
+            }));
             if (r?.item) {
                 self.config.rollupFieldId = r.item.value;
                 var f = self.rollTableSchema.visibleFields.find(g => g.id == self.config.rollupFieldId);
@@ -207,12 +207,12 @@ export class TableFieldView extends EventsComponent {
                 schema: this.dataGrid.schema,
                 formula: this.config?.formula?.formula || ''
             });
-            if(!lodash.isUndefined(formula)) this.config.formula = formula;
+            if (!lodash.isUndefined(formula)) this.config.formula = formula;
         }
         return <div className="gap-h-10 padding-w-14">
             <div className="flex gap-b-5 remark f-12"><S>公式</S></div>
             <div className="flex">
-                <div>{this.config?.formula?.formula || ''}</div>
+                <div className="gap-b-5">{this.config?.formula?.formula || ''}</div>
                 <Button onMouseDown={e => openEditFormula(e)} ghost size={'small'}><S>编辑公式</S></Button>
             </div>
         </div>
@@ -222,7 +222,7 @@ export class TableFieldView extends EventsComponent {
             return <div className="gap-h-10 padding-w-14">
                 <div className="flex gap-b-5 remark f-12"><S>表情</S></div>
                 <div className="flex padding-w-5">
-                    {this.config?.emoji?.code && <span className="gap-r-5 f-20 l-20 size-20" onClick={e => this.onSetEmoji(e)} dangerouslySetInnerHTML={{ __html: getEmoji(this.config?.emoji?.code) }}></span>}
+                    {this.config?.emoji?.code && <span className="gap-r-10 f-20 l-20 size-20 round item-hover" onClick={e => this.onSetEmoji(e)} dangerouslySetInnerHTML={{ __html: getEmoji(this.config?.emoji?.code) }}></span>}
                     <Button size="small" onClick={e => this.onSetEmoji(e)} ghost >{this.config?.emoji?.code ? lst("更换表情") : lst("添加表情")}</Button>
                 </div>
             </div>
