@@ -98,7 +98,8 @@ export class Paging extends Block {
     getVisibleHandleCursorPoint() {
         var el = this.el;
         if (el) {
-            el = this.el.querySelector('div>span') as HTMLElement;
+            if (this.refBlock)
+                el = this.el.querySelector('div>span') as HTMLElement;
             if (!el) el = this.el;
             var rect = Rect.fromEle(el);
             return rect.leftMiddle;
