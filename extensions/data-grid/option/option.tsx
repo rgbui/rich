@@ -173,8 +173,6 @@ export class TableStoreOption extends EventsComponent {
         var menus = [
             { text: lst('标签'), name: 'name', value: option.text, type: MenuItemType.input },
             { type: MenuItemType.divide },
-            { name: 'delete', icon: TrashSvg, text: lst('删除') },
-            { type: MenuItemType.divide },
             { type: MenuItemType.text, text: lst('颜色') },
             ...OptionBackgroundColorList().map(b => {
                 return {
@@ -192,7 +190,9 @@ export class TableStoreOption extends EventsComponent {
                         </div>
                     }
                 }
-            })
+            }),
+            { type: MenuItemType.divide },
+            { name: 'delete', icon: TrashSvg, text: lst('删除') },
         ]
         var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
         if (um) {
