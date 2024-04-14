@@ -44,6 +44,7 @@ class FormFieldImage extends OriginFormField {
     async onGetContextMenus() {
         var items = await super.onGetContextMenus();
         var newItems = [];
+        newItems.push({ type: MenuItemType.divide })
         newItems.push({
             text: lst('图片展示'),
             type: MenuItemType.select,
@@ -63,8 +64,8 @@ class FormFieldImage extends OriginFormField {
             });
         }
         newItems.push({ type: MenuItemType.divide })
-        var at = items.findIndex(c => c.name == BlockDirective.copy);
-        items.splice(at+1, 0, ...newItems);
+        var at = items.findIndex(c => c.name == 'hidePropTitle' || c.name == 'required');
+        items.splice(at - 1, 0, ...newItems);
         return items;
     }
     async onContextMenuInput(item: MenuItem<BlockDirective | string>) {
@@ -84,7 +85,7 @@ class FormFieldImage extends OriginFormField {
 }
 
 @view('/form/image')
-class FormFieldImageView extends BlockView<FormFieldImage>{
+class FormFieldImageView extends BlockView<FormFieldImage> {
     deleteImage(img, event: React.MouseEvent) {
         var vs = util.covertToArray(this.block.value)
         lodash.remove(vs, g => g == img);

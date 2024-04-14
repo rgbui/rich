@@ -11,7 +11,6 @@ import {
     CommentSvg,
     CustomizePageSvg,
     DuplicateSvg,
-    EyeHideSvg,
     FieldsSvg,
     HSvg,
     LinkSvg,
@@ -550,6 +549,7 @@ export class PageContextmenu {
     async onOpenFieldProperty(this: Page, event: React.MouseEvent) {
         var self = this;
         var view = this.schema.recordViews.find(g => g.id == this.pe.id1)
+        var viewType = this.pageSchemaRecordType;
         var r = await useSelectMenuItem(
             { roundArea: Rect.fromEvent(event) },
             [
@@ -562,19 +562,19 @@ export class PageContextmenu {
                             text: lst('默认'),
                             value: 'doc',
                             icon: { name: 'bytedance-icon', code: 'editor' },
-                            overlay: lst('数据记录浏览编辑')
+                            overlay: lst('数据浏览编辑')
                         },
                         {
                             text: lst('表单'),
                             value: 'doc-add',
                             icon: { name: 'bytedance-icon', code: 'doc-add' },
-                            overlay: lst('收集数据的数据表单')
+                            overlay: lst('收集数据表单')
                         },
                         {
                             text: lst('清单'),
                             value: 'doc-detail',
                             icon: { name: 'bytedance-icon', code: 'doc-detail' },
-                            overlay: lst('只读的数据记录清单')
+                            overlay: lst('只读的数据清单')
                         }
                     ]
                 },
@@ -585,7 +585,7 @@ export class PageContextmenu {
                     text: lst('仅允许提交一次'),
                     type: MenuItemType.switch,
                     checked: view?.disabledUserMultiple,
-                    visible: this.isSchemaRecordViewTemplate ? true : false
+                    visible: viewType == 'template' ? true : false
                 },
                 {
                     icon: { name: 'bytedance-icon', code: 'personal-privacy' },
@@ -593,21 +593,20 @@ export class PageContextmenu {
                     text: lst('允许匿名提交'),
                     type: MenuItemType.switch,
                     checked: view?.allowAnonymous,
-                    visible: this.isSchemaRecordViewTemplate ? true : false
+                    visible: viewType == 'template' ? true : false
                 },
                 {
                     name: 'editForm',
                     icon: { name: 'bytedance-icon', code: 'arrow-right-up' },
                     text: lst('编辑模板'),
-                    visible: this.pe.type == ElementType.SchemaRecordViewData || this.pe.type == ElementType.SchemaRecordView && !this.isSchemaRecordViewTemplate ? true : false
+                    visible: viewType == 'add' || viewType == 'template-edit'
                 },
                 {
                     type: MenuItemType.gap,
-                    visible: true
+                    visible: viewType == 'origin-edit' ? false : true
                 },
                 { text: lst('显示字段'), type: MenuItemType.text },
-                ...this.schema.allowFormFields.findAll(g => (this.pe.type == ElementType.SchemaRecordView && !this.isSchemaRecordViewTemplate || this.pe.type == ElementType.SchemaData) && g.type == FieldType.title ? false : true).toArray(uf => {
-                    if (this.pe.type == ElementType.SchemaData && uf.type == FieldType.title) return;
+                ...this.schema.allowFormFields.findAll(g => viewType != 'template' && g.type == FieldType.title ? false : true).toArray(uf => {
                     return {
                         icon: GetFieldTypeSvg(uf.type),
                         name: uf.id,
@@ -622,12 +621,18 @@ export class PageContextmenu {
                     type: MenuItemType.switch,
                     checked: this.findAll(g => g instanceof OriginFormField).every(c => (c as OriginFormField).hidePropTitle !== true),
                     icon: { name: 'bytedance-icon', code: 'tag-one' },
-                    text: lst('字段属性名')
+                    text: lst('隐藏字段文本')
                 },
                 {
                     name: 'hideAllFields',
-                    icon: EyeHideSvg,
-                    text: lst('隐藏所有字段')
+                    icon: { name: 'byte', code: 'clear-format' },
+                    text: lst('清空页面所有字段')
+                },
+                { type: MenuItemType.divide },
+                {
+                    text: lst('了解如何设置数据表记录页面'),
+                    type: MenuItemType.help,
+                    url: window.shyConfig?.isUS ? "https://help.shy.red/page/42#vQh5qaxCEC3aPjuFisoRh5" : "https://help.shy.live/page/1870#3Fgw3UNGQErf8tZdJnhjru"
                 }
             ],
             {

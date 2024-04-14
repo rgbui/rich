@@ -117,6 +117,7 @@ export class OriginFormField extends Block {
     fieldError: string = '';
     async onGetContextMenus() {
         var rs = await super.onGetContextMenus();
+        lodash.remove(rs, c => c.name == 'color');
         var items: MenuItem<BlockDirective | string>[] = [];
         if (this.fieldType == 'doc-add') {
             items.push({

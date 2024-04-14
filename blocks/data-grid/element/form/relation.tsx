@@ -67,9 +67,9 @@ class FormFieldRelationView extends BlockView<FormFieldRelation>{
         var icon = rs?.fields.find(g => g.type == FieldType.icon);
         if (!f) f = rs?.fields.find(g => g.type == FieldType.text);
         return <div>
-            {this.block.relationList?.length > 0 && <div className="gap-b-5 item-hover-light-focus round ">
+            {this.block.relationList?.length > 0 && <div className="gap-b-5 padding-h-5 item-hover-light-focus round ">
                 {this.block.relationList?.map(r => {
-                    return <div className="padding-h-2 padding-w-10   item-hover-light   round cursor flex  visible-hover"
+                    return <div className="padding-h-2 padding-w-5 gap-w-5   item-hover-light   round cursor flex  visible-hover"
                         onClick={e => e.preventDefault()}
                         key={r.id}
                     >

@@ -96,6 +96,29 @@ export class Page extends Events<PageDirective> {
     showMembers: boolean = false;
     formType: 'doc' | 'doc-add' | 'doc-detail' = 'doc';
     /**
+     * 判断当前页面在数据表中是什么类型
+     * add 表单，添加新数据（需要指定模板）
+     * template-edit 记录页面，按指定的模板显示
+     * origin-edit 记录页面，按在首次添加数据时，保存的页面显示
+     * template 模板页面，用于管理设置模板
+     */
+    get pageSchemaRecordType() {
+        var viewType: "add" | 'template-edit' | 'origin-edit' | 'template' = null;
+        if (this.pe.type == ElementType.SchemaData) {
+            viewType = 'origin-edit'
+        }
+        else if (this.pe.type == ElementType.SchemaRecordViewData) {
+            viewType = 'template-edit'
+        }
+        else if (this.pe.type == ElementType.SchemaRecordView) {
+            if (this.isSchemaRecordViewTemplate) {
+                viewType = 'template'
+            }
+            else viewType = 'add'
+        }
+        return viewType;
+    }
+    /**
      * 页面格式 
      * 仅文档、数据表格、宣传页起作用
      */

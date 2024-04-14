@@ -221,13 +221,13 @@ export class MenuItemView extends React.Component<{
             </div>}
             {item.type == MenuItemType.buttonOptions && <div className="flex flex-wrap padding-l-5">
                 {item.options.map((op, index) => {
-                    return <div key={index} onMouseDown={e => {
+                    return <ToolTip key={index} overlay={op.overlay}><div  onMouseDown={e => {
                         item.value = op.value;
                         this.select(item, e.nativeEvent)
                     }} style={{ flexGrow: 1 }} className="item-hover padding-h-5 round gap-r-5 cursor">
                         {op.icon && <div className="flex-center" style={{ color: item.value == op.value ? "var(--text-b-color)" : "var(--text-color)" }}><Icon size={item.iconSize || 18} icon={op.icon}></Icon></div>}
                         <div className="remark flex-center f-12" style={{ fontWeight: item.value == op.value ? "bold" : undefined, color: item.value == op.value ? "var(--text-b-color)" : "var(--text-color)" }}>{op.text}</div>
-                    </div>
+                    </div></ToolTip>
                 })}
             </div>}
             {item.type == MenuItemType.drag && <ToolTip overlay={item.overlay} placement={item.placement || 'right'} ><div data-drag={item.drag}

@@ -20,7 +20,7 @@ class FieldText extends OriginFormField {
     async onGetContextMenus() {
         var items = await super.onGetContextMenus();
         if (this.fieldType == 'doc-add') {
-            var index = items.findIndex(g => g.name == 'hide');
+            var index = items.findIndex(g => g.name == 'required');
             items.splice(index, 0, {
                 name: 'optionType',
                 text: lst('选项类型'),
@@ -52,7 +52,7 @@ class FieldText extends OriginFormField {
 }
 
 @view('/form/option')
-class FieldTextView extends BlockView<FieldText>{
+class FieldTextView extends BlockView<FieldText> {
     async mousedown(event: React.MouseEvent) {
         if (this.block.checkEdit() === false) return;
         var fc: FieldConfig = this.block.field.config;
@@ -73,7 +73,7 @@ class FieldTextView extends BlockView<FieldText>{
             }
         );
         if (typeof op != 'undefined') {
-            this.block.onChange(op?op.map(o=>o.value):[]);
+            this.block.onChange(op ? op.map(o => o.value) : []);
         }
     }
     renderView() {
