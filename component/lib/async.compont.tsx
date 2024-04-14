@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
 import { Spin } from '../view/spin';
+
 /**
  * 动态加载组件
  * @param props 

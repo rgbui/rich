@@ -201,7 +201,7 @@ export class TableStoreView extends BlockView<TableStore> {
             })}
             {this.block.dataGridIsCanEdit() && <div className='sy-dg-table-head-th sy-dg-table-head-th-plus'
                 style={{ minWidth: 40, flexGrow: 1, flexShrink: 1 }}>
-                <ToolTip overlay={lst('添加新列')}><span onMouseDown={e => { e.stopPropagation(); this.block.onAddField(Rect.fromEvent(e)) }} className="size-24 item-hover round cursor flex-center text-1"><Icon icon={PlusSvg}></Icon></span></ToolTip>
+                <ToolTip overlay={lst('添加新列')}><span onMouseDown={e => { e.stopPropagation(); this.block.onAddField(Rect.fromEvent(e)) }} className="size-24 item-hover round cursor flex-center text-1"><Icon size={18} icon={PlusSvg}></Icon></span></ToolTip>
             </div>}
         </div>
         </div>

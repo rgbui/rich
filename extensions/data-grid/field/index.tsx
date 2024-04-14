@@ -16,7 +16,6 @@ import { Divider } from "../../../component/view/grid";
 import { Icon } from "../../../component/view/icon";
 import { Input } from "../../../component/view/input";
 import { Switch } from "../../../component/view/switch";
-import { Textarea } from "../../../component/view/input/textarea";
 import { getEmoji } from "../../../net/element.type";
 import { DataGridView } from "../../../blocks/data-grid/view/base";
 import lodash from "lodash";
@@ -26,6 +25,7 @@ import { lst } from "../../../i18n/store";
 import { S } from "../../../i18n/view";
 import { HelpText } from "../../../component/view/text";
 import './style.less';
+import { useFormula } from "../formula/lazy";
 
 export class TableFieldView extends EventsComponent {
     onSave() {
@@ -166,13 +166,11 @@ export class TableFieldView extends EventsComponent {
                 <div className="flex gap-b-5 remark f-12"><S>关联表格</S></div>
                 <div onClick={e => selectRelationTable(e)}
                     className="flex h-26  border-light  round item-hover-light cursor">
-
                     <span className="flex-center  size-24  flex-fix cursor  round "><Icon size={14} icon={tt?.icon || CollectTableSvg}></Icon></span>
                     <span className="flex-auto ">{tt?.text}</span>
                     <span className="flex-fixed size-24 round  flex-center">
                         <Icon size={14} icon={ChevronDownSvg}></Icon>
                     </span>
-
                 </div>
             </div>
             {self.rollTableSchema?.visibleFields && <>
@@ -185,7 +183,6 @@ export class TableFieldView extends EventsComponent {
                         <span className="flex-fixed size-24 round  flex-center">
                             <Icon size={14} icon={ChevronDownSvg}></Icon>
                         </span>
-
                     </div>
                 </div>
                 {this.config.rollupFieldId && <div className="gap-h-10 padding-w-14">
@@ -204,10 +201,19 @@ export class TableFieldView extends EventsComponent {
     }
     renderFormula() {
         if (this.type != FieldType.formula) return <></>
+        var openEditFormula = async (event: React.MouseEvent) => {
+            console.log(this.dataGrid.schema);
+            var formula = await useFormula({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
+                schema: this.dataGrid.schema,
+                formula: this.config?.formula?.formula || ''
+            });
+            if(!lodash.isUndefined(formula)) this.config.formula = formula;
+        }
         return <div className="gap-h-10 padding-w-14">
             <div className="flex gap-b-5 remark f-12"><S>公式</S></div>
             <div className="flex">
-                <Textarea value={this.config?.formula?.formula || ''} onEnter={e => this.config.formula = e}></Textarea>
+                <div>{this.config?.formula?.formula || ''}</div>
+                <Button onMouseDown={e => openEditFormula(e)} ghost size={'small'}><S>编辑公式</S></Button>
             </div>
         </div>
     }
@@ -217,7 +223,7 @@ export class TableFieldView extends EventsComponent {
                 <div className="flex gap-b-5 remark f-12"><S>表情</S></div>
                 <div className="flex padding-w-5">
                     {this.config?.emoji?.code && <span className="gap-r-5 f-20 l-20 size-20" onClick={e => this.onSetEmoji(e)} dangerouslySetInnerHTML={{ __html: getEmoji(this.config?.emoji?.code) }}></span>}
-                    <Button onClick={e => this.onSetEmoji(e)} ghost >{this.config?.emoji?.code ? lst("更换表情") : lst("添加表情")}</Button>
+                    <Button size="small" onClick={e => this.onSetEmoji(e)} ghost >{this.config?.emoji?.code ? lst("更换表情") : lst("添加表情")}</Button>
                 </div>
             </div>
         }

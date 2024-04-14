@@ -16,10 +16,10 @@ import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare"
 import lodash from "lodash";
 import { CheckSvg, DetailSvg, GridPageDialougSvg, GridPagePageSvg, GridPageSlideSvg, LoopSvg } from "../../../../component/svgs";
 import { Rect } from "../../../../src/common/vector/point";
-import { DataGridConfig } from "..";
 import { lst } from "../../../../i18n/store";
 import { CardFactory } from "../../../../blocks/data-grid/template/card/factory/factory";
 import { Icon } from "../../../../component/view/icon";
+import DataGridConfig from "..";
 
 export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> {
     get schema() {

@@ -5,9 +5,7 @@ import {
     DotsSvg,
     DuplicateSvg,
     LinkSvg,
-    FileSvg,
     LockSvg,
-    PropertysSvg,
     SortSvg,
     LoopSvg,
     UnlockSvg,
@@ -19,7 +17,6 @@ import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare"
 import { BlockDirective } from "../../../../src/block/enum";
 import { Rect } from "../../../../src/common/vector/point";
 import { DataGridView } from ".";
-import { useDataGridConfig } from "../../../../extensions/data-grid/view.config";
 import { getSchemaViewIcon } from "../../schema/util";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { channel } from "../../../../net/channel";
@@ -31,6 +28,7 @@ import lodash from "lodash";
 import { DataGridChart } from "../statistic/charts";
 import { IconValueType } from "../../../../component/view/icon";
 import { useDataSourceView } from "../../../../extensions/data-grid/datasource";
+import { useDataGridConfig } from "../../../../extensions/data-grid/view.config/lazy";
 
 export class DataGridViewConfig {
     async onOpenViewSettings(this: DataGridView, rect: Rect) {
@@ -232,7 +230,7 @@ export class DataGridViewConfig {
                 { text: lst('复制视图链接'), icon: LinkSvg, name: 'copylink' },
                 { type: MenuItemType.divide },
                 { text: lst('视图设置...'), icon: { name: 'byte', code: 'setting-one' }, name: 'view' },
-                { text: lst('字段设置...'), icon: PropertysSvg, name: 'propertys' },
+                { text: lst('字段设置...'), icon: { name: 'byte', code: 'list-checkbox' }, name: 'propertys' },
                 { text: lst('过滤设置...'), icon: FilterSvg, name: 'filter' },
                 { text: lst('排序设置...'), icon: SortSvg, name: 'sort' },
                 { type: MenuItemType.divide },

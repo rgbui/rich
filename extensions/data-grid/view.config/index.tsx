@@ -2,9 +2,6 @@ import React from "react";
 import { DataGridView } from "../../../blocks/data-grid/view/base";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { Tab } from "../../../component/view/tab";
-import { ResourceArguments } from "../../icon/declare";
-import { PopoverSingleton } from "../../../component/popover/popover";
-import { PopoverPosition } from "../../../component/popover/position";
 import { DataGridFields } from "./field";
 import { TableFilterView } from "./filter";
 import { TableSortView } from "./sort";
@@ -14,9 +11,10 @@ import { BlockUrlConstant } from "../../../src/block/constant";
 import { PageLayoutType } from "../../../src/page/declare";
 import { lst } from "../../../i18n/store";
 
-export class DataGridConfig extends EventsComponent {
+export default class DataGridConfig extends EventsComponent {
     dataGrid: DataGridView
-    onOpen(dataGrid: DataGridView, mode?: 'view' | 'field' | 'sort' | 'filter' | 'group') {
+    onOpen(dataGrid: DataGridView,
+        mode?: 'view' | 'field' | 'sort' | 'filter' | 'group') {
         this.dataGrid = dataGrid;
         if (this.dataGridViewConfig)
             this.dataGridViewConfig.onOpen(this.dataGrid);
@@ -75,9 +73,6 @@ export class DataGridConfig extends EventsComponent {
                 <Tab.Page item={lst('排序')}>
                     <TableSortView ref={e => this.tableSortView = e}></TableSortView>
                 </Tab.Page>
-                {/*<Tab.Page item={'触发器'}>
-                  <DataGridTrigger ref={e => this.dataGridTrigger = e}></DataGridTrigger>
-                 </Tab.Page>*/}
             </Tab>
         </div>
     }
@@ -87,19 +82,3 @@ export class DataGridConfig extends EventsComponent {
 }
 
 
-
-export async function useDataGridConfig(pos: PopoverPosition, options?: { mode?: 'view' | 'field' | 'sort' | 'filter' | 'group', dataGrid: DataGridView }) {
-   //mask: true 
-    let popover = await PopoverSingleton(DataGridConfig, { });
-    let dataGridViewer = await popover.open(pos);
-    dataGridViewer.onOpen(options.dataGrid, options.mode)
-    return new Promise((resolve: (data: ResourceArguments) => void, reject) => {
-        popover.only('close', () => {
-            resolve(null);
-        });
-        dataGridViewer.only('close', () => {
-            popover.close();
-            resolve(null)
-        })
-    })
-}

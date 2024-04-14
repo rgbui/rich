@@ -1,4 +1,4 @@
-import React, { LazyExoticComponent, Suspense } from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
 import { assyDiv } from "../types";
 import { Spin } from "../view/spin";

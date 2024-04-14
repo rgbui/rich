@@ -9,8 +9,6 @@ import { Icon } from "../../../component/view/icon";
 import { Textarea } from "../../../component/view/input/textarea";
 import { Express } from "./express";
 import { util } from "../../../util/util";
-import { PopoverSingleton } from "../../../component/popover/popover";
-import { PopoverPosition } from "../../../component/popover/position";
 import { constLangs, GetFormulaLangs, funLangs, logcLangs } from "./data";
 import { Field } from "../../../blocks/data-grid/schema/field";
 import { S } from "../../../i18n/view";
@@ -19,7 +17,7 @@ import { HelpText } from "../../../component/view/text";
 import { Button } from "../../../component/view/button";
 import { LazyMarkdown } from "../../../component/view/markdown/lazy";
 
-class FormulaSelector extends EventsComponent {
+export default class FormulaSelector extends EventsComponent {
     schema: TableSchema;
     cacheDatas = new Map<string, string>()
     openData = lodash.debounce(async (f) => {
@@ -246,7 +244,9 @@ class FormulaSelector extends EventsComponent {
         this.formula = formula;
         this.result = null;
         this.error = '';
-        this.forceUpdate()
+        this.forceUpdate(() => {
+            this.emit('update');
+        })
     }
     onCompile() {
         this.error = '';
@@ -302,29 +302,3 @@ class FormulaSelector extends EventsComponent {
     }
 }
 
-export async function useFormula(pos: PopoverPosition, options: {
-    schema: TableSchema,
-    formula: string
-}) {
-    let popover = await PopoverSingleton(FormulaSelector);
-    let fv = await popover.open(pos);
-    fv.open(options.schema, options.formula);
-    return new Promise((resolve: (data: { formula: string, jsCode: string, exp: any }) => void, reject) => {
-        fv.only('close', () => {
-            popover.close();
-            resolve(undefined);
-        })
-        fv.only('save', () => {
-            popover.close();
-            if (fv.formula) resolve(fv.result);
-            else resolve({
-                formula: '',
-                jsCode: '',
-                exp: null
-            })
-        })
-        popover.only('close', () => {
-            resolve(undefined)
-        })
-    })
-}

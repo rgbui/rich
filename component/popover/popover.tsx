@@ -3,12 +3,14 @@ import ReactDOM from "react-dom";
 import { Point, Rect, RectUtility } from "../../src/common/vector/point";
 import { EventsComponent } from "../lib/events.component";
 import { PopoverPosition } from "./position";
-import './style.less';
 import { popoverLayer } from "../lib/zindex";
 import { assyDiv } from "../types";
 import { Spin } from "../view/spin";
+import './style.less';
+
 export class Popover<T extends React.Component> extends EventsComponent<{
-    component: { new(...args: any[]): T },
+    component?: { new(...args: any[]): T },
+    lazy?: boolean,
     shadow?: boolean,
     args?: Record<string, any>,
     mask?: boolean,
@@ -37,7 +39,8 @@ export class Popover<T extends React.Component> extends EventsComponent<{
         else if (pos.dockRight) {
             return new Promise((resolve: (ins: T) => void, reject) => {
                 this.forceUpdate(() => {
-                    resolve(this.cp);
+                    if (this.cp) resolve(this.cp);
+                    else this.notifyCp = () => resolve(this.cp);
                 })
             })
         }
@@ -45,19 +48,21 @@ export class Popover<T extends React.Component> extends EventsComponent<{
             this.point = pos.fixPoint;
             return new Promise((resolve: (ins: T) => void, reject) => {
                 this.forceUpdate(() => {
-                    resolve(this.cp);
+                    if (this.cp) resolve(this.cp);
+                    else this.notifyCp = () => resolve(this.cp);
                 })
             })
         }
         else this.point = pos.roundArea.leftTop;
         return new Promise((resolve: (ins: T) => void, reject) => {
             this.forceUpdate(() => {
-                this.updateLayout();
-                resolve(this.cp);
+                if (this.cp) { this.updateLayout(); resolve(this.cp); }
+                else this.notifyCp = () => { this.updateLayout(); resolve(this.cp) };
             })
         })
     }
     cp: T;
+    notifyCp: () => void;
     private box: HTMLElement;
     render() {
         if (typeof this.maskZindex == 'undefined') {
@@ -66,7 +71,6 @@ export class Popover<T extends React.Component> extends EventsComponent<{
         if (typeof this.zindex == 'undefined') {
             this.zindex = popoverLayer.zoom(this);
         }
-        var CP = this.props.component;
         var style: CSSProperties = {
             top: this.point.y,
             left: this.point.x,
@@ -84,16 +88,34 @@ export class Popover<T extends React.Component> extends EventsComponent<{
             style.backgroundColor = 'transparent';
             style.boxShadow = 'none';
         }
+        var CP = this.props.component;
+        var child: JSX.Element;
+        if (this.props.lazy) {
+            child = <Suspense fallback={<div className="size-30 flex-center round"><Spin size={16}></Spin></div>}>
+                <CP {...this.props.args} ref={e => {
+                    this.cp = e;
+                    if (this.cp) (this.cp as any).popover = this as any
+                    if (this.notifyCp) this.notifyCp()
+                }}></CP>
+            </Suspense>
+        }
+        else {
+            child = <CP {...this.props.args} ref={e => {
+                this.cp = e;
+                if (this.cp) (this.cp as any).popover = this as any;
+                if (this.notifyCp) this.notifyCp()
+            }}></CP>
+        }
         if (this.props.visible == 'hidden') {
             return <div className="shy-popover-box" ref={e => this.box = e} style={{ zIndex: this.zindex, pointerEvents: 'none', display: this.visible == true ? "block" : "none" }}>
                 {this.props.mask == true && <div style={{ pointerEvents: 'visible' }} className={'shy-popover-mask' + (this.props.shadow ? " shy-popover-mask-shadow" : "")} onMouseDown={e => this.onClose(e)}></div>}
-                <div style={style} className='shy-popover' ref={e => this.el = e}><CP {...this.props.args} ref={e => { this.cp = e; if (this.cp) (this.cp as any).popover = this as any }}></CP></div>
+                <div style={style} className='shy-popover' ref={e => this.el = e}>{child}</div>
             </div>
         }
         else {
             return <div className="shy-popover-box" ref={e => this.box = e} style={{ zIndex: this.zindex, pointerEvents: 'none', display: this.visible == false ? 'none' : undefined }} >{this.visible && <>
                 {this.props.mask == true && <div style={{ pointerEvents: 'visible' }} className={'shy-popover-mask' + (this.props.shadow ? " shy-popover-mask-shadow" : "")} onMouseDown={e => this.onClose(e)}></div>}
-                <div style={style} className='shy-popover' ref={e => this.el = e}><CP {...this.props.args} ref={e => { { this.cp = e; if (this.cp) (this.cp as any).popover = this as any } }}></CP></div>
+                <div style={style} className='shy-popover' ref={e => this.el = e}>{child}</div>
             </>}</div>
         }
     }
@@ -205,19 +227,15 @@ export async function LazyPopoverSingleton<T extends React.Component>(CP: React.
     return new Promise((resolve: (data: Popover<T>) => void, reject) => {
         if (ms.has(CP)) return resolve(ms.get(CP) as any)
         var ele = assyDiv();
-        var GP = CP as any;
-        ReactDOM.render(<Suspense fallback={<div className="flex-center" style={{ position: 'fixed', width: '100vw', height: '100vh', top: 0, left: 0, zIndex: 100000 }}><Spin block></Spin></div>}>
-            <Popover<T> {...(props || {})} args={args || {}} component={GP} ref={e => {
-
+        ReactDOM.render(<Popover<T> {...(props || {})} args={args || {}} lazy={true} component={CP as any} ref={e => {
+            ms.set(CP, e);
+            if (props?.slow !== true)
+                resolve(e);
+        }}
+            did={(e) => {
                 ms.set(CP, e);
-                if (props?.slow !== true)
-                    resolve(e);
+                if (props?.slow == true) resolve(ms.get(CP) as any);
             }}
-                did={(e) => {
-                    ms.set(CP, e);
-                    if (props?.slow == true) resolve(ms.get(CP) as any);
-                }}
-            ></Popover>
-        </Suspense>, ele)
+        ></Popover>, ele)
     })
 }

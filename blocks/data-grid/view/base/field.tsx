@@ -23,7 +23,6 @@ import { Icon } from "../../../../component/view/icon";
 import { useSelectMenuItem } from "../../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import { useTableStoreAddField } from "../../../../extensions/data-grid/field";
-import { useFormula } from "../../../../extensions/data-grid/formula";
 import { useOpenEmoji } from "../../../../extensions/emoji";
 import { BlockDirective } from "../../../../src/block/enum";
 import { Rect, Point } from "../../../../src/common/vector/point";
@@ -34,6 +33,7 @@ import { ViewField } from "../../schema/view";
 import { lst } from "../../../../i18n/store";
 import { BackgroundColorList, OptionBackgroundColorList } from "../../../../extensions/color/data";
 import { TableSchema } from "../../schema/meta";
+import { useFormula } from "../../../../extensions/data-grid/formula/lazy";
 
 export class DataGridViewField {
     private getFieldMenuItems(this: DataGridView, viewField: ViewField) {
