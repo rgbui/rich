@@ -2,7 +2,7 @@ import React from "react";
 import { Field } from "../../../blocks/data-grid/schema/field";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { EventsComponent } from "../../../component/lib/events.component";
-import { CloseSvg, SearchSvg } from "../../../component/svgs";
+import { CloseSvg, CollectTableSvg, SearchSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { PopoverSingleton } from "../../../component/popover/popover";
 import { PopoverPosition } from "../../../component/popover/position";
@@ -25,6 +25,7 @@ import { S } from "../../../i18n/view";
 import { util } from "../../../util/util";
 import { ResourceArguments } from "../../icon/declare";
 import { getPageIcon, getPageText } from "../../../src/page/declare";
+import { HelpText } from "../../../component/view/text";
 
 class RelationPicker extends EventsComponent {
     render() {
@@ -54,11 +55,19 @@ class RelationPicker extends EventsComponent {
                 if (a.type == FieldType.title) return -1;
             })
             return <div>
+                <div className="gap-w-10 flex gap-h-10">
+                    <span><S>在</S></span>
+                    <span className="flex-fixed flex item-hover item-hover-light-focus round padding-w-5 padding-h-3">
+                        <Icon size={16} icon={this.relationSchema.icon || CollectTableSvg}></Icon>
+                        <span>{this.relationSchema.text}</span>
+                    </span>
+                    <span><S>中选择</S></span>
+                    <HelpText url={window.shyConfig?.isUS ? "" : ""}><S>了解如何关联数据表</S></HelpText>
+                </div>
                 <div >
-                    <div className="gap-w-14 gap-t-10 gap-b-5">
+                    <div className="gap-w-10 gap-t-10 gap-b-5">
                         <Input
                             prefix={<span className="size-24 flex-center cursor"><Icon className={'remark'} size={16} icon={SearchSvg}></Icon></span>}
-                            size='small'
                             placeholder={lst('搜索...')}
                             value={this.seachList.word}
                             onChange={e => {
@@ -73,7 +82,7 @@ class RelationPicker extends EventsComponent {
                                 this.onSearch();
                             }}></Input>
                     </div>
-                    {this.relationDatas.length > 0 && <div className="flex flex-wrap min-h-30 gap-w-14">
+                    {this.relationDatas.length > 0 && <div className="flex flex-wrap min-h-30 gap-w-10">
                         {this.relationDatas.map(r => {
                             return <span key={r.id} className="item-hover remark round gap-r-10 padding-w-5 padding-h-3 flex cursor" onMouseDown={e => {
                                 lodash.remove(this.relationDatas, g => g.id == r.id)
@@ -87,10 +96,10 @@ class RelationPicker extends EventsComponent {
                     </div>}
                     <Divider></Divider>
                 </div>
-                <div className="min-h-100 max-h-400 overflow-y padding-w-14 padding-t-5 padding-b-80">
+                <div className="min-h-100 max-h-400 overflow-y padding-w-10 padding-t-5 padding-b-80">
                     <div className="overflow-x gap-t-10">
                         <div className="flex  flex-full">
-                            <div className="flex-fixed flex w-60 remark border-left border-top padding-5">
+                            <div className={"flex-fixed flex w-60 remark border-left border-top padding-5 " + (this.seachList.list.length == 0 ? " border-bottom" : "")}>
                                 {this.isMultiple && <CheckBox
                                     checked={this.seachList.list.length > 0 && this.seachList.list.every(c => this.relationDatas.some(s => s.id == c.id))}
                                     onChange={e => {
@@ -113,12 +122,12 @@ class RelationPicker extends EventsComponent {
                                 if ([FieldType.text, FieldType.bool, FieldType.option, FieldType.options, FieldType.number, FieldType.creater, FieldType.user].includes(vf.type)) {
                                     className = 'w-60';
                                 }
-                                return <div className={"flex-fixed border-left border-top flex r-gap-r-5 padding-5  f-14 " + className} key={vf.id}><Icon className={'remark flex-fixed'} size={16} icon={GetFieldTypeSvg(vf.type)}></Icon><span className="text-1 flex-auto text-overflow">{vf.text}</span></div>
+                                return <div className={"flex-fixed border-left border-top flex r-gap-r-5 padding-5  f-14 " + className + (this.seachList.list.length == 0 ? " border-bottom" : "")} key={vf.id}><Icon className={'remark flex-fixed'} size={16} icon={GetFieldTypeSvg(vf.type)}></Icon><span className="text-1 flex-auto text-overflow">{vf.text}</span></div>
                             })}</div>
-                        <div className="border-bottom">
+                        <div>
                             {this.seachList.list.map((l, i) => {
                                 return <div className="flex flex-full " key={l.id + i.toString()}>
-                                    <div className="flex-fixed w-60   border-left border-top padding-5"><CheckBox
+                                    <div className={"flex-fixed w-60   border-left border-top padding-5 " + (i == this.seachList.list.length - 1 ? "border-bottom" : "")}><CheckBox
                                         checked={this.relationDatas.some(s => s.id == l.id)}
                                         onChange={e => {
                                             if (this.isMultiple) {
@@ -143,7 +152,7 @@ class RelationPicker extends EventsComponent {
                                         if ([FieldType.text, FieldType.bool, FieldType.option, FieldType.options, FieldType.number, FieldType.creater, FieldType.user].includes(vf.type)) {
                                             className = 'w-60';
                                         }
-                                        return <div className={"flex-fixed   border-left border-top r-gap-r-5 padding-5 " + className} key={vf.id}>{this.getRowValue(l, vf)}</div>
+                                        return <div className={"flex-fixed   border-left border-top r-gap-r-5 padding-5 " + className + (i == this.seachList.list.length - 1 ? " border-bottom" : "")} key={vf.id}>{this.getRowValue(l, vf)}</div>
                                     })}
                                 </div>
                             })}
@@ -151,15 +160,17 @@ class RelationPicker extends EventsComponent {
                         {this.seachList.loading && <Spin block></Spin>}
                         {this.seachList.list.length == 0 && this.seachList.loading == false && <div className="flex-center h-100 remark"><S>无数据</S></div>}
                     </div>
-                    <Pagination
-                        index={this.seachList.page}
-                        total={this.seachList.total}
-                        size={this.seachList.size}
-                        onChange={(e, s) => {
-                            this.seachList.page = e;
-                            this.seachList.size = s;
-                            this.onSearch()
-                        }}></Pagination>
+                    <div className="gap-h-10">
+                        <Pagination
+                            index={this.seachList.page}
+                            total={this.seachList.total}
+                            size={this.seachList.size}
+                            onChange={(e, s) => {
+                                this.seachList.page = e;
+                                this.seachList.size = s;
+                                this.onSearch()
+                            }}></Pagination>
+                    </div>
                 </div>
             </div>
         }
@@ -258,6 +269,7 @@ class RelationPicker extends EventsComponent {
         this.isMultiple = options.isMultiple;
         this.relationSchema = options.relationSchema;
         await this.onSearch();
+        this.emit('update')
     }
     seachList: SearchListType<Record<string, any>> = { loading: false, word: '', list: [], total: 0, size: 100, page: 1 };
     onSearch = async () => {
@@ -304,6 +316,9 @@ export async function useRelationPickData(pos: PopoverPosition,
         fv.only('save', (rows) => {
             resolve(rows);
             popover.close();
+        })
+        fv.only('update', () => {
+            popover.updateLayout()
         })
         popover.only('close', () => {
             resolve(fv.isChange ? fv.relationDatas : undefined);

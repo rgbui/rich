@@ -36,7 +36,7 @@ class FormFieldRelation extends OriginFormField {
     }
     async onSelectData(event: React.MouseEvent<Element, MouseEvent>) {
         if (this.checkEdit() === false) return;
-        var r = await useRelationPickData({ roundArea: Rect.fromEvent(event) }, {
+        var r = await useRelationPickData({ roundArea:Rect.fromEle(event.currentTarget as HTMLElement) }, {
             field: this.field,
             relationDatas: this.relationList,
             isMultiple: this.field.config?.isMultiple,

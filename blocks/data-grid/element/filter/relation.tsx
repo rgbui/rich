@@ -63,7 +63,7 @@ export class FilterRelationView extends BlockView<FilterRelation>{
             this.relationSchema = await TableSchema.loadTableSchema(this.block.field.config.relationTableId, this.block.page.ws);
         }
         var g = await useRelationPickData({
-            roundArea: Rect.fromEvent(event)
+            roundArea:Rect.fromEle(event.currentTarget as HTMLElement)
         }, {
             relationDatas: this.block.selectDataIds.map(s => { return { id: s.id, title: s.title } }),
             relationSchema: this.relationSchema,
