@@ -141,7 +141,7 @@ export class PageContextmenu {
                         { name: 'prevOrNext', text: lst('上下篇'), icon: { name: 'bytedance-icon', code: 'transfer-data' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PagePreOrNext) },
                         { name: 'refPages', text: lst("引用"), visible: [ElementType.SchemaRecordView].includes(this.pe.type) ? false : true, icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.RefLinks) },
                         { type: MenuItemType.divide },
-                        { type: MenuItemType.help, url: window.shyConfig?.isUS ? "https://help.shy.red/page/68#sm8Eix3mziuLx83RnrUYw8" : "https://help.shy.live/page/1988#5ChJozytSL93WbD7Uxy8sk", text: lst('了解如何使用小组件') }
+                        { type: MenuItemType.help, url: window.shyConfig?.isUS ? "https://help.shy.red/page/68#sm8Eix3mziuLx83RnrUYw8" : "https://help.shy.live/page/1988#5ChJozytSL93WbD7Uxy8sk", text: lst('了解如何使用小部件') }
                     ]
                 },
                 {
@@ -220,7 +220,7 @@ export class PageContextmenu {
                         { name: 'pageUpvotedOrShared', text: lst('点赞分享'), icon: { name: 'bytedance-icon', code: 'send' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PageUpvotedOrShared) },
                         { name: 'showComment', text: lst("评论"), icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                         { type: MenuItemType.divide },
-                        { type: MenuItemType.help, url: window.shyConfig?.isUS ? "https://help.shy.red/page/68#sm8Eix3mziuLx83RnrUYw8" : "https://help.shy.live/page/1988#5ChJozytSL93WbD7Uxy8sk", text: lst('了解如何使用小组件') }
+                        { type: MenuItemType.help, url: window.shyConfig?.isUS ? "https://help.shy.red/page/68#sm8Eix3mziuLx83RnrUYw8" : "https://help.shy.live/page/1988#5ChJozytSL93WbD7Uxy8sk", text: lst('了解如何使用小部件') }
                     ]
                 },
                 { type: MenuItemType.divide },
@@ -271,7 +271,7 @@ export class PageContextmenu {
                         { name: 'showComment', text: lst("评论"), icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                         { name: 'refPages', text: lst("引用"), visible: [ElementType.SchemaRecordView].includes(this.pe.type) ? false : true, icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.RefLinks) },
                         { type: MenuItemType.divide },
-                        { type: MenuItemType.help, url: window.shyConfig?.isUS ? "https://help.shy.red/page/68#sm8Eix3mziuLx83RnrUYw8" : "https://help.shy.live/page/1988#5ChJozytSL93WbD7Uxy8sk", text: lst('了解如何使用小组件') }
+                        { type: MenuItemType.help, url: window.shyConfig?.isUS ? "https://help.shy.red/page/68#sm8Eix3mziuLx83RnrUYw8" : "https://help.shy.live/page/1988#5ChJozytSL93WbD7Uxy8sk", text: lst('了解如何使用小部件') }
                     ]
                 },
                 { type: MenuItemType.divide },
