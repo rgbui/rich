@@ -768,7 +768,7 @@ body {
 }
 
 .text {
-    color   : var(--text-color);
+    color: var(--text-color);
 }
 
 .text-1 {
@@ -1023,6 +1023,16 @@ body {
 
 .overscroll-contain {
     overscroll-behavior: contain;
+}
+
+.scroll-hidden::-webkit-scrollbar-thumb,
+.scroll-hidden::-webkit-scrollbar-track {
+    visibility: hidden;
+    background-color: transparent;
+    border-width: none;
+    &:hover{
+        visibility: hidden;
+    }
 }
 
 /**
@@ -1639,6 +1649,7 @@ each(@ops, {
         border-bottom: 0.1rem solid rgb(225, 98, 89);
     }
 }
+
 .border-bottom-0,
 .border-b-0 {
     border-bottom: 0.1rem solid transparent;

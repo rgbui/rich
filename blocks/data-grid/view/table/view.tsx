@@ -17,7 +17,7 @@ import { lst } from "../../../../i18n/store"
 import { S } from "../../../../i18n/view"
 
 @view('/data-grid/table')
-export class TableStoreView extends BlockView<TableStore>{
+export class TableStoreView extends BlockView<TableStore> {
     mouseleaveHead(event: React.MouseEvent) {
         if (this.isMoveLine) return;
         if (this.isDragMouseField) return;
@@ -244,11 +244,11 @@ export class TableStoreView extends BlockView<TableStore>{
             {this.block.isLoading && <Spin block></Spin>}
             {this.block.schema && <DataGridTool block={this.block}></DataGridTool>}
             {this.block.schema && this.block.noHead !== true && <div
-                ref={e => this.headScrollEl = e}
+                ref={e => { this.headScrollEl = e; this.bindScroll() }}
+                className="scroll-hidden"
                 style={{
                     overflowX: 'auto',
                     zIndex: 1,
-                    background: '#fff',
                     position: 'sticky',
                     top: 0,
                     display: 'none'
@@ -269,12 +269,21 @@ export class TableStoreView extends BlockView<TableStore>{
             box.addEventListener('scroll', this.content_scroll);
         }
     }
+    bindScroll() {
+        if (this.headScrollEl) {
+            this.headScrollEl.removeEventListener('scroll', this.head_scroll);
+            this.headScrollEl.addEventListener('scroll', this.head_scroll);
+        }
+    }
     willUnmount() {
         var sd = this.props.block.page.getScrollDiv() as HTMLElement;
         if (sd) sd.removeEventListener('scroll', this._scroll);
         var box = this.block.el.querySelector('.sy-dg-table-content');
         if (box) {
             box.removeEventListener('scroll', this.content_scroll);
+        }
+        if (this.headScrollEl) {
+            this.headScrollEl.removeEventListener('scroll', this.head_scroll);
         }
     }
     _scroll = (e) => {
@@ -287,9 +296,14 @@ export class TableStoreView extends BlockView<TableStore>{
                 if (db.top > eb.top && db.top < eb.bottom) {
                     this.headScrollEl.style.display = 'block'
                     this.headScrollEl.appendChild(this.headEl);
+                    var box = this.block.el.querySelector('.sy-dg-table-content');
+                    if (box)
+                        this.headScrollEl.scrollLeft = box.scrollLeft;
+                    this.headEl.style.backgroundColor = '#fff';
                 }
                 else {
                     this.headScrollEl.style.display = 'none';
+                    this.headEl.style.backgroundColor = 'none';
                     this.block.el.querySelector('.h-36').appendChild(this.headEl);
                 }
             }
@@ -299,6 +313,13 @@ export class TableStoreView extends BlockView<TableStore>{
         var box = this.block.el.querySelector('.sy-dg-table-content');
         if (box) {
             this.headScrollEl.scrollLeft = box.scrollLeft;
+        }
+    }
+    head_scroll = (e) => {
+        var box = this.block.el.querySelector('.sy-dg-table-content');
+        if (box) {
+
+            box.scrollLeft = this.headScrollEl.scrollLeft;
         }
     }
 }
