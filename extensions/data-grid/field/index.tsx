@@ -24,8 +24,8 @@ import { useDataSourceView } from "../datasource";
 import { MenuItemType } from "../../../component/view/menu/declare";
 import { lst } from "../../../i18n/store";
 import { S } from "../../../i18n/view";
-import './style.less';
 import { HelpText } from "../../../component/view/text";
+import './style.less';
 
 export class TableFieldView extends EventsComponent {
     onSave() {
@@ -54,7 +54,7 @@ export class TableFieldView extends EventsComponent {
             FieldType.image
         ].includes(this.type)) {
             return <div className="flex gap-h-10 padding-w-14 ">
-                <span className="flex-auto remark f-12"><S>是否允许多个</S>:</span>
+                <span className="flex-auto remark f-12"><S>是否允许多个</S></span>
                 <div className="flex-fix flxe-end"><Switch onChange={e => this.onChangeConfig({ isMultiple: e })} checked={this.config?.isMultiple ? true : false}></Switch></div>
             </div>
         }
@@ -65,7 +65,7 @@ export class TableFieldView extends EventsComponent {
         var rt = this.relationDatas.find(g => g.id == this.config.relationTableId)
         return <>
             <div className="gap-h-10 padding-w-14">
-                <div className="flex gap-b-5 remark f-12"><S>关联表格</S>:</div>
+                <div className="flex gap-b-5 remark f-12"><S>关联表格</S></div>
                 <div className="flex h-26 border-light  round item-hover-light cursor" onClick={e => this.openSelectRelationTable(e)}>
                     <span className="flex-center  size-24  flex-fix cursor  round "><Icon size={14} icon={rt?.icon || CollectTableSvg}></Icon></span>
                     <span className="flex-auto ">{rt?.text}</span>
@@ -75,7 +75,7 @@ export class TableFieldView extends EventsComponent {
                 </div>
             </div>
             <div className="flex gap-h-10 padding-w-14 ">
-                <span className="flex-auto remark f-12"><S>是否一对多</S>:</span>
+                <span className="flex-auto remark f-12"><S>是否一对多</S></span>
                 <div className="flex-fix flxe-end"><Switch onChange={e => this.onChangeConfig({ isMultiple: e })} checked={this.config?.isMultiple ? true : false}></Switch></div>
             </div>
         </>
@@ -163,7 +163,7 @@ export class TableFieldView extends EventsComponent {
         var tt = ts.find(g => g.id == this.config.rollupTableId)
         return <>
             <div className="gap-h-10 padding-w-14">
-                <div className="flex gap-b-5 remark f-12"><S>关联表格</S>:</div>
+                <div className="flex gap-b-5 remark f-12"><S>关联表格</S></div>
                 <div onClick={e => selectRelationTable(e)}
                     className="flex h-26  border-light  round item-hover-light cursor">
 
@@ -177,7 +177,7 @@ export class TableFieldView extends EventsComponent {
             </div>
             {self.rollTableSchema?.visibleFields && <>
                 <div className="gap-h-10 padding-w-14">
-                    <label className="flex gap-b-5 remark f-12"><S>统计列</S>:</label>
+                    <label className="flex gap-b-5 remark f-12"><S>统计列</S></label>
                     <div onClick={e => selectField(e)} className="flex h-26  border-light   round item-hover-light cursor">
 
                         <span className="flex-center  size-24  flex-fix cursor  round "> <Icon size={16} className={'text-1'} icon={GetFieldTypeSvg(self.rollTableSchema.visibleFields.find(g => g.id == this.config.rollupFieldId)?.type)}></Icon></span>
@@ -189,7 +189,7 @@ export class TableFieldView extends EventsComponent {
                     </div>
                 </div>
                 {this.config.rollupFieldId && <div className="gap-h-10 padding-w-14">
-                    <label className="flex gap-b-5 remark f-12"><S>统计</S>:</label>
+                    <label className="flex gap-b-5 remark f-12"><S>统计</S></label>
                     <div onClick={e => selectS(e)} className="flex h-26 border-light  round item-hover-light cursor">
                         <span className="flex-center  size-24  flex-fix cursor  round "> <Icon icon={sums.find(g => g.value == this.config.rollupStatistic)?.icon as any} size={16} className={'text-1'} ></Icon></span>
                         <span className="flex-auto ">{sums.find(g => g.value == this.config.rollupStatistic)?.text}</span>
@@ -205,7 +205,7 @@ export class TableFieldView extends EventsComponent {
     renderFormula() {
         if (this.type != FieldType.formula) return <></>
         return <div className="gap-h-10 padding-w-14">
-            <div className="flex gap-b-5 remark f-12"><S>公式</S>:</div>
+            <div className="flex gap-b-5 remark f-12"><S>公式</S></div>
             <div className="flex">
                 <Textarea value={this.config?.formula?.formula || ''} onEnter={e => this.config.formula = e}></Textarea>
             </div>
@@ -214,7 +214,7 @@ export class TableFieldView extends EventsComponent {
     renderEmoji() {
         if ([FieldType.emoji].includes(this.type)) {
             return <div className="gap-h-10 padding-w-14">
-                <div className="flex gap-b-5 remark f-12"><S>表情</S>:</div>
+                <div className="flex gap-b-5 remark f-12"><S>表情</S></div>
                 <div className="flex padding-w-5">
                     {this.config?.emoji?.code && <span className="gap-r-5 f-20 l-20 size-20" onClick={e => this.onSetEmoji(e)} dangerouslySetInnerHTML={{ __html: getEmoji(this.config?.emoji?.code) }}></span>}
                     <Button onClick={e => this.onSetEmoji(e)} ghost >{this.config?.emoji?.code ? lst("更换表情") : lst("添加表情")}</Button>
@@ -248,13 +248,13 @@ export class TableFieldView extends EventsComponent {
             <Divider></Divider>
             <div className="max-h-250 overflow-y">
                 <div className="gap-h-10 padding-w-14">
-                    <div className="flex gap-b-5 remark f-12"><S>字段名</S>:</div>
+                    <div className="flex gap-b-5 remark f-12"><S>字段名</S></div>
                     <div>
                         <Input ref={e => this.input = e} onChange={e => this.text = e} value={this.text}></Input>
                     </div>
                 </div>
                 <div className="gap-h-10 padding-w-14">
-                    <div className="flex gap-b-5 remark f-12"><S>字段类型</S>:</div>
+                    <div className="flex gap-b-5 remark f-12"><S>字段类型</S></div>
                     <div className="flex h-26 border-light round item-hover-light cursor" onClick={e => this.openSelectType(e)}>
                         <span className="flex-center  size-24  flex-fix cursor  round "><Icon size={14} icon={GetFieldTypeSvg(this.type)}></Icon></span>
                         <span className="flex-auto ">{tm?.text}</span>
