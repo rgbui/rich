@@ -43,7 +43,7 @@ export class DataGridCreateView extends EventsComponent {
             <div className="gap-w-10 gap-h-10">
                 <Button onMouseDown={e => this.onSave()} block><Icon size={18} icon={PlusSvg}></Icon><S>创建视图</S></Button>
             </div>
-            <div className="gap-w-10">
+            <div className="gap-w-10 gap-b-10">
                 <HelpText url={window.shyConfig?.isUS ? "https://help.shy.red/page/44#p6dtzzCsUHUrhyfNdrfkXh" : "https://help.shy.live/page/288#eNk3NZZyXWMCgMEMCyJRcG"}><S>了解如何创建数据表视图</S></HelpText>
             </div>
         </div>
