@@ -1,5 +1,6 @@
 .sy-dg-table {
-    margin  : 10px 0px;
+    margin: 10px 0px;
+
     &-content {
         position: relative;
         overflow: auto;
@@ -23,7 +24,6 @@
             padding        : 5px;
             position       : relative;
             overflow       : hidden;
-         
             >label {
                 flex-grow    : 1;
                 flex-shrink  : 1;
@@ -39,8 +39,10 @@
                 flex-grow  : 0;
                 display    : none;
                 cursor     : pointer;
+                &.hover {
+                    display: flex;
+                }
             }
-
             &:hover {
                 .sy-dg-table-head-th-property {
                     display: flex;
@@ -65,6 +67,7 @@
         &-th+&-th {
             border-left: 1px solid transparent;
         }
+
         &-th-plus {
             display        : flex;
             align-items    : center;

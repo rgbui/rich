@@ -196,7 +196,19 @@ export class TableStoreView extends BlockView<TableStore> {
                         <Icon icon={icon} size={16}></Icon>
                     </div>}
                     <label>{text}</label>
-                    {this.block.dataGridIsCanEdit() && <div className={'sy-dg-table-head-th-property remark'} onMouseDown={e => this.block.onOpenFieldConfig(e, f)}><Icon icon={DotsSvg}></Icon></div>}
+                    {this.block.dataGridIsCanEdit() && <div className={'sy-dg-table-head-th-property remark'} onMouseDown={async e => {
+                        var ele = e.currentTarget as HTMLElement;
+                        try {
+                            ele.classList.add('hover');
+                            await this.block.onOpenFieldConfig(e, f);
+                        }
+                        catch (ex) {
+
+                        }
+                        finally {
+                            ele.classList.remove('hover');
+                        }
+                    }}><Icon icon={DotsSvg}></Icon></div>}
                 </div>
             })}
             {this.block.dataGridIsCanEdit() && <div className='sy-dg-table-head-th sy-dg-table-head-th-plus'
