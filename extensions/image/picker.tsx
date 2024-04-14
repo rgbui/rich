@@ -16,8 +16,8 @@ import { Icon } from "../../component/view/icon";
 import { Tab } from "../../component/view/tab";
 import { GalleryView } from "./gellery";
 import { PicSvg } from "../../component/svgs";
-import "./style.less";
 import { LastUploadFiles } from "./lasterUpload";
+import "./style.less";
 
 class ImagePicker extends EventsComponent {
     onChange(data: ResourceArguments) {
@@ -45,7 +45,7 @@ class ImagePicker extends EventsComponent {
                     <GalleryView onChange={e => this.onChange(e as any)}></GalleryView>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' text={'上传图片'}><Icon size={20} icon={Upload}></Icon></Tip>}>
-                    <div className="padding-14"><UploadView
+                    <div className="padding-w-10"><UploadView
                         fileClassify={this.showGallery ? "cover" : undefined}
                         mine='image'
                         change={e => this.onChange(e)}></UploadView></div>

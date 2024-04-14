@@ -10,7 +10,7 @@ class ImageFilePicker extends EventsComponent {
         this.emit('select', { ...data });
     }
     render() {
-        return <div className='shy-file-picker' >
+        return <div className='shy-file-picker   gap-w-10' >
             <UploadView mine='image' change={e => this.onChange({ name: 'upload', ...e })}></UploadView>
         </div>
     }

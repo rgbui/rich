@@ -59,7 +59,7 @@ class IconPicker extends EventsComponent {
                     <FontAwesomeView ref={e => this.fav = e} onChange={e => this.onChange({ name: "font-awesome", ...e })}></FontAwesomeView>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' text='上传图标'><Icon icon={UploadSvg} size={20}></Icon></Tip>}>
-                    <div className="padding-14">
+                    <div className="padding-10">
                         <UploadView mine='image' change={e => this.onChange({ name: 'image', url: e.url })}></UploadView>
                     </div>
                 </Tab.Page>

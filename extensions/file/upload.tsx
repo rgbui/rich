@@ -96,14 +96,14 @@ export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audi
     progress: string = '';
     render() {
         var text = lst('上传文件');
-        var mineText = lst('文件');
-        if (this.props.mine == 'image') { text = lst('上传图片'); mineText = lst('图片'); }
-        else if (this.props.mine == 'video') { text = lst('上传视频'); mineText = lst('视频'); }
-        else if (this.props.mine == 'audio') { text = lst('上传音频'); mineText = lst('音频'); }
+        var mineText = lst('拖放文件或粘贴文件或粘贴文件网址');
+        if (this.props.mine == 'image') { text = lst('上传图片'); mineText = mineText = lst('拖放图片或粘贴图片或粘贴图片网址'); }
+        else if (this.props.mine == 'video') { text = lst('上传视频'); mineText = mineText = lst('拖放视频或粘贴视频或粘贴视频网址'); }
+        else if (this.props.mine == 'audio') { text = lst('上传音频'); mineText = mineText = lst('拖放音频或粘贴音频或粘贴音频网址'); }
         return <div className='shy-upload'>
             <div className="dashed gap-h-10 round flex-center min-h-80  padding-10" tabIndex={1} onPaste={this.onPaste} onDragOverCapture={e => { e.preventDefault() }} onDrop={this.onDrop}>
                 <span className="remark">
-                    <Sp data={{ content: mineText }} text="拖放{content}或粘贴{content}或粘贴{content}网址">拖放{text}或粘贴{text}或粘贴网址</Sp>
+                    {mineText}
                 </span>
             </div>
             <Button onClick={e => this.onOpenFile()} ref={e => this.button = e} block>{text}</Button>
