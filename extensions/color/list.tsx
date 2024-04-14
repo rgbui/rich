@@ -5,7 +5,8 @@ import { Icon } from "../../component/view/icon";
 import { CloseSvg, NoneSvg, PlusSvg } from "../../component/svgs";
 import { channel } from "../../net/channel";
 import { Rect } from "../../src/common/vector/point";
-import { useColorPicker } from "../../component/view/color/picker";
+import { useColorPicker } from "../../component/view/color/lazy";
+
 
 export class ColorListBox extends React.Component<{
     title?: string,

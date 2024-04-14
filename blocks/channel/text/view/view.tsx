@@ -4,7 +4,7 @@ import { ChannelText } from "..";
 import { Edit1Svg, TopicSvg, UnreadTextSvg } from "../../../../component/svgs";
 import { useForm } from "../../../../component/view/form/dialoug";
 import { Icon } from "../../../../component/view/icon";
-import { Markdown } from "../../../../component/view/markdown";
+// import { Markdown } from "../../../../component/view/markdown";
 import { Spin } from "../../../../component/view/spin";
 import { channel } from "../../../../net/channel";
 import { view } from "../../../../src/block/factory/observable";
@@ -18,6 +18,7 @@ import { ChatInputType, InputChatBox } from "../../../../component/view/input.ch
 import { lst } from "../../../../i18n/store";
 import { S, Sp } from "../../../../i18n/view";
 import { AgentRequest } from "../../../../net/ai/robot";
+import { LazyMarkdown } from "../../../../component/view/markdown/lazy";
 
 @view('/channel/text')
 export class ChannelTextView extends BlockView<ChannelText>{
@@ -50,7 +51,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
                 }} size={72} icon={pd?.icon || TopicSvg}></Icon>
                 <div className="h1 flex"><span>{pd?.text || lst('新话题')}</span>{this.block.page.isCanManage && <span className="flex-center round gap-l-5 cursor item-hover flex-line size-24 visible"><Icon onClick={e => this.openEdit(e)} size={18} icon={Edit1Svg}></Icon></span>}</div>
                 {pd?.description && <div className="text-1 f-14">
-                    <Markdown md={pd?.description}></Markdown>
+                    <LazyMarkdown md={pd?.description}></LazyMarkdown>
                 </div>}
             </div>
         }

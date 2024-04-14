@@ -1,16 +1,15 @@
 import React from "react";
-import { EventsComponent } from "../../component/lib/events.component";
-import { PopoverSingleton } from "../../component/popover/popover";
-import { Page } from "../../src/page";
-import { Button } from "../../component/view/button";
-import { SelectBox } from "../../component/view/select/box";
-import { channel } from "../../net/channel";
-import { util } from "../../util/util";
-import { lst } from "../../i18n/store";
-import { S } from "../../i18n/view";
-import { HelpText } from "../../component/view/text";
+import { EventsComponent } from "../../../component/lib/events.component";
+import { Page } from "../../../src/page";
+import { Button } from "../../../component/view/button";
+import { SelectBox } from "../../../component/view/select/box";
+import { channel } from "../../../net/channel";
+import { util } from "../../../util/util";
+import { lst } from "../../../i18n/store";
+import { S } from "../../../i18n/view";
+import { HelpText } from "../../../component/view/text";
 
-class ExportFile extends EventsComponent {
+export default class ExportFile extends EventsComponent {
     render() {
         return <div className="w-300 round padding-14">
             <div className="flex">
@@ -75,13 +74,3 @@ class ExportFile extends EventsComponent {
     }
 }
 
-export async function useExportFile(options?: { page: Page }) {
-    let popover = await PopoverSingleton(ExportFile, { slow: true });
-    let filePicker = await popover.open({ center: true, centerTop: 100 });
-    filePicker.onOpen(options)
-    return new Promise((resolve: (data: any) => void, reject) => {
-        popover.only('close', () => {
-            resolve(null)
-        })
-    })
-}

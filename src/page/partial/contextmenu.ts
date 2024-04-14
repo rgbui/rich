@@ -47,7 +47,7 @@ import { FieldType } from "../../../blocks/data-grid/schema/type";
 
 import { util } from "../../../util/util";
 import { ActionDirective } from "../../history/declare";
-import { useExportFile } from "../../../extensions/export-file";
+
 import { DataGridView } from "../../../blocks/data-grid/view/base";
 import { useForm } from "../../../component/view/form/dialoug";
 import { lst } from "../../../i18n/store";
@@ -58,6 +58,7 @@ import { RobotInfo } from "../../../types/user";
 import { usePageTheme } from "../../../extensions/theme";
 import { getAiDefaultModel } from "../../../net/ai/cost";
 import { UA } from "../../../util/ua";
+import { useExportFile } from "../../../extensions/Import-export/export-file/lazy";
 
 export class PageContextmenu {
     async onGetContextMenus(this: Page) {

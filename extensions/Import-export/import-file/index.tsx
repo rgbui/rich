@@ -1,18 +1,17 @@
 import React from "react";
-import { EventsComponent } from "../../component/lib/events.component";
-import { PopoverSingleton } from "../../component/popover/popover";
-import { Icon } from "../../component/view/icon";
-import { S } from "../../i18n/view";
-import { Page } from "../../src/page";
-import { OpenFileDialoug } from "../../component/file";
-import { parseMarkdown } from "../../src/import-export/markdown/parse";
-import { util } from "../../util/util";
-import { parseHtml } from "../../src/import-export/html/parse";
-import { parseWord } from "../../src/import-export/word/parse";
-import { ShyAlert } from "../../component/lib/alert";
-import { lst } from "../../i18n/store";
+import { EventsComponent } from "../../../component/lib/events.component";
+import { Icon } from "../../../component/view/icon";
+import { S } from "../../../i18n/view";
+import { Page } from "../../../src/page";
+import { OpenFileDialoug } from "../../../component/file";
+import { parseMarkdown } from "../mime/markdown/parse";
+import { util } from "../../../util/util";
+import { parseHtml } from "../mime/html/parse";
+import { parseWord } from "../mime/word/parse";
+import { ShyAlert } from "../../../component/lib/alert";
+import { lst } from "../../../i18n/store";
 
-class ImportFile extends EventsComponent {
+export default class ImportFile extends EventsComponent {
     render() {
         return <div className="bg-white shadow w-350 round padding-10">
             <div className="h4"><S>导入</S></div>
@@ -62,18 +61,3 @@ class ImportFile extends EventsComponent {
     }
 }
 
-export async function useImportFile(options?: { page: Page }) {
-    let popover = await PopoverSingleton(ImportFile, { slow: true });
-    let filePicker = await popover.open({ center: true, centerTop: 100 });
-    filePicker.onOpen(options)
-    return new Promise((resolve: (data: { text: string, blocks: any[] }) => void, reject) => {
-
-        filePicker.only('save', data => {
-            popover.close();
-            resolve(data);
-        })
-        popover.only('close', () => {
-            resolve(null)
-        })
-    })
-}

@@ -6,7 +6,7 @@ import "./style.less"
 /**
  * https://github.com/remarkjs/react-markdown
  */
-export class Markdown extends React.Component<{ md: string, html?: boolean, className?: string | (string[]) }> {
+export default class Markdown extends React.Component<{ md: string, html?: boolean, className?: string | (string[]) }> {
     constructor(props) { super(props) }
     render() {
         var classList: string[] = ['md', 'break-all'];

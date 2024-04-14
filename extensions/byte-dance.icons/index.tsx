@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { Tip } from "../../component/view/tooltip/tip";
 
 import { dom } from "../../src/common/dom";
@@ -14,6 +14,7 @@ import { ByteDanceType } from "./declare";
 import { byteDanceStore } from "./store";
 import { ls, lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
+import { LazyByteIcon } from "./icon/lazy";
 
 const BYTE_DANCE_HISTORYS = '_bytedance_historys__';
 export class ByteDanceIconView extends React.Component<{ loaded?: () => void, onChange: (data: { code: string, color?: string }) => void }> {
@@ -64,8 +65,8 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
                 <div className='shy-font-awesome-category-head'><span><S>最近</S></span></div>
                 <div className='shy-font-awesome-category-content'>
                     {this.historyByteDances.map(ic => {
-                        return <Tip overlay={ls.isCn ? ic.e.title : ic.e.name} key={ic.e.name}><a onMouseDown={e => this.onChange(ic.e)} dangerouslySetInnerHTML={{ __html: this.renderSvg(ic.e) }}>
-                            {/* <i style={{ color: this.color }} className={'fa' + ' fa-' + ic.name}></i> */}
+                        return <Tip overlay={ls.isCn ? ic.e.title : ic.e.name} key={ic.e.name}><a onMouseDown={e => this.onChange(ic.e)} >
+                            {this.renderSvg(ic.e)}
                         </a></Tip>
                     })}
                 </div>
@@ -78,8 +79,8 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
                 <div className='shy-font-awesome-category-head'><span>{ls.isCn ? ic.text : ic.name}</span></div>
                 <div className='shy-font-awesome-category-content'>
                     {icons.map(icon => {
-                        return <Tip overlay={ls.isCn ? icon.title : icon.name} key={icon.name}><a onMouseDown={e => this.onChange(icon)} dangerouslySetInnerHTML={{ __html: this.renderSvg(icon) }}>
-                            {/* <i style={{ color: this.color }} className={'fa' + ' fa-' + ic.name}></i> */}
+                        return <Tip overlay={ls.isCn ? icon.title : icon.name} key={icon.name}><a onMouseDown={e => this.onChange(icon)}>
+                            {this.renderSvg(icon)}
                         </a></Tip>
                     })}
                 </div>
@@ -107,14 +108,16 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
         </div>
     }
     renderSvg(icon: ByteDanceType) {
-        return byteDanceStore.renderSvg(icon.name, this.color == 'inherit' ? "var(--text-color)" : this.color);
+        return <Suspense fallback={<span>.</span>}>
+            <LazyByteIcon className={'flex-center size-24'} name={icon.name} color={this.color == 'inherit' ? "var(--text-color)" : this.color}></LazyByteIcon>
+        </Suspense>
     }
     renderSearch() {
         if (this.searchEmojis.length == 0) return <div className="flex-center remark f-12 gap-h-10"><S>没有搜索图标</S></div>
         return <div className='shy-font-awesome-category'><div className="shy-font-awesome-category-content">
             {this.searchEmojis.map(ic => {
-                return <Tip overlay={ls.isCn ? ic.title : ic.name} key={ic.name}><a onMouseDown={e => this.onChange(ic)} dangerouslySetInnerHTML={{ __html: this.renderSvg(ic) }}>
-                    {/* <i style={{ color: this.color }} className={'fa' + ' fa-' + ic.name}></i> */}
+                return <Tip overlay={ls.isCn ? ic.title : ic.name} key={ic.name}><a onMouseDown={e => this.onChange(ic)} >
+                    {this.renderSvg(ic)}
                 </a></Tip>
             })}
         </div></div>
@@ -175,8 +178,8 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
             this.forceUpdate()
         }
     }, 800)
-    onClear(colorVisible?:boolean) {
-        this.colorVisible=colorVisible==false?false:true;
+    onClear(colorVisible?: boolean) {
+        this.colorVisible = colorVisible == false ? false : true;
         if (this.word) {
             this.loadSearch('')
         }

@@ -1,11 +1,13 @@
-import React from 'react';
-import Loadable from 'react-loadable';
+import React, { Suspense } from 'react';
 import { Spin } from '../view/spin';
-export function AsyncComponent(imp: any) {
-    return Loadable({
-        loader: imp,
-        loading: () => {
-            return <Spin></Spin>
-        }
-    })
+/**
+ * 动态加载组件
+ * @param props 
+ * @returns 
+ */
+export function ACC(props: { C: React.LazyExoticComponent<(new (...args: any[]) => any)>, props?: Record<string, any> }) {
+    return <Suspense fallback={<div><Spin block></Spin></div>}>
+        <props.C {...(props.props || {})}></props.C>
+    </Suspense>
 }
+

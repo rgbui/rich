@@ -1,9 +1,10 @@
 
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, Suspense, lazy } from 'react';
 import { IconArguments } from '../../extensions/icon/declare';
 import { getEmoji } from '../../net/element.type';
 import { PageSvg } from '../svgs';
-import { ByteIcons } from '../../extensions/byte-dance.icons/byte-dance.icons';
+import { ByteIcons } from '../../extensions/byte-dance.icons/icon/byte-dance.icons';
+import { LazyByteIcon } from '../../extensions/byte-dance.icons/icon/lazy';
 
 export type IconValueType = string | SvgrComponent | JSX.Element | IconArguments
 
@@ -103,22 +104,14 @@ export function Icon(props: {
                 });
                 var color = pc.color || 'currentColor';
                 if (color == 'inherit') color = 'currentColor';
-                var iconSvg = ByteIcons.get(pc.code)({
-                    id: pc.name as any,
-                    width: props.size == 'none' ? undefined : (props.size || 20),
-                    height: props.size == 'none' ? undefined : (props.size || 20),
-                    strokeWidth: 3,
-                    strokeLinejoin: 'round',
-                    strokeLinecap: 'round',
-                    colors: [color, 'none', color, color, color, color, color, color]
-                })
-                classList.push('shy-icon-inner-svg')
-                return <span className={classList.join(" ")}
-                    style={style}
-                    onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
-                    onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }}
-                    dangerouslySetInnerHTML={{ __html: iconSvg }}
-                ></span>
+                classList.push('shy-icon-inner-svg');
+                return <Suspense fallback={<span className={classList.join(" ")} style={style}>.</span>}>
+                    <LazyByteIcon
+                        className={classList}
+                        style={style}
+                        onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
+                        onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }} size={props.size == 'none' ? undefined : (props.size) || 20} name={pc.code} color={color}></LazyByteIcon>
+                </Suspense>
             case 'emoji':
                 Object.assign(style, {
                     color: '#000',

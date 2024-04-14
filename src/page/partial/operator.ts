@@ -20,9 +20,9 @@ import { PageDirective } from "../directive";
 import { useTemplateView } from "../../../extensions/template";
 import { lst } from "../../../i18n/store";
 import { Matrix } from "../../common/matrix";
-import { useImportFile } from "../../../extensions/import-file";
 import { buildPage } from "../common/create";
 import { util } from "../../../util/util";
+import { useImportFile } from "../../../extensions/Import-export/import-file/lazy";
 
 
 export class Page$Operator {

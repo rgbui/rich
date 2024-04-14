@@ -8,14 +8,13 @@ import { PopoverPosition } from "../../component/popover/position";
 import { Block } from "../../src/block";
 import { popoverLayer } from "../../component/lib/zindex";
 import { channel } from "../../net/channel";
-import { Loading1, Spin } from "../../component/view/spin";
+import { Loading1} from "../../component/view/spin";
 import { FixedViewScroll } from "../../src/common/scroll";
 import { Point, Rect } from "../../src/common/vector/point";
 import { DivInput } from "../../component/view/input/div";
 import { MenuView } from "../../component/view/menu/menu";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { AiWrite } from "./write";
-import { Markdown } from "../../component/view/markdown";
 import { Divider } from "../../component/view/grid";
 
 import {
@@ -32,7 +31,7 @@ import {
     WritingAssistant,
     getTemplateInstance
 } from "./prompt";
-import { parseMarkdownContent } from "../../src/import-export/markdown/parse";
+import { parseMarkdownContent } from "../Import-export/mime/markdown/parse";
 import { BlockUrlConstant } from "../../src/block/constant";
 import { List, ListType } from "../../blocks/present/list/list";
 import { onMergeListBlocks } from "./util";
@@ -43,6 +42,7 @@ import { KeyboardCode } from "../../src/common/keys";
 
 import lodash from "lodash";
 import { WsConsumeType, getAiDefaultModel } from "../../net/ai/cost";
+import { LazyMarkdown } from "../../component/view/markdown/lazy";
 
 /**
  * The type of the options object that can be passed to the AITool component.
@@ -137,7 +137,7 @@ export class AITool extends EventsComponent {
                 <div className="pv min-h-30 bg-white shadow  round-8">
                     {this.anwser && [AIAskStatus.selectionAsking, AIAskStatus.selectionAsked].includes(this.status) && <>
                         <div ref={e => this.mdEl = e} className=" padding-w-10 padding-t-10 gap-t-10 max-h-150 overflow-y">
-                            <Markdown md={this.anwser}></Markdown>
+                            <LazyMarkdown md={this.anwser}></LazyMarkdown>
                         </div>
                         <Divider></Divider>
                     </>

@@ -1,8 +1,8 @@
 
 import lodash from "lodash";
-import { ListType } from "../../../blocks/present/list/list";
-import { BlockCssName } from "../../block/pattern/css";
-import { dom } from "../../common/dom";
+import { ListType } from "../../../../blocks/present/list/list";
+import { BlockCssName } from "../../../../src/block/pattern/css";
+import { dom } from "../../../../src/common/dom";
 
 /**
  * 

@@ -11,7 +11,7 @@ import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
 import { Matrix } from "../../common/matrix";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
-import { parseHtml } from "../../import-export/html/parse";
+import { parseHtml } from "../../../extensions/Import-export/mime/html/parse";
 import { readCopyBlocks } from "../../page/common/copy";
 import { PageLayoutType } from "../../page/declare";
 import { isUrl } from "./declare";

@@ -1,4 +1,4 @@
-import React, { CSSProperties } from "react";
+import React, { CSSProperties, Suspense } from "react";
 import ReactDOM from "react-dom";
 import { Point, Rect, RectUtility } from "../../src/common/vector/point";
 import { EventsComponent } from "../lib/events.component";
@@ -6,6 +6,7 @@ import { PopoverPosition } from "./position";
 import './style.less';
 import { popoverLayer } from "../lib/zindex";
 import { assyDiv } from "../types";
+import { Spin } from "../view/spin";
 export class Popover<T extends React.Component> extends EventsComponent<{
     component: { new(...args: any[]): T },
     shadow?: boolean,
@@ -195,5 +196,28 @@ export async function PopoverSingleton<T extends React.Component>(CP: { new(...a
             }}
         ></Popover>, ele)
 
+    })
+}
+
+var ms = new Map();
+export async function LazyPopoverSingleton<T extends React.Component>(CP: React.LazyExoticComponent<(new (...args: any[]) => T)>,
+    props?: { slow?: boolean, mask?: boolean, frame?: boolean, style?: CSSProperties, visible?: 'hidden' | "none", shadow?: boolean }, args?: Record<string, any>) {
+    return new Promise((resolve: (data: Popover<T>) => void, reject) => {
+        if (ms.has(CP)) return resolve(ms.get(CP) as any)
+        var ele = assyDiv();
+        var GP = CP as any;
+        ReactDOM.render(<Suspense fallback={<div className="flex-center" style={{ position: 'fixed', width: '100vw', height: '100vh', top: 0, left: 0, zIndex: 100000 }}><Spin block></Spin></div>}>
+            <Popover<T> {...(props || {})} args={args || {}} component={GP} ref={e => {
+
+                ms.set(CP, e);
+                if (props?.slow !== true)
+                    resolve(e);
+            }}
+                did={(e) => {
+                    ms.set(CP, e);
+                    if (props?.slow == true) resolve(ms.get(CP) as any);
+                }}
+            ></Popover>
+        </Suspense>, ele)
     })
 }

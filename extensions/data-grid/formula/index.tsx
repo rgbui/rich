@@ -7,7 +7,6 @@ import { EventsComponent } from "../../../component/lib/events.component";
 import { ChevronRightSvg, FxSvg, TriangleSvg, TypesNumberSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { Textarea } from "../../../component/view/input/textarea";
-import { Markdown } from "../../../component/view/markdown";
 import { Express } from "./express";
 import { util } from "../../../util/util";
 import { PopoverSingleton } from "../../../component/popover/popover";
@@ -18,6 +17,7 @@ import { S } from "../../../i18n/view";
 import { lst } from "../../../i18n/store";
 import { HelpText } from "../../../component/view/text";
 import { Button } from "../../../component/view/button";
+import { LazyMarkdown } from "../../../component/view/markdown/lazy";
 
 class FormulaSelector extends EventsComponent {
     schema: TableSchema;
@@ -205,7 +205,7 @@ class FormulaSelector extends EventsComponent {
                     </div>
                 </div>
                 <div ref={e => this.mdEl = e} className="padding-10 overflow-y flex-auto md" style={{ paddingBottom: 50 }}>
-                    {this.md && <Markdown html={true} md={this.md}></Markdown>}
+                    {this.md && <LazyMarkdown html={true} md={this.md}></LazyMarkdown>}
                 </div>
             </div>
             <div className="flex h-40 padding-w-10 border-top">

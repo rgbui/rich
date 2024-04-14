@@ -1,7 +1,7 @@
 import React from "react";
 import { Rect } from "../../../src/common/vector/point";
-import { useColorPicker } from "./picker";
 import { CheckIsColor } from "./util";
+import { useColorPicker } from "./lazy";
 
 export class ColorInput extends React.Component<{
     color: string,

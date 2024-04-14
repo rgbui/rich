@@ -5,8 +5,6 @@
  * 
  */
 
-import dayjs from "dayjs";
-import lodash from "lodash";
 
 
 
@@ -14,7 +12,7 @@ export async function exportExcel(headers, rows, filename: string) {
     const XLSX = await getXls();
     const wb = XLSX.utils.book_new();
 
-  
+
 
     var rs = rows.map(r => {
         return headers.map(h => {
@@ -28,7 +26,10 @@ export async function exportExcel(headers, rows, filename: string) {
 var _xls;
 async function getXls() {
     if (_xls) return _xls;
-    _xls = (await import("./xlsx.full.min.js"));
+    _xls = (await import(
+        /* webpackChunkName: 'xlsx' */
+        "./xlsx.full.min.js"
+    ));
     return _xls;
     // console.log(d);
     // var XLSX = (await import("./xlsx.full.min.js")).XLSX;
