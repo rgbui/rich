@@ -1,14 +1,13 @@
-import ReactDOM from "react-dom";
 import { Page } from "..";
 import { Block } from "../../block";
 import { View } from "../../block/element/view";
 import { BlockFactory } from "../../block/factory/block.factory";
 import { UserAction, ViewOperate } from "../../history/action";
-import { ActionDirective, OperatorDirective } from "../../history/declare";
+import { ActionDirective } from "../../history/declare";
 import { PageDirective } from "../directive";
 import { PageHistory } from "../interaction/history";
 import { PageKeys } from "../interaction/keys";
-import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
+import {  BlockUrlConstant } from "../../block/constant";
 import { PageLayoutType } from "../declare";
 import { GridMap } from "../grid";
 import { Matrix } from "../../common/matrix";
@@ -18,17 +17,12 @@ import { util } from "../../../util/util";
 import { PageOutLine } from "../../../blocks/navigation/outline";
 import { channel } from "../../../net/channel";
 import { ElementType, getElementUrl } from "../../../net/element.type";
-import { TableSchema } from "../../../blocks/data-grid/schema/meta";
-import { GetFieldFormBlockInfo } from "../../../blocks/data-grid/element/service";
-import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
-import { Field } from "../../../blocks/data-grid/schema/field";
-import { DataGridView } from "../../../blocks/data-grid/view/base";
 import { QueueHandle } from "../../../component/lib/queue";
 import { Image } from "../../../blocks/media/image";
-import { FieldType } from "../../../blocks/data-grid/schema/type";
+
 import { ls } from "../../../i18n/store";
 import { BuildTemplate } from "../template/build";
-import { Head } from "../../../blocks/general/head";
+
 
 export class Page$Cycle {
     async init(this: Page) {
@@ -254,104 +248,8 @@ export class Page$Cycle {
         var data = this.getDefaultData();
         await this.load(data);
     }
-    onPageSave(this: Page) {
-        this.emit(PageDirective.save);
-    }
-    onPageClose(this: Page) {
-        this.emit(PageDirective.close);
-    }
-    async onBack(this: Page) {
-        if (ElementType.SchemaRecordView == this.pe.type) {
-            var url: '/page/open' | '/page/dialog' | '/page/slide' = '/page/dialog'
-            if (this.openSource == 'page') url = '/page/open'
-            else if (this.openSource == 'slide') url = '/page/slide'
-            await channel.air(url, {
-                elementUrl: this.elementUrl,
-                config: { wait: false, force: true }
-            })
-            return;
-        }
-        if (this.openSource == 'page') {
-            if (this.isCanEdit) {
-                if ([ElementType.SchemaData, ElementType.SchemaRecordView].includes(this.pe.type)) {
-                    await this.onSubmitForm();
-                }
-                else {
-                    this.onPageSave();
-                }
-            }
-            this.emit(PageDirective.back);
-        }
-        else this.onPageClose();
-    }
-    async onFormOpen(this: Page, source: Page['openSource'] | 'next' | 'prev' | 'template') {
-        if (source == 'page') {
-            await channel.air('/page/open', { elementUrl: this.elementUrl, config: { force: true, wait: false } });
-            this.onPageClose();
-        }
-        else if (source == 'template') {
-            var url: '/page/open' | '/page/dialog' | '/page/slide' = '/page/dialog'
-            if (this.openSource == 'page') url = '/page/open'
-            else if (this.openSource == 'slide') url = '/page/slide'
-            await channel.air(url, {
-                elementUrl: this.elementUrl,
-                config: { wait: false, force: true, isTemplate: true }
-            })
-        }
-        else {
-            var url: '/page/open' | '/page/dialog' | '/page/slide' = '/page/dialog'
-            if (this.openSource == 'page') url = '/page/open'
-            else if (this.openSource == 'slide') url = '/page/slide'
-            if (source == 'prev') {
-                if (this.formPreRow)
-                    await channel.air(url, { elementUrl: getElementUrl(ElementType.SchemaData, this.schema?.id, this.formPreRow.id), config: { wait: false, force: true } })
-            }
-            else if (source == 'next') {
-                if (this.formNextRow)
-                    await channel.air(url, { elementUrl: getElementUrl(ElementType.SchemaData, this.schema?.id, this.formNextRow.id), config: { wait: false, force: true } })
-            }
-        }
-    }
-    /**
-     * 
-     * @param this 
-     * @param options {
-     *   isClose:是否关闭页面
-     *   isFormBlank:是否清空表单
-     * }
-     */
-    async onSubmitForm(this: Page, options?: { isClose?: boolean, isFormMargin?: boolean }) {
-        if (this.pe.type == ElementType.SchemaData) {
-            this.onPageSave();
-            var newRow = await this.getSchemaRow()
-            if (this.isCanEdit && newRow && Object.keys(newRow).length > 0) {
-                await this.schema.rowUpdate({ dataId: this.pe.id1, data: newRow })
-            }
-        }
-        else if (this.pe.type == ElementType.SchemaRecordView) {
-            var newRow = await this.getSchemaRow();
-            if (newRow) {
-                var r = await this.schema.rowAdd({ data: newRow, pos: { id: undefined, pos: 'after' } });
-                if (r.ok) {
-                    newRow = r.data.data;
-                    await channel.act('/view/snap/store',
-                        {
-                            elementUrl: getElementUrl(ElementType.SchemaData,
-                                this.schema.id,
-                                newRow.id
-                            ),
-                            seq: 0,
-                            plain: await this.getPlain(),
-                            thumb: await this.getThumb(),
-                            content: await this.getString(),
-                            text: newRow.title,
-                        })
-                }
-            }
-        }
-        if (options?.isClose)
-            this.onPageClose()
-    }
+
+   
     private willUpdateAll: boolean = false;
     private willUpdateBlocks: Block[];
     private willLayoutBlocks: Block[];
@@ -708,85 +606,7 @@ export class Page$Cycle {
             }
         )
     }
-    onUnmount(this: Page) {
-        ReactDOM.unmountComponentAtNode(this.root);
-    }
-    onError(this: Page, error: Error) {
-        this.emit(PageDirective.error, error);
-    }
-    onWarn(this: Page, error: string | Error) {
-        this.emit(PageDirective.warn, error);
-    }
-    onFocus(this: Page, event: FocusEvent) {
-        if (this.isFocus == false) {
-            this.isFocus = true;
-            this.emit(PageDirective.focus, event);
-        }
-    }
-    onBlur(this: Page, event: FocusEvent) {
-        if (this.isFocus == true) {
-            this.isFocus = false;
-            this.emit(PageDirective.blur, event);
-        }
-    }
-    onHighlightBlock(this: Page, blocks: Block | (Block[]) | string | (string[]), scrollTo?: boolean) {
-        if (lodash.isNull(blocks) || lodash.isUndefined(blocks)) return;
-        var bs: Block[] = [];
-        if (Array.isArray(blocks)) {
-            if (blocks[0] instanceof Block) {
-                bs = blocks as any;
-            }
-            else {
-                bs = this.findAll(c => blocks.includes(c.id))
-            }
-        }
-        else {
-            if (typeof blocks == 'string') {
-                var g = this.find(c => c.id == blocks);
-                if (g) bs.push(g);
-            }
-            else if (blocks instanceof Block) bs.push(g)
-        }
-        bs = this.getAtomBlocks(bs);
-        if (bs.length == 0) return;
-        var first = bs.first();
-        if (scrollTo)
-            this.onPageScroll(first);
-        bs.forEach(b => {
-            b.el.classList.remove('shy-block-highlight');
-        })
-        bs.forEach(b => {
-            b.el.classList.add('shy-block-highlight')
-        });
-        setTimeout(() => {
-            bs.forEach(b => {
-                b.el.classList.remove('shy-block-highlight');
-            })
-        }, 5000);
-    }
-    public hoverBlock: Block;
-    onHoverBlock(this: Page, block: Block) {
-        var isChange = this.hoverBlock != block;
-        if (isChange && this.hoverBlock) {
-            this.onOutHoverBlock(this.hoverBlock);
-        }
-        if (isChange) {
-            this.hoverBlock = block;
-            if (this.hoverBlock?.el) {
-                this.hoverBlock.el.classList.add('shy-block-hover');
-            }
-            this.emit(PageDirective.hoverBlock, this.hoverBlock);
-        }
-        if (this.hoverBlock) this.kit.handle.onShowBlockHandle(this.hoverBlock);
-        else this.kit.handle.onCloseBlockHandle();
-    }
-    onOutHoverBlock(this: Page, block: Block) {
-        if (block?.el) {
-            block.el.classList.remove('shy-block-hover');
-        }
-        this.emit(PageDirective.hoverOutBlock, block);
-        this.kit.handle.onCloseBlockHandle();
-    }
+
     /**
      * 修复一些不正常的block
      */
@@ -843,229 +663,26 @@ export class Page$Cycle {
             }
         }
     }
-    async updateProps(this: Page, props: Record<string, any>) {
-        var oldValue: Record<string, any> = {};
-        var newValue: Record<string, any> = {};
-        for (let prop in props) {
-            if (!lodash.isEqual(lodash.get(this, prop), lodash.get(props, prop))) {
-                oldValue[prop] = util.clone(lodash.get(this, prop));
-                newValue[prop] = util.clone(lodash.get(props, prop));
-                lodash.set(this, prop, util.clone(lodash.get(props, prop)));
-            }
-        }
-        if (Object.keys(oldValue).length > 0 || Object.keys(newValue).length > 0) {
-            this.snapshoot.record(OperatorDirective.pageUpdateProp, {
-                old: oldValue,
-                new: newValue
-            }, this);
-        }
+  
+ 
+      /**
+     * 这里表示刚创建的block,是新的
+     * 不是通过load创建
+     * @param block 
+     */
+      async onNotifyCreateBlock(this: Page, block: Block) {
+        block.creater = this.user?.id;
+        block.createDate = Date.now();
+        block.editor = this.user?.id;
+        block.editDate = Date.now();
     }
-    async onUpdateProps(this: Page, props: Record<string, any>, isUpdate?: boolean, callback?: () => void) {
-        await this.onAction(ActionDirective.onPageUpdateProps, async () => {
-            await this.updateProps(props);
-            if (typeof callback == 'function') callback();
-            if (isUpdate) this.addPageUpdate();
-        });
-    }
-    formRowData: Record<string, any>;
-    formUserEmojis: Record<string, string[]> = {};
-    formPreRow: Record<string, any>;
-    formNextRow: Record<string, any>;
-    async loadPageSchema(this: Page) {
-        if (!this.schema) {
-            this.schema = await TableSchema.loadTableSchema(this.pe.id, this.ws);
-        }
-        if (this.schema) {
-            if (this.pe.type == ElementType.Schema || this.pe.type == ElementType.SchemaView) {
-                if (!this.exists(g => g instanceof DataGridView)) {
-                    var view = this.pe.type == ElementType.Schema ? this.schema.listViews.first() : this.schema.listViews.find(g => g.id == this.pe.id1);
-                    if (!view) {
-                        view = this.schema.listViews.first();
-                    }
-                    var dc = await BlockFactory.createBlock(view.url, this, {
-                        schemaId: this.schema.id,
-                        syncBlockId: view.id,
-                    }, this.views.first());
-                    this.views.first().blocks.childs.push(dc);
-                }
-            }
-            else {
-                if (this.loadDefault == true) {
-                    var cs: Record<string, any>[] = this.schema.allowFormFields.toArray(field => {
-                        if (field?.type == FieldType.title && this.isSchemaRecordViewTemplate) return undefined;
-                        var r = GetFieldFormBlockInfo(field);
-                        if (r) return Object.assign({
-                            fieldMode: 'detail'
-                        }, r);
-                    })
-                    cs.splice(0, 0, { url: BlockUrlConstant.Title })
-                    this.views = [];
-                    await this.loadViews({ views: [{ url: BlockUrlConstant.View, blocks: { childs: cs } }] })
-                    this.loadDefault = false;
-                }
-                if (!this.isSchemaRecordViewTemplate) {
-                    var r = this.find(g => (g as OriginFormField).field?.name == 'title');
-                    if (r) {
-                        lodash.remove(r.parentBlocks, g => g == r);
-                    }
-                }
-                if (this.pe.type == ElementType.SchemaData || this.pe.type == ElementType.SchemaRecordViewData) {
-                    var rg = await this.schema.rowGetPrevAndNext(this.pe.type == ElementType.SchemaRecordViewData ? this.pe.id2 : this.pe.id1, this.ws);
-                    if (rg) {
-                        this.formRowData = lodash.cloneDeep(rg.data.data);
-                        this.formPreRow = lodash.cloneDeep(rg.data.prev);
-                        this.formNextRow = lodash.cloneDeep(rg.data.next);
-                        this.each(g => {
-                            if (g instanceof OriginFormField) {
-                                var f = g.field;
-                                if (f) {
-                                    g.value = g.field.getValue(this.formRowData);
-                                }
-                            }
-                        })
-                    }
-                }
-                if (typeof this.formRowData == 'undefined') {
-                    this.formRowData = {};
-                }
-                if (typeof this.openPageData?.formData != 'undefined') Object.assign(this.formRowData, this.openPageData.formData)
-                this.each(g => {
-                    if (g instanceof OriginFormField) {
-                        var f = g.field;
-                        if (f) {
-                            this.formRowData[f.name] = g.value;
-                        }
-                    }
-                })
-            }
-            var fs = this.schema.fields.findAll(g => [FieldType.like, FieldType.oppose, FieldType.love].includes(g.type))
-            var es = fs.map(f => {
-                return getElementUrl(ElementType.SchemaFieldNameData, this.schema.id, f.name, this.formRowData.id)
+    async onNotifyEditBlock(this: Page, block: Block) {
+        if (this.user) {
+            await block.updateProps({
+                editor: this.user.id,
+                editDate: Date.now()
             })
-            if (this.formRowData) {
-                var rgc = await channel.get('/user/interactives',
-                    {
-
-                        schemaId: this.schema?.id,
-                        ids: [this.formRowData.id],
-                        ws: this.ws,
-                        es: es
-                    });
-                if (rgc.ok) {
-                    this.formUserEmojis = rgc.data.list;
-                    this.forceUpdate();
-                }
-            }
         }
-    }
-    async getSchemaRow(this: Page) {
-        var row: Record<string, any> = {};
-        this.each(g => {
-            if (g instanceof OriginFormField) {
-                var f = g.field;
-                if (f) {
-                    row[f.name] = g.value;
-                }
-            }
-        })
-        /**
-         * 比较初始值，如果一样，说明没有任何修改，返回null
-         */
-        if (lodash.isEqual(this.formRowData, row) && !this.pageModifiedOrNot) {
-            return null;
-        }
-        row.icon = this.formRowData.icon;
-        row.cover = this.formRowData.cover;
-        row.title = this.formRowData.title;
-        row.plain = await this.getPlain();
-        row.plain = row.plain.slice(0, 200);
-        row.thumb = await this.getThumb();
-        return row;
-    }
-    async onToggleFieldView(this: Page, field: Field, checked: boolean) {
-        await this.onAction('onToggleFieldView', async () => {
-            if (checked) {
-                var b = GetFieldFormBlockInfo(field);
-                if (b) {
-                    var view = this.views[0];
-                    (b as any).fieldType = this.formType;
-                    var newBlock = await this.createBlock(b.url, b, view, view.childs.length);
-                    if (this.formRowData)
-                        await newBlock.updateProps({ value: field.getValue(this.formRowData) })
-                }
-            }
-            else {
-                var f = this.find(c => (c instanceof OriginFormField) && c.field.id == field.id);
-                if (f) await f.delete()
-            }
-        });
-    }
-    async onTurnToPPT(this: Page) {
-        await this.onAction('onTrunToPPT', async () => {
-
-            var view = this.views.first();
-            var cs = view.childs.map(v => v);
-            var ns: (Block[])[] = [];
-            var lastLevel = -1;
-            var lastRs: Block[] = [];
-            for (let i = 0; i < cs.length; i++) {
-                if (cs[i].url == BlockUrlConstant.Title || cs[i].url == BlockUrlConstant.Head) {
-                    if (cs[i].url == BlockUrlConstant.Title) {
-                        lastLevel = -1;
-                        lastRs.push(cs[i]);
-                    }
-                    else {
-                        var level = parseFloat((cs[i] as Head).level.replace('h', ''));;
-                        if (lastLevel == -1 || level >= lastLevel) {
-                            lastLevel = level;
-                            ns.push(lastRs);
-                            lastRs = [];
-                            lastRs.push(cs[i]);
-                        }
-                        else {
-                            lastRs.push(cs[i])
-                        }
-                    }
-                }
-                else {
-                    lastRs.push(cs[i])
-                }
-            }
-            if (lastRs.length > 0) {
-                ns.push(lastRs);
-            }
-            var ds = ns.map(c => ({ url: BlockUrlConstant.CardBox }));
-            var bs = await view.appendArrayBlockData(ds, view.childs.length, BlockChildKey.childs);
-            for (let j = 0; j < bs.length; j++) {
-                await bs[j].appendArray(ns[j], 0, BlockChildKey.childs);
-            }
-            await this.updateProps({
-                pageLayout: {
-                    type: PageLayoutType.ppt
-                }
-            })
-            await channel.air('/page/update/info', { id: this.pageInfo?.id, pageInfo: { pageType: this.pageLayout.type } });
-            this.addPageUpdate();
-        }, { immediate: true })
-    }
-    async onTurnToDoc(this: Page) {
-        await this.onAction('onTurnToDoc', async () => {
-            var view = this.views[0];
-            var cs = view.childs.findAll(c => c.url == BlockUrlConstant.CardBox);
-            for (let i = 0; i < cs.length; i++) {
-                await view.appendArray(cs[i].childs, view.childs.length, BlockChildKey.childs);
-            }
-            for (let j = 0; j < cs.length; j++) {
-                await cs[j].delete();
-            }
-            await this.updateProps({
-                pageLayout: {
-                    type: PageLayoutType.doc
-                }
-            })
-            await channel.air('/page/update/info', { id: this.pageInfo?.id, pageInfo: { pageType: this.pageLayout.type } });
-            this.addPageUpdate();
-        }, { immediate: true })
     }
 }
 

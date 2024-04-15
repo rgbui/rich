@@ -225,7 +225,7 @@ export class PageBar extends React.Component<{ page: Page }>{
             isMember = true;
         }
         if (this.props.page.isSign) return <div className="flex r-flex-center r-size-24 r-item-hover r-round r-cursor r-gap-l-10 text-1 gap-r-20">
-            {isField && <span onMouseDown={e => this.props.page.onOpenFieldProperty(e)} ><Icon className={'text-1'} size={18} icon={{ name: 'bytedance-icon', code: 'setting-one' }}></Icon></span>}
+            {isField && <span onMouseDown={e => this.props.page.onOpenFormMenu(e)} ><Icon className={'text-1'} size={18} icon={{ name: 'bytedance-icon', code: 'setting-one' }}></Icon></span>}
             {isMember && <span onMouseDown={e => this.props.page.onOpenMember(e)} ><Icon className={'text-1'} size={18} icon={MemberSvg}></Icon></span>}
             {isSearch && <span onMouseDown={async e => { await useSearchBox({ ws: this.props.page.ws }) }}><Icon className={'text-1'} size={18} icon={SearchSvg}></Icon></span>}
             {isAi && <span onMouseDown={async e => { await useAISearchBox({ ws: this.props.page.ws }) }}><Icon className={'text-1'} size={18} icon={AiStartSvg}></Icon></span>}

@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { Events } from "../../util/events";
 import { util } from "../../util/util";
 import { View } from "../block/element/view";
-import { PageEvent } from "./partial/event";
+import { Page$ViewEvent } from "./partial/view.event";
 import { HistorySnapshoot } from '../history/snapshoot';
 import { Block } from '../block';
 import { KeyboardPlate } from '../common/keys';
@@ -15,12 +15,12 @@ import { DropDirection } from '../kit/handle/direction';
 import { PageDirective } from './directive';
 import { Mix } from '../../util/mix';
 import { Page$Cycle } from './partial/life.cycle';
-import { Page$Operator } from './partial/operator';
+import { Page$Operator } from './partial/op/op1';
 import { LinkPageItem, LinkWs, PageLayoutType, PageThemeStyle, PageVersion } from './declare';
 import { Point, Rect } from '../common/vector/point';
 import { GridMap } from './grid';
 import { Matrix } from '../common/matrix';
-import { PageContextmenu } from './partial/contextmenu';
+import { Page$ContextMenu } from './partial/contextmenu';
 import { Kit } from '../kit';
 import { channel } from '../../net/channel';
 import { TableSchema } from '../../blocks/data-grid/schema/meta';
@@ -38,6 +38,9 @@ import { Link } from '../../blocks/navigation/link';
 import { AtomPermission } from './permission';
 import { forceCloseBoardEditTool } from '../../extensions/board.edit.tool';
 import "./style.less";
+import { PageOnEvent } from './partial/on.event';
+import { Page$Operator2 } from './partial/op/op2';
+import { Page$Schema } from './partial/schema';
 
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
@@ -94,30 +97,7 @@ export class Page extends Events<PageDirective> {
     autoRefSubPages: boolean = true;
     addedSubPages: string[] = [];
     showMembers: boolean = false;
-    formType: 'doc' | 'doc-add' | 'doc-detail' = 'doc';
-    /**
-     * 判断当前页面在数据表中是什么类型
-     * add 表单，添加新数据（需要指定模板）
-     * template-edit 记录页面，按指定的模板显示
-     * origin-edit 记录页面，按在首次添加数据时，保存的页面显示
-     * template 模板页面，用于管理设置模板
-     */
-    get pageSchemaRecordType() {
-        var viewType: "add" | 'template-edit' | 'origin-edit' | 'template' = null;
-        if (this.pe.type == ElementType.SchemaData) {
-            viewType = 'origin-edit'
-        }
-        else if (this.pe.type == ElementType.SchemaRecordViewData) {
-            viewType = 'template-edit'
-        }
-        else if (this.pe.type == ElementType.SchemaRecordView) {
-            if (this.isSchemaRecordViewTemplate) {
-                viewType = 'template'
-            }
-            else viewType = 'add'
-        }
-        return viewType;
-    }
+   
     /**
      * 页面格式 
      * 仅文档、数据表格、宣传页起作用
@@ -263,7 +243,7 @@ export class Page extends Events<PageDirective> {
     get scale() {
         return this.matrix.getScaling().x;
     }
-    schema: TableSchema;
+    
     openSource: 'page' | 'slide' | 'dialog' | 'snap' | 'popup' = 'page';
     getScreenStyle() {
         var style: CSSProperties = {};
@@ -477,7 +457,7 @@ export class Page extends Events<PageDirective> {
     onLazyHistory = lodash.debounce(async (u) => {
         this.emit(PageDirective.history, u)
     }, 700);
-    public isSchemaRecordViewTemplate: boolean
+    
     public openPageData?: {
         pre?: {
             id: any;
@@ -501,6 +481,7 @@ export class Page extends Events<PageDirective> {
         userid: string
     }
 }
+
 export interface Page {
     on(name: PageDirective.init, fn: () => void);
     emit(name: PageDirective.init);
@@ -571,11 +552,14 @@ export interface Page {
     on(name: PageDirective.syncItems, fn: () => void);
     emit(name: PageDirective.syncItems);
 }
-export interface Page extends PageEvent { }
-export interface Page extends Page$Seek { }
 
+export interface Page extends Page$ViewEvent { }
+export interface Page extends PageOnEvent { }
+export interface Page extends Page$Seek { }
 export interface Page extends Page$Cycle { }
 export interface Page extends Page$Operator { }
+export interface Page extends Page$Operator2{ }
+export interface Page extends Page$ContextMenu { }
+export interface Page extends Page$Schema{ }
 export interface Page extends Mix { }
-export interface Page extends PageContextmenu { }
-Mix(Page, PageEvent, Page$Seek, Page$Cycle, Page$Operator, PageContextmenu);
+Mix(Page, Page$ViewEvent, PageOnEvent, Page$Seek,Page$Schema, Page$Cycle, Page$Operator,Page$Operator2, Page$ContextMenu);

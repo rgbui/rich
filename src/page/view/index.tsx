@@ -302,7 +302,7 @@ export class PageView extends Component<{ page: Page }> {
                 onMouseDownCapture={e => this.page.onMouseDownCapture(e)}
             >
                 <div className={'shy-page-view-box'}
-                    onContextMenu={e => this.page.onContextmenu(e)}
+                    onContextMenu={e => this.page.onContextMenu(e)}
                     onMouseDown={e => this.page.onMousedown(e)}>
                     <PageLayoutView page={this.page}>
                         <div className={'shy-page-view-content '} ref={e => this.page.contentEl = e}>

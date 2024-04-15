@@ -1,342 +1,41 @@
 import lodash from "lodash";
-import { Page } from "..";
-import { CopyText } from "../../../component/copy";
-import { CloseShyAlert, ShyAlert } from "../../../component/lib/alert";
-import { useSelectMenuItem } from "../../../component/view/menu";
-import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
-import { channel } from "../../../net/channel";
-import { AnimatedScrollTo } from "../../../util/animatedScrollTo";
-import { Block } from "../../block";
-import { AppearAnchor } from "../../block/appear";
-import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
-import { BlockDirective } from "../../block/enum";
-import { BlockFactory } from "../../block/factory/block.factory";
-import { Point, Rect } from "../../common/vector/point";
-import { ActionDirective, OperatorDirective } from "../../history/declare";
-import { DropDirection } from "../../kit/handle/direction";
-import { storeCopyBlocks } from "../common/copy";
-import { LinkPageItem, PageLayoutType } from "../declare";
-import { PageDirective } from "../directive";
-import { useTemplateView } from "../../../extensions/template";
-import { lst } from "../../../i18n/store";
-import { Matrix } from "../../common/matrix";
-import { buildPage } from "../common/create";
-import { util } from "../../../util/util";
-import { useImportFile } from "../../../extensions/Import-export/import-file/lazy";
+import { Page } from "../..";
+import { CloseShyAlert, ShyAlert } from "../../../../component/lib/alert";
+
+import { channel } from "../../../../net/channel";
+import { AnimatedScrollTo } from "../../../../util/animatedScrollTo";
+import { Block } from "../../../block";
+import { BlockChildKey, BlockUrlConstant } from "../../../block/constant";
+import { Point, Rect } from "../../../common/vector/point";
+import { ActionDirective, OperatorDirective} from "../../../history/declare";
+import { LinkPageItem, PageLayoutType, PageTemplateTags, PageTemplateTypeGroups } from "../../declare";
+import { PageDirective } from "../../directive";
+import { useTemplateView } from "../../../../extensions/template";
+import { lst } from "../../../../i18n/store";
+import { Matrix } from "../../../common/matrix";
+import { buildPage } from "../../common/create";
+import { util } from "../../../../util/util";
+import { useImportFile } from "../../../../extensions/Import-export/import-file/lazy";
+import { OriginFormField } from "../../../../blocks/data-grid/element/form/origin.field";
+import { GetFieldFormBlockInfo } from "../../../../blocks/data-grid/element/service";
+import { Field } from "../../../../blocks/data-grid/schema/field";
+import { DataGridView } from "../../../../blocks/data-grid/view/base";
+import { BlockButton } from "../../../../blocks/interaction/button";
+import { Title } from "../../../../blocks/interaction/title";
+import { useForm } from "../../../../component/view/form/dialoug";
+import { useExportFile } from "../../../../extensions/Import-export/export-file/lazy";
+import { usePageHistoryStore } from "../../../../extensions/history";
+import { usePagePublish } from "../../../../extensions/publish";
+import { usePageTheme } from "../../../../extensions/theme";
+import { getAiDefaultModel } from "../../../../net/ai/cost";
+import { ElementType } from "../../../../net/element.type";
+import { RobotInfo } from "../../../../types/user";
+import { Head } from "../../../../blocks/general/head";
 
 
 export class Page$Operator {
-    /**
-    * 创建一个block
-    * @param url 
-    * @param data 
-    * @param parent 
-    * @param at 
-    * 
-    */
-    async createBlock(this: Page, url: string, data: Record<string, any>, parent: Block, at?: number, childKey?: string) {
-        var block = await BlockFactory.createBlock(url, this, data, parent);
-        await this.onNotifyCreateBlock(block);
-        if (parent) {
-            if (typeof childKey == 'undefined') childKey = block.isLine ? BlockChildKey.childs : (parent?.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
-            if (!parent.allBlockKeys.some(s => s == childKey)) {
-                console.error(`${parent.url} not support childKey:${childKey}`);
-                childKey = parent.allBlockKeys[0];
-            }
-            var bs = parent.blocks[childKey];
-            if (!Array.isArray(bs)) parent.blocks[childKey] = bs = [];
-            if (typeof at == 'undefined' || at == -1) at = bs.length;
-            bs.insertAt(at, block);
-            await block.created();
-            this.snapshoot.record(OperatorDirective.$create, {
-                pos: block.pos,
-                data: await block.get()
-            }, block);
-            this.monitorBlockOperator(block, 'create');
-            this.addBlockUpdate(parent);
-            this.addBlockChange(block);
-        }
-        else {
-            if (typeof at == 'undefined')
-                this.views.push(block);
-            else this.views.splice(at, 0, block);
-            await block.created();
-            this.snapshoot.record(OperatorDirective.$create, {
-                pos: block.pos,
-                data: await block.get()
-            }, block);
-            this.monitorBlockOperator(block, 'create');
-            this.addPageUpdate();
-        }
-        await block.loadSyncBlock();
-        return block;
-    }
-    async onCreateTailTextSpan(this: Page, panel?: Block) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                await this.onAction(ActionDirective.onCreateTailTextSpan, async () => {
-                    panel = panel || this.views[0];
-                    var lastBlock = panel.findReverse(g => g.isBlock);
-                    var newBlock: Block;
-                    if (lastBlock && lastBlock.parent == panel) {
-                        newBlock = await this.createBlock(BlockUrlConstant.TextSpan, {}, lastBlock.parent, lastBlock.at + 1);
-                    }
-                    else {
-                        newBlock = await this.createBlock(BlockUrlConstant.TextSpan, {}, panel);
-                    }
-                    newBlock.mounted(() => {
-                        this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
-                        resolve(true);
-                    })
-                })
-            }
-            catch (ex) {
-                this.onError(ex);
-                reject(ex);
-            }
-        })
-    }
-    async onBatchDelete(this: Page, blocks: Block[]) {
-        blocks = blocks.toArray(c => c);
-        lodash.remove(blocks, c => c.url == BlockUrlConstant.Title);
-        if (blocks.length > 0)
-            await this.onAction(ActionDirective.onBatchDeleteBlocks, async () => {
-                var pre = blocks.first().prevFind(c => c.isVisible && !blocks.includes(c) && !blocks.some(s => s.exists(g => g.id == c.id)) && c.isBlock);
-                if (!pre) blocks.first().nextFind(c => c.isVisible && !blocks.includes(c) && !blocks.some(s => s.exists(g => g.id == c.id)) && c.isBlock);
-                if (pre) {
-                    this.kit.anchorCursor.focusBlockAnchor(pre, { last: true, render: true })
-                }
-                if (this.kit.picker.blocks.some(s => blocks.some(c => c == s))) {
-                    this.kit.picker.blocks.removeAll(s => blocks.includes(s));
-                    if (this.kit.picker.blocks.length == 0) {
-                        this.kit.picker.onCancel();
-                    }
-                    else this.kit.picker.onRePicker();
-                }
-                await blocks.eachAsync(async bl => {
-                    await bl.delete()
-                });
-
-            })
-    }
-    async onTurn(this: Page, block: Block, url: string, callback: (newBlock: Block, oldBlock: Block) => void) {
-        await this.onAction(ActionDirective.onTurn, async () => {
-            var oldBlock = block;
-            var newBlock = await block.turn(url);
-            callback(newBlock, oldBlock);
-        });
-    }
-    async onReplace(this: Page, block: Block, blockData: (Record<string, any> | Block) | ((Record<string, any> | Block)[]), action?: (block: Block) => Promise<void>) {
-        if (!Array.isArray(blockData)) blockData = [blockData];
-        var newBlock: Block = null;
-        await this.onAction(ActionDirective.onReplace, async () => {
-            if (blockData[0] instanceof Block) newBlock = (await block.replace(blockData as Block[]))[0];
-            else newBlock = (await block.replaceDatas(blockData as Record<string, any>[]))[0];
-            if (typeof action == 'function') await action(newBlock);
-        });
-        return newBlock;
-    }
-    async onBatchTurn(this: Page, blocks: Block[], url: string) {
-        var bs: Block[] = [];
-        await this.onAction(ActionDirective.onBatchTurn, async () => {
-            await blocks.eachAsync(async bl => {
-                var newBlock = await bl.turn(url);
-                bs.push(newBlock);
-            })
-        });
-        return bs;
-    }
-    async onCombineLikeTextSpan(this: Page, block: Block, willCombineBlock: Block, after?: () => Promise<void>) {
-        await this.onAction(ActionDirective.combineTextSpan, async () => {
-            if (willCombineBlock.childs.length > 0) {
-                if (block.content && block.childs.length == 0) {
-                    await this.createBlock(BlockUrlConstant.Text, { content: block.content }, block, 0);
-                    await block.updateProps({ content: '' });
-                }
-                var cs = willCombineBlock.childs.map(c => c);
-                await cs.eachAsync(async (c) => {
-                    await block.append(c)
-                })
-            }
-            else {
-                if (block.content && block.childs.length == 0) {
-                    await this.createBlock(BlockUrlConstant.Text, { content: block.content }, block, 0);
-                    await block.updateProps({ content: '' });
-                }
-                if (willCombineBlock.content) {
-                    await this.createBlock(BlockUrlConstant.Text, { content: willCombineBlock.content }, block, block.childs.length);
-                }
-            }
-            if (willCombineBlock.hasSubChilds && willCombineBlock.subChilds.length > 0) {
-                if (block.hasSubChilds) {
-                    await block.appendArray(willCombineBlock.subChilds, undefined, BlockChildKey.subChilds)
-                }
-                else {
-                    await block.parent.appendArray(willCombineBlock.subChilds, block.at + 1, block.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs)
-                }
-            }
-            await willCombineBlock.delete();
-            if (typeof after == 'function') {
-                await after();
-            }
-        });
-    }
-    onBlurAnchor(this: Page, anchor: AppearAnchor) {
-        if (anchor.block) {
-            anchor.block.blurAnchor(anchor);
-        }
-        this.emit(PageDirective.blurAnchor, anchor);
-    }
-    onFocusAnchor(this: Page, anchor: AppearAnchor) {
-        if (anchor.block) {
-            anchor.block.focusAnchor(anchor);
-        }
-        this.emit(PageDirective.focusAnchor, anchor);
-    }
-    /**
-     * 批量将block拖到另一个block
-     * @param this 
-     * @param blocks 
-     * @param to 
-     * @param arrow 
-     */
-    async onBatchDragBlocks(this: Page, blocks: Block[], to: Block, direction: DropDirection) {
-        /**
-         * 就是将blocks append 到to 下面
-         */
-        await this.onAction(ActionDirective.onBatchDragBlocks, async () => {
-            if (this.keyboardPlate.isAlt()) {
-                var blockDatas = await blocks.asyncMap(async b => b.cloneData());
-                var bs = await to.dropBlockDatas(blockDatas, direction);
-                this.addUpdateEvent(async () => {
-                    this.kit.anchorCursor.onSelectBlocks(bs, { render: true, merge: true });
-                })
-            }
-            else {
-                await to.drop(blocks, direction);
-                this.addUpdateEvent(async () => {
-                    this.kit.anchorCursor.onSelectBlocks(blocks, { render: true, merge: true });
-                })
-            }
-        })
-    }
-    async onBatchDragCreateBlocks(this: Page, blocks: any[], to: Block, direction: DropDirection) {
-        /**
-        * 就是将blocks append 到to 下面
-        */
-        await this.onAction(ActionDirective.onBatchDragBlockDatas, async () => {
-            await to.dropBlockDatas(blocks, direction);
-        })
-    }
-    /**
-     * 对block打开右键菜单
-     * @param this 
-     * @param blocks 
-     * @param event 
-     */
-    async onOpenMenu(this: Page, blocks: Block[], event: MouseEvent | Point) {
-        if (!(event instanceof Point)) event.preventDefault();
-        if (blocks.length == 1) {
-            try {
-                return await blocks[0].onContextmenu(event);
-            }
-            catch (ex) {
-                console.error(ex)
-                return;
-            }
-        }
-        var isSameUrl = blocks.every(b => b.url == blocks[0].url);
-        var menus = await blocks[0].onGetContextMenus();
-        if (!isSameUrl) {
-            lodash.remove(menus, c => c.name == BlockDirective.link);
-            var ns = await blocks[0].onGetTurnMenus();
-            await blocks.eachAsync(async (b, i) => {
-                if (i == 0) return;
-                var ms = await b.onGetContextMenus();
-                lodash.remove(menus, c => !ms.some(m => m.name == c.name));
-                if (menus.some(s => s.name == BlockDirective.trun)) {
-                    var ts = await b.onGetTurnMenus();
-                    if (!lodash.isEqual(ns.map(n => n.url), ts.map(c => c.url))) {
-                        lodash.remove(menus, c => c.name == BlockDirective.trun)
-                    }
-                }
-            })
-        }
-        menus = util.neighborDeWeight(menus, c => (c.name + "") + c.type);
-        if (menus[0]?.type == MenuItemType.divide) menus = menus.slice(1);
-        else if (menus.last()?.type == MenuItemType.divide) menus = menus.slice(0, -1);
-        var re = await useSelectMenuItem(
-            {
-                roundPoint: event instanceof Point ? event : Point.from(event),
-                direction: 'left'
-            },
-            menus,
-            {
-                input: async (e) => {
-                    await blocks.eachAsync(async b => {
-                        await b.onContextMenuInput(e, { merge: true })
-                    })
-                }
-            }
-        );
-        if (re) {
-            await this.onClickBatchBlocksContextMenu(blocks, re.item, re.event)
-        }
-    }
-    async onClickBatchBlocksContextMenu(this: Page, blocks: Block[], item: MenuItem<BlockDirective | string>, event: MouseEvent) {
-        switch (item.name) {
-            case BlockDirective.delete:
-                this.onBatchDelete(blocks);
-                break;
-            case BlockDirective.copy:
-                /**
-                 * 复制块
-                 */
-                this.onAction(ActionDirective.onCopyBlock, async () => {
-                    var bs = await blocks.asyncMap(async b => b.cloneData());
-                    var at = blocks[0].at;
-                    var to = blocks.last().at;
-                    var pa = blocks[0].parent;
-                    var newBlocks = await pa.appendArrayBlockData(bs, Math.max(at, to) + 1, blocks.first().parentKey);
-                    this.addUpdateEvent(async () => {
-                        this.kit.anchorCursor.onSelectBlocks(newBlocks, { render: true, merge: true });
-                    })
-                });
-                break;
-            case BlockDirective.link:
-                CopyText(blocks[0].blockUrl);
-                ShyAlert(lst('块的链接已复制'))
-                break;
-            case BlockDirective.trun:
-                this.onBatchTurn(blocks, item.url);
-                break;
-            case BlockDirective.trunIntoPage:
-                break;
-            case 'fontColor':
-                this.onAction('setFontStyle', async () => {
-                    await blocks.eachAsync(async (block) => {
-                        await block.pattern.setFontStyle({ color: item.value });
-                        this.addBlockUpdate(block);
-                    })
-                })
-                break;
-            case 'fillColor':
-                this.onAction('setFillStyle', async () => {
-                    await blocks.eachAsync(async (block) => {
-                        await block.pattern.setFillStyle({ mode: 'color', color: item.value })
-                        this.addBlockUpdate(block);
-                    })
-                })
-                break;
-            case 'askAi':
-                this.kit.writer.onAskAi(blocks)
-                break;
-            default:
-                await blocks.eachAsync(async (block) => {
-                    await block.onClickContextMenu(item, event, { merge: true });
-                })
-        }
-    }
+   
+  
     async onToggleOutline(this: Page, d: { nav: boolean }) {
         await this.onAction('onToggleOutline', async () => {
             await this.updateProps({ nav: d.nav });
@@ -496,13 +195,7 @@ export class Page$Operator {
             }
         })
     }
-    async onCopyBlocks(this: Page, blocks: Block[]) {
-        await storeCopyBlocks(blocks);
-    }
-    async onCutBlocks(this: Page, blocks: Block[]) {
-        await storeCopyBlocks(blocks);
-        await this.onBatchDelete(blocks);
-    }
+  
     async onChangeTextChannelSpeak(this: Page, speak: LinkPageItem['speak']) {
         await channel.air('/page/update/info', {
             id: this.pageInfo.id,
@@ -512,20 +205,7 @@ export class Page$Operator {
             }
         })
     }
-    async onPageScroll(this: Page, block: Block) {
-        try {
-            var panelEl = this.getScrollDiv();
-            var offset = panelEl.scrollTop;
-            var blockRect = block.getVisibleBound();
-            var panelElRect = Rect.fromEle(panelEl);
-            var d = blockRect.top - panelElRect.top;
-            AnimatedScrollTo(panelEl, offset + d)
-        }
-        catch (ex) {
-            console.error(ex);
-            this.onError(ex);
-        }
-    }
+  
     async onOpenTemplate(this: Page) {
         var ut = await useTemplateView();
         if (ut) {
@@ -700,4 +380,275 @@ export class Page$Operator {
     onSpreadMenu(this: Page,) {
         this.emit(PageDirective.spreadSln)
     }
+
+    async onOpenHistory(this: Page) {
+        var result = await usePageHistoryStore(this);
+        if (result) {
+            this.emit(PageDirective.rollup, result);
+        }
+    }
+    async onPageCopy(this: Page) {
+        await channel.act('/current/page/copy');
+    }
+    async onPageMove(this: Page) {
+        await channel.act('/current/page/move');
+    }
+    async onOpenPublish(this: Page, event: React.MouseEvent) {
+        await usePagePublish({ roundArea: Rect.fromEvent(event) }, this)
+    }
+    async onOpenMember(this: Page, event: React.MouseEvent) {
+        this.showMembers = this.showMembers ? false : true;
+        this.forceUpdate()
+    }
+ 
+  
+    async onOpenTheme(this: Page) {
+        await usePageTheme(this);
+    }
+    async onPageRemove(this: Page) {
+        channel.air('/page/remove', { item: this.pageInfo.id });
+    }
+    async onOpenRobot(this: Page, robot: RobotInfo) {
+        await channel.air('/robot/open', { robot });
+    }
+    async onSyncAi(this: Page, robot: RobotInfo, isTurn?: boolean) {
+        ShyAlert(lst('正在同步中...'), 'warn', isTurn ? 1000 * 60 * 10 : 1000 * 4);
+        try {
+            var r = await channel.put('/sync/wiki/doc', {
+                robotId: robot.robotId,
+                elementUrl: this.customElementUrl,
+                pageText: this.getPageDataInfo()?.text,
+                contents: [{ id: util.guid(), content: await this.getMd() }]
+            })
+            if (isTurn) {
+                if (r.ok) {
+                    ShyAlert(lst('正在微调中...'), 'warn', isTurn ? 1000 * 60 * 10 : 1000 * 60 * 2);
+                    await new Promise((resolve, reject) => {
+                        channel.post('/fetch', {
+                            url: '/robot/doc/embedding/stream',
+                            data: {
+                                id: r.data.doc.id,
+                                model: getAiDefaultModel(robot.embeddingModel, 'embedding')
+                            },
+                            method: 'post',
+                            callback: (str, done) => {
+                                if (done) {
+                                    resolve(done);
+                                }
+                            }
+                        })
+                    })
+
+                }
+            }
+        }
+        catch (ex) {
+            this.onError(ex)
+        }
+        finally {
+            if (isTurn)
+                CloseShyAlert()
+        }
+    }
+    async onLockPage(this: Page, lock?: boolean) {
+        await this.onAction(ActionDirective.onPageLock, async () => {
+            await this.updateProps({
+                locker: {
+                    userid: this.user?.id,
+                    date: Date.now(),
+                    lock: this.locker?.lock ? false : true
+                }
+            });
+            this.addPageUpdate();
+        })
+    }
+    async onExport(this: Page) {
+        if (this.pe.type == ElementType.Schema) {
+            var dg: DataGridView = this.find(g => g instanceof DataGridView) as DataGridView;
+            if (dg) {
+                dg.onExport()
+            }
+        }
+        else await useExportFile({ page: this });
+    }
+    async onRequireTemplate(this: Page) {
+        var ws = this.ws;
+        var tg = await channel.get('/get/workspace/template', {
+            wsId: ws.id,
+            pageId: this.pageInfo?.id,
+            elementUrl: this.elementUrl,
+        });
+        var tgd = tg.data?.template || {};
+        var rf = await useForm({
+            maskCloseNotSave: true,
+            deleteButton: true,
+            title: lst('申请模板'),
+            model: {
+                classify: tgd['classify'],
+                tags: tgd['tags'],
+                description: tgd['description'],
+                text: tgd['text'] || this.pageInfo?.text
+            },
+            fields: [
+                { name: 'text', text: lst('标题'), type: 'input' },
+                { name: 'description', text: lst('描述'), type: 'textarea' },
+                {
+                    name: 'tags',
+                    text: lst('标签'),
+                    multiple: true,
+                    type: 'select',
+                    options: PageTemplateTags.map(p => {
+                        return {
+                            text: p.text,
+                            value: p.text,
+                            type: p.type
+                        }
+                    })
+                },
+                {
+                    name: 'classify',
+                    text: lst('分类'),
+                    type: 'select',
+                    multiple: true,
+                    options: PageTemplateTypeGroups.map(c => {
+                        return {
+                            text: c.text,
+                            icon: c.icon,
+                            value: c.text
+                        }
+                    })
+                }
+            ]
+        })
+        if (rf) {
+            ShyAlert(rf && rf.delete == true ? lst('正在删除中...') : lst('正在申请中...'), 'warn', 1000 * 60 * 10);
+            try {
+                if (rf && rf.delete == true) {
+                    await channel.del('/del/workspace/template', { id: tg.data.template.id });
+                }
+                else {
+                    var g = await channel.post('/create/template', { config: { pageId: this.pageInfo?.id } })
+                    if (g.ok) {
+                        var r = await channel.post('/download/file', { url: g.data.file.url });
+                        if (r.ok) {
+                            await channel.post('/create/workspace/template', {
+                                wsId: ws.id,
+                                pageId: this.pageInfo?.id,
+                                type: 'page',
+                                templateUrl: r.data.file.url,
+                                elementUrl: this.elementUrl,
+                                text: rf.text,
+                                description: rf.description,
+                                file: r.data.file,
+                                icon: this.pageInfo?.icon,
+                                config: {
+                                    classify: rf.classify,
+                                    tags: rf.tags
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+            catch (ex) {
+
+            }
+            finally {
+                CloseShyAlert()
+            }
+        }
+    }
+    async onCopyPage(this: Page) {
+        await channel.act('/current/page/copy');
+    }
+    async onMovePage(this: Page, event: React.MouseEvent) {
+        await channel.act('/current/page/move', { event: event } as any);
+    }
+    async onToggleFieldView(this: Page, field: Field, checked: boolean) {
+        await this.onAction('onToggleFieldView', async () => {
+            if (checked) {
+                var b = GetFieldFormBlockInfo(field);
+                if (b) {
+                    var view = this.views[0];
+                    (b as any).fieldType = this.formType;
+                    var newBlock = await this.createBlock(b.url, b, view, view.childs.length);
+                    if (this.formRowData)
+                        await newBlock.updateProps({ value: field.getValue(this.formRowData) })
+                }
+            }
+            else {
+                var f = this.find(c => (c instanceof OriginFormField) && c.field.id == field.id);
+                if (f) await f.delete()
+            }
+        });
+    }
+    async onTurnToPPT(this: Page) {
+        await this.onAction('onTrunToPPT', async () => {
+
+            var view = this.views.first();
+            var cs = view.childs.map(v => v);
+            var ns: (Block[])[] = [];
+            var lastLevel = -1;
+            var lastRs: Block[] = [];
+            for (let i = 0; i < cs.length; i++) {
+                if (cs[i].url == BlockUrlConstant.Title || cs[i].url == BlockUrlConstant.Head) {
+                    if (cs[i].url == BlockUrlConstant.Title) {
+                        lastLevel = -1;
+                        lastRs.push(cs[i]);
+                    }
+                    else {
+                        var level = parseFloat((cs[i] as Head).level.replace('h', ''));;
+                        if (lastLevel == -1 || level >= lastLevel) {
+                            lastLevel = level;
+                            ns.push(lastRs);
+                            lastRs = [];
+                            lastRs.push(cs[i]);
+                        }
+                        else {
+                            lastRs.push(cs[i])
+                        }
+                    }
+                }
+                else {
+                    lastRs.push(cs[i])
+                }
+            }
+            if (lastRs.length > 0) {
+                ns.push(lastRs);
+            }
+            var ds = ns.map(c => ({ url: BlockUrlConstant.CardBox }));
+            var bs = await view.appendArrayBlockData(ds, view.childs.length, BlockChildKey.childs);
+            for (let j = 0; j < bs.length; j++) {
+                await bs[j].appendArray(ns[j], 0, BlockChildKey.childs);
+            }
+            await this.updateProps({
+                pageLayout: {
+                    type: PageLayoutType.ppt
+                }
+            })
+            await channel.air('/page/update/info', { id: this.pageInfo?.id, pageInfo: { pageType: this.pageLayout.type } });
+            this.addPageUpdate();
+        }, { immediate: true })
+    }
+    async onTurnToDoc(this: Page) {
+        await this.onAction('onTurnToDoc', async () => {
+            var view = this.views[0];
+            var cs = view.childs.findAll(c => c.url == BlockUrlConstant.CardBox);
+            for (let i = 0; i < cs.length; i++) {
+                await view.appendArray(cs[i].childs, view.childs.length, BlockChildKey.childs);
+            }
+            for (let j = 0; j < cs.length; j++) {
+                await cs[j].delete();
+            }
+            await this.updateProps({
+                pageLayout: {
+                    type: PageLayoutType.doc
+                }
+            })
+            await channel.air('/page/update/info', { id: this.pageInfo?.id, pageInfo: { pageType: this.pageLayout.type } });
+            this.addPageUpdate();
+        }, { immediate: true })
+    }
+
+   
 }

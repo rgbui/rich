@@ -5,7 +5,7 @@ import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { BlockDirective, BlockRenderRange } from "../../block/enum";
 import { Point, Rect } from "../../common/vector/point";
-import { PageLayoutType, PageTemplateTags, PageTemplateTypeGroups } from "../declare";
+import { PageLayoutType } from "../declare";
 import {
     AiStartSvg,
     CommentSvg,
@@ -30,89 +30,23 @@ import {
 } from "../../../component/svgs";
 
 import { CopyText } from "../../../component/copy";
-import { CloseShyAlert, ShyAlert } from "../../../component/lib/alert";
+import { ShyAlert } from "../../../component/lib/alert";
 import { channel } from "../../../net/channel";
 import { Confirm } from "../../../component/lib/confirm";
-import { usePageHistoryStore } from "../../../extensions/history";
-import { PageDirective } from "../directive";
-import { usePagePublish } from "../../../extensions/publish";
 import { BlockUrlConstant } from "../../block/constant";
 import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
 import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
-import { Field } from "../../../blocks/data-grid/schema/field";
-import { GetFieldFormBlockInfo } from "../../../blocks/data-grid/element/service";
 import { ElementType } from "../../../net/element.type";
 import { FieldType } from "../../../blocks/data-grid/schema/type";
 
 import { util } from "../../../util/util";
 import { ActionDirective } from "../../history/declare";
-
-import { DataGridView } from "../../../blocks/data-grid/view/base";
-import { useForm } from "../../../component/view/form/dialoug";
 import { lst } from "../../../i18n/store";
-import { Title } from "../../../blocks/interaction/title";
-import { BlockButton } from "../../../blocks/interaction/button";
 import { Block } from "../../block";
-import { RobotInfo } from "../../../types/user";
-import { usePageTheme } from "../../../extensions/theme";
-import { getAiDefaultModel } from "../../../net/ai/cost";
 import { UA } from "../../../util/ua";
-import { useExportFile } from "../../../extensions/Import-export/export-file/lazy";
+import lodash from "lodash";
 
-export class PageContextmenu {
-    async onGetContextMenus(this: Page) {
-        if (this.isBoard) return this.onGetBoardContextMenus();
-        var items: MenuItem<BlockDirective | string>[] = [];
-        return items;
-    }
-    async onGetBoardContextMenus(this: Page) {
-        var items: MenuItem<BlockDirective | string>[] = [];
-        items.push({
-            type: MenuItemType.switch,
-            checked: this.pageInfo?.locker?.lock ? true : false,
-            text: lst('编辑保护'),
-            name: 'lock'
-        });
-        items.push({ type: MenuItemType.divide });
-        items.push({ name: 'copy-link', text: lst('复制链接'), label: UA.isMacOs ? "⌥+Shift+L" : "Alt+Shift+L" })
-        items.push({ type: MenuItemType.divide });
-        items.push({ name: 'show-all', text: lst('显示所有内容') });
-        // items.push({ name: 'show-grid', text: '显示网格' })
-        return items;
-    }
-    async onClickContextMenu(this: Page, item: MenuItem<BlockDirective | string>, event: MouseEvent) {
-        if (this.isBoard) return this.onClickBoardContextMenu(item, event);
-    }
-    async onClickBoardContextMenu(this: Page, item: MenuItem<BlockDirective | string>, event: MouseEvent) {
-        switch (item.name) {
-            case 'lock':
-                channel.air('/page/update/info', {
-                    id: this.pageInfo.id,
-                    pageInfo: {
-                        locker: this.pageInfo.locker?.userid ? null : {
-                            userid: this.user.id,
-                            date: Date.now(),
-                            lock: this.pageInfo?.locker?.lock ? false : true
-                        }
-                    }
-                });
-            case 'copy-link':
-                CopyText(this.pageInfo.url);
-                ShyAlert(lst('复制链接'));
-                break;
-            case 'show-all':
-                break;
-        }
-    }
-    async onContextMenu(this: Page, event: React.MouseEvent | MouseEvent) {
-        var re = await useSelectMenuItem(
-            { roundPoint: Point.from(event) },
-            await this.onGetContextMenus()
-        );
-        if (re) {
-            await this.onClickContextMenu(re.item, re.event);
-        }
-    }
+export class Page$ContextMenu {
     async onPageContextmenu(this: Page, event: React.MouseEvent) {
         var items: MenuItem<BlockDirective | string>[] = [];
         var robots = (await this.ws.getWsRobots()).filter(g => g.disabledWiki !== true);
@@ -527,29 +461,119 @@ export class PageContextmenu {
             }
         }
     }
-    async onOpenHistory(this: Page) {
-        var result = await usePageHistoryStore(this);
-        if (result) {
-            this.emit(PageDirective.rollup, result);
+    /**
+   * 对block打开右键菜单
+   * @param this 
+   * @param blocks 
+   * @param event 
+   */
+    async onOpenMenu(this: Page, blocks: Block[], event: MouseEvent | Point) {
+        if (!(event instanceof Point)) event.preventDefault();
+        if (blocks.length == 1) {
+            try {
+                return await blocks[0].onContextmenu(event);
+            }
+            catch (ex) {
+                console.error(ex)
+                return;
+            }
+        }
+        var isSameUrl = blocks.every(b => b.url == blocks[0].url);
+        var menus = await blocks[0].onGetContextMenus();
+        if (!isSameUrl) {
+            lodash.remove(menus, c => c.name == BlockDirective.link);
+            var ns = await blocks[0].onGetTurnMenus();
+            await blocks.eachAsync(async (b, i) => {
+                if (i == 0) return;
+                var ms = await b.onGetContextMenus();
+                lodash.remove(menus, c => !ms.some(m => m.name == c.name));
+                if (menus.some(s => s.name == BlockDirective.trun)) {
+                    var ts = await b.onGetTurnMenus();
+                    if (!lodash.isEqual(ns.map(n => n.url), ts.map(c => c.url))) {
+                        lodash.remove(menus, c => c.name == BlockDirective.trun)
+                    }
+                }
+            })
+        }
+        menus = util.neighborDeWeight(menus, c => (c.name + "") + c.type);
+        if (menus[0]?.type == MenuItemType.divide) menus = menus.slice(1);
+        else if (menus.last()?.type == MenuItemType.divide) menus = menus.slice(0, -1);
+        var re = await useSelectMenuItem(
+            {
+                roundPoint: event instanceof Point ? event : Point.from(event),
+                direction: 'left'
+            },
+            menus,
+            {
+                input: async (e) => {
+                    await blocks.eachAsync(async b => {
+                        await b.onContextMenuInput(e, { merge: true })
+                    })
+                }
+            }
+        );
+        if (re) {
+            await this.onClickBatchBlocksContextMenu(blocks, re.item, re.event)
         }
     }
-    async onPageCopy(this: Page) {
-        await channel.act('/current/page/copy');
+    async onClickBatchBlocksContextMenu(this: Page, blocks: Block[], item: MenuItem<BlockDirective | string>, event: MouseEvent) {
+        switch (item.name) {
+            case BlockDirective.delete:
+                this.onBatchDelete(blocks);
+                break;
+            case BlockDirective.copy:
+                /**
+                 * 复制块
+                 */
+                this.onAction(ActionDirective.onCopyBlock, async () => {
+                    var bs = await blocks.asyncMap(async b => b.cloneData());
+                    var at = blocks[0].at;
+                    var to = blocks.last().at;
+                    var pa = blocks[0].parent;
+                    var newBlocks = await pa.appendArrayBlockData(bs, Math.max(at, to) + 1, blocks.first().parentKey);
+                    this.addUpdateEvent(async () => {
+                        this.kit.anchorCursor.onSelectBlocks(newBlocks, { render: true, merge: true });
+                    })
+                });
+                break;
+            case BlockDirective.link:
+                CopyText(blocks[0].blockUrl);
+                ShyAlert(lst('块的链接已复制'))
+                break;
+            case BlockDirective.trun:
+                this.onBatchTurn(blocks, item.url);
+                break;
+            case BlockDirective.trunIntoPage:
+                break;
+            case 'fontColor':
+                this.onAction('setFontStyle', async () => {
+                    await blocks.eachAsync(async (block) => {
+                        await block.pattern.setFontStyle({ color: item.value });
+                        this.addBlockUpdate(block);
+                    })
+                })
+                break;
+            case 'fillColor':
+                this.onAction('setFillStyle', async () => {
+                    await blocks.eachAsync(async (block) => {
+                        await block.pattern.setFillStyle({ mode: 'color', color: item.value })
+                        this.addBlockUpdate(block);
+                    })
+                })
+                break;
+            case 'askAi':
+                this.kit.writer.onAskAi(blocks)
+                break;
+            default:
+                await blocks.eachAsync(async (block) => {
+                    await block.onClickContextMenu(item, event, { merge: true });
+                })
+        }
     }
-    async onPageMove(this: Page) {
-        await channel.act('/current/page/move');
-    }
-    async onOpenPublish(this: Page, event: React.MouseEvent) {
-        await usePagePublish({ roundArea: Rect.fromEvent(event) }, this)
-    }
-    async onOpenMember(this: Page, event: React.MouseEvent) {
-        this.showMembers = this.showMembers ? false : true;
-        this.forceUpdate()
-    }
-    async onOpenFieldProperty(this: Page, event: React.MouseEvent) {
+    async onOpenFormMenu(this: Page, event: React.MouseEvent) {
         var self = this;
         var view = this.schema.recordViews.find(g => g.id == this.pe.id1)
-        var viewType = this.pageSchemaRecordType;
+        var viewType = this.getPageSchemaRecordType();
         var r = await useSelectMenuItem(
             { roundArea: Rect.fromEvent(event) },
             [
@@ -676,229 +700,11 @@ export class PageContextmenu {
             else if (r.item.name == 'viewDisplay') {
                 await this.onTurnForm(r.item.value);
             }
-        }
-    }
-    async onTurnForm(this: Page, value: 'doc' | 'doc-add' | 'doc-detail') {
-        var self = this;
-        await this.onAction('onTurnForm', async () => {
-            var fs = this.findAll(g => g instanceof OriginFormField) as OriginFormField[];
-            for (let i = 0; i < fs.length; i++) {
-                var off = fs[i];
-                await off.turnForm(value);
-            }
-            if (value == 'doc-add') {
-                var title = self.find(g => g.url == BlockUrlConstant.Title) as Title;
-                await title.updateProps({ align: 'center' })
-                var button = self.find(g => g.url == BlockUrlConstant.Button && (g as BlockButton).isFormSubmit() == true) as BlockButton;
-                if (!button) {
-                    var last: Block = self.findReverse(g => (g instanceof OriginFormField));
-                    if (!last) {
-                        last = self.views[0].childs.last();
-                    }
-                    if (last) {
-                        await last.visibleDownCreateBlock(BlockUrlConstant.Button, {
-                            align: 'center',
-                            buttonText: lst('提交') + this.getPageDataInfo()?.text,
-                            flow: {
-                                commands: [{ url: '/form/submit' }]
-                            }
-                        });
-                    }
-                }
-            }
-            else {
-                var button = self.find(g => g.url == BlockUrlConstant.Button && (g as BlockButton).isFormSubmit() == true) as BlockButton;
-                if (button) await button.delete();
-            }
-            await this.updateProps({ formType: value })
-        })
-    }
-    async onChangeSchemaView(this: Page, viewId: string, props) {
-        var view = this.schema.views.find(g => g.id == viewId);
-        if (view) {
-            this.schema.onSchemaOperate([{ name: 'updateSchemaView', id: view.id, data: props }])
-        }
-    }
-    async onToggleFieldView(this: Page, field: Field, checked: boolean) {
-        await this.onAction('onToggleFieldView', async () => {
-            if (checked) {
-                var b: Record<string, any> = GetFieldFormBlockInfo(field);
-                if (b) {
-                    b.fieldMode = 'detail';
-                    var at = this.views[0].childs.findLastIndex(c => (c instanceof OriginFormField))
-                    if (at == -1) at = 0;
-                    var newBlock = await this.createBlock(b.url, b, this.views[0], at);
-                    if (this.formRowData) newBlock.updateProps({ value: field.getValue(this.formRowData) })
-                }
-            }
-            else {
-                var f = this.find(c => (c instanceof OriginFormField) && c.field.id == field.id);
-                if (f) await f.delete()
-            }
-        });
-        this.view.forceUpdate();
-    }
-    async onOpenTheme(this: Page) {
-        await usePageTheme(this);
-    }
-    async onPageRemove(this: Page) {
-        channel.air('/page/remove', { item: this.pageInfo.id });
-    }
-    async onOpenRobot(this: Page, robot: RobotInfo) {
-        await channel.air('/robot/open', { robot });
-    }
-    async onSyncAi(this: Page, robot: RobotInfo, isTurn?: boolean) {
-        ShyAlert(lst('正在同步中...'), 'warn', isTurn ? 1000 * 60 * 10 : 1000 * 4);
-        try {
-            var r = await channel.put('/sync/wiki/doc', {
-                robotId: robot.robotId,
-                elementUrl: this.customElementUrl,
-                pageText: this.getPageDataInfo()?.text,
-                contents: [{ id: util.guid(), content: await this.getMd() }]
-            })
-            if (isTurn) {
-                if (r.ok) {
-                    ShyAlert(lst('正在微调中...'), 'warn', isTurn ? 1000 * 60 * 10 : 1000 * 60 * 2);
-                    await new Promise((resolve, reject) => {
-                        channel.post('/fetch', {
-                            url: '/robot/doc/embedding/stream',
-                            data: {
-                                id: r.data.doc.id,
-                                model: getAiDefaultModel(robot.embeddingModel, 'embedding')
-                            },
-                            method: 'post',
-                            callback: (str, done) => {
-                                if (done) {
-                                    resolve(done);
-                                }
-                            }
-                        })
-                    })
-
-                }
+            else if (this.schema.fields.some(s => s.id == r.item.name)) {
+                var sf = this.schema.fields.find(s => s.id == r.item.name);
+                this.onToggleFieldView(sf, r.item.checked)
             }
         }
-        catch (ex) {
-            this.onError(ex)
-        }
-        finally {
-            if (isTurn)
-                CloseShyAlert()
-        }
-    }
-    async onLockPage(this: Page, lock?: boolean) {
-        await this.onAction(ActionDirective.onPageLock, async () => {
-            await this.updateProps({
-                locker: {
-                    userid: this.user?.id,
-                    date: Date.now(),
-                    lock: this.locker?.lock ? false : true
-                }
-            });
-            this.addPageUpdate();
-        })
-    }
-    async onExport(this: Page) {
-        if (this.pe.type == ElementType.Schema) {
-            var dg: DataGridView = this.find(g => g instanceof DataGridView) as DataGridView;
-            if (dg) {
-                dg.onExport()
-            }
-        }
-        else await useExportFile({ page: this });
-    }
-    async onRequireTemplate(this: Page) {
-        var ws = this.ws;
-        var tg = await channel.get('/get/workspace/template', {
-            wsId: ws.id,
-            pageId: this.pageInfo?.id,
-            elementUrl: this.elementUrl,
-        });
-        var tgd = tg.data?.template || {};
-        var rf = await useForm({
-            maskCloseNotSave: true,
-            deleteButton: true,
-            title: lst('申请模板'),
-            model: {
-                classify: tgd['classify'],
-                tags: tgd['tags'],
-                description: tgd['description'],
-                text: tgd['text'] || this.pageInfo?.text
-            },
-            fields: [
-                { name: 'text', text: lst('标题'), type: 'input' },
-                { name: 'description', text: lst('描述'), type: 'textarea' },
-                {
-                    name: 'tags',
-                    text: lst('标签'),
-                    multiple: true,
-                    type: 'select',
-                    options: PageTemplateTags.map(p => {
-                        return {
-                            text: p.text,
-                            value: p.text,
-                            type: p.type
-                        }
-                    })
-                },
-                {
-                    name: 'classify',
-                    text: lst('分类'),
-                    type: 'select',
-                    multiple: true,
-                    options: PageTemplateTypeGroups.map(c => {
-                        return {
-                            text: c.text,
-                            icon: c.icon,
-                            value: c.text
-                        }
-                    })
-                }
-            ]
-        })
-        if (rf) {
-            ShyAlert(rf && rf.delete == true ? lst('正在删除中...') : lst('正在申请中...'), 'warn', 1000 * 60 * 10);
-            try {
-                if (rf && rf.delete == true) {
-                    await channel.del('/del/workspace/template', { id: tg.data.template.id });
-                }
-                else {
-                    var g = await channel.post('/create/template', { config: { pageId: this.pageInfo?.id } })
-                    if (g.ok) {
-                        var r = await channel.post('/download/file', { url: g.data.file.url });
-                        if (r.ok) {
-                            await channel.post('/create/workspace/template', {
-                                wsId: ws.id,
-                                pageId: this.pageInfo?.id,
-                                type: 'page',
-                                templateUrl: r.data.file.url,
-                                elementUrl: this.elementUrl,
-                                text: rf.text,
-                                description: rf.description,
-                                file: r.data.file,
-                                icon: this.pageInfo?.icon,
-                                config: {
-                                    classify: rf.classify,
-                                    tags: rf.tags
-                                }
-                            });
-                        }
-                    }
-                }
-            }
-            catch (ex) {
-
-            }
-            finally {
-                CloseShyAlert()
-            }
-        }
-    }
-    async onCopyPage(this: Page) {
-        await channel.act('/current/page/copy');
-    }
-    async onMovePage(this: Page, event: React.MouseEvent) {
-        await channel.act('/current/page/move', { event: event } as any);
     }
 }
 

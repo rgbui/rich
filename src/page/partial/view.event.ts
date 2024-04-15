@@ -16,12 +16,11 @@ import { PageDirective } from "../directive";
 import { BlockUrlConstant } from "../../block/constant";
 import { ElementType } from "../../../net/element.type";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
-import lodash from "lodash";
 import { lst } from "../../../i18n/store";
 import { Block } from "../../block";
-import { Title } from "../../../blocks/interaction/title";
+import { AnimatedScrollTo } from "../../../util/animatedScrollTo";
 
-export class PageEvent {
+export class Page$ViewEvent {
     /**
      * 鼠标点击页面,
      * 点的过程中有可能有按下不松开选择一个较大的区域情况，
@@ -309,7 +308,7 @@ export class PageEvent {
             // })
         }
     }
-    async onContextmenu(this: Page, event: React.MouseEvent) {
+    async onContextMenu(this: Page, event: React.MouseEvent) {
         if (!this.isCanEdit) return;
         // event.preventDefault();
     }
@@ -344,56 +343,13 @@ export class PageEvent {
             icon: { name: "emoji", code: g.code }
         })
     }
-    async onUpdatePageData(this: Page, data: Record<string, any>) {
-        for (let n in data) {
-            if (lodash.isUndefined(data[n])) {
-                delete data[n];
-            }
-        }
-        if ([
-            ElementType.SchemaData,
-            ElementType.SchemaRecordView,
-            ElementType.SchemaView
-        ].includes(this.pe.type) && !this.isSchemaRecordViewTemplate) {
-            data.title = data.text;
-            delete data.text;
-            Object.assign(this.formRowData, data);
-            this.forceUpdate();
-            this.view.pageBar?.forceUpdate();
-            var tb = this.find(c => c.url == BlockUrlConstant.Title);
-            if (tb) {
-                await (tb as Title).loadPageInfo();
-                tb.forceUpdate()
-            }
-            if (this.pe.type == ElementType.SchemaData) {
-                if (!this.openPageData?.pre && this.formRowData?.id) {
-                    await this.schema.rowUpdate({ dataId: this.formRowData?.id, data: this.formRowData })
-                }
-            }
-        }
-        else if (this.isSchemaRecordViewTemplate) {
-
-            var sr = this.schema.views.find(g => g.id == this.pe.id1);
-            if (sr) {
-                await this.schema.onSchemaOperate([{
-                    name: 'updateSchemaView',
-                    data: data,
-                    id: this.pe.id1,
-                }])
-                this.forceUpdate();
-            }
-        }
-        else {
-            if (this.pe.type == ElementType.Schema) {
-                var schema = await TableSchema.loadTableSchema(this.pe.id, this.ws);
-                var props = lodash.pick(data, ['icon', 'description', 'text'])
-                if (schema && Object.keys(props).length > 0)
-                    schema.update(props)
-            }
-            channel.air('/page/update/info', {
-                elementUrl: this.elementUrl,
-                pageInfo: data
-            })
+    async onChangeIcon(this: Page, event: React.MouseEvent) {
+        if (this.isCanEdit == false) return;
+        event.stopPropagation();
+        var pd = this.getPageDataInfo();
+        var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) }, pd.icon);
+        if (typeof icon != 'undefined') {
+            await this.onUpdatePageData({ icon })
         }
     }
     async onUpdatePageTitle(this: Page, text: string) {
@@ -470,36 +426,8 @@ export class PageEvent {
             description: this.pageInfo?.description
         }
     }
-    async onChangeIcon(this: Page, event: React.MouseEvent) {
-        if (this.isCanEdit == false) return;
-        event.stopPropagation();
-        var pd = this.getPageDataInfo();
-        var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) }, pd.icon);
-        if (typeof icon != 'undefined') {
-            await this.onUpdatePageData({ icon })
-        }
-    }
     async onSaveAndPublish(this: Page) {
 
-    }
-    /**
-     * 这里表示刚创建的block,是新的
-     * 不是通过load创建
-     * @param block 
-     */
-    async onNotifyCreateBlock(this: Page, block: Block) {
-        block.creater = this.user?.id;
-        block.createDate = Date.now();
-        block.editor = this.user?.id;
-        block.editDate = Date.now();
-    }
-    async onNotifyEditBlock(this: Page, block: Block) {
-        if (this.user) {
-            await block.updateProps({
-                editor: this.user.id,
-                editDate: Date.now()
-            })
-        }
     }
     async onUpdatePermissions(this: Page, data: Record<string, any>) {
         if ([
@@ -582,6 +510,20 @@ export class PageEvent {
              * 可以指定角色，也可以指定具体的人
              */
             memberPermissions: this._pageItem.memberPermissions
+        }
+    }
+    async onPageScroll(this: Page, block: Block) {
+        try {
+            var panelEl = this.getScrollDiv();
+            var offset = panelEl.scrollTop;
+            var blockRect = block.getVisibleBound();
+            var panelElRect = Rect.fromEle(panelEl);
+            var d = blockRect.top - panelElRect.top;
+            AnimatedScrollTo(panelEl, offset + d)
+        }
+        catch (ex) {
+            console.error(ex);
+            this.onError(ex);
         }
     }
 }

@@ -296,6 +296,7 @@ export var DisabledFormFieldTypes: FieldType[] = [
     FieldType.formula,
     FieldType.rollup,
     FieldType.modifyDate,
+    FieldType.modifyer,
     FieldType.createDate,
     FieldType.creater,
     FieldType.cover,
