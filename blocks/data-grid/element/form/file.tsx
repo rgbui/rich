@@ -39,7 +39,7 @@ class FormFieldFile extends OriginFormField {
 }
 
 @view('/form/file')
-class FormFieldFileView extends BlockView<FormFieldFile>{
+class FormFieldFileView extends BlockView<FormFieldFile> {
     deleteImage(img) {
         var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);
         if (!this.block.field?.config?.isMultiple && vs.length > 1) vs = [vs.first()]
@@ -54,7 +54,7 @@ class FormFieldFileView extends BlockView<FormFieldFile>{
         return <div className={this.block.fieldType == 'doc' ? "gap-w-10" : ""}>
             {files.length > 0 && <div className="gap-b-5 item-hover-light-focus round">
                 {files.map((img, i) => {
-                    return <div className="padding-h-2 padding-w-10   item-hover-light   round cursor flex  visible-hover" key={i}>
+                    return <div className="padding-h-2 padding-w-5 gap-w-5   item-hover-light   round cursor flex  visible-hover" key={i}>
                         <a className="link f-14 flex-auto flex" download={img.url} href={img.url}>
                             <span className="flex-fixed item-hover round size-24 remark flex-center"><Icon size={18} icon={FileSvg}></Icon></span>
                             <span className="flex-fixed text-overflow gap-w-5">{img.filename}</span>
@@ -74,7 +74,6 @@ class FormFieldFileView extends BlockView<FormFieldFile>{
         return (vs.length < 1 || vs.length > 1 && this.block.field?.config?.isMultiple) && this.block.fieldType != 'doc-detail'
     }
     renderView() {
-
         var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);
         if (!this.block.field?.config?.isMultiple && vs.length > 1) vs = [vs.first()]
         return <FieldView block={this.block} className={'visible-hover'}>

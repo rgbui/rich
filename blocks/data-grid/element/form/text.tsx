@@ -16,14 +16,16 @@ class FieldText extends OriginFormField {
     async onGetContextMenus() {
         var items = await super.onGetContextMenus();
         if (this.fieldType == 'doc-add' && [FieldType.text].includes(this.field.type)) {
-            var at = items.findIndex(c => c.name == BlockDirective.copy);
-            items.splice(at+1, 0, {
-                name: 'inputType',
-                text: lst('多行文本'),
-                type: MenuItemType.switch,
-                checked: this.inputType == 'textarea',
-                icon: { name: 'bytedance-icon', code: 'more-two' }
-            });
+            var at = items.findIndex(c => c.name == 'required');
+            items.splice(at - 1, 0,
+                { type: MenuItemType.divide },
+                {
+                    name: 'inputType',
+                    text: lst('多行文本'),
+                    type: MenuItemType.switch,
+                    checked: this.inputType == 'textarea',
+                    icon: { name: 'bytedance-icon', code: 'more-two' }
+                }, { type: MenuItemType.divide });
         }
         return items;
     }
@@ -40,7 +42,7 @@ class FieldText extends OriginFormField {
 }
 
 @view('/form/text')
-class FieldTextView extends BlockView<FieldText>{
+class FieldTextView extends BlockView<FieldText> {
     renderView() {
         var self = this;
         function keydown(event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) {

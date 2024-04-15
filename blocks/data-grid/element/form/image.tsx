@@ -51,7 +51,10 @@ class FormFieldImage extends OriginFormField {
             name: 'imageFormat.display',
             value: this.imageFormat?.display,
             icon: { name: 'bytedance-icon', code: 'picture-one' },
-            options: [{ text: lst('缩略图'), value: 'thumb' }, { text: lst('自适应'), value: 'auto' }]
+            options: [
+                { text: lst('略缩图'), value: 'thumb', icon: { name: 'byte', code: 'new-picture' } },
+                { text: lst('自适应'), value: 'auto', icon: { name: 'byte', code: 'moving-picture' } }
+            ]
         });
         if (this.field?.config?.isMultiple) {
             newItems.push({
@@ -60,7 +63,10 @@ class FormFieldImage extends OriginFormField {
                 name: 'imageFormat.multipleDisplay',
                 icon: { name: "bytedance-icon", code: 'more-two' },
                 value: this.imageFormat?.multipleDisplay,
-                options: [{ text: lst('平铺'), value: 'tile' }, { text: lst('滚轮'), value: 'carousel' }]
+                options: [
+                    { text: lst('平铺'), value: 'tile', icon: { name: 'byte', code: 'all-application' } },
+                    { text: lst('轮播'), value: 'carousel', icon: { name: 'byte', code: 'multi-picture-carousel' } }
+                ]
             });
         }
         newItems.push({ type: MenuItemType.divide })

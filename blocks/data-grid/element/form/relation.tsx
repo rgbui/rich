@@ -30,13 +30,13 @@ class FormFieldRelation extends OriginFormField {
             }
         }
     }
-    async didMounted(): Promise<void> {
+    async didMounted() {
         await this.loadFieldData();
         this.view.forceUpdate()
     }
     async onSelectData(event: React.MouseEvent<Element, MouseEvent>) {
         if (this.checkEdit() === false) return;
-        var r = await useRelationPickData({ roundArea:Rect.fromEle(event.currentTarget as HTMLElement) }, {
+        var r = await useRelationPickData({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
             field: this.field,
             relationDatas: this.relationList,
             isMultiple: this.field.config?.isMultiple,
@@ -59,7 +59,7 @@ class FormFieldRelation extends OriginFormField {
 }
 
 @view('/form/relation')
-class FormFieldRelationView extends BlockView<FormFieldRelation>{
+class FormFieldRelationView extends BlockView<FormFieldRelation> {
     renderList() {
         var rs = this.block.relationSchema;
         if (!rs) return <></>
@@ -83,7 +83,7 @@ class FormFieldRelationView extends BlockView<FormFieldRelation>{
                     </div>
                 })}
             </div>}
-            {this.block.relationList.length == 0 && <span className="f-14 remark"><S>空内容</S></span>}
+            {this.block.relationList.length == 0 && this.block.fieldType == 'doc-detail' && <span className="f-12 remark"><S>空内容</S></span>}
             {(this.block.field.config?.isMultiple || (!(this.block.relationList.length > 0))) && this.block.fieldType != 'doc-detail' && <div className={"flex " + (this.block.relationList.length > 0 ? " visible" : "")}><span className={"item-hover-light-focus item-hover round padding-w-5 f-12   cursor flex text-1"} onClick={e => this.block.onSelectData(e)}><Icon size={16} icon={PlusSvg}></Icon><span ><S>添加关联</S></span></span></div>}
         </div>
     }

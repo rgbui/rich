@@ -12,6 +12,8 @@ import { MenuItemType, MenuItem } from "../../../../component/view/menu/declare"
 import { lst } from "../../../../i18n/store";
 import { BlockDirective, BlockRenderRange } from "../../../../src/block/enum";
 import { S } from "../../../../i18n/view";
+import { TypesMultipleSelectSvg, TypesSelectSvg } from "../../../../component/svgs";
+import { FieldType } from "../../schema/type";
 
 @url('/form/option')
 class FieldText extends OriginFormField {
@@ -27,9 +29,9 @@ class FieldText extends OriginFormField {
                 type: MenuItemType.select,
                 value: this.optionType,
                 options: [
-                    { text: lst('默认'), value: 'default' },
-                    { text: lst('下拉框'), value: 'select' },
-                    { text: lst('多选框'), value: 'checkList' }
+                    { text: lst('默认'), value: 'default', icon: this.field.type == FieldType.option ? TypesSelectSvg : TypesMultipleSelectSvg },
+                    { text: lst('下拉框'), value: 'select', icon: { name: 'byte', code: 'drop-down-list' } },
+                    { text: lst('多选框'), value: 'checkList', icon: { name: 'byte', code: 'list-checkbox' } }
                 ],
                 icon: { name: 'bytedance-icon', code: 'more-two' }
             });

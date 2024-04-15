@@ -58,13 +58,14 @@ class FieldText extends OriginFormField {
                 label: day.format('HH:mm')
             }
         ]);
-        var at = items.findIndex(c => c.name == BlockDirective.copy);
-        items.splice(at + 1, 0,
+        var at = items.findIndex(c => c.name == 'hidePropTitle' || c.name == 'required');
+        items.splice(at - 1, 0,
+            { type: MenuItemType.divide },
             {
                 text: lst('日期格式'),
                 childs: dateItems,
                 icon: { name: 'bytedance-icon', code: 'calendar-thirty' }
-            }, { type: MenuItemType.divide })
+            },{ type: MenuItemType.divide })
         return items;
     }
     async onClickContextMenu(this: Block, item: MenuItem<string | BlockDirective>, event: MouseEvent): Promise<void> {
@@ -74,9 +75,8 @@ class FieldText extends OriginFormField {
         else await super.onClickContextMenu(item, event);
     }
 }
-
 @view('/form/date')
-class FieldTextView extends BlockView<FieldText>{
+class FieldTextView extends BlockView<FieldText> {
     async mousedown(event: React.MouseEvent) {
         event.stopPropagation();
         if (this.block.checkEdit() === false) return;

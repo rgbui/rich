@@ -30,7 +30,7 @@ export class FieldUser extends OriginFormField {
 }
 
 @view('/form/user')
-export class FieldTextView extends BlockView<FieldUser>{
+export class FieldTextView extends BlockView<FieldUser> {
     renderView() {
         var vs = util.covertToArray(this.block.value);
         return <FieldView block={this.block} className={'visible-hover'}>
