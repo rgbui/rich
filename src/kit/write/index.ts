@@ -250,6 +250,16 @@ export class PageWrite {
             case KeyboardCode.Space:
                 onSpaceInputUrl(this, aa, event);
                 break;
+            case KeyboardCode.L.toLowerCase():
+                if (this.kit.page.keyboardPlate.isAltAndShift())
+                {
+                    var lb = aa.block.closest(x => !x.isLine);
+                    if (lb) {
+                        event.preventDefault();
+                        lb.onCopyLink()
+                    }
+                }
+                break;
             case KeyboardCode.D.toLowerCase():
                 if (UA.isMacOs && this.kit.page.keyboardPlate.isMeta() || !UA.isMacOs && this.kit.page.keyboardPlate.isCtrl()) {
                     var b = aa.block.closest(x => !x.isLine);

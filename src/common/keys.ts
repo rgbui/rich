@@ -64,7 +64,7 @@ export class KeyboardPlate {
     keys: KeyboardCode[] = [];
     private isKeyUped: boolean = true;
     private lastKeydownDate: number;
-    static getKeyString(event:KeyboardEvent){
+    static getKeyString(event: KeyboardEvent) {
         var ek = event.key as KeyboardCode;
         if (typeof event.keyCode == 'number') {
             if (event.keyCode >= 48 && event.keyCode <= 57) {
@@ -108,17 +108,17 @@ export class KeyboardPlate {
                     "82": "R",
                     "48": "0",
                     "57": "9",
-                    "186":";",
-                    "187":"=",
-                    "188":",",
-                    "189":"-",
-                    "190":".",
-                    "191":"/",
-                    "192":"`",
-                    "219":"[",
-                    "220":"\\",
-                    "221":"]",
-                    "222":"'",
+                    "186": ";",
+                    "187": "=",
+                    "188": ",",
+                    "189": "-",
+                    "190": ".",
+                    "191": "/",
+                    "192": "`",
+                    "219": "[",
+                    "220": "\\",
+                    "221": "]",
+                    "222": "'",
                 }
                 var cc = ms[event.keyCode.toString()] as KeyboardCode;
                 if (typeof cc != 'undefined') ek = cc;
@@ -135,7 +135,7 @@ export class KeyboardPlate {
         this.altKey = event.altKey;
         this.shiftKey = event.shiftKey;
         this.ctrlKey = event.ctrlKey;
-        var ek =KeyboardPlate.getKeyString(event);
+        var ek = KeyboardPlate.getKeyString(event);
         if (!this.keys.exists(ek))
             this.keys.push(ek);
         else if (!this.keys.exists(ek))
@@ -220,6 +220,13 @@ export class KeyboardPlate {
     }
     isMetaOrCtrl(code?: KeyboardCode) {
         if (UA.isMacOs && this.onlyKeys('meta') || !UA.isMacOs && this.onlyKeys('ctrl')) {
+            if (typeof code != 'undefined') { if (this.is(code)) return true; }
+            else return true;
+        }
+        return false;
+    }
+    isAltAndShift(code?: KeyboardCode) {
+        if (this.onlyKeys('alt', 'shift')) {
             if (typeof code != 'undefined') { if (this.is(code)) return true; }
             else return true;
         }
