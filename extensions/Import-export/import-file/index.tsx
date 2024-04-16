@@ -10,11 +10,17 @@ import { parseHtml } from "../mime/html/parse";
 import { parseWord } from "../mime/word/parse";
 import { ShyAlert } from "../../../component/lib/alert";
 import { lst } from "../../../i18n/store";
+import { HelpText } from "../../../component/view/text";
 
 export default class ImportFile extends EventsComponent {
     render() {
         return <div className="bg-white shadow w-350 round padding-10">
-            <div className="h4"><S>导入</S></div>
+            <div className="gap-b-20 flex">
+                <span className="flex-auto bold f-16"><S>导入</S></span>
+                <div className="flex-fixed ">
+                    <HelpText url={window.shyConfig?.isUS ? "https://help.shy.red/page/70#aGKh7nRzM5swwdx5p3oGaa" : "https://help.shy.live/page/1998#2M94eeDY63oS9SsE3BPTVn"}><S>了解数据导入</S></HelpText>
+                </div>
+            </div>
             <div className="r-round r-flex r-padding-w-10 r-cursor r-item-hover r-padding-h-5 text-1 r-gap-10">
                 <div onMouseDown={e => { this.onImport('markdown') }} className=" border shadow-s">
                     <Icon icon={{ name: 'bytedance-icon', code: 'file-txt' }}></Icon><span className="gap-l-5"><S>TXT或Markdown文件</S></span>

@@ -15,7 +15,7 @@ export default class ExportFile extends EventsComponent {
             <div className="flex">
                 <span className="flex-auto remark f-12 "><S>仅支持单文件导出</S></span>
                 <div className="flex-fixed ">
-                    <HelpText url={window.shyConfig?.isUS ? "https://help.shy.live/page/1869#9jTtjTXApVBuTjZTwBHR88" : "https://help.shy.live/page/1869#9jTtjTXApVBuTjZTwBHR88"}><S>了解数据导出</S></HelpText>
+                    <HelpText url={window.shyConfig?.isUS ? "https://help.shy.red/page/71#e72EUw6QxP19ff3RxfowCS" : "https://help.shy.live/page/1869#9jTtjTXApVBuTjZTwBHR88"}><S>了解数据导出</S></HelpText>
                 </div>
             </div>
             <div className="gap-b-10 gap-t-5">
