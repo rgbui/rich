@@ -4,7 +4,7 @@ import { Input } from "../../../component/view/input";
 import { PopoverSingleton } from "../../../component/popover/popover";
 import { PopoverPosition } from "../../../component/popover/position";
 import { getSchemaViewIcon, getSchemaViews } from "../../../blocks/data-grid/schema/util";
-import { CheckSvg, CollectTableSvg, TriangleSvg } from "../../../component/svgs";
+import { CheckSvg, CloseSvg, CollectTableSvg, TriangleSvg } from "../../../component/svgs";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import lodash from "lodash";
 import { lst } from "../../../i18n/store";
@@ -17,6 +17,7 @@ import { Tip } from "../../../component/view/tooltip/tip";
 import { HelpText } from "../../../component/view/text";
 import { S } from "../../../i18n/view";
 import { util } from "../../../util/util";
+import { ToolTip } from "../../../component/view/tooltip";
 
 /**
  * 
@@ -41,26 +42,31 @@ export class DataGridCreate extends EventsComponent {
                 <Tab.Page item={<Tip placement='bottom' text={'新建数据表'}><Icon size={18} icon={CollectTableSvg}></Icon></Tip>}>
                     {this.renderCreate()}
                 </Tab.Page>
-                <Tab.Page item={<Tip placement='bottom' text={'数据表模板'}><Icon size={20} icon={{ name: 'byte', code: 'application-two' }}></Icon></Tip>}>
-                    {this.renderCms()}
-                </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' text={'已创建的数据表'}><Icon size={18} icon={{ name: 'byte', code: 'history' }}></Icon></Tip>}>
                     {this.renderTables()}
                 </Tab.Page>
             </Tab>
         </div>
     }
+    cmsSpread: boolean = false;
     renderCms() {
         var self = this;
         var cms = CardFactory.getCardModels();
         return <div className="gap-t-10">
-            <div className="f-12 gap-w-10 remark flex"><span className="flex-auto">选择数据表模板</span>
+            <div className="f-12 remark flex"
+                onMouseDown={e => {
+                    this.cmsSpread = this.cmsSpread !== false ? false : true;
+                    this.forceUpdate(() => { this.emit('update') });
+                }}>
+                <span className={"flex-fixed item-hover cursor round  size-16 flex-center ts " + (this.cmsSpread !== false ? "angle-180 " : "angle-90 ")}><Icon size={8} icon={TriangleSvg}></Icon></span>
+                <span className="flex-fixed item-hover cursor">选择数据表模板</span>
             </div>
-            <div className="max-h-200   gap-w-10 overflow-y">
+            {this.cmsSpread && <div className="max-h-200   gap-w-10 overflow-y">
                 {cms.map((c, i) => {
                     return <div key={i} onMouseDown={e => {
                         self.url = c.model.url;
                         self.source = 'dataView';
+                        if (!this.inputViewText) this.inputViewText = c.model.title;
                         self.viewText = c.model.title;
                         self.forceUpdate()
                     }} className="flex-full relative item-hover round padding-w-10 padding-h-5">
@@ -76,11 +82,7 @@ export class DataGridCreate extends EventsComponent {
                         </div>}
                     </div>
                 })}
-            </div>
-            <div className="border-top  padding-w-10  flex">
-                <div className="flex-auto"> <HelpText className={'flex-fixed'} url={window.shyConfig?.isUS ? "https://help.shy.red/page/45#uQnBXa9C8oL491JK26T2QK" : 'https://help.shy.live/page/1872#4pY1nM2HnuvhZtZQWyrG5v'}><S>了解什么是数据表模板</S></HelpText></div>
-                <Button className="gap-h-5 flex-fixed" onMouseDown={e => this.onSave()}>确定</Button>
-            </div>
+            </div>}
         </div>
     }
     rsSpreads: { [key: string]: boolean } = {};
@@ -113,7 +115,7 @@ export class DataGridCreate extends EventsComponent {
                                 self.url = view.url;
                                 self.forceUpdate()
                             }} key={c}>
-                                <span className="size-20 flex-center flex-fixed text-1"><Icon size={16} icon={getSchemaViewIcon(view)}></Icon></span>
+                                <span className="size-24 flex-center flex-fixed text-1"><Icon size={16} icon={getSchemaViewIcon(view)}></Icon></span>
                                 <span className="flex-auto text-1">{view.text}</span>
                                 {self.source == 'tableView' && self.syncBlockId == view.id && <span className="flex-fixed size-16 flex-center gap-r-10"><Icon size={16} icon={CheckSvg}></Icon></span>}
                             </div>
@@ -126,17 +128,12 @@ export class DataGridCreate extends EventsComponent {
             </div>
         </div>
     }
-    onCreateTable() {
-        this.url = BlockUrlConstant.DataGridTable;
-        this.source = 'createView';
-        this.onSave();
-    }
     onSave() {
         var self = this;
         if (this.source == 'createView') {
             self.emit('save', {
                 text: self.inputViewText || lst('未命名数据表'),
-                url: this.url,
+                url: BlockUrlConstant.DataGridTable,
                 source: this.source
             })
         }
@@ -151,20 +148,29 @@ export class DataGridCreate extends EventsComponent {
         }
         else if (this.source == 'dataView') {
             self.emit('save', {
-                text: self.viewText || lst('未命名数据表'),
+                text: self.inputViewText || lst('未命名数据表'),
                 url: this.url,
                 source: this.source
             })
         }
-
     }
     renderCreate() {
         return <div className="gap-10">
-            <div><Input placeholder={lst('数据表名称')} value={this.inputViewText} onChange={e => { this.inputViewText = e }} onEnter={e => {
-                this.inputViewText = e;
-                this.onCreateTable();
-            }} ></Input></div>
-            <div className="gap-h-10"><Button block onMouseDown={e => this.onCreateTable()}><S>创建</S></Button></div>
+            <div><Input placeholder={lst('数据表名称')} value={this.inputViewText}
+                onChange={e => {
+                    this.inputViewText = e
+                }}
+                onEnter={e => {
+                    this.inputViewText = e;
+                }} ></Input></div>
+            {this.renderCms()}
+            {this.source == 'dataView' && <div onMouseDown={e => {
+                this.source = 'createView';
+                this.forceUpdate(() => {
+                    this.emit('update')
+                });
+            }} className="flex f-12 gap-h-5 item-hover-light-focus round"><span className="flex-fixed">已选择数据表模板</span><span className="flex-auto">:{this.viewText}</span><ToolTip overlay={<S>移除选择的数据表模板</S>}><span className="flex-fixed size-20 flex-center cursor item-hover round" ><Icon size={8} icon={CloseSvg}></Icon></span></ToolTip></div>}
+            <div className="gap-h-10"><Button block onMouseDown={e => this.onSave()}><S>创建</S></Button></div>
             <div><HelpText url={window.shyConfig?.isUS ? "https://help.shy.red/page/38#3qfPYqnTJCwwQ6P9zYx8Q8" : 'https://help.shy.live/page/285#xcmSsiEKkYt3pgKVwyDHxJ'}>了解如何创建数据表</HelpText></div>
         </div>
     }
@@ -196,6 +202,9 @@ export async function useDataGridCreate(pos: PopoverPosition) {
             resolve(null);
         });
         fv.only('changeIndex', () => {
+            popover.updateLayout();
+        })
+        fv.only('update', () => {
             popover.updateLayout();
         })
         popover.only('close', () => {
