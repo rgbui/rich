@@ -12,7 +12,7 @@ export async function onCreateDataGridTemplate(
 ) {
     var g = CardFactory.getCardModel(url);
     var vs = typeof g.createViews == 'function' ? await g.createViews() : lodash.cloneDeep(g.views || []);
-    vs.forEach(v => {
+    vs.forEach(v=>{
         v.text = text + "-" + v.text;
     })
     var r = await channel.put('/schema/create/define', {

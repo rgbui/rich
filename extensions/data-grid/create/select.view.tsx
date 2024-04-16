@@ -95,7 +95,7 @@ export class DataGridCreate extends EventsComponent {
         var srs = getSchemaViews()
         return <div className="gap-t-10">
             <div className="f-12 gap-w-10 remark flex">
-                <span className="gap-l-3"><S>选择已创建的数据表视图</S></span>
+                <span className="gap-l-3"><S text='选择已创建的数据表视图'>选择数据表视图(已创建的)</S></span>
             </div>
             <div className="max-h-200 gap-w-10  overflow-y">
                 {list.map((rd, r) => {
@@ -150,7 +150,7 @@ export class DataGridCreate extends EventsComponent {
         }
         else if (this.source == 'dataView') {
             self.emit('save', {
-                text: self.inputViewText ||self.viewText || lst('未命名数据表'),
+                text: self.inputViewText || self.viewText || lst('未命名数据表'),
                 url: this.url,
                 source: this.source
             })
