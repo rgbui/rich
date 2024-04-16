@@ -208,7 +208,7 @@ export function getPageIcon(item: LinkPageItem, defaultIcon?: SvgrComponent) {
     if (item?.icon) return item.icon;
     if (!item) return defaultIcon || PageSvg
     if (item.pageType == PageLayoutType.board) {
-        return { name: 'bytedance-icon', code: 'chopping-board' } as IconValueType
+        // return { name: 'bytedance-icon', code: 'chopping-board' } as IconValueType
         return { name: 'bytedance-icon', code: 'enter-the-keyboard' } as IconValueType
     }
     else if (item.pageType == PageLayoutType.doc) {
