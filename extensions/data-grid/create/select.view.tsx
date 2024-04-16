@@ -69,7 +69,6 @@ export class DataGridCreate extends EventsComponent {
                     return <div key={i} onMouseDown={e => {
                         self.url = c.model.url;
                         self.source = 'dataView';
-                        if (!this.inputViewText) this.inputViewText = c.model.title;
                         self.viewText = c.model.title;
                         self.forceUpdate()
                     }} className="flex-full relative item-hover round padding-w-10 padding-h-5">
@@ -151,7 +150,7 @@ export class DataGridCreate extends EventsComponent {
         }
         else if (this.source == 'dataView') {
             self.emit('save', {
-                text: self.inputViewText || lst('未命名数据表'),
+                text: self.inputViewText ||self.viewText || lst('未命名数据表'),
                 url: this.url,
                 source: this.source
             })
@@ -172,7 +171,7 @@ export class DataGridCreate extends EventsComponent {
                 this.forceUpdate(() => {
                     this.emit('update')
                 });
-            }} className="flex f-12 gap-h-5 item-hover-light-focus round"><span className="flex-fixed">已选择数据表模板</span><span className="flex-auto">:{this.viewText}</span><ToolTip overlay={<S>移除选择的数据表模板</S>}><span className="flex-fixed size-20 flex-center cursor item-hover round" ><Icon size={8} icon={CloseSvg}></Icon></span></ToolTip></div>}
+            }} className="flex f-12 gap-t-10 item-hover-light-focus round"><span className="flex-fixed">已选择数据表模板</span><span className="flex-auto">:{this.viewText}</span><ToolTip overlay={<S>移除选择的数据表模板</S>}><span className="flex-fixed size-20 flex-center cursor item-hover round" ><Icon size={8} icon={CloseSvg}></Icon></span></ToolTip></div>}
             <div className="gap-h-10"><Button block onMouseDown={e => this.onSave()}><S>创建</S></Button></div>
             <div><HelpText url={window.shyConfig?.isUS ? "https://help.shy.red/page/38#3qfPYqnTJCwwQ6P9zYx8Q8" : 'https://help.shy.live/page/285#xcmSsiEKkYt3pgKVwyDHxJ'}>了解如何创建数据表</HelpText></div>
         </div>
