@@ -56,7 +56,10 @@ export class DataGridCreate extends EventsComponent {
             <div className="f-12 remark flex"
                 onMouseDown={e => {
                     this.cmsSpread = this.cmsSpread !== false ? false : true;
-                    this.forceUpdate(() => { this.emit('update') });
+                    this.forceUpdate(() => {
+                        if (this.cmsSpread)
+                            this.emit('update')
+                    });
                 }}>
                 <span className={"flex-fixed item-hover cursor round  size-16 flex-center ts " + (this.cmsSpread !== false ? "angle-180 " : "angle-90 ")}><Icon size={8} icon={TriangleSvg}></Icon></span>
                 <span className="flex-fixed item-hover cursor">选择数据表模板</span>
