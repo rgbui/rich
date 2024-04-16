@@ -24,8 +24,8 @@ import { MenuItemType } from "../../../component/view/menu/declare";
 import { lst } from "../../../i18n/store";
 import { S } from "../../../i18n/view";
 import { HelpText } from "../../../component/view/text";
-import './style.less';
 import { useFormula } from "../formula/lazy";
+import './style.less';
 
 export class TableFieldView extends EventsComponent {
     onSave() {
@@ -94,7 +94,7 @@ export class TableFieldView extends EventsComponent {
         var ts = this.relationDatas.findAll(g => rs.some(r => r.config.relationTableId == g.id));
         if (ts.length == 0) return <>
             <div className="flex-center gap-h-10 remark">
-                <S text="没有关联的表无法聚合统计">没有关联的表，无法聚合统计</S>
+                <S text="没有关联的表无法聚合统计">没有关联的数据表,无法聚合统计</S>
             </div>
         </>
         var sums = [
