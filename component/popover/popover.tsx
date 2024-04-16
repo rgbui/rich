@@ -95,7 +95,7 @@ export class Popover<T extends React.Component> extends EventsComponent<{
                 <CP {...this.props.args} ref={e => {
                     this.cp = e;
                     if (this.cp) (this.cp as any).popover = this as any
-                    if (this.notifyCp) this.notifyCp()
+                    if (this.notifyCp) { this.notifyCp(); this.notifyCp = null; }
                 }}></CP>
             </Suspense>
         }
@@ -103,7 +103,7 @@ export class Popover<T extends React.Component> extends EventsComponent<{
             child = <CP {...this.props.args} ref={e => {
                 this.cp = e;
                 if (this.cp) (this.cp as any).popover = this as any;
-                if (this.notifyCp) this.notifyCp()
+                if (this.notifyCp) { this.notifyCp(); this.notifyCp = null; }
             }}></CP>
         }
         if (this.props.visible == 'hidden') {
