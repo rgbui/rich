@@ -1,22 +1,22 @@
 
 import React from "react";
 import { ReactNode } from "react";
-import { IconArguments } from "../../../../../extensions/icon/declare";
-import { FieldType } from "../../../schema/type";
-import { CardModel, CardViewCom } from "../factory/observable";
-import { CardView } from "../view";
+import { IconArguments } from "../../../../../../extensions/icon/declare";
+import { FieldType } from "../../../../schema/type";
+import { CardModel, CardViewCom } from "../../factory/observable";
+import { CardView } from "../../view";
 import * as Card1 from "../../../../../src/assert/img/card/card1.png"
-import { BlockUrlConstant } from "../../../../../src/block/constant";
+import { BlockUrlConstant } from "../../../../../../src/block/constant";
 import dayjs from "dayjs";
-import { lst } from "../../../../../i18n/store";
-import { S } from "../../../../../i18n/view";
-import { DotsSvg, Edit1Svg, EyeSvg, TrashSvg } from "../../../../../component/svgs";
-import { Avatar } from "../../../../../component/view/avator/face";
-import { UserBox } from "../../../../../component/view/avator/user";
-import { Icon } from "../../../../../component/view/icon";
-import { useSelectMenuItem } from "../../../../../component/view/menu";
-import { MenuItemType } from "../../../../../component/view/menu/declare";
-import { Rect } from "../../../../../src/common/vector/point";
+import { lst } from "../../../../../../i18n/store";
+import { S } from "../../../../../../i18n/view";
+import { DotsSvg, Edit1Svg, EyeSvg, TrashSvg } from "../../../../../../component/svgs";
+import { Avatar } from "../../../../../../component/view/avator/face";
+import { UserBox } from "../../../../../../component/view/avator/user";
+import { Icon } from "../../../../../../component/view/icon";
+import { useSelectMenuItem } from "../../../../../../component/view/menu";
+import { MenuItemType } from "../../../../../../component/view/menu/declare";
+import { Rect } from "../../../../../../src/common/vector/point";
 
 /**
  * 
@@ -166,7 +166,7 @@ export class CardPin extends CardView {
                     {endDate && <span>～{ed.isSame(dayjs(startDate), 'day') ? ed.format("HH:mm") : "DD/HH:mm"}</span>}
                 </div>
                 <div className="flex f-14">
-                    {address && <span className="flex-fixed flex">{address}</span> }
+                    {address && <span className="flex-fixed flex">{address}</span>}
                     <span className={" remark flex-auto flex flex-end " + (isDue ? "" : "")}><Icon size={16} icon={{ name: 'byte', code: 'peoples' }} className={'gap-r-5 remark'}></Icon>{users.length} / {(typeof memberCount == 'number' && memberCount > 0 ? memberCount : lst('不限'))}</span>
                 </div>
                 <div className="flex gap-h-5">

@@ -1,30 +1,30 @@
-import React, { ReactNode } from "react";
-import { Avatar } from "../../../../../component/view/avator/face";
-import { UserBox } from "../../../../../component/view/avator/user";
-import { ResourceArguments } from "../../../../../extensions/icon/declare";
-import { autoImageUrl } from "../../../../../net/element.type";
-import * as Card1 from "../../../../../src/assert/img/card/card8.jpg"
-import { BlockUrlConstant } from "../../../../../src/block/constant";
-import { util } from "../../../../../util/util";
-import { FieldType } from "../../../schema/type";
-import { CardModel, CardViewCom } from "../factory/observable";
-import { CardView } from "../view";
-import { LikeSvg, CommentSvg, DotsSvg, Edit1Svg, TrashSvg } from "../../../../../component/svgs";
-import { Icon } from "../../../../../component/view/icon";
-import { buildPageData } from "../../../../../src/page/common/create";
-import { lst } from "../../../../../i18n/store";
-import { Sp } from "../../../../../i18n/view";
-import { UserAvatars } from "../../../../../component/view/avator/users";
-import { CommentListView } from "../../../../../extensions/comment/list";
-import { Rect } from "../../../../../src/common/vector/point";
-import { MenuItemType } from "../../../../../component/view/menu/declare";
-import { useSelectMenuItem } from "../../../../../component/view/menu";
-import { BlockRenderRange } from "../../../../../src/block/enum";
-import { useImageViewer } from "../../../../../component/view/image.preview";
+import React from "react";
+import { Avatar } from "../../../../../../component/view/avator/face";
+import { UserBox } from "../../../../../../component/view/avator/user";
+import { ResourceArguments } from "../../../../../../extensions/icon/declare";
+import { autoImageUrl } from "../../../../../../net/element.type";
+import * as Card1 from "../../../../../../src/assert/img/card/card8.jpg"
+import { BlockUrlConstant } from "../../../../../../src/block/constant";
+import { util } from "../../../../../../util/util";
+import { FieldType } from "../../../../schema/type";
+import { CardModel, CardViewCom } from "../../factory/observable";
+import { CardView } from "../../view";
+import { LikeSvg, CommentSvg, DotsSvg, Edit1Svg, TrashSvg } from "../../../../../../component/svgs";
+import { Icon } from "../../../../../../component/view/icon";
+import { buildPageData } from "../../../../../../src/page/common/create";
+import { lst } from "../../../../../../i18n/store";
+import { Sp } from "../../../../../../i18n/view";
+import { UserAvatars } from "../../../../../../component/view/avator/users";
+import { CommentListView } from "../../../../../../extensions/comment/list";
+import { Rect } from "../../../../../../src/common/vector/point";
+import { MenuItemType } from "../../../../../../component/view/menu/declare";
+import { useSelectMenuItem } from "../../../../../../component/view/menu";
+import { BlockRenderRange } from "../../../../../../src/block/enum";
+import { useImageViewer } from "../../../../../../component/view/image.preview";
 
 CardModel('/list/tizhi', () => ({
     url: '/list/tizhi',
-    title: lst('话题'),
+    title: lst('帖子'),
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridList],
     props: [
@@ -75,12 +75,11 @@ CardModel('/list/tizhi', () => ({
 @CardViewCom('/list/tizhi')
 export class CardTiZhi extends CardView {
     commentSpread: boolean = false;
-    async openMenu(event: React.MouseEvent)
-    {
+    async openMenu(event: React.MouseEvent) {
         var self = this;
         var ele = event.currentTarget as HTMLElement;
         event.stopPropagation();
-        var action = async () =>{
+        var action = async () => {
             ele.classList.remove('visible');
             try {
                 var rect = Rect.fromEvent(event);
@@ -98,8 +97,8 @@ export class CardTiZhi extends CardView {
                     },
                 });
                 if (r) {
-                    
-                     if (r.item.name == 'remove') {
+
+                    if (r.item.name == 'remove') {
                         await self.deleteItem();
                     }
                     else if (r.item.name == 'open') {
@@ -117,7 +116,7 @@ export class CardTiZhi extends CardView {
         if (this.dataGrid) this.dataGrid.onDataGridTool(async () => await action())
         else await action();
     }
-    render(): ReactNode {
+    render() {
         var self = this;
         var pics = this.getValue<ResourceArguments[]>('pic', FieldType.cover);
         if (pics && !Array.isArray(pics)) pics = [pics];
@@ -136,20 +135,20 @@ export class CardTiZhi extends CardView {
                         <div className="remark f-12">{util.showTime(createDate)}&nbsp;</div>
                     </div>
                     <div className="flex-fixed">
-                        <span className="size-24 round item-hover visile" onMouseDown={e=>this.openMenu(e)}><Icon icon={DotsSvg}></Icon></span>
+                        <span className="size-24 round item-hover visile" onMouseDown={e => this.openMenu(e)}><Icon icon={DotsSvg}></Icon></span>
                     </div>
                 </div>
             }}</UserBox>
 
-            {remark &&<div className="gap-h-10  text">
+            {remark && <div className="gap-h-10  text">
                 {remark}
             </div>}
 
             <div className="flex flex-wrap">
-                {pics.slice(0,9).map(pic=>{
-                    return <div onMouseDown={e=>{
+                {pics.slice(0, 9).map(pic => {
+                    return <div onMouseDown={e => {
                         e.stopPropagation();
-                        useImageViewer(pic,pics);
+                        useImageViewer(pic, pics);
                     }} key={pic.url} className="w-120 h-120 gap-r-10">
                         <img className="w100 h100 obj-center round-8" src={autoImageUrl(pic.url, 250)} />
                     </div>
@@ -176,7 +175,7 @@ export class CardTiZhi extends CardView {
                 <UserAvatars users={like.users}></UserAvatars>
                 <span className="remark f-12 gap-l-10"><Sp text="{name}等{total}人都觉得的很赞" data={{ name: '', total: like.count }}>等觉得的很赞</Sp></span>
             </div>}
-            {this.commentSpread && <div className="gap-h-5" onMouseDown={e=>{
+            {this.commentSpread && <div className="gap-h-5" onMouseDown={e => {
                 e.stopPropagation();
             }}>
                 <CommentListView page={this.dataGrid.page} userid={this.dataGrid.page.user?.id} elementUrl={this.props.item.elementUrl}></CommentListView>

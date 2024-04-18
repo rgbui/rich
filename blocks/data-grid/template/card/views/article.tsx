@@ -1,7 +1,7 @@
 
 
 import React from "react";
-import { CommentSvg, DotsSvg, Edit1Svg, EyeSvg, LikeSvg, TrashSvg, UploadSvg } from "../../../../../component/svgs";
+import { CommentSvg, DotsSvg, EyeSvg, LikeSvg } from "../../../../../component/svgs";
 import { Avatar } from "../../../../../component/view/avator/face";
 import { UserBox } from "../../../../../component/view/avator/user";
 import { Icon } from "../../../../../component/view/icon";
@@ -15,10 +15,8 @@ import { buildPageData } from "../../../../../src/page/common/create";
 import { lst } from "../../../../../i18n/store";
 import { autoImageUrl } from "../../../../../net/element.type";
 import dayjs from "dayjs";
-import { Rect } from "../../../../../src/common/vector/point";
-import { useSelectMenuItem } from "../../../../../component/view/menu";
-import { MenuItemType } from "../../../../../component/view/menu/declare";
-import { BlockRenderRange } from "../../../../../src/block/enum";
+import { MenuItem, MenuItemType } from "../../../../../component/view/menu/declare";
+import { BlockDirective, BlockRenderRange } from "../../../../../src/block/enum";
 import { util } from "../../../../../util/util";
 import { loadPageUrlData } from "../../create";
 import { OptionBackgroundColorList } from "../../../../../extensions/color/data";
@@ -32,7 +30,7 @@ import { Divider } from "../../../../../component/view/grid";
  */
 CardModel('/article', () => ({
     url: '/article',
-    title: lst('文章'),
+    title: lst('图文'),
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridList],
     props: [
@@ -79,7 +77,8 @@ CardModel('/article', () => ({
         { name: 'comment', text: lst('评论'), types: [FieldType.comment] },
         { name: 'browse', text: lst('浏览量'), types: [FieldType.browse] },
     ],
-    async createViews() {
+    async createViews()
+    {
         return [
             {
                 url: BlockUrlConstant.DataGridTable,
@@ -115,7 +114,8 @@ CardModel('/article', () => ({
                 title: '花',
                 snap: await buildPageData([
                     { url: BlockUrlConstant.Image, src: { url: 'https://api-w1.shy.live/ws/img?id=1e1a07d5c333421c9cc885775b0ff17c' } },
-                ], { isTitle: true, isComment: true }),
+                ], { isTitle: true, isComment: true }
+                ),
                 tags: '3'
             },
         ]
@@ -124,58 +124,32 @@ CardModel('/article', () => ({
 
 @CardViewCom('/article')
 export class CardPin extends CardView {
-    async openMenu(event: React.MouseEvent) {
-        var self = this;
-        var ele = event.currentTarget as HTMLElement;
-        event.stopPropagation();
-        var action = async () => {
-            ele.classList.remove('visible');
-            try {
-                var rect = Rect.fromEvent(event);
-                var r = await useSelectMenuItem({ roundArea: rect }, [
-                    { name: 'open', icon: Edit1Svg, text: lst('编辑') },
-                    {
-                        name: 'align',
-                        icon: { name: 'byte', code: 'align-text-both' },
-                        text: lst('对齐'),
-                        type: MenuItemType.select,
-                        options: [
-                            { text: lst('居左'), value: 'left' },
-                            { text: lst('居右'), value: 'right' }
-                        ]
-                    },
-                    { type: MenuItemType.divide },
-                    { name: 'remove', icon: TrashSvg, text: lst('删除') }
-                ], {
-                    async input(item) {
-                        if (item.name == 'align')
-                            await self.dataGrid.onUpdateProps({ 'cardSettings.align': item.value }, { range: BlockRenderRange.self })
-                    },
-                    click(item, event, clickName, mp) {
-
-                    },
-                });
-                if (r) {
-                    if (r.item.name == 'align') {
-                        await self.dataGrid.onUpdateProps({ 'cardSettings.align': r.item.value }, { range: BlockRenderRange.self })
-                    }
-                    else if (r.item.name == 'remove') {
-                        await self.deleteItem();
-                    }
-                    else if (r.item.name == 'open') {
-                        await self.openEdit();
-                    }
-                }
-            }
-            catch (ex) {
-
-            }
-            finally {
-                ele.classList.add('visible')
-            }
+    async onGetMenus(): Promise<MenuItem<string | BlockDirective>[]> {
+        var rs = await super.onGetMenus();
+        var at = rs.findIndex(x => x.name == 'openSlide');
+        var cs = this.cardSettings<{ align: 'left' | 'right' }>({ align: 'left' });
+        if (at > -1) {
+            rs.splice(at + 1, 0,
+                { type: MenuItemType.divide },
+                {
+                    icon: { name: 'byte', code: 'rectangle-one' },
+                    text: lst('图像'),
+                    childs: [
+                        { name: 'align', checkLabel: cs.align == 'left', text: lst('居左'), value: 'left', icon: { name: 'byte', code: 'align-left' } },
+                        { name: 'align', checkLabel: cs.align == 'right', text: lst('居右'), value: 'right', icon: { name: 'byte', code: 'align-right' } }
+                    ]
+                },
+                { type: MenuItemType.divide }
+            )
         }
-        if (this.dataGrid) this.dataGrid.onDataGridTool(async () => await action())
-        else await action();
+        return rs;
+    }
+    async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent, options?: { merge?: boolean; }): Promise<void> {
+        var self = this;
+        if (item.name == 'align') {
+            await self.dataGrid.onUpdateProps({ 'cardSettings.align': item.value }, { range: BlockRenderRange.self })
+        }
+        else await super.onClickContextMenu(item, event, options);
     }
     render() {
         var self = this;
@@ -194,7 +168,7 @@ export class CardPin extends CardView {
         if (cs.align == 'left' || !cs.align) {
             return <div><div onMouseDown={e => this.openEdit()} className={"relative gap-h-10 visible-hover " + (hasPic ? "flex  flex-full  " : "")}>
                 {hasPic && <div className="flex-fixed">
-                    <img className="w-180 h-120 block round  object-center" src={autoImageUrl(pics[0].url, 250)} />
+                    <img style={{ height: 140 }} className="w-200 h-150 block round  object-center" src={autoImageUrl(pics[0].url, 250)} />
                 </div>}
                 <div className={"flex flex-col flex-full " + (hasPic ? "flex-auto gap-l-10" : "")}>
                     <div className="f-16 bold flex-fixed">
@@ -224,7 +198,7 @@ export class CardPin extends CardView {
                         </div>
                     </div>
                 </div>
-                <div className="pos-top-full  flex-end z-2  gap-t-5 r-size-24 r-gap-r-5 r-round r-cursor">
+                <div className="pos-t-r z-2   r-size-24  r-round r-cursor">
                     {this.isCanEdit && <span onMouseDown={e => self.openMenu(e)} className="visible item-hover   flex-center">
                         <Icon size={18} icon={DotsSvg}></Icon>
                     </span>}
@@ -253,9 +227,9 @@ export class CardPin extends CardView {
                     </div>
                 </div>
                 {hasPic && <div className="flex-fixed ">
-                    <img className="w-100 h-60 block round  object-center" src={autoImageUrl(pics[0].url, 250)} />
+                    <img draggable={false} style={{ height: 140 }} className="w-200 h-150 block round  object-center" src={autoImageUrl(pics[0].url, 250)} />
                 </div>}
-                <div className="pos-top pos-right  flex-end z-2  gap-t-5 r-size-24 r-gap-r-5 r-round r-cursor">
+                <div className="pos-t-r  z-2   r-size-24  r-round r-cursor">
                     {this.isCanEdit && <span onMouseDown={e => self.openMenu(e)} className="bg-dark-1 visible text-white   flex-center">
                         <Icon size={18} icon={DotsSvg}></Icon>
                     </span>}

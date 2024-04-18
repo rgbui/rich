@@ -1,5 +1,5 @@
 import React from "react";
-import { DotsSvg, PicSvg, VideoSvg, AudioSvg, FileSvg, DownloadSvg, EditSvg, Edit1Svg, TrashSvg } from "../../../../../component/svgs";
+import { DotsSvg, PicSvg, VideoSvg, AudioSvg, FileSvg, DownloadSvg } from "../../../../../component/svgs";
 import { Icon } from "../../../../../component/view/icon";
 import { ResourceArguments } from "../../../../../extensions/icon/declare";
 import * as Card1 from "../../../../../src/assert/img/card/card8.jpg"
@@ -8,16 +8,15 @@ import { util } from "../../../../../util/util";
 import { FieldType } from "../../../schema/type";
 import { CardModel, CardViewCom } from "../factory/observable";
 import { CardView } from "../view";
-import { useSelectMenuItem } from "../../../../../component/view/menu";
-import { Rect } from "../../../../../src/common/vector/point";
 import { MenuItem, MenuItemType } from "../../../../../component/view/menu/declare";
 import { lst } from "../../../../../i18n/store";
 import { Avatar } from "../../../../../component/view/avator/face";
 import dayjs from "dayjs";
+import { BlockDirective } from "../../../../../src/block/enum";
 
-CardModel('/list/disk',() => ({
+CardModel('/list/disk', () => ({
     url: '/list/disk',
-    title: lst('文件管理'),
+    title: lst('文件'),
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridList],
     props: [
@@ -42,56 +41,37 @@ CardModel('/list/disk',() => ({
 
 @CardViewCom('/list/disk')
 export class CardPin extends CardView {
-    async openMenu(event: React.MouseEvent) {
+    async onGetMenus() {
+        var rs = await super.onGetMenus();
+        var at = rs.findIndex(x => x.name == 'openSlide');
+        if (at > -1) {
+            rs.splice(at + 1, 0,
+                { type: MenuItemType.divide },
+                { name: 'download', text: ('下载文件'), icon: DownloadSvg },
+                { name: 'look', text: ('查看文件'), icon: { name: 'byte', code: 'arrow-right-up' } },
+                { type: MenuItemType.divide }
+            )
+        }
+        return rs;
+    }
+    async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent, options?: { merge?: boolean; }): Promise<void> {
         var self = this;
-        var ele = event.currentTarget as HTMLElement;
-        event.stopPropagation();
-        var rect = Rect.fromEvent(event);
-        var pics = this.getValue<ResourceArguments[]>('file', FieldType.file);
-        var title = this.getValue<string>('title');
-        var action = async () => {
-            ele.classList.remove('visible');
-            try {
-                var rs: MenuItem<string>[] = [
-                    { name: 'download', text: ('下载'), icon: DownloadSvg },
-                    { name: 'edit', text: ('编辑'), disabled: self.isCanEdit ? false : true, icon: Edit1Svg },
-                    { type: MenuItemType.divide },
-                    { name: 'delete', text: ('删除'), disabled: self.isCanEdit ? false : true, icon: TrashSvg }
-                ]
-                if (!self.isCanEdit) {
-                    rs = [
-                        { name: 'download', text: ('下载'), icon: DownloadSvg },
-                    ]
-                }
-                var r = await useSelectMenuItem(
-                    { roundArea: rect },
-                    rs
-                );
-                if (r) {
-                    if (r.item?.name == 'download') {
-                        util.downloadFile(pics[0].url, title || pics[0].filename)
-                    }
-                    else if (r.item?.name == 'edit') {
-                        self.openEdit();
-                    }
-                    else if (r?.item.name == 'delete') {
-                        self.deleteItem();
-                    }
-                }
-            }
-            catch (ex) {
-
-            }
-            finally {
-                ele.classList.add('visible')
+        if (item.name == 'download') {
+            var title = this.getValue<string>('title');
+            var pics = this.getValue<ResourceArguments[]>('file', FieldType.file);
+            await util.downloadFile(pics[0].url, title || pics[0].filename)
+        }
+        else if (item.name == 'look') {
+            var pics = this.getValue<ResourceArguments[]>('file', FieldType.file);
+            if (pics[0]?.url) {
+                window.open(pics[0]?.url)
             }
         }
-        if (this.dataGrid) this.dataGrid.onDataGridTool(async () => await action())
-        else await action();
+        else await super.onClickContextMenu(item, event, options);
     }
     async download(e: React.MouseEvent, url: string, filename: string) {
         e.stopPropagation();
-        util.downloadFile(url, filename)
+        await util.downloadFile(url, filename)
     }
     render() {
         var self = this;
@@ -123,7 +103,7 @@ export class CardPin extends CardView {
             {author && <div className="flex-fixed gap-w-10">
                 <Avatar size={20} userid={author}></Avatar>
             </div>}
-            <div onMouseDown={e => (this.download(e, pics[0]?.url,title|| pics[0]?.filename))} className="flex-fixed remark text-over item-hover size-24 round cursor gap-w-5 flex-center">
+            <div onMouseDown={e => (this.download(e, pics[0]?.url, title || pics[0]?.filename))} className="flex-fixed remark text-over item-hover size-24 round cursor gap-w-5 flex-center">
                 <Icon size={16} icon={DownloadSvg}></Icon>
             </div>
             <div onMouseDown={e => (this.openMenu(e))} className="flex-fixed remark text-over  item-hover size-24 round cursor gap-w-5 flex-center">

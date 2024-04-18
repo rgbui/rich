@@ -6,10 +6,6 @@ import { CardModel, CardViewCom } from "../factory/observable";
 import { CardView } from "../view";
 import { ResourceArguments } from "../../../../../extensions/icon/declare";
 import { autoImageUrl } from "../../../../../net/element.type";
-import { Rect } from "../../../../../src/common/vector/point";
-import { Edit1Svg, UploadSvg, TrashSvg, DotsSvg } from "../../../../../component/svgs";
-import { useSelectMenuItem } from "../../../../../component/view/menu";
-import { MenuItemType } from "../../../../../component/view/menu/declare";
 import { Icon } from "../../../../../component/view/icon";
 import { util } from "../../../../../util/util";
 import { Sp } from "../../../../../i18n/view";
@@ -17,6 +13,10 @@ import { BackgroundColorList } from "../../../../../extensions/color/data";
 import { Avatar } from "../../../../../component/view/avator/face";
 import { UserBox } from "../../../../../component/view/avator/user";
 import { channel } from "../../../../../net/channel";
+import { DotsSvg, UploadSvg } from "../../../../../component/svgs";
+import { MenuItem, MenuItemType } from "../../../../../component/view/menu/declare";
+import { BlockDirective } from "../../../../../src/block/enum";
+import { Rect } from "../../../../../src/common/vector/point";
 
 CardModel('/goods', () => ({
     url: '/goods',
@@ -48,7 +48,7 @@ CardModel('/goods', () => ({
         { name: 'address', text: lst('地址'), types: [FieldType.text] },
     ],
     views: [
-        { url: BlockUrlConstant.DataGridTable, text:lst ('商品'), },
+        { url: BlockUrlConstant.DataGridTable, text: lst('商品'), },
         { autoCreate: true, url: BlockUrlConstant.DataGridGallery, text: lst('商品列表'), },
         { url: BlockUrlConstant.RecordPageView, text: lst('商品详情'), }
     ],
@@ -79,47 +79,31 @@ CardModel('/goods', () => ({
             soldCount: 100,
             address: '浙江',
             tags: ['3'],
-        },
+        }
     ]
 }))
 
 @CardViewCom('/goods')
 export class CardPin extends CardView {
-    async openMenu(event: React.MouseEvent) {
-        var self = this;
-        var ele = event.currentTarget as HTMLElement;
-        event.stopPropagation();
-        var action = async () => {
-            ele.classList.remove('visible');
-            try {
-                var rect = Rect.fromEvent(event);
-                var r = await useSelectMenuItem({ roundArea: rect }, [
-                    { name: 'open', icon: Edit1Svg, text: lst('编辑') },
-                    { name: 'replace', icon: UploadSvg, text: lst('替换') },
-                    { type: MenuItemType.divide },
-                    { name: 'remove', icon: TrashSvg, text: lst('删除') }
-                ]);
-                if (r) {
-                    if (r.item.name == 'replace') {
-                        await self.uploadImage('pic', rect, 'title')
-                    }
-                    else if (r.item.name == 'remove') {
-                        await self.deleteItem();
-                    }
-                    else if (r.item.name == 'open') {
-                        await self.openEdit(event);
-                    }
-                }
-            }
-            catch (ex) {
-
-            }
-            finally {
-                ele.classList.add('visible')
-            }
+    async onGetMenus() {
+        var rs = await super.onGetMenus();
+        var at = rs.findIndex(x => x.name == 'openSlide');
+        if (at > -1) {
+            rs.splice(at + 1, 0,
+                { type: MenuItemType.divide },
+                { name: 'replace', icon: UploadSvg, text: lst('上传商品图片') },
+                { type: MenuItemType.divide }
+            )
         }
-        if (this.dataGrid) this.dataGrid.onDataGridTool(async () => await action())
-        else await action();
+        return rs;
+    }
+    async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent, options?: { merge?: boolean; }): Promise<void> {
+        var self = this;
+        if (item.name == 'replace') {
+            var rect = Rect.fromEvent(event);
+            await self.uploadImage('pic', rect, 'title')
+        }
+        else await super.onClickContextMenu(item, event, options);
     }
     render() {
         var self = this;
@@ -140,7 +124,7 @@ export class CardPin extends CardView {
                 </span>}
             </div>
             {hasPic && <div className="flex-fixed flex-center" >
-                <img className="h-200 w100 block round-16  object-center" src={autoImageUrl(pics[0].url, 250)} />
+                <img className="h-200 w100 block round  object-center" src={autoImageUrl(pics[0].url, 250)} />
             </div>}
             <div className="text-1 rows-2 padding-w-10  gap-h-5 bold break-all">{title}</div>
             <div className="flex padding-w-10 gap-h-5 ">
@@ -148,7 +132,7 @@ export class CardPin extends CardView {
                 <span className="flex-fixed f-14 remark gap-w-10"><Sp text="{count}人付款" data={{ count: soldCount }}>{count}人付款</Sp></span>
                 <span className="flex-fixed f-14 remark">{address}</span>
             </div>
-            {tags.length > 0 && <div className="padding-w-10  gap-h-5 flex">
+            {tags.length > 0 && <div className="padding-w-10  gap-h-5 flex flex-wrap">
                 {tags.map((t, i) => {
                     return <span className="round-16 padding-w-5 border-p h-20 text-p flex-center f-12 gap-r-10" key={i}>{t.text}</span>
                 })}

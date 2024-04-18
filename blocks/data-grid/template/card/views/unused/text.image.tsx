@@ -1,21 +1,21 @@
 import React from "react";
-import { Edit1Svg, TrashSvg, DotsSvg } from "../../../../../component/svgs";
+import { Edit1Svg, TrashSvg, DotsSvg } from "../../../../../../component/svgs";
 
-import { useSelectMenuItem } from "../../../../../component/view/menu";
-import { MenuItemType } from "../../../../../component/view/menu/declare";
-import { ResourceArguments } from "../../../../../extensions/icon/declare";
-import { lst } from "../../../../../i18n/store";
-import { autoImageUrl } from "../../../../../net/element.type";
-import { BlockUrlConstant } from "../../../../../src/block/constant";
-import { BlockRenderRange } from "../../../../../src/block/enum";
-import { Rect } from "../../../../../src/common/vector/point";
-import { buildPageData } from "../../../../../src/page/common/create";
-import { FieldType } from "../../../schema/type";
-import { CardModel, CardViewCom } from "../factory/observable";
-import { CardView } from "../view";
-import { Icon } from "../../../../../component/view/icon";
-import { UserBox } from "../../../../../component/view/avator/user";
-import { util } from "../../../../../util/util";
+import { useSelectMenuItem } from "../../../../../../component/view/menu";
+import { MenuItemType } from "../../../../../../component/view/menu/declare";
+import { ResourceArguments } from "../../../../../../extensions/icon/declare";
+import { lst } from "../../../../../../i18n/store";
+import { autoImageUrl } from "../../../../../../net/element.type";
+import { BlockUrlConstant } from "../../../../../../src/block/constant";
+import { BlockRenderRange } from "../../../../../../src/block/enum";
+import { Rect } from "../../../../../../src/common/vector/point";
+import { buildPageData } from "../../../../../../src/page/common/create";
+import { FieldType } from "../../../../schema/type";
+import { CardModel, CardViewCom } from "../../factory/observable";
+import { CardView } from "../../view";
+import { Icon } from "../../../../../../component/view/icon";
+import { UserBox } from "../../../../../../component/view/avator/user";
+import { util } from "../../../../../../util/util";
 
 
 CardModel('/text/image', () => ({
@@ -48,7 +48,8 @@ CardModel('/text/image', () => ({
         { autoCreate: true, url: BlockUrlConstant.DataGridList, text: ('文章列表'), },
         { url: BlockUrlConstant.RecordPageView, text: ('文章详情'), }
     ],
-    async createDataList() {
+    async createDataList()
+    {
         return [
             {
                 pic: [{ url: 'https://api-w1.shy.live/ws/img?id=1e1a07d5c333421c9cc885775b0ff17c' }],

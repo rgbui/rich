@@ -5,16 +5,14 @@ import { CardView } from "./view";
 
 import "./views/article";
 import "./views/pin";
-import "./views/text.image";
-import "./views/think";
-import "./views/rank";
 import "./views/vote";
 import "./views/disk";
-import "./views/events";
-import "./views/things";
 import "./views/user.card";
 import "./views/goods";
 import "./views/job";
+import "./views/rank";
+import "./views/things";
+
 import { Block } from "../../../../src/block";
 import { FieldConfig } from "../../schema/field";
 

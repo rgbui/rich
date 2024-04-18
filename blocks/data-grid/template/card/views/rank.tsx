@@ -1,15 +1,13 @@
 
 import React from "react";
-import { Edit1Svg, TrashSvg, DotsSvg } from "../../../../../component/svgs";
+import { DotsSvg } from "../../../../../component/svgs";
 import { UserBox } from "../../../../../component/view/avator/user";
-import { useSelectMenuItem } from "../../../../../component/view/menu";
-import { MenuItemType } from "../../../../../component/view/menu/declare";
+import { MenuItem, MenuItemType } from "../../../../../component/view/menu/declare";
 import { ResourceArguments } from "../../../../../extensions/icon/declare";
 import { lst } from "../../../../../i18n/store";
 import { autoImageUrl } from "../../../../../net/element.type";
 import { BlockUrlConstant } from "../../../../../src/block/constant";
-import { BlockRenderRange } from "../../../../../src/block/enum";
-import { Rect } from "../../../../../src/common/vector/point";
+import { BlockDirective, BlockRenderRange } from "../../../../../src/block/enum";
 import { buildPageData } from "../../../../../src/page/common/create";
 import { FieldType } from "../../../schema/type";
 import { CardModel, CardViewCom } from "../factory/observable";
@@ -17,7 +15,7 @@ import { CardView } from "../view";
 import { Icon } from "../../../../../component/view/icon";
 import { util } from "../../../../../util/util";
 
-CardModel('/rank', () => ({
+CardModel('/rank',() => ({
     url: '/rank',
     title: lst('排名'),
     forUrls: [BlockUrlConstant.DataGridList],
@@ -80,75 +78,48 @@ CardModel('/rank', () => ({
 
 @CardViewCom('/rank')
 export class CardPin extends CardView {
-    async openMenu(event: React.MouseEvent) {
-        var self = this;
-        var ele = event.currentTarget as HTMLElement;
-        event.stopPropagation();
-        var cs = this.cardSettings<{ align: 'left' | 'right', size: number }>({ align: 'left', size: 40 });
-        var action = async () => {
-            ele.classList.remove('visible');
-            try {
-                var rect = Rect.fromEvent(event);
-                var r = await useSelectMenuItem({ roundArea: rect }, [
-                    { name: 'open', icon: Edit1Svg, text: lst('编辑') },
-                    { type: MenuItemType.divide },
-                    {
-                        name: 'align',
-                        icon: { name: 'byte', code: 'align-text-both' },
-                        text: lst('对齐'),
-                        type: MenuItemType.select,
-                        value: cs.align,
-                        options: [
-                            { text: lst('居左'), value: 'left' },
-                            { text: lst('居右'), value: 'right' }
-                        ]
-                    },
-                    {
-                        name: 'size',
-                        icon: { name: 'byte', code: 'zoom-in' },
-                        text: lst('大小'),
-                        type: MenuItemType.select,
-                        value: cs.size,
-                        options: [
-                            { text: lst('大'), value: 100 },
-                            { text: lst('中'), value: 70 },
-                            { text: lst('小'), value: 40 }
-                        ]
-                    },
-                    { type: MenuItemType.divide },
-                    { name: 'remove', icon: TrashSvg, text: lst('删除') }
-                ], {
-                    async input(item) {
-                        if (item.name == 'align')
-                            await self.dataGrid.onUpdateProps({ 'cardSettings.align': item.value }, { range: BlockRenderRange.self })
-                        else if (item.name == 'size')
-                            await self.dataGrid.onUpdateProps({ 'cardSettings.size': item.value }, { range: BlockRenderRange.self })
-                    },
-                    click(item, event, clickName, mp) {
+    async onGetMenus(): Promise<MenuItem<string | BlockDirective>[]> {
+        var rs = await super.onGetMenus();
+        var at = rs.findIndex(x => x.name == 'openSlide');
+        if (at > -1)
+        {
+            var cs = this.cardSettings<{ align: 'left' | 'right', size: number }>({ align: 'left', size: 40 });
+            rs.splice(at + 1,
+                0,
+                { type: MenuItemType.divide },
+                {
+                    icon: { name: 'byte', code: 'rectangle-one' },
+                    text: lst('排名位于'),
+                    childs: [
+                        { name: 'align', text: lst('居左'), value: 'left', icon: { name: 'byte', code: 'align-left' } },
+                        { name: 'align', text: lst('居右'), value: 'right', icon: { name: 'byte', code: 'align-right' } }
+                    ]
+                },
+                {
 
-                    },
-                });
-                if (r) {
-                    if (r.item.name == 'align') {
-                        await self.dataGrid.onUpdateProps({ 'cardSettings.align': r.item.value }, { range: BlockRenderRange.self })
-                    }
-                    else if (r.item.name == 'remove') {
-                        await self.deleteItem();
-                    }
-                    else if (r.item.name == 'open') {
-                        await self.openEdit();
-                    }
-                }
-            }
-            catch (ex) {
-
-            }
-            finally {
-                ele.classList.add('visible')
-            }
+                    icon: { name: 'byte', code: 'zoom-in' },
+                    text: lst('大小'),
+                    value: cs.size,
+                    childs: [
+                        { name: 'size', text: lst('大'), value: 100, checkLabel: cs.size == 100 },
+                        { name: 'size', text: lst('中'), value: 70, checkLabel: cs.size == 70 },
+                        { name: 'size', text: lst('小'), value: 40, checkLabel: cs.size == 40 }
+                    ]
+                },
+                { type: MenuItemType.divide }
+            )
         }
-        if (this.dataGrid) this.dataGrid.onDataGridTool(async () => await action())
-        else await action();
+        return rs;
+    }
+    async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent, options?: { merge?: boolean; }): Promise<void> {
+        var self = this;
+        if (item.name == 'align') {
+            await self.dataGrid.onUpdateProps({ 'cardSettings.align': item.value }, { range: BlockRenderRange.self })
+        }
+        else if (item.name == 'size') {
+            await self.dataGrid.onUpdateProps({ 'cardSettings.size': item.value }, { range: BlockRenderRange.self })
+        }
+        else await super.onClickContextMenu(item, event, options);
     }
     render() {
         var self = this;

@@ -2,12 +2,11 @@
 
 
 import React from "react";
-import { DotsSvg, Edit1Svg, LoveFillSvg, LoveSvg, TrashSvg, UploadSvg } from "../../../../../component/svgs";
+import { DotsSvg, LoveFillSvg, LoveSvg, UploadSvg } from "../../../../../component/svgs";
 import { Avatar } from "../../../../../component/view/avator/face";
 import { UserBox } from "../../../../../component/view/avator/user";
 import { Icon } from "../../../../../component/view/icon";
-import { useSelectMenuItem } from "../../../../../component/view/menu";
-import { MenuItemType } from "../../../../../component/view/menu/declare";
+import { MenuItem, MenuItemType } from "../../../../../component/view/menu/declare";
 import { BackgroundColorList } from "../../../../../extensions/color/data";
 import { ResourceArguments } from "../../../../../extensions/icon/declare";
 import { Rect } from "../../../../../src/common/vector/point";
@@ -21,10 +20,10 @@ import { autoImageUrl } from "../../../../../net/element.type";
 import { lst } from "../../../../../i18n/store";
 import { S } from "../../../../../i18n/view";
 import { useUserCard } from "../../../../../component/view/avator/card";
-
+import { BlockDirective } from "../../../../../src/block/enum";
 CardModel('/card/pinterest', () => ({
     url: '/card/pinterest',
-    title: lst('瀑布流'),
+    title: lst('图片库'),
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridGallery],
     props: [
@@ -52,41 +51,25 @@ CardModel('/card/pinterest', () => ({
 
 @CardViewCom('/card/pinterest')
 export class CardPin extends CardView {
-    async openMenu(event: React.MouseEvent) {
-        var self = this;
-        var ele = event.currentTarget as HTMLElement;
-        event.stopPropagation();
-        var action = async () => {
-            ele.classList.remove('visible');
-            try {
-                var rect = Rect.fromEvent(event);
-                var r = await useSelectMenuItem({ roundArea: rect }, [
-                    { name: 'open', icon: Edit1Svg, text: lst('编辑') },
-                    { name: 'replace', icon: UploadSvg, text: lst('替换') },
-                    { type: MenuItemType.divide },
-                    { name: 'remove', icon: TrashSvg, text: lst('删除') }
-                ]);
-                if (r) {
-                    if (r.item.name == 'replace') {
-                        await self.uploadImage('pic', rect, 'title')
-                    }
-                    else if (r.item.name == 'remove') {
-                        await self.deleteItem();
-                    }
-                    else if (r.item.name == 'open') {
-                        await self.openEdit(event);
-                    }
-                }
-            }
-            catch (ex) {
-
-            }
-            finally {
-                ele.classList.add('visible')
-            }
+    async onGetMenus(): Promise<MenuItem<string | BlockDirective>[]> {
+        var rs = await super.onGetMenus();
+        var at = rs.findIndex(x => x.name == 'openSlide');
+        if (at > -1) {
+            rs.splice(at + 1, 0,
+                { type: MenuItemType.divide },
+                { name: 'replace', icon: UploadSvg, text: lst('替换') },
+                { type: MenuItemType.divide }
+            )
         }
-        if (this.dataGrid) this.dataGrid.onDataGridTool(async () => await action())
-        else await action();
+        return rs;
+    }
+    async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent, options?: { merge?: boolean; }): Promise<void> {
+        var self = this;
+        if (item.name == 'replace') {
+            var rect = Rect.fromEvent(event);
+            await self.uploadImage('pic', rect, 'title')
+        }
+        else await super.onClickContextMenu(item, event, options);
     }
     render() {
         var self = this;
