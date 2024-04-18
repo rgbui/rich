@@ -30,10 +30,10 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
         this.block = block;
         this.forceUpdate();
     }
-    getItems(): MenuItem[] {
+    getItems() {
         var self = this;
         var cms = CardFactory.getCardModels(this.schema);
-        var baseItems: MenuItem[] = [
+        var baseItems: MenuItem[]=[
             {
                 value: this.block.schemaView.text,
                 name: 'viewText',
@@ -45,6 +45,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 text: lst('视图类型'),
                 icon: LoopSvg,
                 childs: [
+                    { text: lst('数据表视图'), type: MenuItemType.text, helpUrl: window.shyConfig?.isUS ? "https://help.shy.red/page/44#p6dtzzCsUHUrhyfNdrfkXh" : "https://help.shy.live/page/288#eNk3NZZyXWMCgMEMCyJRcG" },
                     ...getSchemaViews().map(v => {
                         return {
                             name: "toggleView",
@@ -54,39 +55,34 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                             checkLabel: !this.block.getCardUrl() && this.block.url == v.url
                         }
                     }),
-                    {
-                        text: lst('数据视图'),
-                        icon: { name: 'bytedance-icon', code: 'application-two' },
-                        childs: [
-                            { text: lst('选择数据视图'), type: MenuItemType.text },
-                            ...cms.map(c => {
-                                return {
-                                    type: MenuItemType.custom,
-                                    name: 'dataView',
-                                    value: c.model.url,
-                                    render(item, view) {
-                                        return <div className="flex-full relative item-hover round padding-w-10 padding-h-5">
-                                            <div className="flex-fixed">
-                                                <img src={c.model.image} className="obj-center round h-40 w-80" />
-                                            </div>
-                                            <div className="flex-auto gap-l-10 f-14">
-                                                <div>{c.model.title}</div>
-                                                <div className="remark">{c.model.remark}</div>
-                                            </div>
-                                            {self.block.getCardUrl() == c.model.url && <div className="pos pos-right pos-t-5 pos-r-5 size-20 cursor round ">
-                                                <Icon size={16} icon={CheckSvg}></Icon>
-                                            </div>}
-                                        </div>
-                                    }
-                                }
-                            }),
-                            {
-                                type: MenuItemType.custom,
-                                render(item, view) {
-                                    return <div className="flex padding-w-10 padding-h-3"><span className="text-1">{lst('AI生成数据视图')}</span><span className="op-3 gap-l-5 bg-p text-white padding-w-5 round l-20">coming soon</span></div>
-                                }
+                    { type: MenuItemType.gap },
+                    { text: lst('数据表模板'), type: MenuItemType.text, helpUrl: window.shyConfig?.isUS ? "https://help.shy.red/page/45#uQnBXa9C8oL491JK26T2QK" : 'https://help.shy.live/page/1870#3Fgw3UNGQErf8tZdJnhjru' },
+                    ...cms.map(c => {
+                        return {
+                            type: MenuItemType.custom,
+                            name: 'dataView',
+                            value: c.model.url,
+                            render(item, view) {
+                                return <div className="flex-full relative item-hover round padding-w-10 padding-h-5">
+                                    <div className="flex-fixed">
+                                        <img src={c.model.image} className="obj-center round h-40 w-80" />
+                                    </div>
+                                    <div className="flex-auto gap-l-10 f-14">
+                                        <div>{c.model.title}</div>
+                                        <div className="remark">{c.model.remark}</div>
+                                    </div>
+                                    {self.block.getCardUrl() == c.model.url && <div className="pos pos-right pos-t-5 pos-r-5 size-20 cursor round ">
+                                        <Icon size={16} icon={CheckSvg}></Icon>
+                                    </div>}
+                                </div>
                             }
-                        ]
+                        }
+                    }),
+                    {
+                        type: MenuItemType.custom,
+                        render(item, view) {
+                            return <div className="flex padding-w-10 padding-h-3"><span className="remark f-14">{lst('AI生成数据视图')}</span><span className="op-3 gap-l-5 bg-p text-white padding-w-5 round l-20">coming soon</span></div>
+                        }
                     }
                 ]
             },

@@ -5,7 +5,6 @@ import {
     CollectionCalendarSvg,
     CollectionGallerySvg,
     CollectionListSvg,
-    CollectTableSvg,
     EmojiSvg,
     EyeSvg,
     LikeSvg,
@@ -126,11 +125,11 @@ export function GetFieldTypeSvg(type: FieldType): IconValueType {
 export function getSchemaViewIcon(view: TableSchemaView): IconValueType {
     if (view?.icon) return lodash.cloneDeep(view.icon);
     var url = view?.url;
-    if (!url) return CollectTableSvg
+    if (!url) return { name: 'byte', code: 'table' }
     if (url.indexOf('?') > 0) url = url.substring(0, url.indexOf('?'))
     switch (url) {
         case '/data-grid/table':
-            return CollectTableSvg
+            return { name: 'byte', code: 'table' };
         case '/data-grid/board':
             return CollectionBoardSvg
         case '/data-grid/gallery':
@@ -143,10 +142,9 @@ export function getSchemaViewIcon(view: TableSchemaView): IconValueType {
         case '/data-grid/statistic/value':
             return { name: 'bytedance-icon', code: 'chart-pie-one' }
         default:
-            return CollectTableSvg
+            return { name: 'byte', code: 'table' }
     }
 }
-
 export function getChartViews() {
     var menus = [
         {

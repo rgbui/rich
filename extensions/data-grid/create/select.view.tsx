@@ -39,7 +39,7 @@ export class DataGridCreate extends EventsComponent {
             <Tab change={e => {
                 this.emit('changeIndex')
             }}>
-                <Tab.Page item={<Tip placement='bottom' text={'新建数据表'}><Icon size={18} icon={CollectTableSvg}></Icon></Tip>}>
+                <Tab.Page item={<Tip placement='bottom' text={'新建数据表'}><Icon size={18} icon={{name:'byte',code:'table'}}></Icon></Tip>}>
                     {this.renderCreate()}
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' text={'已创建的数据表'}><Icon size={18} icon={{ name: 'byte', code: 'history' }}></Icon></Tip>}>
@@ -125,7 +125,7 @@ export class DataGridCreate extends EventsComponent {
                     </div>
                 })}
             </div>
-            <div className="border-top  padding-w-10  flex-end">
+            <div className="border-top-light  padding-w-10  flex-end">
                 <Button className="gap-h-5" onMouseDown={e => this.onSave()}>确定</Button>
             </div>
         </div>
@@ -157,23 +157,27 @@ export class DataGridCreate extends EventsComponent {
         }
     }
     renderCreate() {
-        return <div className="gap-10">
-            <div><Input placeholder={lst('数据表名称')} value={this.inputViewText}
+        return <div className=" gap-t-10">
+            <div className="gap-w-10"><Input placeholder={lst('数据表名称')} value={this.inputViewText}
                 onChange={e => {
                     this.inputViewText = e
                 }}
                 onEnter={e => {
                     this.inputViewText = e;
                 }} ></Input></div>
-            {this.renderCms()}
+            <div className="gap-w-10 gap-b-10">{this.renderCms()}</div>
             {this.source == 'dataView' && <div onMouseDown={e => {
                 this.source = 'createView';
                 this.forceUpdate(() => {
                     this.emit('update')
                 });
-            }} className="flex f-12 gap-t-10 item-hover-light-focus round"><span className="flex-fixed">已选择数据表模板</span><span className="flex-auto">:{this.viewText}</span><ToolTip overlay={<S>移除选择的数据表模板</S>}><span className="flex-fixed size-20 flex-center cursor item-hover round" ><Icon size={8} icon={CloseSvg}></Icon></span></ToolTip></div>}
-            <div className="gap-h-10"><Button block onMouseDown={e => this.onSave()}><S>创建</S></Button></div>
-            <div><HelpText url={window.shyConfig?.isUS ? "https://help.shy.red/page/38#3qfPYqnTJCwwQ6P9zYx8Q8" : 'https://help.shy.live/page/285#xcmSsiEKkYt3pgKVwyDHxJ'}>了解如何创建数据表</HelpText></div>
+            }} className="flex f-12 gap-w-10 gap-h-5 item-hover-light-focus round"><span className="flex-fixed">已选择数据表模板</span><span className="flex-auto">:{this.viewText}</span><ToolTip overlay={<S>移除选择的数据表模板</S>}><span className="flex-fixed size-20 flex-center cursor item-hover round" ><Icon size={8} icon={CloseSvg}></Icon></span></ToolTip></div>}
+            <div className="flex border-top-light  padding-w-10">
+                <div className="flex-auto"><HelpText url={window.shyConfig?.isUS ? "https://help.shy.red/page/38#3qfPYqnTJCwwQ6P9zYx8Q8" : 'https://help.shy.live/page/285#xcmSsiEKkYt3pgKVwyDHxJ'}>了解如何创建数据表</HelpText></div>
+                <div className="flex-fixed gap-h-5">
+                    <Button onMouseDown={e => this.onSave()}><S>创建</S></Button>
+                </div>
+            </div>
         </div>
     }
     input: Input;

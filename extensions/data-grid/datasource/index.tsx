@@ -109,7 +109,7 @@ export class DataSourceView extends EventsComponent {
                             name: 'name',
                             type: MenuItemType.inputTitleAndIcon,
                             value: rd.text,
-                            icon: lodash.cloneDeep(rd.icon) || CollectTableSvg,
+                            icon: lodash.cloneDeep(rd.icon) || { name: 'byte', code: 'table' },
                             text: lst('编辑表名'),
                             data: rd,
                         },
@@ -120,7 +120,7 @@ export class DataSourceView extends EventsComponent {
                     name: 'name',
                     type: MenuItemType.inputTitleAndIcon,
                     value: rd.text,
-                    icon: lodash.cloneDeep(rd.icon) || CollectTableSvg,
+                    icon: lodash.cloneDeep(rd.icon) || { name: 'byte', code: 'table' },
                     placeholder: lst('编辑表名'),
                     data: rd,
                 })
@@ -158,7 +158,7 @@ export class DataSourceView extends EventsComponent {
                     text: rd.text,
                     value: rd.id,
                     remark: util.showTime(rd.createDate),
-                    icon: (rd as any).icon || CollectTableSvg,
+                    icon: (rd as any).icon || { name: 'byte', code: 'table' },
                     checkLabel: rd.id == this.currentTableId,
                     forceHasChilds: true,
                     childs: cs
@@ -170,7 +170,7 @@ export class DataSourceView extends EventsComponent {
                     text: rd.text,
                     value: rd.id,
                     // label: util.showTime(rd.createDate),
-                    icon: (rd as any).icon || CollectTableSvg,
+                    icon: (rd as any).icon || { name: 'byte', code: 'table' },
                     checkLabel: rd.id == this.currentTableId,
                 })
             }

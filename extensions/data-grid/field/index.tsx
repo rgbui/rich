@@ -67,7 +67,7 @@ export class TableFieldView extends EventsComponent {
             <div className="gap-h-10 padding-w-14">
                 <div className="flex gap-b-5 remark f-12"><S>关联表格</S></div>
                 <div className="flex h-26 border-light  round item-hover-light cursor" onClick={e => this.openSelectRelationTable(e)}>
-                    <span className="flex-center  size-24  flex-fix cursor  round "><Icon size={14} icon={rt?.icon || CollectTableSvg}></Icon></span>
+                    <span className="flex-center  size-24  flex-fix cursor  round "><Icon size={14} icon={rt?.icon || {name:'byte',code:'table'}}></Icon></span>
                     <span className="flex-auto ">{rt?.text}</span>
                     <span className="flex-fixed size-24 round  flex-center">
                         <Icon size={14} icon={ChevronDownSvg}></Icon>
@@ -166,7 +166,7 @@ export class TableFieldView extends EventsComponent {
                 <div className="flex gap-b-5 remark f-12"><S>关联表格</S></div>
                 <div onClick={e => selectRelationTable(e)}
                     className="flex h-26  border-light  round item-hover-light cursor">
-                    <span className="flex-center  size-24  flex-fix cursor  round "><Icon size={14} icon={tt?.icon || CollectTableSvg}></Icon></span>
+                    <span className="flex-center  size-24  flex-fix cursor  round "><Icon size={14} icon={tt?.icon || {name:'byte',code:'table'}}></Icon></span>
                     <span className="flex-auto ">{tt?.text}</span>
                     <span className="flex-fixed size-24 round  flex-center">
                         <Icon size={14} icon={ChevronDownSvg}></Icon>

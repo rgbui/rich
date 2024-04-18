@@ -5,7 +5,7 @@ import { GalleryType, OuterPic } from "../extensions/image/declare";
 import { StatusCode } from "./status.code";
 import { UserAction } from "../src/history/action";
 import { RobotInfo, UserBasic, UserStatus } from "../types/user";
-import {IconArguments, ResourceArguments } from "../extensions/icon/declare";
+import { ResourceArguments } from "../extensions/icon/declare";
 import { PayFeatureCheck } from "../component/pay";
 import { AtomPermission } from "../src/page/permission";
 import { WsConsumeType } from "./ai/cost";

@@ -49,7 +49,7 @@ export class TableStoreListView extends BlockView<TableStoreList>{
         if (this.block.isLoading) return <></>
         if (this.block.isLoadingData) return <></>
         return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus padding-h-5 padding-w-10 cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
-            <span className="size-24 flex-center remark"><Icon size={16} icon={CollectTableSvg}></Icon></span>
+            <span className="size-24 flex-center remark"><Icon size={16} icon={{ name: 'byte', code: 'table' }}></Icon></span>
             <span className="remark"><S>创建数据表格</S></span>
         </div>
     }

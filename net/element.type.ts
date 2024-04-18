@@ -263,9 +263,10 @@ export function autoImageUrl(url: string, width?: 50 | 120 | 250 | 500 | 900|120
     return newUrl;
 }
 import "./twemoji.js";
-export function getEmoji(code: string) {
+export function getEmoji(code: string)
+{
     if (!UA.isMacOs) {
-        return (window as any).twemoji.parse(code, {
+        return (window as any).twemoji.parse(code,{
             folder: 'svg',
             base: 'https://resources.shy.live/emoji/',
             ext: '.svg'

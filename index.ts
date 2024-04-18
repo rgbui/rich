@@ -10,5 +10,5 @@ import "./extensions/declare";
 import "./src/page/index";
 
 
-import { testExpressIsCorrect } from "./extensions/data-grid/formula/express/test";
-testExpressIsCorrect()
+// import { testExpressIsCorrect } from "./extensions/data-grid/formula/express/test";
+// testExpressIsCorrect()

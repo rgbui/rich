@@ -282,7 +282,7 @@ export class DataGridFields extends EventsComponent {
                     return <div key={pro.name} className="flex gap-h-5 padding-h-3 f-14 padding-w-5 gap-w-5 item-hover round cursor text-1">
                         <span className="flex-fixed w-100 flex-end flex remark">
                             <Tip overlay={lst('卡片属性') + ":" + searchFieldItems(pro.types).map(c => c.text).join(",")}><span className="flex remark">
-                                <Icon size={20} icon={{ name: 'byte', code: 'pound-sign' }}></Icon>
+                                {/*<Icon size={20} icon={{ name: 'byte', code: 'pound-sign' }}></Icon> */}
                                 <span className="text-over">{pro.text}</span>
                             </span></Tip>
                         </span>

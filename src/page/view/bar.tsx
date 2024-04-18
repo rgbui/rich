@@ -84,7 +84,7 @@ export class PageBar extends React.Component<{ page: Page }>{
                     <span className="gap-l-5">{getPageText(this.props.page?.openPageData?.pre)}</span>
                 </span>
                     <span className="flex-center desk-no-drag "><Icon className={'text-1'} icon={ChevronRightSvg} size={20}></Icon></span></>}
-                <span onMouseDown={e => { this.onRenamePage(e, { text: this.props.page?.formRowData?.title, icon: this.props.page?.formRowData?.icon, defaultIcon: CollectTableSvg }) }} className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5">
+                <span onMouseDown={e => { this.onRenamePage(e, { text: this.props.page?.formRowData?.title, icon: this.props.page?.formRowData?.icon, defaultIcon: {name:'byte',code:'table'} }) }} className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5">
                     <Icon className={'text-1'} size={18} icon={this.props.page?.formRowData?.icon || PageSvg}></Icon>
                     <span className="gap-l-5">{this.props.page?.formRowData?.title || lst('新页面')}</span>
                 </span>

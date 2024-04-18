@@ -38,8 +38,9 @@ export class FieldOption extends OriginField {
     }
 }
 @view('/field/option')
-export class FieldTextView extends OriginFileView<FieldOption>{
+export class FieldTextView extends OriginFileView<FieldOption> {
     renderFieldValue() {
+        if (!this.block.field) return <></>
         var fc: FieldConfig = this.block.field.config;
         var vs = util.covertToArray(this.block.value);
         var ops = fc?.options ? fc.options.filter(g => vs.includes(g.value)) : undefined;

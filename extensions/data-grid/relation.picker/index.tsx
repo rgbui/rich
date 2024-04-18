@@ -58,7 +58,7 @@ class RelationPicker extends EventsComponent {
                 <div className="gap-w-10 flex gap-h-10">
                     <span><S>在</S></span>
                     <span className="flex-fixed flex item-hover item-hover-light-focus round padding-w-5 padding-h-3">
-                        <Icon size={16} icon={this.relationSchema.icon || CollectTableSvg}></Icon>
+                        <Icon size={16} icon={this.relationSchema.icon || {name:'byte',code:'table'}}></Icon>
                         <span>{this.relationSchema.text}</span>
                     </span>
                     <span><S>中选择</S></span>

@@ -79,7 +79,7 @@ export class MenuItemView extends React.Component<{
     }
     async openSelectMenu(item: MenuItem, event: React.MouseEvent) {
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) },
-            item.options.map(op => {
+            item.options.map(op=>{
                 return {
                     ...op,
                     checkLabel: item.value == op.value
@@ -161,13 +161,16 @@ export class MenuItemView extends React.Component<{
                 {(item.childs && item.childs.length > 0 || item.forceHasChilds) && <Icon size={18} className={'shy-menu-box-item-option-spread remark'} icon={ChevronRightSvg}></Icon>}
             </div></ToolTip>}
             {(item.type == MenuItemType.custom) && <ToolTip overlay={item.overlay} placement={'right'} ><div className={'shy-menu-box-item-custom' + (item.disabled == true ? " disabled" : "")}
-                onMouseDown={e => this.select(item, e.nativeEvent)}>
+                onMouseDown={e => { if (typeof item.value != 'undefined') this.select(item, e.nativeEvent) }}>
                 {item.render && item.render(item, this)}
             </div></ToolTip>}
             {item.type == MenuItemType.divide && <div className='shy-menu-box-item-divide'></div>}
             {item.type == MenuItemType.gap && <div className="h-10"></div>}
             {item.type == MenuItemType.text && <div className='shy-menu-box-item-text flex'>
-                <span className="flex-auto">{item.text}</span>
+                <span className="flex-auto flex">
+                   <span>{item.text}</span>
+                   {item.helpUrl && <span className="flex-fixed h-20 flex"><HelpText onMouseDown={e => e.stopPropagation()} url={item.helpUrl}>{item.helpText}</HelpText></span>}
+                </span>
                 {item.label && <label className="flex-fixed">{item.label}</label>}
             </div>}
             {item.type == MenuItemType.user && <div onMouseDown={e => this.select(item, e.nativeEvent)} className="shy-menu-box-item-user"><Avatar userid={item.userid} showName size={item.size || 30}></Avatar></div>}
@@ -221,7 +224,7 @@ export class MenuItemView extends React.Component<{
             </div>}
             {item.type == MenuItemType.buttonOptions && <div className="flex flex-wrap padding-l-5">
                 {item.options.map((op, index) => {
-                    return <ToolTip key={index} overlay={op.overlay}><div  onMouseDown={e => {
+                    return <ToolTip key={index} overlay={op.overlay}><div onMouseDown={e => {
                         item.value = op.value;
                         this.select(item, e.nativeEvent)
                     }} style={{ flexGrow: 1 }} className="item-hover padding-h-5 round gap-r-5 cursor">

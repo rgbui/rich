@@ -294,7 +294,7 @@ export class AddRecordsCommandView extends FlowCommandView<AddRecordsCommand>{
         return <div>
             {this.renderHead(<Icon size={18} icon={PlusSvg}></Icon>,
                 <><S>添加数据至</S>
-                    {this.command.schema && <span className="item-hover remark  padding-w-5 round cursor flex" onMouseDown={e => this.openSelectTable(e)}><Icon size={16} icon={this.command.schema.icon || CollectTableSvg}></Icon>{this.command.schema?.text}</span>}
+                    {this.command.schema && <span className="item-hover remark  padding-w-5 round cursor flex" onMouseDown={e => this.openSelectTable(e)}><Icon size={16} icon={this.command.schema.icon || {name:'byte',code:'table'}}></Icon>{this.command.schema?.text}</span>}
                     {!this.command.schema && <span className="item-hover remark  padding-w-5 round cursor " onMouseDown={e => this.openSelectTable(e)}><S>选择数据表</S></span>}
                 </>)}
             <div>
@@ -448,7 +448,7 @@ export class EditRecordsCommandView extends FlowCommandView<EditRecordsCommand> 
         return <div>
             {this.renderHead(<Icon size={18} icon={Edit1Svg}></Icon>,
                 <><S>编辑数据</S>
-                    {this.command.schema && <span className="item-hover remark  padding-w-5 round cursor flex" onMouseDown={e => this.openSelectTable(e)}><Icon size={16} className={'gap-r-3'} icon={this.command.schema.icon || CollectTableSvg}></Icon>{this.command.schema?.text}</span>}
+                    {this.command.schema && <span className="item-hover remark  padding-w-5 round cursor flex" onMouseDown={e => this.openSelectTable(e)}><Icon size={16} className={'gap-r-3'} icon={this.command.schema.icon || {name:'byte',code:'table'}}></Icon>{this.command.schema?.text}</span>}
                     {!this.command.schema && <span className="item-hover remark  padding-w-5 round cursor " onMouseDown={e => this.openSelectTable(e)}><S>选择数据表</S></span>}
                 </>)}
             <div>

@@ -81,11 +81,12 @@ export class OriginField extends Block {
     }
 }
 
-export class OriginFileView<T extends OriginField> extends BlockView<T>{
+export class OriginFileView<T extends OriginField> extends BlockView<T> {
     renderFieldValue() {
         return <></>
     }
-    renderView(): React.ReactNode {
+    renderView() {
+        if (!this.block.viewField) return <></>
         var isCard = [
             BlockUrlConstant.DataGridBoard,
             BlockUrlConstant.DataGridGallery].includes(this.block.dataGrid.url as any);

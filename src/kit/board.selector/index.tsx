@@ -114,7 +114,7 @@ export class BoardSelector extends React.Component<{
                 className={this.openSelector == BoardToolOperator.table ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.table, e) }}>
                 {/* <Icon icon={UploadSvg}></Icon> */}
-                <Icon size={18} icon={CollectTableSvg}></Icon>
+                <Icon size={18} icon={{name:'byte',code:'table'}}></Icon>
             </div></Tip>
 
             <Tip text='思维导图'><div

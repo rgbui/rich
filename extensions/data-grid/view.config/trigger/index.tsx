@@ -18,7 +18,6 @@ import { getFieldFilterUrl } from "../../../../blocks/data-grid/schema/filter";
 import { Divider } from "../../../../component/view/grid";
 import { HelpText } from "../../../../component/view/text";
 
-
 export class DataGridTrigger extends EventsComponent {
     get schema() {
         return this.block?.schema;
@@ -55,7 +54,7 @@ export class DataGridTrigger extends EventsComponent {
         return <div className="f-14 ">
             <div className="max-h-300 overflow-y">
                 <div className="h-30 flex padding-w-10 gap-w-5 gap-h-10 text-1 f-14">
-                    <S text="拖动视图触发器至页面">拖动视图触发器至页面(管理数据表)</S>
+                    <S text="拖动触发器至页面">拖动下列触发器至页面管理数据表</S>
                 </div>
                 <div className="remark f-12 padding-w-10 gap-w-5 gap-t-10"><S text='查询按钮'>查询按钮</S></div>
                 <div>

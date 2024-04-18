@@ -9,7 +9,7 @@ import { lst } from "../../i18n/store";
 import { parseElementUrl } from "../element.type";
 import lodash from "lodash";
 import { LinkPageItem } from "../../src/page/declare";
-import { WsConsumeType, getAiDefaultModel } from "./cost";
+import {  getAiDefaultModel } from "./cost";
 
 /**
  *  获取robot wikit基于ask的相关上下文参考资料
@@ -96,9 +96,6 @@ export async function getWsContext(prompt: string, minRank?: number) {
         }
     }
 }
-
-
-
 
 
 

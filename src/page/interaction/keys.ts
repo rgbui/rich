@@ -8,10 +8,10 @@ import { MoveSelectBlocks } from "../../kit/write/keydown";
 export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
     keyboardPlate.listener(kt => UA.isMacOs && kt.isMeta(KeyboardCode.Z) || !UA.isMacOs && kt.isCtrl(KeyboardCode.Z), (event, kt) => {
         page.onUndo();
-    });
+    },undefined,'undo',true);
     keyboardPlate.listener(kt => UA.isMacOs && kt.isMeta(KeyboardCode.Y) || !UA.isMacOs && kt.isCtrl(KeyboardCode.Y), (event, kt) => {
         page.onRedo();
-    });
+    },undefined,'redo',true);
     keyboardPlate.listener(kt => kt.is(KeyboardCode.ArrowDown), (event, kt) => {
         if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
             MoveSelectBlocks(page.kit.writer, page.kit.anchorCursor.currentSelectHandleBlocks, event)
@@ -55,24 +55,28 @@ export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
         }
     });
     keyboardPlate.listener(kt => kt.is(KeyboardCode.Enter), (event, kt) => {
+      
         if (page.requireSelectLayout && page.isCanEdit) {
+            console.log('xxxxxx');
             var list = Array.from(page.view.el.querySelectorAll('.shy-page-view-template-picker-items a'));
             var aindex = list.findIndex(c => c.classList.contains('hover'));
-            var link = list[aindex] as HTMLAnchorElement;
-            var rect = Rect.fromEle(link);
-            // 创建一个mousedown事件对象
-            var ev = new MouseEvent("mousedown", {
-                view: window,
-                bubbles: true,
-                cancelable: true,
-                button: 0, // 表示鼠标左键
-                // buttons: 1, // 表示鼠标左键被按下
-                clientX: rect.middleCenter.x, // 鼠标指针相对于客户端区域的X坐标
-                clientY: rect.middleCenter.y, // 鼠标指针相对于客户端区域的Y坐标
-                // 可以根据需要添加其他属性
-            });
-            // 触发mousedown事件
-            link.dispatchEvent(ev);
+            if (aindex > -1) {
+                var link = list[aindex] as HTMLAnchorElement;
+                var rect = Rect.fromEle(link);
+                // 创建一个mousedown事件对象
+                var ev = new MouseEvent("mousedown", {
+                    view: window,
+                    bubbles: true,
+                    cancelable: true,
+                    button: 0, // 表示鼠标左键
+                    // buttons: 1, // 表示鼠标左键被按下
+                    clientX: rect.middleCenter.x, // 鼠标指针相对于客户端区域的X坐标
+                    clientY: rect.middleCenter.y, // 鼠标指针相对于客户端区域的Y坐标
+                    // 可以根据需要添加其他属性
+                });
+                // 触发mousedown事件
+                link.dispatchEvent(ev);
+            }
         }
     });
     keyboardPlate.listener(kt => {

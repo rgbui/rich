@@ -259,7 +259,7 @@ export class KeyboardPlate {
         keydown: (event: KeyboardEvent, kbp: KeyboardPlate) => void,
         keyup?: (event: KeyboardEvent, kbp: KeyboardPlate) => void, key?: any,
         isBlocked?: boolean) {
-        this.listeners.push({ predict, keydown: keydown, keyup, key, isBlocked });
+        this.listeners.push({ predict, keydown: keydown, keyup, key, isBlocked: isBlocked ? true : false });
     }
     off(key: any) {
         this.listeners.removeAll(g => g.key === key);

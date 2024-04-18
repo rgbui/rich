@@ -57,7 +57,7 @@ export interface LinkPageItem<T = {}> {
     },
     share?: 'net' | 'nas' | 'local';
     createDate?: Date,
-    creater?:string,
+    creater?: string,
     editDate?: Date,
     editor?: string,
     mime?: any,
@@ -223,7 +223,7 @@ export function getPageIcon(item: LinkPageItem, defaultIcon?: SvgrComponent) {
     }
     else if (item.pageType == PageLayoutType.db) {
         // return { name: 'byte', code: 'table-file' } as IconValueType
-        return CollectTableSvg
+        return { name: 'byte', code: 'table' } as IconValueType
     }
     return defaultIcon || PageSvg
 }

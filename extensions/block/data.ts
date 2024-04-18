@@ -104,7 +104,7 @@ export function getBlockSelectData() {
         {
             text: lst('数据'),
             childs: [
-                { text: lst('数据表格'), icon: CollectTableSvg, url: "/data-grid/table", label: lst('/数据'), labels: ['/data', lst('/表格'), '/grid', '/gridview', '/table', '/bg', '/biaoge', '/shuju', '/sj', '/shujubiaoge', '/sjbg'] },
+                { text: lst('数据表格'), icon: {name:'byte',code:'table'}, url: "/data-grid/table", label: lst('/数据'), labels: ['/data', lst('/表格'), '/grid', '/gridview', '/table', '/bg', '/biaoge', '/shuju', '/sj', '/shujubiaoge', '/sjbg'] },
 
                 //网盘 图片库 音乐库 视频库
             ]
