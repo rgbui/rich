@@ -10,6 +10,7 @@ import { CardView } from "../view";
 import { Icon } from "../../../../../component/view/icon";
 import { BackgroundColorList } from "../../../../../extensions/color/data";
 import * as Card9 from "../../../../../src/assert/img/card/card9.png";
+import lodash from "lodash";
 
 /***
  * 
@@ -162,6 +163,10 @@ export class CardJob extends CardView {
         var companySize = this.getValue<{ text: string, color: string }[]>('companySize', FieldType.option);
         var jobTitle = this.getValue<string>('jobTitle');
         var companyCategory = this.getValue<string>('companyCategory');
+        var ts = [
+            companyCategory, companySize[0]?.text
+        ];
+        lodash.remove(ts, (v) => !v);
         return <div
             onMouseDown={e => self.openEdit(e)}
             className="relative visible-hover  padding-t-10 round bg-white border-light">
@@ -186,7 +191,7 @@ export class CardJob extends CardView {
                     <span className="flex-auto text-overflow f-12 remark">{company}</span>
                 </div>
                 <div className="flex-fixed flex f-12 remark">
-                    <span className="gap-r-3">{[companyCategory, companySize[0]?.text].join("/")}</span>
+                    <span className="gap-r-3">{ts.join("/")}</span>
                     <span>{city}</span>
                 </div>
             </div>
