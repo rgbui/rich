@@ -51,16 +51,16 @@ class FormFieldFileView extends BlockView<FormFieldFile> {
         var text = lst('添加文件');
         if (this.block.field?.type == FieldType.video) text = lst('添加视频')
         else if (this.block.field?.type == FieldType.audio) text = lst('添加音频')
-        return <div className={this.block.fieldType == 'doc' ? "gap-w-10" : ""}>
-            {files.length > 0 && <div className="gap-b-5 item-hover-light-focus round">
-                {files.map((img, i) => {
-                    return <div className="padding-h-2 padding-w-5 gap-w-5   item-hover-light   round cursor flex  visible-hover" key={i}>
-                        <a className="link f-14 flex-auto flex" download={img.url} href={img.url}>
-                            <span className="flex-fixed item-hover round size-24 remark flex-center"><Icon size={18} icon={FileSvg}></Icon></span>
+        return <div className={this.block.fieldType == 'doc' ? "" : ""}>
+            {files.length > 0 && <div className="gap-b-5 padding-w-10  round item-hover  round">
+                {files.map((img,i)=>{
+                    return <div className="h-30  cursor flex  visible-hover" key={i}>
+                        <a className="link f-14 flex-fixed flex padding-w-3 round item-hover-light-focus" download={img.url} href={img.url}>
+                            <span className="flex-fixed round  text-1 flex-center"><Icon size={16} icon={FileSvg}></Icon></span>
                             <span className="flex-fixed text-overflow gap-w-5">{img.filename}</span>
-                            <em className="flex-fixed remark">{util.byteToString(img.size)}</em>
                         </a>
-                        {this.block.isCanEdit() && this.block.fieldType != 'doc-detail' && <span onClick={e => this.deleteImage(img)} className="gap-l-10 flex-fixed visible size-20 round cursor flex-center item-hover remark"><Icon size={14} icon={CloseSvg}></Icon></span>}
+                        <span className="flex-auto"></span>
+                        {this.block.isCanEdit() && this.block.fieldType != 'doc-detail' && <span onClick={e => this.deleteImage(img)} className="flex-fixed visible size-20 round cursor flex-center item-hover remark "><Icon size={14} icon={CloseSvg}></Icon></span>}
                     </div>
                 })}
             </div>}

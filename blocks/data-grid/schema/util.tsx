@@ -7,6 +7,7 @@ import {
     CollectionListSvg,
     EmojiSvg,
     EyeSvg,
+    FileSvg,
     LikeSvg,
     LoveSvg,
     OpposeSvg,
@@ -16,7 +17,6 @@ import {
     TypesCreateAtSvg,
     TypesDateSvg,
     TypesEmailSvg,
-    TypesFileSvg,
     TypesFormulaSvg,
     TypesLinkSvg,
     TypesMultipleSelectSvg,
@@ -55,7 +55,7 @@ export function GetFieldTypeSvg(type: FieldType): IconValueType {
         case FieldType.options:
             return TypesMultipleSelectSvg
         case FieldType.file:
-            return TypesFileSvg
+            return FileSvg
         case FieldType.image:
             return PicSvg
         case FieldType.audio:
