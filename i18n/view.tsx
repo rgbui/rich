@@ -3,7 +3,8 @@ import { ls, lst } from "./store";
 import lodash from "lodash";
 
 export class S extends React.Component<{ text?: string, data?: Record<string, any>, children: React.ReactText }>{
-    render(): React.ReactNode {
+    render()
+    {
         var text = this.props.children.toString().trim();
         if (this.props.text) {
             text = lst(this.props.text, this.props.data || text || undefined);

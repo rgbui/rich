@@ -92,7 +92,7 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
     }
     open(c) {
         this.color = c.color;
-
+        if (!this.color) this.color = '#000';
         this.forceUpdate()
     }
     renderFontColors() {

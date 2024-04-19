@@ -38,6 +38,7 @@ export class MenuPanel<T> extends EventsComponent {
     visible: boolean = false;
     private options: { height?: number, width?: number, overflow?: 'auto' | 'visible' } = {};
     onClose(e: React.MouseEvent) {
+       
         if (e) {
             e.stopPropagation();
             e.preventDefault();
@@ -123,17 +124,17 @@ export async function useSelectMenuItem<T = string>(pos: PopoverPosition, menus:
     range?: HTMLElement
 }) {
     var menuPanel = await Singleton<MenuPanel<T>>(MenuPanel, options?.nickName);
+    menuPanel.open(pos, menus, options);
+    menuPanel.only('input', item => {
+        if (options?.input) options?.input(item);
+    });
+    menuPanel.only('click', (item, e, name, mp) => {
+        if (options.click) options.click(item, e, name, mp)
+    })
     return new Promise((resolve: (data: { item: MenuItem<T>, event: MouseEvent }) => void, reject) => {
-        menuPanel.open(pos, menus, options);
         menuPanel.only('select', (item, event) => {
             resolve({ item, event });
         });
-        menuPanel.only('input', item => {
-            if (options?.input) options?.input(item);
-        });
-        menuPanel.only('click', (item, e, name, mp) => {
-            if (options.click) options.click(item, e, name, mp)
-        })
         menuPanel.only('error', (error: Error) => {
             reject(error);
         });

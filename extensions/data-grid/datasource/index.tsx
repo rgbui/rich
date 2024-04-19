@@ -18,7 +18,7 @@ import { useCreateDataGridView } from "../create/view";
 import { Point } from "../../../src/common/vector/point";
 
 export class DataSourceView extends EventsComponent {
-    render(): ReactNode {
+    render() {
         var self = this;
         var saveTable = lodash.debounce(async (schema: TableSchema, options?: { text?: string, icon?: IconValueType }) => {
             if (options) {
@@ -65,9 +65,8 @@ export class DataSourceView extends EventsComponent {
                     { schema: sh }
                 );
                 if (dg) {
-
                     var sv = await sh.createSchemaView(dg.text, dg.url);
-                    self.emit('save', {
+                    self.emit('save',{
                         tableId: sh.id,
                         viewUrl: sv.view.url,
                         type: 'view',

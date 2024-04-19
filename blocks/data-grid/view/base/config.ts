@@ -113,6 +113,14 @@ export class DataGridViewConfig {
                             var itemView = self.schema.listViews.find(c => c.id == item.value);
                             if (item.value == view?.id) {
                                 rs.push(...[
+                                    {
+                                        name: 'name',
+                                        type: MenuItemType.inputTitleAndIcon,
+                                        icon: itemView.icon,
+                                        value: item.text,
+                                        text: lst('编辑视图名'),
+                                    },
+                                    { type: MenuItemType.divide },
                                     { name: 'duplicate', icon: DuplicateSvg, text: lst('复制') }
                                 ])
                             }
@@ -129,15 +137,24 @@ export class DataGridViewConfig {
                                     { name: 'delete', disabled: item.value == view?.id, icon: TrashSvg, text: lst('删除') }
                                 ])
                             }
-                            var rg = await useSelectMenuItem({ roundArea: Rect.fromEvent(ev) },
-                                rs,
-                                { nickName: 'second' }
-                            );
+                            var rg;
+                            try {
+                                rg = await useSelectMenuItem({ roundArea: Rect.fromEvent(ev) },
+                                    rs,
+                                    { nickName: "three" }
+                                );
+                            }
+                            catch (ex) {
+                                console.log(ex);
+                            }
                             if (rg?.item) {
                                 if (rg?.item.name == 'delete') {
                                     self.schema.onSchemaOperate([{ name: 'removeSchemaView', id: item.value }])
                                     items.arrayJsonRemove('childs', g => g === item);
                                     mp.updateItems(items);
+                                }
+                                else if (rg?.item.name == 'duplicate') {
+                                    self.onCopySchemaView();
                                 }
                             }
                             var props: Record<string, any> = {};

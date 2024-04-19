@@ -207,6 +207,14 @@ export class DataGridTab extends Block {
                                 var rs: MenuItem<BlockDirective | string>[] = [];
                                 if (item.value == view?.id) {
                                     rs.push(...[
+                                        {
+                                            name: 'name',
+                                            type: MenuItemType.inputTitleAndIcon,
+                                            icon: getSchemaViewIcon(view),
+                                            value: item.text,
+                                            text: lst('编辑视图名'),
+                                        },
+                                        { type: MenuItemType.divide },
                                         { name: 'duplicate', icon: DuplicateSvg, text: lst('复制') }
                                     ])
                                 }
@@ -231,6 +239,9 @@ export class DataGridTab extends Block {
                                         self.dataGridBlock.schema.onSchemaOperate([{ name: 'removeSchemaView', id: item.value }])
                                         items.arrayJsonRemove('childs', g => g === item);
                                         mp.updateItems(items);
+                                    }
+                                    else if (rg?.item.name == 'duplicate') {
+                                        self.dataGridBlock.onCopySchemaView();
                                     }
                                 }
                                 var props: Record<string, any> = {};
