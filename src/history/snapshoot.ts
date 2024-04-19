@@ -126,11 +126,11 @@ export class HistorySnapshoot extends Events {
                 var rs = options?.disabledSyncBlock ? [] : bs.map(b => b.closest(x => x.syncBlockId ? true : false) || null);
                 var bs: Block[] = [];
                 rs.forEach(r => {
-                    if (bs.some(x => x.id == r.id)) return;
-                    bs.push(r);
+                    if (r && bs.some(x => x.id == r.id)) return;
+                    if (r) bs.push(r);
                 })
                 this.action.syncBlocks = bs;
-                if (this.action.syncBlocks.some(s => s === null)) {
+                if (rs.some(s => s === null)) {
                     this.action.syncPage = true;
                 }
                 lodash.remove(this.action.syncBlocks, g => g === null);
