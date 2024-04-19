@@ -19,6 +19,9 @@ export class FieldText extends OriginField {
             this.page.kit.anchorCursor.onFocusBlockAnchor(this, { last: true })
         }, 50);
     }
+    get isDisabledInputLine() {
+        return true;
+    }
 }
 
 @view('/field/title')

@@ -31,7 +31,7 @@ export class FieldRelation extends OriginField {
     async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
         if (this.checkEdit() === false) return;
         var fn = async () => {
-            var r = await useRelationPickData({ roundArea:Rect.fromEle(this.el.parentNode as HTMLElement) }, {
+            var r = await useRelationPickData({ dist: 0, roundArea: Rect.fromEle(this.el.parentNode as HTMLElement) }, {
                 field: this.viewField.field,
                 relationDatas: this.relationList,
                 isMultiple: this.viewField.field.config?.isMultiple,
@@ -50,7 +50,7 @@ export class FieldRelation extends OriginField {
     }
 }
 @view('/field/relation')
-export class FieldRelationView extends OriginFileView<FieldRelation>{
+export class FieldRelationView extends OriginFileView<FieldRelation> {
     renderList() {
         var rs = this.block.relationSchema;
         var f = rs?.fields?.find(g => g.type == FieldType.title);
@@ -99,7 +99,7 @@ export class FieldRollup extends OriginField {
 }
 
 @view('/field/rollup')
-export class FieldRollupView extends OriginFileView<FieldRollup>{
+export class FieldRollupView extends OriginFileView<FieldRollup> {
     renderFieldValue() {
         var str: string = '';
         var list = this.block.relationList;

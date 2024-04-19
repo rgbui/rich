@@ -20,6 +20,7 @@ export class FieldOption extends OriginField {
         var fn = async () => {
             var fc: FieldConfig = this.field.config || {};
             var op = await useTableStoreOption({
+                dist:0,
                 roundArea: rect
             }, this.value,
                 {
