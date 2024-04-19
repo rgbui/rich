@@ -94,6 +94,7 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
     }
     open(c) {
         this.color = c.color;
+        if (!this.color) this.color = '#000';
         this.forceUpdate()
     }
     renderFontColors() {
