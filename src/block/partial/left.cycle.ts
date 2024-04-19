@@ -309,14 +309,24 @@ export class Block$LifeCycle {
         if (!options?.emptyChilds == true) {
             for (let b in this.blocks) {
                 if (this.allBlockKeys.some(s => s == b)) {
-                    json.blocks[b] = await this.blocks[b].asyncMap(async x => await x.get(args));
+                    try {
+                        json.blocks[b] = await this.blocks[b].asyncMap(async x => await x.get(args));
+                    }
+                    catch (ex) {
+                        console.error(ex);
+                    }
                     lodash.remove(json.blocks[b], g => typeof g == 'undefined' || lodash.isNull(g));
                 }
             }
         }
         if (Array.isArray(this.__props)) {
             await this.__props.eachAsync(async pro => {
-                json[pro] = await this.clonePropData(pro, this[pro]);
+                try {
+                    json[pro] = await this.clonePropData(pro, this[pro]);
+                }
+                catch (ex) {
+                    console.error(ex);
+                }
             })
         }
         return json;

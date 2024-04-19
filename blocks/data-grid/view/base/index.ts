@@ -160,8 +160,14 @@ export class DataGridView extends Block {
         if (Array.isArray(this.__props)) {
             var ss = super.getCurrentProps();
             await this.__props.eachAsync(async pro => {
-                if (ss.includes(pro) || this.viewProps.includes(pro))
-                    json[pro] = await this.clonePropData(pro, this[pro]);
+                if (ss.includes(pro) || this.viewProps.includes(pro)) {
+                    try {
+                        json[pro] = await this.clonePropData(pro, this[pro]);
+                    }
+                    catch (ex) {
+                        console.error(ex);
+                    }
+                }
             })
         }
         return json;
