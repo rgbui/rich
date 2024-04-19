@@ -54,16 +54,21 @@ export class LatestOrHot extends Block {
             {
                 type: MenuItemType.help,
                 url: window.shyConfig?.isUS ? "https://shy.red/ws/help/page/51" : "https://shy.live/ws/help/page/1879",
-                text: lst('了解如何使用最新或最热块')
+                text: lst('了解如何使用最新最热块')
             }
         )
         return rs;
     }
     getVisibleHandleCursorPoint(): Point {
-        var rect = Rect.fromEle(this.el.querySelector('.flex') as HTMLElement);
-        if (rect) {
-            return rect.leftMiddle;
+        var el = this.el.querySelector('.sy-block-latest') as HTMLElement;
+        if (el) {
+            el = el.children[0] as HTMLElement;
         }
+        if (!el) {
+            el = this.el;
+        }
+        var r = Rect.fromEle(el)
+        return r.leftMiddle;
     }
 }
 
@@ -75,7 +80,7 @@ export class LatestOrHotView extends BlockView<LatestOrHot>{
         else if (this.block.align == 'right') style.justifyContent = 'flex-end';
         else style.justifyContent = 'flex-start';
         return <div style={this.block.visibleStyle}>
-            <div className="flex" style={style}>
+            <div className="flex sy-block-latest" style={style}>
                 <SelectButtons
                     value={this.block.lasteOrHost}
                     options={[

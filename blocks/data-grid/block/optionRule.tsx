@@ -15,6 +15,7 @@ import { SelectButtons } from "../../../component/view/button/select";
 import { util } from "../../../util/util";
 import { S } from "../../../i18n/view";
 import { IconArguments } from "../../../extensions/icon/declare";
+import { Point, Rect } from "../../../src/common/vector/point";
 
 @url('/data-grid/OptionRule')
 export class OptionDefineRule extends Block {
@@ -82,10 +83,14 @@ export class OptionDefineRule extends Block {
         rs.splice(at - 1, 0, ...items);
         lodash.remove(rs, c => c.name == 'color');
         var dat = rs.findIndex(c => c.name == BlockDirective.delete);
-        rs.splice(dat + 1, 0,
+        rs.splice(dat + 1,
+            0,
             { type: MenuItemType.divide },
             { type: MenuItemType.help, url: window.shyConfig?.isUS ? "https://help.shy.red/page/50" : "https://shy.live/ws/help/page/1878", text: lst('了解数据表规则查询按钮') }
         )
+        if (this.format != 'listLine') {
+            lodash.remove(rs, c => c.name == 'text-center')
+        }
         return rs;
     }
     async onClickContextMenu(item, event) {
@@ -132,51 +137,59 @@ export class OptionDefineRule extends Block {
         }
         return fs;
     }
+    getVisibleHandleCursorPoint(): Point {
+        var el = this.el.querySelector('.sy-option-rule') as HTMLElement;
+        if (el) {
+            el = el.children[0] as HTMLElement;
+        }
+        if (!el) {
+            el = this.el;
+        }
+        var r = Rect.fromEle(el)
+        return r.leftMiddle;
+    }
 }
 
 @view('/data-grid/OptionRule')
-export class OptionDefineRuleView extends BlockView<OptionDefineRule>{
+export class OptionDefineRuleView extends BlockView<OptionDefineRule> {
     renderOptions() {
         if (this.block.format == 'select') {
-            return <div>
-                <SelectBox
-                    inline
-                    multiple={this.block.isMultiple}
-                    value={this.block.isMultiple ? this.block.values : (this.block.values.length == 0 ? "" : this.block.values[0] || "")}
-                    border
-                    options={[
-                        { text: lst('全部'), value: '' },
-                        ...this.block.optionRules.map(c => {
-                            return {
-                                text: c.text,
-                                value: c.id,
-                                icon: c.icon || undefined
-                            }
-                        })]}
-                    onChange={e => {
-                        this.block.onSetRule(e);
-                    }}></SelectBox>
-            </div>
+            return <SelectBox
+                inline
+                multiple={this.block.isMultiple}
+                value={this.block.isMultiple ? this.block.values : (this.block.values.length == 0 ? "" : this.block.values[0] || "")}
+                border
+                options={[
+                    { text: lst('全部'), value: '' },
+                    ...this.block.optionRules.map(c => {
+                        return {
+                            text: c.text,
+                            value: c.id,
+                            icon: c.icon || undefined
+                        }
+                    })]}
+                onChange={e => {
+                    this.block.onSetRule(e);
+                }}></SelectBox>
+
         }
         else if (this.block.format == 'listLine') {
-            return <div className="inline">
-                <SelectButtons gap={10}
-                    multiple={this.block.isMultiple}
-                    value={this.block.isMultiple ? this.block.values : (this.block.values.length == 0 ? "" : (this.block.values[0] || ""))}
-                    options={[
-                        { text: lst('全部'), value: '' },
-                        ...this.block.optionRules.map(c => {
-                            return {
-                                text: c.text,
-                                value: c.id,
-                                icon: c.icon || undefined
-                            }
-                        })]}
-                    onChange={e => {
-                        this.block.onSetRule(e);
-                    }}
-                ></SelectButtons>
-            </div>
+            return <SelectButtons gap={10}
+                multiple={this.block.isMultiple}
+                value={this.block.isMultiple ? this.block.values : (this.block.values.length == 0 ? "" : (this.block.values[0] || ""))}
+                options={[
+                    { text: lst('全部'), value: '' },
+                    ...this.block.optionRules.map(c => {
+                        return {
+                            text: c.text,
+                            value: c.id,
+                            icon: c.icon || undefined
+                        }
+                    })]}
+                onChange={e => {
+                    this.block.onSetRule(e);
+                }}
+            ></SelectButtons>
         }
     }
     renderView() {
@@ -189,7 +202,7 @@ export class OptionDefineRuleView extends BlockView<OptionDefineRule>{
                 <span className="size-24 round gap-l-5 flex-center item-hover"><Icon size={16} icon={{ name: 'bytedance-icon', code: 'association' }}></Icon></span>
                 <span ><S>添加查询规则</S></span>
             </div>}
-            {this.block.optionRules.length > 0 && <div style={style}>
+            {this.block.optionRules.length > 0 && <div className="flex sy-option-rule" style={style}>
                 {this.renderOptions()}
             </div>}
         </div>
