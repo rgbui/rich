@@ -24,6 +24,7 @@ export class DataGridCreateView extends EventsComponent {
     url: string = '/data-grid/table';
     source: 'tableView' | 'dataView' = 'tableView';
     viewText: string = '';
+    viewMayBeText: string = '';
     render() {
         return <div className="w-300">
             <div className="gap-w-10 gap-h-10"><Input placeholder={lst('数据表视图')} value={this.viewText} onChange={e => { this.viewText = e }}  ></Input></div>
@@ -56,6 +57,7 @@ export class DataGridCreateView extends EventsComponent {
                 return <div className="flex h-30 padding-w-10 item-hover round cursor" onMouseDown={e => {
                     this.url = v.url;
                     this.source = 'tableView';
+                    this.viewMayBeText = v.text;
                     this.forceUpdate();
                 }} key={v.url}>
                     <span className="flex-fixed size-20 flex-center">
@@ -78,6 +80,7 @@ export class DataGridCreateView extends EventsComponent {
                     return <div key={i} onMouseDown={e => {
                         self.url = c.model.url;
                         self.source = 'dataView';
+                        self.viewMayBeText = c.model.title;
                         self.forceUpdate()
                     }} className="flex-full relative item-hover round padding-w-10 padding-h-5">
                         <div className="flex-fixed">
@@ -117,7 +120,7 @@ export class DataGridCreateView extends EventsComponent {
     onSave() {
         var self = this;
         self.emit('save', {
-            text: self.viewText,
+            text: self.viewText || self.viewMayBeText,
             url: self.url,
             source: self.source
         })
@@ -142,7 +145,6 @@ export async function useCreateDataGridView(pos: PopoverPosition, options?: { sc
         source?: DataGridCreateView['source']
     }) => void, reject) => {
         fv.only('save', (value) => {
-            console.log('save value', value);
             popover.close();
             resolve(value);
         });
