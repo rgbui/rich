@@ -70,6 +70,7 @@ export class TableStoreView extends BlockView<TableStore> {
         event.stopPropagation();
         var head = self.block.el.querySelector('.sy-dg-table-head');
         var cs = Array.from(head.querySelectorAll('.sy-dg-table-head-th')) as HTMLElement[];
+        var newFields = self.block.fields.map(f => f.clone());
         MouseDragger<{ colIndex: number, colWidth: number, colEles: HTMLElement[] }>({
             event,
             cursor: 'col-resize',
@@ -100,11 +101,11 @@ export class TableStoreView extends BlockView<TableStore> {
                 var tableHeadRect = Rect.fromEle(self.block.el.querySelector('.sy-dg-table-head') as HTMLElement);
                 self.subline.style.height = (tableHeadRect.height) + 'px';
                 if (isend) {
-                    var newFields = self.block.fields.map(f => f.clone());
                     var col = newFields[data.colIndex];
                     col.colWidth = w;
                     self.isMoveLine = false;
                     self.subline.style.display = 'none';
+                    console.log('newFields', newFields, w);
                     self.block.onChangeFields(self.block.fields, newFields);
                 }
             },
