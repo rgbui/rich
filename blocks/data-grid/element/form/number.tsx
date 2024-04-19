@@ -35,7 +35,7 @@ class FieldTextView extends BlockView<FieldText>{
         return <input
             className={"padding-w-10 round sy-doc-field-input-value item-hover"}
             type='text'
-            placeholder={lst('请输入') + this.block.field?.text}
+            placeholder={lst('输入') + this.block.field?.text}
             data-shy-page-no-focus={true}
             defaultValue={lodash.isNumber(this.block.value) ? this.block.value.toString() : ''}
             onInput={e => { this.block.inputChange((e.target as HTMLInputElement).value) }}

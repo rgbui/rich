@@ -59,7 +59,7 @@ class FieldTextView extends BlockView<FieldText> {
             {this.block.inputType == 'input' && <input
                 className={this.block.fieldType == 'doc-add' ? "sy-form-field-input-value" : "padding-w-10 round sy-doc-field-input-value item-hover"}
                 type='text'
-                placeholder={lst('请输入') + this.block.field?.text}
+                placeholder={lst('输入') + this.block.field?.text}
                 data-shy-page-no-focus={true}
                 defaultValue={this.block.value}
                 onInput={e => { this.block.inputChange((e.target as HTMLInputElement).value) }}
@@ -67,7 +67,7 @@ class FieldTextView extends BlockView<FieldText> {
             />}
             {this.block.inputType == 'textarea' && <textarea
                 className="sy-form-field-input-value"
-                placeholder={lst('请输入') + this.block.field?.text}
+                placeholder={lst('输入') + this.block.field?.text}
                 data-shy-page-no-focus={true}
                 defaultValue={this.block.value}
                 style={{ height: 80 }}

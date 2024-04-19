@@ -62,7 +62,10 @@ class FieldTextView extends BlockView<FieldText> {
             if (hover)
                 hover.classList.add('item-hover-light-focus')
             var fc: FieldConfig = this.block.field.config;
-            var op = await useTableStoreOption({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) },
+            var op = await useTableStoreOption({
+                dist: 3,
+                roundArea: Rect.fromEle(event.currentTarget as HTMLElement)
+            },
                 this.block.value,
                 {
                     multiple: fc?.isMultiple ? true : false,

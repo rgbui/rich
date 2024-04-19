@@ -220,7 +220,7 @@ export function FieldView(props: { block: OriginFormField, className?: string | 
                     ><S>必填</S></em>}
                 </div>
                 {block.allowRemark && <div className="sy-form-field-remark remark f-12">
-                    <TextArea plain placeholderEmptyVisible={true} placeholder={lst("请输入说明介绍")} prop="fieldRemark" block={block} ></TextArea>
+                    <TextArea plain placeholderEmptyVisible={true} placeholder={lst("输入说明介绍")} prop="fieldRemark" block={block} ></TextArea>
                 </div>}
                 <div className="sy-form-field-control gap-t-5">{props.children}</div>
             </div>}
