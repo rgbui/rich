@@ -13,7 +13,8 @@ export class SelectButtons extends React.Component<{
     style?: CSSProperties,
     size?: 'small' | 'normal' | 'large',
     gap?: number,
-    theme?: 'default' | 'ghost'
+    theme?: 'default' | 'ghost',
+    block?: boolean
 }> {
     render() {
         var vs = util.covertToArray(this.props.value);
@@ -36,7 +37,7 @@ export class SelectButtons extends React.Component<{
             }
         }
         if (typeof this.props.gap == 'number') {
-            return <div className="flex flex-wrap f-14" style={this.props.style}>
+            return <div className={"flex-wrap f-14" + (this.props.block ? " flex" : " flex-inline")} style={this.props.style}>
                 {this.props.options.map((g, i) => {
                     var classList: string[] = ['flex', 'round', 'cursor'];
                     if (vs.includes(g.value)) classList.push(...['text-white', 'bg-primary'])
@@ -62,7 +63,7 @@ export class SelectButtons extends React.Component<{
             var bgStyle: CSSProperties = {
                 backgroundColor: 'rgba(55, 53, 47, 0.06)',
             };
-            return <div className="flex round h-30 padding-w-5" style={bgStyle}>
+            return <div className={"round h-30 padding-w-5 " + (this.props.block ? "flex" : " flex-inline")} style={bgStyle}>
                 {this.props.options.map((g, i) => {
                     var classList: string[] = ['cursor', 'flex-center', 'f-14', 'padding-w-12', 'h-24'];
                     if (vs.includes(g.value)) {
@@ -79,7 +80,7 @@ export class SelectButtons extends React.Component<{
                 })}
             </div>
         }
-        return <div className="flex flex-wrap border round f-14" style={this.props.style}>
+        return <div className={"flex-wrap border round f-14 " + (this.props.block ? " flex" : " flex-inline")} style={this.props.style}>
             {this.props.options.map((g, i) => {
                 var classList: string[] = ['cursor'];
                 if (vs.includes(g.value)) {
