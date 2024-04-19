@@ -60,6 +60,8 @@ export class DataGridView extends Block {
     @prop()
     noTitle: boolean = false;
     @prop()
+    breakRow: boolean = false;
+    @prop()
     openRecordSource: Page['openSource'] = 'dialog';
     @prop()
     openRecordViewId: string = '';

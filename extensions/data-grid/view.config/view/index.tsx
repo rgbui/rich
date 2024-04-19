@@ -33,7 +33,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
     getItems() {
         var self = this;
         var cms = CardFactory.getCardModels(this.schema);
-        var baseItems: MenuItem[]=[
+        var baseItems: MenuItem[] = [
             {
                 value: this.block.schemaView.text,
                 name: 'viewText',
@@ -161,8 +161,9 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
             if (!this.block.isDefineViewTemplate)
                 baseItems.splice(baseItems.length, 0, ...[
                     { type: MenuItemType.divide },
+                    // { text: lst('自动换行'), type: MenuItemType.switch, checked: (this.block as TableStore).breakRow, name: 'breakRow' },
                     { text: lst('显示行号'), type: MenuItemType.switch, checked: (this.block as TableStore).showRowNum, name: 'showRowNum' },
-                    { text: lst('批量选择行'), helpText: lst('了解批量选择行'), helpUrl: window.shyConfig?.isUS ? "https://help.shy.red/page/44#2FEd5Tdmxzq89YYsBekSYE" : "https://help.shy.live/page/288#sGSUeWF8nocf2ZaTqsQK2F", type: MenuItemType.switch, checked: (this.block as TableStore).checkRow == 'checkbox', name: 'checkRow' }
+                    // { text: lst('批量选择行'), helpText: lst('了解批量选择行'), helpUrl: window.shyConfig?.isUS ? "https://help.shy.red/page/44#2FEd5Tdmxzq89YYsBekSYE" : "https://help.shy.live/page/288#sGSUeWF8nocf2ZaTqsQK2F", type: MenuItemType.switch, checked: (this.block as TableStore).checkRow == 'checkbox', name: 'checkRow' }
                 ])
         }
         else if (this.block.url == BlockUrlConstant.DataGridList) {
@@ -274,6 +275,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
             else if (item.name == 'noTitle') self.block.onUpdateProps({ noTitle: !item.checked }, { range: BlockRenderRange.self });
             else if (['openRecordViewId', 'openRecordSource', 'createRecordSource'].includes(item.name)) self.block.onUpdateProps({ [item.name]: item.value }, {})
             else if (item.name == 'showRowNum') self.block.onShowRowNum(item.checked);
+            else if (item.name == 'breakRow') self.block.onBreakRow(item.checked);
             else if (item.name == 'checkRow') {
                 await self.block.onShowCheck(item.checked ? "checkbox" : 'none');
             }

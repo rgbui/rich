@@ -492,6 +492,16 @@ export class DataGridViewOperator {
             this.forceUpdate();
         })
     }
+    async onBreakRow(this: DataGridView, visible: boolean) {
+        await this.page.onAction(ActionDirective.onDataGridShowRowNum, async () => {
+            this.page.addBlockChange(this);
+            // if (visible == true) await this.arrayPush({ prop: 'fields', data: new ViewField({ type: 'rowNum', colWidth: 80, text: "No." }, this.schema), at: 0 })
+            // else await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.type == 'rowNum' });
+            await this.updateProps({ breakRow: visible });
+            await this.createItem();
+            this.forceUpdate();
+        })
+    }
     async onShowCheck(this: DataGridView, value: DataGridView['checkRow']) {
         var newFields = this.fields.map(f => f.clone());
         if (value == 'checkbox' && newFields.some(s => s.type == 'check')) return
