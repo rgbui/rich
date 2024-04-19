@@ -6,7 +6,6 @@ import {
     CollectionGallerySvg,
     CollectionListSvg,
     EmojiSvg,
-    EyeSvg,
     FileSvg,
     LikeSvg,
     LoveSvg,
@@ -108,7 +107,7 @@ export function GetFieldTypeSvg(type: FieldType): IconValueType {
         case FieldType.title:
             return TypesTitleSvg
         case FieldType.browse:
-            return EyeSvg;
+            return { name: 'byte', code: 'preview-open' };
         case FieldType.id:
             return { name: 'byte', code: 'adobe-indesign' }
         case FieldType.parentId:

@@ -253,7 +253,7 @@ export class DataGridViewOperator {
     async onDataGridChangeView(this: DataGridView, url: string) {
         await this.page.onAction('onDataGridChangeView', async () => {
             await this.dataGridChangeView(url);
-        })
+        }, { disabledSyncBlock: true })
     }
     async onDataGridChangeViewByTemplate(this: DataGridView, url: string) {
         await this.page.onAction('onDataGridChangeViewByTemplate', async () => {
@@ -285,7 +285,7 @@ export class DataGridViewOperator {
                 }
             });
             await this.dataGridChangeView(viewUrl, viewProps);
-        })
+        }, { disabledSyncBlock: true })
     }
     async dataGridChangeView(this: DataGridView, url: string, viewProps?: Record<string, any>) {
         var dt = this.dataGridTab;
@@ -367,7 +367,7 @@ export class DataGridViewOperator {
         if (this.syncBlockId != viewId) {
             await this.page.onAction(ActionDirective.onDataGridTurnView, async () => {
                 await this.dataGridTrunView(viewId, viewProps, schemaId);
-            })
+            }, { disabledSyncBlock: true })
         }
     }
     async dataGridTrunView(this: DataGridView, viewId: string, viewProps?: Record<string, any>, schemaId?: string) {
