@@ -159,10 +159,11 @@ export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: Re
         var block = aa.block;
         var rowBlock = block.closest(x => !x.isLine);
         var gs = block.isLine ? block.nexts : [];
-        var rest, text;
+        var rest: string, text: string;
         if (aa.isText) {
             rest = aa.textContent.slice(0, offset);
             text = aa.textContent.slice(offset);
+            text = text.trimLeft();
         }
         else if (aa.isSolid && offset == 0) {
             gs.push(block);
