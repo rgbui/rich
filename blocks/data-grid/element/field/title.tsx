@@ -63,8 +63,9 @@ export class FieldTextView extends OriginFileView<FieldText> {
                 BlockUrlConstant.DataGridList
             ].includes(this.block.dataGrid.url as any)) && <span ref={e => this.span = e}
                 style={{
-                    position: this.block.dataGrid.url != BlockUrlConstant.DataGridList ? "absolute" : 'static',
-                    marginLeft: this.block.dataGrid.url != BlockUrlConstant.DataGridList ? undefined : 10
+                    position: 'absolute',
+                    right: this.block.dataGrid.url != BlockUrlConstant.DataGridList ? undefined : -40,
+                    transform: 'translateY(-2px)'
                 }}
                 onClick={e => this.block.openPage()}
                 className="sy-field-title-button visible flex-center f-12 text-1 border-light  round padding-w-5 padding-h-1 cursor">

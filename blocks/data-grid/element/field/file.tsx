@@ -5,7 +5,7 @@ import { url, view } from "../../../../src/block/factory/observable";
 import { Rect } from "../../../../src/common/vector/point";
 import { util } from "../../../../util/util";
 import { OriginField, OriginFileView } from "./origin.field";
-import { DownloadSvg } from "../../../../component/svgs";
+import { DownloadSvg, FileSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import { Tip } from "../../../../component/view/tooltip/tip";
 
@@ -19,7 +19,7 @@ export class FieldFile extends OriginField {
             vs = vs.slice(0, 1);
         }
         var fn = async () => {
-            var rs = await useDataGridFileViewer({dist:0, roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
+            var rs = await useDataGridFileViewer({ dist: 0, roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
                 mime: 'file',
                 resources: vs,
                 isMultiple: this.field?.config?.isMultiple ? true : false
@@ -34,17 +34,19 @@ export class FieldFile extends OriginField {
         else await fn()
     }
 }
+
 @view('/field/file')
-export class FieldFileView extends OriginFileView<FieldFile>{
+export class FieldFileView extends OriginFileView<FieldFile> {
     down(img: ResourceArguments, e: React.MouseEvent) {
         e.stopPropagation();
         util.downloadFile(img.url, img.filename)
     }
     renderFiles(images: ResourceArguments[]) {
-        return images.map((img,i)=>{
-            return <div className="min-h-30 gap-b-5 padding-w-5 flex item-hover-focus round " key={i}>
-                <span className="cursor text-1 text-overflow flex-auto" >{img.filename}</span>
-                <Tip text={'下载文件'}><span onMouseDown={e => { this.down(img, e) }} className="gap-l-5 size-20 visible flex-center item-hover round cursor flex-fixed"><Icon size={14} icon={DownloadSvg}></Icon></span></Tip>
+        return images.map((img, i) => {
+            return <div className={" padding-w-3 text-1 flex item-hover-light-focus round " + (i == images.length - 1 ? "" : "gap-b-5")} key={i}>
+                <span className="flex-fixed size-16  flex-center gap-r-2"><Icon size={16} icon={FileSvg}></Icon></span>
+                <span className="cursor text-overflow flex-auto" >{img.filename}</span>
+                <Tip text={'下载文件'}><span onMouseDown={e => { this.down(img, e) }} className="gap-l-5 visible size-16 flex-center item-hover round cursor flex-fixed"><Icon size={14} icon={DownloadSvg}></Icon></span></Tip>
             </div>
         })
     }
