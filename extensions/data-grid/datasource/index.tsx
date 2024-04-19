@@ -5,7 +5,7 @@ import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { getSchemaViewIcon, getSchemaViews } from "../../../blocks/data-grid/schema/util";
 import { Confirm } from "../../../component/lib/confirm";
 import { EventsComponent } from "../../../component/lib/events.component";
-import { CollectTableSvg, DotsSvg, TrashSvg } from "../../../component/svgs";
+import { DotsSvg, TrashSvg } from "../../../component/svgs";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { MenuView } from "../../../component/view/menu/menu";
 import { util } from "../../../util/util";
@@ -51,7 +51,7 @@ export class DataSourceView extends EventsComponent {
                 self.emit('save', item.value);
             }
             else if (item?.name == 'deleteTable') {
-                if (await Confirm(lst('确认要删除表格吗'))) {
+                if (await Confirm(lst('确认要删除数据表吗'))) {
                     await TableSchema.deleteTableSchema(item.value);
                     channel.air('/page/remove', { item: { id: item.value } })
                     self.forceUpdate()
@@ -77,7 +77,7 @@ export class DataSourceView extends EventsComponent {
             }
         }
         var items: MenuItem[] = [];
-        items.push({ type: MenuItemType.text, text: this.selectView ? lst('选择表格视图') : lst('选择表格') })
+        items.push({ type: MenuItemType.text, text: this.selectView ? lst('选择数据表视图') : lst('选择表格') })
         var list = Array.from(TableSchema.schemas.values());
         list = lodash.sortBy(list, g => 0 - g.createDate.getTime())
         list.forEach((rd) => {
@@ -110,7 +110,7 @@ export class DataSourceView extends EventsComponent {
                             type: MenuItemType.inputTitleAndIcon,
                             value: rd.text,
                             icon: lodash.cloneDeep(rd.icon) || { name: 'byte', code: 'table' },
-                            text: lst('编辑表名'),
+                            text: lst('编辑数据表名'),
                             data: rd,
                         },
                         { type: MenuItemType.divide }
@@ -121,7 +121,7 @@ export class DataSourceView extends EventsComponent {
                     type: MenuItemType.inputTitleAndIcon,
                     value: rd.text,
                     icon: lodash.cloneDeep(rd.icon) || { name: 'byte', code: 'table' },
-                    placeholder: lst('编辑表名'),
+                    placeholder: lst('编辑数据表名'),
                     data: rd,
                 })
                 if (this.createView == true) {
@@ -131,7 +131,7 @@ export class DataSourceView extends EventsComponent {
                         {
                             name: 'addView',
                             value: rd.id,
-                            type: MenuItemType.button, text: lst('创建视图')
+                            type: MenuItemType.button, text: lst('创建数据表视图')
                         }
                     ])
                     if (this.editTable == true)
@@ -141,14 +141,14 @@ export class DataSourceView extends EventsComponent {
                     if (cs.length > 0 && cs.last().type != MenuItemType.divide) {
                         cs.push({ type: MenuItemType.divide });
                         cs.push({
-                            text: lst('删除表格'),
+                            text: lst('删除数据表'),
                             name: 'deleteTable',
                             icon: TrashSvg,
                             value: rd.id
                         })
                     }
                     else cs.push({
-                        text: lst('删除表格'),
+                        text: lst('删除数据表'),
                         name: 'deleteTable',
                         icon: TrashSvg,
                         value: rd.id
