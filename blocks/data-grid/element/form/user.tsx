@@ -36,7 +36,19 @@ export class FieldTextView extends BlockView<FieldUser> {
         return <FieldView block={this.block} className={'visible-hover'}>
             <div className={this.block.fieldType !== 'doc' ? "" : "gap-w-10"}>
                 <UserAvatars size={30} users={vs}>
-                    {(this.block.field?.config?.isMultiple || vs.length < 2) && this.block.fieldType != 'doc-detail' && <span onMouseDown={e => this.block.onSelectUser(e)}
+                    {(this.block.field?.config?.isMultiple || vs.length < 2) && this.block.fieldType != 'doc-detail' && <span onMouseDown={async e => {
+                        var el = event.currentTarget as HTMLElement;
+                        try {
+                            el.classList.add('item-hover-focus')
+                            await this.block.onSelectUser(e)
+                        }
+                        catch (ex) {
+
+                        }
+                        finally {
+                            el.classList.remove('item-hover-focus')
+                        }
+                    }}
                         className={"round item-hover-light-focus item-hover size-24 flex-center cursor" + (vs.length == 0 ? " " : " visible")}
                     ><Icon size={16} icon={PlusSvg}></Icon></span>}
                 </UserAvatars>

@@ -65,7 +65,7 @@ class FieldText extends OriginFormField {
                 text: lst('日期格式'),
                 childs: dateItems,
                 icon: { name: 'bytedance-icon', code: 'calendar-thirty' }
-            },{ type: MenuItemType.divide })
+            }, { type: MenuItemType.divide })
         return items;
     }
     async onClickContextMenu(this: Block, item: MenuItem<string | BlockDirective>, event: MouseEvent): Promise<void> {
@@ -80,10 +80,22 @@ class FieldTextView extends BlockView<FieldText> {
     async mousedown(event: React.MouseEvent) {
         event.stopPropagation();
         if (this.block.checkEdit() === false) return;
-        var el = event.target as HTMLElement;
-        var pickDate = await useDatePicker({ roundArea: Rect.from(el.getBoundingClientRect()) }, this.block.value);
-        if (pickDate) {
-            this.block.onChange(pickDate);
+        var hover = this.block.el.querySelector('.item-hover-light');
+        try {
+            if(hover)
+            hover.classList.add('item-hover-light-focus')
+            var el = event.target as HTMLElement;
+            var pickDate = await useDatePicker({ roundArea: Rect.from(el.getBoundingClientRect()) }, this.block.value);
+            if (pickDate) {
+                this.block.onChange(pickDate);
+            }
+        }
+        catch (ex) {
+
+        }
+        finally {
+            if(hover)
+            hover.classList.remove('item-hover-light-focus')
         }
     }
     renderView() {

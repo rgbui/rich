@@ -57,26 +57,39 @@ class FieldText extends OriginFormField {
 class FieldTextView extends BlockView<FieldText> {
     async mousedown(event: React.MouseEvent) {
         if (this.block.checkEdit() === false) return;
-        var fc: FieldConfig = this.block.field.config;
-        var op = await useTableStoreOption({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) },
-            this.block.value,
-            {
-                multiple: fc?.isMultiple ? true : false,
-                options: fc?.options || [],
-                isEdit: this.block.isCanEdit(),
-                changeOptions: (ops) => {
-                    this.block.schema.fieldUpdate({
-                        fieldId: this.block.field.id,
-                        data: {
-                            config: { options: ops }
-                        }
-                    })
+        var hover = this.block.el.querySelector('.item-hover-light');
+        try {
+            if (hover)
+                hover.classList.add('item-hover-light-focus')
+            var fc: FieldConfig = this.block.field.config;
+            var op = await useTableStoreOption({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) },
+                this.block.value,
+                {
+                    multiple: fc?.isMultiple ? true : false,
+                    options: fc?.options || [],
+                    isEdit: this.block.isCanEdit(),
+                    changeOptions: (ops) => {
+                        this.block.schema.fieldUpdate({
+                            fieldId: this.block.field.id,
+                            data: {
+                                config: { options: ops }
+                            }
+                        })
+                    }
                 }
+            );
+            if (typeof op != 'undefined') {
+                this.block.onChange(op ? op.map(o => o.value) : []);
             }
-        );
-        if (typeof op != 'undefined') {
-            this.block.onChange(op ? op.map(o => o.value) : []);
         }
+        catch (ex) {
+
+        }
+        finally {
+            if (hover)
+                hover.classList.remove('item-hover-light-focus')
+        }
+
     }
     renderView() {
         var fc: FieldConfig = this.block.field.config;
@@ -126,7 +139,7 @@ class FieldTextView extends BlockView<FieldText> {
                     </div>
                 }
             }
-            return <div className={"flex " + (self.block.fieldType == 'doc-add' ? "sy-form-field-input-value" : "  padding-h-5 round item-hover-light padding-w-10 " + (ops.length == 0 ? " h-30" : ""))} onMouseDown={e => self.mousedown(e)}>
+            return <div className={"flex " + (self.block.fieldType == 'doc-add' ? "sy-form-field-input-value" : "  padding-h-5 round item-hover-light padding-w-10 " + (ops.length == 0 ? " h-20" : ""))} onMouseDown={e => self.mousedown(e)}>
                 {ops.map(op => {
                     return <span key={op.value} className="gap-r-10 padding-w-5 f-14 padding-h-2  l-16 round cursor" style={{ background: op.color }}>{op.text}</span>
                 })}
