@@ -16,7 +16,7 @@ export class FieldAudio extends OriginField {
             vs = vs.slice(0, 1);
         }
         var fn = async () => {
-            var rs = await useDataGridFileViewer({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
+            var rs = await useDataGridFileViewer({ dist: 0, roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
                 mime: 'audio',
                 resources: vs,
                 isMultiple: this.field?.config?.isMultiple ? true : false
@@ -33,7 +33,7 @@ export class FieldAudio extends OriginField {
 }
 
 @view('/field/audio')
-export class FieldVideoView extends OriginFileView<FieldAudio>{
+export class FieldVideoView extends OriginFileView<FieldAudio> {
     renderImages(images: { url: string }[]) {
         var style: CSSProperties = {};
         style.width = '100%';

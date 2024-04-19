@@ -81,7 +81,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                     {
                         type: MenuItemType.custom,
                         render(item, view) {
-                            return <div className="flex padding-w-10 padding-h-3"><span className="remark f-14">{lst('AI生成数据视图')}</span><span className="op-3 gap-l-5 bg-p text-white padding-w-5 round l-20">coming soon</span></div>
+                            return <div className="flex padding-w-10 padding-h-3"><span className="remark f-14">{lst('AI生成数据模板')}</span><span className="op-3 gap-l-5 bg-green text-white padding-w-5 round l-20">coming soon</span></div>
                         }
                     }
                 ]
@@ -183,9 +183,9 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                     type: MenuItemType.select,
                     visible: (this.block as TableStoreGallery).getCardUrl() ? false : true,
                     options: [
-                        { text: lst('隐藏'), value: 'none' },
-                        { text: lst('显示'), value: 'nowrap' },
-                        { text: lst('换行显示'), value: 'wrap' },
+                        { text: lst('隐藏'), value: 'none', icon: { name: "byte", code: 'preview-close-one' } as any },
+                        { text: lst('显示'), value: 'nowrap', icon: { name: "byte", code: 'preview-open' }  as any},
+                        { text: lst('换行显示'), value: 'wrap', icon: { name: "byte", code: 'align-left-two' } as any },
                     ]
                 },
                 {
@@ -214,9 +214,9 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                     type: MenuItemType.select,
                     visible: (this.block as TableStoreGallery).getCardUrl() ? false : true,
                     options: [
-                        { text: lst('隐藏'), value: 'none' },
-                        { text: lst('显示'), value: 'nowrap' },
-                        { text: lst('换行显示'), value: 'wrap' },
+                        { text: lst('隐藏'), value: 'none', icon: { name: "byte", code: 'preview-close-one' } as any },
+                        { text: lst('显示'), value: 'nowrap', icon: { name: "byte", code: 'preview-open' }  as any},
+                        { text: lst('换行显示'), value: 'wrap', icon: { name: "byte", code: 'align-left-two' } as any },
                     ]
                 },
                 {

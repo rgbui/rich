@@ -16,7 +16,6 @@ import { Avatar } from "../avator/face";
 import { HelpText } from "../text";
 import { useIconPicker } from "../../../extensions/icon";
 import { IconArguments } from "../../../extensions/icon/declare";
-import { util } from "../../../util/util";
 
 export class MenuItemView extends React.Component<{
     item: MenuItem,
@@ -79,7 +78,8 @@ export class MenuItemView extends React.Component<{
         this.forceUpdate();
     }
     async openSelectMenu(item: MenuItem, event: React.MouseEvent) {
-        var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) },
+        var el = event.currentTarget as HTMLElement;
+        var r = await useSelectMenuItem({ dist: 3, roundArea: Rect.fromEle(el), align: 'end' },
             item.options.map(op => {
                 return {
                     ...op,
