@@ -77,6 +77,7 @@ export class DataSourceView extends EventsComponent {
             }
         }
         var items: MenuItem[] = [];
+        var rs: MenuItem[] = [];
         items.push({ type: MenuItemType.text, text: this.selectView ? lst('选择数据表视图') : lst('选择表格') })
         var list = Array.from(TableSchema.schemas.values());
         list = lodash.sortBy(list, g => 0 - g.createDate.getTime())
@@ -154,7 +155,7 @@ export class DataSourceView extends EventsComponent {
                         value: rd.id
                     })
                 }
-                items.push({
+                rs.push({
                     text: rd.text,
                     value: rd.id,
                     remark: util.showTime(rd.createDate),
@@ -165,7 +166,7 @@ export class DataSourceView extends EventsComponent {
                 })
             }
             else {
-                items.push({
+                rs.push({
                     name: 'table',
                     text: rd.text,
                     value: rd.id,
@@ -175,14 +176,23 @@ export class DataSourceView extends EventsComponent {
                 })
             }
         })
+        items.push({
+            type: MenuItemType.container,
+            childs: rs,
+            containerHeight: 250
+        })
+        items.push({ type: MenuItemType.divide });
+        items.push({
+            type: MenuItemType.help,
+            text: lst('了解数据表'),
+            url: window.shyConfig?.isUS ? "https://help.shy.red/page/38#3qfPYqnTJCwwQ6P9zYx8Q8" : "https://help.shy.live/page/285#xcmSsiEKkYt3pgKVwyDHxJ"
+        })
         return <MenuView ref={e => this.mv = e} input={input}
             select={select}
             style={{
                 width: 300,
-                maxHeight: 300,
-                paddingTop: 10,
-                paddingBottom: 10,
-                overflowY: 'auto'
+                paddingTop:5,
+                paddingBottom:5
             }} items={items}></MenuView>
     }
     private mv: MenuView;

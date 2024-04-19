@@ -4,7 +4,7 @@ import { Input } from "../../../component/view/input";
 import { PopoverSingleton } from "../../../component/popover/popover";
 import { PopoverPosition } from "../../../component/popover/position";
 import { getSchemaViewIcon, getSchemaViews } from "../../../blocks/data-grid/schema/util";
-import { CheckSvg, CloseSvg, CollectTableSvg, TriangleSvg } from "../../../component/svgs";
+import { CheckSvg, CloseSvg,TriangleSvg } from "../../../component/svgs";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import lodash from "lodash";
 import { lst } from "../../../i18n/store";
@@ -171,7 +171,7 @@ export class DataGridCreate extends EventsComponent {
                 this.forceUpdate(() => {
                     this.emit('update')
                 });
-            }} className="flex f-12 gap-w-10 gap-h-5 item-hover-light-focus round"><span className="flex-fixed">已选择数据表模板</span><span className="flex-auto">:{this.viewText}</span><ToolTip overlay={<S>移除选择的数据表模板</S>}><span className="flex-fixed size-20 flex-center cursor item-hover round" ><Icon size={8} icon={CloseSvg}></Icon></span></ToolTip></div>}
+            }} className="flex f-12 gap-w-10 gap-h-5 item-hover-light-focus round text-1"><span className="flex-fixed ">已选择数据表模板</span><span className="flex-auto">:{this.viewText}</span><ToolTip overlay={<S>移除选择的模板</S>}><span className="flex-fixed size-20 flex-center cursor item-hover round" ><Icon size={8} icon={CloseSvg}></Icon></span></ToolTip></div>}
             <div className="flex border-top-light  padding-w-10">
                 <div className="flex-auto"><HelpText url={window.shyConfig?.isUS ? "https://help.shy.red/page/38#3qfPYqnTJCwwQ6P9zYx8Q8" : 'https://help.shy.live/page/285#xcmSsiEKkYt3pgKVwyDHxJ'}>了解如何创建数据表</HelpText></div>
                 <div className="flex-fixed gap-h-5">

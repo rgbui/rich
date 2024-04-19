@@ -207,8 +207,11 @@ export class DataGridView extends Block {
                     }
                     else await this.setPropData(n, data[n]);
                 }
-                if (Array.isArray(r.data.operates) && r.data.operates.length > 0)
-                    await this.page.onSyncUserActions(r.data.operates, 'loadSyncBlock');
+                var ops = r.data.operates;
+                if (Array.isArray(ops) && ops.length > 0)
+                    lodash.remove(ops, op => op.directive == 'SelectTableSchema' || op.directive == 125);
+                if (Array.isArray(ops) && ops.length > 0)
+                    await this.page.onSyncUserActions(ops, 'loadSyncBlock');
             }
         }
         else await super.loadSyncBlock();
@@ -386,6 +389,15 @@ export class DataGridView extends Block {
         this.willCreateSchema = true;
         try {
             if (!this.schemaId) {
+                /***
+                 * 
+                 * 这里表示对于当前的块进行创建或选择数据表视图
+                 * 由于更换后的block有syncBlockId，导致对当前的操作判断为syncBlockId中的视图actions，而不是page的action,
+                 * 所以加上disabledSyncBlock: true
+                 * 注意onOpenAddTabView也会有同样的问题
+                 * 数据表视图本身是明确时候，如果更新视图的属性或其它操作应该归属于数据视图的action，
+                 * 如果是更新数据视图，该action应该归为page的action操作
+                 */
                 var dg = await useDataGridCreate({ roundArea: Rect.fromEle(this.el) });
                 if (dg) {
                     if (this.view) this.view.forceUpdate();
@@ -397,11 +409,13 @@ export class DataGridView extends Block {
                                 schemaId: dg.schemaId,
                                 syncBlockId: dg.syncBlockId
                             })
-                        })
+                        }, { disabledSyncBlock: true })
                         else await this.page.onReplace(this, {
                             url: dg.url,
                             schemaId: dg.schemaId,
                             syncBlockId: dg.syncBlockId
+                        }, undefined, {
+                            disabledSyncBlock: true
                         })
                     }
                     else if (dg.source == 'dataView') {
@@ -417,11 +431,13 @@ export class DataGridView extends Block {
                                 schemaId: this.schema.id,
                                 syncBlockId: view.id
                             })
-                        });
+                        }, { disabledSyncBlock: true });
                         else await this.page.onReplace(this, {
                             url: viewUrl,
                             schemaId: this.schema.id,
                             syncBlockId: view.id
+                        }, undefined, {
+                            disabledSyncBlock: true
                         })
                     }
                     if (viewUrl == this.url) {

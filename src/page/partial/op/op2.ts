@@ -114,14 +114,24 @@ export class Page$Operator2 {
             callback(newBlock, oldBlock);
         });
     }
-    async onReplace(this: Page, block: Block, blockData: (Record<string, any> | Block) | ((Record<string, any> | Block)[]), action?: (block: Block) => Promise<void>) {
+    async replace(this: Page, block: Block, blockData: (Record<string, any> | Block) | ((Record<string, any> | Block)[]), action?: (block: Block) => Promise<void>) {
+        if (!Array.isArray(blockData)) blockData = [blockData];
+        var newBlock: Block = null;
+        if (blockData[0] instanceof Block) newBlock = (await block.replace(blockData as Block[]))[0];
+        else newBlock = (await block.replaceDatas(blockData as Record<string, any>[]))[0];
+        if (typeof action == 'function') await action(newBlock);
+        return newBlock
+    }
+    async onReplace(this: Page, block: Block, blockData: (Record<string, any> | Block) | ((Record<string, any> | Block)[]), action?: (block: Block) => Promise<void>,options?: {
+        disabledStore?: boolean;
+        disabledSyncBlock?: boolean;
+        immediate?: boolean;
+    }) {
         if (!Array.isArray(blockData)) blockData = [blockData];
         var newBlock: Block = null;
         await this.onAction(ActionDirective.onReplace, async () => {
-            if (blockData[0] instanceof Block) newBlock = (await block.replace(blockData as Block[]))[0];
-            else newBlock = (await block.replaceDatas(blockData as Record<string, any>[]))[0];
-            if (typeof action == 'function') await action(newBlock);
-        });
+            newBlock = await this.replace(block, blockData, action);
+        },options);
         return newBlock;
     }
     async onBatchTurn(this: Page, blocks: Block[], url: string) {

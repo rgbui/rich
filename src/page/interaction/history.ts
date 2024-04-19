@@ -25,6 +25,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         if (page.pe.type == ElementType.SchemaRecordView && !page.isSchemaRecordViewTemplate) {
             return
         }
+        console.log('action', action);
         if (action.isCursorOperator()) page.onLazyHistory(action)
         else page.emit(PageDirective.history, action);
     });

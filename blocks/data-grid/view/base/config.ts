@@ -304,7 +304,7 @@ export class DataGridViewConfig {
                 if (typeof g != 'string' && g.type == 'view') {
                     var s = this.schemaId == g.tableId ? this.schema : await TableSchema.loadTableSchema(g.tableId, this.page.ws);
                     var sv = s.listViews.find(c => c.id == (g as any).viewId)
-                    await this.page.onReplace(this, {
+                    var viewData = {
                         url: BlockUrlConstant.DataGridTab,
                         tabIndex: 1,
                         tabItems: [
@@ -350,6 +350,9 @@ export class DataGridViewConfig {
                                 }
                             ]
                         }
+                    }
+                    await this.page.onReplace(this, viewData, undefined, {
+                        disabledSyncBlock: true
                     })
                 }
             }
