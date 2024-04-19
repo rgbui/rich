@@ -121,63 +121,81 @@ export class DataGridTab extends Block {
     }
     async onTabeItemContextmenu(rect: Rect, at: number) {
         if (!this.isCanEdit()) return;
-        if (!this.dataGridBlock) return;
         await this.onDataGridTool(async () => {
             var self = this;
-            var view = self.dataGridBlock.schemaView;
-            var items: MenuItem<BlockDirective | string>[] = [
-                {
-                    name: 'name',
-                    type: MenuItemType.inputTitleAndIcon,
-                    value: view.text,
-                    icon: getSchemaViewIcon(view)
-                },
-                { type: MenuItemType.divide },
-                {
-                    text: lst("切换视图"),
-                    icon: LoopSvg,
-                    childs: [
-                        {
-                            type: MenuItemType.container,
-                            drag: true,
-                            name: 'viewContainer',
-                            childs: [
-                                ...self.dataGridBlock.schema.views.findAll(g => ![BlockUrlConstant.RecordPageView].includes(g.url as any)).map(v => {
-                                    return {
-                                        name: 'turn',
-                                        text: v.text,
-                                        type: MenuItemType.drag,
-                                        value: v.id,
-                                        icon: getSchemaViewIcon(v),
-                                        checkLabel: v.id == self.dataGridBlock.schemaView?.id,
-                                        btns: [
-                                            { icon: DotsSvg, name: 'property' }
-                                        ]
-                                    }
-                                }),
-                                { type: MenuItemType.divide },
-                                { name: 'addView', type: MenuItemType.button, text: lst('创建视图') }
-                            ]
-                        }
-                    ]
-                },
-                { text: lst('配置视图'), name: 'viewConfig', icon: { name: 'byte', code: 'setting-one' } as IconValueType },
-                { type: MenuItemType.divide },
-                { text: lst('数据源'), name: 'datasource', icon: DatasourceSvg },
-                { type: MenuItemType.divide },
-                { name: 'prev', text: lst('前移'), disabled: at == 0 ? true : false, icon: ArrowLeftSvg },
-                { name: 'after', text: lst('后移'), disabled: at == this.childs.length - 1 ? true : false, icon: ArrowRightSvg },
-                { type: MenuItemType.divide },
-                { name: 'link', icon: LinkSvg, text: lst('复制视图链接') },
-                { type: MenuItemType.divide },
-                { name: 'delete', icon: TrashSvg, text: lst('移除视图') },
-                { type: MenuItemType.divide },
-                {
-                    type: MenuItemType.help,
-                    text: lst('了解如何使用数据表格'),
-                    url: window.shyConfig?.isUS ? "https://help.shy.red/page/38#3qfPYqnTJCwwQ6P9zYx8Q8" : "https://shy.live/ws/help/page/286"
-                }
-            ];
+            var view = self.dataGridBlock?.schemaView;
+
+            var items: MenuItem<BlockDirective | string>[] = [];
+            if (view) {
+                items = [
+                    {
+                        name: 'name',
+                        type: MenuItemType.inputTitleAndIcon,
+                        value: view.text,
+                        icon: getSchemaViewIcon(view)
+                    },
+                    { type: MenuItemType.divide },
+                    {
+                        text: lst("切换视图"),
+                        icon: LoopSvg,
+                        childs: [
+                            {
+                                type: MenuItemType.container,
+                                drag: true,
+                                name: 'viewContainer',
+                                childs: [
+                                    ...self.dataGridBlock.schema.views.findAll(g => ![BlockUrlConstant.RecordPageView].includes(g.url as any)).map(v => {
+                                        return {
+                                            name: 'turn',
+                                            text: v.text,
+                                            type: MenuItemType.drag,
+                                            value: v.id,
+                                            icon: getSchemaViewIcon(v),
+                                            checkLabel: v.id == self.dataGridBlock.schemaView?.id,
+                                            btns: [
+                                                { icon: DotsSvg, name: 'property' }
+                                            ]
+                                        }
+                                    }),
+                                    { type: MenuItemType.divide },
+                                    { name: 'addView', type: MenuItemType.button, text: lst('创建视图') }
+                                ]
+                            }
+                        ]
+                    },
+                    { text: lst('配置视图'), name: 'viewConfig', icon: { name: 'byte', code: 'setting-one' } as IconValueType },
+                    { type: MenuItemType.divide },
+                    { text: lst('数据源'), name: 'datasource', icon: DatasourceSvg },
+                    { type: MenuItemType.divide },
+                    { name: 'prev', text: lst('前移'), disabled: at == 0 ? true : false, icon: ArrowLeftSvg },
+                    { name: 'after', text: lst('后移'), disabled: at == this.childs.length - 1 ? true : false, icon: ArrowRightSvg },
+                    { type: MenuItemType.divide },
+                    { name: 'link', icon: LinkSvg, text: lst('复制视图链接') },
+                    { type: MenuItemType.divide },
+                    { name: 'delete', icon: TrashSvg, text: lst('移除视图') },
+                    { type: MenuItemType.divide },
+                    {
+                        type: MenuItemType.help,
+                        text: lst('了解如何使用数据表格'),
+                        url: window.shyConfig?.isUS ? "https://help.shy.red/page/38#3qfPYqnTJCwwQ6P9zYx8Q8" : "https://shy.live/ws/help/page/286"
+                    }
+                ];
+            }
+            else {
+                items = [
+                    { name: 'prev', text: lst('前移'), disabled: at == 0 ? true : false, icon: ArrowLeftSvg },
+                    { name: 'after', text: lst('后移'), disabled: at == this.childs.length - 1 ? true : false, icon: ArrowRightSvg },
+                    { type: MenuItemType.divide },
+                    { name: 'delete', icon: TrashSvg, text: lst('移除视图') },
+                    { type: MenuItemType.divide },
+                    {
+                        type: MenuItemType.help,
+                        text: lst('了解如何使用数据表格'),
+                        url: window.shyConfig?.isUS ? "https://help.shy.red/page/38#3qfPYqnTJCwwQ6P9zYx8Q8" : "https://shy.live/ws/help/page/286"
+                    }
+                ]
+            }
+
             var um = await useSelectMenuItem(
                 { roundArea: rect },
                 items,
@@ -254,7 +272,8 @@ export class DataGridTab extends Block {
             if (um) {
                 if (um.item.name == 'delete') {
                     this.page.onAction(ActionDirective.onTabRemoveItem, async () => {
-                        await self.dataGridBlock.closest(x => x.url == BlockUrlConstant.DataGridTabPage).delete();
+                        if (self.dataGridBlock)
+                            await self.dataGridBlock.closest(x => x.url == BlockUrlConstant.DataGridTabPage).delete();
                         var items = lodash.cloneDeep(this.tabItems);
                         items.remove(items[at]);
                         if (items.length == 1) {
@@ -306,18 +325,20 @@ export class DataGridTab extends Block {
                     await self.dataGridBlock.onAddCreateTableView();
                 }
             }
-            var props: Record<string, any> = {};
-            var rn = items.find(g => g.name == 'name');
-            if (rn.value != view.text && rn.value) {
-                props.text = rn.value;
-            }
-            if (!lodash.isEqual(rn.icon, getSchemaViewIcon(view))) {
-                props.icon = rn.icon;
-            }
-            if (Object.keys(props).length > 0) {
-                await self.dataGridBlock.onSchemaViewUpdate(view.id, {
-                    ...props
-                });
+            if (view) {
+                var props: Record<string, any> = {};
+                var rn = items.find(g => g.name == 'name');
+                if (rn.value != view.text && rn.value) {
+                    props.text = rn.value;
+                }
+                if (!lodash.isEqual(rn.icon, getSchemaViewIcon(view))) {
+                    props.icon = rn.icon;
+                }
+                if (Object.keys(props).length > 0) {
+                    await self.dataGridBlock.onSchemaViewUpdate(view.id, {
+                        ...props
+                    });
+                }
             }
         })
     }
