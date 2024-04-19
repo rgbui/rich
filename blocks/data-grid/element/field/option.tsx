@@ -14,10 +14,13 @@ export class FieldOption extends OriginField {
     async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
         event.stopPropagation();
         if (this.checkEdit() === false) return;
+        var el=this.el.querySelector('.sy-field-option') as HTMLElement;
+        if(!el)el=this.el;
+        var rect = Rect.fromEle(el);
         var fn = async () => {
             var fc: FieldConfig = this.field.config || {};
             var op = await useTableStoreOption({
-                roundArea: Rect.fromEle(event.currentTarget as HTMLElement)
+                roundArea: rect
             }, this.value,
                 {
                     isEdit: this.isCanEdit(),
@@ -30,7 +33,7 @@ export class FieldOption extends OriginField {
                 }
             );
             if (typeof op != 'undefined') {
-                this.onUpdateProps({ value: op ? op.map(o => o.value) : [] }, { range: BlockRenderRange.self });
+                await this.onUpdateProps({ value: op ? op.map(o => o.value) : [] }, { range: BlockRenderRange.self });
             }
         }
         if (this.dataGrid) await this.dataGrid.onDataGridTool(fn)
@@ -45,7 +48,7 @@ export class FieldTextView extends OriginFileView<FieldOption> {
         var vs = util.covertToArray(this.block.value);
         var ops = fc?.options ? fc.options.filter(g => vs.includes(g.value)) : undefined;
         if (!Array.isArray(ops)) ops = [];
-        return <div className='sy-field-option flex  flex-wrap  ' onMouseDown={e => this.block.onCellMousedown(e)}  >
+        return <div className='sy-field-option flex  flex-wrap' >
             {ops.map(op => {
                 return <span key={op.value} className="text-overflow  f-14 padding-h-2  l-16 " style={{ backgroundColor: op?.color }}>{op?.text || <i>&nbsp;</i>}</span>
             })}
