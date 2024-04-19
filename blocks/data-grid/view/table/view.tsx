@@ -246,31 +246,35 @@ export class TableStoreView extends BlockView<TableStore> {
         </div>
     }
     renderView() {
-        return <div className={"sy-dg-table" +
-            (this.block.noBorder ? " sy-dg-table-no-border" : "") +
-            (this.block.noHead ? " sy-dg-table-no-header" : "")
-        }
-            onMouseEnter={e => this.block.onOver(true)}
-            onMouseLeave={e => this.block.onOver(false)}
-        >
-            {this.block.isLoading && <Spin block></Spin>}
-            {this.block.schema && <DataGridTool block={this.block}></DataGridTool>}
-            {this.block.schema && this.block.noHead !== true && <div
-                ref={e => { this.headScrollEl = e; this.bindScroll() }}
-                className="scroll-hidden"
-                style={{
-                    overflowX: 'auto',
-                    zIndex: 1,
-                    position: 'sticky',
-                    top: 0,
-                    display: 'none'
-                }}>
-            </div>}
-            <div className="sy-dg-table-content" >
-                {this.block.schema && this.block.noHead !== true && this.renderHead()}
-                {this.block.schema && this.renderBody()}
+        return <div style={this.block.visibleStyle}>
+            <div style={this.block.contentStyle}>
+                <div className={"sy-dg-table" +
+                    (this.block.noBorder ? " sy-dg-table-no-border" : "") +
+                    (this.block.noHead ? " sy-dg-table-no-header" : "")
+                }
+                    onMouseEnter={e => this.block.onOver(true)}
+                    onMouseLeave={e => this.block.onOver(false)}
+                >
+                    {this.block.isLoading && <Spin block></Spin>}
+                    {this.block.schema && <DataGridTool block={this.block}></DataGridTool>}
+                    {this.block.schema && this.block.noHead !== true && <div
+                        ref={e => { this.headScrollEl = e; this.bindScroll() }}
+                        className="scroll-hidden"
+                        style={{
+                            overflowX: 'auto',
+                            zIndex: 1,
+                            position: 'sticky',
+                            top: 0,
+                            display: 'none'
+                        }}>
+                    </div>}
+                    <div className="sy-dg-table-content" >
+                        {this.block.schema && this.block.noHead !== true && this.renderHead()}
+                        {this.block.schema && this.renderBody()}
+                    </div>
+                    {this.renderCreateTable()}
+                </div>
             </div>
-            {this.renderCreateTable()}
         </div>
     }
     async didMount() {

@@ -47,7 +47,7 @@ export class TabPage extends Block {
 }
 
 @view('/data-grid/tab/page')
-export class TabPageView extends BlockView<TabPage>{
+export class TabPageView extends BlockView<TabPage> {
     async mousedown(event: React.MouseEvent) {
         if (this.block.childs.length == 0) {
             event.stopPropagation()
@@ -60,10 +60,13 @@ export class TabPageView extends BlockView<TabPage>{
         }
     }
     renderView() {
-        return <div 
+        return <div
             style={this.block.visibleStyle}
             onMouseDown={e => this.mousedown(e)}
-        ><ChildsArea childs={this.block.blocks.childs}></ChildsArea>
+        >
+            <div style={this.block.contentStyle}>
+                <ChildsArea childs={this.block.blocks.childs}></ChildsArea>
+            </div>
         </div>
     }
 }
