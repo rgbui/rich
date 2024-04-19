@@ -63,7 +63,7 @@ export class TableStoreListView extends BlockView<TableStoreList>{
             {this.block.dataGridIsCanEdit() && !this.block.isCardAuto && <div
                 onMouseDown={e => { e.stopPropagation(); this.block.onSyncAddRow({}, undefined, 'after') }}
                 className="flex cursor item-hover round padding-5 f-14 remark">
-                <Icon icon={PlusSvg}></Icon>
+                <Icon size={18} icon={PlusSvg}></Icon>
                 <span><S>新增</S></span>
             </div>}
             {this.renderCreateTable()}

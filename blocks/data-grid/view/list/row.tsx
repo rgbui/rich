@@ -24,7 +24,7 @@ export class TableStoreListItem extends TableStoreItem {
 }
 
 @view('/data-grid/list/row')
-export class TableStoreListItemView extends BlockView<TableStoreListItem>{
+export class TableStoreListItemView extends BlockView<TableStoreListItem> {
     renderRows() {
         var title = this.block.childs.find(g => (g as OriginField).url == '/field/title');
         var cs = this.block.childs.findAll(g => g !== title);
@@ -34,7 +34,7 @@ export class TableStoreListItemView extends BlockView<TableStoreListItem>{
             </div>
             <div className="flex-auto flex-end">
                 {cs.map(c => {
-                    return <div className="gap-l-10" key={c.id}>
+                    return <div className="gap-l-10 flex-fixed flex" key={c.id}>
                         <c.viewComponent block={c}></c.viewComponent>
                     </div>
                 })}
