@@ -31,8 +31,9 @@ export class ColorInput extends React.Component<{
             this.props.onChange && this.props.onChange(r);
         }
     }
-    render(): React.ReactNode {
-        return <div className="flex border round h-30">
+    render()
+    {
+        return <div className="flex border round h-28 item-hover-light">
             <div className="flex-fixed size-20 border-light round cursor gap-r-5 gap-l-5" onMouseDown={e => this.onPicker(e)} style={{ backgroundColor: this.props.color }}>
 
             </div>
