@@ -132,15 +132,15 @@ export class Page$Schema {
         row.thumb = await this.getThumb();
         return row;
     }
-     /**
-     * 
-     * @param this 
-     * @param options {
-     *   isClose:是否关闭页面
-     *   isFormBlank:是否清空表单
-     * }
-     */
-     async onSubmitForm(this: Page, options?: { isClose?: boolean, isFormMargin?: boolean }) {
+    /**
+    * 
+    * @param this 
+    * @param options {
+    *   isClose:是否关闭页面
+    *   isFormBlank:是否清空表单
+    * }
+    */
+    async onSubmitForm(this: Page, options?: { isClose?: boolean, isFormMargin?: boolean }) {
         if (this.pe.type == ElementType.SchemaData) {
             this.onPageSave();
             var newRow = await this.getSchemaRow()
@@ -244,7 +244,7 @@ export class Page$Schema {
                     if (last) {
                         await last.visibleDownCreateBlock(BlockUrlConstant.Button, {
                             align: 'center',
-                            buttonText: lst('提交') + this.getPageDataInfo()?.text,
+                            buttonText: lst('提交'),
                             flow: {
                                 commands: [{ url: '/form/submit' }]
                             }
