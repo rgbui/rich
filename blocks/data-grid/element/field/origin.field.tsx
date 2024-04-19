@@ -22,6 +22,9 @@ export class OriginField extends Block {
     get isCanEmptyDelete() {
         return false
     }
+    get isEnterCreateNewLine() {
+        return false;
+    }
     get handleBlock(): Block {
         return this.parent;
     }

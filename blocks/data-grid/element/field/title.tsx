@@ -15,17 +15,14 @@ export class FieldText extends OriginField {
         this.dataGrid.onOpenEditForm(this.item.dataRow.id);
     }
     onCellMousedown(event: React.MouseEvent<Element, MouseEvent>): void {
-        var isDataGridTable = [BlockUrlConstant.DataGridTable].includes(this.dataGrid.url as any);
-        if (!isDataGridTable) {
-            setTimeout(() => {
-                this.page.kit.anchorCursor.onFocusBlockAnchor(this, { last: true })
-            }, 200);
-        }
+        setTimeout(() => {
+            this.page.kit.anchorCursor.onFocusBlockAnchor(this, { last: true })
+        }, 50);
     }
 }
 
 @view('/field/title')
-export class FieldTextView extends OriginFileView<FieldText>{
+export class FieldTextView extends OriginFileView<FieldText> {
     span: HTMLElement;
     move(e?: React.MouseEvent) {
         if (this.span) {
@@ -51,7 +48,7 @@ export class FieldTextView extends OriginFileView<FieldText>{
             BlockUrlConstant.DataGridBoard,
             BlockUrlConstant.DataGridGallery
         ].includes(this.block.dataGrid.url as any);
-        
+
         return <div className={'flex l-20 flex-top sy-field-title  ' + (isCard ? " f-14 bold" : " f-14")} onKeyDown={e => this.keydown(e)} onMouseMove={e => this.move(e)}>
             {!(!this.block.item?.dataRow?.icon && isCard) && <span className="size-20 flex-center inline-flex remark gap-r-3"><Icon size={isCard ? 24 : 18} icon={getPageIcon({
                 pageType: PageLayoutType.doc,
