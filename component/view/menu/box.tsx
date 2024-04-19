@@ -36,7 +36,7 @@ export class MenuBox extends React.Component<{
         </div>
     }
     el: HTMLElement;
-    point = new Point(0, 0);
+    point = new Point(-500, -500);
     style: CSSProperties = {}
     open(pos: PopoverPosition, style?: CSSProperties) {
         this.style = style || {};

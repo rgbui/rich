@@ -16,6 +16,7 @@ import { Avatar } from "../avator/face";
 import { HelpText } from "../text";
 import { useIconPicker } from "../../../extensions/icon";
 import { IconArguments } from "../../../extensions/icon/declare";
+import { util } from "../../../util/util";
 
 export class MenuItemView extends React.Component<{
     item: MenuItem,
@@ -79,7 +80,7 @@ export class MenuItemView extends React.Component<{
     }
     async openSelectMenu(item: MenuItem, event: React.MouseEvent) {
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) },
-            item.options.map(op=>{
+            item.options.map(op => {
                 return {
                     ...op,
                     checkLabel: item.value == op.value
@@ -168,8 +169,8 @@ export class MenuItemView extends React.Component<{
             {item.type == MenuItemType.gap && <div className="h-10"></div>}
             {item.type == MenuItemType.text && <div className='shy-menu-box-item-text flex'>
                 <span className="flex-auto flex">
-                   <span>{item.text}</span>
-                   {item.helpUrl && <span className="flex-fixed h-20 flex"><HelpText onMouseDown={e => e.stopPropagation()} url={item.helpUrl}>{item.helpText}</HelpText></span>}
+                    <span>{item.text}</span>
+                    {item.helpUrl && <span className="flex-fixed h-20 flex"><HelpText onMouseDown={e => e.stopPropagation()} url={item.helpUrl}>{item.helpText}</HelpText></span>}
                 </span>
                 {item.label && <label className="flex-fixed">{item.label}</label>}
             </div>}
@@ -185,7 +186,7 @@ export class MenuItemView extends React.Component<{
                 <Switch size='small' onChange={e => this.checked(e, item)} checked={item.checked ? item.checked : false}></Switch>
             </div>}
             {item.type == MenuItemType.help && <div className="shy-menu-box-item-help">
-                <HelpText className={'padding-w-5'} align="left" block={item.helpInline===false ? true:false} url={item.url}>{item.text}</HelpText>
+                <HelpText className={'padding-w-5'} align="left" block={item.helpInline === false ? true : false} url={item.url}>{item.text}</HelpText>
             </div>}
             {item.type == MenuItemType.input && !item.label && <div className="shy-menu-box-item-input"><Input size={'small'} value={item.value} onEnter={e => { item.value = e; this.select(item) }} onChange={e => { item.value = e; this.input(e, item) }} placeholder={item.placeholder || item.text}></Input></div>}
             {item.type == MenuItemType.input && item.label && <div className="flex shy-menu-box-item-input">
