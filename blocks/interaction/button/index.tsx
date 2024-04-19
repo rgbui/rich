@@ -236,7 +236,7 @@ export class BlockButton extends Block {
 }
 
 @view('/button')
-export class BlockButtonView extends BlockView<BlockButton>{
+export class BlockButtonView extends BlockView<BlockButton> {
     boxTip: FixBoxTip;
     dragBlock(event: React.MouseEvent) {
         DragBlockLine(this.block, event);
@@ -364,8 +364,8 @@ export class BlockButtonView extends BlockView<BlockButton>{
         if (this.block.align == 'center') style.justifyContent = 'center';
         else if (this.block.align == 'right') style.justifyContent = 'flex-end'
         return <div className="flex" style={{ top: 0, left: 0, right: 0, ...style }}>
-            <div className='w-500 round-6 padding-h-14  text' >
-                <div className="flex padding-w-14" onMouseDown={e => { e.stopPropagation() }}>
+            <div className='w-500 round padding-t-10  text' >
+                <div className="flex padding-w-10" onMouseDown={e => { e.stopPropagation() }}>
                     <span className="border size-24 round cursor flex-center"><Icon size={18} onMousedown={e => this.changeIcon(e)} icon={this.block.buttonIcon || { name: 'bytedance-icon', code: 'smiling-face' }}></Icon></span>
                     <span className="flex-auto gap-w-10"><Input value={this.block.buttonText} onChange={e => {
                         this.block.buttonText = e;
@@ -377,7 +377,7 @@ export class BlockButtonView extends BlockView<BlockButton>{
                         this.openEdit(e)
                     }}><S>保存</S></Button></span>
                 </div>
-                <div className="max-h-300 padding-w-14 overflow-y">
+                <div className="max-h-300  overflow-y">
                     {this.block.flow && <FlowView onChange={async () => {
                         await this.onSave()
                     }} flow={this.block.flow}></FlowView>}
