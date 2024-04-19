@@ -39,8 +39,7 @@ export class TableStoreOption extends EventsComponent {
                     if (self.isNeedCreated && self.isEdit && self.focusIndex == self.filterOptions.length) self.focusIndex = self.filterOptions.length;
                     else self.focusIndex = 0;
                 }
-                else
-                    self.focusIndex++;
+                else { self.focusIndex++; }
                 self.forceUpdate()
             }
             else if (event.key == KeyboardCode.ArrowUp) {
@@ -102,8 +101,9 @@ export class TableStoreOption extends EventsComponent {
                     onInput={e => changeInput(e)} onKeyDown={e => keydown(e.nativeEvent)} /></div>
             </div>}
             <div className="bg-white overflow-y max-h-180">
-                {this.isEdit && <div className="remark gap-h-10 padding-w-10 h-20 f-12">{this.filterOptions.length > 0 ? lst('选择或创建一个选项') : lst('暂无选项')}</div>}
+                {this.isEdit && <div className="remark gap-h-5 padding-w-10 h-20 f-12">{this.filterOptions.length > 0 ? lst('选择或创建一个选项') : lst('暂无选项')}</div>}
                 <DragList
+                    className={'gap-b-10'}
                     onChange={change}
                     isDragBar={e => e.closest('.shy-tablestore-option-item-icon') ? true : false}>
                     {this.filterOptions.map((op, i) => {
