@@ -3,7 +3,6 @@ import React from "react";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { PopoverSingleton } from "../../../component/popover/popover";
 import { PopoverPosition } from "../../../component/popover/position";
-
 import DragHandle from "../../../src/assert/svg/dragHandle.svg";
 import Dots from "../../../src/assert/svg/dots.svg";
 import { MenuItemType } from "../../../component/view/menu/declare";
@@ -11,7 +10,6 @@ import { CheckSvg, CloseSvg, TrashSvg } from "../../../component/svgs";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { Point } from "../../../src/common/vector/point";
 import { Icon } from "../../../component/view/icon";
-
 import { util } from "../../../util/util";
 import { Confirm } from "../../../component/lib/confirm";
 import { ShyAlert } from "../../../component/lib/alert";
@@ -20,19 +18,40 @@ import { DataGridOptionType } from "../../../blocks/data-grid/schema/field";
 import { lst } from "../../../i18n/store";
 import { S } from "../../../i18n/view";
 import { OptionBackgroundColorList } from "../../color/data";
+import { KeyboardCode } from "../../../src/common/keys";
 import './style.less';
 
 export class TableStoreOption extends EventsComponent {
     render() {
         var self = this;
         function keydown(event: KeyboardEvent) {
-            if (event.key == 'Enter') {
-                if (self.isEdit) self.onCreateOption();
+            if (event.key == KeyboardCode.Enter) {
+                if (self.isNeedCreated && self.isEdit && self.focusIndex == self.filterOptions.length) self.onCreateOption();
+                else self.setOption(self.filterOptions[self.focusIndex]);
             }
-            else if (event.key.toLowerCase() == 'backspace') {
+            else if (event.key == KeyboardCode.Backspace) {
                 if (!self.value) {
                     self.onlyClearOption();
                 }
+            }
+            else if (event.key == KeyboardCode.ArrowDown) {
+                if (self.focusIndex >= self.filterOptions.length - 1) {
+                    if (self.isNeedCreated && self.isEdit && self.focusIndex == self.filterOptions.length) self.focusIndex = self.filterOptions.length;
+                    else self.focusIndex = 0;
+                }
+                else
+                    self.focusIndex++;
+                self.forceUpdate()
+            }
+            else if (event.key == KeyboardCode.ArrowUp) {
+                if (self.focusIndex == 0) {
+                    if (self.isNeedCreated && self.isEdit) self.focusIndex = self.filterOptions.length;
+                    else self.focusIndex = self.filterOptions.length - 1;
+                }
+                else {
+                    self.focusIndex--;
+                }
+                self.forceUpdate()
             }
         }
         function changeInput(event: React.FormEvent<HTMLInputElement>) {
@@ -82,21 +101,21 @@ export class TableStoreOption extends EventsComponent {
                     className="input-placeholder-remark"
                     onInput={e => changeInput(e)} onKeyDown={e => keydown(e.nativeEvent)} /></div>
             </div>}
-            <div className="shy-tablestore-option-selector-drop overflow-y max-h-180">
-                {this.isEdit && <div className="remark gap-h-8 padding-w-10 h-20 f-12">{this.filterOptions.length > 0 ? lst('选择或创建一个选项') : lst('暂无选项')}</div>}
+            <div className="bg-white overflow-y max-h-180">
+                {this.isEdit && <div className="remark gap-h-10 padding-w-10 h-20 f-12">{this.filterOptions.length > 0 ? lst('选择或创建一个选项') : lst('暂无选项')}</div>}
                 <DragList
                     onChange={change}
                     isDragBar={e => e.closest('.shy-tablestore-option-item-icon') ? true : false}>
-                    {this.filterOptions.map(op => {
-                        return <div className="shy-tablestore-option-item" key={op.text} onClick={e => this.setOption(op)} >
-                            {this.isEdit && <span className="shy-tablestore-option-item-icon"><DragHandle></DragHandle></span>}
-                            <span className="shy-tablestore-option-item-text text-overflow"><em className=" f-14 padding-h-2  l-16 " style={{ backgroundColor: op.color }}>{op.text}</em></span>
+                    {this.filterOptions.map((op, i) => {
+                        return <div className={"flex visible-hover item-hover-light min-h-28 user-none round gap-w-5 padding-w-5 " + (this.focusIndex == i ? "item-hover-focus" : "")} key={op.text} onClick={e => this.setOption(op)} >
+                            {this.isEdit && <span className="shy-tablestore-option-item-icon size-24 flex-center flex-fixed cursor item-hover round"><Icon icon={DragHandle} size={16}></Icon></span>}
+                            <span className="text-overflow flex-auto gap-w-4 "><em className=" f-14 padding-h-2 padding-w-6 round h-18 f-14 l-16 " style={{ backgroundColor: op.color }}>{op.text}</em></span>
                             {this.ovs.some(c => c.value == op.value) && <span className="flex-fixed size-20 flex-center gap-r-3 text-1"><Icon size={16} icon={CheckSvg}></Icon></span>}
-                            {this.isEdit && <span className="shy-tablestore-option-item-property" onClick={e => this.configOption(op, e)}><Dots></Dots></span>}
+                            {this.isEdit && <span className="visible size-24 flex-center flex-fixed cursor item-hover round" onClick={e => this.configOption(op, e)}><Icon icon={Dots} size={16}></Icon></span>}
                         </div>
                     })}
                 </DragList>
-                {this.isNeedCreated && self.isEdit && <div className="shy-tablestore-option-item-create box-border" onClick={e => this.onCreateOption()}><em><S>创建</S></em><span style={{ backgroundColor: this.optionColor }}>{this.value}</span></div>}
+                {this.isNeedCreated && self.isEdit && <div className={"item-hover-light min-h-28 user-none round gap-w-5 padding-w-5 flex " + (this.focusIndex == this.filterOptions.length ? "item-hover-focus" : "")} onClick={e => this.onCreateOption()}><em><S>创建</S></em><span className="l-18 h-18 padding-w-6 f-14 bold" style={{ backgroundColor: this.optionColor }}>{this.value}</span></div>}
             </div>
         </div>
     }
@@ -110,6 +129,7 @@ export class TableStoreOption extends EventsComponent {
             return OptionBackgroundColorList().randomOf()?.color;
         }
     }
+    focusIndex: number = 0;
     get filterOptions() {
         return this.options.filter(g => g.text == this.value || !this.value);
     }
@@ -162,6 +182,8 @@ export class TableStoreOption extends EventsComponent {
         this.options = data.options;
         this.isEdit = data.isEdit || false;
         this.value = '';
+        this.focusIndex = 0;
+        if (this.focusIndex == -1) this.focusIndex = 0;
         this.forceUpdate(async () => {
             await util.delay(10);
             if (this.input) this.input.focus();
