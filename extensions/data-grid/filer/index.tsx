@@ -129,12 +129,12 @@ export class DataGridFileViewer extends EventsComponent {
             }
             return text;
         }
-        return <div className={"gap-h-14" + (this.mime == 'user' ? " w-180" : " w-300")}>
+        return <div className={"gap-h-10" + (this.mime == 'user' ? " w-180" : " w-300")}>
             {this.resources.length > 0 && <div className="max-h-300 overflow-y padding-h-5">
                 <DragList onChange={(e, c) => this.dragChange(e, c)}
                     isDragBar={e => e.closest('.drag') ? true : false}>
                     {this.resources.map((re, i) => {
-                        return <div className="flex cursor min-h-30 padding-w-14 text-1 item-hover round" key={i}>
+                        return <div className="flex cursor min-h-30 padding-w-10 text-1 item-hover round" key={i}>
                             <span className="round flex-fixed drag size-24 remark flex-center cursor item-hover">
                                 <Icon icon={DragHandleSvg} size={14}></Icon>
                             </span>
@@ -146,7 +146,7 @@ export class DataGridFileViewer extends EventsComponent {
                     })}</DragList>
             </div>}
             {this.resources.length > 0 && <Divider></Divider>}
-            <div className="padding-w-14">
+            <div className="padding-w-10">
                 {self.mime == 'user' && <Button onClick={e => this.uploadFile(e)} block>{getButtonText()}</Button>}
                 {self.mime != 'user' && <UploadView mine={self.mime} change={e => this.onSaveResource(e)}></UploadView>}
             </div>
