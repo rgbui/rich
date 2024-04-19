@@ -29,7 +29,7 @@ export class FlowView extends React.Component<{ flow: Flow, onChange: () => Prom
         </DragList>
     }
     render() {
-        return <div className="f-14 gap-h-10" onMouseDown={e => e.stopPropagation()}>
+        return <div className="f-14 gap-t-10 gap-b-5" onMouseDown={e => e.stopPropagation()}>
             <div className="f-12 remark flex gap-w-10 gap-t-10 gap-b-5"><S>当按钮被点击时</S></div>
             <div className="gap-w-10">{this.renderCommands()}</div>
             <div className="flex remark item-hover round padding-w-5 gap-w-10 h-30 cursor " onMouseDown={e => this.props.flow.openAddStep(e)} ><span className="flex-center    round"><Icon size={20} icon={PlusSvg}></Icon><span><S>添加下一步</S></span></span></div>

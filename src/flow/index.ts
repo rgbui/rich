@@ -66,7 +66,7 @@ export class Flow {
         }, [
             { text: lst('插入块'), value: '/insertBlocks', icon: DuplicateSvg },
             { type: MenuItemType.divide },
-            { text: lst('添加记录至数据表'), value: '/addRecords', icon: PlusSvg },
+            { text: lst('添加记录至数据表'), value: '/addRecords', icon: { name: 'byte', code: 'add' } },
             { text: lst('编辑记录至数据表'), value: '/editRecords', icon: Edit1Svg },
             { type: MenuItemType.divide },
             { text: lst('确认继续'), value: '/confirm', icon: { name: 'bytedance-icon', code: 'help' } },
