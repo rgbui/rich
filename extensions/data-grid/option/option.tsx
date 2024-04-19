@@ -11,7 +11,6 @@ import { useSelectMenuItem } from "../../../component/view/menu";
 import { Point } from "../../../src/common/vector/point";
 import { Icon } from "../../../component/view/icon";
 import { util } from "../../../util/util";
-import { Confirm } from "../../../component/lib/confirm";
 import { ShyAlert } from "../../../component/lib/alert";
 import { DragList } from "../../../component/view/drag.list";
 import { DataGridOptionType } from "../../../blocks/data-grid/schema/field";
@@ -103,19 +102,19 @@ export class TableStoreOption extends EventsComponent {
             <div className="bg-white overflow-y max-h-180">
                 {this.isEdit && <div className="remark gap-h-5 padding-w-10 h-20 f-12">{this.filterOptions.length > 0 ? lst('选择或创建一个选项') : lst('暂无选项')}</div>}
                 <DragList
-                    className={'gap-b-10'}
+                    className={this.filterOptions.length > 0 ? 'gap-b-10' : ""}
                     onChange={change}
                     isDragBar={e => e.closest('.shy-tablestore-option-item-icon') ? true : false}>
                     {this.filterOptions.map((op, i) => {
-                        return <div className={"flex visible-hover item-hover-light min-h-28 user-none round gap-w-5 padding-w-5 " + (this.focusIndex == i ? "item-hover-focus" : "")} key={op.text} onClick={e => this.setOption(op)} >
-                            {this.isEdit && <span className="shy-tablestore-option-item-icon size-24 flex-center flex-fixed cursor item-hover round"><Icon icon={DragHandle} size={16}></Icon></span>}
-                            <span className="text-overflow flex-auto gap-w-4 "><em className=" f-14 padding-h-2 padding-w-6 round h-18 f-14 l-16 " style={{ backgroundColor: op.color }}>{op.text}</em></span>
+                        return <div className={"cursor flex visible-hover item-hover-light h-30 gap-h-2 user-none round gap-w-5 padding-w-5 " + (this.focusIndex == i ? "item-hover-light-focus" : "")} key={op.text} onClick={e => this.setOption(op)} >
+                            {this.isEdit && <span className="shy-tablestore-option-item-icon size-20 flex-center flex-fixed cursor item-hover round text-1"><Icon icon={DragHandle} size={14}></Icon></span>}
+                            <span className="text-overflow flex-auto gap-w-4 "><em className=" f-14  padding-w-6 round h-22 f-14 l-22 " style={{ display: 'inline-block', backgroundColor: op.color }}>{op.text}</em></span>
                             {this.ovs.some(c => c.value == op.value) && <span className="flex-fixed size-20 flex-center gap-r-3 text-1"><Icon size={16} icon={CheckSvg}></Icon></span>}
-                            {this.isEdit && <span className="visible size-24 flex-center flex-fixed cursor item-hover round" onClick={e => this.configOption(op, e)}><Icon icon={Dots} size={16}></Icon></span>}
+                            {this.isEdit && <span className="visible size-20 flex-center flex-fixed cursor item-hover round" onClick={e => this.configOption(op, e)}><Icon icon={Dots} size={16}></Icon></span>}
                         </div>
                     })}
                 </DragList>
-                {this.isNeedCreated && self.isEdit && <div className={"item-hover-light min-h-28 user-none round gap-w-5 padding-w-5 flex " + (this.focusIndex == this.filterOptions.length ? "item-hover-focus" : "")} onClick={e => this.onCreateOption()}><em><S>创建</S></em><span className="l-18 h-18 padding-w-6 f-14 bold" style={{ backgroundColor: this.optionColor }}>{this.value}</span></div>}
+                {this.isNeedCreated && self.isEdit && <div className={"item-hover-light h-28 gap-b-5 user-none round gap-w-5 padding-w-5 flex " + (this.focusIndex == this.filterOptions.length ? "item-hover-focus" : "")} onClick={e => this.onCreateOption()}><em><S>创建</S></em><span className="l-18 h-18 padding-w-6 f-14 bold" style={{ backgroundColor: this.optionColor }}>{this.value}</span></div>}
             </div>
         </div>
     }
@@ -220,15 +219,13 @@ export class TableStoreOption extends EventsComponent {
         if (um) {
             if (um.item.name == 'color') {
                 option.color = um.item.value;
-                this.emit('changeOptions', lodash.cloneDeep(this.options));
                 this.forceUpdate();
+                this.emit('changeOptions', lodash.cloneDeep(this.options));
             }
             else if (um.item.name == 'delete') {
-                if (await Confirm(lst('确认删除标签项吗?'))) {
-                    this.options.remove(o => o === option);
-                    this.emit('changeOptions', lodash.cloneDeep(this.options));
-                    this.forceUpdate();
-                }
+                this.options.remove(o => o === option);
+                this.forceUpdate();
+                this.emit('changeOptions', lodash.cloneDeep(this.options));
             }
         }
         var name = menus[0].value;

@@ -72,6 +72,7 @@ class FieldTextView extends BlockView<FieldText> {
                     options: fc?.options || [],
                     isEdit: this.block.isCanEdit(),
                     changeOptions: (ops) => {
+                        console.log('ssss', ops);
                         this.block.schema.fieldUpdate({
                             fieldId: this.block.field.id,
                             data: {
@@ -82,6 +83,7 @@ class FieldTextView extends BlockView<FieldText> {
                 }
             );
             if (typeof op != 'undefined') {
+                console.log('op', op);
                 this.block.onChange(op ? op.map(o => o.value) : []);
             }
         }
