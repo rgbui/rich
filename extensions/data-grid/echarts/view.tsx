@@ -1,20 +1,17 @@
 import lodash from "lodash";
 import React from "react";
-import { GetFieldTypeSvg, getChartViews, getSchemaViewIcon, getSchemaViews } from "../../../blocks/data-grid/schema/util";
-import { CardFactory } from "../../../blocks/data-grid/template/card/factory/factory";
+import { GetFieldTypeSvg, getChartViews, getSchemaViewIcon } from "../../../blocks/data-grid/schema/util";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { MenuView } from "../../../component/view/menu/menu";
 import { lst } from "../../../i18n/store";
-import { BlockUrlConstant } from "../../../src/block/constant";
 import { BlockRenderRange } from "../../../src/block/enum";
-import { Rect } from "../../../src/common/vector/point";
 import { DataGridChartConfig } from ".";
 import { S } from "../../../i18n/view";
 import { SelectBox } from "../../../component/view/select/box";
 import { DataGridChart } from "../../../blocks/data-grid/view/statistic/charts";
 import { FieldType } from "../../../blocks/data-grid/schema/type";
-import { CheckSvg, CloseSvg, LoopSvg, PlusSvg } from "../../../component/svgs";
+import { CheckSvg, CloseSvg, PlusSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { getEchartTheme } from "../../../blocks/data-grid/view/statistic/load";
 import { Divider } from "../../../component/view/grid";
@@ -22,6 +19,7 @@ import { Switch } from "../../../component/view/switch";
 import { renderEcharts } from "../../../blocks/data-grid/view/statistic/render";
 import { InputNumber } from "../../../component/view/input/number";
 import { DynamicDateInput } from "../../date/input";
+import { HelpText } from "../../../component/view/text";
 
 export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChartConfig }> {
     get schema() {
@@ -29,59 +27,12 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
     }
     block: DataGridChart
     getItems(): MenuItem[] {
-        var self = this;
-        var cms = CardFactory.getCardModels(this.schema);
         var baseItems: MenuItem[] = [
             {
                 value: this.block.schemaView.text,
                 name: 'viewText',
                 type: MenuItemType.inputTitleAndIcon,
                 icon: getSchemaViewIcon(this.block.schemaView) || { name: 'byte', code: 'chart-proportion' },
-            },
-            { type: MenuItemType.gap },
-            {
-                text: lst('视图'),
-                icon: LoopSvg,
-                childs: [
-                    ...getSchemaViews().map(v => {
-                        return {
-                            name: "toggleView",
-                            value: v.url,
-                            text: v.text,
-                            icon: getSchemaViewIcon(v as any),
-                            checkLabel: !this.block.getCardUrl() && this.block.url == v.url
-                        }
-                    }),
-                    {
-                        text: lst('数据视图'),
-                        icon: { name: 'bytedance-icon', code: 'application-two' },
-                        childsStyle: { width: 300 },
-                        childs: [
-                            { text: lst('选择数据视图'), type: MenuItemType.text },
-                            ...cms.map(c => {
-                                return {
-                                    type: MenuItemType.custom,
-                                    name: 'dataView',
-                                    value: c.model.url,
-                                    render(item, view) {
-                                        return <div className="flex-full relative item-hover round padding-w-14 padding-h-10">
-                                            <div className="flex-fixed">
-                                                <img src={c.model.image} className="obj-center h-60 w-120" />
-                                            </div>
-                                            <div className="flex-auto gap-l-10">
-                                                <div>{c.model.title}</div>
-                                                <div className="remark">{c.model.remark}</div>
-                                            </div>
-                                            {self.block.getCardUrl() == c.model.url && <div className="pos pos-right pos-t-5 pos-r-5 size-20 cursor round">
-                                                <Icon size={16} icon={CheckSvg}></Icon>
-                                            </div>}
-                                        </div>
-                                    }
-                                }
-                            })
-                        ]
-                    }
-                ]
             },
             { type: MenuItemType.divide }
         ]
@@ -98,45 +49,15 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
     renderItems() {
         var self = this;
         async function input(item) {
-            if (item.name == 'size') self.block.onChangeSize(item.value)
-            else if (item.name == 'noTitle') self.block.onUpdateProps({ noTitle: !item.checked }, { range: BlockRenderRange.self });
-            else if (item.name == 'openRecordSource') self.block.onUpdateProps({ openRecordSource: item.value }, {})
-            else if (item.name == 'createRecordSource') self.block.onUpdateProps({ createRecordSource: item.value }, {})
-            else if (item.name == 'showRowNum') self.block.onShowRowNum(item.checked);
-            else if (item.name == 'checkRow') {
-                await self.block.onShowCheck(item.checked ? "checkbox" : 'none');
-            }
-            else if (item.name == 'showPager') {
-                await self.block.onExtendTriggerBlock(BlockUrlConstant.DataGridPage, {}, !self.block.hasTriggerBlock(BlockUrlConstant.DataGridPage))
-            }
-            else if (item.name == 'noHead') {
-                await self.block.onUpdateProps({ noHead: !item.checked }, { range: BlockRenderRange.self });
-            }
-            else if (['gallerySize', 'cardConfig.showField', 'dateFieldId', 'groupFieldId'].includes(item.name)) {
-                await self.block.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self });
-            }
-            else if (item.name == 'viewText') {
+            if (item.name == 'viewText') {
                 if (self.block.schemaView.text != item.value)
                     self.onStoreViewText(item.value);
                 else if (!lodash.isEqual(self.block.schemaView.icon, item.icon))
                     self.block.onSchemaViewUpdate(self.block.syncBlockId, { icon: item.icon });
             }
-            else if (item.name == 'lock') {
-                self.block.onTableSchemaLock(item.checked);
-            }
         }
         function select(item, event) {
-            if (item?.name == 'datasource') {
-                self.block.onOpenDataSource(Rect.fromEvent(event));
-            }
-            else if (item?.name == 'toggleView') {
-                self.block.onDataGridChangeView(item.value);
-                self.props.gc.onClose();
-            }
-            else if (item?.name == 'dataView') {
-                self.block.onDataGridChangeViewByTemplate(item.value);
-                self.props.gc.onClose();
-            }
+
         }
         function click(item) {
 
@@ -150,18 +71,18 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
     }
     getChartMessage() {
         if (this.bc?.chart_type == 'graph') {
-            var f = this.schema.fields.find(g => g.type == FieldType.relation);
+            var f = this.schema.visibleFields.find(g => g.type == FieldType.relation);
             if (f) {
                 if (f.config?.relationTableId == this.schema.id) return false;
             }
             return <div className="error f-12"><S text='graph统计意义'>存在关联字段且关联表指向自身，关系图才有意义</S></div>
         }
         else if (this.bc?.chart_type == 'radar') {
-            var ns = this.schema.fields.findAll(g => g.type == FieldType.number);
+            var ns = this.schema.visibleFields.findAll(g => g.type == FieldType.number);
             if (ns.length < 3) return <div className="error f-12"><S text='radar统计意义'>存在至少三个数值字段的统计,雷达图才有意义</S></div>
         }
         else if (this.bc?.chart_type == 'scatter') {
-            var ns = this.schema.fields.findAll(g => g.type == FieldType.number);
+            var ns = this.schema.visibleFields.findAll(g => g.type == FieldType.number);
             if (ns.length < 2) return <div className="error f-12"><S text='scatter统计意义'>存在两到三个数值字段的统计，散点图才有意义</S></div>
         }
         return false;
@@ -171,7 +92,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
             chart_type: type
         }
         if (type == 'radar') {
-            var nfs = this.schema.fields.findAll(g => g.type == FieldType.number);
+            var nfs = this.schema.visibleFields.findAll(g => g.type == FieldType.number);
             if (nfs.length > 2) {
                 if (!(Array.isArray(this.bc.chart_config?.aggs) && this.bc.chart_config?.aggs.length > 2)) {
                     props['chart_config.aggs'] = nfs.slice(0, 3).map(f => {
@@ -185,7 +106,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
             }
         }
         else if (type == 'scatter') {
-            var nfs = this.schema.fields.findAll(g => g.type == FieldType.number);
+            var nfs = this.schema.visibleFields.findAll(g => g.type == FieldType.number);
             if (nfs.length >= 2) {
                 if (!this.bc.chart_config?.y_fieldId) {
                     props['chart_config.y_fieldId'] = nfs[0]?.id;
@@ -198,7 +119,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
             }
         }
         else if (type == 'graph') {
-            var nc = this.schema.fields.find(g => g.type == FieldType.relation);
+            var nc = this.schema.visibleFields.find(g => g.type == FieldType.relation);
             if (nc) {
                 if (!this.bc.chart_config?.graph_fieldId)
                     props['chart_config.graph_fieldId'] = nc.id;
@@ -216,8 +137,8 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
         var bc = (this.block as any) as DataGridChart;
         var charts = getChartViews();
         var cm = this.getChartMessage();
-        return <div className="gap-b-14 r-gap-h-5">
-            <div className="flex gap-w-10 padding-w-5 padding-h-3 round item-hover">
+        return <div className="r-gap-h-5">
+            <div className="flex gap-w-5 padding-w-5 padding-h-3 round item-hover">
                 <div className="flex-auto"><S>图表</S></div>
                 <div className="flex-fixed">
                     <SelectBox
@@ -236,9 +157,9 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                         }} value={bc.chart_type}></SelectBox>
                 </div>
             </div>
-            {cm && <div className="gap-w-10">{cm}</div>}
+            {cm && <div className="gap-w-5">{cm}</div>}
             {!cm && <div>
-                {!["calendarHeatmap", "summary"].includes(bc.chart_type) && <div className="flex gap-w-10 padding-w-5 padding-h-3 round item-hover gap-h-5">
+                {!["calendarHeatmap", "summary"].includes(bc.chart_type) && <div className="flex gap-w-5 padding-w-5 padding-h-3 round item-hover gap-h-5">
                     <div className="flex-auto"><S>主题</S></div>
                     <div className={"flex-fixed"}>
                         <SelectBox
@@ -270,7 +191,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                     </div>
                 </div>}
                 {bc.chart_type == 'line' && <>
-                    <div className="flex gap-w-10 padding-w-5 padding-h-3 round  item-hover gap-h-5">
+                    <div className="flex gap-w-5 padding-w-5 padding-h-3 round  item-hover gap-h-5">
                         <div className="flex-auto"><S>面积</S></div>
                         <div className={"flex-fixed"}>
                             <Switch checked={bc.chart_config?.isArea}
@@ -282,7 +203,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             ></Switch>
                         </div>
                     </div>
-                    <div className="flex gap-w-10 padding-w-5 padding-h-3 round  item-hover gap-h-5">
+                    <div className="flex gap-w-5 padding-w-5 padding-h-3 round  item-hover gap-h-5">
                         <div className="flex-auto"><S>平滑</S></div>
                         <div className={"flex-fixed"}>
                             <Switch checked={bc.chart_config?.isSmooth}
@@ -294,7 +215,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             ></Switch>
                         </div>
                     </div>
-                    <div className="flex gap-w-10 padding-w-5 padding-h-3 round  item-hover gap-h-5">
+                    <div className="flex gap-w-5 padding-w-5 padding-h-3 round  item-hover gap-h-5">
                         <div className="flex-auto"><S>水平</S></div>
                         <div className={"flex-fixed"}>
                             <Switch checked={bc.chart_config?.isX}
@@ -308,7 +229,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                     </div>
                 </>}
                 {bc.chart_type == 'radar' && <>
-                    <div className="flex gap-w-10 padding-w-5 padding-h-3 round  item-hover gap-h-5">
+                    <div className="flex gap-w-5 padding-w-5 padding-h-3 round  item-hover gap-h-5">
                         <div className="flex-auto"><S>面积</S></div>
                         <div className={"flex-fixed"}>
                             <Switch checked={bc.chart_config?.isArea}
@@ -322,7 +243,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                     </div>
                 </>}
                 {bc.chart_type == 'graph' && <>
-                    <div className="flex gap-w-10 padding-w-5 padding-h-3 round  item-hover gap-h-5">
+                    <div className="flex gap-w-5 padding-w-5 padding-h-3 round  item-hover gap-h-5">
                         <div className="flex-auto"><S>环形</S></div>
                         <div className={"flex-fixed"}>
                             <Switch checked={bc.chart_config?.isRadius}
@@ -336,7 +257,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                     </div>
                 </>}
                 {bc.chart_type == 'bar' && <>
-                    <div className="flex gap-w-10 padding-w-5 padding-h-3 round  item-hover gap-h-5">
+                    <div className="flex gap-w-5 padding-w-5 padding-h-3 round  item-hover gap-h-5">
                         <div className="flex-auto"><S>水平</S></div>
                         <div className={"flex-fixed"}>
                             <Switch checked={bc.chart_config?.isX}
@@ -349,7 +270,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                         </div>
                     </div>
                 </>}
-                {bc.chart_type == 'pie' && <div className="flex gap-w-10 padding-w-5 padding-h-3 round  item-hover gap-h-5">
+                {bc.chart_type == 'pie' && <div className="flex gap-w-5 padding-w-5 padding-h-3 round  item-hover gap-h-5">
                     <div className="flex-auto"><S>环形</S></div>
                     <div className={"flex-fixed"}>
                         <Switch checked={bc.chart_config?.isRadius}
@@ -363,15 +284,15 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                 </div>}
                 <Divider></Divider>
                 {this.renderAggs()}
-                {!["wordCloud", 'pie', 'gauge', "summary", "calendarHeatmap", "radar"].includes(bc.chart_type) && <div className="flex gap-w-10 padding-w-5 padding-h-3 round item-hover">
+                {!["wordCloud", 'pie', 'gauge', "summary", "calendarHeatmap", "radar"].includes(bc.chart_type) && <div className="flex gap-w-5 padding-w-5 padding-h-3 round item-hover">
                     <div className="flex-fixed"><S>字段分组</S></div>
                     <div className={"flex-auto flex-end " + (this.schema.isType(bc.chart_config?.group_fieldId, FieldType.createDate, FieldType.date, FieldType.modifyDate) ? " flex-end" : "")}>
                         <SelectBox
                             textAlign="right"
-                            value={bc.chart_config?.group_fieldId}
+                            value={bc.chart_config?.group_fieldId||''}
                             dropHeight={150}
                             onChange={async e => {
-                                var sf = this.block.schema.fields.find(g => g.id == e);
+                                var sf = this.block.schema.visibleFields.find(g => g.id == e);
                                 var props = {
                                     'chart_config.group_fieldId': e
                                 }
@@ -389,7 +310,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             options={[
                                 { text: '无', value: '', icon: { name: 'bytedance-icon', code: 'square' } },
                                 { type: MenuItemType.divide },
-                                ...this.schema.fields.findAll(g => [
+                                ...this.schema.visibleFields.findAll(g => [
                                     FieldType.title,
                                     FieldType.date,
                                     FieldType.createDate,
@@ -429,6 +350,9 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                     </div>
                 </div>}
             </div>}
+            <div className="border-top-light h-30 flex padding-w-10">
+                <HelpText url={window.shyConfig?.isUS ? "https://help.shy.red/page/74#1FDGNukNCBK8mzVbfn95vt" : "https://help.shy.live/page/1876#eRtyKsBkW5hPkruxkyGdKL"}><S>了解如何使用数据图表</S></HelpText>
+            </div>
         </div>
     }
 
@@ -442,18 +366,18 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                 { text: lst('最大'), value: '$max', icon: { name: 'byte', code: 'maximum' } },
             ] as MenuItem<string>[];
         }
-        var numberField = this.schema.fields.find(g => g.type == FieldType.number);
+        var numberField = this.schema.visibleFields.find(g => g.type == FieldType.number);
         if (bc.chart_type == 'radar') {
-            var nfs = this.schema.fields.findAll(g => g.type == FieldType.number);
+            var nfs = this.schema.visibleFields.findAll(g => g.type == FieldType.number);
             return <div>
                 <div className="gap-w-10"><span className="f-12 remark"><S>统计</S></span></div>
-                <div className="flex gap-w-10 padding-w-5 padding-h-3 round gap-h-5 item-hover">
+                <div className="flex gap-w-5 padding-w-5 padding-h-3 round gap-h-5 item-hover">
                     <div className="flex-fixed gap-r-10"><S text="维度_X轴">维度(X轴)</S></div>
                     <div className={"flex-auto flex flex-end "}>
                         <SelectBox textAlign="right" dropHeight={150}
                             value={bc.chart_config?.x_fieldId}
                             onChange={async e => {
-                                var sf = this.schema.fields.find(g => g.id == e);
+                                var sf = this.schema.visibleFields.find(g => g.id == e);
                                 var props = {
                                     'chart_config.x_fieldId': e
                                 }
@@ -468,7 +392,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                 await bc.didMounted();
                                 this.forceUpdate()
                             }}
-                            options={this.schema.fields.findAll(g => [
+                            options={this.schema.visibleFields.findAll(g => [
                                 FieldType.title,
                                 FieldType.date,
                                 FieldType.createDate,
@@ -508,9 +432,9 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                         }
                     </div>
                 </div>
-                <div className="border round gap-h-5 gap-w-10">
+                <div className="border round gap-h-5 gap-w-5">
                     {(bc.chart_config?.aggs || []).map((agg, i) => {
-                        return <div key={i} className="flex visible-hover gap-w-10 item-hover gap-h-5 padding-w-5 padding-h-3 round ">
+                        return <div key={i} className="flex visible-hover gap-w-5 item-hover gap-h-5 padding-w-5 padding-h-3 round ">
                             <span className="flex-fixed gap-r-10 w-80 ">
                                 <SelectBox onChange={async e => {
                                     await bc.onUpdateProps(
@@ -522,7 +446,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                 }}
                                     dropHeight={150}
                                     value={agg.fieldId}
-                                    options={this.schema.fields.findAll(g => [FieldType.number].includes(g.type)).map(f => {
+                                    options={this.schema.visibleFields.findAll(g => [FieldType.number].includes(g.type)).map(f => {
                                         return {
                                             icon: GetFieldTypeSvg(f.type),
                                             text: f.text,
@@ -580,7 +504,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                         )
                         await bc.didMounted();
                         this.forceUpdate();
-                    }} className="flex gap-w-10 cursor  item-hover gap-h-5 padding-w-5 padding-h-3 round">
+                    }} className="flex gap-w-5 cursor  item-hover gap-h-5 padding-w-5 padding-h-3 round">
                         <Icon size={16} icon={PlusSvg}></Icon>
                         <span><S>添加雷达图指标</S></span>
                     </div>}
@@ -590,13 +514,13 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
         else if (bc.chart_type == 'scatter') {
             return <div>
                 <div className="gap-w-10"><span className="f-12 remark"><S>统计</S></span></div>
-                <div className="flex gap-w-10 padding-w-5 padding-h-3 round gap-h-5 item-hover">
+                <div className="flex gap-w-5 padding-w-5 padding-h-3 round gap-h-5 item-hover">
                     <div className="flex-fixed gap-r-10"><S text="维度_X轴">维度(X轴)</S></div>
                     <div className={"flex-auto flex flex-end "}>
                         <SelectBox textAlign="right" dropHeight={150}
                             value={bc.chart_config?.x_fieldId}
                             onChange={async e => {
-                                var sf = this.schema.fields.find(g => g.id == e);
+                                var sf = this.schema.visibleFields.find(g => g.id == e);
                                 var props = {
                                     'chart_config.x_fieldId': e
                                 }
@@ -611,7 +535,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                 await bc.didMounted();
                                 this.forceUpdate()
                             }}
-                            options={this.schema.fields.findAll(g => [
+                            options={this.schema.visibleFields.findAll(g => [
                                 FieldType.title,
                                 FieldType.date,
                                 FieldType.createDate,
@@ -651,8 +575,8 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                         }
                     </div>
                 </div>
-                <div className="border round gap-h-5 gap-w-10">
-                    <div className="flex gap-w-10 item-hover gap-h-5 padding-w-5 padding-h-3 round ">
+                <div className="border round gap-h-5 gap-w-5">
+                    <div className="flex gap-w-5 item-hover gap-h-5 padding-w-5 padding-h-3 round ">
                         <span className=" gap-r-10">
                             <SelectBox onChange={async e => {
                                 await bc.onUpdateProps(
@@ -664,7 +588,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             }}
                                 dropHeight={150}
                                 value={bc.chart_config?.y_fieldId}
-                                options={this.schema.fields.findAll(g => [FieldType.number].includes(g.type)).map(f => {
+                                options={this.schema.visibleFields.findAll(g => [FieldType.number].includes(g.type)).map(f => {
                                     return {
                                         icon: GetFieldTypeSvg(f.type),
                                         text: f.text,
@@ -681,7 +605,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             }}
                             options={getSOptions()}></SelectBox></span>
                     </div>
-                    <div className="flex gap-w-10  item-hover gap-h-5 padding-w-5 padding-h-3 round ">
+                    <div className="flex gap-w-5  item-hover gap-h-5 padding-w-5 padding-h-3 round ">
                         <span className=" gap-r-10">
                             <SelectBox onChange={async e => {
                                 await bc.onUpdateProps(
@@ -693,7 +617,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             }}
                                 dropHeight={150}
                                 value={bc.chart_config?.y1_fieldId}
-                                options={this.schema.fields.findAll(g => [FieldType.number].includes(g.type)).map(f => {
+                                options={this.schema.visibleFields.findAll(g => [FieldType.number].includes(g.type)).map(f => {
                                     return {
                                         icon: GetFieldTypeSvg(f.type),
                                         text: f.text,
@@ -710,7 +634,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             }}
                             options={getSOptions()}></SelectBox></span>
                     </div>
-                    <div className="flex gap-w-10  item-hover gap-h-5 padding-w-5 padding-h-3 round ">
+                    <div className="flex gap-w-5  item-hover gap-h-5 padding-w-5 padding-h-3 round ">
                         <span className="gap-r-10">
                             <SelectBox onChange={async e => {
                                 await bc.onUpdateProps(
@@ -725,7 +649,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                 options={[
                                     { icon: { name: 'byte', code: 'square' }, text: lst('无'), value: '' },
                                     { type: MenuItemType.divide },
-                                    ...this.schema.fields.findAll(g => [FieldType.number].includes(g.type)).map(f => {
+                                    ...this.schema.visibleFields.findAll(g => [FieldType.number].includes(g.type)).map(f => {
                                         return {
                                             icon: GetFieldTypeSvg(f.type),
                                             text: f.text,
@@ -746,7 +670,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
             </div>
         }
         else if (bc.chart_type == 'graph') {
-            return <div className="flex gap-w-10 gap-h-5 item-hover padding-w-5 padding-h-3 round ">
+            return <div className="flex gap-w-5 gap-h-5 item-hover padding-w-5 padding-h-3 round ">
                 <span className="flex-fixed"><S>关系</S></span>
                 <span className="flex-auto flex-end gap-l-10">
                     <SelectBox onChange={async e => {
@@ -759,7 +683,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                     }}
                         dropHeight={150}
                         value={bc.chart_config?.graph_fieldId}
-                        options={this.schema.fields.findAll(g => [FieldType.relation].includes(g.type)).map(f => {
+                        options={this.schema.visibleFields.findAll(g => [FieldType.relation].includes(g.type)).map(f => {
                             return {
                                 icon: GetFieldTypeSvg(f.type),
                                 text: f.text,
@@ -771,7 +695,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
         }
         else if (bc.chart_type == 'gauge' || bc.chart_type == 'summary') {
             return <div>
-                <div className="flex gap-w-10 padding-w-5 padding-h-3 round gap-h-5 item-hover">
+                <div className="flex gap-w-5 padding-w-5 padding-h-3 round gap-h-5 item-hover">
                     <span className="flex-fixed"><S>统计</S></span>
                     <span className="flex-auto flex-end gap-r-10">
                         <SelectBox onChange={async e => {
@@ -787,7 +711,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             options={[
                                 { icon: { name: 'byte', code: 'square' }, text: lst('总量'), value: '' },
                                 { type: MenuItemType.divide },
-                                ...this.schema.fields.findAll(g => [FieldType.number].includes(g.type)).map(f => {
+                                ...this.schema.visibleFields.findAll(g => [FieldType.number].includes(g.type)).map(f => {
                                     return {
                                         icon: GetFieldTypeSvg(f.type),
                                         text: f.text,
@@ -804,7 +728,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                         }}
                         options={getSOptions()}></SelectBox></span>}
                 </div>
-                <div className="flex gap-w-10 padding-w-5 padding-h-3 round gap-h-5 item-hover">
+                <div className="flex gap-w-5 padding-w-5 padding-h-3 round gap-h-5 item-hover">
                     <span className="flex-fixed"><S>指标</S></span>
                     <span className="flex-auto flex-end "><InputNumber
                         size='small'
@@ -829,13 +753,13 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
         else if (bc.chart_type == 'calendarHeatmap') {
             return <div>
                 <div className="gap-w-10"><span className="f-12 remark"><S>统计</S></span></div>
-                <div className="flex gap-w-10 padding-w-5 padding-h-3 round gap-h-5 item-hover">
+                <div className="flex gap-w-5 padding-w-5 padding-h-3 round gap-h-5 item-hover">
                     <div className="flex-fixed gap-r-10"><S text="维度_X轴">维度(X轴)</S></div>
                     <div className={"flex-auto flex flex-end "}>
                         <SelectBox textAlign="right" dropHeight={150}
                             value={bc.chart_config?.x_fieldId}
                             onChange={async e => {
-                                var sf = this.schema.fields.find(g => g.id == e);
+                                var sf = this.schema.visibleFields.find(g => g.id == e);
                                 var props = {
                                     'chart_config.x_fieldId': e
                                 }
@@ -850,7 +774,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                 await bc.didMounted();
                                 this.forceUpdate()
                             }}
-                            options={this.schema.fields.findAll(g => [
+                            options={this.schema.visibleFields.findAll(g => [
                                 FieldType.date,
                                 FieldType.createDate,
                                 FieldType.modifyDate,
@@ -884,29 +808,29 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                         }
                     </div>
                 </div>
-                <div className="flex gap-w-10 gap-h-5 item-hover padding-w-5 padding-h-3 round">
+                <div className="flex gap-w-5 gap-h-5 item-hover padding-w-5 padding-h-3 round">
                     <span className="flex-fixed gap-r-10">
                         <S text='数值_Y轴'>数值（Y 轴）</S>
                     </span>
-                    <div className="flex-auto flex flex-end  r-round r-cursor r-padding-h-3 r-padding-w-3 r-flex-center r-w60 ">
+                    <div className="flex-auto flex flex-end  r-round r-cursor r-padding-h-2 r-padding-w-3 r-flex-center r-w60 ">
                         <span onMouseDown={async e => {
                             await bc.onUpdateProps({ 'chart_config.y_fieldId': '' }, { range: BlockRenderRange.self })
                             await bc.didMounted();
                             this.forceUpdate()
                         }}
-                            className={" " + (bc.chart_config.y_fieldId ? "" : "item-hover-focus")}><S>统计总数</S></span>
+                            className={" " + (bc.chart_config.y_fieldId ? "" : "item-hover-button")}><S>统计总数</S></span>
                         <span
                             onMouseDown={async e => {
-                                await bc.onUpdateProps({ 'chart_config.y_fieldId': this.schema.fields.find(g => g.type == FieldType.number)?.id }, { range: BlockRenderRange.self })
+                                await bc.onUpdateProps({ 'chart_config.y_fieldId': this.schema.visibleFields.find(g => g.type == FieldType.number)?.id }, { range: BlockRenderRange.self })
                                 await bc.didMounted();
                                 this.forceUpdate();
                             }}
-                            className={" " + (bc.chart_config.y_fieldId && numberField ? "item-hover-focus" : "") + (numberField ? " " : " remark")}
+                            className={" " + (bc.chart_config.y_fieldId && numberField ? "item-hover-button" : "") + (numberField ? " " : " remark")}
                         ><S>聚合统计</S></span>
                     </div>
                 </div>
                 {
-                    bc.chart_config.y_fieldId && <div className="flex gap-w-10 gap-h-5 item-hover padding-w-5 padding-h-3 round ">
+                    bc.chart_config.y_fieldId && <div className="flex gap-w-5 gap-h-5 item-hover padding-w-5 padding-h-3 round ">
                         <span className=" gap-r-10">
                             <SelectBox onChange={async e => {
                                 await bc.onUpdateProps(
@@ -918,7 +842,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             }}
                                 dropHeight={150}
                                 value={bc.chart_config?.y_fieldId}
-                                options={this.schema.fields.findAll(g => [FieldType.number].includes(g.type)).map(f => {
+                                options={this.schema.visibleFields.findAll(g => [FieldType.number].includes(g.type)).map(f => {
                                     return {
                                         icon: GetFieldTypeSvg(f.type),
                                         text: f.text,
@@ -936,7 +860,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             options={getSOptions()}></SelectBox></span>
                     </div>
                 }
-                <div className="flex gap-w-10 padding-w-5 padding-h-3 round gap-h-5 item-hover">
+                <div className="flex gap-w-5 padding-w-5 padding-h-3 round gap-h-5 item-hover">
                     <span className="flex-fixed"><S>时间范围</S></span>
                     <span className="flex-auto flex flex-end gap-r-10">
                         <span className="flex-fixed gap-l-10">
@@ -961,13 +885,13 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
         }
         return <div>
             <div className="gap-w-10"><span className="f-12 remark"><S>统计</S></span></div>
-            <div className="flex gap-w-10 padding-w-5 padding-h-3 round gap-h-5 item-hover">
+            <div className="flex gap-w-5 padding-w-5 padding-h-3 round gap-h-5 item-hover">
                 <div className="flex-fixed gap-r-10"><S text="维度_X轴">维度(X轴)</S></div>
                 <div className={"flex-auto flex flex-end "}>
                     <SelectBox textAlign="right" dropHeight={150}
                         value={bc.chart_config?.x_fieldId}
                         onChange={async e => {
-                            var sf = this.schema.fields.find(g => g.id == e);
+                            var sf = this.schema.visibleFields.find(g => g.id == e);
                             var props = {
                                 'chart_config.x_fieldId': e
                             }
@@ -982,7 +906,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             await bc.didMounted();
                             this.forceUpdate()
                         }}
-                        options={this.schema.fields.findAll(g => [
+                        options={this.schema.visibleFields.findAll(g => [
                             FieldType.title,
                             FieldType.date,
                             FieldType.createDate,
@@ -1022,29 +946,29 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                     }
                 </div>
             </div>
-            <div className="flex gap-w-10 gap-h-5 item-hover padding-w-5 padding-h-3 round">
+            <div className="flex gap-w-5 gap-h-5 item-hover padding-w-5 padding-h-3 round">
                 <span className="flex-fixed gap-r-10">
                     <S text='数值_Y轴'>数值（Y 轴）</S>
                 </span>
-                <div className="flex-auto flex flex-end  r-round r-cursor r-padding-h-3 r-padding-w-3 r-flex-center r-w60 ">
+                <div className="flex-auto flex flex-end  r-round r-cursor r-padding-h-2 r-padding-w-3 r-flex-center r-w60 ">
                     <span onMouseDown={async e => {
                         await bc.onUpdateProps({ 'chart_config.y_fieldId': '' }, { range: BlockRenderRange.self })
                         await bc.didMounted();
                         this.forceUpdate()
                     }}
-                        className={" " + (bc.chart_config.y_fieldId ? "" : "item-hover-focus")}><S>统计总数</S></span>
+                        className={" " + (bc.chart_config.y_fieldId ? "" : "item-hover-button")}><S>统计总数</S></span>
                     <span
                         onMouseDown={async e => {
-                            await bc.onUpdateProps({ 'chart_config.y_fieldId': this.schema.fields.find(g => g.type == FieldType.number)?.id }, { range: BlockRenderRange.self })
+                            await bc.onUpdateProps({ 'chart_config.y_fieldId': this.schema.visibleFields.find(g => g.type == FieldType.number)?.id }, { range: BlockRenderRange.self })
                             await bc.didMounted();
                             this.forceUpdate();
                         }}
-                        className={" " + (bc.chart_config.y_fieldId && numberField ? "item-hover-focus" : "") + (numberField ? " " : " remark")}
+                        className={" " + (bc.chart_config.y_fieldId && numberField ? "item-hover-button" : "") + (numberField ? " " : " remark")}
                     ><S>聚合统计</S></span>
                 </div>
             </div>
             {
-                bc.chart_config.y_fieldId && <div className="flex gap-w-10 gap-h-5 item-hover padding-w-5 padding-h-3 round ">
+                bc.chart_config.y_fieldId && <div className="flex gap-w-5 gap-h-5 item-hover padding-w-5 padding-h-3 round ">
                     <span className=" gap-r-10">
                         <SelectBox onChange={async e => {
                             await bc.onUpdateProps(
@@ -1056,7 +980,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                         }}
                             dropHeight={150}
                             value={bc.chart_config?.y_fieldId}
-                            options={this.schema.fields.findAll(g => [FieldType.number].includes(g.type)).map(f => {
+                            options={this.schema.visibleFields.findAll(g => [FieldType.number].includes(g.type)).map(f => {
                                 return {
                                     icon: GetFieldTypeSvg(f.type),
                                     text: f.text,

@@ -29,12 +29,11 @@ export class DataGridChartConfig extends EventsComponent {
                 <Tab.Page item={lst('视图')}>
                     <DataGridChartViewConfig gc={this} ref={e => this.dataGridViewConfig = e} ></DataGridChartViewConfig>
                 </Tab.Page>
-                <Tab.Page item={lst('过滤')}>
+                <Tab.Page item={lst('筛选')}>
                     <TableFilterView ref={e => this.tableFilterView = e}></TableFilterView>
                 </Tab.Page>
             </Tab>
         </div>
-
     }
     onClose() {
         this.emit('close')

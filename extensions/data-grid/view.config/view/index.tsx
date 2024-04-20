@@ -46,7 +46,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 icon: LoopSvg,
                 childs: [
                     { text: lst('数据表视图'), type: MenuItemType.text, helpUrl: window.shyConfig?.isUS ? "https://help.shy.red/page/44#p6dtzzCsUHUrhyfNdrfkXh" : "https://help.shy.live/page/288#eNk3NZZyXWMCgMEMCyJRcG" },
-                    ...getSchemaViews().map(v => {
+                    ...getSchemaViews().map(v=>{
                         return {
                             name: "toggleView",
                             value: v.url,

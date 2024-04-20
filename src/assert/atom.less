@@ -573,7 +573,6 @@ item-selected:选中的效果
 .r-bg-hover>*,
 .r-item-bg-hover>* {
     background-color: #fff;
-
     &:hover {
         background-color: #eee;
     }
@@ -584,10 +583,15 @@ item-selected:选中的效果
 .r-bg-hover-light>*,
 .r-item-bg-hover-light>* {
     background-color: #fff;
-
     &:hover {
         background-color: #fefefe;
     }
+}
+
+.item-hover-button-focus,
+.r-item-hover-button-focus>* {
+    box-shadow             : var(--shadow-s);
+    background             : #fff;
 }
 
 .item-hover-button,
