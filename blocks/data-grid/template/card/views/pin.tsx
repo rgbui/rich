@@ -32,7 +32,7 @@ CardModel('/card/pinterest', () => ({
         { name: 'author', text: lst('作者'), types: [FieldType.creater] },
         { name: 'title', text: lst('标题'), types: [FieldType.title, FieldType.text] },
         { name: 'remark', text: lst('描述'), types: [FieldType.text] },
-        { name: 'like', text: lst('点赞'), types: [FieldType.like] },
+        { name: 'like', text: lst('点赞'), types: [FieldType.like] , required: true},
         { name: 'tags', text: lst('标签'), types: [FieldType.options, FieldType.option] }
     ],
     views: [

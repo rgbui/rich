@@ -23,7 +23,7 @@ CardModel('/job', () => ({
     image: Card9.default,
     forUrls: [BlockUrlConstant.DataGridGallery],
     props: [
-        { name: 'jobTitle', text: lst('职位名称'), types: [FieldType.title, FieldType.text, FieldType.option] },
+        { name: 'jobTitle', text: lst('职位名称'), types: [FieldType.title, FieldType.text, FieldType.option], required: true },
         { name: 'jobDescription', text: lst('工作职责描述'), types: [FieldType.plain] },
         { name: 'isShelf', text: lst('是否发布'), types: [FieldType.bool] },
         {
@@ -42,7 +42,8 @@ CardModel('/job', () => ({
                     { text: lst('节日福利'), value: '8', color: BackgroundColorList().randomOf()?.color },
                     { text: lst('零食下午茶'), value: '9', color: BackgroundColorList().randomOf()?.color }
                 ]
-            }
+            },
+            required: true
         },
         { name: 'city', text: lst('城市'), types: [FieldType.text, FieldType.option] },
         {
@@ -61,7 +62,7 @@ CardModel('/job', () => ({
                     { text: lst('5-10年'), value: '8', color: BackgroundColorList().randomOf()?.color },
                     { text: lst('10年以上'), value: '9', color: BackgroundColorList().randomOf()?.color }
                 ]
-            }
+            }, required: true
         },
         {
             name: 'edu',
@@ -75,7 +76,7 @@ CardModel('/job', () => ({
                     { text: lst('硕士'), value: '4', color: BackgroundColorList().randomOf()?.color },
                     { text: lst('博士'), value: '5', color: BackgroundColorList().randomOf()?.color },
                 ]
-            }
+            }, required: true
         },
         {
             name: 'salary',
@@ -91,10 +92,13 @@ CardModel('/job', () => ({
                     { text: lst('20-50K'), value: '6', color: BackgroundColorList().randomOf()?.color },
                     { text: lst('50K以上'), value: '7', color: BackgroundColorList().randomOf()?.color },
                 ]
-            }
+            }, required: true
         },
         { name: 'companyLogo', text: lst('公司logo'), types: [FieldType.image] },
-        { name: 'company', text: lst('公司名称'), types: [FieldType.text] },
+        {
+            name: 'company', text: lst('公司名称'), types: [FieldType.text],
+            required: true
+        },
         {
             name: 'companyCategory',
             text: lst('公司类别'),

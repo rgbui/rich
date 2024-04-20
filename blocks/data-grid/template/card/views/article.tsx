@@ -43,8 +43,7 @@ CardModel('/article', () => ({
         {
             name: 'pic',
             text: lst('插图'),
-            types: [FieldType.thumb, FieldType.image, FieldType.cover, FieldType.video],
-            required: true
+            types: [FieldType.thumb, FieldType.image, FieldType.cover, FieldType.video]
         },
         { name: 'remark', text: lst('简介'), types: [FieldType.plain, FieldType.text] },
         { name: 'like', text: lst('点赞'), types: [FieldType.like] },

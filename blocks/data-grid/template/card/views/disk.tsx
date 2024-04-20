@@ -22,7 +22,6 @@ CardModel('/list/disk', () => ({
     props: [
         { name: 'file', text: lst('文件'), types: [FieldType.file], required: true },
         { name: 'title', text: lst('标题'), types: [FieldType.title, FieldType.text] },
-        { name: 'remark', text: lst('描述'), types: [FieldType.plain, FieldType.text] },
         { name: 'createDate', text: lst("创建日期"), types: [FieldType.createDate] },
         { name: 'tags', text: lst('分类'), types: [FieldType.option, FieldType.options] },
         { name: 'author', text: lst('作者'), types: [FieldType.creater, FieldType.user] },

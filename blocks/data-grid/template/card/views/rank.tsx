@@ -14,11 +14,13 @@ import { CardModel, CardViewCom } from "../factory/observable";
 import { CardView } from "../view";
 import { Icon } from "../../../../../component/view/icon";
 import { util } from "../../../../../util/util";
+import * as Card1 from "../../../../../src/assert/img/card/card10.png";
 
-CardModel('/rank',() => ({
+CardModel('/rank', () => ({
     url: '/rank',
     title: lst('排名'),
     forUrls: [BlockUrlConstant.DataGridList],
+    image: Card1.default,
     props: [
         {
             name: 'title',
@@ -28,17 +30,13 @@ CardModel('/rank',() => ({
         },
         {
             name: 'pic',
-            text: lst('缩略图'),
-            types: [FieldType.image, FieldType.video, FieldType.thumb, FieldType.cover],
-            required: true
+            text: lst('插图'),
+            types: [FieldType.image, FieldType.video, FieldType.thumb, FieldType.cover]
         },
-        { name: 'remark', text: lst('简介'), types: [FieldType.plain, FieldType.text] },
-        { name: 'like', text: lst('点赞'), types: [FieldType.like] },
+        { name: 'remark', text: lst('简介'), types: [FieldType.text, FieldType.plain] },
         { name: 'author', text: lst('作者'), types: [FieldType.creater, FieldType.user] },
         { name: 'tags', text: lst('分类'), types: [FieldType.option, FieldType.options] },
-        { name: 'date', text: lst('日期'), types: [FieldType.createDate, FieldType.date] },
-        { name: 'comment', text: lst('评论'), types: [FieldType.comment] },
-        { name: 'browse', text: lst('浏览量'), types: [FieldType.browse] },
+        { name: 'date', text: lst('日期'), types: [FieldType.createDate, FieldType.date] }
     ],
     views: [
         { url: BlockUrlConstant.DataGridTable, text: lst('排名'), },
@@ -48,28 +46,31 @@ CardModel('/rank',() => ({
     async createDataList() {
         return [
             {
-                pic: [{ url: 'https://api-w1.shy.live/ws/img?id=1e1a07d5c333421c9cc885775b0ff17c' }],
-                title: '花',
+                pic: [{ url: 'https://api-w2.shy.live/ws/img?id=4b473a7ac43041bfbc030272d3abdca5' }],
+                title: '诗云',
+                remark: '诗云是一款知识协作生产力工具，它旨在帮助用户更高效地进行知识管理和协作',
                 snap: await buildPageData([
-                    'eeeeeeee',
-                    { url: BlockUrlConstant.Image, src: { url: 'https://api-w1.shy.live/ws/img?id=1e1a07d5c333421c9cc885775b0ff17c' } },
-                    'gggggggggeeee'
+                    { url: BlockUrlConstant.Image, src: { url: 'https://api-w2.shy.live/ws/img?id=4b473a7ac43041bfbc030272d3abdca5' } },
+                    '诗云是一款知识协作生产力工具，它旨在帮助用户更高效地进行知识管理和协作'
                 ], { isTitle: true, isComment: true })
             },
             {
-                pic: [{ url: 'https://api-w1.shy.live/ws/img?id=08e4ff43377b4e13a618a183b3a82dc6' }], title: '水果季节',
+                title: "Notion",
+                remark: 'Notion 是一款全面的数字化协作工作管理工具，它集成了笔记、知识库和任务管理等功能，使个人和团队能够在一个平台上高效地进行信息组织、协作和项目管理。',
+                pic: [{ url: 'https://api-w2.shy.live/ws/img?id=a639fe861c6e4be5a252eceb784e87f3' }],
                 snap: await buildPageData([
-                    'eeeeeeee',
-                    { url: BlockUrlConstant.Image, src: { url: 'https://api-w1.shy.live/ws/img?id=08e4ff43377b4e13a618a183b3a82dc6' } },
-                    'gggggggggeeee'
+
+                    { url: BlockUrlConstant.Image, src: { url: 'https://api-w2.shy.live/ws/img?id=a639fe861c6e4be5a252eceb784e87f3' } },
+                    'Notion 是一款全面的数字化协作工作管理工具，它集成了笔记、知识库和任务管理等功能，使个人和团队能够在一个平台上高效地进行信息组织、协作和项目管理。'
                 ], { isTitle: true, isComment: true })
             },
             {
-                pic: [{ url: 'https://api-w1.shy.live/ws/img?id=e90c90e3f4634b49a19eceba035d30d8' }], title: '盆栽',
+                title: "滴答",
+                remark: '滴答清单是一款实用的时间管理和任务规划工具，它帮助用户有效地记录、安排和追踪任务。',
+                pic: [{ url: 'https://api-w2.shy.live/ws/img?id=32f9c9dd73d64358ae7b57f345b77128' }],
                 snap: await buildPageData([
-                    'eeeeeeee',
-                    { url: BlockUrlConstant.Image, src: { url: 'https://api-w1.shy.live/ws/img?id=e90c90e3f4634b49a19eceba035d30d8' } },
-                    'gggggggggeeee'
+                    { url: BlockUrlConstant.Image, src: {url: 'https://api-w2.shy.live/ws/img?id=32f9c9dd73d64358ae7b57f345b77128' } },
+                    '滴答清单是一款实用的时间管理和任务规划工具，它帮助用户有效地记录、安排和追踪任务。'
                 ], { isTitle: true, isComment: true })
             }
         ]
@@ -78,7 +79,8 @@ CardModel('/rank',() => ({
 
 @CardViewCom('/rank')
 export class CardPin extends CardView {
-    async onGetMenus(): Promise<MenuItem<string | BlockDirective>[]> {
+    async onGetMenus()
+    {
         var rs = await super.onGetMenus();
         var at = rs.findIndex(x => x.name == 'openSlide');
         if (at > -1)
@@ -96,7 +98,6 @@ export class CardPin extends CardView {
                     ]
                 },
                 {
-
                     icon: { name: 'byte', code: 'zoom-in' },
                     text: lst('大小'),
                     value: cs.size,
@@ -136,7 +137,7 @@ export class CardPin extends CardView {
         if (cs.size == 100) numberSize = '60px';
         else if (cs.size == 70) numberSize = '40px';
         if (cs.align == 'left') {
-            return <div onMouseDown={e => this.openEdit(e)} className={"relative gap-h-10 visible-hover " + (hasPic ? "flex  flex-full  " : "")}>
+            return <div onMouseDown={e => this.openEdit(e)} className={"relative gap-h-10 visible-hover flex  flex-full"}>
                 <div
                     className={"flex-fixed flex-center gap-r-10 " + ("w-40") + " " + (index <= 3 ? "text-p" : "text")}
                     style={{ fontSize: numberSize, fontStyle: 'italic' }}>
@@ -145,7 +146,7 @@ export class CardPin extends CardView {
                 {hasPic && <div className="flex-fixed flex-center">
                     <img className={"size-" + cs.size + "  block round  object-center"} src={autoImageUrl(pics[0].url, 120)} />
                 </div>}
-                <div className={hasPic ? "flex-auto gap-l-10" : ""}>
+                <div className={"flex-auto gap-l-10"}>
                     <div className="f-16 bold">{title}</div>
                     {remark && <div className="f-12 remark rows-2">{remark}</div>}
                     {tags.length > 0 && <div className="flex">{tags.map((tag, i) => {
@@ -189,7 +190,7 @@ export class CardPin extends CardView {
                     style={{ fontSize: numberSize, fontStyle: 'italic' }}>
                     {index}
                 </div>
-                <div className="pos-top pos-right  flex-end z-2  gap-t-5 r-size-24 r-gap-r-5 r-round r-cursor">
+                <div className="pos-top-right  flex-end z-2  gap-t-5 r-size-24 r-gap-r-5 r-round r-cursor">
                     {this.isCanEdit && <span onMouseDown={e => self.openMenu(e)} className="bg-dark-1 visible text-white   flex-center">
                         <Icon size={18} icon={DotsSvg}></Icon>
                     </span>}

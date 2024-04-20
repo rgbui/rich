@@ -21,10 +21,10 @@ CardModel('/user/story', () => ({
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridGallery],
     props: [
-        { name: 'user', text: lst('用户'), types: [FieldType.user] },
+        { name: 'user', text: lst('用户'), types: [FieldType.user], required: true },
         { name: 'title', text: lst('称呼'), types: [FieldType.title, FieldType.text] },
         { name: 'profession', text: lst('职业'), types: [FieldType.text] },
-        { name: 'indr', text: lst('介绍'), types: [FieldType.text] },
+        { name: 'indr', text: lst('介绍'), types: [FieldType.text], required: true },
         { name: 'address', text: lst('所在地'), types: [FieldType.text] },
     ],
     views: [

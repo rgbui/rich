@@ -109,11 +109,22 @@ export class TableSchema {
         fs.splice(1, 0, ...ns);
         return fs;
     }
+    get allVisibleFields() {
+        var fs = this.fields.findAll(g => g.text && ![FieldType.deleted].includes(g.type));
+        var ns = fs.findAll(g => !SysFieldTypes.includes(g.type));
+        fs = fs.findAll(g => SysFieldTypes.includes(g.type));
+        fs.sort((x, y) => {
+            if (x.type === FieldType.title) return -1;
+            else return 1;
+        })
+        fs.splice(1, 0, ...ns);
+        return fs;
+    }
     /**
      * 系统创建表格时，默认创建显示的字段
      */
     get defaultViewFields() {
-        var fs= this.fields.findAll(g => g.text && (g.type == FieldType.title || !SysFieldTypes.includes(g.type)))
+        var fs = this.fields.findAll(g => g.text && (g.type == FieldType.title || !SysFieldTypes.includes(g.type)))
         var ns = fs.findAll(g => !SysFieldTypes.includes(g.type));
         fs = fs.findAll(g => SysFieldTypes.includes(g.type));
         fs.sort((x, y) => {
