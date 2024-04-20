@@ -115,7 +115,7 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
     }
     renderSearch() {
         if (this.searchEmojis.length == 0) return <div className="flex-center remark f-12 gap-h-10"><S>没有搜索图标</S></div>
-        return <div className='shy-font-awesome-category'><div className="shy-font-awesome-category-content">
+        return <div className='shy-font-awesome-category gap-h-10'><div className="shy-font-awesome-category-content">
             {this.searchEmojis.map(ic => {
                 return <Tip overlay={ls.isCn ? ic.title : ic.name} key={ic.name}><a onMouseDown={e => this.onChange(ic)} >
                     {this.renderSvg(ic)}
