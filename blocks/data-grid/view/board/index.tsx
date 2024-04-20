@@ -198,7 +198,7 @@ export class TableStoreBoard extends DataGridView {
         }
     }
     get isCardAuto() {
-        return this.cardConfig?.auto || this.cardConfig.showMode == 'define'
+        return this.cardConfig?.auto || this.cardConfig?.showMode == 'define'
     }
 }
 

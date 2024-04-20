@@ -6,7 +6,7 @@ import { Avatar } from "../../../../../component/view/avator/face";
 import { UserBox } from "../../../../../component/view/avator/user";
 import { Icon } from "../../../../../component/view/icon";
 import { ResourceArguments } from "../../../../../extensions/icon/declare";
-import * as Card1 from "../../../../../src/assert/img/card/card1.png"
+import * as Card1 from "../../../../../src/assert/img/card/card2.png"
 import { FieldType } from "../../../schema/type";
 import { CardModel, CardViewCom } from "../factory/observable";
 import { CardView } from "../view";
@@ -42,7 +42,7 @@ CardModel('/article', () => ({
         },
         {
             name: 'pic',
-            text: lst('缩略图'),
+            text: lst('插图'),
             types: [FieldType.thumb, FieldType.image, FieldType.cover, FieldType.video],
             required: true
         },
@@ -77,8 +77,7 @@ CardModel('/article', () => ({
         { name: 'comment', text: lst('评论'), types: [FieldType.comment] },
         { name: 'browse', text: lst('浏览量'), types: [FieldType.browse] },
     ],
-    async createViews()
-    {
+    async createViews() {
         return [
             {
                 url: BlockUrlConstant.DataGridTable,
@@ -98,26 +97,17 @@ CardModel('/article', () => ({
     async createDataList() {
         return [
             {
-                pic: [{ url: 'https://api-w1.shy.live/ws/img?id=08e4ff43377b4e13a618a183b3a82dc6' }],
-                title: '红肉水果',
-                snap: await loadPageUrlData('红肉水果'),
+                pic: [{ url: 'https://api-w1.shy.live/ws/img?id=3a144b9275b848c4b4382eab4d3027c6' }],
+                title: '如何才能保持自己对生活的热爱',
+                snap: await loadPageUrlData('如何才能保持自己对生活的热爱'),
                 tags: '1'
             },
             {
-                pic: [{ url: 'https://api-w1.shy.live/ws/img?id=e90c90e3f4634b49a19eceba035d30d8' }],
-                title: '如何种植盆栽',
-                snap: await loadPageUrlData("如何种植盆栽"),
+                pic: [{ url: 'https://api-w1.shy.live/ws/img?id=3e4cfb20708e44c0925d0dbb1a647e99' }],
+                title: '如何整理信息做笔记',
+                snap: await loadPageUrlData("如何整理信息做笔记"),
                 tags: '2'
-            },
-            {
-                pic: [{ url: 'https://api-w1.shy.live/ws/img?id=1e1a07d5c333421c9cc885775b0ff17c' }],
-                title: '花',
-                snap: await buildPageData([
-                    { url: BlockUrlConstant.Image, src: { url: 'https://api-w1.shy.live/ws/img?id=1e1a07d5c333421c9cc885775b0ff17c' } },
-                ], { isTitle: true, isComment: true }
-                ),
-                tags: '3'
-            },
+            }
         ]
     }
 }))

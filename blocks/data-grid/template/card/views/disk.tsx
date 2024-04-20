@@ -2,7 +2,7 @@ import React from "react";
 import { DotsSvg, PicSvg, VideoSvg, AudioSvg, FileSvg, DownloadSvg } from "../../../../../component/svgs";
 import { Icon } from "../../../../../component/view/icon";
 import { ResourceArguments } from "../../../../../extensions/icon/declare";
-import * as Card1 from "../../../../../src/assert/img/card/card8.jpg"
+import * as Card1 from "../../../../../src/assert/img/card/card8.png"
 import { BlockUrlConstant } from "../../../../../src/block/constant";
 import { util } from "../../../../../util/util";
 import { FieldType } from "../../../schema/type";
@@ -33,9 +33,9 @@ CardModel('/list/disk', () => ({
         { url: BlockUrlConstant.RecordPageView, text: lst('文件详情'), }
     ],
     dataList: [
-        { title: '花', remark: '', file: [{ size: 50, filename: 'kankan.png', ext: '.png', url: 'https://api-w1.shy.live/ws/img?id=1e1a07d5c333421c9cc885775b0ff17c' }], },
-        { title: '水果季节', remark: '', file: [{ size: 50, filename: 'kankan.png', ext: '.png', url: 'https://api-w1.shy.live/ws/img?id=08e4ff43377b4e13a618a183b3a82dc6' }], },
-        { title: '盆栽', remark: '', file: [{ size: 50, filename: 'kankan.png', ext: '.png', url: 'https://api-w1.shy.live/ws/img?id=e90c90e3f4634b49a19eceba035d30d8' }], },
+        { title: '通用AI，通用技术，通向何方（0507）', remark: '', file: [{ size: 50, filename: '通用AI，通用技术，通向何方（0507）.pdf', ext: '.pdf', url: 'https://api-w2.shy.live/ws/file?id=ed161f6d7ea64111bec61b6a4d26dfcb' }], },
+        { title: '笔记软件热度排行', remark: '', file: [{ size: 50, filename: '笔记软件热度排行.png', ext: '.png', url: 'https://api-w2.shy.live/ws/img?id=4a8f7680b1624db1adc4befe13835ae9' }], },
+        { title: 'This_week_in_AI_（AI社群独享）（第三周）', remark: '', file: [{ size: 50, filename: 'This_week_in_AI_（AI社群独享）（第三周）.pdf', ext: '.pdf', url: 'https://api-w2.shy.live/ws/file?id=ac811c4fa0354c4e95f6b270110ccc3d' }], },
     ]
 }))
 

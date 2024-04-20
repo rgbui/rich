@@ -26,7 +26,7 @@ CardModel('/goods', () => ({
         { name: 'author', text: lst('用户'), types: [FieldType.creater] },
         { name: 'title', text: lst('商品名'), types: [FieldType.title, FieldType.text] },
         { name: 'remark', text: lst('商品描述'), types: [FieldType.plain] },
-        { name: 'pic', text: lst('缩略图'), types: [FieldType.image, FieldType.thumb, FieldType.cover, FieldType.video], required: true },
+        { name: 'pic', text: lst('商品图片'), types: [FieldType.image, FieldType.thumb, FieldType.cover, FieldType.video], required: true },
         { name: 'price', text: lst('价格'), types: [FieldType.number] },
         { name: 'comment', text: lst('评论'), types: [FieldType.comment] },
         { name: 'count', text: lst('数量'), types: [FieldType.number] },

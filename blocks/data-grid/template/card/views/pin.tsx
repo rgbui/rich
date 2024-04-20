@@ -14,7 +14,7 @@ import { util } from "../../../../../util/util";
 import { FieldType } from "../../../schema/type";
 import { CardModel, CardViewCom } from "../factory/observable";
 import { CardView } from "../view";
-import * as Card1 from "../../../../../src/assert/img/card/card8.jpg"
+import * as Card1 from "../../../../../src/assert/img/card/card1.png"
 import { BlockUrlConstant } from "../../../../../src/block/constant";
 import { autoImageUrl } from "../../../../../net/element.type";
 import { lst } from "../../../../../i18n/store";
@@ -47,7 +47,7 @@ CardModel('/card/pinterest', () => ({
         { pic: [{ url: 'https://api-w2.shy.live/ws/img?id=693fcef8a235488d9e77e40c4d79bc3d' }], title: lst(''), remark: '' },
         { pic: [{ url: 'https://api-w2.shy.live/ws/img?id=536ea56f5e324db2bd9db43d59be32b8' }], title: lst(''), remark: '' },
         { pic: [{ url: 'https://api-w2.shy.live/ws/img?id=b319195db5574084bc858207558247fb' }], title: lst(''), remark: '' },
-        { pic: [{ url: 'https://api-w2.shy.live/ws/img?id=e9bd01a2d6174a7b842cfc296b8af4f6' }] }
+        { pic: [{ url: 'https://api-w2.shy.live/ws/img?id=e9bd01a2d6174a7b842cfc296b8af4f6' }], title: lst(''), remark: '' }
     ]
 }))
 

@@ -1,0 +1,3090 @@
+{
+    "id": "vYWSTX2AXZvsciiKdhvWh6",
+    "date": 1713584085414,
+    "isFullWidth": true,
+    "smallFont": true,
+    "version": "0.0.1",
+    "loadElementUrl": "/Schema/aa676111358e4a4681068a020832641a/Data/b3c5c6e9e6da4e46ba50319b7e9ef749",
+    "pageTheme": {
+        "name": "style-1",
+        "bgStyle": {
+            "mode": "color",
+            "color": "#fff"
+        },
+        "contentStyle": {
+            "color": "light",
+            "transparency": "noborder"
+        },
+        "coverStyle": {
+            "display": "none"
+        }
+    },
+    "requireSelectLayout": false,
+    "hideDocTitle": false,
+    "pageLayout": {
+        "type": 1
+    },
+    "matrix": [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+    ],
+    "nav": false,
+    "formType": "doc",
+    "views": [
+        {
+            "id": "5zTkwsoJ4nbUyJhXJwUzeQ",
+            "url": "/view",
+            "matrix": [
+                1,
+                0,
+                0,
+                1,
+                0,
+                0
+            ],
+            "pattern": {},
+            "blocks": {
+                "childs": [
+                    {
+                        "id": "epbDRDCqnB3mkDoSdjcjX2",
+                        "url": "/title",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": []
+                        },
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584085540
+                        },
+                        "align": "left"
+                    },
+                    {
+                        "id": "uLnUzAJ4FVu7NyZgoHKyky",
+                        "url": "/image",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": []
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584616009,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584627914,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584616008
+                        },
+                        "src": {
+                            "id": "3a144b9275b848c4b4382eab4d3027c6",
+                            "url": "https://api-w1.shy.live/ws/img?id=3a144b9275b848c4b4382eab4d3027c6",
+                            "filename": "two-graceful-cranes-in-flight-the-bird-on-the-left-4BGU4_PWR3GV5gsQHMDz4Q-VYP2NEmvQ2yB5ZLk1loSBw.png",
+                            "size": 691124,
+                            "md5": "823d1d457ece235b995da0b0f911d619",
+                            "ext": ".png",
+                            "mime": "image"
+                        },
+                        "imageWidthPercent": 70,
+                        "imageSizeMode": "none",
+                        "caption": "",
+                        "allowCaption": false,
+                        "captionAlign": "center",
+                        "originSize": {
+                            "width": 1280,
+                            "height": 720
+                        },
+                        "align": "center",
+                        "mask": "rect",
+                        "link": null
+                    },
+                    {
+                        "id": "w3mpeGL9bAXBzRVkXYzqDR",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "kJRsvMWPV1JcJKedUgBTXV",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "m7qiFpgyjzvFKA3oww7ssH",
+                                        "date": 1713584121365,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121365,
+                                                "id": "hnH4MBGC48jjApz5LNriuF"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "保持对生活的热爱是一种积极的生活态度，它可以帮助我们更好地面对生活中的挑战和困难。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121365
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584121365,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584121365,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121365
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "o8zQKsyaoKK9hd8c9bTKwh",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "ajQbnLj87fvvhSWWVALQEN",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "34nrTrQbpRyd9BEMDkmDwG",
+                                        "date": 1713584121366,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121366,
+                                                "id": "cYL3FsyaaZXcm1DefA58hV"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "以下是一些建议，可以帮助您保持对生活的热爱：",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121366
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584121366,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584121366,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121366
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "uhfrBe59i8Eh8GmupNbooC",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "6pSnnVkW14DPzQfwo6voBL",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "5XS3QikxpwGaJrh3cyQdxW",
+                                        "date": 1713584121366,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold",
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121367,
+                                                "id": "uHY7jNQ8CUsC8qYBv9iFsJ"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713584141439,
+                                    "content": "培养感恩的心态",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121366
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                },
+                                {
+                                    "id": "xeeFgM3n2pJEx1mcosmBAj",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "kKCrZvNccRtzDhyqDkJmV9",
+                                        "date": 1713584121367,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121367,
+                                                "id": "vqYFzNZSG56LLarvFTsWxJ"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713584141439,
+                                    "content": "：",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121367
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584121367,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584121367,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121366
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "uZNMupugtRZXFxWhGLoVw2",
+                        "url": "/list",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "mPhPEXDEKye5eBws6VRLKu",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "3Wutb6J6W3y9cqRDEH6nad",
+                                        "date": 1713584121368,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121368,
+                                                "id": "qeS3SbNVbuxxNd7eGpqdCC"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "每天花点时间思考您感激的事物，无论大小。感恩的心态能够帮助您看到生活中积极的一面。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121368
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ],
+                            "subChilds": []
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584229962,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584229962,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121368
+                        },
+                        "smallFont": false,
+                        "listType": 0,
+                        "listView": 0,
+                        "startNumber": 1,
+                        "expand": true
+                    },
+                    {
+                        "id": "8vGgHXSBeT2FZXvKwHYgFd",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "8xQjCwGv32FdCF3f1w8GND",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "huprC5bksapT7vEjUN8yVC",
+                                        "date": 1713584121368,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold",
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121368,
+                                                "id": "djpaHqQcFap7f9sm8qdaH1"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713584144566,
+                                    "content": "设定目标和梦想",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121368
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                },
+                                {
+                                    "id": "rMM3v4yBDJvEfKCF1gBKkR",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "2Lv5xY3jo2EUw7eWvAaBpH",
+                                        "date": 1713584121368,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121368,
+                                                "id": "3ZWtUQUJK3q2RLBbvi5hn8"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713584144566,
+                                    "content": "：",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121368
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584121368,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584121368,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121368
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "9tRWQLJ3q4mAM8krNfJ6t5",
+                        "url": "/list",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "eGfPMXNRApQYgzRgSsS9q7",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "8V1NVnjcUKZquRLayopPwY",
+                                        "date": 1713584121369,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121369,
+                                                "id": "m1nCAQGNxMGQ37NcPe6YNt"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "设定短期和长期的目标，让自己有所追求。实现这些目标会给您带来成就感和满足感。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121369
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ],
+                            "subChilds": []
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584251097,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584251097,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121369
+                        },
+                        "smallFont": false,
+                        "listType": 0,
+                        "listView": 0,
+                        "startNumber": 1,
+                        "expand": true
+                    },
+                    {
+                        "id": "vBBFozp2PFiyAsee8sUKiR",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "qfcP8UDRJQ4P5mzGXLdV23",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "91dGRKotJhKUSm9HCXNJSS",
+                                        "date": 1713584121369,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold",
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121369,
+                                                "id": "aARypyBvhAm4seRyNyQ5tV"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713584147964,
+                                    "content": "保持好奇心",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121369
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                },
+                                {
+                                    "id": "5a7jH2T6tp3HEJbcz9dpAM",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "pSCiycPjSKgoYEKiqe69u7",
+                                        "date": 1713584121370,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121370,
+                                                "id": "m1ev3Ako3Yv16nMjjTwYPm"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "：",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121370
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584121370,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584121370,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121369
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "deJDDVQqCBZkQt4r8Mr5Ks",
+                        "url": "/list",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "eQzngXHcJkCTBwt3GE9WuC",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "bjYr4aZiyz7EAwUyu13LUe",
+                                        "date": 1713584121370,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121370,
+                                                "id": "euGfZCcMLugV1YE54sXTi9"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "对世界保持好奇，不断探索新事物。学习新技能、阅读书籍、旅行或尝试不同的活动都能激发您的热情。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121370
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ],
+                            "subChilds": []
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584259343,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584259343,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121370
+                        },
+                        "smallFont": false,
+                        "listType": 0,
+                        "listView": 0,
+                        "startNumber": 1,
+                        "expand": true
+                    },
+                    {
+                        "id": "2WFnmEZHZUnSWLKf7xyx8m",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "ae6dcNAuYJh9J3JPrCa9Ug",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "osFbYFcMQSvXNh2G2mswHJ",
+                                        "date": 1713584121371,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold",
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121371,
+                                                "id": "8NDwRZTxoTA2GUnEpG3TrQ"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713584151089,
+                                    "content": "维护人际关系",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121370
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                },
+                                {
+                                    "id": "nM325kyZJSSW8WAWJx6Gnc",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "1vBd4ak8K8S788iPVzSbes",
+                                        "date": 1713584121371,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121371,
+                                                "id": "1ChVqLLngodvzJrB7TgCEN"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "：",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121371
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584121371,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584121371,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121370
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "tdYbq1ELBdFav9Yfba9Hr5",
+                        "url": "/list",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "nt38Ya77xhc4h6gUEvnqVQ",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "1pwn9f6eD5Y5pSbxvuMeGu",
+                                        "date": 1713584121372,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121372,
+                                                "id": "wkWgnQdDWbh44SJMN8AB1Y"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "与家人、朋友和同事建立积极的关系。良好的人际关系能够给您带来支持和快乐。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121372
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ],
+                            "subChilds": []
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584263545,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584263545,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121372
+                        },
+                        "smallFont": false,
+                        "listType": 0,
+                        "listView": 0,
+                        "startNumber": 1,
+                        "expand": true
+                    },
+                    {
+                        "id": "7XVQFSrwy6jq2sTiRYQbPQ",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "ekuJ6qA6UmcNzrGNZNyFom",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "iD4x4eBSh24Von97kWLg71",
+                                        "date": 1713584121372,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold",
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121372,
+                                                "id": "47Y9kumqn7mZcJ4eaA29QP"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713584159677,
+                                    "content": "关注身体健康",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121372
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                },
+                                {
+                                    "id": "oQKNgnPcmtMNTkbWxhbgny",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "7JspxwSBeDkeFk2AVHdCUT",
+                                        "date": 1713584121372,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121372,
+                                                "id": "saEzTU3khEND5eWkxgiNjE"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "：",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121372
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584121372,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584121372,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121372
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "kM3oJVkHsqLcmDE1F4vsbT",
+                        "url": "/list",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "mXFLJf2RcQCLp1vWSjbgb2",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "apYLSzR5tHJBeomuXa19kp",
+                                        "date": 1713584121373,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121373,
+                                                "id": "5zrM3JERY7RDkuQRvnjtZD"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "通过健康饮食、规律运动和充足睡眠来照顾好自己的身体。身体健康是热爱生活的基础。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121373
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ],
+                            "subChilds": []
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584268942,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584268942,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121373
+                        },
+                        "smallFont": false,
+                        "listType": 0,
+                        "listView": 0,
+                        "startNumber": 1,
+                        "expand": true
+                    },
+                    {
+                        "id": "3d9KmcUBTb7vi9VxcKCd2s",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "pFfRd7mboX2JrUfugSxxei",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "hkxuzj1WQWmhDQGqBiervo",
+                                        "date": 1713584121373,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold",
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121373,
+                                                "id": "13hRSMDftNmFoLqTLL6wp9"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713584163312,
+                                    "content": "培养兴趣和爱好",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121373
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                },
+                                {
+                                    "id": "xsSFiaQHBuMBehPdPm7js2",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "6hbWxUAvXm1xH8oYwVLNXV",
+                                        "date": 1713584121373,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121373,
+                                                "id": "4zG2zrzVjo7VwUhU9AsrrQ"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "：",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121373
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584121373,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584121373,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121373
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "fv1Mk5e5VzQmjosnun6Rct",
+                        "url": "/list",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "uXS6xdnjgYXabLLaf2AA9W",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "x1tc1Xxy2FMGfmPdCFdKPh",
+                                        "date": 1713584121374,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121374,
+                                                "id": "ajx3WWhqgFbC1unpwvG1yZ"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "投身于您感兴趣的活动，无论是艺术、音乐、运动还是其他爱好。这些活动可以让您的生活更加多彩。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121374
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ],
+                            "subChilds": []
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584277091,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584277091,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121374
+                        },
+                        "smallFont": false,
+                        "listType": 0,
+                        "listView": 0,
+                        "startNumber": 1,
+                        "expand": true
+                    },
+                    {
+                        "id": "jqsVf7gcCSsAqKYYAQJyKC",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "gEUn9VSpz3yBik8sSwjFSo",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "ictJR1wDta741z33WeVSsS",
+                                        "date": 1713584121374,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold",
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121374,
+                                                "id": "hrUeN1oyKSZXFttZw1fDWs"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713584167072,
+                                    "content": "保持乐观态度",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121374
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                },
+                                {
+                                    "id": "qkD29TBKFPCH95mY4Qo79r",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "jp7avtNA2ngb7yvN6wbfbm",
+                                        "date": 1713584121374,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121374,
+                                                "id": "wiwHMDL3AEvjM5HCgDebfe"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "：",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121374
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584121374,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584121374,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121374
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "4UqbV7ZtYeLAnuryWhVHB3",
+                        "url": "/list",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "fm97UPJzeT7F9PsYPW6H3U",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "cCybSWAd9phTmYTVJg2GyS",
+                                        "date": 1713584121376,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121376,
+                                                "id": "nfTYDWypqmmF8CviBsNkLv"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "尝试从挑战中寻找成长的机会，保持积极乐观的心态。乐观可以帮助您更好地应对生活中的困难。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121376
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ],
+                            "subChilds": []
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584281619,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584281619,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121375
+                        },
+                        "smallFont": false,
+                        "listType": 0,
+                        "listView": 0,
+                        "startNumber": 1,
+                        "expand": true
+                    },
+                    {
+                        "id": "gewvrHZyrsPsqPaLoXgBnW",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "jJ1J1F6nNdfsDUkZuQhCmy",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "cXU4NVZ7ESuzQ9svjarHVa",
+                                        "date": 1713584121376,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold",
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121376,
+                                                "id": "9xMtMNycR7BN5sCSUKYn8T"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713584170256,
+                                    "content": "学会放松和减压",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121376
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                },
+                                {
+                                    "id": "fC1aR1foU8LFPNrxP6mugU",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "gWqXfz1rNNNmfjvFyM1nJ5",
+                                        "date": 1713584121376,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121376,
+                                                "id": "pMuytrgzX1gc8oiBmbfEjH"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "：",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121376
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584121376,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584121376,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121376
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "bjVPGfCwgLykxs7xxmn5VP",
+                        "url": "/list",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "cGkz84hHh99AMANsuUU8hA",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "ffbcY5QHJEm8qhEJhEZRzX",
+                                        "date": 1713584121377,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121377,
+                                                "id": "v222mGtjbmTPbZuJ3CKvbT"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "通过冥想、瑜伽、深呼吸等方式学会放松。适当的休息和放松可以帮助您恢复活力。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121377
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ],
+                            "subChilds": []
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584286140,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584286140,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121377
+                        },
+                        "smallFont": false,
+                        "listType": 0,
+                        "listView": 0,
+                        "startNumber": 1,
+                        "expand": true
+                    },
+                    {
+                        "id": "9tV5nbgcZ4R9hj9qFpSntf",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "fHc2g4h8TJbju3nztS2WMk",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "mYnWjAV3yqBe1RnGdaRWJz",
+                                        "date": 1713584121377,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold",
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121377,
+                                                "id": "qR4EKvS9DfTjYbi5MQqr8E"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713584173869,
+                                    "content": "参与社会活动",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121377
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                },
+                                {
+                                    "id": "o1cBiDU5fQSjGqf6H4wNai",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "4AiCS9775BxfJuEDErwcjw",
+                                        "date": 1713584121377,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121377,
+                                                "id": "iFjpzwL4DR95MSP8z3wKWU"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "：",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121377
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584121377,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584121377,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121377
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "nnXjUoWx87RRKAQgRjJmmK",
+                        "url": "/list",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "2kjAADUygvcUNgQKKBk7bN",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "mqFSHEQac5bQhyqtERzkVs",
+                                        "date": 1713584121377,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121377,
+                                                "id": "36Cej2QFGaWAWascDDZUJJ"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "参与志愿活动或社区服务，帮助他人。这种付出可以带给您内心的满足和快乐。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121377
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ],
+                            "subChilds": []
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584291172,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584291172,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121377
+                        },
+                        "smallFont": false,
+                        "listType": 0,
+                        "listView": 0,
+                        "startNumber": 1,
+                        "expand": true
+                    },
+                    {
+                        "id": "rNyFP4uYKZjHpusmjCbfSe",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "p2zQjd7BS9quMxdffT98pM",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "oWyexeT4rp2F6fFQ5cKY2u",
+                                        "date": 1713584121378,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold",
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121378,
+                                                "id": "4MtxhuqKVncH2ECqi7w9bX"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713584178951,
+                                    "content": "自我反思和成长",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121378
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                },
+                                {
+                                    "id": "7vSDR5hyDg7bE7RWFsagSG",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "kBSxvgZwryz98ZLD4LKhvC",
+                                        "date": 1713584121378,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121378,
+                                                "id": "5TDn9cjydoAbTyDraaZzLL"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713584178951,
+                                    "content": "：",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121378
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584121378,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584121378,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121378
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "gws2Rg4cK6iZemXoYr7322",
+                        "url": "/list",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "n3SuACeS7SKdxfgUpSEMD3",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "f4bghtdrgGREcgZE6rzGd8",
+                                        "date": 1713584121379,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121379,
+                                                "id": "pFp3UmFY8FRyS9UYrScVet"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "定期花时间反思自己的行为和思想，思考如何成为更好的自己。个人成长可以带来新的生活热情。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121379
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ],
+                            "subChilds": []
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584296598,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584296598,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121379
+                        },
+                        "smallFont": false,
+                        "listType": 0,
+                        "listView": 0,
+                        "startNumber": 1,
+                        "expand": true
+                    },
+                    {
+                        "id": "auTPrLtD19d6zJ6gPYSzzu",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "iodStTnWzEXSNbcK3PAX8j",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "vk1KTBquEELRLvZ5ZXq7up",
+                                        "date": 1713584121379,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold",
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121379,
+                                                "id": "ukexX4HSyMJaQ3fpoPDVcW"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713584182725,
+                                    "content": "欣赏生活中的小美好",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121379
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                },
+                                {
+                                    "id": "4XxmFMVKiYnYTM3mgwMcfT",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "acD395effLCMAod26AEETg",
+                                        "date": 1713584121379,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121379,
+                                                "id": "qQBkubjdctLUa5NSsvSN1n"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "：",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121379
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584121379,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584121379,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121379
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "riHE4oE8VFYiVAdneFej3t",
+                        "url": "/list",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "fCGCpN1Ya9QaX5rs84f7Rq",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "eX1qAsB9kjRyKymRSBfKxo",
+                                        "date": 1713584121380,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121380,
+                                                "id": "6H7Y99ALTM2s7Jarg1kwdL"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "不要忽视生活中的小确幸，比如一杯热咖啡、一次美丽的日落或一个温暖的微笑。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121380
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ],
+                            "subChilds": []
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584301500,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584301500,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121380
+                        },
+                        "smallFont": false,
+                        "listType": 0,
+                        "listView": 0,
+                        "startNumber": 1,
+                        "expand": true
+                    },
+                    {
+                        "id": "f65txcMjuVkPgCeZt6JzKX",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "nJr27Z5YzboJZTLSKbQ8PH",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "gAYHUBZX1L5HAUgZZZf9L7",
+                                        "date": 1713584121380,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold",
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121380,
+                                                "id": "j54SuCL18jkMqXZPzkSKC7"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713584188120,
+                                    "content": "避免长时间的工作和压力",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121380
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                },
+                                {
+                                    "id": "eQofU8HA4reUfVdDMmNdAL",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "xepxEcaWQCXAA6MFazw3tp",
+                                        "date": 1713584121380,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121380,
+                                                "id": "tJ6zBP5sdTB9YN6BxJZ1wQ"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "：",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121380
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584121380,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584121380,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121380
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "4Lh7PzZXbxvJqnWvxwE3AE",
+                        "url": "/list",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "kRH1xpSqQHPbheNCb52M3g",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "fy9UpA11fHiTuxpKu45tx3",
+                                        "date": 1713584121381,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121381,
+                                                "id": "5CgCtVBA47o2pAjhwUxtix"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713584314956,
+                                    "content": "保持工作与生活的平衡，避免长时间的工作和过度的压力。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121381
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ],
+                            "subChilds": []
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584308152,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584308152,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121381
+                        },
+                        "smallFont": false,
+                        "listType": 0,
+                        "listView": 0,
+                        "startNumber": 1,
+                        "expand": true
+                    },
+                    {
+                        "id": "hLoK9ZQtaXDhBW8V216mRm",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": []
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584315793,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584315793,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584314956
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "d2pykyxaKM7TdqZdQcXzUm",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "1MgkenwwET21fpS65NrBf8",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "通过上述建议，您可以保持对生活的热爱，享受生活的每一刻。记住，热爱生活是一种选择，也是一种积极的生活态度。通过不断的努力和实践，您可以培养并维持这种态度，让生活变得更加美好和有意义。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584318501
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584318501,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584318501,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584318501
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "tVkc8EhDPkH3ReUeik5dUM",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {
+                            "id": "gJk1UvZu88Upms8JATM5ow",
+                            "date": 1713584216021,
+                            "styles": [
+                                {
+                                    "cssList": [
+                                        {
+                                            "abled": true,
+                                            "cssName": 0,
+                                            "color": "rgb(120,119,116)"
+                                        }
+                                    ],
+                                    "name": "default",
+                                    "date": 1713584326724,
+                                    "id": "7oVrkocU8DSwUHQVbvg42D"
+                                }
+                            ]
+                        },
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "c9VjmieVL6Fiv4pGAiAsEC",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "a9X2WykTptFZbAFAUgQUZv",
+                                        "date": 1713584121382,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713584121382,
+                                                "id": "qrPzkJYMaicLVupVCefAAT"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "AI内容生成，仅做为示范",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713584121382
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584121382,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584326724,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584121381
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    }
+                ]
+            },
+            "content": "",
+            "fixedWidth": 100,
+            "fixedHeight": 100,
+            "zindex": 1,
+            "isScale": false,
+            "refLines": [],
+            "locker": {
+                "lock": false,
+                "date": 1713584085540
+            }
+        }
+    ],
+    "addedSubPages": []
+}

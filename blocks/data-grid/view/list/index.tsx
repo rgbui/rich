@@ -34,7 +34,7 @@ export class TableStoreList extends DataGridView {
         templateProps: {}
     }
     get isCardAuto() {
-        return this.cardConfig?.auto || this.cardConfig.showMode == 'define'
+        return this.cardConfig?.auto || this.cardConfig?.showMode == 'define'
     }
     getCardUrl() {
         if (this.cardConfig?.showMode == 'define') {

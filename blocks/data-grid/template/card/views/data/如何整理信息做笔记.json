@@ -1,0 +1,1956 @@
+{
+    "id": "98Hgg2LxvSn3d46zqDDuDX",
+    "date": 1713583757479,
+    "isFullWidth": true,
+    "smallFont": true,
+    "version": "0.0.1",
+    "loadElementUrl": "/Schema/aa676111358e4a4681068a020832641a/Data/6d70d1aa2d2d469a8c5e3cd328237949",
+    "pageTheme": {
+        "bgStyle": {
+            "mode": "color",
+            "color": "#fff"
+        },
+        "contentStyle": {
+            "color": "light",
+            "transparency": "noborder"
+        },
+        "coverStyle": {
+            "display": "outside"
+        }
+    },
+    "requireSelectLayout": false,
+    "hideDocTitle": false,
+    "pageLayout": {
+        "type": 1
+    },
+    "matrix": [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+    ],
+    "nav": false,
+    "formType": "doc",
+    "views": [
+        {
+            "id": "oycaVGPhSi8fH1DTRUeBUG",
+            "url": "/view",
+            "matrix": [
+                1,
+                0,
+                0,
+                1,
+                0,
+                0
+            ],
+            "pattern": {},
+            "blocks": {
+                "childs": [
+                    {
+                        "id": "bFZQQPJa8aS7X2Ks4vE4FY",
+                        "url": "/title",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": []
+                        },
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713583758074
+                        },
+                        "align": "left"
+                    },
+                    {
+                        "id": "sip8wLKbtSa7HqYmRhr3Hd",
+                        "url": "/image",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": []
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713584051171,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713584060805,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713584051171
+                        },
+                        "src": {
+                            "id": "3e4cfb20708e44c0925d0dbb1a647e99",
+                            "url": "https://api-w1.shy.live/ws/img?id=3e4cfb20708e44c0925d0dbb1a647e99",
+                            "filename": "this-is-an-illustration-of-two-cartoon-characters---Y83lSxoQF2nXwxPRM4WNA-o6_-kuM5RMe39DbPaXfvfg.png",
+                            "size": 933035,
+                            "md5": "ad436053b160847337d1552407c531a7",
+                            "ext": ".png",
+                            "mime": "image"
+                        },
+                        "imageWidthPercent": 70,
+                        "imageSizeMode": "none",
+                        "caption": "",
+                        "allowCaption": false,
+                        "captionAlign": "center",
+                        "originSize": {
+                            "width": 1024,
+                            "height": 1024
+                        },
+                        "align": "center",
+                        "mask": "rect",
+                        "link": null
+                    },
+                    {
+                        "id": "4BDbMgLwytY6WoSnyf1fdp",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "2Ufjh3ejh23VayhLFjgb2e",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "q5e8xnXpLf4nz9hAwQmmrx",
+                                        "date": 1713583822102,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822102,
+                                                "id": "3gcw1P4pgMgzBQjC9F4Hpp"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "整理信息并做好笔记是一个重要的学习和工作技能。在当今信息爆炸的时代，我们面临着大量的信息和数据，因此，有效地整理信息并制作出高质量的笔记显得尤为重要。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822102
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713583822102,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713583822102,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713583822101
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "iWxqqbak5774BxB9jZDzMq",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "snLhAciiut31GdUykcxRvn",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "maDx8Qqd8N8uwcTsYgVm2P",
+                                        "date": 1713583822104,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822104,
+                                                "id": "igMSYjjMG9GPdVuP3SSsqs"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "本文将为您提供一些步骤和建议，帮助您更有效地整理信息。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822104
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713583822104,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713583822104,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713583822104
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "ahdCm7B35boW87TMS55pnQ",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "7RDNi8rhNSRHWCRpLrRCY7",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "65MsxbMX4FzmKGkqEA1kNn",
+                                        "date": 1713583822105,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold",
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822105,
+                                                "id": "vEdPvW1mtBJ5hPTbtzzP3m"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713583827453,
+                                    "content": "明确目的",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822105
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                },
+                                {
+                                    "id": "cPDitwye1qH6bjUhQiX9bH",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "fVc9e4MFAZZDUEKYNYczud",
+                                        "date": 1713583822105,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822105,
+                                                "id": "vtnsXYjtJr4ewsJFu4nHyM"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713583827452,
+                                    "content": "：在开始之前，明确记笔记的目的。是为了学习新知识、准备考试、还是为了工作项目？明确目的有助于您在整理信息时更加有针对性和方向感。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822105
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713583822105,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713583822105,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713583822105
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "n17rvHfgLmuEp6tZg6aK8D",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "ghHi7KJ62jVeKBEV4Xp7pZ",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "1SdyaXFKuXghFpJVnqYuTW",
+                                        "date": 1713583822106,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold",
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822106,
+                                                "id": "9cAUTTavRx2AagrmfsjdR1"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713583831111,
+                                    "content": "选择合适的工具",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822106
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                },
+                                {
+                                    "id": "pD1BnWt4SeoKMiZNJs6gJh",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "cjmr7QgeLxkM741YBgp28m",
+                                        "date": 1713583822106,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822106,
+                                                "id": "fpZks4eLggjf8j234o8rpg"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "：根据个人习惯和需求选择合适的工具，如传统的笔和纸、数字笔记本、笔记软件（如OneNote、Evernote）等。合适的工具可以提高记笔记的效率，让您更加方便地整理和查找信息。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822106
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713583822106,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713583822106,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713583822106
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "v6SFQtSjUP3xY7prDhezaL",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "b5hC9i4zRVfV9xyEzbS2Z3",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "w46Gs7KDw8GJMFKeMrNQvH",
+                                        "date": 1713583822107,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold",
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822107,
+                                                "id": "iSmSoREPjPJZ44ZMvuXn7y"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713583834159,
+                                    "content": "预读和分类",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822107
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                },
+                                {
+                                    "id": "jn5ees6PYXkFDsrEcaVKY3",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "3Yjjt7VzxSjUpVN6bJCgYa",
+                                        "date": 1713583822107,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822107,
+                                                "id": "sd3dQEMNKhLiPFFFg82sC3"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713583834159,
+                                    "content": "：在详细阅读或听讲之前，快速浏览材料，了解大致内容和结构。确定将要记录的主要类别或主题。预读和分类有助于您在整理信息时更加有条理，避免记下无关紧要的内容。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822107
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713583822107,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713583822107,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713583822107
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "xdzCR9zYRdPcVgrsboodJX",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "rp8paYyRBX62Ptd5nMyL69",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "hmr2wrhy91MdjcCpj4LKWf",
+                                        "date": 1713583822109,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold",
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822109,
+                                                "id": "thWrZK4R7PCuzAFs7PNq82"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713583842838,
+                                    "content": "使用缩写和符号",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822109
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                },
+                                {
+                                    "id": "8n8aNWnuc6n7QynSQE6iaB",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "uYx6PpguMftr8ontBwu7KS",
+                                        "date": 1713583822109,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822109,
+                                                "id": "eQuefZbNbeygYzsnWsdrc5"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "：使用缩写和符号来提高笔记速度，但要确保自己能够理解。例如，使用箭头表示因果关系，使用星号表示重要信息等。使用缩写和符号可以节省时间，让您更加专注于整理信息。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822109
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713583822109,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713583822109,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713583822109
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "jVCpyTeKoobmrQPbwFeCkn",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "jvHCSCWpoXg8kNyoMXgUdo",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "meSb18B7B1FXKRxnan2bVz",
+                                        "date": 1713583822109,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold",
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822110,
+                                                "id": "nk5rFnHzK7ApibPPBMTf23"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713583846421,
+                                    "content": "简洁明了",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822109
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                },
+                                {
+                                    "id": "5F3vSeZQtx7tbFuv4hVofr",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "1PquLwedwNrkqTNopDPrho",
+                                        "date": 1713583822110,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822110,
+                                                "id": "4VDFTJgavV68GzSn1jwU6S"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713583846421,
+                                    "content": "：用自己的话简明扼要地记录信息，避免长篇大论的摘抄。简洁明了的笔记更容易理解和记忆，也便于日后的复习和整理。结构化笔记：使用标题、子标题、项目符号等来组织笔记，使其结构清晰。结构化笔记有助于您在整理信息时更加有条理，也便于日后的查找和复习。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822110
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713583822110,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713583822110,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713583822109
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "nGXLJ85SUX8wpbHt1PK1R4",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "1eCicZ4mfWo35g5kkxKHt2",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "a5yoSv6FiF3ModxY6mKH9P",
+                                        "date": 1713583822110,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold",
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822110,
+                                                "id": "fu4xzkZhTecU68NEvy8a42"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713583851155,
+                                    "content": "留白和标记",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822110
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                },
+                                {
+                                    "id": "1eUnuH2xbJDEzyhzrhVeSV",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "pt4h5XoSmocQmhVrZMPARu",
+                                        "date": 1713583822110,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822110,
+                                                "id": "snTqyXJ4PGJ4n2SyyXFYsH"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "：在笔记中留出空间，以便之后添加信息或澄清疑问。使用不同颜色或标记来突出重点或区分不同类型的信息。留白和标记可以让您的笔记更加整洁和直观，也便于日后的整理和复习。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822110
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713583822110,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713583822110,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713583822110
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "pFGw7mhLmygW8nDboSQ3zJ",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "epQYqcPVdv3nEZTRCdBT4M",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "dyYRne2MnmqC3a9vrUpsLS",
+                                        "date": 1713583822112,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold",
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822112,
+                                                "id": "vJCEqBi6tz5XUjt5QT3psi"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713583855219,
+                                    "content": "总结和提炼",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822112
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                },
+                                {
+                                    "id": "dG9uarKFaRJkgq9v8tQmuy",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "sZrJuqg1Cx5ejzZhaK9gR2",
+                                        "date": 1713583822113,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822113,
+                                                "id": "i9LZVGkEgn3WkUvEnYX1yE"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713583855219,
+                                    "content": "：在笔记的末尾或每个部分之后，用一两句话总结关键信息。总结和提炼有助于您加深对信息的理解和记忆，也便于日后的复习和整理。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822113
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713583822113,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713583822113,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713583822112
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "qJKSGdF6xZggM3GN4Uk5nj",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "qdQgwZMTZUES8DeJgSTQJj",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "4z9qWLJMTv33o868WbHj1b",
+                                        "date": 1713583822116,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold",
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822116,
+                                                "id": "gjZg8Wh3PFaXcTYvZKArEZ"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713583859118,
+                                    "content": "复习和整理",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822115
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                },
+                                {
+                                    "id": "urpShv1BoRrjGRv9fPANZZ",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "vkvpb35xHCNWJXzX9toj4N",
+                                        "date": 1713583822116,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822116,
+                                                "id": "qaAxaBrHW7PvCYgvNpoAmN"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "：定期复习笔记，整理和更新内容，确保信息的准确性和时效性。复习和整理有助于您巩固记忆，也便于日后的查找和分享。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822116
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713583822116,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713583822116,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713583822115
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "vdyt6gKJ2EZAufzpGnMNSX",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "1k7uFc4rHEibqaEcETJnC1",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "32ophaV9YtxQn3t1Pf8qhm",
+                                        "date": 1713583822117,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold",
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822117,
+                                                "id": "xkFqRstkC62hTyfY2pZaAG"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713583862780,
+                                    "content": "整合和链接",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822117
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                },
+                                {
+                                    "id": "9G9u7G2MwuRRT4R1zhuknX",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "eWEikwYQ1nmsdZfM2ebuzF",
+                                        "date": 1713583822117,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822117,
+                                                "id": "kTnTENykGaH67Y8DtsK2zL"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713583862780,
+                                    "content": "：将新信息与已有知识联系起来，建立知识网络。整合和链接有助于您加深对信息的理解和记忆，也便于日后的应用和创新。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822117
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713583822117,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713583822117,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713583822116
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "4XrRqZfCXYn6iUPVyy7VJU",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "2kZTLsnJC8jx2dYdtF2v3B",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "poKA7N1U3xhP3BabVmA1Cc",
+                                        "date": 1713583822117,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold",
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822118,
+                                                "id": "8XtJDohmUUSiP99vpfXFrX"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713583866998,
+                                    "content": "实践和应用",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822117
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                },
+                                {
+                                    "id": "eYReD3zLaZK8tjoQ2kwUMQ",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "u1PVVYg7MzzzU6NE3hHSBE",
+                                        "date": 1713583822118,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822118,
+                                                "id": "jEpUf8dvskUiEcRoL7y5vc"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "：尝试用自己的话解释笔记中的内容，或与他人讨论，加深理解和记忆。实践和应用有助于您将知识内化为自己的能力，也便于日后的工作和生活。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822118
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713583822118,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713583822118,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713583822117
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "eSTQDCTrZtpCct9kYaKJCn",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "f9Njp9EtJeJTStF1EQFcse",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "am5XWb8UBcqm4cfrn7K6c1",
+                                        "date": 1713583822118,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold",
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822119,
+                                                "id": "iLbRrxewSB5HTnfs4pRCsC"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713583870790,
+                                    "content": "保持整洁和一致",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822118
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                },
+                                {
+                                    "id": "9XGCmYF1uGfm3B2MEr4Avi",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "fWfAM844axmehieM2pvTZZ",
+                                        "date": 1713583822119,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822119,
+                                                "id": "sMFXWQrqSA3cxpDjwqLVx4"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713583870789,
+                                    "content": "：保持笔记的整洁和格式的一致性，便于日后查找和复习。整洁和一致的笔记可以让您更加专注于整理信息，也便于日后的分享和传承。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822119
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713583822119,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713583822119,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713583822118
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "ftAzwfuPs44yi9f2tovim6",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "xmrtkJP99mNStBXYQiAza3",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "bqyqxuH3RicbvXnc6c5Ds4",
+                                        "date": 1713583822119,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": null
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822119,
+                                                "id": "72nA1ZVMwykuwYMDFpKVYP"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "通过上述步骤和建议，您可以更有效地整理信息并制作出高质量的笔记。这将有助于您在学习和工作中取得更好的成绩，实现自己的人生目标。记住，整理信息并做好笔记不仅是一种技能，更是一种生活态度。让我们共同努力，用心整理信息，做好笔记，为自己的未来铺就坚实的基石。",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822119
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713583822119,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713583822119,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713583822119
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "fEGsbgxszJS8Ss3U7ugZms",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "jczAYHdbJbo61kcgzqhDqq",
+                                    "url": "/text",
+                                    "matrix": [
+                                        1,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0
+                                    ],
+                                    "pattern": {
+                                        "id": "jiY5sbukJZ73KJRS5uDryB",
+                                        "date": 1713583822120,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "color": "rgb(120,119,116)"
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1713583822120,
+                                                "id": "xi9XsYFZycgezdMs2SerXZ"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "editor": "4EFGvb8P-2",
+                                    "editDate": 1713583878889,
+                                    "content": "AI内容生成，仅做为示范",
+                                    "fixedWidth": 100,
+                                    "fixedHeight": 100,
+                                    "zindex": 1,
+                                    "isScale": false,
+                                    "refLines": [],
+                                    "locker": {
+                                        "lock": false,
+                                        "date": 1713583822120
+                                    },
+                                    "link": null,
+                                    "comment": null,
+                                    "code": false,
+                                    "refLinks": null
+                                }
+                            ]
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713583822120,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713583822120,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713583822120
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    },
+                    {
+                        "id": "2ibs593cfPh9wZ24MTMJZE",
+                        "url": "/textspan",
+                        "matrix": [
+                            1,
+                            0,
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        "pattern": {},
+                        "blocks": {
+                            "childs": []
+                        },
+                        "creater": "4EFGvb8P-2",
+                        "createDate": 1713583879570,
+                        "editor": "4EFGvb8P-2",
+                        "editDate": 1713583879570,
+                        "content": "",
+                        "fixedWidth": 100,
+                        "fixedHeight": 100,
+                        "zindex": 1,
+                        "isScale": false,
+                        "refLines": [],
+                        "locker": {
+                            "lock": false,
+                            "date": 1713583879570
+                        },
+                        "align": "left",
+                        "fontScale": 1,
+                        "smallFont": false
+                    }
+                ]
+            },
+            "content": "",
+            "fixedWidth": 100,
+            "fixedHeight": 100,
+            "zindex": 1,
+            "isScale": false,
+            "refLines": [],
+            "locker": {
+                "lock": false,
+                "date": 1713583758074
+            }
+        }
+    ],
+    "addedSubPages": []
+}
