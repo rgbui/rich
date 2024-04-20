@@ -109,7 +109,7 @@ export class DataGridFilterList extends EventsComponent {
             self.forceUpdate()
         }
         return <div className="bg-white shadow round padding-5 w-250">
-            <div className="f-12 remark gap-b-10"><S>查询条件列表</S></div>
+            <div className="f-12 remark gap-b-10"><S>筛选条件列表</S></div>
             <DragList onChange={change} isDragBar={e => e.closest('.drag-item') && !e.closest('[item-btn]') ? true : false}>
                 {this.filters.map(f => {
                     return <div className="flex item-hover padding-w-5 h-30  round drag-item" key={f.id}>
@@ -123,11 +123,11 @@ export class DataGridFilterList extends EventsComponent {
             </DragList>
             {this.filters.length > 0 && <Divider></Divider>}
             <div className="flex item-hover padding-w-5 h-30 round cursor" onMouseDown={e => this.onAddRule(e)}>
-                <Icon size={18} icon={PlusSvg}></Icon><span className="gap-l-5">添加查询条件</span>
+                <Icon size={18} icon={PlusSvg}></Icon><span className="gap-l-5">添加筛选条件</span>
             </div>
             <Divider></Divider>
             <div className="h-30 flex">
-                <HelpText url={window.shyConfig?.isUS ? "https://help.shy.red/page/50" : "https://shy.live/ws/help/page/1878"}>了解添加查询条件制做成查询按钮</HelpText>
+                <HelpText url={window.shyConfig?.isUS ? "https://help.shy.red/page/50" : "https://shy.live/ws/help/page/1878"}>了解如何为规则按钮添加筛选条件</HelpText>
             </div>
         </div>
     }
