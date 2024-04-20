@@ -44,7 +44,7 @@ export class PageHistoryStore extends EventsComponent {
                 <div className="remark flex-fixed f-14">
                     <Sp text={'诗云将自动保留60天的历史记录'}>诗云将自动保留60天的历史记录<br />被重命名的版本,诗云将不在自动清理,需要手动清理</Sp>
                 </div>
-                <div className="flex-fixed">
+                <div className="flex-fixed  flex">
                     <HelpText url={window.shyConfig?.isUS ? "https://shy.red/ws/help/page/53" : "https://help.shy.live/page/1891"}><S>了解页面历史</S></HelpText>
                 </div>
                 <div className="flex-auto flex-end"><Button ref={e => this.button = e} onClick={e => this.onBake()} disabled={this.currentId ? false : true}><S>恢复</S></Button></div>
