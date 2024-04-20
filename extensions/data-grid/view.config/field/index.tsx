@@ -32,6 +32,7 @@ import { S } from "../../../../i18n/view";
 import { TableSchema } from "../../../../blocks/data-grid/schema/meta";
 import { HelpText } from "../../../../component/view/text";
 import { Tip } from "../../../../component/view/tooltip/tip";
+import lodash from "lodash";
 
 export class DataGridFields extends EventsComponent {
     get schema() {
@@ -184,8 +185,7 @@ export class DataGridFields extends EventsComponent {
 
         }
         var getItems = () => {
-            if ((this.block as TableStoreGallery)?.cardConfig?.showMode == 'define')
-                return []
+            if ((this.block as TableStoreGallery)?.cardConfig?.showMode == 'define')  return []
             var baseItems: MenuItem[] = [
                 { text: lst('卡片视图'), type: MenuItemType.text },
                 {
@@ -282,27 +282,31 @@ export class DataGridFields extends EventsComponent {
                     return <div key={pro.name} className="flex gap-h-5 padding-h-3 f-14 padding-w-5 gap-w-5 item-hover round cursor text-1">
                         <span className="flex-fixed w-100 flex-end flex remark">
                             <Tip overlay={lst('卡片属性') + ":" + searchFieldItems(pro.types).map(c => c.text).join(",")}><span className="flex remark">
-                                {/*<Icon size={20} icon={{ name: 'byte', code: 'pound-sign' }}></Icon> */}
-                                <span className="text-over">{pro.text}</span>
+                                <span className="flex-fixed">{pro.required ? "* " : ""}</span>
+                                <span className="text-over flex-auto">{pro.text}</span>
                             </span></Tip>
                         </span>
                         <span className="flex-fixed gap-w-5">:</span>
                         <span className="flex-fixed">
                             <SelectBox dropWidth={250} small
                                 multiple
-                                value={bp && Array.isArray(bp.bindFieldIds) ? bp.bindFieldIds : (bp?.bindFieldId ? [bp.bindFieldId] : [])}
-                                onChange={e => {
-                                    changeArrayProp(bp, { name: pro.name, bindFieldIds: e })
+                                value={bp && Array.isArray(bp.bindFieldIds) ? (bp.bindFieldIds.length > 0 ? bp.bindFieldIds : ['']) : (bp?.bindFieldId ? [bp.bindFieldId] : [''])}
+                                onChange={(e, item) => {
+                                    lodash.remove(e, c => c == '');
+                                    var c = item.value == '' ? [''] : e;
+                                    changeArrayProp(bp, { name: pro.name, bindFieldIds: c })
                                 }}
-                                options={self.block.schema.fields.findAll(c => pro.types.includes(c.type)).map(c => {
-                                    return {
-                                        icon: GetFieldTypeSvg(c.type),
-                                        text: c.text,
-                                        value: c.id,
-                                        helpText: SysHiddenFieldTypes.includes(c.type) ? lst('系统字段') : "",
-                                        helpUrl: SysHiddenFieldTypes.includes(c.type) ? (window.shyConfig.isUS ? "https://help.shy.red/page/43#7tnyYFHConacTXx4gYntRx" : "https://help.shy.live/page/1871#meCoYNUUKf4XdquyfxA9aW") : undefined
-                                    }
-                                })}>
+                                options={[
+                                    ...(pro.required ? [] : [{ value: '', text: lst('无'), icon: { name: 'byte', code: "rectangle-one" } as any }, { type: MenuItemType.divide }]),
+                                    ...self.block.schema.allVisibleFields.findAll(c => pro.types.includes(c.type)).map(c => {
+                                        return {
+                                            icon: GetFieldTypeSvg(c.type),
+                                            text: c.text,
+                                            value: c.id,
+                                            helpText: SysHiddenFieldTypes.includes(c.type) ? lst('系统字段') : "",
+                                            helpUrl: SysHiddenFieldTypes.includes(c.type) ? (window.shyConfig.isUS ? "https://help.shy.red/page/43#7tnyYFHConacTXx4gYntRx" : "https://help.shy.live/page/1871#meCoYNUUKf4XdquyfxA9aW") : undefined
+                                        }
+                                    })]}>
                             </SelectBox>
                         </span>
                     </div>
@@ -319,7 +323,7 @@ export class DataGridFields extends EventsComponent {
                     {!TableSchema.isSystemField(f) && <span className="size-24 round flex-center flex-fixed item-hover"><Icon className={'eye'} size={14} onClick={async (e) => { self.openProperty('field', f, e) }} icon={DotsSvg}></Icon></span>}
                 </div>
             })}</div>
-        </div>
+        </div >
     }
     render(): ReactNode {
         if (!this.block) return <></>;
