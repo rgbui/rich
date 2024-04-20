@@ -21,6 +21,7 @@ import { lst } from "../../../../../i18n/store";
 import { S } from "../../../../../i18n/view";
 import { useUserCard } from "../../../../../component/view/avator/card";
 import { BlockDirective } from "../../../../../src/block/enum";
+
 CardModel('/card/pinterest', () => ({
     url: '/card/pinterest',
     title: lst('图片库'),
@@ -35,17 +36,18 @@ CardModel('/card/pinterest', () => ({
         { name: 'tags', text: lst('标签'), types: [FieldType.options, FieldType.option] }
     ],
     views: [
-        { url: BlockUrlConstant.DataGridTable, text: lst('列表'), },
-        { autoCreate: true, url: BlockUrlConstant.DataGridGallery, text: lst('瀑布流'), },
-        { url: BlockUrlConstant.RecordPageView, text: lst('详情'), }
+        { url: BlockUrlConstant.DataGridTable, text: lst('图片列表'), },
+        { autoCreate: true, url: BlockUrlConstant.DataGridGallery, text: lst('图片瀑布流'), },
+        { url: BlockUrlConstant.RecordPageView, text: lst('图片详情'), }
     ],
     dataList: [
-        { pic: [{ url: 'https://api-w1.shy.live/ws/img?id=1e1a07d5c333421c9cc885775b0ff17c' }], title: lst('花'), remark: '' },
-        { pic: [{ url: 'https://api-w1.shy.live/ws/img?id=08e4ff43377b4e13a618a183b3a82dc6' }], title: lst('水果季节'), remark: '' },
-        { pic: [{ url: 'https://api-w1.shy.live/ws/img?id=e90c90e3f4634b49a19eceba035d30d8' }], title: lst('盆栽'), remark: '' },
-        { pic: [{ url: 'https://api-w1.shy.live/ws/img?id=639fd35e2d91409fb7861841d6c6afa6' }], title: lst('花束'), remark: '' },
-        { pic: [{ url: 'https://api-w1.shy.live/ws/img?id=8206822bcf214b779b8fb05f42e1c55d' }], title: lst('伞'), remark: '' },
-        { pic: [{ url: 'https://api-w1.shy.live/ws/img?id=b7f399c7ffb5429c9ae7f521266735b6' }], title: lst('照片 女'), remark: '' },
+        { pic: [{ url: 'https://api-w1.shy.live/ws/img?id=9b6807dd3e0944d0ab2e219c81eb14c7' }], title: lst(''), remark: '' },
+        { pic: [{ url: 'https://api-w1.shy.live/ws/img?id=8d28df8026574bb3976b97777f348400' }], title: lst(''), remark: '' },
+        { pic: [{ url: 'https://api-w1.shy.live/ws/img?id=c42313fa6a764e4dafb424f7d872d8b6' }], title: lst(''), remark: '' },
+        { pic: [{ url: 'https://api-w2.shy.live/ws/img?id=693fcef8a235488d9e77e40c4d79bc3d' }], title: lst(''), remark: '' },
+        { pic: [{ url: 'https://api-w2.shy.live/ws/img?id=536ea56f5e324db2bd9db43d59be32b8' }], title: lst(''), remark: '' },
+        { pic: [{ url: 'https://api-w2.shy.live/ws/img?id=b319195db5574084bc858207558247fb' }], title: lst(''), remark: '' },
+        { pic: [{ url: 'https://api-w2.shy.live/ws/img?id=e9bd01a2d6174a7b842cfc296b8af4f6' }] }
     ]
 }))
 
