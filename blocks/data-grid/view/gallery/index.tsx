@@ -39,7 +39,7 @@ export class TableStoreGallery extends DataGridView {
 }
 
 @view('/data-grid/gallery')
-export class TableStoreGalleryView extends BlockView<TableStoreGallery>{
+export class TableStoreGalleryView extends BlockView<TableStoreGallery> {
     renderRows() {
         var childs = this.block.childs;
         var eles: JSX.Element[] = [];
@@ -47,7 +47,10 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery>{
         if (typeof size != 'number') size = 3;
         var gap = 20;
         if (isMobileOnly) { size = 2; gap = 8; }
-        var w = (100 / size).toFixed(2);
+        // var w = (100 / size).toFixed(2);
+        var wd = `calc((100% - ${(size-1)*gap}px ) / ${size})`
+        // n*w + (n-1)*gap = 100%
+        //w=(100%-(n-1)* gap)/n
 
         if (this.block.isCardAuto) {
             var rss = [];
@@ -59,7 +62,7 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery>{
                 rss[c].push(childs[i]);
             }
             eles = rss.map((rs, i) => {
-                return <div className='sy-data-grid-gallery-column' style={{ width: `calc(${w}% - ${gap}px)`, marginRight: gap, marginBottom: undefined }} key={i}>
+                return <div className='sy-data-grid-gallery-column' style={{ width: wd, marginRight:i==rss.length-1?undefined: gap, marginBottom: undefined }} key={i}>
                     {rs.map(c => <div className="sy-data-grid-gallery-cell w100" key={c.id}>{this.renderItem(c)}</div>)}
                 </div>
             })
@@ -74,7 +77,7 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery>{
                 }
                 i += (size - 1);
                 eles.push(<div className='sy-data-grid-gallery-row' key={i}>
-                    {cs.map(c => <div className="sy-data-grid-gallery-cell" style={{ width: `calc(${w}% - ${gap}px)`, marginRight: gap, marginBottom: undefined }}
+                    {cs.map((c,j)=> <div className="sy-data-grid-gallery-cell" style={{ width:wd, marginRight:cs.length-1==j?undefined: gap, marginBottom: undefined }}
                         key={c.id}>{this.renderItem(c)}
                     </div>)}
                 </div>)
