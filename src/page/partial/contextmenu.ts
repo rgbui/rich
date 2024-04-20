@@ -650,7 +650,7 @@ export class Page$ContextMenu {
                 {
                     name: 'hideAllFields',
                     icon: { name: 'byte', code: 'clear-format' },
-                    text: lst('清空页面所有字段')
+                    text: lst('隐藏所有字段')
                 },
                 { type: MenuItemType.divide },
                 {
