@@ -4,6 +4,7 @@ import { useDataGridFileViewer } from "../../../../extensions/data-grid/filer";
 import { url, view } from "../../../../src/block/factory/observable";
 import { Rect } from "../../../../src/common/vector/point";
 import { OriginField, OriginFileView } from "./origin.field";
+import { autoImageUrl } from "../../../../net/element.type";
 
 @url('/field/image')
 export class FieldImage extends OriginField {
@@ -15,7 +16,7 @@ export class FieldImage extends OriginField {
             vs = vs.slice(0, 1);
         }
         var fn = async () => {
-            var rs = await useDataGridFileViewer({dist:0, roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
+            var rs = await useDataGridFileViewer({ dist: 0, roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
                 mime: 'image',
                 resources: vs,
                 isMultiple: this.field?.config?.isMultiple ? true : false
@@ -31,7 +32,7 @@ export class FieldImage extends OriginField {
     }
 }
 @view('/field/image')
-export class FieldImageView extends OriginFileView<FieldImage>{
+export class FieldImageView extends OriginFileView<FieldImage> {
     renderImages(images: { url: string, src: string }[]) {
         var style: CSSProperties = {};
         if (this.block.field?.config?.imageFormat?.display == 'auto') {
@@ -53,12 +54,12 @@ export class FieldImageView extends OriginFileView<FieldImage>{
                 renderCenterRightControls: () => <></>
             };
             return <div onMouseDown={e => { e.stopPropagation() }}><Slick {...settings}>{images.map((img, i) => {
-                return <img key={i} className="round" src={img.url || img.src} style={style} />
+                return <img key={i} className="round" src={autoImageUrl(img.url || img.src, 250)} style={style} />
             })}</Slick></div>
         }
         return images.map((img, i) => {
             return <div className="sy-field-image-item" key={i}>
-                <img className="round" src={img.url || img.src} style={style} />
+                <img className="round" src={autoImageUrl(img.url || img.src, 120)} style={style} />
             </div>
         })
     }
