@@ -214,17 +214,19 @@ export class DataGridViewConfig {
                     await self.onAddCreateTableView();
                 }
             }
-            var props: Record<string, any> = {};
-            if (rname.value != self.schemaView.text && rname.value) {
-                props.text = rname.value;
-            }
-            if (!lodash.isEqual(rname.icon, self.schemaView.icon)) {
-                props.icon = rname.icon;
-            }
-            if (Object.keys(props).length > 0) {
-                await self.onSchemaViewUpdate(view?.id, props);
-                if (props.text && view.url.startsWith('/data-grid/charts')) {
-                    await (self as DataGridChart).renderEcharts();
+            if (rname) {
+                var props: Record<string, any> = {};
+                if (rname.value != self.schemaView.text && rname.value) {
+                    props.text = rname.value;
+                }
+                if (!lodash.isEqual(rname.icon, self.schemaView.icon)) {
+                    props.icon = rname.icon;
+                }
+                if (Object.keys(props).length > 0) {
+                    await self.onSchemaViewUpdate(view?.id, props);
+                    if (props.text && view.url.startsWith('/data-grid/charts')) {
+                        await (self as DataGridChart).renderEcharts();
+                    }
                 }
             }
         })

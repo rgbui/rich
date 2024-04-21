@@ -277,7 +277,7 @@ export class DataGridFields extends EventsComponent {
                 <HelpText className={'flex-fixed'} url={window.shyConfig.isUS ? "https://help.shy.red/page/45#bL7PqQVPV559C39frqH1nR" : "https://help.shy.live/page/1872#8vxftyLXa8uJ1PDxJAuDJG"}></HelpText>
             </div>
             <div>
-                {card.model.props.map(pro => {
+                {card.model&&card.model.props.map(pro => {
                     var bp = (self.block as TableStoreGallery).cardConfig.templateProps?.props?.find(g => g.name == pro.name);
                     return <div key={pro.name} className="flex gap-h-5 padding-h-3 f-14 padding-w-5 gap-w-5 item-hover round cursor text-1">
                         <span className="flex-fixed w-100 flex-end flex remark">
