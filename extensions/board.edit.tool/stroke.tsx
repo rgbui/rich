@@ -25,7 +25,7 @@ export function ShapeStroke(props: {
             width: 16,
             boxSizing: 'border-box',
             height: 16
-        }} onMouseDown={e => props.tool.showDrop('stroke')}>
+        }} onMouseDown={e =>props.tool.showDrop('stroke')}>
             {(props.stroke == 'transparent' || props.strokeOpacity == 0) && <Icon size={16} icon={TransparentSvg}></Icon>}
             {props.stroke != 'transparent' && <a className="size-16 circle" style={{ backgroundColor: props.stroke || '#000', opacity: props.strokeOpacity }}></a>}
         </div>
@@ -49,7 +49,7 @@ export function ShapeStroke(props: {
                             </g>
                         </svg>
                     </span>
-                    
+
                     <span onMouseDown={e => props.change('strokeDasharray', 'dash-larger')} className={props.strokeDasharray == 'dash-larger' ? "item-hover-focus" : ""}>
                         <svg style={{ width: 24, height: 24 }} viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
                             <path d="M0 14h6v2H0zm9 0h6v2H9zm9 0h6v2h-6z" fill="currentColor" fillRule="evenodd"></path>

@@ -1,20 +1,23 @@
 
-import { BoardToolFrameSvg, BoardFrame34Svg, BoardFrame43Svg, BoardFrame11Svg, BoardFrame169Svg, BoardFrameA4Svg, BoardFramePhoneSvg, BoardFramePadSvg, BoardFrameWebSvg } from "../../component/svgs"
+import React from "react"
+import { BoardFrame34Svg, BoardFrame43Svg, BoardFrame11Svg, BoardFrame169Svg, BoardFrameA4Svg, BoardFramePhoneSvg, BoardFramePadSvg, BoardFrameWebSvg } from "../../component/svgs"
 import { Icon } from "../../component/view/icon"
+
 import { MenuItemType } from "../../component/view/menu/declare"
 import { lst } from "../../i18n/store"
-import React from "react"
 
-export var canvasOptions = () => [
+export var canvasOptions=()=>[
     {
         text: lst('画板'),
         renderIcon() {
             return <span className="flex-center flex-line  text-1 size-32" ><Icon
-                icon={BoardToolFrameSvg}
+                size={18}
+                icon={{ name: 'byte', code: 'rectangle-one' }}
             ></Icon></span >
         },
         value: 'none'
     },
+    { type: MenuItemType.divide },
     { text: '3:4', value: '3:4', iconSize: 32, icon: BoardFrame34Svg },
     { text: '4:3', value: '4:3', iconSize: 32, icon: BoardFrame43Svg },
     { text: '1:1', value: '1:1', iconSize: 32, icon: BoardFrame11Svg },

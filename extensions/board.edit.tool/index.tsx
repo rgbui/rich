@@ -73,15 +73,18 @@ export class BoardEditTool extends EventsComponent {
         else if (name == 'mindDirection') {
             return <Tip key={at} placement="top" text='分支方向'>
                 <div className={'shy-board-edit-tool-item'}>
-                    <SelectBox value={getValue('mindDirection')}
+                    <SelectBox
+                        dist={16}
+                        value={getValue('mindDirection')}
                         onChange={e => this.onChange('mindDirection', e)}
                         dropWidth={40}
+
                         onDrop={e => {
                             if (e) self.showDrop('');
                         }}
                         options={[
-                            { icon: MindDirectionXSvg, value: 'x' },
-                            { icon: MindDirectionYSvg, value: 'y' },
+                            { icon: { name: 'byte', code: 'right-branch' }, value: 'x', iconSize: 16 },
+                            { icon: { name: 'byte', code: "lower-branch" }, value: 'y', iconSize: 16 },
                         ]}></SelectBox >
                 </div>
             </Tip>
@@ -89,15 +92,17 @@ export class BoardEditTool extends EventsComponent {
         else if (name == 'mindLineType') {
             return <Tip key={at} placement="top" text='线框类型'>
                 <div className={'shy-board-edit-tool-item'} >
-                    <SelectBox value={getValue('mindLineType')}
+                    <SelectBox
+                        dist={16}
+                        value={getValue('mindLineType')}
                         onChange={e => this.onChange('mindLineType', e)}
                         dropWidth={40}
                         onDrop={e => {
                             if (e) self.showDrop('');
                         }}
                         options={[
-                            { icon: BrokenLineSvg, value: 'brokenLine' },
-                            { icon: CureSvg, value: 'cure' },
+                            { icon: BrokenLineSvg, value: 'brokenLine', iconSize: 16 },
+                            { icon: CureSvg, value: 'cure', iconSize: 16 },
                         ]}></SelectBox>
                 </div>
             </Tip>
@@ -113,6 +118,7 @@ export class BoardEditTool extends EventsComponent {
             return <Tip placement="top" key={at} text={'画板'}>
                 <div className={'shy-board-edit-tool-item'} >
                     <SelectBox
+                        dist={14}
                         value={getValue('frameFormat')}
                         onDrop={e => {
                             if (e) self.showDrop('');
@@ -192,9 +198,11 @@ export class BoardEditTool extends EventsComponent {
         else if (name == 'fontSize') {
             return <Tip key={at} placement="top" text={'字体大小'}>
                 <div className={'shy-board-edit-tool-item'} >
-                    <SelectBox value={getValue('fontSize')}
+                    <SelectBox
+                        value={getValue('fontSize')}
                         onChange={e => this.onChange('fontSize', e)}
                         dropWidth={80}
+                        dist={14}
                         onDrop={e => {
                             if (e) self.showDrop('');
                         }}
@@ -220,6 +228,7 @@ export class BoardEditTool extends EventsComponent {
                         onDrop={e => {
                             if (e) self.showDrop('');
                         }}
+                        dist={14}
                         dropWidth={100}
                         placeholder={lst('大小')}
                         value={getValue('stickerSize')}
@@ -334,6 +343,11 @@ export class BoardEditTool extends EventsComponent {
         }
     }
     getItems() {
+        if (this.blocks.first().url == BlockUrlConstant.Frame) {
+            return [
+                "frameFormat",
+            ]
+        }
         if (this.blocks.first().url == BlockUrlConstant.Mind) {
             return [
                 "mindDirection",

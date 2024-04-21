@@ -45,7 +45,8 @@ export function LineColor(props: { name: string, tool: BoardEditTool, value: str
             }}></a>}
         </div>
         {props.tool.isShowDrop(props.name) && <div style={{ width: 230 }} className="w-160 shy-board-edit-font-color-drops">
-            <ColorListBox title={lst('线条颜色')}
+            <ColorListBox
+                title={lst('线条颜色')}
                 name={props.name}
                 colors={colors}
                 value={props.value}
@@ -74,7 +75,7 @@ export function FillFontColor(props: {
     return <div className="shy-board-edit-font-color size-20" >
         <div className="shy-board-edit-font-color-current flex-center size-20 round" style={{}} onMouseDown={e => props.tool.showDrop('fontColor')}>
             <Icon style={{
-            }} size={16} icon={FontStyleSvg}></Icon>
+            }} size={16} icon={{ name: "byte", code: 'text-style-one' }}></Icon>
         </div>
         {props.tool.isShowDrop('fontColor') && <div
             style={{ width: 230 }}
@@ -87,9 +88,7 @@ export function FillFontColor(props: {
                 onChange={e => {
                     props.change(e.color, undefined, undefined)
                 }}></ColorListBox>
-
             <Divider></Divider>
-
             {props.showOpacity && <div className="shy-shape-fill-opacity gap-h-10">
                 <div className="shy-measure-view-label"><label className="f-12 remark"><S>透明度</S></label><span className="f-12 remark" style={{ float: 'right' }}>{props.fillOpacity}</span></div>
                 <MeasureView
@@ -101,11 +100,9 @@ export function FillFontColor(props: {
                     value={props.fillOpacity}
                     inputting={false}
                     onChange={e => {
-                        console.log('gggg', e);
                         props.change(undefined, undefined, e);
                     }}></MeasureView>
             </div>}
-
             <ColorListBox
                 title={lst('背景色')}
                 name={name}
@@ -114,8 +111,6 @@ export function FillFontColor(props: {
                 onChange={e => {
                     props.change(undefined, e.color, undefined);
                 }}></ColorListBox>
-
-
         </div>}
     </div>
 }
@@ -137,9 +132,9 @@ export function FontTextAlign(props: {
         <div className="shy-board-edit-background-color-current size-20 flex-center">
             <Icon icon={(al?.icon || { name: 'byte', code: 'align-text-both' } as any)} size={16}></Icon>
         </div>
-        {props.tool.isShowDrop(name) && <div
-            style={{ top: 26, height: 30, width: 'auto', minHeight: 'auto', padding: '5px 0px' }}
-            className=" shy-board-edit-background-color-drops">
+        {props.tool.isShowDrop(name) && <div style={{ position: 'absolute', top: 20, transform: 'translate(-50%, 0px)' }}> <div
+            style={{ marginTop: 15, height: 30, width: 'auto', minHeight: 'auto', padding: '5px 0px' }}
+            className=" bg-white shadow-s round">
             <div className="h-30 flex r-item-hover r-round r-cursor r-gap-w-5">
                 {aligns.map((g, i) => {
                     return <span onMouseDown={e => {
@@ -148,7 +143,7 @@ export function FontTextAlign(props: {
                         <Icon icon={g.icon as any} size={16}></Icon>
                     </span>
                 })}
-            </div>
+            </div></div>
         </div>}
     </div>
 }
@@ -169,34 +164,36 @@ export function FontTextStyle(props: {
         <div className="shy-board-edit-background-color-current size-20 flex-center">
             <div className="size-20">
                 <Icon className={'pos pos-center'} icon={
-                    { name: 'byte', code: 'font-size-two' }
-                } size={14}></Icon>
+                    { name: 'byte', code: 'text' }
+                } size={17}></Icon>
             </div>
         </div>
-        {props.tool.isShowDrop(name) && <div style={{ top: 26, height: 30, width: 'auto', minHeight: 'auto', padding: '5px 0px' }} className=" shy-board-edit-background-color-drops">
-            <div className="h-30 flex r-item-hover r-round r-cursor r-gap-w-5">
-                <span onMouseDown={e => {
-                    props.change({
-                        fontWeight: props.fontWeight == 'bold' || props.fontWeight == true || props.fontWeight > 500 ? "normal" : 'bold'
-                    })
-                }} className={"size-24 flex-center " + (props.fontWeight == 'bold' || props.fontWeight == true || props.fontWeight > 500 ? " item-hover-focus link" : "")}><Icon size={16} icon={{ name: 'byte', code: 'text-bold' }}></Icon></span>
+        {props.tool.isShowDrop(name) && <div style={{ position: 'absolute', top: 20, transform: 'translate(-50%, 0px)' }}>
+            <div style={{ marginTop: 15, height: 30, width: 'auto', minHeight: 'auto', padding: '5px 0px' }} className=" round bg-white shadow-s">
+                <div className="h-30 flex r-item-hover r-round r-cursor r-gap-w-5">
+                    <span onMouseDown={e => {
+                        props.change({
+                            fontWeight: props.fontWeight == 'bold' || props.fontWeight == true || props.fontWeight > 500 ? "normal" : 'bold'
+                        })
+                    }} className={"size-24 flex-center " + (props.fontWeight == 'bold' || props.fontWeight == true || props.fontWeight > 500 ? " item-hover-focus link" : "")}><Icon size={16} icon={{ name: 'byte', code: 'text-bold' }}></Icon></span>
 
-                <span onMouseDown={e => {
-                    props.change({
-                        fontStyle: props.fontStyle == 'itailc' || props.fontStyle == true ? false : true
-                    })
-                }} className={"size-24 flex-center " + (props.fontStyle == 'itailc' || props.fontStyle == true ? " item-hover-focus link" : "")}><Icon size={16} icon={{ name: 'byte', code: 'text-italic' }} ></Icon></span>
+                    <span onMouseDown={e => {
+                        props.change({
+                            fontStyle: props.fontStyle == 'itailc' || props.fontStyle == true ? false : true
+                        })
+                    }} className={"size-24 flex-center " + (props.fontStyle == 'itailc' || props.fontStyle == true ? " item-hover-focus link" : "")}><Icon size={16} icon={{ name: 'byte', code: 'text-italic' }} ></Icon></span>
 
-                <span onMouseDown={e => {
-                    props.change({
-                        textDecoration: props.textDecoration == 'line-through' ? 'none' : 'line-through'
-                    })
-                }} className={"size-24 flex-center " + (props.textDecoration == 'line-through' ? " item-hover-focus link" : "")}><Icon size={16} icon={{ name: 'byte', code: 'strikethrough' }}></Icon></span>
-                <span
-                    onMouseDown={e => {
-                        props.change({ textDecoration: props.textDecoration == 'underline' ? 'none' : 'underline' })
-                    }}
-                    className={"size-24 flex-center " + (props.textDecoration == 'underline' ? " item-hover-focus link" : "")}><Icon size={16} icon={{ name: 'byte', code: 'text-underline' }}></Icon></span>
+                    <span onMouseDown={e => {
+                        props.change({
+                            textDecoration: props.textDecoration == 'line-through' ? 'none' : 'line-through'
+                        })
+                    }} className={"size-24 flex-center " + (props.textDecoration == 'line-through' ? " item-hover-focus link" : "")}><Icon size={16} icon={{ name: 'byte', code: 'strikethrough' }}></Icon></span>
+                    <span
+                        onMouseDown={e => {
+                            props.change({ textDecoration: props.textDecoration == 'underline' ? 'none' : 'underline' })
+                        }}
+                        className={"size-24 flex-center " + (props.textDecoration == 'underline' ? " item-hover-focus link" : "")}><Icon size={16} icon={{ name: 'byte', code: 'text-underline' }}></Icon></span>
+                </div>
             </div>
         </div>}
     </div>
