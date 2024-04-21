@@ -252,6 +252,7 @@ export class TextSpan extends Block {
         else return true;
     }
     async onGetContextMenus() {
+        if (this.page.isBoard) return await super.onGetContextMenus();
         var rs = await super.onGetContextMenus();
         var at = rs.findIndex(g => g.name == 'text-center');
         var ns: MenuItem<string | BlockDirective>[] = [];
@@ -283,7 +284,7 @@ export class TextSpan extends Block {
 }
 
 @view("/textspan")
-export class TextSpanView extends BlockView<TextSpan>{
+export class TextSpanView extends BlockView<TextSpan> {
     renderView() {
         var style = this.block.contentStyle;
         if (this.block.align == 'center') style.textAlign = 'center';
