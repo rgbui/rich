@@ -12,7 +12,7 @@ import { Icon } from "../../component/view/icon";
 import { lst } from "../../i18n/store";
 import { Spin } from "../../component/view/spin";
 import { util } from "../../util/util";
-import { CloseSvg } from "../../component/svgs";
+import { CloseSvg, SearchSvg } from "../../component/svgs";
 import { MenuItem } from "../../component/view/menu/declare";
 import { BlockDirective, BlockRenderRange } from "../../src/block/enum";
 import { Point, Rect } from "../../src/common/vector/point";
@@ -182,7 +182,7 @@ export class SearchWorkspaceView extends BlockView<SearchWorkspace>{
 
                             }}
                             onMouseDown={e => this.onForceSearch()}>
-                            <Icon size={16} icon={{ name: 'byte', code: 'search' }}></Icon>
+                            <Icon size={16} icon={SearchSvg}></Icon>
                             <span className="gap-l-3"><S>搜索</S></span>
                         </span>
                     </div>
