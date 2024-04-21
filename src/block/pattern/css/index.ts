@@ -98,7 +98,8 @@ export class FontCss extends BlockCss {
     get style(): CSSProperties {
         var style: CSSProperties = {
             fontSize: this.fontSize,
-            // lineHeight: typeof this.lineHeight == 'number' ? this.lineHeight + 'px' : (this.lineHeight || 1.3),
+            //lineHeight: typeof this.lineHeight == 'number' ? this.lineHeight + 'px' : (this.lineHeight || 1.3),
+            lineHeight: 1.2,
             textDecoration: this.textDecoration,
             fontStyle: this.fontStyle,
             fontFamily: this.fontFamily || undefined,
@@ -210,7 +211,7 @@ export class SvgCss extends BlockCss {
             fillOpacity: typeof this.fillOpacity == 'number' ? this.fillOpacity : 1
         };
         if (this.strokeDasharray == 'dash-circle') {
-            st.strokeDasharray = (0) + "," + (this.strokeWidth*2);
+            st.strokeDasharray = (0) + "," + (this.strokeWidth * 2);
         }
         return st;
     }
