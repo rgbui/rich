@@ -2,6 +2,7 @@ import { CSSProperties } from "react";
 import { lst } from "../../i18n/store";
 import { Page } from "../../src/page";
 import { PageLayoutType, PageThemeStyle } from "../../src/page/declare";
+import lodash from "lodash";
 
 export function GetPageThemes(page: Page) {
     if ([
@@ -260,7 +261,7 @@ export function GetPageBgs() {
     return [
         // { color: 'inherit', text: lst('默认') },
         { color: '#fff', text: lst('白色') },
-        { color: 'rgba(237,233,235,0.5)', text: lst('白灰') },
+        // { color: 'rgba(237,233,235,0.5)', text: lst('白灰') },
         { color: '#EDF2F7', text: lst('冷灰') },
         { color: '#F2F2F2', text: lst('浅灰') },
         { color: '#F7F3F0', text: lst('暖灰') },
@@ -269,22 +270,22 @@ export function GetPageBgs() {
         { color: 'rgba(247,214,183,0.5)', text: lst('幼杏') },
         { color: 'rgba(255,193,153,0.5)', text: lst('鲜橘') },
         { color: '#f8ecd3', text: lst('木瓜') },
-        { color: 'rgba(252,246,189,0.5)', text: lst('淡黄') },
+        // { color: 'rgba(252,246,189,0.5)', text: lst('淡黄') },
         { color: 'rgba(205,243,220,0.5)', text: lst('浅绿') },
         { color: '#bdebe8', text: lst('绿蓝') },
         { color: '#d5eff6', text: lst('青色') },
         { color: 'rgba(169,222,249,0.5)', text: lst('天蓝') },
         { color: '#cbdbf1', text: lst('长春') },
-        { color: 'rgba(189,201,255,0.5)', text: lst('雾蓝') },
-        { color: 'rgba(239,218,251,0.5)', text: lst('轻紫') },
+        // { color: 'rgba(189,201,255,0.5)', text: lst('雾蓝') },
+        // { color: 'rgba(239,218,251,0.5)', text: lst('轻紫') },
         { color: '#e2def2', text: lst('淡紫') },
         { color: 'rgba(234,202,220,0.5)', text: lst('熏粉') },
         { color: '#f8d3d7', text: lst('淡粉') },
-        { color: 'rgba(253,198,200,0.5)', text: lst('将红') },
+        // { color: 'rgba(253,198,200,0.5)', text: lst('将红') },
         { color: '#eee2dd', text: lst('亚麻') },
     ].map(c => {
         return {
-            color: c.color.replace('0.5)', '0.8)'),
+            color: c.color.replace('0.5)', '1)'),
             text: c.text
         }
     })
@@ -302,9 +303,9 @@ export function getCardThemes() {
                     pageTheme: {
                         name: 'style-3',
                         contentStyle: {
-                            border: '1px solid #eee',
-                            round: 8,
-                            shadow: 'rgba(0, 0, 0, 0.1) 0px 4.5px 6.75px -1.125px, rgba(0, 0, 0, 0.06) 0px 2.25px 4.5px -1.125px, rgb(229, 224, 223) 0px 0px 0px 1.125px'
+                            border: '1px solid rgb(238, 238, 238)',
+                            round: 16,
+                            shadow: 'rgba(18, 18, 18, 0.1) 0px 1px 3px 0px'
                         },
                         coverStyle: {
                             display: 'none'
@@ -318,7 +319,7 @@ export function getCardThemes() {
                         name: 'style-4',
                         contentStyle: {
                             border: '2px dashed #aaa',
-                            round: 8,
+                            round: 16,
                             shadow: 'none'
                         },
                         coverStyle: {
@@ -333,7 +334,7 @@ export function getCardThemes() {
                         name: 'style-5',
                         contentStyle: {
                             border: '2px solid rgb(225, 98, 89)',
-                            round: 8,
+                            round: 16,
                             shadow: 'none'
                         },
                         coverStyle: {
@@ -348,7 +349,7 @@ export function getCardThemes() {
                         name: 'style-6',
                         contentStyle: {
                             border: '0px solid #eee',
-                            round: 2,
+                            round: 16,
                             shadow: '0 1px 3px hsla(0,0%,7%,.1)'
                         },
                         coverStyle: {
@@ -378,7 +379,7 @@ export function getCardThemes() {
                         name: 'style-9',
                         contentStyle: {
                             border: '1px solid #e7eaf3',
-                            round: 20,
+                            round: 16,
                             shadow: '0 .2rem 1.25rem rgba(0, 0, 0, .07)'
                         },
                         coverStyle: {
@@ -393,7 +394,7 @@ export function getCardThemes() {
                         name: 'style-10',
                         contentStyle: {
                             border: '1px solid #e7eaf3',
-                            round: 20,
+                            round: 16,
                             shadow: 'none'
                         },
                         coverStyle: {
@@ -408,7 +409,7 @@ export function getCardThemes() {
                         name: 'style-11',
                         contentStyle: {
                             border: '2px solid rgb(225, 98, 89);1px solid #eee;1px solid #eee;1px solid #eee',
-                            round: 10,
+                            round: 16,
                             shadow: 'rgba(0, 0, 0, 0.1) 0px 4.5px 6.75px -1.125px, rgba(0, 0, 0, 0.06) 0px 2.25px 4.5px -1.125px, rgb(229, 224, 223) 0px 0px 0px 1.125px'
                         },
                         coverStyle: {
@@ -443,6 +444,29 @@ export function getBgStyle(s: PageThemeStyle['bgStyle']) {
     return bgStyle;
 }
 
+function getBorderWidths(borderStyle: CSSProperties) {
+    var bs: any[] = [];
+    if (borderStyle.borderTop) {
+        // var cbs = borderStyle.split(";");
+        bs.push(borderStyle.borderTop);
+        bs.push(borderStyle.borderRight);
+        bs.push(borderStyle.borderBottom);
+        bs.push(borderStyle.borderLeft);
+    }
+    else {
+        bs = [borderStyle.border, borderStyle.border, borderStyle.border, borderStyle.border];
+    }
+    return bs.map(b => {
+        if (!b) return 0;
+        var r= b.match(/\d+px/g)[0];
+        // var rs: string[] = b.split(' ');
+        // lodash.remove(rs, c => c.trim() ? true : false);
+        // var r = rs.find(c => /^\d$/.test(c[0]));
+        if (r) return parseFloat(r.replace('px', ''));
+        else return 0;
+    })
+}
+
 export function getCardStyle(s: PageThemeStyle) {
     var bgStyle: CSSProperties = {};
     var contentStyle: CSSProperties = {};
@@ -460,8 +484,8 @@ export function getCardStyle(s: PageThemeStyle) {
                 var cbs = cs.border.split(";");
                 contentStyle.borderTop = cbs[0];
                 contentStyle.borderRight = cbs[1];
-                contentStyle.borderBottom = cbs[2];
-                contentStyle.borderLeft = cbs[3];
+                contentStyle.borderBottom = cbs[2] || cbs[0];
+                contentStyle.borderLeft = cbs[3] || cbs[1];
             }
             else
                 contentStyle.border = cs.border;
@@ -509,13 +533,28 @@ export function getCardStyle(s: PageThemeStyle) {
     }
 
     if (s.coverStyle.display == 'inside-cover') {
+        var bs = getBorderWidths(contentStyle);
+        console.log(contentStyle,bs);
         coverStyle.borderRadius = `${r1} ${r2} 0px  0px`;
+        coverStyle.width = `calc(100% + ${bs[1] + bs[3]}px)`;
+        coverStyle.marginLeft = `-${bs[3]}px`;
+        coverStyle.marginTop = `-${bs[0]}px`;
     }
     else if (s.coverStyle.display == 'inside-cover-left') {
+        var bs = getBorderWidths(contentStyle);
         coverStyle.borderRadius = `${r1} 0px 0px ${r4} `;
+        // coverStyle.height = `calc(100% + ${bs[0] + bs[2]}px)`;
+        coverStyle.marginTop = `-${bs[0]}px`;
+        coverStyle.marginBottom = `-${bs[2]}px`;
+        coverStyle.marginLeft = `-${bs[3]}px`;
     }
     else if (s.coverStyle.display == 'inside-cover-right') {
+        var bs = getBorderWidths(contentStyle);
         coverStyle.borderRadius = ` 0px ${r2} ${r3} 0px`;
+        // coverStyle.height = `calc(100% + ${bs[0] + bs[2]}px)`;
+        coverStyle.marginTop = `-${bs[0]}px`;
+        coverStyle.marginBottom = `-${bs[2]}px`;
+        coverStyle.marginRight = `-${bs[1]}px`;
     }
 
 
@@ -527,14 +566,14 @@ export function getCardStyle(s: PageThemeStyle) {
             coverStyle.backgroundSize = 'cover';
             coverStyle.backgroundRepeat = 'no-repeat';
             coverStyle.backgroundPosition = 'center center';
-            coverStyle.backgroundAttachment = 'fixed';
+            // coverStyle.backgroundAttachment = 'fixed';
         }
         else if (s.coverStyle?.bgStyle.mode == 'grad') {
             coverStyle.backgroundImage = s.coverStyle?.bgStyle?.grad?.bg;
             coverStyle.backgroundSize = 'cover';
             coverStyle.backgroundRepeat = 'no-repeat';
             coverStyle.backgroundPosition = 'center center';
-            coverStyle.backgroundAttachment = 'fixed';
+            // coverStyle.backgroundAttachment = 'fixed';
         }
     }
 
@@ -545,14 +584,14 @@ export function getCardStyle(s: PageThemeStyle) {
             bgStyle.backgroundSize = 'cover';
             bgStyle.backgroundRepeat = 'no-repeat';
             bgStyle.backgroundPosition = 'center center';
-            bgStyle.backgroundAttachment = 'fixed';
+            // bgStyle.backgroundAttachment = 'fixed';
         }
         else if (s?.bgStyle.mode == 'grad') {
             bgStyle.backgroundImage = s?.bgStyle?.grad?.bg;
             bgStyle.backgroundSize = 'cover';
             bgStyle.backgroundRepeat = 'no-repeat';
             bgStyle.backgroundPosition = 'center center';
-            bgStyle.backgroundAttachment = 'fixed';
+            // bgStyle.backgroundAttachment = 'fixed';
         }
     }
 

@@ -17,6 +17,7 @@ import lodash from "lodash";
 import { BlockUrlConstant } from "../../src/block/constant";
 import { CardBox } from "../../src/block/element/cardbox/cardbox";
 import { BlockRenderRange } from "../../src/block/enum";
+import { HelpText } from "../../component/view/text";
 
 export class PageTheme extends EventsComponent {
     page: Page;
@@ -99,23 +100,25 @@ export class PageTheme extends EventsComponent {
         else return <></>
     }
     renderCustom() {
-        return <div className="">
+        return <div >
             {this.renderCover()}
             <div className="remark padding-w-15  gap-t-10 gap-b-5 f-12">
                 <S>透明性</S>
             </div>
             <div className="padding-w-15">
-                <SelectBox border value={this.page.pageTheme.contentStyle.transparency} options={[
+                <SelectBox border dropAlign="full" value={this.page.pageTheme.contentStyle.transparency} options={[
                     { text: lst('白色'), value: 'solid' },
                     { text: lst('玻璃'), value: 'frosted' },
                     { text: lst('渐近'), value: 'faded' },
-                    { text: lst('透明'), value: 'noborder' },
+                    // { text: lst('透明'), value: 'noborder' },
                 ]} onChange={e => {
                     this.setTheme('pageTheme.contentStyle.transparency', e)
                 }}></SelectBox>
             </div>
-            <Divider></Divider>
-            <div className="remark padding-w-15 gap-t-10 gap-b-5 f-12"><S>页面背景</S></div>
+
+            <Divider className={'gap-h-10'}></Divider>
+
+            <div className="remark padding-w-15  gap-b-5 f-12"><S>页面背景</S></div>
             <div className="gap-b-50"><PageFillStyle
                 isFill
                 openSpread={e => {
@@ -153,11 +156,11 @@ export class PageTheme extends EventsComponent {
                 }
                 if (s.contentStyle?.transparency !== 'noborder') {
                     contentStyle.borderRadius = 16;
-                    contentStyle.boxShadow = 'rgba(18, 18, 18, 0.1) 0px 1px 3px 0px';
+                    contentStyle.boxShadow = 'rgba(18,18,18,0.1) 0px 1px 3px 0px';
                     contentStyle.padding = 10;
                     contentStyle.height = 90;
                     contentStyle.boxSizing = 'border-box';
-                    contentStyle.border = '1px solid rgb(238, 238, 238)';
+                    contentStyle.border = '1px solid rgb(238,238,238)';
                     if (s.coverStyle?.display == 'inside-cover')
                         contentStyle.paddingTop = 0;
                     contentStyle.marginTop = 10;
@@ -259,7 +262,12 @@ export class PageTheme extends EventsComponent {
         var isPPT = this.page?.pageLayout?.type == PageLayoutType.ppt
         return <div ref={e => this.el = e} className="padding-h-15 bg-white round w-310 h100 overflow-y" style={{ width: 360 }}>
             <div className="flex flex-top padding-w-15">
-                <span className="flex-auto h1"><S>主题</S></span>
+                <span className="flex-auto flex h1">
+                    <span className="flex">
+                        <S>主题</S>
+                        <HelpText className={'gap-l-3'} url={window.shyConfig?.isUS ? "https://help.shy.red/page/77#bYzFNTFKxzBQZjitZCczVb" : "https://help.shy.live/page/2008#i8PWYYn5wPbf5UGzoJ58fp"}><S>了解页面主题</S></HelpText>
+                    </span>
+                </span>
                 <span onClick={e => this.emit('close')} className="size-30 flex-center flex-fixed text-1 item-hover cursor round">
                     <Icon size={16} icon={CloseSvg}></Icon>
                 </span>
@@ -278,7 +286,7 @@ export class PageTheme extends EventsComponent {
                 <S>透明性</S>
             </div>
             <div className="padding-w-15">
-                <SelectBox border value={this.page.pageTheme.contentStyle.transparency} options={[
+                <SelectBox border dropAlign="full" value={this.page.pageTheme.contentStyle.transparency} options={[
                     { text: lst('默认'), value: 'solid' },
                     { text: lst('玻璃'), value: 'frosted' },
                     { text: lst('渐近'), value: 'faded' },
@@ -302,7 +310,7 @@ export class PageTheme extends EventsComponent {
         </div>
     }
     renderbg() {
-        return <div>
+        return <div className="gap-b-50">
 
             {this.page?.pageLayout?.type == PageLayoutType.textChannel && <div className="padding-w-15">
                 <div className="remark   gap-t-10 gap-b-5 f-12">
@@ -311,9 +319,10 @@ export class PageTheme extends EventsComponent {
                 <div className="gap-h-10">
                     <SelectBox
                         border
+                        dropAlign="full"
                         value={this.page.pageTheme.contentStyle?.transparency}
                         options={[
-                            { text: lst('无透明'), value: 'solid' },
+                            { text: lst('白色'), value: 'solid' },
                             { text: lst('毛玻璃'), value: 'frosted' },
                             { text: lst('渐近'), value: 'faded' },
                         ]} onChange={async e => {

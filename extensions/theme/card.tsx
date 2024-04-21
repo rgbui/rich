@@ -16,6 +16,7 @@ import lodash from "lodash";
 import { BlockRenderRange } from "../../src/block/enum";
 import { Tip } from "../../component/view/tooltip/tip";
 import { BgBorder } from "./card/bg.boder";
+import { HelpText } from "../../component/view/text";
 
 export class CardTheme extends EventsComponent {
     popover: Popover<CardTheme>;
@@ -53,7 +54,12 @@ export class CardTheme extends EventsComponent {
         var textp = 'var(--text-p-color)';
         var solid = '2px solid var(--text-p-color)'
         return <div className="padding-w-10">
-            <div className="remark gap-b-5 f-12"><S>封面</S></div>
+            <div className="remark gap-b-5 f-12 flex">
+                <span className="flex-auto"><S>封面</S></span>
+                <span className="flex-fixed">
+                    <HelpText url={window.shyConfig?.isUS ? "https://help.shy.red/page/76#6R5HYHohVAmbonKCMEHBco" : "https://help.shy.live/page/281"}><S>了解如何使用卡片块</S></HelpText>
+                </span>
+            </div>
             <div className="flex r-gap-r-10 r-round-2">
                 <Tip text='无布局'><div className={'round padding-5 ' + ((this.pageTheme?.coverStyle?.display || 'none') == 'none' ? "item-hover-focus" : "item-hover")}>
                     <div className="cursor round" onMouseDown={e => this.setTheme('coverStyle.display', 'none')} style={{ border: (this.pageTheme?.coverStyle?.display || 'none') == 'none' ? solid : '2px solid #cac5c4', width: 30, height: 20 }}></div>
@@ -66,7 +72,7 @@ export class CardTheme extends EventsComponent {
             {(this.pageTheme?.coverStyle?.display || 'none') != 'none' && <div>
                 <div className="remark  gap-t-10 gap-b-5 f-12"><S>背景</S></div>
                 <div>
-                    <PageFillStyle isNotEmpty openSpread={e => {
+                    <PageFillStyle smallGallery={true} isNotEmpty openSpread={e => {
                         if (e == true) { this.el.classList.remove('overflow-y'); this.el.classList.remove('h-300') }
                         else { this.el.classList.add('overflow-y'); this.el.classList.add('h-300') }
                         if (this.popover) this.popover.stopMousedownClose(e);
@@ -76,6 +82,7 @@ export class CardTheme extends EventsComponent {
             {this.pageTheme?.coverStyle.display == 'inside' && <><div className="remark   gap-t-10 gap-b-5 f-12">
                 <S>透明性</S>
             </div>
+
                 <div >
                     <SelectBox
                         border
@@ -188,7 +195,7 @@ export class CardTheme extends EventsComponent {
                     }}><S>自定义风格</S></span>
                 </div>}
                 {this.mode == 'custom' && <div className="flex remark f-12 gap-h-10">
-                    <span className="flex-fixed" onMouseDown={e => {
+                    <span className="flex-fixed cursor" onMouseDown={e => {
                         if (this.mode == 'custom') return;
                         this.mode = 'custom';
                         this.forceUpdate()

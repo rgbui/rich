@@ -1,11 +1,11 @@
 import React from "react";
 import { PageThemeStyle } from "../../../src/page/declare";
-import { CheckSvg, ChevronDownSvg, CloseSvg, PicSvg, UploadSvg } from "../../../component/svgs";
+import { CheckSvg, ChevronDownSvg, CloseSvg } from "../../../component/svgs";
 import { ColorInput } from "../../../component/view/color/input";
 import { Icon } from "../../../component/view/icon";
 import { S } from "../../../i18n/view";
 import { UploadView } from "../../file/upload";
-import { GalleryBgs } from "../../image/gellery";
+
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { lst } from "../../../i18n/store";
 import { Rect } from "../../../src/common/vector/point";
@@ -14,20 +14,25 @@ import { SelectBox } from "../../../component/view/select/box";
 import { GradColor } from "./grad";
 import { GetPageBgs } from "../themes";
 import { useSelectMenuItem } from "../../../component/view/menu";
+import { GalleryBgs } from "../../image/store";
 
 export class PageFillStyle extends React.Component<{
     bgStyle: PageThemeStyle['bgStyle'],
     isFill?: boolean,
     isNotEmpty?: boolean,
+    smallGallery?: boolean,
     onChange: (e: PageThemeStyle['bgStyle']) => void,
     openSpread?: (spread: boolean) => void
-}>{
+}> {
     constructor(props) {
         super(props);
         this.bgStyle = lodash.cloneDeep(props.bgStyle);
         if (!this.bgStyle) this.bgStyle = { mode: 'none' };
     }
-    componentDidUpdate(prevProps: Readonly<{ bgStyle: PageThemeStyle['bgStyle']; onChange: (e: PageThemeStyle['bgStyle']) => void; }>,
+    componentDidUpdate(prevProps: Readonly<{
+        bgStyle: PageThemeStyle['bgStyle'];
+        onChange: (e: PageThemeStyle['bgStyle']) => void;
+    }>,
         prevState: Readonly<{}>, snapshot?: any): void {
         if (!lodash.isEqual(prevProps.bgStyle, this.props.bgStyle)) {
             this.bgStyle = lodash.cloneDeep(this.props.bgStyle);
@@ -74,7 +79,7 @@ export class PageFillStyle extends React.Component<{
             </div>
         }
         return <div className="relative" ref={e => this.el = e}>
-            <div className="h-30 border round flex" onMouseDown={e => {
+            <div className="h-28 cursor item-hover-light border round flex" onMouseDown={e => {
                 this.spread = true;
                 if (this.props.openSpread)
                     this.props.openSpread(true);
@@ -85,10 +90,10 @@ export class PageFillStyle extends React.Component<{
             }}>
                 <span className="gap-l-10 flex-fixed">{(this.getItems().find(c => c.value == this.bgStyle.mode) as any)?.stext}</span>
                 <span className="flex-auto  gap-l-10 flex">
-                    {this.bgStyle.mode == 'color' && <span className="w-120 h-24 border round " style={{ backgroundColor: this.bgStyle.color, display: 'block' }}></span>}
-                    {this.bgStyle.mode == 'image' && this.bgStyle.src && <img className="obj-center w-120 h-24 round" src={this.bgStyle.src}></img>}
-                    {this.bgStyle.mode == 'uploadImage' && this.bgStyle.src && <img className="obj-center w-120 h-24  round" src={this.bgStyle.src}></img>}
-                    {this.bgStyle.mode == 'grad' && this.bgStyle.grad?.bg && <span className="w-120 h-24 border round " style={{ backgroundImage: this.bgStyle.grad?.bg, display: 'block' }}></span>}
+                    {this.bgStyle.mode == 'color' && <span className="w-100 h-20 border round " style={{ backgroundColor: this.bgStyle.color, display: 'block' }}></span>}
+                    {this.bgStyle.mode == 'image' && this.bgStyle.src && <img className="obj-center w-100 h-20 round" src={this.bgStyle.src}></img>}
+                    {this.bgStyle.mode == 'uploadImage' && this.bgStyle.src && <img className="obj-center w-100 h-20  round" src={this.bgStyle.src}></img>}
+                    {this.bgStyle.mode == 'grad' && this.bgStyle.grad?.bg && <span className="w-100 h-20 border round " style={{ backgroundImage: this.bgStyle.grad?.bg, display: 'block' }}></span>}
                 </span>
                 <span className="flex-fixed flex-center size-20 remark"><Icon size={14} icon={ChevronDownSvg}></Icon></span>
             </div>
@@ -116,7 +121,7 @@ export class PageFillStyle extends React.Component<{
     dropEle: HTMLElement;
     getItems() {
         var items = [
-            { icon: { name: 'byte', code: 'square' }, name: 'none', value: "none", stext: lst('无背景'), text: lst('无背景'), checkLabel: this.bgStyle?.mode == 'none' },
+            { icon: { name: 'byte', code: 'rectangle-one' }, name: 'none', value: "none", stext: lst('无背景'), text: lst('无背景'), checkLabel: this.bgStyle?.mode == 'none' },
             { type: MenuItemType.divide },
             { icon: { name: 'byte', code: 'pic' }, name: 'image', text: lst('选择图片'), stext: lst('图片'), value: 'image', checkLabel: this.bgStyle?.mode == 'image' },
             { icon: { name: 'byte', code: 'upload-one' }, name: 'uploadImage', text: lst('上传图片'), stext: lst('图片'), value: 'uploadImage', checkLabel: this.bgStyle?.mode == 'uploadImage' },
@@ -137,7 +142,7 @@ export class PageFillStyle extends React.Component<{
                 width: 310,
                 left: -10,
                 display: this.bgStyle.mode == 'none' ? 'none' : 'block',
-                paddingTop: 30
+
             }}>
             {!this.props.isFill && <div className="pos size-24 round item-hover flex-center cursor" onMouseDown={e => {
                 this.spread = false;
@@ -175,8 +180,8 @@ export class PageFillStyle extends React.Component<{
                                                 this.setProps({ 'mode': 'image', 'src': gc.url })
                                             }}
                                             key={gc.url}
-                                            style={{ width: (300 - 45) / 2 }} className={'relative gap-r-15 w-120 h-80 gap-b-10 cursor gap-h-10 '}>
-                                            <img className="obj-center w100 h100 round-8" src={gc.thumb} />
+                                            style={{ width: `calc( 50% - 15px )` }} className={'relative gap-r-15 gap-b-10 cursor ' + (this.props.smallGallery ? " h-80" : " h-100")}>
+                                            <img className="op-hover obj-center w100 h100 round" src={gc.thumb} />
                                             {gc.url == this.bgStyle?.src && <div className="pos-all flex-end-top">
                                                 <span className="flex-center size-20 round bg-white shadow gap-5"><Icon size={16} icon={CheckSvg}></Icon></span>
                                             </div>}
@@ -213,9 +218,9 @@ export class PageFillStyle extends React.Component<{
                                     this.setProps({ 'mode': 'color', 'color': bg.color })
                                 }}
                                 style={{ background: bg.color }}
-                                className='round cursor gap-h-10 min-h-30 border item-hover-shadow flex padding-w-10' >
-                                <span className="flex-auto">{bg.text}</span>
-                                {this.bgStyle?.color == bg.color && <span className="flex-fixed">
+                                className='round cursor gap-h-10 h-28 border item-hover-light flex padding-w-10' >
+                                <span className="flex-auto text-1">{bg.text}</span>
+                                {this.bgStyle?.color == bg.color && <span className="size-20 flex-center flex-fixed">
                                     <Icon size={16} icon={CheckSvg}></Icon>
                                 </span>}
                             </div>

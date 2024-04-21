@@ -13,6 +13,7 @@ import { PageFillStyle } from "./card/bg";
 import { SelectBox } from "../../component/view/select/box";
 import { PageThemeStyle } from "../../src/page/declare";
 import { Divider } from "../../component/view/grid";
+import { HelpText } from "../../component/view/text";
 
 export class CardBoxStyle extends EventsComponent {
     async setTheme(key: string, value: any) {
@@ -23,8 +24,6 @@ export class CardBoxStyle extends EventsComponent {
                     this.cardThemeStyle.bgStyle = { mode: 'color', color: '#fff' }
                 }
                 if (this.cardThemeStyle.bgStyle.mode == 'none') {
-                    this.cardThemeStyle.bgStyle.mode = 'color';
-                    this.cardThemeStyle.bgStyle.color = '#fff';
                 }
             }
         }
@@ -52,6 +51,7 @@ export class CardBoxStyle extends EventsComponent {
                 <div className="remark gap-b-5 f-12"><S>强调</S></div>
                 <div>
                     <PageFillStyle
+                        smallGallery={true}
                         openSpread={e => {
                             if (e == true) {
                                 this.el.classList.remove('overflow-y');
@@ -82,15 +82,15 @@ export class CardBoxStyle extends EventsComponent {
                             { text: lst('透明'), value: 'noborder' },
                             { text: lst('渐变'), value: 'faded' },
                             { text: lst('玻璃'), value: 'frosted' },
-                            { text: lst('纯色'), value: 'solid' },
+                            { text: lst('白色'), value: 'solid' },
                         ]}></SelectBox>
                 </div>
             </div>
             <Divider></Divider>
             <div className="gap-h-10">
-                <div className="emark gap-b-5 f-12"><S>背景</S></div>
+                <div className="remark gap-b-5 f-12"><S>背景</S></div>
                 <div>
-                    <PageFillStyle openSpread={e => {
+                    <PageFillStyle smallGallery={true} openSpread={e => {
                         if (e == true) {
                             this.el.classList.remove('overflow-y');
                         }
@@ -103,6 +103,9 @@ export class CardBoxStyle extends EventsComponent {
                         bgStyle={this.cardThemeStyle.bgStyle}
                     ></PageFillStyle>
                 </div>
+            </div>
+            <div className="gap-t-10 flex">
+                <HelpText url={window.shyConfig?.isUS ? "https://help.shy.red/page/75#mkGeJUgiw3uaxo6ehPuTMW" : "https://help.shy.live/page/1127#pTME9R6KTZjmEZvSXASB72"}><S>了解如何使用PPT卡片</S></HelpText>
             </div>
         </div>
     }

@@ -229,10 +229,10 @@ export class GradColor extends React.Component<{
                     {this.renderDots()}
                 </div>
             </div>
-            <div className="h-60 round gap-h-10" style={{ background: this.grad.bg, boxShadow: ' 0 4px 6px -1px rgba(0, 0, 0, 0.1),0 2px 4px -1px rgba(0, 0, 0, 0.06)' }}></div>
+            <div className="h-60 round gap-h-10 border" style={{ background: this.grad.bg, boxShadow: ' 0 4px 6px -1px rgba(0, 0, 0, 0.1),0 2px 4px -1px rgba(0, 0, 0, 0.06)' }}></div>
             <div className="flex">
                 <div className="flex-auto">
-                    <SelectBox border options={[
+                    <SelectBox dropAlign="full"   border options={[
                         { text: lst('柔软'), value: 'soft' },
                         { text: lst('适当'), value: 'duo' },
                         { text: lst('新月'), value: 'crescent' },
