@@ -6,7 +6,7 @@ import { useColorPicker } from "./lazy";
 export class ColorInput extends React.Component<{
     color: string,
     onChange: (color: string) => void
-}>{
+}> {
     input: HTMLInputElement;
     change() {
         var value = this.input.value as string;
@@ -31,15 +31,14 @@ export class ColorInput extends React.Component<{
             this.props.onChange && this.props.onChange(r);
         }
     }
-    render()
-    {
-        return <div className="flex border round h-28 item-hover-light">
-            <div className="flex-fixed size-20 border-light round cursor gap-r-5 gap-l-5" onMouseDown={e => this.onPicker(e)} style={{ backgroundColor: this.props.color }}>
+    render() {
+        return <div className="flex border round h-28 item-hover-light cursor">
+            <div className="flex-fixed size-20 border shadow-s round cursor gap-r-5 gap-l-5" onMouseDown={e => this.onPicker(e)} style={{ backgroundColor: this.props.color }}>
 
             </div>
             <div className="flex-auto"><input
                 spellCheck={false}
-                style={{ fontSize: 14, outline: 'none', border: 0, height: 24 }}
+                style={{ fontSize: 14, outline: 'none', backgroundColor: 'transparent', border: 0, height: 24 }}
                 ref={e => this.input = e}
                 defaultValue={this.props.color}
                 onKeyDown={e => {
