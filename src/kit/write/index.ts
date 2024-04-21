@@ -251,8 +251,7 @@ export class PageWrite {
                 onSpaceInputUrl(this, aa, event);
                 break;
             case KeyboardCode.L.toLowerCase():
-                if (this.kit.page.keyboardPlate.isAltAndShift())
-                {
+                if (this.kit.page.keyboardPlate.isAltAndShift()) {
                     var lb = aa.block.closest(x => !x.isLine);
                     if (lb) {
                         event.preventDefault();
@@ -291,38 +290,36 @@ export class PageWrite {
                 }
                 break;
             case KeyboardCode.H.toLowerCase():
-                if (this.kit.page.keyboardPlate.isMeta() || this.kit.page.keyboardPlate.isCtrl()) {
+                if (this.kit.page.keyboardPlate.isMetaOrCtrlAndShift()) {
                     event.preventDefault()
-                    if (this.kit.page.keyboardPlate.isShift()) {
-                        if (hasSelectionRange && this.kit.anchorCursor.currentSelectedBlocks.length == 0) {
-                            var rcc = await GetTextCacheFontColor();
-                            if (rcc) {
-                                var rc = onTextToolExcute(TextCommand.setColor, {
-                                    color: rcc.name == 'font' ? rcc.color : undefined,
-                                    backgroundColor: rcc.name == 'fill' ? rcc.color : undefined
-                                });
-                            }
+                    if (hasSelectionRange && this.kit.anchorCursor.currentSelectedBlocks.length == 0) {
+                        var rcc = await GetTextCacheFontColor();
+                        if (rcc) {
+                            var rc = onTextToolExcute(TextCommand.setColor, {
+                                color: rcc.name == 'font' ? rcc.color : undefined,
+                                backgroundColor: rcc.name == 'fill' ? rcc.color : undefined
+                            });
                         }
-                        else {
-                            var bs: Block[] = [];
-                            var block = aa.block.closest(x => !x.isLine);
-                            if (this.kit.anchorCursor.currentSelectedBlocks.length > 0) {
-                                bs = this.kit.anchorCursor.currentSelectedBlocks;
-                            }
-                            else bs.push(block)
-                            var rcc = await GetTextCacheFontColor();
-                            if (rcc) {
-                                this.kit.page.onAction('onUpdatePattern', async () => {
-                                    await bs.eachAsync(async b => {
-                                        if (rcc.name == 'fill') {
-                                            await b.pattern.setStyles({ [BlockCssName.fill]: { mode: 'color', color: rcc.color } } as any);
-                                        }
-                                        else {
-                                            await b.pattern.setStyles({ [BlockCssName.font]: { color: rcc.color } } as any);
-                                        }
-                                    });
-                                })
-                            }
+                    }
+                    else {
+                        var bs: Block[] = [];
+                        var block = aa.block.closest(x => !x.isLine);
+                        if (this.kit.anchorCursor.currentSelectedBlocks.length > 0) {
+                            bs = this.kit.anchorCursor.currentSelectedBlocks;
+                        }
+                        else bs.push(block)
+                        var rcc = await GetTextCacheFontColor();
+                        if (rcc) {
+                            this.kit.page.onAction('onUpdatePattern', async () => {
+                                await bs.eachAsync(async b => {
+                                    if (rcc.name == 'fill') {
+                                        await b.pattern.setStyles({ [BlockCssName.fill]: { mode: 'color', color: rcc.color } } as any);
+                                    }
+                                    else {
+                                        await b.pattern.setStyles({ [BlockCssName.font]: { color: rcc.color } } as any);
+                                    }
+                                });
+                            })
                         }
                     }
                 }
@@ -366,7 +363,7 @@ export class PageWrite {
             case KeyboardCode.K7:
             case KeyboardCode.K8:
                 // case KeyboardCode.K9:
-                if (this.kit.page.keyboardPlate.isAlt() && (this.kit.page.keyboardPlate.isMeta() || this.kit.page.keyboardPlate.isCtrl())) {
+                if (this.kit.page.keyboardPlate.isMetaOrCtrlAndAlt()) {
                     var bs: Block[] = this.kit.anchorCursor.getAppearBlocks(aa);
                     var url;
                     if (ek == KeyboardCode.K0) url = BlockUrlConstant.TextSpan;
@@ -385,6 +382,15 @@ export class PageWrite {
                                 { last: true, render: true }
                             )
                         })
+                    }
+                }
+                break;
+            case KeyboardCode.M.toLowerCase():
+                if (this.kit.page.keyboardPlate.isMetaOrCtrlAndAlt()) {
+                    //对当前块发表评论
+                    var block = aa.block.closest(x => !x.isLine);
+                    if (block) {
+
                     }
                 }
                 break;

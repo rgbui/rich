@@ -21,6 +21,7 @@ export enum KeyboardCode {
     U = 'U',
     K = 'K',
     H = 'H',
+    M='M',
     Z = 'Z',
     Y = 'Y',
     S = 'S',
@@ -234,6 +235,13 @@ export class KeyboardPlate {
     }
     isMetaOrCtrlAndShift(code?: KeyboardCode) {
         if (UA.isMacOs && this.onlyKeys('meta', 'shift') || !UA.isMacOs && this.onlyKeys('ctrl', 'shift')) {
+            if (typeof code != 'undefined') { if (this.is(code)) return true; }
+            else return true;
+        }
+        return false;
+    }
+    isMetaOrCtrlAndAlt(code?: KeyboardCode) {
+        if (UA.isMacOs && this.onlyKeys('meta', 'alt') || !UA.isMacOs && this.onlyKeys('ctrl', 'alt')) {
             if (typeof code != 'undefined') { if (this.is(code)) return true; }
             else return true;
         }
