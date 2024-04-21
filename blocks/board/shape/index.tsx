@@ -58,7 +58,7 @@ export class Shape extends Block {
         if (['stroke', 'strokeDasharray', 'strokeOpacity', 'strokeWidth', 'fillColor', 'fillOpacity',].includes(name)) {
             var key = name;
             if (name == 'fillColor') key = 'fill';
-            await   this.pattern.setSvgStyle({ [key]: value })
+            await this.pattern.setSvgStyle({ [key]: value })
         }
         else if ((await super.setBoardEditCommand(name, value))) {
 
@@ -123,7 +123,7 @@ export class Shape extends Block {
     }
 }
 @view('/shape')
-export class ShapeView extends BlockView<Shape>{
+export class ShapeView extends BlockView<Shape> {
     renderView() {
         var fs = this.block.fixedSize;
         var sb = this.block.svg.clone();
@@ -133,9 +133,18 @@ export class ShapeView extends BlockView<Shape>{
         var style = this.block.visibleStyle;
         style.width = this.block.fixedWidth || 200;
         style.height = this.block.fixedHeight || 200;
-        return <div className="sy-block-shape" style={style}>
+        return <div className="sy-block-shape relative" style={style}>
             {sb.render({ marginLeft: 0 - w / 2, marginTop: 0 - w / 2, width: sb.viewBox.width, height: sb.viewBox.height })}
-            <div className="sy-block-shape-content">
+            <div className="pos flex-center border-box" style={
+                {
+                    top: 0,
+                    left: 0,
+                    // padding: dx,
+                    // background: this.block.color,
+                    width: this.block.fixedSize.width,
+                    height: this.block.fixedSize.height,
+                    overflow: 'hidden'
+                }}>
                 <TextSpanArea placeholder={this.block.isFreeBlock ? lst("键入文本") : undefined} block={this.block}></TextSpanArea>
             </div>
         </div>
