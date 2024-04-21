@@ -88,6 +88,10 @@ export class CardView extends React.Component<{
         if (typeof value != 'undefined') {
             if (typeof safeType != 'undefined') {
                 switch (safeType) {
+                    case FieldType.file:
+                    case FieldType.video:
+                    case FieldType.audio:
+                        return util.covertToArray(value) as any
                     case FieldType.comment:
                     case FieldType.like:
                     case FieldType.love:
@@ -123,8 +127,13 @@ export class CardView extends React.Component<{
         else {
             if (typeof safeType != 'undefined') {
                 switch (safeType) {
+                    case FieldType.file:
+                    case FieldType.video:
+                    case FieldType.audio:
+                        return [] as any
                     case FieldType.comment:
                     case FieldType.like:
+
                     case FieldType.love:
                     case FieldType.oppose:
                     case FieldType.browse:

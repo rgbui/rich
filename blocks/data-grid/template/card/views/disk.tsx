@@ -58,7 +58,8 @@ export class CardPin extends CardView {
         if (item.name == 'download') {
             var title = this.getValue<string>('title');
             var pics = this.getValue<ResourceArguments[]>('file', FieldType.file);
-            await util.downloadFile(pics[0].url, title || pics[0].filename)
+            if (pics[0]?.url)
+                await util.downloadFile(pics[0]?.url, title || pics[0]?.filename)
         }
         else if (item.name == 'look') {
             var pics = this.getValue<ResourceArguments[]>('file', FieldType.file);
@@ -90,8 +91,8 @@ export class CardPin extends CardView {
         return <div className="w100 flex  item-light-hover padding-5 cursor round" onMouseDown={e => self.openEdit(e)}>
             <div className="flex-auto flex">
                 <div className="flex-fixed flex">
-                    <span className="gap-r-5 flex-center text-1">{getExtElement(pics[0].ext)}</span>
-                    <span >{title || pics[0].filename}</span>
+                    <span className="gap-r-5 flex-center text-1">{getExtElement(pics[0]?.ext)}</span>
+                    <span >{title || pics[0]?.filename}</span>
                 </div>
                 <div className="flex-fixed gap-l-20 flex">
                     {tags.length > 0 && tags.map((tag, i) => {
@@ -108,7 +109,7 @@ export class CardPin extends CardView {
             <div onMouseDown={e => (this.openMenu(e))} className="flex-fixed remark text-over  item-hover size-24 round cursor gap-w-5 flex-center">
                 <Icon size={16} icon={DotsSvg}></Icon>
             </div>
-            <div className="flex-fixed gap-w-10 remark f-12">{util.byteToString(pics[0].size)}</div>
+            <div className="flex-fixed gap-w-10 remark f-12">{util.byteToString(pics[0]?.size)}</div>
             <div className="flex-fixed gap-w-10 remark f-12">{dayjs(createDate).format('YYYY-MM-HH')}</div>
         </div>
     }
