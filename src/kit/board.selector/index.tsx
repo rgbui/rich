@@ -40,7 +40,7 @@ import { S } from "../../../i18n/view";
 
 export class BoardSelector extends React.Component<{
     kit: Kit
-}>{
+}> {
     constructor(props) {
         super(props);
         this.fvs.on('change', (offset: Point) => {
@@ -59,19 +59,19 @@ export class BoardSelector extends React.Component<{
         }
         return <div><div className="z-1000 pos w-40 padding-h-5  round-4 border-light shadow bg-white r-size-30 r-gap-l-5 r-gap-t-5 r-gap-b-5 r-item-hover r-round-4 r-cursor r-flex-center  " ref={e => this.el = e} style={style}>
 
-            <Tip text='文本'><div
+            <Tip text='文本' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.text ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.text, e) }}>
                 <Icon size={18} icon={BoardToolTextSvg} />
             </div></Tip>
 
-            <Tip text='便签'><div
+            <Tip text='便签' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.note ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.note, e) }}>
                 <Icon size={18} icon={BoardToolStickerSvg} />
             </div></Tip>
 
-            <Tip text='文档'>
+            <Tip text='文档' placement={'left'}>
                 <div
                     className={this.openSelector == BoardToolOperator.card ? "item-hover-focus" : ""}
                     onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.card, e) }}>
@@ -79,45 +79,48 @@ export class BoardSelector extends React.Component<{
                 </div>
             </Tip>
 
-            <Tip text='形状'><div
+            <Tip text='形状' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.shape ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.shape, e) }}>
                 <Icon size={18} icon={BoardToolSharpSvg}></Icon>
             </div></Tip>
 
-            <Tip text='连线'><div
+            <Tip text='连线' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.connect ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.connect, e) }}>
                 <Icon size={18} icon={ConnetLineSvg}></Icon>
             </div></Tip>
 
-            <Tip text='画笔'><div
+            <Tip text='画笔' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.pen ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.pen, e) }}>
                 <Icon size={18} icon={{ name: 'bytedance-icon', code: 'writing-fluently' }}></Icon>
             </div></Tip>
 
-            <Tip text='容器'><div
+            <Tip text='容器' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.frame ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.frame, e) }}>
-                <Icon size={20} icon={BoardToolFrameSvg}></Icon>
+                <Icon size={18} icon={{ name: 'byte', code: 'rectangle-one' }}></Icon>
             </div></Tip>
 
-            <Tip text='图片'><div
+            <Tip text='图片' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.upload ? "item-hover-focus" : ""}
-                onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.upload, e) }}>
+                onMouseDown={e => {
+                    e.stopPropagation();
+                    this.selector(BoardToolOperator.upload, e)
+                }}>
                 {/* <Icon icon={UploadSvg}></Icon> */}
                 <Icon size={18} icon={PicSvg}></Icon>
             </div></Tip>
 
-            <Tip text='表格'><div
+            <Tip text='表格' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.table ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.table, e) }}>
                 {/* <Icon icon={UploadSvg}></Icon> */}
-                <Icon size={18} icon={{name:'byte',code:'table'}}></Icon>
+                <Icon size={18} icon={{ name: 'byte', code: 'table' }}></Icon>
             </div></Tip>
 
-            <Tip text='思维导图'><div
+            <Tip text='思维导图' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.mind ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.mind, e) }}>
                 <Icon size={18} icon={MindSvg}></Icon>
