@@ -233,9 +233,11 @@ export class Page$ViewEvent {
             var rect = Rect.from(this.root.getBoundingClientRect());
             point = rect.middleCenter;
         }
+      
         var zs = [1, 2, 3, 5, 10, 15, 20, 33, 50, 75, 100, 125, 150, 200, 250, 300];
         var current = zs.findMin(x => Math.abs(x - this.scale * 100));
         var at = zs.findIndex(g => g == current);
+      
         var ro = this.globalMatrix.inverseTransform(point);
         var r = 1;
         var current = this.scale * 100;
