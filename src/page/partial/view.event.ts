@@ -4,7 +4,7 @@ import { Page } from "..";
 import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
 import { emojiStore } from "../../../extensions/emoji/store";
 import { useIconPicker } from "../../../extensions/icon";
-import { GalleryPics } from "../../../extensions/image/gellery";
+
 import { channel } from "../../../net/channel";
 import { util } from "../../../util/util";
 import { Matrix } from "../../common/matrix";
@@ -19,6 +19,7 @@ import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { lst } from "../../../i18n/store";
 import { Block } from "../../block";
 import { AnimatedScrollTo } from "../../../util/animatedScrollTo";
+import { GalleryPics } from "../../../extensions/image/store";
 
 export class Page$ViewEvent {
     /**
