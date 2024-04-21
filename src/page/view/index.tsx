@@ -304,6 +304,7 @@ export class PageView extends Component<{ page: Page }> {
                         e.preventDefault();
                         var ele = e.currentTarget as HTMLElement;
                         ele.scrollTop = 0;
+                        ele.scrollLeft = 0;
                     }
                 }}
             >
