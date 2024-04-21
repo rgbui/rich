@@ -97,6 +97,7 @@ export var util = {
         return ps.join('')
     },
     byteToString(byte: number) {
+        if(typeof byte != 'number') return '';
         if (byte > 1024 * 1024 * 1024 * 1024 * 1024) {
             return (byte / (1024 * 1024 * 1024 * 1024 * 1024)).toFixed(2) + "PB"
         }
@@ -246,6 +247,7 @@ export var util = {
         return text;
     },
     getFileMime(ext: string) {
+        if(!ext) return 'unknow';
         ext = ext.toLowerCase();
         if (['.gif', '.png', '.webp', '.jpg', '.jpeg', '.bmp', '.svg', '.tga', '.exif', '.fpx', '.ico', '.avif', '.apng'].includes(ext)) return "image"
         else if (['.mp3', '.wma', '.wav', '.midi', '.mp4', '.m4v', '.mkv', '.flv', '.vob', '.3gp', '.avi', '.rm', '.rmvb', '.mpeg', '.mpe', '.mpg', '.dat', '.mov', '.qt', '.asf', '.wmv', '.asx'].includes(ext)) return 'video'

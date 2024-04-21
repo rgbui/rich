@@ -3,11 +3,11 @@ import React, { CSSProperties } from "react";
 import { Block } from "../..";
 import {
     DotsSvg,
-    DuplicateSvg,
     PicSvg,
     PlatteSvg,
     PlusSvg
 } from "../../../../component/svgs";
+
 import { Icon, IconValueType } from "../../../../component/view/icon";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import { useCardBoxStyle } from "../../../../extensions/theme/card.style";
@@ -263,7 +263,7 @@ export class CardBox extends Block {
  *  但页面可以会有弹层等一些其它的视图
  */
 @view('/card/box')
-export class ViewComponent extends BlockView<CardBox>{
+export class ViewComponent extends BlockView<CardBox> {
     contentEl: HTMLElement;
     dragSize(arrow: 'top' | 'left' | 'right', event: React.MouseEvent) {
         event.stopPropagation();
@@ -469,6 +469,7 @@ export class ViewComponent extends BlockView<CardBox>{
             // contentStyle.boxShadow = 'none';
             // contentStyle.backgroundColor = 'transparent';
         }
+        console.log('contentStyle', contentStyle, coverStyle);
         return <div style={style}>
             <div className={"sy-block-view-card" + (this.block.isCanEdit() ? " allow-hover" : "")} style={screenStyle}>
                 <div style={gapStyle}>

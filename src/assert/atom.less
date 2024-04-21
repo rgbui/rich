@@ -1242,8 +1242,16 @@ each(@ops, {
             opacity:@value*0.1;
         }
     }
+) 
 
-) .box-border,
+.op-hover{
+    &:hover{
+        opacity: 0.8;
+    }
+}
+
+
+.box-border,
 .border-box,
 .r-border-box>* {
     box-sizing: border-box;

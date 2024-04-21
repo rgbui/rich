@@ -134,7 +134,7 @@ export class PageCard extends Block {
             rs.splice(dat + 1, 0, { type: MenuItemType.divide }, {
                 type: MenuItemType.help,
                 text: lst('了解如何使用卡片块'),
-                url: window.shyConfig?.isUS ? "https://help.shy.live/page/281" : "https://help.shy.live/page/281"
+                url: window.shyConfig?.isUS ? "https://help.shy.red/page/76#6R5HYHohVAmbonKCMEHBco" : "https://help.shy.live/page/281"
             })
         }
         return rs;
