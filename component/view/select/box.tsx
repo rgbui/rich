@@ -56,7 +56,7 @@ export class SelectBox<T = any> extends React.Component<{
                 self.props.onDrop(true, event);
             var rect = Rect.fromEle(event.currentTarget as HTMLElement)
             var r = await useSelectMenuItem(
-                { roundArea: rect, align: self.props.dropAlign == 'left' || self.props.dropAlign == 'full' ? 'start' : 'end' },
+                { roundArea: rect, dist: 3, align: self.props.dropAlign == 'left' || self.props.dropAlign == 'full' ? 'start' : 'end' },
                 ms,
                 {
                     width: self.props.dropAlign == 'full' ? rect.width : (self.props.dropWidth || 160),
