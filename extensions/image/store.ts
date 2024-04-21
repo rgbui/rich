@@ -889,6 +889,11 @@ export var GalleryBgs = () => {
                 },
                 {
                     title: '',
+                    url: 'https://resources.shy.live/gallery/ai/shy_2024_4_33.png',
+                    thumb: 'https://resources.shy.live/gallery/ai/shy_2024_4_33_thumb.png'
+                },
+                {
+                    title: '',
                     url: 'https://resources.shy.live/gallery/ai/shy_2024_4_27.png',
                     thumb: 'https://resources.shy.live/gallery/ai/shy_2024_4_27_thumb.png'
                 },
@@ -919,11 +924,7 @@ export var GalleryBgs = () => {
                 },
                
               
-                {
-                    title: '',
-                    url: 'https://resources.shy.live/gallery/ai/shy_2024_4_33.png',
-                    thumb: 'https://resources.shy.live/gallery/ai/shy_2024_4_33_thumb.png'
-                },
+              
                 {
                     title: '',
                     url: 'https://resources.shy.live/gallery/ai/shy_2024_4_34.png',
