@@ -7,7 +7,7 @@ export class Row extends React.Component<{
     children?: React.ReactNode,
     className?: string[] | string,
     onMouseDown?: (event: React.MouseEvent) => void,
-}>{
+}> {
     render() {
         var cns: string[] = ['shy-row'];
         if (this.props.className) {
@@ -37,7 +37,7 @@ export class Col extends React.Component<{
     valign?: 'top' | 'middle' | 'bottom',
     align?: 'start' | 'end' | 'center',
     style?: CSSProperties,
-    className?:string|(string[])
+    className?: string | (string[])
 }> {
     render() {
         var sp = this.props.span;
@@ -54,9 +54,9 @@ export class Col extends React.Component<{
         if (this.props.valign == 'middle') style.alignItems = 'center'
         else if (this.props.valign == 'bottom') style.alignItems = 'flex-end'
         if (this.props.style) style = Object.assign(style, this.props.style);
-        var classList:string[]=['shy-col'];
-        if(Array.isArray(this.props.className))classList=classList.concat(this.props.className);
-        else if(typeof this.props.className=='string')classList.push(this.props.className);
+        var classList: string[] = ['shy-col'];
+        if (Array.isArray(this.props.className)) classList = classList.concat(this.props.className);
+        else if (typeof this.props.className == 'string') classList.push(this.props.className);
         return <div className={classList.join(' ')} style={style}>{this.props.children}</div>
     }
 }
@@ -69,7 +69,7 @@ export class Space extends React.Component<{
     children?: React.ReactNode,
     style?: CSSProperties,
     onMousedown?: (event: React.MouseEvent) => void
-}>{
+}> {
     render() {
         var style: CSSProperties = {
             display: "flex",
@@ -105,14 +105,20 @@ export class Space extends React.Component<{
 export class Divider extends React.Component<{
     align?: 'left' | 'center' | 'right'
     children?: React.ReactNode,
+    className?: string | (string[]),
     style?: CSSProperties,
     hidden?: boolean
-}>{
+}> {
     render() {
         var style: CSSProperties = this.props.style || {};
         var align = this.props.align || 'left';
         if (this.props.hidden) style.visibility = 'hidden';
-        return <div style={style} className='shy-divider'>
+        var classList: string[] = ['shy-divider'];
+        if (this.props.className) {
+            if (Array.isArray(this.props.className)) classList.addRange(this.props.className);
+            else classList.push(this.props.className);
+        }
+        return <div style={style} className={classList.join(' ')}>
             <div className='shy-divider-line'></div>
             {this.props.children && <div className={'shy-divider-title' + " " + align}>
                 <span>{this.props.children}</span>
@@ -128,7 +134,7 @@ export class Dialoug extends React.Component<{
     style?: CSSProperties,
     className?: string[] | string,
     contentClassName?: string[] | string,
-}>{
+}> {
     render(): React.ReactNode {
         var classList: string[] = ['shy-dialoug'];
         if (this.props.className) {
@@ -158,7 +164,7 @@ export class Dialoug extends React.Component<{
 
 
 
-export class Line extends React.Component<{ className?: string | (string[]), height?: number, gap?: number }>{
+export class Line extends React.Component<{ className?: string | (string[]), height?: number, gap?: number }> {
     render(): React.ReactNode {
         var style: CSSProperties = {
             display: 'inline-block',
