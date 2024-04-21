@@ -32,6 +32,7 @@ export class SelectBox<T = any> extends React.Component<{
     checkChange?: (value: any, item?: MenuItem<string>) => Promise<boolean>,
     onDrop?: (spread?: boolean, e?: React.MouseEvent) => void,
     bg?: boolean,
+    dist?: number,
     hover?: boolean
 }> {
     el: HTMLElement;
@@ -56,7 +57,7 @@ export class SelectBox<T = any> extends React.Component<{
                 self.props.onDrop(true, event);
             var rect = Rect.fromEle(event.currentTarget as HTMLElement)
             var r = await useSelectMenuItem(
-                { roundArea: rect, dist: 3, align: self.props.dropAlign == 'left' || self.props.dropAlign == 'full' ? 'start' : 'end' },
+                { roundArea: rect, dist: self.props.dist || 3, align: self.props.dropAlign == 'left' || self.props.dropAlign == 'full' ? 'start' : 'end' },
                 ms,
                 {
                     width: self.props.dropAlign == 'full' ? rect.width : (self.props.dropWidth || 160),
@@ -119,7 +120,7 @@ export class SelectBox<T = any> extends React.Component<{
             {this.props.children && <>{this.props.children}<Icon className={'gap-l-3 remark'} size={14} icon={ChevronDownSvg}></Icon></>}
             {!this.props.children && <div style={{ width: '100%' }} className="flex">
                 {this.props.prefix}
-                {this.props.multiple != true && <span style={{ justifyContent: this.props.textAlign == 'right' ? "flex-end" : undefined }} className={'flex  ' + (this.props.border ? "flex-auto " : "flex-fixed") + (op?.text ? "" : " ")}>{op?.icon && this.props.iconHidden !== true && <Icon size={op?.iconSize || 14} className={'gap-r-3'} icon={op.icon}></Icon>}{op?.text || this.props.placeholder}</span>}
+                {this.props.multiple != true && <span style={{ justifyContent: this.props.textAlign == 'right' ? "flex-end" : undefined }} className={'flex  ' + (this.props.border ? "flex-auto " : "flex-fixed") + (!op?.text&&this.props.placeholder ? " remark" : " ")}>{op?.icon && this.props.iconHidden !== true && <Icon size={op?.iconSize || 14} className={'gap-r-3'} icon={op.icon}></Icon>}{op?.text || this.props.placeholder}</span>}
                 {this.props.multiple == true && <span className={'flex ' + (this.props.border ? "flex-auto" : "flex-fixed")}>{ops.map((op, i) => {
                     return <span className={'round padding-h-2 flex  ' + (i == 0 && this.props.prefix ? "gap-l-5" : (i == 0 ? "" : "padding-l-3 "))} key={op.value}>
                         <span className={"flex " + (i < ops.length - 1 ? "gap-r-3" : "")}>
