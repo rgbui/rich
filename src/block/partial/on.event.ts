@@ -108,7 +108,7 @@ export class Block$Event {
             name: BlockDirective.link,
             text: lst('复制块链接'),
             icon: LinkSvg,
-            label: UA.isMacOs ? "⌥+Shift+L" : "Alt+Shift+L"
+            label: UA.isMacOs ? "Opt+Shift+L" : "Alt+Shift+L"
         });
         items.push({
             type: MenuItemType.divide
@@ -251,11 +251,13 @@ export class Block$Event {
             name: BlockDirective.bringToFront,
             text: lst('移到前面'),
             icon: BoardMoveTopSvg,
+            label: UA.isMacOs ? "⌘+Opt+]" : "Ctrl+Alt+]"
         });
         items.push({
             name: BlockDirective.sendToBack,
             text: lst('移到最下面'),
-            icon: BoardMoveBottomSvg
+            icon: BoardMoveBottomSvg,
+            label: UA.isMacOs ? "⌘+Opt+[" : "Ctrl+Alt+["
         });
         items.push({
             type: MenuItemType.divide
@@ -263,14 +265,16 @@ export class Block$Event {
         items.push({
             name: this.locker?.lock == false ? BlockDirective.lock : BlockDirective.unlock,
             text: this.locker?.lock == false ? lst('锁住') : lst('解锁'),
-            icon: this.locker?.lock == false ? LockSvg : UnlockSvg
+            icon: this.locker?.lock == false ? LockSvg : UnlockSvg,
+            label: UA.isMacOs ? "⌘+L" : "Ctrl+L"
         });
         items.push({
             type: MenuItemType.divide
         });
         items.push({
-            name: 'copy',
-            text: lst('复制'),
+            name: BlockDirective.copy,
+            text: lst('拷贝副本'),
+            label: UA.isMacOs ? "⌘+D" : "Ctrl+D",
             icon: DuplicateSvg
         });
         items.push({
@@ -287,7 +291,7 @@ export class Block$Event {
             name: BlockDirective.delete,
             icon: TrashSvg,
             text: lst('删除'),
-            label: "delete"
+            label: "Del"
         });
         if (this.editor) {
             items.push({
