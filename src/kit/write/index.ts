@@ -560,6 +560,7 @@ export class PageWrite {
                 var aa = this.inputPop.aa;
                 var newBlock: Block;
                 var bd = lodash.cloneDeep(blockData.data || {});
+                
                 if (blockData.isLine) {
                     /**
                      * 说明创建的是行内块
@@ -595,6 +596,7 @@ export class PageWrite {
                                                * 判断是否为空行块，如果是空行块，则将当前的块转用
                                                * 否则创建一个换行块
                                                */
+                        
                         newBlock = await aa.block.visibleDownCreateBlock(blockData.url, { ...bd, createSource: 'InputBlockSelector' });
                         await aa.block.clearEmptyBlock();
                     }

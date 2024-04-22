@@ -83,7 +83,7 @@ class PageLinkSelector extends InputTextPopSelector<LinkPageItem> {
                 blockData: {
                     url: BlockUrlConstant.Text,
                     isLine: true,
-                    content: this.text || "新页面",
+                    data: { content: this.text || "新页面" },
                     operator: { name: "create", text: this.text || "新页面" }
                 }
             }
@@ -95,8 +95,10 @@ class PageLinkSelector extends InputTextPopSelector<LinkPageItem> {
                 blockData: {
                     url: BlockUrlConstant.Text,
                     isLine: true,
-                    content: b.text || "新页面",
-                    refLinks: [{ id: util.guid(), type: 'page', pageId: b.id }]
+                    data: {
+                        content: b.text || "新页面",
+                        refLinks: [{ id: util.guid(), type: 'page', pageId: b.id }]
+                    }
                 }
             }
         }

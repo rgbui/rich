@@ -113,21 +113,21 @@ class InputUrlSelector extends InputTextPopSelector {
         try {
             if (typeof this._select == 'function') {
                 var ut = this.urlTexts.find(c => c.name == item.name);
-                var props: Record<string, any> = {};
+                var props: Record<string, any> = { data: {} };
                 if (item.url == BlockUrlConstant.Text) {
-                    props.content = this.url;
+                    props.data.content = this.url;
                     if (item.name != 'text')
-                        props.link = { url: this.url }
+                        props.data.link = { url: this.url }
                 }
                 else if (item.url == '/embed') {
                     var ru = ConvertEmbed(this.url);
-                    props.src = { name: 'link', url: ru.url };
-                    props.embedType = ru.embedType;
-                    props.origin = ru.origin;
+                    props.data.src = { name: 'link', url: ru.url };
+                    props.data.embedType = ru.embedType;
+                    props.data.origin = ru.origin;
                 }
-                else if (item.url == '/bookmark') { props.bookmarkUrl = this.url; }
+                else if (item.url == '/bookmark') { props.data.bookmarkUrl = this.url; }
                 else if (item.name == 'data-grid' || item.name == 'page') {
-                    Object.assign(props, ut.data);
+                    Object.assign(props.data, ut.data);
                 }
                 if (isReturn) {
                     return {

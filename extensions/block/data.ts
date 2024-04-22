@@ -6,7 +6,6 @@ import {
     BrowserSvg,
     ButtonSvg,
     CalloutSvg,
-    CollectTableSvg,
     DividerSvg,
     EmbedSvg,
     EmojiSvg,
@@ -33,7 +32,8 @@ import { lst } from '../../i18n/store';
 import B from "../../src/assert/img/bilibili.ico";
 import M from "../../src/assert/img/163.music.ico";
 
-export function getBlockSelectData() {
+export function getBlockSelectData()
+{
     var BlockSelectorData: BlockGroup[] = [
         {
             text: lst('基本'),
@@ -80,7 +80,7 @@ export function getBlockSelectData() {
                 { text: lst('标签页'), icon: BrowserSvg, url: "/tab", label: lst('/标签页'), labels: ['/tab', '/bjy', '/bianqianye'] },
                 { text: lst('简单表格'), icon: TableSvg, url: '/table', label: lst('/表格'), labels: ['/jdbg', '/bg', '/biaoge', '/jiandanbiaoge', '/simpletable', '/table'] },
                 { text: lst('卡片'), icon: { name: 'byte', code: 'bank-card-two' }, url: "/card", label: lst('/卡片'), labels: ['/card', '/kp', '/kaipian'] },
-                { text: lst('白板'), icon: { name: 'byte', code: 'chopping-board' }, url: "/board", label: lst('/白板'), labels: ['/board', '/bb', '/baiban', '/hb', '/huabu', '/canvas'] },
+                { text: lst('白板'), icon: { name: 'byte', code: 'enter-the-keyboard' }, url: "/board", label: lst('/白板'), labels: ['/board', '/bb', '/baiban', '/hb', '/huabu', '/canvas'] },
                 { text: lst('2列'), icon: { name: 'byte', code: 'two-key' }, url: '/2', label: '/2', labels: ['/2', '/2lie', '/2column', '/2col'] },
                 { text: lst('3列'), icon: { name: 'byte', code: 'three-key' }, url: '/3', label: '/3', labels: ['/3', '/3lie', '/3column', '/3col'] },
                 { text: lst('4列'), icon: { name: 'byte', code: 'four-key' }, url: '/4', label: '/4', labels: ['/4', '/4lie', '/4column', '/3col'] },
