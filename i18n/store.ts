@@ -6,6 +6,7 @@ import { S, Sp } from "./view";
 import { util } from "../util/util";
 import { blockStore } from "../extensions/block/store";
 const LANG_LOCAL_KEY = '__shy_lang';
+const LANG_UN_KEY = '__shy_lang_uns';
 
 var uns: Record<string, any> = {};
 export class LangStore {
@@ -69,6 +70,7 @@ export class LangStore {
             if (typeof content == 'string') uns[key] = content || '';
             else uns[key] = key;
             console.log(key, content);
+            this.lazyStoreUns()
         }
         if (typeof d != 'undefined') {
             if (lodash.isObject(content) && !lodash.isNull(content)) return this.format(d, content)
@@ -96,6 +98,15 @@ export class LangStore {
     }
     svs: S[] = [];
     sps: Sp[] = [];
+    lazyStoreUns = lodash.debounce(async () => {
+        var rs = await channel.query('/cache/get', { key: LANG_UN_KEY });
+        if (!rs) rs = {};
+        for (let key in uns) rs[key] = uns[key];
+        await channel.act('/cache/set', {
+            key: LANG_UN_KEY,
+            value: rs
+        })
+    }, 2000)
 }
 
 export var langOptions = [
@@ -119,12 +130,20 @@ export var ls = new LangStore();
 export function lst(key: string, content?: string | Record<string, any>, checkExists?: boolean) {
     return ls.t(key, content, checkExists);
 }
-(window as any).pg = () => {
-    console.log(uns);
+
+(window as any).pg = async () => {
+    var rs = await channel.query('/cache/get', { key: LANG_UN_KEY });
     try {
-        console.log(JSON.stringify(uns, undefined, 4))
+        console.log(JSON.stringify(rs, undefined, 4))
     }
     catch (ex) {
 
     }
+}
+(window as any).pgc = async () => {
+    uns = {};
+    await channel.act('/cache/set', {
+        key: LANG_UN_KEY,
+        value: {}
+    })
 }
