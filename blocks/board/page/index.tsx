@@ -39,7 +39,7 @@ export class PageCard extends Block {
 }
 
 @view('/board/page/card')
-export class PageCardView extends BlockView<PageCard>{
+export class PageCardView extends BlockView<PageCard> {
     mousedown(event: React.MouseEvent) {
         if (this.block.childs.length == 0) {
             event.stopPropagation()
@@ -56,7 +56,7 @@ export class PageCardView extends BlockView<PageCard>{
         style.width = this.block.fixedWidth || 300;
         style.height = this.block.fixedHeight || 500;
         return <div style={style} className="visible-hover">
-            <div className='bg-white shadow border round w100 h100' >
+            <div className='bg-white shadow-s border-light round w100 h100' >
                 <div className="h100 flex flex-col flex-full">
                     <div className="flex h-24 remark flex-fixed">
                         <span className="flex-auto">
