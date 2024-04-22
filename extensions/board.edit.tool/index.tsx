@@ -120,7 +120,7 @@ export class BoardEditTool extends EventsComponent {
                     <SelectBox
                         dist={14}
                         value={getValue('frameFormat')}
-                        onDrop={e => {
+                        onDrop={e=>{
                             if (e) self.showDrop('');
                         }}
                         onChange={e => {
@@ -315,7 +315,8 @@ export class BoardEditTool extends EventsComponent {
             }
             return <div key={at}></div>
         }
-        else if (name == 'borderWidth') {
+        else if (name == 'borderWidth')
+        {
             return <Tip key={at} placement="top" text={'边框'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <BorderBoxStyle
@@ -346,6 +347,7 @@ export class BoardEditTool extends EventsComponent {
         if (this.blocks.first().url == BlockUrlConstant.Frame) {
             return [
                 "frameFormat",
+                'backgroundColor'
             ]
         }
         if (this.blocks.first().url == BlockUrlConstant.Mind) {
@@ -439,13 +441,17 @@ export class BoardEditTool extends EventsComponent {
         this.blocks = blocks;
         var poly = new Polygon(...this.blocks.map(b => b.getVisiblePolygon().points).flat());
         this.point = poly.bound.leftTop;
-        var yoffset = 80;
+        
         var xoffset = 30;
-        if (this.point.y - yoffset < 100) {
-            this.point = poly.bound.leftBottom;
-            this.point.moved(0, yoffset);
+        if (this.point.y - 50 > 0) {
+            this.point = this.point.move(0, -50)
         }
-        else this.point = this.point.move(0, -yoffset)
+        else {
+            this.point = poly.bound.leftBottom;
+            this.point = this.point.move(0, 10)
+        }
+   
+
         if (this.point.x < this.range.left) {
             this.point.x = this.range.left + xoffset;
         }
