@@ -200,7 +200,7 @@ export class TextSpan extends Block {
         var fontStyle = this.pattern.css(BlockCssName.font)
         var bold = fontStyle?.fontWeight || false;
         var cs: { name: string; value?: any; }[] = [];
-        cs.push({ name: 'fontFamily', value: fontStyle.fontFamily });
+        cs.push({ name: 'fontFamily', value: fontStyle?.fontFamily });
         cs.push({ name: 'fontSize', value: Math.round(this.fontScale * 14) });
         cs.push({ name: 'fontWeight', value: bold == 'bold' || bold == 500 ? true : false });
         cs.push({ name: 'fontStyle', value: fontStyle?.fontStyle == 'italic' ? true : false });
