@@ -22,7 +22,7 @@ export type PortLocation = {
 @url('/line')
 export class Line extends Block {
     async created() {
-        await   this.pattern.setSvgStyle({
+        await this.pattern.setSvgStyle({
             strokeWidth: 3,
             stroke: 'rgb(0,198,145)'
         });
@@ -309,7 +309,7 @@ export class Line extends Block {
     }
     async setBoardEditCommand(name: string, value: any) {
         if (name == 'backgroundColor') {
-            await  this.pattern.setSvgStyle({ stroke: value })
+            await this.pattern.setSvgStyle({ stroke: value })
         }
         else if (name == 'lineType') {
             await this.updateProps({ [name]: value }, BlockRenderRange.self);
@@ -318,7 +318,7 @@ export class Line extends Block {
             await this.updateProps({ [name]: value }, BlockRenderRange.self);
         }
         else if (['strokeWidth', 'strokeDasharray'].includes(name)) {
-            await  this.pattern.setSvgStyle({ [name]: value });
+            await this.pattern.setSvgStyle({ [name]: value });
         }
     }
     getVisiblePolygon() {
@@ -342,13 +342,24 @@ export class Line extends Block {
         if (!(segs?.length > 0)) return null;
         return await super.get(args, options)
     }
+    checkSafe() {
+        if (this.from && this.from.blockId) {
+            var block = this.page.find(g => g.id == this.from.blockId);
+            if (!block) return false;
+        }
+        if (this.to && this.to.blockId) {
+            var block = this.page.find(g => g.id == this.to.blockId);
+            if (!block) return false;
+        }
+        return true;
+    }
 }
 @view('/line')
-export class LineView extends BlockView<Line>{
+export class LineView extends BlockView<Line> {
     renderView() {
         var w = this.block.pattern.getSvgStyle()?.strokeWidth || 1;
         var segs = this.block.segments
-        if (!(segs?.length > 0)) return <div style={this.block.visibleStyle}></div>
+        if (!(segs?.length > 0) || this.block.checkSafe() === false) return <div style={this.block.visibleStyle}></div>
         var rect = Segment.getSegmentsBound(segs);
         var re = rect.extend(Math.max(30, w * 6, 100));
         var style = this.block.visibleStyle;
