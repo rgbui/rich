@@ -107,7 +107,7 @@ class TextTool extends EventsComponent {
                     }}></div>
                 })
             }
-            {this.visible == true && <div className='shy-tool-text-menu' ref={e => this.boxEl = e} style={style}>
+            {this.visible == true && <div className='shy-tool-text-menu shadow-s border bg-white round padding-w-5' ref={e => this.boxEl = e} style={style}>
                 {!(this.page.ws.aiConfig.disabled == true) && <><Tip overlay={<div><S>诗云AI</S><span style={{ color: '#bbb' }}>{UA.isMacOs ? "⌘+J" : 'Ctrl+J'}</span></div>} >
                     <div className='shy-tool-text-menu-item' onMouseDown={e => this.onExcute(TextCommand.askAI, e)}>
                         <Icon icon={AiStartSvg}></Icon><span>AI</span>
