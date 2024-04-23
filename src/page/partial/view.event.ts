@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Page } from "..";
-import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
+import { closeBoardEditTool } from "../../../extensions/board.edit.tool";
 import { emojiStore } from "../../../extensions/emoji/store";
 import { useIconPicker } from "../../../extensions/icon";
 
@@ -36,7 +36,7 @@ export class Page$ViewEvent {
     onMousedown(this: Page, event: React.MouseEvent) {
         if (this.pageLayout.type == PageLayoutType.board) {
             if (this.kit.page.isCanEdit)
-                this.kit.boardSelector.onShow(this.root);
+                this.kit.boardSelector.onShow(this.root,{page:this.kit.page});
         }
         this.kit.operator.mousedown(event);
     }
@@ -263,10 +263,10 @@ export class Page$ViewEvent {
     onSetMatrix(this: Page, matrix: Matrix) {
         this.matrix = matrix;
         this.view.forceUpdate();
-        forceCloseBoardEditTool();
+        closeBoardEditTool();
     }
     onFitZoom(this: Page) {
-        forceCloseBoardEditTool();
+        closeBoardEditTool();
         var matrix = new Matrix();
         this.gridMap.start();
         var bound = this.gridMap.gridRange();

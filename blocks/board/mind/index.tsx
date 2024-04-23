@@ -13,7 +13,7 @@ import { BlockCssName } from "../../../src/block/pattern/css";
 import { BlockRenderRange } from "../../../src/block/enum";
 import { BlockChildKey } from "../../../src/block/constant";
 import { MouseDragger } from "../../../src/common/dragger";
-import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
+import { closeBoardEditTool } from "../../../extensions/board.edit.tool";
 import { lst } from "../../../i18n/store";
 import { VR } from "../../../src/common/render";
 import { Polygon } from "../../../src/common/vector/polygon";
@@ -56,7 +56,7 @@ export class FlowMind extends Block {
             BlockChildKey.childs,
             BlockChildKey.subChilds,
             BlockChildKey.otherChilds
-        ];
+        ]
     }
     @prop()
     align: 'left' | 'center' | 'right' = 'left';
@@ -780,7 +780,7 @@ export class FlowMind extends Block {
         MouseDragger({
             event,
             moveStart() {
-                forceCloseBoardEditTool();
+                closeBoardEditTool();
             },
             moving(ev, data, isEnd) {
                 var tp = gm.inverseTransform(Point.from(ev));

@@ -12,7 +12,7 @@ import { ActionDirective } from '../../history/declare';
 import { FontCss, BlockCssName } from '../pattern/css';
 import { CssSelectorType } from '../pattern/type';
 import { MouseDragger } from '../../common/dragger';
-import { forceCloseBoardEditTool } from '../../../extensions/board.edit.tool';
+import { closeBoardEditTool } from '../../../extensions/board.edit.tool';
 import { openBoardEditTool } from '../../kit/operator/board/edit';
 import { lst } from '../../../i18n/store';
 import { BlockUrlConstant } from '../constant';
@@ -122,7 +122,7 @@ export class TextSpan extends Block {
         MouseDragger({
             event,
             moveStart() {
-                forceCloseBoardEditTool();
+                closeBoardEditTool();
             },
             async moving(ev, data, isEnd) {
                 if ((arrows.includes(PointArrow.right) || arrows.includes(PointArrow.left)) && arrows.includes(PointArrow.middle)) {
@@ -252,7 +252,7 @@ export class TextSpan extends Block {
         else return true;
     }
     async onGetContextMenus() {
-        if (this.page.isBoard) return await super.onGetContextMenus();
+        if (this.isFreeBlock) return await super.onGetContextMenus();
         var rs = await super.onGetContextMenus();
         var at = rs.findIndex(g => g.name == 'text-center');
         var ns: MenuItem<string | BlockDirective>[] = [];
@@ -295,8 +295,7 @@ export class TextSpanView extends BlockView<TextSpan> {
             style.fontSize = this.block.page.smallFont ? '12px' : '14px';
         }
         var placeholder = this.block.isFreeBlock || pa?.url == BlockUrlConstant.TableCell ? lst("输入文本") : undefined;
-        if (this.block.placeholder)
-            placeholder = this.block.placeholder;
+        if (this.block.placeholder) placeholder = this.block.placeholder;
         var visibleStyle = this.block.visibleStyle;
         return <div className='sy-block-text-span' style={visibleStyle}>
             <div style={style}>

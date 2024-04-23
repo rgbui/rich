@@ -34,7 +34,6 @@ export class Bookmark extends Block {
                 await this.onLoadBookmarkByUrl(this.initialData.url, true);
             }
             else if (this.createSource == 'InputBlockSelector') {
-                console.log(this,'this');
                 if (this.bookmarkUrl) {
                     await this.onLoadBookmarkByUrl(this.bookmarkUrl, true);
                 }

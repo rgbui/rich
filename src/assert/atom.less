@@ -573,6 +573,7 @@ item-selected:选中的效果
 .r-bg-hover>*,
 .r-item-bg-hover>* {
     background-color: #fff;
+
     &:hover {
         background-color: #eee;
     }
@@ -583,6 +584,7 @@ item-selected:选中的效果
 .r-bg-hover-light>*,
 .r-item-bg-hover-light>* {
     background-color: #fff;
+
     &:hover {
         background-color: #fefefe;
     }
@@ -590,8 +592,8 @@ item-selected:选中的效果
 
 .item-hover-button-focus,
 .r-item-hover-button-focus>* {
-    box-shadow             : var(--shadow-s);
-    background             : #fff;
+    box-shadow: var(--shadow-s);
+    background: #fff;
 }
 
 .item-hover-button,
@@ -1242,10 +1244,9 @@ each(@ops, {
             opacity:@value*0.1;
         }
     }
-) 
 
-.op-hover{
-    &:hover{
+) .op-hover {
+    &:hover {
         opacity: 0.8;
     }
 }
@@ -1676,6 +1677,14 @@ each(@ops, {
 
 .r-border-light {
     >* {
+        border: 0.1rem solid rgba(55, 53, 47, 0.08);
+    }
+}
+
+.border-light-hover,
+.r-border-light-hover>* {
+    border: 0.1rem solid transparent;
+    &:hover {
         border: 0.1rem solid rgba(55, 53, 47, 0.08);
     }
 }

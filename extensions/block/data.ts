@@ -22,7 +22,6 @@ import {
     PicSvg,
     ProgressSvg,
     QuoteSvg,
-    TableSvg,
     TimeSvg,
     TodoSvg,
     ToggleListSvg,
@@ -32,8 +31,7 @@ import { lst } from '../../i18n/store';
 import B from "../../src/assert/img/bilibili.ico";
 import M from "../../src/assert/img/163.music.ico";
 
-export function getBlockSelectData()
-{
+export function getBlockSelectData() {
     var BlockSelectorData: BlockGroup[] = [
         {
             text: lst('基本'),
@@ -62,7 +60,7 @@ export function getBlockSelectData()
             childs: [
 
                 { text: lst('页面链接'), url: '/link', icon: LinkSvg, label: lst("/链接"), labels: ['/link', '/lianjie', '/lj', '/wz'] },
-                { text: lst('面包屑导航'), url: '/links', icon: { name: 'byte', code: "navigation",rotate:90, }, label: lst("/面包屑"), labels: ['/links', '/urls', '/mbx', '/mianbaoxie', '/breadcrumb'] },
+                { text: lst('面包屑导航'), url: '/links', icon: { name: 'byte', code: "navigation", rotate: 90, }, label: lst("/面包屑"), labels: ['/links', '/urls', '/mbx', '/mianbaoxie', '/breadcrumb'] },
                 { text: lst('标签'), url: '/tag', icon: { name: "byte", code: 'hashtag-key' }, label: lst('/标签'), labels: ['/tag', '/biaoqian', '/bq'] },
                 { text: lst("书签"), url: '/bookmark', icon: BookSvg, label: lst('/书签'), labels: ['/wzsq', '/shuqian', '/sq', '/bookmark'] },
                 // { text: lst('二维码'), url: '/qr', icon: MentionSvg, label: lst("/二维码"), labels: ['/qr', '/wz', '/ewm'] },
@@ -78,7 +76,7 @@ export function getBlockSelectData()
             childs: [
 
                 { text: lst('标签页'), icon: BrowserSvg, url: "/tab", label: lst('/标签页'), labels: ['/tab', '/bjy', '/bianqianye'] },
-                { text: lst('简单表格'), icon: TableSvg, url: '/table', label: lst('/表格'), labels: ['/jdbg', '/bg', '/biaoge', '/jiandanbiaoge', '/simpletable', '/table'] },
+                { text: lst('简单表格'), icon: { name: 'byte', code: 'insert-table' }, url: '/table', label: lst('/表格'), labels: ['/jdbg', '/bg', '/biaoge', '/jiandanbiaoge', '/simpletable', '/table'] },
                 { text: lst('卡片'), icon: { name: 'byte', code: 'bank-card-two' }, url: "/card", label: lst('/卡片'), labels: ['/card', '/kp', '/kaipian'] },
                 { text: lst('白板'), icon: { name: 'byte', code: 'enter-the-keyboard' }, url: "/board", label: lst('/白板'), labels: ['/board', '/bb', '/baiban', '/hb', '/huabu', '/canvas'] },
                 { text: lst('2列'), icon: { name: 'byte', code: 'two-key' }, url: '/2', label: '/2', labels: ['/2', '/2lie', '/2column', '/2col'] },
@@ -99,12 +97,13 @@ export function getBlockSelectData()
                 { text: lst("视频"), icon: VideoSvg, url: '/video', label: lst('/视频'), labels: ['/sp', '/shiping', '/video'] },
                 { text: lst("文件"), icon: FileSvg, url: '/file', label: lst('/文件'), labels: ['/wj', '/wenjian', '/file'] },
                 { text: lst("代码"), icon: EquationSvg, url: "/code", label: lst("/代码"), labels: ['/dmpd', '/daima', '/dm', '/daimapianduan', '/code'] },
+                { text: lst('思维导图'), icon: { name: 'byte', code: 'mindmap-map' }, url: "/board", data: { isAutoCreateMind: true }, label: lst('/思维导图'), labels: ['/mind', '/mindmap', '/shiwei', '/naotu', '/脑图', '/思维导图'] },
             ]
         },
         {
             text: lst('数据'),
             childs: [
-                { text: lst('数据表'), icon: {name:'byte',code:'table'}, url: "/data-grid/table", label: lst('/数据'), labels: ['/data', lst('/表格'), '/grid', '/gridview', '/table', '/bg', '/biaoge', '/shuju', '/sj', '/shujubiaoge', '/sjbg'] },
+                { text: lst('数据表'), icon: { name: 'byte', code: 'table' }, url: "/data-grid/table", label: lst('/数据'), labels: ['/data', lst('/表格'), '/grid', '/gridview', '/table', '/bg', '/biaoge', '/shuju', '/sj', '/shujubiaoge', '/sjbg'] },
 
                 //网盘 图片库 音乐库 视频库
             ]
@@ -114,8 +113,12 @@ export function getBlockSelectData()
             childs: [
                 { text: lst('按钮'), url: '/button', icon: ButtonSvg, label: '/按钮', labels: ['/button', '/anniu', '/an'] },
                 {
-                    text: lst('搜索'), url: '/search',
-                    icon: { name: 'byte', code: 'search' }, label: lst('/搜索'), labels: ['/search',
+                    text: lst('搜索'),
+                    url: '/search',
+                    icon: { name: 'byte', code: 'search' },
+                    label: lst('/搜索'),
+                    labels: [
+                        '/search',
                         lst('/空间搜索'),
                         '/so',
                         '/sosearch',

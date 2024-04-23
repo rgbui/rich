@@ -1,4 +1,4 @@
-import React, { CSSProperties, ReactNode } from "react";
+import React, { CSSProperties } from "react";
 import { EventsComponent } from "../../component/lib/events.component";
 import { Singleton } from "../../component/lib/Singleton";
 import { Point } from "../../src/common/vector/point";
@@ -48,7 +48,7 @@ class NoteSelector extends EventsComponent {
         </svg>
         </a>
     }
-    render(): ReactNode {
+    render() {
         if (this.visible != true) return <></>;
         var style: CSSProperties = {
             top: this.point?.y,
@@ -68,7 +68,7 @@ class NoteSelector extends EventsComponent {
         this.visible = true;
         this.forceUpdate()
     }
-    close(): void {
+    close(){
         this.visible = false;
         this.forceUpdate();
     }
@@ -78,7 +78,10 @@ interface NoteSelector {
     emit(name: 'selector', data: ColorType);
     only(name: 'selector', fn: (data: ColorType) => void)
 }
-
+var _noteSelector: NoteSelector;
 export async function getNoteSelector() {
-    return await Singleton(NoteSelector);
+    return _noteSelector= await Singleton(NoteSelector);
+}
+export function closeNoteSelector() {
+    if(_noteSelector) _noteSelector.close();
 }

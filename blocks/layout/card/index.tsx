@@ -204,7 +204,7 @@ export class PageCard extends Block {
 }
 
 @view('/card')
-export class PageCardView extends BlockView<PageCard>{
+export class PageCardView extends BlockView<PageCard> {
     mousedownLink(event: React.MouseEvent) {
         if (this.block.link) {
             if (this.block.link.url) {
@@ -303,7 +303,7 @@ export class PageCardView extends BlockView<PageCard>{
     renderCard() {
         var s = this.block.cardStyle;
         var self = this;
-        var { bgStyle, contentStyle, coverStyle } = getCardStyle(s);
+        var { contentStyle, coverStyle } = getCardStyle(s);
         if (s.coverStyle?.display == 'none') {
             return <div >
                 <div className="padding-10" style={{

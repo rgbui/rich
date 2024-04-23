@@ -46,9 +46,13 @@ interface ShapeSelector {
     emit(name: 'selector', data: ShapeType);
     only(name: 'selector', fn: (data: ShapeType) => void)
 }
+var _shapeSelector: ShapeSelector;
 export async function getShapeSelector() {
-    return await Singleton(ShapeSelector);
+    return _shapeSelector = await Singleton(ShapeSelector);
 }
 
+export function closeShapeSelector() {
+   if(_shapeSelector) _shapeSelector.close();
+}
 
 

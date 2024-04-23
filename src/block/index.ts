@@ -442,7 +442,7 @@ export abstract class Block extends Events {
             return pos;
         }
     }
-    isVisiblePlus(){
+    isVisiblePlus() {
         return true;
     }
     getVisibleContentBound() {
@@ -655,7 +655,7 @@ export abstract class Block extends Events {
     get isBoardBlock() {
         return this.url == BlockUrlConstant.Board;
     }
-    get frameBlock() {
+    get frameBlock(): Block {
         var r = this.closest(x => x.isFrame || x.isBoardBlock);
         if (r) return r;
         else {
@@ -684,7 +684,7 @@ export abstract class Block extends Events {
      * 坐标系相对的块，
      * 没有就是相对于页面
      */
-    get relativeBlock() {
+    get relativeBoardBlock() {
         var rb = this.closest(x => x.isFrame || x.isBoardBlock || x.isMind || x.url == BlockUrlConstant.Group, true);
         if (rb) return rb;
     }
@@ -692,8 +692,7 @@ export abstract class Block extends Events {
     matrix = new Matrix();
     private _childsOffsetMatrix: Matrix;
     get childsOffsetMatrix() {
-        if (typeof this._childsOffsetMatrix == 'undefined')
-            this._childsOffsetMatrix = new Matrix();
+        if (typeof this._childsOffsetMatrix == 'undefined') this._childsOffsetMatrix = new Matrix();
         return this._childsOffsetMatrix;
     }
     set childsOffsetMatrix(value: Matrix) {
@@ -706,7 +705,7 @@ export abstract class Block extends Events {
         return this.page.windowMatrix.appended(this.globalMatrix);
     }
     get globalMatrix(): Matrix {
-        var rb = this.relativeBlock;
+        var rb = this.relativeBoardBlock;
         if (rb) return rb.globalMatrix.appended(this.currentMatrix).appended(this.moveMatrix).appended(this.childsOffsetMatrix)
         else return this.page.matrix.appended(this.currentMatrix).appended(this.moveMatrix).appended(this.childsOffsetMatrix);
     }
@@ -811,12 +810,12 @@ export abstract class Block extends Events {
     isAllow(...ps: AtomPermission[]) {
         return this.page.isAllow(...ps);
     }
-    getRelativePoint(point: Point) {
+    getBoardRelativePoint(point: Point) {
         if (this.page.isBoard || this.isFrame || this.isFreeBlock || this.isBoardBlock)
             return this.globalMatrix.transform(point);
         else if (this.el) return point.relative(Rect.fromEle(this.el).leftTop);
     }
-    getRelativeRect(rect: Rect) {
+    getBoardRelativeRect(rect: Rect) {
         if (this.page.isBoard || this.isFrame || this.isFreeBlock || this.isBoardBlock)
             return new Rect(this.globalMatrix.transform(rect.leftBottom), this.matrix.transform(rect.rightBottom))
         else if (this.el) return rect.relative(Rect.fromEle(this.el).leftTop)

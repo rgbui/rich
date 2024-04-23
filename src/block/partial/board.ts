@@ -1,7 +1,7 @@
 
 import { Block } from "..";
 import { Line, PortLocation } from "../../../blocks/board/line/line";
-import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
+import { closeBoardEditTool } from "../../../extensions/board.edit.tool";
 import { MouseDragger } from "../../common/dragger";
 import { Matrix } from "../../common/matrix";
 import { Point, PointArrow, Rect, RectUtility } from "../../common/vector/point";
@@ -76,7 +76,7 @@ export class Block$Board {
     ]): BoardBlockSelector[] {
         var pickers: BoardBlockSelector[] = [];
         var { width, height } = this.fixedSize;
-        var rect = new Rect(0, 0, width, height);
+        var rect = new Rect(0,0,width,height);
         var gm = this.globalMatrix;
         gm = this.globalMatrix;
         var feelDist = this.realPx(Math.min(100, width / 2));
@@ -172,7 +172,7 @@ export class Block$Board {
         MouseDragger({
             event,
             moveStart() {
-                forceCloseBoardEditTool();
+                closeBoardEditTool();
             },
             moving(ev, data, isEnd) {
                 var tp = gm.inverseTransform(Point.from(ev));

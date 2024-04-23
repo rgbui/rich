@@ -36,7 +36,7 @@ import { dom } from '../common/dom';
 import { DataGridView } from '../../blocks/data-grid/view/base';
 import { Link } from '../../blocks/navigation/link';
 import { AtomPermission } from './permission';
-import { forceCloseBoardEditTool } from '../../extensions/board.edit.tool';
+import { closeBoardEditTool } from '../../extensions/board.edit.tool';
 import "./style.less";
 import { PageOnEvent } from './partial/on.event';
 import { Page$Operator2 } from './partial/op/op2';
@@ -97,7 +97,6 @@ export class Page extends Events<PageDirective> {
     autoRefSubPages: boolean = true;
     addedSubPages: string[] = [];
     showMembers: boolean = false;
-   
     /**
      * 页面格式 
      * 仅文档、数据表格、宣传页起作用
@@ -108,9 +107,16 @@ export class Page extends Events<PageDirective> {
      */
     bar = true;
     get windowMatrix() {
-        var rect = Rect.fromEle(this.viewEl);
         var matrix = new Matrix();
-        matrix.translate(rect.left, rect.top);
+        if (this.isBoard) {
+            var rect = Rect.fromEle(this.viewEl);
+            matrix.translate(rect.left, rect.top);
+        }
+        else {
+            var sd = this.getScrollDiv();
+            var rect = Rect.fromEle(sd);
+            matrix.translate(rect.left - sd.scrollLeft, rect.top - sd.scrollTop);
+        }
         return matrix;
     }
     get bound() {
@@ -158,7 +164,7 @@ export class Page extends Events<PageDirective> {
             }
             this.isPageOff = true;
             this.kit.picker.onCancel();
-            forceCloseBoardEditTool();
+            closeBoardEditTool();
         }
         catch (ex) {
             console.error(ex);
@@ -166,7 +172,7 @@ export class Page extends Events<PageDirective> {
     }
     destory() {
         this.kit.picker.onCancel();
-        forceCloseBoardEditTool();
+        closeBoardEditTool();
         ReactDOM.unmountComponentAtNode(this.root);
         this.root.remove();
     }
@@ -228,14 +234,27 @@ export class Page extends Events<PageDirective> {
     getPageFrame() {
         return this.views[0];
     }
-    getRelativePoint(point: Point) {
+    getBoardRelativePoint(point: Point) {
         return this.globalMatrix.transform(point);
     }
-    getRelativeRect(rect: Rect) {
-        return new Rect(this.globalMatrix.transform(rect.leftTop), this.globalMatrix.transform(rect.rightBottom))
+    getDocRelativePoint(block: Block, point?: Point) {
+        var ps: (Block | Page)[] = block.parents(c => (c.isPanel && !c.isBoardBlock ? true : false));
+        ps = ps.reverse();
+        ps.splice(0, 0, this);
+        var p = point ? point : block.getVisibleBound().leftTop;
+        var x = 0;
+        var y = 0;
+        for (let i = 0; i < ps.length; i++) {
+            var d = ps[i].getScrollDiv();
+            var rect = Rect.fromEle(d);
+            x += p.x - rect.left + d.scrollLeft;
+            y += p.y - rect.top + d.scrollTop;
+            p = rect.leftTop;
+        }
+        return new Point(x, y);
     }
-    getInverseRect(rect: Rect) {
-        return new Rect(this.globalMatrix.inverseTransform(rect.leftTop), this.globalMatrix.inverseTransform(rect.rightBottom))
+    getBoardRelativeRect(rect: Rect) {
+        return new Rect(this.globalMatrix.transform(rect.leftTop), this.globalMatrix.transform(rect.rightBottom))
     }
     get isBoard() {
         return this.pageLayout?.type == PageLayoutType.board;
@@ -243,7 +262,7 @@ export class Page extends Events<PageDirective> {
     get scale() {
         return this.matrix.getScaling().x;
     }
-    
+
     openSource: 'page' | 'slide' | 'dialog' | 'snap' | 'popup' = 'page';
     getScreenStyle() {
         var style: CSSProperties = {};
@@ -427,7 +446,7 @@ export class Page extends Events<PageDirective> {
     ) => {
         return this.onAction(directive, fn, options);
     }, 700)
-    getScrollDiv(el?: HTMLElement) {
+    getScrollDiv(el?: HTMLElement): HTMLElement {
         if (this.pageLayout?.type == PageLayoutType.textChannel) {
             var tc = this.find(g => g.url == BlockUrlConstant.TextChannel);
             if (tc) {
@@ -457,7 +476,6 @@ export class Page extends Events<PageDirective> {
     onLazyHistory = lodash.debounce(async (u) => {
         this.emit(PageDirective.history, u)
     }, 700);
-    
     public openPageData?: {
         pre?: {
             id: any;
@@ -558,8 +576,8 @@ export interface Page extends PageOnEvent { }
 export interface Page extends Page$Seek { }
 export interface Page extends Page$Cycle { }
 export interface Page extends Page$Operator { }
-export interface Page extends Page$Operator2{ }
+export interface Page extends Page$Operator2 { }
 export interface Page extends Page$ContextMenu { }
-export interface Page extends Page$Schema{ }
+export interface Page extends Page$Schema { }
 export interface Page extends Mix { }
-Mix(Page, Page$ViewEvent, PageOnEvent, Page$Seek,Page$Schema, Page$Cycle, Page$Operator,Page$Operator2, Page$ContextMenu);
+Mix(Page, Page$ViewEvent, PageOnEvent, Page$Seek, Page$Schema, Page$Cycle, Page$Operator, Page$Operator2, Page$ContextMenu);

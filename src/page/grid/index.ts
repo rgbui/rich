@@ -11,33 +11,19 @@ export class GridMap {
     private getRelativeRect(rect: Rect) {
         if (this.relativePanelPoint) return rect.relative(this.relativePanelPoint);
         if (this.panel instanceof Page) {
-            return this.panel.getRelativeRect(rect);
+            return this.panel.getBoardRelativeRect(rect);
         }
         else if (this.panel instanceof Block) {
-            return this.panel.getRelativeRect(rect);
-        }
-    }
-    private getInverseRect(rect: Rect): Rect {
-        if (this.relativePanelPoint) {
-            var r = rect.clone();
-            r.left += this.relativePanelPoint.x;
-            r.top += this.relativePanelPoint.y;
-            return r;
-        }
-        if (this.panel instanceof Page) {
-            return this.panel.getInverseRect(rect);
-        }
-        else if (this.panel instanceof Block) {
-            return this.panel.getInverseRect(rect);
+            return this.panel.getBoardRelativeRect(rect);
         }
     }
     private getRelativePoint(point: Point) {
         if (this.relativePanelPoint) return point.relative(this.relativePanelPoint);
         if (this.panel instanceof Page) {
-            return this.panel.getRelativePoint(point);
+            return this.panel.getBoardRelativePoint(point);
         }
         else if (this.panel instanceof Block) {
-            return this.panel.getRelativePoint(point);
+            return this.panel.getBoardRelativePoint(point);
         }
     }
     public sync(block: Block) {
