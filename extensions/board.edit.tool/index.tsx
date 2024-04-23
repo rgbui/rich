@@ -6,9 +6,7 @@ import {
     BrokenLineSvg,
     CureSvg,
     DotsSvg,
-    DragHandleSvg,
-    MindDirectionXSvg,
-    MindDirectionYSvg
+    DragHandleSvg
 } from "../../component/svgs";
 
 import { Icon } from "../../component/view/icon";
@@ -30,10 +28,19 @@ import { MouseDragger } from "../../src/common/dragger";
 import { SelectBox } from "../../component/view/select/box";
 import { BlockUrlConstant } from "../../src/block/constant";
 import { canvasOptions } from "./util";
+import { FixedViewScroll } from "../../src/common/scroll";
 import "./style.less";
 
 export class BoardEditTool extends EventsComponent {
     el: HTMLElement;
+    private fvs: FixedViewScroll = new FixedViewScroll();
+    constructor(props) {
+        super(props);
+        this.fvs.on('change', (offset: Point) => {
+            if (this.visible == true && this.el)
+                this.el.style.transform = `translate(${offset.x}px,${offset.y}px)`
+        })
+    }
     render() {
         if (this.visible != true) return <></>;
         var style: CSSProperties = {
@@ -43,12 +50,12 @@ export class BoardEditTool extends EventsComponent {
         };
         var self = this;
         if (self.blocks.some(s => s.isLock))
-            return <div ref={e => this.el = e} style={style} className="shy-board-edit-tool shadow border-light r-item-hover">
+            return <div ref={e => this.el = e} style={style} className="shy-board-edit-tool bg-white round  shadow-s border r-item-hover">
                 <div style={{ paddingLeft: 0, paddingRight: 0, margin: 0, paddingTop: 5, paddingBottom: 5, borderTopRightRadius: 0, borderBottomRightRadius: 0 }} onMouseDown={e => this.onDrag(e)} className={'shy-board-edit-tool-item remark item-light-hover-focus'}><Icon size={16} icon={DragHandleSvg}></Icon></div>
                 <div className={'shy-board-edit-tool-devide'} style={{ marginLeft: 0, marginTop: 0, marginBottom: 0 }}></div>
                 <div onMouseDown={e => this.onUnlock(e)} className={'shy-board-edit-tool-item'}><Icon size={16} icon={{ name: 'byte', code: 'lock' }}></Icon></div>
             </div>
-        return <div ref={e => this.el = e} style={style} className="shy-board-edit-tool shadow border-light r-item-hover">
+        return <div ref={e => this.el = e} style={style} className="shy-board-edit-tool bg-white round  shadow-s border r-item-hover">
             <div style={{ paddingLeft: 0, paddingRight: 0, margin: 0, paddingTop: 5, paddingBottom: 5, borderTopRightRadius: 0, borderBottomRightRadius: 0 }} onMouseDown={e => this.onDrag(e)} className={'shy-board-edit-tool-item remark  item-light-hover-focus'}><Icon size={16} icon={DragHandleSvg}></Icon></div>
             <div className={'shy-board-edit-tool-devide'} style={{ marginLeft: 0, marginTop: 0, marginBottom: 0 }}></div>
             {this.renderItems()}
@@ -120,7 +127,7 @@ export class BoardEditTool extends EventsComponent {
                     <SelectBox
                         dist={14}
                         value={getValue('frameFormat')}
-                        onDrop={e=>{
+                        onDrop={e => {
                             if (e) self.showDrop('');
                         }}
                         onChange={e => {
@@ -315,8 +322,7 @@ export class BoardEditTool extends EventsComponent {
             }
             return <div key={at}></div>
         }
-        else if (name == 'borderWidth')
-        {
+        else if (name == 'borderWidth') {
             return <Tip key={at} placement="top" text={'边框'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <BorderBoxStyle
@@ -439,19 +445,18 @@ export class BoardEditTool extends EventsComponent {
     async open(blocks: Block[], range: Rect) {
         this.range = range;
         this.blocks = blocks;
+        var pa = this.blocks.first();
+        this.fvs.bind(pa.page.getScrollDiv());
         var poly = new Polygon(...this.blocks.map(b => b.getVisiblePolygon().points).flat());
         this.point = poly.bound.leftTop;
-        
         var xoffset = 30;
         if (this.point.y - 50 > 0) {
-            this.point = this.point.move(0, -50)
+            this.point = this.point.move(0, -50);
         }
         else {
             this.point = poly.bound.leftBottom;
-            this.point = this.point.move(0, 10)
+            this.point = this.point.move(0, 10);
         }
-   
-
         if (this.point.x < this.range.left) {
             this.point.x = this.range.left + xoffset;
         }
@@ -532,6 +537,7 @@ export class BoardEditTool extends EventsComponent {
     }, 1000)
     close() {
         if (this.visible == true) {
+            this.fvs.unbind();
             this.dropName = '';
             this.visible = false;
             this.forceUpdate();
@@ -571,7 +577,7 @@ export interface BoardEditTool {
 var editTool: BoardEditTool;
 export async function useBoardEditTool(blocks: Block[], range: Rect) {
     editTool = await Singleton(BoardEditTool);
-    editTool.open(blocks, range);
+    await editTool.open(blocks, range);
     return new Promise((resolve: (result: { name: string, value: any, props?: Record<string, any> } | Record<string, any>) => void, reject) => {
         editTool.only('save', (data: { name: string, value: any, props?: Record<string, any> } | Record<string, any>) => {
             resolve(data)
@@ -582,6 +588,6 @@ export async function useBoardEditTool(blocks: Block[], range: Rect) {
     })
 }
 
-export function forceCloseBoardEditTool() {
+export function closeBoardEditTool() {
     if (editTool) editTool.close();
 }
