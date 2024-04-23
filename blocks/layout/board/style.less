@@ -1,10 +1,20 @@
 .sy-board {
-    display: block;
-    margin : 10px 0px;
-    border : 1px solid #ddd;
+    // display: block;
+    // margin : 10px 0px;
+    // border : 1px solid #ddd;
+    // position        : relative;
     &-content {
         position        : relative;
         transform-origin: 0% 0%;
-        overflow        : hidden;
+        // overflow        : hidden;
+    }
+    &-resize {
+        position        : absolute;
+        left            : 0px;
+        right           : 0px;
+        bottom          : -5px;
+        height          : 10px;
+        background-color: transparent;
+        cursor          : row-resize;
     }
 }

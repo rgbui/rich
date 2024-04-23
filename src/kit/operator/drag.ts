@@ -1,9 +1,8 @@
 import { Kit } from "..";
-import { Point } from "../../common/vector/point";
 import { PageLayoutType } from "../../page/declare";
 import { BoardDrag } from "./board";
+import { CheckBoardSelector } from "../board.selector/selector";
 import { DocDrag } from "./doc";
-
 /***
  * page的点击至拖动主要分两大类
  * 文档
@@ -24,26 +23,52 @@ export async function PageDrag(kit: Kit, event: React.MouseEvent) {
      * 判断块的类型来决定后续的操作分类，不一定靠谱
      */
     var block = kit.page.getBlockByMouseOrPoint(event.nativeEvent);
-    if (!(kit.page.isBoard || block?.isFreeBlock) && kit.page.isCanEdit) {
-        kit.boardSelector.close();
-        if (block) {
-            var bb = block.closest(x => x.isBoardBlock);
-            if (bb) {
-                kit.boardSelector.onShow(bb.el, {
-                    relativeEleAutoScroll: bb.el,
-                    pos: Point.from(bb.getVisibleBound().leftTop).move(-40, 30),
-                })
-            }
-        }
-    }
     if (block?.isLine) block = block.closest(x => !x.isLine);
-    if (kit.page.isBoard && !block || block?.isFreeBlock) {
+
+    if (kit.boardSelector.isSelector && block) {
+        CheckBoardSelector(kit, block, event);
+        return;
+    }
+
+    if (kit.page.isBoard || block?.isFreeBlock || block && block.frameBlock) {
+        if (!kit.page.isBoard) {
+            kit.boardSelector.onShow(block.frameBlock?.el, {
+                block: block.frameBlock,
+                page: kit.page
+            })
+        }
+        else kit.boardSelector.onShow(kit.page.root, { page: kit.page })
         event.preventDefault()
         window.getSelection().collapse(kit.page.viewEl)
         BoardDrag(kit, block, event);
-    }
-    else {
+    } else {
+        kit.boardSelector.close();
         kit.picker.onCancel();
         DocDrag(kit, block, event);
     }
+
+    // if (!(kit.page.isBoard || block?.isFreeBlock) && kit.page.isCanEdit)
+    // {
+    //     kit.boardSelector.close();
+    //     if (block) {
+    //         var bb = block.closest(x => x.isBoardBlock);
+    //         if (bb) {
+    //             kit.boardSelector.onShow(bb.el, {
+    //                 block: bb,
+    //                 page: kit.page
+    //             })
+    //         }
+    //     }
+    // }
+
+    // if (kit.page.isBoard && !block || block?.isFreeBlock) {
+    //     event.preventDefault()
+    //     window.getSelection().collapse(kit.page.viewEl)
+    //     BoardDrag(kit, block, event);
+    // }
+    // else {
+    //     if (!(block && block.frameBlock))
+    //         kit.picker.onCancel();
+    //     DocDrag(kit, block, event);
+    // }
 }

@@ -1,11 +1,11 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import { BlockPicker } from ".";
 import { Line } from "../../../blocks/board/line/line";
 import { PlusSvg, RotatingSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { Block } from "../../block";
 import { BoardPointType } from "../../block/partial/board";
-import { PointArrow } from "../../common/vector/point";
+import { PointArrow, Rect } from "../../common/vector/point";
 import { Tip } from "../../../component/view/tooltip/tip";
 import { Sp } from "../../../i18n/view";
 import "./style.less";
@@ -137,8 +137,31 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
         </g>
     }
     render() {
+        var style: CSSProperties = {
+            zIndex: 10000,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: '100vw',
+            height: '100vh'
+        }
+        var viewBox
+        var b = this.picker.blocks[0];
+        if (b?.page && !b.page.isBoard) {
+            var frameBlock = b.frameBlock;
+            var fb = frameBlock.getVisibleContentBound();
+            delete style.bottom;
+            delete style.right;
+            var rc = Rect.fromEle(b.page.contentEl);
+            style.width = fb.width + 'px';
+            style.height = fb.height + 'px';
+            style.top = fb.top - rc.top + 'px';
+            style.left = fb.left - rc.left + 'px';
+            viewBox = `${fb.left - rc.left} ${fb.top - rc.top} ${fb.width} ${fb.height}`;
+        }
         return <div className='shy-kit-picker'>
-            {this.picker.visible && <svg className="shy-kit-picker-svg" style={{ zIndex: 100 }}>
+            {this.picker.visible && <svg viewBox={viewBox ?? undefined} className="shy-kit-picker-svg" style={style}>
                 {this.picker.blocks.map(block => {
                     return this.renderBlockRange(block);
                 })}

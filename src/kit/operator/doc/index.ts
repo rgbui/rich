@@ -8,6 +8,7 @@ import { Point, Rect } from "../../../common/vector/point";
 import { PageLayoutType } from "../../../page/declare";
 import { BlockUrlConstant } from "../../../block/constant";
 import lodash from "lodash";
+import { CheckBoardSelector } from "../../board.selector/selector";
 
 /**
  * 如果点在文档的空白处，那么左右上需要找到邻近的编辑点，如果是下面，一般是尾部，需要创建一个空白的文本块，且聚焦
@@ -19,6 +20,19 @@ import lodash from "lodash";
  * 
  */
 export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
+
+    console.log('doc drag...');
+
+    /**
+   * 先判断toolBoard工具栏有没有被使用，
+   * 如果有使用，则根据工具栏来进行下一步操作
+   */
+    if (kit.boardSelector.isSelector && block) {
+        CheckBoardSelector(kit, block, event);
+        return;
+    }
+    else kit.boardSelector.close()
+
     kit.anchorCursor.renderSelectBlocks([]);
     var downPoint = Point.from(event);
     var gm = block ? block.panelGridMap : kit.page.gridMap;

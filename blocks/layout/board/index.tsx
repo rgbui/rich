@@ -5,33 +5,174 @@ import { BlockView } from "../../../src/block/view";
 import { ChildsArea } from "../../../src/block/view/appear";
 import { Matrix } from "../../../src/common/matrix";
 import { Rect } from "../../../src/common/vector/point";
+import { GridMap } from "../../../src/page/grid";
+import { Tip } from "../../../component/view/tooltip/tip";
+import { MouseDragger } from "../../../src/common/dragger";
+import { BlockDirective, BlockRenderRange } from "../../../src/block/enum";
+import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
+import { lst } from "../../../i18n/store";
 import "./style.less";
+import { BlockChildKey, BlockUrlConstant } from "../../../src/block/constant";
 
 @url('/board')
 export class Board extends Block {
     @prop()
     viewHeight: number = 300;
-    get childsOffsetMatrix(): Matrix {
+    @prop()
+    boardOffsetMatrix: Matrix = new Matrix();
+    isAutoCreateMind: boolean = false;
+    get childsOffsetMatrix() {
         var matrix = new Matrix();
         if (this.el) {
-            var root = this.page.root;
-            var rect = Rect.fromEle(root);
-            var currentRect = Rect.fromEle(this.el);
-            var r = currentRect.leftTop.relative(rect.leftTop);
-            matrix.translate(r.x, r.y);
+            var p = this.page.getDocRelativePoint(this, this.getVisibleContentBound().leftTop);
+            matrix.translate(p.x, p.y);
         }
+        matrix.append(this.boardOffsetMatrix);
         return matrix;
     }
+    init() {
+        this.gridMap = new GridMap(this)
+        this.registerPropMeta('boardOffsetMatrix', Matrix, false, (v) => {
+            try {
+                return new Matrix(v)
+            }
+            catch (ex) {
+                console.trace(v);
+                this.page.onError(ex);
+                return new Matrix(v);
+            }
+        }, (v) => v.getValues())
+    }
+    async didMounted() {
+        await this.loadBoard();
+    }
+    async loadBoard() {
+        if (this.createSource == 'InputBlockSelector') {
+            if (this.isAutoCreateMind) {
+                this.page.onAction('autoCreateMind',
+                    async () => {
+                        var ma = new Matrix();
+                        ma.translate(this.el.clientWidth / 2, this.el.clientHeight / 2)
+                        var newBlock = await this.page.createBlock(BlockUrlConstant.Mind, {
+                            matrix: ma.getValues()
+                        }, this, 0, BlockChildKey.childs);
+                        newBlock.mounted(() => {
+                            this.page.kit.picker.onPicker([newBlock], true)
+                        })
+                        this.page.snapshoot.merge();
+                    },
+                    {
+
+                    }
+                )
+            }
+        }
+    }
+    getVisibleContentBound(): Rect {
+        var el = this.el.querySelector('.sy-border-box>.relative') as HTMLElement;
+        return Rect.fromEle(el);
+    }
+    @prop()
+    border: 'border' | 'none' = 'border';
+    async onGetContextMenus() {
+        var menus = await super.onGetContextMenus();
+        var cat = menus.findIndex(m => m.name == BlockDirective.comment);
+        if (cat > -1) {
+            menus.splice(cat, 0, {
+                name: 'border',
+                type: MenuItemType.switch,
+                checked: this.border == 'none' ? false : true,
+                text: lst('边框'),
+                icon: { name: "byte", code: 'rectangle-one' }
+            }, { type: MenuItemType.divide })
+        }
+        var c = menus.find(c => c.name == 'color');
+        if (c) {
+            var cd = c.childs.findIndex(g => g.name == 'fontColor');
+            c.childs = c.childs.slice(cd + 2);
+        }
+        var dat = menus.findIndex(c => c.name == BlockDirective.delete);
+        if (dat > -1) {
+            menus.splice(dat + 1, 0, { type: MenuItemType.divide }, {
+                type: MenuItemType.help,
+                text: lst('了解如何使用白板块'),
+                url: window.shyConfig?.isUS ? "https://help.shy.red/page/78#h9qoXmdsNTEHcPtjEiyah1" : "https://help.shy.live/page/2009#3SRDiGyXURubpTNPhYjbDR"
+            })
+        }
+        return menus;
+    }
+    async onContextMenuInput(this: Block, item: MenuItem<BlockDirective | string>) {
+        if (item?.name == 'border') {
+            await this.onUpdateProps({ border: item.checked ? "border" : "none" }, { range: BlockRenderRange.self });
+        }
+        else await super.onContextMenuInput(item);
+    }
 }
+
 @view('/board')
-export class BoardView extends BlockView<Board>{
-    
+export class BoardView extends BlockView<Board> {
+    onResize(event: React.MouseEvent) {
+        event.stopPropagation();
+        var height = this.block.viewHeight;
+        MouseDragger({
+            event,
+            moving: (e, d, end) => {
+                var dy = e.clientY - event.clientY;
+                var h = height + dy;
+                if (h < 60) h = 60;
+                this.block.viewHeight = h;
+                if (end) {
+                    this.block.onManualUpdateProps(
+                        { viewHeight: height },
+                        { viewHeight: h }
+                    );
+                }
+                else this.forceUpdate()
+            }
+        })
+    }
+    mousedown(event: React.MouseEvent) {
+        if (this.block.page.kit.boardSelector.isSelector) return;
+        var ele = event.target as HTMLElement;
+        if (event.target === event.currentTarget || ele.classList.contains('sy-board-content')) {
+            MouseDragger({
+                event,
+                moving: async (e, d, end) => {
+                    var dx = e.clientX - event.clientX;
+                    var dy = e.clientY - event.clientY;
+                    var ma = new Matrix();
+                    ma.translate(dx, dy);
+                    this.block.moveMatrix = ma;
+                    if (end) {
+                        this.block.moveMatrix = new Matrix();
+                        var oa = this.block.boardOffsetMatrix.clone().append(ma);
+                        await this.block.onUpdateProps({ boardOffsetMatrix: oa }, { range: BlockRenderRange.self })
+                    }
+                    else this.forceUpdate();
+                }
+            })
+        }
+    }
     renderView() {
-        var style: CSSProperties = { ...this.block.contentStyle };
-        style.height = this.block.viewHeight;
-        return <div className="sy-board" style={this.block.visibleStyle}>
-            <div className="sy-board-content" style={style}><ChildsArea childs={this.block.childs}></ChildsArea></div>
-        </div>
+        var style: CSSProperties = {
+            ... (this.block.boardOffsetMatrix.appended(this.block.moveMatrix)).getCss()
+        }
+        return <div className="sy-board"
+            style={this.block.visibleStyle}>
+            <div className={'sy-border-box ' + (this.block.border == 'border' ? "border-light" : "border-light-hover")}
+                style={this.block.contentStyle}>
+                <div className="relative" onMouseDown={e => {
+                    this.mousedown(e)
+                }} style={{
+                    height: this.block.viewHeight,
+                    overflow: 'hidden'
+                }}>
+                    <div className="sy-board-content " style={style} ><ChildsArea childs={this.block.childs}></ChildsArea>
+                    </div>
+                    {this.block.isCanEdit() && <Tip text={'拖动调整高度'}><div className="sy-board-resize visible" onMouseDown={e => this.onResize(e)}></div></Tip>}
+                </div>
+            </div>
+        </div >
     }
 }
 

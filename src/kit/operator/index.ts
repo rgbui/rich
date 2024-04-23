@@ -1,12 +1,13 @@
 import React from "react";
 import { Kit } from "..";
-import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
-import { getShapeSelector } from "../../../extensions/shapes";
+import { closeBoardEditTool } from "../../../extensions/board.edit.tool";
+import { closeShapeSelector } from "../../../extensions/shapes";
 import { forceCloseTextTool } from "../../../extensions/text.tool";
 import { Block } from "../../block";
 import { onAutoScrollStop } from "../../common/scroll";
 import { PageDrag } from "./drag";
 import { Rect } from "../../common/vector/point";
+import { closeNoteSelector } from "../../../extensions/note";
 
 /****
  * 鼠标点击：
@@ -67,14 +68,12 @@ export class PageOperator {
     /**
      * 清理页面的输入状态
      */
-    async onClearPage() {
-        (await getShapeSelector()).close();
+    onClearPage() {
+        closeShapeSelector();
+        closeNoteSelector();
         onAutoScrollStop();
-        forceCloseBoardEditTool();
+        closeBoardEditTool();
         forceCloseTextTool();
-        if (this.kit.writer.inputPop && this.kit.writer.inputPop.selector) {
-            this.kit.writer.inputPop.selector.onClose();
-        }
-        this.kit.writer.inputPop = null;
+        this.kit.writer.onClearInputPop();
     }
 }

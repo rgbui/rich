@@ -1,12 +1,12 @@
 import { Kit } from "../..";
-import { forceCloseBoardEditTool } from "../../../../extensions/board.edit.tool";
+import { closeBoardEditTool } from "../../../../extensions/board.edit.tool";
 import { Block } from "../../../block";
 import { findBlockAppear } from "../../../block/appear/visible.seek";
 import { MouseDragger } from "../../../common/dragger";
 import { onTimeAuto, onTimeAutoScrollStop } from "../../../common/scroll";
 import { Point, Rect } from "../../../common/vector/point";
 import { openBoardEditTool } from "./edit";
-import { CheckBoardTool } from "./selector";
+import { CheckBoardSelector } from "../../board.selector/selector";
 
 export function BoardDrag(
     kit: Kit,
@@ -16,12 +16,13 @@ export function BoardDrag(
         moveEnd?(ev, isMove, data): void
     }
 ) {
+    console.log('board drag...');
     /**
      * 先判断toolBoard工具栏有没有被使用，
      * 如果有使用，则根据工具栏来进行下一步操作
      */
     if (kit.boardSelector.isSelector) {
-        CheckBoardTool(kit, block, event);
+        CheckBoardSelector(kit, block, event);
         return;
     }
     var downPoint = Point.from(event);
@@ -150,7 +151,7 @@ export function BoardDrag(
                     }
                 }
                 else if (kit.picker.blocks.length > 0) await openBoardEditTool(kit);
-                else forceCloseBoardEditTool()
+                else closeBoardEditTool()
             }
             if (options?.moveEnd) options.moveEnd(ev, isMove, data);
         }

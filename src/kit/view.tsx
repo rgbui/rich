@@ -27,7 +27,6 @@ export class KitView extends React.Component<{ kit: Kit }>{
             <Collaboration kit={this.props.kit} ref={e => this.kit.collaboration = e}></Collaboration>
             <BoardBlockHover ref={e => this.kit.boardBlockHover = e} kit={this.kit}></BoardBlockHover>
             <BoardSelector ref={e => this.kit.boardSelector = e} kit={this.kit}></BoardSelector>
-
         </div>
     }
     get toolEl() {

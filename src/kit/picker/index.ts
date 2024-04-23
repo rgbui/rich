@@ -2,7 +2,7 @@
 import React from "react";
 import { Kit } from "..";
 import { Line, PortLocation } from "../../../blocks/board/line/line";
-import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
+import { closeBoardEditTool } from "../../../extensions/board.edit.tool";
 import { useShapeSelector } from "../../../extensions/shapes/box";
 import { util } from "../../../util/util";
 import { Block } from "../../block";
@@ -65,7 +65,7 @@ export class BlockPicker {
         this.visible = false;
         this.blocks = [];
         if (this.view) this.view.forceUpdate();
-        forceCloseBoardEditTool();
+        closeBoardEditTool();
     }
     onMoveStart(point: Point) {
         this.alighLines = [];
@@ -166,7 +166,7 @@ export class BlockPicker {
         MouseDragger({
             event,
             moveStart() {
-                forceCloseBoardEditTool()
+                closeBoardEditTool()
                 createConnectLine();
             },
             move(ev, data) {
@@ -282,7 +282,7 @@ export class BlockPicker {
         MouseDragger({
             event,
             moveStart(ev) {
-                forceCloseBoardEditTool()
+                closeBoardEditTool()
                 var tr = gm.inverseTransform(Point.from(ev));
                 po = { x: tr.x, y: tr.y } as PortLocation;
                 block.points.insertAt(selector.data.at, po);
@@ -325,7 +325,7 @@ export class BlockPicker {
         MouseDragger({
             event,
             moveStart(ev) {
-                forceCloseBoardEditTool()
+                closeBoardEditTool()
                 if (selector.type == BoardPointType.brokenLinePort) {
 
                 }
@@ -503,7 +503,7 @@ export class BlockPicker {
             MouseDragger({
                 event,
                 moveStart() {
-                    forceCloseBoardEditTool()
+                    closeBoardEditTool()
                 },
                 async moving(ev, data, isEnd) {
                     var point = gm.inverseTransform(Point.from(ev));
@@ -535,7 +535,7 @@ export class BlockPicker {
             MouseDragger({
                 event,
                 moveStart() {
-                    forceCloseBoardEditTool()
+                    closeBoardEditTool()
                 },
                 async moving(ev, data, isEnd) {
                     var current = gm.inverseTransform(Point.from(ev));
@@ -572,7 +572,7 @@ export class BlockPicker {
         MouseDragger({
             event,
             moveStart() {
-                forceCloseBoardEditTool();
+                closeBoardEditTool();
             },
             moving(ev, data, isEnd, isMove) {
                 var pos = gm.inverseTransform(Point.from(ev));

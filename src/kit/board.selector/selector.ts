@@ -1,17 +1,17 @@
 
 import lodash from "lodash";
-import { Kit } from "../..";
-import { Block } from "../../../block";
-import { BlockUrlConstant } from "../../../block/constant";
-import { MouseDragger } from "../../../common/dragger";
-import { Matrix } from "../../../common/matrix";
-import { Point } from "../../../common/vector/point";
-import { Polygon } from "../../../common/vector/polygon";
-import { ActionDirective } from "../../../history/declare";
-import { loadPaper } from "../../../paper";
-import { setBoardBlockCache } from "../../../page/common/cache";
+import { Kit } from "..";
+import { Block } from "../../block";
+import { BlockUrlConstant } from "../../block/constant";
+import { MouseDragger } from "../../common/dragger";
+import { Matrix } from "../../common/matrix";
+import { Point } from "../../common/vector/point";
+import { Polygon } from "../../common/vector/polygon";
+import { ActionDirective } from "../../history/declare";
+import { loadPaper } from "../../paper";
+import { setBoardBlockCache } from "../../page/common/cache";
 
-export function CheckBoardTool(
+export function CheckBoardSelector(
     kit: Kit,
     block: Block,
     event: React.MouseEvent) {

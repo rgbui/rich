@@ -16,7 +16,6 @@ import {
     BoardArrowNoneSvg,
     BoardArrowPolylineSvg,
     BoardArrowSvg,
-    CollectTableSvg,
     BoardFrame34Svg,
     BoardFrame43Svg,
     BoardFrame11Svg,
@@ -27,8 +26,8 @@ import {
     BoardFramePhoneSvg
 } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
-import { getNoteSelector } from "../../../extensions/note";
-import { getShapeSelector } from "../../../extensions/shapes";
+import { closeNoteSelector, getNoteSelector } from "../../../extensions/note";
+import { closeShapeSelector, getShapeSelector } from "../../../extensions/shapes";
 import { channel } from "../../../net/channel";
 import { BlockUrlConstant } from "../../block/constant";
 import { FixedViewScroll } from "../../common/scroll";
@@ -37,37 +36,46 @@ import { BoardToolOperator } from "./declare";
 import { lst } from "../../../i18n/store";
 import { Tip } from "../../../component/view/tooltip/tip";
 import { S } from "../../../i18n/view";
+import { Page } from "../../page";
+import { Block } from "../../block";
 
 export class BoardSelector extends React.Component<{
     kit: Kit
 }> {
-    constructor(props) {
+    constructor(props)
+    {
         super(props);
-        this.fvs.on('change', (offset: Point) => {
-            if (this.visible == true && this.el)
-                this.el.style.transform = `translate(${offset.x}px,${offset.y}px)`
-        })
+        // this.fvs.on('change', (offset: Point) => {
+        //     if (this.visible == true && this.el)
+        //         this.el.style.transform = `translate(${offset.x}px,${offset.y}px)`
+        // })
     }
     private fvs: FixedViewScroll = new FixedViewScroll();
     el: HTMLElement;
     render(): ReactNode {
-        if (this.visible == false) return <></>;
+        if (this.visible == false) return <div className="shy-kit-board-selector"></div>;
         var style: CSSProperties = {};
         if (this.point) {
             style.top = this.point.y;
             style.right = this.point.x;
         }
-        return <div><div className="z-1000 pos w-40 padding-h-5  round-4 border-light shadow bg-white r-size-30 r-gap-l-5 r-gap-t-5 r-gap-b-5 r-item-hover r-round-4 r-cursor r-flex-center  " ref={e => this.el = e} style={style}>
+        return <div className="shy-kit-board-selector"><div className="z-1000 pos w-40 padding-h-5  round-4 border shadow-s bg-white r-size-30 r-gap-l-5 r-gap-t-5 r-gap-b-5 r-item-hover r-round-4 r-cursor r-flex-center  " ref={e => this.el = e} style={style}>
 
             <Tip text='文本' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.text ? "item-hover-focus" : ""}
-                onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.text, e) }}>
+                onMouseDown={e => {
+                    e.stopPropagation();
+                    this.selector(BoardToolOperator.text, e);
+                }}>
                 <Icon size={18} icon={BoardToolTextSvg} />
             </div></Tip>
 
             <Tip text='便签' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.note ? "item-hover-focus" : ""}
-                onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.note, e) }}>
+                onMouseDown={e => {
+                    e.stopPropagation();
+                    this.selector(BoardToolOperator.note, e);
+                }}>
                 <Icon size={18} icon={BoardToolStickerSvg} />
             </div></Tip>
 
@@ -117,7 +125,7 @@ export class BoardSelector extends React.Component<{
                 className={this.openSelector == BoardToolOperator.table ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.table, e) }}>
                 {/* <Icon icon={UploadSvg}></Icon> */}
-                <Icon size={18} icon={{ name: 'byte', code: 'table' }}></Icon>
+                <Icon size={18} icon={{ name: 'byte', code: 'insert-table' }}></Icon>
             </div></Tip>
 
             <Tip text='思维导图' placement={'left'}><div
@@ -227,7 +235,6 @@ export class BoardSelector extends React.Component<{
                             this.currentSelector.data.frameFormat = 'pad';
                             this.currentSelector.data.fixedWidth = 768;
                             this.currentSelector.data.fixedHeight = 1024;
-
                         }}>
                             <Icon size={32} icon={BoardFramePadSvg}></Icon>
                             <span>Pad</span>
@@ -260,10 +267,10 @@ export class BoardSelector extends React.Component<{
         }
         else {
             if (this.openSelector == operator) {
-                await this.clearSelector();
+                this.clearSelector();
                 return;
             }
-            else await this.clearSelector();
+            else this.clearSelector();
             this.openSelector = operator;
             this.forceUpdate();
             var sel: Record<string, any> = { event };
@@ -375,43 +382,61 @@ export class BoardSelector extends React.Component<{
         }
         this.openCursor(cursor);
     }
-    async clearSelector() {
+    clearSelector() {
         delete this.currentSelector;
         this.openSelector = null;
         this.closeCursor();
+        closeNoteSelector();
+        closeShapeSelector();
         this.forceUpdate();
-        var noteSelector = await getNoteSelector();
-        noteSelector.close();
-        var shape = await getShapeSelector();
-        shape.close();
     }
     private point: Point;
     visible: boolean = false;
+    page?: Page;
+    block?: Block;
     onShow(viewEl: HTMLElement, options?: {
-        relativeEleAutoScroll?: HTMLElement,
-        pos?: Point
+        page: Page,
+        block?: Block,
+        // relativeEleAutoScroll?: HTMLElement,
+        // pos?: Point
     }) {
         if (this.cursorEl !== viewEl) {
             this.cursorEl = viewEl;
-            if (options?.relativeEleAutoScroll) this.fvs.bind(options.relativeEleAutoScroll);
-            var po = options?.pos ? options.pos : new Point(20, 20);
-            this.point = po;
+            // if (options?.relativeEleAutoScroll) this.fvs.bind(options.relativeEleAutoScroll);
+
+            this.page = options?.page;
+            this.block = options?.block;
+            if (!this.block && this.page) {
+                var po = new Point(20, 20);
+                this.point = po;
+            }
+            else {
+                var sd = this.page.getScrollDiv();
+                var re = Rect.fromEle(sd)
+                var vb = this.block.getVisibleBound();
+                var y = vb.top - re.top + sd.scrollTop;
+                this.point = new Point(re.right - vb.right - 60, y)
+            }
+            this.visible = true;
+            this.forceUpdate();
+        }
+        else {
             this.visible = true;
             this.forceUpdate();
         }
     }
-    close(): void {
-        this.fvs.unbind();
+    close() {
+        // this.fvs.unbind();
         this.visible = false;
         this.clearSelector();
         this.forceUpdate();
     }
     private cursorEl: HTMLElement;
     openCursor(cursor: string) {
-        if (this.cursorEl) this.cursorEl.style.cursor = cursor;
+        if (this.cursorEl?.style) this.cursorEl.style.cursor = cursor;
     }
     closeCursor() {
-        if (this.cursorEl) {
+        if (this.cursorEl?.style) {
             this.cursorEl.style.cursor = 'default';
         }
     }
