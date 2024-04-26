@@ -1,17 +1,21 @@
 import { Page } from "..";
 import { UA } from "../../../util/ua";
+import { Block } from "../../block";
 import { findBlockAppear } from "../../block/appear/visible.seek";
 import { KeyboardCode, KeyboardPlate } from "../../common/keys";
 import { Rect } from "../../common/vector/point";
+import { ActionDirective } from "../../history/declare";
 import { MoveSelectBlocks } from "../../kit/write/keydown";
 
-export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
+export function PageKeys(
+    page: Page,
+    keyboardPlate: KeyboardPlate) {
     keyboardPlate.listener(kt => UA.isMacOs && kt.isMeta(KeyboardCode.Z) || !UA.isMacOs && kt.isCtrl(KeyboardCode.Z), (event, kt) => {
         page.onUndo();
-    },undefined,'undo',true);
+    }, undefined, 'undo', true);
     keyboardPlate.listener(kt => UA.isMacOs && kt.isMeta(KeyboardCode.Y) || !UA.isMacOs && kt.isCtrl(KeyboardCode.Y), (event, kt) => {
         page.onRedo();
-    },undefined,'redo',true);
+    }, undefined, 'redo', true);
     keyboardPlate.listener(kt => kt.is(KeyboardCode.ArrowDown), (event, kt) => {
         if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
             MoveSelectBlocks(page.kit.writer, page.kit.anchorCursor.currentSelectHandleBlocks, event)
@@ -55,9 +59,8 @@ export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
         }
     });
     keyboardPlate.listener(kt => kt.is(KeyboardCode.Enter), (event, kt) => {
-      
         if (page.requireSelectLayout && page.isCanEdit) {
-            console.log('xxxxxx');
+
             var list = Array.from(page.view.el.querySelectorAll('.shy-page-view-template-picker-items a'));
             var aindex = list.findIndex(c => c.classList.contains('hover'));
             if (aindex > -1) {
@@ -82,21 +85,20 @@ export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
     keyboardPlate.listener(kt => {
         var r = UA.isMacOs && kt.is(KeyboardCode.Backspace, KeyboardCode.Delete) || !UA.isMacOs && kt.is(KeyboardCode.Delete);
         return r;
-    },
-        (event, kt) => {
-            var b = findBlockAppear(event.target as HTMLElement);
-            var cursorNode = window.getSelection().focusNode;
-            if (!(b && cursorNode && b.el.contains(cursorNode))) {
-                if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
-                    event.preventDefault();
-                    page.onBatchDelete(page.kit.anchorCursor.currentSelectHandleBlocks);
-                }
-                if (page.kit.picker.blocks.length > 0) {
-                    event.preventDefault();
-                    page.onBatchDelete(page.kit.picker.blocks);
-                }
+    }, (event, kt) => {
+        var b = findBlockAppear(event.target as HTMLElement);
+        var cursorNode = window.getSelection().focusNode;
+        if (!(b && cursorNode && b.el.contains(cursorNode))) {
+            if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
+                event.preventDefault();
+                page.onBatchDelete(page.kit.anchorCursor.currentSelectHandleBlocks);
             }
-        },
+            if (page.kit.picker.blocks.length > 0) {
+                event.preventDefault();
+                page.onBatchDelete(page.kit.picker.blocks);
+            }
+        }
+    },
         (event, kt) => {
 
         },
@@ -128,5 +130,98 @@ export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
         },
         'copy',
         false
+    );
+    keyboardPlate.listener(kt =>
+        kt.isMetaOrCtrl(KeyboardCode.B)
+        ||
+        kt.isMetaOrCtrl(KeyboardCode.I)
+        ||
+        kt.isMetaOrCtrl(KeyboardCode.U)
+        ||
+        kt.isMetaOrCtrl(KeyboardCode.S)
+        ||
+        kt.isMetaOrCtrlAndAlt(KeyboardCode['['])
+        ||
+        kt.isMetaOrCtrlAndAlt(KeyboardCode[']'])
+        ||
+        kt.isMetaOrCtrlAndAlt(KeyboardCode.M)
+        ||
+        kt.isMetaOrCtrl(KeyboardCode.L)
+        ||
+        kt.isMetaOrCtrl(KeyboardCode.D)
+        ,
+        async (ev, k) => {
+            if (page.kit.picker.blocks.length > 0) {
+                var getCommands = async (blocks: Block[]) => {
+                    var rs;
+                    await blocks.eachAsync(async block => {
+                        var cs = await block.getBoardEditCommand();
+                        if (typeof rs == 'undefined') {
+                            rs = cs;
+                        }
+                        else {
+                            rs.removeAll(r => !cs.some(c => c.name == r.name))
+                        }
+                    });
+                    return (rs || []) as {
+                        name: string;
+                        value?: any;
+                    }[];
+                }
+                if (ev.key.toLowerCase() == KeyboardCode.B.toLowerCase()
+                    ||
+                    ev.key.toLowerCase() == KeyboardCode.I.toLowerCase()
+                    ||
+                    ev.key.toLowerCase() == KeyboardCode.U.toLowerCase()
+                    ||
+                    ev.key.toLowerCase() == KeyboardCode.S.toLowerCase()
+                ) {
+                    var cs = await getCommands(page.kit.picker.blocks);
+                    var name: string;
+                    var value: any;
+                    if (cs.some(s => s.name == 'fontWeight')) {
+                        if (ev.key.toLowerCase() == KeyboardCode.B.toLowerCase()) {
+                            name = 'fontWeight';
+                            value = cs.find(g => g.name == name)?.value ? 'normal' : 'bold';
+                        }
+                        else if (ev.key.toLowerCase() == KeyboardCode.I.toLowerCase()) { name = 'fontStyle'; value = cs.find(g => g.name == name)?.value ? false : true; }
+                        else if (ev.key.toLowerCase() == KeyboardCode.U.toLowerCase()) { name = 'textDecoration'; value = 'underline' }
+                        else if (ev.key.toLowerCase() == KeyboardCode.S.toLowerCase()) { name = 'textDecoration'; value = 'line-through' }
+                        await page.onAction(ActionDirective.onBoardEditProp, async () => {
+                            await page.kit.picker.blocks.eachAsync(async (block) => {
+                                await block.setBoardEditCommand(name, value);
+                            })
+                        });
+                    }
+                }
+                else if (ev.key.toLowerCase() == KeyboardCode.L.toLowerCase()) {
+                    await page.onAction(ActionDirective.onBoardEditProp, async () => {
+                        await page.kit.picker.blocks.eachAsync(async (block) => {
+                            await block.unlock(block?.locker?.lock ? false : true);
+                        })
+                    });
+                }
+                else if (ev.key.toLowerCase() == KeyboardCode.D.toLowerCase()) {
+                    await page.onCopyBlocks(page.kit.picker.blocks);
+                }
+                else if (ev.key.toLowerCase() == KeyboardCode['['].toLowerCase()) {
+                    await page.onAction(ActionDirective.onBoardEditProp, async () => {
+                        await page.kit.picker.blocks.eachAsync(async (block) => {
+                            await block.posZIndex('top');
+                        })
+                    });
+                }
+                else if (ev.key.toLowerCase() == KeyboardCode[']'].toLowerCase()) {
+                    await page.onAction(ActionDirective.onBoardEditProp, async () => {
+                        await page.kit.picker.blocks.eachAsync(async (block) => {
+                            await block.posZIndex('bottom');
+                        })
+                    });
+                }
+                else if (ev.key.toLowerCase() == KeyboardCode.M.toLowerCase()) {
+
+                }
+            }
+        }
     );
 }
