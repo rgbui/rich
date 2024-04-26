@@ -6,6 +6,7 @@ export function DivInput(props: {
     onInput?: (value: string) => void,
     onChange?: (value: string) => void,
     onEnter?: (value) => void,
+    onKeyDown?: (event: React.KeyboardEvent) => void,
     onMouseDown?: (event: React.MouseEvent) => void,
     value?: string,
     style?: CSSProperties,
@@ -35,7 +36,8 @@ export function DivInput(props: {
             props.onChange(text);
         }
     }
-    function paster(e: React.ClipboardEvent<HTMLSpanElement>) {
+    function paster(e:React.ClipboardEvent<HTMLSpanElement>)
+    {
         e.preventDefault();
         var text = e.clipboardData.getData('text/plain');
         var sel = window.getSelection();
@@ -65,6 +67,7 @@ export function DivInput(props: {
             if (typeof props.onEnter == 'function')
                 props.onEnter(text);
         }
+        if (typeof props.onKeyDown == 'function') props.onKeyDown(event)
     }
     async function mousedown(event: React.MouseEvent) {
         if (typeof props.onMouseDown == 'function') props.onMouseDown(event)

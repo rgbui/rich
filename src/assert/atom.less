@@ -763,14 +763,14 @@ body {
     --text-color-1     : rgba(55, 53, 47, 0.8);
     --text-color-remark: rgba(55, 53, 47, 0.5);
     --remark           : var(--text-color-remark);
-
-    --text-p-color : rgb(225, 98, 89);
-    --text-p1-color: #64a1df;
-    --text-b-color : rgb(100, 161, 223);
-    --text-g-color : rgb(33, 175, 90);
-    --shadow       : rgba(15, 15, 15, 0.05) 0rem 0rem 0rem 1px, rgba(15, 15, 15, 0.1) 0rem 3px 6px, rgba(15, 15, 15, 0.2) 0rem 9px 24px;
-    --shadow-light : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
-    --shadow-s     : 0px 2px 8px rgba(25, 25, 26, .12), 0px 0px 1px rgba(25, 25, 26, .08);
+    --text-purple      : rgb(189, 115, 232);
+    --text-p-color     : rgb(225, 98, 89);
+    --text-p1-color    : #64a1df;
+    --text-b-color     : rgb(100, 161, 223);
+    --text-g-color     : rgb(33, 175, 90);
+    --shadow           : rgba(15, 15, 15, 0.05) 0rem 0rem 0rem 1px, rgba(15, 15, 15, 0.1) 0rem 3px 6px, rgba(15, 15, 15, 0.2) 0rem 9px 24px;
+    --shadow-light     : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+    --shadow-s         : 0px 2px 8px rgba(25, 25, 26, .12), 0px 0px 1px rgba(25, 25, 26, .08);
 }
 
 .text {
@@ -780,7 +780,9 @@ body {
 .text-1 {
     color: rgba(55, 53, 47, 0.8);
 }
-
+.text-purple ,.text-pu {
+    color: var(--text-purple);
+}
 
 
 .text-0 {
@@ -1684,6 +1686,7 @@ each(@ops, {
 .border-light-hover,
 .r-border-light-hover>* {
     border: 0.1rem solid transparent;
+
     &:hover {
         border: 0.1rem solid rgba(55, 53, 47, 0.08);
     }

@@ -8,7 +8,7 @@ import { PopoverPosition } from "../../component/popover/position";
 import { Block } from "../../src/block";
 import { popoverLayer } from "../../component/lib/zindex";
 import { channel } from "../../net/channel";
-import { Loading1} from "../../component/view/spin";
+import { Loading1 } from "../../component/view/spin";
 import { FixedViewScroll } from "../../src/common/scroll";
 import { Point, Rect } from "../../src/common/vector/point";
 import { DivInput } from "../../component/view/input/div";
@@ -16,7 +16,6 @@ import { MenuView } from "../../component/view/menu/menu";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { AiWrite } from "./write";
 import { Divider } from "../../component/view/grid";
-
 import {
     AbstractTemplate,
     ArticleContinue,
@@ -43,6 +42,8 @@ import { KeyboardCode } from "../../src/common/keys";
 import lodash from "lodash";
 import { WsConsumeType, getAiDefaultModel } from "../../net/ai/cost";
 import { LazyMarkdown } from "../../component/view/markdown/lazy";
+import { ToolTip } from "../../component/view/tooltip";
+import { util } from "../../util/util";
 
 /**
  * The type of the options object that can be passed to the AITool component.
@@ -128,23 +129,21 @@ export class AITool extends EventsComponent {
         }
         return <div
             className="pos-t-r pn vw100 vh100 overflow-hidden"
-            style={{
-                zIndex: popoverLayer.zoom(this)
-            }}><div
-                ref={e => this.el = e}
-                className="pos"
-                style={style}>
-                <div className="pv min-h-30 bg-white shadow  round-8">
+            style={{ zIndex: 2 }}
+        ><div
+            ref={e => this.el = e}
+            className="pos"
+            style={style}>
+                <div style={{ border: `2px solid var(--text-purple)` }} className="pv min-h-30 bg-white  shadow-s  round-8">
                     {this.anwser && [AIAskStatus.selectionAsking, AIAskStatus.selectionAsked].includes(this.status) && <>
                         <div ref={e => this.mdEl = e} className=" padding-w-10 padding-t-10 gap-t-10 max-h-150 overflow-y">
                             <LazyMarkdown md={this.anwser}></LazyMarkdown>
                         </div>
                         <Divider></Divider>
-                    </>
-                    }
+                    </>}
                     <div className="flex flex-top">
                         <span className={"flex-fixed h-30 w-30 gap-h-5 flex-center "}>
-                            <Icon size={18} icon={AiStartSvg}></Icon>
+                            <Icon className={'text-pu'} size={18} icon={AiStartSvg}></Icon>
                         </span>
                         <div className="flex-auto flex">
                             {([AIAskStatus.asking, AIAskStatus.selectionAsking].includes(this.status)) && <div className=" gap-h-10 flex remark  flex"><S>AI正在写作</S><Loading1></Loading1></div>}
@@ -154,16 +153,21 @@ export class AITool extends EventsComponent {
                                 onInput={this.onInput}
                                 onEnter={this.onEnter}
                                 className='padding-h-10 min-h-20 l-20'
-                                placeholder={lst("告诉AI写什么")} ></DivInput>}
+                                placeholder={lst("告诉AI你想写什么...")} ></DivInput>}
                         </div>
                         <span className="gap-h-5 h-30 flex-center flex-fixed gap-l-10 gap-r-10">
                             {([AIAskStatus.asking, AIAskStatus.selectionAsking].includes(this.status)) && <div className="h-24 flex-center">
-                                <span className="gap-r-10 cursor" onMouseDown={e => this.onTry()}><S>重试</S><em className="remark gap-l-5">R</em></span>
-                                <span className="cursor" onMouseDown={e => this.onEsc()}><S>取消</S><em className="remark gap-l-5">ESC</em></span>
+                                <span className="gap-r-10 cursor f-14 remark" onMouseDown={e => this.onTry()}><S>重试</S><em className="remark gap-l-5">R</em></span>
+                                <span className="cursor f-14 remark" onMouseDown={e => this.onEsc()}><S>取消</S><em className="remark gap-l-5">ESC</em></span>
                             </div>}
-                            {(![AIAskStatus.asking, AIAskStatus.selectionAsking].includes(this.status)) && <span onClick={e => this.onEnter()} className={"round size-24 flex-center cursor item-hover" + (this.ask ? " remark" : "")}>
-                                <Icon size={18} icon={PublishSvg}></Icon>
-                            </span>}
+                            {(![AIAskStatus.asking, AIAskStatus.selectionAsking].includes(this.status)) && <ToolTip overlay={<div>
+                                <div className="flex"><span style={{ color: '#bbb' }}>Enter</span><span className="gap-l-5"><S>发送</S></span></div>
+                                <div className="flex"><span style={{ color: '#bbb' }}>Shift+Enter</span><span className="gap-l-5"><S>换行</S></span></div>
+                            </div>}>
+                                <span onClick={e => this.onEnter()} className={"round size-24 flex-center cursor item-hover" + (this.ask ? "" : " remark")}>
+                                    <Icon size={18} icon={PublishSvg}></Icon>
+                                </span>
+                            </ToolTip>}
                         </span>
                     </div>
                     {this.error && <div className="flex min-h-20 gap-b-5 padding-w-10 f-12 visible-hover">
@@ -175,9 +179,12 @@ export class AITool extends EventsComponent {
                     </div>}
                 </div>
                 <div
-                    style={{ display: [AIAskStatus.asking, AIAskStatus.selectionAsking].includes(this.status) ? 'none' : 'block' }}
+                    style={{
+                        border: `2px solid var(--text-purple)`,
+                        display: [AIAskStatus.asking, AIAskStatus.selectionAsking].includes(this.status) ? 'none' : 'block'
+                    }}
                     ref={e => this.menuView = e}
-                    className="gap-t-10 pv shadow w-300 bg-white   round-8">
+                    className="gap-t-10 pv border shadow-s w-300 bg-white   round-8">
                     {this.renderItems()}
                 </div>
             </div>
@@ -567,6 +574,8 @@ export class AITool extends EventsComponent {
     anwser: string = '';
     onEnter = async () => {
         var self = this;
+        var r = this.mv.onSelectFocusItem();
+        if (r == true) return;
         if (this.ask) {
             if (this.options.block) this.aiText({ prompt: self.ask })
             else if (this.options.blocks) {
@@ -600,9 +609,8 @@ export class AITool extends EventsComponent {
         this.options = options;
         this.page.setPaddingBottom(500);
         if (this.textarea) this.textarea.innerText = '';
-        this.updateView(() => {
-            if (this.textarea)
-                this.textarea.focus()
+        this.updateView(async () => {
+            await this.focusTextarea();
             if (options.isRun) {
                 this.onEnter()
             }
@@ -707,7 +715,9 @@ export class AITool extends EventsComponent {
                     if (done) {
                         // console.log('done', JSON.stringify(self.anwser))
                         self.status = AIAskStatus.selectionAsked;
-                        self.updateView();
+                        self.updateView(async () => {
+                            await self.focusTextarea();
+                        });
                     }
                 }
             });
@@ -773,9 +783,9 @@ export class AITool extends EventsComponent {
     }
     componentWillUnmount() {
         document.removeEventListener('mousedown', this.onGlobalMousedown, true);
-        if (this.onKeydown) document.removeEventListener('keydown', this.onKeydown, true);
+        document.removeEventListener('keydown', this.onKeydown, true);
     }
-    onKeydown(event: KeyboardEvent) {
+    onKeydown = (event: KeyboardEvent) => {
         if (event.key == KeyboardCode.Esc) {
             if ([AIAskStatus.asking, AIAskStatus.selectionAsking].includes(this.status)) {
                 this.onEsc();
@@ -788,6 +798,20 @@ export class AITool extends EventsComponent {
             if ([AIAskStatus.asking, AIAskStatus.selectionAsking].includes(this.status)) {
                 this.onTry();
             }
+        }
+        else if (event.key.toLowerCase() == KeyboardCode.ArrowDown.toLowerCase()) {
+            console.log('down focus item', this.mv);
+            if (this.mv) this.mv.onDownFocusItem()
+        }
+        else if (event.key.toLowerCase() == KeyboardCode.ArrowUp.toLowerCase()) {
+            console.log('up focus item...');
+            if (this.mv) this.mv.onUpFocusItem()
+        }
+        else if (event.key.toLowerCase() == KeyboardCode.ArrowLeft.toLowerCase()) {
+            if (this.mv) this.mv.onLeftFocusItem();
+        }
+        else if (event.key.toLowerCase() == KeyboardCode.ArrowRight.toLowerCase()) {
+            if (this.mv) this.mv.onRightFocusItem()
         }
     }
     close() {
@@ -822,6 +846,13 @@ export class AITool extends EventsComponent {
     onEsc() {
         if (this.controller)
             this.controller.abort()
+    }
+    async focusTextarea() {
+        await util.delay(100);
+        if (this.textarea) {
+            var sel = window.getSelection();
+            sel.collapse(this.textarea, 0);
+        }
     }
 }
 
