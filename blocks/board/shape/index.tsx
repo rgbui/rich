@@ -139,6 +139,7 @@ export class ShapeView extends BlockView<Shape> {
                 {
                     top: 0,
                     left: 0,
+                    textDecoration: 'inherit',
                     // padding: dx,
                     // background: this.block.color,
                     width: this.block.fixedSize.width,
