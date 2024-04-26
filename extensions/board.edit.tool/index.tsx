@@ -29,6 +29,7 @@ import { SelectBox } from "../../component/view/select/box";
 import { BlockUrlConstant } from "../../src/block/constant";
 import { canvasOptions } from "./util";
 import { FixedViewScroll } from "../../src/common/scroll";
+import { AlignNineGridView } from "./align";
 import "./style.less";
 
 export class BoardEditTool extends EventsComponent {
@@ -249,11 +250,11 @@ export class BoardEditTool extends EventsComponent {
         }
         else if (name == 'tickness') {
             return <div key={at} style={{ width: 90 }} className={'shy-board-edit-tool-item no-item-hover'}>
-                <MeasureView theme="light" min={1} max={40} showValue={false} value={getValue('tickness')} inputting={false} onChange={e => { this.onChange('tickness', e) }}></MeasureView>
+                <MeasureView  theme="light" min={1} max={40} showValue={false} value={getValue('tickness')} inputting={false} onChange={e => { this.onChange('tickness', e) }}></MeasureView>
             </div>
         }
         else if (name == 'fontWeight') {
-            return <Tip key={at} placement="top" text='加粗'>
+            return <Tip key={at} placement="top" text='文本样式'>
                 <div onMouseEnter={e => {
                     this.showDrop('text-font-style');
                 }} onMouseLeave={e => {
@@ -348,9 +349,33 @@ export class BoardEditTool extends EventsComponent {
                 </div>
             </Tip>
         }
+        else if (name == 'nine-align') {
+            return <Tip key={at} placement="top" text='元素对齐'>
+                <div onMouseEnter={e => {
+                    this.showDrop('nine-align');
+                }} onMouseLeave={e => {
+                    this.showDrop('');
+                }} className="shy-board-edit-tool-item">
+                    <AlignNineGridView
+                        name='nine-align'
+                        tool={this}
+                        change={e => {
+                            this.onChange('nine-align', e)
+                        }}
+                    ></AlignNineGridView>
+                </div>
+            </Tip>
+        }
     }
     getItems() {
         if (this.blocks.first().url == BlockUrlConstant.Frame) {
+            if (this.blocks.length > 1) {
+                return ["frameFormat",
+                    'backgroundColor',
+                    "divider",
+                    'nine-align'
+                ]
+            }
             return [
                 "frameFormat",
                 'backgroundColor'
@@ -388,6 +413,7 @@ export class BoardEditTool extends EventsComponent {
                 "backgroundColor",
                 "backgroundNoTransparentColor",
                 "fillColor",
+                ...(this.blocks.length > 1 ? ["divider", "nine-align"] : [])
             ]
         }
         return [
@@ -420,12 +446,13 @@ export class BoardEditTool extends EventsComponent {
             "backgroundNoTransparentColor",
             "divider",
             "borderWidth",
-            "stroke"
+            "stroke",
+            ...(this.blocks.length > 1 ? ["divider", "nine-align"] : [])
         ]
     }
     renderItems() {
         var items = this.getItems();
-        lodash.remove(items, g => g != 'divider' && !this.commands.some(s => s.name == g));
+        lodash.remove(items, g => (g != 'divider' && g != 'nine-align') && !this.commands.some(s => s.name == g));
         lodash.remove(items, (g, i) => g == 'divider' && items[i - 1] == 'divider');
         if (items.indexOf('divider') == 0) {
             items = items.slice(1);

@@ -1,6 +1,6 @@
 import React from "react";
 import { BoardEditTool } from ".";
-import { FontStyleSvg, TransparentSvg } from "../../component/svgs";
+import { TransparentSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { BoardBackgroundColorList, BoardTextFontColorList } from "../color/data";
 import { ColorListBox } from "../color/list";
@@ -8,6 +8,8 @@ import { lst } from "../../i18n/store";
 import { MeasureView } from "../../component/view/progress";
 import { S } from "../../i18n/view";
 import { Divider } from "../../component/view/grid";
+import { ToolTip } from "../../component/view/tooltip";
+import { UA } from "../../util/ua";
 
 export function MindLineColor(props: {
     tool: BoardEditTool,
@@ -137,11 +139,12 @@ export function FontTextAlign(props: {
             className=" bg-white shadow-s round">
             <div className="h-30 flex r-item-hover r-round r-cursor r-gap-w-5">
                 {aligns.map((g, i) => {
-                    return <span onMouseDown={e => {
-                        props.change(g.value);
-                    }} key={i} className={"flex-center size-24 round" + (props.align == g.value ? " item-hover-focus link" : "item-hover-light")}>
-                        <Icon icon={g.icon as any} size={16}></Icon>
-                    </span>
+                    return <ToolTip overlay={g.text}><span onMouseDown={e => {
+                            props.change(g.value);
+                        }} key={i} className={"flex-center size-24 round" + (props.align == g.value ? " item-hover-focus link" : "item-hover-light")}>
+                            <Icon icon={g.icon as any} size={16}></Icon>
+                        </span>
+                    </ToolTip>
                 })}
             </div></div>
         </div>}
@@ -171,28 +174,40 @@ export function FontTextStyle(props: {
         {props.tool.isShowDrop(name) && <div style={{ position: 'absolute', top: 20, transform: 'translate(-50%, 0px)' }}>
             <div style={{ marginTop: 15, height: 30, width: 'auto', minHeight: 'auto', padding: '5px 0px' }} className=" round bg-white shadow-s">
                 <div className="h-30 flex r-item-hover r-round r-cursor r-gap-w-5">
-                    <span onMouseDown={e => {
-                        props.change({
-                            fontWeight: props.fontWeight == 'bold' || props.fontWeight == true || props.fontWeight > 500 ? "normal" : 'bold'
-                        })
-                    }} className={"size-24 flex-center " + (props.fontWeight == 'bold' || props.fontWeight == true || props.fontWeight > 500 ? " item-hover-focus link" : "")}><Icon size={16} icon={{ name: 'byte', code: 'text-bold' }}></Icon></span>
 
-                    <span onMouseDown={e => {
-                        props.change({
-                            fontStyle: props.fontStyle == 'itailc' || props.fontStyle == true ? false : true
-                        })
-                    }} className={"size-24 flex-center " + (props.fontStyle == 'itailc' || props.fontStyle == true ? " item-hover-focus link" : "")}><Icon size={16} icon={{ name: 'byte', code: 'text-italic' }} ></Icon></span>
+                    <ToolTip overlay={<div><S>加粗</S><br /><span style={{ color: '#bbb' }}>{UA.isMacOs ? "⌘+B" : 'Ctrl+B'}</span></div>}>
+                        <span onMouseDown={e => {
+                            props.change({
+                                fontWeight: props.fontWeight == 'bold' || props.fontWeight == true || props.fontWeight > 500 ? "normal" : 'bold'
+                            })
+                        }} className={"size-24 flex-center " + (props.fontWeight == 'bold' || props.fontWeight == true || props.fontWeight > 500 ? " item-hover-focus link" : "")}><Icon size={16} icon={{ name: 'byte', code: 'text-bold' }}></Icon></span>
+                    </ToolTip>
 
-                    <span onMouseDown={e => {
-                        props.change({
-                            textDecoration: props.textDecoration == 'line-through' ? 'none' : 'line-through'
-                        })
-                    }} className={"size-24 flex-center " + (props.textDecoration == 'line-through' ? " item-hover-focus link" : "")}><Icon size={16} icon={{ name: 'byte', code: 'strikethrough' }}></Icon></span>
-                    <span
-                        onMouseDown={e => {
-                            props.change({ textDecoration: props.textDecoration == 'underline' ? 'none' : 'underline' })
-                        }}
-                        className={"size-24 flex-center " + (props.textDecoration == 'underline' ? " item-hover-focus link" : "")}><Icon size={16} icon={{ name: 'byte', code: 'text-underline' }}></Icon></span>
+                    <ToolTip overlay={<div><S>斜体</S><br /><span style={{ color: '#bbb' }}>{UA.isMacOs ? "⌘+I" : 'Ctrl+I'}</span></div>}>
+                        <span onMouseDown={e => {
+                            props.change({
+                                fontStyle: props.fontStyle == 'itailc' || props.fontStyle == true ? false : true
+                            })
+                        }} className={"size-24 flex-center " + (props.fontStyle == 'itailc' || props.fontStyle == true ? " item-hover-focus link" : "")}><Icon size={16} icon={{ name: 'byte', code: 'text-italic' }} ></Icon></span>
+                    </ToolTip>
+
+                    <ToolTip overlay={<div><S>下划线</S><br /><span style={{ color: '#bbb' }}>{UA.isMacOs ? "⌘+U" : 'Ctrl+U'}</span></div>}>
+                        <span
+                            onMouseDown={e => {
+                                props.change({ textDecoration: props.textDecoration == 'underline' ? 'none' : 'underline' })
+                            }}
+                            className={"size-24 flex-center " + (props.textDecoration == 'underline' ? " item-hover-focus link" : "")}><Icon size={16} icon={{ name: 'byte', code: 'text-underline' }}></Icon>
+                        </span>
+                    </ToolTip>
+
+                    <ToolTip overlay={<div><S>删除线</S><br /><span style={{ color: '#bbb' }}>{UA.isMacOs ? "⌘+S" : 'Ctrl+S'}</span></div>}>
+                        <span onMouseDown={e => {
+                            props.change({
+                                textDecoration: props.textDecoration == 'line-through' ? 'none' : 'line-through'
+                            })
+                        }} className={"size-24 flex-center " + (props.textDecoration == 'line-through' ? " item-hover-focus link" : "")}><Icon size={16} icon={{ name: 'byte', code: 'strikethrough' }}></Icon></span>
+                    </ToolTip>
+
                 </div>
             </div>
         </div>}
