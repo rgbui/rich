@@ -330,7 +330,7 @@ export class PageWrite {
             case KeyboardCode.S.toLowerCase():
             case KeyboardCode.E.toLowerCase():
             case KeyboardCode.R.toLowerCase():
-                if (this.kit.page.keyboardPlate.isMeta() || this.kit.page.keyboardPlate.isCtrl()) {
+                if (this.kit.page.keyboardPlate.isMetaOrCtrl() || this.kit.page.keyboardPlate.isMetaOrCtrlAndShift()) {
                     var name: TextCommand | string;
                     if (event.key.toLowerCase() == KeyboardCode.B.toLowerCase())
                         name = TextCommand.bold;

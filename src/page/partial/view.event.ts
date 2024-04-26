@@ -313,7 +313,7 @@ export class Page$ViewEvent {
     }
     async onContextMenu(this: Page, event: React.MouseEvent) {
         if (!this.isCanEdit) return;
-        // event.preventDefault();
+        event.preventDefault();
     }
     async onAddCover(this: Page, toggle = true) {
         if (!this.isCanEdit) return;
@@ -529,5 +529,6 @@ export class Page$ViewEvent {
             this.onError(ex);
         }
     }
+    
 }
 
