@@ -1,4 +1,5 @@
 
+import { Segment } from "../../block/svg/segment";
 import { Point } from "./point";
 export class Line {
     x1: number;
@@ -21,5 +22,49 @@ export class Line {
     }
     center() {
         return new Point((this.x1 + this.x2) / 2, (this.y1 + this.y2) / 2)
+    }
+}
+
+
+export class LineSegment {
+    points: Point[] = [];
+    currentPoint: Point;
+    private constructor(point: Point) {
+        this.currentPoint = point;
+        this.points.push(point);
+    }
+    x(d: number) {
+        var np = this.currentPoint.clone().setX(d);
+        this.currentPoint = np;
+        this.points.push(np);
+        return this;
+    }
+    y(d: number) {
+        var np = this.currentPoint.clone().setY(d)
+        this.currentPoint = np;
+        this.points.push(np);
+        return this;
+    }
+    xy(x: number, y: number) {
+        var np = this.currentPoint.clone().setX(x);
+        np = np.setY(y);
+        this.currentPoint = np;
+        this.points.push(np);
+        return this;
+    }
+    to(x: number, y: number) {
+
+        this.points.push(new Point(x, y));
+        this.currentPoint = this.points.last()
+        return this;
+    }
+    toSegments() {
+        return this.points.map(p => {
+            return Segment.create(p)
+        })
+    }
+
+    static create(point: Point) {
+        return new LineSegment(point.clone());
     }
 }

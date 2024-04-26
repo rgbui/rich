@@ -392,12 +392,16 @@ export class Rect {
         var e = this.rightBottom;
         return new Rect(matrix.transform(t), matrix.transform(e));
     }
+    transformInverseToRect(matrix: Matrix) {
+        var t = this.leftTop;
+        var e = this.rightBottom;
+        return new Rect(matrix.inverseTransform(t), matrix.inverseTransform(e));
+    }
     transformToPoints(matrix: Matrix) {
         return this.points.map(t => matrix.transform(t));
     }
     static fromWindow() {
         return new Rect(0, 0, window.innerWidth, window.innerHeight);
-
     }
 }
 

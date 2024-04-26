@@ -413,7 +413,7 @@ export class BoardSelector extends React.Component<{
             else {
                 var sd = this.page.getScrollDiv();
                 var re = Rect.fromEle(sd)
-                var vb = this.block.getVisibleBound();
+                var vb = this.block.getVisibleContentBound();
                 var y = vb.top - re.top + sd.scrollTop;
                 this.point = new Point(re.right - vb.right - 60, y)
             }
