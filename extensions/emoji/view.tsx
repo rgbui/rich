@@ -86,7 +86,7 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
         return els;
     }
     renderSearch() {
-        if (this.searchEmojis.length == 0) return <div className="flex-center remark padding-14 f-12 ">没有搜索表情</div>
+        if (this.searchEmojis.length == 0) return <div className="flex-center remark padding-10 f-12 ">没有搜索表情</div>
         return <div className='shy-emoji-view-category'>
             <div className="shy-emoji-view-category-emojis">
                 {this.searchEmojis.map(emoji => {
@@ -96,7 +96,7 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
     }
     render() {
         return <div>
-            <div className="flex padding-h-14 padding-w-10">
+            <div className="flex padding-h-10 padding-w-10">
                 <div className="flex-auto"><Input clear placeholder={lst("搜索...")} value={this.word} onClear={() => this.loadSearch('')} onEnter={e => { this.word = e; this.loadSearch.flush() }} onChange={e => this.loadSearch(e)} ></Input></div>
                 <div className="flex-fixed gap-l-10 text-1">
                     <Tip overlay={<S>随机</S>}><span onMouseDown={e => this.onRandomIcon()} className=" flex-center size-30 round item-hover cursor">
