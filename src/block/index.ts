@@ -350,6 +350,7 @@ export abstract class Block extends Events {
     * 判断该块是否接受dragBlocks拖到这里
     */
     isAllowDrops(dragBlocks: Block[]) {
+        if (this.isFreeBlock) return false;
         if (this.isAllowDrop == false) return false;
         return true;
     }
@@ -653,7 +654,7 @@ export abstract class Block extends Events {
         return this.url == BlockUrlConstant.Mind;
     }
     get isBoardBlock() {
-        return this.url == BlockUrlConstant.Board;
+        return this.url == BlockUrlConstant.Board || (this.url == BlockUrlConstant.CardBox && (this as any).board == true);
     }
     get frameBlock(): Block {
         var r = this.closest(x => x.isFrame || x.isBoardBlock);
