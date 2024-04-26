@@ -134,7 +134,7 @@ export class AITool extends EventsComponent {
             ref={e => this.el = e}
             className="pos"
             style={style}>
-                <div style={{ border: `2px solid var(--text-purple)` }} className="pv min-h-30 bg-white  shadow-s  round-8">
+                <div style={{ border: `2px solid var(--text-purple)` }} className="pv min-h-30 bg-white  shadow  round-8">
                     {this.anwser && [AIAskStatus.selectionAsking, AIAskStatus.selectionAsked].includes(this.status) && <>
                         <div ref={e => this.mdEl = e} className=" padding-w-10 padding-t-10 gap-t-10 max-h-150 overflow-y">
                             <LazyMarkdown md={this.anwser}></LazyMarkdown>
@@ -180,11 +180,11 @@ export class AITool extends EventsComponent {
                 </div>
                 <div
                     style={{
-                        border: `2px solid var(--text-purple)`,
+                        // border: `2px solid var(--text-purple)`,
                         display: [AIAskStatus.asking, AIAskStatus.selectionAsking].includes(this.status) ? 'none' : 'block'
                     }}
                     ref={e => this.menuView = e}
-                    className="gap-t-10 pv border shadow-s w-300 bg-white   round-8">
+                    className="gap-t-10 pv border shadow w-300 bg-white   round-8">
                     {this.renderItems()}
                 </div>
             </div>
