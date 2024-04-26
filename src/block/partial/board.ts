@@ -10,6 +10,7 @@ import { ActionDirective } from "../../history/declare";
 import { openBoardEditTool } from "../../kit/operator/board/edit";
 
 export enum BoardPointType {
+    none,
     /**
      * 路径
      */
@@ -76,7 +77,7 @@ export class Block$Board {
     ]): BoardBlockSelector[] {
         var pickers: BoardBlockSelector[] = [];
         var { width, height } = this.fixedSize;
-        var rect = new Rect(0,0,width,height);
+        var rect = new Rect(0, 0, width, height);
         var gm = this.globalMatrix;
         gm = this.globalMatrix;
         var feelDist = this.realPx(Math.min(100, width / 2));
@@ -86,7 +87,7 @@ export class Block$Board {
          * scale 水平和垂直相等
          */
         var extendRect = rect.extend(this.realPx(15));
-        var pathRects = RectUtility.getRectLineRects(rect, this.realPx(1));
+        var pathRects = RectUtility.getRectLineRects(rect, this.realPx(2));
         if (types.includes(BoardPointType.path))
             pickers.push(...pathRects.map((pr, i) => {
                 var arrows: PointArrow[] = [];
@@ -323,7 +324,8 @@ export class Block$Board {
         this.moveMatrix = matrix;
         this.updateRenderLines(true);
     }
-    async boardMoveEnd(this: Block, from: Point, to: Point) {
+    async boardMoveEnd(this: Block,from: Point,to: Point)
+    {
         var moveMatrix = new Matrix();
         moveMatrix.translateMove(this.globalMatrix.inverseTransform(from), this.globalMatrix.inverseTransform(to))
         var newMatrix = this.currentMatrix.clone();

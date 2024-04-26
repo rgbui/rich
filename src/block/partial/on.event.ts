@@ -537,11 +537,14 @@ export class Block$Event {
     }
     async onZIndex(this: Block, layer: 'top' | 'bottom') {
         await this.page.onAction(ActionDirective.onZIndex, async () => {
-            var zindex = this.zindex;
-            if (layer == 'top') zindex = this.parent.childs.max(g => g.zindex) + 1;
-            else zindex = this.parent.childs.min(g => g.zindex) - 1;
-            this.updateProps({ zindex }, BlockRenderRange.self);
+            await this.posZIndex(layer);
         })
+    }
+    async posZIndex(this: Block, layer: 'top' | 'bottom') {
+        var zindex = this.zindex;
+        if (layer == 'top') zindex = this.parent.childs.max(g => g.zindex) + 1;
+        else zindex = this.parent.childs.min(g => g.zindex) - 1;
+        await this.updateProps({ zindex }, BlockRenderRange.self);
     }
     /**
      * 光标输入完后触发的事件

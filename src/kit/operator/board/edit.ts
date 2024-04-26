@@ -10,8 +10,8 @@ export async function openBoardEditTool(kit: Kit) {
                 kit.page.bound
             );
             if (r) {
-                if (r.name && r.name.indexOf("grid-") > -1) {
-                    await kit.page.onGridAlign(kit.picker.blocks, r.name, r.value);
+                if (r.name && r.name == 'nine-align') {
+                    await kit.page.onGridAlign(kit.picker.blocks,  r.value);
                 }
                 else {
                     await kit.page.onAction(ActionDirective.onBoardEditProp, async () => {

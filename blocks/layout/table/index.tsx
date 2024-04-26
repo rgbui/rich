@@ -8,7 +8,17 @@ import { ActionDirective } from "../../../src/history/declare";
 import { Point, Rect } from "../../../src/common/vector/point";
 import lodash from 'lodash';
 import { MouseDragger } from "../../../src/common/dragger";
-import { DragHandleSvg, PlusSvg, TableBottomInsertSvg, TableClearCellSvg, TableDeleteColSvg, TableDeleteRowSvg, TableLeftInsertSvg, TableRightInsertSvg, TableTopInsertSvg } from "../../../component/svgs";
+import {
+    DragHandleSvg,
+    PlusSvg,
+    TableBottomInsertSvg,
+    TableClearCellSvg,
+    TableDeleteColSvg,
+    TableDeleteRowSvg,
+    TableLeftInsertSvg,
+    TableRightInsertSvg,
+    TableTopInsertSvg
+} from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { ghostView } from "../../../src/common/ghost";
 import { ToolTip } from "../../../component/view/tooltip";
@@ -712,7 +722,7 @@ export class Table extends Block {
 }
 
 @view('/table')
-export class TableView extends BlockView<Table>{
+export class TableView extends BlockView<Table> {
     mousemove(event: MouseEvent) {
         if (!this.block.isCanEdit()) return;
         if (this.isMoveLine) return;
@@ -1177,6 +1187,7 @@ export class TableView extends BlockView<Table>{
     private isMoveLine: boolean = false;
     onBoardDrag(event: React.MouseEvent) {
         event.stopPropagation();
+        event.preventDefault();
         BoardDrag(this.block.page.kit, this.block, event, {
             moveEnd: (ev, isM, d) => {
                 if (!isM) {

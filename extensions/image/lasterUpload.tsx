@@ -14,8 +14,15 @@ export class LastUploadFiles extends React.Component<{
     fileClassify?: 'cover',
     mime?: 'image',
     onChange: (resource: ResourceArguments) => void
-}>{
-    slist: SearchListType<ResourceArguments> = { total: 0, list: [], page: 1, size: 50, loading: false, word: '' };
+}> {
+    slist: SearchListType<ResourceArguments> = {
+        total: 0,
+        list: [],
+        page: 1,
+        size: 50,
+        loading: false,
+        word: ''
+    };
     async load(fileClassify?: 'cover') {
         this.slist.loading = true;
         this.slist.error = '';
