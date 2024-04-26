@@ -7,12 +7,12 @@ import { BlockView } from "../../src/block/view";
 import dayjs from "dayjs";
 import { useDatePicker } from "../../extensions/date";
 import { Rect } from "../../src/common/vector/point";
-import "./style.less";
 import { DragHandleSvg, EditSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { BoxTip } from "../../component/view/tooltip/box";
 import { DragBlockLine } from "../../src/kit/handle/line";
 import { Tip } from "../../component/view/tooltip/tip";
+import "./style.less";
 
 @url('/mention/date')
 export class ShyDate extends Block {
