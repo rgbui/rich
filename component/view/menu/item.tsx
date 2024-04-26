@@ -47,7 +47,7 @@ export class MenuItemView extends React.Component<{
         this.props?.click(item, event, name);
     }
     hover: boolean = false;
-    mouseenter(item: MenuItem, event: MouseEvent) {
+    mouseenter(item: MenuItem, event: MouseEvent,cb?:()=>void) {
         if (this.props.parent.free) return;
         this.hover = true;
         this.forceUpdate(() => {
@@ -70,6 +70,7 @@ export class MenuItemView extends React.Component<{
                         position: isFixed ? 'fixed' : "absolute"
                     });
             }
+            if(cb)cb();
         });
     }
     mouseleave(item: MenuItem, event: MouseEvent) {
@@ -145,7 +146,12 @@ export class MenuItemView extends React.Component<{
             onMouseLeave={e => this.mouseleave(item, e.nativeEvent)}
             onMouseEnter={e => this.mouseenter(item, e.nativeEvent)}
             className={'shy-menu-box-item' + (this.hover ? " hover" : "")}
-            ref={e => this.el = e}>
+            ref={e => {
+                if (e) {
+                    this.el = e;
+                    this.el['data-menu-item'] = this;
+                }
+            }}>
             {(item.type == MenuItemType.item || !item.type) && <ToolTip overlay={item.overlay} placement={item.placement || 'right'} ><div className={'shy-menu-box-item-option' + (item.disabled == true ? " disabled" : "")}
                 onMouseDown={e => this.select(item, e.nativeEvent)}>
                 {item.icon && <i className={"flex-center flex-line  text-1 " + (item.iconSize > 20 ? "" : "size-20")}><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
