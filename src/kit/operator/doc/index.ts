@@ -21,8 +21,6 @@ import { CheckBoardSelector } from "../../board.selector/selector";
  */
 export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
 
-    console.log('doc drag...');
-
     /**
    * 先判断toolBoard工具栏有没有被使用，
    * 如果有使用，则根据工具栏来进行下一步操作

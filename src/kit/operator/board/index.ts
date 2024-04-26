@@ -16,6 +16,7 @@ export function BoardDrag(
         moveEnd?(ev, isMove, data): void
     }
 ) {
+
     console.log('board drag...');
     /**
      * 先判断toolBoard工具栏有没有被使用，
@@ -30,6 +31,7 @@ export function BoardDrag(
     if (block?.isLine) block = block.closest(x => !x.isLine);
     var beforeIsPicked = kit.picker.blocks.some(s => s == block);
     var hasBlock: boolean = block ? true : false;
+    if (block?.isBoardBlock) hasBlock = false;
     var isCopy: boolean = false;
     if (kit.page.keyboardPlate.isShift() && block?.isFreeBlock) {
         //连选
