@@ -525,16 +525,7 @@ export class Page$ContextMenu {
                 /**
                  * 复制块
                  */
-                this.onAction(ActionDirective.onCopyBlock, async () => {
-                    var bs = await blocks.asyncMap(async b => b.cloneData());
-                    var at = blocks[0].at;
-                    var to = blocks.last().at;
-                    var pa = blocks[0].parent;
-                    var newBlocks = await pa.appendArrayBlockData(bs, Math.max(at, to) + 1, blocks.first().parentKey);
-                    this.addUpdateEvent(async () => {
-                        this.kit.anchorCursor.onSelectBlocks(newBlocks, { render: true, merge: true });
-                    })
-                });
+                this.onCopyBlocks(blocks);
                 break;
             case BlockDirective.link:
                 CopyText(blocks[0].blockUrl);

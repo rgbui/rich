@@ -122,7 +122,7 @@ export class Page$Operator2 {
         if (typeof action == 'function') await action(newBlock);
         return newBlock
     }
-    async onReplace(this: Page, block: Block, blockData: (Record<string, any> | Block) | ((Record<string, any> | Block)[]), action?: (block: Block) => Promise<void>,options?: {
+    async onReplace(this: Page, block: Block, blockData: (Record<string, any> | Block) | ((Record<string, any> | Block)[]), action?: (block: Block) => Promise<void>, options?: {
         disabledStore?: boolean;
         disabledSyncBlock?: boolean;
         immediate?: boolean;
@@ -131,7 +131,7 @@ export class Page$Operator2 {
         var newBlock: Block = null;
         await this.onAction(ActionDirective.onReplace, async () => {
             newBlock = await this.replace(block, blockData, action);
-        },options);
+        }, options);
         return newBlock;
     }
     async onBatchTurn(this: Page, blocks: Block[], url: string) {
@@ -302,5 +302,17 @@ export class Page$Operator2 {
                 pageInfo: data
             })
         }
+    }
+    async onCopyBlocks(this: Page, blocks: Block[]) {
+        await this.onAction(ActionDirective.onCopyBlock, async () => {
+            var bs = await blocks.asyncMap(async b => b.cloneData());
+            var at = blocks[0].at;
+            var to = blocks.last().at;
+            var pa = blocks[0].parent;
+            var newBlocks = await pa.appendArrayBlockData(bs, Math.max(at, to) + 1, blocks.first().parentKey);
+            this.addUpdateEvent(async () => {
+                this.kit.anchorCursor.onSelectBlocks(newBlocks, { render: true, merge: true });
+            })
+        });
     }
 }

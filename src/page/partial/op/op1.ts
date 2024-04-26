@@ -7,7 +7,7 @@ import { AnimatedScrollTo } from "../../../../util/animatedScrollTo";
 import { Block } from "../../../block";
 import { BlockChildKey, BlockUrlConstant } from "../../../block/constant";
 import { Point, Rect } from "../../../common/vector/point";
-import { ActionDirective, OperatorDirective} from "../../../history/declare";
+import { ActionDirective, OperatorDirective } from "../../../history/declare";
 import { LinkPageItem, PageLayoutType, PageTemplateTags, PageTemplateTypeGroups } from "../../declare";
 import { PageDirective } from "../../directive";
 import { useTemplateView } from "../../../../extensions/template";
@@ -34,8 +34,8 @@ import { Head } from "../../../../blocks/general/head";
 
 
 export class Page$Operator {
-   
-  
+
+
     async onToggleOutline(this: Page, d: { nav: boolean }) {
         await this.onAction('onToggleOutline', async () => {
             await this.updateProps({ nav: d.nav });
@@ -195,7 +195,7 @@ export class Page$Operator {
             }
         })
     }
-  
+
     async onChangeTextChannelSpeak(this: Page, speak: LinkPageItem['speak']) {
         await channel.air('/page/update/info', {
             id: this.pageInfo.id,
@@ -205,7 +205,7 @@ export class Page$Operator {
             }
         })
     }
-  
+
     async onOpenTemplate(this: Page) {
         var ut = await useTemplateView();
         if (ut) {
@@ -261,9 +261,9 @@ export class Page$Operator {
             this.emit(PageDirective.save);
         }
     }
-    async onGridAlign(this: Page, blocks: Block[], command: string, value: string) {
+    async onGridAlign(this: Page, blocks: Block[], value: string) {
         await this.onAction('onGridAlign', async () => {
-            if (command == 'grid-align') {
+            if (['left', 'center', 'right'].includes(value)) {
                 var b = blocks.first().getVisibleBound();
                 for (let i = 1; i < blocks.length; i++) {
                     var block = blocks[i]
@@ -292,7 +292,7 @@ export class Page$Operator {
                     block.moveMatrix = new Matrix();
                 }
             }
-            else if (command == 'grid-valign') {
+            else if (['top', 'middle', 'bottom'].includes(value)) {
                 var b = blocks.first().getVisibleBound();
                 for (let i = 1; i < blocks.length; i++) {
                     var block = blocks[i]
@@ -321,7 +321,7 @@ export class Page$Operator {
                     block.moveMatrix = new Matrix();
                 }
             }
-            else if (command == 'grid-distribute') {
+            else if (['x', 'y'].includes(value)) {
                 if (value == 'y') {
                     var first = blocks.first().getVisibleBound();
                     var second = blocks[1].getVisibleBound();
@@ -400,8 +400,8 @@ export class Page$Operator {
         this.showMembers = this.showMembers ? false : true;
         this.forceUpdate()
     }
- 
-  
+
+
     async onOpenTheme(this: Page) {
         await usePageTheme(this);
     }
@@ -650,5 +650,5 @@ export class Page$Operator {
         }, { immediate: true })
     }
 
-   
+
 }
