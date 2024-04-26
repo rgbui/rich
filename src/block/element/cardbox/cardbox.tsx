@@ -4,8 +4,7 @@ import { Block } from "../..";
 import {
     DotsSvg,
     PicSvg,
-    PlatteSvg,
-    PlusSvg
+    PlatteSvg
 } from "../../../../component/svgs";
 
 import { Icon, IconValueType } from "../../../../component/view/icon";
@@ -28,12 +27,23 @@ import lodash from "lodash";
 import { util } from "../../../../util/util";
 import { memoryCopyData, memoryReadData } from "../../../page/common/copy";
 import { MouseDragger } from "../../../common/dragger";
+import { Matrix } from "../../../common/matrix";
+import { Tip } from "../../../../component/view/tooltip/tip";
 import "./style.less";
 
 @url('/card/box')
 export class CardBox extends Block {
     init() {
         this.gridMap = new GridMap(this)
+    }
+    get childsOffsetMatrix() {
+        var matrix = new Matrix();
+        if (this.el) {
+            var p = this.page.getDocRelativePoint(this, this.getVisibleContentBound().leftTop);
+            matrix.translate(p.x, p.y);
+        }
+        // matrix.append(this.boardOffsetMatrix);
+        return matrix;
     }
     async onAddCardBox(event: React.MouseEvent) {
         this.page.onAction('onAddCardBox', async () => {
@@ -54,6 +64,26 @@ export class CardBox extends Block {
             })
         });
     }
+    async onAddBoardCardBox(event: React.MouseEvent) {
+        this.page.onAction('onAddBoardCardBox', async () => {
+            var d = {
+                url: BlockUrlConstant.CardBox,
+                board: true,
+                blocks: {
+                    childs: [
+                        // { url: BlockUrlConstant.Head }
+                    ]
+                }
+            };
+            var pa = this.parent;
+            var nb = await pa.appendBlock(d, this.at + 1, this.parentKey);
+            this.page.addUpdateEvent(async () => {
+                // await util.delay(100);
+                // var head = nb.find(g => g.url == BlockUrlConstant.Head)
+                // this.page.kit.anchorCursor.onFocusBlockAnchor(head, { merge: true, render: true, last: true })
+            })
+        });
+    }
     async onOpenCardStyle(event?: React.MouseEvent) {
         var el = this.el.querySelector('.sy-block-view-card-ops') as HTMLElement;
         el.style.visibility = 'visible';
@@ -68,6 +98,10 @@ export class CardBox extends Block {
             el.style.visibility = '';
         }
     }
+    @prop()
+    board: boolean = false;
+    @prop()
+    boardHeight: number = 300;
     @prop()
     cardCoverHeight = 120;
     @prop()
@@ -239,7 +273,7 @@ export class CardBox extends Block {
     get contentEl() {
         return (this.view as any)?.contentEl as HTMLElement;
     }
-    getScrollDiv(): HTMLElement {
+    getScrollDiv() {
         var p = this.parentPanel;
         if (p) return p.getScrollDiv()
         else return this.page.getScrollDiv();
@@ -289,7 +323,7 @@ export class ViewComponent extends BlockView<CardBox> {
                         }
                         else self.forceUpdate();
                     }
-                },
+                }
             })
         }
         else {
@@ -327,6 +361,41 @@ export class ViewComponent extends BlockView<CardBox> {
                 },
             })
         }
+    }
+    onResize(event: React.MouseEvent) {
+        event.stopPropagation();
+        var height = this.block.boardHeight
+        MouseDragger({
+            event,
+            moving: (e, d, end) => {
+                var dy = e.clientY - event.clientY;
+                var h = height + dy;
+                if (h < 60) h = 60;
+                this.block.boardHeight = h;
+                if (end) {
+                    this.block.onManualUpdateProps(
+                        { boardHeight: height },
+                        { boardHeight: h }
+                    );
+                }
+                else this.forceUpdate()
+            }
+        })
+    }
+    renderBoard() {
+        if (this.block.board) {
+            return <><div style={{
+                height: this.block.boardHeight,
+                'position': 'relative',
+                transformOrigin: '0% 0%',
+                overflow: 'hidden'
+            }}>
+                <ChildsArea childs={this.block.childs}></ChildsArea>
+            </div>
+                {this.block.isCanEdit() && <Tip text={'拖动调整高度'}><div className="sy-board-resize visible" onMouseDown={e => this.onResize(e)}></div></Tip>}
+            </>
+        }
+        else return <></>
     }
     renderView() {
         var style: CSSProperties = {};
@@ -366,7 +435,18 @@ export class ViewComponent extends BlockView<CardBox> {
                 hasCover = false;
             }
             if (cs?.display == 'inside-cover') {
-                return <div className="relative">
+                var cStyle: CSSProperties = {};
+                if (self.block.board) {
+                    cStyle.position = 'absolute'
+                    cStyle.top = 0;
+                    cStyle.left = 0;
+                    cStyle.right = 0;
+                    cStyle.zIndex = '-1'
+                }
+                else cStyle.position = 'relative';
+                return <div
+                    style={cStyle}
+                >
                     <div className="h-120" style={{
                         borderRadius: '16px 16px 0px 0px',
                         ...coverStyle,
@@ -381,22 +461,33 @@ export class ViewComponent extends BlockView<CardBox> {
                     }} style={{
                         position: 'absolute',
                         top: self.block.cardCoverHeight - 3,
-                        left: 0,
+                        left: self.block.board  ? -30 : 0,
                         height: 6,
-                        right: 0,
+                        right: self.block.board  ? -30 : 0,
                         cursor: 'row-resize',
                         color: 'rgba(55, 53, 47, 0.16)',
                     }}></div>}
-                    <div className="gap-w-50 gap-h-30"><ChildsArea childs={self.block.childs}></ChildsArea></div>
+                    {self.block.board == false && <div className="gap-w-50 gap-h-30">
+                        <ChildsArea childs={self.block.childs}></ChildsArea>
+                    </div>}
                 </div>
             }
             else if (cs?.display == 'inside') {
-                return <div className="padding-w-50 padding-h-30" >
+                return self.block.board == false && <div className="padding-w-50 padding-h-30" >
                     <div ><ChildsArea childs={self.block.childs}></ChildsArea></div>
                 </div>
             }
             else if (cs?.display == 'inside-cover-left') {
-                return <div className="flex flex-full">
+                var cStyle: CSSProperties = {};
+                if (self.block.board) {
+                    cStyle.position = 'absolute'
+                    cStyle.top = 0;
+                    cStyle.left = 0;
+                    cStyle.right = 0;
+                    cStyle.zIndex = '-1';
+                    cStyle.bottom = 0;
+                }
+                return <div style={cStyle} className="flex flex-full">
                     <div className="min-h-60 flex-fixed relative" style={{
                         borderRadius: '16px 0px 0px 16px ',
                         width: (self.block.cardCoverWidth) + '%',
@@ -412,8 +503,8 @@ export class ViewComponent extends BlockView<CardBox> {
                             }}
                             style={{
                                 position: 'absolute',
-                                top: 0,
-                                bottom: 0,
+                                top: self.block.board ? -30 : 0,
+                                bottom: self.block.board ? -30 : 0,
                                 right: -3,
                                 width: 6,
                                 cursor: 'col-resize',
@@ -422,12 +513,23 @@ export class ViewComponent extends BlockView<CardBox> {
                             }}
                         ></div>}
                     </div>
-                    <div className="flex-auto gap-w-50 gap-h-30"><ChildsArea childs={self.block.childs}></ChildsArea></div>
+                    <div className="flex-auto gap-w-50 gap-h-30"> {self.block.board == false && <ChildsArea childs={self.block.childs}></ChildsArea>}</div>
                 </div>
             }
             else if (cs?.display == 'inside-cover-right') {
-                return <div className="flex flex-full">
-                    <div className="flex-auto gap-w-50 gap-h-30"><ChildsArea childs={self.block.childs}></ChildsArea></div>
+                var cStyle: CSSProperties = {};
+                if (self.block.board) {
+                    cStyle.position = 'absolute'
+                    cStyle.top = 0;
+                    cStyle.left = 0;
+                    cStyle.right = 0;
+                    cStyle.zIndex = '-1'
+                    cStyle.bottom = 0;
+                }
+                return <div style={cStyle} className="flex flex-full">
+                    <div className="flex-auto gap-w-50 gap-h-30">
+                        {self.block.board == false && <ChildsArea childs={self.block.childs}></ChildsArea>}
+                    </div>
                     <div className="min-h-60 flex-fixed relative" style={{
                         borderRadius: '0px 16px 16px 0px ',
                         width: self.block.cardCoverWidth + "%",
@@ -443,8 +545,8 @@ export class ViewComponent extends BlockView<CardBox> {
                             }}
                             style={{
                                 position: 'absolute',
-                                top: 0,
-                                bottom: 0,
+                                top: self.block.board  ? -30 : 0,
+                                bottom: self.block.board  ? -30 : 0,
                                 left: -3,
                                 width: 6,
                                 cursor: 'col-resize',
@@ -455,7 +557,7 @@ export class ViewComponent extends BlockView<CardBox> {
                     </div>
                 </div>
             }
-            return <div className="gap-w-50 padding-h-30"><ChildsArea childs={self.block.childs}></ChildsArea></div>
+            return self.block.board == false && <div className="gap-w-50 padding-h-30"><ChildsArea childs={self.block.childs}></ChildsArea></div>
         }
 
         var cs = self.block.cardThemeStyle.coverStyle
@@ -469,7 +571,9 @@ export class ViewComponent extends BlockView<CardBox> {
             // contentStyle.boxShadow = 'none';
             // contentStyle.backgroundColor = 'transparent';
         }
-        console.log('contentStyle', contentStyle, coverStyle);
+        if (self.block.board) {
+            contentStyle.height = self.block.boardHeight;
+        }
         return <div style={style}>
             <div className={"sy-block-view-card" + (this.block.isCanEdit() ? " allow-hover" : "")} style={screenStyle}>
                 <div style={gapStyle}>
@@ -501,16 +605,23 @@ export class ViewComponent extends BlockView<CardBox> {
                         }}>
                             <div style={{ ...contentStyle }} className={"round-16 sy-block-card-box" + (" sy-block-card-box-" + this.block.cardThemeStyle.contentStyle?.color) + (" sy-block-card-box-" + this.block.cardThemeStyle?.contentStyle?.transparency)}>
                                 {renderContent()}
+                                {this.renderBoard()}
                             </div>
                         </div>}
-                        {cs?.display !== 'inside' && <div style={{ ...contentStyle }} className={"round-16 sy-block-card-box" + (" sy-block-card-box-" + this.block.cardThemeStyle.contentStyle?.color) + (" sy-block-card-box-" + this.block.cardThemeStyle?.contentStyle?.transparency)}>
+                        {cs?.display !== 'inside' && <div style={{ ...contentStyle }} className={"relative round-16 sy-block-card-box" + (" sy-block-card-box-" + this.block.cardThemeStyle.contentStyle?.color) + (" sy-block-card-box-" + this.block.cardThemeStyle?.contentStyle?.transparency)}>
                             {renderContent()}
+                            {this.renderBoard()}
                         </div>}
                     </div>
                     <div className="sy-block-view-card-ops flex-center gap-h-10 gap-w-50 ">
-                        {this.block.isCanEdit() && <ToolTip overlay={lst('添加卡片')}>
-                            <div onMouseDown={e => this.block.onAddCardBox(e)} className="size-30 bg-white shadow-s flex-center cursor border circle text-1 link-hover"> <Icon size={18} icon={PlusSvg}></Icon></div>
-                        </ToolTip>}
+                        {this.block.isCanEdit() && <>
+                            <ToolTip overlay={lst('添加文档卡片')}>
+                                <div onMouseDown={e => this.block.onAddCardBox(e)} className="size-30 bg-white shadow-s flex-center cursor border circle text-1 link-hover gap-r-20"><Icon size={18} icon={{ name: "byte", code: 'add' }}></Icon></div>
+                            </ToolTip>
+                            <ToolTip overlay={lst('添加白板卡片')}>
+                                <div onMouseDown={e => this.block.onAddBoardCardBox(e)} className="size-30 bg-white shadow-s flex-center cursor border circle text-1 link-hover"> <Icon size={18} icon={{ name: 'byte', code: 'add-one' }}></Icon></div>
+                            </ToolTip>
+                        </>}
                     </div>
                 </div>
             </div>
