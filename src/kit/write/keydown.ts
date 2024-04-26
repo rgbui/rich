@@ -49,8 +49,10 @@ export function predictKeydown(write: PageWrite, aa: AppearAnchor, event: React.
 
 export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
     var sel = window.getSelection();
+    var br = aa.block.closest(x => !x.isLine)?.frameBlock;
     if (event.key == KeyboardCode.ArrowLeft) {
-        onceAutoScroll({ el: aa.el, feelDis: 60, dis: 120 })
+        if (!br)
+            onceAutoScroll({ el: aa.el, feelDis: 60, dis: 120 })
         if (aa.isSolid && aa.isSolidPos(sel.focusNode, 1)) {
             event.preventDefault();
             write.kit.anchorCursor.onFocusAppearAnchor(aa, { render: true, at: 0 })
@@ -70,7 +72,8 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
         }
     }
     else if (event.key == KeyboardCode.ArrowRight) {
-        onceAutoScroll({ el: aa.el, feelDis: 60, dis: 120 })
+        if (!br)
+            onceAutoScroll({ el: aa.el, feelDis: 60, dis: 120 })
         if (aa.isSolid && aa.isSolidPos(sel.focusNode, 0)) {
             event.preventDefault();
             write.kit.anchorCursor.onFocusAppearAnchor(aa, { render: true, last: true })
@@ -88,6 +91,7 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
         }
     }
     else if (event.key == KeyboardCode.ArrowDown) {
+
         var range = sel.getRangeAt(0);
         var rect = aa.textContent == '' || aa.isSolid ? Rect.fromEle(aa.el) : Rect.fromEle(range);
         onceAutoScroll({ el: aa.el, point: rect.leftMiddle, feelDis: 60, dis: 120 })
@@ -102,7 +106,7 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
             var downAA = aa.visibleDown(rect.leftMiddle.x);
             if (downAA) {
                 event.preventDefault();
-                onceAutoScroll({ el: downAA.el, feelDis: 60, dis: 120 })
+                if (!br) onceAutoScroll({ el: downAA.el, feelDis: 60, dis: 120 })
                 write.kit.anchorCursor.onFocusAppearAnchor(downAA, { render: true, left: rect.left, y: rects.last().bottom + lineHeight / 2 })
             }
         }
@@ -110,7 +114,7 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
     else if (event.key == KeyboardCode.ArrowUp) {
         var range = sel.getRangeAt(0);
         var rect = aa.textContent == '' || aa.isSolid ? Rect.fromEle(aa.el) : Rect.fromEle(range);
-        onceAutoScroll({ el: aa.el, point: rect.leftMiddle, feelDis: 60, dis: 120 });
+        if (!br) onceAutoScroll({ el: aa.el, point: rect.leftMiddle, feelDis: 60, dis: 120 });
         range = sel.getRangeAt(0);
         rect = aa.textContent == '' || aa.isSolid ? Rect.fromEle(aa.el) : Rect.fromEle(range);
         var rects = TextEle.getBounds(aa.el);
@@ -122,7 +126,7 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
             var upAA = aa.visibleUp(rect.leftMiddle.x);
             if (upAA) {
                 event.preventDefault();
-                onceAutoScroll({ el: upAA.el, feelDis: 60, dis: 120 })
+                if (!br) onceAutoScroll({ el: upAA.el, feelDis: 60, dis: 120 })
                 write.kit.anchorCursor.onFocusAppearAnchor(upAA, { render: true, left: rect.left, last: true, y: rects.first().top + lineHeight / 2 })
             }
         }
@@ -135,7 +139,8 @@ export function MoveSelectBlocks(write: PageWrite, blocks: Block[], event: Keybo
         var pre = block.prevFind(x => !x.isLine && !x.isLayout && !x.isCell);
         if (pre) {
             event.preventDefault();
-            onceAutoScroll({ el: pre.el, feelDis: 60, dis: 120 })
+            var br = pre?.closest(x => !x.isLine)?.frameBlock;
+            if (!br) onceAutoScroll({ el: pre.el, feelDis: 60, dis: 120 })
             write.kit.anchorCursor.onSelectBlocks([pre], { render: true })
         }
     }
@@ -144,7 +149,8 @@ export function MoveSelectBlocks(write: PageWrite, blocks: Block[], event: Keybo
         var next = block.nextFind(x => !x.isLine && !x.isLayout && !x.isCell);
         if (next) {
             event.preventDefault();
-            onceAutoScroll({ el: next.el, feelDis: 60, dis: 120 })
+            var br = next?.closest(x => !x.isLine)?.frameBlock;
+            if (!br) onceAutoScroll({ el: next.el, feelDis: 60, dis: 120 })
             write.kit.anchorCursor.onSelectBlocks([next], { render: true })
         }
     }
