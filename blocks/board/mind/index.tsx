@@ -110,7 +110,7 @@ export class FlowMind extends Block {
         var s = gm.getScaling().x;
         var sextendRect = rect.extend(15 / s);
         var extendRect = rect.extend(30 / s);
-        var pathRects = RectUtility.getRectLineRects(rect, 1 / s);
+        var pathRects = RectUtility.getRectLineRects(rect, 2 / s);
         pickers.push(...pathRects.map((pr, i) => {
             var arrows: PointArrow[] = [];
             if (i == 0) arrows = [PointArrow.top, PointArrow.center];
@@ -120,7 +120,6 @@ export class FlowMind extends Block {
             return {
                 type: BoardPointType.path,
                 arrows,
-                // fillOpacity: 0,
                 poly: new Polygon(...pr.points.map(p => gm.transform(p)))
             }
         }))
@@ -137,7 +136,7 @@ export class FlowMind extends Block {
             }
         }))
         pickers.push(...sextendRect.centerPoints.toArray((p, i) => {
-            var type = BoardPointType.mindAdd;
+            var type = BoardPointType.none;
             if (!this.isMindRoot) {
                 if (this.parentKey == 'subChilds') {
                     if (this.mindDirection == 'x' && i == 1) return;
@@ -149,10 +148,10 @@ export class FlowMind extends Block {
                 }
             }
             if (this.mindDirection != 'none') {
-                if (this.mindDirection == 'x' && (i == 0 || i == 2)) type = BoardPointType.connectPort;
-                else if (this.mindDirection == 'y' && (i == 1 || i == 3)) type = BoardPointType.connectPort;
+                if (this.mindDirection == 'x' && (i == 0 || i == 2) && !this.isMindRoot) type = BoardPointType.mindAdd;
+                else if (this.mindDirection == 'y' && (i == 1 || i == 3) && !this.isMindRoot) type = BoardPointType.mindAdd;
             }
-            if (type == BoardPointType.mindAdd) return;
+            if (type == BoardPointType.none) return;
             var arrows: PointArrow[] = [];
             if (i == 0) arrows = [PointArrow.top, PointArrow.center];
             else if (i == 1) arrows = [PointArrow.middle, PointArrow.right];
@@ -258,26 +257,67 @@ export class FlowMind extends Block {
         if (selector.type == BoardPointType.mindAdd) {
             await this.page.onAction(ActionDirective.onMindAddSub, async () => {
                 var keys = 'subChilds';
+                var pa: FlowMind = this;
+                var at: number;
                 if (selector.arrows.every(g => [PointArrow.top, PointArrow.center].includes(g))) {
-                    if (this.isMindRoot) await this.updateProps({ direction: 'y' });
-                    keys = 'subChilds';
+                    if (this.isMindRoot) { await this.updateProps({ direction: 'y' }); keys = 'subChilds'; }
+                    else {
+                        if (this.mindDirection == 'x') {
+                            pa = this.parent as FlowMind;
+                            at = this.at;
+                            keys = this.parentKey;
+                        }
+                        else if (this.mindDirection == 'y') {
+                            keys = 'subChilds';
+                        }
+                    }
                 }
                 else if (selector.arrows.every(g => [PointArrow.bottom, PointArrow.center].includes(g))) {
-                    if (this.isMindRoot) await this.updateProps({ direction: 'y' });
-                    keys = 'otherChilds';
+                    if (this.isMindRoot) { await this.updateProps({ direction: 'y' }); keys = 'otherChilds'; }
+                    else {
+                        if (this.mindDirection == 'x') {
+                            pa = this.parent as FlowMind;
+                            at = this.at + 1;
+                            keys = this.parentKey;
+                        }
+                        else if (this.mindDirection == 'y') {
+                            keys = 'otherChilds';
+                        }
+                    }
                 }
                 else if (selector.arrows.every(g => [PointArrow.middle, PointArrow.right].includes(g))) {
-                    if (this.isMindRoot) await this.updateProps({ direction: 'x' });
-                    keys = 'otherChilds';
+                    if (this.isMindRoot) { await this.updateProps({ direction: 'x' }); keys = 'otherChilds'; }
+                    else {
+                        if (this.mindDirection == 'x') {
+                            keys = 'otherChilds';
+                        }
+                        else if (this.mindDirection == 'y') {
+                            pa = this.parent as FlowMind;
+                            at = this.at + 1;
+                            keys = this.parentKey;
+                        }
+                    }
                 }
                 else if (selector.arrows.every(g => [PointArrow.middle, PointArrow.left].includes(g))) {
-                    if (this.isMindRoot) await this.updateProps({ direction: 'x' });
-                    keys = 'subChilds';
+                    if (this.isMindRoot) {
+                        await this.updateProps({ direction: 'x' });
+                        keys = 'subChilds';
+                    }
+                    else {
+                        if (this.mindDirection == 'x') {
+                            keys = 'otherChilds';
+                        }
+                        else if (this.mindDirection == 'y') {
+                            pa = this.parent as FlowMind;
+                            at = this.at + 1;
+                            keys = this.parentKey;
+                        }
+                    }
                 }
                 var newBlock = await self.page.createBlock('/flow/mind',
                     {},
-                    this,
-                    undefined,
+                    pa,
+                    at,
                     keys
                 );
                 newBlock.mounted(async () => {
@@ -569,6 +609,7 @@ export class FlowMind extends Block {
             else return false;
         })
         if (bs.length > 0) {
+
             var r = bs.findMin(g => g.dis)
             if (r) {
                 if (r.block.mindRoot.mindDirection == 'x') {
@@ -775,7 +816,6 @@ export class FlowMind extends Block {
         var s = gm.getScaling().x;
         var minW = 50 / s;
         var minH = 20 / s;
-        var self = this;
         var isDs = this.isDragSize;
         MouseDragger({
             event,
@@ -872,7 +912,7 @@ export class FlowMind extends Block {
 }
 
 @view('/flow/mind')
-export class FlowMindView extends BlockView<FlowMind>{
+export class FlowMindView extends BlockView<FlowMind> {
     updateFlowLine() {
         if (this.flowMindLine) {
             var { width, height } = this.block.fixedSize;
@@ -908,10 +948,12 @@ export class FlowMindView extends BlockView<FlowMind>{
         if (this.block.deep == 1) text = lst('分支主题');
         else text = lst('子主题')
         var cs = this.block.contentStyle;
+        cs.pointerEvents = 'visible';
         if (this.block.isDragSize == false) {
             delete cs.width;
-            cs.maxWidth = 250;
+            cs.display = 'inline-flex'
         }
+        else { cs.display = 'flex'; }
         if (this.block.align == 'left')
             cs.justifyContent = 'flex-start';
         else if (this.block.align == 'center')
@@ -932,18 +974,15 @@ export class FlowMindView extends BlockView<FlowMind>{
         if (this.block.otherChilds.length == 0 && this.block.subChilds.length == 0) return <></>
         if (this.block.mindRoot.direction == 'x') {
             return <div>
-
                 {this.block.otherChilds.length > 0 && this.block.otherMindSpread == false && <div onMouseDown={e => { e.stopPropagation(); this.block.onMindSpread('otherMindSpread') }} className="pos flex-center sy-flow-mind-spread" style={{ top: '50%', right: -2, transform: 'translate(100%, -50%)' }}><div className="circle cursor flex-center" style={{ width: s, height: s }}>
                     <span style={{ fontSize: 14 }}>{this.block.otherChilds.length}</span>
                 </div>
                 </div>}
-
                 {this.block.subChilds.length > 0 && this.block.subMindSpread == false && <div onMouseDown={e => { e.stopPropagation(); this.block.onMindSpread('subMindSpread') }} className="pos flex-center  sy-flow-mind-spread" style={{ top: '50%', left: -2, transform: 'translate(-100%, -50%)' }}>
                     <div className="circle cursor flex-center" style={{ width: s, height: s }}>
                         <span style={{ fontSize: 14 }}>{this.block.subChilds.length}</span>
                     </div>
                 </div>}
-
             </div>
         }
         else {
@@ -952,7 +991,6 @@ export class FlowMindView extends BlockView<FlowMind>{
                     <span style={{ fontSize: 14 }}>{this.block.otherChilds.length}</span>
                 </div>
                 </div>}
-
                 {this.block.subChilds.length > 0 && this.block.subMindSpread == false && <div onMouseDown={e => { e.stopPropagation(); this.block.onMindSpread('subMindSpread') }} className="pos flex-center  sy-flow-mind-spread" style={{ left: '50%', top: -2, transform: 'translate(-50%,-100%)' }}>
                     <div className="circle cursor flex-center" style={{ width: s, height: s }}>
                         <span style={{ fontSize: 14 }}>{this.block.subChilds.length}</span>
@@ -963,7 +1001,7 @@ export class FlowMindView extends BlockView<FlowMind>{
     }
     mindEl: HTMLElement;
     renderSubChilds() {
-        return <div>
+        return <div style={{ pointerEvents: 'visible' }}>
             {this.block.subMindSpread && <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>}
             {this.block.otherMindSpread && <ChildsArea childs={this.block.blocks.otherChilds}></ChildsArea>}
         </div>
@@ -972,6 +1010,11 @@ export class FlowMindView extends BlockView<FlowMind>{
     renderView() {
         var style = this.block.visibleStyle;
         style.padding = 0;
+        if (this.block.isDragSize == false) {
+            style.width = 250;
+            style.pointerEvents = 'none'
+        }
+
         return <div className='sy-flow-mind' style={style}>
             {this.renderItem()}
             {this.renderSubChilds()}

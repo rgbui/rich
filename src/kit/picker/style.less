@@ -2,13 +2,6 @@
     &-svg {
         pointer-events   : none;
         position         : absolute;
-        // top           : 0px;
-        // left          : 0px;
-        // right         : 0px;
-        // bottom        : 0px;
-        // width         : 100vw;
-        // height        : 100vh;
-
         g {
             >path {
                 fill          : #e16259;
@@ -17,14 +10,12 @@
                 stroke-width  : 4;
                 pointer-events: visible;
             }
-
             >circle {
                 fill          : #fff;
                 stroke        : rgb(0, 0, 0);
                 stroke-width  : 2;
                 stroke-opacity: 0.3;
                 pointer-events: visible;
-
                 &.connect {
                     stroke-width  : 2;
                     fill          : #e16259;
@@ -33,7 +24,6 @@
                     stroke        : var(--text-b-color);
                     stroke-opacity: 0.3;
                     cursor        : pointer;
-
                     &:hover {
                         stop-opacity: 1;
                         stroke-width: 6px;

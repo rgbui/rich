@@ -68,6 +68,7 @@ export class BlockPicker {
         closeBoardEditTool();
     }
     onMoveStart(point: Point) {
+        closeBoardEditTool();
         this.alighLines = [];
         this.blocks.forEach(bl => {
             bl.boardMoveStart(point);
