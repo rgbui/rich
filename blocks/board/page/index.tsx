@@ -27,7 +27,7 @@ export class PageCard extends Block {
         lodash.remove(pickers, g => g.type == BoardPointType.rotatePort)
         return pickers;
     }
-    getVisibleBound(): Rect {
+    getVisibleBound() {
         var fs = this.fixedSize;
         var rect = new Rect(0, 0, fs.width, fs.height);
         rect = rect.transformToRect(this.globalWindowMatrix);
@@ -57,20 +57,31 @@ export class PageCardView extends BlockView<PageCard> {
         style.height = this.block.fixedHeight || 500;
         return <div style={style} className="visible-hover">
             <div className='bg-white shadow-s border-light round w100 h100' >
-                <div className="h100 flex flex-col flex-full">
-                    <div className="flex h-24 remark flex-fixed">
-                        <span className="flex-auto">
-                            {/* <span className="flex-center size-20 item-hover cursor round">
-                                <Icon size={18} icon={ArrowZoomSvg}></Icon>
-                            </span> */}
-                        </span>
-                        <span className="flex-fixed visible h-24 flex">
-                            <Tip text='属性'><span onMouseDown={e => { e.stopPropagation(); this.block.onContextmenu(e.nativeEvent) }} className="flex-center size-20 gap-r-2 item-hover cursor round">
+                <div className="h100 relative">
+                    <div className="visible size-30 flex-center pos-t-r "
+                        onMouseDown={async e => {
+                            e.stopPropagation();
+                            var ele = e.currentTarget as HTMLElement;
+                            ele.classList.remove('visible');
+                            try {
+                                await this.block.onContextmenu(e.nativeEvent)
+                            }
+                            catch (ex) {
+
+                            }
+                            finally {
+                                ele.classList.add('visible');
+                            }
+                        }}
+                        style={{ top: -30 }}>
+                        <div className="size-24 flex-center cursor round   bg-white shadow-s" >
+                            <Tip text='属性'><span className="flex-center item-hover size-24 ">
                                 <Icon size={18} icon={DotsSvg}></Icon>
                             </span></Tip>
-                        </span>
+                        </div>
                     </div>
-                    <div className="padding-w-20  padding-b-20 flex-auto overflow-y" onMouseDown={e => this.mousedown(e)}>
+
+                    <div className="padding-20 border-box  h100  padding-b-20 flex-auto overflow-y" onMouseDown={e => this.mousedown(e)}>
                         <ChildsArea childs={this.block.childs}></ChildsArea>
                     </div>
                 </div>
