@@ -10,7 +10,6 @@ import { ListSvg, NumberListSvg, TriangleSvg } from "../../../component/svgs";
 import { BlockChildKey, BlockUrlResolve } from "../../../src/block/constant";
 import { DropDirection } from "../../../src/kit/handle/direction";
 import { dom } from "../../../src/common/dom";
-import { BlockFactory } from "../../../src/block/factory/block.factory";
 import { util } from "../../../util/util";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { MenuItemView } from "../../../component/view/menu/item";
@@ -52,11 +51,11 @@ export class List extends Block {
     @prop()
     expand: boolean = true;
     display = BlockDisplay.block;
-    onExpand() {
+    async onExpand() {
         /**
          * 当前元素会折叠
          */
-        this.onUpdateProps({ expand: !this.expand }, { range: BlockRenderRange.self });
+        await this.onUpdateProps({ expand: !this.expand }, { range: BlockRenderRange.self });
     }
     get isExpand() {
         return this.blocks.subChilds.length > 0 && !(this.listType == ListType.toggle && this.expand == false)
@@ -147,7 +146,8 @@ export class List extends Block {
     async onGetContextMenus() {
         var items = await super.onGetContextMenus();
         var at = items.findIndex(g => g.name == BlockDirective.link) + 2;
-        items.splice(at, 0,
+        items.splice(at,
+            0,
             {
                 name: 'smallFont',
                 type: MenuItemType.switch,
@@ -230,7 +230,7 @@ export class List extends Block {
 }
 
 @view('/list')
-export class ListView extends BlockView<List>{
+export class ListView extends BlockView<List> {
     renderListType() {
         if (this.block.listType == ListType.circle) return <span style={{
             height: this.block.page.lineHeight,
@@ -267,8 +267,7 @@ export class ListView extends BlockView<List>{
                 else break
             }
             var num = 0;
-            if (list.length > 0)
-                num = (list.last().startNumber || 1) - 1 + list.length;
+            if (list.length > 0) num = (list.last().startNumber || 1) - 1 + list.length;
             else num = (this.block.startNumber || 1) - 1;
             var str = (num + 1).toString();
             if (this.block.listView == ListTypeView.alphabet) {
@@ -293,7 +292,7 @@ export class ListView extends BlockView<List>{
         var text = this.block.listType == ListType.circle ? lst("列表") : lst("数字列表");
         if (this.block.listType == ListType.toggle) text = lst('折叠列表');
         if (this.block.childs.length > 0) return <TextLineChilds childs={this.block.childs}></TextLineChilds>
-        else return <TextArea block={this.block} placeholderEmptyVisible prop='content' placeholder={text}></TextArea>
+        else return <TextArea block={this.block} placeholderEmptyVisible={this.block.isCanEdit() ? true : false} prop='content' placeholder={text}></TextArea>
     }
     renderView() {
         var contentStyle: CSSProperties = this.block.contentStyle;
