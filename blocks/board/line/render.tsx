@@ -3,8 +3,11 @@ import React from "react";
 import { ShyPath } from "../../../src/block/svg/path";
 import { Segment } from "../../../src/block/svg/segment";
 import { Matrix } from "../../../src/common/matrix";
-import { Point } from "../../../src/common/vector/point";
+import { Point, PointArrow, Rect } from "../../../src/common/vector/point";
 import { Line } from "./line";
+import { Block } from "../../../src/block";
+import { BoardBlockSelector } from "../../../src/block/partial/board";
+import { LineSegment } from "../../../src/common/vector/line";
 
 export function renderLine(line: Line) {
     if (!line.page.viewEl) return <></>

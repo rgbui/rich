@@ -11,6 +11,7 @@ import { Point, PointArrow, Rect } from "../../../src/common/vector/point";
 import { Polygon } from "../../../src/common/vector/polygon";
 import { util } from "../../../util/util";
 import { renderLine } from "./render";
+import { cachBrokeLinePoints } from "./util";
 import "./style.less";
 
 export type PortLocation = {
@@ -43,7 +44,7 @@ export class Line extends Block {
                     point: gm.transform(segs.first().point),
                     data: { at: 0 }
                 });
-                for (let i = 0; i < segs.length - 1; i++) {
+                for (let i = 1; i < segs.length - 1; i++) {
                     var current = segs[i];
                     var next = segs[i + 1];
                     if (current && next)
@@ -211,10 +212,12 @@ export class Line extends Block {
         try {
             var segs: Segment[] = [];
             if (this.lineType == 'line') {
+                var fp = this.getPi(this.from);
+                var tp = this.getPi(this.to);
                 var ps: Point[] = [
-                    this.getPi(this.from).point,
+                    fp.point,
                     ...this.points.map(p => new Point(p.x as number, p.y as number)),
-                    this.getPi(this.to).point
+                    tp.point
                 ];
                 var isCorrectLine = true;
                 for (let j = 0; j < ps.length - 1; j++) {
@@ -232,12 +235,7 @@ export class Line extends Block {
                     }
                 }
                 else {
-                    var from = ps.first();
-                    var to = ps.last();
-                    segs.push(Segment.create(from, undefined, undefined));
-                    segs.push(Segment.create(new Point(from.x / 2 + to.x / 2, from.y), undefined, undefined));
-                    segs.push(Segment.create(new Point(from.x / 2 + to.x / 2, to.y), undefined, undefined));
-                    segs.push(Segment.create(to, undefined, undefined));
+                    segs.push(...cachBrokeLinePoints(this, fp, tp));
                 }
             }
             else {
