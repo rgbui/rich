@@ -38,9 +38,7 @@ import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
 import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
 import { ElementType } from "../../../net/element.type";
 import { FieldType } from "../../../blocks/data-grid/schema/type";
-
 import { util } from "../../../util/util";
-import { ActionDirective } from "../../history/declare";
 import { lst } from "../../../i18n/store";
 import { Block } from "../../block";
 import { UA } from "../../../util/ua";
@@ -111,7 +109,7 @@ export class Page$ContextMenu {
                 {
                     name: 'move',
                     text: lst('移动'),
-                    icon: MoveToSvg,
+                    icon: { name: 'byte', code: 'corner-up-right' },
                     label: UA.isMacOs ? "⌘+Shift+P" : "Ctrl+Shift+P"
                 },
                 { name: 'export', iconSize: 16, text: lst('导出'), icon: { name: 'bytedance-icon', code: 'download-one' } },
@@ -163,7 +161,7 @@ export class Page$ContextMenu {
                     label: UA.isMacOs ? "⌘+D" : "Ctrl+D"
                 },
                 {
-                    name: 'move', text: lst('移动'), icon: MoveToSvg,
+                    name: 'move', text: lst('移动'), icon:{ name: 'byte', code: 'corner-up-right' },
                     label: UA.isMacOs ? "⌘+Shift+P" : "Ctrl+Shift+P"
                 },
                 { name: 'export', iconSize: 16, text: lst('导出'), icon: { name: 'bytedance-icon', code: 'download-one' } },
@@ -220,7 +218,7 @@ export class Page$ContextMenu {
                     label: UA.isMacOs ? "⌘+D" : "Ctrl+D"
                 },
                 {
-                    name: 'move', text: lst('移动'), icon: MoveToSvg,
+                    name: 'move', text: lst('移动'), icon:{ name: 'byte', code: 'corner-up-right' },
                     label: UA.isMacOs ? "⌘+Shift+P" : "Ctrl+Shift+P"
                 },
                 { name: 'export', iconSize: 16, text: lst('导出'), icon: { name: 'bytedance-icon', code: 'download-one' } },
@@ -278,7 +276,7 @@ export class Page$ContextMenu {
                 },
                 {
                     name: 'move', text: lst('移动'),
-                    icon: MoveToSvg,
+                    icon: { name: 'byte', code: 'corner-up-right' },
                     label: UA.isMacOs ? "⌘+Shift+P" : "Ctrl+Shift+P"
                 },
                 { name: 'delete', icon: TrashSvg, text: lst('删除'), label: "Del" },
