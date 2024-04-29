@@ -1,4 +1,4 @@
-import { CSSProperties, ReactNode } from "react";
+import { CSSProperties } from "react";
 import { EventsComponent } from "../../component/lib/events.component";
 import React from "react";
 import { AiStartSvg, CheckSvg, CloseSvg, Edit1Svg, PicSvg, PublishSvg, RefreshSvg, TrashSvg } from "../../component/svgs";
@@ -30,10 +30,11 @@ import {
     WritingAssistant,
     getTemplateInstance
 } from "./prompt";
+
 import { parseMarkdownContent } from "../Import-export/mime/markdown/parse";
 import { BlockUrlConstant } from "../../src/block/constant";
 import { List, ListType } from "../../blocks/present/list/list";
-import { onMergeListBlocks } from "./util";
+import { onBlockPickLine, onMergeListBlocks } from "./util";
 import { CanSupportFeature, PayFeatureCheck } from "../../component/pay";
 import { lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
@@ -48,7 +49,7 @@ import { util } from "../../util/util";
 /**
  * The type of the options object that can be passed to the AITool component.
  */
-export type AIToolType = {
+export type AIWriteAssistantProps = {
     block?: Block,
     blocks?: Block[],
     pos?: PopoverPosition,
@@ -57,9 +58,9 @@ export type AIToolType = {
 }
 
 /**
- * The possible status values for the AIAskStatus enum.
+ * The possible status values for the AIWriteStatus enum.
  */
-export enum AIAskStatus {
+export enum AIWriteStatus {
     none,
     /**
      * Will ask a question.
@@ -100,7 +101,7 @@ export enum AIAskStatus {
 /**
  * The AITool component.
  */
-export class AITool extends EventsComponent {
+export class AIWriteAssistant extends EventsComponent {
     constructor(props) {
         super(props);
         this.fvs.on('change', (offset: Point) => {
@@ -129,13 +130,15 @@ export class AITool extends EventsComponent {
         }
         return <div
             className="pos-t-r pn vw100 vh100 overflow-hidden"
-            style={{ zIndex: 2 }}
+            style={{
+                zIndex: popoverLayer.zoom(this)
+            }}
         ><div
             ref={e => this.el = e}
             className="pos"
             style={style}>
                 <div style={{ border: `2px solid var(--text-purple)` }} className="pv min-h-30 bg-white  shadow  round-8">
-                    {this.anwser && [AIAskStatus.selectionAsking, AIAskStatus.selectionAsked].includes(this.status) && <>
+                    {this.anwser && [AIWriteStatus.selectionAsking, AIWriteStatus.selectionAsked].includes(this.status) && <>
                         <div ref={e => this.mdEl = e} className=" padding-w-10 padding-t-10 gap-t-10 max-h-150 overflow-y">
                             <LazyMarkdown md={this.anwser}></LazyMarkdown>
                         </div>
@@ -146,8 +149,8 @@ export class AITool extends EventsComponent {
                             <Icon className={'text-pu'} size={18} icon={AiStartSvg}></Icon>
                         </span>
                         <div className="flex-auto flex">
-                            {([AIAskStatus.asking, AIAskStatus.selectionAsking].includes(this.status)) && <div className=" gap-h-10 flex remark  flex"><S>AI正在写作</S><Loading1></Loading1></div>}
-                            {(![AIAskStatus.asking, AIAskStatus.selectionAsking].includes(this.status)) && <DivInput
+                            {([AIWriteStatus.asking, AIWriteStatus.selectionAsking].includes(this.status)) && <div className=" gap-h-10 flex remark  flex"><S>AI正在写作</S><Loading1></Loading1></div>}
+                            {(![AIWriteStatus.asking, AIWriteStatus.selectionAsking].includes(this.status)) && <DivInput
                                 value={this.ask}
                                 rf={e => this.textarea = e}
                                 onInput={this.onInput}
@@ -156,11 +159,11 @@ export class AITool extends EventsComponent {
                                 placeholder={lst("告诉AI你想写什么...")} ></DivInput>}
                         </div>
                         <span className="gap-h-5 h-30 flex-center flex-fixed gap-l-10 gap-r-10">
-                            {([AIAskStatus.asking, AIAskStatus.selectionAsking].includes(this.status)) && <div className="h-24 flex-center">
+                            {([AIWriteStatus.asking, AIWriteStatus.selectionAsking].includes(this.status)) && <div className="h-24 flex-center">
                                 <span className="gap-r-10 cursor f-14 remark" onMouseDown={e => this.onTry()}><S>重试</S><em className="remark gap-l-5">R</em></span>
                                 <span className="cursor f-14 remark" onMouseDown={e => this.onEsc()}><S>取消</S><em className="remark gap-l-5">ESC</em></span>
                             </div>}
-                            {(![AIAskStatus.asking, AIAskStatus.selectionAsking].includes(this.status)) && <ToolTip overlay={<div>
+                            {(![AIWriteStatus.asking, AIWriteStatus.selectionAsking].includes(this.status)) && <ToolTip overlay={<div>
                                 <div className="flex"><span style={{ color: '#bbb' }}>Enter</span><span className="gap-l-5"><S>发送</S></span></div>
                                 <div className="flex"><span style={{ color: '#bbb' }}>Shift+Enter</span><span className="gap-l-5"><S>换行</S></span></div>
                             </div>}>
@@ -181,7 +184,7 @@ export class AITool extends EventsComponent {
                 <div
                     style={{
                         // border: `2px solid var(--text-purple)`,
-                        display: [AIAskStatus.asking, AIAskStatus.selectionAsking].includes(this.status) ? 'none' : 'block'
+                        display: [AIWriteStatus.asking, AIWriteStatus.selectionAsking].includes(this.status) ? 'none' : 'block'
                     }}
                     ref={e => this.menuView = e}
                     className="gap-t-10 pv border shadow w-300 bg-white   round-8">
@@ -193,7 +196,7 @@ export class AITool extends EventsComponent {
     menuView: HTMLElement;
     onHander = async (item: MenuItem) => {
         var self = this;
-        if ([AIAskStatus.willAsk].includes(this.status)) {
+        if ([AIWriteStatus.willAsk].includes(this.status)) {
             switch (item.name) {
                 case 'continue':
                     var preContent = this.getPrevBlockContent();
@@ -223,7 +226,7 @@ export class AITool extends EventsComponent {
                     break;
             }
         }
-        else if ([AIAskStatus.asked].includes(this.status)) {
+        else if ([AIWriteStatus.asked].includes(this.status)) {
             switch (item.name) {
                 case 'done':
                 case 'cancel':
@@ -253,7 +256,7 @@ export class AITool extends EventsComponent {
                     break;
             }
         }
-        else if ([AIAskStatus.selectionWillAsk].includes(this.status)) {
+        else if ([AIWriteStatus.selectionWillAsk].includes(this.status)) {
             switch (item.name) {
                 case 'improveWrite':
                     var preContent = this.getPrevBlockContent();
@@ -316,7 +319,7 @@ export class AITool extends EventsComponent {
                     break;
             }
         }
-        else if ([AIAskStatus.selectionAsked].includes(this.status)) {
+        else if ([AIWriteStatus.selectionAsked].includes(this.status)) {
             switch (item.name) {
                 case 'replace':
                     var blockDatas = await parseMarkdownContent(this.anwser);
@@ -370,7 +373,6 @@ export class AITool extends EventsComponent {
                             if (newBlocks.length > 0)
                                 newBlocks.last().mounted(() => {
                                     this.page.kit.anchorCursor.onSelectBlocks(newBlocks, { render: true });
-
                                 })
                         })
                         this.close()
@@ -388,7 +390,7 @@ export class AITool extends EventsComponent {
                     break;
             }
         }
-        else if ([AIAskStatus.willAsking].includes(this.status)) {
+        else if ([AIWriteStatus.willAsking].includes(this.status)) {
             switch (item.name) {
                 case 'image':
                     if (await CanSupportFeature(PayFeatureCheck.aiImage, self.page.ws))
@@ -424,9 +426,9 @@ export class AITool extends EventsComponent {
     }
     getItems() {
         var items: MenuItem[] = [];
-        if ([AIAskStatus.willAsk].includes(this.status)) {
+        if ([AIWriteStatus.willAsk, AIWriteStatus.willAsking].includes(this.status)) {
             items = [
-                { text: lst('用AI写作'), type: MenuItemType.text },
+                { text: lst('用AI写作'), type: MenuItemType.text, helpAlign: 'right', helpText: lst('了解诗云AI'), helpUrl: window.shyConfig?.isUS ? "https://help.shy.red/page/62#3m2UwPfji1semDiT92uiyP" : "https://help.shy.live/page/696#1Gbvfw852sj8TNYfPYVXNh" },
                 { name: 'continue', text: lst('用AI续写...'), icon: { name: 'byte', code: 'go-on' } },
                 { type: MenuItemType.divide },
                 { text: lst('基于页面生成'), type: MenuItemType.text },
@@ -453,12 +455,7 @@ export class AITool extends EventsComponent {
                 }
             ];
         }
-        else if ([AIAskStatus.willAsking].includes(this.status)) {
-            items = [
-                { name: 'image', text: lst('生成图片'), icon: PicSvg },
-            ]
-        }
-        else if ([AIAskStatus.asked].includes(this.status)) {
+        else if ([AIWriteStatus.asked].includes(this.status)) {
             items = [
                 { name: 'done', text: lst('完成'), icon: CheckSvg },
                 { name: 'continue', text: lst('继续'), icon: { name: 'byte', code: 'go-on' } },
@@ -467,10 +464,9 @@ export class AITool extends EventsComponent {
                 { name: 'cancel', text: lst('取消'), icon: CloseSvg }
             ]
         }
-        else if ([AIAskStatus.selectionWillAsk].includes(this.status)) {
-
+        else if ([AIWriteStatus.selectionWillAsk, AIWriteStatus.selectionWillAsking].includes(this.status)) {
             items = [
-                { text: lst('编辑优化选择的内容'), type: MenuItemType.text },
+                { text: lst('编辑优化选择的内容'), type: MenuItemType.text, helpAlign: 'right', helpText: lst('了解诗云AI'), helpUrl: window.shyConfig?.isUS ? "https://help.shy.red/page/62#3m2UwPfji1semDiT92uiyP" : "https://help.shy.live/page/696#1Gbvfw852sj8TNYfPYVXNh" },
                 { name: 'improveWrite', text: lst('提升写作'), icon: { name: 'byte', code: 'optimize' }, },
                 { name: 'fix', text: lst('拼写及语法优化'), icon: { name: 'byte', code: 'modify' } },
                 { name: 'explain', text: lst('解释'), icon: { name: 'byte', code: 'transform' } },
@@ -510,13 +506,11 @@ export class AITool extends EventsComponent {
                         { name: 'polish', text: lst('更口语话一些'), icon: Edit1Svg },
                     ]
                 },
+                { type: MenuItemType.divide },
                 { name: 'insertImage', text: lst("生成插图"), icon: PicSvg },
             ];
         }
-        else if ([AIAskStatus.selectionWillAsking].includes(this.status)) {
-            items = [];
-        }
-        else if ([AIAskStatus.selectionAsked].includes(this.status)) {
+        else if ([AIWriteStatus.selectionAsked].includes(this.status)) {
             items = [
                 { name: 'replace', text: lst('替换'), icon: CheckSvg },
                 { name: 'insertBelow', text: lst('插到下面'), icon: Edit1Svg },
@@ -555,12 +549,12 @@ export class AITool extends EventsComponent {
     onInput = (e) => {
         this.ask = e;
         if (this.ask) {
-            if (this.options.block) this.status = AIAskStatus.willAsking;
-            else this.status = AIAskStatus.selectionWillAsking;
+            if (this.options.block) this.status = AIWriteStatus.willAsking;
+            else this.status = AIWriteStatus.selectionWillAsking;
         }
         else {
-            if (this.options.block) this.status = AIAskStatus.willAsk;
-            else this.status = AIAskStatus.selectionWillAsk;
+            if (this.options.block) this.status = AIWriteStatus.willAsk;
+            else this.status = AIWriteStatus.selectionWillAsk;
         }
         if (this.mv) this.mv.forceUpdateItems(this.getItems())
     }
@@ -570,7 +564,7 @@ export class AITool extends EventsComponent {
     }
     textarea: HTMLElement;
     ask: string = '';
-    status: AIAskStatus = AIAskStatus.none;
+    status: AIWriteStatus = AIWriteStatus.none;
     anwser: string = '';
     onEnter = async () => {
         var self = this;
@@ -585,13 +579,12 @@ export class AITool extends EventsComponent {
             }
         }
     }
-    options: AIToolType = {
+    options: AIWriteAssistantProps = {
         block: null,
         pos: null
     }
-    async open(options: AIToolType) {
+    async open(options: AIWriteAssistantProps) {
         if (options.block) this.writer.open(options.block);
-        else this.writer.selection(options.blocks);
         this.fvs.unbind();
         if (!options.pos) {
             options.pos = {
@@ -601,8 +594,8 @@ export class AITool extends EventsComponent {
         }
         if (options.pos.relativeEleAutoScroll) this.fvs.bind(options.pos.relativeEleAutoScroll);
         this.el.style.transform = `translate(${0}px,${0}px)`;
-        if (options.block) this.status = AIAskStatus.willAsk;
-        else this.status = AIAskStatus.selectionWillAsk;
+        if (options.block) this.status = AIWriteStatus.willAsk;
+        else this.status = AIWriteStatus.selectionWillAsk;
         this.visible = true;
         this.ask = options.ask || '';
         this.anwser = '';
@@ -624,7 +617,7 @@ export class AITool extends EventsComponent {
         if (!options?.model) options.model = getAiDefaultModel(this?.page?.ws?.aiConfig?.text)
         this.lastCommand = { ask: this.ask, command: 'text', options: lodash.cloneDeep(options) };
         var self = this;
-        this.status = AIAskStatus.asking;
+        this.status = AIWriteStatus.asking;
         self.anwser = '';
         this.updateView()
         var scope = '';
@@ -641,33 +634,38 @@ export class AITool extends EventsComponent {
                     bs = bs.findAll(g => g.parent == p);
                 }
                 self.writer.page.kit.anchorCursor.onSelectBlocks(bs, { render: true })
-                self.status = AIAskStatus.asked;
+                self.status = AIWriteStatus.asked;
                 self.updateView();
             }
         }
         else {
+            self.writer.ms = [];
             await channel.post('/text/ai/stream', {
                 question: options?.prompt,
                 model: options?.model,
                 async callback(str, done, contoller) {
                     if (contoller) { self.controller = contoller; return }
-                    console.log(str, done);
+                    // console.log(str, done);
                     if (typeof str == 'string') {
                         self.anwser += str;
                         scope += str;
-                        if (done !== true && (str.match(/^[\d]+/) || str.match(/[\d]+$/) || str.match(/^`+/) || str.match(/`+$/))) {
-                            self.writer.accept(undefined, done);
+                        if (done !== true && (scope.length < 10 || scope.match(/```[^\n\r]*$/) || scope.match(/[一二三四五六七八九十]+$/) || scope.match(/[`]+$/) || scope.match(/[#]+$/) || scope.match(/^[\*]+$/) || scope.endsWith('~') || scope.endsWith('-') || scope.endsWith('|') || scope.match(/[\d]+$/))) {
+
                         }
                         else {
                             self.writer.accept(scope, done);
                             scope = '';
                         }
                     }
-                    else self.writer.accept(undefined, done);
+                    else self.writer.accept(scope, done);
                     if (done) {
-                        //console.log('answer', JSON.stringify(self.anwser))
+                        console.log(self.anwser);
+                        await util.delay(200);
                         var bs = self.writer.writedBlocks;
                         if (bs.length > 0) {
+                            await bs.eachAsync(async b => {
+                                await onBlockPickLine(self.page, b, true);
+                            })
                             var p = bs.first().parent;
                             if (bs.some(s => s.url == BlockUrlConstant.List && (s as List).listType == ListType.number)) {
                                 await onMergeListBlocks(self.page, bs);
@@ -675,8 +673,10 @@ export class AITool extends EventsComponent {
                             }
                             self.writer.page.kit.anchorCursor.onSelectBlocks(bs, { render: true })
                         }
-                        self.status = AIAskStatus.asked;
-                        self.updateView();
+                        self.status = AIWriteStatus.asked;
+                        self.updateView(async () => {
+                            await self.focusTextarea(true);
+                        });
                     }
                 }
             });
@@ -687,7 +687,7 @@ export class AITool extends EventsComponent {
         this.lastCommand = { ask: this.ask, command: 'selection', options: lodash.cloneDeep(options) };
         if (!options?.model) options.model = getAiDefaultModel(this?.page?.ws?.aiConfig?.text);
         var self = this;
-        this.status = AIAskStatus.selectionAsking;
+        this.status = AIWriteStatus.selectionAsking;
         self.anwser = '';
         this.updateView()
         if (options?.isNotFound) {
@@ -695,7 +695,7 @@ export class AITool extends EventsComponent {
             if (self.mdEl) {
                 self.mdEl.scrollTop = self.mdEl.scrollHeight
             }
-            self.status = AIAskStatus.selectionAsked;
+            self.status = AIWriteStatus.selectionAsked;
             self.updateView()
         }
         else {
@@ -711,12 +711,10 @@ export class AITool extends EventsComponent {
                         }
                         self.updateView()
                     }
-                    // else self.writer.accept(undefined, done);
                     if (done) {
-                        // console.log('done', JSON.stringify(self.anwser))
-                        self.status = AIAskStatus.selectionAsked;
+                        self.status = AIWriteStatus.selectionAsked;
                         self.updateView(async () => {
-                            await self.focusTextarea();
+                            await self.focusTextarea(true);
                         });
                     }
                 }
@@ -730,8 +728,8 @@ export class AITool extends EventsComponent {
         var ask = options?.prompt;
         if (!ask) return;
         var self = this;
-        if (this.options.block) this.status = AIAskStatus.asking;
-        else this.status = AIAskStatus.selectionAsking;
+        if (this.options.block) this.status = AIWriteStatus.asking;
+        else this.status = AIWriteStatus.selectionAsking;
         this.updateView()
         var r = await channel.post('/http', {
             url: '/text/ai/image',
@@ -745,24 +743,24 @@ export class AITool extends EventsComponent {
             if (Array.isArray(r.data.images)) {
                 if (this.options.block) {
                     self.writer.acceptImages(r.data.images);
-                    this.status = AIAskStatus.asking;
+                    this.status = AIWriteStatus.asking;
                     this.close()
                 }
                 else {
                     self.anwser += r.data.images.map(g => `![${g.filename.slice(0, 10) || 'image'}](${g.url})`).join("\n\n");
-                    this.status = AIAskStatus.selectionAsked;
+                    this.status = AIWriteStatus.selectionAsked;
                     this.updateView();
                 }
             }
             else if (r.data.error) {
                 this.error = r.data.error;
-                if (this.options.block) this.status = AIAskStatus.asking;
-                else this.status = AIAskStatus.selectionAsked;
+                if (this.options.block) this.status = AIWriteStatus.asking;
+                else this.status = AIWriteStatus.selectionAsked;
                 this.updateView();
             }
         }
     }
-    updatePosition(options: AIToolType) {
+    updatePosition(options: AIWriteAssistantProps) {
         this.fvs.unbind();
         this.el.style.transform = `translate(${0}px,${0}px)`
         if (options.pos.relativeEleAutoScroll) this.fvs.bind(options.pos.relativeEleAutoScroll);
@@ -770,6 +768,7 @@ export class AITool extends EventsComponent {
     }
     visible: boolean = false;
     onGlobalMousedown = (event: MouseEvent) => {
+        if ([AIWriteStatus.asking, AIWriteStatus.selectionAsking].includes(this.status)) return;
         if (this.visible == true && this.el) {
             var target = event.target as HTMLElement;
             if (this.el.contains(target)) return;
@@ -786,16 +785,25 @@ export class AITool extends EventsComponent {
         document.removeEventListener('keydown', this.onKeydown, true);
     }
     onKeydown = (event: KeyboardEvent) => {
+        if (event.key != KeyboardCode.Esc && [AIWriteStatus.asking, AIWriteStatus.selectionAsking].includes(this.status)) return;
         if (event.key == KeyboardCode.Esc) {
-            if ([AIAskStatus.asking, AIAskStatus.selectionAsking].includes(this.status)) {
+            if ([AIWriteStatus.asking, AIWriteStatus.selectionAsking].includes(this.status)) {
                 this.onEsc();
+                if (this.status == AIWriteStatus.asking)
+                    this.status = AIWriteStatus.willAsk;
+                else if (this.status == AIWriteStatus.selectionWillAsking) {
+                    this.status = AIWriteStatus.selectionWillAsk;
+                }
+                this.updateView(() => {
+                    this.focusTextarea()
+                })
             }
-            if ([AIAskStatus.willAsk, AIAskStatus.selectionWillAsk].includes(this.status)) {
+            if ([AIWriteStatus.willAsk, AIWriteStatus.asked, AIWriteStatus.selectionAsked, AIWriteStatus.selectionWillAsk].includes(this.status)) {
                 this.close()
             }
         }
         else if (event.key == KeyboardCode.R) {
-            if ([AIAskStatus.asking, AIAskStatus.selectionAsking].includes(this.status)) {
+            if ([AIWriteStatus.asked, AIWriteStatus.selectionAsked].includes(this.status)) {
                 this.onTry();
             }
         }
@@ -821,14 +829,19 @@ export class AITool extends EventsComponent {
             }
             this.fvs.unbind();
             this.visible = false;
-            this.status = AIAskStatus.none;
+            this.status = AIWriteStatus.none;
             this.updateView();
             this.emit('close');
         }
     }
     onTry() {
-        if (this.controller)
-            this.controller.abort()
+        try {
+            if (this.controller)
+                this.controller.abort()
+        }
+        catch (ex) {
+            console.error(ex);
+        }
         if (this.lastCommand) {
             switch (this.lastCommand.command) {
                 case 'image':
@@ -844,23 +857,43 @@ export class AITool extends EventsComponent {
         }
     }
     onEsc() {
-        if (this.controller)
-            this.controller.abort()
+        try {
+            if (this.controller)
+                this.controller.abort()
+        }
+        catch (ex) {
+            console.error(ex)
+        }
     }
-    async focusTextarea() {
+    autoScrollPage() {
+        if (this.el && this.page) {
+            var r = Rect.fromEle(this.el);
+            if (r.bottom > window.innerHeight) {
+                this.page.getScrollDiv().scrollTop = this.page.getScrollDiv().scrollTop + r.bottom - window.innerHeight + 50
+            }
+            else if (r.top < 48) {
+                this.page.getScrollDiv().scrollTop = this.page.getScrollDiv().scrollTop - 48 - r.top
+            }
+        }
+    }
+    async focusTextarea(isSelectMenu?: boolean) {
         await util.delay(100);
+        this.autoScrollPage();
         if (this.textarea) {
             var sel = window.getSelection();
             sel.collapse(this.textarea, 0);
         }
+        if (isSelectMenu) {
+            if (this.mv) this.mv.onDownFocusItem()
+        }
     }
 }
 
-export var aiTool: AITool;
-export async function useAITool(options: AIToolType) {
-    aiTool = await Singleton(AITool);
+export var aiTool: AIWriteAssistant;
+export async function useAIWriteAssistant(options: AIWriteAssistantProps) {
+    aiTool = await Singleton(AIWriteAssistant);
     await aiTool.open(options);
-    return new Promise((resolve: (d: { ask: string, aiTool: AITool }) => void, reject) => {
+    return new Promise((resolve: (d: { ask: string, aiTool: AIWriteAssistant }) => void, reject) => {
         aiTool.only('save', d => {
             resolve(d)
         })
