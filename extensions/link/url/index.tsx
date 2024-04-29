@@ -13,11 +13,11 @@ import M from "../../../src/assert/img/163.music.ico";
 import { lst } from "../../../i18n/store";
 import { Page } from "../../../src/page";
 import { channel } from "../../../net/channel";
-import "./style.less";
 import { BlockUrlConstant } from "../../../src/block/constant";
+import "./style.less";
 
 class InputUrlSelector extends InputTextPopSelector {
-    onClose(): void {
+    onClose() {
         this.close();
     }
     private url: string;
@@ -179,7 +179,7 @@ class InputUrlSelector extends InputTextPopSelector {
     }
     renderUrls() {
         return this.urlTexts.map((u, i) => {
-            return <div className={'flex item-hover padding-w-10 padding-h-5 cursor' + (i == this.selectIndex ? " item-hover-focus" : "")} key={u.name} onMouseDown={e => this.onSelect(u)}>
+            return <div className={'flex item-hover gap-w-5 padding-w-5 round padding-h-5 cursor' + (i == this.selectIndex ? " item-hover-focus" : "")} key={u.name} onMouseDown={e => this.onSelect(u)}>
                 <span className="flex-fixed size-24 flex-center item-hover round "><Icon size={18} icon={u.icon}></Icon></span>
                 <span className="flex-auto">{u.text}</span>
             </div>
