@@ -34,7 +34,7 @@ export class FlowView extends React.Component<{ flow: Flow, onChange: () => Prom
             <div className="gap-w-10">{this.renderCommands()}</div>
             <div className="flex remark item-hover round padding-w-5 gap-w-10 h-30 cursor " onMouseDown={e => this.props.flow.openAddStep(e)} ><span className="flex-center    round"><Icon size={20} icon={PlusSvg}></Icon><span><S>添加下一步</S></span></span></div>
             <Divider></Divider>
-            <div className="flex padding-w-5 gap-w-10 h-30 ">
+            <div className="flex padding-w-5 gap-w-5 h-30 ">
                 <HelpText url={window.shyConfig?.isUS?"https://help.shy.red/page/73#pdNvMSxKmxCYX6Q4dAyHm3":"https://help.shy.live/page/2002#sr8s6iSaarGuvkhgkuRQar"}><S>了解如何编辑按扭动作</S></HelpText>
             </div>
         </div>
