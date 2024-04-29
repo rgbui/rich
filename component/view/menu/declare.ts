@@ -44,12 +44,13 @@ export type MenuItem<T = string> = {
     /**
      * 只有在type为 MenuItemType.help 时才有效
      */
-    helpInline?:boolean,
+    helpInline?: boolean,
     /**
      * 增加一个tip
      */
     helpText?: string,
     helpUrl?: string,
+    helpAlign?: 'left' | 'right',
     visible?: boolean | ((items: MenuItem[], item: MenuItem) => boolean),
     drag?: boolean,
     btns?: {

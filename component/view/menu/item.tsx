@@ -47,7 +47,7 @@ export class MenuItemView extends React.Component<{
         this.props?.click(item, event, name);
     }
     hover: boolean = false;
-    mouseenter(item: MenuItem, event: MouseEvent,cb?:()=>void) {
+    mouseenter(item: MenuItem, event: MouseEvent, cb?: () => void) {
         if (this.props.parent.free) return;
         this.hover = true;
         this.forceUpdate(() => {
@@ -70,7 +70,7 @@ export class MenuItemView extends React.Component<{
                         position: isFixed ? 'fixed' : "absolute"
                     });
             }
-            if(cb)cb();
+            if (cb) cb();
         });
     }
     mouseleave(item: MenuItem, event: MouseEvent) {
@@ -176,9 +176,10 @@ export class MenuItemView extends React.Component<{
             {item.type == MenuItemType.text && <div className='shy-menu-box-item-text flex'>
                 <span className="flex-auto flex">
                     <span>{item.text}</span>
-                    {item.helpUrl && <span className="flex-fixed h-20 flex"><HelpText onMouseDown={e => e.stopPropagation()} url={item.helpUrl}>{item.helpText}</HelpText></span>}
+                    {item.helpUrl && item.helpAlign != 'right' && <span className="flex-fixed h-20 flex"><HelpText onMouseDown={e => e.stopPropagation()} url={item.helpUrl}>{item.helpText}</HelpText></span>}
                 </span>
                 {item.label && <label className="flex-fixed">{item.label}</label>}
+                {item.helpUrl && item.helpAlign == 'right' && <span className="flex-fixed h-20 flex"><HelpText onMouseDown={e => e.stopPropagation()} url={item.helpUrl}>{item.helpText}</HelpText></span>}
             </div>}
             {item.type == MenuItemType.user && <div onMouseDown={e => this.select(item, e.nativeEvent)} className="shy-menu-box-item-user"><Avatar userid={item.userid} showName size={item.size || 30}></Avatar></div>}
             {item.type == MenuItemType.switch && <div className='shy-menu-box-item-switch'>
