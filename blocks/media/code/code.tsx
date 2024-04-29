@@ -190,8 +190,8 @@ export class TextCodeView extends BlockView<TextCode>{
     renderView() {
         var label = CodeMirrorModes.filter(g => g.abled).find(g => g.mode == this.block.language)?.label || '纯文本';
         var s = {
-            '--code-mirror-font-size': this.block.page.fontSize + 'px',
-            '--code-mirror-line-height': this.block.page.lineHeight + 'px'
+            '--code-mirror-font-size': this.block.page.fontSize ,
+            '--code-mirror-line-height': this.block.page.lineHeight 
         } as any;
 
         return <div style={this.block.visibleStyle}>
