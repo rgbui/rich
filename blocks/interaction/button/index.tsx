@@ -241,7 +241,8 @@ export class BlockButtonView extends BlockView<BlockButton> {
     dragBlock(event: React.MouseEvent) {
         DragBlockLine(this.block, event);
     }
-    didMount(): void {
+    didMount()
+    {
         this.load()
     }
     async load() {

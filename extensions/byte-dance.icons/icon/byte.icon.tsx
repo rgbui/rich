@@ -23,7 +23,11 @@ export default class ByteIcon extends React.Component<{
             colors: [color, 'none', color, color, color, color, color, color]
         })
         var cs = util.covertToArray(this.props.className);
-        return <span className={cs.join(' ')} style={{
+        return <span className={cs.join(' ')} onClick={e => {
+            this.props.onClick && this.props.onClick(e);
+        }} onMouseDown={e => {
+            this.props.onMouseDown && this.props.onMouseDown(e);
+        }} style={{
             ...(this.props.style || {})
         }} dangerouslySetInnerHTML={{ __html: d }}></span>
     }
