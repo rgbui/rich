@@ -23,7 +23,6 @@ import { Matrix } from '../common/matrix';
 import { Page$ContextMenu } from './partial/contextmenu';
 import { Kit } from '../kit';
 import { channel } from '../../net/channel';
-import { TableSchema } from '../../blocks/data-grid/schema/meta';
 import { Title } from '../../blocks/interaction/title';
 import { AppearAnchor } from '../block/appear';
 
@@ -226,9 +225,13 @@ export class Page extends Events<PageDirective> {
             console.error(ex);
         }
     }
-    setPaddingBottom(paddingBottom: number = 200) {
-        if (this.contentEl) {
-            this.contentEl.style.paddingBottom = paddingBottom + 'px';
+    setPaddingBottom(paddingBottom?: number) {
+        if (this.pageLayout?.type == PageLayoutType.doc || this.pageLayout?.type == PageLayoutType.ppt) {
+            if (this.contentEl) {
+                if (typeof paddingBottom == 'number')
+                    this.contentEl.style.paddingBottom = paddingBottom + 'px';
+                else this.contentEl.style.paddingBottom = '';
+            }
         }
     }
     getPageFrame() {

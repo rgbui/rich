@@ -36,7 +36,7 @@ import {
 import { onPaste } from "./paste";
 import { AutoInputStore, InputForceStore, InputStore } from "./store";
 import { AiInput } from "./ai";
-import { useAITool } from "../../../extensions/ai";
+import { useAIWriteAssistant } from "../../../extensions/ai";
 import { channel } from "../../../net/channel";
 import { BlockSelectorItem } from "../../../extensions/block/delcare";
 import { BlockRenderRange } from "../../block/enum";
@@ -853,7 +853,7 @@ export class PageWrite {
     async onAskAi(rowBlocks: Block[]) {
         this.kit.anchorCursor.onSelectBlocks(rowBlocks, { render: true });
         forceCloseTextTool()
-        useAITool({ blocks: rowBlocks });
+        useAIWriteAssistant({ blocks: rowBlocks });
         this.kit.anchorCursor.onSelectBlocks(rowBlocks, { render: true });
     }
 }

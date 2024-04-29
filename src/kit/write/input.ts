@@ -137,7 +137,6 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                     else {
                         var nbs = await row.parent.appendArrayBlockData([{ url: rule.url, createSource: 'InputBlockSelector' }, { url: BlockUrlConstant.TextSpan }], row.at + 1, row.parentKey)
                         newBlock = nbs.last();
-                        console.log('neeee', nbs);
                         newBlock.mounted(() => {
                             write.kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true })
                         });

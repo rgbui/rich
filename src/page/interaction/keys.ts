@@ -1,4 +1,5 @@
 import { Page } from "..";
+import { useAIWriteAssistant } from "../../../extensions/ai";
 import { UA } from "../../../util/ua";
 import { Block } from "../../block";
 import { findBlockAppear } from "../../block/appear/visible.seek";
@@ -224,4 +225,14 @@ export function PageKeys(
             }
         }
     );
+    keyboardPlate.listener(
+        kt => kt.isMetaOrCtrl(KeyboardCode.J),
+        async (ev, kt) => {
+            if (ev.key.toLowerCase() == KeyboardCode.J.toLowerCase()) {
+                if (page.kit.anchorCursor.currentSelectedBlocks.length > 0) {
+                    useAIWriteAssistant({ blocks: page.kit.anchorCursor.currentSelectedBlocks.map(b=>b) })
+                }
+            }
+        }
+    )
 }

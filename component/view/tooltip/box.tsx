@@ -17,7 +17,7 @@ export class ToolTipOverlay extends React.Component {
         })
     }
     render() {
-      
+
         if (this.visible !== true) return <div ref={e => this.el = e} className="shy-box-tip" style={{ display: 'none', ...this.boxStyle }}></div>
         var ov = typeof this.overlay == 'function' ? this.overlay() : this.overlay;
         return <div className="shy-box-tip" ref={e => this.el = e} style={{
@@ -94,7 +94,7 @@ export class ToolTipOverlay extends React.Component {
                 if (r) {
                     var rt = Rect.fromEle(r as HTMLElement);
                     rt.move(0, 0 - (r as HTMLElement).scrollTop);
-                    console.log(rt, tipRect, r);
+                    // console.log(rt, tipRect, r);
                     tipRect.moveTo(tipRect.x - rt.x, tipRect.y - rt.y);
                     windowRect.moveTo(windowRect.x - rt.x, windowRect.y - rt.y);
                     overlayRect.moveTo(overlayRect.x - rt.x, overlayRect.y - rt.y);
@@ -225,7 +225,7 @@ export class BoxTip extends React.Component<{
     onMouseLeave?: (el: HTMLElement) => void,
     cacOverEle?: (el: HTMLElement) => HTMLElement,
     align?: 'left' | 'right' | 'center',
-}>{
+}> {
     el: HTMLElement;
     componentDidMount() {
         if (!this.props.overlay) return;

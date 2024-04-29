@@ -204,7 +204,7 @@ export class PageBar extends React.Component<{ page: Page }> {
         var isSearch: boolean = true;
         var isPublish: boolean = true;
         var isContextMenu: boolean = true;
-        var isAi: boolean = this.props.page.ws?.aiConfig?.aiSearch;
+        // var isAi: boolean = this.props.page.ws?.aiConfig?.aiSearch;
         if (!this.props.page.isSign) {
             isPublish = false;
         }
@@ -228,7 +228,7 @@ export class PageBar extends React.Component<{ page: Page }> {
             {isField && <span onMouseDown={e => this.props.page.onOpenFormMenu(e)} ><Icon  size={18} icon={{ name: 'bytedance-icon', code: 'setting-one' }}></Icon></span>}
             {isMember && <span onMouseDown={e => this.props.page.onOpenMember(e)} ><Icon  size={18} icon={MemberSvg}></Icon></span>}
             {isSearch && <span onMouseDown={async e => { await useSearchBox({ ws: this.props.page.ws }) }}><Icon  size={18} icon={SearchSvg}></Icon></span>}
-            {isAi && <span onMouseDown={async e => { await useAISearchBox({ ws: this.props.page.ws }) }}><Icon  size={18} icon={AiStartSvg}></Icon></span>}
+            {/* {isAi && <span onMouseDown={async e => { await useAISearchBox({ ws: this.props.page.ws }) }}><Icon  size={18} icon={AiStartSvg}></Icon></span>} */}
             {isPublish && <span onMouseDown={e => this.props.page.onOpenPublish(e)} ><Icon  size={18} icon={PublishSvg}></Icon></span>}
             {isContextMenu && <span onMouseDown={e => this.props.page.onPageContextmenu(e)} ><Icon  size={18} icon={DotsSvg}></Icon></span>}
             {!isCanEdit && ws.access == 0 && !ws.isMember && <span className="size-30 gap-r-30"><Avatar size={32} userid={user.id}></Avatar></span>}

@@ -223,6 +223,7 @@ export class Block$LifeCycle {
         try {
             if (!this.pattern) this.pattern = new Pattern(this);
             for (var n in data) {
+                if (typeof data[n] == 'undefined') continue;
                 if (n == 'blocks') continue;
                 else if (n == 'pattern') await this.pattern.load(data[n]);
                 else await this.setPropData(n, data[n]);

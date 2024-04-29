@@ -331,5 +331,15 @@ export var util = {
             }
         }
         return array;
-    }
+    },
+    countOccurrences(text, char) {
+        // 使用split方法分割字符串，得到一个数组
+        var arr = text.split(char);
+        // 数组长度减1就是char出现的次数
+        var count = arr.length - 1;
+        // 如果text以char开头或结尾，需要修正count
+        if (text.startsWith(char)) count++;
+        if (text.endsWith(char)) count++;
+        return count;
+      }
 }

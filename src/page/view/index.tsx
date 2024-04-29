@@ -22,7 +22,7 @@ import { ActionDirective } from "../../history/declare";
 import { Block } from "../../block";
 import { PageDirective } from "../directive";
 import { PageBar } from "./bar";
-import { useAITool } from "../../../extensions/ai";
+import { useAIWriteAssistant } from "../../../extensions/ai";
 import { lst } from "../../../i18n/store";
 import { S } from "../../../i18n/view";
 import { util } from "../../../util/util";
@@ -202,7 +202,7 @@ export class PageView extends Component<{ page: Page }> {
                         this.page.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
                         var title = this.page.getPageDataInfo()?.text;
                         if (config?.useAi)
-                            useAITool({
+                            useAIWriteAssistant({
                                 block: newBlock,
                                 isRun: true,
                                 ask: title ? lst('以{title}为主题写一份不少于1000字文档', { title }) : lst('写一份文档不少于1000字')
