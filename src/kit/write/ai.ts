@@ -1,5 +1,5 @@
 import { PageWrite } from ".";
-import { useAITool } from "../../../extensions/ai";
+import { useAIWriteAssistant } from "../../../extensions/ai";
 import { AppearAnchor } from "../../block/appear";
 
 export function AiInput(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
@@ -11,7 +11,7 @@ export function AiInput(write: PageWrite, aa: AppearAnchor, event: React.Keyboar
         var sel = window.getSelection();
         if (sel.focusOffset == 0 && aa.isRowStart && !aa.isSolid) {
             var block = aa.block.closest(x => x.isBlock);
-            useAITool({ block })
+            useAIWriteAssistant({ block })
             return true;
         }
     }

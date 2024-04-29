@@ -3,61 +3,54 @@ import { EventsComponent } from "../../component/lib/events.component";
 import { channel } from "../../net/channel";
 import { PopoverSingleton } from "../../component/popover/popover";
 import { PopoverPosition } from "../../component/popover/position";
-import { Avatar } from "../../component/view/avator/face";
-import { UserBox } from "../../component/view/avator/user";
 import { util } from "../../util/util";
 import { marked } from "marked";
 import { AskTemplate, getTemplateInstance } from "../ai/prompt";
 import { Divider } from "../../component/view/grid";
 import { isMobileOnly } from "react-device-detect";
 import { lst } from "../../i18n/store";
-
-import { LinkPageItem, LinkWs, getPageIcon } from "../../src/page/declare";
+import { LinkPageItem, LinkWs, getPageIcon, getPageText } from "../../src/page/declare";
 import { Icon } from "../../component/view/icon";
-import { Input } from "../../component/view/input";
-import { AiStartSvg, CloseSvg, DotsSvg, DuplicateSvg, TrashSvg } from "../../component/svgs";
+import { AiStartSvg, DuplicateSvg, PublishSvg, RefreshSvg } from "../../component/svgs";
 import { S } from "../../i18n/view";
-import { useSelectMenuItem } from "../../component/view/menu";
-import { Rect } from "../../src/common/vector/point";
 import { getWsContext } from "../../net/ai/robot";
-import "./style.less";
 import { CopyAlert } from "../../component/copy";
 import { getAiDefaultModel } from "../../net/ai/cost";
-
-var messages: { id: string, userid?: string, date: Date, content: string, refs?: { blockIds: string[], page: LinkPageItem, elementUrl: string }[] }[] = [];
+import { ToolTip } from "../../component/view/tooltip";
+import { DivInput } from "../../component/view/input/div";
+import { Button } from "../../component/view/button";
+const AI_SEARCH_MESSAGES = 'AI_SEARCH_MESSAGES';
+import "./style.less";
 
 export class AISearchBox extends EventsComponent {
+    messages: { id: string, userid?: string, asking?: boolean, prompt?: string, date: Date, content: string, refs?: { blockIds: string[], page: LinkPageItem, elementUrl: string }[] }[] = [];
     renderMessages() {
-        return messages.map(msg => {
-            return <div key={msg.id} className="visible-hover">
-                {msg.userid && <UserBox userid={msg.userid}>{(user) => {
-                    return <div className="flex flex-top gap-h-10">
-                        <div className="flex-fixed gap-r-10">
-                            <Avatar size={30} user={user}></Avatar>
-                        </div>
-                        <div className="flex-atuo">
-                            <div className="flex">
-                                <span className="flex-fixed">{user.name}</span>
-                                <span className="flex-auto gap-l-10 remark">{util.showTime(msg.date)}</span>
-                            </div>
-                            <div dangerouslySetInnerHTML={{ __html: msg.content }}>
-                            </div>
-                        </div>
+        return this.messages.map(msg => {
+            return <div key={msg.id}>
+
+                {msg.userid && <div className="flex-end">
+                    <div style={{ maxWidth: '80%' }} className="gap-h-20   padding-10 item-hover-focus  round-16">
+                        <div dangerouslySetInnerHTML={{ __html: msg.content }}></div>
                     </div>
-                }}</UserBox>}
-                {!msg.userid && <div className="gap-h-20 relative gap-w-30 padding-15 border shadow round" >
-                    <div className="pos visible" style={{ top: 0, right: 0 }}><span onMouseDown={e => { CopyAlert(msg.content, lst('已复制')) }} className="flex-center size-24 item-hover round cursor"><Icon size={18} icon={DuplicateSvg}></Icon></span></div>
-                    <div dangerouslySetInnerHTML={{ __html: msg.content }}>
+                </div>}
+
+                {!msg.userid && <div style={{ maxWidth: '80%' }} className="gap-h-20 padding-10 border-light shadow-s  round-16" >
+                    <div className="pos visible" style={{ top: 5, right: 5 }}><span onMouseDown={e => { CopyAlert(msg.content, lst('已复制')) }} className="flex-center size-24 item-hover round cursor remark"><Icon size={16} icon={DuplicateSvg}></Icon></span></div>
+                    <div className="break-all gap-h-10 md" dangerouslySetInnerHTML={{ __html: msg.content }}>
                     </div>
-                    {msg.refs && msg.refs.length > 0 && <div className="f-12 remark"><S>引用页面</S></div>}
-                    {msg.refs?.map(rf => {
-                        return <div className="flex" key={rf.page?.id}>
-                            <span onMouseDown={e => this.openPage(rf)} className="flex item-hover round gap-r-5"><Icon size={16} icon={getPageIcon(rf.page)}></Icon><span>{rf.page.text}</span></span>
-                            {rf.blockIds.length > 1 && <span className="flex flex-fixed ">{rf.blockIds.map((b, i) => {
-                                return <em onMouseDown={e => this.openPage(rf, b)} className="bg-hover bg-p-light text-p  padding-w-3 round gap-w-5 cursor" key={b}>{i}</em>
-                            })}</span>}
-                        </div>
-                    })}
+                    {msg.asking == false && <div> {msg.refs && msg.refs.length > 0 && <div className="f-12 remark"><S>引用页面</S></div>}
+                        {msg.refs?.map(rf => {
+                            return <div className="flex" key={rf.page?.id}>
+                                <span onMouseDown={e => this.openPage(rf)} className="flex item-hover round gap-r-5 padding-w-3 "><Icon size={16} icon={getPageIcon(rf.page)}></Icon><span className="gap-l-5">{getPageText(rf.page)}</span></span>
+                                {rf.blockIds.length > 1 && <span className="flex flex-fixed ">{rf.blockIds.map((b, i) => {
+                                    return <em onMouseDown={e => this.openPage(rf, b)} className="bg-hover bg-p-light text-p  padding-w-3 round gap-w-5 cursor" key={b}>{i}</em>
+                                })}</span>}
+                            </div>
+                        })}
+                        <div className="flex r-gap-r-20 gap-h-10">
+                            <Button size="small" onMouseDown={e => { CopyAlert(msg.content, lst('已复制')) }} ghost icon={DuplicateSvg}><S>复制</S></Button>
+                            <Button size="small" onMouseDown={e => { this.tryAgain(msg) }} ghost icon={RefreshSvg} ><S>重新尝试</S></Button>
+                        </div></div>}
                 </div>}
             </div>
         })
@@ -67,77 +60,83 @@ export class AISearchBox extends EventsComponent {
         page: LinkPageItem<{}>;
         elementUrl: string;
     }, blockId?: string) {
-
         if (!blockId) blockId = page.blockIds[0];
         channel.air('/page/open', { elementUrl: page.elementUrl, config: { force: true, blockId: blockId } })
         this.emit('close');
     }
     async openProperty(event: React.MouseEvent) {
-        var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, [{ text: lst('清空'), name: 'trash', icon: TrashSvg }]);
-        if (r) {
-            if (r.item.name == 'trash') {
-                messages = [];
-                this.forceUpdate();
-            }
-        }
+        this.messages = [];
+        this.forceUpdate();
+        await channel.act('/cache/set', { key: this.getCacheKey(), value: this.messages })
     }
     render() {
         return <div className={"bg-white  round flex flex-col flex-full" + (isMobileOnly ? " vw100-20" : " w-800 ")}>
             <div className="padding-w-10 flex  padding-h-5">
                 <span className="size-24 flex-center">
-                    <Icon icon={AiStartSvg}></Icon>
+                    <Icon className={'text-pu'} size={18} icon={AiStartSvg}></Icon>
                 </span>
-                <span className="remark flex-auto text-overflow">
+                <span className="text-1 flex-auto text-overflow">
                     {lst('智能搜索')}
                 </span>
                 <span className="flex-fixed flex">
-                    <span onMouseDown={e => this.openProperty(e)} className="flex-center size-24 item-hover round cursor">
-                        <Icon icon={DotsSvg} size={16}></Icon>
-                    </span>
-                    <span onMouseDown={e => this.emit('close')} className="flex-center size-24 item-hover round cursor">
-                        <Icon icon={CloseSvg} size={14}></Icon>
+                    <span onMouseDown={e => this.openProperty(e)} className="flex-center remark size-24 item-hover round cursor">
+                        <Icon icon={{ name: 'byte', code: 'clear' }} size={16}></Icon>
                     </span>
                 </span>
             </div>
             <Divider></Divider>
-            <div className="padding-w-10 min-h-120 max-h-400 overflow-y" ref={e => this.scrollEl = e}>
+            <div style={{ paddingBottom: 50 }} className="padding-w-30  min-h-300 max-h-400 overflow-y" ref={e => this.scrollEl = e}>
                 {this.renderMessages()}
             </div>
-            <Divider></Divider>
-            <div className="flex flex-top padding-w-10 gap-h-10">
-                <div className="flex-auto "><Input
-                    value={this.prompt}
-                    ref={e => this.textarea = e}
-                    onChange={e => this.prompt = e}
-                    onEnter={e => this.send()}
-                ></Input></div>
+            <div className="flex gap-w-10 padding-w-5  min-h-30  border round-16 gap-h-5">
+                <div className="flex-auto ">
+                    <DivInput
+                        value={this.prompt}
+                        rf={e => this.textarea = e}
+                        onInput={e => { this.prompt = e }}
+                        onEnter={e => this.send()}
+                        className='min-h-20 l-20'
+                        placeholder={lst("告诉AI你想问什么...")} ></DivInput>
+                </div>
+                <ToolTip overlay={<div>
+                    <div className="flex"><span style={{ color: '#bbb' }}>Enter</span><span className="gap-l-5"><S>发送</S></span></div>
+                    <div className="flex"><span style={{ color: '#bbb' }}>Shift+Enter</span><span className="gap-l-5"><S>换行</S></span></div>
+                </div>}><div onMouseDown={e => this.send()} className="flex-fixed text-1 size-24 flex-center item-hover round">
+                        <Icon size={16} icon={PublishSvg}></Icon>
+                    </div>
+                </ToolTip>
             </div>
         </div>
     }
-    textarea: Input;
+    textarea: HTMLElement;
     scrollEl: HTMLElement;
     prompt: string = '';
-    async send() {
+    async tryAgain(message: any) {
+        this.prompt = message.prompt;
+        await this.send(true);
+    }
+    async send(isTry?: boolean) {
         try {
             var self = this;
             var prompt = this.prompt;
             this.prompt = '';
-            this.textarea.updateValue('');
+            this.textarea.innerHTML = '';
             var u = channel.query('/query/current/user');
             var sender = { id: util.guid(), userid: u.id, date: new Date(), content: prompt }
-            messages.push(sender)
+            if (isTry !== true)
+                this.messages.push(sender)
             this.forceUpdate(() => {
                 if (this.scrollEl) {
                     this.scrollEl.scrollTop = this.scrollEl.scrollHeight;
                 }
             });
-            var cb = { id: util.guid(), date: new Date(), content: '', refs: [] };
-            messages.push(cb);
+            var cb = { id: util.guid(), prompt, date: new Date(), asking: true, content: '', noAnswer: false, refs: [] };
+            this.messages.push(cb);
             this.forceUpdate();
             var r = await getWsContext(prompt);
             if (r.context) {
-
                 cb.refs = r.refs;
+                console.log(r, 'rr');
                 var text = '';
                 cb.content = `<span class='typed-print'></span>`;
                 var content = getTemplateInstance(AskTemplate, {
@@ -158,6 +157,7 @@ export class AISearchBox extends EventsComponent {
                             });
                             if (done) {
                                 self.scrollEl.scrollTop = self.scrollEl.scrollHeight;
+                                cb.asking = false;
                                 resolve(true)
                             }
                         }
@@ -166,6 +166,8 @@ export class AISearchBox extends EventsComponent {
             }
             else {
                 cb.content = lst('没有搜到关联的答案');
+                cb.noAnswer = true;
+                cb.asking = false;
             }
         }
         catch (ex) {
@@ -177,18 +179,21 @@ export class AISearchBox extends EventsComponent {
                     this.scrollEl.scrollTop = this.scrollEl.scrollHeight;
                 }
             });
+            await channel.act('/cache/set', { key: this.getCacheKey(), value: this.messages })
         }
     }
-
-
+    getCacheKey() {
+        return AI_SEARCH_MESSAGES + this.ws.id;
+    }
     ws: LinkWs;
     async open(options: { ws: any }) {
         this.ws = options.ws;
+        var rs = await channel.query('/cache/get', { key: this.getCacheKey() });
+        if (Array.isArray(rs)) this.messages = rs;
         if (this.scrollEl) {
             this.scrollEl.scrollTop = this.scrollEl.scrollHeight;
         }
-        //console.log(this.messages,'messages...');
-        // this.forceUpdate();
+        this.forceUpdate();
     }
 }
 
@@ -196,7 +201,7 @@ export async function useAISearchBox(options: { ws: LinkWs }) {
     var pos: PopoverPosition = { center: true, centerTop: 100 };
     let popover = await PopoverSingleton(AISearchBox, { mask: true, frame: true, shadow: true, });
     let fv = await popover.open(pos);
-    fv.open(options);
+    await fv.open(options);
     return new Promise((resolve: (p: { id: string, content?: string }) => void, reject) => {
         fv.only('save', (value) => {
             popover.close();

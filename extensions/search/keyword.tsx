@@ -9,7 +9,7 @@ import { PopoverSingleton } from "../../component/popover/popover";
 import { PopoverPosition } from "../../component/popover/position";
 import { LinkPageItem, getPageIcon, getPageText } from "../../src/page/declare";
 import { Spin } from "../../component/view/spin";
-import { SearchSvg } from "../../component/svgs";
+import { AiStartSvg, SearchSvg } from "../../component/svgs";
 import { SearchListType } from "../../component/types";
 import { util } from "../../util/util";
 import { SwitchText } from "../../component/view/switch";
@@ -17,14 +17,14 @@ import { SelectBox } from "../../component/view/select/box";
 import { useAISearchBox } from "./ai";
 import { isMobileOnly } from "react-device-detect";
 import { lst } from "../../i18n/store";
-import { S } from "../../i18n/view";
+import { S, Sp } from "../../i18n/view";
 import "./style.less";
 
 export class SearchBox extends EventsComponent {
     render() {
         var ws = this.ws;
         return <div className={"bg-white  round" + (isMobileOnly ? " vw100-c20" : " w-800 ")}>
-            <div className="padding-10 flex">
+            <div className="padding-w-10 padding-h-5 flex">
                 <div className="flex-auto">
                     <Input
                         clear
@@ -32,7 +32,7 @@ export class SearchBox extends EventsComponent {
                         prefix={<span className="flex cursor">
                             <span className="flex-center size-20  text-1"><Icon className={'remark'} size={16} icon={SearchSvg}></Icon></span>
                         </span>}
-                        inputStyle={{ fontSize: '18px' }}
+                        inputStyle={{ fontSize: '20px' }}
                         size='larger'
                         onClear={() => { this.searchList.word = ''; this.onForceSearch() }}
                         placeholder={lst('在{text}中搜索', { text: ws?.text || lst('空间') })}
@@ -42,13 +42,13 @@ export class SearchBox extends EventsComponent {
                 </div>
             </div>
             <Divider></Divider>
-            <div className="flex f-12 remark padding-w-10 padding-t-5">
+            <div className="flex f-12 remark padding-w-5 gap-w-5 padding-t-5">
                 <SwitchText size="small" className={'flex-fixed item-hover round padding-w-3 '} checked={this.searchList.isOnlySearchTitle} onChange={e => {
                     this.searchList.isOnlySearchTitle = e;
                     this.onForceSearch()
                 }}><S>仅匹配标题</S></SwitchText>
                 <span className="flex-auto flex-end">
-                    <span className="padding-w-3 round cursor item-hover"><span className="gap-r-3"><S>编辑时间</S></span>
+                    <span className="padding-w-3 round cursor item-hover">
                         <SelectBox
                             className={'f-12'}
                             inline
@@ -56,8 +56,8 @@ export class SearchBox extends EventsComponent {
                             iconHidden={true}
                             onChange={e => { this.searchList.editDate = e; this.onForceSearch() }}
                             options={[
-                                { text: lst('升序'), value: 1, icon: { name: 'bytedance-icon', code: 'sort-amount-up' } },
-                                { text: lst('降序'), value: -1, icon: { name: 'bytedance-icon', code: 'sort-amount-down' } },
+                                { text: lst('编辑时间升序'), value: 1, icon: { name: 'bytedance-icon', code: 'sort-amount-up' } },
+                                { text: lst('编辑时间降序'), value: -1, icon: { name: 'bytedance-icon', code: 'sort-amount-down' } },
                             ]}></SelectBox>
                     </span>
                 </span>
@@ -69,17 +69,34 @@ export class SearchBox extends EventsComponent {
         </div>
     }
     renderList() {
-        if (this.searchList.list.length == 0 && this.searchList.pages.length == 0) return <div className="h-30 flex-center remark"><S>没有搜到相关的内容</S></div>
+        if (this.searchList.list.length == 0 && this.searchList.pages.length == 0) return <div>
+            {this.ws?.aiConfig?.aiSearch && <div onMouseDown={e=>this.openAi(e)} className="flex h-30  padding-w-5 gap-w-5 item-hover round cursor">
+                <span className="size-24 flex-center flex-fixed "><Icon className={'text-pu'} size={18} icon={AiStartSvg}></Icon></span>
+                <span className="flex-auto">使用AI智能检索<b>{this.searchList.word}</b></span>
+            </div>}
+            <div className="h-30 gap-h-10 flex-center remark"><S>没有搜索结果</S></div>
+        </div>
         if (this.searchList.pages?.length > 0 && this.searchList.list.length == 0) {
-            return this.searchList.pages.map(r => {
-                return <div key={r.id} className="padding-10 item-hover round cursor" onMouseDown={e => this.onSelect(r)}>
-                    <div className="flex">
-                        <span className="flex-fixed flex-line flex-center size-20 round remark gap-r-5"><Icon size={16} icon={getPageIcon(r)}></Icon></span>
-                        <span className="text f-14 flex-auto">{getPageText(r)}</span>
-                        <span className="flex-fixed remark f-14">{util.showTime(r.editDate || r.createDate)}</span>
-                    </div>
+            return <div>
+
+                {this.ws?.aiConfig?.aiSearch && <div  onMouseDown={e=>this.openAi(e)}  className="flex h-30  padding-w-5 gap-w-5 item-hover round cursor">
+                    <span className="size-24 flex-center flex-fixed "><Icon className={'text-pu'} size={18} icon={AiStartSvg}></Icon></span>
+                    <span className="flex-auto">使用AI智能检索<b>{this.searchList.word}</b></span>
+                </div>}
+                <div className="flex h-30 padding-w-5 gap-w-5">
+                    <span className="remark"><Sp text={'共{count}条匹配结果'} data={{ count: this.searchList.total }}>共0条匹配结果</Sp></span>
+                    <span></span>
                 </div>
-            })
+
+                {this.searchList.pages.map(r => {
+                    return <div key={r.id} className="padding-w-5 padding-h-10 gap-w-5 item-hover round cursor" onMouseDown={e => this.onSelect(r)}>
+                        <div className="flex">
+                            <span className="flex-fixed flex-line flex-center size-20 round remark gap-r-5"><Icon size={16} icon={getPageIcon(r)}></Icon></span>
+                            <span className="text f-14 flex-auto">{getPageText(r)}</span>
+                            <span className="flex-fixed remark f-12">{util.showTime(r.editDate || r.createDate)}</span>
+                        </div>
+                    </div>
+                })}</div>
         }
         return this.searchList.list.map(r => {
             return <div key={r.id} className="padding-10 item-hover round cursor" onMouseDown={e => this.onSelect(r)}>
