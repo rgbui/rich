@@ -1,14 +1,14 @@
 import React, { CSSProperties } from "react";
 import { InputChatTool } from "./plugins/tool";
-import "./style.less";
-import { InsertSelectionText } from "./util";
+
+import { InsertSelectionText, getChatHtml } from "./util";
 import { ChatInputPop } from "./plugins/pop";
 import { RobotInfo, RobotTask, UserBasic } from "../../../types/user";
 import { Rect } from "../../../src/common/vector/point";
 import { ChatCommandInput } from "./plugins/command";
 import { util } from "../../../util/util";
-import { getTextLink } from "../../../src/kit/write/declare";
 import { InputChatBox } from "./box";
+import "./style.less";
 
 export type ChatInputOptions = {
 
@@ -266,32 +266,7 @@ export class ChatInput extends React.Component<ChatInputOptions> {
         }
     }
     getValue() {
-        var html = this.richEl.innerHTML;
-        html = getTextLink(html);
-        html = html.replace(/(\*\*[^\*]+\*\*)/g, (_, $1) => {
-            return '<b>' + $1.slice(2, -2) + '</b>'
-        })
-        html = html.replace(/(\*[^\*]+\*)/g, (_, $1) => {
-            return '<i>' + $1.slice(1, -1) + '</i>'
-        })
-        html = html.replace(/(\~\~[^\~]+\~\~)/g, (_, $1) => {
-            return '<del>' + $1.slice(2, -2) + '</del>'
-        })
-        // console.log('before', html);
-        html = html.replace(/(\`\`\`[^\`]+\`\`\`)/g, (_, $1) => {
-            var pc = $1.trim().slice(3, -3);
-            pc = pc.replace(/^(\<br\/?\>)+/g, '');
-            pc = pc.replace(/(\<br\/?\>)+$/g, '');
-            return '<pre><code>' + pc + '</code></pre>'
-        })
-        // console.log('after', html);
-        html = html.replace(/(\`[^\`]+\`)/g, (_, $1) => {
-            return '<code>' + $1.slice(1, -1) + '</code>'
-        })
-        if (this.isQuote) {
-            html = '<blockquote>' + html + '</blockquote>'
-        }
-        return html;
+        return getChatHtml(this.richEl.innerHTML, this.isQuote);
     }
     getMentionUsers() {
         var users = Array.from(this.richEl.querySelectorAll('a.at-user')) as HTMLElement[];
@@ -449,14 +424,7 @@ export class ChatInput extends React.Component<ChatInputOptions> {
             delete this.cursorEndOffset;
         }
         else {
-            var sel = window.getSelection(); //DOM
-            sel.removeAllRanges();
-            var range = document.createRange();
-            if (range) {
-                var text = this.richEl.innerText;
-                range.setStart(this.richEl, text.length);
-            }
-            window.getSelection().addRange(range);
+            this.onFocus();
         }
     }
     commandInput: ChatCommandInput;
@@ -536,16 +504,16 @@ export class ChatInput extends React.Component<ChatInputOptions> {
     }
     onFocus() {
         if (this.richEl) {
-            
-            // var sel = window.getSelection(); //DOM
-            // sel.removeAllRanges();
-            // var range = document.createRange();
-            // if (range) {
-            //     // range.setStart(this.cursorEl, this.cursorOffset);
-            //     range.setEnd(this.richEl, 0);
-            // }
-            // window.getSelection().addRange(range);
-            // this.richEl.focus()
+            var sel = window.getSelection(); //DOM
+            var text = this.richEl.innerHTML;
+            if (!text) {
+                this.richEl.focus();
+            }
+            else {
+                var t = this.richEl.childNodes[0];
+                if (t instanceof Text) sel.collapse(t, t.textContent.length)
+                else sel.collapse(t, 0);
+            }
         }
     }
 }

@@ -41,10 +41,10 @@ export class InputChatTool extends React.Component<{
         }
         if (this.visible == false) style.display = 'none'
         return createPortal(<div
-            className="pos bg-white round shadow"
+            className="pos bg-white round border-light shadow-s "
             ref={e => this.el = e}
             style={style}>
-            <div className="flex border padding-w-10 h-30 r-size-24 r-round r-item-hover r-cursor r-flex-center ">
+            <div className="flex  r-size-30  r-round r-item-hover r-cursor r-flex-center ">
                 <span onMouseDown={e => this.onClick('bold')}><Icon size={16} icon={{ name: 'byte', code: 'text-bold' }}></Icon></span>
                 <span onMouseDown={e => this.onClick('italic')}><Icon size={16} icon={{ name: 'byte', code: 'text-italic' }}></Icon></span>
                 <span onMouseDown={e => this.onClick('delete')}><Icon size={16} icon={{ name: 'byte', code: 'strikethrough' }}></Icon></span>

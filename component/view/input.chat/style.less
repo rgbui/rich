@@ -64,51 +64,21 @@
     position: relative;
 
     &-reply {
-        position               : absolute;
-        display                : flex;
-        justify-content        : flex-start;
-        align-items            : center;
-        user-select            : none;
-        top                    : -40px;
-        height                 : 30px;
-        line-height            : 20px;
-        background             : var(--background-secondary);
-        border-top-left-radius : 8px;
-        border-top-right-radius: 8px;
-        left                   : -6px;
-        right                  : -6px;
-        font-size              : 14px;
-        border-bottom          : 1px solid rgba(53, 54, 57, .08);
+        position                  : absolute;
+        user-select               : none;
+        top                       : -40px;
+        height                    : 30px;
+      
+        border-top-left-radius    : 8px;
+        border-top-right-radius   : 8px;
+        left                      : -6px;
+        right                     : -6px;
 
         &-content {
-            flex-grow    : 1;
-            flex-shrink  : 1;
-            padding-left : 10px;
-            height       : 20px;
-            line-height  : 20px;
-            overflow     : hidden;
-            text-overflow: ellipsis;
-            color        : rgba(53, 54, 57, 1)
-        }
-
-        &-operators {
-            padding-right: 10px;
-            flex-grow    : 0;
-            flex-shrink  : 0;
-
-            a {
-                display        : inline-flex;
-                justify-content: center;
-                align-items    : center;
-                border-radius  : 4px;
-                width          : 24px;
-                cursor         : pointer;
-                height         : 24px;
-
-                &:hover {
-                    background-color: rgba(53, 54, 57, .08);
-                }
-            }
+          
+            overflow        : hidden;
+            text-overflow   : ellipsis;
+           
         }
     }
 
@@ -121,7 +91,7 @@
         top                    : -40px;
         height                 : 30px;
         line-height            : 20px;
-        background             : var(--background-secondary);
+        // background             : var(--background-secondary);
         border-top-left-radius : 8px;
         border-top-right-radius: 8px;
         left                   : -6px;
@@ -164,7 +134,7 @@
 
     &-files {
         position               : absolute;
-        background             : var(--background-secondary);
+        // background             : var(--background-secondary);
         border-top-left-radius : 8px;
         border-top-right-radius: 8px;
         left                   : 0px;

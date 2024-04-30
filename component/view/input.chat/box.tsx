@@ -1,6 +1,6 @@
 import React from "react";
 import { Icon } from "../icon";
-import { AiSvg, CloseSvg, EmojiSvg, FileSvg, PlusSvg, TrashSvg, UploadSvg } from "../../svgs";
+import { AiSvg, CloseSvg, EmojiSvg, FileSvg, TrashSvg, UploadSvg } from "../../svgs";
 import { ChatInput } from "./chat";
 import { useOpenEmoji } from "../../../extensions/emoji";
 import { Rect } from "../../../src/common/vector/point";
@@ -44,9 +44,9 @@ export class InputChatBox extends React.Component<{
     className?: string[] | string,
     searchRobots?: () => Promise<RobotInfo[]>,
     ws?: LinkWs
-}>{
+}> {
     el: HTMLElement;
-    render(): React.ReactNode {
+    render() {
         var richClassList: string[] = ["shy-rich-input-editor"];
         if (this.props.className) {
             if (Array.isArray(this.props.className)) richClassList.push(...this.props.className)
@@ -55,50 +55,45 @@ export class InputChatBox extends React.Component<{
         var width = 120;
         var height = 160;
         return <div className="shy-rich-input" ref={e => this.el = e}>
-            {this.uploadFiles.length > 0 && <div className="shy-rich-input-files round-16 flex" style={{
+            {this.uploadFiles.length > 0 && <div className="shy-rich-input-files bg-white-1 round-16 flex" style={{
                 left: -10,
                 right: -10,
                 height: height + 20,
                 top: (0 - (height + 30 + 1))
             }}>
                 {this.uploadFiles.map(uf => {
-                    return <div key={uf.id} className="relative visible-hover item-hover border round-16 overflow-hidden gap-w-10" style={{ width, height }}>
+                    return <div key={uf.id} className="relative visible-hover item-hover border-light shadow-s round-16 overflow-hidden gap-w-10" style={{ width, height }}>
                         {uf.speed && <div
                             style={{ width, height }}
                             className="flex-center overflow-hidden">
-                            <span>{uf.speed}</span>
+                            <span className="f-14">{uf.speed}</span>
                         </div>}
                         {uf.file?.mime == 'image' && <img
-                            style={{
-                                width,
-                                height,
-                                objectFit: 'contain',
-                                objectPosition: '50% 50%'
-                            }}
+                            className="object-center w100 h100"
                             src={uf.file.url} />}
                         {uf.file?.mime && <div className="flex-center remark flex-col " style={{ width, height }}>
                             <Icon size={48} icon={FileSvg}></Icon>
-                            <span>{uf.file?.name}<span className="gap-l-5">{util.byteToString(uf?.file.size)}</span></span>
+                            <span className="gap-10 text-overflow">{uf.file?.filename}<span className="gap-l-5 f-12 remark">{util.byteToString(uf?.file.size)}</span></span>
                         </div>}
-                        <div className="pos bg-white item-hover flex-center round visible cursor size-20" style={{ top: 10, right: 10 }} onClick={e => {
+                        <div className="pos item-hover-button flex-center round visible cursor size-20" style={{ top: 10, right: 10 }} onClick={e => {
                             lodash.remove(this.uploadFiles, g => g == uf)
                             this.forceUpdate()
                         }} ><Icon size={16} icon={TrashSvg}></Icon></div>
                     </div>
                 })}
             </div>}
-            {this.reply && <div className="shy-rich-input-reply">
-                <span className="shy-rich-input-reply-content">{this.reply.text}</span>
-                <ToolTip overlay={lst('取消回复')}><span className="shy-rich-input-reply-operators" onMouseDown={e => this.clearReply()}><a><Icon size={12} icon={CloseSvg}></Icon></a></span></ToolTip>
+            {this.reply && <div className="shy-rich-input-reply flex padding-w-10 bg-white-1">
+                <span className="shy-rich-input-reply-content f-12 flex-auto">{this.reply.text}</span>
+                <ToolTip overlay={lst('取消回复')}><span className="shy-rich-input-reply-operators flex-fixed flex-center cursor size-20 item-hover round" onMouseDown={e => this.clearReply()}><Icon size={12} icon={CloseSvg}></Icon></span></ToolTip>
             </div>}
-            {this.errorTip && <div className="shy-rich-input-error">
+            {this.errorTip && <div className="shy-rich-input-error bg-white-1">
                 <span className="shy-rich-input-error-content">{this.errorTip}</span>
                 <ToolTip overlay={lst('清理错误提示')}><span className="shy-rich-input-error-operators" onMouseDown={e => this.clearError()}><a><Icon size={12} icon={CloseSvg}></Icon></a></span></ToolTip>
             </div>}
             <div className="flex flex-top">
                 <span className="flex-fixed size-24 round flex-center cursor item-hover">
                     {this.cp?.currentRobot && <Avatar size={24} userid={this.cp.currentRobot.robotId}></Avatar>}
-                    {!this.cp?.currentRobot && <Icon onMousedown={e => this.openAddFile(e)} size={18} icon={{name:'byte',code:'add-one'}}></Icon>}
+                    {!this.cp?.currentRobot && <Icon onMousedown={e => this.openAddFile(e)} size={18} icon={{ name: 'byte', code: 'add-one' }}></Icon>}
                 </span>
                 <div className="flex-auto l-24" >
                     <ChatInput
@@ -134,7 +129,7 @@ export class InputChatBox extends React.Component<{
             menus.push({ type: MenuItemType.divide });
             menus.push({ name: 'addRobot', text: lst('机器人指令'), icon: AiSvg });
         }
-        var re = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, menus);
+        var re = await useSelectMenuItem({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, menus);
         if (re) {
             if (re.item.name == 'addFile') {
                 var files = await OpenMultipleFileDialoug();
@@ -158,7 +153,7 @@ export class InputChatBox extends React.Component<{
         if (this.props.readonly) return;
         this.cp.rememberCursor();
         var re = await useOpenEmoji({
-            roundArea: Rect.fromEvent(event),
+            roundArea: Rect.fromEle((event.currentTarget as HTMLElement).parentNode as HTMLElement),
             direction: 'top',
             align: 'end'
         });
@@ -287,6 +282,7 @@ export class InputChatBox extends React.Component<{
             mentions: this.cp.getMentionUsers(),
             ...this.cp.getCommandValue()
         })
+        this.reply = null;
         this.cp.isQuote = false;
         this.cp.richEl.innerHTML = '';
         var sel = window.getSelection();
