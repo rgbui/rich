@@ -1,16 +1,17 @@
 import React from "react";
 import { EventsComponent } from "../../component/lib/events.component";
-import './style.less';
 import { EmojiCode } from "./store";
 import { EmojiView } from "./view";
 import { PopoverSingleton } from "../../component/popover/popover";
 import { PopoverPosition } from "../../component/popover/position";
+import './style.less';
+
 /**
  * https://www.zhangxinxu.com/wordpress/2020/03/css-emoji-opentype-svg-fonts/
  */
 export class EmojiPicker extends EventsComponent {
     render() {
-        return <div className='shy-emoji-picker' ><EmojiView onChange={e => this.onPick(e)}></EmojiView></div>
+        return <div className='shy-emoji-picker shadow-s' ><EmojiView onChange={e => this.onPick(e)}></EmojiView></div>
     }
     private onPick(emoji: EmojiCode) {
         this.emit('pick', emoji);

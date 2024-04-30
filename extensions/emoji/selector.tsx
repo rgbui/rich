@@ -69,7 +69,7 @@ class EmojiSelector extends InputTextPopSelector<EmojiCode> {
             left: this.pos.x,
             display: this.visible ? "block" : 'none'
         }
-        return <div className='emoji-selectors' onScroll={e => this.onScroll(e)} style={style}>
+        return <div className='emoji-selectors  shadow-s' onScroll={e => this.onScroll(e)} style={style}>
             {!this.searchWord && this.renderEmojis()}
             {this.searchWord && this.renderSearchs()}
         </div>
