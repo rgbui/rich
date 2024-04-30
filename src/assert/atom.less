@@ -757,6 +757,9 @@ item-selected:选中的效果
 
 body {
     --white            : #fff;
+    --white-smoke      : #f5f5f5;
+    --white-1          : var(--white-smoke);
+    --border-color     : rgba(55, 53, 47, 0.16);
     --black            : #000;
     --text-color       : rgba(55, 53, 47);
     --text             : var(--text-color);
@@ -765,16 +768,16 @@ body {
     --remark           : var(--text-color-remark);
     --text-purple      : rgb(189, 115, 232);
     --text-p-color     : rgb(225, 98, 89);
-    // --text-p-color     : rgb(245, 161, 176);
-    --text-p-1-color   : #B84C4E;
-    --text-p1-color    : #64a1df;
-    --text-b-color     : rgb(100, 161, 223);
-    --text-g-color     : rgb(33, 175, 90);
-    --shadow           : rgba(15, 15, 15, 0.05) 0rem 0rem 0rem 1px, rgba(15, 15, 15, 0.1) 0rem 3px 6px, rgba(15, 15, 15, 0.2) 0rem 9px 24px;
-    --shadow-light     : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
-    --shadow-s         : 0px 2px 8px rgba(25, 25, 26, .12), 0px 0px 1px rgba(25, 25, 26, .08);
-    --shadow-bottom    : 0 1px 0 rgba(6, 6, 7, 0.1), 0 1.5px 0 rgba(6, 6, 7, 0.025), 0 2px 0 rgba(6, 6, 7, 0.025);
-    --shadow-b         : var(--shadow-bottom);
+
+    --text-p-1-color: #B84C4E;
+    --text-p1-color : #64a1df;
+    --text-b-color  : rgb(100, 161, 223);
+    --text-g-color  : rgb(33, 175, 90);
+    --shadow        : rgba(15, 15, 15, 0.05) 0rem 0rem 0rem 1px, rgba(15, 15, 15, 0.1) 0rem 3px 6px, rgba(15, 15, 15, 0.2) 0rem 9px 24px;
+    --shadow-light  : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+    --shadow-s      : 0px 2px 8px rgba(25, 25, 26, .12), 0px 0px 1px rgba(25, 25, 26, .08);
+    --shadow-bottom : 0 1px 0 rgba(6, 6, 7, 0.1), 0 1.5px 0 rgba(6, 6, 7, 0.025), 0 2px 0 rgba(6, 6, 7, 0.025);
+    --shadow-b      : var(--shadow-bottom);
 }
 
 .text {
@@ -782,7 +785,7 @@ body {
 }
 
 .text-1 {
-    color: rgba(55, 53, 47, 0.8);
+    color: var(--text-color-1);
 }
 
 .text-purple,
@@ -1502,7 +1505,14 @@ each(@ops, {
 .white,
 .r-white>*,
 .r-bg-white>* {
-    background-color: #fff;
+    background-color: var(--white);
+}
+
+.bg-white-1,
+.white-1,
+.r-white-1>*,
+.r-bg-white-1>* {
+    background-color: var(--white-1)
 }
 
 .bg-black,
@@ -1612,7 +1622,7 @@ each(@ops, {
 }
 
 .border {
-    border: 0.1rem solid rgba(55, 53, 47, 0.16);
+    border: 0.1rem solid var(--border-color);
 }
 
 .border-red {
@@ -1620,21 +1630,21 @@ each(@ops, {
 }
 
 .dashed {
-    border: 0.1rem dashed rgba(55, 53, 47, 0.16);
+    border: 0.1rem dashed var(--border-color);
 }
 
 .r-border {
     >* {
-        border: 0.1rem solid rgba(55, 53, 47, 0.16);
+        border: 0.1rem solid var(--border-color);
     }
 }
 
 .border-left {
-    border-left: 0.1rem solid rgba(55, 53, 47, 0.16);
+    border-left: 0.1rem solid var(--border-color);
 }
 
 .border-right {
-    border-right: 0.1rem solid rgba(55, 53, 47, 0.16);
+    border-right: 0.1rem solid var(--border-color);
 }
 
 
@@ -1646,18 +1656,18 @@ each(@ops, {
 
 .border-bottom,
 .border-b {
-    border-bottom: 0.1rem solid rgba(55, 53, 47, 0.16);
+    border-bottom: 0.1rem solid var(--border-color);
 }
 
 .border-top,
 .border-t {
-    border-top: 0.1rem solid rgba(55, 53, 47, 0.16);
+    border-top: 0.1rem solid var(--border-color);
 }
 
 .r-border-bottom,
 .r-border-b {
     >* {
-        border-bottom: 0.1rem solid rgba(55, 53, 47, 0.16);
+        border-bottom: 0.1rem solid var(--border-color);
     }
 }
 

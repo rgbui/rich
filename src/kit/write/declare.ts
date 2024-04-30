@@ -32,7 +32,7 @@ export var URL_END_REGEX = new RegExp(strRegex + "$");
 
 
 export function getTextLink(text) {
-    const reg = new RegExp(strRegex, 'g');
+    const reg = /^(https?:\/\/)([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)*\/?$/g;
     return text.replace(reg, function (m, p) {
         // console.log(m, p);
         return '<a href="' + m + '" target="_blank">' + m + '</a>'

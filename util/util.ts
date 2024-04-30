@@ -97,7 +97,7 @@ export var util = {
         return ps.join('')
     },
     byteToString(byte: number) {
-        if(typeof byte != 'number') return '';
+        if (typeof byte != 'number') return '';
         if (byte > 1024 * 1024 * 1024 * 1024 * 1024) {
             return (byte / (1024 * 1024 * 1024 * 1024 * 1024)).toFixed(2) + "PB"
         }
@@ -247,13 +247,114 @@ export var util = {
         return text;
     },
     getFileMime(ext: string) {
-        if(!ext) return 'unknow';
+        if (!ext) return 'file';
         ext = ext.toLowerCase();
         if (['.gif', '.png', '.webp', '.jpg', '.jpeg', '.bmp', '.svg', '.tga', '.exif', '.fpx', '.ico', '.avif', '.apng'].includes(ext)) return "image"
-        else if (['.mp3', '.wma', '.wav', '.midi', '.mp4', '.m4v', '.mkv', '.flv', '.vob', '.3gp', '.avi', '.rm', '.rmvb', '.mpeg', '.mpe', '.mpg', '.dat', '.mov', '.qt', '.asf', '.wmv', '.asx'].includes(ext)) return 'video'
-        else if (['.zip', '.rar'].includes(ext)) return 'zip'
-        else if (['.doc', '.docx', '.pdf', '.ppt', '.xls', '.xlsx'].includes(ext)) return "doc"
-        else return 'unknow';
+        else if (['.mp3', '.wma', '.wav', ".midi", ".acc", ".ogg", ".m4a", ".amr", ".mid", ".ape", ".dts", ".ac3"].includes(ext)) return 'audio'
+        else if ([
+            ".mp4",
+            ".mkv",
+            ".avi",
+            ".mov",
+            ".wmv",
+            ".flv",
+            ".mpg",
+            ".mpeg",
+            ".m4v",
+            ".3gp",
+            ".webm",
+            ".ogv",
+            ".vob",
+            ".qt",
+            ".divx",
+            ".xvid",
+            ".rm",
+            ".rmvb",
+            ".asf",
+            ".mxf",
+            ".mts",
+            ".m2ts",
+            ".mts",
+            ".mod",
+            ".tod",
+            ".dv",
+            ".f4v",
+            ".swf",
+            ".h264",
+            ".hevc",
+            ".avchd",
+            ".avs",
+            ".yuv",
+            ".dat",
+            ".ifo",
+            ".m2v",
+            ".mpe"
+        ]
+            .includes(ext)) return 'video'
+        else if ([
+            ".zip",
+            ".rar",
+            ".7z",
+            ".tar",
+            ".gz",
+            ".bz2",
+            ".xz",
+            ".iso",
+            ".cab",
+            ".arj",
+            ".lzh"
+        ].includes(ext)) return 'zip'
+        else if ([
+            ".doc",
+            ".docx",
+            ".ppt",
+            ".pptx",
+            ".xls",
+            ".xlsx",
+            ".pdf",
+            ".txt",
+            ".rtf",
+            ".odt",
+            ".ods",
+            ".odp",
+            ".pages",
+            ".numbers",
+            ".key",
+            ".wpd",
+            ".wps",
+            ".csv",
+            ".md",
+            ".epub",
+            ".htm",
+            ".html",
+            ".xhtml",
+            ".xml",
+            ".tex",
+            ".latex",
+            ".djvu",
+            ".abw",
+            ".docm",
+            ".dot",
+            ".dotm",
+            ".dotx",
+            ".pptm",
+            ".pot",
+            ".potm",
+            ".potx",
+            ".ppsm",
+            ".ppsx",
+            ".xlsb",
+            ".xlsm",
+            ".xlt",
+            ".xltm",
+            ".xltx",
+            ".xml",
+            ".xsd",
+            ".xsl",
+            ".xslt"
+        ]
+            .includes(ext)) return "doc"
+        else return 'file';
     },
     covertToArray(d) {
         if (Array.isArray(d)) return d;
@@ -341,5 +442,5 @@ export var util = {
         if (text.startsWith(char)) count++;
         if (text.endsWith(char)) count++;
         return count;
-      }
+    }
 }
