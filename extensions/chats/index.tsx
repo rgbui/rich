@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import lodash from "lodash";
 import React from "react";
-import { FileIconSvg, DownloadSvg, Edit1Svg, ReplySvg, DotsSvg, EditSvg, TrashSvg,  CheckSvg, EmojiSvg, DuplicateSvg } from "../../component/svgs";
+import { FileIconSvg, DownloadSvg, Edit1Svg, ReplySvg, DotsSvg, EditSvg, TrashSvg, CheckSvg, EmojiSvg, DuplicateSvg } from "../../component/svgs";
 import { Avatar } from "../../component/view/avator/face";
 import { UserBox } from "../../component/view/avator/user";
 import { Icon } from "../../component/view/icon";
@@ -73,7 +73,7 @@ export class ViewChats extends React.Component<{
         var jsList: JSX.Element[] = [];
         if (d.content) jsList.push(<div key={d.id + "c"} className='shy-user-channel-chat-content'>
             <span dangerouslySetInnerHTML={{ __html: d.content }}></span>
-            {d.isEdited && <span className="sy-channel-text-edited-tip">(<S>已编辑</S>)</span>}
+            {d.isEdited && <span className="sy-channel-text-edited-tip f-12 text-1">(<S>已编辑</S>)</span>}
         </div>)
         for (let i = 0; i < files.length; i++) {
             var f = files[i];
@@ -148,7 +148,7 @@ export class ViewChats extends React.Component<{
                                     </span>}
                                     <span>{util.showTime(d.createDate)}</span>
                                 </div>
-                                <div className="sy-channel-text-item-edited-content-input">
+                                <div className="sy-channel-text-item-edited-content-input  item-hover-focus">
                                     <ChatInput
                                         ref={e => this.chatInput = e}
                                         value={d.content}
@@ -160,7 +160,7 @@ export class ViewChats extends React.Component<{
                                 </div>
                             </div>
                         </div>
-                        <div className="sy-channel-text-item-edited-tip"><S>ESC键</S><a onClick={e => this.closeEdit()}><S>取消</S></a>•<S>回车键</S><a onMouseDown={e => this.chatInput.onEnter()}><S>保存</S></a></div>
+                        <div className="sy-channel-text-item-edited-tip flex text-1"><S>ESC键</S><a className="gap-r-5" onClick={e => this.closeEdit()}><S>取消</S></a><S>回车键</S><a onMouseDown={e => this.chatInput.onEnter()}><S>保存</S></a></div>
                     </>
                 }}</UserBox>
             </div>
@@ -180,7 +180,7 @@ export class ViewChats extends React.Component<{
                 </div>
             }}</UserBox>}
             {!(d.id == this.editChannelText?.id) && noUser && <div className="sy-channel-text-item-box" >
-                <div className="sy-channel-text-item-date remark">{dayjs(d.createDate).format('HH:mm')}</div>
+                <div className="sy-channel-text-item-date text-1">{dayjs(d.createDate).format('HH:mm')}</div>
                 <div className="sy-channel-text-item-wrapper" >
                     <div className="sy-channel-text-item-content">{this.renderContent(d)}</div>
                 </div>
@@ -191,7 +191,7 @@ export class ViewChats extends React.Component<{
                     <span>{em.count}</span>
                 </a>
             })}</div>}
-            {!(d.id == this.editChannelText?.id) && this.props.readonly !== true && <div className="sy-channel-text-item-operators">
+            {!(d.id == this.editChannelText?.id) && this.props.readonly !== true && <div className="sy-channel-text-item-operators shadow-s bg-white border-light padding-w-3 flex r-size-24 h-30 r-cursor r-round r-flex-center r-item-hover">
                 <ToolTip overlay={lst('添加表情')}><span onMouseDown={e => this.addEmoji(d, e)}><Icon size={16} icon={EmojiSvg}></Icon></span></ToolTip>
                 {d.userid == this.currentUser.id && <ToolTip overlay={lst('编辑')}><span onMouseDown={e => this.openEdit(d)}><Icon size={16} icon={Edit1Svg}></Icon></span></ToolTip>}
                 {d.userid != this.currentUser.id && <ToolTip overlay={lst('回复')}><span onMouseDown={e => this.reply(d)}><Icon size={16} icon={ReplySvg}></Icon></span></ToolTip>}
@@ -279,7 +279,15 @@ export class ViewChats extends React.Component<{
     }, 1000)
     private async openEdit(d: ChannelTextType) {
         this.editChannelText = d;
-        this.forceUpdate();
+        this.forceUpdate( async ()=>{
+            if(this.chatInput){
+                this.chatInput.onFocus()
+            }
+            await util.delay(100);
+            if(this.chatInput){
+                this.chatInput.onFocus()
+            }
+        });
     }
     private closeEdit() {
         this.editChannelText = null;
@@ -302,8 +310,7 @@ export class ViewChats extends React.Component<{
     async reply(d: ChannelTextType) {
         await this.props.replyChat(d)
     }
-    async report(d: ChannelTextType)
-    {
+    async report(d: ChannelTextType) {
         await useOpenReport({
             reportContent: d.content,
             userid: d.userid,
@@ -328,7 +335,7 @@ export class ViewChats extends React.Component<{
         var op = this.getOp(d);
         var items: MenuItem<string>[] = [];
         if (d.userid == this.currentUser.id) {
-            items.push({ name: 'edit', text: lst('编辑'), icon: EditSvg });
+            items.push({ name: 'edit', text: lst('编辑'), icon: { name: 'byte', code: 'write' } });
             items.push({ name: 'reply', text: lst('回复'), icon: ReplySvg });
             items.push({ type: MenuItemType.divide });
             items.push({ name: 'copy', disabled: d.content ? false : true, text: lst('拷贝'), icon: DuplicateSvg });
