@@ -1,15 +1,28 @@
 import dayjs from "dayjs";
 import lodash from "lodash";
 import React from "react";
-import { FileIconSvg, DownloadSvg, Edit1Svg, ReplySvg, DotsSvg, EditSvg, TrashSvg, CheckSvg, EmojiSvg, DuplicateSvg } from "../../component/svgs";
+import {
+    FileIconSvg,
+    DownloadSvg,
+    Edit1Svg,
+    ReplySvg,
+    DotsSvg,
+    TrashSvg,
+    CheckSvg,
+    EmojiSvg, DuplicateSvg
+} from "../../component/svgs";
 import { Avatar } from "../../component/view/avator/face";
 import { UserBox } from "../../component/view/avator/user";
 import { Icon } from "../../component/view/icon";
 import { useSelectMenuItem } from "../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
-import { Remark } from "../../component/view/text";
 import { SockResponse } from "../../net/declare";
-import { ElementType, autoImageUrl, getElementUrl, getEmoji } from "../../net/element.type";
+import {
+    ElementType,
+    autoImageUrl,
+    getElementUrl,
+    getEmoji
+} from "../../net/element.type";
 import { KeyboardCode } from "../../src/common/keys";
 import { Rect } from "../../src/common/vector/point";
 import { UserBasic } from "../../types/user";
@@ -17,7 +30,6 @@ import { util } from "../../util/util";
 import { useOpenEmoji } from "../emoji";
 import { EmojiCode } from "../emoji/store";
 import { ChannelTextType } from "./declare";
-import "./style.less";
 import { ChatInput } from "../../component/view/input.chat/chat";
 import { ToolTip } from "../../component/view/tooltip";
 import { S } from "../../i18n/view";
@@ -25,8 +37,9 @@ import { lst } from "../../i18n/store";
 import { useImageViewer } from "../../component/view/image.preview";
 import { CopyAlert } from "../../component/copy";
 import { LinkWs } from "../../src/page/declare";
-
 import { useOpenReport } from "../report";
+import "./style.less";
+import { getChatText } from "../../component/view/input.chat/util";
 
 export class ViewChats extends React.Component<{
     readonly?: boolean,
@@ -73,29 +86,35 @@ export class ViewChats extends React.Component<{
         var jsList: JSX.Element[] = [];
         if (d.content) jsList.push(<div key={d.id + "c"} className='shy-user-channel-chat-content'>
             <span dangerouslySetInnerHTML={{ __html: d.content }}></span>
-            {d.isEdited && <span className="sy-channel-text-edited-tip f-12 text-1">(<S>已编辑</S>)</span>}
+            {d.isEdited && <span className="sy-channel-text-edited-tip f-12 text">(<S>已编辑</S>)</span>}
         </div>)
         for (let i = 0; i < files.length; i++) {
             var f = files[i];
             if (f.mime == 'image') {
-                jsList.push(<div key={i} className='shy-user-channel-chat-image' >
-                    <img onMouseDown={e => this.openPic(f)} src={autoImageUrl(f.url, 500)} />
+                jsList.push(<div key={i} className='gap-h-5' >
+                    <img className="round obj-center max-w-400 max-h-500" data-json={JSON.stringify(f)} onMouseDown={e => {
+                        var j = JSON.parse(e.currentTarget.getAttribute('data-json'));
+                        this.openPic(j)
+                    }} src={autoImageUrl(f.url, 500)} />
                 </div>)
             }
             else if (f.mime == 'video') {
-                jsList.push(<div key={i} className='shy-user-channel-chat-video' >
-                    <video controls src={f.url}></video>
+                jsList.push(<div key={i} className='   gap-h-5' >
+                    <video className="round obj-center max-w-400 max-h-500" controls src={f.url}></video>
                 </div>)
             }
-            else jsList.push(<div key={i} className='shy-user-channel-chat-file' >
-                <div className="shy-user-channel-chat-file-content">
-                    <Icon size={40} icon={FileIconSvg}></Icon>
-                    <div className='shy-user-channel-chat-file-content-info' >
-                        <span>{f.name}</span>
-                        <Remark>{util.byteToString(f.size)}</Remark>
-                    </div>
-                    <a href={f.url} download={f.text}>
-                        <Icon size={24} icon={DownloadSvg}></Icon>
+            else if (f.mime == 'audio') {
+                jsList.push(<div key={i} className=' gap-h-5' >
+                    <audio controls src={f.url}></audio>
+                </div>)
+            }
+            else jsList.push(<div key={i} className=' gap-h-5' >
+                <div className=" flex max-w-300 padding-10 round item-hover-light-focus item-hover">
+                    <Icon className={'flex-fixed gap-r-5 text-link'} style={{ fill: 'currentcolor' }} size={32} icon={FileIconSvg}></Icon>
+                    <ToolTip overlay={f.filename}><span className="max-w-200 text-overflow gap-r-5">{f.filename}</span></ToolTip>
+                    <span className="remark flex-auto">{util.byteToString(f.size)}</span>
+                    <a className="flex-fixed cursor  text-link gap-l-5 size-24 round item-hover flex-center " target="_blank" href={f.url} download={f.text}>
+                        <Icon size={18} icon={DownloadSvg}></Icon>
                     </a>
                 </div>
             </div>)
@@ -151,7 +170,7 @@ export class ViewChats extends React.Component<{
                                 <div className="sy-channel-text-item-edited-content-input  item-hover-focus">
                                     <ChatInput
                                         ref={e => this.chatInput = e}
-                                        value={d.content}
+                                        value={getChatText(d.content)}
                                         placeholder={lst("回车提交")}
                                         onEnter={e => this.edit(d, { content: e })}
                                         searchUser={this.props.searchUser}
@@ -185,16 +204,16 @@ export class ViewChats extends React.Component<{
                     <div className="sy-channel-text-item-content">{this.renderContent(d)}</div>
                 </div>
             </div>}
-            {Array.isArray(d.emojis) && <div className="sy-channel-text-item-emojis">{d.emojis.filter(g => g.count > 0).map(em => {
-                return <a onMouseDown={e => this.editEmoji(d, em)} key={em.emojiId} >
+            {Array.isArray(d.emojis) && <div className="sy-channel-text-item-emojis gap-l-50 flex">{d.emojis.filter(g => g.count > 0).map(em => {
+                return <a className="round item-hover-light-focus" onMouseDown={e => this.editEmoji(d, em)} key={em.emojiId} >
                     <span dangerouslySetInnerHTML={{ __html: getEmoji(em.code) }}></span>
                     <span>{em.count}</span>
                 </a>
             })}</div>}
-            {!(d.id == this.editChannelText?.id) && this.props.readonly !== true && <div className="sy-channel-text-item-operators shadow-s bg-white border-light padding-w-3 flex r-size-24 h-30 r-cursor r-round r-flex-center r-item-hover">
+            {!(d.id == this.editChannelText?.id) && this.props.readonly !== true && <div className="sy-channel-text-item-operators shadow-s bg-white border-light  flex r-size-24 h-24 r-cursor r-round r-flex-center r-item-hover">
                 <ToolTip overlay={lst('添加表情')}><span onMouseDown={e => this.addEmoji(d, e)}><Icon size={16} icon={EmojiSvg}></Icon></span></ToolTip>
                 {d.userid == this.currentUser.id && <ToolTip overlay={lst('编辑')}><span onMouseDown={e => this.openEdit(d)}><Icon size={16} icon={Edit1Svg}></Icon></span></ToolTip>}
-                {d.userid != this.currentUser.id && <ToolTip overlay={lst('回复')}><span onMouseDown={e => this.reply(d)}><Icon size={16} icon={ReplySvg}></Icon></span></ToolTip>}
+                <ToolTip overlay={lst('回复')}><span onMouseDown={e => this.reply(d)}><Icon size={16} icon={ReplySvg}></Icon></span></ToolTip>
                 <span onMouseDown={e => this.openProperty(d, e)}><Icon size={16} icon={DotsSvg}></Icon></span>
             </div>}
         </div>
@@ -238,29 +257,35 @@ export class ViewChats extends React.Component<{
         op.classList.add('operating');
         return op;
     }
-    private async addEmoji(d: ChannelTextType, e: React.MouseEvent) {
+    private async addEmoji(d: ChannelTextType, rect: Rect | React.MouseEvent) {
         var op = this.getOp(d);
-        var re = await useOpenEmoji({
-            roundArea: Rect.fromEvent(e),
-            direction: 'top',
-            align: 'end'
-        });
-        if (re) {
-            var result = await this.emojiChat(d, re);
-            if (!Array.isArray(d.emojis)) {
-                d.emojis = [];
-            }
-            if (result?.data?.emoji) {
-                var em = d.emojis.find(g => g.emojiId == result.data.emoji.emojiId);
-                if (em) {
-                    Object.assign(em, result.data.emoji)
+        try {
+            var re = await useOpenEmoji({
+                roundArea: rect instanceof Rect ? rect : Rect.fromEvent(rect),
+                direction: 'top',
+                align: 'end'
+            });
+            if (re) {
+                var result = await this.emojiChat(d, re);
+                if (!Array.isArray(d.emojis)) {
+                    d.emojis = [];
                 }
-                else d.emojis.push(result.data.emoji);
-                op.classList.remove('operating');
-                this.forceUpdate();
+                if (result?.data?.emoji) {
+                    var em = d.emojis.find(g => g.emojiId == result.data.emoji.emojiId);
+                    if (em) {
+                        Object.assign(em, result.data.emoji)
+                    }
+                    else d.emojis.push(result.data.emoji);
+                    this.forceUpdate();
+                }
             }
         }
+        catch (ex) {
 
+        }
+        finally {
+            op.classList.remove('operating');
+        }
     }
     editEmoji = lodash.throttle(async (
         d: ChannelTextType,
@@ -279,14 +304,18 @@ export class ViewChats extends React.Component<{
     }, 1000)
     private async openEdit(d: ChannelTextType) {
         this.editChannelText = d;
-        this.forceUpdate( async ()=>{
-            if(this.chatInput){
+        this.forceUpdate(async () => {
+            if (this.chatInput) {
                 this.chatInput.onFocus()
+                this.chatInput.richEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+                return;
             }
             await util.delay(100);
-            if(this.chatInput){
+            if (this.chatInput) {
                 this.chatInput.onFocus()
+                this.chatInput.richEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
             }
+
         });
     }
     private closeEdit() {
@@ -335,6 +364,7 @@ export class ViewChats extends React.Component<{
         var op = this.getOp(d);
         var items: MenuItem<string>[] = [];
         if (d.userid == this.currentUser.id) {
+            items.push({ name: 'emoji', text: lst('表情'), icon: EmojiSvg })
             items.push({ name: 'edit', text: lst('编辑'), icon: { name: 'byte', code: 'write' } });
             items.push({ name: 'reply', text: lst('回复'), icon: ReplySvg });
             items.push({ type: MenuItemType.divide });
@@ -343,12 +373,14 @@ export class ViewChats extends React.Component<{
             items.push({ name: 'delete', text: lst('删除'), icon: TrashSvg });
         }
         else {
+            items.push({ name: 'emoji', text: lst('表情'), icon: EmojiSvg })
             items.push({ name: 'reply', text: lst('回复'), icon: ReplySvg });
             items.push({ name: 'copy', disabled: d.content ? false : true, text: lst('拷贝'), icon: DuplicateSvg });
             items.push({ type: MenuItemType.divide });
             items.push({ name: 'report', text: lst('举报'), icon: { name: 'bytedance-icon', code: 'harm' } });
         }
-        var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) },
+        var rect = Rect.fromEle(event.currentTarget as HTMLElement);
+        var r = await useSelectMenuItem({ roundArea: rect },
             items
         );
         if (r?.item) {
@@ -368,6 +400,9 @@ export class ViewChats extends React.Component<{
                 if (d.content) {
                     CopyAlert(d.content, lst('已拷贝'))
                 }
+            }
+            else if (r.item.name == 'emoji') {
+                this.addEmoji(d, rect)
             }
         }
         op.classList.remove('operating');

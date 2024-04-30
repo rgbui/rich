@@ -132,9 +132,9 @@
             }
         }
 
-        .sy-channel-text-edited-tip {
-            // font-size: 12px;
-        }
+        // .sy-channel-text-edited-tip {
+        //     // font-size: 12px;
+        // }
 
         .sy-channel-text-item-head {
             display        : flex;
@@ -216,17 +216,17 @@
             align-items    : flex-start;
 
             a {
-                display      : inline-block;
-                background   : var(--background-secondary);
-                border-radius: 0.5rem;
-                padding      : 0.125rem 0.375rem;
-                margin-right : 10px;
-                border       : 1px solid transparent;
-                cursor       : pointer;
-                line-height  : 1.3rem;
+                display         : inline-block;
+                // background   : var(--background-secondary);
+                // border-radius: 0.5rem;
+                padding         : 0.15rem 0.4rem;
+                margin-right    : 10px;
+                border          : 1px solid transparent;
+                cursor          : pointer;
+                line-height     : 1.3rem;
 
                 span {
-                    font-size  : 0.875rem;
+                    font-size  : 1rem;
                     font-weight: 500;
 
                     &:first-child {
@@ -234,11 +234,11 @@
                     }
 
                     text-align : center;
-                    color      : var(--interactive-normal);
+                    // color      : var(--interactive-normal);
                 }
 
                 &:hover {
-                    background-color: var(--background-primary);
+                    background-color: var(--white);
                     border-color    : rgba(0, 0, 0, .2);
                 }
             }
@@ -397,63 +397,36 @@
 }
 
 
-.shy-user-channel-chat-image {
-    margin: 5px 0px;
 
-    img {
-        border-radius  : 4px;
-        max-width      : 400px;
-        max-height     : 500px;
-        object-fit     : cover;
-        object-position: center;
-    }
-}
 
-.shy-user-channel-chat-video {
-    margin: 5px 0px;
+.sy-channel-text-item-tip-date {
+    text-align: center;
+    position  : relative;
+    height    : 24px;
+    margin    : 10px 20px 0px 20px;
 
-    video {
-        border-radius  : 4px;
-        max-width      : 400px;
-        max-height     : 500px;
-        object-fit     : cover;
-        object-position: center;
-    }
-}
-
-.shy-user-channel-chat-file {
-    &-content {
-        margin          : 5px 0px;
-        padding         : 10px;
-        border-radius   : 4px;
-        border-color    : var(--background-secondary-alt);
-        background-color: var(--background-secondary);
-        display         : inline-flex;
-        justify-content : flex-start;
-        align-items     : flex-start;
-
-        >.shy-icon {
-            color: var(--text-link);
-            fill : currentColor;
-        }
-
-        &-info {
-            color: var(--text-link);
-        }
-
-        >a {
-            cursor         : pointer;
-            width          : 24px;
-            height         : 24px;
-            display        : inline-block;
-            justify-content: center;
-            align-items    : center;
-            border-radius  : 4px;
-
-            &:hover {
-                background-color: rgba(55, 53, 47, .08);
-            }
-        }
+    .line {
+        position        : absolute;
+        top             : 50%;
+        left            : 0px;
+        right           : 0px;
+        transform       : translate(0%, -50%);
+        height          : 1px;
+        background-color: var(--border-color);
     }
 
+    .text {
+        padding    : 2px 4px;
+        color      : var(text-color-1);
+        background : var(--white);
+        line-height: 13px;
+        font-size  : 12px;
+        position   : absolute;
+        top        : 50%;
+        left       : 50%;
+        transform  : translate(-50%, -50%);
+        padding    : 0px 10px;
+        line-height: 24px;
+        height     : 24px;
+    }
 }
