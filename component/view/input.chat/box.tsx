@@ -98,7 +98,7 @@ export class InputChatBox extends React.Component<{
             <div className="flex flex-top">
                 <span className="flex-fixed size-24 round flex-center cursor item-hover">
                     {this.cp?.currentRobot && <Avatar size={24} userid={this.cp.currentRobot.robotId}></Avatar>}
-                    {!this.cp?.currentRobot && <Icon onMousedown={e => this.openAddFile(e)} size={18} icon={PlusSvg}></Icon>}
+                    {!this.cp?.currentRobot && <Icon onMousedown={e => this.openAddFile(e)} size={18} icon={{name:'byte',code:'add-one'}}></Icon>}
                 </span>
                 <div className="flex-auto l-24" >
                     <ChatInput

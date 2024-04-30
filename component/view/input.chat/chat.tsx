@@ -29,7 +29,7 @@ export type ChatInputOptions = {
     box?: InputChatBox
 }
 
-export class ChatInput extends React.Component<ChatInputOptions>{
+export class ChatInput extends React.Component<ChatInputOptions> {
     isQuote: boolean = false;
     keydown = (event: React.KeyboardEvent<HTMLDivElement>) => {
         var key = event.key.toLowerCase();
@@ -304,8 +304,7 @@ export class ChatInput extends React.Component<ChatInputOptions>{
         var style: CSSProperties = { outline: 'none', width: '100%' };
         if (typeof this.props.height == 'number') style.minHeight = this.props.height;
         else {
-            if (this.props.allowNewLine) style.minHeight = 60
-            else style.minHeight = 30;
+            style.minHeight = 24;
         }
         if (typeof this.props.style !== 'undefined') Object.assign(style, this.props.style)
         var v = this.props.value;
@@ -534,5 +533,19 @@ export class ChatInput extends React.Component<ChatInputOptions>{
         var text = this.richEl.childNodes[0];
         sel.setBaseAndExtent(text, 1, text, 1);
         this.commandInput.open();
+    }
+    onFocus() {
+        if (this.richEl) {
+            
+            // var sel = window.getSelection(); //DOM
+            // sel.removeAllRanges();
+            // var range = document.createRange();
+            // if (range) {
+            //     // range.setStart(this.cursorEl, this.cursorOffset);
+            //     range.setEnd(this.richEl, 0);
+            // }
+            // window.getSelection().addRange(range);
+            // this.richEl.focus()
+        }
     }
 }
