@@ -5,26 +5,15 @@
         left    : 0px;
         right   : 0px;
         bottom  : 0px;
-        &-bar {
-            position        : absolute;
-            top             : 0px;
-            left            : 0px;
-            right           : 0px;
-            height          : 48px;
-            background-color: #fff;
 
-            &::after {
-                content       : "";
-                position      : absolute;
-                display       : block;
-                top           : 47px;
-                left          : 0;
-                right         : 0;
-                height        : 1px;
-                box-shadow    : rgba(55, 53, 47, 0.09) 0px 1px 0px;
-                z-index       : 1;
-                pointer-events: none;
-            }
+        &-bar {
+            position             : absolute;
+            top                  : 0px;
+            left                 : 0px;
+            right                : 0px;
+            height               : 48px;
+            background-color     : #fff;
+            box-shadow           : var(--shadow-b);
         }
     }
 
