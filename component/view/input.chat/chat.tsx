@@ -254,15 +254,16 @@ export class ChatInput extends React.Component<ChatInputOptions> {
 
     }
     paste = async (event: React.ClipboardEvent<HTMLDivElement>) => {
+        event.preventDefault();
         var files: File[] = Array.from(event.clipboardData.files);
         var text = event.clipboardData.getData('text/plain');
-        if (text) {
-            event.preventDefault();
-            InsertSelectionText(text)
-        }
-        else if (files.length > 0) {
+        if (files.length > 0) {
             if (typeof this.props.onPasteFiles == 'function')
                 this.props.onPasteFiles(files)
+        }
+        else if (text) {
+            event.preventDefault();
+            InsertSelectionText(text)
         }
     }
     getValue() {
