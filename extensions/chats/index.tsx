@@ -38,8 +38,8 @@ import { useImageViewer } from "../../component/view/image.preview";
 import { CopyAlert } from "../../component/copy";
 import { LinkWs } from "../../src/page/declare";
 import { useOpenReport } from "../report";
-import "./style.less";
 import { getChatText } from "../../component/view/input.chat/util";
+import "./style.less";
 
 export class ViewChats extends React.Component<{
     readonly?: boolean,
@@ -150,7 +150,7 @@ export class ViewChats extends React.Component<{
             {d.reply && <div className="sy-channel-text-item-reply">
                 <UserBox userid={d.reply.userid}>{us => {
                     return < ><Avatar ws={this.props.ws} showCard user={us} userid={d.userid} size={16}></Avatar>
-                        <div className="sy-channel-text-item-reply-content f-12">{this.renderContent(d.reply)}</div>
+                        <div className="sy-channel-text-item-reply-content f-12 text-overflow">{this.renderContent(d.reply)}</div>
                     </>
                 }}</UserBox>
             </div>}

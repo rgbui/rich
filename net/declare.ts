@@ -5,7 +5,7 @@ import { GalleryType, OuterPic } from "../extensions/image/declare";
 import { StatusCode } from "./status.code";
 import { UserAction } from "../src/history/action";
 import { RobotInfo, UserBasic, UserStatus } from "../types/user";
-import { ResourceArguments } from "../extensions/icon/declare";
+import {IconArguments, ResourceArguments } from "../extensions/icon/declare";
 import { PayFeatureCheck } from "../component/pay";
 import { AtomPermission } from "../src/page/permission";
 import { WsConsumeType } from "./ai/cost";
@@ -227,7 +227,7 @@ export interface ChannelPutMapUrls {
 	"/ws/create":{args:{text:string,dataServiceAddress?:string,datasource?: "private-clound" | "public-clound" | "private-local",templateUrl?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>,pids:any[]}>>},
 	"/ws/invite/create":{args:any,returnType:Promise<SockResponse<{code:string}>>},
 	"/ws/invite/join":{args:{wsId:string,sock?:any,agree?:boolean,username:string},returnType:Promise<SockResponse<void>>},
-	"/ws/channel/send":{args:{ sockId?: string,wsId?: string,roomId: string,content?: string,replyId?: string, files?:any[],mentions?:string[],robotId?:string,isRobotSend?: boolean,newLine?: boolean},returnType:Promise<SockResponse<{id:string,seq:number,createDate:Date}>>},
+	"/ws/channel/send":{args:{ sockId?: string,wsId?: string,roomId: string,content?: string,replyId?: string, files?:any[],refs?:any[],mentions?:string[],robotId?:string,isRobotSend?: boolean,newLine?: boolean},returnType:Promise<SockResponse<{id:string,seq:number,createDate:Date}>>},
 	"/ws/channel/emoji":{args:{elementUrl: string,sockId?: string, wsId?: string, emoji: { emojiId: string, code?: string }},returnType:Promise<SockResponse<{emoji:{emojiId:string,code?:string,count:number}}>>},
 	"/ws/flow":{args:{ws:LinkWs,wsId?:string,flow:Record<string,any>},returnType:Promise<SockResponse<{flow:Record<string,any>}>>},
 	"/ws/role/create":{args:{data:Record<string,any>},returnType:Promise<SockResponse<{role:Record<string,any>}>>},

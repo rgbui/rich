@@ -1,3 +1,5 @@
+import { LinkPageItem } from "../../../src/page/declare";
+
 export type ChannelTextType = {
     id: string;
     userid: string;
@@ -7,7 +9,7 @@ export type ChannelTextType = {
     seq: number;
     content?: string;
     // file?: any;
-    files?:any[],
+    files?: any[],
     isEdited?: boolean;
     isDeleted?: boolean;
     replyId?: string;
@@ -16,5 +18,10 @@ export type ChannelTextType = {
         emojiId: string;
         code?: string;
         count: number;
+    }[],
+    refs?:{
+        elementUrl: string;
+        page: LinkPageItem<{}>;
+        blockIds: string[];
     }[]
 }

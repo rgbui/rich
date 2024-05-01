@@ -98,7 +98,8 @@ export class ChannelTextView extends BlockView<ChannelText> {
                         content: result.content,
                         robotId: data.robot.robotId,
                         files: result.files || undefined,
-                        replyId: options.replyId
+                        replyId: options.replyId,
+                        refs: result.refs||undefined
                     })
                     if (cr.data) {
                         var chat: ChannelTextType = {
@@ -109,7 +110,8 @@ export class ChannelTextView extends BlockView<ChannelText> {
                             roomId: this.block.roomId,
                             seq: cr.data.seq,
                             files: result.files || [],
-                            replyId: options.replyId
+                            replyId: options.replyId,
+                            refs: result.refs||undefined
                         };
                         this.block.chats.push(chat);
                         if (options.replyId) {

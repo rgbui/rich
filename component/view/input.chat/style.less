@@ -54,6 +54,7 @@
                 min-width       : 80px;
                 outline         : none;
                 border-radius   : 4px;
+                padding         : 0px 4px;
             }
         }
     }
@@ -64,40 +65,40 @@
     position: relative;
 
     &-reply {
-        position                  : absolute;
-        user-select               : none;
-        top                       : -40px;
-        height                    : 30px;
-      
-        border-top-left-radius    : 8px;
-        border-top-right-radius   : 8px;
-        left                      : -6px;
-        right                     : -6px;
+        position   : absolute;
+        user-select: none;
+        top        : -40px;
+        height     : 30px;
 
-        &-content {
-          
-            overflow        : hidden;
-            text-overflow   : ellipsis;
-           
-        }
-    }
-
-    &-error {
-        position               : absolute;
-        display                : flex;
-        justify-content        : flex-start;
-        align-items            : center;
-        user-select            : none;
-        top                    : -40px;
-        height                 : 30px;
-        line-height            : 20px;
-        // background             : var(--background-secondary);
         border-top-left-radius : 8px;
         border-top-right-radius: 8px;
         left                   : -6px;
         right                  : -6px;
-        font-size              : 14px;
-        border-bottom          : 1px solid rgba(53, 54, 57, .08);
+
+        &-content {
+
+            overflow     : hidden;
+            text-overflow: ellipsis;
+
+        }
+    }
+
+    &-error {
+        position                  : absolute;
+        display                   : flex;
+        justify-content           : flex-start;
+        align-items               : center;
+        user-select               : none;
+        top                       : -40px;
+        height                    : 30px;
+        line-height               : 20px;
+        // background             : var(--background-secondary);
+        border-top-left-radius    : 8px;
+        border-top-right-radius   : 8px;
+        left                      : -6px;
+        right                     : -6px;
+        font-size                 : 14px;
+        border-bottom             : 1px solid rgba(53, 54, 57, .08);
 
         &-content {
             flex-grow    : 1;
@@ -133,11 +134,11 @@
     }
 
     &-files {
-        position               : absolute;
+        position                  : absolute;
         // background             : var(--background-secondary);
-        border-top-left-radius : 8px;
-        border-top-right-radius: 8px;
-        left                   : 0px;
-        right                  : 0px;
+        border-top-left-radius    : 8px;
+        border-top-right-radius   : 8px;
+        left                      : 0px;
+        right                     : 0px;
     }
 }

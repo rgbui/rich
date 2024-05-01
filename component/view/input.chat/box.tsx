@@ -83,7 +83,7 @@ export class InputChatBox extends React.Component<{
                 })}
             </div>}
             {this.reply && <div className="shy-rich-input-reply flex padding-w-10 bg-white-1">
-                <span className="shy-rich-input-reply-content f-12 flex-auto">{this.reply.text}</span>
+                <span className="shy-rich-input-reply-content f-12 flex-auto text-overflow">{(this.reply.text || "").slice(0, 50)}</span>
                 <ToolTip overlay={lst('取消回复')}><span className="shy-rich-input-reply-operators flex-fixed flex-center cursor size-20 item-hover round" onMouseDown={e => this.clearReply()}><Icon size={12} icon={CloseSvg}></Icon></span></ToolTip>
             </div>}
             {this.errorTip && <div className="shy-rich-input-error bg-white-1">
