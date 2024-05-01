@@ -9,7 +9,7 @@ import { ls } from "../../../i18n/store";
 export class PageLayoutView extends React.Component<{
     page: Page,
     children?: React.ReactNode
-}>{
+}> {
     render(): React.ReactNode {
         if (this.error) return this.renderErrorPage();
         if ([ElementType.SchemaData, ElementType.SchemaRecordView].includes(this.props.page.pe.type) && !this.props.page.schema) {
@@ -112,7 +112,10 @@ export class PageLayoutView extends React.Component<{
                 return <div style={{ ...style }}>
                     <div className="flex flex-top" style={{ ...sr, height: mh }}>
                         <div className="flex-auto">{props.children}</div>
-                        <div className="flex-fix w-250" style={{ height: mh, borderLeft: '1px solid rgba(6, 6, 7, 0.08)' }}><OnlineUsers ws={this.props.page.ws}></OnlineUsers></div>
+                        <div className="flex-fix w-250" style={{ height: mh, borderLeft: '1px solid rgba(6, 6, 7, 0.08)' }}><OnlineUsers
+                            onClose={(e) => {
+                                props.page.onOpenMember(e)
+                            }} ws={this.props.page.ws}></OnlineUsers></div>
                     </div>
                 </div>
             }
