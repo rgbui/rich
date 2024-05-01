@@ -14,7 +14,7 @@ export class ChatCommandInput extends React.Component<{
     cp: ChatInput,
     searchRobots?: () => Promise<RobotInfo[]>,
     select: (task: RobotTask, robot: RobotInfo) => void,
-}>{
+}> {
     robots: RobotInfo[] = [];
     showRobotId: string = '';
     tasks: RobotTask[] = [];
@@ -59,7 +59,6 @@ export class ChatCommandInput extends React.Component<{
             width: this.rect.width,
             height: this.rect.height,
             userSelect: 'none',
-            // transform: 'translate(0px, -100%)',
             zIndex: '10000'
         };
         if (this.visible) style.display = 'block';
@@ -80,8 +79,8 @@ export class ChatCommandInput extends React.Component<{
                     })}
                 </div>
                 <div className="flex-auto padding-14">
-                    {(currentRobot?.tasks || []).map(c => {
-                        return <div className="flex visible-hover cursor padding-10 min-h-30 item-hover gap-h-10 round flex-top" onMouseDown={e => this.select(c)} key={c.id}>
+                    {(currentRobot?.tasks || []).map((c, i) => {
+                        return <div className={"flex visible-hover cursor padding-10 min-h-30 item-hover gap-h-10 round flex-top " + (this.selectIndex == i ? " item-hover-focus" : "")} onMouseDown={e => this.select(c)} key={c.id}>
                             <div className="flex-auto">
                                 <div className="flex">
                                     <span className="flex-fixed text">/{c.name}</span>
@@ -93,7 +92,7 @@ export class ChatCommandInput extends React.Component<{
                                 </div>
                                 <div className="remark f-12">{c.description}</div>
                             </div>
-                            <div className="flex-fixed">{currentRobot?.name}</div>
+                            <div className="flex-fixed f-14 text-1">{currentRobot?.name}</div>
                         </div>
                     })}
                 </div>
@@ -146,7 +145,7 @@ export class ChatCommandInput extends React.Component<{
                     status: UserStatus.online,
                     slogan: '',
                     online: true,
-                  
+
                     tasks: [
                         {
                             id: '1', name: '任务1', description: '任务1描述', args: [
