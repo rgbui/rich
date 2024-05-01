@@ -59,12 +59,12 @@ export class ChatInputPop extends React.Component<{
         if (key == 'enter') {
             if (this.selectIndex == 0 && lst('所有人').startsWith(this.word)) this.select({ name: lst('所有人'), id: 'all' } as any)
             else {
-                var g = this.users[this.selectIndex - 1];
+                var g = this.users[lst('所有人').startsWith(this.word) ? this.selectIndex - 1 : this.selectIndex];
                 this.select(g);
             }
         }
         else if (key == 'arrowdown') {
-            if (this.selectIndex + 1 == (this.users.length + 1)) { this.selectIndex = 0 }
+            if (this.selectIndex + 1 == (this.users.length + (lst('所有人').startsWith(this.word) ? 1 : 0))) { this.selectIndex = 0 }
             else this.selectIndex++;
             this.forceUpdate(() => {
                 var eg = this.el.querySelector('.item-hover-focus');
@@ -74,7 +74,7 @@ export class ChatInputPop extends React.Component<{
             })
         }
         else if (key == 'arrowup') {
-            if (this.selectIndex - 1 == -1) { this.selectIndex = this.users.length }
+            if (this.selectIndex - 1 == (lst('所有人').startsWith(this.word) ? -1 : 0)) { this.selectIndex = this.users.length }
             else this.selectIndex--;
             this.forceUpdate(() => {
                 var eg = this.el.querySelector('.item-hover-focus');
@@ -96,6 +96,7 @@ export class ChatInputPop extends React.Component<{
         // }
     }
     keyup() {
+        console.log('keyup...')
         var content = this.node == this.props.cp.richEl ? this.props.cp.richEl.innerHTML : this.node.textContent;
         var word = content.slice(this.nodeOffset);
         if (word && word.startsWith('@')) {
@@ -111,12 +112,14 @@ export class ChatInputPop extends React.Component<{
     isContinueEmpty: boolean = false;
     word: string = ''
     search = lodash.debounce(async (word: string) => {
+        if (this.word == word) return;
         this.loading = true;
         this.forceUpdate()
         try {
             this.word = word;
             if (typeof this.props.search == 'function') {
                 this.users = await this.props.search(word);
+                this.selectIndex = 0;
                 if (this.users.length == 0) {
                     if (this.isContinueEmpty == true) {
                         this.hide();
@@ -172,21 +175,23 @@ export class ChatInputPop extends React.Component<{
         return createPortal(<div
             ref={e => this.el = e}
             className="bg-white pos border shadow w-220   round  max-h-250 overflow-y" style={style}>
-            <div>
+            {!this.loading && <div>
                 {(!this.word || this.word && lst('所有人').startsWith(this.word)) && <>
-                    <div onClick={e => this.select({ name: lst('所有人'), id: 'all' } as any)} className={"h-30 item-hover round  padding-w-10 cursor flex" + (this.selectIndex == 0 ? " item-hover-focus" : "")}><S>@所有人</S></div>
+                    <div onClick={e => this.select({ name: lst('所有人'), id: 'all' } as any)} className={"h-30 gap-t-5 item-hover round  gap-w-5 padding-w-5 cursor flex" + (this.selectIndex == 0 ? " item-hover-focus" : "")}><S>@所有人</S></div>
                     <Divider></Divider>
                 </>}
                 {this.users.map((u, index) => {
                     return <div
                         onClick={e => this.select(u)}
                         key={u.id}
-                        className={'h-30 gap-h-5 item-hover round padding-w-10 cursor flex' + (this.selectIndex == (index + 1) ? " item-hover-focus" : "")}>
-                        <Avatar size={24} userid={u.id} showName></Avatar>
+                        className={'h-30 gap-h-5 item-hover round gap-w-5 padding-w-5 cursor flex' + (this.selectIndex == (index + (lst('所有人').startsWith(this.word) ? 1 : 0)) ? " item-hover-focus" : "")}>
+                        <Avatar middle size={24} userid={u.id} showName></Avatar>
                     </div>
                 })}
-            </div>
-            <SpinBox spin={this.loading}></SpinBox>
+            </div>}
+            {this.loading && <div className="gap-h-5">
+                <SpinBox spin={this.loading}></SpinBox>
+            </div>}
             {this.users.length == 0 && this.loading == false && <div className="remark f-12 gap-10"><S>没有搜到用户</S></div>}
         </div>, this.panel)
     }
