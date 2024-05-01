@@ -158,7 +158,7 @@ export async function AgentRequest(robot: RobotInfo,
         }
     }
     else {
-        callback({ msg: marked.parse(text + lst('未找到匹配的答案')), done: true, content: marked.parse(text + lst('未找到匹配的答案')) })
+        callback({ msg: marked.parse(text + lst('没有搜到相关资料')), done: true, content: marked.parse(text + lst('没有搜到相关资料')) })
     }
 
 

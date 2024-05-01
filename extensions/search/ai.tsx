@@ -34,20 +34,19 @@ export class AISearchBox extends EventsComponent {
                     </div>
                 </div>}
 
-                {!msg.userid && <div style={{ maxWidth: '80%' }} className="gap-h-20 padding-10 border-light shadow-s  round-16" >
-                    <div className="pos visible" style={{ top: 5, right: 5 }}><span onMouseDown={e => { CopyAlert(msg.content, lst('已复制')) }} className="flex-center size-24 item-hover round cursor remark"><Icon size={16} icon={DuplicateSvg}></Icon></span></div>
-                    <div className="break-all gap-h-10 md" dangerouslySetInnerHTML={{ __html: msg.content }}>
+                {!msg.userid && msg.content && <div style={{ maxWidth: '80%' }} className="gap-h-20 padding-10 border shadow-s  round-16" >
+                    <div className="break-all gap-b-10 md" dangerouslySetInnerHTML={{ __html: msg.content }}>
                     </div>
-                    {msg.asking == false && <div> {msg.refs && msg.refs.length > 0 && <div className="f-12 remark"><S>引用页面</S></div>}
+                    {msg.asking == false && <div> {msg.refs && msg.refs.length > 0 && <div className="f-12 remark gap-b-3"><S>引用页面</S></div>}
                         {msg.refs?.map(rf => {
-                            return <div className="flex" key={rf.page?.id}>
-                                <span onMouseDown={e => this.openPage(rf)} className="flex item-hover round gap-r-5 padding-w-3 "><Icon size={16} icon={getPageIcon(rf.page)}></Icon><span className="gap-l-5">{getPageText(rf.page)}</span></span>
+                            return <div className="flex gap-b-5" key={rf.page?.id}>
+                                <span onMouseDown={e => this.openPage(rf)} className="flex item-hover round gap-r-5 padding-w-3 l-20 "><Icon size={16} icon={getPageIcon(rf.page)}></Icon><span className="gap-l-5">{getPageText(rf.page)}</span></span>
                                 {rf.blockIds.length > 1 && <span className="flex flex-fixed ">{rf.blockIds.map((b, i) => {
                                     return <em onMouseDown={e => this.openPage(rf, b)} className="bg-hover bg-p-light text-p  padding-w-3 round gap-w-5 cursor" key={b}>{i}</em>
                                 })}</span>}
                             </div>
                         })}
-                        <div className="flex r-gap-r-20 gap-h-10">
+                        <div className="flex r-gap-r-20 gap-t-20">
                             <Button size="small" onMouseDown={e => { CopyAlert(msg.content, lst('已复制')) }} ghost icon={DuplicateSvg}><S>复制</S></Button>
                             <Button size="small" onMouseDown={e => { this.tryAgain(msg) }} ghost icon={RefreshSvg} ><S>重新尝试</S></Button>
                         </div></div>}
@@ -71,7 +70,7 @@ export class AISearchBox extends EventsComponent {
     }
     render() {
         return <div className={"bg-white  round flex flex-col flex-full" + (isMobileOnly ? " vw100-20" : " w-800 ")}>
-            <div className="padding-w-10 flex  padding-h-5">
+            <div className="padding-w-5 flex  padding-h-5">
                 <span className="size-24 flex-center">
                     <Icon className={'text-pu'} size={18} icon={AiStartSvg}></Icon>
                 </span>
@@ -79,16 +78,16 @@ export class AISearchBox extends EventsComponent {
                     {lst('智能搜索')}
                 </span>
                 <span className="flex-fixed flex">
-                    <span onMouseDown={e => this.openProperty(e)} className="flex-center remark size-24 item-hover round cursor">
+                    <ToolTip overlay={<S>清空对话</S>}><span onMouseDown={e => this.openProperty(e)} className="flex-center remark size-24 item-hover round cursor">
                         <Icon icon={{ name: 'byte', code: 'clear' }} size={16}></Icon>
-                    </span>
+                    </span></ToolTip>
                 </span>
             </div>
             <Divider></Divider>
             <div style={{ paddingBottom: 50 }} className="padding-w-30  min-h-300 max-h-400 overflow-y" ref={e => this.scrollEl = e}>
                 {this.renderMessages()}
             </div>
-            <div className="flex gap-w-10 padding-w-5  min-h-30  border round-16 gap-h-5">
+            <div className="flex gap-w-30 padding-w-10    border shadow-s round-16 gap-t-10 gap-b-10" style={{ minHeight: 36 }}>
                 <div className="flex-auto ">
                     <DivInput
                         value={this.prompt}
@@ -136,7 +135,6 @@ export class AISearchBox extends EventsComponent {
             var r = await getWsContext(prompt);
             if (r.context) {
                 cb.refs = r.refs;
-                console.log(r, 'rr');
                 var text = '';
                 cb.content = `<span class='typed-print'></span>`;
                 var content = getTemplateInstance(AskTemplate, {
@@ -198,7 +196,7 @@ export class AISearchBox extends EventsComponent {
 }
 
 export async function useAISearchBox(options: { ws: LinkWs }) {
-    var pos: PopoverPosition = { center: true, centerTop: 100 };
+    var pos: PopoverPosition = { center: true };
     let popover = await PopoverSingleton(AISearchBox, { mask: true, frame: true, shadow: true, });
     let fv = await popover.open(pos);
     await fv.open(options);

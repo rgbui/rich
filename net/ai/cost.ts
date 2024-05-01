@@ -218,6 +218,16 @@ export function getAiImageModelOptions() {
     ]
 }
 
+export function getAiEmbeddingsOptions() {
+    return window.shyConfig.isUS ? [
+        { text: 'DALLE-3', value: WsConsumeType.gpt_embedding },
+    ] : [
+        { text: '智谱 Embedding(向量)', value: WsConsumeType.glm_embedding_2 },
+        { text: '文言一心 Embedding(向量', value: WsConsumeType.baidu_embedding },
+
+    ]
+}
+
 export function getAiDefaultModel(model: WsConsumeType, type?: 'text' | 'image' | 'embedding') {
     if (typeof model != 'undefined') return model;
     if (!type) type = 'text'

@@ -109,13 +109,13 @@ export class Popover<T extends React.Component> extends EventsComponent<{
         if (this.props.visible == 'hidden') {
             return <div className="shy-popover-box" ref={e => this.box = e} style={{ zIndex: this.zindex, pointerEvents: 'none', display: this.visible == true ? "block" : "none" }}>
                 {this.props.mask == true && <div style={{ pointerEvents: 'visible' }} className={'shy-popover-mask' + (this.props.shadow ? " shy-popover-mask-shadow" : "")} onMouseDown={e => this.onClose(e)}></div>}
-                <div style={style} className='shy-popover' ref={e => this.el = e}>{child}</div>
+                <div style={style} className='shy-popover shadow' ref={e => this.el = e}>{child}</div>
             </div>
         }
         else {
             return <div className="shy-popover-box" ref={e => this.box = e} style={{ zIndex: this.zindex, pointerEvents: 'none', display: this.visible == false ? 'none' : undefined }} >{this.visible && <>
                 {this.props.mask == true && <div style={{ pointerEvents: 'visible' }} className={'shy-popover-mask' + (this.props.shadow ? " shy-popover-mask-shadow" : "")} onMouseDown={e => this.onClose(e)}></div>}
-                <div style={style} className='shy-popover' ref={e => this.el = e}>{child}</div>
+                <div style={style} className='shy-popover  shadow' ref={e => this.el = e}>{child}</div>
             </>}</div>
         }
     }

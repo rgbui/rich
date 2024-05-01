@@ -21,14 +21,14 @@ import { AgentRequest } from "../../../../net/ai/robot";
 import { LazyMarkdown } from "../../../../component/view/markdown/lazy";
 
 @view('/channel/text')
-export class ChannelTextView extends BlockView<ChannelText>{
+export class ChannelTextView extends BlockView<ChannelText> {
     contentEl: HTMLElement;
     async openEdit(event: React.MouseEvent) {
         var pd = this.block.page.getPageDataInfo();
         var model = { text: pd?.text || '', description: pd?.description }
         var f = await useForm({
             head: false,
-            fields: [{ name: 'text', text: lst('频道名称'), type: 'input' }, { name: 'description', text: lst('频道描述'), type: 'textarea' }],
+            fields: [{ name: 'text', placeholder: lst('话题...'), text: lst('频道名称'), type: 'input' }, { name: 'description', text: lst('频道描述'), type: 'textarea' }],
             title: lst('编辑讨论话题'),
             remark: '',
             footer: false,

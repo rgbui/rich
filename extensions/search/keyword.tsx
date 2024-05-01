@@ -70,18 +70,24 @@ export class SearchBox extends EventsComponent {
     }
     renderList() {
         if (this.searchList.list.length == 0 && this.searchList.pages.length == 0) return <div>
-            {this.ws?.aiConfig?.aiSearch && <div onMouseDown={e=>this.openAi(e)} className="flex h-30  padding-w-5 gap-w-5 item-hover round cursor">
+            {this.ws?.aiConfig?.aiSearch && <div onMouseDown={e => this.openAi(e)} className="flex h-30  padding-w-5 gap-w-5 item-hover round cursor">
                 <span className="size-24 flex-center flex-fixed "><Icon className={'text-pu'} size={18} icon={AiStartSvg}></Icon></span>
-                <span className="flex-auto">使用AI智能检索<b>{this.searchList.word}</b></span>
+                <span className="flex-fixed">使用AI智能检索<b className="bold">{this.searchList.word}</b></span>
+                <span className="flex-fixed size-24 flex-center  remark  round item-hover">
+                    <Icon size={18} icon={{ name: 'byte', code: 'corner-up-right' }}></Icon>
+                </span>
             </div>}
             <div className="h-30 gap-h-10 flex-center remark"><S>没有搜索结果</S></div>
         </div>
         if (this.searchList.pages?.length > 0 && this.searchList.list.length == 0) {
             return <div>
 
-                {this.ws?.aiConfig?.aiSearch && <div  onMouseDown={e=>this.openAi(e)}  className="flex h-30  padding-w-5 gap-w-5 item-hover round cursor">
+                {this.ws?.aiConfig?.aiSearch && <div onMouseDown={e => this.openAi(e)} className="flex h-30  padding-w-5 gap-w-5 item-hover round cursor">
                     <span className="size-24 flex-center flex-fixed "><Icon className={'text-pu'} size={18} icon={AiStartSvg}></Icon></span>
                     <span className="flex-auto">使用AI智能检索<b>{this.searchList.word}</b></span>
+                    <span className="flex-fixed size-24 remark flex-center round item-hover">
+                        <Icon size={18} icon={{ name: 'byte', code: 'corner-up-right' }}></Icon>
+                    </span>
                 </div>}
                 <div className="flex h-30 padding-w-5 gap-w-5">
                     <span className="remark"><Sp text={'共{count}条匹配结果'} data={{ count: this.searchList.total }}>共0条匹配结果</Sp></span>
@@ -89,7 +95,7 @@ export class SearchBox extends EventsComponent {
                 </div>
 
                 {this.searchList.pages.map(r => {
-                    return <div key={r.id} className="padding-w-5 padding-h-10 gap-w-5 item-hover round cursor" onMouseDown={e => this.onSelect(r)}>
+                    return <div key={r.id} className="padding-w-5 padding-h-5 gap-h-5 gap-w-5 item-hover round cursor" onMouseDown={e => this.onSelect(r)}>
                         <div className="flex">
                             <span className="flex-fixed flex-line flex-center size-20 round remark gap-r-5"><Icon size={16} icon={getPageIcon(r)}></Icon></span>
                             <span className="text f-14 flex-auto">{getPageText(r)}</span>
