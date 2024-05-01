@@ -63,7 +63,7 @@ class FormDialoug extends EventsComponent {
                         <div>
                             {f.type == 'input' && <Input placeholder={f.placeholder || undefined} onEnter={e => this.onSave()} onChange={e => this.model[f.name] = e} value={this.model[f.name] || ''}></Input>}
                             {f.type == 'textarea' && <Textarea placeholder={f.placeholder || undefined} onEnter={e => this.onSave()} onChange={e => this.model[f.name] = e} value={this.model[f.name] || ''}></Textarea>}
-                            {f.type == 'select' && <SelectBox border multiple={f.multiple ? true : false} onChange={e => { this.model[f.name] = e; this.forceUpdate(); }} value={this.model[f.name] || (f.multiple ? [] : '')} options={f.options || []}></SelectBox>}
+                            {f.type == 'select' && <SelectBox dropAlign="full" border multiple={f.multiple ? true : false} onChange={e => { this.model[f.name] = e; this.forceUpdate(); }} value={this.model[f.name] || (f.multiple ? [] : '')} options={f.options || []}></SelectBox>}
                             {f.type == 'file' && <FileInput mime={f.mime} value={this.model[f.name]} onChange={e => { this.model[f.name] = e; this.forceUpdate(); }}></FileInput>}
                         </div>
                     </div>
