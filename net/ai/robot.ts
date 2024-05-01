@@ -1,15 +1,13 @@
 
 import { ResourceArguments } from "../../extensions/icon/declare";
 import { RobotInfo } from "../../types/user";
-
 import { channel } from "../channel";
-
-import { marked } from "marked"
+import { marked } from "marked";
 import { lst } from "../../i18n/store";
 import { parseElementUrl } from "../element.type";
 import lodash from "lodash";
 import { LinkPageItem } from "../../src/page/declare";
-import {  getAiDefaultModel } from "./cost";
+import { getAiDefaultModel } from "./cost";
 
 /**
  *  获取robot wikit基于ask的相关上下文参考资料
@@ -111,7 +109,7 @@ export async function AgentRequest(robot: RobotInfo,
     }) => Promise<void>) {
     var user = await channel.query('/query/current/user')
     var text = message + `<a class='at-user' data-userid='${user.id}'>@${user.name}</a><br/>`;
-    if (options?.isAt !== true) text = '';
+    if (options?.isAt == true) text = '';
     await callback({ msg: text + "<span class='typed-print'></span>", done: false, content: text });
     var content = '';
     if (robot.disabledWiki !== true) {
