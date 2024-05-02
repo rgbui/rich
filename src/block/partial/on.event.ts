@@ -23,12 +23,12 @@ import {
 import lodash from "lodash";
 import { FontColorList, BackgroundColorList, GetTextCacheFontColor, SetTextCacheFontColor } from "../../../extensions/color/data";
 import { BlockUrlConstant, ParseBlockUrl } from "../constant";
-import { List } from "../../../blocks/present/list/list";
 import { util } from "../../../util/util";
 import { ls, lst } from "../../../i18n/store";
 import { channel } from "../../../net/channel";
 import { UA } from "../../../util/ua";
 import { PageOutLine } from "../../../blocks/navigation/outline";
+import { useCommentListView } from "../../../extensions/comment/dialoug";
 
 export class Block$Event {
     /**
@@ -482,8 +482,22 @@ export class Block$Event {
         CopyText(this.blockUrl);
         ShyAlert(lst('块的链接已复制'))
     }
-    async onInputComment(this: Block) {
-
+    async onInputComment(this: Block, area?: Rect) {
+        console.log(this,this.getResolveContent());
+        var r = await useCommentListView({ roundArea: area || this.getVisibleContentBound() }, {
+            elementUrl: this.elementUrl,
+            userid: this.page.user.id,
+            displayFormat: 'comment',
+            ws: this.page.ws,
+            resolvedHtml: this.getResolveContent()
+        });
+        if (typeof r == 'number') {
+            if (r == this.commentCount) return;
+            await this.onUpdateProps({ commentCount: r }, { range: BlockRenderRange.self })
+        }
+    }
+    getResolveContent(this: Block) {
+        return this.getBlockContent();
     }
     async onUpdateProps(this: Block, props: Record<string, any>, options?: {
         range?: BlockRenderRange,
@@ -745,8 +759,8 @@ export class Block$Event {
             if (this.url == BlockUrlConstant.List) {
                 url = BlockUrlConstant.List;
                 data = {
-                    listType: (this as List).listType,
-                    listView: (this as List).listView
+                    listType: (this as any).listType,
+                    listView: (this as any).listView
                 }
             }
             if (this.url == BlockUrlConstant.Todo) {

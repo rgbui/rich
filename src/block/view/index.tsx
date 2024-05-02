@@ -8,6 +8,8 @@ import { Icon } from "../../../component/view/icon";
 import { Tip } from "../../../component/view/tooltip/tip";
 import { util } from "../../../util/util";
 import { Spin } from "../../../component/view/spin";
+import { Rect } from "../../common/vector/point";
+import { ToolTip } from "../../../component/view/tooltip";
 
 export abstract class BlockView<T extends Block> extends Component<{ block: T }> {
     constructor(props) {
@@ -91,5 +93,13 @@ export abstract class BlockView<T extends Block> extends Component<{ block: T }>
     }
     get block(): T {
         return this.props.block;
+    }
+    renderComment() {
+        if (this.block.commentCount > 0) {
+            return <ToolTip overlay={<S>点击展开评论</S>}><div className="shy-block-comment-count flex-center h-20 min-w-20 f-12 cursor" onMouseDown={e => { this.block.onInputComment(Rect.fromEle(e.currentTarget as HTMLElement)) }}>
+                {this.block.commentCount}
+            </div></ToolTip>
+        }
+        return <></>
     }
 }

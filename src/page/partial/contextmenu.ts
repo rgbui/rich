@@ -8,7 +8,6 @@ import { Point, Rect } from "../../common/vector/point";
 import { PageLayoutType } from "../declare";
 import {
     AiStartSvg,
-    CommentSvg,
     CustomizePageSvg,
     DuplicateSvg,
     FieldsSvg,
@@ -43,7 +42,6 @@ import { lst } from "../../../i18n/store";
 import { Block } from "../../block";
 import { UA } from "../../../util/ua";
 import lodash from "lodash";
-
 export class Page$ContextMenu {
     async onPageContextmenu(this: Page, event: React.MouseEvent) {
         var items: MenuItem<BlockDirective | string>[] = [];
@@ -67,7 +65,7 @@ export class Page$ContextMenu {
                         { name: 'showCover', text: lst('封面'), type: MenuItemType.switch, checked: this.pageInfo?.cover?.abled && this.pageInfo?.cover.url ? true : false, icon: PicSvg },
                         { name: 'pageAuthor', text: lst('作者'), icon: { name: 'bytedance-icon', code: 'edit-name' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PageAuthor) },
                         { type: MenuItemType.divide },
-                        { name: 'showComment', text: lst("评论"), icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
+                        { name: 'showComment', text: lst("评论"), icon: { name: 'byte', code: 'message' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                         { name: 'pageUpvotedOrShared', text: lst('点赞分享'), icon: { name: 'bytedance-icon', code: 'send' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PageUpvotedOrShared) },
                         { name: 'prevOrNext', text: lst('上下篇'), icon: { name: 'bytedance-icon', code: 'transfer-data' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PagePreOrNext) },
                         { name: 'refPages', text: lst("引用"), visible: [ElementType.SchemaRecordView].includes(this.pe.type) ? false : true, icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.RefLinks) },
@@ -149,7 +147,7 @@ export class Page$ContextMenu {
                     childs: [
                         { name: 'onlyDisplayContent', text: lst('标题'), type: MenuItemType.switch, checked: this.hideDocTitle ? false : true, icon: NoteSvg },
                         { name: 'pageUpvotedOrShared', text: lst('点赞分享'), icon: { name: 'bytedance-icon', code: 'send' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PageUpvotedOrShared) },
-                        { name: 'showComment', text: lst("评论"), icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
+                        { name: 'showComment', text: lst("评论"), icon: { name: 'byte', code: 'message' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                         { type: MenuItemType.divide },
                         { type: MenuItemType.help, url: window.shyConfig?.isUS ? "https://help.shy.red/page/68#sm8Eix3mziuLx83RnrUYw8" : "https://help.shy.live/page/1988#5ChJozytSL93WbD7Uxy8sk", text: lst('了解如何使用小部件') }
                     ]
@@ -161,7 +159,7 @@ export class Page$ContextMenu {
                     label: UA.isMacOs ? "⌘+D" : "Ctrl+D"
                 },
                 {
-                    name: 'move', text: lst('移动'), icon:{ name: 'byte', code: 'corner-up-right' },
+                    name: 'move', text: lst('移动'), icon: { name: 'byte', code: 'corner-up-right' },
                     label: UA.isMacOs ? "⌘+Shift+P" : "Ctrl+Shift+P"
                 },
                 { name: 'export', iconSize: 16, text: lst('导出'), icon: { name: 'bytedance-icon', code: 'download-one' } },
@@ -199,7 +197,7 @@ export class Page$ContextMenu {
                         { type: MenuItemType.divide },
                         { name: 'pageUpvotedOrShared', text: lst('点赞分享'), icon: { name: 'bytedance-icon', code: 'send' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PageUpvotedOrShared) },
                         { name: 'prevOrNext', text: lst('上下篇'), icon: { name: 'bytedance-icon', code: 'transfer-data' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PagePreOrNext) },
-                        { name: 'showComment', text: lst("评论"), icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
+                        { name: 'showComment', text: lst("评论"), icon: { name: 'byte', code: 'message' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                         { name: 'refPages', text: lst("引用"), visible: [ElementType.SchemaRecordView].includes(this.pe.type) ? false : true, icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.RefLinks) },
                         { type: MenuItemType.divide },
                         { type: MenuItemType.help, url: window.shyConfig?.isUS ? "https://help.shy.red/page/68#sm8Eix3mziuLx83RnrUYw8" : "https://help.shy.live/page/1988#5ChJozytSL93WbD7Uxy8sk", text: lst('了解如何使用小部件') }
@@ -218,7 +216,7 @@ export class Page$ContextMenu {
                     label: UA.isMacOs ? "⌘+D" : "Ctrl+D"
                 },
                 {
-                    name: 'move', text: lst('移动'), icon:{ name: 'byte', code: 'corner-up-right' },
+                    name: 'move', text: lst('移动'), icon: { name: 'byte', code: 'corner-up-right' },
                     label: UA.isMacOs ? "⌘+Shift+P" : "Ctrl+Shift+P"
                 },
                 { name: 'export', iconSize: 16, text: lst('导出'), icon: { name: 'bytedance-icon', code: 'download-one' } },
