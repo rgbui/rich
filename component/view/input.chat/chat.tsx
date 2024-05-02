@@ -10,27 +10,11 @@ import { util } from "../../../util/util";
 import { InputChatBox } from "./box";
 import "./style.less";
 
-export type ChatInputOptions = {
-
-    placeholder?: string;
-    disabled?: boolean,
-    readonly?: boolean,
-    height?: number,
-    value?: string,
-    onInput?: (value: string) => void,
-    allowNewLine?: boolean,
-    spellCheck?: boolean,
-    onPasteFiles?: (files: File[]) => void,
-    onEnter?: (value: string) => void,
-    searchUser?: (word: string) => Promise<UserBasic[]>,
-    searchRobots?: () => Promise<RobotInfo[]>,
-    style?: CSSProperties,
-    disabledInputQuote?: boolean,
-    box?: InputChatBox
-}
-
-export class ChatInput extends React.Component<ChatInputOptions> {
+export class ChatInput extends React.Component<{ box?: InputChatBox, }> {
     isQuote: boolean = false;
+    get box() {
+        return this.props.box;
+    }
     keydown = (event: React.KeyboardEvent<HTMLDivElement>) => {
         var key = event.key.toLowerCase();
         var isShift = event.shiftKey;
@@ -39,8 +23,8 @@ export class ChatInput extends React.Component<ChatInputOptions> {
             //左右移动
             //回退移动或回退删除command
             if (!isShift && key == 'enter') {
-                if (typeof this.props.onEnter == 'function') {
-                    this.props.onEnter(this.getValue());
+                if (typeof this.box.props.onEnter == 'function') {
+                    this.props.box.onEnter();
                 }
                 event.preventDefault();
                 return;
@@ -136,7 +120,7 @@ export class ChatInput extends React.Component<ChatInputOptions> {
                 this.commandInput.hide()
             }
         }
-        if ((!this.props.disabledInputQuote) == true && (key.charCodeAt(0) == 32 || key.charCodeAt(0) == 160) && !event.nativeEvent.isComposing) {
+        if ((!this.box.props.disabledInputQuote) == true && (key.charCodeAt(0) == 32 || key.charCodeAt(0) == 160) && !event.nativeEvent.isComposing) {
             var sel = window.getSelection();
             var node = sel.focusNode;
             var offset = sel.focusOffset;
@@ -151,19 +135,19 @@ export class ChatInput extends React.Component<ChatInputOptions> {
                 }
             }
         }
-        if (!isShift && key == 'enter' && this.props.allowNewLine !== true) {
+        if (!isShift && key == 'enter' && this.box.props.allowNewLine !== true) {
             var value = this.richEl.innerHTML;
             let regex = new RegExp('```', 'g');
             let count = (value.match(regex) || []).length;
             if (count % 2 == 0) {
-                if (typeof this.props.onEnter == 'function') {
-                    this.props.onEnter(this.getValue());
+                if (typeof this.box.onEnter == 'function') {
+                    this.box.onEnter();
                 }
                 event.preventDefault();
                 return;
             }
         }
-        else if (key == '@') {
+        else if (key == '@' && this.box.props.disabledUsers !== true) {
             if (this.userPop.visible == true) {
                 this.userPop.hide();
                 return;
@@ -179,7 +163,7 @@ export class ChatInput extends React.Component<ChatInputOptions> {
                 return;
             }
         }
-        else if (key == '/' && typeof this.props.searchRobots == 'function') {
+        else if (key == '/' && this.box.props.disabledRobot !== true) {
             var sel = window.getSelection();
             var node = sel.focusNode;
             if (node === this.richEl && sel.focusOffset == 0) {
@@ -188,7 +172,7 @@ export class ChatInput extends React.Component<ChatInputOptions> {
             }
         }
         else if (key == 'backspace' || key == 'delete') {
-            if (this.isQuote) {
+            if (this.isQuote && this.box.props.disabledInputQuote !== true) {
                 var sel = window.getSelection();
                 var node = sel.focusNode;
                 if (node === this.richEl || node instanceof Text && !node.previousSibling) {
@@ -211,8 +195,8 @@ export class ChatInput extends React.Component<ChatInputOptions> {
     }
     input = (event: React.FormEvent<HTMLDivElement>) => {
 
-        if (typeof this.props.onInput == 'function')
-            this.props.onInput(this.getValue())
+        // if (typeof this.props.onInput == 'function')
+        //     this.props.onInput(this.getValue())
     }
     mousedown = (event: React.MouseEvent) => {
 
@@ -223,6 +207,7 @@ export class ChatInput extends React.Component<ChatInputOptions> {
         }
         else {
             if (this.currentCommand) return;
+            if (this.box.props.disabledTextStyle == true) return;
             var sel = window.getSelection(); //DOM
             if (sel && sel.rangeCount > 0) {
                 var range = sel.getRangeAt(0); // DOM下
@@ -257,9 +242,8 @@ export class ChatInput extends React.Component<ChatInputOptions> {
         event.preventDefault();
         var files: File[] = Array.from(event.clipboardData.files);
         var text = event.clipboardData.getData('text/plain');
-        if (files.length > 0) {
-            if (typeof this.props.onPasteFiles == 'function')
-                this.props.onPasteFiles(files)
+        if (files.length > 0 && this.box.props.disabledUploadFiles !== true) {
+            this.box.onUploadFiles(files);
         }
         else if (text) {
             event.preventDefault();
@@ -276,20 +260,19 @@ export class ChatInput extends React.Component<ChatInputOptions> {
         })
     }
     richEl: HTMLElement;
-    render(): React.ReactNode {
+    render() {
         var style: CSSProperties = { outline: 'none', width: '100%' };
-        if (typeof this.props.height == 'number') style.minHeight = this.props.height;
+        if (typeof this.box.props.height == 'number') style.minHeight = this.box.props.height;
         else {
             style.minHeight = 24;
         }
-        if (typeof this.props.style !== 'undefined') Object.assign(style, this.props.style)
-        var v = this.props.value;
+        var v = this.box.props.value;
         return <div>
             <div className={"text shy-rich-view" + (this.isQuote ? " shy-rich-view-quote" : "")}
                 style={style}
-                data-placeholder={this.props.placeholder}
-                spellCheck={this.props.spellCheck || false}
-                contentEditable={this.currentCommand || this.props.readonly || this.props.disabled ? false : true}
+                data-placeholder={this.box.props.placeholder}
+                spellCheck={this.props.box.props.spellCheck || false}
+                contentEditable={this.currentCommand || this.box.props.readonly || this.box.props.disabled ? false : true}
                 dangerouslySetInnerHTML={{ __html: v }}
                 ref={e => this.richEl = e}
                 onKeyDown={this.keydown}
@@ -304,10 +287,9 @@ export class ChatInput extends React.Component<ChatInputOptions> {
                 onPaste={this.paste}
             >
             </div>
-            <ChatInputPop cp={this} search={this.props.searchUser} select={this.selectUser} ref={e => this.userPop = e} ></ChatInputPop>
+            <ChatInputPop cp={this} select={this.selectUser} ref={e => this.userPop = e} ></ChatInputPop>
             <InputChatTool ref={e => this.tool = e} click={this.toolClick}></InputChatTool>
             <ChatCommandInput
-                searchRobots={this.props.searchRobots}
                 select={(e, r) => this.selectCommand(e, r)}
                 cp={this}
                 ref={e => this.commandInput = e}></ChatCommandInput>
@@ -491,9 +473,7 @@ export class ChatInput extends React.Component<ChatInputOptions> {
         }
     }
     onEnter() {
-        if (typeof this.props.onEnter == 'function') {
-            this.props.onEnter(this.getValue());
-        }
+        this.box.onEnter();
     }
     async onCommandInput() {
         this.richEl.innerHTML = '/';

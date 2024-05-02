@@ -1,6 +1,6 @@
 import React from "react";
 import { Icon } from "../icon";
-import { AiSvg, CloseSvg, EmojiSvg, FileSvg, TrashSvg, UploadSvg } from "../../svgs";
+import { AiSvg, CloseSvg, EmojiSvg, FileSvg, PublishSvg, TrashSvg, UploadSvg } from "../../svgs";
 import { ChatInput } from "./chat";
 import { useOpenEmoji } from "../../../extensions/emoji";
 import { Rect } from "../../../src/common/vector/point";
@@ -17,6 +17,7 @@ import { Avatar } from "../avator/face";
 import { ToolTip } from "../tooltip";
 import { lst } from "../../../i18n/store";
 import { LinkWs } from "../../../src/page/declare";
+import { S } from "../../../i18n/view";
 
 export type ChatInputType = {
     content?: string,
@@ -30,6 +31,7 @@ export type ChatInputType = {
 }
 
 export class InputChatBox extends React.Component<{
+    userid?: string,
     placeholder?: string;
     disabled?: boolean,
     readonly?: boolean,
@@ -40,10 +42,15 @@ export class InputChatBox extends React.Component<{
     spellCheck?: boolean,
     onEnter?: (ct: ChatInputType) => void,
     searchUser?: (word?: string) => Promise<UserBasic[]>,
-    disabledInputQuote?: boolean
+    disabledInputQuote?: boolean,
+    disabledUploadFiles?: boolean,
+    disabledTextStyle?: boolean,
+    disabledRobot?: boolean,
     className?: string[] | string,
     searchRobots?: () => Promise<RobotInfo[]>,
-    ws?: LinkWs
+    ws?: LinkWs,
+    disabledUsers?: boolean,
+    display?: 'channel' | 'comment' | 'redit'
 }> {
     el: HTMLElement;
     render() {
@@ -54,12 +61,15 @@ export class InputChatBox extends React.Component<{
         }
         var width = 120;
         var height = 160;
-        return <div className="shy-rich-input" ref={e => this.el = e}>
+
+        return <div className="shy-rich-input" style={{
+            zIndex: this.props.display == 'comment' ? 100 : 0
+        }} ref={e => this.el = e}>
             {this.uploadFiles.length > 0 && <div className="shy-rich-input-files bg-white-1 round-16 flex" style={{
                 left: -10,
                 right: -10,
                 height: height + 20,
-                top: (0 - (height + 30 + 1))
+                top: (0 - (height + 20 + (this.props.display == 'comment' ? 0 : 10) + 1))
             }}>
                 {this.uploadFiles.map(uf => {
                     return <div key={uf.id} className="relative visible-hover item-hover border-light shadow-s round-16 overflow-hidden gap-w-10" style={{ width, height }}>
@@ -90,36 +100,53 @@ export class InputChatBox extends React.Component<{
                 <span className="shy-rich-input-error-content">{this.errorTip}</span>
                 <ToolTip overlay={lst('清理错误提示')}><span className="shy-rich-input-error-operators" onMouseDown={e => this.clearError()}><a><Icon size={12} icon={CloseSvg}></Icon></a></span></ToolTip>
             </div>}
-            <div className="flex flex-top">
+            {this.renderRichInput()}
+        </div>
+    }
+    renderRichInput() {
+        if (this.props.display == 'comment') {
+            return <div className="flex flex-top">
                 <span className="flex-fixed size-24 round flex-center cursor item-hover">
-                    {this.cp?.currentRobot && <Avatar size={24} userid={this.cp.currentRobot.robotId}></Avatar>}
-                    {!this.cp?.currentRobot && <Icon onMousedown={e => this.openAddFile(e)} size={18} icon={{ name: 'byte', code: 'add-one' }}></Icon>}
+                    {this.props.userid && <Avatar size={24} userid={this.props.userid}></Avatar>}
                 </span>
                 <div className="flex-auto l-24" >
                     <ChatInput
                         box={this}
                         ref={e => this.cp = e}
-                        placeholder={this.props.placeholder}
-                        onPasteFiles={e => this.onUploadFiles(e)}
-                        disabled={this.props.disabled}
-                        readonly={this.props.readonly}
-                        height={this.props.height}
-                        value={this.props.value}
-                        onInput={e => { }}
-                        allowNewLine={this.props.allowNewLine}
-                        spellCheck={this.props.spellCheck}
-                        onEnter={e => { this.onEnter() }}
-                        searchUser={this.props.searchUser}
-                        disabledInputQuote={this.props.disabledInputQuote}
-                        searchRobots={this.props.searchRobots}
+                    ></ChatInput>
+                </div>
+                <ToolTip overlay={lst('添加表情')}><span className="flex-fixed size-24 gap-l-5 round flex-center cursor item-hover"><Icon size={16} onMousedown={e => this.openEmoji(e)} icon={EmojiSvg}></Icon></span></ToolTip>
+                {this.props.disabledUploadFiles !== true && <ToolTip overlay={lst('添加附件')}><span className="flex-fixed size-24  gap-l-5 round flex-center cursor item-hover"><Icon size={16} onMousedown={e => this.onAddFile()} icon={UploadSvg}></Icon></span></ToolTip>}
+                <ToolTip overlay={<div>
+                    <div className="flex"><span style={{ color: '#bbb' }}>Enter</span><span className="gap-l-5"><S>发送</S></span></div>
+                    <div className="flex"><span style={{ color: '#bbb' }}>Shift+Enter</span><span className="gap-l-5"><S>换行</S></span></div>
+                </div>}><span className="flex-fixed size-24 gap-l-5 round flex-center cursor item-hover"><Icon size={16} onMousedown={e => this.onEnter()} icon={PublishSvg}></Icon></span></ToolTip>
+            </div>
+        }
+        else if (this.props.display == 'redit') {
+            return <ChatInput
+                box={this}
+                ref={e => this.cp = e}
+            ></ChatInput>
+        }
+        else {
+            return <div className="flex flex-top">
+                <span className="flex-fixed size-24 round flex-center cursor item-hover">
+                    {this.cp?.currentRobot && <Avatar size={24} userid={this.cp.currentRobot.robotId}></Avatar>}
+                    {!this.cp?.currentRobot && <Icon onMousedown={e => this.openCommand(e)} size={18} icon={{ name: 'byte', code: 'add-one' }}></Icon>}
+                </span>
+                <div className="flex-auto l-24" >
+                    <ChatInput
+                        box={this}
+                        ref={e => this.cp = e}
                     ></ChatInput>
                 </div>
                 <ToolTip overlay={lst('添加表情')}><span className="flex-fixed size-24 round flex-center cursor item-hover"><Icon size={18} onMousedown={e => this.openEmoji(e)} icon={EmojiSvg}></Icon></span></ToolTip>
             </div>
-        </div>
+        }
     }
     cp: ChatInput;
-    async openAddFile(event: React.MouseEvent) {
+    async openCommand(event: React.MouseEvent) {
         if (this.props.disabled) return;
         if (this.props.readonly) return;
         var menus: MenuItem<string>[] = [
@@ -132,20 +159,23 @@ export class InputChatBox extends React.Component<{
         var re = await useSelectMenuItem({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, menus);
         if (re) {
             if (re.item.name == 'addFile') {
-                var files = await OpenMultipleFileDialoug();
-                var size = 1024 * 1024 * 1024;
-                var rs = files.filter(g => g.size > size);
-                if (rs.length > 0) {
-                    this.openEror(`${rs.map(r => r.name + `(${util.byteToString(r.size)})`).join(",")}${lst('文件大于1G,暂不支持上传')}`)
-                }
-                files = files.filter(g => g.size <= size);
-                if (files.length > 0) {
-                    this.onUploadFiles(files);
-                }
+                this.onAddFile();
             }
             else if (re?.item?.name == 'addRobot') {
                 this.cp.onCommandInput()
             }
+        }
+    }
+    async onAddFile() {
+        var files = await OpenMultipleFileDialoug();
+        var size = 1024 * 1024 * 1024;
+        var rs = files.filter(g => g.size > size);
+        if (rs.length > 0) {
+            this.openEror(`${rs.map(r => r.name + `(${util.byteToString(r.size)})`).join(",")}${lst('文件大于1G,暂不支持上传')}`)
+        }
+        files = files.filter(g => g.size <= size);
+        if (files.length > 0) {
+            this.onUploadFiles(files);
         }
     }
     async openEmoji(event: React.MouseEvent) {
@@ -260,7 +290,6 @@ export class InputChatBox extends React.Component<{
                     await util.delay(3e3);
                 }
             }
-
             fr.speed = ``;
             this.forceUpdate()
             await util.delay(20)

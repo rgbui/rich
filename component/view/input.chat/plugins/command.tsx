@@ -1,6 +1,6 @@
 import React, { CSSProperties } from "react";
 import { ChatInput } from "../chat";
-import { RobotInfo, RobotTask, UserStatus } from "../../../../types/user";
+import { RobotInfo, RobotTask } from "../../../../types/user";
 import { createPortal } from "react-dom";
 import { Rect } from "../../../../src/common/vector/point";
 import { SpinBox } from "../../spin";
@@ -8,11 +8,10 @@ import lodash from "lodash";
 import { Avatar } from "../../avator/face";
 import { Line } from "../../grid";
 import { S } from "../../../../i18n/view";
-import { lst } from "../../../../i18n/store";
+
 
 export class ChatCommandInput extends React.Component<{
     cp: ChatInput,
-    searchRobots?: () => Promise<RobotInfo[]>,
     select: (task: RobotTask, robot: RobotInfo) => void,
 }> {
     robots: RobotInfo[] = [];
@@ -129,41 +128,13 @@ export class ChatCommandInput extends React.Component<{
     componentDidMount(): void {
         //  this.load()
     }
+    searchRobot = async () => {
+        var g = await this.props.cp.box.props.ws.getWsRobots();
+        return g;
+    }
     async load() {
-        if (typeof this.props.searchRobots == 'function') {
-            this.robots = await this.props.searchRobots()
-            this.showRobotId = this.robots[0].id;
-        }
-        else {
-            this.robots = [
-                {
-                    id: '1',
-                    name: lst('机器人1'),
-                    sn: 1,
-                    role: 'robot',
-                    avatar: { name: 'none', url: 'https://img.yzcdn.cn/vant/cat.jpeg' } as any,
-                    status: UserStatus.online,
-                    slogan: '',
-                    online: true,
-
-                    tasks: [
-                        {
-                            id: '1', name: '任务1', description: '任务1描述', args: [
-                                { id: '1', name: '参数1', text: '', type: 'text' },
-                                { id: '2', name: '参数2', text: '', type: 'text' }
-                            ]
-                        },
-                        {
-                            id: '2', name: '任务2', description: '任务2描述', args: [
-                                { id: '1', name: '参数1', text: '', type: 'text' },
-                                { id: '2', name: '参数2', text: '', type: 'text' }
-                            ]
-                        },
-                    ]
-                },
-            ]
-            this.showRobotId = this.robots[0]?.id;
-        }
+        this.robots = typeof this.props.cp.box.props.searchRobots == 'function' ? await this.props.cp.box.props.searchRobots() : await this.searchRobot();
+        this.showRobotId = this.robots[0].id;
     }
     componentWillUnmount(): void {
         if (this.panel) this.panel.remove()

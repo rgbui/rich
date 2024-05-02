@@ -36,8 +36,7 @@ export function DivInput(props: {
             props.onChange(text);
         }
     }
-    function paster(e:React.ClipboardEvent<HTMLSpanElement>)
-    {
+    function paster(e: React.ClipboardEvent<HTMLSpanElement>) {
         e.preventDefault();
         var text = e.clipboardData.getData('text/plain');
         var sel = window.getSelection();

@@ -5,12 +5,12 @@ import { UserBasic } from "../../../../types/user";
 import { Point, Rect } from "../../../../src/common/vector/point";
 import { SpinBox } from "../../spin";
 import lodash from "lodash";
-import { util } from "../../../../util/util";
 import { Divider } from "../../grid";
 import { ChatInput } from "../chat";
 import { Avatar } from "../../avator/face";
 import { lst } from "../../../../i18n/store";
 import { S } from "../../../../i18n/view";
+import { channel } from "../../../../net/channel";
 
 
 /**
@@ -20,7 +20,7 @@ import { S } from "../../../../i18n/view";
  * 
  */
 export class ChatInputPop extends React.Component<{
-    search: (word?: string) => Promise<UserBasic[]>,
+
     select: (user: UserBasic) => void,
     cp: ChatInput
 }> {
@@ -44,9 +44,7 @@ export class ChatInputPop extends React.Component<{
                 rect = Rect.fromEle(this.props.cp.richEl)
             }
             this.point = rect.clone().leftBottom.move(0, 10)
-            if (typeof this.props.search == 'function') {
-                this.users = await this.props.search();
-            }
+            this.users=await this.searchUser()
         }
         catch (ex) {
             console.error(ex)
@@ -111,44 +109,36 @@ export class ChatInputPop extends React.Component<{
     }
     isContinueEmpty: boolean = false;
     word: string = ''
+    searchUser = async (text?: string) => {
+        if (this.props.cp.box.props.searchUser)
+            return await this.props.cp.box.props.searchUser(text)
+        var r = await channel.get('/ws/member/word/query', { word: text, ws: this.props.cp.box.props.ws });
+        if (r.ok) {
+            return r.data.list.map(c => {
+                return {
+                    ...c,
+                    id: c.userid,
+                }
+            }) as any
+        }
+        else return []
+    }
     search = lodash.debounce(async (word: string) => {
         if (this.word == word) return;
         this.loading = true;
         this.forceUpdate()
         try {
             this.word = word;
-            if (typeof this.props.search == 'function') {
-                this.users = await this.props.search(word);
-                this.selectIndex = 0;
-                if (this.users.length == 0) {
-                    if (this.isContinueEmpty == true) {
-                        this.hide();
-                        return;
-                    }
-                    this.isContinueEmpty = true;
+            this.users = await this.searchUser(word);
+            this.selectIndex = 0;
+            if (this.users.length == 0) {
+                if (this.isContinueEmpty == true) {
+                    this.hide();
+                    return;
                 }
-                else this.isContinueEmpty = false;
+                this.isContinueEmpty = true;
             }
-            else this.users = [
-                { id: 'kan', name: 'ggg' },
-                { id: 'kanaa', name: 'kanhai' },
-                { id: util.guid(), name: util.guid() },
-                { id: util.guid(), name: util.guid() },
-                { id: util.guid(), name: util.guid() },
-                { id: util.guid(), name: util.guid() },
-                { id: util.guid(), name: util.guid() },
-                { id: util.guid(), name: util.guid() },
-                { id: util.guid(), name: util.guid() },
-                { id: util.guid(), name: util.guid() },
-                { id: util.guid(), name: util.guid() },
-                { id: util.guid(), name: util.guid() },
-                { id: util.guid(), name: util.guid() },
-                { id: util.guid(), name: util.guid() },
-                { id: util.guid(), name: util.guid() },
-                { id: util.guid(), name: util.guid() },
-                { id: util.guid(), name: util.guid() },
-                { id: util.guid(), name: util.guid() },
-            ] as any;
+            else this.isContinueEmpty = false;
         }
         catch (ex) {
 
