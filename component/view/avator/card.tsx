@@ -20,8 +20,7 @@ import { ShyAlert } from "../../lib/alert";
 
 export class UserCard extends EventsComponent {
     user: UserBasic;
-    render()
-    {
+    render() {
         var u = channel.query('/query/current/user');
         return <div className="shy-user-card">
             {this.user && <><div className="shy-user-card-cover">
@@ -39,10 +38,10 @@ export class UserCard extends EventsComponent {
                             </span>}
                         </div>
                         <div className="shy-user-card-operators flex-fixed">
-                            {(this.ws || u) && !this.isUserSelf && <span onMouseDown={e => this.onUserProperty(e)} className="gap-r-10  size-24 item-hover round cursor flex-center">
+                            {(this.ws || u) && !this.isUserSelf() && <span onMouseDown={e => this.onUserProperty(e)} className="gap-r-10  size-24 item-hover round cursor flex-center">
                                 <Icon size={18} icon={DotsSvg}></Icon>
                             </span>}
-                            {(this.ws || u) && this.isUserSelf && <span onMouseDown={async e => {
+                            {(this.ws || u) && this.isUserSelf() && <span onMouseDown={async e => {
                                 await channel.act('/open/user/settings');
                                 this.emit('close');
                             }} className="gap-r-10  size-24 item-hover round cursor flex-center">
@@ -59,7 +58,7 @@ export class UserCard extends EventsComponent {
     }
     isUserSelf() {
         var u = channel.query('/query/current/user');
-        return u.id == this.user.id;
+        return u.id == this.user.id && this.ws.isOwner;
     }
     async onUserProperty(event: React.MouseEvent) {
         var rr = await channel.get('/friend/is', { friendId: this.user.id });
