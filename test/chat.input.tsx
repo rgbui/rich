@@ -1,8 +1,8 @@
-import React from "react";
-import { ChatInput } from "../component/view/input.chat/chat";
+// import React from "react";
+// import { ChatInput } from "../component/view/input.chat/chat";
 
 
 
-export function ChatInputBox(){
-    return <ChatInput></ChatInput>
-}
+// export function ChatInputBox(){
+//     return <ChatInput></ChatInput>
+// }

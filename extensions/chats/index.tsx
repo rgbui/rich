@@ -30,7 +30,6 @@ import { util } from "../../util/util";
 import { useOpenEmoji } from "../emoji";
 import { EmojiCode } from "../emoji/store";
 import { ChannelTextType } from "./declare";
-import { ChatInput } from "../../component/view/input.chat/chat";
 import { ToolTip } from "../../component/view/tooltip";
 import { S } from "../../i18n/view";
 import { lst } from "../../i18n/store";
@@ -40,6 +39,7 @@ import { LinkWs } from "../../src/page/declare";
 import { useOpenReport } from "../report";
 import { getChatText } from "../../component/view/input.chat/util";
 import "./style.less";
+import { InputChatBox } from "../../component/view/input.chat/box";
 
 export class ViewChats extends React.Component<{
     readonly?: boolean,
@@ -73,7 +73,7 @@ export class ViewChats extends React.Component<{
             else return -1;
         })
     }
-    chatInput: ChatInput;
+    chatInput: InputChatBox;
     get currentUser(): UserBasic {
         return this.props.user
     }
@@ -168,14 +168,19 @@ export class ViewChats extends React.Component<{
                                     <span>{util.showTime(d.createDate)}</span>
                                 </div>
                                 <div className="sy-channel-text-item-edited-content-input  item-hover-focus">
-                                    <ChatInput
-                                        ref={e => this.chatInput = e}
+                                    <InputChatBox
+                                        userid={this.currentUser?.id}
+                                        display='redit'
+                                        ws={this.props.ws}
                                         value={getChatText(d.content)}
+                                        disabledUploadFiles={true}
+                                        disabledRobot={true}
+                                        ref={e => this.chatInput = e}
                                         placeholder={lst("回车提交")}
-                                        onEnter={e => this.edit(d, { content: e })}
-                                        searchUser={this.props.searchUser}
-                                    >
-                                    </ChatInput>
+                                        onChange={e => this.edit(d,
+                                            { content: e.content }
+                                        )}
+                                    ></InputChatBox>
                                 </div>
                             </div>
                         </div>
@@ -204,9 +209,9 @@ export class ViewChats extends React.Component<{
                     <div className="sy-channel-text-item-content">{this.renderContent(d)}</div>
                 </div>
             </div>}
-            {Array.isArray(d.emojis) && <div className="sy-channel-text-item-emojis gap-l-50 flex">{d.emojis.filter(g => g.count > 0).map(em => {
-                return <a className="round item-hover-light-focus" onMouseDown={e => this.editEmoji(d, em)} key={em.emojiId} >
-                    <span dangerouslySetInnerHTML={{ __html: getEmoji(em.code) }}></span>
+            {Array.isArray(d.emojis) && <div className="sy-channel-text-item-emojis gap-l-50 flex padding-h-10">{d.emojis.filter(g => g.count > 0).map(em => {
+                return <a className="round-8 item-hover-light-focus" onMouseDown={e => this.editEmoji(d, em)} key={em.emojiId} >
+                    <Icon icon={{ code: em.code, name: 'emoji' }} size={16} ></Icon>
                     <span>{em.count}</span>
                 </a>
             })}</div>}
@@ -306,14 +311,14 @@ export class ViewChats extends React.Component<{
         this.editChannelText = d;
         this.forceUpdate(async () => {
             if (this.chatInput) {
-                this.chatInput.onFocus()
-                this.chatInput.richEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+                this.chatInput.cp.onFocus()
+                this.chatInput.cp.richEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
                 return;
             }
             await util.delay(100);
             if (this.chatInput) {
-                this.chatInput.onFocus()
-                this.chatInput.richEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+                this.chatInput.cp.onFocus()
+                this.chatInput.cp.richEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
             }
 
         });

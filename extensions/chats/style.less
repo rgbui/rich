@@ -1,14 +1,14 @@
 .sy-channel-view-chats {
     .sy-channel-text-item {
-        margin-top    : 10px;
-        padding-top   : 5px;
-        padding-bottom: 5px;
-        padding-left  : 5px;
-        padding-right : 5px;
-        border-radius : 5px;
-        margin-left   : 20px;
-        margin-right  : 48px;
-        position      : relative;
+        margin-top       : 10px;
+        padding-top      : 5px;
+        // padding-bottom: 5px;
+        padding-left     : 5px;
+        padding-right    : 5px;
+        border-radius    : 5px;
+        margin-left      : 20px;
+        margin-right     : 48px;
+        position         : relative;
 
         &-operators {
             position     : absolute;
@@ -43,8 +43,8 @@
                 margin-left: 10px;
 
                 .sy-channel-text-item-content {
-                    color      : rgba(55, 53, 47, 1);
-                    line-height: 20px;
+                    // color      : var(--text-color);
+                    line-height: 22px;
 
                     a {
                         color                : rgb(0, 108, 231);
@@ -143,12 +143,12 @@
             height         : 20px;
 
             a {
-                display        : inline-flex;
-                justify-content: center;
-                align-items    : center;
-                font-size      : 1.2rem;
-                font-weight    : bold;
-                color          : var(--header-primary);
+                display           : inline-flex;
+                justify-content   : center;
+                align-items       : center;
+                // font-size      : 1.2rem;
+                font-weight       : bold;
+                color             : var(--text-color);
             }
 
             span {
@@ -216,24 +216,23 @@
             align-items    : flex-start;
 
             a {
-                display         : inline-block;
-                // background   : var(--background-secondary);
-                // border-radius: 0.5rem;
-                padding         : 0.15rem 0.4rem;
-                margin-right    : 10px;
-                border          : 1px solid transparent;
-                cursor          : pointer;
-                line-height     : 1.3rem;
+                display     : inline-block;
+                padding     : 0.3rem 0.6rem;
+                margin-right: 10px;
+                border      : 1px solid transparent;
+                cursor      : pointer;
+                line-height : 1.3rem;
+                color       : var(--text-color);
 
                 span {
-                    font-size  : 1rem;
+                    font-size  : 1.6rem;
                     font-weight: 500;
 
                     &:first-child {
                         margin-right: 0.375rem;
                     }
 
-                    text-align : center;
+                    text-align    : center;
                     // color      : var(--interactive-normal);
                 }
 
