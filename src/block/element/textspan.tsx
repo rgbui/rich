@@ -301,6 +301,7 @@ export class TextSpanView extends BlockView<TextSpan> {
             <div style={style}>
                 <TextSpanArea placeholderEmptyVisible={this.block.isFreeBlock ? true : false} placeholder={placeholder} block={this.block}></TextSpanArea>
             </div>
+            {this.renderComment()}
         </div>
     }
 }

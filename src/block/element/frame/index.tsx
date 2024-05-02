@@ -171,6 +171,7 @@ export class FrameView extends BlockView<Frame>{
                 ...this.block.contentStyle
             }}>
             </div>
+            {this.renderComment()}
         </div>
     }
     renderBorder() {

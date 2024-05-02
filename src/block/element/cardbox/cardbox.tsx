@@ -625,6 +625,7 @@ export class ViewComponent extends BlockView<CardBox> {
                     </div>
                 </div>
             </div>
+            {this.renderComment()}
         </div>
     }
 }

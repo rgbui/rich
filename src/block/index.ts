@@ -49,6 +49,8 @@ export abstract class Block extends Events {
     editor: string;
     @prop()
     editDate: number;
+    @prop()
+    commentCount: number;
     /**
      * 建立栅格索引
      */
@@ -230,6 +232,7 @@ export abstract class Block extends Events {
             Object.assign(style, this.transformStyle);
         }
         else {
+            style.position = 'relative';
             if (this.isBlock) {
                 Object.assign(style, {
                     paddingTop: '0.2rem',
