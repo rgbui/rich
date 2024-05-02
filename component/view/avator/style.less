@@ -224,27 +224,24 @@
         position     : relative;
         display      : block;
         margin-bottom: 32px;
-        overflow     : hidden;
-        height       : 143px;
+        // overflow     : hidden;
+        // height       : 143px;
 
         img {
-            height         : inherit;
+            // height         : inherit;
             width          : 100%;
-            object-fit     : cover;
-            object-position: 50% 50%;
+            // object-fit     : cover;
+            // object-position: 50% 50%;
         }
     }
 
     &-face {
-        position        : absolute;
+       
         left            : 12px;
-        top             : 120px;
-        width           : 50px;
-        height          : 50px;
-        background-color: #fff;
-        display         : flex;
-        justify-content : center;
-        align-items     : center;
+      
+        bottom:-25px;
+        z-index: 11;
+      
         border-radius   : 12px;
 
         img {
@@ -254,7 +251,6 @@
             object-fit     : cover;
             object-position: 50% 50%;
         }
-
         >span {
             width           : 44px;
             height          : 44px;
@@ -262,7 +258,6 @@
             display         : inline-flex;
             justify-content : center;
             align-items     : center;
-            // font-size       : 14px;
             background-color: #5865f2;
             color           : #fff;
         }
@@ -270,7 +265,6 @@
 
     &-content {
         margin: 0px 12px;
-
         h3 {
             display        : flex;
             justify-content: flex-start;
@@ -289,17 +283,16 @@
         }
     }
 
-    &-slogan {
-        height       : 65px;
-        overflow     : hidden;
-        text-overflow: ellipsis;
-        color        : var(--header-secondary);
-    }
+    // &-slogan {
+    //     // height       : 65px;
+    //     // overflow     : hidden;
+    //     // text-overflow: ellipsis;
+    //     // color        : var(--header-secondary);
+    // }
 
     &-count {
-        color  : var(--header-secondary);
+        // color  : var(--header-secondary);
         display: flex;
-
         span {
             flex-grow      : 1.0;
             flex-shrink    : 1.0;
@@ -346,7 +339,6 @@
     width   : 16px;
     height  : 16px;
     color   : green;
-
     svg {
         &:last-child {
             position : absolute;

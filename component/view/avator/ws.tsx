@@ -38,21 +38,17 @@ export class WsAvatar extends React.Component<{
         }
         return <div className="shy-ws-avatar">
             <div className="shy-ws-avatar-cover">
-                {this.ws.cover && <img src={autoImageUrl(this.ws.cover.url, 500)} />}
-                {!this.ws.cover && <div style={{ height: 153, backgroundColor: 'rgb(192, 157, 156)' }}></div>}
+                {this.ws.cover && <img className="object-center h-120" src={autoImageUrl(this.ws.cover.url, 500)} />}
+                {!this.ws.cover && <div className="h-80" style={{ backgroundColor: 'rgb(192, 157, 156)' }}></div>}
+                <div className="shy-ws-avatar-face size-50 flex-center pos bg-white" >
+                    {this.ws.icon && <img src={autoImageUrl(this.ws.icon.url, 120)} />}
+                    {!this.ws.icon && <span className="f-20 bold">{this.ws.text.slice(0, 1).toUpperCase()}</span>}
+                </div>
             </div>
-            <div className="shy-ws-avatar-face">
-                {this.ws.icon && <img src={autoImageUrl(this.ws.icon.url, 120)} />}
-                {!this.ws.icon && <span className="f-20 bold">{this.ws.text.slice(0, 1).toUpperCase()}</span>}
-            </div>
+
             <div className="shy-ws-avatar-content">
                 <div className="h3 flex">{getFlags()}<span>{this.ws.text}</span></div>
-                <div className="shy-ws-avatar-slogan"
-                    style={{
-                        display: '-webkit-box',
-                        WebkitLineClamp: 3,/* 显示两行 */
-                        WebkitBoxOrient: 'vertical'
-                    }}
+                <div className="shy-ws-avatar-slogan row-2"
                 >{this.ws.slogan}</div>
                 <div className="shy-ws-avatar-count gap-h-10">
                     <span><i className="online"></i><em>{this.ws.memberOnlineCount}<S>在线</S></em></span>
