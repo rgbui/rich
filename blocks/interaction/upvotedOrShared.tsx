@@ -136,6 +136,7 @@ export class UpvotedOrSharedView extends BlockView<UpvotedOrShared>{
                     {this.block.isCanEdit() && <span className="cursor" onMouseDown={e => this.block.onContextmenu(e.nativeEvent)} ><Icon size={20} icon={DotsSvg}></Icon></span>}
                 </div>
             </div>
+            {this.renderComment()}
         </div>
     }
 }

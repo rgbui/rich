@@ -139,6 +139,9 @@ export class PageCard extends Block {
         }
         return rs;
     }
+    getResolveContent(this: Block) {
+        return lst('卡片')
+    }
     async onContextMenuInput(this: Block, item: MenuItem<BlockDirective | string>) {
         if (item?.name == 'autoContentHeight') {
             this.onUpdateProps({ autoContentHeight: item.checked }, { range: BlockRenderRange.self });
@@ -458,6 +461,7 @@ export class PageCardView extends BlockView<PageCard> {
                 </div>
                 {this.block.isCanEdit() && this.block.autoContentHeight !== true && <Tip text={'拖动标签页高度'}><div className="sy-block-card-resize visible" onMouseDown={e => this.onResize(e)}></div></Tip>}
             </div>
+            {this.renderComment()}
         </div>
     }
 }

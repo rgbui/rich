@@ -178,7 +178,7 @@ export class CardTiZhi extends CardView {
             {this.commentSpread && <div className="gap-h-5" onMouseDown={e => {
                 e.stopPropagation();
             }}>
-                <CommentListView page={this.dataGrid.page} userid={this.dataGrid.page.user?.id} elementUrl={this.props.item.elementUrl}></CommentListView>
+                <CommentListView ws={this.dataGrid.page.ws} userid={this.dataGrid.page.user?.id} elementUrl={this.props.item.elementUrl}></CommentListView>
             </div>}
         </div>
     }

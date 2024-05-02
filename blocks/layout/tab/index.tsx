@@ -478,6 +478,7 @@ export class TabView extends BlockView<Tab>{
                 </div>
                 {this.block.isCanEdit() && this.block.autoContentHeight !== true && <Tip text={'拖动标签页高度'}><div className="sy-block-tab-resize visible" onMouseDown={e => this.onResize(e)}></div></Tip>}
             </div>
+            {this.renderComment()}
         </div>
     }
 }

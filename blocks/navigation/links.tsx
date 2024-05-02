@@ -137,7 +137,7 @@ export class LinkPathsView extends BlockView<LinkPaths> {
                 {items.map((item, i) => {
                     return this.renderItem(item, i, items)
                 })}
-            </div>
+            </div> {this.renderComment()}
         </div>
     }
 }

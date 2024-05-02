@@ -148,6 +148,7 @@ export class ShapeView extends BlockView<Shape> {
                 }}>
                 <TextSpanArea placeholder={this.block.isFreeBlock ? lst("键入文本") : undefined} block={this.block}></TextSpanArea>
             </div>
+            {this.renderComment()}
         </div>
     }
 }

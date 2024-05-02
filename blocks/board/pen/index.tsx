@@ -69,6 +69,7 @@ export class PenView extends BlockView<Pen>{
                     strokeLinejoin="round"
                     d={this.block.pathString}></path>}
             </svg>
+            {this.renderComment()}
         </div>
     }
 }

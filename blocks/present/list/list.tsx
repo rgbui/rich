@@ -305,6 +305,7 @@ export class ListView extends BlockView<List> {
                     {this.renderListType()}
                     <div className='sy-block-list-text-content'>{this.renderText()}</div>
                 </div>
+                {this.renderComment()}
             </div>
             {this.block.isExpand && <div className='sy-block-list-subs'>
                 <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>

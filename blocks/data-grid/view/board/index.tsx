@@ -6,7 +6,7 @@ import { FieldType } from "../../schema/type";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { TableStoreItem } from "../item";
 import { DataGridTool } from "../components/tool";
-import { CollectTableSvg, DotsSvg, EyeHideSvg, EyeSvg, PlusSvg } from "../../../../component/svgs";
+import { DotsSvg, EyeHideSvg, EyeSvg, PlusSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import { lst } from "../../../../i18n/store";
 import { S } from "../../../../i18n/view";
@@ -203,7 +203,7 @@ export class TableStoreBoard extends DataGridView {
 }
 
 @view('/data-grid/board')
-export class TableStoreBoardView extends BlockView<TableStoreBoard>{
+export class TableStoreBoardView extends BlockView<TableStoreBoard> {
     renderGroup(dg: ArrayOf<TableStoreBoard['dataGroups']>, index: number) {
         var cs = this.block.childs.findAll(g => g.mark == dg.group);
         return <div className="sy-data-grid-board-group visible-hover" key={index}>
@@ -276,16 +276,20 @@ export class TableStoreBoardView extends BlockView<TableStoreBoard>{
         </div>
     }
     renderView() {
-        return <div className='sy-data-grid-board' onMouseEnter={e => this.block.onOver(true)}
-            onMouseLeave={e => this.block.onOver(false)}>
-            <DataGridTool block={this.block}></DataGridTool>
-            <div className="sy-data-grid-board-list">
-                {this.block.dataGroups.findAll(g => this.block.hideGroups.some(s => s == g.value) ? false : true).map((dg, i) => {
-                    return this.renderGroup(dg, i)
-                })}
-                {this.block.isCanEdit() && this.renderAddGroup()}
+        return <div style={this.block.visibleStyle}><div style={this.block.contentStyle}>
+            <div className='sy-data-grid-board' onMouseEnter={e => this.block.onOver(true)}
+                onMouseLeave={e => this.block.onOver(false)}>
+                <DataGridTool block={this.block}></DataGridTool>
+                <div className="sy-data-grid-board-list">
+                    {this.block.dataGroups.findAll(g => this.block.hideGroups.some(s => s == g.value) ? false : true).map((dg, i) => {
+                        return this.renderGroup(dg, i)
+                    })}
+                    {this.block.isCanEdit() && this.renderAddGroup()}
+                </div>
+                {this.renderCreateTable()}
             </div>
-            {this.renderCreateTable()}
+        </div>
+            {this.renderComment()}
         </div>
     }
 }

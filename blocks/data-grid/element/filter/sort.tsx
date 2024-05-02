@@ -40,7 +40,9 @@ export class SearchTextView extends BlockView<FilterSort>{
                         { text: lst('降序'), value: -1, icon: { name: 'bytedance-icon', code: 'sort-amount-down' } }
                     ]}></SelectBox>
             </div>
-        </OriginFilterFieldView ></div>
+        </OriginFilterFieldView >
+        {this.renderComment()}
+        </div>
     }
 }
 

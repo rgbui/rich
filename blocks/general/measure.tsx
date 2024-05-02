@@ -45,7 +45,7 @@ export class Measure extends Block {
 }
 
 @view('/measure')
-export class MeasureView extends BlockView<Measure>{
+export class MeasureView extends BlockView<Measure> {
     setProgress(e: React.MouseEvent) {
         var pe = this.block.el.querySelector('.sy-block-measure-progress') as HTMLElement;
         var bound = Rect.fromEle(pe);
@@ -84,6 +84,7 @@ export class MeasureView extends BlockView<Measure>{
             {this.block.hideValue !== true && <div className='sy-block-measure-value' style={
                 { color: style.color }
             }>{this.block.value}%</div>}
+            {this.renderComment()}
         </div>
     }
 }

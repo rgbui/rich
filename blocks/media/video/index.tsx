@@ -97,6 +97,9 @@ export class Video extends Block {
     async getMd() {
         return `[${this.src?.filename || lst('视频')}](${this.src?.url})`;
     }
+    getResolveContent(this: Block) {
+        return lst('视频')
+    }
     async getVideoSize() {
         if (this.originSize) return this.originSize;
         if (this.src?.url)

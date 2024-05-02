@@ -183,6 +183,7 @@ export class LinkView extends BlockView<Link> {
                 <span className="gap-l-3 f-14"><S>添加链接</S></span>
             </div>}
         </div>
+        {this.renderComment()}
         </div>
     }
 }

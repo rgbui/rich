@@ -240,6 +240,7 @@ export class TitleView extends BlockView<Title> {
                     html={this.block.pageInfo?.text}
                 ></TextArea></span>
             </div>}
+            {this.renderComment()}
         </div>
     }
 }

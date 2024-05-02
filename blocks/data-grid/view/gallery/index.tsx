@@ -8,7 +8,6 @@ import { DataGridView } from "../base";
 import { DataGridTool } from "../components/tool";
 import { CardConfig } from "../item/service";
 import "./style.less";
-import { CollectTableSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import { isMobileOnly } from "react-device-detect";
 import { S } from "../../../../i18n/view";
@@ -48,7 +47,7 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery> {
         var gap = 20;
         if (isMobileOnly) { size = 2; gap = 8; }
         // var w = (100 / size).toFixed(2);
-        var wd = `calc((100% - ${(size-1)*gap}px ) / ${size})`
+        var wd = `calc((100% - ${(size - 1) * gap}px ) / ${size})`
         // n*w + (n-1)*gap = 100%
         //w=(100%-(n-1)* gap)/n
 
@@ -62,7 +61,7 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery> {
                 rss[c].push(childs[i]);
             }
             eles = rss.map((rs, i) => {
-                return <div className='sy-data-grid-gallery-column' style={{ width: wd, marginRight:i==rss.length-1?undefined: gap, marginBottom: undefined }} key={i}>
+                return <div className='sy-data-grid-gallery-column' style={{ width: wd, marginRight: i == rss.length - 1 ? undefined : gap, marginBottom: undefined }} key={i}>
                     {rs.map(c => <div className="sy-data-grid-gallery-cell w100" key={c.id}>{this.renderItem(c)}</div>)}
                 </div>
             })
@@ -77,7 +76,7 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery> {
                 }
                 i += (size - 1);
                 eles.push(<div className='sy-data-grid-gallery-row' key={i}>
-                    {cs.map((c,j)=> <div className="sy-data-grid-gallery-cell" style={{ width:wd, marginRight:cs.length-1==j?undefined: gap, marginBottom: undefined }}
+                    {cs.map((c, j) => <div className="sy-data-grid-gallery-cell" style={{ width: wd, marginRight: cs.length - 1 == j ? undefined : gap, marginBottom: undefined }}
                         key={c.id}>{this.renderItem(c)}
                     </div>)}
                 </div>)
@@ -102,12 +101,16 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery> {
         </div>
     }
     renderView() {
-        return <div className='sy-data-grid-gallery'
-            onMouseEnter={e => this.block.onOver(true)}
-            onMouseLeave={e => this.block.onOver(false)}>
-            <DataGridTool block={this.block}></DataGridTool>
-            <div className={"sy-data-grid-gallery-list" + (this.block.isCardAuto ? " sy-data-grid-gallery-list-cols" : "")}>{this.renderRows()} </div>
-            {this.renderCreateTable()}
+        return <div style={this.block.visibleStyle}><div style={this.block.contentStyle}>
+            <div className='sy-data-grid-gallery'
+                onMouseEnter={e => this.block.onOver(true)}
+                onMouseLeave={e => this.block.onOver(false)}>
+                <DataGridTool block={this.block}></DataGridTool>
+                <div className={"sy-data-grid-gallery-list" + (this.block.isCardAuto ? " sy-data-grid-gallery-list-cols" : "")}>{this.renderRows()} </div>
+                {this.renderCreateTable()}
+            </div>
+        </div>
+            {this.renderComment()}
         </div>
     }
 }

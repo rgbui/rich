@@ -130,6 +130,7 @@ export default class VideoWrapper extends React.Component<{ block: Video }> {
                     </>}
                 </div>
             </div>}
+            {this.block.view.renderComment()}
         </div>
     }
     componentDidMount(): void {

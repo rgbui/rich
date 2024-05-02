@@ -67,7 +67,7 @@ export class SearchUser extends OriginFilterField {
 }
 
 @view('/field/filter/user')
-export class SearchTextView extends BlockView<SearchUser>{
+export class SearchTextView extends BlockView<SearchUser> {
     async mousedown(event: React.MouseEvent) {
         var r = await useUserPicker({ roundArea: Rect.fromEvent(event) }, this.block.page.ws, {});
         if (r) {
@@ -83,6 +83,8 @@ export class SearchTextView extends BlockView<SearchUser>{
                 {!(this.block.selectUsers?.length > 0) && <em className="remark cursor item-hover border round-8 padding-w-5 padding-h-2 f-14 "><S>所有人</S></em>}
                 {this.block.selectUsers.length > 0 && <UserAvatars size={24} users={this.block.selectUsers}></UserAvatars>}
             </div>
-        </OriginFilterFieldView ></div>
+        </OriginFilterFieldView >
+            {this.renderComment()}
+        </div>
     }
 }

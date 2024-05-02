@@ -276,6 +276,7 @@ export class TableStoreView extends BlockView<TableStore> {
                     {this.renderCreateTable()}
                 </div>
             </div>
+            {this.renderComment()}
         </div>
     }
     async didMount() {

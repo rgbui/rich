@@ -86,6 +86,7 @@ export class SearchTextView extends BlockView<SearchText>{
                     }}
                 ></Input>
             </OriginFilterFieldView >
+            {this.renderComment()}
         </div>
     }
 }

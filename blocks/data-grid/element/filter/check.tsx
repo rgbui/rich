@@ -79,6 +79,6 @@ export class FilterFieldCheckView extends BlockView<FilterFieldCheck>{
                     }}></Switch>}
                 <TextArea className={'flex-fixed gap-l-5 text-overflow'} placeholderSmallFont plain placeholder={lst("是否核查")} prop="checkLabel" block={this.block} ></TextArea>
             </div>
-        </OriginFilterFieldView></div>
+        </OriginFilterFieldView>{this.renderComment()}</div>
     }
 }

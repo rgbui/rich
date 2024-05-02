@@ -90,6 +90,7 @@ export class LatestOrHotView extends BlockView<LatestOrHot>{
                     onChange={v => this.block.onSet(v)}
                 ></SelectButtons>
             </div>
+            {this.renderComment()}
         </div>
     }
 }

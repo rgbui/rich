@@ -54,6 +54,6 @@ export class SearchTextView extends BlockView<FieldFilterNull>{
                     }}></Switch>}
                 <TextArea className={'flex-fixed gap-l-5 text-overflow'} plain placeholderSmallFont placeholder={lst("不为空")} prop="checkLabel" block={this.block} ></TextArea>
             </div>
-        </OriginFilterFieldView ></div>
+        </OriginFilterFieldView >{this.renderComment()}</div>
     }
 }

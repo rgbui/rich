@@ -62,6 +62,9 @@ export class Carousel extends Block {
             }, { range: BlockRenderRange.self });
         }
     }
+    getResolveContent(this: Block) {
+        return lst('轮播图')
+    }
     @prop()
     contentWidthPercent: number = 100;
     @prop()
@@ -304,7 +307,7 @@ export class Carousel extends Block {
     }
 }
 @view('/carousel/image')
-export class CarouselView extends BlockView<Carousel>{
+export class CarouselView extends BlockView<Carousel> {
     onMousedown(event: React.MouseEvent, operator: 'bottom-left' | "bottom-right") {
         event.stopPropagation();
         var el = this.block.el;
@@ -360,7 +363,7 @@ export class CarouselView extends BlockView<Carousel>{
             pauseOnHover: true
         };
         return <div onMouseDown={e => { e.stopPropagation() }}><Slider {...settings}>{this.block.srcs.map((img, i) => {
-            return <div key={i} ><img  draggable={false} className="round" src={img.src?.url} style={style} /></div>
+            return <div key={i} ><img draggable={false} className="round" src={img.src?.url} style={style} /></div>
         })}</Slider></div>
     }
     renderView() {
@@ -396,6 +399,7 @@ export class CarouselView extends BlockView<Carousel>{
                         </div>
                     </>}
                 </div></div>}
+            {this.renderComment()}
         </div>
     }
 }

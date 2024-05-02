@@ -142,6 +142,6 @@ export class QuoteView extends BlockView<Quote>{
                     </div>
                 </div>
             </div>
-        </div></div>
+        </div>{this.renderComment()}</div>
     }
 }

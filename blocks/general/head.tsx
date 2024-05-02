@@ -167,7 +167,7 @@ export class Head extends Block {
 }
 
 @view("/head")
-export class HeadView extends BlockView<Head>{
+export class HeadView extends BlockView<Head> {
     renderView() {
         var style: Record<string, any> = { fontWeight: 600 };
         Object.assign(style, this.block.contentStyle);
@@ -268,6 +268,7 @@ export class HeadView extends BlockView<Head>{
         return <div className='sy-block-text-head'>
             <div className="visible-hover" style={this.block.visibleStyle}>
                 <div data-block-content >{renderHead()}</div>
+                {this.renderComment()}
             </div>
             {this.block.isExpand && <div className="sy-block-text-head-subs" style={{ paddingLeft: 24 }}>
                 <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>

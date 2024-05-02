@@ -143,6 +143,7 @@ export class NoteView extends BlockView<Note>{
             }}>
                 <TextSpanArea placeholder={this.block.isFreeBlock ? lst("输入文本") : undefined} block={this.block}></TextSpanArea>
             </div>
+            {this.renderComment()}
         </div>
     }
 }

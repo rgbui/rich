@@ -719,6 +719,9 @@ export class Table extends Block {
         p = p.move(-5, 8);
         return p;
     }
+    getResolveContent(this: Block) {
+        return lst('简单表格')
+    }
 }
 
 @view('/table')
@@ -1287,6 +1290,7 @@ export class TableView extends BlockView<Table> {
                 </div>}
 
             </div>
+            {this.renderComment()}
         </div>
     }
 }

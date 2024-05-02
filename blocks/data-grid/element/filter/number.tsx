@@ -69,6 +69,6 @@ export class FilterFieldNumberView extends BlockView<FilterFieldNumber>{
                     defaultValue={typeof this.block.max == 'number' ? this.block.max.toString() : ''}
                 />
             </div>
-        </OriginFilterFieldView></div>
+        </OriginFilterFieldView>{this.renderComment()}</div>
     }
 }

@@ -1019,6 +1019,7 @@ export class FlowMindView extends BlockView<FlowMind> {
             {this.renderItem()}
             {this.renderSubChilds()}
             <FlowMindLine mind={this.block} ref={e => this.flowMindLine = e}></FlowMindLine>
+            {this.renderComment()}
         </div>
     }
 }

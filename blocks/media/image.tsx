@@ -115,6 +115,10 @@ export class Image extends Block {
             console.error(ex);
         }
     }
+    getResolveContent()
+    {
+        return lst('图片')
+    }
     getVisibleContentBound() {
         var img = this.el.querySelector('.sy-block-image-content-view-wrapper img') as HTMLElement;
         if (img) {
@@ -628,6 +632,7 @@ export class ImageView extends BlockView<Image> {
                 {!this.block?.src && this.block.isCanEdit() && this.renderEmptyImage()}
                 {this.block?.src && this.renderImage()}
             </div>
+            {this.renderComment()}
         </div>
     }
 }

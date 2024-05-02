@@ -3,7 +3,7 @@ import { CommentListView } from "../../../extensions/comment/list";
 import { Block } from "../../../src/block";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
-import { MenuItem} from "../../../component/view/menu/declare";
+import { MenuItem } from "../../../component/view/menu/declare";
 import { BlockDirective, BlockRenderRange } from "../../../src/block/enum";
 import { Point } from "../../../src/common/vector/point";
 import { util } from "../../../util/util";
@@ -48,20 +48,22 @@ export class Comment extends Block {
 }
 
 @view('/comments')
-export class CommentView extends BlockView<Comment>{
+export class CommentView extends BlockView<Comment> {
     renderView() {
         return <div
             style={this.block.visibleStyle}
             onMouseDown={e => e.stopPropagation()}>
             <div style={this.block.contentStyle}>
                 <CommentListView
-                    page={this.props.block.page}
+                    ws={this.props.block.page.ws}
+                  
                     displayFormat={this.props.block.displayFormat || "comment"}
                     userid={this.props.block.page.user.id}
                     elementUrl={this.props.block.getCommentElementUrl()}
                     sort={this.props.block.sort as any}
                 ></CommentListView>
             </div>
+            {this.renderComment()}
         </div>
     }
 

@@ -277,6 +277,7 @@ export class EmbedView extends BlockView<Embed>{
                     {isAllowResizeHeight && <div className="sy-block-embed-height-resize" onMouseDown={e => this.onMousedown(e, 'height')}></div>}
                 </>}
             </div></div>}
+            {this.renderComment()}
         </div>
     }
 }

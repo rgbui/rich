@@ -6,7 +6,11 @@ import { DataGridView } from "../base";
 import { FieldType } from "../../schema/type";
 import { Icon } from "../../../../component/view/icon";
 import { DataGridTool } from "../components/tool";
-import { ChevronLeftSvg, ChevronRightSvg, CollectTableSvg, PlusSvg } from "../../../../component/svgs";
+import {
+    ChevronLeftSvg,
+    ChevronRightSvg,
+    PlusSvg
+} from "../../../../component/svgs";
 import { S } from "../../../../i18n/view";
 import { lst } from "../../../../i18n/store";
 import { Spin } from "../../../../component/view/spin";
@@ -72,12 +76,12 @@ export class TableStoreCalendar extends DataGridView {
         this.forceUpdate();
     }
     async onAddCalendar(day) {
-        await this.onOpenAddForm(undefined, undefined, undefined, { formData:{[this.dateField.name]: day.toDate()} });
+        await this.onOpenAddForm(undefined, undefined, undefined, { formData: { [this.dateField.name]: day.toDate() } });
     }
 }
 
 @view('/data-grid/calendar')
-export class TableStoreCalendarView extends BlockView<TableStoreCalendar>{
+export class TableStoreCalendarView extends BlockView<TableStoreCalendar> {
     renderItems(day) {
         if (!this.block?.schema) return <></>
         var rs = this.block.data.filter(g => typeof g[this.block.dateField.name] != 'undefined' && dayjs(g[this.block.dateField.name]).isSame(day, 'day'))
@@ -116,7 +120,7 @@ export class TableStoreCalendarView extends BlockView<TableStoreCalendar>{
             <div className="sy-data-grid-calendar-cells-head">{weeks.map(w => <div key={w} className="sy-data-grid-calendar-cells-head-label f-12">{w}</div>)}
             </div>
             <div className="sy-data-grid-calendar-cells-days">
-                {days.map((day,i) =>{
+                {days.map((day, i) => {
                     var classList: string[] = ['sy-data-grid-calendar-cell', 'visible-hover'];
                     if (day.month() != dj.month()) {
                         classList.push('outside');
@@ -149,23 +153,29 @@ export class TableStoreCalendarView extends BlockView<TableStoreCalendar>{
     renderView() {
         var now = dayjs();
         var day = dayjs(this.block.date);
-        return <div className='sy-data-grid-calendar' onMouseEnter={e => this.block.onOver(true)}
-            onMouseLeave={e => this.block.onOver(false)}>
-            <DataGridTool block={this.block}></DataGridTool>
-            <div className="sy-data-grid-calendar-head" onMouseDown={e => e.stopPropagation()}>
-                <div className="sy-data-grid-calendar-head-date">
-                    <label className="bold f-14">{day.format(lst('YYYY年MM月'))}</label>
-                </div>
-                <div className="sy-data-grid-calendar-head-operator">
-                    <span className="icon"><Icon size={16} onClick={e => this.block.onPrevMonth()} icon={ChevronLeftSvg}></Icon></span>
-                    <label className="f-14">{now.isSame(day, 'date') ? lst("今天") : (day.get('date'))}</label>
-                    <span className="icon"><Icon size={16} onClick={e => this.block.onNextMonth()} icon={ChevronRightSvg}></Icon></span>
+        return <div style={this.block.visibleStyle}>
+            <div style={this.block.contentStyle} >
+                <div className='sy-data-grid-calendar' onMouseEnter={e => this.block.onOver(true)}
+                    onMouseLeave={e => this.block.onOver(false)}>
+                    <DataGridTool block={this.block}></DataGridTool>
+                    <div className="sy-data-grid-calendar-head" onMouseDown={e => e.stopPropagation()}>
+                        <div className="sy-data-grid-calendar-head-date">
+                            <label className="bold f-14">{day.format(lst('YYYY年MM月'))}</label>
+                        </div>
+                        <div className="sy-data-grid-calendar-head-operator">
+                            <span className="icon"><Icon size={16} onClick={e => this.block.onPrevMonth()} icon={ChevronLeftSvg}></Icon></span>
+                            <label className="f-14">{now.isSame(day, 'date') ? lst("今天") : (day.get('date'))}</label>
+                            <span className="icon"><Icon size={16} onClick={e => this.block.onNextMonth()} icon={ChevronRightSvg}></Icon></span>
+                        </div>
+                    </div>
+                    <div className="sy-data-grid-calendar-cells">
+                        {this.renderMonth()}
+                    </div>
+                    {this.renderCreateTable()}
                 </div>
             </div>
-            <div className="sy-data-grid-calendar-cells">
-                {this.renderMonth()}
-            </div>
-            {this.renderCreateTable()}
+            {this.renderComment()}
         </div>
+
     }
 }

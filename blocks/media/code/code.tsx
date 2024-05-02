@@ -223,6 +223,7 @@ export class TextCodeView extends BlockView<TextCode>{
                     </div>
                 </div>
             </div>
+            {this.renderComment()}
         </div>
     }
 }

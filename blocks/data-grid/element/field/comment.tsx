@@ -1,29 +1,30 @@
 
 import React from "react";
-import { useCommentListView } from "../../../../extensions/comment/list";
+
 import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { url, view } from "../../../../src/block/factory/observable";
 import { OriginField, OriginFileView } from "./origin.field";
 import lodash from "lodash";
 import { S } from "../../../../i18n/view";
+import { useCommentListView } from "../../../../extensions/comment/dialoug";
 
 @url('/field/comment')
 export class FieldComment extends OriginField {
     async onOpenCommentView(event: React.MouseEvent) {
         if (this.checkSign() === false) return;
         var fn = async () => {
-            var r = await useCommentListView({
+            var r = await useCommentListView(null,{
+                ws: this.page.ws,
                 userid: this.page.user.id,
                 elementUrl: getElementUrl(ElementType.SchemaData,
                     this.dataGrid.schema.id,
                     this.item.dataRow.id),
-                sort: 'default',
                 displayFormat: this.value?.format ?? 'comment',
             });
             if (r != 0 && typeof r == 'number') {
                 var v = this.value;
                 if (typeof v == 'object' && typeof v.count == 'number') {
-                    v.count = v.count + r;
+                    v.count = r;
                 }
                 else v = { count: r, format: 'comment', users: [this.page.user] };
                 this.value = v;
@@ -35,7 +36,7 @@ export class FieldComment extends OriginField {
     }
 }
 @view('/field/comment')
-export class FieldCommentView extends OriginFileView<FieldComment>{
+export class FieldCommentView extends OriginFileView<FieldComment> {
     renderFieldValue() {
         var v = this.block.value;
         if (typeof v == 'object' && typeof v?.count == 'number') v = v.count;

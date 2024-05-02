@@ -136,6 +136,9 @@ export class File extends Block {
     async downloadFile() {
         util.downloadFile(this.src?.url, (this.src?.filename) + (this.src.ext))
     }
+    getResolveContent(this: Block) {
+        return lst('文件')
+    }
 }
 @view('/file')
 export class FileView extends BlockView<File>{
@@ -175,6 +178,7 @@ export class FileView extends BlockView<File>{
                     </Tip>
                 </span>
             </div>}
+            {this.renderComment()}
         </div>
     }
 }

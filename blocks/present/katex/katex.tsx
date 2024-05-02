@@ -83,7 +83,7 @@ export class KatexView extends BlockView<KatexBlock>{
             className={'sy-block-katex' + (this.block.opened ? " sy-block-katex-opened" : "")}
             style={style} onMouseDown={e => this.block.open(e)}>
             <Katex block className='sy-block-katex-content' latex={this.block.content}></Katex>
-        </div>
+        </div> {this.renderComment()}
         </div>
     }
 }

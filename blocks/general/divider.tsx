@@ -183,6 +183,7 @@ export class DividerView extends BlockView<Divider>{
             <div className='h-16 flex-center' style={this.block.contentStyle}>
                 <div style={style}></div>
             </div>
+            {this.renderComment()}
         </div>
     }
 }

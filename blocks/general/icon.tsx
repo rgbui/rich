@@ -145,7 +145,7 @@ export class BlockIcon extends Block {
 }
 
 @view('/icon')
-export class BlockIconView extends BlockView<BlockIcon>{
+export class BlockIconView extends BlockView<BlockIcon> {
 
     mousedown(event: React.MouseEvent) {
         if (this.block.link) {
@@ -206,6 +206,7 @@ export class BlockIconView extends BlockView<BlockIcon>{
                     </>}
                 </div>
             </div>
+            {this.renderComment()}
         </div>
     }
 }

@@ -122,6 +122,7 @@ export class RefLinksView extends BlockView<RefLinks>{
                 {this.block.loading && <div className="flex-center"><Spin></Spin></div>}
                 {!this.block.loading && this.renderRefBlocks()}
             </div>}
+            {this.renderComment()}
         </div>
     }
 }

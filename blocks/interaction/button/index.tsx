@@ -241,8 +241,7 @@ export class BlockButtonView extends BlockView<BlockButton> {
     dragBlock(event: React.MouseEvent) {
         DragBlockLine(this.block, event);
     }
-    didMount()
-    {
+    didMount() {
         this.load()
     }
     async load() {
@@ -327,6 +326,7 @@ export class BlockButtonView extends BlockView<BlockButton> {
                     </div>
                 </div>
             </FixBoxTip>
+            {this.renderComment()}
         </div>
     }
     async onSave() {

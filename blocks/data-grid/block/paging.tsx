@@ -187,6 +187,7 @@ export class PagingView extends BlockView<Paging> {
                 </>}
                 {!this.block.refBlock && <div></div>}
             </div>
+            {this.renderComment()}
         </div>
     }
 }

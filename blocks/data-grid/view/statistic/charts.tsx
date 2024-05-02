@@ -384,6 +384,7 @@ export class DataGridChartView extends BlockView<DataGridChart>{
                     </>}
                 </div>
             </div>
+            {this.renderComment()}
         </div>
     }
 }

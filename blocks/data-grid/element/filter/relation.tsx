@@ -108,6 +108,6 @@ export class FilterRelationView extends BlockView<FilterRelation>{
                     })}
                 </div>
             </div>
-        </OriginFilterFieldView ></div>
+        </OriginFilterFieldView >{this.renderComment()}</div>
     }
 }

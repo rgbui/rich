@@ -39,6 +39,7 @@ export class ImageView extends BlockView<Image>{
         style.height = size.height;
         return <div className='sy-block-image' style={style} >
             <img src={this.block?.src?.url} className='w100 h100' />
+            {this.renderComment()}
         </div>
     }
 }

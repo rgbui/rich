@@ -93,7 +93,7 @@ export class ToDo extends Block {
     }
 }
 @view('/todo')
-export class ToDoView extends BlockView<ToDo>{
+export class ToDoView extends BlockView<ToDo> {
     renderView() {
         if (this.block.childs.length > 0) {
             return <div style={this.block.visibleStyle}>
@@ -112,6 +112,7 @@ export class ToDoView extends BlockView<ToDo>{
                 <div className='sy-block-todo-subs' style={{ paddingLeft: 20 }}>
                     <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>
                 </div>
+                {this.renderComment()}
             </div>
         }
         else {
@@ -130,6 +131,7 @@ export class ToDoView extends BlockView<ToDo>{
                         ></TextArea>
                         </span>
                     </div>
+                    {this.renderComment()}
                 </div>
                 <div className='sy-block-todo-subs' style={{ paddingLeft: 20 }}>
                     <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>

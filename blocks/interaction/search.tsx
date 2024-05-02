@@ -113,7 +113,7 @@ export class SearchWorkspace extends Block {
 }
 
 @view('/search')
-export class SearchWorkspaceView extends BlockView<SearchWorkspace>{
+export class SearchWorkspaceView extends BlockView<SearchWorkspace> {
     searchList: SearchListType<{
         id: string,
         creater: string,
@@ -130,9 +130,6 @@ export class SearchWorkspaceView extends BlockView<SearchWorkspace>{
         if (this.block.align == 'left') style.justifyContent = 'flex-start';
         else if (this.block.align == 'right') style.justifyContent = 'flex-end';
         else style.justifyContent = 'center';
-        var borderStyle: CSSProperties = {
-
-        }
         return <div style={this.block.visibleStyle}>
             <div className="flex" style={style}>
                 <div className="relative"
@@ -200,6 +197,7 @@ export class SearchWorkspaceView extends BlockView<SearchWorkspace>{
                     </div>
                 </div>
             </div>
+            {this.renderComment()}
         </div>
     }
     dropEle: HTMLElement;

@@ -94,7 +94,7 @@ export class Callout extends TextSpan {
     }
 }
 @view('/callout')
-export class CalloutView extends BlockView<Callout>{
+export class CalloutView extends BlockView<Callout> {
     renderView() {
         var style = this.block.contentStyle;
         var bg = style.backgroundColor?.replace(/ /g, '')
@@ -119,6 +119,7 @@ export class CalloutView extends BlockView<Callout>{
                 </div>
             </div>
         </div>
+            {this.renderComment()}
         </div>
     }
 }

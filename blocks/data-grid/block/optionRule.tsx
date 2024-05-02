@@ -205,6 +205,7 @@ export class OptionDefineRuleView extends BlockView<OptionDefineRule> {
             {this.block.optionRules.length > 0 && <div className="flex sy-option-rule" style={style}>
                 {this.renderOptions()}
             </div>}
+            {this.renderComment()}
         </div>
     }
 }

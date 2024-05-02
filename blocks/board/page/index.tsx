@@ -86,6 +86,7 @@ export class PageCardView extends BlockView<PageCard> {
                     </div>
                 </div>
             </div>
+            {this.renderComment()}
         </div>
     }
 }

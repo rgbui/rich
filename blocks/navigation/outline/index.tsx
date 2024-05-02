@@ -255,6 +255,7 @@ export class PageOutLineView extends BlockView<PageOutLine> {
                     return this.renderItem(line, 0)
                 })}
             </div>
+            {this.renderComment()}
         </div>
     }
     renderItem(item: OutLineItemType, deep: number) {

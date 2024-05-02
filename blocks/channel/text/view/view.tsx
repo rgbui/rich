@@ -256,29 +256,26 @@ export class ChannelTextView extends BlockView<ChannelText> {
                         placeholder={this.block.abledSend && this.block.page.user?.id ? lst("回车提交") : (this.block.page.user?.id ? lst("您不能发言") : lst("请登录发言"))}
                         ref={e => this.inputChatBox = e}
                         onChange={e => this.onInput(e)}
-                        searchUser={this.searchUser}
-                        searchRobots={this.searchRobot}
+                        // searchUser={this.searchUser}
+                        // searchRobots={this.searchRobot}
                     ></InputChatBox>
                 </div>
             </div>
         </div>
     }
-    searchUser = async (text: string) => {
-        var r = await channel.get('/ws/member/word/query', { word: text, ws: this.block.page.ws });
-        if (r.ok) {
-            return r.data.list.map(c => {
-                return {
-                    ...c,
-                    id: c.userid,
-                }
-            }) as any
-        }
-        else return []
-    }
-    searchRobot = async () => {
-        var g = await this.block.page.ws.getWsRobots();
-        return g;
-    }
+    // searchUser = async (text: string) => {
+    //     var r = await channel.get('/ws/member/word/query', { word: text, ws: this.block.page.ws });
+    //     if (r.ok) {
+    //         return r.data.list.map(c => {
+    //             return {
+    //                 ...c,
+    //                 id: c.userid,
+    //             }
+    //         }) as any
+    //     }
+    //     else return []
+    // }
+   
     get isPageLayoutTextChannel() {
         return this.block.page.pageLayout.type == PageLayoutType.textChannel;
     }

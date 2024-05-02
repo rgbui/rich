@@ -94,6 +94,7 @@ export class PageOrNextView extends BlockView<PageOrNext> {
         delete cs.backgroundColor;
         return <div style={this.block.visibleStyle}>
             <div style={{ ...cs }}>{this.renderContent()}</div>
+            {this.renderComment()}
         </div>
     }
 }

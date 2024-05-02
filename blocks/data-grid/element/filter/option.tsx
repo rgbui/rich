@@ -139,7 +139,7 @@ export class FilterFieldOption extends OriginFilterField {
     statOptions: { value: string, count: number }[] = [];
 }
 @view('/field/filter/option')
-export class FilterFieldOptionView extends BlockView<FilterFieldOption>{
+export class FilterFieldOptionView extends BlockView<FilterFieldOption> {
     renderOptions() {
         var self = this;
         function gs(v) {
@@ -185,6 +185,6 @@ export class FilterFieldOptionView extends BlockView<FilterFieldOption>{
     renderView() {
         return <div style={this.block.visibleStyle}><OriginFilterFieldView top={this.block.format == 'list' || this.block.format == 'listCheck'} style={this.block.contentStyle} filterField={this.block}>
             {this.block.field?.config?.options && this.renderOptions()}
-        </OriginFilterFieldView></div>
+        </OriginFilterFieldView>{this.renderComment()}</div>
     }
 }

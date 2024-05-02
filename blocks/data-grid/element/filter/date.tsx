@@ -230,6 +230,6 @@ export class FilterFieldDateView extends BlockView<FilterFieldDate>{
                     <span className="size-20 flex-center cursor circle item-hover"><Icon size={12} icon={CloseSvg}></Icon></span>
                 </span>
             </div>}
-        </OriginFilterFieldView></div>
+        </OriginFilterFieldView>{this.renderComment()}</div>
     }
 }

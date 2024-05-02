@@ -46,6 +46,9 @@ export class Board extends Block {
     async didMounted() {
         await this.loadBoard();
     }
+    getResolveContent(this: Block) {
+        return lst('白板')
+    }
     async loadBoard() {
         if (this.createSource == 'InputBlockSelector') {
             if (this.isAutoCreateMind) {
@@ -172,6 +175,7 @@ export class BoardView extends BlockView<Board> {
                     {this.block.isCanEdit() && <Tip text={'拖动调整高度'}><div className="sy-board-resize visible" onMouseDown={e => this.onResize(e)}></div></Tip>}
                 </div>
             </div>
+            {this.renderComment()}
         </div >
     }
 }

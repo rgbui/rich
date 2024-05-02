@@ -125,6 +125,9 @@ export class Audio extends Block {
         }
         await super.onClickContextMenu(item, event);
     }
+    getResolveContent(this: Block) {
+        return lst('音频')
+    }
 }
 @view('/audio')
 export class AudioView extends BlockView<Audio>{
@@ -138,6 +141,7 @@ export class AudioView extends BlockView<Audio>{
             {this.block.src.name != 'none' && <div className='sy-block-audio-content'>
                 <audio  draggable={false} controls style={{ width: 'inherit', height: 'inherit' }} src={this.block.src.url}></audio>
             </div>}
+            {this.renderComment()}
         </div>
     }
 }

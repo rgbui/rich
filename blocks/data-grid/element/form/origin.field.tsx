@@ -208,9 +208,10 @@ export function FieldView(props: { block: OriginFormField, className?: string | 
                     {props.children}
                 </div>
             </div>
+            {this.renderComment()}
         </div>
     }
-    return <div className={'sy-form-field ' + classList.join(' ')} onMouseDown={e => e.stopPropagation()}>
+    return <div style={block.visibleStyle} className={'sy-form-field ' + classList.join(' ')} onMouseDown={e => e.stopPropagation()}>
         <div className="gap-t-10 gap-b-30">
             {block.field && <div className="sy-form-field-box">
                 <div className="flex gap-t-5">
@@ -230,5 +231,6 @@ export function FieldView(props: { block: OriginFormField, className?: string | 
             </div>}
             {block.fieldError && <div className="sy-form-field-error">{block.fieldError}</div>}
         </div>
+        {this.renderComment()}
     </div>
 }

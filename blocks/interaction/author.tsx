@@ -53,6 +53,7 @@ export class PageAuthorView extends BlockView<PageAuthor>{
                 {editDate && <span className="flex-fixed remark f-12 gap-r-10" style={{ lineHeight: 1.3 }} ><S>编辑于</S>&nbsp;{dayjs(editDate).format("YYYY-MM-DD HH:mm")}</span>}
                 {viewCount && viewCount > 0 && <span className="flex-fixed remark f-12" style={{ lineHeight: 1.3 }}><S>浏览</S>&nbsp;{viewCount}</span>}
             </div>
+            {this.renderComment()}
         </div>
     }
 }
