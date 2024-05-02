@@ -87,7 +87,7 @@ export class AISearchBox extends EventsComponent {
             <div style={{ paddingBottom: 50 }} className="padding-w-30  min-h-300 max-h-400 overflow-y" ref={e => this.scrollEl = e}>
                 {this.renderMessages()}
             </div>
-            <div className="flex gap-w-30 padding-w-10    border shadow-s round-16 gap-t-10 gap-b-10" style={{ minHeight: 36 }}>
+            <div className="flex gap-w-30 padding-w-10    border shadow-s round-16 gap-h-10 " style={{ minHeight: 36 }}>
                 <div className="flex-auto ">
                     <DivInput
                         value={this.prompt}

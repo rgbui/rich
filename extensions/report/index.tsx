@@ -9,12 +9,11 @@ export async function useOpenReport(options: {
     userid: string,
     reportElementUrl?: string,
 }) {
-
     var r = await useForm({
         title: lst('举报'),
         maskCloseNotSave: true,
         head: false,
-        remark: lst('请真实填写举报原因，我们会在尽快处理。'),
+        remark: lst('请真实填写举报原因', '请真实填写举报原因，我们会在尽快处理。'),
         fields: [
             {
                 name: 'tags',

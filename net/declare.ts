@@ -152,7 +152,8 @@ export interface ChannelDelMapUrls {
 	"/ws/member/exit":{args:{wsId?:string},returnType:Promise<SockResponse<void>>},
 	"/ws/member/delete":{args:{userid:string},returnType:Promise<SockResponse<void>>},
 	"/ws/role/delete":{args:{roleId:string},returnType:Promise<SockResponse<void>>},
-	"/ws/comment/del":{args:{id:string},returnType:Promise<SockResponse<void>>},
+	"/ws/user/delete/role":{args:{userid:string,roleId:string},returnType:Promise<SockResponse<void>>},
+	"/ws/comment/del":{args:{id?:string,elementUrl?: string},returnType:Promise<SockResponse<void>>},
 	"/del/workspace/template":{args:{id:string},returnType:Promise<SockResponse<void>>},
 	"/page/deleted/clean":{args:{ws?:LinkWs,wsId?:string,pageId:string},returnType:Promise<SockResponse<void>>},
 	"/view/snap/del":{args:{id:string},returnType:Promise<SockResponse<void>>}
@@ -231,7 +232,7 @@ export interface ChannelPutMapUrls {
 	"/ws/channel/emoji":{args:{elementUrl: string,sockId?: string, wsId?: string, emoji: { emojiId: string, code?: string }},returnType:Promise<SockResponse<{emoji:{emojiId:string,code?:string,count:number}}>>},
 	"/ws/flow":{args:{ws:LinkWs,wsId?:string,flow:Record<string,any>},returnType:Promise<SockResponse<{flow:Record<string,any>}>>},
 	"/ws/role/create":{args:{data:Record<string,any>},returnType:Promise<SockResponse<{role:Record<string,any>}>>},
-	"/ws/comment/send":{args:{elementUrl: string,wsId?: string, parentId: string, rootId: string,content: string},returnType:Promise<SockResponse<{data:any}>>},
+	"/ws/comment/send":{args:{elementUrl: string,wsId?: string, parentId: string, rootId: string,content: string,mentions?:string[],files?:any[]},returnType:Promise<SockResponse<{data:any}>>},
 	"/ws/comment/emoji":{args:{wsId?: string, elementUrl: string},returnType:Promise<SockResponse<{count:number,exists?:boolean}>>},
 	"/page/item/create":{args:{wsId?:string,data:Record<string,any>},returnType:Promise<SockResponse<{ item:Record<string,any> }>>},
 	"/view/snap/direct":{args:{wsId?:string,  elementUrl: string, content: any,plain?:string,text?:string,thumb?:any },returnType:Promise<Promise<void>>},
