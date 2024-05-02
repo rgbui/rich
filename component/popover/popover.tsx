@@ -121,6 +121,7 @@ export class Popover<T extends React.Component> extends EventsComponent<{
     }
     onClose(event?: React.MouseEvent) {
         if (event) event.stopPropagation();
+        this.emit('willClose');
         this.close();
         this.emit('close');
     }
