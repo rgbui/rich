@@ -1,5 +1,5 @@
 import React from "react";
-import { CollectTableSvg, PlusSvg } from "../../../../component/svgs";
+import { PlusSvg } from "../../../../component/svgs";
 import { Divider } from "../../../../component/view/grid";
 import { Icon } from "../../../../component/view/icon";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
@@ -48,7 +48,7 @@ export class TableStoreListView extends BlockView<TableStoreList> {
     renderCreateTable() {
         if (this.block.isLoading) return <></>
         if (this.block.isLoadingData) return <></>
-        return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus padding-h-5 padding-w-10 cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
+        return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus padding-5 cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
             <span className="size-24 flex-center remark"><Icon size={16} icon={{ name: 'byte', code: 'table' }}></Icon></span>
             <span className="remark"><S>创建数据表格</S></span>
         </div>
