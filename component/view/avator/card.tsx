@@ -67,7 +67,7 @@ export class UserCard extends EventsComponent {
                         {!this.member && <div className="f-12 remark"><S>无介绍</S></div>}
                         {this.member && <div className="flex">
                             {this.member.roles.map(r => {
-                                return <div key={r.id} className="border-light flex round padding-w-5 padding-h-2 gap-r-5">
+                                return <div key={r.id} className="border-light flex round padding-w-5 padding-h-1 gap-t-2 gap-r-5">
                                     <span className="size-10 circle gap-r-3" style={{ display: 'inline-block', backgroundColor: r.color }}></span>
                                     <span className="f-12">{r.text}</span>
                                 </div>
