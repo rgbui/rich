@@ -4,8 +4,8 @@ import { LinkPageItem,LinkWs} from "../src/page/declare";
 import { GalleryType, OuterPic } from "../extensions/image/declare";
 import { StatusCode } from "./status.code";
 import { UserAction } from "../src/history/action";
-import { RobotInfo, UserBasic, UserStatus } from "../types/user";
-import {IconArguments, ResourceArguments } from "../extensions/icon/declare";
+import { RobotInfo, UserBasic, UserStatus, WorkspaceMember } from "../types/user";
+import { ResourceArguments } from "../extensions/icon/declare";
 import { PayFeatureCheck } from "../component/pay";
 import { AtomPermission } from "../src/page/permission";
 import { WsConsumeType } from "./ai/cost";
@@ -299,6 +299,7 @@ export interface ChannelGetMapUrls {
 	"/ws/member/word/query":{args:{ws:LinkWs,wsId?:string,word?:string,size?:number},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
 	"/ws/members":{args:{ws:LinkWs,wsId?:string,page:number,size:number,word?:string,roleId?:string},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
 	"/ws/is/member":{args:{sock?:any,wsId:string},returnType:Promise<SockResponse<{exists:boolean,workspace:Record<string,any>}>>},
+	"/ws/user/basic":{args:{wsId:string,userid:string},returnType:Promise<SockResponse<{wsMember:WorkspaceMember}>>},
 	"/ws/roles":{args:{ws:LinkWs,wsId?:string,},returnType:Promise<SockResponse<{list:any[]}>>},
 	"/ws/role/members":{args:{ws:LinkWs,wsId?:string,roleId:string,page:number,size:number,word?:string},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
 	"/ws/discovery":{args:{word?:string,page?:number,size?:number,type?:string},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},

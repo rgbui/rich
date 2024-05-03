@@ -3,7 +3,7 @@ import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
 import { channel } from "../../../net/channel";
 import { autoImageUrl } from "../../../net/element.type";
-import { UserBasic } from "../../../types/user";
+import { UserBasic, WorkspaceMember } from "../../../types/user";
 import { EventsComponent } from "../../lib/events.component";
 import { Avatar } from "./face";
 import { Icon } from "../icon";
@@ -17,9 +17,12 @@ import "./style.less"
 import { Confirm } from "../../lib/confirm";
 import { useOpenReport } from "../../../extensions/report";
 import { ShyAlert } from "../../lib/alert";
+import { S } from "../../../i18n/view";
+import Markdown from "../markdown";
 
 export class UserCard extends EventsComponent {
     user: UserBasic;
+    member: WorkspaceMember;
     render() {
         var u = channel.query('/query/current/user');
         return <div className="shy-user-card">
@@ -49,10 +52,24 @@ export class UserCard extends EventsComponent {
                             </span>}
                         </div>
                     </div>
-                    <div className="shy-user-card-remark">{this.user.slogan}</div>
-                    {/* {u && u.id && <div className="shy-user-card-send">
-                        <Input placeholder={"私信@" + this.user.name}></Input>
-                    </div>} */}
+                    <div className="gap-10 ">
+                        <div className="f-12 bold"><S>自我介绍</S></div>
+                        {!this.user.slogan && <div className="f-12 remark"><S>无介绍</S></div>}
+                        {this.user.slogan && <div className="f-12"><Markdown md={this.user.slogan}></Markdown></div>}
+                    </div>
+                    <div className="gap-10">
+                        <div className="f-12 bold"><S>身份组</S></div>
+                        {!this.member && <div className="f-12 remark"><S>无介绍</S></div>}
+                        {this.member && <div className="flex">
+                            {this.member.roles.map(r => {
+                                return <div key={r.id} className="border-light round padding-w-5 padding-h-2 gap-r-5">
+                                    <span className="size-12 circle" style={{ backgroundColor: r.color }}></span>
+                                    <span>{r.text}</span>
+                                </div>
+                            })}
+                        </div>}
+                    </div>
+                    <div></div>
                 </div></>}
         </div>
     }
@@ -117,7 +134,7 @@ export class UserCard extends EventsComponent {
                         await channel.del('/friend/delete', { id: this.user.id });
                     break;
                 case 'addBlack':
-                    if (await Confirm(lst('确定拉黑，拉黑无法加好友？')))
+                    if (await Confirm(lst('确定拉黑吗', '确定拉黑，拉黑无法加好友？')))
                         await channel.put('/blacklist/join', { otherId: this.user.id });
                     break;
                 case 'report':
@@ -154,6 +171,13 @@ export class UserCard extends EventsComponent {
         }
         if (options?.ws) this.ws = options.ws;
         else this.ws = null;
+        var rm = await channel.get('/ws/user/basic', {
+            wsId: this.ws.id,
+            userid: this.user.id
+        })
+        if (rm) {
+            this.member = rm.data.wsMember;
+        }
         this.forceUpdate(() => {
             this.emit('update')
         })

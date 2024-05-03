@@ -59,59 +59,6 @@ export type RobotTask = {
     // template?: string,
 }
 
-// export enum RobotApply {
-//     none = 0,
-//     channel = 1,
-//     search = 2,
-//     aDraft = 3,
-//     pageSumit = 4,
-//     pageContinue = 5,
-//     askWrite = 6,
-//     selectionAskWrite = 7,
-// }
-
-
-
-// export function GetRobotApplyOptions() {
-//     return [
-//         { text: lst('无'), value: RobotApply.none },
-//         { text: lst('频道'), value: RobotApply.channel },
-//         // { text: '搜索', value: RobotApply.search },
-//         // { text: '拟草稿', value: RobotApply.aDraft },
-//         // { text: '页面总结', value: RobotApply.pageSumit },
-//         // { text: '页面续写', value: RobotApply.pageContinue },
-//         { text: lst('生成内容'), value: RobotApply.askWrite },
-//         { text: lst('内容润色'), value: RobotApply.selectionAskWrite }
-//     ]
-// }
-
-// export function GetRobotApplyArgs(apply: RobotApply) {
-//     switch (apply) {
-//         case RobotApply.channel:
-//         case RobotApply.search:
-//         case RobotApply.askWrite:
-//             return [{ name: 'prompt', input: true, text: lst('提问'), tip: lst('输入提问') }, { name: 'context', text: lst('上下文') }]
-//             break;
-//         // case RobotApply.aDraft:
-//         //     return [{ name: 'title', input: true, text: '标题', tip: '输入草稿标题' }, { name: 'context', text: '上下文' }]
-//         //     break;
-//         // case RobotApply.pageContinue:
-//         //     return [{ name: 'content', input: true, text: '内容', tip: '输入续写的上文' }, { name: 'context', text: '上下文' }]
-//         //     break;
-//         // case RobotApply.pageSumit:
-//         //     return [{ name: 'content', input: true, text: '内容', tip: '输入正文' }, { name: 'context', text: '上下文' }]
-//         //     break;
-//         case RobotApply.selectionAskWrite:
-//             return [
-//                 { name: 'selection', text: lst('待处理内容'), tip: lst('待处理内容') },
-//                 { name: 'prompt', input: true, text: lst('提问'), tip: lst('输入提问') },
-//                 { name: 'context', text: lst('上下文') }
-//             ]
-//             break;
-//         default:
-//             return [{ name: 'prompt', input: true, text: lst('提示'), tip: lst('输入提问') }, { name: 'context', text: lst('上下文') }]
-//     }
-// }
 
 
 export type RobotInfo = UserBasic & {
@@ -119,7 +66,7 @@ export type RobotInfo = UserBasic & {
     model?: WsConsumeType;
     instructions?: string;
     imageModel?: WsConsumeType;
-    embeddingModel?:WsConsumeType;
+    embeddingModel?: WsConsumeType;
     /**
      * 是否禁用知识库上下文 ，
      */
@@ -161,6 +108,34 @@ export type RobotInfo = UserBasic & {
     tasks?: RobotTask[],
 
     share?: 'private' | 'public',
+}
+
+export type WorkspaceMember = {
+    id: string;
+    createDate: number;
+    creater: string;
+    userid: string;
+    /**
+     * 当前空间内用户的呢称
+     */
+    name: string;
+    /**
+     * 当前用户的角色
+     */
+    roleIds: string[];
+    roles?: WorkspaceRole[];
+    workspaceId: string;
+    avatar: IconArguments;
+    cover: IconArguments;
+    totalScore: number;
+}
+
+export type WorkspaceRole = {
+    id: string,
+    text: string,
+    color: string,
+    permissions: number[],
+    icon?: IconArguments
 }
 
 
