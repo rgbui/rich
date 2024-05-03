@@ -106,7 +106,7 @@ export class InputChatBox extends React.Component<{
     renderRichInput() {
         if (this.props.display == 'comment') {
             return <div className="flex flex-top">
-                <span className="flex-fixed size-24 round flex-center cursor item-hover">
+                <span className="flex-fixed size-24 round flex-center cursor">
                     {this.props.userid && <Avatar size={24} userid={this.props.userid}></Avatar>}
                 </span>
                 <div className="flex-auto l-24" >

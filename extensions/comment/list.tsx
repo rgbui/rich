@@ -71,7 +71,7 @@ export class CommentListView extends React.Component<{
             this.forceUpdate()
         }
     }
-    currentReply: any;
+    currentReply: WsCommentType;
     async onReply(l: WsCommentType, user, event: React.MouseEvent) {
         if (this.checkSign() == false) return;
         if (!user) user = (channel.query('/query/current/user'))
@@ -117,7 +117,7 @@ export class CommentListView extends React.Component<{
         if (this.checkSign() == false) return;
         if (event) event.preventDefault();
         if (data) {
-            var l = this.currentReply && this.currentReply?.id == data.replyId ? this.currentReply : null;
+            var l: WsCommentType = this.currentReply && this.currentReply?.id == data.replyId ? this.currentReply : null;
             var r = await channel.put('/ws/comment/send', {
                 elementUrl: this.elementUrl,
                 parentId: data.replyId,
@@ -137,6 +137,7 @@ export class CommentListView extends React.Component<{
                         list: []
                     }
                     l.replys?.list.push(r.data.data);
+                    l.spread = true;
                     l.replys.total += 1;
                 }
                 else {
@@ -252,7 +253,7 @@ export class CommentListView extends React.Component<{
         this.addComment(data);
     }
     renderSendComment() {
-        return <div className=" padding-w-10 round-8    border padding-h-5">
+        return <div className="padding-5 round-8 border ">
             <InputChatBox
                 userid={this.userid}
                 ws={this.props.ws}
