@@ -1,13 +1,11 @@
 import lodash from "lodash";
 import { Page } from "../..";
 import { CloseShyAlert, ShyAlert } from "../../../../component/lib/alert";
-
 import { channel } from "../../../../net/channel";
-import { AnimatedScrollTo } from "../../../../util/animatedScrollTo";
 import { Block } from "../../../block";
 import { BlockChildKey, BlockUrlConstant } from "../../../block/constant";
 import { Point, Rect } from "../../../common/vector/point";
-import { ActionDirective, OperatorDirective } from "../../../history/declare";
+import { ActionDirective } from "../../../history/declare";
 import { LinkPageItem, PageLayoutType, PageTemplateTags, PageTemplateTypeGroups } from "../../declare";
 import { PageDirective } from "../../directive";
 import { useTemplateView } from "../../../../extensions/template";
@@ -20,12 +18,10 @@ import { OriginFormField } from "../../../../blocks/data-grid/element/form/origi
 import { GetFieldFormBlockInfo } from "../../../../blocks/data-grid/element/service";
 import { Field } from "../../../../blocks/data-grid/schema/field";
 import { DataGridView } from "../../../../blocks/data-grid/view/base";
-import { BlockButton } from "../../../../blocks/interaction/button";
-import { Title } from "../../../../blocks/interaction/title";
 import { useForm } from "../../../../component/view/form/dialoug";
 import { useExportFile } from "../../../../extensions/Import-export/export-file/lazy";
 import { usePageHistoryStore } from "../../../../extensions/history";
-import { usePagePublish } from "../../../../extensions/publish";
+import { usePagePermission } from "../../../../extensions/permission";
 import { usePageTheme } from "../../../../extensions/theme";
 import { getAiDefaultModel } from "../../../../net/ai/cost";
 import { ElementType } from "../../../../net/element.type";
@@ -394,7 +390,7 @@ export class Page$Operator {
         await channel.act('/current/page/move');
     }
     async onOpenPublish(this: Page, event: React.MouseEvent) {
-        await usePagePublish({ roundArea: Rect.fromEvent(event) }, this)
+        await usePagePermission({ roundArea: Rect.fromEvent(event) }, this)
     }
     async onOpenMember(this: Page, event: React.MouseEvent) {
         this.showMembers = this.showMembers ? false : true;

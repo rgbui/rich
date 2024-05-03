@@ -3,7 +3,7 @@ import React from "react";
 import { CopyText } from "../../component/copy";
 import { ShyAlert } from "../../component/lib/alert";
 import { EventsComponent } from "../../component/lib/events.component";
-import { CloseSvg, GlobalLinkSvg, PlusSvg } from "../../component/svgs";
+import { CheckSvg, CloseSvg, GlobalLinkSvg, PlusSvg } from "../../component/svgs";
 import { Avatar } from "../../component/view/avator/face";
 import { Divider } from "../../component/view/grid";
 import { Icon } from "../../component/view/icon";
@@ -11,7 +11,7 @@ import { useSelectMenuItem } from "../../component/view/menu";
 import { MenuItemType } from "../../component/view/menu/declare";
 import { SelectBox } from "../../component/view/select/box";
 import { Switch } from "../../component/view/switch";
-import { Point } from "../../src/common/vector/point";
+import { Rect } from "../../src/common/vector/point";
 import { Page } from "../../src/page";
 
 import {
@@ -29,8 +29,9 @@ import { lst } from "../../i18n/store";
 import { Tip } from "../../component/view/tooltip/tip";
 import { ElementType } from "../../net/element.type";
 import { TableSchemaView } from "../../blocks/data-grid/schema/meta";
+import { HelpText } from "../../component/view/text";
 
-class PagePublish extends EventsComponent {
+class PagePermission extends EventsComponent {
     constructor(props) {
         super(props);
     }
@@ -82,30 +83,32 @@ class PagePublish extends EventsComponent {
         }
         async function addPermission(event: React.MouseEvent) {
             var rs = self.page.ws;
-            var r = await useSelectMenuItem({ roundPoint: Point.from(event) },
+            var r = await useSelectMenuItem({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) },
                 [
                     {
                         text: lst('添加角色'),
                         type: MenuItemType.text
                     },
                     {
-                        text: lst('所有人'),
+                        text: lst('@所有人', '@  所有人'),
                         name: "addRole",
                         value: 'all',
-                        disabled: (pr?.memberPermissions || []).some(s => s.roleId == 'all')
+                        // disabled: (pr?.memberPermissions || []).some(s => s.roleId == 'all')
                     },
                     ...rs.roles.map(r => {
                         return {
                             text: r.text,
                             name: 'addRole',
                             value: r.id,
-                            renderIcon: () => {
-                                return <span
-                                    className="size-16 circle"
-                                    style={{ background: r.color }}>
-                                </span>
+                            type: MenuItemType.custom,
+                            render(item, view) {
+                                return <div className='gap-w-5 h-28 flex item-hover cursor padding-w-5 round'>
+                                    <span className='flex-fixed size-12 gap-l-4 circle' style={{ background: r.color }}></span>
+                                    <span className='flex-fixed gap-l-5'>{r.text}</span>
+                                    {Array.isArray(pr.memberPermissions) && pr.memberPermissions.some(s => s.roleId == r.id) && <label className='flex-auto flex-end'><Icon className={'gap-r-8'} size={16} icon={CheckSvg}></Icon></label>}
+                                </div>
                             },
-                            disabled: (pr?.memberPermissions || []).some(s => s.roleId == r.id)
+                            // disabled: (pr?.memberPermissions || []).some(s => s.roleId == r.id)
                         }
                     })
                 ]
@@ -129,14 +132,18 @@ class PagePublish extends EventsComponent {
             await setGlobalShare({ 'memberPermissions': ps });
         }
         function getRoles(roleId) {
-            if (roleId == 'all') return lst('所有人')
-            return self.page.ws.roles.find(g => g.id == roleId)?.text
+            if (roleId == 'all') return lst('@所有人')
+            var role = self.page.ws.roles.find(g => g.id == roleId)
+            return <><span className="size-12 gap-r-5 circle"
+                style={{ backgroundColor: role.color }}></span>
+                <span>{role?.text}</span>
+            </>
         }
         if (!pr) return <div className='w-300 min-h-60'></div>
         var cp = this.page.currentPermissions;
         var as = getAtomPermissionOptions(this.page.pageLayout.type);
         return <div className='w-300 min-h-60 padding-t-10 round f-14'>
-            <div className="flex  padding-w-14 ">
+            <div className="flex round gap-w-5 padding-w-5 ">
                 <div className="flex-auto">
                     <UserBox userid={this.page.user.id}>{(user) => {
                         return <div className="flex flex-top">
@@ -145,7 +152,7 @@ class PagePublish extends EventsComponent {
                                 <div>{user.name}</div>
                                 <span className="gap remark f-12">
                                     {cp.item && <span className="flex-inline flex-center"><S>权限继承</S><span className="item-hover-focus padding-w-5 round cursor padding-h-2">{getPageText(cp.item)}</span></span>}
-                                    {cp.isOwner && <span><S>权限继承空间管理员</S></span>}
+                                    {cp.isOwner && <span><S>权限继承超级管理员</S></span>}
                                     {cp.isWs && <span><S>权限继承所有人</S></span>}
                                 </span>
                             </div>
@@ -170,23 +177,24 @@ class PagePublish extends EventsComponent {
             {
                 this.page.isCanManage && <>
                     <Divider></Divider>
-                    <div className="flex  padding-w-14">
-                        <span className="flex-auto f-14 flex"><Icon size={16} className={'gap-r-5'} icon={{ name: 'bytedance-icon', code: 'user' }}></Icon><S>空间成员</S></span>
-                        {this.page.isCanManage && <Tip text='添加成员权限'><span onMouseDown={e => addPermission(e)} className="flex-fixed flex-center size-20 item-hover round cursor"><Icon size={16} icon={PlusSvg}></Icon></span></Tip>}
+                    <div className="flex  round gap-w-5 padding-w-5 ">
+                        <span className="flex-auto f-14 flex remark"><Icon size={14} className={'gap-r-3'} icon={{ name: 'bytedance-icon', code: 'user' }}></Icon><S>成员角色</S></span>
+                        {this.page.isCanManage && <Tip text='添加成员角色权限'><span onMouseDown={e => addPermission(e)} className="flex-fixed flex-center size-20 item-hover round cursor"><Icon size={16} icon={PlusSvg}></Icon></span></Tip>}
                     </div>
                     <div>
                         {ps.map((mp, id) => {
-                            return <div className="flex flex-top gap-h-10 padding-h-5 padding-w-14 item-hover round" key={id}>
-                                <div className="flex-fixed">
+                            return <div className="flex item-hover gap-h-5 h-28  gap-w-5 padding-w-5  round" key={id}>
+                                <div className="flex-fixed flex">
                                     {mp.userid && <Avatar size={30} userid={mp.userid}></Avatar>}
-                                    {mp.roleId && <span>{getRoles(mp.roleId)}</span>}
+                                    {mp.roleId && getRoles(mp.roleId)}
                                 </div>
                                 <div className="flex-auto flex flex-end">
                                     <div className="flex-fixed gap-r-5 flex-end f-12">
                                         <SelectBox
-                                            small
-                                            dropWidth={120}
+                                            dropWidth={150}
                                             multiple
+                                            border
+                                            small
                                             computedChanges={async (vs, v) => {
                                                 return getAtomPermissionComputedChanges(this.page.pageLayout.type, vs, v);
                                             }}
@@ -203,16 +211,17 @@ class PagePublish extends EventsComponent {
                                             }}
                                         ></SelectBox>
                                     </div>
-                                    {mp.roleId != 'all' && <span
+                                    <span
                                         onMouseDown={e => remove(mp)}
-                                        className="flex-fixed flex-center size-24 round item-hover cursor"><Icon
-                                            size={16} icon={CloseSvg}></Icon></span>}
+                                        className="flex-fixed flex-center size-20 remark  round item-hover cursor"><Icon
+                                            size={12} icon={CloseSvg}></Icon>
+                                    </span>
                                 </div>
                             </div>
                         })}
                     </div>
                     <Divider></Divider>
-                    <div className="item-hover h-30 flex padding-w-14">
+                    <div className="item-hover h-28 gap-h-5  round flex gap-w-5 padding-w-5">
                         <span className="flex-auto flex">
                             <Icon size={16} icon={GlobalLinkSvg}></Icon>
                             <span className="gap-l-5"><S>公开至互联网</S></span>
@@ -222,14 +231,14 @@ class PagePublish extends EventsComponent {
                         </span>
                     </div>
                     {pr.share == 'net' && <>
-                        <div className="flex item-hover h-30 flex padding-w-14">
+                        <div className="flex h-28 gap-h-5 item-hover round flex gap-w-5 padding-w-5">
                             <div className="flex-auto text-overflow">
-                                <S>页面公开访问权限</S>
+                                <S>页面公开访问</S>
                             </div>
                             <div className="flex-fixed f-12">
                                 <SelectBox
+                                    border
                                     small
-                                    // border
                                     multiple
                                     computedChanges={async (vs, v) => {
                                         return getAtomPermissionComputedChanges(this.page.pageLayout.type, vs, v);
@@ -244,16 +253,20 @@ class PagePublish extends EventsComponent {
                 </>
             }
             <Divider></Divider>
-            <div className="item-hover h-30  cursor  padding-w-14 flex"
+            <div className="item-hover h-28 gap-h-5 cursor round gap-w-5 padding-w-5 flex "
                 onClick={e => this.copyLink()}>
-                <Icon size={18} icon={{ name: 'bytedance-icon', code: 'copy-link' }}></Icon><span className="gap-l-5"><S>复制页面访问链接</S></span>
+                <Icon size={16} icon={{ name: 'bytedance-icon', code: 'copy-link' }}></Icon><span className="gap-l-5"><S>复制页面访问链接</S></span>
+            </div>
+            <Divider></Divider>
+            <div className="h-28 gap-w-5 padding-w-5 flex gap-b-5">
+                <HelpText url={window.shyConfig?.isUS ? "https://help.shy.red/page/56#hGhhfbuoABYdi2teyAV39s" : "https://help.shy.live/page/348#f5wKC2CQ6jwJCsekNy6qZr"}><S>了解如何设置页面权限</S></HelpText>
             </div>
         </div>
     }
 }
 
-export async function usePagePublish(pos: PopoverPosition, page: Page) {
-    let popover = await PopoverSingleton(PagePublish, { mask: true });
+export async function usePagePermission(pos: PopoverPosition, page: Page) {
+    let popover = await PopoverSingleton(PagePermission, { mask: true });
     let pagePublish = await popover.open(pos);
     pagePublish.open(page);
     return new Promise((resolve: (data: any) => void, reject) => {

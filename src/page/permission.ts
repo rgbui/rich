@@ -22,7 +22,6 @@ export enum AtomPermission {
     docView = 3,
     docComment = 4,
     docNotAllow = 5,
-
     /**
      * 频道的日常管理
      */
@@ -30,7 +29,6 @@ export enum AtomPermission {
     channelSpeak = 11,
     channelView = 12,
     channelNotAllow = 13,
-
     /**
      * 数据表格编辑
      */
@@ -139,12 +137,12 @@ export function getAtomPermissionOptions(pageType: PageLayoutType): MenuItem[] {
         return [
             { text: lst('所有权限'), value: AtomPermission.all },
             { type: MenuItemType.divide },
-            { text: lst('可编辑'), value: AtomPermission.docEdit },
-            { text: lst('可编辑行'), value: AtomPermission.dbEditRow },
+            { text: lst('编辑'), value: AtomPermission.docEdit },
+            { text: lst('编辑数据'), value: AtomPermission.dbEditRow },
             { type: MenuItemType.divide },
-            { text: lst('可添加行'), value: AtomPermission.dbAddRow },
-            { text: lst('可评论'), value: AtomPermission.docComment },
-            { text: lst('可查看'), value: AtomPermission.docView },
+            { text: lst('添加数据'), value: AtomPermission.dbAddRow },
+            { text: lst('评论'), value: AtomPermission.docComment },
+            { text: lst('浏览'), value: AtomPermission.docView },
             { type: MenuItemType.divide },
             { text: lst('无权限'), value: AtomPermission.docNotAllow },
         ]
@@ -153,10 +151,10 @@ export function getAtomPermissionOptions(pageType: PageLayoutType): MenuItem[] {
         return [
             { text: lst('所有权限'), value: AtomPermission.all },
             { type: MenuItemType.divide },
-            { text: lst('可编辑'), value: AtomPermission.channelEdit },
+            { text: lst('编辑'), value: AtomPermission.channelEdit },
             { type: MenuItemType.divide },
-            { text: lst('可发言'), value: AtomPermission.channelSpeak },
-            { text: lst('可查看'), value: AtomPermission.channelView },
+            { text: lst('发言'), value: AtomPermission.channelSpeak },
+            { text: lst('浏览'), value: AtomPermission.channelView },
             { type: MenuItemType.divide },
             { text: lst('无权限'), value: AtomPermission.channelNotAllow },
         ]
@@ -165,11 +163,11 @@ export function getAtomPermissionOptions(pageType: PageLayoutType): MenuItem[] {
         return [
             { text: lst('所有权限'), value: AtomPermission.all },
             { type: MenuItemType.divide },
-            { text: lst('可编辑'), value: AtomPermission.dbEdit },
-            { text: lst('可编辑行'), value: AtomPermission.dbEditRow },
+            { text: lst('编辑'), value: AtomPermission.dbEdit },
+            { text: lst('编辑数据'), value: AtomPermission.dbEditRow },
             { type: MenuItemType.divide },
-            { text: lst('可添加行'), value: AtomPermission.dbAddRow },
-            { text: lst('可查看'), value: AtomPermission.dbView },
+            { text: lst('添加数据'), value: AtomPermission.dbAddRow },
+            { text: lst('浏览'), value: AtomPermission.dbView },
             { type: MenuItemType.divide },
             { text: lst('无权限'), value: AtomPermission.dbNotAllow },
         ]

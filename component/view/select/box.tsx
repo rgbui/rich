@@ -130,7 +130,7 @@ export class SelectBox<T = any> extends React.Component<{
                         {i < ops.length - 1 ? "," : ""}
                     </span>
                 })}</span>}
-                <span className={"flex-fixed  remark flex-center " + (this.props.border ? "size-20" : "size-14")}>
+                <span className={"flex-fixed  remark flex-center " + (this.props.border ? "size-14" : "size-14")}>
                     <Icon size={14} icon={ChevronDownSvg}></Icon>
                 </span>
             </div>}
