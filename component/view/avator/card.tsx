@@ -13,12 +13,13 @@ import { useSelectMenuItem } from "../menu";
 import { Rect } from "../../../src/common/vector/point";
 import { lst } from "../../../i18n/store";
 import { MenuItem, MenuItemType } from "../menu/declare";
-import "./style.less"
 import { Confirm } from "../../lib/confirm";
 import { useOpenReport } from "../../../extensions/report";
 import { ShyAlert } from "../../lib/alert";
 import { S } from "../../../i18n/view";
 import Markdown from "../markdown";
+import dayjs from "dayjs";
+import "./style.less"
 
 export class UserCard extends EventsComponent {
     user: UserBasic;
@@ -29,7 +30,7 @@ export class UserCard extends EventsComponent {
             {this.user && <><div className="shy-user-card-cover">
                 {this.user?.cover?.url && <img src={autoImageUrl(this.user?.cover?.url, 500)} />}
                 {!this.user?.cover?.url && <div style={{ height: 60, backgroundColor: this.user?.cover?.color ? this.user?.cover?.color : "#d85050" }}></div>}
-            </div><div className="shy-user-card-content">
+            </div><div className="shy-user-card-content padding-b-5">
                     <div className="shy-user-card-head">
                         <div className="user-avatar">
                             <Avatar size={50} user={this.user}></Avatar>
@@ -52,24 +53,27 @@ export class UserCard extends EventsComponent {
                             </span>}
                         </div>
                     </div>
-                    <div className="gap-10 ">
+                    <div className="gap-w-10 gap-h-5 ">
                         <div className="f-12 bold"><S>自我介绍</S></div>
                         {!this.user.slogan && <div className="f-12 remark"><S>无介绍</S></div>}
                         {this.user.slogan && <div className="f-12"><Markdown md={this.user.slogan}></Markdown></div>}
                     </div>
-                    <div className="gap-10">
+                    {this.member && <div className="gap-w-10 gap-h-5">
+                        <div className="f-12 bold"><S>加入时间</S></div>
+                        <div className="f-12 remark">{dayjs(this.member.createDate).format('YYYY-MM-DD')}</div>
+                    </div>}
+                    {this.member && <div className="gap-w-10 gap-h-5">
                         <div className="f-12 bold"><S>身份组</S></div>
                         {!this.member && <div className="f-12 remark"><S>无介绍</S></div>}
                         {this.member && <div className="flex">
                             {this.member.roles.map(r => {
-                                return <div key={r.id} className="border-light round padding-w-5 padding-h-2 gap-r-5">
-                                    <span className="size-12 circle" style={{ backgroundColor: r.color }}></span>
-                                    <span>{r.text}</span>
+                                return <div key={r.id} className="border-light flex round padding-w-5 padding-h-2 gap-r-5">
+                                    <span className="size-10 circle gap-r-3" style={{ display: 'inline-block', backgroundColor: r.color }}></span>
+                                    <span className="f-12">{r.text}</span>
                                 </div>
                             })}
                         </div>}
-                    </div>
-                    <div></div>
+                    </div>}
                 </div></>}
         </div>
     }
