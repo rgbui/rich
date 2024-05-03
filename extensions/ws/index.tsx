@@ -18,7 +18,7 @@ export class WsPicker extends EventsComponent {
     }
     render() {
         return <div className="bg-white w-350">
-            <div className="gap-h-5 gap-w-5 padding-w-5"><span className="f-12 remark"><S>选择移动到的空间</S></span></div>
+            <div className="gap-t-5 gap-w-5 padding-w-5"><span className="f-12 remark"><S>选择移动到的空间</S></span></div>
             <div className="max-h-250 overflow-y">
                 {this.wss.map(ws => {
                     return <div
@@ -27,7 +27,7 @@ export class WsPicker extends EventsComponent {
                         key={ws.id}>
                         <span className="flex-fixed">{ws.icon && <a className="size-48 flex-center round-16">
                             <img src={autoImageUrl(ws.icon.url, 120)} style={{ width: 48, height: 48 }} />
-                        </a>}{!ws.icon && <a style={{ color: '#3ba55d' }} className="flex-center size-48 bg-white round-16"><span style={{ fontSize: 18 }}>{util.firstToUpper(ws?.text?.slice(0, 2))}</span>
+                        </a>}{!ws.icon && <a style={{ color: '#3ba55d' }} className="flex-center size-48 bg-white shadow-s round-16"><span style={{ fontSize: 18 }}>{util.firstToUpper(ws?.text?.slice(0, 2))}</span>
                         </a>}
                         </span>
                         <span className="flex-auto gap-l-10 text-overflow">{ws.text}</span>
