@@ -1,6 +1,6 @@
 import React, { CSSProperties } from "react";
-import "./style.less";
 import { util } from "../../../util/util";
+import "./style.less";
 
 // function getCircle(size?: 24 | 16) {
 //     return <div className={"size-" + (size) + " relative"}>
@@ -10,27 +10,21 @@ import { util } from "../../../util/util";
 //         <i className={`size-${size == 24 ? 8 : 4}` + " circle pos bg-primary op-3"} style={{ bottom: 0, left: 0 }}></i>
 //     </div>
 // }
-
+ 
 export function Spin(props: { block?: boolean, size?: 24 | 16, children?: React.ReactNode }) {
     var ov = props.children;
     var size = props.size || 16;
+    if (props.block) return <div className="flex-center gap-h-10">
+        {Loading4(size)}
+    </div>
     return Loading4(size);
-    // if (!ov) ov = getCircle(size);
-    // var div = <div className="shy-spin-circle flex-center flex-inline" style={{ width: size * 1.5, height: size * 1.5 }}>
-    //     {ov}
-    // </div>;
-    // if (props.block) return <div className="flex-center gap-h-20">{div}</div>
-    // return div;
 }
 
 export function SpinBox(props: {
     children?: React.ReactNode,
-    // overlay?: React.ReactNode,
     spin?: boolean,
     mask?: boolean
 }) {
-    // var ov = props.overlay;
-    // if (!ov) ov = getCircle(24);
     return <div className="relative">
         {props.children}
         {props.mask && props.spin && <div className="pos-full" style={{ background: 'rgba(0,0,0,.1)', opacity: .4 }}></div>}
@@ -116,8 +110,7 @@ export class Ring extends React.Component<{
     }
 }
 
-export function Loading4(size = 32)
-{
+export function Loading4(size = 32) {
     return <svg
         style={{
             boxSizing: 'content-box',
