@@ -115,6 +115,7 @@ export class AISearchBox extends EventsComponent {
         await this.send(true);
     }
     async send(isTry?: boolean) {
+        if (!this.prompt) return;
         try {
             var self = this;
             var prompt = this.prompt;
