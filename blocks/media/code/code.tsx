@@ -209,7 +209,7 @@ export class TextCodeView extends BlockView<TextCode>{
                                 <Icon size={14} icon={ChevronDownSvg}></Icon>
                             </div>}
                             <ToolTip overlay={lst('复制')}><div onMouseDown={e => this.onCopy()} className="size-24 flex-center cursor item-hover round">
-                                <Icon size={18} icon={DuplicateSvg}></Icon>
+                                <Icon size={16} icon={DuplicateSvg}></Icon>
                             </div></ToolTip>
                             {this.props.block.isCanEdit() && <ToolTip overlay={lst('菜单')}><div onMouseDown={e => {
                                 e.stopPropagation();
