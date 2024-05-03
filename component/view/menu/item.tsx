@@ -181,7 +181,7 @@ export class MenuItemView extends React.Component<{
                 {item.label && <label className="flex-fixed">{item.label}</label>}
                 {item.helpUrl && item.helpAlign == 'right' && <span className="flex-fixed h-20 flex"><HelpText onMouseDown={e => e.stopPropagation()} url={item.helpUrl}>{item.helpText}</HelpText></span>}
             </div>}
-            {item.type == MenuItemType.user && <div onMouseDown={e => this.select(item, e.nativeEvent)} className="shy-menu-box-item-user"><Avatar userid={item.userid} showName size={item.size || 30}></Avatar></div>}
+            {item.type == MenuItemType.user && <div onMouseDown={e => this.select(item, e.nativeEvent)} className="shy-menu-box-item-user"><Avatar userid={item.userid} middle showName size={item.size || 30}></Avatar></div>}
             {item.type == MenuItemType.switch && <div className='shy-menu-box-item-switch'>
                 {item.icon && <i className="flex-center flex-inline size-20 text-1"><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
                 {item.renderIcon && item.renderIcon(item, this)}

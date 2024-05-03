@@ -118,7 +118,7 @@ export class Avatar extends React.Component<{
             </div>
         }
         if (this.props.head || this.props.showName || this.props.showSn) {
-            return <div style={{ justifyContent: this.props.middle ? "center" : 'flex-start' }} className={'shy-avatar-say' + " " + (this.props.className || "")}>
+            return <div style={{ alignItems: this.props.middle ? "center" : 'flex-start' }} className={'shy-avatar-say' + " " + (this.props.className || "")}>
                 <div className={'shy-avatar-say-face'} style={{ width: size, height: size }} onMouseDown={e => this.mousedown(e)}>{renderIcon()}{size > 24 && this.props.hideStatus !== true && renderStatus()}</div>
                 <div className={'shy-avatar-say-content'} >
                     <div className={'shy-avatar-say-content-head'}><div className='left flex' onMouseDown={e => this.mousedown(e)}>
