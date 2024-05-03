@@ -238,7 +238,7 @@ export class Page$ContextMenu {
         }
         else if (this.pageLayout.type == PageLayoutType.textChannel) {
             items = [
-                { name: 'smallText', icon: { name: 'bytedance-icon', code: 'add-text' }, text: lst('小字号'), checked: this.smallFont ? true : false, type: MenuItemType.switch },
+                // { name: 'smallText', icon: { name: 'bytedance-icon', code: 'add-text' }, text: lst('小字号'), checked: this.smallFont ? true : false, type: MenuItemType.switch },
                 {
                     name: 'fullWidth', icon: { name: 'bytedance-icon', code: 'fullwidth' }, text: lst('宽版'),
                     updateMenuPanel: true,
@@ -491,6 +491,7 @@ export class Page$ContextMenu {
                 }
             })
         }
+        lodash.remove(menus, c => c.name == BlockDirective.comment);
         menus = util.neighborDeWeight(menus, c => (c.name + "") + c.type);
         if (menus[0]?.type == MenuItemType.divide) menus = menus.slice(1);
         else if (menus.last()?.type == MenuItemType.divide) menus = menus.slice(0, -1);
