@@ -182,7 +182,7 @@ export class OriginFormField extends Block {
     getVisibleHandleCursorPoint() {
         var point = super.getVisibleHandleCursorPoint();
         if (this.fieldType == 'doc-add') {
-            point = point.move(0, -5);
+            point = point.move(0, 10);
         }
         else {
             point = point.move(0, 10);
@@ -208,7 +208,7 @@ export function FieldView(props: { block: OriginFormField, className?: string | 
                     {props.children}
                 </div>
             </div>
-            {this.renderComment()}
+            {block.view.renderComment()}
         </div>
     }
     return <div style={block.visibleStyle} className={'sy-form-field ' + classList.join(' ')} onMouseDown={e => e.stopPropagation()}>
