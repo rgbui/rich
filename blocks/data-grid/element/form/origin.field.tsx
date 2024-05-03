@@ -231,6 +231,6 @@ export function FieldView(props: { block: OriginFormField, className?: string | 
             </div>}
             {block.fieldError && <div className="sy-form-field-error">{block.fieldError}</div>}
         </div>
-        {this.renderComment()}
+        {block.view.renderComment()}
     </div>
 }

@@ -64,14 +64,6 @@ class PagePermission extends EventsComponent {
             userid?: string;
             permissions: AtomPermission[];
         }[] = pr?.memberPermissions || [];
-        if (ps.length == 0) {
-            ps.push(
-                {
-                    roleId: 'all',
-                    permissions: [AtomPermission.docComment]
-                }
-            )
-        }
         async function setGlobalShare(data) {
             if (view) {
                 await self.page.schema.onSchemaOperate([{ name: 'updateSchemaView', id: view.id, data }])
@@ -93,7 +85,7 @@ class PagePermission extends EventsComponent {
                         text: lst('@所有人', '@  所有人'),
                         name: "addRole",
                         value: 'all',
-                        // disabled: (pr?.memberPermissions || []).some(s => s.roleId == 'all')
+                        checkLabel: Array.isArray(pr.memberPermissions) && pr.memberPermissions.some(s => s.roleId == 'all')
                     },
                     ...rs.roles.map(r => {
                         return {
@@ -119,6 +111,7 @@ class PagePermission extends EventsComponent {
                 }
                 else if (r.item.name == 'addRole') {
                     if (!Array.isArray(pr.memberPermissions)) pr.memberPermissions = [];
+                    if (pr.memberPermissions.some(s => s.roleId == r.item.value)) return;
                     pr.memberPermissions.push({
                         roleId: r.item.value,
                         permissions: [AtomPermission.docComment]
@@ -128,8 +121,9 @@ class PagePermission extends EventsComponent {
             }
         }
         async function remove(mp) {
-            lodash.remove(ps, p => p.userid && p.userid == mp.userid || p.roleId && p.roleId == mp.roleId);
-            await setGlobalShare({ 'memberPermissions': ps });
+            // console.log(JSON.stringify(ps), JSON.stringify(mp), 'ps mp...');
+            lodash.remove(pr.memberPermissions as any[], p => p.userid && p.userid == mp.userid || p.roleId && p.roleId == mp.roleId);
+            await setGlobalShare({ 'memberPermissions': pr.memberPermissions });
         }
         function getRoles(roleId) {
             if (roleId == 'all') return lst('@所有人')
@@ -183,7 +177,7 @@ class PagePermission extends EventsComponent {
                     </div>
                     <div>
                         {ps.map((mp, id) => {
-                            return <div className="flex item-hover gap-h-5 h-28  gap-w-5 padding-w-5  round" key={id}>
+                            return <div className="flex item-hover gap-t-5 h-28  gap-w-5 padding-w-5  round" key={id}>
                                 <div className="flex-fixed flex">
                                     {mp.userid && <Avatar size={30} userid={mp.userid}></Avatar>}
                                     {mp.roleId && getRoles(mp.roleId)}
@@ -221,7 +215,7 @@ class PagePermission extends EventsComponent {
                         })}
                     </div>
                     <Divider></Divider>
-                    <div className="item-hover h-28 gap-h-5  round flex gap-w-5 padding-w-5">
+                    <div className={"item-hover h-28 round flex gap-w-5 padding-w-5" + (pr.share == 'net' ? " gap-b-5 " : "")}>
                         <span className="flex-auto flex">
                             <Icon size={16} icon={GlobalLinkSvg}></Icon>
                             <span className="gap-l-5"><S>公开至互联网</S></span>
@@ -231,7 +225,7 @@ class PagePermission extends EventsComponent {
                         </span>
                     </div>
                     {pr.share == 'net' && <>
-                        <div className="flex h-28 gap-h-5 item-hover round flex gap-w-5 padding-w-5">
+                        <div className="flex h-28 gap-t-5 item-hover round flex gap-w-5 padding-w-5">
                             <div className="flex-auto text-overflow">
                                 <S>页面公开访问</S>
                             </div>
@@ -253,7 +247,7 @@ class PagePermission extends EventsComponent {
                 </>
             }
             <Divider></Divider>
-            <div className="item-hover h-28 gap-h-5 cursor round gap-w-5 padding-w-5 flex "
+            <div className="item-hover h-28 cursor round gap-w-5 padding-w-5 flex "
                 onClick={e => this.copyLink()}>
                 <Icon size={16} icon={{ name: 'bytedance-icon', code: 'copy-link' }}></Icon><span className="gap-l-5"><S>复制页面访问链接</S></span>
             </div>

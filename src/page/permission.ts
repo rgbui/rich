@@ -114,7 +114,8 @@ export function getAllAtomPermission() {
 
 export function getAtomPermissionComputedChanges(pageType: PageLayoutType, vs: AtomPermission[], v: AtomPermission) {
     if ([PageLayoutType.board, PageLayoutType.doc, PageLayoutType.ppt].includes(pageType)) {
-        if ([AtomPermission.docComment, AtomPermission.docExport, AtomPermission.dbAddRow, AtomPermission.dbEditRow].includes(v)) lodash.remove(vs, g => ![AtomPermission.docExport, AtomPermission.dbEditRow, AtomPermission.dbAddRow, AtomPermission.docComment].includes(g))
+        if ([AtomPermission.docComment, AtomPermission.docExport].includes(v)) lodash.remove(vs, g => ![AtomPermission.docExport, AtomPermission.docComment].includes(g))
+        else if ([AtomPermission.dbEditRow, AtomPermission.docEdit, AtomPermission.dbAddRow].includes(v)) lodash.remove(vs, g => ![AtomPermission.dbEditRow, AtomPermission.docEdit, AtomPermission.dbAddRow].includes(g))
         else vs = []
         if (!vs.includes(v)) vs.push(v)
         return vs;
@@ -139,8 +140,8 @@ export function getAtomPermissionOptions(pageType: PageLayoutType): MenuItem[] {
             { type: MenuItemType.divide },
             { text: lst('编辑'), value: AtomPermission.docEdit },
             { text: lst('编辑数据'), value: AtomPermission.dbEditRow },
-            { type: MenuItemType.divide },
             { text: lst('添加数据'), value: AtomPermission.dbAddRow },
+            { type: MenuItemType.divide },
             { text: lst('评论'), value: AtomPermission.docComment },
             { text: lst('浏览'), value: AtomPermission.docView },
             { type: MenuItemType.divide },
@@ -165,8 +166,8 @@ export function getAtomPermissionOptions(pageType: PageLayoutType): MenuItem[] {
             { type: MenuItemType.divide },
             { text: lst('编辑'), value: AtomPermission.dbEdit },
             { text: lst('编辑数据'), value: AtomPermission.dbEditRow },
-            { type: MenuItemType.divide },
             { text: lst('添加数据'), value: AtomPermission.dbAddRow },
+            { type: MenuItemType.divide },
             { text: lst('浏览'), value: AtomPermission.dbView },
             { type: MenuItemType.divide },
             { text: lst('无权限'), value: AtomPermission.dbNotAllow },
