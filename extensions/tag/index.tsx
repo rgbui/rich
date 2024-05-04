@@ -34,22 +34,20 @@ class TagSelector extends InputTextPopSelector<{ id: string, tag: string }> {
             this.allList.lastDate = new Date();
         }
     }
-    private renderLinks()
-    {
+    private renderLinks() {
         return <div>
-            <a className={"h-30 gap-w-10 text item-hover cursor round padding-w-10 flex" + (0 == this.selectIndex ? " item-hover-focus" : "")} onMouseDown={e => this.onSelect({ name: 'create' })}>
-                <span className="flex flex-inline size-24 item-hover round flex-center"> <Icon size={18} icon={TopicSvg}></Icon></span>
+            {this.searchWord && this.list.length == 0 && <a className={"h-30 gap-w-5 text item-hover cursor round padding-w-5 flex" + (0 == this.selectIndex ? " item-hover-focus" : "")} onMouseDown={e => this.onSelect({ name: 'create' })}>
+                <span className="flex flex-inline size-24 item-hover round flex-center"><Icon size={18} icon={TopicSvg}></Icon></span>
                 <span className="f-14 flex-auto flex">
                     <S>创建</S><b className="bold gap-l-5">{this.text || lst('标签')}</b>
                 </span>
                 <span className="flex-fixed flex flex-inline size-24 item-hover round flex-center">
                     <Icon size={18} icon={PlusSvg}></Icon>
                 </span>
-            </a>
-            <Divider></Divider>
+            </a>}
             {this.loading && <div className="flex-center gap-h-30"><Spin></Spin></div>}
             {!this.loading && this.list.map((link, i) => {
-                return <a onMouseDown={e => this.onSelect(link)} className={"h-30 gap-w-10 text  item-hover cursor round padding-w-10 flex" + ((i + 1) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
+                return <a onMouseDown={e => this.onSelect(link)} className={"h-30 gap-w-5 text  item-hover cursor round padding-w-5 flex" + (i == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
                     <span className="flex flex-inline size-24 item-hover round"><Icon size={18} icon={TopicSvg}></Icon></span>
                     <span className="f-14">{link.tag || lst('标签')}</span></a>
             })}
@@ -93,7 +91,7 @@ class TagSelector extends InputTextPopSelector<{ id: string, tag: string }> {
         this.close();
     }
     getSelectBlockData() {
-        if (this.selectIndex == 0) {
+        if (this.selectIndex == 0 && this.searchWord && this.list.length == 0) {
             return {
                 blockData: {
                     url: BlockUrlConstant.Tag,
@@ -103,7 +101,7 @@ class TagSelector extends InputTextPopSelector<{ id: string, tag: string }> {
             }
         }
         else {
-            var b = this.list[this.selectIndex - 1];
+            var b = this.list[this.selectIndex];
             if (!b) return false;
             return {
                 blockData: {

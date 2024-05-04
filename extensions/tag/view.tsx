@@ -21,10 +21,12 @@ export class TagsView extends EventsComponent {
         super(props)
     }
     render(): ReactNode {
-        return <div className="padding-10 round w-400 max-h-300 overlay-y">
+        return <div className="padding-10 round w-400 ">
             <div className="h3">#{this.search.tag}</div>
-            {this.search.loading && <div><Spin></Spin></div>}
-            {this.renderRefs()}
+            <div className="max-h-300 overlay-y">
+                {this.search.loading && <Spin block></Spin>}
+                {this.renderRefs()}
+            </div>
         </div>
     }
     open(refPage: ArrayOf<BlockRefPage['childs']>) {
@@ -41,7 +43,7 @@ export class TagsView extends EventsComponent {
         return this.search.refs.map(pa => {
             return <div key={pa.id} className='gap-h-10'>
                 <div className="flex h-24 cursor" onMouseDown={e => { pa.spread = !pa.spread; this.forceUpdate() }} >
-                    <span className="remark ts-transform flex-center size-16 cursor  round remark"
+                    <span className="remark item-hover ts-transform flex-center size-20 cursor  round remark"
                         style={{ transform: pa.spread ? 'rotateZ(180deg)' : 'rotateZ(90deg)' }}><Icon size={10} icon={TriangleSvg}></Icon></span>
                     <span className="size-24 flex-center flex-inline"><Icon size={16} icon={getPageIcon(pa)}></Icon></span>
                     <span className="bold text">{getPageText(pa)}</span>
@@ -88,11 +90,11 @@ export class TagsView extends EventsComponent {
         refs: []
     }
     page: Page;
-    onOpen(link?: { tagId?: string, page: Page, tag?: string }) {
+    async onOpen(link?: { tagId?: string, page: Page, tag?: string }) {
         this.search.tagId = link?.tagId || ''
         this.search.tag = link?.tag || ''
         this.page = link?.page;
-        this.load()
+        await this.load()
     }
 }
 
@@ -101,8 +103,10 @@ export async function useTagViewer(pos: PopoverPosition, link?: { tagId?: string
     var picker = await popover.open(pos);
     await picker.onOpen(link);
     return new Promise((resolve: (reason?: any) => void, reject) => {
-
-        popover.on('close', () => {
+        popover.only('close', () => {
+            resolve()
+        })
+        picker.only('close', () => {
             resolve()
         })
     })
