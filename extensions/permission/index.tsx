@@ -140,11 +140,11 @@ class PagePermission extends EventsComponent {
             <div className="flex round gap-w-5 padding-w-5 ">
                 <div className="flex-auto">
                     <UserBox userid={this.page.user.id}>{(user) => {
-                        return <div className="flex flex-top">
-                            <Avatar className="flex-fixed gap-r-10" size={32} user={user}></Avatar>
+                        return <div className="flex">
+                            <Avatar className="flex-fixed gap-r-10" size={36} user={user}></Avatar>
                             <div className="flex-auto">
-                                <div>{user.name}</div>
-                                <span className="gap remark f-12">
+                                <div className="h-20 l-20">{user.name}</div>
+                                <span className="remark f-12 l-20">
                                     {cp.item && <span className="flex-inline flex-center"><S>权限继承</S><span className="item-hover-focus padding-w-5 round cursor padding-h-2">{getPageText(cp.item)}</span></span>}
                                     {cp.isOwner && <span><S>权限继承超级管理员</S></span>}
                                     {cp.isWs && <span><S>权限继承所有人</S></span>}

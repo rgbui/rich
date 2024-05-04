@@ -123,7 +123,7 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
     }
     render() {
         return <div>
-            <div className="flex padding-t-14 padding-w-10">
+            <div className="flex padding-t-10 padding-w-10">
                 <div className="flex-auto"><Input clear placeholder={lst("搜索...")} value={this.word} onClear={() => this.loadSearch('')} onEnter={e => { this.word = e; this.loadSearch.flush() }} onChange={e => this.loadSearch(e)} ></Input></div>
                 <div className="flex-fixed gap-l-20 text-1">
                     <Tip overlay={<S>随机</S>}><span onMouseDown={e => this.onRandomIcon()} className=" flex-center size-30 round item-hover cursor">

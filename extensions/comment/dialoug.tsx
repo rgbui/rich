@@ -12,7 +12,7 @@ export class CommentDialoug extends EventsComponent {
     render() {
         return <div className="w-500 padding-10 ">
             {this.resolvedHtml && <div className="gap-b-10 padding-w-10 flex border round">
-                <div className="flex-auto gap-r-20 gap-h-5 padding-h-5 padding-l-10 text-1" style={{ borderLeft: '2px solid var(--text-p-color)' }} >
+                <div className="flex-auto gap-r-20 gap-h-5 padding-h-3 padding-l-10 text-1" style={{ borderLeft: '2px solid var(--text-p-color)' }} >
                     <div className="row-2" dangerouslySetInnerHTML={{ __html: this.resolvedHtml }}></div>
                 </div>
                 <div className="flex-fixed">
@@ -48,10 +48,11 @@ export class CommentDialoug extends EventsComponent {
         this.displayFormat = props.displayFormat;
         this.ws = props.ws;
         this.resolvedHtml = props.resolvedHtml;
-        this.forceUpdate();
+        this.forceUpdate(() => {
+            this.emit('update')
+        });
     }
     getCount() {
-
         if (this.cv) return this.cv.total;
     }
     async onResolve() {
@@ -66,7 +67,6 @@ export async function useCommentListView(pos: PopoverPosition, props: {
     displayFormat?: 'comment' | 'discuss',
     ws?: LinkWs,
     resolvedHtml?: string
-
 }) {
     if (!pos) pos = { center: true }
     let popover = await PopoverSingleton(CommentDialoug, { mask: true });
@@ -76,6 +76,9 @@ export async function useCommentListView(pos: PopoverPosition, props: {
         popover.only('willClose', () => {
             resolve(fv.getCount())
         });
+        fv.only('update', () => {
+            popover.updateLayout();
+        })
         fv.only('resolve', () => {
             resolve(-1);
         })

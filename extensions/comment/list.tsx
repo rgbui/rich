@@ -217,8 +217,8 @@ export class CommentListView extends React.Component<{
         }
     }
     renderAllComments(comments: WsCommentType[], deep: number = 0) {
-        return <div onMouseDown={e => this.onMentionUser(e)}>{comments.map(l => {
-            return <div key={l.id} className={"flex-top gap-b-10"}>
+        return <div onMouseDown={e => this.onMentionUser(e)}>{comments.map((l, i) => {
+            return <div key={l.id} className={"flex-top " + (i == comments.length - 1 ? "" : "gap-b-10")}>
                 <UserBox userid={l.creater}>{(user) => <>
                     <div className="flex-fixed"><Avatar className="flex-fixed" size={24} user={user}></Avatar></div>
                     <div className={"flex-auto gap-l-10  " + (deep > 0 ? "" : " gap-b-5 padding-b-5 border-bottom-light")}>
@@ -288,7 +288,7 @@ export class CommentListView extends React.Component<{
                 </div>
             </div>}
             {this.list.length > 0 && <><Divider></Divider>
-                <div className="padding-h-10 round min-h-30 " style={{
+                <div className="padding-t-10 round min-h-30 " style={{
                     maxHeight: this.props.contentHeight,
                     overflowY: typeof this.props.contentHeight == 'number' ? "auto" : undefined,
                     marginBottom: typeof this.props.contentHeight == 'number' ? 10 : undefined,
