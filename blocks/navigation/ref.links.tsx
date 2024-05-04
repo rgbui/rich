@@ -16,6 +16,7 @@ import { BlockRefPage } from "../../extensions/tag/ref.declare";
 import { S } from "../../i18n/view";
 import { lst } from "../../i18n/store";
 import { MenuItem } from "../../component/view/menu/declare";
+import { Rect } from "../../src/common/vector/point";
 
 @url('/ref/links')
 export class RefLinks extends Block {
@@ -67,6 +68,14 @@ export class RefLinks extends Block {
         }
         return await super.onClickContextMenu(item, event);
     }
+    getVisibleHandleCursorPoint() {
+        if (!this.el) return null;
+        var r = this.el.querySelector('.h-30');
+        if (r) {
+            var rect = Rect.fromEle(r as HTMLElement);
+            return rect.leftMiddle;
+        }
+    }
 }
 
 @view('/ref/links')
@@ -110,12 +119,15 @@ export class RefLinksView extends BlockView<RefLinks> {
         return <div style={this.block.visibleStyle}>
             <div style={this.block.contentStyle} className="visible-hover">
                 <div className="flex h-30 ">
-                    <span onMouseDown={e => this.onToggle(e)} className="flex-fixed remark ts-transform  flex-center item-hover size-16 cursor  round"
-                        style={{ transform: this.block.expand ? 'rotateZ(180deg)' : 'rotateZ(90deg)' }}
-                    ><Icon size={10} icon={TriangleSvg}></Icon>
+                    <span className="flex-auto">
+                        <span className="flex round item-hover l-20 padding-r-5" style={{ display: 'inline-flex' }}>
+                            <span onMouseDown={e => this.onToggle(e)} className="flex-fixed remark ts-transform  flex-center  size-16 cursor  round"
+                                style={{ transform: this.block.expand ? 'rotateZ(180deg)' : 'rotateZ(90deg)' }}
+                            ><Icon size={10} icon={TriangleSvg}></Icon>
+                            </span>
+                            <span className="flex-fixed remark f-12 cursor"><span onMouseDown={e => this.onToggle(e)}><S>引用页面</S></span></span>
+                        </span>
                     </span>
-                    <span className="flex-auto remark f-12 cursor"><span onMouseDown={e => this.onToggle(e)}><S>引用页面</S></span></span>
-
                     <div className="visible flex-fixed bg-white shadow-s round flex text-1">
                         <span onClick={e => {
                             e.stopPropagation();
