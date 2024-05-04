@@ -6,7 +6,7 @@ import { Icon } from "../../component/view/icon";
 import { channel } from "../../net/channel";
 import { ElementType, getElementUrl, parseElementUrl } from "../../net/element.type";
 import { Block } from "../../src/block";
-import { BlockDirective, BlockRenderRange } from "../../src/block/enum";
+import { BlockDirective } from "../../src/block/enum";
 import { prop, url, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
 import { util } from "../../util/util";
@@ -70,7 +70,7 @@ export class RefLinks extends Block {
 }
 
 @view('/ref/links')
-export class RefLinksView extends BlockView<RefLinks>{
+export class RefLinksView extends BlockView<RefLinks> {
     open(refPage: ArrayOf<BlockRefPage['childs']>) {
         var pe = parseElementUrl(refPage.elementUrl);
         channel.air('/page/open', {
@@ -82,46 +82,63 @@ export class RefLinksView extends BlockView<RefLinks>{
         if (this.block.list.length == 0) {
             return <div className="flex-center remark f-12"><S>没有引用</S></div>
         }
-        return this.block.list.map(pa => {
-            return <div key={pa.id} className='gap-h-10'>
+        return this.block.list.map((pa, i) => {
+            return <div key={pa.id} className={i == this.block.list.length - 1 ? "" : 'gap-b-10'}>
                 <div className="flex h-24 cursor" onMouseDown={e => { pa.spread = !pa.spread; this.forceUpdate() }} >
-                    <span className="remark ts-transform flex-center size-16 cursor  round remark"
+                    <span className="remark ts-transform flex-center size-16 cursor item-hover  round remark"
                         style={{ transform: pa.spread ? 'rotateZ(180deg)' : 'rotateZ(90deg)' }}><Icon size={10} icon={TriangleSvg}></Icon></span>
                     <span className="size-24 flex-center flex-inline"><Icon size={16} icon={getPageIcon(pa)}></Icon></span>
                     <span className="bold text">{getPageText(pa)}</span>
                 </div>
                 {pa.spread && <div className="gap-l-10">{pa.childs.map((b, i) => {
                     return <div onMouseDown={e => this.open(b)} key={b.id} className='text-1 gap-h-5  flex flex-top item-hover round padding-5 cursor'>
-                        <span className="flex-fixed l-20">{i + 1}.</span>
+                        <span className="flex-fixed l-20 gap-r-5">{i + 1}.</span>
                         <div className="flex-auto l-20 f-14" dangerouslySetInnerHTML={{ __html: b.html }}></div>
-                        <span className="flex-fixed f-12 remark   l-20">{util.showTime(b.createDate)}</span></div>
+                        <span className="flex-fixed f-12 remark  l-20">{util.showTime(b.createDate)}</span></div>
                 })}</div>}
             </div>
         })
     }
     onToggle(e: React.MouseEvent) {
         e.stopPropagation();
-        this.block.onUpdateProps({ expand: this.block.expand ? false : true }, { range: BlockRenderRange.self })
+        var ed = this.block.expand;
+        this.block.expand = !ed;
+        this.forceUpdate();
+        this.block.onManualUpdateProps({ expand: ed }, { expand: ed ? false : true });
     }
     renderView() {
         return <div style={this.block.visibleStyle}>
-            <div className="flex h-24 visible-hover">
-                <span onMouseDown={e => this.onToggle(e)} className="flex-fixed remark ts-transform flex-center size-16 cursor  round"
-                    style={{ transform: this.block.expand ? 'rotateZ(180deg)' : 'rotateZ(90deg)' }}>
-                    <Icon size={10} icon={TriangleSvg}></Icon>
-                </span>
-                <span className="flex-auto remark f-12"><span onMouseDown={e => this.onToggle(e)}><S>引用页面</S></span></span>
-                <span onClick={e => {
-                    e.stopPropagation();
-                    this.block.loadList()
-                }} className="visible flex-fixed flex-center size-20 round item-hover cursor">
-                    <Icon size={12} icon={DotsSvg}></Icon>
-                </span>
+            <div style={this.block.contentStyle} className="visible-hover">
+                <div className="flex h-30 ">
+                    <span onMouseDown={e => this.onToggle(e)} className="flex-fixed remark ts-transform  flex-center item-hover size-16 cursor  round"
+                        style={{ transform: this.block.expand ? 'rotateZ(180deg)' : 'rotateZ(90deg)' }}
+                    ><Icon size={10} icon={TriangleSvg}></Icon>
+                    </span>
+                    <span className="flex-auto remark f-12 cursor"><span onMouseDown={e => this.onToggle(e)}><S>引用页面</S></span></span>
+
+                    <div className="visible flex-fixed bg-white shadow-s round flex text-1">
+                        <span onClick={e => {
+                            e.stopPropagation();
+                            this.block.loadList()
+                        }} className=" flex-fixed flex-center size-24 round item-hover cursor">
+                            <Icon size={16} icon={RefreshSvg}></Icon>
+                        </span>
+                        <span onClick={e => {
+                            e.stopPropagation();
+                            this.block.onContextmenu(e.nativeEvent);
+                        }} className="flex-fixed flex-center size-24 round item-hover cursor">
+                            <Icon size={16} icon={DotsSvg}></Icon>
+                        </span>
+                    </div>
+
+                </div>
+                <div style={{
+                    display: this.block.expand ? 'block' : 'none'
+                }} className="sy-block-ref-links bg round padding-10 gap-l-5">
+                    {this.block.loading && <Spin block></Spin>}
+                    {!this.block.loading && this.renderRefBlocks()}
+                </div>
             </div>
-            {this.block.expand && <div className="sy-block-ref-links bg round padding-10">
-                {this.block.loading && <div className="flex-center"><Spin></Spin></div>}
-                {!this.block.loading && this.renderRefBlocks()}
-            </div>}
             {this.renderComment()}
         </div>
     }
