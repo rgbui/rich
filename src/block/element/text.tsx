@@ -9,9 +9,8 @@ import { Block } from "..";
 import { channel } from "../../../net/channel";
 import lodash from "lodash";
 import { BoxTip } from "../../../component/view/tooltip/box";
-import { DragHandleSvg, DuplicateSvg, Edit1Svg, EditSvg, GlobalLinkSvg, TrashSvg } from "../../../component/svgs";
+import { DragHandleSvg, DuplicateSvg, GlobalLinkSvg, TrashSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
-import { useLinkPicker } from "../../../extensions/link/picker";
 import { Rect } from "../../common/vector/point";
 import { DragBlockLine } from "../../kit/handle/line";
 import { CopyAlert } from "../../../component/copy";
@@ -20,6 +19,7 @@ import { util } from "../../../util/util";
 import { S } from "../../../i18n/view";
 import { Tip } from "../../../component/view/tooltip/tip";
 import { lst } from "../../../i18n/store";
+import { useLinkEditor } from "../../../extensions/link/link";
 
 /***
  * 文字型的block，
@@ -78,6 +78,21 @@ export class TextContent extends Block {
         }
         return false;
     }
+    getPageLink() {
+        var lc: PageLink = {};
+        if (this.link) {
+            lc.name = 'outside';
+            lc.url = this.link.url;
+            lc.text = this.content;
+        }
+        else if (Array.isArray(this.refLinks) && this.refLinks.length > 0) {
+            lc.name = 'page';
+            lc.pageId = this.refLinks[0].pageId;
+            lc.text = this.content;
+        }
+        else lc = null;
+        return lc;
+    }
     get isBlankPlain() {
         if (this.link) return false;
         if (this.code == true) return false;
@@ -123,7 +138,7 @@ export class TextContent extends Block {
     }
 }
 @view(BlockUrlConstant.Text)
-export class TextContentView extends BlockView<TextContent>{
+export class TextContentView extends BlockView<TextContent> {
     openPage(e: React.MouseEvent) {
         e.stopPropagation();
         e.preventDefault();
@@ -160,25 +175,17 @@ export class TextContentView extends BlockView<TextContent>{
         })
     }
     async openLink(e: React.MouseEvent) {
-        if (this.boxTip)
-            this.boxTip.close();
-        var lc: PageLink = {};
-        if (this.block.link) {
-            lc.name = 'outside';
-            lc.url = this.block.link.url;
-        }
-        else if (Array.isArray(this.block.refLinks) && this.block.refLinks.length > 0) {
-            lc.pageId = this.block.refLinks[0].pageId;
-            lc.text = this.block.content;
-        }
-        var pageLink = await useLinkPicker({ roundArea: Rect.fromEle(this.block.el) }, lc);
+        if (this.boxTip) this.boxTip.close();
+        var lc: PageLink = this.block.getPageLink()
+        var pageLink = await useLinkEditor({ roundArea: Rect.fromEle(this.block.el) }, lc);
         if (pageLink) {
             if (lodash.isNull(pageLink.link)) {
                 this.onClearLink();
             }
             else if (pageLink.link)
-                this.block.onUpdateProps({ link: pageLink.link, refLinks: null }, { range: BlockRenderRange.self });
+                this.block.onUpdateProps({ content: pageLink.content && pageLink.content != this.block.content ? pageLink.content : undefined, link: pageLink.link, refLinks: null }, { range: BlockRenderRange.self });
             else this.block.onUpdateProps({
+                content: pageLink.content && pageLink.content != this.block.content ? pageLink.content : undefined,
                 link: null,
                 refLinks: pageLink.refLinks
             }, { range: BlockRenderRange.self })
@@ -191,14 +198,15 @@ export class TextContentView extends BlockView<TextContent>{
     renderView() {
         var ta = <TextArea block={this.block} prop='content' ></TextArea>
         var classList: string[] = ['sy-block-text-content'];
-        if (this.block.link || this.block.refLinks?.length > 0) {
+        var pl = this.block.getPageLink();
+        if (pl) {
             ta = <SolidArea block={this.block}>{this.block.content}</SolidArea>;
             if (this.block.link?.name == 'create') {
                 if (this.block.isCanEdit())
                     ta = <BoxTip ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center padding-5 r-flex-center r-size-24 r-round r-item-hover r-cursor text">
                         <Tip text={'拖动'}><span onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>
                         <Tip text={'取消'}><span onMouseDown={e => this.onClearLink()}><Icon size={14} icon={TrashSvg}></Icon></span></Tip>
-                    </div>}><a  draggable={false} className="sy-block-text-content-link">{ta}<i onMouseDown={e => this.openCreatePage(e)}>(<S>创建</S>)</i></a>
+                    </div>}><a draggable={false} className="sy-block-text-content-link">{ta}<i onMouseDown={e => this.openCreatePage(e)}>(<S>创建</S>)</i></a>
                     </BoxTip>
             }
             else if (this.block.link?.pageId || this.block.refLinks?.length > 0) {
@@ -208,8 +216,8 @@ export class TextContentView extends BlockView<TextContent>{
                     {this.block.isCanEdit() && <Tip text={'拖动'}><span className="item-hover" onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>}
                     <Tip overlay={url}><span className="max-w-160 padding-w-3 text-overflow " style={{ width: 'auto', justifyContent: 'flex-start' }}>{url}</span></Tip>
                     <Tip text={'复制网址'}><span className="item-hover" onMouseDown={e => this.copyLink(url)} ><Icon size={16} icon={DuplicateSvg}></Icon></span></Tip>
-                    {this.block.isCanEdit() && <Tip text={'编辑'}><span className="item-hover" onMouseDown={e => this.openLink(e)}><Icon size={14} icon={{name:'byte',code:"write"}}></Icon></span></Tip>}
-                </div>}><a  draggable={false} className="sy-block-text-content-link" onClick={e => {
+                    {this.block.isCanEdit() && <Tip text={'编辑'}><span className="item-hover" onMouseDown={e => this.openLink(e)}><Icon size={14} icon={{ name: 'byte', code: "write" }}></Icon></span></Tip>}
+                </div>}><a draggable={false} className="sy-block-text-content-link" onClick={e => {
                     this.openPage(e)
                 }} href={url}>{ta}</a></BoxTip>
             }
@@ -218,8 +226,8 @@ export class TextContentView extends BlockView<TextContent>{
                     {this.block.isCanEdit() && <Tip text={'拖动'}><span className="item-hover" onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>}
                     <Tip overlay={this.block.link.url}><span className="padding-w-3" style={{ width: 'auto' }}><Icon className={'gap-r-3'} icon={GlobalLinkSvg} size={14}></Icon><span className="max-w-160 text-overflow">{this.block.link?.url}</span></span></Tip>
                     <Tip text={'复制网址'}><span className="item-hover" onMouseDown={e => this.copyLink(this.block.link?.url)} ><Icon size={16} icon={DuplicateSvg}></Icon></span></Tip>
-                    {this.block.isCanEdit() && <Tip text={'编辑'}><span className="item-hover" onMouseDown={e => this.openLink(e)}><Icon size={14} icon={{name:'byte',code:"write"}}></Icon></span></Tip>}
-                </div>}><a  draggable={false} className="sy-block-text-content-link" onClick={e => {
+                    {this.block.isCanEdit() && <Tip text={'编辑'}><span className="item-hover" onMouseDown={e => this.openLink(e)}><Icon size={14} icon={{ name: 'byte', code: "write" }}></Icon></span></Tip>}
+                </div>}><a draggable={false} className="sy-block-text-content-link" onClick={e => {
                     if (this.block.page.keyboardPlate.isShift()) {
                         e.preventDefault();
                     }

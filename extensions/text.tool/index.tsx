@@ -15,7 +15,16 @@ import { BlockDirective } from "../../src/block/enum";
 import { PopoverPosition } from "../../component/popover/position";
 import { FixedViewScroll } from "../../src/common/scroll";
 import { blockStore } from "../block/store";
-import { AiStartSvg, ChevronDownSvg, CodeSvg, DoubleLinkSvg, EquationSvg, FontStyleSvg, FontcolorSvg, LinkSvg, SearchSvg } from "../../component/svgs";
+import {
+    AiStartSvg,
+    ChevronDownSvg,
+    CodeSvg,
+    DoubleLinkSvg,
+    EquationSvg,
+    FontStyleSvg,
+    LinkSvg,
+    SearchSvg
+} from "../../component/svgs";
 import { dom } from "../../src/common/dom";
 import { util } from "../../util/util";
 import { useSearchBox } from "../search/keyword";
@@ -25,6 +34,9 @@ import { isUrl } from "../../src/kit/write/declare";
 import { UA } from "../../util/ua";
 import { S } from "../../i18n/view";
 import { SetTextCacheFontColor } from "../color/data";
+import { useLinkEditor } from "../link/link";
+import { PageLink } from "../link/declare";
+import { TextContent } from "../../src/block/element/text";
 
 export type TextToolStyle = {
     link: string,
@@ -51,15 +63,17 @@ class TextTool extends EventsComponent {
     }
     private fvs: FixedViewScroll = new FixedViewScroll();
     private turnBlock: Block = null;
+    private blocks: Block[] = [];
     private turnText: string = '';
     private selectionText: string = '';
     el: HTMLElement;
     boxEl: HTMLElement;
-    open(pos: PopoverPosition, options: { page: Page, style: TextToolStyle, turnBlock?: Block }) {
+    open(pos: PopoverPosition, options: { blocks: Block[], page: Page, style: TextToolStyle, turnBlock?: Block }) {
         var rs = pos.roundArea;
         if (!rs && Array.isArray(pos.roundAreas)) rs = pos.roundAreas[0];
         if (pos.relativeEleAutoScroll) this.fvs.bind(pos.relativeEleAutoScroll);
         this.page = options.page;
+        this.blocks = options.blocks;
         this.point = rs.leftTop;
         this.visible = true;
         this.textStyle = options.style;
@@ -110,7 +124,7 @@ class TextTool extends EventsComponent {
             {this.visible == true && <div className='shy-tool-text-menu shadow-s border bg-white round padding-w-5' ref={e => this.boxEl = e} style={style}>
                 {!(this.page.ws.aiConfig.disabled == true) && <><Tip overlay={<div><S>诗云AI</S><span style={{ color: '#bbb' }}>{UA.isMacOs ? "⌘+J" : 'Ctrl+J'}</span></div>} >
                     <div className='shy-tool-text-menu-item' onMouseDown={e => this.onExcute(TextCommand.askAI, e)}>
-                        <Icon  className={'text-pu'} icon={AiStartSvg}></Icon><span>AI</span>
+                        <Icon className={'text-pu'} icon={AiStartSvg}></Icon><span>AI</span>
                     </div>
                 </Tip><div className="shy-tool-text-menu-devide"></div></>}
 
@@ -127,11 +141,6 @@ class TextTool extends EventsComponent {
                     </div>
                 </Tip>
                 <div className="shy-tool-text-menu-devide"></div>
-                {/*<Tip text='评论'>
-                    <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenComment(e)}>
-                        <Icon size={16} icon={CommentSvg}></Icon>
-                    </div>
-                </Tip>*/}
                 <Tip overlay={<div><S>加粗</S><br /><span style={{ color: '#bbb' }}>{UA.isMacOs ? "⌘+B" : 'Ctrl+B'}</span></div>}>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.bold == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.bold == true ? TextCommand.cancelBold : TextCommand.bold, e)}>
                         <span className="size-20 flex-center"><Icon size={16} icon={{ name: 'byte', code: 'text-bold' }}></Icon></span>
@@ -316,20 +325,28 @@ class TextTool extends EventsComponent {
             text = text.split(/\n/g)[0];
         }
         if (text.length > 10 && !isUrl(text)) text = text.slice(0, 10);
-        var pageLink = await useLinkPicker({ roundArea: Rect.fromEle(this.linkEl) }, { text: text });
+        var pl: PageLink = { text };
+        if (this.blocks.length == 1) {
+            var bc = this.blocks.first();
+            if (bc instanceof TextContent && typeof (bc as TextContent).getPageLink == 'function') {
+                var b = (this.blocks.first() as TextContent)?.getPageLink();
+                if (b) {
+                    pl = b;
+                }
+            }
+        }
+        var pageLink = await useLinkEditor({ roundArea: Rect.fromEle(this.linkEl) }, pl);
         this.selection.rects = [];
         this.blocked = false;
         this.forceUpdate()
         if (pageLink) {
+            // delete pageLink.content;
             this.emit('setProp', { ...pageLink });
         }
         else if (range) {
             await util.delay(50);
             sel.addRange(range);
         }
-    }
-    onOpenComment(event: React.MouseEvent) {
-
     }
     onSearch(event: React.MouseEvent) {
         if (this.selectionText) {
@@ -391,7 +408,7 @@ export type textToolResult = { command: 'setStyle', styles: Record<BlockCssName,
     | { command: 'askAI' }
     | false;
 var textTool: TextTool;
-export async function useTextTool(point: PopoverPosition, options: { page: Page, style: TextToolStyle, turnBlock?: Block }) {
+export async function useTextTool(point: PopoverPosition, options: { blocks: Block[], page: Page, style: TextToolStyle, turnBlock?: Block }) {
     textTool = await Singleton(TextTool);
     textTool.open(point, options);
     return new Promise((resolve: (result: textToolResult) => void, reject) => {

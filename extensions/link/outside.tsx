@@ -17,7 +17,7 @@ export class OutsideUrl extends React.Component<{ url?: string, remark?: React.R
     }
     render() {
         return <div className='shy-outside-url padding-10 flex-center flex-col'>
-            <Input placeholder={lst('请输入网址')} value={this.url} onChange={e => this.url = e} onEnter={e => { this.url = e; this.save() }}></Input>
+            <Input placeholder={lst('输入网址...')} value={this.url} onChange={e => this.url = e} onEnter={e => { this.url = e; this.save() }}></Input>
             <div className="flex-center gap-t-10">
                 <Button block style={{ width: 200 }} onClick={() => this.save()}><S>保存</S></Button>
             </div>

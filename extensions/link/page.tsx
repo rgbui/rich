@@ -36,21 +36,19 @@ class PageLinkSelector extends InputTextPopSelector<LinkPageItem> {
     }
     private renderLinks() {
         return <div>
-            <a className={"h-30 gap-l-10 text item-hover cursor round padding-w-10 flex" + (0 == this.selectIndex ? " item-hover-focus" : "")} onMouseDown={e => this.onSelect({ name: 'create' })}>
-                <span className="flex flex-inline size-24 item-hover round">
-                    <Icon size={18} icon={PlusSvg}></Icon>
+            {this.searchWord && this.list.length == 0 && <><a className={"h-28 gap-h-5 text item-hover cursor round padding-w-5 gap-w-5 flex" + (0 == this.selectIndex ? " item-hover-focus" : "")} onMouseDown={e => this.onSelect({ name: 'create' })}>
+                <span className="flex flex-center size-24 item-hover round">
+                    <Icon size={16} icon={PlusSvg}></Icon>
                 </span>
                 <span className="f-14">创建<b className="bold">{this.text || '新页面'}</b>
                 </span>
-            </a>
-            <Divider></Divider>
-            {this.loading && <div className="flex-center gap-h-30"><Spin></Spin></div>}
+            </a><Divider></Divider></>}
+            {this.loading && <div className="flex-center h-28 gap-h-5"><Spin></Spin></div>}
             {!this.loading && this.list.map((link, i) => {
-                return <a onMouseDown={e => this.onSelect(link)} className={"h-30 gap-l-10 text  item-hover cursor round padding-w-10 flex" + ((i + 1) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
-                    <span className="flex-fixed flex flex-inline size-24 item-hover round"> <Icon size={18} icon={getPageIcon(link)}></Icon></span>
+                return <a onMouseDown={e => this.onSelect(link)} className={"h-28 gap-h-5  text  item-hover cursor round padding-w-5 gap-w-5 flex" + (i == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
+                    <span className="flex-fixed flex flex-center size-24 item-hover round"> <Icon size={16} icon={getPageIcon(link)}></Icon></span>
                     <span className="flex-auto f-14 text-overflow">{link.text || '新页面'}</span></a>
             })}
-            {!this.loading && this.list.length == 0 && this.searchWord && <a className="remark flex-center gap-h-10 f-14">没有搜索到</a>}
         </div>
     }
     render() {
@@ -78,7 +76,7 @@ class PageLinkSelector extends InputTextPopSelector<LinkPageItem> {
         this.close();
     }
     getSelectBlockData() {
-        if (this.selectIndex == 0) {
+        if (this.selectIndex == 0 && this.list.length == 0 && this.searchWord) {
             return {
                 blockData: {
                     url: BlockUrlConstant.Text,
@@ -89,7 +87,7 @@ class PageLinkSelector extends InputTextPopSelector<LinkPageItem> {
             }
         }
         else {
-            var b = this.list[this.selectIndex - 1];
+            var b = this.list[this.selectIndex];
             if (!b) return false;
             return {
                 blockData: {

@@ -449,7 +449,6 @@ export class PageWrite {
             this.onRowLastLineBlockCreateTextBlock(aa, event);
             return;
         }
-
         /**
          * 这里需要判断是否有必要弹出弹窗
          */
@@ -512,7 +511,7 @@ export class PageWrite {
                 }
                 var result = await useTextTool(
                     { roundAreas: rs, relativeEleAutoScroll: this.kit.anchorCursor.endAnchor.el },
-                    { page: this.kit.page, style: this.kit.page.pickBlocksTextStyle(blocks), turnBlock }
+                    { blocks, page: this.kit.page, style: this.kit.page.pickBlocksTextStyle(blocks), turnBlock }
                 );
                 if (result) {
                     if (result.command == 'setStyle') {
