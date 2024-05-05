@@ -418,6 +418,20 @@ export class Page extends Events<PageDirective> {
         else if (this.pageLayout?.type == PageLayoutType.textChannel) return sf ? '1.2rem' : '1.4rem'
         return sf ? '1.4rem' : '1.6rem'
     }
+    /**
+     * 如果sf为小字体，那么需要重新计算，否则返回页面的字体大小
+     * 示例：如文本为小字号，那么先计算文本的小字号，在计算页面的字体大小
+     * @param sf 是否为小字体
+     * @returns 
+     */
+    cacSmallFont(sf: boolean) {
+        if (sf) {
+            if (this.pageLayout?.type == PageLayoutType.ppt) return sf ? '1.6rem' : '1.8rem'
+            else if (this.pageLayout?.type == PageLayoutType.textChannel) return sf ? '1.2rem' : '1.4rem'
+            return sf ? '1.4rem' : '1.6rem'
+        }
+        else return this.fontSize;
+    }
     get lineHeight() {
         var sf = this.smallFont;
         if (this.ws?.isPubSite) {
@@ -426,6 +440,13 @@ export class Page extends Events<PageDirective> {
         if (this.pageLayout?.type == PageLayoutType.ppt) return sf ? '2.56rem' : '2.88rem'
         else if (this.pageLayout?.type == PageLayoutType.textChannel) return sf ? '1.56rem' : '1.82rem'
         return sf ? '1.82rem' : '2.08rem'
+    }
+    /**
+     * 文字大小与行高的比例系数
+     */
+    get fontLineRatio() {
+        if (this.pageLayout?.type == PageLayoutType.ppt) return 1.6
+        else return 1.3
     }
     private _pe: {
         type: ElementType;

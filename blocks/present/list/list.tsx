@@ -233,7 +233,7 @@ export class List extends Block {
 export class ListView extends BlockView<List> {
     renderListType() {
         if (this.block.listType == ListType.circle) return <span style={{
-            height: this.block.page.lineHeight,
+            height: util.remScale(this.block.page.cacSmallFont(this.block.smallFont), this.block.page.fontLineRatio),
             marginTop: 0
         }} className='sy-block-list-text-type'>
             {this.block.listView == ListTypeView.none && <i className="flex size-6 circle" style={{ backgroundColor: 'currentColor' }}></i>}
@@ -296,9 +296,7 @@ export class ListView extends BlockView<List> {
     }
     renderView() {
         var contentStyle: CSSProperties = this.block.contentStyle;
-        if (this.block.smallFont) {
-            contentStyle.fontSize = this.block.page.smallFont ? '12px' : '14px';
-        }
+        contentStyle.fontSize = this.block.page.cacSmallFont(this.block.smallFont);
         return <div className='sy-block-list'>
             <div style={this.block.visibleStyle}>
                 <div className='sy-block-list-text' data-block-content style={contentStyle}>
