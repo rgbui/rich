@@ -31,42 +31,44 @@
         border-radius  : 50%;
     }
 
-    &-status {
-        position: absolute;
-        width   : 100%;
-        height  : 100%;
-        top     : 0px;
-        left    : 0px;
-        z-index : 4;
 
-        &::before {
-            content         : '\20';
-            width           : 14px;
-            height          : 14px;
-            background-color: #fff;
-            border-radius   : 50%;
-            position        : absolute;
-            bottom          : 0px;
-            right           : 0px;
+}
+
+.shy-avatar-status {
+    position: absolute;
+    width   : 100%;
+    height  : 100%;
+    top     : 0px;
+    left    : 0px;
+    z-index : 4;
+
+    &::before {
+        content         : '\20';
+        width           : 14px;
+        height          : 14px;
+        background-color: #fff;
+        border-radius   : 50%;
+        position        : absolute;
+        bottom          : 0px;
+        right           : 0px;
+    }
+
+    >div {
+        width    : 25px;
+        height   : 15px;
+        position : absolute;
+        bottom   : 0px;
+        right    : 0px;
+        transform: translate(5.5px, -2px);
+
+        svg {
+            position: absolute;
+            top     : 0px;
+            left    : 0px;
         }
 
-        >div {
-            width    : 25px;
-            height   : 15px;
-            position : absolute;
-            bottom   : 0px;
-            right    : 0px;
-            transform: translate(5.5px, -2px);
-
-            svg {
-                position: absolute;
-                top     : 0px;
-                left    : 0px;
-            }
-
-            // bottom: 2.5px;
-            // right: -5.5px;
-        }
+        // bottom: 2.5px;
+        // right: -5.5px;
     }
 }
 
@@ -203,46 +205,46 @@
 
 
 .shy-ws-avatar {
-    box-shadow         : 0 0 0 1px rgba(185, 187, 190, .3), var(--elevation-medium);
-    display            : flex;
-    flex-direction     : column;
+    box-shadow            : 0 0 0 1px rgba(185, 187, 190, .3), var(--elevation-medium);
+    display               : flex;
+    flex-direction        : column;
     // height             : 320px;
     // width           : 250px;
-    overflow           : hidden;
-    border-radius      : 8px;
-    position           : relative;
-    cursor             : pointer;
-    transition         : box-shadow .2s ease-out, transform .2s ease-out, background .2s ease-out, opacity .2s ease-in, -webkit-box-shadow .2s ease-out, -webkit-transform .2s ease-out;
-    background-color   : var(--activity-card-background);
+    overflow              : hidden;
+    border-radius         : 8px;
+    position              : relative;
+    cursor                : pointer;
+    transition            : box-shadow .2s ease-out, transform .2s ease-out, background .2s ease-out, opacity .2s ease-in, -webkit-box-shadow .2s ease-out, -webkit-transform .2s ease-out;
+    background-color      : var(--activity-card-background);
 
     &:hover {
-        box-shadow: var(--elevation-high);
+        box-shadow   : var(--elevation-high);
         // transform : translateY(-1px);
     }
 
     &-cover {
-        position     : relative;
-        display      : block;
-        margin-bottom: 32px;
+        position        : relative;
+        display         : block;
+        margin-bottom   : 32px;
         // overflow     : hidden;
         // height       : 143px;
 
         img {
             // height         : inherit;
-            width          : 100%;
+            width             : 100%;
             // object-fit     : cover;
             // object-position: 50% 50%;
         }
     }
 
     &-face {
-       
-        left            : 12px;
-      
-        bottom:-25px;
+
+        left: 12px;
+
+        bottom : -25px;
         z-index: 11;
-      
-        border-radius   : 12px;
+
+        border-radius: 12px;
 
         img {
             width          : 44px;
@@ -251,6 +253,7 @@
             object-fit     : cover;
             object-position: 50% 50%;
         }
+
         >span {
             width           : 44px;
             height          : 44px;
@@ -265,6 +268,7 @@
 
     &-content {
         margin: 0px 12px;
+
         h3 {
             display        : flex;
             justify-content: flex-start;
@@ -293,6 +297,7 @@
     &-count {
         // color  : var(--header-secondary);
         display: flex;
+
         span {
             flex-grow      : 1.0;
             flex-shrink    : 1.0;
@@ -339,6 +344,7 @@
     width   : 16px;
     height  : 16px;
     color   : green;
+
     svg {
         &:last-child {
             position : absolute;
