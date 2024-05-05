@@ -442,7 +442,7 @@ export abstract class Block extends Events {
         var bound = this.getVisibleContentBound()
         if (bound) {
             var pos = Point.from(bound);
-            pos = pos.move(0, 3 + util.remToPx(this.page.lineHeight) / 2);
+            pos = pos.move(0, 5 + util.remToPx(this.page.lineHeight) / 2);
             return pos;
         }
     }

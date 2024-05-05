@@ -218,7 +218,7 @@ export class List extends Block {
     }
     getVisibleHandleCursorPoint(): Point {
         var point = super.getVisibleHandleCursorPoint()
-        point = point.move(0, 0);
+        point = point.move(0, -2);
         return point;
     }
     async onContextMenuInput(this: Block, item: MenuItem<BlockDirective | string>) {

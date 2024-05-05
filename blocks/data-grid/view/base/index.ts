@@ -549,6 +549,11 @@ export class DataGridView extends Block {
         }
         else return super.isCanDrag;
     }
+    getVisibleHandleCursorPoint() {
+        var r = super.getVisibleHandleCursorPoint();
+        r = r.move(0, 3);
+        return r;
+    }
 }
 
 export interface DataGridView extends DataGridViewLife { }
