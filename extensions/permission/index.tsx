@@ -154,7 +154,7 @@ class PagePermission extends EventsComponent {
                     }}</UserBox>
                 </div>
                 <div className="flex-fixed f-12 remark">
-                    {cp.isOwner && <span className="item-hover-focus round padding-w-3 padding-h-2 cursor "><S>所有权</S></span>}
+                    {cp.isOwner && <span className="item-hover-focus round padding-w-3 padding-h-2 cursor "><S>所有权限</S></span>}
                     {cp.isWs && <span className="item-hover-focus round padding-w-3 padding-h-2  cursor ">{cp.permissions.map(p => {
                         return as.find(a => a.value == p)?.text
                     }).filter(g => g ? true : false).join(",")}</span>}
