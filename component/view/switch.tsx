@@ -16,6 +16,10 @@ export function Switch(props: {
     if (props.checked) classList.push('checked')
     if (props.disabled) classList.push('disabled')
     if (props.size == 'small') classList.push('shy-switch-small')
+    if (props.className) {
+        if (Array.isArray(props.className)) classList.push(...props.className)
+        else classList.push(props.className)
+    }
     return <div style={props.style || {}}
         className={classList.join(" ")}
         onMouseDown={e => down(e)}>
