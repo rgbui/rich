@@ -425,10 +425,8 @@ export class Page extends Events<PageDirective> {
      * @returns 
      */
     cacSmallFont(sf: boolean) {
-        if (sf) {
-            if (this.pageLayout?.type == PageLayoutType.ppt) return sf ? '1.6rem' : '1.8rem'
-            else if (this.pageLayout?.type == PageLayoutType.textChannel) return sf ? '1.2rem' : '1.4rem'
-            return sf ? '1.4rem' : '1.6rem'
+        if (sf==true) {
+            return '1.2rem';
         }
         else return this.fontSize;
     }

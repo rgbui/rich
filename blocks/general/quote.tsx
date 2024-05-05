@@ -121,9 +121,7 @@ export class Quote extends TextSpan {
 export class QuoteView extends BlockView<Quote>{
     renderView() {
         var style: CSSProperties = {};
-        if (this.block.smallFont) {
-            style.fontSize = this.block.page.smallFont ? '12px' : '14px';
-        }
+        style.fontSize = this.block.page.cacSmallFont(this.block.smallFont)
         var barStyle: CSSProperties = { }
         if (this.block.lineColor) {
             barStyle.backgroundColor = this.block.lineColor;
