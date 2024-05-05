@@ -92,6 +92,7 @@ export class LangStore {
     format(c: string, d: Record<string, any>) {
         if (c)
             c = c.replace(/(\{\w+\})/g, (a, b) => {
+                if (typeof d[b.slice(1, -1)] == 'undefined') return a;
                 return d[b.slice(1, -1)];
             })
         return c;
