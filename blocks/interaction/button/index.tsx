@@ -210,9 +210,7 @@ export class BlockButton extends Block {
             var db = this.el.querySelector('[data-button]') as HTMLElement;
             var bound = Rect.fromEle(db);
             if (bound) {
-                var pos = Point.from(bound);
-                pos = pos.move(0, (this.buttonSize == 'small' ? 0 : 3) + util.remToPx(this.page.lineHeight) / 2);
-                return pos;
+                return bound.leftMiddle;
             }
         }
     }
