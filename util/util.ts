@@ -404,6 +404,10 @@ export var util = {
         var r = parseFloat(rem.replace('rem', ''));
         return r * 10
     },
+    remScale(rem: string, scale: number) {
+        var r = parseFloat(rem.replace('rem', ''));
+        return (r * scale) + "rem"
+    },
     nf(number: any, def: number) {
         if (lodash.isNull(number) || lodash.isUndefined(number)) return def;
         else if (typeof number == 'number') return number;
