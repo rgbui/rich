@@ -172,10 +172,9 @@ export interface LinkWs {
         allowSearch: boolean,
         defineNavMenu: boolean,
         navMenus: WorkspaceNavMenuItem[],
-        defineContent: boolean,
         isFullWidth: boolean,
         smallFont: boolean,
-        contentTheme: 'default' | 'none' | 'wiki',
+        contentTheme: 'web' | 'wiki',
         defineBottom: boolean
     }
     isManager: boolean

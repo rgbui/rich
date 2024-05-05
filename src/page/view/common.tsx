@@ -4,7 +4,7 @@ import { LinkWs, WorkspaceNavMenuItem } from "../declare";
 import { Button } from "../../../component/view/button";
 import { Avatar } from "../../../component/view/avator/face";
 import { Icon } from "../../../component/view/icon";
-import { ChevronDownSvg, Edit1Svg, LogoutSvg, SearchSvg, SettingsSvg } from "../../../component/svgs";
+import { ChevronDownSvg, LogoutSvg, SearchSvg, SettingsSvg } from "../../../component/svgs";
 import { UserBasic } from "../../../types/user";
 import { lst } from "../../../i18n/store";
 import lodash from "lodash";
@@ -21,7 +21,7 @@ export class DefinePageNavBar extends React.Component<{
     style?: CSSProperties,
     user?: UserBasic,
     renderUser?: JSX.Element
-}>{
+}> {
     constructor(props) {
         super(props);
     }
@@ -77,7 +77,7 @@ export class DefinePageNavBar extends React.Component<{
         </a>
     }
     renderNavs(childs: WorkspaceNavMenuItem[], deep = 0) {
-        var h = this.props.ws.publishConfig.contentTheme == 'default' ? 48 : 48;
+        var h = this.props.ws.publishConfig.contentTheme == 'wiki' ? 48 : 48;
         var self = this;
         var style: React.CSSProperties = {
             top: h,
@@ -122,7 +122,7 @@ export class DefinePageNavBar extends React.Component<{
     renderMenuNavs() {
         var self = this;
         var props = this.props;
-        var h = props.ws.publishConfig.contentTheme == 'default' ? 48 : 48;
+        var h = props.ws.publishConfig.contentTheme == 'wiki' ? 48 : 48;
         return this.getNavMenus().map((e, i) => {
             var href = e.urlType == 'url' ? e.url : undefined;
             if (e.urlType == 'page') {
@@ -162,7 +162,7 @@ export class DefinePageNavBar extends React.Component<{
         if (logo.urlType == 'page') {
             href = this.props.ws.resolve({ pageId: logo.pageId });
         }
-        var h = this.props.ws.publishConfig.contentTheme == 'default' ? 48 : 48;
+        var h = this.props.ws.publishConfig.contentTheme == 'wiki' ? 48 : 48;
         return <div className="flex">
             <div style={{ zIndex: 100000, position: 'relative' }}>
                 <span onMouseDown={e => {
