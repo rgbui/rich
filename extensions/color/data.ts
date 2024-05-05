@@ -77,7 +77,6 @@ export var OptionBackgroundColorList = () => {
     return cs;
 }
 
-
 export var BoardBackgroundColorList = () => {
     return [
         { "color": "rgb(0,0,0)" },
