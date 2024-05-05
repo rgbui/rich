@@ -423,9 +423,9 @@ export class Page extends Events<PageDirective> {
         if (this.ws?.isPubSite) {
             sf = this.ws.publishConfig.smallFont;
         }
-        if (this.pageLayout?.type == PageLayoutType.ppt) return sf ? '2.6rem' : '3.0rem'
-        else if (this.pageLayout?.type == PageLayoutType.textChannel) return sf ? '1.8rem' : '2.2rem'
-        return sf ? '2.2rem' : '2.6rem'
+        if (this.pageLayout?.type == PageLayoutType.ppt) return sf ? '2.56rem' : '2.88rem'
+        else if (this.pageLayout?.type == PageLayoutType.textChannel) return sf ? '1.56rem' : '1.82rem'
+        return sf ? '1.82rem' : '2.08rem'
     }
     private _pe: {
         type: ElementType;

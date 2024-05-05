@@ -247,6 +247,7 @@ export class ListView extends BlockView<List> {
                     cursor: 'pointer',
                     transform: this.block.expand ? 'rotateZ(180deg)' : 'rotateZ(90deg)',
                     height: this.block.page.lineHeight,
+                    width: this.block.page.lineHeight,
                     color: 'currentcolor'
                 }} onMouseDown={e => {
                     e.stopPropagation();
@@ -288,7 +289,6 @@ export class ListView extends BlockView<List> {
         }
     }
     renderText() {
-
         var text = this.block.listType == ListType.circle ? lst("列表") : lst("数字列表");
         if (this.block.listType == ListType.toggle) text = lst('折叠列表');
         if (this.block.childs.length > 0) return <TextLineChilds childs={this.block.childs}></TextLineChilds>
