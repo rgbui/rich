@@ -33,7 +33,7 @@ export class FileInput extends React.Component<{
             text =lst('上传视频') 
         }
         return <div className="flex">
-            {this.props.value && this.props.mime == 'image' && <span onMouseDown={e => uploadFile(e)} className="flex flex-inline item-hover round padding-w-5 padding-h-2 relative">
+            {this.props.value && this.props.mime == 'image' && <span onMouseDown={e => uploadFile(e)} className="flex flex-inline item-hover   round padding-w-5 padding-h-2 relative">
                 <img className="max-w-100 max-w-180 max-h-120 obj-center" src={this.props.value.url}></img>
                 <div className="pos-top-full flex-end">
                     <span onClick={e => {

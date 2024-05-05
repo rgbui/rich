@@ -58,7 +58,6 @@ export class Textarea extends React.Component<{
                 disabled={props.disabled ? true : false}
                 placeholder={props.placeholder}
                 style={{
-                    textIndent: 4,
                     borderRadius: props.round === false ? 0 : undefined,
                     boxShadow: props.transparent ? 'none' : undefined,
                     backgroundColor: props.transparent ? 'transparent' : undefined,

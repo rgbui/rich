@@ -46,21 +46,23 @@ class SelectWorkspacePage extends EventsComponent {
     selectIndex = 0;
     el: HTMLElement;
     render() {
-        return <div ref={e => this.el = e} style={{ zIndex: popoverLayer.zoom(this) }} className='pos-fixed bg-white w-250 max-h-300 overlay-y padding-w-10 padding-t-10 padding-b-40 round shadow'>
-            <div className="gap-b-10"><Input size='small'
-                placeholder={lst('搜索页面')}
+        return <div ref={e => this.el = e} style={{ zIndex: popoverLayer.zoom(this) }} className='pos-fixed bg-white w-250 max-h-300 overlay-y  padding-t-10 padding-b-40 round shadow'>
+            <div className="gap-b-10  gap-w-5"><Input size='small'
+                placeholder={lst('搜索页面...')}
                 onChange={e => { this.word = e; this.syncSearch() }}
                 onEnter={(e, g) => { this.word = e; this.forceSyncSearch() }}
                 value={this.word}></Input>
             </div>
             {!this.word && this.currentLinks && this.currentLinks.map((link, i) => {
-                return <a onMouseUp={e => this.onSelect(link)} className={"h-30 text  item-hover cursor round padding-w-10 flex" + ((i) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
-                    <span className="flex flex-inline flex-center size-24 item-hover round flex-fixed"><Icon size={20} icon={getPageIcon(link)}></Icon></span> <span className="f-14 flex-auto text-overflow">{getPageText(link)}</span></a>
+                return <a onMouseUp={e => this.onSelect(link)} className={"h-28 gap-h-5 text  item-hover cursor round padding-w-5 gap-w-5 flex" + ((i) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
+                    <span className="flex flex-inline flex-center size-24 item-hover round flex-fixed"><Icon size={18} icon={getPageIcon(link)}></Icon></span>
+                    <span className="f-14 flex-auto text-overflow">{getPageText(link)}</span>
+                </a>
             })}
             {this.loading && <div className="gap-h-10 flex-center"><Spin></Spin></div>}
             {this.word && this.links && this.links.map((link, i) => {
-                return <a onMouseUp={e => this.onSelect(link)} className={"h-30  text  item-hover cursor round padding-w-10 flex" + ((i) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
-                    <span className="flex flex-inline size-24 flex-center item-hover round flex-fixed"><Icon size={20} icon={getPageIcon(link)}></Icon></span> <span className="f-14 flex-auto text-overflow">{getPageText(link)}</span></a>
+                return <a onMouseUp={e => this.onSelect(link)} className={"h-28 gap-h-5  text  item-hover cursor round padding-w-5 gap-w-5 flex" + ((i) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
+                    <span className="flex flex-inline size-24 flex-center item-hover round flex-fixed"><Icon size={18} icon={getPageIcon(link)}></Icon></span> <span className="f-14 flex-auto text-overflow">{getPageText(link)}</span></a>
             })}
         </div>
     }
