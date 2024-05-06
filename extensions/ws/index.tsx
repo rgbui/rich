@@ -26,7 +26,7 @@ export class WsPicker extends EventsComponent {
                         onMouseDown={e => this.onSelect(ws)}
                         key={ws.id}>
                         <span className="flex-fixed">{ws.icon && <a className="size-48 flex-center round-16">
-                            <img src={autoImageUrl(ws.icon.url, 120)} style={{ width: 48, height: 48 }} />
+                            <img className="round-16 " src={autoImageUrl(ws.icon.url, 120)} style={{ width: 48, height: 48 }} />
                         </a>}{!ws.icon && <a style={{ color: '#3ba55d' }} className="flex-center size-48 bg-white shadow-s round-16"><span style={{ fontSize: 18 }}>{util.firstToUpper(ws?.text?.slice(0, 2))}</span>
                         </a>}
                         </span>
