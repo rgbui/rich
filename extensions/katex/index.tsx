@@ -70,7 +70,7 @@ class KatexInput extends EventsComponent {
             <Divider></Divider>
             <div className="flex padding-w-10">
                 <span className="flex-auto flex-end">
-                    <span className="remark gap-r-5">{UA.isMacOs ? "⌘" : "Ctrl"}+Enter</span>
+                    <span className="remark gap-r-10 f-12">{UA.isMacOs ? "⌘" : "Ctrl"}+Enter</span>
                     <Button onClick={e => this.onSave()}><S>确定</S></Button>
                 </span>
             </div>

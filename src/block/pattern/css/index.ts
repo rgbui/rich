@@ -99,7 +99,7 @@ export class FontCss extends BlockCss {
         var style: CSSProperties = {
             fontSize: this.fontSize,
             //lineHeight: typeof this.lineHeight == 'number' ? this.lineHeight + 'px' : (this.lineHeight || 1.3),
-            lineHeight: 1.2,
+            lineHeight: 1.3,
             textDecoration: this.textDecoration,
             fontStyle: this.fontStyle,
             fontFamily: this.fontFamily || undefined,
