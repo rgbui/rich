@@ -7,7 +7,6 @@ import { findBlockAppear, findBlocksBetweenAppears } from "../../block/appear/vi
 import { BlockUrlConstant } from "../../block/constant";
 import { TextContent } from "../../block/element/text";
 import { BlockRenderRange } from "../../block/enum";
-import { dom } from "../../common/dom";
 import { TextEle } from "../../common/text.ele";
 import { Point } from "../../common/vector/point";
 import { OperatorDirective } from "../../history/declare";
@@ -77,8 +76,12 @@ export class AnchorCursor {
         if (this.endAnchor)
             this.endOffset = this.endAnchor.getCursorOffset(sel.focusNode, sel.focusOffset);
         this.currentSelectedBlocks = [];
-        if (this.startAnchor && this.endAnchor)
+        if (this.startAnchor && this.endAnchor) {
             this.kit.page.snapshoot.record(OperatorDirective.$change_cursor_offset, { old_value: old, new_value: this.record }, this.kit.page)
+            this.kit.page.addUpdateEvent(async () => {
+                await this.kit.writer.onOpenTextTool()
+            })
+        }
     }
     async onCollapse(anchor: AppearAnchor, offset: number) {
         await this.kit.page.onAction('onCollapse', async () => {
@@ -104,7 +107,7 @@ export class AnchorCursor {
      *                  .combine 相同的行内块合并
      */
     async onSetTextSelection(options: { startAnchor: AppearAnchor, startOffset: number, endAnchor: AppearAnchor, endOffset: number },
-        operators?: { merge?: boolean, render?: boolean, combine?: boolean }) {
+        operators?: { merge?: boolean, render?: boolean, isOpenTool?: boolean, combine?: boolean }) {
         if (!options.startAnchor?.el || !options.endAnchor?.el) return;
         await this.kit.page.onAction('onSetTextSelection', async () => {
             if (operators?.merge) this.kit.page.snapshoot.merge();
@@ -113,6 +116,11 @@ export class AnchorCursor {
             if (operators?.render) {
                 this.kit.page.addUpdateEvent(async () => {
                     this.renderAnchorCursorSelection()
+                })
+            }
+            if (operators?.isOpenTool && !this.isCollapse && this.currentSelectedBlocks.length == 0) {
+                this.kit.page.addUpdateEvent(async () => {
+                    await this.kit.writer.onOpenTextTool()
                 })
             }
         })
@@ -258,13 +266,13 @@ export class AnchorCursor {
                     var cr = this.startAnchor.cacCollapseFocusPos(this.startOffset);
                     var er = this.endAnchor.cacCollapseFocusPos(this.endOffset);
                     sel.setBaseAndExtent(cr.node, cr.pos, er.node, er.pos);
-                    if (cr.node) {
-                        var c = dom(cr.node).closest(g => (g as any) && typeof (g as any).scrollIntoViewIfNeeded == 'function') as any;
-                        if (c) c.scrollIntoViewIfNeeded()
-                    }
-                    else {
-                        console.log(this.startAnchor, cr.node, er.node, this.endAnchor);
-                    }
+                    // if (cr.node) {
+                    //     var c = dom(cr.node).closest(g => (g as any) && typeof (g as any).scrollIntoViewIfNeeded == 'function') as any;
+                    //     if (c) c.scrollIntoViewIfNeeded()
+                    // }
+                    // else {
+                    //     console.log(this.startAnchor, cr.node, er.node, this.endAnchor);
+                    // }
                 }
             }
             else {
@@ -275,13 +283,13 @@ export class AnchorCursor {
                 else {
                     var cr = this.endAnchor.cacCollapseFocusPos(this.endOffset);
                     sel.collapse(cr.node, cr.pos);
-                    if (cr.node) {
-                        var c = dom(cr.node).closest(g => (g as any) && typeof (g as any).scrollIntoViewIfNeeded == 'function') as any;
-                        if (c) c.scrollIntoViewIfNeeded()
-                    }
-                    else {
-                        console.log(this.startAnchor, cr.node, this.endAnchor);
-                    }
+                    // if (cr.node) {
+                    //     var c = dom(cr.node).closest(g => (g as any) && typeof (g as any).scrollIntoViewIfNeeded == 'function') as any;
+                    //     if (c) c.scrollIntoViewIfNeeded()
+                    // }
+                    // else {
+                    //     console.log(this.startAnchor, cr.node, this.endAnchor);
+                    // }
                 }
             }
         }

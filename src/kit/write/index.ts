@@ -134,9 +134,9 @@ export class PageWrite {
             moveEnd(ev, isMove, data) {
                 if (isMove) {
                     self.kit.anchorCursor.onCatchWindowSelection();
-                    if (!sel.isCollapsed) {
-                        self.onOpenTextTool();
-                    }
+                    // if (!sel.isCollapsed) {
+                    //     self.onOpenTextTool();
+                    // }
                 }
             }
         })
@@ -500,7 +500,6 @@ export class PageWrite {
             var sel = window.getSelection();
             sel.setBaseAndExtent(firstAppear.firstTextNode, 0, lastAppear.lastTextNode, lastAppear.lastTextNode.textContent.length)
             await this.kit.anchorCursor.onCatchWindowSelection()
-            await this.onOpenTextTool();
         }
     }
     async onOpenTextTool() {

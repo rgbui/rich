@@ -603,7 +603,7 @@ export async function inputBackspaceDeleteContent(write: PageWrite,
                     startOffset: insertSelection.from,
                     endAnchor: insertSelection.anchor,
                     endOffset: insertSelection.to
-                }, { merge: true, render: true });
+                }, { merge: true, render: true ,isOpenTool:true});
             }
             else {
                 if (focusB) write.kit.anchorCursor.onFocusBlockAnchor(focusB, { last: true, render: true, merge: true });

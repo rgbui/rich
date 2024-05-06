@@ -98,7 +98,6 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         if (source == 'notify' || source == 'notifyView' || source == 'load' || source == 'loadSyncBlock') return;
         if (oc.new_value.blocks?.length > 0) {
             var bs = page.findAll(g => oc.new_value.blocks.some(s => s.blockId == g.id));
-            console.log('bs', bs);
             page.kit.anchorCursor.selectBlocks(bs);
             page.addUpdateEvent(async () => {
                 page.kit.anchorCursor.renderAnchorCursorSelection()
@@ -119,6 +118,9 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
                 });
                 page.addUpdateEvent(async () => {
                     page.kit.anchorCursor.renderAnchorCursorSelection()
+                    if (!page.kit.anchorCursor.isCollapse && page.kit.anchorCursor.currentSelectedBlocks.length == 0) {
+                        await page.kit.writer.onOpenTextTool()
+                    }
                 })
             }
             else {
@@ -133,7 +135,6 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         } = operator.data as any;
         if (oc.old_value.blocks?.length > 0) {
             var bs = page.findAll(g => oc.old_value.blocks.some(s => s.blockId == g.id));
-            console.log('bsss', bs);
             page.kit.anchorCursor.selectBlocks(bs);
             page.addUpdateEvent(async () => {
                 page.kit.anchorCursor.renderAnchorCursorSelection()
@@ -154,6 +155,9 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
                 });
                 page.addUpdateEvent(async () => {
                     page.kit.anchorCursor.renderAnchorCursorSelection()
+                    if (!page.kit.anchorCursor.isCollapse && page.kit.anchorCursor.currentSelectedBlocks.length == 0) {
+                        await page.kit.writer.onOpenTextTool()
+                    }
                 })
             } else {
                 console.error('not found cursor pos block')
@@ -315,7 +319,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
                 }
             }
         }
-        if (source == 'notify' || source == 'notifyView' || source == 'load' || 'loadSyncBlock') return;
+        if (source == 'notify' || source == 'notifyView' || source == 'load' || source == 'loadSyncBlock') return;
         if (oc.new_value.blocks?.length > 0) {
             var bs = page.findAll(g => oc.new_value.blocks.some(s => s.blockId == g.id));
             page.kit.anchorCursor.selectBlocks(bs);
@@ -338,6 +342,9 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
                 });
                 page.addUpdateEvent(async () => {
                     page.kit.anchorCursor.renderAnchorCursorSelection()
+                    if (!page.kit.anchorCursor.isCollapse && page.kit.anchorCursor.currentSelectedBlocks.length == 0) {
+                        await page.kit.writer.onOpenTextTool()
+                    }
                 })
             }
             else {
@@ -371,6 +378,9 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
                 });
                 page.addUpdateEvent(async () => {
                     page.kit.anchorCursor.renderAnchorCursorSelection()
+                    if (!page.kit.anchorCursor.isCollapse && page.kit.anchorCursor.currentSelectedBlocks.length == 0) {
+                        await page.kit.writer.onOpenTextTool()
+                    }
                 })
             } else {
                 console.error('not found cursor pos block')

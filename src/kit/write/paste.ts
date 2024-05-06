@@ -19,7 +19,6 @@ import { inputBackspaceDeleteContent } from "./input";
 import { InputForceStore } from "./store";
 import { util } from "../../../util/util";
 
-
 export async function onPasteBlank(kit: Kit, event: ClipboardEvent) {
     if (kit.page.pageLayout?.type == PageLayoutType.board) {
         var files: File[] = Array.from(event.clipboardData.files);

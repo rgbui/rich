@@ -282,9 +282,9 @@ export class TextSpan extends Block {
         var px = util.remToPx(lf);
         if (this.page.pageLayout?.type == PageLayoutType.ppt) {
             // px = px - 2;
-            px = px - 8;
+            px = px - 6;
         }
-        else { px = px - 4; }
+        else { px = px - 2; }
         return rect.leftTop.move(0, px / 2);
     }
 }
