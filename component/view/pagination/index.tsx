@@ -5,8 +5,9 @@ export class Pagination extends React.Component<{
     size: number,
     index: number,
     total: number,
+    gap?: number,
     onChange?: (index: number, size: number) => void
-}>{
+}> {
     getPages() {
         var page = Math.ceil(this.props.total / this.props.size);
         var index: number = this.props.index;
@@ -35,7 +36,11 @@ export class Pagination extends React.Component<{
         var page = Math.ceil(this.props.total / this.props.size);
         if (page < 2) return <></>
         var size = this.props.size;
-        return <div className='shy-pagination flex-center'>{this.getPages().map((pa, i) => {
+        var gap = this.props.gap || 0;
+        return <div style={{
+            marginTop: gap,
+            marginBottom: gap
+        }} className='shy-pagination flex-center'>{this.getPages().map((pa, i) => {
             return <a key={i} className={pa.classList.join(" ")} onMouseDown={e => pa.index && this.props.onChange(pa.index, size)}>{pa.text}</a>
         })}</div>
     }

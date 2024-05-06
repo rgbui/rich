@@ -10,11 +10,15 @@ import "./style.less";
 //         <i className={`size-${size == 24 ? 8 : 4}` + " circle pos bg-primary op-3"} style={{ bottom: 0, left: 0 }}></i>
 //     </div>
 // }
- 
-export function Spin(props: { block?: boolean, size?: 24 | 16, children?: React.ReactNode }) {
+
+export function Spin(props: { gap?: number, block?: boolean, size?: 24 | 16, children?: React.ReactNode }) {
     var ov = props.children;
     var size = props.size || 16;
-    if (props.block) return <div className="flex-center gap-h-10">
+    var gap = props.gap || 10;
+    if (props.block) return <div style={{
+        marginTop: gap,
+        marginBottom: gap
+    }} className="flex-center ">
         {Loading4(size)}
     </div>
     return Loading4(size);

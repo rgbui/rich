@@ -9,6 +9,7 @@ import { S } from "../../i18n/view";
 import { channel } from "../../net/channel";
 import { lst } from "../../i18n/store";
 import { util } from "../../util/util";
+import { autoImageUrl } from "../../net/element.type";
 
 export class LastUploadFiles extends React.Component<{
     fileClassify?: 'cover',
@@ -55,14 +56,14 @@ export class LastUploadFiles extends React.Component<{
     }
     renderItem(item: ResourceArguments, index: number) {
         return <div style={{ width: 'calc(25% - 15px)' }} onMouseDown={e => this.props.onChange(item)} className="gap-l-5 padding-5 gap-b-5 item-hover  round cursor" key={index}>
-            <img className="obj-center w100  h-80 round " src={item.url} />
+            <img className="obj-center w100  h-80 round " src={autoImageUrl(item.url, 120)} />
             <div className="h-20 f-12  w100  flex"><span className="flex-auto text-overflow text-1">{item.filename}</span>{item.createDate && <span className="flex-fixed remark">{util.showTime(typeof item.createDate == 'number' ? new Date(item.createDate) : item.createDate as any)}</span>}</div>
         </div>
     }
     render() {
         return <div className="padding-h-10 padding-l-5 padding-r-10 max-h-400 overflow-y">
 
-            {this.slist.loading && <Spin block></Spin>}
+            {this.slist.loading && <Spin gap={30} block></Spin>}
             {!this.slist.loading && <div>
                 {this.slist.list.length == 0 && <div
                     className="flex-center f-12 remark"><S>暂无上传记录</S></div>}
@@ -73,6 +74,7 @@ export class LastUploadFiles extends React.Component<{
                 </div>}
             </div>}
             <Pagination
+                gap={20}
                 size={this.slist.size}
                 index={this.slist.page}
                 total={this.slist.total} onChange={(i, s) => {
