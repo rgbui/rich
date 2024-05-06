@@ -446,5 +446,14 @@ export var util = {
         if (text.startsWith(char)) count++;
         if (text.endsWith(char)) count++;
         return count;
+    },
+    getSafeSelRange(sel: Selection, at?: number) {
+        try {
+            return sel.getRangeAt(at || 0)
+        }
+        catch (ex) {
+            return null;
+        }
+
     }
 }

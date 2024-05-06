@@ -359,7 +359,7 @@ export class ChatInput extends React.Component<{ box?: InputChatBox, }> {
             this.onTurnQuote(this.isQuote ? false : true);
             return;
         }
-        var r = sel.getRangeAt(0);
+        var r = util.getSafeSelRange(sel)
         sel.setBaseAndExtent(text, s + d, text, e + d);
         // sel.removeAllRanges();
 
@@ -382,7 +382,7 @@ export class ChatInput extends React.Component<{ box?: InputChatBox, }> {
     rememberCursor() {
         var sel = window.getSelection(); //DOM
         if (sel && sel.rangeCount > 0) {
-            var range = sel.getRangeAt(0); // DOM下
+            var range = util.getSafeSelRange(sel); // DOM下
             if (range && this.richEl.contains(range.startContainer)) {
                 this.cursorEl = range.startContainer as HTMLElement;
                 this.cursorOffset = range.startOffset;

@@ -326,4 +326,9 @@ export class InputChatBox extends React.Component<{
             this.forceUpdate()
         }
     }
+    onFocus() {
+        if (this.cp) {
+            this.cp.onFocus()
+        }
+    }
 }

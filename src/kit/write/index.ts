@@ -3,7 +3,6 @@ import React from "react";
 import { Kit } from "..";
 import { InputTextPopSelector, InputTextPopSelectorType } from "../../../extensions/common/input.pop";
 import { forceCloseTextTool, onTextToolExcute, useTextTool } from "../../../extensions/text.tool";
-import { UA } from "../../../util/ua";
 import { util } from "../../../util/util";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
@@ -228,21 +227,18 @@ export class PageWrite {
                 await onKeyTab(this, aa, event);
                 break;
             case KeyboardCode.X.toLowerCase():
-                if (UA.isMacOs && this.kit.page.keyboardPlate.isMeta() || !UA.isMacOs && this.kit.page.keyboardPlate.isCtrl()) {
-                    if (this.kit.page.keyboardPlate.isShift()) {
-                        var rc = onTextToolExcute(TextCommand.toggleEquation);
-                        if (rc) event.preventDefault()
-                    }
-                    else {
-                        inputBackspaceDeleteContent(this, aa, event, { cut: true })
-                        forceCloseTextTool();
-                    }
+                if (this.kit.page.keyboardPlate.isMetaOrCtrlAndShift()) {
+                    var rc = onTextToolExcute(TextCommand.toggleEquation);
+                    if (rc) event.preventDefault()
+                }
+                else if (this.kit.page.keyboardPlate.isMetaOrCtrl()) {
+                    inputBackspaceDeleteContent(this, aa, event, { cut: true })
+                    forceCloseTextTool();
                 }
                 break;
             case KeyboardCode.A.toLowerCase():
-                if (UA.isMacOs && this.kit.page.keyboardPlate.isMeta() || !UA.isMacOs && this.kit.page.keyboardPlate.isCtrl()) {
-                    this.kit.anchorCursor.onSelectAll()
-                    forceCloseTextTool();
+                if (this.kit.page.keyboardPlate.isMetaOrCtrl()) {
+                    this.onSelectionAll(aa);
                     event.preventDefault();
                 }
                 break;
@@ -259,16 +255,22 @@ export class PageWrite {
                 }
                 break;
             case KeyboardCode.D.toLowerCase():
-                if (UA.isMacOs && this.kit.page.keyboardPlate.isMeta() || !UA.isMacOs && this.kit.page.keyboardPlate.isCtrl()) {
+                if (this.kit.page.keyboardPlate.isMetaOrCtrl()) {
                     var b = aa.block.closest(x => !x.isLine);
                     if (b) {
                         event.preventDefault();
+                        if ([
+                            BlockUrlConstant.Title,
+                            BlockUrlConstant.Comment,
+                            BlockUrlConstant.PageUpvotedOrShared,
+                            BlockUrlConstant.PageAuthor
+                        ].includes(b.url as any)) return;
                         await b.onClone();
                     }
                 }
                 break;
             case KeyboardCode.J.toLowerCase():
-                if (UA.isMacOs && this.kit.page.keyboardPlate.isMeta() || !UA.isMacOs && this.kit.page.keyboardPlate.isCtrl()) {
+                if (this.kit.page.keyboardPlate.isMetaOrCtrl()) {
                     if (hasSelectionRange) {
                         if (this.kit.anchorCursor.currentSelectedBlocks.length > 0) {
                             event.preventDefault();
@@ -327,23 +329,39 @@ export class PageWrite {
             case KeyboardCode.I.toLowerCase():
             case KeyboardCode.U.toLowerCase():
             case KeyboardCode.K.toLowerCase():
-            case KeyboardCode.S.toLowerCase():
             case KeyboardCode.E.toLowerCase():
-            case KeyboardCode.R.toLowerCase():
-                if (this.kit.page.keyboardPlate.isMetaOrCtrl() || this.kit.page.keyboardPlate.isMetaOrCtrlAndShift()) {
+                if (this.kit.page.keyboardPlate.isMetaOrCtrl()) {
                     var name: TextCommand | string;
+                    var bs = this.kit.anchorCursor.getAppearBlocks();
+                    var style = this.kit.page.pickBlocksTextStyle(bs);
                     if (event.key.toLowerCase() == KeyboardCode.B.toLowerCase())
-                        name = TextCommand.bold;
+                        name = style.bold ? TextCommand.cancelBold : TextCommand.bold;
                     else if (event.key.toLowerCase() == KeyboardCode.I.toLowerCase())
-                        name = TextCommand.italic;
+                        name = style.italic ? TextCommand.cancelItalic : TextCommand.italic;
                     else if (event.key.toLowerCase() == KeyboardCode.U.toLowerCase())
-                        name = TextCommand.underline;
+                        name = style.underline ? TextCommand.cancelLine : TextCommand.underline;
                     else if (event.key.toLowerCase() == KeyboardCode.S.toLocaleLowerCase())
-                        name = TextCommand.deleteLine
+                        name = style.deleteLine ? TextCommand.cancelLine : TextCommand.deleteLine
                     else if (event.key.toLowerCase() == KeyboardCode.K.toLowerCase())
                         name = 'link';
                     else if (event.key.toLowerCase() == KeyboardCode.E.toLowerCase())
                         name = TextCommand.toggleCode;
+                    else if (event.key.toLowerCase() == KeyboardCode.R.toLowerCase() && this.kit.page.keyboardPlate.isShift())
+                        name = TextCommand.doubleLink;
+                    if (typeof name != 'undefined') {
+                        var rc = onTextToolExcute(name);
+                        if (rc) event.preventDefault()
+                    }
+                }
+                break;
+            case KeyboardCode.S.toLowerCase():
+            case KeyboardCode.R.toLowerCase():
+                if (this.kit.page.keyboardPlate.isMetaOrCtrlAndShift()) {
+                    var name: TextCommand | string;
+                    var bs = this.kit.anchorCursor.getAppearBlocks();
+                    var style = this.kit.page.pickBlocksTextStyle(bs);
+                    if (event.key.toLowerCase() == KeyboardCode.S.toLocaleLowerCase())
+                        name = style.deleteLine ? TextCommand.cancelLine : TextCommand.deleteLine
                     else if (event.key.toLowerCase() == KeyboardCode.R.toLowerCase() && this.kit.page.keyboardPlate.isShift())
                         name = TextCommand.doubleLink;
                     if (typeof name != 'undefined') {
@@ -389,7 +407,7 @@ export class PageWrite {
                     //对当前块发表评论
                     var block = aa.block.closest(x => !x.isLine);
                     if (block) {
-
+                        block.onInputComment()
                     }
                 }
                 break;
@@ -473,7 +491,7 @@ export class PageWrite {
      * 通过AppearAnchor来选中当前行
      * @param aa
      */
-    onSelectionAll(aa: AppearAnchor) {
+    async onSelectionAll(aa: AppearAnchor) {
         var block = aa.block;
         if (block.isLine) block = block.closest(x => !x.isLine);
         var firstAppear = block.find(g => g.appearAnchors.length > 0, true)?.appearAnchors.find(g => true);
@@ -481,11 +499,13 @@ export class PageWrite {
         if (firstAppear && lastAppear) {
             var sel = window.getSelection();
             sel.setBaseAndExtent(firstAppear.firstTextNode, 0, lastAppear.lastTextNode, lastAppear.lastTextNode.textContent.length)
+            await this.kit.anchorCursor.onCatchWindowSelection()
+            await this.onOpenTextTool();
         }
     }
     async onOpenTextTool() {
         var sel = window.getSelection();
-        var range = sel.getRangeAt(0);
+        var range = util.getSafeSelRange(sel);
         if (range) {
             var rs = TextEle.getWindowCusorBounds();
             while (true) {
@@ -662,8 +682,8 @@ export class PageWrite {
                         nstart = rs[1];
                         nend = rs[1]
                     }
-                    if (styles) { await nstart.pattern.setStyles(styles); }
-                    if (props) { await nstart.updateProps(props); }
+                    if (styles && nstart) { await nstart.pattern.setStyles(styles); }
+                    if (props && nstart) { await nstart.updateProps(props); }
                     so = 0;
                     no = nend.content.length;
                 }

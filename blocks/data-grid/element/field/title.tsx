@@ -8,6 +8,7 @@ import { BlockUrlConstant } from "../../../../src/block/constant";
 import { Rect } from "../../../../src/common/vector/point";
 import { lst } from "../../../../i18n/store";
 import { S } from "../../../../i18n/view";
+import { util } from "../../../../util/util";
 
 @url('/field/title')
 export class FieldText extends OriginField {
@@ -32,7 +33,7 @@ export class FieldTextView extends OriginFileView<FieldText> {
             this.span.style.display = 'block';
             var sel = window.getSelection();
             var eg = sel?.focusNode;
-            var range = sel.rangeCount > 0 ? sel.getRangeAt(0) : undefined;
+            var range = sel.rangeCount > 0 ?util.getSafeSelRange(sel): undefined;
             if (eg && this.span.parentNode.contains(eg) && range) {
                 var sg = Rect.fromEle(range);
                 var r = Rect.fromEle(this.span);

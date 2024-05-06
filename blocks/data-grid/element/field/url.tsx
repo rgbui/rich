@@ -7,6 +7,7 @@ import { TextArea } from "../../../../src/block/view/appear";
 import { Rect } from "../../../../src/common/vector/point";
 import { lst } from "../../../../i18n/store";
 import { Tip } from "../../../../component/view/tooltip/tip";
+import { util } from "../../../../util/util";
 
 @url('/field/url')
 export class FieldUrl extends OriginField {
@@ -22,7 +23,7 @@ export class FieldUrlView extends OriginFileView<FieldUrl>{
             this.span.style.display = 'flex';
             var sel = window.getSelection();
             var eg = sel?.focusNode;
-            var range = sel.rangeCount > 0 ? sel.getRangeAt(0) : undefined;
+            var range = sel.rangeCount > 0 ? util.getSafeSelRange(sel) : undefined;
             if (eg && this.span.parentNode.contains(eg) && range) {
                 var sg = Rect.fromEle(range);
                 var r = Rect.fromEle(this.span);

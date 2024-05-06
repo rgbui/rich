@@ -159,7 +159,7 @@ class TextTool extends EventsComponent {
                     </div>
                 </Tip>
 
-                <Tip overlay={<div><S>删除线</S><br /><span style={{ color: '#bbb' }}>{UA.isMacOs ? "⌘+S" : 'Ctrl+S'}</span></div>}>
+                <Tip overlay={<div><S>删除线</S><br /><span style={{ color: '#bbb' }}>{UA.isMacOs ? "⌘+Shift+S" : 'Ctrl+Shift+S'}</span></div>}>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.deleteLine == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.deleteLine == true ? TextCommand.cancelLine : TextCommand.deleteLine, e)}>
                         <span className="size-20 flex-center">  <Icon size={16} icon={{ name: 'byte', code: 'strikethrough' }}></Icon></span>
                     </div>
@@ -303,13 +303,7 @@ class TextTool extends EventsComponent {
         if (event) event.stopPropagation();
         this.blocked = true;
         var sel = window.getSelection();
-        var range: Range;
-        try {
-            range = sel.getRangeAt(0);
-        }
-        catch (ex) {
-            console.error(ex);
-        }
+        var range: Range = util.getSafeSelRange(sel);
         var text = '';
         if (range) {
             var lineHeight = dom(sel.focusNode.parentNode).lineHeight(20);

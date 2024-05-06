@@ -19,6 +19,7 @@ import { Rect } from "../../common/vector/point";
 import { InputForceStore, InputStore } from "./store";
 import { useTagSelector } from "../../../extensions/tag";
 import { URL_END_REGEX } from "./declare";
+import { util } from "../../../util/util";
 
 
 /**
@@ -32,7 +33,7 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
     var sel = window.getSelection();
     var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
     if (!write.inputPop) {
-        var rect = Rect.fromEle(sel.getRangeAt(0));
+        var rect = Rect.fromEle(util.getSafeSelRange(sel));
         var data = ev.data;
         var textContent = aa.textContent;
         var data2 = textContent.slice(offset - 2, offset);
@@ -503,7 +504,7 @@ export async function inputBackspaceDeleteContent(write: PageWrite,
     if (event) event.preventDefault();
     await InputForceStore(aa, async () => {
         var sel = window.getSelection();
-        var deleteText = sel.getRangeAt(0)?.cloneContents()?.textContent;
+        var deleteText = util.getSafeSelRange(sel)?.cloneContents()?.textContent;
         write.kit.anchorCursor.catchWindowSelection();
         write.kit.anchorCursor.adjustAnchorSorts()
         var appears = write.kit.anchorCursor.getAppears()

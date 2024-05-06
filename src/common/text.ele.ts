@@ -1,3 +1,4 @@
+import { util } from "../../util/util";
 import { dom } from "./dom";
 import { Point, Rect } from "./vector/point";
 let __g: CanvasRenderingContext2D;
@@ -47,13 +48,13 @@ export class TextEle {
     }
     static getWindowCusorBound() {
         var sel = window.getSelection();
-        var range = sel.getRangeAt(0);
+        var range = util.getSafeSelRange(sel);
         if (range)
             return Rect.fromEle(range);
     }
     static getWindowCusorBounds() {
         var sel = window.getSelection();
-        var range = sel.getRangeAt(0);
+        var range = util.getSafeSelRange(sel);
         var rs: Rect[] = [];
         if (range) {
             var cs = range.getClientRects();

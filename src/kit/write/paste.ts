@@ -17,6 +17,7 @@ import { PageLayoutType } from "../../page/declare";
 import { isUrl } from "./declare";
 import { inputBackspaceDeleteContent } from "./input";
 import { InputForceStore } from "./store";
+import { util } from "../../../util/util";
 
 
 export async function onPasteBlank(kit: Kit, event: ClipboardEvent) {
@@ -393,7 +394,7 @@ async function onPasteUrl(kit: Kit, aa: AppearAnchor, url: string) {
             this.kit.page.addUpdateEvent(async () => {
                 this.kit.writer.cursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
                 var sel = window.getSelection();
-                var rect = Rect.fromEle(sel.getRangeAt(0));
+                var rect = Rect.fromEle(util.getSafeSelRange(sel));
                 kit.writer.inputPop = {
                     rect,
                     type: InputTextPopSelectorType.UrlSelector,
@@ -413,7 +414,7 @@ async function onPasteUrl(kit: Kit, aa: AppearAnchor, url: string) {
         var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
         aa.setContent(content.slice(0, offset) + url + content.slice(offset));
         aa.collapse(offset + url.length);
-        var rect = Rect.fromEle(sel.getRangeAt(0));
+        var rect = Rect.fromEle(util.getSafeSelRange(sel));
         kit.writer.inputPop = {
             rect,
             type: InputTextPopSelectorType.UrlSelector,

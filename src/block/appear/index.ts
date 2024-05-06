@@ -5,6 +5,7 @@ import { AppearVisibleSeek } from "./visible.seek";
 import { BlockChildKey, BlockUrlConstant } from "../constant";
 import lodash from "lodash";
 import { TextContent } from "../element/text";
+import { util } from "../../../util/util";
 
 export enum BlockAppear {
     /**
@@ -411,16 +412,16 @@ export class AppearAnchor {
                 var at = Math.round((s + e) / 2);
                 if (Math.abs(s - e) < 2) {
                     this.collapse(s, sel);
-                    var sb = Rect.fromEle(sel.getRangeAt(0));
+                    var sb = Rect.fromEle(util.getSafeSelRange(sel));
                     this.collapse(e, sel);
-                    var eb = Rect.fromEle(sel.getRangeAt(0));
+                    var eb = Rect.fromEle(util.getSafeSelRange(sel));
                     if (Math.abs(sb.left - point.x) < Math.abs(eb.left - point.x)) endOffset = s;
                     else endOffset == e;
                     break;
                 }
                 else {
                     this.collapse(at, sel);
-                    var b = Rect.fromEle(sel.getRangeAt(0));
+                    var b = Rect.fromEle(util.getSafeSelRange(sel));
                     if (point.y <= b.top || point.x <= b.left && point.y >= b.top && point.y <= b.bottom) {
                         e = at;
                     }

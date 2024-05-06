@@ -11,6 +11,7 @@ import { Avatar } from "../../avator/face";
 import { lst } from "../../../../i18n/store";
 import { S } from "../../../../i18n/view";
 import { channel } from "../../../../net/channel";
+import { util } from "../../../../util/util";
 
 
 /**
@@ -39,7 +40,7 @@ export class ChatInputPop extends React.Component<{
             this.nodeText = this.node === this.props.cp.richEl ? this.props.cp.richEl.innerHTML : this.node.textContent;
             this.nodeOffset = sel.focusOffset;
             this.visible = true;
-            var rect = Rect.fromEle(sel.getRangeAt(0));
+            var rect = Rect.fromEle(util.getSafeSelRange(sel));
             if (this.node === this.props.cp.richEl) {
                 rect = Rect.fromEle(this.props.cp.richEl)
             }

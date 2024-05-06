@@ -12,6 +12,7 @@ import { Rect } from "../../common/vector/point";
 import { InputForceStore } from "./store";
 import { ListType, ListTypeView } from "../../../blocks/present/list/list";
 import lodash from "lodash";
+import { util } from "../../../util/util";
 
 /***
  * 这里主要是判断当前的keydown事件是否还需要触发，继续执行输入
@@ -92,10 +93,10 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
     }
     else if (event.key == KeyboardCode.ArrowDown) {
 
-        var range = sel.getRangeAt(0);
+        var range =util.getSafeSelRange(sel);
         var rect = aa.textContent == '' || aa.isSolid ? Rect.fromEle(aa.el) : Rect.fromEle(range);
         onceAutoScroll({ el: aa.el, point: rect.leftMiddle, feelDis: 60, dis: 120 })
-        range = sel.getRangeAt(0);
+        range = util.getSafeSelRange(sel);
         rect = aa.textContent == '' || aa.isSolid ? Rect.fromEle(aa.el) : Rect.fromEle(range);
         var rects = TextEle.getBounds(aa.el);
         var lineHeight = TextEle.getLineHeight(aa.el);
@@ -112,10 +113,10 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
         }
     }
     else if (event.key == KeyboardCode.ArrowUp) {
-        var range = sel.getRangeAt(0);
+        var range = util.getSafeSelRange(sel);
         var rect = aa.textContent == '' || aa.isSolid ? Rect.fromEle(aa.el) : Rect.fromEle(range);
         if (!br) onceAutoScroll({ el: aa.el, point: rect.leftMiddle, feelDis: 60, dis: 120 });
-        range = sel.getRangeAt(0);
+        range = util.getSafeSelRange(sel);
         rect = aa.textContent == '' || aa.isSolid ? Rect.fromEle(aa.el) : Rect.fromEle(range);
         var rects = TextEle.getBounds(aa.el);
         var lineHeight = TextEle.getLineHeight(aa.el);
