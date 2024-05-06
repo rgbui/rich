@@ -41,8 +41,8 @@ export class AnchorCursor {
     get isAnchorAppear() {
         return this.startAnchor === this.endAnchor
     }
-    onCatchWindowSelection() {
-        this.kit.page.onAction('onCatchWindowSelection', async () => {
+    async onCatchWindowSelection() {
+        await this.kit.page.onAction('onCatchWindowSelection', async () => {
             this.catchWindowSelection()
         })
     }
@@ -80,14 +80,14 @@ export class AnchorCursor {
         if (this.startAnchor && this.endAnchor)
             this.kit.page.snapshoot.record(OperatorDirective.$change_cursor_offset, { old_value: old, new_value: this.record }, this.kit.page)
     }
-    onCollapse(anchor: AppearAnchor, offset: number) {
-        this.kit.page.onAction('onCollapse', async () => {
+    async onCollapse(anchor: AppearAnchor, offset: number) {
+        await this.kit.page.onAction('onCollapse', async () => {
             this.collapse(anchor, offset)
         })
     }
     collapse(anchor: AppearAnchor, offset: number) {
-        anchor.focus();
         var old = this.record;
+        anchor.focus();
         this.startAnchor = anchor;
         this.startOffset = offset;
         this.endAnchor = anchor;
@@ -103,10 +103,10 @@ export class AnchorCursor {
      *                  .render  光标选区渲染
      *                  .combine 相同的行内块合并
      */
-    onSetTextSelection(options: { startAnchor: AppearAnchor, startOffset: number, endAnchor: AppearAnchor, endOffset: number },
+    async onSetTextSelection(options: { startAnchor: AppearAnchor, startOffset: number, endAnchor: AppearAnchor, endOffset: number },
         operators?: { merge?: boolean, render?: boolean, combine?: boolean }) {
         if (!options.startAnchor?.el || !options.endAnchor?.el) return;
-        this.kit.page.onAction('onSetTextSelection', async () => {
+        await this.kit.page.onAction('onSetTextSelection', async () => {
             if (operators?.merge) this.kit.page.snapshoot.merge();
             if (operators.combine) await this.combineBlockLines(options);
             this.setTextSelection(options)
@@ -180,7 +180,11 @@ export class AnchorCursor {
         this.kit.page.snapshoot.record(OperatorDirective.$change_cursor_offset, { old_value: old, new_value: this.record }, this.kit.page)
     }
     get record(): { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] } {
-        return { start: this.startPos, end: this.endPos, blocks: this.currentSelectedBlocks.map(c => c.pos) }
+        return {
+            start: this.startPos,
+            end: this.endPos,
+            blocks: this.currentSelectedBlocks.map(c => c.pos)
+        }
     }
     get startPos() {
         if (this.startAnchor) {
@@ -374,8 +378,8 @@ export class AnchorCursor {
         cs.each(c => { if (!ds.some(s => s == c)) ds.push(c) });
         return ds;
     }
-    onSelectBlocks(blocks: Block[], options?: { merge?: boolean, render?: boolean }) {
-        this.kit.page.onAction('onSelectBlocks', async () => {
+    async onSelectBlocks(blocks: Block[], options?: { merge?: boolean, render?: boolean }) {
+        await this.kit.page.onAction('onSelectBlocks', async () => {
             if (options?.merge) this.kit.page.snapshoot.merge();
             this.selectBlocks(blocks)
             if (options?.render) {
@@ -383,19 +387,18 @@ export class AnchorCursor {
             }
         })
     }
-    onSelectAll() {
+    async onSelectAll() {
         var cs = this.kit.page.views[0].childs.map(c => c);
         lodash.remove(cs, c => c.url == BlockUrlConstant.Title)
-        this.onSelectBlocks(cs, { render: true })
+        await this.onSelectBlocks(cs, { render: true })
     }
     selectBlocks(blocks: Block[]) {
         var old = this.record;
         this.currentSelectedBlocks = blocks;
         this.kit.page.snapshoot.record(OperatorDirective.$change_cursor_offset, { old_value: old, new_value: this.record }, this.kit.page)
     }
-    onClearSelectBlocks() {
-        this.currentSelectedBlocks = [];
-        this.renderSelectBlocks(this.currentSelectedBlocks);
+    async onClearSelectBlocks() {
+        await this.onSelectBlocks([], { render: true });
     }
     renderSelectBlocks(blocks: Block[]) {
         var currentEls = Array.from(document.body.querySelectorAll(".shy-block-selected"));

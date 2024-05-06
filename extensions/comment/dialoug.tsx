@@ -50,6 +50,9 @@ export class CommentDialoug extends EventsComponent {
         this.resolvedHtml = props.resolvedHtml;
         this.forceUpdate(() => {
             this.emit('update')
+            if (this.cv) {
+                this.cv.onFocusInput();
+            }
         });
     }
     getCount() {

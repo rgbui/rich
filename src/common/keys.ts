@@ -21,7 +21,7 @@ export enum KeyboardCode {
     U = 'U',
     K = 'K',
     H = 'H',
-    M='M',
+    M = 'M',
     Z = 'Z',
     Y = 'Y',
     S = 'S',
@@ -63,8 +63,12 @@ export class KeyboardPlate {
     private metaKey: boolean = false;
     private shiftKey: boolean = false;
     keys: KeyboardCode[] = [];
-    private isKeyUped: boolean = true;
+    private isStartLongKeyUped: boolean = true;
     private lastKeydownDate: number;
+    /**
+     * 这个表示按键是按下的，如果是长按的，会不断的触发keydown事件，这个属性表示是否是按下的
+     */
+    public isKeydown = false;
     static getKeyString(event: KeyboardEvent) {
         var ek = event.key as KeyboardCode;
         if (typeof event.keyCode == 'number') {
@@ -132,6 +136,7 @@ export class KeyboardPlate {
      * @param event 
      */
     keydown(event: KeyboardEvent) {
+        this.isKeydown = true;
         this.metaKey = event.metaKey;
         this.altKey = event.altKey;
         this.shiftKey = event.shiftKey;
@@ -145,11 +150,11 @@ export class KeyboardPlate {
             /**
              * 长按keydown，会不断的触发，这里减轻触发的情况
              */
-            if (this.isKeyUped == false && typeof this.lastKeydownDate == 'number') {
+            if (this.isStartLongKeyUped == false && typeof this.lastKeydownDate == 'number') {
                 var ts = (Date.now() - this.lastKeydownDate);
                 if (ts < 1000) return;
             }
-            this.isKeyUped = false;
+            this.isStartLongKeyUped = false;
             this.lastKeydownDate = Date.now();
         }
         for (let i = 0; i < this.listeners.length; i++) {
@@ -157,17 +162,33 @@ export class KeyboardPlate {
             if (listener.predict(this) == true && typeof listener.keydown == 'function') listener.keydown(event, this);
         }
     }
+    keyup(event: KeyboardEvent) {
+        this.isKeydown = false;
+        this.isStartLongKeyUped = true;
+        delete this.lastKeydownDate;
+        this.metaKey = false;
+        this.altKey = false;
+        this.shiftKey = false;
+        this.ctrlKey = false;
+        this.keys = [];
+    }
+    /**
+     * 一般有keydown，必然有keyup，所以这里不需要清理
+     * 但当打开一个新的页面，keyup有时候不触发，这里需要手动清理
+     * 
+     */
+    clear() {
+        this.isKeydown = false;
+        this.isStartLongKeyUped = true;
+        delete this.lastKeydownDate;
+        this.metaKey = false;
+        this.altKey = false;
+        this.shiftKey = false;
+        this.ctrlKey = false;
+        this.keys = [];
+    }
     isPredict() {
         return this.listeners.some(s => s.isBlocked !== false && s.predict(this) && typeof s.keydown == 'function')
-    }
-    keyup(event: KeyboardEvent) {
-        this.isKeyUped = true;
-        delete this.lastKeydownDate;
-        this.metaKey = event.metaKey;
-        this.altKey = event.altKey;
-        this.shiftKey = event.shiftKey;
-        this.ctrlKey = event.ctrlKey;
-        this.keys = [];
     }
     is(...codes: KeyboardCode[]) {
         return this.keys.exists(g => codes.exists(c => c.toLowerCase() == g.toLowerCase()));
@@ -191,13 +212,6 @@ export class KeyboardPlate {
         }
         return false;
     }
-    isCtrl(code?: KeyboardCode) {
-        if (this.onlyKeys('ctrl') == true) {
-            if (typeof code != 'undefined') { if (this.is(code)) return true; }
-            else return true;
-        }
-        return false;
-    }
     isShift(code?: KeyboardCode) {
         if (this.onlyKeys('shift') == true) {
             if (typeof code != 'undefined') { if (this.is(code)) return true; }
@@ -207,13 +221,6 @@ export class KeyboardPlate {
     }
     isAlt(code?: KeyboardCode) {
         if (this.onlyKeys('alt')) {
-            if (typeof code != 'undefined') { if (this.is(code)) return true; }
-            else return true;
-        }
-        return false;
-    }
-    isMeta(code?: KeyboardCode) {
-        if (this.onlyKeys('meta')) {
             if (typeof code != 'undefined') { if (this.is(code)) return true; }
             else return true;
         }

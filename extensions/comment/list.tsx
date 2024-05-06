@@ -29,6 +29,7 @@ export class CommentListView extends React.Component<{
     ws?: LinkWs,
     onChange?: (props: Record<string, any>) => void,
     contentHeight?: number
+   
 }> {
     list: WsCommentType[] = [];
     total = 0;
@@ -272,6 +273,11 @@ export class CommentListView extends React.Component<{
     onFocus(e) {
         this.spread = true;
         this.forceUpdate();
+    }
+    onFocusInput(){
+        if(this.inputChatBox){
+            this.inputChatBox.onFocus()
+        }
     }
     onBlur(e) {
         if (this.isOver) return;

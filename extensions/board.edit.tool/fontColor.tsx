@@ -200,7 +200,7 @@ export function FontTextStyle(props: {
                         </span>
                     </ToolTip>
 
-                    <ToolTip overlay={<div><S>删除线</S><br /><span style={{ color: '#bbb' }}>{UA.isMacOs ? "⌘+S" : 'Ctrl+S'}</span></div>}>
+                    <ToolTip overlay={<div><S>删除线</S><br /><span style={{ color: '#bbb' }}>{UA.isMacOs ? "⌘+Shift+S" : 'Ctrl+Shift+S'}</span></div>}>
                         <span onMouseDown={e => {
                             props.change({
                                 textDecoration: props.textDecoration == 'line-through' ? 'none' : 'line-through'
