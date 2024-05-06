@@ -167,12 +167,16 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     snapshoot.registerOperator(OperatorDirective.updateProp, async (operator, source) => {
         var block = page.find(x => x.id == operator.data.blockId);
         if (block) {
-            await block.manualUpdateProps(operator.data.old, operator.data.new, BlockRenderRange.self);
+            var od = await block.createDataPropObject(operator.data.old);
+            var nd = await block.createDataPropObject(operator.data.new);
+            await block.manualUpdateProps(od, nd, BlockRenderRange.self);
         }
     }, async (operator) => {
         var block = page.find(x => x.id == operator.data.blockId);
         if (block) {
-            await block.manualUpdateProps(operator.data.new, operator.data.old, BlockRenderRange.self);
+            var od = await block.createDataPropObject(operator.data.old);
+            var nd = await block.createDataPropObject(operator.data.new);
+            await block.manualUpdateProps(nd, od, BlockRenderRange.self);
         }
     });
     snapshoot.registerOperator(OperatorDirective.updatePropMatrix, async (operator, source) => {
@@ -275,13 +279,27 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         var dr: { pos: SnapshootBlockPropPos, old_value: any, new_value: any, render: BlockRenderRange } = operator.data as any;
         var block = page.find(x => x.id == dr.pos.blockId);
         if (block) {
-            await block.manualUpdateProps(dr.old_value, dr.new_value, typeof dr.render != 'undefined' ? dr.render : BlockRenderRange.self);
+            var od = await block.createDataPropObject(dr.old_value);
+            var nd = await block.createDataPropObject(dr.new_value);
+            await block.manualUpdateProps(od, nd, typeof dr.render != 'undefined' ? dr.render : BlockRenderRange.self);
+            page.addUpdateEvent(async () => {
+                if (page.kit.picker.blocks.length > 0) {
+                    page.kit.picker.onRePicker(true)
+                }
+            })
         }
     }, async (operator) => {
         var dr: { pos: SnapshootBlockPropPos, old_value: any, new_value: any, render: BlockRenderRange } = operator.data as any;
         var block = page.find(x => x.id == dr.pos.blockId);
         if (block) {
-            await block.manualUpdateProps(dr.new_value, dr.old_value, typeof dr.render != 'undefined' ? dr.render : BlockRenderRange.self);
+            var od = await block.createDataPropObject(dr.old_value);
+            var nd = await block.createDataPropObject(dr.new_value);
+            await block.manualUpdateProps(nd, od, typeof dr.render != 'undefined' ? dr.render : BlockRenderRange.self);
+            page.addUpdateEvent(async () => {
+                if (page.kit.picker.blocks.length > 0) {
+                    page.kit.picker.onRePicker(true)
+                }
+            })
         }
     });
     snapshoot.registerOperator(OperatorDirective.$change_cursor_offset, async (operator, source, action) => {

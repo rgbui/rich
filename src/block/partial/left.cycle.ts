@@ -195,6 +195,16 @@ export class Block$LifeCycle {
         }
         else lodash.set(this, prop, lodash.cloneDeep(value));
     }
+    async createDataPropObject(data: Record<string, any>) {
+        var json = {};
+        for (var n in data) {
+            if (typeof data[n] == 'undefined') continue;
+            if (n == 'blocks') continue;
+            else if (n == 'pattern') json[n] = await this.createPropObject(n, data[n]);
+            else json[n] = await this.createPropObject(n, data[n]);
+        }
+        return json;
+    }
     async createPropObject(prop: string, value: any) {
         var pm = this.propMetas.find(g => g.key == prop);
         if (pm) {
