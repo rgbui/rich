@@ -20,7 +20,7 @@ export class LastUploadFiles extends React.Component<{
         total: 0,
         list: [],
         page: 1,
-        size: 50,
+        size: 48,
         loading: false,
         word: ''
     };
