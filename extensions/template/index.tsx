@@ -11,7 +11,6 @@ import { channel } from "../../net/channel";
 import { S } from "../../i18n/view";
 import { Input } from "../../component/view/input";
 import { ElementType, getElementUrl } from "../../net/element.type";
-import { Avatar } from "../../component/view/avator/face";
 import { lst } from "../../i18n/store";
 import lodash from "lodash";
 
@@ -63,8 +62,8 @@ export class TemplateView extends EventsComponent {
                         <div onClick={e => {
                             tg.spread = tg.spread ? false : true;
                             this.forceUpdate();
-                        }} className="f-12 flex  cursor padding-w-5 item-hover-light">
-                            <span className={"ts size-24 flex-center flex-fixed " + (tg.spread == true ? "" : "angle-90-")}>
+                        }} className="f-12 flex  cursor gap-w-5 padding-w-5 item-hover-light">
+                            <span className={"ts size-20 flex-center flex-fixed " + (tg.spread == true ? "" : "angle-90-")}>
                                 <Icon className={'text-1'} size={16} icon={ChevronDownSvg}></Icon>
                             </span>
                             <span className="flex-auto">{tg.text}</span>
@@ -73,7 +72,7 @@ export class TemplateView extends EventsComponent {
                             {ts.map((tl, j) => {
                                 return <div onMouseDown={e => {
                                     this.onSetTemplate(tl);
-                                }} className={"h-30 gap-h-3 flex round cursor item-hover-light padding-w-10 " + (this.currentPageTemplate === tl ? " item-hover-focus" : "")} key={tl.id}>
+                                }} className={"h-30 gap-h-3 flex round cursor item-hover-light gap-w-5 padding-w-5 " + (this.currentPageTemplate === tl ? " item-hover-focus" : "")} key={tl.id}>
                                     <span className="flex-center size-24 rounc cursor flex-fixed"><Icon size={18} icon={tl.icon || PageSvg}></Icon></span>
                                     <span className="gap-l-5 text-overflow flex-auto">{tl.text}</span>
                                 </div>
@@ -84,7 +83,7 @@ export class TemplateView extends EventsComponent {
                 {this.templateList.word && this.getSearchList().map((tl, i) => {
                     return <div onMouseDown={e => {
                         this.onSetTemplate(tl);
-                    }} className={"h-30 gap-h-3 flex round cursor item-hover-light padding-w-10 " + (this.currentPageTemplate === tl ? " item-hover-focus" : "")} key={tl.id}>
+                    }} className={"h-30 gap-h-3 flex round cursor item-hover-light gap-w-5 padding-w-5 " + (this.currentPageTemplate === tl ? " item-hover-focus" : "")} key={tl.id}>
                         <span className="flex-center size-24 rounc cursor flex-fixed"><Icon size={18} icon={tl.icon || PageSvg}></Icon></span>
                         <span className="gap-l-5 text-overflow flex-auto">{tl.text}</span>
                     </div>
