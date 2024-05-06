@@ -86,7 +86,6 @@ export class BoardEditTool extends EventsComponent {
                         value={getValue('mindDirection')}
                         onChange={e => this.onChange('mindDirection', e)}
                         dropWidth={40}
-
                         onDrop={e => {
                             if (e) self.showDrop('');
                         }}

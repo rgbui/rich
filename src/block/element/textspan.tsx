@@ -41,8 +41,6 @@ export class TextSpan extends Block {
             Object.assign(style, this.transformStyle);
             var s = this.pattern.style;
             delete s.backgroundColor;
-            s.fontSize = '14px';
-            s.lineHeight = (14 * 1.2) + 'px';
             Object.assign(style, s);
             return style;
         }

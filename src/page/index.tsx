@@ -415,7 +415,6 @@ export class Page extends Events<PageDirective> {
             sf = this.ws.publishConfig.smallFont;
         }
         if (this.pageLayout?.type == PageLayoutType.ppt) return sf ? '1.6rem' : '1.8rem'
-        else if (this.pageLayout?.type == PageLayoutType.textChannel) return sf ? '1.2rem' : '1.4rem'
         return sf ? '1.4rem' : '1.6rem'
     }
     /**
@@ -425,7 +424,9 @@ export class Page extends Events<PageDirective> {
      * @returns 
      */
     cacSmallFont(sf: boolean) {
-        if (sf==true) {
+        if (sf == true) {
+            if (this.pageLayout?.type == PageLayoutType.ppt)
+                return '1.4rem';
             return '1.2rem';
         }
         else return this.fontSize;
@@ -436,8 +437,8 @@ export class Page extends Events<PageDirective> {
             sf = this.ws.publishConfig.smallFont;
         }
         if (this.pageLayout?.type == PageLayoutType.ppt) return sf ? '2.56rem' : '2.88rem'
-        else if (this.pageLayout?.type == PageLayoutType.textChannel) return sf ? '1.56rem' : '1.82rem'
-        return sf ? '1.82rem' : '2.08rem'
+        else if (this.pageLayout?.type == PageLayoutType.textChannel) return sf ? '2rem' : '2.4rem'
+        return sf ? '2rem' : '2.4rem'
     }
     /**
      * 文字大小与行高的比例系数
