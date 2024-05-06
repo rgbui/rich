@@ -98,6 +98,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         if (source == 'notify' || source == 'notifyView' || source == 'load' || source == 'loadSyncBlock') return;
         if (oc.new_value.blocks?.length > 0) {
             var bs = page.findAll(g => oc.new_value.blocks.some(s => s.blockId == g.id));
+            console.log('bs', bs);
             page.kit.anchorCursor.selectBlocks(bs);
             page.addUpdateEvent(async () => {
                 page.kit.anchorCursor.renderAnchorCursorSelection()
@@ -125,12 +126,14 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             }
         }
     }, async (operator) => {
+        console.log('undo', operator.data)
         var oc: {
             old_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] },
             new_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] }
         } = operator.data as any;
         if (oc.old_value.blocks?.length > 0) {
             var bs = page.findAll(g => oc.old_value.blocks.some(s => s.blockId == g.id));
+            console.log('bsss', bs);
             page.kit.anchorCursor.selectBlocks(bs);
             page.addUpdateEvent(async () => {
                 page.kit.anchorCursor.renderAnchorCursorSelection()
