@@ -202,7 +202,7 @@ export class TextSpan extends Block {
         cs.push({ name: 'fontFamily', value: fontStyle?.fontFamily });
         cs.push({ name: 'fontSize', value: Math.round(this.fontScale * 14) });
         cs.push({ name: 'fontWeight', value: bold == 'bold' || bold == 500 ? true : false });
-        cs.push({ name: 'fontStyle', value: fontStyle?.fontStyle == 'italic' ? true : false });
+        cs.push({ name: 'fontStyle', value: fontStyle?.fontStyle == 'italic' || (fontStyle as any)?.fontStyle == true ? true : false });
         cs.push({ name: 'textDecoration', value: fontStyle?.textDecoration || 'none' });
         cs.push({ name: 'fontColor', value: fontStyle?.color || '#000' });
         cs.push({ name: 'link' });
@@ -220,6 +220,9 @@ export class TextSpan extends Block {
         }
         else if (name == 'fontFamily') {
             await this.pattern.setFontStyle({ fontFamily: value })
+        }
+        else if (name == 'fontStyle') {
+            await this.pattern.setFontStyle({ fontStyle: value === true || value == 'italic' ? 'italic' : 'normal' })
         }
         else if (name == 'fontWeight')
             await this.pattern.setFontStyle({ fontWeight: value })
