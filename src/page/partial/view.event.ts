@@ -20,6 +20,8 @@ import { lst } from "../../../i18n/store";
 import { Block } from "../../block";
 import { AnimatedScrollTo } from "../../../util/animatedScrollTo";
 import { GalleryPics } from "../../../extensions/image/store";
+import { forceCloseTextTool } from "../../../extensions/text.tool";
+import { ShyAlert } from "../../../component/lib/alert";
 
 export class Page$ViewEvent {
     /**
@@ -36,7 +38,7 @@ export class Page$ViewEvent {
     onMousedown(this: Page, event: React.MouseEvent) {
         if (this.pageLayout.type == PageLayoutType.board) {
             if (this.kit.page.isCanEdit)
-                this.kit.boardSelector.onShow(this.root,{page:this.kit.page});
+                this.kit.boardSelector.onShow(this.root, { page: this.kit.page });
         }
         this.kit.operator.mousedown(event);
     }
@@ -46,7 +48,7 @@ export class Page$ViewEvent {
          */
         if (this.kit.anchorCursor.currentSelectedBlocks.length > 0) {
             if (event.target && this.kit.handle.view.handleEle.contains(event.target as HTMLElement)) return;
-            this.kit.anchorCursor.onClearSelectBlocks();
+            // this.kit.anchorCursor.onClearSelectBlocks();
         }
     }
     onMousemove(this: Page, event: MouseEvent) {
@@ -148,16 +150,22 @@ export class Page$ViewEvent {
 
     }
     async onUndo(this: Page) {
+        forceCloseTextTool()
+        closeBoardEditTool();
         if (this.snapshoot.historyRecord.isCanUndo)
             await this.onAction(ActionDirective.onUndo, async () => {
                 await this.snapshoot.undo();
             })
+        else ShyAlert(lst('没有可撤销的操作'))
     }
     async onRedo(this: Page) {
+        forceCloseTextTool()
+        closeBoardEditTool();
         if (this.snapshoot.historyRecord.isCanRedo)
             await this.onAction(ActionDirective.onRedo, async () => {
                 await this.snapshoot.redo();
             })
+        else ShyAlert(lst('没有可恢复的操作'))
     }
     async turnLayout(this: Page,
         layoutType: PageLayoutType) {
@@ -233,11 +241,11 @@ export class Page$ViewEvent {
             var rect = Rect.from(this.root.getBoundingClientRect());
             point = rect.middleCenter;
         }
-      
+
         var zs = [1, 2, 3, 5, 10, 15, 20, 33, 50, 75, 100, 125, 150, 200, 250, 300];
         var current = zs.findMin(x => Math.abs(x - this.scale * 100));
         var at = zs.findIndex(g => g == current);
-      
+
         var ro = this.globalMatrix.inverseTransform(point);
         var r = 1;
         var current = this.scale * 100;
@@ -529,6 +537,6 @@ export class Page$ViewEvent {
             this.onError(ex);
         }
     }
-    
+
 }
 

@@ -11,10 +11,10 @@ import { MoveSelectBlocks } from "../../kit/write/keydown";
 export function PageKeys(
     page: Page,
     keyboardPlate: KeyboardPlate) {
-    keyboardPlate.listener(kt => UA.isMacOs && kt.isMeta(KeyboardCode.Z) || !UA.isMacOs && kt.isCtrl(KeyboardCode.Z), (event, kt) => {
+    keyboardPlate.listener(kt =>kt.isMetaOrCtrl(KeyboardCode.Z),(event, kt) => {
         page.onUndo();
     }, undefined, 'undo', true);
-    keyboardPlate.listener(kt => UA.isMacOs && kt.isMeta(KeyboardCode.Y) || !UA.isMacOs && kt.isCtrl(KeyboardCode.Y), (event, kt) => {
+    keyboardPlate.listener(kt =>kt.isMetaOrCtrl(KeyboardCode.Y), (event, kt) => {
         page.onRedo();
     }, undefined, 'redo', true);
     keyboardPlate.listener(kt => kt.is(KeyboardCode.ArrowDown), (event, kt) => {
@@ -106,7 +106,7 @@ export function PageKeys(
         'delete',
         false
     );
-    keyboardPlate.listener(kt => UA.isMacOs && kt.isMeta(KeyboardCode.C) || !UA.isMacOs && kt.isCtrl(KeyboardCode.C),
+    keyboardPlate.listener(kt => kt.isMetaOrCtrl(KeyboardCode.C) ,
         (event, kt) => {
             if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
                 event.preventDefault();
@@ -119,7 +119,7 @@ export function PageKeys(
         'copy',
         false
     );
-    keyboardPlate.listener(kt => UA.isMacOs && kt.isMeta(KeyboardCode.X) || !UA.isMacOs && kt.isCtrl(KeyboardCode.X),
+    keyboardPlate.listener(kt => kt.isMetaOrCtrl(KeyboardCode.X) ,
         (event, kt) => {
             if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
                 event.preventDefault();
@@ -225,8 +225,7 @@ export function PageKeys(
             }
         }
     );
-    keyboardPlate.listener(
-        kt => kt.isMetaOrCtrl(KeyboardCode.J),
+    keyboardPlate.listener(kt => kt.isMetaOrCtrl(KeyboardCode.J),
         async (ev, kt) => {
             if (ev.key.toLowerCase() == KeyboardCode.J.toLowerCase()) {
                 if (page.kit.anchorCursor.currentSelectedBlocks.length > 0) {

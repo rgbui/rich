@@ -145,5 +145,6 @@ export function lst(key: string, content?: string | Record<string, any>, checkEx
     await channel.act('/cache/set', {
         key: LANG_UN_KEY,
         value: {}
-    })
+    });
+    console.log('clear all pg..');
 }

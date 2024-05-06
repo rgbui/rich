@@ -457,6 +457,7 @@ export class Block$Event {
         })
     }
     async onClone(this: Block) {
+
         /**
         *复制块
         */
@@ -483,7 +484,6 @@ export class Block$Event {
         ShyAlert(lst('块的链接已复制'))
     }
     async onInputComment(this: Block, area?: Rect) {
-        console.log(this,this.getResolveContent());
         var r = await useCommentListView({ roundArea: area || this.getVisibleContentBound() }, {
             elementUrl: this.elementUrl,
             userid: this.page.user.id,
