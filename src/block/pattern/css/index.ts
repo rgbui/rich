@@ -83,7 +83,7 @@ export class FontCss extends BlockCss {
     color: string | { grad: string, color: string };
     fontSize: number;
     lineHeight: number | string;
-    fontStyle: 'normal'|'italic';
+    fontStyle: 'normal' | 'italic';
     // fontGrad: { grad: string, color: string };
     fontWeight: 'normal' | 'bold' | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
     letterSpacing: 'normal' | number;
@@ -98,10 +98,10 @@ export class FontCss extends BlockCss {
     get style(): CSSProperties {
         var r = 22 / 14;
         var style: CSSProperties = {
-            fontSize:typeof this.fontSize=='number'? this.fontSize:undefined,
-            lineHeight:typeof this.fontSize=='number'?  ((r * (this.fontSize || 14) * 0.1).toString() + 'rem'):undefined,
+            fontSize: typeof this.fontSize == 'number' ? this.fontSize : undefined,
+            lineHeight: typeof this.fontSize == 'number' ? ((r * (this.fontSize || 14) * 0.1).toString() + 'rem') : undefined,
             textDecoration: this.textDecoration,
-            fontStyle: this.fontStyle,
+            fontStyle: (this as any).fontStyle === true || this.fontStyle == 'italic' ? 'italic' : 'normal',
             fontFamily: this.fontFamily || undefined,
             fontWeight: this.fontWeight,
             writingMode: this.writingMode as any

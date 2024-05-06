@@ -46,13 +46,16 @@ export class BlockPicker {
             openBoardEditTool(this.kit);
         }
     }
-    onRePicker() {
+    onRePicker(openEditTool = false) {
         this.alighLines = [];
         this.blocks.forEach(bl => {
             bl.updateRenderLines();
         });
         if (this.view)
             this.view.forceUpdate();
+        if (openEditTool == true) {
+            openBoardEditTool(this.kit);
+        }
     }
     onShiftPicker(blocks: Block[]) {
         blocks.each(b => {

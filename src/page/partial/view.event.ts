@@ -139,7 +139,7 @@ export class Page$ViewEvent {
         if (this.isPageOff == true) return;
         var ele = event.target as HTMLElement;
         if (ele && (ele === document.body || this.view.el === ele || this.view.el.contains(ele))) {
-            this.keyboardPlate.keydown(event);
+           this.keyboardPlate.keydown(event);
         }
     }
     onKeyup(this: Page, event: KeyboardEvent) {
