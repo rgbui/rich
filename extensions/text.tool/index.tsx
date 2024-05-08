@@ -408,25 +408,32 @@ export async function useTextTool(point: PopoverPosition, options: { blocks: Blo
     return new Promise((resolve: (result: textToolResult) => void, reject) => {
         textTool.only('setStyle', (styles) => {
             resolve({ command: 'setStyle', styles })
+            textTool.close();
         });
         textTool.only('setProp', (props) => {
             resolve({ command: 'setProp', props })
+            textTool.close();
         })
         textTool.only('setEquation', (props) => {
             resolve({ command: 'setEquation', props })
+            textTool.close();
         })
         textTool.only('setProp', (props) => {
             resolve({ command: 'setProp', props })
+            textTool.close();
         })
         //textTool.only
         textTool.only("turn", (item, event) => {
             resolve({ command: 'turn', item, event })
+            textTool.close();
         });
         textTool.only("close", () => {
             resolve(false);
+            textTool.close();
         })
         textTool.only('askAI', () => {
             resolve({ command: 'askAI' })
+            textTool.close();
         })
     })
 }

@@ -16,7 +16,27 @@ export abstract class BlockView<T extends Block> extends Component<{ block: T }>
         super(props);
         this.block.view = this;
     }
-    render(): React.ReactNode {
+    /**
+     * 这里设置一个假的state，用来触发更新
+     * 主要是block 里面的属性比较复杂，不好比较，这里是通过手动来触发更新
+     */
+    state: Readonly<{ seq: number }> = {
+        seq: 0
+    };
+    // 🔥🍅🤴🏻🟦 shouldComponentUpdate()函数的使用 ★
+    // 更新之前
+    shouldComponentUpdate() {
+        // 通过返回true或false，决定是否更新
+        // 返回true 表示更新
+        // 返回false 表示不更新
+        if (this.block.needUpdate) {
+            this.block.needUpdate = false;
+            return true;
+        }
+        return false
+    }
+    render() {
+        //console.log(this.block.url, this.block.id);
         if (this.viewError) {
             return this.renderViewError();
         }

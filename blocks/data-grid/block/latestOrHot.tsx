@@ -38,7 +38,7 @@ export class LatestOrHot extends Block {
             this.lasteOrHost = '';
         }
         else this.lasteOrHost = value;
-        await this.forceUpdate();
+        await this.forceManualUpdate();
         if (this.refBlock) {
             await this.refBlock.onSearch();
         }

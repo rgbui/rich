@@ -211,7 +211,7 @@ export class List extends Block {
                 await cs.eachAsync(async g => {
                     await g.updateProps({ listView: item.value as ListTypeView })
                 });
-                this.page.addBlockUpdate(this.parent);
+                this.page.notifyActionBlockUpdate(this.parent);
             })
         }
         else await super.onClickContextMenu(item, event);

@@ -29,7 +29,7 @@ export class RefLinks extends Block {
     list: BlockRefPage[] = [];
     async loadList() {
         this.loading = true;
-        this.forceUpdate();
+        this.forceManualUpdate();
         var r = await channel.get('/get/page/refs', { ws: this.page.ws, pageId: this.page.pageInfo?.id });
         this.loading = false;
         if (r.ok) {
@@ -41,7 +41,7 @@ export class RefLinks extends Block {
                 }
             })
         }
-        this.forceUpdate()
+        this.forceManualUpdate()
     }
     async getMd() {
         var ws = this.page.ws

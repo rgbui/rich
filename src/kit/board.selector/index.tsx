@@ -393,7 +393,7 @@ export class BoardSelector extends React.Component<{
     private point: Point;
     visible: boolean = false;
     page?: Page;
-    block?: Block;
+    boardBlock?: Block;
     onShow(viewEl: HTMLElement, options?: {
         page: Page,
         block?: Block,
@@ -405,15 +405,15 @@ export class BoardSelector extends React.Component<{
             // if (options?.relativeEleAutoScroll) this.fvs.bind(options.relativeEleAutoScroll);
 
             this.page = options?.page;
-            this.block = options?.block;
-            if (!this.block && this.page) {
+            this.boardBlock = options?.block;
+            if (!this.boardBlock && this.page) {
                 var po = new Point(20, 20);
                 this.point = po;
             }
             else {
                 var sd = this.page.getScrollDiv();
                 var re = Rect.fromEle(sd)
-                var vb = this.block.getVisibleContentBound();
+                var vb = this.boardBlock.getVisibleContentBound();
                 var y = vb.top - re.top + sd.scrollTop;
                 this.point = new Point(re.right - vb.right - 60, y)
             }

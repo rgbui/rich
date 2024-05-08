@@ -41,9 +41,10 @@ export class Title extends Block {
     get isDisabledInputLine() {
         return true;
     }
-    onEmptyTitleFocusAnchor() {
-        if (this.page?.pageInfo) {
-            this.page.kit.anchorCursor.onFocusBlockAnchor(this, { store: false, render: true });
+    onFocusPageTitle() {
+        if (this.page?.pageInfo)
+        {
+            this.page.kit.anchorCursor.onFocusBlockAnchor(this, { disabledStore:true, render: true });
         }
     }
     get isCanEmptyDelete() {
@@ -185,7 +186,7 @@ export class TitleView extends BlockView<Title> {
         channel.sync('/page/update/info', this.updatePageInfo);
         await this.block.loadPageInfo();
         this.forceUpdate(() => {
-            this.block.onEmptyTitleFocusAnchor();
+            this.block.onFocusPageTitle();
         })
     }
     updatePageInfo = (r: { elementUrl: string, id: string, pageInfo: LinkPageItem }) => {

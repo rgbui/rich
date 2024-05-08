@@ -14,7 +14,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
          * 判断是否是光标操作
          * 仅仅是光标操作，页面没有编辑
          */
-        if (!action.isCursorOperator()) {
+        if (!action.isCursorOperatorOrPicker()) {
             page.pageModifiedOrNot = true;
             page.emit(PageDirective.change);
         }
@@ -26,7 +26,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             return
         }
         console.log('action', action);
-        if (action.isCursorOperator()) page.onLazyHistory(action)
+        if (action.isCursorOperatorOrPicker()) page.onLazyHistory(action)
         else page.emit(PageDirective.history, action);
     });
     snapshoot.on('error', err => page.onError(err));
@@ -71,7 +71,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         var block = page.find(x => x.id == operator.data.blockId);
         if (block) {
             block.syncUpdate(BlockRenderRange.self);
-            block.page.addUpdateEvent(async () => {
+            block.page.addActionCompletedEvent(async () => {
                 var aa = block.appearAnchors.find(g => g.prop == operator.data.prop);
                 if (aa) {
                     page.kit.anchorCursor.onFocusAppearAnchor(aa, { at: operator.data.new });
@@ -82,7 +82,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         var block = page.find(x => x.id == operator.data.blockId);
         if (block) {
             block.syncUpdate(BlockRenderRange.self);
-            block.page.addUpdateEvent(async () => {
+            block.page.addActionCompletedEvent(async () => {
                 var aa = block.appearAnchors.find(g => g.prop == operator.data.prop);
                 if (aa) {
                     page.kit.anchorCursor.onFocusAppearAnchor(aa, { at: operator.data.old });
@@ -99,7 +99,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         if (oc.new_value.blocks?.length > 0) {
             var bs = page.findAll(g => oc.new_value.blocks.some(s => s.blockId == g.id));
             page.kit.anchorCursor.selectBlocks(bs);
-            page.addUpdateEvent(async () => {
+            page.addActionCompletedEvent(async () => {
                 page.kit.anchorCursor.renderAnchorCursorSelection()
             })
         }
@@ -116,7 +116,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
                     endAnchor: endAppear,
                     endOffset: oc.new_value.end.offset
                 });
-                page.addUpdateEvent(async () => {
+                page.addActionCompletedEvent(async () => {
                     page.kit.anchorCursor.renderAnchorCursorSelection()
                     if (!page.kit.anchorCursor.isCollapse && page.kit.anchorCursor.currentSelectedBlocks.length == 0) {
                         await page.kit.writer.onOpenTextTool()
@@ -136,7 +136,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         if (oc.old_value.blocks?.length > 0) {
             var bs = page.findAll(g => oc.old_value.blocks.some(s => s.blockId == g.id));
             page.kit.anchorCursor.selectBlocks(bs);
-            page.addUpdateEvent(async () => {
+            page.addActionCompletedEvent(async () => {
                 page.kit.anchorCursor.renderAnchorCursorSelection()
             })
         }
@@ -153,7 +153,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
                     endAnchor: endAppear,
                     endOffset: oc.old_value.end.offset
                 });
-                page.addUpdateEvent(async () => {
+                page.addActionCompletedEvent(async () => {
                     page.kit.anchorCursor.renderAnchorCursorSelection()
                     if (!page.kit.anchorCursor.isCollapse && page.kit.anchorCursor.currentSelectedBlocks.length == 0) {
                         await page.kit.writer.onOpenTextTool()
@@ -212,21 +212,21 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         if (operator.data.new_page_data) {
             await page.reload(operator.data.new_page_data)
         }
-        page.addPageUpdate();
+        page.notifyActionPageUpdate();
     }, async (operator) => {
         if (!page.pageLayout) page.pageLayout = { type: operator.data.old };
         else page.pageLayout.type = operator.data.old;
         if (operator.data.old_page_data) {
             await page.reload(operator.data.old_page_data)
         }
-        page.addPageUpdate();
+        page.notifyActionPageUpdate();
     });
     snapshoot.registerOperator(OperatorDirective.pageUpdateProp, async (operator, source) => {
         await page.updateProps(operator.data.new);
-        page.addPageUpdate();
+        page.notifyActionPageUpdate();
     }, async (operator) => {
         await page.updateProps(operator.data.old);
-        page.addPageUpdate();
+        page.notifyActionPageUpdate();
     });
     /***
      * 新的指令
@@ -282,7 +282,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             var od = await block.createDataPropObject(dr.old_value);
             var nd = await block.createDataPropObject(dr.new_value);
             await block.manualUpdateProps(od, nd, typeof dr.render != 'undefined' ? dr.render : BlockRenderRange.self);
-            page.addUpdateEvent(async () => {
+            page.addActionCompletedEvent(async () => {
                 if (page.kit.picker.blocks.length > 0) {
                     page.kit.picker.onRePicker(true)
                 }
@@ -295,7 +295,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             var od = await block.createDataPropObject(dr.old_value);
             var nd = await block.createDataPropObject(dr.new_value);
             await block.manualUpdateProps(nd, od, typeof dr.render != 'undefined' ? dr.render : BlockRenderRange.self);
-            page.addUpdateEvent(async () => {
+            page.addActionCompletedEvent(async () => {
                 if (page.kit.picker.blocks.length > 0) {
                     page.kit.picker.onRePicker(true)
                 }
@@ -311,7 +311,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             window.shyLog(oc, 'notifyView')
             if (oc.new_value.blocks?.length > 0) {
                 var bs = page.findAll(g => oc.new_value.blocks.some(s => s.blockId == g.id));
-                page.addUpdateEvent(async () => {
+                page.addActionCompletedEvent(async () => {
                     page.kit.collaboration.renderBlocks(action.userid, bs);
                 })
             }
@@ -328,7 +328,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
                         endAnchor: endAppear,
                         endOffset: oc.new_value.end.offset
                     });
-                    page.addUpdateEvent(async () => {
+                    page.addActionCompletedEvent(async () => {
                         page.kit.collaboration.renderSelection(action.userid, selection);
                     })
                 }
@@ -341,7 +341,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         if (oc.new_value.blocks?.length > 0) {
             var bs = page.findAll(g => oc.new_value.blocks.some(s => s.blockId == g.id));
             page.kit.anchorCursor.selectBlocks(bs);
-            page.addUpdateEvent(async () => {
+            page.addActionCompletedEvent(async () => {
                 page.kit.anchorCursor.renderAnchorCursorSelection()
             })
         }
@@ -358,7 +358,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
                     endAnchor: endAppear,
                     endOffset: oc.new_value.end.offset
                 });
-                page.addUpdateEvent(async () => {
+                page.addActionCompletedEvent(async () => {
                     page.kit.anchorCursor.renderAnchorCursorSelection()
                     if (!page.kit.anchorCursor.isCollapse && page.kit.anchorCursor.currentSelectedBlocks.length == 0) {
                         await page.kit.writer.onOpenTextTool()
@@ -377,7 +377,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         if (oc.old_value.blocks?.length > 0) {
             var bs = page.findAll(g => oc.old_value.blocks.some(s => s.blockId == g.id));
             page.kit.anchorCursor.selectBlocks(bs);
-            page.addUpdateEvent(async () => {
+            page.addActionCompletedEvent(async () => {
                 page.kit.anchorCursor.renderAnchorCursorSelection()
             })
         }
@@ -386,15 +386,15 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             var startBlock = page.find(x => x.id == oc.old_value.start.blockId);
             if (startBlock) {
                 var startAppear = startBlock.appearAnchors.find(g => g.prop == oc.old_value.start.prop);
-                var endBlock = oc.old_value.end.blockId == startBlock?.id ? startBlock : page.find(x => x.id == oc.old_value.end.blockId);
-                var endAppear = endBlock.appearAnchors.find(g => g.prop == oc.old_value.end.prop);
+                var endBlock = !oc.old_value.end ? undefined : (oc.old_value.end.blockId == startBlock?.id ? startBlock : page.find(x => x.id == oc.old_value.end.blockId));
+                var endAppear = !endBlock ? undefined : endBlock.appearAnchors.find(g => g.prop == oc.old_value.end.prop);
                 page.kit.anchorCursor.setTextSelection({
                     startAnchor: startAppear,
                     startOffset: oc.old_value.start.offset,
                     endAnchor: endAppear,
-                    endOffset: oc.old_value.end.offset
+                    endOffset: !endAppear ? undefined : oc.old_value.end.offset
                 });
-                page.addUpdateEvent(async () => {
+                page.addActionCompletedEvent(async () => {
                     page.kit.anchorCursor.renderAnchorCursorSelection()
                     if (!page.kit.anchorCursor.isCollapse && page.kit.anchorCursor.currentSelectedBlocks.length == 0) {
                         await page.kit.writer.onOpenTextTool()
@@ -405,6 +405,25 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             }
         }
     });
+    snapshoot.registerOperator(OperatorDirective.$pick_blocks, async (operator, source, action) => {
+        var oc: {
+            old_value: { blocks: SnapshootBlockPos[] },
+            new_value: { blocks: SnapshootBlockPos[] }
+        } = operator.data as any;
+        if (oc.new_value.blocks?.length > 0) {
+            var bs = page.findAll(g => oc.old_value.blocks.some(s => s.blockId == g.id));
+            page.kit.picker.pick(bs);
+        }
+    }, async (operator) => {
+        var oc: {
+            old_value: { blocks: SnapshootBlockPos[] },
+            new_value: { blocks: SnapshootBlockPos[] }
+        } = operator.data as any;
+        if (oc.old_value.blocks?.length > 0) {
+            var bs = page.findAll(g => oc.old_value.blocks.some(s => s.blockId == g.id));
+            page.kit.picker.pick(bs);
+        }
+    })
     snapshoot.registerOperator(OperatorDirective.$insert_style, async (operator, source) => {
         var oc: {
             pos: SnapshootBlockStylePos,

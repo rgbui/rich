@@ -11,8 +11,10 @@ import { MouseDragger } from "../../../src/common/dragger";
 import { BlockDirective, BlockRenderRange } from "../../../src/block/enum";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { lst } from "../../../i18n/store";
-import "./style.less";
 import { BlockChildKey, BlockUrlConstant } from "../../../src/block/constant";
+import { UA } from "../../../util/ua";
+import lodash from "lodash";
+import "./style.less";
 
 @url('/board')
 export class Board extends Block {
@@ -60,7 +62,7 @@ export class Board extends Block {
                             matrix: ma.getValues()
                         }, this, 0, BlockChildKey.childs);
                         newBlock.mounted(() => {
-                            this.page.kit.picker.onPicker([newBlock], true)
+                            this.page.kit.picker.onPicker([newBlock], { merge: true })
                         })
                         this.page.snapshoot.merge();
                     },
@@ -72,7 +74,7 @@ export class Board extends Block {
         }
     }
     getVisibleContentBound(): Rect {
-        var el = this.el.querySelector('.sy-border-box>.relative') as HTMLElement;
+        var el = this.el.querySelector('.sy-board-canvas') as HTMLElement;
         return Rect.fromEle(el);
     }
     @prop()
@@ -136,11 +138,16 @@ export class BoardView extends BlockView<Board> {
     }
     mousedown(event: React.MouseEvent) {
         if (this.block.page.kit.boardSelector.isSelector) return;
+        if (event.button !== 2) return;
+        if (UA.isMacOs) return;
+        event.stopPropagation();
         var ele = event.target as HTMLElement;
         if (event.target === event.currentTarget || ele.classList.contains('sy-board-content')) {
+          
             MouseDragger({
                 event,
-                moving: async (e, d, end) => {
+                moving: async (e, d, end, isM) => {
+                    if (!isM) return;
                     var dx = e.clientX - event.clientX;
                     var dy = e.clientY - event.clientY;
                     var ma = new Matrix();
@@ -156,23 +163,74 @@ export class BoardView extends BlockView<Board> {
             })
         }
     }
+    wheel = (event: WheelEvent) => {
+        if (event.ctrlKey == true) {
+            // event.preventDefault();
+            // if (this.lastTriggerTime && (Date.now() - this.lastTriggerTime < 60)) return;
+            // this.lastTriggerTime = Date.now();
+            // var ma = this.matrix.clone();
+            // var ro = this.globalMatrix.inverseTransform(new Point(event.pageX, event.pageY));
+            // if (event.deltaY > 0) {
+            //     //缩小
+            //     ma.scale(0.8, 0.8, ro);
+            //     if (ma.getScaling().x * 100 < 1) return;
+            //     this.onSetMatrix(ma);
+            // }
+            // else {
+            //     //放大
+            //     ma.scale(1.2, 1.2, ro);
+            //     if (ma.getScaling().x * 100 > 300) return;
+            //     this.onSetMatrix(ma);
+            // }
+        }
+        else {
+            var g = (x) => {
+                if (x > 0) return 0 - x;
+                else if (x < 0) return 0 - x;
+                else return 0;
+            }
+            var r = 1 / 1;
+            var dx = g(event.deltaX) * r;
+            var dy = g(event.deltaY) * r;
+            this.block.moveMatrix.translate(dx, dy);
+            this.forceUpdate();
+            this.saveMatrix()
+        }
+    }
+    saveMatrix = lodash.debounce(() => {
+        var ma = this.block.moveMatrix;
+        if (lodash.isEqual(ma.getValues(), new Matrix().getValues())) return;
+        this.block.moveMatrix = new Matrix();
+        var oa = this.block.boardOffsetMatrix.clone().append(ma);
+        this.block.onUpdateProps({ boardOffsetMatrix: oa })
+    }, 1000)
+    canvasEl: HTMLElement;
+    didMount(): void {
+        this.canvasEl = this.block.el.querySelector('.sy-board-canvas');
+        this.canvasEl.addEventListener('wheel', this.wheel, { passive: true})
+    }
+    willUnmount(): void {
+        this.canvasEl.removeEventListener('wheel', this.wheel)
+    }
     renderView() {
         var style: CSSProperties = {
             ... (this.block.boardOffsetMatrix.appended(this.block.moveMatrix)).getCss()
         }
         return <div className="sy-board"
             style={this.block.visibleStyle}>
-            <div className={'sy-border-box ' + (this.block.border == 'border' ? "border-light" : "border-light-hover")}
+            <div className={'sy-board-box '}
                 style={this.block.contentStyle}>
-                <div className="relative" onMouseDown={e => {
-                    this.mousedown(e)
-                }} style={{
-                    height: this.block.viewHeight,
-                    overflow: 'hidden'
-                }}>
+                <div className={"relative sy-board-canvas round " + (this.block.border == 'border' ? "border-light" : "border-light-hover")}
+                    // onWheel={e => this.wheel(e)}
+                    onMouseDown={e => {
+                        this.mousedown(e)
+                    }} style={{
+                        height: this.block.viewHeight,
+                        overflow: 'hidden'
+                    }}>
                     <div className="sy-board-content " style={style} ><ChildsArea childs={this.block.childs}></ChildsArea>
                     </div>
-                    {this.block.isCanEdit() && <Tip text={'拖动调整高度'}><div className="sy-board-resize visible" onMouseDown={e => this.onResize(e)}></div></Tip>}
+                    {this.block.isCanEdit() && <Tip text={'拖动调整高度'}><div className="sy-board-resize visible round item-light-hover" onMouseDown={e => this.onResize(e)}></div></Tip>}
                 </div>
             </div>
             {this.renderComment()}

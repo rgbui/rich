@@ -75,15 +75,15 @@ export class Pattern {
         if (st) {
             var old = st.get();
             st.merge(BlockCss.createBlockCss(Object.assign({ cssName }, style)));
-            if (this.block.page.snapshoot.canRecord) {
+            if (this.block.page.snapshoot.canRecord && !lodash.isEqual(old, st.get())) {
                 await this.block.page.onNotifyEditBlock(this.block);
                 this.block.page.snapshoot.record(OperatorDirective.$merge_style, {
                     pos: st.pos,
                     old_value: old,
                     new_value: st.get()
                 }, this.block)
+                this.block.page.notifyActionBlockUpdate(this.block);
             }
-            this.block.page.addBlockUpdate(this.block);
         }
         else {
             await this.createStyle({ name: name, cssList: [Object.assign({ cssName }, style)] });
@@ -99,7 +99,7 @@ export class Pattern {
             old_value: old,
             new_value: style.get()
         }, this.block)
-        this.block.page.addBlockUpdate(this.block);
+        this.block.page.notifyActionBlockUpdate(this.block);
     }
     async deleteStyle(styleId: string) {
         var style = this.styles.find(g => g.id == styleId);
@@ -111,7 +111,7 @@ export class Pattern {
             }, this.block);
             this.styles.remove(g => g.id == styleId);
         }
-        this.block.page.addBlockUpdate(this.block);
+        this.block.page.notifyActionBlockUpdate(this.block);
     }
     async createStyle(styleData: Record<string, any>) {
         var sty = new BlockStyleCss(styleData, this);
@@ -121,7 +121,7 @@ export class Pattern {
             pos: sty.pos,
             data: sty.get()
         }, this.block);
-        this.block.page.addBlockUpdate(this.block);
+        this.block.page.notifyActionBlockUpdate(this.block);
     }
     async setFontStyle(style: Partial<FontCss>) {
         await this.setStyle(BlockCssName.font, style);

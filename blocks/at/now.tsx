@@ -10,7 +10,7 @@ export class ShyNowDate extends Block {
     display = BlockDisplay.inline;
     loadTime() {
         this.time = setInterval(() => {
-            this.forceUpdate()
+            this.forceManualUpdate()
         }, 1000) as any;
     }
     time: number;

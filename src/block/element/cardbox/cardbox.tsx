@@ -57,7 +57,7 @@ export class CardBox extends Block {
             };
             var pa = this.parent;
             var nb = await pa.appendBlock(d, this.at + 1, this.parentKey);
-            this.page.addUpdateEvent(async () => {
+            this.page.addActionAfterEvent(async () => {
                 await util.delay(100);
                 var head = nb.find(g => g.url == BlockUrlConstant.Head)
                 this.page.kit.anchorCursor.onFocusBlockAnchor(head, { merge: true, render: true, last: true })
@@ -77,11 +77,11 @@ export class CardBox extends Block {
             };
             var pa = this.parent;
             var nb = await pa.appendBlock(d, this.at + 1, this.parentKey);
-            this.page.addUpdateEvent(async () => {
+            //this.page.addActionCompletedEvent(async () => {
                 // await util.delay(100);
                 // var head = nb.find(g => g.url == BlockUrlConstant.Head)
                 // this.page.kit.anchorCursor.onFocusBlockAnchor(head, { merge: true, render: true, last: true })
-            })
+           // })
         });
     }
     async onOpenCardStyle(event?: React.MouseEvent) {

@@ -16,8 +16,23 @@ export function BoardDrag(
         moveEnd?(ev, isMove, data): void
     }
 ) {
-
     console.log('board drag...');
+    if (kit.boardSelector.visible == false || !kit.page.isBoard) {
+        if (!kit.page.isBoard) {
+            var bb = block.closest(x => x.isBoardBlock);
+            if (bb) {
+                kit.boardSelector.onShow(bb?.el, {
+                    block: bb,
+                    page: kit.page
+                })
+            }
+            else {
+                console.warn('not found board block...')
+                return;
+            }
+        }
+        else kit.boardSelector.onShow(kit.page.root, { page: kit.page })
+    }
     /**
      * 先判断toolBoard工具栏有没有被使用，
      * 如果有使用，则根据工具栏来进行下一步操作
@@ -46,7 +61,7 @@ export function BoardDrag(
     async function createCopyBlocks() {
         await kit.page.onAction('createAltCopyBlocks', async () => {
             var bs = await kit.picker.blocks.asyncMap(async c => await c.clone());
-            kit.page.addUpdateEvent(async () => {
+            kit.page.addActionAfterEvent(async () => {
                 kit.picker.onPicker(bs);
             })
         })
@@ -54,6 +69,7 @@ export function BoardDrag(
     var rect = kit.page.bound;
     var moveSize = 50;
     var feel = 50;
+    var oldBlockPickers = kit.picker.blocks.map(b => b);
     MouseDragger({
         event,
         dis: 5,
@@ -112,7 +128,7 @@ export function BoardDrag(
                 kit.anchorCursor.selector.setMove(ed);
                 var bs = gm.findBlocksByRect(new Rect(downPoint, ed));
                 bs = kit.page.getAtomBlocks(bs);
-                kit.picker.onPicker(bs);
+                kit.picker.viewPick(bs);
             }
         },
         async moveEnd(ev, isMove, data) {
@@ -123,10 +139,11 @@ export function BoardDrag(
                 }
                 else {
                     kit.anchorCursor.selector.close();
+                    kit.picker.onUpdatePicker(oldBlockPickers, kit.picker.blocks);
                 }
                 if (gm) gm.over();
-                if (kit.picker.blocks.length > 0)
-                    await openBoardEditTool(kit);
+                // if (kit.picker.blocks.length > 0)
+                //     await openBoardEditTool(kit);
             }
             else {
                 if (gm) gm.over();
@@ -151,6 +168,7 @@ export function BoardDrag(
                             kit.anchorCursor.onFocusBlockAnchor(bl, { last: true })
                         }
                     }
+                    closeBoardEditTool()
                 }
                 else if (kit.picker.blocks.length > 0) await openBoardEditTool(kit);
                 else closeBoardEditTool()

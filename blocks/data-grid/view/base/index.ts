@@ -89,7 +89,7 @@ export class DataGridView extends Block {
     isLoadingData: boolean = false;
     async onLoadingAction(fn: () => Promise<void>) {
         this.isLoadingData = true;
-        if (this.isMounted) this.forceUpdate()
+        if (this.isMounted) this.forceManualUpdate()
         try {
             await fn();
         }
@@ -97,7 +97,7 @@ export class DataGridView extends Block {
             console.error(ex)
         }
         this.isLoadingData = false;
-        if (this.isMounted) this.forceUpdate()
+        if (this.isMounted) this.forceManualUpdate()
     }
     isEmoji(field: Field, rowId: string) {
         var isOp = this.userEmojis[field.name]?.includes(rowId)
@@ -475,7 +475,7 @@ export class DataGridView extends Block {
                 }
             }
         ]);
-        this.forceUpdate()
+        this.forceManualUpdate()
     }
     get elementUrl() {
         return getElementUrl(ElementType.SchemaView, this.schemaId, this.syncBlockId);

@@ -43,7 +43,7 @@ export class ShyTag extends Block {
             var g = await channel.get('/tag/query', { id: this.refLinks[0].tagId, ws: this.page.ws });
             if (g.ok) {
                 this.refLinks[0].tagText = g.data?.tag?.tag;
-                this.forceUpdate()
+                this.forceManualUpdate()
             }
         }
     }

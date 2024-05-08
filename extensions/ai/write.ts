@@ -130,7 +130,7 @@ export class AiWrite {
                             if (block.isContentEmpty) await block.delete()
                             lodash.remove(this.writedBlocks, c => c === block);
                             this.block = bs.last();
-                            this.page.addUpdateEvent(async () => {
+                            this.page.addActionCompletedEvent(async () => {
                                 this.tool.updatePosition({ pos: { relativeEleAutoScroll: this.block.el, roundArea: this.block.getVisibleBound() } })
                                 await util.delay(100)
                                 resolve(true);
@@ -385,7 +385,7 @@ export class AiWrite {
                         }), at + 1, block.parent.hasSubChilds ? 'subChilds' : 'childs');
                         this.writedBlocks.push(...bs);
                         this.block = bs.last();
-                        this.page.addUpdateEvent(async () => {
+                        this.page.addActionCompletedEvent(async () => {
                             this.aa = this.block.appearAnchors.last()
                             if (this.aa) {
                                 this.aa.endCollapse();
@@ -466,7 +466,7 @@ export class AiWrite {
                 this.page.onAction('AIWriteTableRow', async () => {
                     var block = this.block;
                     var bs = await block.appendArrayBlockData(createRows, block.childs.length, 'childs');
-                    this.page.addUpdateEvent(async () => {
+                    this.page.addActionCompletedEvent(async () => {
                         this.tool.updatePosition({ pos: { relativeEleAutoScroll: this.block.el, roundArea: this.block.getVisibleBound() } })
                         await util.delay(100)
                         resolve(bs.last())

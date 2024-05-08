@@ -28,7 +28,7 @@ export class FieldComment extends OriginField {
                 }
                 else v = { count: r, format: 'comment', users: [this.page.user] };
                 this.value = v;
-                this.forceUpdate();
+                this.forceManualUpdate();
             }
         }
         if (this.dataGrid) await this.dataGrid.onDataGridTool(fn)

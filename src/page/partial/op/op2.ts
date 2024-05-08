@@ -24,6 +24,7 @@ export class Page$Operator2 {
     */
     async createBlock(this: Page, url: string, data: Record<string, any>, parent: Block, at?: number, childKey?: string) {
         var block = await BlockFactory.createBlock(url, this, data, parent);
+        block.needUpdate=true;
         await this.onNotifyCreateBlock(block);
         if (parent) {
             if (typeof childKey == 'undefined') childKey = block.isLine ? BlockChildKey.childs : (parent?.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
@@ -41,8 +42,8 @@ export class Page$Operator2 {
                 data: await block.get()
             }, block);
             this.monitorBlockOperator(block, 'create');
-            this.addBlockUpdate(parent);
-            this.addBlockChange(block);
+            this.notifyActionBlockUpdate(parent);
+            this.notifyActionBlockSync(block);
         }
         else {
             if (typeof at == 'undefined')
@@ -54,7 +55,7 @@ export class Page$Operator2 {
                 data: await block.get()
             }, block);
             this.monitorBlockOperator(block, 'create');
-            this.addPageUpdate();
+            this.notifyActionPageUpdate();
         }
         await block.loadSyncBlock();
         return block;
@@ -145,7 +146,7 @@ export class Page$Operator2 {
         return bs;
     }
     async onCombineLikeTextSpan(this: Page, block: Block, willCombineBlock: Block, after?: () => Promise<void>) {
-        await this.onAction(ActionDirective.combineTextSpan, async () => {
+        await this.onAction(ActionDirective.onCombineTextSpan, async () => {
             if (willCombineBlock.childs.length > 0) {
                 if (block.content && block.childs.length == 0) {
                     await this.createBlock(BlockUrlConstant.Text, { content: block.content }, block, 0);
@@ -206,13 +207,13 @@ export class Page$Operator2 {
             if (this.keyboardPlate.isAlt()) {
                 var blockDatas = await blocks.asyncMap(async b => b.cloneData());
                 var bs = await to.dropBlockDatas(blockDatas, direction);
-                this.addUpdateEvent(async () => {
+                this.addActionAfterEvent(async () => {
                     this.kit.anchorCursor.onSelectBlocks(bs, { render: true, merge: true });
                 })
             }
             else {
                 await to.drop(blocks, direction);
-                this.addUpdateEvent(async () => {
+                this.addActionAfterEvent(async () => {
                     this.kit.anchorCursor.onSelectBlocks(blocks, { render: true, merge: true });
                 })
             }
@@ -248,7 +249,7 @@ export class Page$Operator2 {
         await this.onAction(ActionDirective.onPageUpdateProps, async () => {
             await this.updateProps(props);
             if (typeof callback == 'function') callback();
-            if (isUpdate) this.addPageUpdate();
+            if (isUpdate) this.notifyActionPageUpdate();
         });
     }
     async onUpdatePageData(this: Page, data: Record<string, any>) {
@@ -270,7 +271,7 @@ export class Page$Operator2 {
             var tb = this.find(c => c.url == BlockUrlConstant.Title);
             if (tb) {
                 await (tb as Title).loadPageInfo();
-                tb.forceUpdate()
+                tb.forceManualUpdate()
             }
             if (this.pe.type == ElementType.SchemaData) {
                 if (!this.openPageData?.pre && this.formRowData?.id) {
@@ -310,7 +311,7 @@ export class Page$Operator2 {
             var to = blocks.last().at;
             var pa = blocks[0].parent;
             var newBlocks = await pa.appendArrayBlockData(bs, Math.max(at, to) + 1, blocks.first().parentKey);
-            this.addUpdateEvent(async () => {
+            this.addActionCompletedEvent(async () => {
                 this.kit.anchorCursor.onSelectBlocks(newBlocks, { render: true, merge: true });
             })
         });

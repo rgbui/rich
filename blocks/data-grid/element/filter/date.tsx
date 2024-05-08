@@ -32,7 +32,7 @@ export class FilterFieldDate extends OriginFilterField {
         if (typeof pickDate != 'undefined') {
             this[key] = pickDate;
             if (this.refBlock) this.refBlock.onSearch()
-            this.forceUpdate()
+            this.forceManualUpdate()
         }
     }
     dateSelectValue: '' | 'today' | 'yesterday' | 'tomorrow' | 'thisWeek' | 'lastWeek' | 'nextWeek' | 'thisMonth' | 'lastMonth' | 'nextMonth' | 'thisYear' | 'lastYear' | 'nextYear' = ''
@@ -146,7 +146,7 @@ export class FilterFieldDate extends OriginFilterField {
         this.startDate = null;
         this.endDate = null;
         if (this.refBlock) this.refBlock.onSearch()
-        this.forceUpdate()
+        this.forceManualUpdate()
     }
     async onGetContextMenus() {
         var rs = await super.onGetContextMenus();

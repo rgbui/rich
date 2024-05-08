@@ -66,14 +66,14 @@ export class TableStoreCalendar extends DataGridView {
         var r = day.subtract(1, 'month');
         this.date = r.toDate().getTime();
         await this.loadData();
-        this.forceUpdate();
+        this.forceManualUpdate();
     }
     async onNextMonth() {
         var day = dayjs(this.date);
         var r = day.subtract(-1, 'month');
         this.date = r.toDate().getTime();
         await this.loadData();
-        this.forceUpdate();
+        this.forceManualUpdate();
     }
     async onAddCalendar(day) {
         await this.onOpenAddForm(undefined, undefined, undefined, { formData: { [this.dateField.name]: day.toDate() } });

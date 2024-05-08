@@ -30,7 +30,7 @@ export class FilterFieldOption extends OriginFilterField {
         if (vs.length == 0) vs = [''];
         this.values = vs;
         if (this.refBlock) await this.refBlock.onSearch();
-        this.forceUpdate()
+        this.forceManualUpdate()
     }
     get filters() {
         var vs = lodash.cloneDeep(this.values);
@@ -122,7 +122,7 @@ export class FilterFieldOption extends OriginFilterField {
                             }
                         });
                         if (force)
-                            this.forceUpdate()
+                            this.forceManualUpdate()
                         return;
                     }
                 }

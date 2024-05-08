@@ -24,7 +24,7 @@ export class FieldUser extends OriginFormField {
         });
         if (Array.isArray(rs)) {
             this.value = rs;
-            this.forceUpdate();
+            this.forceManualUpdate();
         }
     }
 }

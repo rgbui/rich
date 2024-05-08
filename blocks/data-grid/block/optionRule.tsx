@@ -43,7 +43,7 @@ export class OptionDefineRule extends Block {
         if (vs.length == 0) vs = [''];
         this.values = vs;
         if (this.refBlock) await this.refBlock.onSearch();
-        this.forceUpdate()
+        this.forceManualUpdate()
     }
     async onGetContextMenus() {
         if (this.isFreeBlock) {

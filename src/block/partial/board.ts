@@ -215,7 +215,7 @@ export class Block$Board {
                 block.fixedHeight = bh;
                 block.fixedWidth = bw;
                 block.updateRenderLines();
-                block.forceUpdate();
+                block.forceManualUpdate();
                 block.page.kit.picker.view.forceUpdate();
                 if (isEnd) {
                     block.page.onAction(ActionDirective.onResizeBlock, async () => {
@@ -283,12 +283,12 @@ export class Block$Board {
         else if (name == 'fontColor') {
             await this.pattern.setFontStyle({ color: value });
         }
-        else if (name == 'fillColor') {
+        // else if (name == 'fillColor') {
 
-        }
-        else if (name == 'fillOpacity') {
+        // }
+        // else if (name == 'fillOpacity') {
 
-        }
+        // }
         else return false;
         return true
     }
@@ -299,15 +299,15 @@ export class Block$Board {
     updateRenderLines(this: Block, isSelfUpdate?: boolean, isAll?: boolean) {
         if (this.isFrame) {
             this.childs.each(b => {
-                b.lines.each(line => { line.forceUpdate() })
+                b.lines.each(line => { line.forceManualUpdate() })
             })
         }
         else {
             if (this.lines.length > 0) {
-                this.lines.each(line => { line.forceUpdate() })
+                this.lines.each(line => { line.forceManualUpdate() })
             }
         }
-        if (isSelfUpdate) this.forceUpdate()
+        if (isSelfUpdate) this.forceManualUpdate()
     }
     isBoardCanMove(this: Block) {
         return true;

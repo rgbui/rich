@@ -455,7 +455,7 @@ export class Page$Operator {
                     lock: this.locker?.lock ? false : true
                 }
             });
-            this.addPageUpdate();
+            this.notifyActionPageUpdate();
         })
     }
     async onExport(this: Page) {
@@ -623,7 +623,7 @@ export class Page$Operator {
                 }
             })
             await channel.air('/page/update/info', { id: this.pageInfo?.id, pageInfo: { pageType: this.pageLayout.type } });
-            this.addPageUpdate();
+            this.notifyActionPageUpdate();
         }, { immediate: true })
     }
     async onTurnToDoc(this: Page) {
@@ -642,7 +642,7 @@ export class Page$Operator {
                 }
             })
             await channel.air('/page/update/info', { id: this.pageInfo?.id, pageInfo: { pageType: this.pageLayout.type } });
-            this.addPageUpdate();
+            this.notifyActionPageUpdate();
         }, { immediate: true })
     }
 

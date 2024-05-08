@@ -320,6 +320,22 @@ export class Page$ContextMenu {
 
             ];
         }
+        if ([PageLayoutType.doc, PageLayoutType.ppt, PageLayoutType.board].includes(this.pageLayout.type)) {
+            var sp = this.statPage();
+            if (sp.wordCount > 0) {
+                items.push({
+                    type: MenuItemType.divide,
+                });
+                items.push({
+                    type: MenuItemType.text,
+                    text: lst('总字数： ') + sp.wordCount
+                });
+                items.push({
+                    type: MenuItemType.text,
+                    text: lst('块个数：') + sp.blockCount
+                });
+            }
+        }
         if (this.pageInfo?.editor) {
             items.push({
                 type: MenuItemType.divide,
@@ -348,6 +364,7 @@ export class Page$ContextMenu {
                 text: lst('创建人 ') + re.data.user.name
             });
         }
+
         if (items.length == 0) return;
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, items, {
             overflow: 'visible',
@@ -374,7 +391,7 @@ export class Page$ContextMenu {
                             await this.createBlock(BlockUrlConstant.Title, {}, this.views[0], 0, 'childs');
                         }
                         await this.updateProps({ hideDocTitle: item.checked ? false : true })
-                        this.addPageUpdate();
+                        this.notifyActionPageUpdate();
                     });
                 }
                 else if (item.name == 'nav') {
@@ -537,7 +554,7 @@ export class Page$ContextMenu {
                 this.onAction('setFontStyle', async () => {
                     await blocks.eachAsync(async (block) => {
                         await block.pattern.setFontStyle({ color: item.value });
-                        this.addBlockUpdate(block);
+                        this.notifyActionBlockUpdate(block);
                     })
                 })
                 break;
@@ -545,7 +562,7 @@ export class Page$ContextMenu {
                 this.onAction('setFillStyle', async () => {
                     await blocks.eachAsync(async (block) => {
                         await block.pattern.setFillStyle({ mode: 'color', color: item.value })
-                        this.addBlockUpdate(block);
+                        this.notifyActionBlockUpdate(block);
                     })
                 })
                 break;

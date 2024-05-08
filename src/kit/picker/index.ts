@@ -13,7 +13,7 @@ import { BoardBlockSelector, BoardPointType } from "../../block/partial/board";
 import { MouseDragger } from "../../common/dragger";
 import { Matrix } from "../../common/matrix";
 import { Point, PointArrow, Rect } from "../../common/vector/point";
-import { ActionDirective } from "../../history/declare";
+import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { openBoardEditTool } from "../operator/board/edit";
 import { BlockPickerView } from "./view";
 import { setBoardBlockCache } from "../../page/common/cache";
@@ -36,15 +36,64 @@ export class BlockPicker {
         start: Point;
         end: Point;
     }[] = [];
-    onPicker(blocks: Block[], openEditTool = false) {
+    async onPicker(blocks: Block[], options?: { disabledOpenTool?: boolean, merge?: boolean }) {
+        await this.kit.page.onAction(ActionDirective.onBoardPickBlocks, async () => {
+            if (options?.merge) this.kit.page.snapshoot.merge();
+            this.pick(blocks, { disabledOpenTool: options?.disabledOpenTool });
+        })
+    }
+    pick(blocks: Block[], options?: { disabledOpenTool?: boolean }) {
+        var old_value = this.blocks.map(b => b.pos);
         this.blocks = blocks;
-        this.alighLines = [];
-        this.visible = true;
+        var new_value = this.blocks.map(b => b.pos);
+        if (lodash.isEqual(old_value, new_value)) return;
+        this.kit.page.snapshoot.record(OperatorDirective.$pick_blocks,
+            {
+                old_value: old_value,
+                new_value: new_value
+            }, this.kit.page)
+        this.kit.page.addActionCompletedEvent(async () => {
+            this.alighLines = [];
+            if (this.blocks.length > 0)
+                this.visible = true;
+            else this.visible = false;
+            if (this.view)
+                this.view.forceUpdate();
+            if (options?.disabledOpenTool !== true && this.blocks.length > 0) {
+                openBoardEditTool(this.kit);
+            }
+            if (this.blocks.length == 0) {
+                closeBoardEditTool();
+            }
+        })
+        /**
+         * 如果白板中有批量选中的块，
+         * 那么文档编辑中不能有批量选中的块
+         */
+        if (this.blocks.length > 0) {
+            if (this.kit.anchorCursor.currentSelectedBlocks.length > 0) {
+                this.kit.anchorCursor.selectBlocks([])
+            }
+        }
+    }
+    viewPick(blocks: Block[]) {
+        this.blocks = blocks;
+        if (this.blocks.length > 0)
+            this.visible = true;
+        else this.visible = false;
         if (this.view)
             this.view.forceUpdate();
-        if (openEditTool == true) {
-            openBoardEditTool(this.kit);
+    }
+    hasCursor() {
+        var sel = window.getSelection();
+        if (sel.focusNode) {
+            if (this.blocks.some(b => b.el && b.el.contains(sel.focusNode))) return true;
         }
+        return false;
+    }
+    async onUpdatePicker(oldBlocks: Block[], newBlocks: Block[], options?: { disabledOpenTool?: boolean, merge?: boolean }) {
+        this.blocks = oldBlocks;
+        await this.onPicker(newBlocks, options);
     }
     onRePicker(openEditTool = false) {
         this.alighLines = [];
@@ -57,18 +106,15 @@ export class BlockPicker {
             openBoardEditTool(this.kit);
         }
     }
-    onShiftPicker(blocks: Block[]) {
+    async onShiftPicker(blocks: Block[], options?: { disabledOpenTool?: boolean, merge?: boolean }) {
+        var ns = this.blocks.map(b => b);
         blocks.each(b => {
-            if (!this.blocks.some(g => g == b)) this.blocks.push(b)
+            if (!ns.some(g => g == b)) ns.push(b)
         })
-        this.visible = true;
-        this.view.forceUpdate();
+        await this.onPicker(ns, options);
     }
-    onCancel() {
-        this.visible = false;
-        this.blocks = [];
-        if (this.view) this.view.forceUpdate();
-        closeBoardEditTool();
+    async onCancel() {
+        await this.onPicker([]);
     }
     onMoveStart(point: Point) {
         closeBoardEditTool();
@@ -163,10 +209,9 @@ export class BlockPicker {
                     isMounted = true;
                 });
                 self.kit.boardLine.onStartConnectOther(lineBlock);
-                lineBlock.parent.forceUpdate();
+                lineBlock.parent.forceManualUpdate();
             })
         }
-
         MouseDragger({
             event,
             moveStart() {
@@ -177,7 +222,7 @@ export class BlockPicker {
                 if (lineBlock) {
                     var tr = gm.inverseTransform(Point.from(ev));
                     (lineBlock as any).to = { x: tr.x, y: tr.y };
-                    if (isMounted) lineBlock.forceUpdate();
+                    if (isMounted) lineBlock.forceManualUpdate();
                 }
             },
             async moveEnd(ev, isMove, data) {
@@ -271,7 +316,7 @@ export class BlockPicker {
                         newBlock = cloneBlock;
                     })
                 }
-                if (isMounted) lineBlock.forceUpdate()
+                if (isMounted) lineBlock.forceManualUpdate()
                 self.kit.boardLine.onEndConnectOther();
                 if (newBlock) self.kit.picker.onPicker([newBlock])
                 else self.kit.picker.onPicker([lineBlock])
@@ -291,7 +336,7 @@ export class BlockPicker {
                 po = { x: tr.x, y: tr.y } as PortLocation;
                 block.points.insertAt(selector.data.at, po);
                 self.onRePicker();
-                block.forceUpdate();
+                block.forceManualUpdate();
             },
             move(ev, data) {
                 if (po) {
@@ -299,7 +344,7 @@ export class BlockPicker {
                     po.x = tr.x;
                     po.y = tr.y;
                     self.onRePicker();
-                    block.forceUpdate();
+                    block.forceManualUpdate();
                 }
             },
             async moveEnd(ev, isMove, data) {
@@ -307,7 +352,7 @@ export class BlockPicker {
                     var ps = block.points.find(g => g != po);
                     block.onManualUpdateProps({ points: ps }, { points: block.points }, { range: BlockRenderRange.self });
                     self.onRePicker();
-                    block.forceUpdate();
+                    block.forceManualUpdate();
                     await openBoardEditTool(self.kit);
                 }
             }
@@ -358,7 +403,7 @@ export class BlockPicker {
                     console.log(block.points);
                 }
                 self.onRePicker();
-                block.forceUpdate();
+                block.forceManualUpdate();
             },
             move(ev, data) {
                 var newTr = gm.inverseTransform(Point.from(ev));
@@ -413,7 +458,7 @@ export class BlockPicker {
                     console.log(block.points);
                 }
                 self.onRePicker();
-                block.forceUpdate();
+                block.forceManualUpdate();
             },
             async moveEnd(ev, isMove, data) {
                 if (isMove) {
@@ -487,7 +532,7 @@ export class BlockPicker {
                         await block.onManualUpdateProps({ points: lodash.cloneDeep(oldSegs.map(s => s.point)) }, { points: block.points }, { range: BlockRenderRange.self });
                     }
                     self.onRePicker();
-                    block.forceUpdate();
+                    block.forceManualUpdate();
                     await openBoardEditTool(self.kit);
                 }
             }
@@ -526,7 +571,7 @@ export class BlockPicker {
                         self.onRePicker();
                         return;
                     }
-                    block.forceUpdate();
+                    block.forceManualUpdate();
                     self.view.forceUpdate();
                 }
             });
@@ -558,7 +603,7 @@ export class BlockPicker {
                         self.onRePicker();
                         return;
                     }
-                    block.forceUpdate();
+                    block.forceManualUpdate();
                     self.view.forceUpdate();
                 }
             });

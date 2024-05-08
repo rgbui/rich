@@ -146,7 +146,7 @@ export class Page extends Events<PageDirective> {
         this.pageVisibleWidth = options?.width;
         this.pageVisibleHeight = options?.height;
         if (this.view)
-            this.view.forceUpdate()
+            this.view.forceManualUpdate()
     }
     fragment: DocumentFragment;
     /**
@@ -192,7 +192,7 @@ export class Page extends Events<PageDirective> {
                 if (this.pageInfo?.text) {
                     var title = this.find(g => g.url == BlockUrlConstant.Title) as Title;
                     if (title) {
-                        if (this.isCanEdit) title.onEmptyTitleFocusAnchor();
+                        if (this.isCanEdit) title.onFocusPageTitle();
                     }
                 }
                 this.isPageOff = false;
@@ -217,7 +217,7 @@ export class Page extends Events<PageDirective> {
             if (options && (options?.width !== this.pageVisibleWidth || options?.height !== this.pageVisibleHeight)) {
                 this.pageVisibleWidth = options?.width;
                 this.pageVisibleHeight = options?.height;
-                this.view.forceUpdate(() => { isForceUpdate = true; nextAction() })
+                this.view.forceManualUpdate(() => { isForceUpdate = true; nextAction() })
             } else nextAction();
         }
         catch (ex) {
@@ -403,7 +403,7 @@ export class Page extends Events<PageDirective> {
     async forceUpdate() {
         return new Promise((resolve, reject) => {
             if (this.view)
-                return this.view.forceUpdate(() => {
+                return this.view.forceManualUpdate(() => {
                     resolve(true);
                 })
             else resolve(false)

@@ -9,7 +9,7 @@ export class FieldFormula extends OriginField {
     cacValue;
     async didMounted() {
         this.cacValue = await cacFormulaValue(this.page, this.dataGrid.schema, this.field, this.item.dataRow);
-        this.forceUpdate()
+        this.forceManualUpdate()
     }
 }
 @view('/field/formula')

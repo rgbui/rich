@@ -66,7 +66,7 @@ export class PageOutLine extends Block {
         }
         if (this.hoverId !== hoverId) {
             this.hoverId = hoverId;
-            this.forceUpdate();
+            this.forceManualUpdate();
         }
     }
     cacOutLines() {
@@ -140,7 +140,7 @@ export class PageOutLine extends Block {
         if (ou) {
             ou.html = block.el ? block.el.innerText : undefined;
             ou.text = block.getBlockContent();
-            if (forceUpdate) this.forceUpdate()
+            if (forceUpdate) this.forceManualUpdate()
         }
     }
     get handleBlock() {
@@ -195,7 +195,7 @@ export class PageOutLine extends Block {
             for (var d in this.spreadCaches) {
                 this.spreadCaches[d] = true;
             };
-            this.forceUpdate();
+            this.forceManualUpdate();
         }
         else if (item.name == 'spreadClose') {
             this.outlines.arrayJsonEach(
@@ -203,7 +203,7 @@ export class PageOutLine extends Block {
             for (var d in this.spreadCaches) {
                 this.spreadCaches[d] = false;
             };
-            this.forceUpdate();
+            this.forceManualUpdate();
         }
         else super.onClickContextMenu(item, event, options)
     }

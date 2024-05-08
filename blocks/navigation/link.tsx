@@ -53,7 +53,7 @@ export class Link extends Block {
             var r = await channel.get('/page/query/info', { ws: this.page.ws, id: link.pageId });
             if (r?.ok) {
                 this.pageInfo = lodash.cloneDeep(r.data);
-                this.forceUpdate();
+                this.forceManualUpdate();
             }
         }
     }

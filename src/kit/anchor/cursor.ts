@@ -76,16 +76,19 @@ export class AnchorCursor {
         if (this.endAnchor)
             this.endOffset = this.endAnchor.getCursorOffset(sel.focusNode, sel.focusOffset);
         this.currentSelectedBlocks = [];
+        this.renderSelectBlocks(this.currentSelectedBlocks);
         if (this.startAnchor && this.endAnchor) {
             this.kit.page.snapshoot.record(OperatorDirective.$change_cursor_offset, { old_value: old, new_value: this.record }, this.kit.page)
-            this.kit.page.addUpdateEvent(async () => {
-                await this.kit.writer.onOpenTextTool()
-            })
+            if (!this.isCollapse)
+                this.kit.page.addActionAfterEvent(async () => {
+                    await this.kit.writer.onOpenTextTool()
+                })
         }
     }
     async onCollapse(anchor: AppearAnchor, offset: number) {
         await this.kit.page.onAction('onCollapse', async () => {
             this.collapse(anchor, offset)
+            forceCloseTextTool()
         })
     }
     collapse(anchor: AppearAnchor, offset: number) {
@@ -96,8 +99,17 @@ export class AnchorCursor {
         this.endAnchor = anchor;
         this.endOffset = offset;
         this.currentSelectedBlocks = [];
+        var nv = this.record;
         this.renderSelectBlocks(this.currentSelectedBlocks);
-        this.kit.page.snapshoot.record(OperatorDirective.$change_cursor_offset, { old_value: old, new_value: this.record }, this.kit.page)
+        if (!lodash.isEqual(old, nv)) {
+            this.kit.page.snapshoot.record(OperatorDirective.$change_cursor_offset, { old_value: old, new_value: nv }, this.kit.page)
+        }
+        if (this.kit.picker.blocks.length > 0) {
+            var ab = anchor.block.closest(x => x.isFreeBlock);
+            if (!(ab && this.kit.picker.blocks.some(s => ab?.id == s.id))) {
+                this.kit.picker.pick([]);
+            }
+        }
     }
     /**
      * 设置文本的选区
@@ -114,12 +126,12 @@ export class AnchorCursor {
             if (operators.combine) await this.combineBlockLines(options);
             this.setTextSelection(options)
             if (operators?.render) {
-                this.kit.page.addUpdateEvent(async () => {
+                this.kit.page.addActionCompletedEvent(async () => {
                     this.renderAnchorCursorSelection()
                 })
             }
-            if (operators?.isOpenTool && !this.isCollapse && this.currentSelectedBlocks.length == 0) {
-                this.kit.page.addUpdateEvent(async () => {
+            if (operators?.isOpenTool !== false && !this.isCollapse && this.currentSelectedBlocks.length == 0) {
+                this.kit.page.addActionAfterEvent(async () => {
                     await this.kit.writer.onOpenTextTool()
                 })
             }
@@ -185,7 +197,17 @@ export class AnchorCursor {
         this.endAnchor = options.endAnchor;
         this.endOffset = options.endOffset;
         this.currentSelectedBlocks = [];
-        this.kit.page.snapshoot.record(OperatorDirective.$change_cursor_offset, { old_value: old, new_value: this.record }, this.kit.page)
+        this.renderSelectBlocks(this.currentSelectedBlocks);
+        var nv = this.record;
+        if (!lodash.isEqual(old, nv)) {
+            this.kit.page.snapshoot.record(OperatorDirective.$change_cursor_offset, { old_value: old, new_value: this.record }, this.kit.page)
+        }
+        if (this.kit.picker.blocks.length > 0) {
+            var ab = options.startAnchor.block.closest(x => x.isFreeBlock);
+            if (!(ab && this.kit.picker.blocks.some(s => ab?.id == s.id))) {
+                this.kit.picker.pick([]);
+            }
+        }
     }
     get record(): { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] } {
         return {
@@ -266,13 +288,6 @@ export class AnchorCursor {
                     var cr = this.startAnchor.cacCollapseFocusPos(this.startOffset);
                     var er = this.endAnchor.cacCollapseFocusPos(this.endOffset);
                     sel.setBaseAndExtent(cr.node, cr.pos, er.node, er.pos);
-                    // if (cr.node) {
-                    //     var c = dom(cr.node).closest(g => (g as any) && typeof (g as any).scrollIntoViewIfNeeded == 'function') as any;
-                    //     if (c) c.scrollIntoViewIfNeeded()
-                    // }
-                    // else {
-                    //     console.log(this.startAnchor, cr.node, er.node, this.endAnchor);
-                    // }
                 }
             }
             else {
@@ -283,13 +298,6 @@ export class AnchorCursor {
                 else {
                     var cr = this.endAnchor.cacCollapseFocusPos(this.endOffset);
                     sel.collapse(cr.node, cr.pos);
-                    // if (cr.node) {
-                    //     var c = dom(cr.node).closest(g => (g as any) && typeof (g as any).scrollIntoViewIfNeeded == 'function') as any;
-                    //     if (c) c.scrollIntoViewIfNeeded()
-                    // }
-                    // else {
-                    //     console.log(this.startAnchor, cr.node, this.endAnchor);
-                    // }
                 }
             }
         }
@@ -338,14 +346,14 @@ export class AnchorCursor {
    * 
    * 将光标移到block中的某个appearAnchor中
    */
-    async onFocusBlockAnchor(block: Block, options?: { store?: boolean, merge?: boolean, render?: boolean, last?: boolean }) {
+    async onFocusBlockAnchor(block: Block, options?: { disabledStore?: boolean, merge?: boolean, render?: boolean, last?: boolean }) {
         await this.kit.page.onAction('onFocusAppearAnchor', async () => {
             if (options?.merge) this.kit.page.snapshoot.merge();
             this.focusBlockAnchor(block, options)
             if (options?.render) {
                 this.renderAnchorCursorSelection()
             }
-        }, { disabledStore: options?.store === false ? true : undefined })
+        }, { disabledStore: options?.disabledStore === true ? true : undefined })
     }
     focusBlockAnchor(block: Block, options?: { render?: boolean, last?: boolean }) {
         var acs = block.appearAnchors;
@@ -403,7 +411,13 @@ export class AnchorCursor {
     selectBlocks(blocks: Block[]) {
         var old = this.record;
         this.currentSelectedBlocks = blocks;
-        this.kit.page.snapshoot.record(OperatorDirective.$change_cursor_offset, { old_value: old, new_value: this.record }, this.kit.page)
+        var nv = this.record;
+        if (!lodash.isEqual(old, nv)) {
+            this.kit.page.snapshoot.record(OperatorDirective.$change_cursor_offset, { old_value: old, new_value: nv }, this.kit.page)
+        }
+        if (this.kit.picker.blocks.length > 0 && this.currentSelectedBlocks.length > 0) {
+            this.kit.picker.pick([]);
+        }
     }
     async onClearSelectBlocks() {
         await this.onSelectBlocks([], { render: true });

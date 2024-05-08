@@ -277,7 +277,7 @@ export class DataGridChart extends DataGridView {
         await this.loadSchema();
         await this.loadData();
         await this.renderEcharts();
-        this.forceUpdate();
+        this.forceManualUpdate();
     }
     myChart
     async onOpenEchartsConfig(rect: Rect) {

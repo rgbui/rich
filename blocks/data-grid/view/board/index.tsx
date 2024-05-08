@@ -127,7 +127,7 @@ export class TableStoreBoard extends DataGridView {
                         await this.schema.rowRemovesByFilter({ [dg.name]: dg.value })
                         dg.count = 0;
                         lodash.remove(this.data, c => c[dg.name] == dg.value);
-                        this.forceUpdate()
+                        this.forceManualUpdate()
                     }
                 }
                 else if (r.item.name == 'deleteGroup') {
@@ -175,12 +175,12 @@ export class TableStoreBoard extends DataGridView {
     async onRemoveRow(id: string) {
         await super.onRemoveRow(id);
         await this.loadData();
-        this.forceUpdate();
+        this.forceManualUpdate();
     }
     async onCloneRow(this: DataGridView, data: any) {
         await super.onCloneRow(data);
         await this.loadData();
-        this.forceUpdate();
+        this.forceManualUpdate();
     }
     @prop()
     cardConfig: CardConfig = {

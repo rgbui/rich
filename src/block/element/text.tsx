@@ -47,22 +47,12 @@ export class TextContent extends Block {
     get isTextContent() {
         return true;
     }
-    /**
-     * text块中有一些属性
-     * 可能需要传递的
-     */
-    get textContentAttributes() {
-        return {
-            link: this.link,
-            comment: this.comment,
-            code: this.code
-        }
-    }
     async getPlain() {
         return this.content;
     }
     /**
-     * 是否是相同的格式
+     * 是否是相同的格式，
+     * 如果是相同的格式会将text合并成一个新的text
      * @param block 
      * @returns 
      */
@@ -93,11 +83,20 @@ export class TextContent extends Block {
         else lc = null;
         return lc;
     }
+    /**
+     * 判断当前的文本块是否为一个空白样式的文本块
+     * 如果不是空白的样式的文本块，那么在尾部输入时会自动创建一个新的文本块
+     */
     get isBlankPlain() {
         if (this.link) return false;
         if (this.code == true) return false;
-        if (this.pattern.getFontStyle()?.color) return false;
-        if (this.pattern.getFillStyle()?.color) return false;
+        var fs = this.pattern.getFontStyle();
+        var fill = this.pattern.getFillStyle();
+        if (fs?.color && fs?.color != 'inherit') return false;
+        if (fill?.color && fill?.color != 'rgba(255,255,255,0)') return false;
+        if (fs?.fontStyle == 'italic') return false;
+        if (fs?.fontWeight == 'bold' || fs?.fontWeight == 700) return false;
+        if (fs?.textDecoration != 'none') return false;
         return true;
     }
     async getHtml() {

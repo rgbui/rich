@@ -37,7 +37,7 @@ export class UserAction {
     syncBlockIds?: string[];
     syncPage?: boolean;
     immediate?: boolean;
-    elementUrl?: string
+    elementUrl?: string;
     constructor() {
         this.id = channel.query('/guid');
     }
@@ -64,15 +64,21 @@ export class UserAction {
     /**
      * 
      * @returns 是否是光标操作,如果是光标操作，光标并没有改变页面的数据，只是改变了光标的位置
+     * 是否为白板选择块
      */
-    isCursorOperator() {
+    isCursorOperatorOrPicker() {
+        var dr = typeof this.directive == 'number' ? UserAction[this.directive] : this.directive;
+        if (dr.indexOf('.') > -1) {
+            dr = dr.split('.')[1];
+        }
         return [
             'onCollapse',
             'onFocusAppearAnchor',
             'onSetTextSelection',
             'onSelectBlocks',
-            'onCatchWindowSelection'
-        ].includes(typeof this.directive == 'number' ? UserAction[this.directive] : this.directive)
+            'onCatchWindowSelection',
+            'onBoardPickBlocks'
+        ].includes(dr)
     }
 }
 

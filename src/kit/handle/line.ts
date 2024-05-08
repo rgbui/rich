@@ -62,7 +62,7 @@ export function DragBlockLine(block: Block, event: React.MouseEvent) {
                                     await appear.block.append(block, 0, 'childs')
                                 }
                             }
-                            block.page.addUpdateEvent(async () => {
+                            block.page.addActionAfterEvent(async () => {
                                 block.page.kit.anchorCursor.onFocusBlockAnchor(block, { merge: true, render: true, last: true })
                             })
                         })

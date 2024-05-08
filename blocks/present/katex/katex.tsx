@@ -19,7 +19,7 @@ export class KatexBlock extends Block {
         event.stopPropagation();
         this.opened = true;
         var old = this.content;
-        this.forceUpdate();
+        this.forceManualUpdate();
         var el = this.el.querySelector('.sy-block-katex-content') as HTMLElement;
         var newValue = await useKatexInput({
             direction: "bottom",
@@ -27,10 +27,10 @@ export class KatexBlock extends Block {
             roundArea: Rect.fromEle(el)
         }, this.content, (data) => {
             this.content = data;
-            this.forceUpdate()
+            this.forceManualUpdate()
         });
         this.opened = false;
-        this.forceUpdate();
+        this.forceManualUpdate();
         if (newValue) {
             await this.onManualUpdateProps({ content: old }, { content: newValue });
         }

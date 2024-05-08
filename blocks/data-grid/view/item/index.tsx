@@ -133,7 +133,7 @@ export class TableStoreItem extends Block {
                     if (cs.length > 0) {
                         for (var i = 0; i < cs.length; i++) {
                             (cs[i] as any).value = r.data.otherCount;
-                            cs[i].forceUpdate();
+                            cs[i].forceManualUpdate();
                         }
                     }
                 }
@@ -277,12 +277,12 @@ export class TableStoreItem extends Block {
                 });
                 if (result.ok) {
                     if (result.data?.isCacSort)
-                        this.page.addUpdateEvent(async () => {
+                        this.page.addActionCompletedEvent(async () => {
                             this.dataGrid.onReloadData()
                         })
                     else {
                         dragRow.dataRow.sort = result.data.sort;
-                        this.page.addUpdateEvent(async () => {
+                        this.page.addActionCompletedEvent(async () => {
                             this.dataGrid.onSortRank()
                         })
                     }
@@ -302,7 +302,7 @@ export class TableStoreItem extends Block {
         var icon = await useIconPicker({ roundArea: Rect.fromEle(this.el) }, this.dataRow.icon);
         if (typeof icon != 'undefined') {
             await this.dataGrid.onRowUpdate(this.dataRow.id, { icon })
-            this.forceUpdate();
+            this.forceManualUpdate();
         }
     }
 }

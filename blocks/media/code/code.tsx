@@ -70,6 +70,10 @@ export class TextCode extends Block {
     async getPlain(this: Block) {
         return this.content;
     }
+    onFocusCursor() {
+        console.log('cm',this.codeMirror);
+        if (this.codeMirror) this.codeMirror.focus();
+    }
     async onChangeMode(name: string) {
         await this.page.onAction('onChangeMode', async () => {
             await this.updateProps({ language: name }, BlockRenderRange.self);
@@ -127,12 +131,12 @@ export class TextCode extends Block {
     getVisibleHandleCursorPoint(): Point {
         if (!this.el) return;
         var r = Rect.fromEle(this.el);
-        return r.leftTop.move(0,22);
+        return r.leftTop.move(0, 22);
     }
 }
 
 @view('/code')
-export class TextCodeView extends BlockView<TextCode>{
+export class TextCodeView extends BlockView<TextCode> {
     async changeLang(e: React.MouseEvent) {
         var vfx = (items: MenuItem[], currentItem: MenuItem) => {
             var item = items.find(g => g.name == 'search_word');
@@ -190,8 +194,8 @@ export class TextCodeView extends BlockView<TextCode>{
     renderView() {
         var label = CodeMirrorModes.filter(g => g.abled).find(g => g.mode == this.block.language)?.label || '纯文本';
         var s = {
-            '--code-mirror-font-size': this.block.page.fontSize ,
-            '--code-mirror-line-height': this.block.page.lineHeight 
+            '--code-mirror-font-size': this.block.page.fontSize,
+            '--code-mirror-line-height': this.block.page.lineHeight
         } as any;
 
         return <div style={this.block.visibleStyle}>

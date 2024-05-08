@@ -27,19 +27,19 @@ export class KatexLine extends Block {
     }
     async renderKatex() {
         this.katexContent = (await loadKatex()).renderToString(this.content, { throwOnError: false });
-        this.forceUpdate()
+        this.forceManualUpdate()
     }
     async open(event: React.MouseEvent) {
         // event.stopPropagation();
         this.opened = true;
         var old = this.content;
-        this.forceUpdate();
+        this.forceManualUpdate();
         var newValue = await useKatexInput({ direction: "bottom", align: 'center', roundArea: Rect.fromEle(this.el) }, this.content, (data) => {
             this.content = data;
-            this.forceUpdate()
+            this.forceManualUpdate()
         });
         this.opened = false;
-        this.forceUpdate();
+        this.forceManualUpdate();
         if (newValue) {
             this.onManualUpdateProps({ cotnent: old }, { content: newValue });
             this.renderKatex()
@@ -47,7 +47,7 @@ export class KatexLine extends Block {
     }
     async onCrash(event: React.MouseEvent) {
         this.page.onTurn(this, BlockUrlConstant.Text, (nb, ob) => {
-            this.page.addUpdateEvent(async () => {
+            this.page.addActionAfterEvent(async () => {
                 this.page.kit.anchorCursor.onFocusBlockAnchor(nb, { render: true, merge: true })
             })
         });

@@ -42,7 +42,7 @@ export class FieldRelation extends OriginField {
                 var ids = r.map(r => r.id);
                 await this.onUpdateCellValue(ids);
                 await this.dataGrid.loadRelationDatas();
-                this.forceUpdate();
+                this.forceManualUpdate();
             }
         }
         if (this.dataGrid) await this.dataGrid.onDataGridTool(fn)

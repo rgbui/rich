@@ -24,7 +24,7 @@ export class FieldAudio extends OriginField {
             if (Array.isArray(rs)) {
                 this.value = rs;
                 this.onUpdateCellValue(this.value);
-                this.forceUpdate();
+                this.forceManualUpdate();
             }
         }
         if (this.dataGrid) await this.dataGrid.onDataGridTool(fn)

@@ -103,7 +103,7 @@ export class Note extends Block {
 }
 
 @view('/note')
-export class NoteView extends BlockView<Note>{
+export class NoteView extends BlockView<Note> {
     renderBg() {
         var bw = this.block.fixedSize.width;
         var size = (8 / 48) * bw + bw - 4;
@@ -139,7 +139,8 @@ export class NoteView extends BlockView<Note>{
                 background: this.block.color,
                 width: this.block.fixedSize.width,
                 height: this.block.fixedSize.height,
-                overflow: 'hidden'
+                overflow: 'hidden',
+                textDecoration: 'inherit'
             }}>
                 <TextSpanArea placeholder={this.block.isFreeBlock ? lst("输入文本") : undefined} block={this.block}></TextSpanArea>
             </div>

@@ -7,7 +7,7 @@ import { BlockDirective, BlockDisplay, BlockRenderRange } from '../enum';
 import { prop, url, view } from '../factory/observable';
 import { MouseDragger } from '../../common/dragger';
 import { ActionDirective } from '../../history/declare';
-import { BlockcolorSvg, HorizontalDistributionSvg, TrashSvg } from '../../../component/svgs';
+import { TrashSvg } from '../../../component/svgs';
 import { Icon } from '../../../component/view/icon';
 import { ToolTip } from '../../../component/view/tooltip';
 import { ls, lst } from '../../../i18n/store';
@@ -201,120 +201,15 @@ export class RowView extends BlockView<Row>{
                             }
                         })
                     }
-                    // {
-                    //     text: lst('颜色'),
-                    //     icon: { name: 'byte', code: 'background-color' },
-                    //     childs: [
-
-                    //     ]
-                    // }
+                   
                 ]
             })
-            // ns.push({
-            //     text: lst('线类型'),
-            //     // name: 'lineType',
-            //     icon: { name: 'bytedance-icon', code: 'align-text-both' },
-            //     // type: MenuItemType.select,
-            //     // value: gap?.type,
-            //     options: [
-            //         {
-            //             name: 'lineType',
-            //             text: lst('实线'),
-            //             value: 'solid',
-            //             checkLabel: gap?.type == 'solid'
-            //         },
-            //         {
-            //             name: 'lineType',
-            //             text: lst('虚线'),
-            //             value: 'dashed',
-            //             checkLabel: gap?.type == 'dashed'
-            //         },
-            //         {
-            //             name: 'lineType',
-            //             text: lst('点虚线'),
-            //             value: 'dotted',
-            //             checkLabel: gap?.type == 'dotted'
-            //         },
-            //         {
-            //             name: 'lineType',
-            //             text: lst('双线'),
-            //             value: 'double',
-            //             checkLabel: gap?.type == 'double'
-            //         },
-            //         {
-            //             name: 'lineType',
-            //             text: lst('双虚线'),
-            //             value: 'double-dashed',
-            //             checkLabel: gap?.type == 'double-dashed'
-            //         }
-            //     ]
-            // });
-            // ns.push({
-            //     text: lst('线宽'),
-            //     icon: { name: 'bytedance-icon', code: 'dividing-line' },
-            //     childs: [
-            //         {
-            //             name: 'lineWidth',
-            //             text: '1',
-            //             value: 1,
-            //             checkLabel: gap?.width == 1
-            //         },
-            //         {
-            //             name: 'lineWidth',
-            //             text: '2',
-            //             value: 2,
-            //             checkLabel: gap?.width == 2
-            //         },
-            //         {
-            //             name: 'lineWidth',
-            //             text: '4',
-            //             value: 4,
-            //             checkLabel: gap?.width == 4
-            //         },
-            //         {
-            //             name: 'lineWidth',
-            //             text: '6',
-            //             value: 6,
-            //             checkLabel: gap?.width == 6
-            //         }
-            //     ]
-            // });
-            // ns.push({ type: MenuItemType.divide })
-            // ns.push({
-            //     text: lst('颜色'),
-            //     icon: { name: 'byte', code: 'background-color' },
-            //     childs: [
-            //         {
-            //             text: lst('线颜色'),
-            //             type: MenuItemType.text
-            //         },
-            //         {
-            //             name: 'color',
-            //             type: MenuItemType.color,
-            //             block: ls.isCn ? false : true,
-            //             options: [
-            //                 { color: 'rgba(55, 53, 47, 0.16)', text: lst('灰白色') },
-            //                 { color: 'rgba(55,53,47,0.2)', text: lst('浅灰色') },
-            //                 { color: 'rgba(55,53,47,0.6)', text: lst('灰色') },
-            //                 { color: 'rgb(100,71,58)', text: lst('棕色') },
-            //                 { color: 'rgb(217,115,13)', text: lst('橙色') },
-            //                 { color: 'rgb(223,171,1)', text: lst('黄色') },
-            //                 { color: 'rgb(15,123,108)', text: lst('绿色') },
-            //                 { color: 'rgb(11,110,153)', text: lst('蓝色') },
-            //                 { color: 'rgb(105,64,165)', text: lst('紫色') },
-            //                 { color: 'rgb(173,26,114)', text: lst('粉色') },
-            //                 { color: 'rgb(224,62,62)', text: lst('红色') },
-            //             ].map(f => {
-            //                 return {
-            //                     text: f.text,
-            //                     overlay: f.text,
-            //                     value: f.color,
-            //                     checked: gap?.color == f.color ? true : false
-            //                 }
-            //             })
-            //         }
-            //     ]
-            // });
+           
+          
+           
+          
+        
+         
         }
         if (gap?.type && gap?.type != 'none') {
             ns.push({ type: MenuItemType.divide });
@@ -378,8 +273,8 @@ export class RowView extends BlockView<Row>{
             var c = cs[index - 1];
             var n = cs[index];
             var agv = (c as Col).widthPercent + (n as Col).widthPercent;
-            await c.updateProps({ widthPercent: Math.round(agv / 2) });
-            await n.updateProps({ widthPercent: Math.round(agv / 2) });
+            await c.updateProps({ widthPercent: Math.round(agv / 2) },BlockRenderRange.self);
+            await n.updateProps({ widthPercent: Math.round(agv / 2) },BlockRenderRange.self);
         });
     }
     async agvCols(event?: React.MouseEvent) {
@@ -388,7 +283,7 @@ export class RowView extends BlockView<Row>{
         await self.block.page.onAction(ActionDirective.onUpdateProps, async () => {
             var cs = self.block.childs;
             await cs.eachAsync(async c => {
-                await c.updateProps({ widthPercent: Math.round(1 * 100 / cs.length) })
+                await c.updateProps({ widthPercent: Math.round(1 * 100 / cs.length) },BlockRenderRange.self)
             })
         });
     }
@@ -457,7 +352,7 @@ export class RowView extends BlockView<Row>{
                         e.classList.add('hover')
                     }}
                         onClose={e => {
-                            console.log('ggeeexxx');
+                          
                             e.classList.remove('hover')
                         }}
                         placement='top' overlay={

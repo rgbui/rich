@@ -48,7 +48,6 @@ export class Page$ViewEvent {
          */
         if (this.kit.anchorCursor.currentSelectedBlocks.length > 0) {
             if (event.target && this.kit.handle.view.handleEle.contains(event.target as HTMLElement)) return;
-            // this.kit.anchorCursor.onClearSelectBlocks();
         }
     }
     onMousemove(this: Page, event: MouseEvent) {
@@ -139,7 +138,7 @@ export class Page$ViewEvent {
         if (this.isPageOff == true) return;
         var ele = event.target as HTMLElement;
         if (ele && (ele === document.body || this.view.el === ele || this.view.el.contains(ele))) {
-           this.keyboardPlate.keydown(event);
+            this.keyboardPlate.keydown(event);
         }
     }
     onKeyup(this: Page, event: KeyboardEvent) {
@@ -155,6 +154,8 @@ export class Page$ViewEvent {
         if (this.snapshoot.historyRecord.isCanUndo)
             await this.onAction(ActionDirective.onUndo, async () => {
                 await this.snapshoot.undo();
+            }, {
+                disabledJoinHistory: true
             })
         else ShyAlert(lst('没有可撤销的操作'))
     }
@@ -164,6 +165,8 @@ export class Page$ViewEvent {
         if (this.snapshoot.historyRecord.isCanRedo)
             await this.onAction(ActionDirective.onRedo, async () => {
                 await this.snapshoot.redo();
+            }, {
+                disabledJoinHistory: true
             })
         else ShyAlert(lst('没有可恢复的操作'))
     }
@@ -224,8 +227,8 @@ export class Page$ViewEvent {
             await channel.air('/page/update/info', { id: this.pageInfo?.id, pageInfo: { pageType: this.pageLayout.type } });
             this.emit(PageDirective.changePageLayout);
             if (typeof actions == 'function') await actions();
-            this.addPageUpdate();
-        }, { immediate: true });
+            this.notifyActionPageUpdate();
+        }, { immediate: true,disabledJoinHistory:true });
     }
     /**
      * 

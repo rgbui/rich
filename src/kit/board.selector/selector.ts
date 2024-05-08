@@ -28,9 +28,9 @@ export function CheckBoardSelector(
             var newBlock = await kit.page.createBlock(kit.boardSelector.currentSelector.url, data, fra);
             kit.boardSelector.clearSelector();
             await setBoardBlockCache(newBlock);
-            newBlock.mounted(() => {
-                kit.picker.onPicker([newBlock], true);
-                kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
+            newBlock.mounted(async () => {
+                await kit.picker.onPicker([newBlock], { merge: true });
+                await kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
             })
         });
     }
@@ -64,7 +64,7 @@ export function CheckBoardSelector(
                     kit.boardLine.line = newBlock;
                     var tr = gm.inverseTransform(Point.from(ev));
                     (newBlock as any).to = { x: tr.x, y: tr.y };
-                    if (isMounted) newBlock.forceUpdate();
+                    if (isMounted) newBlock.forceManualUpdate();
                 }
             },
             async moveEnd(ev, isMove, data) {
@@ -103,9 +103,9 @@ export function CheckBoardSelector(
                             }
                         })
                     }
-                    if (isMounted) newBlock.forceUpdate();
+                    if (isMounted) newBlock.forceManualUpdate();
                 })
-                kit.picker.onPicker([newBlock], true);
+                await kit.picker.onPicker([newBlock], { merge: true });
                 kit.boardSelector.clearSelector();
             }
         })
@@ -143,7 +143,7 @@ export function CheckBoardSelector(
                 createBlock().then(() => {
                     newBlock.fixedWidth = 0;
                     newBlock.fixedHeight = 0;
-                    if (isMounted) newBlock.forceUpdate();
+                    if (isMounted) newBlock.forceManualUpdate();
                 })
             },
             move: (ev, data) => {
@@ -154,7 +154,7 @@ export function CheckBoardSelector(
                     newBlock.matrix = ma;
                     newBlock.fixedWidth = Math.abs(tr.x - re.x);
                     newBlock.fixedHeight = Math.abs(tr.y - re.y);
-                    if (isMounted) newBlock.forceUpdate();
+                    if (isMounted) newBlock.forceManualUpdate();
                 }
             },
             async moveEnd(ev, isMove, data) {
@@ -169,19 +169,21 @@ export function CheckBoardSelector(
                             fixedWidth: Math.abs(tr.x - re.x),
                             fixedHeight: Math.abs(tr.y - re.y)
                         })
-                        if (isMounted) newBlock.forceUpdate();
-                        kit.picker.onPicker([newBlock], true);
-                        if (url == BlockUrlConstant.BoardPageCard) kit.anchorCursor.onFocusBlockAnchor(newBlock.childs.first(), { render: true, merge: true });
-                        else if (url == BlockUrlConstant.Frame || url == BlockUrlConstant.Image) return;
-                        else kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
+                        if (isMounted) newBlock.forceManualUpdate();
+                        kit.page.addActionAfterEvent(async () => {
+                            kit.picker.onPicker([newBlock], { merge: true });
+                            if (url == BlockUrlConstant.BoardPageCard) kit.anchorCursor.onFocusBlockAnchor(newBlock.childs.first(), { render: true, merge: true });
+                            else if (url == BlockUrlConstant.Frame || url == BlockUrlConstant.Image) return;
+                            else kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
+                        })
                     });
                 }
                 else {
-                    if (isMounted) newBlock.forceUpdate();
-                    kit.picker.onPicker([newBlock], true);
+                    if (isMounted) newBlock.forceManualUpdate();
+                    await kit.picker.onPicker([newBlock], { merge: true });
                     if (url == BlockUrlConstant.BoardPageCard) kit.anchorCursor.onFocusBlockAnchor(newBlock.childs.first(), { render: true, merge: true });
                     else if (url == BlockUrlConstant.Frame || url == BlockUrlConstant.Image) return;
-                    else kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
+                    else await kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
                 }
                 kit.boardSelector.clearSelector();
             }
@@ -227,7 +229,7 @@ export function CheckBoardSelector(
                     newBlock.fixedWidth = Math.abs(bound.width);
                     newBlock.fixedHeight = Math.abs(bound.height);
                     (newBlock as any).pathString = poly.relative(bound.leftTop).pathString(false);
-                    if (isMounted) newBlock.forceUpdate();
+                    if (isMounted) newBlock.forceManualUpdate();
                 }
             },
             async moveEnd(ev, isMove, data) {
@@ -247,8 +249,10 @@ export function CheckBoardSelector(
                             pathString: path.pathData
                         })
                         path.remove();
-                        if (isMounted) newBlock.forceUpdate();
-                        kit.picker.onPicker([newBlock], true);
+                        if (isMounted) newBlock.forceManualUpdate();
+                        kit.page.addActionAfterEvent(async () => {
+                            kit.picker.onPicker([newBlock], { merge: true });
+                        })
                     });
                 }
                 kit.boardSelector.clearSelector();

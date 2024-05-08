@@ -63,7 +63,7 @@ export class Video extends Block {
                     uploadProgress: (event) => {
                         if (event.lengthComputable) {
                             this.speed = `${util.byteToString(event.total)}${(100 * event.loaded / event.total).toFixed(2)}%`;
-                            this.forceUpdate();
+                            this.forceManualUpdate();
                         }
                     }
                 });

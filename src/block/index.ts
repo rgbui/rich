@@ -553,6 +553,11 @@ export abstract class Block extends Events {
     }
     isMounted: boolean = false;
     /**
+     * 标记当前块是否更新，
+     * 在block view中决定 shouldComponentUpdate是否更新
+     */
+    needUpdate: boolean = false;
+    /**
      * 这里主要是判断当前的rect,point是否与当前块的视野内相交
      * 注意，如果有子块，那么只表示与子块相交，不是与父块视野相关
      * 一般只是简单的判断即可，对于各别的可继承使用
@@ -585,16 +590,21 @@ export abstract class Block extends Events {
             return false;
         }
     }
-    async forceUpdate() {
+    async forceManualUpdate() {
         return new Promise((resolve, reject) => {
             if (this.view && this.isMounted) {
                 this.appearAnchors.forEach(aa => {
                     aa.updateViewValue();
                 })
-                this.view.forceUpdate(() => {
-                    // console.log('block view forceUpdate', this.appearAnchors);
+                var seq = this.view.state.seq + 1;
+                this.needUpdate=true;
+                this.view.setState({ seq: seq }, () => {
                     resolve(true);
                 })
+                // this.view.forceUpdate(() => {
+                //     // console.log('block view forceUpdate', this.appearAnchors);
+                //     resolve(true);
+                // })
             }
             else resolve(true);
         })
@@ -832,7 +842,7 @@ export abstract class Block extends Events {
     get pos(): SnapshootBlockPos {
         return {
             blockId: this.id,
-            pageId: this.page.id,
+            // pageId: this.page.id,
             parentId: this.parent?.id || undefined,
             childKey: this.parentKey,
             at: this.at

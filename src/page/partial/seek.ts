@@ -43,7 +43,7 @@ export class Page$Seek {
         var y = event.clientY;
         if (typeof bound == 'undefined')
             bound = Rect.fromEle(this.root);
-        
+
         if (direction == 'left') {
             for (var i = x - GAP; i >= bound.x; i = i - GAP) {
                 var block = this.getBlockByMouseOrPoint(new Point(i, y));
@@ -85,6 +85,7 @@ export class Page$Seek {
     }
     pickBlocksTextStyle(blocks: Block[]) {
         var textStyle: TextToolStyle = {} as any;
+        if (blocks.length == 0) return textStyle;
         textStyle.italic = true;
         textStyle.bold = true;
         textStyle.underline = true;
@@ -223,6 +224,19 @@ export class Page$Seek {
             }
             if (arrow == 'last') return min;
             else return min.prev
+        }
+    }
+
+    statPage(this: Page) {
+        var bc: number = 0;
+        var wordCount: number = 0;
+        this.each(b => {
+            bc++;
+            wordCount+=(b.content||'').length;
+        })
+        return{
+            blockCount:bc,
+            wordCount
         }
     }
 }

@@ -1,5 +1,5 @@
 /**
- * 该指令的值不能随便变更(指令的值会存储下来，变更将导致混乱)
+ * 该指令的数值不能变更(指令的值会存储下来，变更将导致混乱)
  * 只能新增
  * 
  */
@@ -20,7 +20,7 @@ export enum ActionDirective {
     onInputDetector = 113,
     onPasteCreateBlocks = 114,
     onTurn = 115,
-    combineTextSpan = 116,
+    onCombineTextSpan = 116,
     onKeyTab = 117,
     onCreateTailTextSpan = 118,
     onBackTurn = 119,
@@ -32,6 +32,7 @@ export enum ActionDirective {
     onReplace = 125,
 
     onBoardToolCreateBlock = 130,
+    onBoardPickBlocks = 140,
     onResizeBlock = 132,
     onLock = 133,
     onZIndex = 134,
@@ -131,6 +132,8 @@ export enum OperatorDirective {
 
     changeCursorPos = 501,
 
+    
+
 
 
     //#region  新的指令，以1000~2000为主
@@ -163,6 +166,7 @@ export enum OperatorDirective {
 
 
     $change_cursor_offset = 1055,
+    $pick_blocks = 1056,
     $page_turn_layout = 1060,
     $page_update_prop = 1061,
 

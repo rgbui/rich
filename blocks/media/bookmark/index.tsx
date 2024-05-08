@@ -48,7 +48,7 @@ export class Bookmark extends Block {
         else {
             var rect = Rect.fromEle(this.el);
             this.imageWidth = rect.width * 0.2;
-            this.forceUpdate();
+            this.forceManualUpdate();
         }
     }
     imageWidth = -20;
@@ -56,7 +56,7 @@ export class Bookmark extends Block {
         this.loading = true;
         var bo = this.bookmarkInfo;
         this.bookmarkInfo = null;
-        this.forceUpdate();
+        this.forceManualUpdate();
         try {
             var r = await channel.put('/bookmark/url', { url });
             if (!r.ok) {
@@ -81,7 +81,7 @@ export class Bookmark extends Block {
         finally {
             this.loading = false;
         }
-        this.forceUpdate();
+        this.forceManualUpdate();
     }
     async openInputBookmark() {
         var r = await useOutSideUrlInput({ roundArea: Rect.fromEle(this.el) },

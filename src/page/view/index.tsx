@@ -40,6 +40,13 @@ export class PageView extends Component<{ page: Page }> {
         super(props);
         this.page.view = this;
     }
+    state: Readonly<{ seq: number }> = { seq: 0 };
+    forceManualUpdate(cb?: () => void) {
+        this.setState({ seq: this.state.seq + 1 }, () => {
+            if (typeof cb == 'function')
+                cb()
+        });
+    }
     get page() {
         return this.props.page;
     }
@@ -72,7 +79,7 @@ export class PageView extends Component<{ page: Page }> {
         this.observeOutsideDrop();
         document.addEventListener('keydown', (this._keydown = e => this.page.onKeydown(e)), true);
         this.el.addEventListener('wheel', this._wheel = e => this.page.onWheel(e), {
-            passive: false
+            passive: true
         });
         document.addEventListener('mousedown', this._mousedown = this.page.onGlobalMousedown.bind(this));
         document.addEventListener('mousemove', (this._mousemove = this.page.onMousemove.bind(this.page)));
@@ -377,6 +384,8 @@ export class PageView extends Component<{ page: Page }> {
             if (isForceUpdate == true) {
                 this.forceUpdate()
             }
+        },{
+            disabledStore: true
         })
     }
 }

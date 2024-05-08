@@ -90,7 +90,7 @@ export class DataGridViewData {
             this.total += 1;
             this.onNotifyPageReferenceBlocks();
             await this.createItem();
-            this.forceUpdate();
+            this.forceManualUpdate();
         }
         return lodash.cloneDeep(newRow);
     }
@@ -105,7 +105,7 @@ export class DataGridViewData {
             if (r.ok) {
                 Object.assign(oldItem, data);
                 await this.createItem();
-                this.forceUpdate();
+                this.forceManualUpdate();
             }
         }
     }
@@ -131,7 +131,7 @@ export class DataGridViewData {
             this.total += 1;
             await this.onNotifyPageReferenceBlocks();
             await this.createItem();
-            this.forceUpdate();
+            this.forceManualUpdate();
         }
     }
 }

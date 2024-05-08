@@ -25,7 +25,7 @@ export class LinkPaths extends Block {
             this.items = c.data.items.reverse();
         }
         else this.items = [];
-        this.forceUpdate();
+        this.forceManualUpdate();
     }
     items: LinkPageItem[] = [];
     getVisibleHandleCursorPoint(): Point {

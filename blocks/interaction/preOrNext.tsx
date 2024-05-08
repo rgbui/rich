@@ -23,7 +23,7 @@ export class PageOrNext extends Block {
         if (r.ok) {
             this.prePageInfo = r.data.pre;
             this.nextPageInfo = r.data.next;
-            this.forceUpdate();
+            this.forceManualUpdate();
         }
     }
     prePageInfo: PageLink;

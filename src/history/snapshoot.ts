@@ -73,7 +73,16 @@ export class HistorySnapshoot extends Events {
         up.isLocal = isLocal;
         this.action.operators.push(up);
     }
-    store() {
+    store(options?: {
+        block?: Block,
+        blocks?: Block[],
+        immediate?: boolean,
+        disabledSyncBlock?: boolean,
+        disabledStore?: boolean,
+        merge?: boolean,
+        disabledJoinHistory?: boolean,
+        disableSyncServer?: boolean
+    }) {
         try {
             if (!this.action?.isEmpty) {
                 this.action.endDate = Date.now();
@@ -86,17 +95,17 @@ export class HistorySnapshoot extends Events {
                 /**
                  * onLoadUserActions 一般是从别的地方触发的，那么相应的history就不应该在触发了
                  */
-                if (this.action.directive !== ActionDirective.onLoadUserActions) {
+                if (options?.disableSyncServer !== true && this.action.directive !== ActionDirective.onLoadUserActions) {
                     this.emit('history', this.action);
                 }
                 if (this.historyRecord) {
-                    if (!([
+                    if (options?.disabledJoinHistory !== true && !([
                         ActionDirective.onRedo,
                         ActionDirective.onPageTurnLayout,
                         ActionDirective.onLoadUserActions,
                         ActionDirective.onUndo
                     ].includes(this.action.directive as any))) {
-                        if (this._merge == true) {
+                        if (this._merge == true || options?.merge == true) {
                             /**
                              * 合并上次的action
                              */
@@ -118,7 +127,16 @@ export class HistorySnapshoot extends Events {
             console.error(ex);
         }
     }
-    async sync(directive: ActionDirective | string, action: (monitorChangeBlocks: (cbs: Block[]) => void) => Promise<void>, options?: { block?: Block, blocks?: Block[], immediate?: boolean, disabledSyncBlock?: boolean, disabledStore?: boolean }) {
+    async sync(directive: ActionDirective | string, action: (monitorChangeBlocks: (cbs: Block[]) => void) => Promise<void>, options?: {
+        block?: Block,
+        blocks?: Block[],
+        immediate?: boolean,
+        disabledSyncBlock?: boolean,
+        disabledStore?: boolean,
+        merge?: boolean,
+        disabledJoinHistory?: boolean,
+        disableSyncServer?: boolean
+    }) {
         this.declare(directive);
         try {
             if (options?.immediate) this.action.immediate = true;
@@ -144,7 +162,7 @@ export class HistorySnapshoot extends Events {
             this.page.onError(ex);
         }
         if (options?.disabledStore == true) return;
-        this.store()
+        this.store(options)
     }
     private ops = new Map<OperatorDirective, { redo: (userOperator: UserOperator, source: 'redo' | 'load' | 'loadSyncBlock' | 'notify' | 'notifyView', action: UserAction) => Promise<void>, undo: (userOperator: UserOperator) => Promise<void> }>();
     /**
@@ -162,6 +180,9 @@ export class HistorySnapshoot extends Events {
     }
     async redo() {
         await this.historyRecord.redo(async (action) => {
+            if (this.action.directive == ActionDirective.onRedo) {
+                this.action.directive = 'onRedo.' + (typeof action.directive == 'number' ? ActionDirective[action.directive] : action.directive);
+            }
             if (Array.isArray(action?.operators)) {
                 for (let i = 0; i < action.operators.length; i++) {
                     let op = action.operators[i];
@@ -177,6 +198,9 @@ export class HistorySnapshoot extends Events {
     }
     async undo() {
         await this.historyRecord.undo(async (action) => {
+            if (this.action.directive == ActionDirective.onUndo) {
+                this.action.directive = 'onUndo.' + (typeof action.directive == 'number' ? ActionDirective[action.directive] : action.directive);
+            }
             if (Array.isArray(action?.operators)) {
                 for (let i = action.operators.length - 1; i >= 0; i--) {
                     let op = action.operators[i];
@@ -240,6 +264,7 @@ export interface HistorySnapshoot {
     record(directive: OperatorDirective.$turn, data: { pos: SnapshootBlockPos, from: string, to: string }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$update, data: { pos: SnapshootBlockPropPos, old_value: any, new_value: any, render: BlockRenderRange }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$change_cursor_offset, data: { old_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] }, new_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] } }, obj: HistorySnapshootObject)
+    record(directive: OperatorDirective.$pick_blocks, data: { old_value: { blocks: SnapshootBlockPos[] }, new_value: { blocks: SnapshootBlockPos[] } }, obj: HistorySnapshootObject)
 
     record(directive: OperatorDirective.$map_splice, data: { pos: SnapshootBlockPropPos, delete_map?: any, insert_map?: any }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$text_splice, data: { pos: SnapshootBlockPropPos, start: number, end?: number, delete_text?: string, insert_text: string }, obj: HistorySnapshootObject);

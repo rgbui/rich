@@ -128,7 +128,7 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                         await row.visibleUpCreateBlock(rule.url, {
                             createSource: 'InputBlockSelector'
                         });
-                        write.kit.page.addUpdateEvent(async () => {
+                        write.kit.page.addActionAfterEvent(async () => {
                             write.kit.anchorCursor.onFocusBlockAnchor(row, {
                                 render: true,
                                 merge: true
@@ -152,14 +152,16 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                     var row = aa.block.closest(x => !x.isLine);
                     var newBlock: Block;
                     newBlock = await row.visibleUpCreateBlock(rule.url, { createSource: 'InputBlockSelector' });
-                    if (row.isContentEmpty) write.kit.anchorCursor.onFocusBlockAnchor(row, {
-                        render: true,
-                        merge: true
-                    });
+                    if (row.isContentEmpty) write.kit.page.addActionAfterEvent(async () => {
+                        await write.kit.anchorCursor.onFocusBlockAnchor(row, {
+                            render: true,
+                            merge: true
+                        })
+                    })
                     else newBlock.mounted(() => {
                         var b = row.nextFind(g => g.appearAnchors.some(s => s.isText));
                         if (b) write.kit.anchorCursor.onFocusBlockAnchor(b, { render: true, merge: true })
-                    });
+                    })
                 });
                 break;
             case DetectorOperator.firstLetterTurnBlock:
@@ -176,8 +178,12 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                     }
                     if (!newBlock)
                         newBlock = await row.turn(rule.url);
-                    write.kit.page.addUpdateEvent(async () => {
-                        write.kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
+                    write.kit.page.addActionAfterEvent(async () => {
+                        if (newBlock.url == BlockUrlConstant.Code) {
+                            (newBlock as any).onFocusCursor()
+                        }
+                        else
+                            write.kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
                     })
                 });
                 break;
@@ -201,9 +207,9 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                     }
                     var newBlock = await rowBlock.appendBlock({ url: BlockUrlConstant.Text, content: mr.matchValue });
                     if (rule.style) await newBlock.pattern.setStyles(rule.style);
-                    if (rule.props) newBlock.updateProps(rule.props);
+                    if (rule.props) await newBlock.updateProps(rule.props);
                     if (rest) await rowBlock.appendBlock({ url: BlockUrlConstant.Text, pattern, content: rest });
-                    write.kit.page.addUpdateEvent(async () => {
+                    write.kit.page.addActionAfterEvent(async () => {
                         write.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
                     })
                 });
@@ -264,7 +270,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                     await pv.delete();
                     pv = fr;
                 }
-                write.kit.page.addUpdateEvent(async () => {
+                write.kit.page.addActionAfterEvent(async () => {
                     if (pv) write.kit.anchorCursor.onFocusBlockAnchor(pv, { last: true, render: true, merge: true });
                     else write.kit.anchorCursor.onFocusBlockAnchor(rowBlock, { render: true, merge: true });
                 });
@@ -272,7 +278,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
             else if (aa.isSolid) {
                 if (offset == 1) {
                     await block.delete();
-                    write.kit.page.addUpdateEvent(async () => {
+                    write.kit.page.addActionAfterEvent(async () => {
                         write.kit.anchorCursor.onFocusBlockAnchor(rowBlock, { render: true, last: false });
                     });
                 }
@@ -280,7 +286,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                     if (rowBlock && rowBlock?.prev?.isTextBlock && rowBlock?.prev?.url != BlockUrlConstant.Title) {
                         //这个需要合并块
                         var lastPreBlock = await combineTextBlock(write, rowBlock);
-                        write.kit.page.addUpdateEvent(async () => {
+                        write.kit.page.addActionAfterEvent(async () => {
                             write.kit.anchorCursor.onFocusBlockAnchor(lastPreBlock, { last: true, render: true, merge: true });
                         });
                         return
@@ -294,7 +300,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                      */
                     var prevAppearBlock = rowBlock.prevFind(x => x.appearAnchors.length > 0);
                     if (prevAppearBlock) {
-                        write.kit.page.addUpdateEvent(async () => {
+                        write.kit.page.addActionAfterEvent(async () => {
                             write.kit.anchorCursor.onFocusBlockAnchor(prevAppearBlock, { last: true, render: true, merge: true });
                         });
                     }
@@ -316,7 +322,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                                     *  */
                     if (rowBlock.isBackspaceAutomaticallyTurnText) {
                         var newBlock = await rowBlock.turn(BlockUrlConstant.TextSpan);
-                        write.kit.page.addUpdateEvent(async () => {
+                        write.kit.page.addActionAfterEvent(async () => {
                             write.kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
                         });
                         return;
@@ -325,7 +331,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                     if (rowBlock?.parent?.hasSubChilds && !rowBlock.next) {
                         var rp = rowBlock.parent;
                         await rowBlock.insertAfter(rp);
-                        write.kit.page.addUpdateEvent(async () => {
+                        write.kit.page.addActionAfterEvent(async () => {
                             write.kit.anchorCursor.onFocusBlockAnchor(rowBlock, { render: true, merge: true });
                         });
                         return;
@@ -333,7 +339,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                     if (rowBlock.isTextBlock && rowBlock?.prev?.isTextBlock && rowBlock?.prev?.url != BlockUrlConstant.Title) {
                         //这个需要合并块
                         var lastPreBlock = await combineTextBlock(write, rowBlock);
-                        write.kit.page.addUpdateEvent(async () => {
+                        write.kit.page.addActionAfterEvent(async () => {
                             write.kit.anchorCursor.onFocusBlockAnchor(lastPreBlock, { last: true, render: true, merge: true });
                         });
                         return
@@ -348,7 +354,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                  */
                 var prevAppearBlock = rowBlock.prevFind(x => x.appearAnchors.length > 0);
                 if (prevAppearBlock) {
-                    write.kit.page.addUpdateEvent(async () => {
+                    write.kit.page.addActionAfterEvent(async () => {
                         write.kit.anchorCursor.onFocusBlockAnchor(prevAppearBlock, { last: true, render: true, merge: true });
                     });
                     if (rowBlock.isContentEmpty) {
@@ -380,7 +386,7 @@ export async function inputBackSpaceTextContent(write: PageWrite, aa: AppearAnch
             var prev = block.prev;
             var isLine = block.isLine;
             if (block.isContentEmpty && block.isLine && !aa.hasGap) await block.delete();
-            write.kit.page.addUpdateEvent(async () => {
+            write.kit.page.addActionAfterEvent(async () => {
                 if (isLine && prev) {
                     write.kit.anchorCursor.onFocusBlockAnchor(prev, { last: true, render: true, merge: true })
                 }
@@ -404,7 +410,7 @@ async function combindSubBlock(write: PageWrite, rowBlock: Block) {
     var lastPreBlock = pa.childs.last();
     if (pa.childs.length == 0) {
         var content = pa.content;
-        pa.updateProps({ content: '' });
+        await pa.updateProps({ content: '' });
         var pattern = await pa.pattern.cloneData();
         lastPreBlock = await pa.appendBlock({ url: BlockUrlConstant.Text, content, pattern }, undefined, BlockChildKey.childs);
     }
@@ -423,7 +429,7 @@ async function combindSubBlock(write: PageWrite, rowBlock: Block) {
     }
     if (!rowBlock.isPart)
         await rowBlock.delete();
-    write.kit.page.addUpdateEvent(async () => {
+    write.kit.page.addActionAfterEvent(async () => {
         write.kit.anchorCursor.onFocusBlockAnchor(lastPreBlock, { last: true, render: true, merge: true });
     });
 }
@@ -445,7 +451,7 @@ async function combineTextBlock(write: PageWrite, rowBlock: Block, preBlock?: Bl
     var lastPreBlock = preBlock.childs.last();
     if (preBlock.childs.length == 0) {
         var content = preBlock.content;
-        preBlock.updateProps({ content: '' });
+        await preBlock.updateProps({ content: '' });
         var pattern = await preBlock.pattern.cloneData();
         if (content != '')
             await preBlock.appendBlock({ url: BlockUrlConstant.Text, content, pattern });
@@ -595,7 +601,7 @@ export async function inputBackspaceDeleteContent(write: PageWrite,
             if (deleteText)
                 CopyText(deleteText);
         }
-        write.kit.page.addUpdateEvent(async () => {
+        write.kit.page.addActionAfterEvent(async () => {
             forceCloseTextTool()
             if (insertSelection.from != null) {
                 write.kit.anchorCursor.onSetTextSelection({
@@ -603,7 +609,7 @@ export async function inputBackspaceDeleteContent(write: PageWrite,
                     startOffset: insertSelection.from,
                     endAnchor: insertSelection.anchor,
                     endOffset: insertSelection.to
-                }, { merge: true, render: true ,isOpenTool:true});
+                }, { merge: true, render: true });
             }
             else {
                 if (focusB) write.kit.anchorCursor.onFocusBlockAnchor(focusB, { last: true, render: true, merge: true });
@@ -628,7 +634,7 @@ export async function onSpaceInputUrl(write: PageWrite, aa: AppearAnchor, event:
                 if (aa.block.isLine) {
                     await aa.block.updateProps({ content: content.slice(0, 0 - url.length) });
                     var newBlock = await write.kit.page.createBlock(BlockUrlConstant.Text, { content: url, link: { url } }, aa.block.parent, aa.block.at, 'childs')
-                    aa.block.page.addUpdateEvent(async () => {
+                    aa.block.page.addActionAfterEvent(async () => {
                         write.kit.anchorCursor.onFocusBlockAnchor(newBlock, { merge: true, last: true, render: true })
                     });
                     if (aa.block.isContentEmpty) await aa.block.delete();
@@ -643,7 +649,7 @@ export async function onSpaceInputUrl(write: PageWrite, aa: AppearAnchor, event:
                     else await aa.block.appendArrayBlockData([
                         { url: BlockUrlConstant.Text, content: url, link: { url } }
                     ], 0, 'childs');
-                    aa.block.page.addUpdateEvent(async () => {
+                    aa.block.page.addActionAfterEvent(async () => {
                         write.kit.anchorCursor.onFocusBlockAnchor(aa.block.childs.last(), { merge: true, last: true, render: true })
                     })
                 }

@@ -70,7 +70,7 @@ export class DataGridTab extends Block {
             }
             i += 1;
         }
-        this.forceUpdate();
+        this.forceManualUpdate();
     }
     async onOpenAddTabView(event: React.MouseEvent) {
         await this.onDataGridTool(async () => {
@@ -419,7 +419,7 @@ export class DataGridTab extends Block {
                     }
                     else {
                         self.tabIndex = at;
-                        self.forceUpdate()
+                        self.forceManualUpdate()
                     }
                 }
             }

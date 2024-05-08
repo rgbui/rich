@@ -12,6 +12,7 @@ class BlockSelector extends InputTextPopSelector<{
 }> {
     prefix: string[] = ['/', '、'];
     lazyTime: number = 0;
+    itemHoverSelector: string = '.item-hover-light-focus';
     async searchAll() {
         await blockStore.import();
     }

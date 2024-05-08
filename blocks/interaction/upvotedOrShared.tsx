@@ -51,7 +51,7 @@ export class UpvotedOrShared extends Block {
             });
         if (r.ok) {
             this.userEmojis = r.data.list;
-            this.forceUpdate();
+            this.forceManualUpdate();
         }
     }
     userEmojis: Record<string, string[]> = {};

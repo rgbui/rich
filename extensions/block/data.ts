@@ -126,7 +126,7 @@ export function getBlockSelectData() {
                 },
                 { text: lst('作者'), url: '/page/author', icon: { name: 'bytedance-icon', code: 'edit-name' }, label: lst('/作者'), labels: ['/author', '/writer', '/zuoze', '/zz'] },
                 { text: lst('点赞分享'), url: '/page/UpvotedOrShared', icon: { name: 'bytedance-icon', code: "send" }, label: lst('/分享'), labels: ['/share', '/dz', '/dianzan', '/like'] },
-                { text: lst('评论'), url: '/comments', icon: { name: 'byte', code: 'comment' }, label: lst('/评论'), labels: ['/comment', '/pinglun', '/pl', '/message'] },
+                { text: lst('评论'), url: '/comments', icon: { name: 'byte', code: 'message' }, label: lst('/评论'), labels: ['/comment', '/pinglun', '/pl', '/message'] },
             ]
         },
         {

@@ -10,7 +10,7 @@ export class FilterSort extends OriginFilterField {
     onFilter(value: number) {
         this.sortRule = value;
         if (this.refBlock) this.refBlock.onSearch()
-        this.forceUpdate()
+        this.forceManualUpdate()
     }
     sortRule: number = 0;
     getSort() {

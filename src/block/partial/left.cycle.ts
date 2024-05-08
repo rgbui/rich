@@ -305,14 +305,17 @@ export class Block$LifeCycle {
         }
     }
     async get(this: Block, args?: { syncBlock: boolean }, options?: { emptyChilds?: boolean }) {
+        var isFb = this.isFreeBlock;
         var json: Record<string, any> = {
             id: this._id,
             url: this.url,
             syncBlockId: this.syncBlockId,
-            matrix: this.matrix ? this.matrix.getValues() : undefined
+            // matrix: isFb && this.matrix ? this.matrix.getValues() : undefined
         };
-        if (typeof this.pattern.get == 'function')
+        if (typeof this.pattern.get == 'function') {
             json.pattern = await this.pattern.get();
+            if (Object.keys(json.pattern).length == 0) delete json.pattern;
+        }
         else {
             console.log(this, this.pattern);
         }
@@ -332,6 +335,7 @@ export class Block$LifeCycle {
         }
         if (Array.isArray(this.__props)) {
             await this.__props.eachAsync(async pro => {
+                if (!isFb && ['isScale', 'matrix', 'fixedHeight', 'refLines', 'zindex', 'fixedWidth'].includes(pro)) return;
                 try {
                     json[pro] = await this.clonePropData(pro, this[pro]);
                 }
@@ -339,6 +343,9 @@ export class Block$LifeCycle {
                     console.error(ex);
                 }
             })
+        }
+        if (json?.locker && json?.locker?.lock == false) {
+            delete json.locker;
         }
         return json;
     }

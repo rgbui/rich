@@ -38,7 +38,7 @@ export class PageCard extends Block {
             this
         );
         this.blocks.childs.push(newBlock);
-        this.forceUpdate();
+        this.forceManualUpdate();
     }
     init() {
         this.gridMap = new GridMap(this)

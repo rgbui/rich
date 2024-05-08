@@ -96,7 +96,7 @@ export class Image extends Block {
                     uploadProgress: (event) => {
                         if (event.lengthComputable) {
                             this.speed = `${util.byteToString(event.total)}&nbsp;&nbsp;${(100 * event.loaded / event.total).toFixed(2)}%`;
-                            this.forceUpdate();
+                            this.forceManualUpdate();
                         }
                     }
                 });

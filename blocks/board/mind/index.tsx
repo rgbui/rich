@@ -323,7 +323,7 @@ export class FlowMind extends Block {
                 newBlock.mounted(async () => {
                     this.renderAllMinds();
                     this.mindRoot.view.forceUpdate(() => {
-                        self.page.kit.picker.onPicker([newBlock], true);
+                        self.page.kit.picker.onPicker([newBlock], { merge: true });
                     })
                 })
             })
@@ -491,9 +491,9 @@ export class FlowMind extends Block {
     async setBoardEditCommand(name: string, value: any) {
         if (name == 'mindDirection') {
             await this.updateProps({ direction: value }, BlockRenderRange.self);
-            this.page.addUpdateEvent(async () => {
+            this.page.addActionCompletedEvent(async () => {
                 this.renderAllMinds();
-                this.mindRoot.forceUpdate()
+                this.mindRoot.forceManualUpdate()
             })
         }
         else if (name == 'mindLineType') {
@@ -743,7 +743,7 @@ export class FlowMind extends Block {
     async boardMoveEnd(from: Point, to: Point) {
         if (this.isMindRoot && !this.moveTo?.block?.mindRoot) {
             await super.boardMoveEnd(from, to);
-            this.page.addUpdateEvent(async () => {
+            this.page.addActionCompletedEvent(async () => {
                 this.renderAllMinds();
             })
             return
@@ -758,17 +758,18 @@ export class FlowMind extends Block {
         VR.unload();
         this.moveMatrix = new Matrix();
         if (oldMindRoot) {
-            this.page.addUpdateEvent(async () => {
-                this.page.onAction('onMindMoveNotify', async () => {
-                    oldMindRoot.renderAllMinds()
-                    await oldMindRoot.forceUpdate();
-                    if (currentMindRoot !== oldMindRoot) {
-                        currentMindRoot.renderAllMinds()
-                        await currentMindRoot.forceUpdate()
-                    }
-                    this.page.kit.picker.onPicker([this]);
-                })
+            this.page.addActionCompletedEvent(async () => {
+                oldMindRoot.renderAllMinds()
+                await oldMindRoot.forceManualUpdate();
+                if (currentMindRoot !== oldMindRoot) {
+                    currentMindRoot.renderAllMinds()
+                    await currentMindRoot.forceManualUpdate()
+                }
             })
+            this.page.addActionAfterEvent(async () => {
+                await this.page.kit.picker.onPicker([this], { merge: true });
+            })
+
         }
         else {
             this.view.forceUpdate(() => {
@@ -873,10 +874,12 @@ export class FlowMind extends Block {
                         )
                         if (isDs == false)
                             await block.manualUpdateProps({ isDragSize: false }, { isDragSize: true }, BlockRenderRange.self);
-                        block.page.addUpdateEvent(async () => {
-                            if (block.isMindRoot) { block.renderAllMinds(); block.forceUpdate(); }
-                            else { (block.parent as FlowMind).renderMinds(); block.parent.forceUpdate(); }
-                            block.page.kit.picker.onPicker([block], true);
+                        block.page.addActionCompletedEvent(async () => {
+                            if (block.isMindRoot) { block.renderAllMinds(); block.forceManualUpdate(); }
+                            else { (block.parent as FlowMind).renderMinds(); block.parent.forceManualUpdate(); }
+                        })
+                        block.page.addActionAfterEvent(async () => {
+                            await block.page.kit.picker.onPicker([block], { merge: true });
                         })
                     })
                 }

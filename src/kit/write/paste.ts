@@ -40,8 +40,8 @@ export async function onPasteBlank(kit: Kit, event: ClipboardEvent) {
                 var newBlock = await kit.page.createBlock(url, data, fra);
                 kit.boardSelector.clearSelector();
                 newBlock.mounted(() => {
-                    kit.picker.onPicker([newBlock], true);
-                    kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
+                     kit.picker.onPicker([newBlock]);
+                     kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
                 })
             });
         }
@@ -77,8 +77,8 @@ export async function onPasteBlank(kit: Kit, event: ClipboardEvent) {
                                 var newBlock = await kit.page.createBlock(url, data, fra);
                                 kit.boardSelector.clearSelector();
                                 newBlock.mounted(() => {
-                                    kit.picker.onPicker([newBlock], true);
-                                    kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
+                                     kit.picker.onPicker([newBlock]);
+                                     kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
                                 })
                             });
                             // this.props.change(r.data?.file as any);
@@ -100,7 +100,7 @@ export async function onPasteBlank(kit: Kit, event: ClipboardEvent) {
                 var newBlock = await kit.page.createBlock(url, data, fra);
                 kit.boardSelector.clearSelector();
                 newBlock.mounted(() => {
-                    kit.picker.onPicker([newBlock], true);
+                    kit.picker.onPicker([newBlock]);
                     kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
                 })
             });
@@ -255,7 +255,7 @@ async function onPasterFiles(kit: Kit, aa: AppearAnchor, files: File[]) {
         if (firstBlock.isContentEmpty) {
             await firstBlock.delete();
         }
-        kit.page.addUpdateEvent(async () => {
+        kit.page.addActionAfterEvent(async () => {
 
         })
     })
@@ -279,7 +279,7 @@ async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
                 var bs = blocks[0].blocks.childs;
                 var rs = await rowBlock.appendArrayBlockData(bs, undefined, BlockChildKey.childs);
                 if (lastText) await rowBlock.appendBlock({ url: BlockUrlConstant.Text, content: lastText });
-                kit.page.addUpdateEvent(async () => {
+                kit.page.addActionAfterEvent(async () => {
                     kit.anchorCursor.onFocusBlockAnchor(rs.last(), { last: true, render: true, merge: true });
                 })
             }
@@ -293,7 +293,7 @@ async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
                     content: lastText
                 });
                 if (aa.block.isContentEmpty) await aa.block.delete();
-                kit.page.addUpdateEvent(async () => {
+                kit.page.addActionAfterEvent(async () => {
                     kit.anchorCursor.onFocusBlockAnchor(rs.last(), { last: true, render: true, merge: true });
                 })
             }
@@ -313,7 +313,7 @@ async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
             if (firstBlock.isContentEmpty) {
                 await firstBlock.delete();
             }
-            kit.page.addUpdateEvent(async () => {
+            kit.page.addActionAfterEvent(async () => {
                 kit.anchorCursor.onSelectBlocks(rs, { render: true, merge: true });
                 // kit.anchorCursor.onFocusBlockAnchor(rowBlock, { last: true, render: true, merge: true });
             })
@@ -336,7 +336,7 @@ async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
             aa.setContent(content.slice(0, offset) + text + content.slice(offset))
             aa.collapse(offset + text.length);
             await InputForceStore(aa, async () => {
-                kit.page.addUpdateEvent(async () => {
+                kit.page.addActionCompletedEvent(async () => {
                     if (aa.block.url == BlockUrlConstant.Code) {
                         (aa.block as TextCode).renderCode()
                     }
@@ -379,7 +379,7 @@ async function onPasteInsertPlainText(kit: Kit, aa: AppearAnchor, text: string) 
 }
 async function onPasteUrl(kit: Kit, aa: AppearAnchor, url: string) {
     if (aa.isSolid) {
-        await this.kit.page.onActionAsync(ActionDirective.onSolidBlockInputTextContent, async () => {
+        await kit.page.onAction(ActionDirective.onSolidBlockInputTextContent, async () => {
             var text = aa.solidContentEl.innerText;
             aa.solidContentEl.innerHTML = '';
             var c = url;
@@ -390,8 +390,8 @@ async function onPasteUrl(kit: Kit, aa: AppearAnchor, url: string) {
                 aa.block.at + 1,
                 aa.block.parentKey
             );
-            this.kit.page.addUpdateEvent(async () => {
-                this.kit.writer.cursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
+            kit.page.addActionAfterEvent(async () => {
+                kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
                 var sel = window.getSelection();
                 var rect = Rect.fromEle(util.getSafeSelRange(sel));
                 kit.writer.inputPop = {

@@ -193,7 +193,7 @@ export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: Re
             newBlock = await rowBlock.visibleDownCreateBlock(url, { ...continuouslyProps, blocks: { childs } });
         }
         await newBlock.appendArray(gs, undefined, BlockChildKey.childs);
-        page.addUpdateEvent(async () => {
+        page.addActionAfterEvent(async () => {
             write.kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
         })
     });
@@ -282,7 +282,7 @@ export async function onKeyTab(write: PageWrite, aa: AppearAnchor, event: React.
                 await prev.append(rowBlock, undefined, 'subChilds');
             }
         }
-        page.addUpdateEvent(async () => {
+        page.addActionAfterEvent(async () => {
             var newAA = block.appearAnchors.find(g => g.prop == prop);
             if (newAA)
                 write.kit.anchorCursor.onFocusAppearAnchor(newAA, { merge: true, at: offset });

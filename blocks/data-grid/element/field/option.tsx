@@ -29,7 +29,7 @@ export class FieldOption extends OriginField {
                     options: fc?.options || [],
                     changeOptions: async (ops) => {
                         await this.onUpdateCellFieldSchema({ config: { options: ops } })
-                        this.dataGrid.forceUpdate()
+                        this.dataGrid.forceManualUpdate()
                     }
                 }
             );

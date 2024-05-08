@@ -153,8 +153,9 @@ export function PageKeys(
         kt.isMetaOrCtrl(KeyboardCode.D)
         ,
         async (ev, k) => {
-            if (page.kit.picker.blocks.length > 0) {
-                console.log('sss');
+            if (page.kit.picker.blocks.length > 0)
+            {
+                console.log('sss', page.kit.picker.blocks);
                 var getCommands = async (blocks: Block[]) => {
                     var rs;
                     await blocks.eachAsync(async block => {
@@ -179,6 +180,7 @@ export function PageKeys(
                     ||
                     ev.key.toLowerCase() == KeyboardCode.S.toLowerCase()
                 ) {
+                    if (page.kit.picker.hasCursor()) return;
                     var cs = await getCommands(page.kit.picker.blocks);
                     var name: string;
                     var value: any;

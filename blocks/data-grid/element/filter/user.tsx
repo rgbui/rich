@@ -27,7 +27,7 @@ export class SearchUser extends OriginFilterField {
             else this.selectUsers = [value];
         }
         if (this.refBlock) this.refBlock.onSearch()
-        this.forceUpdate()
+        this.forceManualUpdate()
     }
     get filters() {
         if (!(Array.isArray(this.selectUsers) && this.selectUsers.length > 0)) return null;

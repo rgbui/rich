@@ -59,7 +59,7 @@ export class Tab extends Block {
             }
         }
         this.createCarouselTime();
-        if (isf) this.forceUpdate()
+        if (isf) this.forceManualUpdate()
     }
     async createInitTabItems() {
         this.blocks.childs = [];
@@ -87,7 +87,7 @@ export class Tab extends Block {
                 BlockChildKey.otherChilds
             );
             this.tabIndex = this.tabItems.length - 1;
-            this.page.addUpdateEvent(async () => {
+            this.page.addActionAfterEvent(async () => {
                 this.page.kit.anchorCursor.onFocusBlockAnchor(newBlock, { merge: true, render: true })
             })
         })
@@ -233,7 +233,7 @@ export class Tab extends Block {
                     }
                     else {
                         self.tabIndex = at;
-                        self.forceUpdate()
+                        self.forceManualUpdate()
                     }
                 }
             }
@@ -354,7 +354,7 @@ export class Tab extends Block {
                 if (this.isOver == false) {
                     this.tabIndex = this.tabIndex + 1;
                     if (this.tabIndex >= this.tabItems.length) this.tabIndex = 0;
-                    this.forceUpdate()
+                    this.forceManualUpdate()
                 }
             }, this.autoCarousel * 1000);
         }

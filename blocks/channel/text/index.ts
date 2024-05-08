@@ -30,7 +30,7 @@ export class ChannelText extends Block {
     async onClearUnread() {
         this.unreadTip = null;
         await this.setLocalSeq(this.chats.max(x => x.seq));
-        this.forceUpdate();
+        this.forceManualUpdate();
     }
     loading: boolean = false;
     async loadChannelTextDatas() {
@@ -184,7 +184,7 @@ export class ChannelText extends Block {
                 icon: this.page.pageInfo.icon,
                 description: this.page.pageInfo.description
             };
-            this.forceUpdate()
+            this.forceManualUpdate()
         }
     }
     async getMd() {

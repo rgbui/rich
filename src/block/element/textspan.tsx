@@ -145,7 +145,7 @@ export class TextSpan extends Block {
                     if (!ma.equals(new Matrix()))
                         block.matrix = matrix.appended(self.selfMatrix).appended(ma).appended(self.selfMatrix.inverted());
                     block.fixedWidth = bw;
-                    await block.forceUpdate();
+                    await block.forceManualUpdate();
                     block.updateRenderLines();
                     block.page.kit.picker.view.forceUpdate();
                     if (isEnd) {
@@ -179,7 +179,7 @@ export class TextSpan extends Block {
                     if (!ma.equals(new Matrix()))
                         block.matrix = matrix.appended(self.selfMatrix).appended(ma).appended(self.selfMatrix.inverted());
                     block.fontScale = old_fs * (bh / h);
-                    await block.forceUpdate();
+                    await block.forceManualUpdate();
                     block.updateRenderLines();
                     block.page.kit.picker.view.forceUpdate();
                     if (isEnd) {

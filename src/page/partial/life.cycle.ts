@@ -7,7 +7,7 @@ import { ActionDirective } from "../../history/declare";
 import { PageDirective } from "../directive";
 import { PageHistory } from "../interaction/history";
 import { PageKeys } from "../interaction/keys";
-import {  BlockUrlConstant } from "../../block/constant";
+import { BlockUrlConstant } from "../../block/constant";
 import { PageLayoutType } from "../declare";
 import { GridMap } from "../grid";
 import { Matrix } from "../../common/matrix";
@@ -147,7 +147,7 @@ export class Page$Cycle {
         }
         await this.onRepair();
     }
-    async onSyncUserActions(this: Page, actions: UserAction[], source: 'load' | 'loadSyncBlock' | 'notify' | 'notifyView') {
+    async onSyncUserActions(this: Page,actions: UserAction[],source: 'load' | 'loadSyncBlock' | 'notify' | 'notifyView') {
         if (source == 'notifyView' || source == 'notify') {
             this.pageModifiedExternally = true;
         }
@@ -163,6 +163,8 @@ export class Page$Cycle {
                     this.onError(ex);
                 }
             }
+        }, {
+            disabledStore: true
         })
         if (source == 'notifyView') {
             actions.forEach(action => {
@@ -249,92 +251,120 @@ export class Page$Cycle {
         await this.load(data);
     }
 
-   
+
     private willUpdateAll: boolean = false;
     private willUpdateBlocks: Block[];
     private willLayoutBlocks: Block[];
-    private willChangeBlocks: Block[] = [];
-    private updatedFns: (() => Promise<void>)[] = [];
-    get hasUpdate() {
+    private willSyncBlocks: Block[] = [];
+    private actionCompletedEvents: (() => Promise<void>)[] = [];
+    private actionAfterEvents: (() => Promise<void>)[] = [];
+    get hasActionUpdate() {
         return this.willUpdateBlocks.length > 0 || this.willUpdateAll;
     }
-    addBlockChange(block: Block) {
-        this.willChangeBlocks.push(block);
+    /**
+     * 主动通知当前Action更新，需要同步的syncBlockId或page
+     * 如果更新是处于syncBlock中时，数据的更新应存在syncBlock中
+     * @param block 
+     */
+    notifyActionBlockSync(block: Block) {
+        this.willSyncBlocks.push(block);
     }
-    addPageUpdate() {
+    /**
+     * 主动通知页面更新
+     */
+    notifyActionPageUpdate() {
         this.willUpdateAll = true;
     }
-    addBlockUpdate(block: Block) {
-        if (this.willUpdateBlocks) {
-            var pa = this.willUpdateBlocks.find(g => g.contains(block));
-            if (!pa) this.willUpdateBlocks.push(block);
-        }
+    /**
+     * 主动通知block重新渲染
+     * @param block 
+     */
+    notifyActionBlockUpdate(block: Block) {
+        block.needUpdate = true;
+        if (!Array.isArray(this.willUpdateBlocks)) this.willUpdateBlocks = [];
+        if (!this.willUpdateBlocks.includes(block))
+            this.willUpdateBlocks.push(block);
     }
-    addBlockClearLayout(block: Block) {
+    /**
+     * 主动通知block重新布局
+     * @param block 
+     */
+    notifyActionBlockResetLayout(block: Block) {
         if (this.willLayoutBlocks && !this.willLayoutBlocks.exists(block))
             this.willLayoutBlocks.push(block);
     }
     /**
-     * 绑定更新后触发的事件
+     * 添加一件事件，当执行onAction完后，触发的事件
+     * 注意事件仍然执行在onAction内部,只是处于尾部
      * @param fn 
      */
-    addUpdateEvent(fn: () => Promise<void>) {
-        this.updatedFns.push(fn);
+    addActionCompletedEvent(fn: () => Promise<void>) {
+        this.actionCompletedEvents.push(fn);
     }
     /**
-     * 触发需要更新的view,
-     * 这个可以手动触发多次
+     * 添加一件事件，当执行onAction完后，触发的事件
+     * 注意事件执行在onAction外部
+     * @param fn 
      */
-    private notifyUpdateBlock(this: Page) {
-        var ups = this.willUpdateBlocks.map(c => c);
-        ups = lodash.uniq(ups);
-        var fns = this.updatedFns.map(f => f);
-        var cos = Object.assign({}, this.recordSyncRowBlocks);
-        var cgs = Object.assign({}, this.recordOutlineChanges);
-        this.recordSyncRowBlocks = { rowBlocks: [], deletes: [] };
-        this.recordOutlineChanges = { isChangeAll: false, changeBlocks: [] }
-        this.willUpdateBlocks = [];
-        this.updatedFns = [];
-        this.willChangeBlocks = []
-        var self = this;
-        var fn = async function () {
-            try {
-                if (self.willUpdateAll) {
-                    self.willUpdateAll = false;
-                    await self.forceUpdate();
-                }
-                else await ups.eachAsync(async (up) => {
-                    try {
-                        if (up) await up.forceUpdate();
-                    }
-                    catch (ex) {
-                        console.error(ex);
-                    }
-                })
-            }
-            catch (ex) {
-                console.error(ex);
-                self.onError(ex);
-            }
-            await fns.eachAsync(async g => {
-                try {
-                    await g()
-                }
-                catch (ex) {
-                    console.error(ex);
-                }
-            });
-            try {
-                self.onNotifyChanged(cos, cgs)
-            }
-            catch (ex) {
-                console.error(ex);
-                self.onError(ex);
-            }
-        }
-        fn()
+    addActionAfterEvent(fn: () => Promise<void>) {
+        this.actionAfterEvents.push(fn);
     }
-    private async onNotifyChanged(this: Page, recordSyncRowBlocks: Page['recordSyncRowBlocks'], recordOutlineChanges: Page['recordOutlineChanges']) {
+    /**
+     * 每次执行onAction完后，触发的事件
+     * 此时执行仍然处于onAction内部，处于onAction尾部
+     * 
+     */
+    // private async onActionCompleted(this: Page) {
+    //     var ups = this.willUpdateBlocks.map(c => c);
+    //     ups = lodash.uniq(ups);
+    //     var fns = this.actionCompletedEvents.map(f => f);
+    //     var cos = Object.assign({}, this.recordSyncRowBlocks);
+    //     var cgs = Object.assign({}, this.recordOutlineChanges);
+    //     this.recordSyncRowBlocks = { rowBlocks: [], deletes: [] };
+    //     this.recordOutlineChanges = { isChangeAll: false, changeBlocks: [] }
+    //     this.willUpdateBlocks = [];
+    //     this.actionCompletedEvents = [];
+    //     this.willSyncBlocks = []
+    //     var self = this;
+    //     console.log(ups, 'ups');
+    //     var fn = async function () {
+    //         try {
+    //             if (self.willUpdateAll) {
+    //                 self.willUpdateAll = false;
+    //                 await self.forceUpdate();
+    //             }
+    //             else await ups.eachAsync(async (up) => {
+    //                 try {
+    //                     if (up) await up.forceUpdate();
+    //                 }
+    //                 catch (ex) {
+    //                     console.error(ex);
+    //                 }
+    //             })
+    //         }
+    //         catch (ex) {
+    //             console.error(ex);
+    //             self.onError(ex);
+    //         }
+    //         await fns.eachAsync(async g => {
+    //             try {
+    //                 await g()
+    //             }
+    //             catch (ex) {
+    //                 console.error(ex);
+    //             }
+    //         });
+    //         try {
+    //             self.onActionCompletedNotify(cos, cgs)
+    //         }
+    //         catch (ex) {
+    //             console.error(ex);
+    //             self.onError(ex);
+    //         }
+    //     }
+    //     fn()
+    // }
+    private async onActionCompletedNotify(this: Page, recordSyncRowBlocks: Page['recordSyncRowBlocks'], recordOutlineChanges: Page['recordOutlineChanges']) {
         if (!this.pageInfo?.id) return;
         try {
             if (recordSyncRowBlocks.deletes.length > 0 || recordSyncRowBlocks.rowBlocks.length > 0) {
@@ -394,6 +424,14 @@ export class Page$Cycle {
             this.onError(ex);
             console.error(ex);
         }
+    }
+    private async onActionAfter(this: Page,
+        fns: (() => Promise<void>)[]) {
+        fns.each((f) => {
+            f().then(() => { }).catch(e => {
+                this.onError(e)
+            })
+        })
     }
     recordOutlineChanges: { isChangeAll: boolean, changeBlocks: Block[] } = { isChangeAll: false, changeBlocks: [] };
     recordSyncRowBlocks: { rowBlocks: Block[], deletes: Block['refLinks'] } = { rowBlocks: [], deletes: [] };
@@ -479,10 +517,7 @@ export class Page$Cycle {
             console.error(ex);
             this.onError(ex);
         }
-
-
         //console.log(this.recordSyncRowBlocks)
-
         /**
          * 页面的大纲目录处理
          */
@@ -566,47 +601,162 @@ export class Page$Cycle {
     async onAction(this: Page,
         directive: ActionDirective | string,
         fn: () => Promise<void>,
-        options?: { disabledStore?: boolean,disabledSyncBlock?: boolean, immediate?: boolean }
+        options?: {
+
+            /**
+             * 禁止同步syncBlock，正常操作有所属的block，
+             * 但如dataGrid中，切换不同的视图时，该操作与原来的视图无关，所以不需要同步
+             */
+            disabledSyncBlock?: boolean,
+            /**
+             * 该操作会直接保存一个快照，存至服务器中
+             */
+            immediate?: boolean,
+            /**
+             * 禁止保存操作，当操作没有发生（即不同步至服务器，也不保存至历史队列中)
+             */
+            disabledStore?: boolean,
+            /**
+             * 将当前的操作合并至上一个操作中
+             */
+            merge?: boolean,
+            /**
+             * 禁止加入到当前的操作历史队列中
+             */
+            disabledJoinHistory?: boolean,
+            /**
+             * 禁止将操作同步至服务器
+             */
+            disableSyncServer?: boolean
+        }
     ) {
-        if (typeof this.onActionQueue == 'undefined') this.onActionQueue = new QueueHandle();
-        await this.onActionQueue.create(
-            async () => {
-                await this.snapshoot.sync(directive, async (cb) => {
-                    this.willUpdateBlocks = [];
-                    this.willLayoutBlocks = [];
-                    this.willChangeBlocks = [];
-                    this.willUpdateAll = false;
-                    this.updatedFns = [];
-                    this.recordSyncRowBlocks = { rowBlocks: [], deletes: [] };
-                    this.recordOutlineChanges = { isChangeAll: false, changeBlocks: [] }
+        var isTs: boolean = false;
+        var willAction = async () => {
+            console.log('onAction', typeof directive == 'number' ? ActionDirective[directive] : directive);
+            this.actionAfterEvents = [];
+            var ts = window.performance.now();
+            await this.snapshoot.sync(directive, async (cb) => {
+                this.willUpdateBlocks = [];
+                this.willLayoutBlocks = [];
+                this.willSyncBlocks = [];
+                this.willUpdateAll = false;
+                this.actionCompletedEvents = [];
+                this.recordSyncRowBlocks = { rowBlocks: [], deletes: [] };
+                this.recordOutlineChanges = { isChangeAll: false, changeBlocks: [] }
+                try {
+
+                    if (typeof fn == 'function') await fn();
+                    if (isTs)
+                        console.log('ts fn', window.performance.now() - ts);
+                    if (this.willSyncBlocks.length > 0) {
+                        cb(this.willSyncBlocks);
+                    }
+                    if (isTs)
+                        console.log('ts willSyncBlocks fn', window.performance.now() - ts);
                     try {
-                        if (typeof fn == 'function') await fn();
-                    } catch (ex) {
+                        if (Array.isArray(this.willLayoutBlocks) && this.willLayoutBlocks.length > 0) {
+                            var bs = this.willLayoutBlocks;
+                            this.willLayoutBlocks = [];
+                            await bs.eachAsync(async (block) => {
+                                await block.layoutCollapse();
+                            });
+                        }
+                    }
+                    catch (ex) {
+                        console.error('will layout', ex)
                         this.onError(ex);
                     }
-                    finally {
-                        if (this.willChangeBlocks.length > 0) {
-                            cb(this.willChangeBlocks);
+                    if (isTs)
+                        console.log('ts will layout fn', window.performance.now() - ts);
+                    if (isTs)
+                        console.log('upda', this.willUpdateAll, this.willUpdateBlocks)
+                    try {
+                        if (this.willUpdateAll) {
+                            this.willUpdateAll = false;
+                            await this.forceUpdate();
                         }
-                        try {
-                            if (Array.isArray(this.willLayoutBlocks) && this.willLayoutBlocks.length > 0) {
-                                var bs = this.willLayoutBlocks;
-                                await bs.eachAsync(async (block) => {
-                                    await block.layoutCollapse();
-                                });
-                                this.willLayoutBlocks = [];
-                            }
+                        else {
+                            var ubs = this.willUpdateBlocks;
+                            this.willUpdateBlocks = [];
+                            await ubs.eachAsync(async (up) => {
+                                try {
+                                    if (up) await up.forceManualUpdate();
+                                }
+                                catch (ex) {
+                                    console.error('update block view', ex)
+                                    this.onError(ex);
+                                }
+                            })
                         }
-                        catch (ex) {
-                            this.onError(ex);
-                        }
-                        this.notifyUpdateBlock();
                     }
-                }, options)
-            }
-        )
-    }
+                    catch (ex) {
+                        console.error('will update view', ex);
+                        this.onError(ex);
+                    }
+                    if (isTs)
+                        console.log('update blocks ', window.performance.now() - ts);
 
+                    try {
+                        var es = this.actionCompletedEvents;
+                        this.actionCompletedEvents = [];
+                        es.forEach(fn => {
+                            try {
+                                fn()
+                            }
+                            catch (ex) {
+                                console.error('action error', ex)
+                                this.onError(ex);
+                            }
+                        })
+                    }
+                    catch (ex) {
+                        console.error(ex);
+                        this.onError(ex);
+                    }
+
+                    try {
+                        var cos = Object.assign({}, this.recordSyncRowBlocks);
+                        var cgs = Object.assign({}, this.recordOutlineChanges);
+                        this.recordSyncRowBlocks = { rowBlocks: [], deletes: [] };
+                        this.recordOutlineChanges = { isChangeAll: false, changeBlocks: [] }
+                        this.onActionCompletedNotify(cos, cgs)
+                    }
+                    catch (ex) {
+                        console.error('action completed notify', ex)
+                    }
+
+                }
+                catch (ex) {
+                    this.onError(ex);
+                }
+                finally {
+                    this.willUpdateBlocks = [];
+                    this.willLayoutBlocks = [];
+                    this.willSyncBlocks = [];
+                    this.willUpdateAll = false;
+                    this.actionCompletedEvents = [];
+                    this.recordSyncRowBlocks = { rowBlocks: [], deletes: [] };
+                    this.recordOutlineChanges = { isChangeAll: false, changeBlocks: [] }
+                }
+            }, options);
+            try {
+                if (isTs)
+                    console.log('ts action after', window.performance.now() - ts);
+                var events = this.actionAfterEvents;
+                this.actionAfterEvents = [];
+                this.onActionAfter(events)
+            }
+            catch (ex) {
+                console.error('action after', ex)
+                this.onError(ex);
+            }
+        }
+        if (typeof this.onActionQueue == 'undefined') this.onActionQueue = new QueueHandle();
+        await this.onActionQueue.create(
+            willAction
+        )
+        // await willAction();
+    }
     /**
      * 修复一些不正常的block
      */
@@ -663,14 +813,14 @@ export class Page$Cycle {
             }
         }
     }
-  
- 
-      /**
-     * 这里表示刚创建的block,是新的
-     * 不是通过load创建
-     * @param block 
-     */
-      async onNotifyCreateBlock(this: Page, block: Block) {
+
+
+    /**
+   * 这里表示刚创建的block,是新的
+   * 不是通过load创建
+   * @param block 
+   */
+    async onNotifyCreateBlock(this: Page, block: Block) {
         block.creater = this.user?.id;
         block.createDate = Date.now();
         block.editor = this.user?.id;

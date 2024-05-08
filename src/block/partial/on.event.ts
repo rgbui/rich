@@ -388,7 +388,7 @@ export class Block$Event {
                     if (options?.merge) this.page.snapshoot.merge();
                     await this.pattern.setFontStyle({ color: item.value });
                     await SetTextCacheFontColor('font', item.value)
-                    this.page.addBlockUpdate(this);
+                    this.page.notifyActionBlockUpdate(this);
                 })
                 break;
             case 'fillColor':
@@ -396,7 +396,7 @@ export class Block$Event {
                     if (options?.merge) this.page.snapshoot.merge();
                     await this.pattern.setFillStyle({ mode: 'color', color: item.value })
                     await SetTextCacheFontColor('fill', item.value);
-                    this.page.addBlockUpdate(this);
+                    this.page.notifyActionBlockUpdate(this);
                 })
                 break;
             case 'text-center':
@@ -468,7 +468,7 @@ export class Block$Event {
                 ma.translate(this.realPx(50), this.realPx(50));
                 await nb.updateMatrix(nb.matrix, ma);
             }
-            this.page.addUpdateEvent(async () => {
+            this.page.addActionCompletedEvent(async () => {
                 this.page.kit.anchorCursor.onFocusBlockAnchor(nb, { merge: true, render: true, last: true })
             })
         });
@@ -634,7 +634,7 @@ export class Block$Event {
                         else ar[n] = newValue[n];
                     }
                 }
-                this.page.addBlockChange(this);
+                this.page.notifyActionBlockSync(this);
                 await this.page.onNotifyEditBlock(this);
                 this.page.snapshoot.record(OperatorDirective.$array_update, {
                     pos: this.getArrayItemPos(options.prop, ar),
@@ -677,7 +677,7 @@ export class Block$Event {
                 else if (typeof (options.data as any).get == 'function') cd = (options.data as any).get()
                 else cd = lodash.cloneDeep(options.data);
             } else cd = lodash.cloneDeep(options.data);
-            this.page.addBlockChange(this);
+            this.page.notifyActionBlockSync(this);
             await this.page.onNotifyEditBlock(this);
             this.page.snapshoot.record(OperatorDirective.$array_create, {
                 pos,
@@ -711,7 +711,7 @@ export class Block$Event {
                 else if (typeof (currentData as any).get == 'function') cd = (currentData as any).get()
                 else cd = lodash.cloneDeep(currentData);
             } else cd = lodash.cloneDeep(currentData);
-            this.page.addBlockChange(this);
+            this.page.notifyActionBlockSync(this);
             await this.page.onNotifyEditBlock(this);
             this.page.snapshoot.record(OperatorDirective.$array_delete, {
                 pos,
@@ -742,7 +742,7 @@ export class Block$Event {
             lodash.remove(arr, (g, i) => i == from);
             arr.splice(to, 0, item);
             var to = options.to;
-            this.page.addBlockChange(this);
+            this.page.notifyActionBlockSync(this);
             await this.page.onNotifyEditBlock(this);
             this.page.snapshoot.record(OperatorDirective.$array_move, {
                 pos,

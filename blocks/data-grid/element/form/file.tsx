@@ -33,7 +33,7 @@ class FormFieldFile extends OriginFormField {
                 vs.push(r);
             }
             this.onChange(vs);
-            this.forceUpdate();
+            this.forceManualUpdate();
         }
     }
 }
