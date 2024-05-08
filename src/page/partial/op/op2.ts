@@ -12,6 +12,7 @@ import { TableSchema } from "../../../../blocks/data-grid/schema/meta";
 import { Title } from "../../../../blocks/interaction/title";
 import { channel } from "../../../../net/channel";
 import { ElementType } from "../../../../net/element.type";
+import { BlockRenderRange } from "../../../block/enum";
 
 export class Page$Operator2 {
     /**
@@ -150,7 +151,7 @@ export class Page$Operator2 {
             if (willCombineBlock.childs.length > 0) {
                 if (block.content && block.childs.length == 0) {
                     await this.createBlock(BlockUrlConstant.Text, { content: block.content }, block, 0);
-                    await block.updateProps({ content: '' });
+                    await block.updateProps({ content: '' },BlockRenderRange.self);
                 }
                 var cs = willCombineBlock.childs.map(c => c);
                 await cs.eachAsync(async (c) => {
@@ -160,7 +161,7 @@ export class Page$Operator2 {
             else {
                 if (block.content && block.childs.length == 0) {
                     await this.createBlock(BlockUrlConstant.Text, { content: block.content }, block, 0);
-                    await block.updateProps({ content: '' });
+                    await block.updateProps({ content: '' },BlockRenderRange.self);
                 }
                 if (willCombineBlock.content) {
                     await this.createBlock(BlockUrlConstant.Text, { content: willCombineBlock.content }, block, block.childs.length);

@@ -27,6 +27,7 @@ import { getAiDefaultModel } from "../../../../net/ai/cost";
 import { ElementType } from "../../../../net/element.type";
 import { RobotInfo } from "../../../../types/user";
 import { Head } from "../../../../blocks/general/head";
+import { BlockRenderRange } from "../../../block/enum";
 
 
 export class Page$Operator {
@@ -569,7 +570,7 @@ export class Page$Operator {
                     (b as any).fieldType = this.formType;
                     var newBlock = await this.createBlock(b.url, b, view, view.childs.length);
                     if (this.formRowData)
-                        await newBlock.updateProps({ value: field.getValue(this.formRowData) })
+                        await newBlock.updateProps({ value: field.getValue(this.formRowData) }, BlockRenderRange.self)
                 }
             }
             else {
@@ -624,7 +625,7 @@ export class Page$Operator {
             })
             await channel.air('/page/update/info', { id: this.pageInfo?.id, pageInfo: { pageType: this.pageLayout.type } });
             this.notifyActionPageUpdate();
-        }, { immediate: true })
+        }, { immediate: true, disabledJoinHistory: true })
     }
     async onTurnToDoc(this: Page) {
         await this.onAction('onTurnToDoc', async () => {
@@ -643,7 +644,7 @@ export class Page$Operator {
             })
             await channel.air('/page/update/info', { id: this.pageInfo?.id, pageInfo: { pageType: this.pageLayout.type } });
             this.notifyActionPageUpdate();
-        }, { immediate: true })
+        }, { immediate: true, disabledJoinHistory: true })
     }
 
 

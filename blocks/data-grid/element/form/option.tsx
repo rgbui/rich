@@ -48,7 +48,7 @@ class FieldText extends OriginFormField {
     async turnForm(fieldType: any): Promise<void> {
         await super.turnForm(fieldType);
         if (this.fieldType != 'doc-add') {
-            await this.updateProps({ optionType: 'default' })
+            await this.updateProps({ optionType: 'default' },BlockRenderRange.self)
         }
     }
 }

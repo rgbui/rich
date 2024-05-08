@@ -18,6 +18,7 @@ import { isUrl } from "./declare";
 import { inputBackspaceDeleteContent } from "./input";
 import { InputForceStore } from "./store";
 import { util } from "../../../util/util";
+import { BlockRenderRange } from "../../block/enum";
 
 export async function onPasteBlank(kit: Kit, event: ClipboardEvent) {
     if (kit.page.pageLayout?.type == PageLayoutType.board) {
@@ -274,7 +275,7 @@ async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
             var beforeText = content.slice(0, offset);
             var lastText = content.slice(offset);
             if (rowBlock.childs.length == 0) {
-                await rowBlock.updateProps({ content: '' });
+                await rowBlock.updateProps({ content: '' },BlockRenderRange.self);
                 if (beforeText) await rowBlock.appendBlock({ url: BlockUrlConstant.Text, content: beforeText });
                 var bs = blocks[0].blocks.childs;
                 var rs = await rowBlock.appendArrayBlockData(bs, undefined, BlockChildKey.childs);
@@ -284,7 +285,7 @@ async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
                 })
             }
             else {
-                await aa.block.updateProps({ content: beforeText });
+                await aa.block.updateProps({ content: beforeText },BlockRenderRange.self);
                 var bs = blocks[0].blocks.childs;
                 var rs = await aa.block.parent.appendArrayBlockData(bs, aa.block.at, BlockChildKey.childs);
                 if (lastText) await aa.block.parent.appendBlock({

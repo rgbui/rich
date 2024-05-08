@@ -74,7 +74,7 @@ export class Note extends Block {
     }
     async setBoardEditCommand(name: string, value: any) {
         if (name == 'backgroundNoTransparentColor')
-            await this.updateProps({ color: value })
+            await this.updateProps({ color: value },BlockRenderRange.self)
         else (await super.setBoardEditCommand(name, value) == false)
         {
             if (name == 'stickerSize') {

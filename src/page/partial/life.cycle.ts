@@ -19,9 +19,9 @@ import { channel } from "../../../net/channel";
 import { ElementType, getElementUrl } from "../../../net/element.type";
 import { QueueHandle } from "../../../component/lib/queue";
 import { Image } from "../../../blocks/media/image";
-
 import { ls } from "../../../i18n/store";
 import { BuildTemplate } from "../template/build";
+import { List, ListType } from "../../../blocks/present/list/list";
 
 
 export class Page$Cycle {
@@ -147,7 +147,7 @@ export class Page$Cycle {
         }
         await this.onRepair();
     }
-    async onSyncUserActions(this: Page,actions: UserAction[],source: 'load' | 'loadSyncBlock' | 'notify' | 'notifyView') {
+    async onSyncUserActions(this: Page, actions: UserAction[], source: 'load' | 'loadSyncBlock' | 'notify' | 'notifyView') {
         if (source == 'notifyView' || source == 'notify') {
             this.pageModifiedExternally = true;
         }
@@ -258,9 +258,6 @@ export class Page$Cycle {
     private willSyncBlocks: Block[] = [];
     private actionCompletedEvents: (() => Promise<void>)[] = [];
     private actionAfterEvents: (() => Promise<void>)[] = [];
-    get hasActionUpdate() {
-        return this.willUpdateBlocks.length > 0 || this.willUpdateAll;
-    }
     /**
      * 主动通知当前Action更新，需要同步的syncBlockId或page
      * 如果更新是处于syncBlock中时，数据的更新应存在syncBlock中
@@ -309,61 +306,6 @@ export class Page$Cycle {
     addActionAfterEvent(fn: () => Promise<void>) {
         this.actionAfterEvents.push(fn);
     }
-    /**
-     * 每次执行onAction完后，触发的事件
-     * 此时执行仍然处于onAction内部，处于onAction尾部
-     * 
-     */
-    // private async onActionCompleted(this: Page) {
-    //     var ups = this.willUpdateBlocks.map(c => c);
-    //     ups = lodash.uniq(ups);
-    //     var fns = this.actionCompletedEvents.map(f => f);
-    //     var cos = Object.assign({}, this.recordSyncRowBlocks);
-    //     var cgs = Object.assign({}, this.recordOutlineChanges);
-    //     this.recordSyncRowBlocks = { rowBlocks: [], deletes: [] };
-    //     this.recordOutlineChanges = { isChangeAll: false, changeBlocks: [] }
-    //     this.willUpdateBlocks = [];
-    //     this.actionCompletedEvents = [];
-    //     this.willSyncBlocks = []
-    //     var self = this;
-    //     console.log(ups, 'ups');
-    //     var fn = async function () {
-    //         try {
-    //             if (self.willUpdateAll) {
-    //                 self.willUpdateAll = false;
-    //                 await self.forceUpdate();
-    //             }
-    //             else await ups.eachAsync(async (up) => {
-    //                 try {
-    //                     if (up) await up.forceUpdate();
-    //                 }
-    //                 catch (ex) {
-    //                     console.error(ex);
-    //                 }
-    //             })
-    //         }
-    //         catch (ex) {
-    //             console.error(ex);
-    //             self.onError(ex);
-    //         }
-    //         await fns.eachAsync(async g => {
-    //             try {
-    //                 await g()
-    //             }
-    //             catch (ex) {
-    //                 console.error(ex);
-    //             }
-    //         });
-    //         try {
-    //             self.onActionCompletedNotify(cos, cgs)
-    //         }
-    //         catch (ex) {
-    //             console.error(ex);
-    //             self.onError(ex);
-    //         }
-    //     }
-    //     fn()
-    // }
     private async onActionCompletedNotify(this: Page, recordSyncRowBlocks: Page['recordSyncRowBlocks'], recordOutlineChanges: Page['recordOutlineChanges']) {
         if (!this.pageInfo?.id) return;
         try {
@@ -432,6 +374,23 @@ export class Page$Cycle {
                 this.onError(e)
             })
         })
+    }
+    adjustListNumStr(blocks: Block[]) {
+        if (blocks.length == 0) return;
+        var bs: List[] = [];
+        var rs: (Block[])[] = [];
+        blocks.forEach(c => {
+            if (!rs.includes(c.parentBlocks)) rs.push(c.parentBlocks)
+        })
+        rs.forEach(c => {
+            var ls = c.filter(g => g.url == BlockUrlConstant.List && (g as List).listType == ListType.number && !blocks.includes(g)) as List[];
+            if (ls.length > 0) {
+                bs.push(...ls);
+            }
+        })
+        for (let b of bs) {
+            b.forceManualUpdate()
+        }
     }
     recordOutlineChanges: { isChangeAll: boolean, changeBlocks: Block[] } = { isChangeAll: false, changeBlocks: [] };
     recordSyncRowBlocks: { rowBlocks: Block[], deletes: Block['refLinks'] } = { rowBlocks: [], deletes: [] };
@@ -668,8 +627,8 @@ export class Page$Cycle {
                     }
                     if (isTs)
                         console.log('ts will layout fn', window.performance.now() - ts);
-                    if (isTs)
-                        console.log('upda', this.willUpdateAll, this.willUpdateBlocks)
+
+                    console.log('willAll...', this.willUpdateAll, this.willUpdateBlocks)
                     try {
                         if (this.willUpdateAll) {
                             this.willUpdateAll = false;
@@ -687,6 +646,7 @@ export class Page$Cycle {
                                     this.onError(ex);
                                 }
                             })
+                            this.adjustListNumStr(ubs)
                         }
                     }
                     catch (ex) {

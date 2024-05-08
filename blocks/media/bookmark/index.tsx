@@ -64,13 +64,13 @@ export class Bookmark extends Block {
             }
             await this.page.onAction(ActionDirective.onBookMark, async () => {
                 if (isInit) this.page.snapshoot.merge();
-                await this.updateProps({ bookmarkUrl: url })
+                await this.updateProps({ bookmarkUrl: url },BlockRenderRange.self)
                 if (r?.ok) {
                     await this.updateProps({ bookmarkInfo: r.data }, BlockRenderRange.self)
                 }
                 else {
                     if (bo) {
-                        await this.updateProps({ bookmarkInfo: bo })
+                        await this.updateProps({ bookmarkInfo: bo },BlockRenderRange.self)
                     }
                 }
             });

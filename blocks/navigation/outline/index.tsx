@@ -87,8 +87,8 @@ export class PageOutLine extends Block {
                     id: b.id,
                     block: b,
                     hLevel: level,
-                    text: b.getBlockContent(),
-                    html: b.el ? b.el.innerText : undefined,
+                    text:b.content,
+                    html: b.contentEl ? b.contentEl.innerText : undefined,
                     spread: sc,
                     childs: []
                 });

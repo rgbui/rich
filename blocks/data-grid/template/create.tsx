@@ -4,6 +4,7 @@ import { TableSchema } from "../schema/meta";
 import { DataGridView } from "../view/base";
 import { CardFactory } from "./card/factory/factory";
 import { util } from "../../../util/util";
+import { BlockRenderRange } from "../../../src/block/enum";
 
 export async function onCreateDataGridTemplate(
     text: string,
@@ -39,7 +40,7 @@ export async function onCreateDataGridTemplate(
                     schemaId: schema.id,
                     syncBlockId: view.id,
                     fields: viewfields,
-                })
+                },BlockRenderRange.self)
                 if (typeof g.blockViewHandle == 'function') await g.blockViewHandle(block, g)
                 else {
                     var ps = g.props.toArray(pro => {
@@ -65,7 +66,7 @@ export async function onCreateDataGridTemplate(
                                 props: ps
                             }
                         }
-                    });
+                    },BlockRenderRange.self);
                 }
             })
         }
@@ -105,7 +106,7 @@ export async function onCreateDataGridTemplate(
                                 props: ps
                             }
                         }
-                    });
+                    },BlockRenderRange.self);
                 }
             })
         }

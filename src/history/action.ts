@@ -67,7 +67,7 @@ export class UserAction {
      * 是否为白板选择块
      */
     isCursorOperatorOrPicker() {
-        var dr = typeof this.directive == 'number' ? UserAction[this.directive] : this.directive;
+        var dr = typeof this.directive == 'number' ? ActionDirective[this.directive] : this.directive;
         if (dr.indexOf('.') > -1) {
             dr = dr.split('.')[1];
         }

@@ -590,14 +590,25 @@ export abstract class Block extends Events {
             return false;
         }
     }
-    async forceManualUpdate() {
+    async forceManualUpdate(isSub: boolean = false, isSubAll: boolean = false) {
+        if (isSubAll)
+            this.each(c => {
+                c.forceManualUpdate()
+            })
+        if (isSub) {
+            for (let b in this.blocks) {
+                for (let bb of this.blocks[b]) {
+                    bb.forceManualUpdate();
+                }
+            }
+        }
         return new Promise((resolve, reject) => {
             if (this.view && this.isMounted) {
                 this.appearAnchors.forEach(aa => {
                     aa.updateViewValue();
                 })
                 var seq = this.view.state.seq + 1;
-                this.needUpdate=true;
+                this.needUpdate = true;
                 this.view.setState({ seq: seq }, () => {
                     resolve(true);
                 })

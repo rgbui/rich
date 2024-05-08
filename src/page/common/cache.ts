@@ -87,7 +87,7 @@ export async function setBoardBlockCache(block: Block, defaultData?: Record<stri
         case BlockUrlConstant.Note:
             var g = await BlockCache.get(url, 'backgroundNoTransparentColor');
             if (!lodash.isUndefined(g)) {
-                await block.updateProps({ color: g })
+                await block.updateProps({ color: g },BlockRenderRange.self)
             }
             var c = await BlockCache.get(url, 'stickerSize');
             if (!lodash.isUndefined(c)) {
@@ -124,7 +124,7 @@ export async function setBoardBlockCache(block: Block, defaultData?: Record<stri
             }
             var fss = await BlockCache.get(url, 'fontSize');
             if (typeof fss != 'undefined') {
-                await block.updateProps({ fontScale: fss / 14 })
+                await block.updateProps({ fontScale: fss / 14 },BlockRenderRange.self)
             }
             break;
 

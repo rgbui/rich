@@ -537,7 +537,7 @@ export class Block$Event {
                     date: Date.now(),
                     userid: this.page.user.id
                 }
-            });
+            },BlockRenderRange.self);
         })
     }
     async unlock(this: Block, locked: boolean) {
@@ -547,7 +547,7 @@ export class Block$Event {
                 date: Date.now(),
                 userid: this.page.user.id
             }
-        });
+        },BlockRenderRange.self);
     }
     async onZIndex(this: Block, layer: 'top' | 'bottom') {
         await this.page.onAction(ActionDirective.onZIndex, async () => {

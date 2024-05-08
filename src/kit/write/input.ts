@@ -203,11 +203,11 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                     if (rowBlock === block) {
                         if (rowBlock.content)
                             await rowBlock.appendBlock({ url: BlockUrlConstant.Text, pattern, content: rowBlock.content });
-                        await rowBlock.updateProps({ content: '' });
+                        await rowBlock.updateProps({ content: '' },BlockRenderRange.self);
                     }
                     var newBlock = await rowBlock.appendBlock({ url: BlockUrlConstant.Text, content: mr.matchValue });
                     if (rule.style) await newBlock.pattern.setStyles(rule.style);
-                    if (rule.props) await newBlock.updateProps(rule.props);
+                    if (rule.props) await newBlock.updateProps(rule.props,BlockRenderRange.self);
                     if (rest) await rowBlock.appendBlock({ url: BlockUrlConstant.Text, pattern, content: rest });
                     write.kit.page.addActionAfterEvent(async () => {
                         write.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
@@ -410,7 +410,7 @@ async function combindSubBlock(write: PageWrite, rowBlock: Block) {
     var lastPreBlock = pa.childs.last();
     if (pa.childs.length == 0) {
         var content = pa.content;
-        await pa.updateProps({ content: '' });
+        await pa.updateProps({ content: '' },BlockRenderRange.self);
         var pattern = await pa.pattern.cloneData();
         lastPreBlock = await pa.appendBlock({ url: BlockUrlConstant.Text, content, pattern }, undefined, BlockChildKey.childs);
     }
@@ -451,7 +451,7 @@ async function combineTextBlock(write: PageWrite, rowBlock: Block, preBlock?: Bl
     var lastPreBlock = preBlock.childs.last();
     if (preBlock.childs.length == 0) {
         var content = preBlock.content;
-        await preBlock.updateProps({ content: '' });
+        await preBlock.updateProps({ content: '' },BlockRenderRange.self);
         var pattern = await preBlock.pattern.cloneData();
         if (content != '')
             await preBlock.appendBlock({ url: BlockUrlConstant.Text, content, pattern });
@@ -632,7 +632,7 @@ export async function onSpaceInputUrl(write: PageWrite, aa: AppearAnchor, event:
             event.preventDefault();
             await InputForceStore(aa, async () => {
                 if (aa.block.isLine) {
-                    await aa.block.updateProps({ content: content.slice(0, 0 - url.length) });
+                    await aa.block.updateProps({ content: content.slice(0, 0 - url.length) },BlockRenderRange.self);
                     var newBlock = await write.kit.page.createBlock(BlockUrlConstant.Text, { content: url, link: { url } }, aa.block.parent, aa.block.at, 'childs')
                     aa.block.page.addActionAfterEvent(async () => {
                         write.kit.anchorCursor.onFocusBlockAnchor(newBlock, { merge: true, last: true, render: true })
@@ -640,7 +640,7 @@ export async function onSpaceInputUrl(write: PageWrite, aa: AppearAnchor, event:
                     if (aa.block.isContentEmpty) await aa.block.delete();
                 }
                 else {
-                    await aa.block.updateProps({ content: '' });
+                    await aa.block.updateProps({ content: '' },BlockRenderRange.self);
                     var rest = content.slice(0, 0 - url.length);
                     if (rest) await aa.block.appendArrayBlockData([
                         { url: BlockUrlConstant.Text, content: content.slice(0, 0 - url.length) },

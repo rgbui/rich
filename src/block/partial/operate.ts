@@ -220,6 +220,7 @@ export class Block$Operator {
                     })
                 }
             }
+            this.page.notifyActionBlockUpdate(this);
             this.page.notifyActionBlockUpdate(this.parent);
             this.page.notifyActionBlockResetLayout(this.parent);
             delete this.parent;
@@ -532,7 +533,7 @@ export class Block$Operator {
         return bs;
     }
     async updateAppear(this: Block, appear: AppearAnchor, newValue: string, range = BlockRenderRange.none) {
-        await this.updateProps({ [appear.prop]: newValue });
+        await this.updateProps({ [appear.prop]: newValue },BlockRenderRange.self);
         await this.changeAppear(appear);
     }
     /**

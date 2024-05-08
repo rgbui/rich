@@ -6,6 +6,7 @@ import { BlockChildKey, BlockUrlConstant } from "../constant";
 import lodash from "lodash";
 import { TextContent } from "../element/text";
 import { util } from "../../../util/util";
+import { BlockRenderRange } from "../enum";
 
 export enum BlockAppear {
     /**
@@ -313,7 +314,7 @@ export class AppearAnchor {
         var props = { code: tc.code, link: lodash.cloneDeep(tc.link), comment: tc.comment };
         if (this.block.isLine) {
             var at = this.block.at;
-            await this.block.updateProps({ content: ts[0] });
+            await this.block.updateProps({ content: ts[0] },BlockRenderRange.self);
             bs.push(this.block);
             if (ts.length > 1) {
                 var rs = await this.block.parent.appendArrayBlockData(
@@ -331,7 +332,7 @@ export class AppearAnchor {
             return bs;
         }
         else {
-            await this.block.updateProps({ content: '' });
+            await this.block.updateProps({ content: '' },BlockRenderRange.self);
             return await this.block.appendArrayBlockData(
                 ts.map(t => ({
                     url: BlockUrlConstant.Text,

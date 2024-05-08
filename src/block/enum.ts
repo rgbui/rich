@@ -14,7 +14,8 @@ export enum BlockRenderRange {
     none = 0,
     self = 1,
     parent = 2,
-    page = 3
+    page = 3,
+    sub = 4
 }
 
 export enum BlockDirective {

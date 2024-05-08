@@ -88,6 +88,7 @@ export class Tab extends Block {
             );
             this.tabIndex = this.tabItems.length - 1;
             this.page.addActionAfterEvent(async () => {
+
                 this.page.kit.anchorCursor.onFocusBlockAnchor(newBlock, { merge: true, render: true })
             })
         })
@@ -258,6 +259,7 @@ export class Tab extends Block {
         var rg = rs.find(g => g.name == 'text-center');
         if (rg) {
             rg.text = lst('对齐');
+
             var ns: MenuItem<string | BlockDirective>[] = [];
             ns.push({
                 text: lst('主题'),
@@ -293,8 +295,6 @@ export class Tab extends Block {
             })
             ns.push({ type: MenuItemType.divide })
 
-            var at = rs.findIndex(g => g.name == 'text-center');
-            rs.splice(at, 2);
             lodash.remove(rs, c => c.name == 'color');
             var pp = rs.findIndex(c => c.name == BlockDirective.comment);
             rs.splice(pp, 0, ...ns);
@@ -389,7 +389,7 @@ export class Tab extends Block {
 }
 
 @view('/tab')
-export class TabView extends BlockView<Tab>{
+export class TabView extends BlockView<Tab> {
     onResize(event: React.MouseEvent) {
         event.stopPropagation();
         var height = this.block.contentHeight;
@@ -474,7 +474,11 @@ export class TabView extends BlockView<Tab>{
                     ...innerStyle,
                     height: this.block.autoContentHeight == true ? undefined : this.block.contentHeight
                 }}>
-                    <ChildsArea childs={this.block.blocks.otherChilds}></ChildsArea>
+                    {this.block.blocks.otherChilds.map((c,i)=>{
+                        return <div key={c.id} style={{display:this.block.tabIndex==i?'block':'none'}}>
+                            <c.viewComponent block={c}></c.viewComponent>
+                        </div>
+                    })}
                 </div>
                 {this.block.isCanEdit() && this.block.autoContentHeight !== true && <Tip text={'拖动标签页高度'}><div className="sy-block-tab-resize visible" onMouseDown={e => this.onResize(e)}></div></Tip>}
             </div>

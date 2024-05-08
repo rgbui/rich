@@ -239,7 +239,7 @@ export class BlockPicker {
                                     x: self.kit.boardLine.over.selector.arrows[1],
                                     y: self.kit.boardLine.over.selector.arrows[0]
                                 }
-                            });
+                            },BlockRenderRange.self);
                         })
                         self.kit.boardLine.over.block.conectLine(lineBlock);
                     }
@@ -268,7 +268,7 @@ export class BlockPicker {
                                         x: p2.arrows[0],
                                         y: p2.arrows[1]
                                     }
-                                });
+                                },BlockRenderRange.self);
                                 shapeBlock.conectLine(lineBlock);
                                 newBlock = shapeBlock;
                             }
@@ -276,7 +276,7 @@ export class BlockPicker {
                                 var tr = gm.inverseTransform(Point.from(ev));
                                 await lineBlock.updateProps({
                                     to: { x: tr.x, y: tr.y }
-                                });
+                                },BlockRenderRange.self);
                             }
                         })
                     }
@@ -311,7 +311,7 @@ export class BlockPicker {
                                 x: p2.arrows[0],
                                 y: p2.arrows[1]
                             }
-                        });
+                        },BlockRenderRange.self);
                         cloneBlock.conectLine(lineBlock);
                         newBlock = cloneBlock;
                     })

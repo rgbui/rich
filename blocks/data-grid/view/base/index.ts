@@ -33,6 +33,7 @@ import { Input } from "../../../../component/view/input";
 import { onCreateDataGridTemplate } from "../../template/create";
 import { DataGridTab } from "../tab";
 import { PageLayoutType } from "../../../../src/page/declare";
+import { BlockRenderRange } from "../../../../src/block/enum";
 
 /**
  * 
@@ -414,7 +415,7 @@ export class DataGridView extends Block {
                             await this.updateProps({
                                 schemaId: dg.schemaId,
                                 syncBlockId: dg.syncBlockId
-                            })
+                            },BlockRenderRange.self)
                         }, { disabledSyncBlock: true })
                         else await this.page.onReplace(this, {
                             url: dg.url,
@@ -436,7 +437,7 @@ export class DataGridView extends Block {
                             await this.updateProps({
                                 schemaId: this.schema.id,
                                 syncBlockId: view.id
-                            })
+                            },BlockRenderRange.self)
                         }, { disabledSyncBlock: true });
                         else await this.page.onReplace(this, {
                             url: viewUrl,

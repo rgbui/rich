@@ -1,6 +1,7 @@
 import { Block } from "..";
 import { BlockAppear, AppearAnchor } from "../appear";
 import { BlockChildKey, BlockUrlConstant } from "../constant";
+import { BlockRenderRange } from "../enum";
 
 /**
  * 主要是用来确定光标的上下左右移动
@@ -25,7 +26,7 @@ export class Block$Anchor {
             var index = this.at;
             var newBlock: Block;
             if (frontConent) {
-                await this.updateProps({ content: frontConent });
+                await this.updateProps({ content: frontConent },BlockRenderRange.self);
                 newBlock = await this.page.createBlock(url, data, this.parent, index + 1);
                 if (latterContent) {
                     var cd = await this.cloneData(); cd.content = latterContent;
@@ -34,7 +35,7 @@ export class Block$Anchor {
             }
             else if (latterContent) {
                 newBlock = await this.page.createBlock(url, data, this.parent, index);
-                await this.updateProps({ content: latterContent });
+                await this.updateProps({ content: latterContent },BlockRenderRange.self);
             }
             else {
                 newBlock = await this.page.createBlock(url, data, this.parent, index);
@@ -48,7 +49,7 @@ export class Block$Anchor {
         else {
             var frontConent = this.content.slice(0, at);
             var latterContent = this.content.slice(at);
-            await this.updateProps({ content: '' });
+            await this.updateProps({ content: '' },BlockRenderRange.self);
             var index = 0;
             if (frontConent) await this.page.createBlock(BlockUrlConstant.Text, { content: frontConent }, this, index++);
             var newBlock = await this.page.createBlock(url, data, this, index++);

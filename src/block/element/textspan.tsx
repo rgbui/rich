@@ -215,7 +215,7 @@ export class TextSpan extends Block {
         else if (name == 'fontColor')
             await this.pattern.setFontStyle({ color: value });
         else if (name == 'fontSize') {
-            await this.updateProps({ fontScale: value / 14 })
+            await this.updateProps({ fontScale: value / 14 },BlockRenderRange.self)
             // this.pattern.setFontStyle({ fontSize: value, lineHeight: (value * 1.2) + 'px' });
         }
         else if (name == 'fontFamily') {

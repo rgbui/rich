@@ -324,7 +324,7 @@ export class DataGridViewOperator {
             pk
         ) as DataGridView;
         if (viewProps && Object.keys(viewProps).length > 0) {
-            await newBlock.updateProps(viewProps);
+            await newBlock.updateProps(viewProps,BlockRenderRange.self);
         }
         else {
             if ([
@@ -342,11 +342,11 @@ export class DataGridViewOperator {
                         showMode: 'default',
                         templateProps: {}
                     }
-                });
+                },BlockRenderRange.self);
             }
         }
         for (let i = 0; i < bs.length; i++) {
-            await bs[i].updateProps({ refBlockId: newBlock.id })
+            await bs[i].updateProps({ refBlockId: newBlock.id },BlockRenderRange.self)
         }
         bs.forEach(c => {
             newBlock.registerReferenceBlocker(c);
@@ -395,10 +395,10 @@ export class DataGridViewOperator {
             pk
         ) as DataGridView;
         if (viewProps && Object.keys(viewProps).length > 0) {
-            await newBlock.updateProps(viewProps);
+            await newBlock.updateProps(viewProps,BlockRenderRange.self);
         }
         for (let i = 0; i < bs.length; i++) {
-            await bs[i].updateProps({ refBlockId: newBlock.id })
+            await bs[i].updateProps({ refBlockId: newBlock.id },BlockRenderRange.self)
         }
         bs.forEach(c => {
             newBlock.registerReferenceBlocker(c);
@@ -452,13 +452,13 @@ export class DataGridViewOperator {
     async onUpdateSorts(this: DataGridView, sorts: { field: string, sort: number }[]) {
         await this.page.onAction(ActionDirective.onDataGridUpdateSorts, async () => {
             // this.page.notifyActionBlockSync(this);
-            await this.updateProps({ sorts })
+            await this.updateProps({ sorts },BlockRenderRange.self)
         })
     }
     async onUpdateFilter(this: DataGridView, filter: SchemaFilter) {
         await this.page.onAction(ActionDirective.onDataGridUpdateFilter, async () => {
             // this.page.notifyActionBlockSync(this);
-            await this.updateProps({ filter })
+            await this.updateProps({ filter },BlockRenderRange.self)
         })
     }
     async onAddFilter(this: DataGridView, viewField: ViewField) {
@@ -469,7 +469,7 @@ export class DataGridViewOperator {
                 field: viewField.field.id,
                 value: ''
             }, this.filter?.logic || "and")
-            await this.updateProps({ filter: newFilter })
+            await this.updateProps({ filter: newFilter },BlockRenderRange.self)
         });
         var rect = this.getVisibleContentBound();
         rect.height = 20;
@@ -497,7 +497,7 @@ export class DataGridViewOperator {
             // this.page.notifyActionBlockSync(this);
             // if (visible == true) await this.arrayPush({ prop: 'fields', data: new ViewField({ type: 'rowNum', colWidth: 80, text: "No." }, this.schema), at: 0 })
             // else await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.type == 'rowNum' });
-            await this.updateProps({ breakRow: visible });
+            await this.updateProps({ breakRow: visible },BlockRenderRange.self);
             await this.createItem();
             this.forceManualUpdate();
         })
@@ -508,7 +508,7 @@ export class DataGridViewOperator {
         else if (value == 'none' && !newFields.some(s => s.type == 'check')) return
         await this.page.onAction(ActionDirective.onDataGridShowCheck, async () => {
             // this.page.notifyActionBlockSync(this);
-            await this.updateProps({ checkRow: value });
+            await this.updateProps({ checkRow: value },BlockRenderRange.self);
             if (value == 'checkbox') await this.arrayPush({ prop: 'fields', at: 0, data: new ViewField({ colWidth: 80, type: 'check', text: lst('选择') }, this.schema) })
             else await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.type == 'check' })
             await this.createItem();
@@ -555,7 +555,7 @@ export class DataGridViewOperator {
             if (!(this.pageIndex >= 1 && this.pageIndex <= totalPage)) {
                 this.pageIndex = 1;
             }
-            await this.updateProps({ size });
+            await this.updateProps({ size },BlockRenderRange.self);
             await this.onLoadingAction(async () => {
                 await this.loadData();
                 this.forceManualUpdate();

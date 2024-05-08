@@ -10,6 +10,7 @@ import { Polygon } from "../../common/vector/polygon";
 import { ActionDirective } from "../../history/declare";
 import { loadPaper } from "../../paper";
 import { setBoardBlockCache } from "../../page/common/cache";
+import { BlockRenderRange } from "../../block/enum";
 
 export function CheckBoardSelector(
     kit: Kit,
@@ -247,7 +248,7 @@ export function CheckBoardSelector(
                             fixedHeight: bound.height,
                             viewBox: `0 0 ${bound.width} ${bound.height}`,
                             pathString: path.pathData
-                        })
+                        },BlockRenderRange.self)
                         path.remove();
                         if (isMounted) newBlock.forceManualUpdate();
                         kit.page.addActionAfterEvent(async () => {

@@ -16,6 +16,7 @@ import { getPageText } from "../../page/declare";
 import weekOfYear from "dayjs/plugin/weekOfYear"
 import { HelpText } from "../../../component/view/text";
 import { PageLink } from "../../../extensions/link/declare";
+import { BlockRenderRange } from "../../block/enum";
 dayjs.extend(weekOfYear);
 
 @flow('/insertBlocks')
@@ -67,7 +68,7 @@ export class InsertBlocksCommand extends FlowCommand {
                         text: block.content
                     });
                     if (r?.data?.items?.length > 0) {
-                        await block.updateProps({ pageId: r.data.items[0].id });
+                        await block.updateProps({ pageId: r.data.items[0].id },BlockRenderRange.self);
                     }
                 }
             }

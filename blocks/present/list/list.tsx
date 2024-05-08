@@ -209,7 +209,7 @@ export class List extends Block {
                 var gs = ps.findAllAfter(at, g => (g as List).listType == this.listType && (g as List).listView == this.listView);
                 var cs = [...rs, this, ...gs];
                 await cs.eachAsync(async g => {
-                    await g.updateProps({ listView: item.value as ListTypeView })
+                    await g.updateProps({ listView: item.value as ListTypeView }, BlockRenderRange.self)
                 });
                 this.page.notifyActionBlockUpdate(this.parent);
             })
@@ -257,29 +257,7 @@ export class ListView extends BlockView<List> {
             </span>
         }
         else if (this.block.listType == ListType.number) {
-            var pas = this.block.parentBlocks;
-            var at = pas.findIndex(g => g === this.block);
-            var list: List[] = [];
-            for (let i = at - 1; i >= 0; i--) {
-                var prevRow = pas[i];
-                if (prevRow && prevRow instanceof List && prevRow.listType == this.block.listType && prevRow.listView == this.block.listView) {
-                    list.push(prevRow);
-                }
-                else break
-            }
-            var num = 0;
-            if (list.length > 0) num = (list.last().startNumber || 1) - 1 + list.length;
-            else num = (this.block.startNumber || 1) - 1;
-            var str = (num + 1).toString();
-            if (this.block.listView == ListTypeView.alphabet) {
-                str = util.decimalToLetter(num + 1);
-            }
-            else if (this.block.listView == ListTypeView.capitalLetter) {
-                str = util.decimalToLetter(num + 1).toUpperCase();
-            }
-            else if (this.block.listView == ListTypeView.roman) {
-                str = util.convertToRoman(num + 1).toLowerCase()
-            }
+            var str = this.cacNumStr();
             return <span style={{
                 fontStyle: 'normal',
                 textDecoration: 'none',
@@ -287,6 +265,32 @@ export class ListView extends BlockView<List> {
                 fontWeight: 'normal'
             }} className='sy-block-list-text-type'>{str}.</span>
         }
+    }
+    cacNumStr() {
+        var pas = this.block.parentBlocks;
+        var at = pas.findIndex(g => g === this.block);
+        var list: List[] = [];
+        for (let i = at - 1; i >= 0; i--) {
+            var prevRow = pas[i];
+            if (prevRow && prevRow instanceof List && prevRow.listType == this.block.listType && prevRow.listView == this.block.listView) {
+                list.push(prevRow);
+            }
+            else break
+        }
+        var num = 0;
+        if (list.length > 0) num = (list.last().startNumber || 1) - 1 + list.length;
+        else num = (this.block.startNumber || 1) - 1;
+        var str = (num + 1).toString();
+        if (this.block.listView == ListTypeView.alphabet) {
+            str = util.decimalToLetter(num + 1);
+        }
+        else if (this.block.listView == ListTypeView.capitalLetter) {
+            str = util.decimalToLetter(num + 1).toUpperCase();
+        }
+        else if (this.block.listView == ListTypeView.roman) {
+            str = util.convertToRoman(num + 1).toLowerCase()
+        }
+        return str;
     }
     renderText() {
         var text = this.block.listType == ListType.circle ? lst("列表") : lst("数字列表");
@@ -296,7 +300,8 @@ export class ListView extends BlockView<List> {
     }
     renderView() {
         var contentStyle: CSSProperties = this.block.contentStyle;
-        contentStyle.fontSize = this.block.page.cacSmallFont(this.block.smallFont);
+        if (this.block.smallFont)
+            contentStyle.fontSize = this.block.page.cacSmallFont(this.block.smallFont);
         return <div className='sy-block-list'>
             <div style={this.block.visibleStyle}>
                 <div className='sy-block-list-text' data-block-content style={contentStyle}>

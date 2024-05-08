@@ -13,6 +13,7 @@ import { BlockButton } from "../../../blocks/interaction/button";
 import { Title } from "../../../blocks/interaction/title";
 import { lst } from "../../../i18n/store";
 import { Block } from "../../block";
+import { BlockRenderRange } from "../../block/enum";
 
 export class Page$Schema {
     formRowData: Record<string, any>;
@@ -234,7 +235,7 @@ export class Page$Schema {
             }
             if (value == 'doc-add') {
                 var title = self.find(g => g.url == BlockUrlConstant.Title) as Title;
-                await title.updateProps({ align: 'center' })
+                await title.updateProps({ align: 'center' },BlockRenderRange.self)
                 var button = self.find(g => g.url == BlockUrlConstant.Button && (g as BlockButton).isFormSubmit() == true) as BlockButton;
                 if (!button) {
                     var last: Block = self.findReverse(g => (g instanceof OriginFormField));

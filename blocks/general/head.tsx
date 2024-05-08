@@ -114,12 +114,12 @@ export class Head extends Block {
                 }
                 if (toggle == true) {
                     await this.appendArray(rs, 0, BlockChildKey.subChilds)
-                    await this.updateProps({ expand: true });
+                    await this.updateProps({ expand: true },BlockRenderRange.self);
                 }
                 else {
                     await this.parent.appendArray(rs, this.at + 1, this.parentKey);
                 }
-                await this.updateProps({ toggle })
+                await this.updateProps({ toggle },BlockRenderRange.self)
             });
             return;
         }

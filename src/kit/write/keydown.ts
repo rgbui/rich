@@ -226,7 +226,7 @@ export async function onKeyTab(write: PageWrite, aa: AppearAnchor, event: React.
                     await rowBlock.updateProps({
                         listType: (pa as any).listType,
                         listView: (pa as any).listView
-                    });
+                    },BlockRenderRange.self);
                 }
             }
             else {
@@ -237,7 +237,7 @@ export async function onKeyTab(write: PageWrite, aa: AppearAnchor, event: React.
             var prev = rowBlock.prev;
             if (prev) {
                 if (prev.url == BlockUrlConstant.List && (prev as any).expand == false) {
-                    await prev.updateProps({ expand: true });
+                    await prev.updateProps({ expand: true },BlockRenderRange.self);
                 }
                 if (prev.url == BlockUrlConstant.List && rowBlock.url == BlockUrlConstant.List) {
                     if ((prev as any).listType == (rowBlock as any).listType) {
@@ -275,7 +275,7 @@ export async function onKeyTab(write: PageWrite, aa: AppearAnchor, event: React.
                             if (rs.length > 0)
                                 await rowBlock.updateProps({
                                     listView: rs[0]
-                                })
+                                },BlockRenderRange.self)
                         }
                     }
                 }

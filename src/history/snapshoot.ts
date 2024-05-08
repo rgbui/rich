@@ -30,11 +30,19 @@ export class HistorySnapshoot extends Events {
     declare(directive: ActionDirective | string) {
         this._merge = false;
         this._pause = false;
+        this._immediate = false;
+        this._disabledStore = false;
+        this._disabledJoinHistory = false;
+        this._disableSyncServer = false;
         this.action = new UserAction();
         this.action.userid = this.page?.user.id;
         this.action.directive = directive;
         this.action.startDate = new Date().getTime();
     }
+    _immediate: boolean
+    _disabledStore: boolean
+    _disabledJoinHistory: boolean
+    _disableSyncServer: boolean
     /**
      * 合并，两次的action合并掉
      */
@@ -87,24 +95,13 @@ export class HistorySnapshoot extends Events {
             if (!this.action?.isEmpty) {
                 this.action.endDate = Date.now();
                 /**
-                 * 这是加载页面后，页面的自动处理动作
-                 */
-                if (this.action.directive == ActionDirective.AutomaticHandle) {
-                    return;
-                }
-                /**
                  * onLoadUserActions 一般是从别的地方触发的，那么相应的history就不应该在触发了
                  */
-                if (options?.disableSyncServer !== true && this.action.directive !== ActionDirective.onLoadUserActions) {
+                if (options?.disableSyncServer !== true && this._disableSyncServer !== true) {
                     this.emit('history', this.action);
                 }
                 if (this.historyRecord) {
-                    if (options?.disabledJoinHistory !== true && !([
-                        ActionDirective.onRedo,
-                        ActionDirective.onPageTurnLayout,
-                        ActionDirective.onLoadUserActions,
-                        ActionDirective.onUndo
-                    ].includes(this.action.directive as any))) {
+                    if (options?.disabledJoinHistory !== true && this._disabledJoinHistory !== true) {
                         if (this._merge == true || options?.merge == true) {
                             /**
                              * 合并上次的action
@@ -156,13 +153,15 @@ export class HistorySnapshoot extends Events {
             if (!(Array.isArray(this.action.syncBlocks) && this.action.syncBlocks.length > 0)) {
                 if (typeof this.action.syncPage == 'undefined') this.action.syncPage = true;
             }
+            if (this._immediate) this.action.immediate = true;
         }
         catch (ex) {
             console.error(ex);
             this.page.onError(ex);
         }
-        if (options?.disabledStore == true) return;
-        this.store(options)
+        if (options?.disabledStore !== true && this._disabledStore !== true) {
+            this.store(options)
+        }
     }
     private ops = new Map<OperatorDirective, { redo: (userOperator: UserOperator, source: 'redo' | 'load' | 'loadSyncBlock' | 'notify' | 'notifyView', action: UserAction) => Promise<void>, undo: (userOperator: UserOperator) => Promise<void> }>();
     /**

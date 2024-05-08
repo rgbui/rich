@@ -19,9 +19,6 @@ export class TabPage extends Block {
     }
     get visibleStyle() {
         var style = super.visibleStyle;
-        if (this.at != this.myTab.tabIndex) {
-            style.display = 'none';
-        }
         style.paddingTop = 0;
         style.paddingBottom = 0;
         style.paddingLeft = 0;

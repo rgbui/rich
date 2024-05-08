@@ -11,6 +11,7 @@ import { util } from "../../util/util";
 import { onBlockPickLine, SplitAiWriteTexts } from "./util";
 import { ResourceArguments } from "../icon/declare";
 import { getCodeMirrorLang } from "../../blocks/media/code/util";
+import { BlockRenderRange } from "../../src/block/enum";
 
 export class AiWrite {
     parentBlock: Block = null;
@@ -172,7 +173,7 @@ export class AiWrite {
                             await new Promise((resolve: (block: Block) => void, reject) => {
                                 this.page.onTurn(this.block, BlockUrlConstant.List, async (newBlock: Block, oldBlock) => {
                                     if (oldBlock) lodash.remove(this.writedBlocks, g => g == oldBlock)
-                                    await newBlock.updateProps({ listType: ListType.number, content: c.slice(d.length) })
+                                    await newBlock.updateProps({ listType: ListType.number, content: c.slice(d.length) },BlockRenderRange.self)
                                     newBlock.mounted(() => {
                                         // console.log('gggg');
                                         this.block = newBlock;
@@ -198,7 +199,7 @@ export class AiWrite {
                             await new Promise((resolve: (block: Block) => void, reject) => {
                                 this.page.onTurn(this.block, BlockUrlConstant.Code, async (newBlock: Block, oldBlock) => {
                                     if (oldBlock) lodash.remove(this.writedBlocks, g => g == oldBlock)
-                                    await newBlock.updateProps({ language: lang, content: code.trimStart() });
+                                    await newBlock.updateProps({ language: lang, content: code.trimStart() },BlockRenderRange.self);
                                     (newBlock as any).codeFinished = codeFinished;
                                     newBlock.mounted(() => {
                                         this.block = newBlock;
@@ -214,7 +215,7 @@ export class AiWrite {
                             await new Promise((resolve: (block: Block) => void, reject) => {
                                 this.page.onTurn(this.block, BlockUrlConstant.Head, async (newBlock: Block, oldBlock) => {
                                     if (oldBlock) lodash.remove(this.writedBlocks, g => g == oldBlock)
-                                    await newBlock.updateProps({ content: c })
+                                    await newBlock.updateProps({ content: c },BlockRenderRange.self)
                                     newBlock.mounted(() => {
                                         this.block = newBlock;
                                         this.aa = newBlock.appearAnchors.last()
@@ -229,7 +230,7 @@ export class AiWrite {
                             await new Promise((resolve: (block: Block) => void, reject) => {
                                 this.page.onTurn(this.block, BlockUrlConstant.Divider, async (newBlock: Block, oldBlock) => {
                                     if (oldBlock) lodash.remove(this.writedBlocks, g => g == oldBlock)
-                                    await newBlock.updateProps({ listType: ListType.circle, content: c.slice(d.length) })
+                                    await newBlock.updateProps({ listType: ListType.circle, content: c.slice(d.length) },BlockRenderRange.self)
                                     newBlock.mounted(() => {
                                         this.block = newBlock;
                                         this.aa = newBlock.appearAnchors.last()
@@ -246,7 +247,7 @@ export class AiWrite {
                             await new Promise((resolve: (block: Block) => void, reject) => {
                                 this.page.onTurn(this.block, BlockUrlConstant.Head, async (newBlock: Block, oldBlock) => {
                                     if (oldBlock) lodash.remove(this.writedBlocks, g => g == oldBlock)
-                                    await newBlock.updateProps({ content: c.slice(d.length).trim(), level: level })
+                                    await newBlock.updateProps({ content: c.slice(d.length).trim(), level: level },BlockRenderRange.self)
                                     newBlock.mounted(() => {
                                         this.block = newBlock;
                                         this.aa = newBlock.appearAnchors.last()
@@ -261,7 +262,7 @@ export class AiWrite {
                             await new Promise((resolve: (block: Block) => void, reject) => {
                                 this.page.onTurn(this.block, BlockUrlConstant.List, async (newBlock: Block, oldBlock) => {
                                     if (oldBlock) lodash.remove(this.writedBlocks, g => g == oldBlock)
-                                    await newBlock.updateProps({ listType: ListType.circle, content: c.slice(1) })
+                                    await newBlock.updateProps({ listType: ListType.circle, content: c.slice(1) },BlockRenderRange.self)
                                     newBlock.mounted(() => {
                                         this.block = newBlock;
                                         this.aa = newBlock.appearAnchors.last()
@@ -277,7 +278,7 @@ export class AiWrite {
                             await new Promise((resolve: (block: Block) => void, reject) => {
                                 this.page.onTurn(this.block, BlockUrlConstant.List, async (newBlock: Block, oldBlock) => {
                                     if (oldBlock) lodash.remove(this.writedBlocks, g => g == oldBlock)
-                                    await newBlock.updateProps({ listType: ListType.circle, content: c.slice(1) })
+                                    await newBlock.updateProps({ listType: ListType.circle, content: c.slice(1) },BlockRenderRange.self)
                                     newBlock.mounted(() => {
                                         // console.log('gggg');
                                         this.block = newBlock;

@@ -260,7 +260,7 @@ export class FlowMind extends Block {
                 var pa: FlowMind = this;
                 var at: number;
                 if (selector.arrows.every(g => [PointArrow.top, PointArrow.center].includes(g))) {
-                    if (this.isMindRoot) { await this.updateProps({ direction: 'y' }); keys = 'subChilds'; }
+                    if (this.isMindRoot) { await this.updateProps({ direction: 'y' },BlockRenderRange.self); keys = 'subChilds'; }
                     else {
                         if (this.mindDirection == 'x') {
                             pa = this.parent as FlowMind;
@@ -273,7 +273,7 @@ export class FlowMind extends Block {
                     }
                 }
                 else if (selector.arrows.every(g => [PointArrow.bottom, PointArrow.center].includes(g))) {
-                    if (this.isMindRoot) { await this.updateProps({ direction: 'y' }); keys = 'otherChilds'; }
+                    if (this.isMindRoot) { await this.updateProps({ direction: 'y' },BlockRenderRange.self); keys = 'otherChilds'; }
                     else {
                         if (this.mindDirection == 'x') {
                             pa = this.parent as FlowMind;
@@ -286,7 +286,7 @@ export class FlowMind extends Block {
                     }
                 }
                 else if (selector.arrows.every(g => [PointArrow.middle, PointArrow.right].includes(g))) {
-                    if (this.isMindRoot) { await this.updateProps({ direction: 'x' }); keys = 'otherChilds'; }
+                    if (this.isMindRoot) { await this.updateProps({ direction: 'x' },BlockRenderRange.self); keys = 'otherChilds'; }
                     else {
                         if (this.mindDirection == 'x') {
                             keys = 'otherChilds';
@@ -300,7 +300,7 @@ export class FlowMind extends Block {
                 }
                 else if (selector.arrows.every(g => [PointArrow.middle, PointArrow.left].includes(g))) {
                     if (this.isMindRoot) {
-                        await this.updateProps({ direction: 'x' });
+                        await this.updateProps({ direction: 'x' },BlockRenderRange.self);
                         keys = 'subChilds';
                     }
                     else {

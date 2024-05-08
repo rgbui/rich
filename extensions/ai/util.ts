@@ -1,6 +1,7 @@
 import { List, ListType } from "../../blocks/present/list/list";
 import { Block } from "../../src/block";
 import { BlockUrlConstant } from "../../src/block/constant";
+import { BlockRenderRange } from "../../src/block/enum";
 import { BlockCssName } from "../../src/block/pattern/css";
 import { DropDirection } from "../../src/kit/handle/direction";
 import { Page } from "../../src/page";
@@ -119,7 +120,7 @@ export async function onBlockPickLine(page: Page, block: Block, isAction?: boole
         }
         if (ts.length > 0 && ts.some(s => s.name != 'text')) {
             var dos = async () => {
-                await block.updateProps({ content: '' });
+                await block.updateProps({ content: '' },BlockRenderRange.self);
                 for (let t of ts) {
                     var font = {
                         textDecoration: t.name == 'line-through' ? 'line-through' : undefined,

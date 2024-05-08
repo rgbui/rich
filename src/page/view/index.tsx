@@ -28,6 +28,7 @@ import { S } from "../../../i18n/view";
 import { util } from "../../../util/util";
 import { isMobileOnly } from "react-device-detect";
 import { Loading1 } from "../../../component/view/spin";
+import lodash from "lodash";
 
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
@@ -79,7 +80,7 @@ export class PageView extends Component<{ page: Page }> {
         this.observeOutsideDrop();
         document.addEventListener('keydown', (this._keydown = e => this.page.onKeydown(e)), true);
         this.el.addEventListener('wheel', this._wheel = e => this.page.onWheel(e), {
-            passive: true
+            passive: false
         });
         document.addEventListener('mousedown', this._mousedown = this.page.onGlobalMousedown.bind(this));
         document.addEventListener('mousemove', (this._mousemove = this.page.onMousemove.bind(this.page)));
@@ -343,49 +344,58 @@ export class PageView extends Component<{ page: Page }> {
     async AutomaticHandle() {
         await this.page.onAction(ActionDirective.AutomaticHandle, async () => {
             var isForceUpdate: boolean = false;
+            var isSyncSnap = false;
             if (this.page.pageLayout?.type == PageLayoutType.doc && this.page.requireSelectLayout == false) {
                 if (this.page.autoRefSubPages == true && this.page.pageInfo) {
                     var oldSubPages = this.page.addedSubPages.map(c => c)
-                    var items = await this.page.pageInfo.getSubItems();
-                    this.page.addedSubPages = items.map(it => it.id);
+                    var subs = await this.page.pageInfo.getSubItems();
+                    var items = subs.map(s => s);
+                    lodash.remove(items, c => oldSubPages.includes(c.id));
                     var view = this.page.views[0];
-                    oldSubPages.removeAll(c => items.exists(t => t.id == c));
                     items.removeAll(r => view.exists(c => c.url == BlockUrlConstant.Link && (c as any).getLink()?.pageId == r.id))
                     await items.eachAsync(async item => {
                         await this.page.createBlock(BlockUrlConstant.Link, { link: { name: 'page', pageId: item.id } }, view, view.blocks.childs.length, BlockChildKey.childs);
                         isForceUpdate = true;
                     });
-                    if (oldSubPages.length > 0) {
-                        var willRemoveItems = view.findAll(c => c.url == BlockUrlConstant.Link && oldSubPages.includes((c as any).getLink()?.pageId));
-                        if (willRemoveItems.length > 0) {
-                            //这些链接需要自动清理掉
-                            await willRemoveItems.eachAsync(async r => {
-                                await r.delete()
-                            })
-                        }
+                    if (items.length > 0) {
+                        isForceUpdate = true;
+                        await this.page.updateProps({
+                            addedSubPages: subs.map(c => c.id)
+                        })
                     }
                 }
             }
             if (this.page.requireSelectLayout == true) {
                 var items = await this.page.pageInfo.getSubItems();
                 if (items.length > 0) {
-                    this.page.updateProps({
+                    await this.page.updateProps({
                         requireSelectLayout: false,
-                        type: PageLayoutType.doc
+                        pageLayout: {
+                            type: PageLayoutType.doc
+                        },
+                        addedSubPages: items.map(c => c.id)
                     })
+                    await channel.air('/page/update/info', { id: this.page.pageInfo?.id, pageInfo: { pageType: this.page.pageLayout.type } });
                     var view = this.page.views[0];
                     items.removeAll(r => view.exists(c => c.url == BlockUrlConstant.Link && (c as any).getLink()?.pageId == r.id))
                     await items.eachAsync(async item => {
                         await this.page.createBlock(BlockUrlConstant.Link, { link: { name: 'page', pageId: item.id } }, view, view.blocks.childs.length, BlockChildKey.childs);
                     })
                     isForceUpdate = true;
+                    isSyncSnap = true;
                 }
             }
             if (isForceUpdate == true) {
+                this.page.snapshoot._disableSyncServer = false;
+                if (isSyncSnap)
+                    this.page.snapshoot._immediate = true;
                 this.forceUpdate()
             }
-        },{
-            disabledStore: true
+            else {
+                this.page.snapshoot._disableSyncServer = true;
+            }
+        }, {
+            disabledJoinHistory: true
         })
     }
 }
