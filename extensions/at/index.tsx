@@ -8,6 +8,7 @@ import { Spin } from "../../component/view/spin";
 import { popoverLayer } from "../../component/lib/zindex";
 import { lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
+import { util } from "../../util/util";
 
 /**
  * 用户输入@触发
@@ -23,21 +24,31 @@ class AtUserSelector extends InputTextPopSelector<UserBasic> {
             if (!word && this.allList.list.length > 0) {
                 return this.allList.list.map(g => g);
             }
-            var r = (await channel.get('/ws/member/word/query', { word: word,ws:this.page?.ws })).data.list;
+            var r = (await channel.get('/ws/member/word/query', { word: word, ws: this.page?.ws })).data.list;
             if (lst('所有人').startsWith(word)) r.splice(0, 0, { id: 'all', userid: 'all', name: lst('所有人') })
             return r;
         }
     }
     async searchAll() {
         if (this.allList.lastDate && Date.now() - this.allList.lastDate.getTime() > 5000) {
-            var r = await channel.get('/ws/member/word/query', { size: this.allList.size,ws:this.page?.ws  });
+            var r = await channel.get('/ws/member/word/query', { size: this.allList.size, ws: this.page?.ws });
             this.allList = r.data;
             this.allList.list.splice(0, 0, { id: 'all', userid: 'all', name: lst('所有人') } as any)
             this.allList.lastDate = new Date();
         }
     }
     onSelect(block) {
-        this._select({ url: '/user/mention', isLine: true,data:{userid: (block as any).userid }  })
+        this._select({
+            url: '/user/mention',
+            isLine: true,
+            data: {
+                refLinks: [{
+                    id: util.guid(),
+                    type: "mention",
+                    userid: (block as any).userid,
+                }]
+            }
+        })
         this.close();
     }
     getSelectBlockData() {
@@ -47,7 +58,11 @@ class AtUserSelector extends InputTextPopSelector<UserBasic> {
                 blockData: {
                     url: '/user/mention',
                     isLine: true,
-                    userid: (r as any).userid,
+                    refLinks: [{
+                        id: util.guid(),
+                        type: "mention",
+                        userid: (r as any).userid,
+                    }]
                 }
             }
         }

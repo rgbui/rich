@@ -175,14 +175,14 @@ export class Page$Schema {
     }
     async onFormOpen(this: Page, source: Page['openSource'] | 'next' | 'prev' | 'template') {
         if (source == 'page') {
-            await channel.air('/page/open', { elementUrl: this.elementUrl, config: { force: true, wait: false } });
+            await channel.act('/page/open', { elementUrl: this.elementUrl, config: { force: true, wait: false } });
             this.onPageClose();
         }
         else if (source == 'template') {
             var url: '/page/open' | '/page/dialog' | '/page/slide' = '/page/dialog'
             if (this.openSource == 'page') url = '/page/open'
             else if (this.openSource == 'slide') url = '/page/slide'
-            await channel.air(url, {
+            await channel.act(url, {
                 elementUrl: this.elementUrl,
                 config: { wait: false, force: true, isTemplate: true }
             })
@@ -193,11 +193,11 @@ export class Page$Schema {
             else if (this.openSource == 'slide') url = '/page/slide'
             if (source == 'prev') {
                 if (this.formPreRow)
-                    await channel.air(url, { elementUrl: getElementUrl(ElementType.SchemaData, this.schema?.id, this.formPreRow.id), config: { wait: false, force: true } })
+                    await channel.act(url, { elementUrl: getElementUrl(ElementType.SchemaData, this.schema?.id, this.formPreRow.id), config: { wait: false, force: true } })
             }
             else if (source == 'next') {
                 if (this.formNextRow)
-                    await channel.air(url, { elementUrl: getElementUrl(ElementType.SchemaData, this.schema?.id, this.formNextRow.id), config: { wait: false, force: true } })
+                    await channel.act(url, { elementUrl: getElementUrl(ElementType.SchemaData, this.schema?.id, this.formNextRow.id), config: { wait: false, force: true } })
             }
         }
     }

@@ -406,7 +406,7 @@ export class Page$Operator {
         channel.air('/page/remove', { item: this.pageInfo.id });
     }
     async onOpenRobot(this: Page, robot: RobotInfo) {
-        await channel.air('/robot/open', { robot });
+        await channel.act('/robot/open', { robot });
     }
     async onSyncAi(this: Page, robot: RobotInfo, isTurn?: boolean) {
         ShyAlert(lst('正在同步中...'), 'warn', isTurn ? 1000 * 60 * 10 : 1000 * 4);

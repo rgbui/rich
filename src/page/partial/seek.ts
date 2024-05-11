@@ -93,6 +93,10 @@ export class Page$Seek {
         textStyle.code = true;
         textStyle.equation = false;
         var rowBlock = blocks.first().closest(x => !x.isLine);
+        if (!rowBlock) {
+            console.log('not found row block', blocks);
+            return textStyle;
+        }
         textStyle.blockUrl = rowBlock.url;
         blocks.each(bl => {
             let font = bl.pattern.css(BlockCssName.font);
@@ -232,10 +236,10 @@ export class Page$Seek {
         var wordCount: number = 0;
         this.each(b => {
             bc++;
-            wordCount+=(b.content||'').length;
+            wordCount += (b.content || '').length;
         })
-        return{
-            blockCount:bc,
+        return {
+            blockCount: bc,
             wordCount
         }
     }

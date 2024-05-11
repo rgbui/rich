@@ -35,7 +35,7 @@ import { UA } from "../../util/ua";
 import { S } from "../../i18n/view";
 import { SetTextCacheFontColor } from "../color/data";
 import { useLinkEditor } from "../link/link";
-import { PageLink } from "../link/declare";
+import { PageLink, RefPageLink } from "../link/declare";
 import { TextContent } from "../../src/block/element/text";
 
 export type TextToolStyle = {
@@ -335,7 +335,20 @@ class TextTool extends EventsComponent {
         this.forceUpdate()
         if (pageLink) {
             // delete pageLink.content;
-            this.emit('setProp', { ...pageLink });
+            var props: {
+                content?: string,
+                link?: PageLink,
+                refLinks?: RefPageLink[]
+            } = {}
+            if (pageLink.name == 'page') {
+                props.refLinks = [{
+                    id: util.guid(), type: 'page', pageId: pageLink.pageId
+                }]
+            }
+            else if (pageLink.name == 'outside') {
+                props.link = pageLink;
+            }
+            this.emit('setProp', { ...props });
         }
         else if (range) {
             await util.delay(50);

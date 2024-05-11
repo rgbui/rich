@@ -7,7 +7,7 @@ import { ActionDirective } from "../../history/declare";
 import { PageDirective } from "../directive";
 import { PageHistory } from "../interaction/history";
 import { PageKeys } from "../interaction/keys";
-import { BlockUrlConstant } from "../../block/constant";
+import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
 import { PageLayoutType } from "../declare";
 import { GridMap } from "../grid";
 import { Matrix } from "../../common/matrix";
@@ -22,33 +22,22 @@ import { Image } from "../../../blocks/media/image";
 import { ls } from "../../../i18n/store";
 import { BuildTemplate } from "../template/build";
 import { List, ListType } from "../../../blocks/present/list/list";
+import { BlockRefPageLink, RefPageLink } from "../../../extensions/link/declare";
+import { SyncPage } from "../interaction/bind";
 
 
 export class Page$Cycle {
     async init(this: Page) {
         this.gridMap = new GridMap(this);
         PageHistory(this, this.snapshoot);
+        SyncPage(this);
         PageKeys(this, this.keyboardPlate);
         this.emit(PageDirective.init);
         await ls.import()
     }
-    async onLoadContentOperates(this: Page, itemId: string, content: any, operates?: any) {
-        await this.clear();
-        await this.load(content);
-        if (Array.isArray(operates) && operates.length > 0) {
-            var operates = operates.map(op => op.operate ? op.operate : op) as any;
-            await this.onSyncUserActions(operates, 'load');
-        }
-        await this.onAction(ActionDirective.onPageUpdateProps, async () => {
-            await this.updateProps({ sourceItemId: itemId });
-        });
-    }
-    async clear(this: Page) {
-        this.views = [];
-    }
+  
     /**
      * 标记当前页面是否加载的是默认的数据
-     * 
      */
     loadDefault: boolean = false;
     async load(this: Page, data?: Record<string, any>, operates?: ViewOperate[]) {
@@ -92,7 +81,7 @@ export class Page$Cycle {
                 this.requireSelectLayout = false;
                 await this.loadPageSchema();
             }
-            await this.onRepair();
+            await this.loadPageRepair();
             await this.views.eachAsync(async v => {
                 await v.loadSyncBlock()
             })
@@ -145,10 +134,10 @@ export class Page$Cycle {
             this.requireSelectLayout = false;
             await this.loadPageSchema();
         }
-        await this.onRepair();
+        await this.loadPageRepair();
     }
-    async onSyncUserActions(this: Page, actions: UserAction[], source: 'load' | 'loadSyncBlock' | 'notify' | 'notifyView') {
-        if (source == 'notifyView' || source == 'notify') {
+    async onSyncUserActions(this: Page, actions: UserAction[], source: 'load' | 'loadSyncBlock' | 'notify') {
+        if (source == 'notify') {
             this.pageModifiedExternally = true;
         }
         var isOk: boolean = true;
@@ -166,14 +155,7 @@ export class Page$Cycle {
         }, {
             disabledStore: true
         })
-        if (source == 'notifyView') {
-            actions.forEach(action => {
-                if (action.directive == ActionDirective.onPageLock) {
-
-                }
-            })
-        }
-        await this.onRepair();
+        await this.loadPageRepair();
         if (this.isCanEdit && isOk && actions.length > 0) {
             var seq = actions.max(g => g.seq);
             var op = actions.find(g => g.seq == seq);
@@ -246,6 +228,7 @@ export class Page$Cycle {
     getDefaultData(this: Page) {
         return BuildTemplate(this);
     }
+
     async loadDefaultData(this: Page) {
         var data = this.getDefaultData();
         await this.load(data);
@@ -277,6 +260,7 @@ export class Page$Cycle {
      * @param block 
      */
     notifyActionBlockUpdate(block: Block) {
+        if (!block) return;
         block.needUpdate = true;
         if (!Array.isArray(this.willUpdateBlocks)) this.willUpdateBlocks = [];
         if (!this.willUpdateBlocks.includes(block))
@@ -306,249 +290,187 @@ export class Page$Cycle {
     addActionAfterEvent(fn: () => Promise<void>) {
         this.actionAfterEvents.push(fn);
     }
-    private async onActionCompletedNotify(this: Page, recordSyncRowBlocks: Page['recordSyncRowBlocks'], recordOutlineChanges: Page['recordOutlineChanges']) {
-        if (!this.pageInfo?.id) return;
-        try {
-            if (recordSyncRowBlocks.deletes.length > 0 || recordSyncRowBlocks.rowBlocks.length > 0) {
-                var ds = recordSyncRowBlocks.deletes;
-                var rs = recordSyncRowBlocks.rowBlocks;
-                var ops = []
-                for (let i = 0; i < rs.length; i++) {
-                    var row = rs[i];
-                    var rfs = row.childs.filter(g => Array.isArray(g.refLinks) && g.refLinks.length > 0);
-                    if (rfs.length > 0) {
-                        await rfs.eachAsync(async rf => {
-                            await rf.refLinks.eachAsync(async f => {
-                                ops.push({
-                                    id: f.id,
-                                    type: f.type,
-                                    ref: lodash.cloneDeep(f),
-                                    elementUrl: getElementUrl(ElementType.BlockLine, this.pageInfo.id, row.id, rf.id),
-                                    html: (await row.childs.asyncMap(async c => await c.getHtml())).join("")
-                                })
-                            })
-                        })
-                    }
-                }
-                ds.forEach(c => {
-                    ops.push({
-                        id: c.id,
-                        type: c.type,
-                        ref: lodash.cloneDeep(c),
-                    })
-                })
-                if (ops.length > 0)
-                    await channel.post('/row/block/sync/refs', {
-                        pageId: this.pageInfo.id,
-                        operators: ops,
-                        ws: this.ws
-                    })
-            }
-        }
-        catch (ex) {
-            this.onError(ex);
-            console.error(ex);
-        }
-        try {
-            if (recordOutlineChanges.isChangeAll == true || recordOutlineChanges.changeBlocks.length > 0) {
-                var outLineBlock = this.find(g => g.url == BlockUrlConstant.Outline) as PageOutLine;
-                if (outLineBlock) {
-                    if (recordOutlineChanges.isChangeAll) outLineBlock.updateOutLine();
-                    else {
-                        for (var i = 0; i < recordOutlineChanges.changeBlocks.length; i++) {
-                            outLineBlock.updateHeadBlock(recordOutlineChanges.changeBlocks[i], i == recordOutlineChanges.changeBlocks.length - 1)
-                        }
-                    }
-                }
-            }
-        }
-        catch (ex) {
-            this.onError(ex);
-            console.error(ex);
-        }
-    }
-    private async onActionAfter(this: Page,
-        fns: (() => Promise<void>)[]) {
-        fns.each((f) => {
-            f().then(() => { }).catch(e => {
-                this.onError(e)
-            })
-        })
-    }
-    adjustListNumStr(blocks: Block[]) {
-        if (blocks.length == 0) return;
-        var bs: List[] = [];
-        var rs: (Block[])[] = [];
-        blocks.forEach(c => {
-            if (!rs.includes(c.parentBlocks)) rs.push(c.parentBlocks)
-        })
-        rs.forEach(c => {
-            var ls = c.filter(g => g.url == BlockUrlConstant.List && (g as List).listType == ListType.number && !blocks.includes(g)) as List[];
-            if (ls.length > 0) {
-                bs.push(...ls);
-            }
-        })
-        for (let b of bs) {
-            b.forceManualUpdate()
-        }
-    }
-    recordOutlineChanges: { isChangeAll: boolean, changeBlocks: Block[] } = { isChangeAll: false, changeBlocks: [] };
-    recordSyncRowBlocks: { rowBlocks: Block[], deletes: Block['refLinks'] } = { rowBlocks: [], deletes: [] };
+
+    recordOutlineChanges: { isChangeAll: boolean, changeBlocks: string[] } = { isChangeAll: false, changeBlocks: [] };
+    recordSyncRowBlocks: { rowBlocks: string[], deletes: RefPageLink[] } = { rowBlocks: [], deletes: [] };
+
     /**
-     * 监听 block块的变化
-     * 块的主要操作就是创建、删除、移动、内容变化
-     * 主要是处理双链的引用数据更新
+     * 监听block的变更，
+     * 同步页面的引用关系
+     * 同步页面的大纲目录
      * @param this 
-     * @param block 
-     * @returns 
-     * 
+     * @param op 
+     * @param options 
      */
-    async monitorBlockOperator(this: Page, block: Block, op: 'create' | 'turn' | 'delete' | 'from' | 'to' | 'content', currentBlock?: Block) {
-        // console.log('mfff', arguments);
-        /**
-         * 争对行内块引用关系的同步记录
+    observeChange(this: Page,
+        op: 'create' | 'willDelete' | 'update' | 'manualUpdate' | 'from' | 'to',
+        options: {
+            block: Block,
+            update?: { old: Record<string, any>, new: Record<string, any> }
+        }) {
+
+        /***
+         * 页面引用关系同步
          */
         try {
             var rs: Block[] = [];
-            var dels: Block['refLinks'] = [];
+            var dels: RefPageLink[] = [];
             switch (op) {
                 case 'create':
-                    if (block.isLine) {
-                        var row = block.closest(x => x.isOnlyBlock);
-                        if (row) {
-                            if (row.isOnlyBlock) rs = [row];
-                            rs.push(...row.findAll(x => x.isOnlyBlock && x.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)));
+                    if (options.block?.isLine) {
+                        //创建了行内块，那么同步行内块所属于的块
+                        var r = options.block.closest(x => x.isOnlyBlock);
+                        if (Array.isArray(options.block.refLinks) && options.block.refLinks.length > 0) {
+                            rs.push(r);
                         }
                     }
                     else {
-                        if (block.isOnlyBlock) rs = [block];
-                        rs.push(...block.findAll(x => x.isOnlyBlock && x.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)));
+                        //创建了块，那么同步当前块及所有子块
+                        var r = options.block.closest(x => x.isOnlyBlock);
+                        if (r) {
+                            var subs = r.findAll(c => c.isOnlyBlock && c.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0));
+                            rs.push(...subs);
+                        }
                     }
                     break;
-                case 'delete':
-                    if (block.isLine) {
-                        if (Array.isArray(block.refLinks) && block.refLinks.length > 0) {
-                            dels.push(...block.refLinks);
+                case 'update':
+                case 'manualUpdate':
+                    var ns = options.update.new;
+                    var od = options.update.old;
+                    if (Object.keys(ns).includes('content')) {
+                        //说明内容变更了，那么当前行内的信息需要同步
+                        var r = options.block.closest(x => x.isOnlyBlock);
+                        if (r && r.childs.some(s => Array.isArray(s.refLinks) && s.refLinks.length > 0)) {
+                            rs.push(r);
                         }
                     }
-                    else {
-                        var lbs = block.findAll(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)
-                        lbs.forEach(c => {
-                            dels.push(...c.refLinks)
-                        })
+                    if (Object.keys(ns).includes('refLinks')) {
+                        //说明当前块在编辑refLinks时
+                        //那么有两种情况
+                        // 1. 删除了refLinks
+                        // 2. 添加或编辑了refLinks
+                        var oldRefLinks = od.refLinks;
+                        var newRefLinks = ns.refLinks;
+                        if (Array.isArray(oldRefLinks) && oldRefLinks.length > 0) {
+                            var os = oldRefLinks.filter(g => Array.isArray(newRefLinks) && newRefLinks.some(c => c.id == g.id) ? false : true);
+                            if (os.length > 0) {
+                                dels.push(...os.map(o => o));
+                            }
+                        }
+                        var r = options.block.closest(x => x.isOnlyBlock);
+                        if (r && r.childs.some(s => Array.isArray(s.refLinks) && s.refLinks.length > 0)) {
+                            rs.push(r);
+                        }
                     }
                     break;
                 case 'from':
-                    if (currentBlock.isOnlyBlock) break;
-                    if (currentBlock.isLine) {
-                        if (block.isOnlyBlock && block.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)) {
-                            rs = [block];
-                        }
-                    }
-                    break;
                 case 'to':
-                    if (currentBlock.isOnlyBlock) break;
-                    if (currentBlock.isLine) {
-                        if (block.isOnlyBlock && block.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)) {
-                            rs = [block];
+                    if (options.block.isLine) {
+                        //行内块，拖放，所以只需要同步当前行
+                        var r = options.block.closest(x => x.isOnlyBlock);
+                        if (r && r.childs.some(s => Array.isArray(s.refLinks) && s.refLinks.length > 0)) {
+                            rs.push(r);
                         }
                     }
                     break;
-                case 'content':
-                    if (block.isLine) {
-                        var row = block.closest(x => x.isOnlyBlock);
-                        if (row && row.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)) {
-                            rs = [row];
+                case 'willDelete':
+                    if (options.block?.isLine) {
+                        //删除行内块
+                        if (Array.isArray(options.block.refLinks) && options.block.refLinks.length > 0) {
+                            dels.push(...options.block.refLinks);
                         }
                     }
-                    break;
-                case 'turn':
+                    else {
+                        //删除整个块，该块可能包含子块
+                        var r = options.block.closest(x => x.isOnlyBlock);
+                        if (r) {
+                            var subs = r.findAll(c => Array.isArray(c.refLinks) && c.refLinks.length > 0);
+                            subs.forEach(s => {
+                                dels.push(...s.refLinks);
+                            })
+                        }
+                    }
                     break;
             }
             rs.forEach(c => {
-                if (!this.recordSyncRowBlocks.rowBlocks.exists(c)) this.recordSyncRowBlocks.rowBlocks.push(c);
+                if (!this.recordSyncRowBlocks.rowBlocks.includes(c.id)) this.recordSyncRowBlocks.rowBlocks.push(c.id);
             })
             dels.forEach(c => {
-                if (!this.recordSyncRowBlocks.deletes.exists(c)) this.recordSyncRowBlocks.deletes.push(c);
+                if (!this.recordSyncRowBlocks.deletes.includes(c)) this.recordSyncRowBlocks.deletes.push(c);
             })
         }
         catch (ex) {
             console.error(ex);
             this.onError(ex);
         }
-        //console.log(this.recordSyncRowBlocks)
-        /**
-         * 页面的大纲目录处理
-         */
-        var outLineBlock = this.find(g => g.url == BlockUrlConstant.Outline);
 
-        if (outLineBlock) {
+        /**
+         * 同步页面的所有大纲目录
+         * 这里判断当前的操作是否会影响到大纲目录
+         */
+        var outLineBlocks = this.find(g => g.url == BlockUrlConstant.Outline);
+        if (outLineBlocks) {
             var outLineChangeBlocks: Block[] = [];
             var isChangeAll = false;
-            switch (op) {
-                case 'create':
-                    if (block.isLine) {
-                        var row = block.closest(x => x.isOnlyBlock);
-                        if (row?.url == BlockUrlConstant.Head) {
-                            outLineChangeBlocks.push(row);
+            try {
+
+                switch (op) {
+                    case 'create':
+                        if (options.block.isLine) {
+                            var row = options.block.closest(x => x.isOnlyBlock);
+                            if (row?.url == BlockUrlConstant.Head) {
+                                outLineChangeBlocks.push(row);
+                            }
                         }
-                    }
-                    else if (block.url == BlockUrlConstant.Head) {
-                        isChangeAll = true;
-                    }
-                    break;
-                case 'delete':
-                    if (block.isLine) {
-                        var row = block.closest(x => x.isOnlyBlock);
-                        if (row?.url == BlockUrlConstant.Head) {
-                            outLineChangeBlocks.push(row);
-                        }
-                    }
-                    else {
-                        if (block.exists(g => g.url == BlockUrlConstant.Head)) {
+                        else if (options.block.url == BlockUrlConstant.Head) {
                             isChangeAll = true;
                         }
-                    }
-                    break;
-                case 'from':
-                case 'to':
-                    //console.log(currentBlock, 'cb');
-                    if (currentBlock.isLine) {
-                        var row = currentBlock.closest(x => x.isOnlyBlock);
-                        if (row.url == BlockUrlConstant.Head) {
-                            outLineChangeBlocks.push(row);
+                        break;
+                    case 'update':
+                    case 'manualUpdate':
+                        var ns = options.update.new;
+                        var od = options.update.old;
+                        if (Object.keys(ns).includes('content')) {
+                            var r = options.block.closest(x => x.isOnlyBlock);
+                            if (r && r.childs.some(s => s.url == BlockUrlConstant.Head)) {
+                                outLineChangeBlocks.push(r);
+                            }
                         }
-                    }
-                    else if (currentBlock.url == BlockUrlConstant.Head) {
-                        isChangeAll = true;
-                    }
-                    break;
-                case 'content':
-                    if (block.isLine) {
-                        var row = block.closest(x => x.isOnlyBlock);
-                        if (row?.url == BlockUrlConstant.Head) {
-                            outLineChangeBlocks.push(row);
+                        break;
+                    case 'willDelete':
+                        if (options.block.isLine) {
+                            var row = options.block.closest(x => x.isOnlyBlock);
+                            if (row?.url == BlockUrlConstant.Head) {
+                                outLineChangeBlocks.push(row);
+                            }
                         }
-                    }
-                    else if (block.url == BlockUrlConstant.Head) {
-                        outLineChangeBlocks.push(block);
-                    }
-                    break;
-                case 'turn':
-                    if (block?.url == BlockUrlConstant.Head) {
-                        isChangeAll = true;
-                    }
-                    if (currentBlock?.url == BlockUrlConstant.Head) {
-                        isChangeAll = true;
-                    }
-                    break;
+                        else if (options.block.url == BlockUrlConstant.Head) {
+                            isChangeAll = true;
+                        }
+                        break;
+                    case 'from':
+                    case 'to':
+                        if (options.block.isLine) {
+                            var row = options.block.closest(x => x.isOnlyBlock);
+                            if (row?.url == BlockUrlConstant.Head) {
+                                outLineChangeBlocks.push(row);
+                            }
+                        }
+                        else if (options.block.url == BlockUrlConstant.Head) {
+                            isChangeAll = true;
+                        }
+                        break;
+                }
+                if (isChangeAll) this.recordOutlineChanges.isChangeAll = true;
+                if (outLineChangeBlocks.length > 0) {
+                    outLineChangeBlocks.forEach(c => {
+                        if (!this.recordOutlineChanges.changeBlocks.includes(c.id))
+                            this.recordOutlineChanges.changeBlocks.push(c.id);
+                    })
+                }
             }
-            if (isChangeAll) this.recordOutlineChanges.isChangeAll = true;
-            if (outLineChangeBlocks.length > 0) {
-                outLineChangeBlocks.forEach(c => {
-                    if (this.recordOutlineChanges.changeBlocks.exists(c) == false)
-                        this.recordOutlineChanges.changeBlocks.push(c);
-                })
+            catch (ex) {
+
             }
         }
     }
@@ -591,7 +513,8 @@ export class Page$Cycle {
     ) {
         var isTs: boolean = false;
         var willAction = async () => {
-            console.log('onAction', typeof directive == 'number' ? ActionDirective[directive] : directive);
+            if (!window.shyConfig?.isPro)
+                console.log('onAction', typeof directive == 'number' ? ActionDirective[directive] : directive);
             this.actionAfterEvents = [];
             var ts = window.performance.now();
             await this.snapshoot.sync(directive, async (cb) => {
@@ -627,8 +550,8 @@ export class Page$Cycle {
                     }
                     if (isTs)
                         console.log('ts will layout fn', window.performance.now() - ts);
-
-                    console.log('willAll...', this.willUpdateAll, this.willUpdateBlocks)
+                    if (!window.shyConfig?.isPro)
+                        console.log('will updates...', this.willUpdateAll, this.willUpdateBlocks)
                     try {
                         if (this.willUpdateAll) {
                             this.willUpdateAll = false;
@@ -679,7 +602,7 @@ export class Page$Cycle {
                         var cgs = Object.assign({}, this.recordOutlineChanges);
                         this.recordSyncRowBlocks = { rowBlocks: [], deletes: [] };
                         this.recordOutlineChanges = { isChangeAll: false, changeBlocks: [] }
-                        this.onActionCompletedNotify(cos, cgs)
+                        this.onActionCompletedObserveProcess(cos, cgs)
                     }
                     catch (ex) {
                         console.error('action completed notify', ex)
@@ -717,10 +640,123 @@ export class Page$Cycle {
         )
         // await willAction();
     }
+    private async onActionCompletedObserveProcess(this: Page, recordSyncRowBlocks: Page['recordSyncRowBlocks'], recordOutlineChanges: Page['recordOutlineChanges']) {
+        if (!this.pageInfo?.id) return;
+        try {
+            if (!window.shyConfig?.isPro)
+                console.log('recordSyncRowBlocks', recordSyncRowBlocks, recordOutlineChanges)
+            if (recordSyncRowBlocks.deletes.length > 0 || recordSyncRowBlocks.rowBlocks.length > 0) {
+                var ds = recordSyncRowBlocks.deletes;
+                var rs = recordSyncRowBlocks.rowBlocks;
+                var ops: BlockRefPageLink[] = []
+                for (let i = 0; i < rs.length; i++) {
+                    var rid = rs[i];
+                    var row = this.find(g => g.id == rid);
+                    if (row) {
+                        var rfs = row.childs.filter(g => Array.isArray(g.refLinks) && g.refLinks.length > 0);
+                        if (rfs.length > 0) {
+                            await rfs.eachAsync(async rf => {
+                                await rf.refLinks.eachAsync(async f => {
+                                    var date;
+                                    if (f.type == 'mention') {
+                                        var da = row.childs.find(c => c.url == '/mention/date');
+                                        if (da) {
+                                            date = (da as any).date;
+                                        }
+                                    }
+                                    ops.push({
+                                        id: f.id,
+                                        type: f.type,
+                                        op: 'sync',
+                                        ref: lodash.cloneDeep(f),
+                                        elementUrl: getElementUrl(ElementType.Block, this.pageInfo.id, row.id),
+                                        html: (await row.childs.asyncMap(async c => await c.getHtml())).join(""),
+                                        blockId: row.id,
+                                        date
+                                    })
+                                })
+                            })
+                        }
+                    }
+                }
+                ds.forEach(c => {
+                    ops.push({
+                        id: c.id,
+                        type: c.type,
+                        op: 'delete',
+                        ref: lodash.cloneDeep(c),
+                    })
+                })
+                if (ops.length > 0) {
+                    if (!window.shyConfig?.isPro)
+                        console.log('row block sync refs', ops);
+                    await channel.post('/row/block/sync/refs', {
+                        pageId: this.pageInfo.id,
+                        operators: ops,
+                        ws: this.ws
+                    })
+                }
+            }
+        }
+        catch (ex) {
+            this.onError(ex);
+            console.error(ex);
+        }
+        try {
+            if (recordOutlineChanges.isChangeAll == true || recordOutlineChanges.changeBlocks.length > 0) {
+                var outLineBlock = this.find(g => g.url == BlockUrlConstant.Outline) as PageOutLine;
+                if (outLineBlock) {
+                    if (recordOutlineChanges.isChangeAll) outLineBlock.updateOutLine();
+                    else {
+                        var rcs = recordOutlineChanges.changeBlocks.map(c => this.find(g => g.id == c));
+                        if (rcs.every(s => s?.id ? true : false)) {
+                            rcs.forEach(rc => {
+                                outLineBlock.updateHeadBlock(rc, rc == rcs[rcs.length - 1])
+                            })
+                        }
+                        else if (rcs.length > 0) outLineBlock.updateOutLine();
+                    }
+                }
+            }
+        }
+        catch (ex) {
+            this.onError(ex);
+            console.error(ex);
+        }
+    }
+    private async onActionAfter(this: Page,
+        fns: (() => Promise<void>)[]) {
+        fns.each((f) => {
+            f().then(() => {
+
+            }).catch(e => {
+                this.onError(e)
+            })
+        })
+    }
+    adjustListNumStr(blocks: Block[]) {
+        if (blocks.length == 0) return;
+        var bs: List[] = [];
+        var rs: (Block[])[] = [];
+        blocks.forEach(c => {
+            if (!rs.includes(c.parentBlocks)) rs.push(c.parentBlocks)
+        })
+        rs.forEach(c => {
+            var ls = c.filter(g => g.url == BlockUrlConstant.List && (g as List).listType == ListType.number && !blocks.includes(g)) as List[];
+            if (ls.length > 0) {
+                bs.push(...ls);
+            }
+        })
+        for (let b of bs) {
+            b.forceManualUpdate()
+        }
+    }
     /**
+     * 
+     * 在onload加载后
      * 修复一些不正常的block
      */
-    async onRepair(this: Page) {
+    async loadPageRepair(this: Page) {
         var rs: Block[] = [];
         await this.views.eachAsync(async (view) => {
             if (view.url != BlockUrlConstant.View) {
@@ -773,26 +809,74 @@ export class Page$Cycle {
             }
         }
     }
-
-
     /**
-   * 这里表示刚创建的block,是新的
-   * 不是通过load创建
-   * @param block 
-   */
-    async onNotifyCreateBlock(this: Page, block: Block) {
-        block.creater = this.user?.id;
-        block.createDate = Date.now();
-        block.editor = this.user?.id;
-        block.editDate = Date.now();
-    }
-    async onNotifyEditBlock(this: Page, block: Block) {
-        if (this.user) {
-            await block.updateProps({
-                editor: this.user.id,
-                editDate: Date.now()
-            })
-        }
+     * 页面加载后，需要的自动处理
+     * 如当前文档有子文档，那么该空白页面自动转成文档
+     * 如当前文档下面新增了一些子文档，那么在页面的尾部需要新增子文档
+     * 同时清理掉已经删除的子文档
+     * @param this 
+     */
+    async AutomaticHandle(this: Page) {
+        await this.onAction(ActionDirective.AutomaticHandle, async () => {
+            var isForceUpdate: boolean = false;
+            var isSyncSnap = false;
+            if (this.pageLayout?.type == PageLayoutType.doc && this.requireSelectLayout == false && this.pageInfo) {
+                var oldSubPages = this.addedSubPages.map(c => c)
+                var subs = await this.pageInfo.getSubItems();
+                var willClearItems = oldSubPages.filter(c => !subs.exists(s => s.id == c));
+                if (this.autoRefSubPages == true) {
+                    var items = subs.map(s => s);
+                    lodash.remove(items, c => oldSubPages.includes(c.id));
+                    var view = this.views[0];
+                    items.removeAll(r => view.exists(c => c.url == BlockUrlConstant.Link && (c as any).getLink()?.pageId == r.id))
+                    await items.eachAsync(async item => {
+                        await this.createBlock(BlockUrlConstant.Link, { link: { name: 'page', pageId: item.id } }, view, view.blocks.childs.length, BlockChildKey.childs);
+                        isForceUpdate = true;
+                    });
+                    if (items.length > 0) {
+                        isForceUpdate = true;
+                        await this.updateProps({
+                            addedSubPages: subs.map(c => c.id)
+                        })
+                    }
+                }
+                var vs = this.views[0].findAll(c => c.url == BlockUrlConstant.Link && (c as any).getLink()?.pageId && willClearItems.includes((c as any).getLink().pageId));
+                await vs.eachAsync(async v => {
+                    await v.delete()
+                })
+            }
+            if (this.requireSelectLayout == true) {
+                var items = await this.pageInfo.getSubItems();
+                if (items.length > 0) {
+                    await this.updateProps({
+                        requireSelectLayout: false,
+                        pageLayout: {
+                            type: PageLayoutType.doc
+                        },
+                        addedSubPages: items.map(c => c.id)
+                    })
+                    await channel.air('/page/update/info', { id: this.pageInfo?.id, pageInfo: { pageType: this.pageLayout.type } });
+                    var view = this.views[0];
+                    items.removeAll(r => view.exists(c => c.url == BlockUrlConstant.Link && (c as any).getLink()?.pageId == r.id))
+                    await items.eachAsync(async item => {
+                        await this.createBlock(BlockUrlConstant.Link, { link: { name: 'page', pageId: item.id } }, view, view.blocks.childs.length, BlockChildKey.childs);
+                    })
+                    isForceUpdate = true;
+                    isSyncSnap = true;
+                }
+            }
+            if (isForceUpdate == true) {
+                this.snapshoot._disableSyncServer = false;
+                if (isSyncSnap)
+                    this.snapshoot._immediate = true;
+                this.forceUpdate()
+            }
+            else {
+                this.snapshoot._disableSyncServer = true;
+            }
+        }, {
+            disabledJoinHistory: true
+        })
     }
 }
 

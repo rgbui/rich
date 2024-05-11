@@ -90,7 +90,7 @@ export class AddRecordsCommand extends FlowCommand {
                     data[fe.name] = lodash.cloneDeep(f.value);
                 }
             });
-            await channel.air('/page/dialog', {
+            await channel.act('/page/dialog', {
                 elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, this.schemaViewId),
                 config: {
                     force: true,
@@ -393,7 +393,7 @@ export class EditRecordsCommand extends FlowCommand {
                     data[fe.name] = lodash.cloneDeep(f.value);
                 }
             });
-            var dialougPage: Page = await channel.air('/page/dialog', {
+            var dialougPage: Page = await channel.act('/page/dialog', {
                 elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, this.schemaViewId),
                 config: {
                     force: true,
@@ -406,7 +406,7 @@ export class EditRecordsCommand extends FlowCommand {
                 var newRow = await dialougPage.getSchemaRow();
                 if (newRow) await this.schema.rowUpdateAll({ data: newRow, filter: this.filter }, this.flow.ws);
             }
-            await channel.air('/page/dialog', { elementUrl: null });
+            await channel.act('/page/dialog', { elementUrl: null });
         }
     }
     async loadSchema() {

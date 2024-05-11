@@ -34,7 +34,7 @@ export class OnlineUsers extends React.Component<{ ws: LinkWs, onClose: (e: Reac
             this.forceUpdate()
         }
     }
-    render(): React.ReactNode {
+    render() {
         return <div className="h100 overflow-y padding-bottom-100 visible-hover">
             <div className="flex padding-w-10  gap-t-10">
                 <span className="flex-auto remark f-12 bold"><S>在线</S></span>

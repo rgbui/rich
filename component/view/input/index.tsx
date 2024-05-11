@@ -4,6 +4,7 @@ import { Icon } from "../icon";
 import { MenuItem } from "../menu/declare";
 import { KeyboardCode } from "../../../src/common/keys";
 import "./style.less";
+import lodash from "lodash";
 
 export class Input extends React.Component<{
     style?: CSSProperties,
@@ -30,7 +31,7 @@ export class Input extends React.Component<{
     prefix?: React.ReactNode,
     onSearchDrop?: (value: string) => Promise<MenuItem[]>,
     onBlur?: (e: React.FocusEvent<HTMLInputElement, Element>) => void
-}>{
+}> {
     private inputEl: HTMLInputElement;
     onClear() {
         var self = this;
@@ -176,6 +177,11 @@ export class Input extends React.Component<{
     }
     focus() {
         this.inputEl.focus()
+    }
+    componentDidUpdate(prevProps) {
+        if(!lodash.isEqual(prevProps.value, this.props.value)) {
+            this.inputEl.value = this.props.value;
+        }
     }
 }
 

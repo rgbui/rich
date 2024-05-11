@@ -87,7 +87,7 @@ export class PageOutLine extends Block {
                     id: b.id,
                     block: b,
                     hLevel: level,
-                    text:b.content,
+                    text: b.content,
                     html: b.contentEl ? b.contentEl.innerText : undefined,
                     spread: sc,
                     childs: []
@@ -138,8 +138,8 @@ export class PageOutLine extends Block {
     updateHeadBlock(block: Block, forceUpdate?: boolean) {
         var ou = this.outlines.arrayJsonFind('childs', c => c.id == block.id);
         if (ou) {
-            ou.html = block.el ? block.el.innerText : undefined;
-            ou.text = block.getBlockContent();
+            ou.html = block.contentEl ? block.contentEl.innerText : undefined;
+            ou.text = block.content;
             if (forceUpdate) this.forceManualUpdate()
         }
     }

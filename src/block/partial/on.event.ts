@@ -635,7 +635,12 @@ export class Block$Event {
                     }
                 }
                 this.page.notifyActionBlockSync(this);
-                await this.page.onNotifyEditBlock(this);
+                if (this.page.user) {
+                    await this.updateProps({
+                        editor: this.page.user.id,
+                        editDate: Date.now()
+                    })
+                }
                 this.page.snapshoot.record(OperatorDirective.$array_update, {
                     pos: this.getArrayItemPos(options.prop, ar),
                     old_value: oldValue,
@@ -678,7 +683,12 @@ export class Block$Event {
                 else cd = lodash.cloneDeep(options.data);
             } else cd = lodash.cloneDeep(options.data);
             this.page.notifyActionBlockSync(this);
-            await this.page.onNotifyEditBlock(this);
+            if (this.page.user) {
+                await this.updateProps({
+                    editor: this.page.user.id,
+                    editDate: Date.now()
+                })
+            }
             this.page.snapshoot.record(OperatorDirective.$array_create, {
                 pos,
                 data: cd
@@ -712,7 +722,12 @@ export class Block$Event {
                 else cd = lodash.cloneDeep(currentData);
             } else cd = lodash.cloneDeep(currentData);
             this.page.notifyActionBlockSync(this);
-            await this.page.onNotifyEditBlock(this);
+            if (this.page.user) {
+                await this.updateProps({
+                    editor: this.page.user.id,
+                    editDate: Date.now()
+                })
+            }
             this.page.snapshoot.record(OperatorDirective.$array_delete, {
                 pos,
                 data: cd
@@ -743,7 +758,12 @@ export class Block$Event {
             arr.splice(to, 0, item);
             var to = options.to;
             this.page.notifyActionBlockSync(this);
-            await this.page.onNotifyEditBlock(this);
+            if (this.page.user) {
+                await this.updateProps({
+                    editor: this.page.user.id,
+                    editDate: Date.now()
+                })
+            }
             this.page.snapshoot.record(OperatorDirective.$array_move, {
                 pos,
                 from,

@@ -49,7 +49,7 @@ class ChannelService {
             this.serviceMetas.push(sm);
         }
     }
-    excute(type: MethodType, url: string, args: Record<string, any>) {
+    excute(type: MethodType, url: string, args: Record<string, any>, ...otherArgs: any[]) {
         var sms = this.serviceMetas.filter(g => g.url == url && type == g.type);
         if (sms.length > 0) {
             var sm = sms.first();
@@ -60,7 +60,7 @@ class ChannelService {
                 channel.fire('/log', { type: 'error', message: new Error('有多个service') })
             }
             try {
-                return sm.instance[sm.method].apply(sm.instance, [args]);
+                return sm.instance[sm.method].apply(sm.instance, [args, ...otherArgs]);
             }
             catch (ex) {
                 console.error('push', ex);
@@ -76,7 +76,7 @@ class ChannelService {
         }
     }
     consumes: { url: string, date?: Date, once?: boolean, handle: (args: Record<string, any>) => any }[] = [];
-    async fire(url: string, args: Record<string, any>) {
+    async fire(url: string, args: Record<string, any>, ...otherArgs: any[]) {
         let es = this.consumes.filter(ev => ev.url == url);
         var rs: any[] = [];
         var removeE = [];
@@ -84,7 +84,7 @@ class ChannelService {
             if (e.once == true) removeE.push(e);
             var r;
             try {
-                r = e.handle(args);
+                var r = e.handle.apply(e, [args, ...otherArgs])
                 if (r instanceof Promise) {
                     var g = await r;
                     rs.push(g);

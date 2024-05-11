@@ -130,7 +130,7 @@ export class SearchBox extends EventsComponent {
     }
     async onSelect(item: LinkPageItem) {
         if (this.isNav == true) {
-            channel.air('/page/open', { item: item.id });
+            channel.act('/page/open', { item: item.id });
         }
         this.emit('save', item);
     }

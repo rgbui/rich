@@ -62,7 +62,7 @@ export class Link extends Block {
             event.preventDefault();
         var link = this.getLink();
         if (link?.pageId)
-            channel.air('/page/open', { item: link?.pageId });
+            channel.act('/page/open', { item: link?.pageId });
         else if (link?.url) {
             window.open(link.url, link.target || '_blank');
         }

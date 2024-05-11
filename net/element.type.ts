@@ -14,7 +14,7 @@ export enum ElementType {
      */
     Block,
     /**
-     * /Page/{id}/Row/{id1}/Block/{id2} 文档中的某个块
+     * /Page/{id}/Row/{id1}/Block/{id2} 文档中某个块里面的行内块
      */
     BlockLine,
     /**

@@ -437,6 +437,14 @@ export var util = {
         }
         return array;
     },
+    arrayRemoveDuplication<T>(list: T[], predict?: (t: T) => any) {
+        var array: T[] = [];
+        list.each(l => {
+            if (array.exists(a => predict ? predict(a) == predict(l) : a == l)) return;
+            array.push(l);
+        })
+        return array;
+    },
     countOccurrences(text, char) {
         // 使用split方法分割字符串，得到一个数组
         var arr = text.split(char);

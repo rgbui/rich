@@ -97,7 +97,7 @@ export class LinkPaths extends Block {
 export class LinkPathsView extends BlockView<LinkPaths> {
     mousedown(item: LinkPageItem) {
         if (item.id == this.block.page.getPageDataInfo()?.id) return;
-        channel.air('/page/open', { item: item.id });
+        channel.act('/page/open', { item: item.id });
     }
     renderJoin() {
         if (this.block.joinChar == '>')

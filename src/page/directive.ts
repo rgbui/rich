@@ -36,3 +36,17 @@ export enum PageDirective {
     back,
     syncItems
 }
+
+
+export enum PageLocation {
+    /**
+     * 文档下面的page信息更新
+     */
+    pageUpdateInfo = 1,
+    pageEditTitle=3,
+
+    /**
+     * page bar的更新
+     */
+    pageBarUpdateInfo=2,
+}

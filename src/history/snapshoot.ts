@@ -117,7 +117,8 @@ export class HistorySnapshoot extends Events {
                         else this.historyRecord.push(this.action);
                     }
                 };
-                window.shyLog(this.action.toString());
+                if (window.shyConfig?.isDev)
+                    console.log(this.action.toString())
             }
         }
         catch (ex) {

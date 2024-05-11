@@ -13,20 +13,13 @@ import { Icon } from "../../component/view/icon";
 import { DragBlockLine } from "../../src/kit/handle/line";
 import { BlockUrlConstant } from "../../src/block/constant";
 import { Tip } from "../../component/view/tooltip/tip";
+import { RefPageLink } from "../../extensions/link/declare";
 
 @url('/tag')
 export class ShyTag extends Block {
     display = BlockDisplay.inline;
     @prop()
-    refLinks: {
-        id: string,
-        type: 'page' | "tag" | "comment" | "mention" | "time",
-        pageId?: string,
-        tagId?: string,
-        commentId?: string,
-        userid?: string,
-        tagText?: string
-    }[] = null;
+    refLinks: RefPageLink[] = null;
     async openTag(event: React.MouseEvent) {
         event.preventDefault();
         event.stopPropagation();

@@ -25,6 +25,8 @@ export class BlockFactory {
         if (bc) {
             var newBlock: Block = new (bc.model as any)(page);
             newBlock.viewComponent = bc.view;
+
+
             if (parent) newBlock.parent = parent;
             if (typeof newBlock.initialLoad == 'function') await newBlock.initialLoad();
             if (data) {
@@ -33,6 +35,12 @@ export class BlockFactory {
                 await newBlock.load(Object.assign(pb.data, data));
             }
             if (typeof newBlock.initialedLoad == 'function') await newBlock.initialedLoad();
+            if (page?.user && !newBlock.creater) {
+                newBlock.creater = page.user?.id;
+                newBlock.createDate = Date.now();
+                newBlock.editor = page.user?.id;
+                newBlock.editDate = Date.now();
+            }
             return newBlock;
         }
         else {

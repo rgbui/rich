@@ -155,7 +155,7 @@ export class BlockIconView extends BlockView<BlockIcon> {
             }
             else if (this.block.link.pageId) {
                 event.stopPropagation();
-                channel.air('/page/open', { item: this.block.link.pageId })
+                channel.act('/page/open', { item: this.block.link.pageId })
             }
         }
     }

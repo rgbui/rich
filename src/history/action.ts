@@ -38,6 +38,7 @@ export class UserAction {
     syncPage?: boolean;
     immediate?: boolean;
     elementUrl?: string;
+    workspaceId?: string;
     constructor() {
         this.id = channel.query('/guid');
     }

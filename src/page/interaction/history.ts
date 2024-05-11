@@ -307,36 +307,37 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             old_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] },
             new_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] }
         } = operator.data as any;
-        if (source == 'notifyView') {
-            window.shyLog(oc, 'notifyView')
-            if (oc.new_value.blocks?.length > 0) {
-                var bs = page.findAll(g => oc.new_value.blocks.some(s => s.blockId == g.id));
-                page.addActionCompletedEvent(async () => {
-                    page.kit.collaboration.renderBlocks(action.userid, bs);
-                })
-            }
-            else {
-                if (!(oc.new_value.start && oc.new_value.end)) return;
-                var startBlock = page.find(x => x.id == oc.new_value.start.blockId);
-                if (startBlock) {
-                    var startAppear = startBlock.appearAnchors.find(g => g.prop == oc.new_value.start.prop);
-                    var endBlock = oc.new_value.end.blockId == startBlock?.id ? startBlock : page.find(x => x.id == oc.new_value.end.blockId);
-                    var endAppear = endBlock.appearAnchors.find(g => g.prop == oc.new_value.end.prop);
-                    var selection = ({
-                        startAnchor: startAppear,
-                        startOffset: oc.new_value.start.offset,
-                        endAnchor: endAppear,
-                        endOffset: oc.new_value.end.offset
-                    });
-                    page.addActionCompletedEvent(async () => {
-                        page.kit.collaboration.renderSelection(action.userid, selection);
-                    })
-                }
-                else {
-                    console.error('not found cursor pos block')
-                }
-            }
-        }
+        // if (source == 'notifyView')
+        // {
+
+        //     if (oc.new_value.blocks?.length > 0) {
+        //         var bs = page.findAll(g => oc.new_value.blocks.some(s => s.blockId == g.id));
+        //         page.addActionCompletedEvent(async () => {
+        //             page.kit.collaboration.renderBlocks(action.userid, bs);
+        //         })
+        //     }
+        //     else {
+        //         if (!(oc.new_value.start && oc.new_value.end)) return;
+        //         var startBlock = page.find(x => x.id == oc.new_value.start.blockId);
+        //         if (startBlock) {
+        //             var startAppear = startBlock.appearAnchors.find(g => g.prop == oc.new_value.start.prop);
+        //             var endBlock = oc.new_value.end.blockId == startBlock?.id ? startBlock : page.find(x => x.id == oc.new_value.end.blockId);
+        //             var endAppear = endBlock.appearAnchors.find(g => g.prop == oc.new_value.end.prop);
+        //             var selection = ({
+        //                 startAnchor: startAppear,
+        //                 startOffset: oc.new_value.start.offset,
+        //                 endAnchor: endAppear,
+        //                 endOffset: oc.new_value.end.offset
+        //             });
+        //             page.addActionCompletedEvent(async () => {
+        //                 page.kit.collaboration.renderSelection(action.userid, selection);
+        //             })
+        //         }
+        //         else {
+        //             console.error('not found cursor pos block')
+        //         }
+        //     }
+        // }
         if (source == 'notify' || source == 'notifyView' || source == 'load' || source == 'loadSyncBlock') return;
         if (oc.new_value.blocks?.length > 0) {
             var bs = page.findAll(g => oc.new_value.blocks.some(s => s.blockId == g.id));

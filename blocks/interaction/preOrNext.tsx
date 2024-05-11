@@ -60,7 +60,7 @@ export class PageOrNextView extends BlockView<PageOrNext> {
                 style={{ cursor: ss ? 'pointer' : 'default', ...bg }}
                 onClick={e => {
                     if (this.block.prePageInfo)
-                        channel.air('/page/open', { item: this.block.prePageInfo?.pageId })
+                        channel.act('/page/open', { item: this.block.prePageInfo?.pageId })
                     else if (this.block.page.formPreRow)
                         this.block.page.onFormOpen('prev')
                 }}>
@@ -74,7 +74,7 @@ export class PageOrNextView extends BlockView<PageOrNext> {
                 style={{ cursor: se ? 'pointer' : 'default', ...bg }}
                 onClick={e => {
                     if (this.block.nextPageInfo)
-                        channel.air('/page/open', { item: this.block.nextPageInfo?.pageId })
+                        channel.act('/page/open', { item: this.block.nextPageInfo?.pageId })
                     else if (this.block.page.formNextRow)
                         this.block.page.onFormOpen('next')
                 }}>

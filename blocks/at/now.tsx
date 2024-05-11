@@ -5,6 +5,7 @@ import { BlockDisplay } from "../../src/block/enum";
 import { url, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
 import "./style.less";
+
 @url('/now/date')
 export class ShyNowDate extends Block {
     display = BlockDisplay.inline;

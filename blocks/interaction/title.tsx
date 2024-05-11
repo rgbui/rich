@@ -6,7 +6,7 @@ import { TextArea } from "../../src/block/view/appear";
 import { BlockView } from "../../src/block/view";
 import { channel } from "../../net/channel";
 import { Icon } from "../../component/view/icon";
-import { AlignTextCenterSvg, EmojiSvg, HideSvg, LinkSvg, MoveToSvg, PicSvg } from "../../component/svgs";
+import { AlignTextCenterSvg, EmojiSvg, HideSvg, LinkSvg, PicSvg } from "../../component/svgs";
 import lodash from "lodash";
 import { Spin } from "../../component/view/spin";
 import { LinkPageItem, PageLayoutType, getPageText } from "../../src/page/declare";
@@ -16,23 +16,25 @@ import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { Rect } from "../../src/common/vector/point";
 import { UA } from "../../util/ua";
 import { util } from "../../util/util";
+import { PageLocation } from "../../src/page/directive";
 import "./style.less";
 
 @url('/title')
 export class Title extends Block {
     display = BlockDisplay.block;
     pageInfo: LinkPageItem = null;
-    async loadPageInfo() {
+    loadPageInfo(isUpdate?:boolean) {
         var r = this.page.getPageDataInfo();
         if (r) {
             this.pageInfo = lodash.cloneDeep(r);
         }
+        if(isUpdate)this.forceManualUpdate();
     }
     @prop()
     align: 'left' | 'center' = 'left';
     async changeAppear(appear) {
         if (appear.prop == 'pageInfo.text') {
-            await this.page.onUpdatePageTitle(this.pageInfo.text);
+            await this.page.onUpdatePageTitle(this.pageInfo.text,PageLocation.pageEditTitle);
         }
     }
     get isSupportTextStyle() {
@@ -42,9 +44,8 @@ export class Title extends Block {
         return true;
     }
     onFocusPageTitle() {
-        if (this.page?.pageInfo)
-        {
-            this.page.kit.anchorCursor.onFocusBlockAnchor(this, { disabledStore:true, render: true });
+        if (this.page?.pageInfo) {
+            this.page.kit.anchorCursor.onFocusBlockAnchor(this, { disabledStore: true, render: true });
         }
     }
     get isCanEmptyDelete() {
@@ -183,32 +184,32 @@ export class Title extends Block {
 @view('/title')
 export class TitleView extends BlockView<Title> {
     async didMount() {
-        channel.sync('/page/update/info', this.updatePageInfo);
-        await this.block.loadPageInfo();
+        // channel.sync('/page/update/info', this.updatePageInfo);
+        this.block.loadPageInfo();
         this.forceUpdate(() => {
             this.block.onFocusPageTitle();
         })
     }
-    updatePageInfo = (r: { elementUrl: string, id: string, pageInfo: LinkPageItem }) => {
-        var { elementUrl, id, pageInfo } = r;
-        if (elementUrl && this.block.page.elementUrl == elementUrl || id && id == this.block.page.pageInfo?.id) {
-            var isUpdate: boolean = false;
-            if (typeof pageInfo.text != 'undefined' && pageInfo.text != this.block.pageInfo.text) {
-                this.block.pageInfo.text = pageInfo.text;
-                isUpdate = true;
-            }
-            if (typeof pageInfo.icon != 'undefined') {
-                this.block.pageInfo.icon = lodash.cloneDeep(pageInfo.icon);
-                isUpdate = true;
-            }
-            if (isUpdate) {
-                this.forceUpdate();
-            }
-        }
-    }
-    willUnmount() {
-        channel.off('/page/update/info', this.updatePageInfo);
-    }
+    // updatePageInfo = (r: { elementUrl: string, id: string, pageInfo: LinkPageItem }) => {
+    //     var { elementUrl, id, pageInfo } = r;
+    //     if (elementUrl && this.block.page.elementUrl == elementUrl || id && id == this.block.page.pageInfo?.id) {
+    //         var isUpdate: boolean = false;
+    //         if (typeof pageInfo.text != 'undefined' && pageInfo.text != this.block.pageInfo.text) {
+    //             this.block.pageInfo.text = pageInfo.text;
+    //             isUpdate = true;
+    //         }
+    //         if (typeof pageInfo.icon != 'undefined') {
+    //             this.block.pageInfo.icon = lodash.cloneDeep(pageInfo.icon);
+    //             isUpdate = true;
+    //         }
+    //         if (isUpdate) {
+    //             this.forceUpdate();
+    //         }
+    //     }
+    // }
+    // willUnmount() {
+    //     channel.off('/page/update/info', this.updatePageInfo);
+    // }
     renderView() {
         var isAdd: boolean = this.block.page.isSupportCover;
         if (!this.block.page.isCanEdit) isAdd = false;

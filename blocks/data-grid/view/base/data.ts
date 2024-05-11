@@ -35,7 +35,7 @@ export class DataGridViewData {
         if (typeof initData == 'undefined') initData = {};
         initData.pre = this.page.getPageDataInfo();
         await this.onDataGridTool(async () => {
-            await channel.air(url, {
+            await channel.act(url, {
                 elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, vid),
                 config: {
                     force: true,
@@ -65,7 +65,7 @@ export class DataGridViewData {
         var initData: Record<string, any> = {};
         initData.pre = this.page.getPageDataInfo();
         await this.onDataGridTool(async () => {
-            await channel.air(url, {
+            await channel.act(url, {
                 elementUrl: elementUrl,
                 config: {
                     force: true,

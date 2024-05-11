@@ -68,7 +68,7 @@ class TabelSchemaFormDrop extends EventsComponent {
     }
     async onOpenTemplate(view, isTemplate: boolean = false) {
         this.emit('save', view);
-        await channel.air('/page/dialog', {
+        await channel.act('/page/dialog', {
             elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, view.id),
             config: isTemplate ? { isTemplate: true, force: true } : { force: true }
         })

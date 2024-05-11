@@ -20,7 +20,7 @@ import { Loading2 } from "../../../component/view/spin";
 import { channel } from "../../../net/channel";
 import { ElementType } from "../../../net/element.type";
 import { PageLayoutType, getPageIcon, getPageText } from "../declare";
-import { PageDirective } from "../directive";
+import { PageDirective, PageLocation } from "../directive";
 import { isMobileOnly } from "react-device-detect";
 import { Avatar } from "../../../component/view/avator/face";
 import { ToolTip } from "../../../component/view/tooltip";
@@ -47,7 +47,7 @@ export class PageBar extends React.Component<{ page: Page }> {
         if (this.props.page.openSource !== 'page') return;
         var r = await useInputIconAndText({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, options);
         if (r) {
-            await this.props.page.onUpdatePageData({ text: r.text || undefined, icon: r.icon || undefined });
+            await this.props.page.onUpdatePageData({ text: r.text || undefined, icon: r.icon || undefined },PageLocation.pageBarUpdateInfo);
         }
     }
     renderTitle() {

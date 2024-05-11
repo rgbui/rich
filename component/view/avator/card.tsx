@@ -158,7 +158,7 @@ export class UserCard extends EventsComponent {
                     this.emit('close');
                     break;
                 case 'openRobot':
-                    await channel.air('/robot/open', { robot: this.user });
+                    await channel.act('/robot/open', { robot: this.user });
                     break;
             }
         }

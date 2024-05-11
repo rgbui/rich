@@ -117,7 +117,7 @@ export class UserPicker extends EventsComponent {
         this.emit('change', link);
     }
     componentDidUpdate() {
-        var el = this.el.querySelector('.selected') as HTMLElement;
+        var el = this.el.querySelector('.item-hover-light-focus') as HTMLElement;
         if (el) {
             el.scrollIntoView({
                 block: "nearest",

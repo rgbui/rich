@@ -27,12 +27,11 @@ export class Block$Operator {
         var pbs = this.parentBlocks;
         if (Array.isArray(pbs) && pbs.exists(g => g === this)) {
             try {
-                await this.page.monitorBlockOperator(this, 'delete');
+                this.page.observeChange('willDelete', { block: this })
             }
             catch (ex) {
                 this.page.onError(ex)
             }
-            await this.page.onNotifyEditBlock(this);
             this.needUpdate = true;
             this.page.snapshoot.record(OperatorDirective.$delete, {
                 pos: this.pos,
@@ -67,12 +66,10 @@ export class Block$Operator {
     }
     async turn(this: Block, url: string, da?: Record<string, any>) {
         var oldUrl = this.getUrl();
-        this.page.monitorBlockOperator(this, 'turn');
         if (this.url == BlockUrlConstant.Head && url.startsWith(BlockUrlConstant.Head)) {
             //这里只是大标题的切换，不需要做任何的处理，更新一些属性即可
             var pb = ParseBlockUrl(url);
             await this.updateProps(pb.data.level ? Object.assign(pb.data, da || {}) : { level: 'h1', ...(da || {}) }, BlockRenderRange.self);
-            this.page.monitorBlockOperator(this, 'turn');
             return this;
         }
         if (this.url == BlockUrlConstant.List && url.startsWith(BlockUrlConstant.List)) {
@@ -81,7 +78,7 @@ export class Block$Operator {
             return this;
         }
         else if (url == BlockUrlConstant.Link) {
-            var content = (await this.getPlain()) || '';
+            var content = await this.getBlockPlain();
             content = content.slice(0, content.indexOf('\n') > -1 ? content.indexOf('\n') : content.length);
             var r = await channel.air('/page/create/sub', {
                 pageId: this.page.pageInfo?.id,
@@ -94,25 +91,26 @@ export class Block$Operator {
         /**
          * 这里可能会存在自转换 
          */
-        if (this.url == url) return this;
-
+        if (this.url == oldUrl) return this;
         var data = await this.getWillTurnData(url);
         if (da) data = Object.assign(data || {}, da);
-        var newBlock = await BlockFactory.createBlock(url, this.page, data, this.parent);
-        await this.page.onNotifyCreateBlock(newBlock);
-        var bs = this.parent.blocks[this.parentKey];
-        bs.insertAt(this.at, newBlock);
-        bs.remove(g => g == this);
-        newBlock.id = this.id;
-        newBlock.needUpdate = true;
-        this.page.monitorBlockOperator(newBlock, 'turn');
-        this.page.notifyActionBlockUpdate(newBlock.parent);
-        await this.page.onNotifyEditBlock(this);
-        this.page.snapshoot.record(OperatorDirective.$turn, {
-            pos: newBlock.pos,
-            from: oldUrl,
-            to: url
-        }, this);
+        var newBlock = await this.page.createBlock(url, data, this.parent, this.at, this.parentKey);
+        await this.delete();
+        // var newBlock = await BlockFactory.createBlock(url, this.page, data, this.parent);
+        // var bs = this.parent.blocks[this.parentKey];
+        // bs.insertAt(this.at, newBlock);
+        // // bs.remove(g => g == this);
+        // this.remove();
+        // newBlock.id = this.id;
+        // this.page.notifyActionBlockUpdate(this);
+        // this.page.observeBlockChange(newBlock, 'turn');
+        // this.page.notifyActionBlockUpdate(newBlock.parent);
+        // await this.page.onNotifyEditBlock(this);
+        // this.page.snapshoot.record(OperatorDirective.$turn, {
+        //     pos: newBlock.pos,
+        //     from: oldUrl,
+        //     to: url
+        // }, this);
         return newBlock;
     }
     async replace(this: Block, newBlock: Block[]) {
@@ -210,7 +208,6 @@ export class Block$Operator {
         if (!this.parent) return;
         var pbs = this.parentBlocks;
         if (Array.isArray(pbs) && pbs.exists(g => g === this)) {
-            this.needUpdate = true;
             pbs.remove(this);
             if (pbs.length > 0) {
                 if (this.parent.isRow && !this.parent.isPart) {
@@ -244,14 +241,19 @@ export class Block$Operator {
             at -= 1;
         }
         var from = block.pos;
-        this.page.monitorBlockOperator(block.parent, 'from', block);
+        this.page.observeChange('from', { block });
         this.page.notifyActionBlockSync(block.parent);
         await block.remove();
         bs.insertAt(at, block);
         block.parent = this;
-        this.page.monitorBlockOperator(block.parent, 'to', block);
+        this.page.observeChange('to', { block });
         this.page.notifyActionBlockSync(block.parent);
-        await this.page.onNotifyEditBlock(this);
+        if (this.page.user) {
+            await this.updateProps({
+                editor: this.page.user.id,
+                editDate: Date.now()
+            })
+        }
         this.page.snapshoot.record(OperatorDirective.$move, {
             from,
             to: block.pos
@@ -326,8 +328,13 @@ export class Block$Operator {
         var from = this.pos;
         var ps = this.parentBlocks;
         ps.move(this, at);
-        this.needUpdate = true;
-        await this.page.onNotifyEditBlock(this);
+        this.page.notifyActionBlockUpdate(this);
+        if (this.page.user) {
+            await this.updateProps({
+                editor: this.page.user.id,
+                editDate: Date.now()
+            })
+        }
         this.page.snapshoot.record(OperatorDirective.$move, {
             from,
             to: this.pos
@@ -360,7 +367,7 @@ export class Block$Operator {
                     var sum = col.childs.sum(x => (x as Col).widthPercent);
                     var r = Math.round(100 / (col.childs.length + 1));
                     await col.childs.eachAsync(async c => {
-                        await c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) },BlockRenderRange.self)
+                        await c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) }, BlockRenderRange.self)
                     })
                     var newCol = await this.page.createBlock(BlockUrlConstant.Col, { widthPercent: r }, col.parent, col.at);
                     await blocks.eachAsync(async (block) => {
@@ -391,7 +398,7 @@ export class Block$Operator {
                     var sum = col.childs.sum(x => (x as Col).widthPercent);
                     var r = Math.round(100 / (col.childs.length + 1));
                     await col.childs.eachAsync(async c => {
-                        await c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) },BlockRenderRange.self)
+                        await c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) }, BlockRenderRange.self)
                     })
                     var newCol = await this.page.createBlock(BlockUrlConstant.Col, { widthPercent: r }, col.parent, col.at + 1);
                     await blocks.eachAsync(async (block) => {
@@ -456,7 +463,7 @@ export class Block$Operator {
                     var sum = col.childs.sum(x => (x as Col).widthPercent);
                     var r = Math.round(100 / (col.childs.length + 1));
                     await col.childs.eachAsync(async c => {
-                        await c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) },BlockRenderRange.self)
+                        await c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) }, BlockRenderRange.self)
                     })
                     var newCol = await this.page.createBlock(BlockUrlConstant.Col, { widthPercent: r }, col.parent, col.at);
                     await blocks.eachAsync(async (block) => {
@@ -487,7 +494,7 @@ export class Block$Operator {
                     var sum = col.childs.sum(x => (x as Col).widthPercent);
                     var r = Math.round(100 / (col.childs.length + 1));
                     await col.childs.eachAsync(async c => {
-                        await c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) },BlockRenderRange.self)
+                        await c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) }, BlockRenderRange.self)
                     });
                     var newCol = await this.page.createBlock(BlockUrlConstant.Col, { widthPercent: r }, col.parent, col.at + 1);
                     await blocks.eachAsync(async (block) => {
@@ -533,7 +540,7 @@ export class Block$Operator {
         return bs;
     }
     async updateAppear(this: Block, appear: AppearAnchor, newValue: string, range = BlockRenderRange.none) {
-        await this.updateProps({ [appear.prop]: newValue },BlockRenderRange.self);
+        await this.updateProps({ [appear.prop]: newValue }, BlockRenderRange.self);
         await this.changeAppear(appear);
     }
     /**
@@ -548,11 +555,6 @@ export class Block$Operator {
         if (!props || lodash.isObject(props) && Object.keys(props).length == 0) return;
         var oldValue: Record<string, any> = {};
         var newValue: Record<string, any> = {};
-        if (typeof props['refLinks'] != 'undefined') {
-            if (props['refLinks'] == null) {
-                await this.page.monitorBlockOperator(this, 'delete');
-            }
-        }
         for (let prop in props) {
             if (!(force == true) && !lodash.isEqual(lodash.get(this, prop), lodash.get(props, prop))) {
                 oldValue[prop] = await this.clonePropData(prop);
@@ -566,9 +568,16 @@ export class Block$Operator {
             }
         }
         if (Object.keys(oldValue).length > 0 || Object.keys(newValue).length > 0) {
-            if (typeof newValue['content'] != 'undefined' || typeof newValue['refLinks'] != 'undefined') {
-                await this.page.monitorBlockOperator(this, 'content');
+            var keys = Object.keys(newValue);
+            if (!(keys.includes('editor') || keys.includes('editDate'))) {
+                if (this.page.user) {
+                    oldValue['editor'] = await this.clonePropData('editor');
+                    newValue['editor'] = this.page.user.id;
+                    oldValue['editDate'] = await this.clonePropData('editDate');
+                    newValue['editDate'] = Date.now();
+                }
             }
+            this.page.observeChange('update', { block: this, update: { old: oldValue, new: newValue } })
             await this.changeProps(oldValue, newValue);
             this.page.notifyActionBlockSync(this);
             this.syncUpdate(range);
@@ -582,9 +591,6 @@ export class Block$Operator {
                 else { delete newValue[n]; delete oldValue[n] }
             }
             if (Object.keys(newValue).length > 0) {
-                var keys = Object.keys(newValue);
-                if (!(keys.includes('editor') || keys.includes('editDate')))
-                    await this.page.onNotifyEditBlock(this);
                 this.page.snapshoot.record(OperatorDirective.$update, {
                     pos: this.pos,
                     old_value: oldValue,
@@ -610,6 +616,13 @@ export class Block$Operator {
         this.syncUpdate(BlockRenderRange.self);
         this.matrix = newMatrix;
         this.page.notifyActionBlockSync(this);
+        this.page.observeChange('update', {
+            block: this,
+            update: {
+                old: { matrix: oldMatrix.getValues() },
+                new: { matrix: newMatrix.getValues() }
+            }
+        })
         this.page.snapshoot.record(OperatorDirective.$update, {
             pos: this.pos,
             old_value: { matrix: oldMatrix.getValues() },
@@ -669,9 +682,8 @@ export class Block$Operator {
                 if (this.__props.includes(n)) continue
                 else { delete newValue[n]; delete oldValue[n] }
             }
-            if (typeof newValue['content'] != 'undefined' || typeof newValue['refLinks'] != 'undefined') {
-                this.page.monitorBlockOperator(this, 'content');
-            }
+            this.page.observeChange('manualUpdate', { block: this, update: { old: oldValue, new: newValue } })
+
             this.page.notifyActionBlockSync(this);
             if (Object.keys(newValue).length > 0)
                 this.page.snapshoot.record(OperatorDirective.$update, {
@@ -688,8 +700,28 @@ export class Block$Operator {
                 this.page.notifyActionBlockUpdate(this);
                 break;
             case BlockRenderRange.parent:
-                this.needUpdate = true;
+                this.page.notifyActionBlockUpdate(this);
                 this.page.notifyActionBlockUpdate(this.parent)
+                break;
+            case BlockRenderRange.subChilds:
+                this.page.notifyActionBlockUpdate(this);
+                this.childs.forEach(c => {
+                    this.page.notifyActionBlockUpdate(c);
+                })
+                break;
+            case BlockRenderRange.sub:
+                this.page.notifyActionBlockUpdate(this);
+                for (let n in this.blocks) {
+                    for (let b of this.blocks[n]) {
+                        this.page.notifyActionBlockUpdate(b);
+                    }
+                }
+                break;
+            case BlockRenderRange.subAll:
+                this.page.notifyActionBlockUpdate(this);
+                this.each(c => {
+                    this.page.notifyActionBlockUpdate(c);
+                })
                 break;
             case BlockRenderRange.none:
                 break;

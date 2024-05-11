@@ -6,7 +6,7 @@ import { BlockChildKey, BlockUrlConstant } from "../../../block/constant";
 import { BlockFactory } from "../../../block/factory/block.factory";
 import { OperatorDirective, ActionDirective } from "../../../history/declare";
 import { DropDirection } from "../../../kit/handle/direction";
-import { PageDirective } from "../../directive";
+import { PageDirective, PageLocation } from "../../directive";
 import { util } from "echarts";
 import { TableSchema } from "../../../../blocks/data-grid/schema/meta";
 import { Title } from "../../../../blocks/interaction/title";
@@ -25,8 +25,7 @@ export class Page$Operator2 {
     */
     async createBlock(this: Page, url: string, data: Record<string, any>, parent: Block, at?: number, childKey?: string) {
         var block = await BlockFactory.createBlock(url, this, data, parent);
-        block.needUpdate=true;
-        await this.onNotifyCreateBlock(block);
+        this.notifyActionBlockUpdate(block);
         if (parent) {
             if (typeof childKey == 'undefined') childKey = block.isLine ? BlockChildKey.childs : (parent?.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
             if (!parent.allBlockKeys.some(s => s == childKey)) {
@@ -42,7 +41,7 @@ export class Page$Operator2 {
                 pos: block.pos,
                 data: await block.get()
             }, block);
-            this.monitorBlockOperator(block, 'create');
+            this.observeChange('create', { block })
             this.notifyActionBlockUpdate(parent);
             this.notifyActionBlockSync(block);
         }
@@ -55,8 +54,9 @@ export class Page$Operator2 {
                 pos: block.pos,
                 data: await block.get()
             }, block);
-            this.monitorBlockOperator(block, 'create');
-            this.notifyActionPageUpdate();
+            this.observeChange('create', { block })
+            this.notifyActionBlockSync(block);
+            this.notifyActionBlockUpdate(block.parent)
         }
         await block.loadSyncBlock();
         return block;
@@ -151,7 +151,7 @@ export class Page$Operator2 {
             if (willCombineBlock.childs.length > 0) {
                 if (block.content && block.childs.length == 0) {
                     await this.createBlock(BlockUrlConstant.Text, { content: block.content }, block, 0);
-                    await block.updateProps({ content: '' },BlockRenderRange.self);
+                    await block.updateProps({ content: '' }, BlockRenderRange.self);
                 }
                 var cs = willCombineBlock.childs.map(c => c);
                 await cs.eachAsync(async (c) => {
@@ -161,7 +161,7 @@ export class Page$Operator2 {
             else {
                 if (block.content && block.childs.length == 0) {
                     await this.createBlock(BlockUrlConstant.Text, { content: block.content }, block, 0);
-                    await block.updateProps({ content: '' },BlockRenderRange.self);
+                    await block.updateProps({ content: '' }, BlockRenderRange.self);
                 }
                 if (willCombineBlock.content) {
                     await this.createBlock(BlockUrlConstant.Text, { content: willCombineBlock.content }, block, block.childs.length);
@@ -253,7 +253,7 @@ export class Page$Operator2 {
             if (isUpdate) this.notifyActionPageUpdate();
         });
     }
-    async onUpdatePageData(this: Page, data: Record<string, any>) {
+    async onUpdatePageData(this: Page, data: Record<string, any>, locationId?: PageLocation) {
         for (let n in data) {
             if (lodash.isUndefined(data[n])) {
                 delete data[n];
@@ -281,7 +281,6 @@ export class Page$Operator2 {
             }
         }
         else if (this.isSchemaRecordViewTemplate) {
-
             var sr = this.schema.views.find(g => g.id == this.pe.id1);
             if (sr) {
                 await this.schema.onSchemaOperate([{
@@ -302,7 +301,7 @@ export class Page$Operator2 {
             channel.air('/page/update/info', {
                 elementUrl: this.elementUrl,
                 pageInfo: data
-            })
+            }, { locationId: locationId || PageLocation.pageUpdateInfo })
         }
     }
     async onCopyBlocks(this: Page, blocks: Block[]) {

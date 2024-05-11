@@ -50,6 +50,8 @@ export class Page extends Events<PageDirective> {
     readonly: boolean = false;
     sourceItemId: string;
     version: PageVersion;
+
+    syncs: Record<string, any> = {};
     constructor(options?: {
         id?: string,
         readonly?: boolean
@@ -170,10 +172,18 @@ export class Page extends Events<PageDirective> {
         }
     }
     destory() {
+        for (let se in this.syncs) {
+            channel.off(se as any, this.syncs[se]);
+        }
         this.kit.picker.onCancel();
         closeBoardEditTool();
         ReactDOM.unmountComponentAtNode(this.root);
         this.root.remove();
+        if (this.isPageOff) {
+            if (this.fragment) {
+                this.fragment = null;
+            }
+        }
     }
     async renderFragment(panel: HTMLElement, options?: { width?: number, height?: number }) {
         try {
@@ -183,7 +193,7 @@ export class Page extends Events<PageDirective> {
             }
             panel.appendChild(this.root);
             this.view.observeScroll();
-            await this.view.AutomaticHandle();
+            await this.AutomaticHandle();
             if ([ElementType.SchemaRecordView, ElementType.SchemaRecordViewData, ElementType.SchemaData].includes(this.pe.type)) {
                 await this.loadPageSchema();
             }
@@ -217,7 +227,10 @@ export class Page extends Events<PageDirective> {
             if (options && (options?.width !== this.pageVisibleWidth || options?.height !== this.pageVisibleHeight)) {
                 this.pageVisibleWidth = options?.width;
                 this.pageVisibleHeight = options?.height;
-                this.view.forceManualUpdate(() => { isForceUpdate = true; nextAction() })
+                this.view.forceManualUpdate(() => {
+                    isForceUpdate = true;
+                    nextAction()
+                })
             } else nextAction();
         }
         catch (ex) {
@@ -228,8 +241,7 @@ export class Page extends Events<PageDirective> {
     setPaddingBottom(paddingBottom?: number) {
         if (this.pageLayout?.type == PageLayoutType.doc || this.pageLayout?.type == PageLayoutType.ppt) {
             if (this.contentEl) {
-                if (typeof paddingBottom == 'number')
-                    this.contentEl.style.paddingBottom = paddingBottom + 'px';
+                if (typeof paddingBottom == 'number') this.contentEl.style.paddingBottom = paddingBottom + 'px';
                 else this.contentEl.style.paddingBottom = '';
             }
         }
@@ -298,7 +310,7 @@ export class Page extends Events<PageDirective> {
     get pageInfo() {
         return this._pageItem;
     }
-    onceStopRenderByPageInfo: boolean = false;
+    // onceStopRenderByPageInfo: boolean = false;
     _pageItem: LinkPageItem;
     set pageInfo(pageInfo: LinkPageItem) {
         this._pageItem = pageInfo;

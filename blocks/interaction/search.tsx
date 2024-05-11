@@ -202,7 +202,7 @@ export class SearchWorkspaceView extends BlockView<SearchWorkspace> {
     }
     dropEle: HTMLElement;
     async onSelect(item: LinkPageItem) {
-        channel.air('/page/open', { item: item.id });
+        channel.act('/page/open', { item: item.id });
     }
     renderList() {
         if (this.searchList.list.length == 0 && this.searchList.pages.length == 0) return <div className="h-30 flex-center remark"><S>没有搜到相关的内容</S></div>

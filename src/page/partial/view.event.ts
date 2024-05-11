@@ -12,7 +12,7 @@ import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { onPasteBlank } from "../../kit/write/paste";
 import { PageLayoutType } from "../declare";
-import { PageDirective } from "../directive";
+import { PageDirective, PageLocation } from "../directive";
 import { BlockUrlConstant } from "../../block/constant";
 import { ElementType } from "../../../net/element.type";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
@@ -228,7 +228,7 @@ export class Page$ViewEvent {
             this.emit(PageDirective.changePageLayout);
             if (typeof actions == 'function') await actions();
             this.notifyActionPageUpdate();
-        }, { immediate: true,disabledJoinHistory:true });
+        }, { immediate: true, disabledJoinHistory: true });
     }
     /**
      * 
@@ -366,8 +366,11 @@ export class Page$ViewEvent {
             await this.onUpdatePageData({ icon })
         }
     }
-    async onUpdatePageTitle(this: Page, text: string) {
-        this.onceStopRenderByPageInfo = true;
+    async onUpdatePageTitle(this: Page,
+        text: string,
+        locationId?: PageLocation
+    ) {
+        // this.onceStopRenderByPageInfo = true;
         if (!this.isSchemaRecordViewTemplate && [ElementType.SchemaRecordView, ElementType.SchemaData, ElementType.SchemaView].includes(this.pe.type)) {
             this.formRowData.title = text;
             if (this.view.pageBar) this.view.pageBar.forceUpdate()
@@ -384,10 +387,8 @@ export class Page$ViewEvent {
             }
         }
         else {
-            window.shyLog('ep', this.elementUrl, this.pageInfo, this.pageInfo?.id, this.pe.id);
             if (this.pe.type == ElementType.Schema) {
                 var schema = await TableSchema.loadTableSchema(this.pe.id, this.ws);
-                window.shyLog('sche', this.schema, schema);
                 if (schema)
                     schema.update({ text })
             }
@@ -396,7 +397,7 @@ export class Page$ViewEvent {
                 pageInfo: {
                     text: text
                 }
-            })
+            }, { locationId: locationId || PageLocation.pageUpdateInfo })
         }
     }
     async onUpdateDescription(this: Page, text: string) {

@@ -4,7 +4,7 @@ import React from 'react';
 import { BlockDisplay, BlockRenderRange } from "../enum";
 import { prop, url, view } from "../factory/observable";
 import { SolidArea, TextArea } from "../view/appear";
-import { PageLink } from "../../../extensions/link/declare";
+import { PageLink, RefPageLink } from "../../../extensions/link/declare";
 import { Block } from "..";
 import { channel } from "../../../net/channel";
 import lodash from "lodash";
@@ -21,6 +21,7 @@ import { Tip } from "../../../component/view/tooltip/tip";
 import { lst } from "../../../i18n/store";
 import { useLinkEditor } from "../../../extensions/link/link";
 
+
 /***
  * 文字型的block，
  * 注意该文字block里面含有子文字或其它的如图像block等
@@ -36,14 +37,7 @@ export class TextContent extends Block {
     @prop()
     code: boolean = false;
     @prop()
-    refLinks: {
-        id: string,
-        type: 'page' | "tag" | "comment" | "mention" | "time",
-        pageId?: string,
-        tagId?: string,
-        commentId?: string,
-        userid?: string,
-    }[] = null;
+    refLinks: RefPageLink[] = null;
     get isTextContent() {
         return true;
     }
@@ -145,7 +139,7 @@ export class TextContentView extends BlockView<TextContent> {
         if (this.block.page.keyboardPlate.isShift()) return;
         var r = Array.isArray(this.block.refLinks) ? this.block.refLinks[0] : undefined;
         if (r) {
-            channel.air('/page/open', { item: r.pageId });
+            channel.act('/page/open', { item: r.pageId });
         }
     }
     copyLink(url: string) {
@@ -177,17 +171,31 @@ export class TextContentView extends BlockView<TextContent> {
         if (this.boxTip) this.boxTip.close();
         var lc: PageLink = this.block.getPageLink()
         var pageLink = await useLinkEditor({ roundArea: Rect.fromEle(this.block.el) }, lc);
-        if (pageLink) {
-            if (lodash.isNull(pageLink.link)) {
-                this.onClearLink();
+        if (lodash.isNull(pageLink)) {
+            this.onClearLink();
+        }
+        else if (pageLink) {
+            if (pageLink.name == 'page') {
+                var rf = this.block.refLinks[0];
+                if (!rf) {
+                    rf = { id: util.guid(), type: 'page', pageId: pageLink.pageId }
+                }
+                else {
+                    rf.pageId = pageLink.pageId;
+                }
+                this.block.onUpdateProps({
+                    content: pageLink.text && pageLink.text != this.block.content ? pageLink.text : undefined,
+                    link: null,
+                    refLinks: [rf]
+                }, { range: BlockRenderRange.self })
             }
-            else if (pageLink.link)
-                this.block.onUpdateProps({ content: pageLink.content && pageLink.content != this.block.content ? pageLink.content : undefined, link: pageLink.link, refLinks: null }, { range: BlockRenderRange.self });
-            else this.block.onUpdateProps({
-                content: pageLink.content && pageLink.content != this.block.content ? pageLink.content : undefined,
-                link: null,
-                refLinks: pageLink.refLinks
-            }, { range: BlockRenderRange.self })
+            else if (pageLink.name == 'outside') {
+                this.block.onUpdateProps({
+                    content: pageLink.text && pageLink.text != this.block.content ? pageLink.text : undefined,
+                    link: pageLink,
+                    refLinks: null
+                }, { range: BlockRenderRange.self })
+            }
         }
     }
     dragBlock(event: React.MouseEvent) {

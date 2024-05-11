@@ -364,6 +364,10 @@ export class Block$LifeCycle {
         var text = this.content || '';
         return text + await this.getChildsPlain();
     }
+    async getBlockPlain(this: Block) {
+        var text = this.content || '';
+        return text + ((await this.childs.asyncMap(async c => await c.getPlain())).join(''))
+    }
     async getChildsPlain(this: Block) {
         var text = '';
         for (let b in this.blocks) {

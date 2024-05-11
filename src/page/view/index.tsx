@@ -5,7 +5,7 @@ import { ChildsArea } from "../../block/view/appear";
 import ReactDOM from "react-dom";
 import { KitView } from "../../kit/view";
 import { LinkPageItem, PageLayoutType } from "../declare";
-import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
+import { BlockUrlConstant } from "../../block/constant";
 import { PageLayoutView } from "./layout";
 import { channel } from "../../../net/channel";
 import { PageCover } from "./cover";
@@ -16,11 +16,9 @@ import {
     PageSvg,
     UploadSvg
 } from "../../../component/svgs";
-
 import { PageOutLine } from "../../../blocks/navigation/outline";
-import { ActionDirective } from "../../history/declare";
 import { Block } from "../../block";
-import { PageDirective } from "../directive";
+import { PageDirective} from "../directive";
 import { PageBar } from "./bar";
 import { useAIWriteAssistant } from "../../../extensions/ai";
 import { lst } from "../../../i18n/store";
@@ -28,7 +26,7 @@ import { S } from "../../../i18n/view";
 import { util } from "../../../util/util";
 import { isMobileOnly } from "react-device-detect";
 import { Loading1 } from "../../../component/view/spin";
-import lodash from "lodash";
+
 
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
@@ -75,7 +73,6 @@ export class PageView extends Component<{ page: Page }> {
     }
     async didMounted() {
         this.el = ReactDOM.findDOMNode(this) as HTMLElement;
-        channel.sync('/page/update/info', this.updatePageInfo);
         this.observeScroll();
         this.observeOutsideDrop();
         document.addEventListener('keydown', (this._keydown = e => this.page.onKeydown(e)), true);
@@ -87,21 +84,9 @@ export class PageView extends Component<{ page: Page }> {
         document.addEventListener('mouseup', (this._mouseup = this.page.onMouseup.bind(this.page)));
         document.addEventListener('keyup', (this._keyup = this.page.onKeyup.bind(this.page)), true);
         document.addEventListener('paste', this._paste = e => this.page.onPaste(e))
-        await this.AutomaticHandle();
         this.page.emit(PageDirective.mounted)
+        await this.page.AutomaticHandle();
         this.loadWxShare();
-    }
-    updatePageInfo = (r: { id: string, elementUrl: string, pageInfo: LinkPageItem }) => {
-        if (r.elementUrl && this.page.elementUrl === r.elementUrl || r.id && r.id == r.pageInfo.id) {
-            if (this.page.onceStopRenderByPageInfo == true) {
-                this.page.onceStopRenderByPageInfo = false;
-                if (this.pageBar) {
-                    this.pageBar.forceUpdate();
-                }
-                return;
-            }
-            this.forceUpdate();
-        }
     }
     observeOutsideDrop() {
         var isMove: boolean = false;
@@ -176,7 +161,6 @@ export class PageView extends Component<{ page: Page }> {
     scrollDiv: HTMLElement;
     scrollTop: number;
     componentWillUnmount() {
-        channel.off('/page/update/info', this.updatePageInfo);
         document.removeEventListener('keydown', this._keydown, true);
         document.removeEventListener('keyup', this._keyup, true);
         document.removeEventListener('mousedown', this._mousedown);
@@ -339,63 +323,7 @@ export class PageView extends Component<{ page: Page }> {
         </>
     }
     onSelect(item: LinkPageItem) {
-        channel.air('/page/open', { item: { id: item.id } })
+        channel.act('/page/open', { item: { id: item.id } })
     }
-    async AutomaticHandle() {
-        await this.page.onAction(ActionDirective.AutomaticHandle, async () => {
-            var isForceUpdate: boolean = false;
-            var isSyncSnap = false;
-            if (this.page.pageLayout?.type == PageLayoutType.doc && this.page.requireSelectLayout == false) {
-                if (this.page.autoRefSubPages == true && this.page.pageInfo) {
-                    var oldSubPages = this.page.addedSubPages.map(c => c)
-                    var subs = await this.page.pageInfo.getSubItems();
-                    var items = subs.map(s => s);
-                    lodash.remove(items, c => oldSubPages.includes(c.id));
-                    var view = this.page.views[0];
-                    items.removeAll(r => view.exists(c => c.url == BlockUrlConstant.Link && (c as any).getLink()?.pageId == r.id))
-                    await items.eachAsync(async item => {
-                        await this.page.createBlock(BlockUrlConstant.Link, { link: { name: 'page', pageId: item.id } }, view, view.blocks.childs.length, BlockChildKey.childs);
-                        isForceUpdate = true;
-                    });
-                    if (items.length > 0) {
-                        isForceUpdate = true;
-                        await this.page.updateProps({
-                            addedSubPages: subs.map(c => c.id)
-                        })
-                    }
-                }
-            }
-            if (this.page.requireSelectLayout == true) {
-                var items = await this.page.pageInfo.getSubItems();
-                if (items.length > 0) {
-                    await this.page.updateProps({
-                        requireSelectLayout: false,
-                        pageLayout: {
-                            type: PageLayoutType.doc
-                        },
-                        addedSubPages: items.map(c => c.id)
-                    })
-                    await channel.air('/page/update/info', { id: this.page.pageInfo?.id, pageInfo: { pageType: this.page.pageLayout.type } });
-                    var view = this.page.views[0];
-                    items.removeAll(r => view.exists(c => c.url == BlockUrlConstant.Link && (c as any).getLink()?.pageId == r.id))
-                    await items.eachAsync(async item => {
-                        await this.page.createBlock(BlockUrlConstant.Link, { link: { name: 'page', pageId: item.id } }, view, view.blocks.childs.length, BlockChildKey.childs);
-                    })
-                    isForceUpdate = true;
-                    isSyncSnap = true;
-                }
-            }
-            if (isForceUpdate == true) {
-                this.page.snapshoot._disableSyncServer = false;
-                if (isSyncSnap)
-                    this.page.snapshoot._immediate = true;
-                this.forceUpdate()
-            }
-            else {
-                this.page.snapshoot._disableSyncServer = true;
-            }
-        }, {
-            disabledJoinHistory: true
-        })
-    }
+
 }

@@ -39,7 +39,7 @@ export class OpenPageCommand extends FlowCommand {
         return json;
     }
     async excute() {
-        await channel.air('/page/open', { item: this.pageId })
+        await channel.act('/page/open', { item: this.pageId })
     }
 }
 

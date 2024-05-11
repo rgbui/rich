@@ -76,7 +76,12 @@ export class Pattern {
             var old = st.get();
             st.merge(BlockCss.createBlockCss(Object.assign({ cssName }, style)));
             if (this.block.page.snapshoot.canRecord && !lodash.isEqual(old, st.get())) {
-                await this.block.page.onNotifyEditBlock(this.block);
+                if (this.block.page.user) {
+                    await this.block.updateProps({
+                        editor: this.block.page.user.id,
+                        editDate: Date.now()
+                    })
+                }
                 this.block.page.snapshoot.record(OperatorDirective.$merge_style, {
                     pos: st.pos,
                     old_value: old,
@@ -93,7 +98,13 @@ export class Pattern {
         var style = this.styles.find(g => g.id == styleId);
         var old = style.get();
         style.load(styleData);
-        await this.block.page.onNotifyEditBlock(this.block);
+        if (this.block.page.user) {
+            await this.block.updateProps({
+                editor: this.block.page.user.id,
+                editDate: Date.now()
+            })
+        }
+
         this.block.page.snapshoot.record(OperatorDirective.$merge_style, {
             pos: style.pos,
             old_value: old,
@@ -104,7 +115,12 @@ export class Pattern {
     async deleteStyle(styleId: string) {
         var style = this.styles.find(g => g.id == styleId);
         if (style) {
-            await this.block.page.onNotifyEditBlock(this.block);
+            if (this.block.page.user) {
+                await this.block.updateProps({
+                    editor: this.block.page.user.id,
+                    editDate: Date.now()
+                })
+            }
             this.block.page.snapshoot.record(OperatorDirective.$delete_style, {
                 pos: style.pos,
                 data: style.get()
@@ -116,7 +132,12 @@ export class Pattern {
     async createStyle(styleData: Record<string, any>) {
         var sty = new BlockStyleCss(styleData, this);
         this.styles.push(sty);
-        await this.block.page.onNotifyEditBlock(this.block);
+        if (this.block.page.user) {
+            await this.block.updateProps({
+                editor: this.block.page.user.id,
+                editDate: Date.now()
+            })
+        }
         this.block.page.snapshoot.record(OperatorDirective.$insert_style, {
             pos: sty.pos,
             data: sty.get()

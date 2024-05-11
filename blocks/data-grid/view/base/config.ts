@@ -301,7 +301,7 @@ export class DataGridViewConfig {
     }
     async onOpenSchemaPage(this: DataGridView, schema?: TableSchema | string) {
         var s = schema ? (typeof schema == 'string' ? schema : schema.id) : this.schema.id;
-        await channel.air('/page/open', { elementUrl: getElementUrl(ElementType.Schema, s) });
+        await channel.act('/page/open', { elementUrl: getElementUrl(ElementType.Schema, s) });
     }
     async onOpenViewTemplates(this: DataGridView, rect: Rect) {
         await this.onDataGridTool(async () => {

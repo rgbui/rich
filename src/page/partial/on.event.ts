@@ -19,7 +19,7 @@ export class PageOnEvent {
             var url: '/page/open' | '/page/dialog' | '/page/slide' = '/page/dialog'
             if (this.openSource == 'page') url = '/page/open'
             else if (this.openSource == 'slide') url = '/page/slide'
-            await channel.air(url, {
+            await channel.act(url, {
                 elementUrl: this.elementUrl,
                 config: { wait: false, force: true }
             })

@@ -42,7 +42,7 @@ export class DefinePageNavBar extends React.Component<{
             location.href = item.url;
         }
         else if (item.urlType == 'page' && item.pageId) {
-            channel.air('/page/open', { item: item.pageId })
+            channel.act('/page/open', { item: item.pageId })
         }
         return false;
     }

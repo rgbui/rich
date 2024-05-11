@@ -60,7 +60,7 @@ export class AISearchBox extends EventsComponent {
         elementUrl: string;
     }, blockId?: string) {
         if (!blockId) blockId = page.blockIds[0];
-        channel.air('/page/open', { elementUrl: page.elementUrl, config: { force: true, blockId: blockId } })
+        channel.act('/page/open', { elementUrl: page.elementUrl, config: { force: true, blockId: blockId } })
         this.emit('close');
     }
     async openProperty(event: React.MouseEvent) {

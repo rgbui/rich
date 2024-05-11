@@ -235,18 +235,16 @@ class LinkEditor extends EventsComponent {
     onSave() {
         if (this.pageId) {
             this.emit('change', {
-                content: this.text,
-                refLinks: [{ type: 'page', id: util.guid(), pageId: this.pageId }]
+                text: this.text,
+                pageId: this.pageId,
+                name: this.name
             })
         }
         else {
             this.emit('change', {
-                content: this.text,
-                link: {
-                    url: this.url,
-                    name: this.name,
-                    text: this.text
-                }
+                url: this.url,
+                name: this.name,
+                text: this.text
             })
         }
     }
@@ -269,13 +267,13 @@ export async function useLinkEditor(pos: PopoverPosition, link?: PageLink) {
     var popover = await PopoverSingleton(LinkEditor, { mask: true }, { link: link });
     var picker = await popover.open(pos);
     await picker.onOpen(link);
-    return new Promise((resolve: (g: { content?: string } & { link: PageLink } & { refLinks?: Block['refLinks'] }) => void, reject) => {
-        picker.on('change', (link: { content?: string } & { link: PageLink } & { refLinks?: Block['refLinks'] }) => {
+    return new Promise((resolve: (g: PageLink) => void, reject) => {
+        picker.on('change', (link: PageLink) => {
             resolve(lodash.cloneDeep(link));
             popover.close();
         })
         picker.on('clear', () => {
-            resolve({ link: null })
+            resolve(null)
             popover.close();
         })
         popover.on('close', () => resolve(undefined))

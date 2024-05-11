@@ -46,11 +46,11 @@ class Channel {
     del<K extends keyof ChannelDelMapUrls>(url: K, args: ChannelDelMapUrls[K]['args']): ChannelDelMapUrls[K]['returnType'] {
         return channelService.excute(MethodType.del, url, args);
     }
-    air<K extends keyof ChannelAirMapUrls>(url: K, args: ChannelAirMapUrls[K]['args']): ChannelAirMapUrls[K]['returnType'] {
-        return channelService.excute(MethodType.air, url, args) as any;
+    air<K extends keyof ChannelAirMapUrls>(url: K, args: ChannelAirMapUrls[K]['args'], options?: { locationId?: string|number }): ChannelAirMapUrls[K]['returnType'] {
+        return channelService.excute(MethodType.air, url, args, options) as any;
     }
-    fire<K extends keyof ChannelFireMapUrls>(url: K, args?: ChannelFireMapUrls[K]['args']): ChannelFireMapUrls[K]['returnType'] {
-        return channelService.fire(url, args) as any;
+    fire<K extends keyof ChannelFireMapUrls>(url: K, args?: ChannelFireMapUrls[K]['args'], options?: { locationId?: string|number, sockId?: string }): ChannelFireMapUrls[K]['returnType'] {
+        return channelService.fire(url, args, options) as any;
     }
     off<K extends keyof ChannelOffMapUrls>(url: K, handle?: ChannelOffMapUrls[K]['args']) {
         if (handle) channelService.consumes.removeAll(g => g.url == url && g.handle == handle);

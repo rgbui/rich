@@ -31,7 +31,7 @@ export class TagsView extends EventsComponent {
     }
     open(refPage: ArrayOf<BlockRefPage['childs']>) {
         var pe = parseElementUrl(refPage.elementUrl);
-        channel.air('/page/open', {
+        channel.act('/page/open', {
             elementUrl: getElementUrl(ElementType.PageItem, pe.id),
             config: { blockId: pe.id1 }
         });

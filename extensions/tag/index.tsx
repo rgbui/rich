@@ -2,7 +2,6 @@ import React from "react";
 import { Singleton } from "../../component/lib/Singleton";
 import { InputTextPopSelector } from "../common/input.pop";
 import { PlusSvg, TopicSvg } from "../../component/svgs";
-import { Divider } from "../../component/view/grid";
 import { Icon } from "../../component/view/icon";
 import { Spin } from "../../component/view/spin";
 import { BlockUrlConstant } from "../../src/block/constant";

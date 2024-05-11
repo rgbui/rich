@@ -29,6 +29,7 @@ import { AtomPermission } from "../page/permission";
 import { util } from "../../util/util";
 import { dom } from "../common/dom";
 import "./style.less";
+import { RefPageLink } from "../../extensions/link/declare";
 
 export abstract class Block extends Events {
     constructor(page: Page) {
@@ -900,14 +901,7 @@ export abstract class Block extends Events {
      * 时间
      * 提及
      */
-    refLinks: {
-        id: string,
-        type: 'page' | "tag" | "comment" | "mention" | "time",
-        pageId?: string,
-        tagId?: string,
-        commentId?: string,
-        userid?: string,
-    }[];
+    refLinks: RefPageLink[];
     getUrl() {
         return this.url;
     }
