@@ -123,6 +123,7 @@ export function SolidArea(props: {
 }
 
 export function ChildsArea(props: { childs: Block[] }) {
+    if (!Array.isArray(props?.childs)) return <></>
     return <>{props.childs.map(x => {
         if (!x) console.trace(x);
         if (!x.viewComponent) console.error(x);

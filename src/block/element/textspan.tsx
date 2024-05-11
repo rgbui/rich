@@ -1,7 +1,7 @@
 
 import React, { CSSProperties } from 'react';
 import { prop, url, view } from '../factory/observable';
-import { TextSpanArea } from '../view/appear';
+import { ChildsArea, TextSpanArea } from '../view/appear';
 import { BlockDirective, BlockDisplay, BlockRenderRange } from '../enum';
 import { BlockView } from '../view';
 import { Block } from '..';
@@ -15,7 +15,7 @@ import { MouseDragger } from '../../common/dragger';
 import { closeBoardEditTool } from '../../../extensions/board.edit.tool';
 import { openBoardEditTool } from '../../kit/operator/board/edit';
 import { lst } from '../../../i18n/store';
-import { BlockUrlConstant } from '../constant';
+import { BlockChildKey, BlockUrlConstant } from '../constant';
 import { MenuItem, MenuItemType } from '../../../component/view/menu/declare';
 import { PageLayoutType } from '../../page/declare';
 import { util } from '../../../util/util';
@@ -52,6 +52,10 @@ export class TextSpan extends Block {
         if (this.childs.length > 0) return []
         else return this.__appearAnchors;
     }
+    get allBlockKeys() {
+        return [BlockChildKey.childs, BlockChildKey.subChilds];
+    }
+    blocks: { childs: Block[], subChilds: Block[] } = { childs: [], subChilds: [] };
     async onGetTurnUrls() {
         return TextTurns.blockDatas();
     }
@@ -215,7 +219,7 @@ export class TextSpan extends Block {
         else if (name == 'fontColor')
             await this.pattern.setFontStyle({ color: value });
         else if (name == 'fontSize') {
-            await this.updateProps({ fontScale: value / 14 },BlockRenderRange.self)
+            await this.updateProps({ fontScale: value / 14 }, BlockRenderRange.self)
             // this.pattern.setFontStyle({ fontSize: value, lineHeight: (value * 1.2) + 'px' });
         }
         else if (name == 'fontFamily') {
@@ -305,11 +309,24 @@ export class TextSpanView extends BlockView<TextSpan> {
         var placeholder = this.block.isFreeBlock || pa?.url == BlockUrlConstant.TableCell ? lst("输入文本") : undefined;
         if (this.block.placeholder) placeholder = this.block.placeholder;
         var visibleStyle = this.block.visibleStyle;
-        return <div className='sy-block-text-span' style={visibleStyle}>
-            <div style={style}>
-                <TextSpanArea placeholderEmptyVisible={this.block.isFreeBlock ? true : false} placeholder={placeholder} block={this.block}></TextSpanArea>
+        if (this.block.isFreeBlock) {
+            return <div className='sy-block-text-span' style={visibleStyle}>
+                <div style={style}>
+                    <TextSpanArea placeholderEmptyVisible={this.block.isFreeBlock ? true : false} placeholder={placeholder} block={this.block}></TextSpanArea>
+                </div>
+                {this.renderComment()}
             </div>
-            {this.renderComment()}
+        }
+        return <div>
+            <div className='sy-block-text-span' style={visibleStyle}>
+                <div style={style}>
+                    <TextSpanArea placeholderEmptyVisible={this.block.isFreeBlock ? true : false} placeholder={placeholder} block={this.block}></TextSpanArea>
+                </div>
+                {this.renderComment()}
+            </div>
+            <div style={{ paddingLeft: 20 }}>
+                <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>
+            </div>
         </div>
     }
 }
