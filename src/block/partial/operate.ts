@@ -91,26 +91,30 @@ export class Block$Operator {
         /**
          * 这里可能会存在自转换 
          */
-        if (this.url == oldUrl) return this;
+        if (url == oldUrl) return this;
         var data = await this.getWillTurnData(url);
         if (da) data = Object.assign(data || {}, da);
-        var newBlock = await this.page.createBlock(url, data, this.parent, this.at, this.parentKey);
-        await this.delete();
-        // var newBlock = await BlockFactory.createBlock(url, this.page, data, this.parent);
-        // var bs = this.parent.blocks[this.parentKey];
-        // bs.insertAt(this.at, newBlock);
-        // // bs.remove(g => g == this);
-        // this.remove();
-        // newBlock.id = this.id;
-        // this.page.notifyActionBlockUpdate(this);
-        // this.page.observeBlockChange(newBlock, 'turn');
-        // this.page.notifyActionBlockUpdate(newBlock.parent);
-        // await this.page.onNotifyEditBlock(this);
-        // this.page.snapshoot.record(OperatorDirective.$turn, {
-        //     pos: newBlock.pos,
-        //     from: oldUrl,
-        //     to: url
-        // }, this);
+        this.page.observeChange('turnBefore', { block: this, turn: { oldUrl: oldUrl, newUrl: url } });
+        var newBlock = await BlockFactory.createBlock(url, this.page, data, this.parent);
+        var bs = this.parent.blocks[this.parentKey];
+        bs.insertAt(this.at, newBlock);
+        bs.remove(g => g == this);
+        newBlock.id = this.id;
+        this.page.observeChange('turnAfter', { block: this, turn: { oldUrl: oldUrl, newUrl: url } });
+
+        this.page.notifyActionBlockUpdate(this);
+        this.page.notifyActionBlockUpdate(newBlock.parent);
+        if (this.page.user) {
+            await this.updateProps({
+                editor: this.page.user.id,
+                editDate: Date.now()
+            })
+        }
+        this.page.snapshoot.record(OperatorDirective.$turn, {
+            pos: newBlock.pos,
+            from: oldUrl,
+            to: url
+        }, this);
         return newBlock;
     }
     async replace(this: Block, newBlock: Block[]) {

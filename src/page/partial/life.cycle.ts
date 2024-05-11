@@ -304,10 +304,11 @@ export class Page$Cycle {
      * @param options 
      */
     observeChange(this: Page,
-        op: 'create' | 'willDelete' | 'update' | 'manualUpdate' | 'from' | 'to',
+        op: 'create' | 'willDelete' | 'update' | 'manualUpdate' | 'from' | 'to' | 'turnBefore' | 'turnAfter',
         options: {
             block: Block,
-            update?: { old: Record<string, any>, new: Record<string, any> }
+            update?: { old: Record<string, any>, new: Record<string, any> },
+            turn?: { oldUrl: string, newUrl: string }
         }) {
 
         /***
@@ -392,6 +393,19 @@ export class Page$Cycle {
                         }
                     }
                     break;
+                case 'turnBefore':
+                    if (!options.block.isLine && options.block.childs.some(s => Array.isArray(s.refLinks) && s.refLinks.length > 0)) {
+                        if (options.turn?.newUrl == BlockUrlConstant.Code || options.turn?.newUrl == BlockUrlConstant.Link) {
+                            var rs = options.block.childs.filter(c => Array.isArray(c.refLinks) && c.refLinks.length > 0);
+                            rs.forEach(r => {
+                                dels.push(...r.refLinks.map(o => o));
+                            })
+                        }
+                    }
+                    break;
+                case 'turnAfter':
+                    break;
+
             }
             rs.forEach(c => {
                 if (!this.recordSyncRowBlocks.rowBlocks.includes(c.id)) this.recordSyncRowBlocks.rowBlocks.push(c.id);
@@ -461,6 +475,19 @@ export class Page$Cycle {
                             isChangeAll = true;
                         }
                         break;
+                    case 'turnBefore':
+                        if (options.block.isBlock) {
+                            if (options.block.url == BlockUrlConstant.Head) {
+                                isChangeAll = true;
+                            }
+                        }
+                        break;
+                    case 'turnAfter':
+                        if (options.block.isBlock) {
+                            if (options.block.url == BlockUrlConstant.Head) {
+                                isChangeAll = true;
+                            }
+                        }
                 }
                 if (isChangeAll) this.recordOutlineChanges.isChangeAll = true;
                 if (outLineChangeBlocks.length > 0) {
@@ -551,7 +578,7 @@ export class Page$Cycle {
                     }
                     if (isTs)
                         console.log('ts will layout fn', window.performance.now() - ts);
-                    if (!window.shyConfig?.isPro&&(this.willUpdateAll||this.willUpdateBlocks.length>0))
+                    if (!window.shyConfig?.isPro && (this.willUpdateAll || this.willUpdateBlocks.length > 0))
                         console.log('will updates...', this.willUpdateAll, this.willUpdateBlocks)
                     try {
                         if (this.willUpdateAll) {
