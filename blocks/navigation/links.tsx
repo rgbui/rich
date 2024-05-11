@@ -9,6 +9,7 @@ import { Point, Rect } from "../../src/common/vector/point";
 import { BlockDirective, BlockRenderRange } from "../../src/block/enum";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { lst } from "../../i18n/store";
+import { parseElementUrl } from "../../net/element.type";
 
 @url('/links')
 export class LinkPaths extends Block {
@@ -98,6 +99,26 @@ export class LinkPathsView extends BlockView<LinkPaths> {
     mousedown(item: LinkPageItem) {
         if (item.id == this.block.page.getPageDataInfo()?.id) return;
         channel.act('/page/open', { item: item.id });
+    }
+    async didMount() {
+        channel.sync('/page/update/info', this.syncPageInfo);
+    }
+    syncPageInfo = async (e: {
+        id: string,
+        elementUrl?: string;
+        pageInfo: LinkPageItem
+    }) => {
+        var pa = this.block.items.find(c => e.id && c.id == e.id || e.elementUrl && parseElementUrl(e.elementUrl).id == c.id);
+        if (pa) {
+            var isUpdate = false;
+            if (typeof e.pageInfo.icon != 'undefined') { pa.icon = e.pageInfo.icon; isUpdate = true }
+            if (typeof e.pageInfo.text != 'undefined') { pa.text = e.pageInfo.text; isUpdate = true }
+            if (isUpdate)
+                this.block.forceManualUpdate();
+        }
+    }
+    willUnmount() {
+        channel.off('/page/update/info', this.syncPageInfo);
     }
     renderJoin() {
         if (this.block.joinChar == '>')

@@ -298,7 +298,7 @@ export class Page$Operator2 {
                 if (schema && Object.keys(props).length > 0)
                     schema.update(props)
             }
-            channel.air('/page/update/info', {
+            await channel.air('/page/update/info', {
                 elementUrl: this.elementUrl,
                 pageInfo: data
             }, { locationId: locationId || PageLocation.pageUpdateInfo })

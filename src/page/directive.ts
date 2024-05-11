@@ -49,4 +49,7 @@ export enum PageLocation {
      * page bar的更新
      */
     pageBarUpdateInfo=2,
+
+
+    pageSyncRefs=4,
 }

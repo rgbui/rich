@@ -4,7 +4,7 @@ import { View } from "../../block/element/view";
 import { BlockFactory } from "../../block/factory/block.factory";
 import { UserAction, ViewOperate } from "../../history/action";
 import { ActionDirective } from "../../history/declare";
-import { PageDirective } from "../directive";
+import { PageDirective, PageLocation } from "../directive";
 import { PageHistory } from "../interaction/history";
 import { PageKeys } from "../interaction/keys";
 import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
@@ -24,6 +24,7 @@ import { BuildTemplate } from "../template/build";
 import { List, ListType } from "../../../blocks/present/list/list";
 import { BlockRefPageLink, RefPageLink } from "../../../extensions/link/declare";
 import { SyncPage } from "../interaction/bind";
+import { SyncMessageUrl } from "../../../net/sync.message";
 
 
 export class Page$Cycle {
@@ -35,7 +36,7 @@ export class Page$Cycle {
         this.emit(PageDirective.init);
         await ls.import()
     }
-  
+
     /**
      * 标记当前页面是否加载的是默认的数据
      */
@@ -550,7 +551,7 @@ export class Page$Cycle {
                     }
                     if (isTs)
                         console.log('ts will layout fn', window.performance.now() - ts);
-                    if (!window.shyConfig?.isPro)
+                    if (!window.shyConfig?.isPro&&(this.willUpdateAll||this.willUpdateBlocks.length>0))
                         console.log('will updates...', this.willUpdateAll, this.willUpdateBlocks)
                     try {
                         if (this.willUpdateAll) {
@@ -643,7 +644,7 @@ export class Page$Cycle {
     private async onActionCompletedObserveProcess(this: Page, recordSyncRowBlocks: Page['recordSyncRowBlocks'], recordOutlineChanges: Page['recordOutlineChanges']) {
         if (!this.pageInfo?.id) return;
         try {
-            if (!window.shyConfig?.isPro)
+            if (!window.shyConfig?.isPro && (recordSyncRowBlocks.deletes.length > 0 || recordSyncRowBlocks.rowBlocks.length > 0 || recordOutlineChanges.isChangeAll == true || recordOutlineChanges.changeBlocks.length > 0))
                 console.log('recordSyncRowBlocks', recordSyncRowBlocks, recordOutlineChanges)
             if (recordSyncRowBlocks.deletes.length > 0 || recordSyncRowBlocks.rowBlocks.length > 0) {
                 var ds = recordSyncRowBlocks.deletes;
@@ -688,6 +689,10 @@ export class Page$Cycle {
                     })
                 })
                 if (ops.length > 0) {
+                    channel.fire(SyncMessageUrl.blcokSyncRefs, {
+                        pageId: this.pageInfo.id,
+                        operators: ops,
+                    }, { locationId: PageLocation.pageSyncRefs })
                     if (!window.shyConfig?.isPro)
                         console.log('row block sync refs', ops);
                     await channel.post('/row/block/sync/refs', {
@@ -806,6 +811,15 @@ export class Page$Cycle {
                         blocks: { childs: [{ url: BlockUrlConstant.TextChannel }] }
                     }, null);
                 this.views.push(dc as View);
+            }
+        }
+        if ([PageLayoutType.doc, PageLayoutType.db, PageLayoutType.board, PageLayoutType.ppt].includes(this.pageLayout.type)) {
+            var ts = this.findAll(g => g.url == BlockUrlConstant.Title);
+            if (ts.length > 1) {
+                ts = ts.slice(1);
+                await ts.eachAsync(async g => {
+                    g.parentBlocks.remove(g);
+                })
             }
         }
     }

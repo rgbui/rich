@@ -12,6 +12,7 @@ export enum SyncMessageUrl {
     pageItemOperate = '/ws/page/item/operate/notify',
     viewOperate = '/ws/view/operate/notify',
     viewOperates = '/ws/view/operates/notify',
+    blcokSyncRefs='/row/block/sync/refs/notify',
     dateGridOperator = '/ws/datagrid/schema/operate/notify',
     workspaceSync = '/ws/sync',
     channelNotify = '/ws/channel/notify',

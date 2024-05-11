@@ -41,7 +41,8 @@ export interface ChannelSyncMapUrls {
 	"/ws/view/operate/notify":{args:(r:UserAction,options?:{locationId?:string|number,sockId?:string})=>void,returnType:void},
 	"/ws/view/operates/notify":{args:(r:UserAction[],options?:{locationId?:string|number,sockId?:string})=>void,returnType:void},
 	"/ws/page/item/operate/notify":{args:(r:{id:string,workspaceId:string,roomId:string},options?:{locationId?:string|number,sockId?:string})=>void,returnType:void},
-	"/ws/datagrid/schema/operate/notify":{args:(r:{id:string,workspaceId:string,roomId:string},options?:{locationId?:string|number,sockId?:string})=>void,returnType:void}
+	"/ws/datagrid/schema/operate/notify":{args:(r:{id:string,workspaceId:string,roomId:string},options?:{locationId?:string|number,sockId?:string})=>void,returnType:void},
+	"/row/block/sync/refs/notify":{args:(r:{pageId?:string,operators:any[]},options?:{locationId?:string|number,sockId?:string})=>void,returnType:void}
 }
 export interface ChannelOnlyMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error})=>void,returnType:void},
@@ -59,7 +60,8 @@ export interface ChannelOnlyMapUrls {
 	"/ws/view/operate/notify":{args:(r:UserAction)=>void,returnType:void},
 	"/ws/view/operates/notify":{args:(r:UserAction[])=>void,returnType:void},
 	"/ws/page/item/operate/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void},
-	"/ws/datagrid/schema/operate/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void}
+	"/ws/datagrid/schema/operate/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void},
+	"/row/block/sync/refs/notify":{args:(r:{pageId?:string,operators:any[]})=>void,returnType:void}
 }
 export interface ChannelOnceMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error})=>void,returnType:void},
@@ -77,7 +79,8 @@ export interface ChannelOnceMapUrls {
 	"/ws/view/operate/notify":{args:(r:UserAction)=>void,returnType:void},
 	"/ws/view/operates/notify":{args:(r:UserAction[])=>void,returnType:void},
 	"/ws/page/item/operate/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void},
-	"/ws/datagrid/schema/operate/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void}
+	"/ws/datagrid/schema/operate/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void},
+	"/row/block/sync/refs/notify":{args:(r:{pageId?:string,operators:any[]})=>void,returnType:void}
 }
 export interface ChannelOffMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error},options?:{locationId?:string|number,sockId?:string})=>void,returnType:void},
@@ -95,7 +98,8 @@ export interface ChannelOffMapUrls {
 	"/ws/view/operate/notify":{args:(r:UserAction,options?:{locationId?:string|number,sockId?:string})=>void,returnType:void},
 	"/ws/view/operates/notify":{args:(r:UserAction[],options?:{locationId?:string|number,sockId?:string})=>void,returnType:void},
 	"/ws/page/item/operate/notify":{args:(r:{id:string,workspaceId:string,roomId:string},options?:{locationId?:string|number,sockId?:string})=>void,returnType:void},
-	"/ws/datagrid/schema/operate/notify":{args:(r:{id:string,workspaceId:string,roomId:string},options?:{locationId?:string|number,sockId?:string})=>void,returnType:void}
+	"/ws/datagrid/schema/operate/notify":{args:(r:{id:string,workspaceId:string,roomId:string},options?:{locationId?:string|number,sockId?:string})=>void,returnType:void},
+	"/row/block/sync/refs/notify":{args:(r:{pageId?:string,operators:any[]},options?:{locationId?:string|number,sockId?:string})=>void,returnType:void}
 }
 export interface ChannelFireMapUrls {
     "/log":{args:{type:"error"|"warn"|"info",message:string|Error},returnType:void},
@@ -113,7 +117,8 @@ export interface ChannelFireMapUrls {
 	"/ws/view/operate/notify":{args:UserAction,returnType:void},
 	"/ws/view/operates/notify":{args:UserAction[],returnType:void},
 	"/ws/page/item/operate/notify":{args:{id:string,workspaceId:string,roomId:string},returnType:void},
-	"/ws/datagrid/schema/operate/notify":{args:{id:string,workspaceId:string,roomId:string},returnType:void}
+	"/ws/datagrid/schema/operate/notify":{args:{id:string,workspaceId:string,roomId:string},returnType:void},
+	"/row/block/sync/refs/notify":{args:{pageId?:string,operators:any[]},returnType:void}
 }
 export interface ChannelDelMapUrls {
     "/schema/delete":{args:{wsId?:string,id:string},returnType:Promise<SockResponse<void>>},
@@ -362,6 +367,7 @@ export interface ChannelAirMapUrls {
 	"/ws/view/operate/notify":{args:UserAction,returnType:void},
 	"/ws/view/operates/notify":{args:UserAction[],returnType:void},
 	"/ws/page/item/operate/notify":{args:{id:string,workspaceId:string,roomId:string},returnType:void},
-	"/ws/datagrid/schema/operate/notify":{args:{id:string,workspaceId:string,roomId:string},returnType:void}
+	"/ws/datagrid/schema/operate/notify":{args:{id:string,workspaceId:string,roomId:string},returnType:void},
+	"/row/block/sync/refs/notify":{args:{pageId?:string,operators:any[]},returnType:void}
 }
     

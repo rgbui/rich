@@ -10,7 +10,7 @@ export function SyncPage(page: Page) {
 
     channel.sync('/page/update/info', page.syncs['/page/update/info'] = (r: { id: string, elementUrl: string, pageInfo: LinkPageItem },
         options: { locationId?: string | number, sockId?: string }) => {
-        if (r.elementUrl && page.elementUrl === r.elementUrl || r.id && r.id == r.pageInfo.id) {
+        if (r.elementUrl && page.elementUrl === r.elementUrl || r.id && r.id == page.pageInfo.id) {
             if (page.view.pageBar && options?.locationId != PageLocation.pageBarUpdateInfo) {
                 page.view.pageBar.forceUpdate();
             }
@@ -19,6 +19,7 @@ export function SyncPage(page: Page) {
                 if (title) {
                     title.loadPageInfo(true);
                 }
+                page.forceUpdate();
             }
         }
     })

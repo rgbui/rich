@@ -19,6 +19,7 @@ import { RefreshSvg } from "../../component/svgs";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { lst } from "../../i18n/store";
 import "./style.less";
+import { parseElementUrl } from "../../net/element.type";
 
 
 @url('/link')
@@ -138,31 +139,33 @@ export class Link extends Block {
 @view('/link')
 export class LinkView extends BlockView<Link> {
     async didMount() {
-        channel.sync('/page/update/info', this.updatePageInfo);
+        channel.sync('/page/update/info', this.syncPageInfo);
         await this.block.loadPageInfo();
     }
-    updatePageInfo = (data: { id: string, pageInfo: LinkPageItem }) => {
-        var { id, pageInfo } = data;
+    syncPageInfo = async (e: {
+        id: string,
+        elementUrl?: string;
+        pageInfo: LinkPageItem
+    }) => {
         var link = this.block.getLink();
-        if (link?.pageId == id) {
-            var isUpdate: boolean = false;
-            if (!lodash.isEqual(lodash.pick(this.block.pageInfo, ['text', 'icon']), lodash.pick(pageInfo, ['text', 'icon']))) {
-                isUpdate = true;
-                this.block.pageInfo = lodash.cloneDeep(pageInfo);
-            }
+        var id = link?.pageId;
+        if (e.id && e.id == id || e.elementUrl && parseElementUrl(e.elementUrl).id == id) {
+            var isUpdate = false;
+            if (typeof e.pageInfo.icon != 'undefined') { this.block.pageInfo.icon = e.pageInfo.icon; isUpdate = true }
+            if (typeof e.pageInfo.text != 'undefined') { this.block.pageInfo.text = e.pageInfo.text; isUpdate = true }
             if (isUpdate)
-                this.forceUpdate();
+                this.block.forceManualUpdate();
         }
     }
     willUnmount() {
-        channel.off('/page/update/info', this.updatePageInfo);
+        channel.off('/page/update/info', this.syncPageInfo);
     }
     renderView() {
         var link = this.block.getLink();
         return <div style={this.block.visibleStyle}><div
             className='sy-block-link'>
             {this.block.pageInfo &&
-                <a  draggable={false} style={this.block.contentStyle} href={this.block.pageInfo.url + (this.block.refBlockId ? "#" + this.block.refBlockId : "")} onClick={e => this.block.openPage(e)}>
+                <a draggable={false} style={this.block.contentStyle} href={this.block.pageInfo.url + (this.block.refBlockId ? "#" + this.block.refBlockId : "")} onClick={e => this.block.openPage(e)}>
                     <SolidArea block={this.block} prop='text'>
                         <div className="flex">
                             <i className="flex-fixed text flex-inline flex-center size-24 gap-r-5"><Icon size={18} icon={getPageIcon(this.block.pageInfo)}></Icon></i>
@@ -174,7 +177,7 @@ export class LinkView extends BlockView<Link> {
                     </SolidArea>
                 </a>
             }
-            {link?.url && <a  draggable={false} style={this.block.contentStyle} href={link?.url}><SolidArea line block={this.block} prop='outsideUrl'><span>{link?.url}</span></SolidArea></a>}
+            {link?.url && <a draggable={false} style={this.block.contentStyle} href={link?.url}><SolidArea line block={this.block} prop='outsideUrl'><span>{link?.url}</span></SolidArea></a>}
             {!link && <div
                 onMouseDown={e => { this.block.onSelectPage({ roundArea: Rect.fromEle((e.currentTarget as HTMLElement)) }) }}
                 className="item-hover-light-focus remark cursor item-hover round padding-h-3 padding-w-5 flex" style={this.block.contentStyle}>
@@ -182,7 +185,7 @@ export class LinkView extends BlockView<Link> {
                 <span className="gap-l-3 f-14"><S>添加链接</S></span>
             </div>}
         </div>
-        {this.renderComment()}
+            {this.renderComment()}
         </div>
     }
 }
