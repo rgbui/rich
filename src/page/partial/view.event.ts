@@ -22,6 +22,8 @@ import { AnimatedScrollTo } from "../../../util/animatedScrollTo";
 import { GalleryPics } from "../../../extensions/image/store";
 import { forceCloseTextTool } from "../../../extensions/text.tool";
 import { ShyAlert } from "../../../component/lib/alert";
+import { UA } from "../../../util/ua";
+import { MouseDragger } from "../../common/dragger";
 
 export class Page$ViewEvent {
     /**
@@ -36,6 +38,10 @@ export class Page$ViewEvent {
      * 
      */
     onMousedown(this: Page, event: React.MouseEvent) {
+        if (event.button == 2 && UA.isWindows && this.isBoard) {
+            this.onDragMousedown(event);
+            return;
+        }
         if (this.pageLayout.type == PageLayoutType.board) {
             if (this.kit.page.isCanEdit)
                 this.kit.boardSelector.onShow(this.root, { page: this.kit.page });
@@ -128,6 +134,22 @@ export class Page$ViewEvent {
                 this.onSetMatrix(ma);
             }
         }
+    }
+    onDragMousedown(this: Page, event: React.MouseEvent) {
+        var ma = this.matrix.clone();
+        var self = this;
+        MouseDragger({
+            event,
+            moving(ev, data, isEnd, isMove) {
+                var dx = ev.clientX - event.clientX;
+                var dy = ev.clientY - event.clientY;
+                var mc = ma.clone();
+                mc.translate(dx, dy);
+                self.onSetMatrix(mc);
+
+
+            },
+        })
     }
     /**
      * 主要是捕获取当前页面用户的按键情况
