@@ -51,7 +51,13 @@ export function DivInput(props: {
         }
         else {
             el.innerText = text;
-            if (text.length > 0) sel.collapse(el.childNodes[0], text.length);
+            if (text.length > 0) {
+                var c = el.childNodes[el.childNodes.length - 1];
+                if (c instanceof Text) {
+                    sel.collapse(c, c.textContent.length)
+                }
+                else sel.collapse(el, el.childNodes.length)
+            }
             input()
         }
     }
