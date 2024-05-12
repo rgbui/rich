@@ -3,6 +3,7 @@ import React, { CSSProperties } from 'react';
 import { Block } from '..';
 import { BlockAppear } from '../appear';
 import { lst } from '../../../i18n/store';
+
 export function TextArea(props: {
     block: Block,
     placeholderEmptyVisible?: boolean,
@@ -68,11 +69,11 @@ export function TextArea(props: {
         // props.style = { ...props.style, display: 'block' }
     }
     if (props.isBlock) {
-        if (props.isHtml) return <div className={classList.join(" ")} dangerouslySetInnerHTML={{ __html: html }} {...(ps as any)}></div>
+        //if (props.isHtml) return <div className={classList.join(" ")} dangerouslySetInnerHTML={{ __html: html }} {...(ps as any)}></div>
         return <div className={classList.join(" ")} {...(ps as any)}>{html}</div>
     }
     else {
-        if (props.isHtml) return <span className={classList.join(" ")} dangerouslySetInnerHTML={{ __html: html }} {...ps}></span>
+        //if (props.isHtml) return <span className={classList.join(" ")} dangerouslySetInnerHTML={{ __html: html }} {...ps}></span>
         return <span className={classList.join(" ")} {...ps}>{html}</span>
     }
 }
@@ -115,7 +116,7 @@ export function SolidArea(props: {
         onCompositionUpdate: (e) => props.block.elementAppearEvent(props.prop, 'compositionupdate', e)
     }
     var line = typeof props.line == 'undefined' ? props.block.isLine : props.line;
-    if (line) return <span className='shy-appear-solid'  {...ps} >{props.block.isCanEdit() && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}<span className='shy-appear-solid-content'>{props.children}</span>{props.block.isCanEdit() && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}</span>
+    if (line) return <span className='shy-appear-solid'  {...ps} >{props.block.isCanEdit() && <span className='shy-appear-solid-cursor' style={{ width: 1 }} suppressContentEditableWarning {...editProps}></span>}<span className='shy-appear-solid-content'>{props.children}</span>{props.block.isCanEdit() && <span className='shy-appear-solid-cursor' style={{ width: 1 }} suppressContentEditableWarning {...editProps}></span>}</span>
     return <div className='shy-appear-solid flex'  {...ps} >
         {props.block.isCanEdit() && <span className='w-1 shy-appear-solid-cursor flex-fixed' suppressContentEditableWarning {...editProps}></span>}
         <div className='shy-appear-solid-content flex-auto'>{props.children}</div>

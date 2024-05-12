@@ -265,6 +265,9 @@ export class TextEle {
                     if (r === null || typeof r === undefined) r = '';
                     text += r;
                 }
+                else if (c instanceof HTMLBRElement) {
+                    text += '\n';
+                }
                 else if (c instanceof HTMLElement) {
                     if (c.classList.contains('shy-anchor-appear')) continue;
                     else {
@@ -426,7 +429,7 @@ export class TextEle {
             point
         }
     }
-    static searchTexts(options:{ ele: HTMLElement, startNode: Node, endNode: Node, startOffset: number, endOffset: number, ignore?: (ele: HTMLElement) => boolean }) {
+    static searchTexts(options: { ele: HTMLElement, startNode: Node, endNode: Node, startOffset: number, endOffset: number, ignore?: (ele: HTMLElement) => boolean }) {
         var { ele, startNode, endNode, startOffset, endOffset, ignore } = options;
         var isExchange = false;
         if (startNode === endNode && startOffset > endOffset) isExchange = true;
