@@ -133,7 +133,7 @@ export class ToDoView extends BlockView<ToDo> {
                     </div>
                     {this.renderComment()}
                 </div>
-                <div className='sy-block-todo-subs' style={{ paddingLeft: 20 }}>
+                <div className='sy-block-todo-subs' style={{ paddingLeft: this.block.page.textIndent }}>
                     <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>
                 </div>
             </div>

@@ -14,6 +14,7 @@ import { Rect } from "../../src/common/vector/point";
 import lodash from "lodash";
 import { lst } from "../../i18n/store";
 import "./style.less";
+
 @url('/callout')
 export class Callout extends TextSpan {
     display = BlockDisplay.block;
@@ -100,11 +101,11 @@ export class CalloutView extends BlockView<Callout> {
         var bg = style.backgroundColor?.replace(/ /g, '')
         if (bg == 'rgba(255,255,255,0)' || bg == 'rgb(255,255,255,0)') style.border = '1px solid rgb(233, 231, 231)';
         else style.border = '1px solid rgba(233,231,231,0)';
-        if(this.block.smallFont)
-        style.fontSize = this.block.page.cacSmallFont(this.block.smallFont)
-        return <div style={this.block.visibleStyle}><div className='sy-block-callout flex-top' style={{
+        if (this.block.smallFont)
+            style.fontSize = this.block.page.cacSmallFont(this.block.smallFont)
+        return <div style={this.block.visibleStyle}><div className='sy-block-callout flex-top padding-16' style={{
             ...style,
-            padding: 16
+            paddingLeft: 12
         }}>
             <div onMouseDown={e => { e.stopPropagation(); this.block.onChangeIcon(e) }} style={{ width: this.block.page.lineHeight, height: this.block.page.lineHeight }} className='size-20 flex-center round cursor item-hover flex-fixed gap-r-5'>
                 <Icon size={18} icon={this.block.calloutIcon}></Icon>

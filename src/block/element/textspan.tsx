@@ -294,6 +294,10 @@ export class TextSpan extends Block {
         else { px = px - 2; }
         return rect.leftTop.move(0, px / 2);
     }
+    get hasSubChilds() {
+        if (this.isFreeBlock) return false;
+        return this.allBlockKeys.includes(BlockChildKey.subChilds) && this.subChilds?.length > 0
+    }
 }
 
 @view("/textspan")
@@ -324,7 +328,7 @@ export class TextSpanView extends BlockView<TextSpan> {
                 </div>
                 {this.renderComment()}
             </div>
-            <div style={{ paddingLeft: 20 }}>
+            <div style={{ paddingLeft: this.block.page.textIndent }}>
                 <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>
             </div>
         </div>

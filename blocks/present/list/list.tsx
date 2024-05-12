@@ -310,7 +310,7 @@ export class ListView extends BlockView<List> {
                 </div>
                 {this.renderComment()}
             </div>
-            {this.block.isExpand && <div className='sy-block-list-subs'>
+            {this.block.isExpand && <div style={{paddingLeft:this.block.page.textIndent }} className='sy-block-list-subs'>
                 <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>
             </div>}
         </div>
