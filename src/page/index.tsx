@@ -310,7 +310,9 @@ export class Page extends Events<PageDirective> {
     get pageInfo() {
         return this._pageItem;
     }
-    // onceStopRenderByPageInfo: boolean = false;
+    get textIndent(){
+        return 24
+    }
     _pageItem: LinkPageItem;
     set pageInfo(pageInfo: LinkPageItem) {
         this._pageItem = pageInfo;

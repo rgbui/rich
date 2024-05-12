@@ -286,6 +286,13 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
                 if (page.kit.picker.blocks.length > 0) {
                     page.kit.picker.onRePicker(true)
                 }
+                else {
+                    if (Object.keys(nd).length == 1 && typeof (nd as any).content == 'string') {
+                        var ba = block.appearAnchors.findLast(g => g.prop == 'content');
+                        if (ba)
+                            page.kit.anchorCursor.onFocusAppearAnchor(ba, { last: true, render: true, merge: true });
+                    }
+                }
             })
         }
     }, async (operator) => {
@@ -298,6 +305,13 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             page.addActionCompletedEvent(async () => {
                 if (page.kit.picker.blocks.length > 0) {
                     page.kit.picker.onRePicker(true)
+                }
+                else {
+                    if (Object.keys(od).length == 1 && typeof (od as any).content == 'string') {
+                        var ba = block.appearAnchors.findLast(g => g.prop == 'content');
+                        if (ba)
+                            page.kit.anchorCursor.onFocusAppearAnchor(ba, { last: true, render: true, merge: true });
+                    }
                 }
             })
         }
@@ -408,23 +422,23 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     });
     snapshoot.registerOperator(OperatorDirective.$pick_blocks, async (operator, source, action) => {
         var oc: {
-            old_value: { blocks: SnapshootBlockPos[] },
-            new_value: { blocks: SnapshootBlockPos[] }
+            old_value: SnapshootBlockPos[],
+            new_value: SnapshootBlockPos[]
         } = operator.data as any;
-        if (oc.new_value.blocks?.length > 0) {
-            var bs = page.findAll(g => oc.old_value.blocks.some(s => s.blockId == g.id));
+        if (oc.new_value?.length > 0) {
+            var bs = page.findAll(g => oc.old_value.some(s => s.blockId == g.id));
             page.kit.picker.pick(bs);
         }
     }, async (operator) => {
         var oc: {
-            old_value: { blocks: SnapshootBlockPos[] },
-            new_value: { blocks: SnapshootBlockPos[] }
+            old_value:SnapshootBlockPos[],
+            new_value: SnapshootBlockPos[]
         } = operator.data as any;
-        if (oc.old_value.blocks?.length > 0) {
-            var bs = page.findAll(g => oc.old_value.blocks.some(s => s.blockId == g.id));
+        if (oc.old_value?.length > 0) {
+            var bs = page.findAll(g => oc.old_value.some(s => s.blockId == g.id));
             page.kit.picker.pick(bs);
         }
-    })
+    });
     snapshoot.registerOperator(OperatorDirective.$insert_style, async (operator, source) => {
         var oc: {
             pos: SnapshootBlockStylePos,

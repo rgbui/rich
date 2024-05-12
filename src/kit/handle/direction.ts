@@ -235,7 +235,8 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
                 direction = DropDirection.top;
             }
             else if (point.y > bound.top + bound.height * 0.4) {
-                if (dropBlock.hasSubChilds) {
+                if (dropBlock.hasSubChilds)
+                {
                     direction = DropDirection.sub;
                     if (point.x - bound.left < 30) {
                         direction = DropDirection.bottom;

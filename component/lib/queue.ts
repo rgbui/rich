@@ -23,7 +23,7 @@ export class QueueHandle {
                 },
                 timeOut: setTimeout(() => {
                     lodash.remove(this.acts, g => g.id == id);
-                    reject('over time');
+                    reject('over Queue Handle time');
                     this.tryExcute();
                 }, 10000 || timeOut)
             }
