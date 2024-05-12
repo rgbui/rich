@@ -6,7 +6,6 @@ import { Block } from "../../src/block";
 import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { prop, url, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
-import { SolidArea } from "../../src/block/view/appear";
 import lodash from "lodash";
 import { LinkPageItem, getPageIcon, getPageText } from "../../src/page/declare";
 import { Rect } from "../../src/common/vector/point";
@@ -153,8 +152,7 @@ export class LinkView extends BlockView<Link> {
             var isUpdate = false;
             if (typeof e.pageInfo.icon != 'undefined') { this.block.pageInfo.icon = e.pageInfo.icon; isUpdate = true }
             if (typeof e.pageInfo.text != 'undefined') { this.block.pageInfo.text = e.pageInfo.text; isUpdate = true }
-            if (isUpdate)
-                this.block.forceManualUpdate();
+            if (isUpdate) this.block.forceManualUpdate();
         }
     }
     willUnmount() {
@@ -166,18 +164,15 @@ export class LinkView extends BlockView<Link> {
             className='sy-block-link'>
             {this.block.pageInfo &&
                 <a draggable={false} style={this.block.contentStyle} href={this.block.pageInfo.url + (this.block.refBlockId ? "#" + this.block.refBlockId : "")} onClick={e => this.block.openPage(e)}>
-                    <SolidArea block={this.block} prop='text'>
-                        <div className="flex">
-                            <i className="flex-fixed text flex-inline flex-center size-24 gap-r-5"><Icon size={18} icon={getPageIcon(this.block.pageInfo)}></Icon></i>
-                            <div className="flex-auto"><span className="sy-block-link-text text-overflow" style={{ height: this.block.page.lineHeight, lineHeight: this.block.page.lineHeight }}>
-                                {getPageText(this.block.pageInfo)}
-                            </span>
-                            </div>
-                        </div>
-                    </SolidArea>
+                    <div className="flex w100">
+                        <i className="flex-fixed text flex-inline flex-center size-24"><Icon size={18} icon={getPageIcon(this.block.pageInfo)}></Icon></i>
+                        <span className="flex-auto text-overflow">
+                            <span className="sy-block-link-text"> {getPageText(this.block.pageInfo)}</span>
+                        </span>
+                    </div>
                 </a>
             }
-            {link?.url && <a draggable={false} style={this.block.contentStyle} href={link?.url}><SolidArea line block={this.block} prop='outsideUrl'><span>{link?.url}</span></SolidArea></a>}
+            {link?.url && <a draggable={false} style={this.block.contentStyle} href={link?.url}><span>{link?.url}</span></a>}
             {!link && <div
                 onMouseDown={e => { this.block.onSelectPage({ roundArea: Rect.fromEle((e.currentTarget as HTMLElement)) }) }}
                 className="item-hover-light-focus remark cursor item-hover round padding-h-3 padding-w-5 flex" style={this.block.contentStyle}>
