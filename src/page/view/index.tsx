@@ -18,7 +18,7 @@ import {
 } from "../../../component/svgs";
 import { PageOutLine } from "../../../blocks/navigation/outline";
 import { Block } from "../../block";
-import { PageDirective} from "../directive";
+import { PageDirective } from "../directive";
 import { PageBar } from "./bar";
 import { useAIWriteAssistant } from "../../../extensions/ai";
 import { lst } from "../../../i18n/store";
@@ -166,7 +166,7 @@ export class PageView extends Component<{ page: Page }> {
         document.removeEventListener('mousedown', this._mousedown);
         document.removeEventListener('mouseup', this._mouseup);
         document.removeEventListener('mousemove', this._mousemove);
-        document.removeEventListener('wheel', this._wheel);
+        this.el.removeEventListener('wheel', this._wheel);
         document.removeEventListener('paste', this._paste);
         delete this.el.shy_drop_move;
         delete this.el.shy_drop_over;
@@ -291,6 +291,8 @@ export class PageView extends Component<{ page: Page }> {
                 onMouseEnter={e => this.page.onMouseenter(e)}
                 onMouseLeave={e => this.page.onMouseleave(e)}
                 onMouseDownCapture={e => this.page.onMouseDownCapture(e)}
+                onContextMenu={e => this.page.onContextMenu(e)}
+                onMouseDown={e => this.page.onMousedown(e)}
                 onScroll={e => {
                     if (this.page.pageLayout?.type == PageLayoutType.board) {
                         e.preventDefault();
@@ -301,8 +303,7 @@ export class PageView extends Component<{ page: Page }> {
                 }}
             >
                 <div className={'shy-page-view-box'}
-                    onContextMenu={e => this.page.onContextMenu(e)}
-                    onMouseDown={e => this.page.onMousedown(e)}>
+                >
                     <PageLayoutView page={this.page}>
                         <div className={'shy-page-view-content '} ref={e => this.page.contentEl = e}>
                             {!(this.page?.pageTheme?.coverStyle?.display == 'inside-cover') && <PageCover page={this.page}></PageCover>}

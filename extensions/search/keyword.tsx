@@ -72,7 +72,7 @@ export class SearchBox extends EventsComponent {
         if (this.searchList.list.length == 0 && this.searchList.pages.length == 0) return <div>
             {this.ws?.aiConfig?.aiSearch && <div onMouseDown={e => this.openAi(e)} className="flex h-30  padding-w-5 gap-w-5 item-hover round cursor">
                 <span className="size-24 flex-center flex-fixed "><Icon className={'text-pu'} size={18} icon={AiStartSvg}></Icon></span>
-                <span className="flex-fixed">使用AI智能检索<b className="bold">{this.searchList.word}</b></span>
+                <span className="flex-fixed">使用AI智能检索<b className="bold text-overflow" style={{display:'inline-block',maxWidth:200}}>{this.searchList.word}</b></span>
                 <span className="flex-fixed size-24 flex-center  remark  round item-hover">
                     <Icon size={18} icon={{ name: 'byte', code: 'corner-up-right' }}></Icon>
                 </span>
