@@ -12,8 +12,6 @@ import { BlockDirective, BlockRenderRange } from "../../../src/block/enum";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { lst } from "../../../i18n/store";
 import { BlockChildKey, BlockUrlConstant } from "../../../src/block/constant";
-import { UA } from "../../../util/ua";
-import lodash from "lodash";
 import "./style.less";
 
 @url('/board')
@@ -21,7 +19,7 @@ export class Board extends Block {
     @prop()
     viewHeight: number = 300;
     @prop()
-    boardOffsetMatrix: Matrix = new Matrix();
+    // boardOffsetMatrix: Matrix = new Matrix();
     isAutoCreateMind: boolean = false;
     get childsOffsetMatrix() {
         var matrix = new Matrix();
@@ -29,7 +27,7 @@ export class Board extends Block {
             var p = this.page.getDocRelativePoint(this, this.getVisibleContentBound().leftTop);
             matrix.translate(p.x, p.y);
         }
-        matrix.append(this.boardOffsetMatrix);
+        // matrix.append(this.boardOffsetMatrix);
         return matrix;
     }
     init() {
@@ -136,95 +134,14 @@ export class BoardView extends BlockView<Board> {
             }
         })
     }
-    mousedown(event: React.MouseEvent) {
-        if (this.block.page.kit.boardSelector.isSelector) return;
-        if (event.button !== 2) return;
-        if (UA.isMacOs) return;
-        event.stopPropagation();
-        var ele = event.target as HTMLElement;
-        if (event.target === event.currentTarget || ele.classList.contains('sy-board-content')) {
-          
-            MouseDragger({
-                event,
-                moving: async (e, d, end, isM) => {
-                    if (!isM) return;
-                    var dx = e.clientX - event.clientX;
-                    var dy = e.clientY - event.clientY;
-                    var ma = new Matrix();
-                    ma.translate(dx, dy);
-                    this.block.moveMatrix = ma;
-                    if (end) {
-                        this.block.moveMatrix = new Matrix();
-                        var oa = this.block.boardOffsetMatrix.clone().append(ma);
-                        await this.block.onUpdateProps({ boardOffsetMatrix: oa }, { range: BlockRenderRange.self })
-                    }
-                    else this.forceUpdate();
-                }
-            })
-        }
-    }
-    wheel = (event: WheelEvent) => {
-        if (event.ctrlKey == true) {
-            // event.preventDefault();
-            // if (this.lastTriggerTime && (Date.now() - this.lastTriggerTime < 60)) return;
-            // this.lastTriggerTime = Date.now();
-            // var ma = this.matrix.clone();
-            // var ro = this.globalMatrix.inverseTransform(new Point(event.pageX, event.pageY));
-            // if (event.deltaY > 0) {
-            //     //缩小
-            //     ma.scale(0.8, 0.8, ro);
-            //     if (ma.getScaling().x * 100 < 1) return;
-            //     this.onSetMatrix(ma);
-            // }
-            // else {
-            //     //放大
-            //     ma.scale(1.2, 1.2, ro);
-            //     if (ma.getScaling().x * 100 > 300) return;
-            //     this.onSetMatrix(ma);
-            // }
-        }
-        else {
-            var g = (x) => {
-                if (x > 0) return 0 - x;
-                else if (x < 0) return 0 - x;
-                else return 0;
-            }
-            var r = 1 / 1;
-            var dx = g(event.deltaX) * r;
-            var dy = g(event.deltaY) * r;
-            this.block.moveMatrix.translate(dx, dy);
-            this.forceUpdate();
-            this.saveMatrix()
-        }
-    }
-    saveMatrix = lodash.debounce(() => {
-        var ma = this.block.moveMatrix;
-        if (lodash.isEqual(ma.getValues(), new Matrix().getValues())) return;
-        this.block.moveMatrix = new Matrix();
-        var oa = this.block.boardOffsetMatrix.clone().append(ma);
-        this.block.onUpdateProps({ boardOffsetMatrix: oa })
-    }, 1000)
-    canvasEl: HTMLElement;
-    didMount(): void {
-        this.canvasEl = this.block.el.querySelector('.sy-board-canvas');
-        this.canvasEl.addEventListener('wheel', this.wheel, { passive: true})
-    }
-    willUnmount(): void {
-        this.canvasEl.removeEventListener('wheel', this.wheel)
-    }
     renderView() {
-        var style: CSSProperties = {
-            ... (this.block.boardOffsetMatrix.appended(this.block.moveMatrix)).getCss()
-        }
+        var style: CSSProperties = {}
         return <div className="sy-board"
             style={this.block.visibleStyle}>
             <div className={'sy-board-box '}
                 style={this.block.contentStyle}>
                 <div className={"relative sy-board-canvas round " + (this.block.border == 'border' ? "border-light" : "border-light-hover")}
-                    // onWheel={e => this.wheel(e)}
-                    onMouseDown={e => {
-                        this.mousedown(e)
-                    }} style={{
+                    style={{
                         height: this.block.viewHeight,
                         overflow: 'hidden'
                     }}>
