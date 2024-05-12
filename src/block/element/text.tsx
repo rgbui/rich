@@ -89,8 +89,8 @@ export class TextContent extends Block {
         if (fs?.color && fs?.color != 'inherit') return false;
         if (fill?.color && fill?.color != 'rgba(255,255,255,0)') return false;
         if (fs?.fontStyle == 'italic') return false;
-        if (fs?.fontWeight == 'bold' || fs?.fontWeight == 700) return false;
-        if (fs?.textDecoration != 'none') return false;
+        if (fs && (fs?.fontWeight == 'bold' || fs?.fontWeight == 700)) return false;
+        if (fs && fs?.textDecoration != 'none') return false;
         return true;
     }
     async getHtml() {
