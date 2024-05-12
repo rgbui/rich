@@ -462,6 +462,19 @@ export var util = {
         catch (ex) {
             return null;
         }
-
+    },
+    safeRegex(str: string,
+        options?: { flags?: string, start?: boolean, end?: boolean }) {
+        //str = str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // 使用$&将整个匹配项替换为它的转义形式
+        str = util.escapeRegex(str);
+        // 现在，你可以安全地将safeString用作正则表达式的源字符串
+        var regex = new RegExp((options?.start ? "^" : "") + str + (options?.end ? "$" : ""), options?.flags);
+        return regex;
+    },
+    escapeRegex(str: string) {
+        if (typeof str != 'string') {
+            str = String(str);
+        }
+        return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     }
 }
