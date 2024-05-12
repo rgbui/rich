@@ -63,7 +63,7 @@ export const MakeLonger = `你是一个擅长思考的写作小肋手。使下�
 `
 
 
-export const FixSpellingGrammar = `你是一个擅长思考的文笔写作小肋手。修正下列由三重引号引起来的文本的拼写和语法。
+export const FixSpellingGrammar = `你是一个擅长思考的文笔写作小肋手。修正下列由三重引号引起来的文本的拼写和语法错误，请直接返回修正后的内容。
 """{content}"""
  `
 export const ExplainPrompt = `你是一个擅长思考的文笔写作小肋手。解释下列由三重引号引起来的文本，让我们更容易理解文本所表达的意思。

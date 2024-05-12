@@ -139,7 +139,7 @@ export class AIWriteAssistant extends EventsComponent {
             style={style}>
                 <div style={{ border: `2px solid var(--text-purple)` }} className="pv min-h-30 bg-white  shadow  round-8">
                     {this.anwser && [AIWriteStatus.selectionAsking, AIWriteStatus.selectionAsked].includes(this.status) && <>
-                        <div ref={e => this.mdEl = e} className=" padding-w-10 padding-t-10 gap-t-10 max-h-150 overflow-y">
+                        <div ref={e => this.mdEl = e} className=" padding-w-10 gap-t-10 max-h-150 overflow-y">
                             <LazyMarkdown md={this.anwser}></LazyMarkdown>
                         </div>
                         <Divider></Divider>
@@ -148,7 +148,15 @@ export class AIWriteAssistant extends EventsComponent {
                         <span className={"flex-fixed h-30 w-30 gap-h-5 flex-center "}>
                             <Icon className={'text-pu'} size={18} icon={AiStartSvg}></Icon>
                         </span>
-                        <div className="flex-auto flex">
+                        <div className="flex-auto flex" onMouseDown={e => {
+                            if (e.target == e.currentTarget) {
+                                if ((![AIWriteStatus.asking, AIWriteStatus.selectionAsking].includes(this.status))) {
+                                    if (this.textarea) {
+                                        this.focusTextarea()
+                                    }
+                                }
+                            }
+                        }}>
                             {([AIWriteStatus.asking, AIWriteStatus.selectionAsking].includes(this.status)) && <div className=" gap-h-10 flex remark  flex"><S>AI正在写作</S><Loading1></Loading1></div>}
                             {(![AIWriteStatus.asking, AIWriteStatus.selectionAsking].includes(this.status)) && <DivInput
                                 value={this.ask}
@@ -621,66 +629,46 @@ export class AIWriteAssistant extends EventsComponent {
         self.anwser = '';
         this.updateView()
         var scope = '';
-        if (options?.isNotFound) {
-            self.anwser = lst('未找到匹配的答案')
-            var done = true;
-            self.writer.accept(scope, done);
-            if (done) {
-                console.log('answer', JSON.stringify(self.anwser))
-                var bs = self.writer.writedBlocks;
+
+        self.writer.ms = [];
+        self.writer.ready(async bs => {
+            if (bs.length > 0) {
+                await bs.eachAsync(async b => {
+                    await onBlockPickLine(self.page, b, true);
+                })
                 var p = bs.first().parent;
                 if (bs.some(s => s.url == BlockUrlConstant.List && (s as List).listType == ListType.number)) {
                     await onMergeListBlocks(self.page, bs);
                     bs = bs.findAll(g => g.parent == p);
                 }
-                self.writer.page.kit.anchorCursor.onSelectBlocks(bs, { render: true })
-                self.status = AIWriteStatus.asked;
-                self.updateView();
+                await self.writer.page.kit.anchorCursor.onSelectBlocks(bs, { render: true })
             }
-        }
-        else {
-            self.writer.ms = [];
-            await channel.post('/text/ai/stream', {
-                question: options?.prompt,
-                model: options?.model,
-                async callback(str, done, contoller) {
-                    if (contoller) { self.controller = contoller; return }
-                    // console.log(str, done);
-                    if (typeof str == 'string') {
-                        self.anwser += str;
-                        scope += str;
-                        if (done !== true && (scope.length < 10 || scope.match(/```[^\n\r]*$/) || scope.match(/[一二三四五六七八九十]+$/) || scope.match(/[`]+$/) || scope.match(/[#]+$/) || scope.match(/^[\*]+$/) || scope.endsWith('~') || scope.endsWith('-') || scope.endsWith('|') || scope.match(/[\d]+$/))) {
+            self.status = AIWriteStatus.asked;
+            self.updateView(async () => {
+                await self.focusTextarea(true);
+            });
+        })
+        await channel.post('/text/ai/stream', {
+            question: options?.prompt,
+            model: options?.model,
+            async callback(str, done, contoller) {
+                if (contoller) { self.controller = contoller; return }
+                // console.log(str, done);
+                if (typeof str == 'string') {
+                    self.anwser += str;
+                    scope += str;
+                    if (done !== true && (scope.length < 10 || scope.match(/```[^\n\r]*$/) || scope.match(/[一二三四五六七八九十]+$/) || scope.match(/[`]+$/) || scope.match(/[#]+$/) || scope.match(/^[\*]+$/) || scope.endsWith('~') || scope.endsWith('-') || scope.endsWith('|') || scope.match(/[\d]+$/))) {
 
-                        }
-                        else {
-                            self.writer.accept(scope, done);
-                            scope = '';
-                        }
                     }
-                    else self.writer.accept(scope, done);
-                    if (done) {
-                        console.log(self.anwser);
-                        await util.delay(200);
-                        var bs = self.writer.writedBlocks;
-                        if (bs.length > 0) {
-                            await bs.eachAsync(async b => {
-                                await onBlockPickLine(self.page, b, true);
-                            })
-                            var p = bs.first().parent;
-                            if (bs.some(s => s.url == BlockUrlConstant.List && (s as List).listType == ListType.number)) {
-                                await onMergeListBlocks(self.page, bs);
-                                bs = bs.findAll(g => g.parent == p);
-                            }
-                            self.writer.page.kit.anchorCursor.onSelectBlocks(bs, { render: true })
-                        }
-                        self.status = AIWriteStatus.asked;
-                        self.updateView(async () => {
-                            await self.focusTextarea(true);
-                        });
+                    else {
+                        self.writer.accept(scope, done);
+                        scope = '';
                     }
                 }
-            });
-        }
+                else self.writer.accept(scope, done);
+            }
+        });
+
     }
     async aiSelection(options: { prompt?: string, model?: WsConsumeType, isNotFound?: boolean }) {
         this.controller = null;
@@ -894,9 +882,9 @@ export async function useAIWriteAssistant(options: AIWriteAssistantProps) {
     aiTool = await Singleton(AIWriteAssistant);
     await aiTool.open(options);
     return new Promise((resolve: (d: { ask: string, aiTool: AIWriteAssistant }) => void, reject) => {
-        aiTool.only('save', d => {
-            resolve(d)
-        })
+        // aiTool.only('save', d => {
+        //     resolve(d)
+        // })
         aiTool.only("close", () => {
             resolve(null);
         })

@@ -54,7 +54,7 @@ export async function onMergeListBlocks(page: Page, bs: Block[]) {
             current.childs.push(g);
         }
     }
-    await page.onAction('mergeListBlocks', async () => {
+    await page.onAction('onMergeListBlocks', async () => {
         for (let i = rs.length - 1; i >= 0; i--) {
             var r = rs[i];
             var list = r.block as List;

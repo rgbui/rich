@@ -41,7 +41,14 @@ export class AiWrite {
     currentTable: { head: string[], isWriteTable: boolean } = { head: [], isWriteTable: false }
     async write() {
         if (this.willWriteBlock) return;
-        if (!this.text) return;
+        if (!this.text) {
+            if (this.writting == false && typeof this.completedFun == 'function') {
+                var cf = this.completedFun;
+                this.completedFun = null;
+                cf(this.writedBlocks);
+            }
+            return;
+        }
         if (window.shyConfig.isDev) console.log('will write', this.text);
         var isContinueWrite = true;
         try {
@@ -173,7 +180,7 @@ export class AiWrite {
                             await new Promise((resolve: (block: Block) => void, reject) => {
                                 this.page.onTurn(this.block, BlockUrlConstant.List, async (newBlock: Block, oldBlock) => {
                                     if (oldBlock) lodash.remove(this.writedBlocks, g => g == oldBlock)
-                                    await newBlock.updateProps({ listType: ListType.number, content: c.slice(d.length) },BlockRenderRange.self)
+                                    await newBlock.updateProps({ listType: ListType.number, content: c.slice(d.length) }, BlockRenderRange.self)
                                     newBlock.mounted(() => {
                                         // console.log('gggg');
                                         this.block = newBlock;
@@ -199,7 +206,7 @@ export class AiWrite {
                             await new Promise((resolve: (block: Block) => void, reject) => {
                                 this.page.onTurn(this.block, BlockUrlConstant.Code, async (newBlock: Block, oldBlock) => {
                                     if (oldBlock) lodash.remove(this.writedBlocks, g => g == oldBlock)
-                                    await newBlock.updateProps({ language: lang, content: code.trimStart() },BlockRenderRange.self);
+                                    await newBlock.updateProps({ language: lang, content: code.trimStart() }, BlockRenderRange.self);
                                     (newBlock as any).codeFinished = codeFinished;
                                     newBlock.mounted(() => {
                                         this.block = newBlock;
@@ -215,7 +222,7 @@ export class AiWrite {
                             await new Promise((resolve: (block: Block) => void, reject) => {
                                 this.page.onTurn(this.block, BlockUrlConstant.Head, async (newBlock: Block, oldBlock) => {
                                     if (oldBlock) lodash.remove(this.writedBlocks, g => g == oldBlock)
-                                    await newBlock.updateProps({ content: c },BlockRenderRange.self)
+                                    await newBlock.updateProps({ content: c }, BlockRenderRange.self)
                                     newBlock.mounted(() => {
                                         this.block = newBlock;
                                         this.aa = newBlock.appearAnchors.last()
@@ -230,7 +237,7 @@ export class AiWrite {
                             await new Promise((resolve: (block: Block) => void, reject) => {
                                 this.page.onTurn(this.block, BlockUrlConstant.Divider, async (newBlock: Block, oldBlock) => {
                                     if (oldBlock) lodash.remove(this.writedBlocks, g => g == oldBlock)
-                                    await newBlock.updateProps({ listType: ListType.circle, content: c.slice(d.length) },BlockRenderRange.self)
+                                    await newBlock.updateProps({ listType: ListType.circle, content: c.slice(d.length) }, BlockRenderRange.self)
                                     newBlock.mounted(() => {
                                         this.block = newBlock;
                                         this.aa = newBlock.appearAnchors.last()
@@ -247,7 +254,7 @@ export class AiWrite {
                             await new Promise((resolve: (block: Block) => void, reject) => {
                                 this.page.onTurn(this.block, BlockUrlConstant.Head, async (newBlock: Block, oldBlock) => {
                                     if (oldBlock) lodash.remove(this.writedBlocks, g => g == oldBlock)
-                                    await newBlock.updateProps({ content: c.slice(d.length).trim(), level: level },BlockRenderRange.self)
+                                    await newBlock.updateProps({ content: c.slice(d.length).trim(), level: level }, BlockRenderRange.self)
                                     newBlock.mounted(() => {
                                         this.block = newBlock;
                                         this.aa = newBlock.appearAnchors.last()
@@ -262,7 +269,7 @@ export class AiWrite {
                             await new Promise((resolve: (block: Block) => void, reject) => {
                                 this.page.onTurn(this.block, BlockUrlConstant.List, async (newBlock: Block, oldBlock) => {
                                     if (oldBlock) lodash.remove(this.writedBlocks, g => g == oldBlock)
-                                    await newBlock.updateProps({ listType: ListType.circle, content: c.slice(1) },BlockRenderRange.self)
+                                    await newBlock.updateProps({ listType: ListType.circle, content: c.slice(1) }, BlockRenderRange.self)
                                     newBlock.mounted(() => {
                                         this.block = newBlock;
                                         this.aa = newBlock.appearAnchors.last()
@@ -278,7 +285,7 @@ export class AiWrite {
                             await new Promise((resolve: (block: Block) => void, reject) => {
                                 this.page.onTurn(this.block, BlockUrlConstant.List, async (newBlock: Block, oldBlock) => {
                                     if (oldBlock) lodash.remove(this.writedBlocks, g => g == oldBlock)
-                                    await newBlock.updateProps({ listType: ListType.circle, content: c.slice(1) },BlockRenderRange.self)
+                                    await newBlock.updateProps({ listType: ListType.circle, content: c.slice(1) }, BlockRenderRange.self)
                                     newBlock.mounted(() => {
                                         // console.log('gggg');
                                         this.block = newBlock;
@@ -308,9 +315,9 @@ export class AiWrite {
                 }
                 ts = ts.slice(1);
                 if (ts.length == 0) {
-                    if (!isWillSave) await InputStore(this.aa);
+                    if (!isWillSave) await InputForceStore(this.aa);
                 }
-                else if (!isWillSave) { await InputForceStore(this.aa); await util.delay(100); }
+                else if (!isWillSave) { await InputForceStore(this.aa); }
             }
             if (ts.length > 0) {
                 await new Promise((resolve, reject) => {
@@ -408,6 +415,13 @@ export class AiWrite {
             console.error(ex)
         }
         finally {
+
+            if (!this.text && this.writting == false && typeof this.completedFun == 'function') {
+                var cf = this.completedFun;
+                this.completedFun = null;
+                cf(this.writedBlocks);
+                return;
+            }
             this.willWriteBlock = false;
             if (this.text && isContinueWrite) this.write()
         }
@@ -421,14 +435,14 @@ export class AiWrite {
         this.text = '';
         this.willWriteBlock = true;
         var rowList = ts;
-     
+
         if (ts.some(s => !s.startsWith('|'))) {
-            var at = ts.findIndex(s => !s.startsWith('|') || util.countOccurrences(s,'|') < this.currentTable.head.length);
+            var at = ts.findIndex(s => !s.startsWith('|') || util.countOccurrences(s, '|') < this.currentTable.head.length);
             rowList = ts.slice(0, at);
             ts = ts.slice(at);
         }
         else {
-            var at = ts.findIndex(s => !s.startsWith('|') || util.countOccurrences(s,'|') < this.currentTable.head.length);
+            var at = ts.findIndex(s => !s.startsWith('|') || util.countOccurrences(s, '|') < this.currentTable.head.length);
             rowList = ts.slice(0, at);
             ts = ts.slice(at);
         }
@@ -477,13 +491,19 @@ export class AiWrite {
         }
     }
     ms: string[] = [];
+    ready(fn: (blocks: Block[]) => void) {
+        this.writting = true;
+        this.completedFun = fn;
+    }
+    writting = false;
+    completedFun: (blocks: Block[]) => void;
     accept(text: string, done: boolean) {
         if (typeof text == 'string') {
             this.ms.push(text);
             this.text += text;
         }
         if (done) {
-            console.log(JSON.stringify(this.ms))
+            this.writting = false;
         }
         this.write()
     }
