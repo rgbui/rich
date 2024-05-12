@@ -53,6 +53,7 @@ export enum KeyboardCode {
      * keyboardEvent 中的code
      */
     Slash = 'Slash',
+    Process = 'Process',
     Backslash = 'Backslash',
     R = 'R'
 }
@@ -128,6 +129,13 @@ export class KeyboardPlate {
                 var cc = ms[event.keyCode.toString()] as KeyboardCode;
                 if (typeof cc != 'undefined') ek = cc;
             }
+        }
+        /**
+         * 这是windows下面对反斜杠的识别处理
+         */
+        if (event.key == 'Process') {
+            if (event.code == 'Slash') ek = KeyboardCode['/'];
+            else if (event.code == 'Backslash') ek = KeyboardCode['\\'];
         }
         return ek;
     }

@@ -93,8 +93,9 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
     }
     else if (event.key == KeyboardCode.ArrowDown) {
 
-        var range =util.getSafeSelRange(sel);
+        var range = util.getSafeSelRange(sel);
         var rect = aa.textContent == '' || aa.isSolid ? Rect.fromEle(aa.el) : Rect.fromEle(range);
+        if (!br)
         onceAutoScroll({ el: aa.el, point: rect.leftMiddle, feelDis: 60, dis: 120 })
         range = util.getSafeSelRange(sel);
         rect = aa.textContent == '' || aa.isSolid ? Rect.fromEle(aa.el) : Rect.fromEle(range);
@@ -207,11 +208,24 @@ export async function onKeyTab(write: PageWrite, aa: AppearAnchor, event: React.
     var page = write.kit.page;
     var rowBlock = block.closest(x => x.isBlock);
     var isBack = page.keyboardPlate.isShift()
+    var hs = (b: Block) => {
+        if (!b) return false;
+        if (b.hasSubChilds) return true;
+        else {
+            if (b.url == BlockUrlConstant.TextSpan) return true;
+        }
+        return false;
+    }
     if (page.keyboardPlate.isShift()) {
-        if (!rowBlock?.parent.hasSubChilds) return false;
+        if (!hs(rowBlock?.parent)) {
+            return false;
+        }
     }
     else {
-        if (!rowBlock.prev?.hasSubChilds) return false;
+        if (!hs(rowBlock.prev)) {
+
+            return false;
+        }
     }
     event.preventDefault();
     await InputForceStore(aa, async () => {
@@ -219,25 +233,25 @@ export async function onKeyTab(write: PageWrite, aa: AppearAnchor, event: React.
             var pa = rowBlock.parent;
             var at = rowBlock.at;
             var rest = pa.subChilds.findAll((item, i) => i > at);
-            if (rowBlock.hasSubChilds) {
+            if (hs(rowBlock)) {
                 await rowBlock.appendArray(rest, undefined, 'subChilds');
                 await rowBlock.insertAfter(pa);
                 if (pa.url == BlockUrlConstant.List && rowBlock.url == BlockUrlConstant.List) {
                     await rowBlock.updateProps({
                         listType: (pa as any).listType,
                         listView: (pa as any).listView
-                    },BlockRenderRange.self);
+                    }, BlockRenderRange.self);
                 }
             }
             else {
-                pa.parent.appendArray([rowBlock, ...rest], pa.at + 1, pa.parent.hasSubChilds ? 'subChilds' : 'childs')
+                pa.parent.appendArray([rowBlock, ...rest], pa.at + 1, hs(pa.parent) ? 'subChilds' : 'childs')
             }
         }
         else {
             var prev = rowBlock.prev;
             if (prev) {
                 if (prev.url == BlockUrlConstant.List && (prev as any).expand == false) {
-                    await prev.updateProps({ expand: true },BlockRenderRange.self);
+                    await prev.updateProps({ expand: true }, BlockRenderRange.self);
                 }
                 if (prev.url == BlockUrlConstant.List && rowBlock.url == BlockUrlConstant.List) {
                     if ((prev as any).listType == (rowBlock as any).listType) {
@@ -275,7 +289,7 @@ export async function onKeyTab(write: PageWrite, aa: AppearAnchor, event: React.
                             if (rs.length > 0)
                                 await rowBlock.updateProps({
                                     listView: rs[0]
-                                },BlockRenderRange.self)
+                                }, BlockRenderRange.self)
                         }
                     }
                 }
