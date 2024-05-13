@@ -25,7 +25,7 @@ export function SyncPage(page: Page) {
     })
 
     channel.sync(SyncMessageUrl.viewOperate, page.syncs[SyncMessageUrl.viewOperate] = async (e: UserAction, op) => {
-        if (page.ws?.id == e.workspaceId) {
+        if (page.ws?.id == e?.workspaceId) {
             if (page.elementUrl == e.elementUrl) {
                 await page.onSyncUserActions([e], 'notify')
             }
@@ -33,7 +33,7 @@ export function SyncPage(page: Page) {
     });
     channel.sync(SyncMessageUrl.viewOperates, page.syncs[SyncMessageUrl.viewOperate] = async (e: UserAction[], op) => {
         var ua = e[0];
-        if (page.ws?.id == ua.workspaceId) {
+        if (ua && page.ws?.id == ua.workspaceId) {
             if (page.elementUrl == ua.elementUrl) {
                 await page.onSyncUserActions(e, 'notify')
             }
