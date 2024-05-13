@@ -310,7 +310,7 @@ export class Page extends Events<PageDirective> {
     get pageInfo() {
         return this._pageItem;
     }
-    get textIndent(){
+    get textIndent() {
         return 24
     }
     _pageItem: LinkPageItem;
@@ -535,6 +535,7 @@ export class Page extends Events<PageDirective> {
         date: number,
         userid: string
     }
+    snapLoadLocker: { date: number, url: string,count:number}[] = [];
 }
 
 export interface Page {

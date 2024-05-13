@@ -70,6 +70,7 @@ class TextTool extends EventsComponent {
     boxEl: HTMLElement;
     open(pos: PopoverPosition, options: { blocks: Block[], page: Page, style: TextToolStyle, turnBlock?: Block }) {
         var rs = pos.roundArea;
+        if (!rs) { console.trace(pos, options) };
         if (!rs && Array.isArray(pos.roundAreas)) rs = pos.roundAreas[0];
         if (pos.relativeEleAutoScroll) this.fvs.bind(pos.relativeEleAutoScroll);
         this.page = options.page;
