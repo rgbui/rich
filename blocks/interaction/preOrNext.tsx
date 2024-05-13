@@ -5,8 +5,7 @@ import { BlockView } from "../../src/block/view";
 import { Icon } from "../../component/view/icon";
 import { S } from "../../i18n/view";
 import { ElementType } from "../../net/element.type";
-import { PageLink } from "../../extensions/link/declare";
-import { getPageText } from "../../src/page/declare";
+import { LinkPageItem, getPageText } from "../../src/page/declare";
 import { channel } from "../../net/channel";
 
 @url('/page/preOrNext')
@@ -21,13 +20,14 @@ export class PageOrNext extends Block {
             pageId: this.page.pageInfo.id
         });
         if (r.ok) {
+            console.log(r.data);
             this.prePageInfo = r.data.pre;
             this.nextPageInfo = r.data.next;
             this.forceManualUpdate();
         }
     }
-    prePageInfo: PageLink;
-    nextPageInfo: PageLink;
+    prePageInfo: LinkPageItem;
+    nextPageInfo: LinkPageItem;
 }
 
 @view('/page/preOrNext')
@@ -56,11 +56,11 @@ export class PageOrNextView extends BlockView<PageOrNext> {
         var bg = { backgroundColor: cs.backgroundColor, backround: cs.background };
 
         return <div className='flex flex-top' >
-            <a className="w50 border gap-r-10 round padding-10 flex "
+            <a className={"w50 border gap-r-10 round padding-16 flex " + (ss ? " item-light-hover" : "")}
                 style={{ cursor: ss ? 'pointer' : 'default', ...bg }}
                 onClick={e => {
                     if (this.block.prePageInfo)
-                        channel.act('/page/open', { item: this.block.prePageInfo?.pageId })
+                        channel.act('/page/open', { item: this.block.prePageInfo?.id })
                     else if (this.block.page.formPreRow)
                         this.block.page.onFormOpen('prev')
                 }}>
@@ -70,11 +70,11 @@ export class PageOrNextView extends BlockView<PageOrNext> {
                     <span className={'flex-end f-14 ' + (ss ? "" : "remark-im")}>{s}</span>
                 </div>
             </a>
-            <a className="w50  border gap-l-10 round padding-10  flex "
+            <a className={"w50  border gap-l-10 round padding-16  flex " + (se == true ? " item-light-hover" : "")}
                 style={{ cursor: se ? 'pointer' : 'default', ...bg }}
                 onClick={e => {
                     if (this.block.nextPageInfo)
-                        channel.act('/page/open', { item: this.block.nextPageInfo?.pageId })
+                        channel.act('/page/open', { item: this.block.nextPageInfo?.id })
                     else if (this.block.page.formNextRow)
                         this.block.page.onFormOpen('next')
                 }}>
