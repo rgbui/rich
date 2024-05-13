@@ -285,7 +285,7 @@ export class TextEle {
      * @param el 
      * @param predict 
      */
-    static eachTextNode(el: HTMLElement, predict: (node: Text|HTMLBRElement) => void | boolean) {
+    static eachTextNode(el: HTMLElement, predict: (node: Text | HTMLBRElement) => void | boolean) {
         var cs = el.childNodes;
         var isBreak: boolean = false;
         function fc(cs: ChildNode[]) {
@@ -474,6 +474,20 @@ export class TextEle {
     static setTextStyle(options: { ele: HTMLElement, startNode: Node, endNode: Node, startOffset: number, endOffset: number, ignore?: (ele: HTMLElement) => boolean }) {
         var { ele, startNode, endNode, startOffset, endOffset, ignore } = options;
         var texts = this.searchTexts(options);
+    }
+    static setElCursor(el: HTMLElement, options?: { start?: boolean, end?: boolean }) {
+        var range = document.createRange();
+        range.selectNodeContents(el);
+        if (options?.start) {
+            range.collapse(true);
+        }
+        else if (options?.end) {
+            range.collapse(false);
+        }
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+
     }
 }
 export type TextFontStyle = {
