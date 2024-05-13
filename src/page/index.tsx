@@ -172,17 +172,24 @@ export class Page extends Events<PageDirective> {
         }
     }
     destory() {
-        for (let se in this.syncs) {
-            channel.off(se as any, this.syncs[se]);
-        }
-        this.kit.picker.onCancel();
-        closeBoardEditTool();
-        ReactDOM.unmountComponentAtNode(this.root);
-        this.root.remove();
-        if (this.isPageOff) {
-            if (this.fragment) {
-                this.fragment = null;
+        try {
+            for (let se in this.syncs) {
+                channel.off(se as any, this.syncs[se]);
             }
+            this.kit.picker.onCancel();
+            closeBoardEditTool();
+            if(this.root instanceof HTMLElement){
+                ReactDOM.unmountComponentAtNode(this.root);
+                this.root.remove();
+            }
+            if (this.isPageOff) {
+                if (this.fragment) {
+                    this.fragment = null;
+                }
+            }
+        }
+        catch (ex) {
+            console.error(ex);
         }
     }
     async renderFragment(panel: HTMLElement, options?: { width?: number, height?: number }) {
@@ -535,7 +542,7 @@ export class Page extends Events<PageDirective> {
         date: number,
         userid: string
     }
-    snapLoadLocker: { date: number, url: string,count:number}[] = [];
+    snapLoadLocker: { date: number, url: string, count: number }[] = [];
 }
 
 export interface Page {
