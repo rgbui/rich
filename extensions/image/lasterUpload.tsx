@@ -10,6 +10,9 @@ import { channel } from "../../net/channel";
 import { lst } from "../../i18n/store";
 import { util } from "../../util/util";
 import { autoImageUrl } from "../../net/element.type";
+import { ToolTip } from "../../component/view/tooltip";
+import dayjs from "dayjs";
+import { Avatar } from "../../component/view/avator/face";
 
 export class LastUploadFiles extends React.Component<{
     fileClassify?: 'cover',
@@ -56,7 +59,12 @@ export class LastUploadFiles extends React.Component<{
     }
     renderItem(item: ResourceArguments, index: number) {
         return <div style={{ width: 'calc(25% - 15px)' }} onMouseDown={e => this.props.onChange(item)} className="gap-l-5 padding-5 gap-b-5 item-hover  round cursor" key={index}>
-            <img className="obj-center w100  h-80 round " src={autoImageUrl(item.url, 120)} />
+            <ToolTip overlay={<div className="f-12 l-20 text-1">
+                <div><S>创建人</S>:<Avatar userid={item.creater} size={24}></Avatar></div>
+                <div><S>文件名</S>:{item.filename}</div>
+                <div><S>大小</S>:{util.byteToString(item.size)}</div>
+                <div><S>创建时间</S>:{dayjs(item.createDate).format('YYYY-MM-HH')}</div>
+            </div>}><img className="obj-center w100  h-80 round " src={autoImageUrl(item.url, 250)} /></ToolTip>
             <div className="h-20 f-12  w100  flex"><span className="flex-auto text-overflow text-1">{item.filename}</span>{item.createDate && <span className="flex-fixed remark">{util.showTime(typeof item.createDate == 'number' ? new Date(item.createDate) : item.createDate as any)}</span>}</div>
         </div>
     }
