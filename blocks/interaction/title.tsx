@@ -23,18 +23,18 @@ import "./style.less";
 export class Title extends Block {
     display = BlockDisplay.block;
     pageInfo: LinkPageItem = null;
-    loadPageInfo(isUpdate?:boolean) {
+    loadPageInfo(isUpdate?: boolean) {
         var r = this.page.getPageDataInfo();
         if (r) {
             this.pageInfo = lodash.cloneDeep(r);
         }
-        if(isUpdate)this.forceManualUpdate();
+        if (isUpdate) this.forceManualUpdate();
     }
     @prop()
     align: 'left' | 'center' = 'left';
     async changeAppear(appear) {
         if (appear.prop == 'pageInfo.text') {
-            await this.page.onUpdatePageTitle(this.pageInfo.text,PageLocation.pageEditTitle);
+            await this.page.onUpdatePageTitle(this.pageInfo.text, PageLocation.pageEditTitle);
         }
     }
     get isSupportTextStyle() {
@@ -83,11 +83,11 @@ export class Title extends Block {
             name: 'text-center',
             type: MenuItemType.switch,
             checked: (this as any).align == 'center',
-            text: lst('标题居中'),
+            text: lst('居中'),
             icon: AlignTextCenterSvg
         });
         rs.push({
-            text: lst('标题隐藏'),
+            text: lst('隐藏'),
             name: 'hidden',
             icon: HideSvg
         });
