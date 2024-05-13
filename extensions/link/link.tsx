@@ -12,13 +12,14 @@ import { LinkPageItem, getPageIcon, getPageText } from "../../src/page/declare";
 import { Spin } from "../../component/view/spin";
 import { popoverLayer } from "../../component/lib/zindex";
 import { KeyboardCode } from "../../src/common/keys";
-import { Block } from "../../src/block";
 import { SearchListType } from "../../component/types";
 import { lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
 import { Button } from "../../component/view/button";
-import { util } from "../../util/util";
 import "./style.less";
+import { DivInput } from "../../component/view/input/div";
+import { IconArguments } from "../icon/declare";
+import { TextEle } from "../../src/common/text.ele";
 
 /**
  * 
@@ -32,6 +33,7 @@ class LinkEditor extends EventsComponent {
     text: string = '';
     name: PageLink['name'];
     pageId: string;
+    pageIcon?: IconArguments;
     async onEnter(url) {
         if (url.startsWith('https://') || url.startsWith('http://')) {
             this.name = 'outside';
@@ -51,26 +53,30 @@ class LinkEditor extends EventsComponent {
         }
     }
     onInput(e: string) {
+        console.log(e);
         this.spread = true;
         /**
          * 说明是网址开头的
          */
         if (e && (e.startsWith('http://') || e.startsWith('https://'))) {
-            this.name = 'outside';
+            // this.name = 'outside';
+            this.selectIndex = 0;
             this.url = e;
-            this.isSearch = false;
+            this.isSearch = true;
             this.links = [];
             this.forceUpdate();
         }
         else if (e) {
             //这里搜索
-            this.name = 'page';
+            // this.name = 'page';
             this.url = e;
             this.isSearch = true;
             this.forceUpdate();
             if (this.url) this.syncSearch();
         }
         else {
+            this.selectIndex = 0;
+            this.name = 'none';
             this.url = '';
             this.isSearch = false;
             this.links = [];
@@ -124,9 +130,11 @@ class LinkEditor extends EventsComponent {
         switch (event.key) {
             case KeyboardCode.ArrowDown:
                 this.selectIndex += 1;
+                if (this.selectIndex >= this.links.length) { } this.selectIndex = this.links.length - 1;
                 return true;
             case KeyboardCode.ArrowUp:
                 this.selectIndex -= 1;
+                if (this.selectIndex < 0) this.selectIndex = 0;
                 return true;
             case KeyboardCode.Enter:
                 break;
@@ -136,29 +144,38 @@ class LinkEditor extends EventsComponent {
     linkEl: HTMLElement;
     renderLink() {
         return <div className="relative" ref={e => this.linkEl = e}>
-            <Input
-                onMousedown={e => {
-                    this.spread = true;
-                    this.forceUpdate()
-                }}
-                onKeydown={this.keydown}
-                placeholder={lst('搜索网址或页面...')}
-                onChange={e => this.onInput(e)}
-                onEnter={(e, g) => {
-                    g.preventDefault();
-                    g.stopPropagation();
-                    this.onEnter(e);
-                }}
-                value={this.url}></Input>
-            <div className="pos shadow-s border-light overflow-y max-h-300 bg-white round padding-t-10" style={{ display: this.spread && (this.name == 'outside' && this.url || this.name == 'page' && this.links.length > 0) ? "block" : 'none', bottom: 30, left: 0, right: 0 }}>
-                {this.name == 'outside' && this.url && <div className={'h-30  gap-b-10 cursor item-hover round gap-w-5 padding-w-5 flex' + (this.selectIndex == 0 ? " item-hover-focus" : "")}
+            <div className="flex border round padding-w-5 " style={{ height: 26 }} onMouseDown={e => {
+                this.spread = true;
+                this.forceUpdate()
+            }}>
+                {['page', 'outside'].includes(this.name) && <div className="flex-fixed size-24 round item-hover flex-center">
+                    {this.name == 'outside' && <Icon size={16} icon={GlobalLinkSvg}></Icon>}
+                    {this.name == 'page' && <Icon size={16} icon={getPageIcon({ icon: this.pageIcon })}></Icon>}
+                </div>}
+                <div className="flex-auto">
+                    <DivInput
+                        rf={e => this.divInput = e}
+
+                        onKeyDown={this.keydown}
+                        placeholder={lst('搜索网址或页面...')}
+                        onInput={e => this.onInput(e)}
+                        onEnter={(e) => {
+                            this.onEnter(e);
+                        }}
+                        value={this.url}
+                    ></DivInput>
+                </div>
+            </div>
+
+            <div className="pos shadow-s border-light overflow-y max-h-300 bg-white round padding-t-10" style={{ display: this.spread && this.url ? "block" : 'none', bottom: 30, left: 0, right: 0 }}>
+                {(this.url.startsWith('http://') || this.url.startsWith('https://')) && <div className={'h-30  gap-b-10 cursor item-hover round gap-w-5 padding-w-5 flex' + (this.selectIndex == 0 ? " item-hover-focus" : "")}
                     onClick={e => {
                         this.onEnter(this.url)
                     }}
                 ><span className="size-24 flex-center item-hover flex-fixed"><Icon size={16} icon={GlobalLinkSvg}></Icon></span>
                     <span className="text-overflow flex-auto">{this.url}</span>
                 </div>}
-                {this.name == 'page' && <div className="gap-b-10">
+                {!(this.url.startsWith('http://') || this.url.startsWith('https://')) && <div className="gap-b-10">
                     {this.loading && <div className="flex-center"><Spin></Spin></div>}
                     {!this.loading && this.links.map((link, i) => {
                         return <div onClick={e => this.onSelect(link)} className={"h-30 cursor item-hover round  gap-w-5  padding-w-5 flex" + (this.selectIndex == i ? " item-hover-focus" : "")} key={link.id}>
@@ -196,12 +213,18 @@ class LinkEditor extends EventsComponent {
             </div>
         </div>
     }
+    divInput: HTMLElement;
     onSelect(link: LinkPageItem) {
         this.pageId = link.id;
         this.url = link.text;
+        this.pageIcon = link.icon;
         this.name = 'page';
         this.spread = false;
-        this.forceUpdate();
+        this.forceUpdate(() => {
+            if (this.divInput) {
+                TextEle.setElCursor(this.divInput, { end: true })
+            }
+        });
     }
     async onOpen(link: PageLink) {
         this.selectIndex = 0;
@@ -214,6 +237,7 @@ class LinkEditor extends EventsComponent {
                 this.name = 'page';
                 this.selectIndex = this.links.findIndex(g => g.id == link.pageId);
                 this.url = this.links[this.selectIndex]?.text || '';
+                this.pageIcon = this.links[this.selectIndex]?.icon;
                 this.forceUpdate()
             }
             else if (link.url) {

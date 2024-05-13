@@ -12,7 +12,7 @@ import { BlockCssName } from "../../block/pattern/css";
 import { MouseDragger } from "../../common/dragger";
 import { KeyboardCode, KeyboardPlate } from "../../common/keys";
 import { TextEle } from "../../common/text.ele";
-import { Point, Rect } from "../../common/vector/point";
+import { Point, Rect, RectUtility } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
 import { PageLayoutType } from "../../page/declare";
 import { PageDirective } from "../../page/directive";
@@ -513,11 +513,13 @@ export class PageWrite {
         }
     }
     async onOpenTextTool() {
+        if(window.shyConfig?.isDev)
         console.log('open text tool....')
         var sel = window.getSelection();
         var range = util.getSafeSelRange(sel);
         if (range) {
             var rs = TextEle.getWindowCusorBounds();
+            var rect = Rect.getRectFromRects(rs);
 
             var list = this.kit.anchorCursor.getAppears();
             if (list.length == 0) {
@@ -540,7 +542,7 @@ export class PageWrite {
                 turnBlock = blocks[0].closest(x => !x.isLine);
             }
             var result = await useTextTool(
-                { roundAreas: rs, relativeEleAutoScroll: this.kit.anchorCursor.endAnchor.el },
+                { roundArea: rect, relativeEleAutoScroll: this.kit.anchorCursor.endAnchor.el },
                 { blocks, page: this.kit.page, style: this.kit.page.pickBlocksTextStyle(blocks), turnBlock }
             );
             if (result) {

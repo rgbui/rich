@@ -622,6 +622,7 @@ export async function inputBackspaceDeleteContent(write: PageWrite,
 
 
 export async function onSpaceInputUrl(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent,) {
+  
     if (aa?.isText) {
         var rowBlock = aa.block.closest(x => x.isBlock);
         if (rowBlock.url == BlockUrlConstant.Title) return;
