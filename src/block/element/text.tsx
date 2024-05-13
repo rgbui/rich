@@ -224,6 +224,7 @@ export class TextContentView extends BlockView<TextContent> {
                     <Tip overlay={url}><span className="max-w-160 padding-w-3 text-overflow " style={{ width: 'auto', justifyContent: 'flex-start' }}>{url}</span></Tip>
                     <Tip text={'复制网址'}><span className="item-hover" onMouseDown={e => this.copyLink(url)} ><Icon size={16} icon={DuplicateSvg}></Icon></span></Tip>
                     {this.block.isCanEdit() && <Tip text={'编辑'}><span className="item-hover" onMouseDown={e => this.openLink(e)}><Icon size={14} icon={{ name: 'byte', code: "write" }}></Icon></span></Tip>}
+                    {this.block.isCanEdit() && <Tip text={'取消'}><span onMouseDown={e => this.onClearLink()}><Icon size={14} icon={TrashSvg}></Icon></span></Tip>}
                 </div>}><a draggable={false} className="sy-block-text-content-link" onClick={e => {
                     this.openPage(e)
                 }} href={url}>{ta}</a></BoxTip>
@@ -234,6 +235,7 @@ export class TextContentView extends BlockView<TextContent> {
                     <Tip overlay={this.block.link.url}><span className="padding-w-3" style={{ width: 'auto' }}><Icon className={'gap-r-3'} icon={GlobalLinkSvg} size={14}></Icon><span className="max-w-160 text-overflow">{this.block.link?.url}</span></span></Tip>
                     <Tip text={'复制网址'}><span className="item-hover" onMouseDown={e => this.copyLink(this.block.link?.url)} ><Icon size={16} icon={DuplicateSvg}></Icon></span></Tip>
                     {this.block.isCanEdit() && <Tip text={'编辑'}><span className="item-hover" onMouseDown={e => this.openLink(e)}><Icon size={14} icon={{ name: 'byte', code: "write" }}></Icon></span></Tip>}
+                    {this.block.isCanEdit() && <Tip text={'取消'}><span onMouseDown={e => this.onClearLink()}><Icon size={14} icon={TrashSvg}></Icon></span></Tip>}
                 </div>}><a draggable={false} className="sy-block-text-content-link" onClick={e => {
                     if (this.block.page.keyboardPlate.isShift()) {
                         e.preventDefault();
