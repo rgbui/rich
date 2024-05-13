@@ -77,7 +77,7 @@ export class AnchorCursor {
             this.endOffset = this.endAnchor.getCursorOffset(sel.focusNode, sel.focusOffset);
         this.currentSelectedBlocks = [];
         this.renderSelectBlocks(this.currentSelectedBlocks);
-        if (this.startAnchor && this.endAnchor) {
+        if (this.startAnchor && this.endAnchor && !lodash.isEqual(old, this.record)) {
             this.kit.page.snapshoot.record(OperatorDirective.$change_cursor_offset, { old_value: old, new_value: this.record }, this.kit.page)
             if (!this.isCollapse)
                 this.kit.page.addActionAfterEvent(async () => {
