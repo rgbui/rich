@@ -26,7 +26,7 @@ export function DragBlockLine(block: Block, event: React.MouseEvent) {
         moving(ev, data, isEnd) {
             var el = ev.target as HTMLElement;
             var appear = findBlockAppear(el);
-            if (appear) {
+            if (appear && appear.block.isSupportTextStyle) {
                 var pos = getPos(ev);
                 if (pos?.textNode) {
                     sel.collapse(pos.textNode, pos.offset)
@@ -40,7 +40,7 @@ export function DragBlockLine(block: Block, event: React.MouseEvent) {
             try {
                 var el = ev.target as HTMLElement;
                 var appear = findBlockAppear(el);
-                if (appear) {
+                if (appear && appear.block.isSupportTextStyle) {
                     var pos = getPos(ev);
                     if (pos?.textNode) {
                         block.page.onAction('DragBlockLine', async () => {

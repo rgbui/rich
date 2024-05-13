@@ -29,9 +29,10 @@ export async function PageDrag(kit: Kit, event: React.MouseEvent) {
         CheckBoardSelector(kit, block, event);
         return;
     }
-    console.log('block', block)
+    if (window.shyConfig?.isDev)
+        console.log('block', block)
     if (kit.page.isBoard || block?.isFreeBlock || block?.isBoardBlock) {
-      
+
         event.preventDefault()
         window.getSelection().collapse(kit.page.viewEl)
         BoardDrag(kit, block, event);

@@ -225,7 +225,7 @@ export var util = {
         const encoder = new TextEncoder();
         const utf8Array = encoder.encode(originalString);
         const base64String = btoa(String.fromCharCode.apply(null, utf8Array));
-        console.log(base64String); // "5L2g5aW977yM5LiW55WMhQ=="
+      
         return base64String;
     },
     /**
@@ -239,7 +239,7 @@ export var util = {
             return c.charCodeAt(0);
         }));
         const decodedString = decoder.decode(base64Array);
-        //console.log(decodedString); // "你好，世界！"
+      
         return decodedString;
     },
     getTextareaShowHtml(text: string) {

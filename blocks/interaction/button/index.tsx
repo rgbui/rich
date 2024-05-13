@@ -16,7 +16,6 @@ import { BlockView } from "../../../src/block/view";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { lst } from "../../../i18n/store";
 import lodash from "lodash";
-import { util } from "../../../util/util";
 import { popoverLayer } from "../../../component/lib/zindex";
 import "./style.less";
 import { FixBoxTip } from "../../../component/view/tooltip/fix";
