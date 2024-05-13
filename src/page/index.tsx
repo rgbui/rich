@@ -178,7 +178,7 @@ export class Page extends Events<PageDirective> {
             }
             this.kit.picker.onCancel();
             closeBoardEditTool();
-            if(this.root instanceof HTMLElement){
+            if (this.root instanceof HTMLElement) {
                 ReactDOM.unmountComponentAtNode(this.root);
                 this.root.remove();
             }
@@ -447,8 +447,8 @@ export class Page extends Events<PageDirective> {
     cacSmallFont(sf: boolean) {
         if (sf == true) {
             if (this.pageLayout?.type == PageLayoutType.ppt)
-                return '1.4rem';
-            return '1.2rem';
+                return this.smallFont ? '1.4rem' : '1.6rem';
+            return this.smallFont ? '1.2rem' : '1.4rem';
         }
         else return this.fontSize;
     }
