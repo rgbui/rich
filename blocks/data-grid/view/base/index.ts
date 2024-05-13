@@ -191,6 +191,20 @@ export class DataGridView extends Block {
     }
     async loadSyncBlock(this: DataGridView): Promise<void> {
         if (this.syncBlockId) {
+            lodash.remove(this.page.snapLoadLocker, s => s.date + 1000 * 30 < Date.now());
+            var rc = this.page.snapLoadLocker.find(s => s.url == this.elementUrl);
+            if (rc) {
+                if (rc.date + 1000 * 5 > Date.now()) {
+                    if (rc.count > 10) {
+                        this.page.onError(new Error('数据加载失败，请稍后再试'));
+                        return;
+                    }
+                    else { rc.count += 1; rc.date = Date.now(); }
+                }
+                else { rc.date = Date.now(); rc.count = 0; }
+            }
+            else this.page.snapLoadLocker.push({ url: this.elementUrl, count: 0, date: Date.now() })
+
             var r = await channel.get('/view/snap/query', { ws: this.page.ws, elementUrl: this.elementUrl });
             if (r.ok) {
                 var data;
@@ -216,7 +230,7 @@ export class DataGridView extends Block {
                 }
                 var ops = r.data.operates;
                 if (Array.isArray(ops) && ops.length > 0)
-                    lodash.remove(ops, op => op.directive == 'SelectTableSchema' || op.directive == 125);
+                    lodash.remove(ops, op => op.directive == "onDataGridChangeView" || op.directive == 'onDataGridChangeViewByTemplate' || op.directive == 'SelectTableSchema' || op.directive == 125);
                 if (Array.isArray(ops) && ops.length > 0)
                     await this.page.onSyncUserActions(ops, 'loadSyncBlock');
             }
@@ -415,7 +429,7 @@ export class DataGridView extends Block {
                             await this.updateProps({
                                 schemaId: dg.schemaId,
                                 syncBlockId: dg.syncBlockId
-                            },BlockRenderRange.self)
+                            }, BlockRenderRange.self)
                         }, { disabledSyncBlock: true })
                         else await this.page.onReplace(this, {
                             url: dg.url,
@@ -437,7 +451,7 @@ export class DataGridView extends Block {
                             await this.updateProps({
                                 schemaId: this.schema.id,
                                 syncBlockId: view.id
-                            },BlockRenderRange.self)
+                            }, BlockRenderRange.self)
                         }, { disabledSyncBlock: true });
                         else await this.page.onReplace(this, {
                             url: viewUrl,

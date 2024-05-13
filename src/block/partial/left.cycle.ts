@@ -266,6 +266,20 @@ export class Block$LifeCycle {
     }
     async loadSyncBlock(this: Block) {
         if (this.syncBlockId) {
+            lodash.remove(this.page.snapLoadLocker, s => s.date + 1000 * 30 < Date.now());
+            var rc = this.page.snapLoadLocker.find(s => s.url == this.elementUrl);
+            if (rc) {
+                if (rc.date + 1000 * 5 > Date.now()) {
+                    if (rc.count > 10) {
+                        this.page.onError(new Error('数据加载失败，请稍后再试'));
+                        return;
+                    }
+                    else { rc.count += 1; rc.date = Date.now(); }
+                }
+                else { rc.date = Date.now(); rc.count = 0; }
+            }
+            else this.page.snapLoadLocker.push({ url: this.elementUrl, count: 0, date: Date.now() })
+
             var r = await channel.get('/view/snap/query', { ws: this.page.ws, elementUrl: this.elementUrl });
             if (r.ok) {
                 var data;
