@@ -96,7 +96,7 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
         var range = util.getSafeSelRange(sel);
         var rect = aa.textContent == '' || aa.isSolid ? Rect.fromEle(aa.el) : Rect.fromEle(range);
         if (!br)
-        onceAutoScroll({ el: aa.el, point: rect.leftMiddle, feelDis: 60, dis: 120 })
+            onceAutoScroll({ el: aa.el, point: rect.leftMiddle, feelDis: 60, dis: 120 })
         range = util.getSafeSelRange(sel);
         rect = aa.textContent == '' || aa.isSolid ? Rect.fromEle(aa.el) : Rect.fromEle(range);
         var rects = TextEle.getBounds(aa.el);
@@ -158,6 +158,12 @@ export function MoveSelectBlocks(write: PageWrite, blocks: Block[], event: Keybo
     }
 }
 
+/**
+ * 回车输入换行
+ * @param write 
+ * @param aa 
+ * @param event 
+ */
 export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
     var sel = window.getSelection();
     var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
@@ -178,7 +184,7 @@ export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: Re
         }
         var childs = text ? [{ url: BlockUrlConstant.Text, content: text }] : [];
         if (aa.isText) {
-            if (rest || !block.isLine) block.updateAppear(aa, rest, BlockRenderRange.self);
+            if (rest || !block.isLine) await block.updateAppear(aa, rest, BlockRenderRange.self);
             else await block.delete();
         }
         var newBlock: Block;
@@ -198,6 +204,29 @@ export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: Re
             write.kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
         })
     });
+}
+/**
+ * 回车输入换行符
+ * 如果是浏览器默认的回车换行符，那么浏览器会产生<br/>，<div>等乱七八糟的东西
+ * @param write 
+ * @param aa 
+ * @param event 
+ */
+export async function onEnterInsertNewLine(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent, cb?: () => void) {
+    event.preventDefault();
+    var sel = window.getSelection();
+    var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
+    // console.log(offset, sel.focusOffset);
+    var tc = aa.textContent;
+    aa.setContent(tc.slice(0, offset) + '\n' + tc.slice(offset));
+    // console.log(aa.el);
+    var page = write.kit.page;
+    await InputForceStore(aa, async () => {
+        page.addActionAfterEvent(async () => {
+            write.kit.anchorCursor.onFocusAppearAnchor(aa, { merge: true, render: true, at: offset + 1 })
+            if (typeof cb == 'function') cb()
+        })
+    })
 }
 
 export async function onKeyTab(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {

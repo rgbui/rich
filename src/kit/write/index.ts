@@ -29,6 +29,7 @@ import {
 import {
     MoveCursor,
     onEnterInput,
+    onEnterInsertNewLine,
     onKeyTab,
     predictKeydown
 } from "./keydown";
@@ -202,11 +203,11 @@ export class PageWrite {
                     this.kit.page.emit(PageDirective.save)
                     return;
                 }
-                if (aa?.block.isFreeBlock) {
-                    //不做任何处理，自动键入换行符
-                    util.delay(50).then(() => {
+                var ab = aa.block ? aa.block.closest(x => !x.isLine) : undefined;
+                if (ab.isFreeBlock) {
+                    await onEnterInsertNewLine(this, aa, event, () => {
                         this.kit.picker.onRePicker();
-                    })
+                    });
                     return;
                 }
                 else if (aa.block.isEnterCreateNewLine) {
@@ -214,8 +215,10 @@ export class PageWrite {
                         await onEnterInput(this, aa, event);
                     }
                     else if (this.kit.page.keyboardPlate.isShift() && aa.block.isDisabledInputLine) {
-                        event.preventDefault()
                         await onEnterInput(this, aa, event);
+                    }
+                    else {
+                        await onEnterInsertNewLine(this, aa, event);
                     }
                 }
                 break;
@@ -226,6 +229,7 @@ export class PageWrite {
                 else await keydownBackspaceTextContent(this, aa, event);
                 break;
             case KeyboardCode.Tab.toLowerCase():
+                if (aa?.block.isFreeBlock) return;
                 await onKeyTab(this, aa, event);
                 break;
             case KeyboardCode.X.toLowerCase():
@@ -253,6 +257,7 @@ export class PageWrite {
                     if (lb) {
                         event.preventDefault();
                         lb.onCopyLink()
+                        return;
                     }
                 }
                 break;
@@ -268,6 +273,7 @@ export class PageWrite {
                             BlockUrlConstant.PageAuthor
                         ].includes(b.url as any)) return;
                         await b.onClone();
+                        return;
                     }
                 }
                 break;
@@ -381,7 +387,7 @@ export class PageWrite {
             case KeyboardCode.K6:
             case KeyboardCode.K7:
             case KeyboardCode.K8:
-                // case KeyboardCode.K9:
+            case KeyboardCode.K9:
                 if (this.kit.page.keyboardPlate.isMetaOrCtrlAndAlt()) {
                     var bs: Block[] = this.kit.anchorCursor.getAppearBlocks(aa);
                     var url;
@@ -394,6 +400,7 @@ export class PageWrite {
                     else if (ek == KeyboardCode.K6) url = '/list?{listType:0}';
                     else if (ek == KeyboardCode.K7) url = '/list?{listType:1}';
                     else if (ek == KeyboardCode.K8) url = '/list?{listType:2}';
+                    else if (ek == KeyboardCode.K9) url = BlockUrlConstant.Link;
                     if (url) {
                         event.preventDefault();
                         this.kit.page.onBatchTurn(bs, url).then(rs => {
@@ -409,6 +416,7 @@ export class PageWrite {
                     //对当前块发表评论
                     var block = aa.block.closest(x => !x.isLine);
                     if (block) {
+                        event.preventDefault();
                         block.onInputComment()
                     }
                 }
@@ -652,7 +660,7 @@ export class PageWrite {
         styles: Record<BlockCssName, Record<string, any>>,
         props?: Record<string, any>
     ) {
-        console.log(appears, styles, props);
+        // console.log(appears, styles, props);
         await this.kit.page.onAction(ActionDirective.onUpdatePattern, async () => {
             await appears.eachAsync(async appear => {
                 if (appear == this.kit.anchorCursor.startAnchor || appear == this.kit.anchorCursor.endAnchor) {
