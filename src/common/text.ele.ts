@@ -279,7 +279,13 @@ export class TextEle {
         }
         return getText(ele);
     }
-    static eachTextNode(el: HTMLElement, predict: (node: Text) => void | boolean) {
+    /**
+     * 正常的文本串
+     * 换行符也算文本
+     * @param el 
+     * @param predict 
+     */
+    static eachTextNode(el: HTMLElement, predict: (node: Text|HTMLBRElement) => void | boolean) {
         var cs = el.childNodes;
         var isBreak: boolean = false;
         function fc(cs: ChildNode[]) {
@@ -287,6 +293,12 @@ export class TextEle {
                 if (isBreak) return;
                 var t = cs[i];
                 if (t instanceof Text) {
+                    var r = predict(t);
+                    if (r == false) {
+                        isBreak = true;
+                    }
+                }
+                else if (t instanceof HTMLBRElement) {
                     var r = predict(t);
                     if (r == false) {
                         isBreak = true;

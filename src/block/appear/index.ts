@@ -48,7 +48,7 @@ export class AppearAnchor {
         this.el.innerHTML = value;
     }
     appendContent(value: string) {
-        this.el.innerText = (this.textContent + '') + value;
+        this.el.innerHTML = (this.textContent + '') + value;
     }
     get isEmpty() {
         if (this.isText) {
@@ -195,7 +195,7 @@ export class AppearAnchor {
             var len = t.textContent.length;
             if (offset >= count && offset <= count + len) {
                 pos = offset - count;
-                node = t;
+                node = t as any;
                 return false;
             } else count += len;
         });
@@ -261,9 +261,20 @@ export class AppearAnchor {
                 pos += offset;
                 return false;
             }
+            else if (t instanceof HTMLBRElement) {
+                pos += 1;
+            }
             else pos += t.textContent.length;
         });
         return pos;
+    }
+    escapeBr() {
+        if (this.isText) {
+            var cs = Array.from(this.el.childNodes);
+            if (cs.some(s => s instanceof HTMLBRElement)) {
+                this.el.innerHTML = this.el.innerHTML.replace(/<br>/g, '\n');
+            }
+        }
     }
     /**
      * 判断是否为当前行块的最开始处的appear
@@ -314,7 +325,7 @@ export class AppearAnchor {
         var props = { code: tc.code, link: lodash.cloneDeep(tc.link), comment: tc.comment };
         if (this.block.isLine) {
             var at = this.block.at;
-            await this.block.updateProps({ content: ts[0] },BlockRenderRange.self);
+            await this.block.updateProps({ content: ts[0] }, BlockRenderRange.self);
             bs.push(this.block);
             if (ts.length > 1) {
                 var rs = await this.block.parent.appendArrayBlockData(
@@ -332,7 +343,7 @@ export class AppearAnchor {
             return bs;
         }
         else {
-            await this.block.updateProps({ content: '' },BlockRenderRange.self);
+            await this.block.updateProps({ content: '' }, BlockRenderRange.self);
             return await this.block.appendArrayBlockData(
                 ts.map(t => ({
                     url: BlockUrlConstant.Text,
@@ -470,7 +481,9 @@ export class AppearAnchor {
     }
     updateViewValue() {
         if (this.isText && this.el) {
-            this.el.innerText = this.propValue;
+            this.setContent(this.propValue);
+            console.log('ssxxxupdateViewValue');
+            // this.el.innerText = this.propValue;
         }
     }
     get() {

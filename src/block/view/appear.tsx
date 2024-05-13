@@ -70,11 +70,11 @@ export function TextArea(props: {
     }
     if (props.isBlock) {
         //if (props.isHtml) return <div className={classList.join(" ")} dangerouslySetInnerHTML={{ __html: html }} {...(ps as any)}></div>
-        return <div className={classList.join(" ")} {...(ps as any)}>{html}</div>
+        return <div className={classList.join(" ")} {...(ps as any)} dangerouslySetInnerHTML={{ __html: html }} ></div>
     }
     else {
         //if (props.isHtml) return <span className={classList.join(" ")} dangerouslySetInnerHTML={{ __html: html }} {...ps}></span>
-        return <span className={classList.join(" ")} {...ps}>{html}</span>
+        return <span className={classList.join(" ")} {...ps} dangerouslySetInnerHTML={{ __html: html }} ></span>
     }
 }
 
