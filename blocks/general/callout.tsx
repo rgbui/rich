@@ -102,7 +102,7 @@ export class CalloutView extends BlockView<Callout> {
         if (bg == 'rgba(255,255,255,0)' || bg == 'rgb(255,255,255,0)') style.border = '1px solid rgb(233, 231, 231)';
         else style.border = '1px solid rgba(233,231,231,0)';
         if (this.block.smallFont) style.fontSize = this.block.page.cacSmallFont(this.block.smallFont)
-        delete style.paddingBottom;
+        delete style.paddingTop;
         delete style.paddingBottom;
         delete style.paddingRight;
         return <div style={this.block.visibleStyle}><div className='sy-block-callout flex-top padding-16' style={{
