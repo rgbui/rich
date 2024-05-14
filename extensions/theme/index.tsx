@@ -36,10 +36,10 @@ export class PageTheme extends EventsComponent {
             await this.updateTheme({ 'pageTheme.coverStyle.display': pageTheme.coverStyle.display })
             if (pageTheme.coverStyle.display == 'none') {
                 var pd = this.page.getPageDataInfo();
-                if (pd?.cover?.abled) this.page.onAddCover()
+                if (pd?.cover?.abled) await this.page.onAddCover()
             }
             else {
-                this.page.onAddCover(false)
+                await this.page.onAddCover(false)
             }
         }
         else if (group == 'style') {
@@ -49,8 +49,10 @@ export class PageTheme extends EventsComponent {
             await this.updateTheme({ pageTheme: pt })
         }
     }
-    async updateTheme(data: Record<string, any>, cb?: () => void) {
-        await this.page.onUpdateProps(data, true, cb);
+    async updateTheme(data: Record<string, any>) {
+        await this.page.onUpdateProps(data, true, () => {
+            this.page.views.forEach(v => v.forceManualUpdate())
+        });
         this.forceUpdate();
     }
     renderCover() {

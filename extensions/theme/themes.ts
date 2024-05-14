@@ -2,7 +2,7 @@ import { CSSProperties } from "react";
 import { lst } from "../../i18n/store";
 import { Page } from "../../src/page";
 import { PageLayoutType, PageThemeStyle } from "../../src/page/declare";
-import lodash from "lodash";
+
 
 export function GetPageThemes(page: Page) {
     if ([
