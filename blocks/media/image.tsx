@@ -82,7 +82,7 @@ export class Image extends Block {
     }
     async didMounted() {
         try {
-            if (this.createSource == 'InputBlockSelector') {
+            if (this.createSource == 'InputBlockSelector'&&!this.link) {
                 var r = await useImagePicker({ roundArea: Rect.fromEle(this.el) });
                 if (r) {
                     await this.onSaveImageSize(r, true);
@@ -95,7 +95,7 @@ export class Image extends Block {
                     file: this.initialData.file,
                     uploadProgress: (event) => {
                         if (event.lengthComputable) {
-                            this.speed = `${util.byteToString(event.total)}&nbsp;&nbsp;${(100 * event.loaded / event.total).toFixed(2)}%`;
+                            this.speed = `${util.byteToString(event.total)}  ${(100 * event.loaded / event.total).toFixed(2)}%`;
                             this.forceManualUpdate();
                         }
                     }
@@ -546,7 +546,7 @@ export class ImageView extends BlockView<Image> {
         if (this.block.speed) {
             return <div className="sy-block-image-empty flex f-14">
                 <Spin size={16}></Spin>
-                <span><S>上传中</S>:<i dangerouslySetInnerHTML={{ __html: this.block.speed }}></i></span>
+                <span className="gap-l-5"><S>上传中</S>:<i >{this.block.speed}</i></span>
             </div>
         }
         return <div className='sy-block-image-empty item-hover cursor' onMouseDown={e => this.block.onOpenUploadImage(e)}>

@@ -36,7 +36,7 @@ export class File extends Block {
     }
     async didMounted() {
         try {
-            if (this.createSource == 'InputBlockSelector') {
+            if (this.createSource == 'InputBlockSelector'&&!this.src?.url) {
                 var r = await useFilePicker({ roundArea: Rect.fromEle(this.el) });
                 if (r) {
                     await this.onUpdateProps({ src: r }, { range: BlockRenderRange.self, merge: true });
@@ -47,7 +47,7 @@ export class File extends Block {
                     file: this.initialData.file,
                     uploadProgress: (event) => {
                         if (event.lengthComputable) {
-                            this.speed = `${util.byteToString(event.total)}${(100 * event.loaded / event.total).toFixed(2)}%`;
+                            this.speed = `${util.byteToString(event.total)}  ${(100 * event.loaded / event.total).toFixed(2)}%`;
                             this.forceManualUpdate();
                         }
                     }

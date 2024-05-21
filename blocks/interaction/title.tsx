@@ -124,18 +124,17 @@ export class Title extends Block {
     }
     async onContextMenuInput(item: MenuItem<BlockDirective | string>) {
         if (item.name == 'addIcon') {
-            if (item.checked) this.page.onAddIcon()
-            else this.page.onUpdatePageData({ icon: null });
+            if (item.checked) await this.page.onAddIcon()
+            else await this.page.onUpdatePageData({ icon: null });
             return;
         }
         else if (item.name == 'addCover') {
-            if (item.checked) this.page.onAddCover()
-            else this.page.onUpdatePageCover({ 'cover.abled': false }, true);
+            if (item.checked) await this.page.onAddCover()
+            else await this.page.onUpdatePageCover({ 'cover.abled': false }, true);
             return;
         }
         else if (item.name == 'text-center') {
             await this.onUpdateProps({ align: item.checked ? 'center' : 'left' })
-            await this.page.forceUpdate();
             return;
         }
         await super.onContextMenuInput(item);
@@ -143,7 +142,7 @@ export class Title extends Block {
     async onClickContextMenu(item: MenuItem<string | BlockDirective>, e) {
         switch (item.name) {
             case 'hidden':
-                this.page.onUpdateProps({ hideDocTitle: this.page.hideDocTitle ? false : true }, true)
+                await this.page.onUpdateProps({ hideDocTitle: this.page.hideDocTitle ? false : true }, true)
                 return;
             case 'move':
                 await this.page.onPageMove();
@@ -190,26 +189,6 @@ export class TitleView extends BlockView<Title> {
             this.block.onFocusPageTitle();
         })
     }
-    // updatePageInfo = (r: { elementUrl: string, id: string, pageInfo: LinkPageItem }) => {
-    //     var { elementUrl, id, pageInfo } = r;
-    //     if (elementUrl && this.block.page.elementUrl == elementUrl || id && id == this.block.page.pageInfo?.id) {
-    //         var isUpdate: boolean = false;
-    //         if (typeof pageInfo.text != 'undefined' && pageInfo.text != this.block.pageInfo.text) {
-    //             this.block.pageInfo.text = pageInfo.text;
-    //             isUpdate = true;
-    //         }
-    //         if (typeof pageInfo.icon != 'undefined') {
-    //             this.block.pageInfo.icon = lodash.cloneDeep(pageInfo.icon);
-    //             isUpdate = true;
-    //         }
-    //         if (isUpdate) {
-    //             this.forceUpdate();
-    //         }
-    //     }
-    // }
-    // willUnmount() {
-    //     channel.off('/page/update/info', this.updatePageInfo);
-    // }
     renderView() {
         var isAdd: boolean = this.block.page.isSupportCover;
         if (!this.block.page.isCanEdit) isAdd = false;

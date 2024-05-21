@@ -17,15 +17,7 @@ export class LinkPaths extends Block {
         this.loadLinks();
     }
     async loadLinks() {
-        var c = await channel.get('/page/query/parents',
-            {
-                ws: this.page.ws,
-                id: this.page.getPageDataInfo()?.id
-            });
-        if (c?.ok) {
-            this.items = c.data.items.reverse();
-        }
-        else this.items = [];
+        this.items = await this.page.loadPageParents();
         this.forceManualUpdate();
     }
     items: LinkPageItem[] = [];

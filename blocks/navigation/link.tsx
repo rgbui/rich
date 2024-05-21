@@ -36,7 +36,7 @@ export class Link extends Block {
         return false;
     }
     async didMounted() {
-        if (this.createSource == 'InputBlockSelector') {
+        if (this.createSource == 'InputBlockSelector' && !this.getLink()) {
             await this.onSelectPage({ roundArea: Rect.fromEle(this.el) })
         }
     }

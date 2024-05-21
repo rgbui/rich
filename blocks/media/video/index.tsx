@@ -7,7 +7,7 @@ import { Rect } from "../../../src/common/vector/point";
 import { useVideoPicker } from "../../../extensions/file/video.picker";
 import { Block } from "../../../src/block";
 import { channel } from "../../../net/channel";
-import {  DownloadSvg, DuplicateSvg, LinkSvg, TrashSvg, UploadSvg } from "../../../component/svgs";
+import { DownloadSvg, DuplicateSvg, LinkSvg, TrashSvg, UploadSvg } from "../../../component/svgs";
 import { util } from "../../../util/util";
 import { getVideoSize } from "../../../component/file";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
@@ -15,18 +15,8 @@ import { MenuItemView } from "../../../component/view/menu/item";
 import { lst } from "../../../i18n/store";
 import { UA } from "../../../util/ua";
 import { Spin } from "../../../component/view/spin";
-/**
- * 
- * https://h5player.bytedance.com/
 
- * 
- * 分辨率比例通过 aspect 设置，目前有 3：4 和 9：16 两种，
- * 根据当前推流与播放画面在手机上的显示区域比例来设置。
- * 手机竖屏状态一般都是 9：16 比例
- * ，如果一个人推流满屏，
- * 则设置 9：16 ；如果双人并排展示，一个推流一个播放，显示区域为 3：4 比例，则设置 3：4。
- * 
- */
+
 @url('/video')
 export class Video extends Block {
     @prop()
@@ -37,6 +27,10 @@ export class Video extends Block {
     originSize: { width: number, height: number, duration: number } = null;
     @prop()
     autoplayMuted: boolean = false;
+    @prop()
+    videoLoop: boolean = false;
+    @prop()
+    noVideoControl = false;
     display = BlockDisplay.block;
     speed = '';
     async addVideo(event: React.MouseEvent) {
@@ -50,7 +44,7 @@ export class Video extends Block {
     }
     async didMounted() {
         try {
-            if (this.createSource == 'InputBlockSelector') {
+            if (this.createSource == 'InputBlockSelector' && !this.src?.url) {
                 var r = await useVideoPicker({ roundArea: Rect.fromEle(this.el) });
                 if (r) {
                     await this.onSaveSize(r, true);
@@ -62,7 +56,7 @@ export class Video extends Block {
                     file: this.initialData.file,
                     uploadProgress: (event) => {
                         if (event.lengthComputable) {
-                            this.speed = `${util.byteToString(event.total)}${(100 * event.loaded / event.total).toFixed(2)}%`;
+                            this.speed = `${util.byteToString(event.total)}  ${(100 * event.loaded / event.total).toFixed(2)}%`;
                             this.forceManualUpdate();
                         }
                     }
@@ -156,6 +150,22 @@ export class Video extends Block {
                     type: MenuItemType.switch,
                     icon: { name: 'bytedance-icon', code: 'play' },
                     checked: this.autoplayMuted,
+                    disabled: this.src?.url ? false : true
+                },
+                {
+                    name: ' videoLoop',
+                    text: lst('循环播放'),
+                    type: MenuItemType.switch,
+                    icon: { name: 'bytedance-icon', code: 'update-rotation' },
+                    checked: this.videoLoop,
+                    disabled: this.src?.url ? false : true
+                },
+                {
+                    name: 'noVideoControl',
+                    text: lst('无控制条'),
+                    type: MenuItemType.switch,
+                    icon: { name: 'bytedance-icon', code: 'rectangle-one' },
+                    checked: this.noVideoControl,
                     disabled: this.src?.url ? false : true
                 },
                 { type: MenuItemType.divide },
@@ -312,6 +322,12 @@ export class Video extends Block {
         if (item?.name == 'autoplayMuted') {
             this.onUpdateProps({ autoplayMuted: item.checked }, { range: BlockRenderRange.self });
         }
+        else if (item?.name == 'videoLoop') {
+            await this.onUpdateProps({ videoLoop: item.checked }, { range: BlockRenderRange.self })
+        }
+        else if (item?.name == 'noVideoControl') {
+            await this.onUpdateProps({ noVideoControl: item.checked }, { range: BlockRenderRange.self })
+        }
     }
     async onClickContextMenu(item, event) {
         switch (item.name) {
@@ -336,18 +352,30 @@ export class Video extends Block {
             case 'autoplayMuted':
                 await this.onUpdateProps({ autoplayMuted: this.autoplayMuted ? false : true }, { range: BlockRenderRange.self })
                 return;
+            case 'videoLoop':
+                await this.onUpdateProps({ videoLoop: this.videoLoop ? false : true }, { range: BlockRenderRange.self })
+                return;
         }
         await super.onClickContextMenu(item, event);
     }
 }
 @view('/video')
 export class VideoView extends BlockView<Video> {
+    async loadPlayer() {
+        if (this.vc) {
+            await this.vc.loadPlayer();
+        }
+    }
+    vc: any;
     renderView() {
         var VC = lazy(() => import('./video'));
-        return <div>
-            <Suspense fallback={<Spin block></Spin>}>
-                <VC block={this.block}></VC>
-            </Suspense>
+        return <div style={this.block.visibleStyle}>
+            <div style={this.block.contentStyle}>
+                <Suspense fallback={<Spin block></Spin>}>
+                    <VC ref={e => this.vc = e} block={this.block}></VC>
+                </Suspense>
+            </div>
+            {this.renderComment()}
         </div>
     }
 }

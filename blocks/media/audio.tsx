@@ -39,7 +39,7 @@ export class Audio extends Block {
     }
     async didMounted() {
         try {
-            if (this.createSource == 'InputBlockSelector') {
+            if (this.createSource == 'InputBlockSelector'&&!this.src?.url) {
                 var r = await useAudioPicker({ roundArea: Rect.fromEle(this.el) });
                 if (r) {
                     await this.onUpdateProps({ src: r }, { range: BlockRenderRange.self, merge: true });

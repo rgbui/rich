@@ -35,7 +35,7 @@ import B from "../../src/assert/img/bilibili.ico";
 import M from "../../src/assert/img/163.music.ico";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { CopyAlert } from "../../component/copy";
-import lodash from "lodash";
+
 
 @url('/embed')
 export class Embed extends Block {
@@ -59,7 +59,7 @@ export class Embed extends Block {
         }
     }
     async didMounted() {
-        if (this.createSource == 'InputBlockSelector') {
+        if (this.createSource == 'InputBlockSelector' && !(this.src && this.src.url)) {
             await this.addEmbed({ roundArea: Rect.fromEle(this.el) })
         }
     }
@@ -167,7 +167,7 @@ export class Embed extends Block {
 }
 
 @view('/embed')
-export class EmbedView extends BlockView<Embed>{
+export class EmbedView extends BlockView<Embed> {
     isResize: boolean = false;
     onMousedown(event: React.MouseEvent, operator: 'left' | "right" | 'height') {
         event.stopPropagation();
@@ -269,7 +269,7 @@ export class EmbedView extends BlockView<Embed>{
             </div>}
             {this.block.src.name != 'none' && <div className="flex w100" style={contentStyle}><div className='sy-block-embed-wrapper' ref={e => this.imageWrapper = e} style={{ height, width: this.block.contentWidthPercent ? this.block.contentWidthPercent + "%" : undefined }}>
                 <div style={{ ...getIframeStyle(), pointerEvents: this.isResize ? "none" : 'auto' }}>
-                    <iframe  draggable={false} referrerPolicy="origin" src={this.block.src.url} ></iframe>
+                    <iframe draggable={false} referrerPolicy="origin" src={this.block.src.url} ></iframe>
                 </div>
                 {this.block.isCanEdit() && <>
                     <div className='sy-block-embed-left-resize' onMouseDown={e => this.onMousedown(e, 'left')}></div>

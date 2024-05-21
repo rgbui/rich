@@ -1,6 +1,6 @@
 
 import React, { CSSProperties } from "react"
-import Player from "xgplayer/es/player";
+import Player from "xgplayer";
 import { VideoSvg, DotsSvg } from "../../../component/svgs";
 import { MouseDragger } from "../../../src/common/dragger";
 import { util } from "../../../util/util";
@@ -12,7 +12,18 @@ import ZH from 'xgplayer/es/lang/zh-cn'
 // 启用中文
 if (!window.shyConfig?.isUS)
     I18N.use(ZH)
+/**
+ * 
+ * https://h5player.bytedance.com/
 
+ * 
+ * 分辨率比例通过 aspect 设置，目前有 3：4 和 9：16 两种，
+ * 根据当前推流与播放画面在手机上的显示区域比例来设置。
+ * 手机竖屏状态一般都是 9：16 比例
+ * ，如果一个人推流满屏，
+ * 则设置 9：16 ；如果双人并排展示，一个推流一个播放，显示区域为 3：4 比例，则设置 3：4。
+ * 
+ */
 export default class VideoWrapper extends React.Component<{ block: Video }> {
     get block() {
         return this.props.block;
@@ -37,6 +48,7 @@ export default class VideoWrapper extends React.Component<{ block: Video }> {
                 width: '100%',
                 autoplayMuted: this.block.autoplayMuted,
                 autoplay: this.block.autoplayMuted,
+                loop: this.block.videoLoop
             });
         }
     }
@@ -98,18 +110,26 @@ export default class VideoWrapper extends React.Component<{ block: Video }> {
             6.7% 25%,
             35.57% 25%)`
         else if (this.block.mask == 'rect') imageMaskStyle.borderRadius = '0%';
-        return <div className='sy-block-video' style={this.block.visibleStyle}>
+        return <div className='sy-block-video' >
             {!this.block.src?.url && this.block.isCanEdit() && <div onMouseDown={e => this.block.addVideo(e)} className='sy-block-video-nofile flex'>
                 <Icon icon={VideoSvg} size={16}></Icon>
                 {!this.block.speed && <span className="gap-w-10">添加视频</span>}
-                {this.block.speed && <span>{this.block.speed}</span>}
+                {this.block.speed && <span className="gap-l-5">{this.block.speed}</span>}
             </div>}
             {this.block.src?.url && <div className='sy-block-video-content flex-center' style={style}>
                 <div
                     className="sy-block-video-wrapper  visible-hover"
                     ref={e => this.contentWrapper = e}
                     style={{ width: this.block.contentWidthPercent ? this.block.contentWidthPercent + "%" : undefined }}>
-                    <div style={imageMaskStyle} ref={e => this.videoPanel = e}></div>
+                    {this.block.noVideoControl == false && <div style={imageMaskStyle} ref={e => this.videoPanel = e}></div>}
+                    {this.block.noVideoControl == true && <video
+                        style={{ width: '100%', height: '100%' }}
+                        src={this.block.src?.url}
+                        loop={this.block.videoLoop}
+                        autoPlay={this.block.autoplayMuted}
+                        muted={this.block.autoplayMuted}
+                        controls={false}
+                    ></video>}
                     {this.block.isCanEdit() && <>
                         <div className='sy-block-video-left-resize' onMouseDown={e => {
                             e.stopPropagation();
@@ -130,7 +150,7 @@ export default class VideoWrapper extends React.Component<{ block: Video }> {
                     </>}
                 </div>
             </div>}
-            {this.block.view.renderComment()}
+
         </div>
     }
     componentDidMount(): void {
