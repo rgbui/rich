@@ -50,9 +50,7 @@ export class PageTheme extends EventsComponent {
         }
     }
     async updateTheme(data: Record<string, any>) {
-        await this.page.onUpdateProps(data, true, () => {
-            this.page.views.forEach(v => v.forceManualUpdate())
-        });
+        await this.page.onUpdateProps(data, true);
         this.forceUpdate();
     }
     renderCover() {

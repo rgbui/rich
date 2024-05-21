@@ -534,7 +534,6 @@ export function getCardStyle(s: PageThemeStyle) {
 
     if (s.coverStyle.display == 'inside-cover') {
         var bs = getBorderWidths(contentStyle);
-        console.log(contentStyle,bs);
         coverStyle.borderRadius = `${r1} ${r2} 0px  0px`;
         coverStyle.width = `calc(100% + ${bs[1] + bs[3]}px)`;
         coverStyle.marginLeft = `-${bs[3]}px`;
