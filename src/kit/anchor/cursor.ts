@@ -12,6 +12,7 @@ import { Point } from "../../common/vector/point";
 import { OperatorDirective } from "../../history/declare";
 import { AppearCursorPos, SnapshootBlockPos } from "../../history/snapshoot";
 import { Selector } from "./selector";
+import { onceAutoScroll } from "../../common/scroll";
 
 export class AnchorCursor {
     selector: Selector;
@@ -309,12 +310,15 @@ export class AnchorCursor {
     /**
     * 这里指定将光标移到appearAnchor的最前面或者最后面
     */
-    async onFocusAppearAnchor(aa: AppearAnchor, options?: { render?: boolean, merge?: boolean, at?: number, last?: boolean | number, left?: number, y?: number }) {
+    async onFocusAppearAnchor(aa: AppearAnchor, options?: { render?: boolean, scroll?: boolean, merge?: boolean, at?: number, last?: boolean | number, left?: number, y?: number }) {
         await this.kit.page.onAction('onFocusAppearAnchor', async () => {
             if (options?.merge) this.kit.page.snapshoot.merge();
             this.focusAppearAnchor(aa, options)
             if (options?.render) {
                 this.renderAnchorCursorSelection()
+            }
+            if (options.scroll) {
+                this.autoScroll([aa.block])
             }
         })
     }
@@ -394,14 +398,34 @@ export class AnchorCursor {
         cs.each(c => { if (!ds.some(s => s == c)) ds.push(c) });
         return ds;
     }
-    async onSelectBlocks(blocks: Block[], options?: { merge?: boolean, render?: boolean }) {
+    async onSelectBlocks(blocks: Block[], options?: { merge?: boolean, scroll?: 'top' | "bottom", render?: boolean }) {
         await this.kit.page.onAction('onSelectBlocks', async () => {
             if (options?.merge) this.kit.page.snapshoot.merge();
             this.selectBlocks(blocks)
             if (options?.render) {
                 this.renderAnchorCursorSelection()
             }
+            if (options?.scroll) {
+                this.autoScroll(this.currentSelectHandleBlocks, options.scroll)
+            }
         })
+    }
+    autoScroll(bs: Block[], scroll: 'top' | 'bottom' = 'top') {
+        var first = bs.first();
+        var last = bs.last();
+        if (first !== last) {
+            if (first.el && last.el && first.getVisibleBound().top > last.getVisibleBound().top) {
+                [first, last] = [last, first]
+            }
+        }
+        if (scroll == 'top') {
+            var br = first?.closest(x => !x.isLine)?.frameBlock;
+            if (!br) onceAutoScroll({ el: first.el, feelDis: 60, dis: 120 })
+        }
+        else if (scroll == 'bottom') {
+            var br = last?.closest(x => !x.isLine)?.frameBlock;
+            if (!br) onceAutoScroll({ el: last.el, feelDis: 60, dis: 120 })
+        }
     }
     async onSelectAll() {
         var cs = this.kit.page.views[0].childs.map(c => c);

@@ -112,6 +112,7 @@ export class Handle extends Events {
         }
     }
     async onClickBlock(event: MouseEvent) {
+        this.kit.anchorCursor.onSelectBlocks(this.dragBlocks, { render: true });
         await this.kit.page.onOpenMenu(this.dragBlocks, event);
     }
     isDown: Boolean;

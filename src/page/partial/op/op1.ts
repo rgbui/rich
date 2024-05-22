@@ -28,16 +28,16 @@ import { ElementType } from "../../../../net/element.type";
 import { RobotInfo } from "../../../../types/user";
 import { Head } from "../../../../blocks/general/head";
 import { BlockRenderRange } from "../../../block/enum";
+import { onceAutoScroll } from "../../../common/scroll";
 
 
 export class Page$Operator {
-
 
     async onToggleOutline(this: Page, d: { nav: boolean }) {
         await this.onAction('onToggleOutline', async () => {
             await this.updateProps({ nav: d.nav });
             if (this.requireSelectLayout == true) {
-                this.updateProps({ requireSelectLayout: false, 'pageLayout.type': PageLayoutType.doc });
+                await this.updateProps({ requireSelectLayout: false, 'pageLayout.type': PageLayoutType.doc });
             }
             if (d.nav == false) {
                 if (this.views.length > 1)
@@ -70,7 +70,7 @@ export class Page$Operator {
         await this.onAction('onToggleRefPages', async () => {
             await this.updateProps({ autoRefPages: d.refPages });
             if (this.requireSelectLayout == true) {
-                this.updateProps({
+                await this.updateProps({
                     requireSelectLayout: false,
                     'pageLayout.type': PageLayoutType.doc
                 });
@@ -239,6 +239,12 @@ export class Page$Operator {
             var pa = await buildPage(r.blocks, { isTitle: true }, this.ws);
             var d = await pa.get();
             await this.onAction('onOpenImport', async () => {
+                if (this.requireSelectLayout == true) {
+                    await this.updateProps({
+                        requireSelectLayout: false,
+                        'pageLayout.type': PageLayoutType.doc
+                    });
+                }
                 var vs = lodash.cloneDeep(d.views);
                 var vo = vs[0];
                 delete d.views;
@@ -253,7 +259,7 @@ export class Page$Operator {
                 if (r.text && !this.getPageDataInfo()?.text) {
                     await this.onUpdatePageTitle(r.text);
                 }
-                await this.onUpdateProps(d, true);
+                await this.updateProps(d);
             })
             this.emit(PageDirective.save);
         }
@@ -397,7 +403,6 @@ export class Page$Operator {
         this.showMembers = this.showMembers ? false : true;
         this.forceUpdate()
     }
-
 
     async onOpenTheme(this: Page) {
         await usePageTheme(this);
@@ -647,5 +652,132 @@ export class Page$Operator {
         }, { immediate: true, disabledJoinHistory: true })
     }
 
+    async onTab(this: Page, blocks: Block[], isShift: boolean = false) {
+        var min = blocks.findMin(c => c.at);
+        var max = blocks.findMax(c => c.at);
+        var prev = min.prev;
+        var isWillTab = false;
 
+        var hs = (b: Block) => {
+            if (!b) return false;
+            if (b.hasSubChilds) return true;
+            else {
+                if (b.url == BlockUrlConstant.TextSpan) return true;
+            }
+            return false;
+        }
+        if (isShift && hs(min.parent)) {
+            isWillTab = true;
+        }
+        else if (prev && hs(prev)) {
+            isWillTab = true;
+        }
+        if (isWillTab) {
+
+            await this.onAction('onTab', async () => {
+                if (isShift) {
+                    if (hs(max)) {
+                        var pa = min.parent;
+                        var rest = pa.subChilds.findAll((item, i) => i > max.at);
+                        await pa.parent.appendArray(blocks, pa.at + 1, pa.parentKey);
+                        await max.appendArray(rest, 0, 'subChilds');
+                    }
+                    else {
+                        var pa = min.parent;
+                        await pa.parent.appendArray(blocks, pa.at + 1, pa.parentKey);
+                    }
+                }
+                else {
+                    await prev.appendArray(blocks, 0, 'subChilds');
+                }
+                this.addActionAfterEvent(async () => {
+                    this.kit.anchorCursor.onSelectBlocks(blocks, { render: true, merge: true });
+                })
+            })
+        }
+
+    }
+
+    async onInterchange(this: Page, blocks: Block[], arrow: 'down' | 'up'
+    ) {
+        await this.onAction('onInterchange', async () => {
+            var first = blocks.first();
+            var last = blocks.last();
+            if (first !== last) {
+                if (first.el && last.el && first.getVisibleBound().top > last.getVisibleBound().top) {
+                    [first, last] = [last, first]
+                }
+            }
+            // console.log(arrow)
+            if (arrow == 'down') {
+                var block = last;
+                var next = block.nextFind(x => !x.isLine && !x.isLayout && !x.isCell);
+                // console.log(next);
+                if (next) {
+                    var br = next?.closest(x => !x.isLine)?.frameBlock;
+                    if (!br) onceAutoScroll({ el: next.el, feelDis: 60, dis: 120 })
+                    await next.parent.appendArray(blocks, next.at + 1, next.parentKey);
+
+                }
+            }
+            else if (arrow == 'up') {
+                var block = first;
+                var pre = block.prevFind(x => !x.isLine && !x.isLayout && !x.isCell);
+                if (pre) {
+                    var br = pre?.closest(x => !x.isLine)?.frameBlock;
+                    if (!br) onceAutoScroll({ el: pre.el, feelDis: 60, dis: 120 })
+                    await pre.parent.appendArray(blocks, pre.at, pre.parentKey);
+                }
+            }
+            this.addActionAfterEvent(async () => {
+                this.kit.anchorCursor.onSelectBlocks(blocks, {
+                    render: true,
+                    merge: true,
+                    scroll: arrow == 'down' ? "bottom" : 'top'
+                });
+            })
+        });
+    }
+    async onBlocksToggle(this: Page, blocks: Block[]) {
+        var bs = blocks.findAll(g => g.url == BlockUrlConstant.List && (g as any).listType == 2 || g.url == BlockUrlConstant.Head && (g as any).toggle == true);
+        if (bs.length > 0) {
+            await this.onAction('BlocksToggle', async () => {
+                for (let i = 0; i < bs.length; i++) {
+                    await bs[i].updateProps({ expand: !(bs[i] as any).expand }, BlockRenderRange.self);
+                }
+                this.addActionAfterEvent(async () => {
+                    this.kit.anchorCursor.onSelectBlocks(bs)
+                })
+            })
+        }
+    }
+    onBlocksSolidInput(this: Page, blocks: Block[]) {
+        var b = blocks.find(g =>
+            g.url == BlockUrlConstant.List && (g as any).listType == 2
+            ||
+            g.url == BlockUrlConstant.Head && (g as any).toggle == true
+            || g.url == BlockUrlConstant.Todo
+            || g.url == BlockUrlConstant.Image
+            || g.url == BlockUrlConstant.Video
+            || g.url == BlockUrlConstant.Link
+        );
+        if (b) {
+            if (b.url == BlockUrlConstant.List || b.url == BlockUrlConstant.Head) {
+                (b as any).onExpand();
+            }
+            else if (b.url == BlockUrlConstant.Todo) {
+                (b as any).onChange();
+            }
+            else if (b.url == BlockUrlConstant.Link) {
+                (b as any).openPage();
+            }
+            else if (b.url == BlockUrlConstant.Image) {
+                (b as any).openPreview()
+            }
+            else if (b.url == BlockUrlConstant.Video) {
+
+            }
+            return true;
+        }
+    }
 }

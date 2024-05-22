@@ -209,13 +209,19 @@ export class Page$Operator2 {
                 var blockDatas = await blocks.asyncMap(async b => b.cloneData());
                 var bs = await to.dropBlockDatas(blockDatas, direction);
                 this.addActionAfterEvent(async () => {
-                    this.kit.anchorCursor.onSelectBlocks(bs, { render: true, merge: true });
+                    var scroll: 'top' | 'bottom';
+                    if (direction == DropDirection.top) scroll = 'top'
+                    else if (direction == DropDirection.bottom) scroll = 'bottom'
+                    this.kit.anchorCursor.onSelectBlocks(bs, { render: true, merge: true, scroll });
                 })
             }
             else {
                 await to.drop(blocks, direction);
                 this.addActionAfterEvent(async () => {
-                    this.kit.anchorCursor.onSelectBlocks(blocks, { render: true, merge: true });
+                    var scroll: 'top' | 'bottom';
+                    if (direction == DropDirection.top) scroll = 'top'
+                    else if (direction == DropDirection.bottom) scroll = 'bottom'
+                    this.kit.anchorCursor.onSelectBlocks(blocks, { render: true, merge: true, scroll  });
                 })
             }
         })
@@ -245,12 +251,16 @@ export class Page$Operator2 {
                 new: newValue
             }, this);
         }
+        this.notifyActionPageUpdate();
+        this.views.forEach(v => this.notifyActionBlockUpdate(v));
+        var title = this.find(g => g.url == BlockUrlConstant.Title);
+        if (title) this.notifyActionBlockUpdate(title);
     }
     async onUpdateProps(this: Page, props: Record<string, any>, isUpdate?: boolean, callback?: () => void) {
         await this.onAction(ActionDirective.onPageUpdateProps, async () => {
             await this.updateProps(props);
             if (typeof callback == 'function') callback();
-            if (isUpdate) this.notifyActionPageUpdate();
+            // if (isUpdate) this.notifyActionPageUpdate();
         });
     }
     async onUpdatePageData(this: Page, data: Record<string, any>, locationId?: PageLocation) {
@@ -312,7 +322,7 @@ export class Page$Operator2 {
             var pa = blocks[0].parent;
             var newBlocks = await pa.appendArrayBlockData(bs, Math.max(at, to) + 1, blocks.first().parentKey);
             this.addActionCompletedEvent(async () => {
-                this.kit.anchorCursor.onSelectBlocks(newBlocks, { render: true, merge: true });
+                this.kit.anchorCursor.onSelectBlocks(newBlocks, { render: true, merge: true, scroll: 'bottom' });
             })
         });
     }

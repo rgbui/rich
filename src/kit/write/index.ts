@@ -211,7 +211,15 @@ export class PageWrite {
                     return;
                 }
                 else if (aa.block.isEnterCreateNewLine) {
-                    if (!this.kit.page.keyboardPlate.isShift()) {
+                    if (this.kit.page.keyboardPlate.isMetaOrCtrl()) {
+                        var bs: Block[] = this.kit.anchorCursor.getAppearBlocks(aa);
+                        var rc = this.kit.page.onBlocksSolidInput(bs);
+                        if (rc) {
+                            event.preventDefault();
+                            return;
+                        }
+                    }
+                    else if (!this.kit.page.keyboardPlate.isShift()) {
                         await onEnterInput(this, aa, event);
                     }
                     else if (this.kit.page.keyboardPlate.isShift() && aa.block.isDisabledInputLine) {
@@ -280,9 +288,9 @@ export class PageWrite {
             case KeyboardCode.J.toLowerCase():
                 if (this.kit.page.keyboardPlate.isMetaOrCtrl()) {
                     if (hasSelectionRange) {
-                        if (this.kit.anchorCursor.currentSelectedBlocks.length > 0) {
+                        if (this.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
                             event.preventDefault();
-                            await this.kit.writer.onAskAi(this.kit.anchorCursor.currentSelectedBlocks)
+                            await this.kit.writer.onAskAi(this.kit.anchorCursor.currentSelectHandleBlocks)
                         }
                         else {
                             var rc = onTextToolExcute(TextCommand.askAI);
@@ -313,8 +321,8 @@ export class PageWrite {
                     else {
                         var bs: Block[] = [];
                         var block = aa.block.closest(x => !x.isLine);
-                        if (this.kit.anchorCursor.currentSelectedBlocks.length > 0) {
-                            bs = this.kit.anchorCursor.currentSelectedBlocks;
+                        if (this.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
+                            bs = this.kit.anchorCursor.currentSelectHandleBlocks;
                         }
                         else bs.push(block)
                         var rcc = await GetTextCacheFontColor();
@@ -388,7 +396,7 @@ export class PageWrite {
             case KeyboardCode.K7:
             case KeyboardCode.K8:
             case KeyboardCode.K9:
-                if (this.kit.page.keyboardPlate.isMetaOrCtrlAndAlt()) {
+                if (this.kit.page.keyboardPlate.isMetaOrCtrlAndOptionOrShift()) {
                     var bs: Block[] = this.kit.anchorCursor.getAppearBlocks(aa);
                     var url;
                     if (ek == KeyboardCode.K0) url = BlockUrlConstant.TextSpan;
@@ -422,14 +430,17 @@ export class PageWrite {
                 }
                 break;
             case KeyboardCode.Esc.toLowerCase():
-                if (!hasSelectionRange) {
-                    var block = aa.block.closest(x => !x.isLine);
-                    if (block) {
-                        event.preventDefault();
-                        this.kit.anchorCursor.onSelectBlocks([block], { render: true });
-                    }
+                var bs: Block[] = this.kit.anchorCursor.getAppearBlocks(aa);
+                if (bs.length > 0) {
+                    event.preventDefault();
+                    this.kit.anchorCursor.onSelectBlocks(bs, { render: true });
                 }
                 break;
+            case KeyboardCode.T.toLowerCase():
+                if (this.kit.page.keyboardPlate.isMetaOrCtrlAndAlt()) {
+                    var bs: Block[] = this.kit.anchorCursor.getAppearBlocks(aa);
+                    await this.kit.page.onBlocksToggle(bs);
+                }
         }
         var r = aa.block.closest(x => !x.isLine);
         if (r?.isFreeBlock) {
@@ -474,8 +485,28 @@ export class PageWrite {
             return;
         }
         if (aa.isText && inputEvent.data && aa.block.isLine && !(aa.block.isTextContent && aa.block.asTextContent.isBlankPlain) && !aa.block.next) {
-            this.onRowLastLineBlockCreateTextBlock(aa, event);
-            return;
+
+
+            var isTextEnd = true;
+            /**
+             * 这里判断输入的光标是否处于输入点的尾部，
+             * 因为输入点要么是行内块（如表情、链接）
+             * 要么是行内文本块，但需要提前确定光标是否为于尾部.
+             */
+            if (aa.block.asTextContent.isLink) isTextEnd = true;
+            else {
+                var sel = window.getSelection();
+                var off = sel.focusOffset;
+                var node = sel.focusNode;
+                if (node instanceof Text && off == (node as Text).textContent.length) {
+                    isTextEnd = true;
+                }
+                else isTextEnd = false;
+            }
+            if (isTextEnd) {
+                this.onRowLastLineBlockCreateTextBlock(aa, event);
+                return;
+            }
         }
         /**
          * 这里需要判断是否有必要弹出弹窗
@@ -513,8 +544,8 @@ export class PageWrite {
         }
     }
     async onOpenTextTool() {
-        if(window.shyConfig?.isDev)
-        console.log('open text tool....')
+        if (window.shyConfig?.isDev)
+            console.log('open text tool....')
         var sel = window.getSelection();
         var range = util.getSafeSelRange(sel);
         if (range) {
@@ -616,6 +647,30 @@ export class PageWrite {
                         var rb = aa.block.closest(x => !x.isLine);
                         newBlock = await rb.createBlockCol(parseInt(blockData.url.slice(1)));
                     }
+                    else if (['/page'].includes(blockData.url)) {
+                        //创建子页面
+                        var currentPage = await channel.query('/current/page');
+                        var r = await channel.air('/page/create/sub', {
+                            pageId: currentPage.id,
+                            text: '',
+                        });
+                        if (r.id) Object.assign(bd, {
+                            link: { type: 'page', id: util.guid(), pageId: r.id },
+                        })
+                        newBlock = await aa.block.visibleRightCreateBlock(offset, '/link', { ...bd, createSource: 'InputBlockSelector' });
+                    }
+                    else if (['/blockcomment', '/duplicate', '/delete'].includes(blockData.url)) {
+                        var block = aa.block.closest(x => !x.isLine);
+                        if (blockData.url == '/blockcomment') {
+                            await block.onInputComment()
+                        }
+                        else if (blockData.url == '/duplicate') {
+                            await block.page.onCopyBlocks([block]);
+                        }
+                        else if (blockData.url == '/delete') {
+                            await block.onDelete();
+                        }
+                    }
                     else {
                         /**
                                                * 判断是否为空行块，如果是空行块，则将当前的块转用
@@ -628,7 +683,12 @@ export class PageWrite {
                 }
                 if (newBlock)
                     newBlock.mounted(async () => {
-                        if (newBlock.url == BlockUrlConstant.Code) {
+                        if (blockData.url == '/page') {
+                            channel.act('/page/open', {
+                                item: (newBlock as any).link?.pageId
+                            })
+                        }
+                        else if (newBlock.url == BlockUrlConstant.Code) {
                             (newBlock as any).onFocusCursor();
                         }
                         else {

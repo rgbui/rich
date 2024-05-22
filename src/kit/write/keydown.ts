@@ -50,13 +50,13 @@ export function predictKeydown(write: PageWrite, aa: AppearAnchor, event: React.
 
 export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
     var sel = window.getSelection();
-    var br = aa.block.closest(x => !x.isLine)?.frameBlock;
+    // var br = aa.block.closest(x => !x.isLine)?.frameBlock;
     if (event.key == KeyboardCode.ArrowLeft) {
-        if (!br)
-            onceAutoScroll({ el: aa.el, feelDis: 60, dis: 120 })
+        // if (!br)
+        //     onceAutoScroll({ el: aa.el, feelDis: 60, dis: 120 })
         if (aa.isSolid && aa.isSolidPos(sel.focusNode, 1)) {
             event.preventDefault();
-            write.kit.anchorCursor.onFocusAppearAnchor(aa, { render: true, at: 0 })
+            write.kit.anchorCursor.onFocusAppearAnchor(aa, { render: true, scroll: true, at: 0 })
             return;
         }
         if (aa.isStart(sel.focusNode, sel.focusOffset)) {
@@ -64,7 +64,7 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
             var prevAA = aa.visibleLeft();
             if (prevAA) {
                 event.preventDefault();
-                write.kit.anchorCursor.onFocusAppearAnchor(prevAA, { render: true, last: prevAA.isBeforeNear(aa) ? -1 : true })
+                write.kit.anchorCursor.onFocusAppearAnchor(prevAA, { render: true, scroll: true, last: prevAA.isBeforeNear(aa) ? -1 : true })
             }
             else {
                 //这说明光标处于当前文档的头部
@@ -73,18 +73,18 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
         }
     }
     else if (event.key == KeyboardCode.ArrowRight) {
-        if (!br)
-            onceAutoScroll({ el: aa.el, feelDis: 60, dis: 120 })
+        // if (!br)
+        //     onceAutoScroll({ el: aa.el, feelDis: 60, dis: 120 })
         if (aa.isSolid && aa.isSolidPos(sel.focusNode, 0)) {
             event.preventDefault();
-            write.kit.anchorCursor.onFocusAppearAnchor(aa, { render: true, last: true })
+            write.kit.anchorCursor.onFocusAppearAnchor(aa, { render: true, scroll: true, last: true })
             return;
         }
         if (aa.isEnd(sel.focusNode, sel.focusOffset)) {
             var downAA = aa.visibleRight();
             if (downAA) {
                 event.preventDefault();
-                write.kit.anchorCursor.onFocusAppearAnchor(downAA, { render: true, at: downAA.isAfterNear(aa) ? 1 : 0 })
+                write.kit.anchorCursor.onFocusAppearAnchor(downAA, { render: true, scroll: true, at: downAA.isAfterNear(aa) ? 1 : 0 })
             } else {
                 //说明光标处于文档的尾部
             }
@@ -95,8 +95,8 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
 
         var range = util.getSafeSelRange(sel);
         var rect = aa.textContent == '' || aa.isSolid ? Rect.fromEle(aa.el) : Rect.fromEle(range);
-        if (!br)
-            onceAutoScroll({ el: aa.el, point: rect.leftMiddle, feelDis: 60, dis: 120 })
+        // if (!br)
+        //     onceAutoScroll({ el: aa.el, point: rect.leftMiddle, feelDis: 60, dis: 120 })
         range = util.getSafeSelRange(sel);
         rect = aa.textContent == '' || aa.isSolid ? Rect.fromEle(aa.el) : Rect.fromEle(range);
         var rects = TextEle.getBounds(aa.el);
@@ -108,15 +108,15 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
             var downAA = aa.visibleDown(rect.leftMiddle.x);
             if (downAA) {
                 event.preventDefault();
-                if (!br) onceAutoScroll({ el: downAA.el, feelDis: 60, dis: 120 })
-                write.kit.anchorCursor.onFocusAppearAnchor(downAA, { render: true, left: rect.left, y: rects.last().bottom + lineHeight / 2 })
+                // if (!br) onceAutoScroll({ el: downAA.el, feelDis: 60, dis: 120 })
+                write.kit.anchorCursor.onFocusAppearAnchor(downAA, { render: true, scroll: true, left: rect.left, y: rects.last().bottom + lineHeight / 2 })
             }
         }
     }
     else if (event.key == KeyboardCode.ArrowUp) {
         var range = util.getSafeSelRange(sel);
         var rect = aa.textContent == '' || aa.isSolid ? Rect.fromEle(aa.el) : Rect.fromEle(range);
-        if (!br) onceAutoScroll({ el: aa.el, point: rect.leftMiddle, feelDis: 60, dis: 120 });
+        // if (!br) onceAutoScroll({ el: aa.el, point: rect.leftMiddle, feelDis: 60, dis: 120 });
         range = util.getSafeSelRange(sel);
         rect = aa.textContent == '' || aa.isSolid ? Rect.fromEle(aa.el) : Rect.fromEle(range);
         var rects = TextEle.getBounds(aa.el);
@@ -128,34 +128,87 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
             var upAA = aa.visibleUp(rect.leftMiddle.x);
             if (upAA) {
                 event.preventDefault();
-                if (!br) onceAutoScroll({ el: upAA.el, feelDis: 60, dis: 120 })
-                write.kit.anchorCursor.onFocusAppearAnchor(upAA, { render: true, left: rect.left, last: true, y: rects.first().top + lineHeight / 2 })
+                // if (!br) onceAutoScroll({ el: upAA.el, feelDis: 60, dis: 120 })
+                write.kit.anchorCursor.onFocusAppearAnchor(upAA, { render: true, scroll: true, left: rect.left, last: true, y: rects.first().top + lineHeight / 2 })
             }
         }
     }
 }
 
-export function MoveSelectBlocks(write: PageWrite, blocks: Block[], event: KeyboardEvent) {
-    if (event.key == KeyboardCode.ArrowUp) {
-        var block = blocks.last();
-        var pre = block.prevFind(x => !x.isLine && !x.isLayout && !x.isCell);
-        if (pre) {
-            event.preventDefault();
-            var br = pre?.closest(x => !x.isLine)?.frameBlock;
-            if (!br) onceAutoScroll({ el: pre.el, feelDis: 60, dis: 120 })
-            write.kit.anchorCursor.onSelectBlocks([pre], { render: true })
+export async function MoveSelectBlocks(write: PageWrite, blocks: Block[], event: KeyboardEvent, options: {
+    shift?: boolean,
+    ctrl?: boolean
+}) {
+
+    if (options.ctrl) {
+        event.preventDefault();
+        //上下移动，交换位置
+        await write.kit.page.onInterchange(blocks, event.key == KeyboardCode.ArrowUp ? 'up' : 'down')
+    }
+    else if (options.shift) {
+        var first = blocks.first();
+        var last = blocks.last();
+        if (first !== last) {
+            if (first.el && last.el && first.getVisibleBound().top > last.getVisibleBound().top) {
+                [first, last] = [last, first]
+            }
+        }
+        //上下移动，扩展选择
+        if (event.key == KeyboardCode.ArrowUp) {
+            var block = first;
+            var pre = block.prevFind(x => !x.isLine && !x.isLayout && !x.isCell);
+            if (pre) {
+                event.preventDefault();
+                var br = pre?.closest(x => !x.isLine)?.frameBlock;
+                if (!br) onceAutoScroll({ el: pre.el, feelDis: 60, dis: 120 })
+                var ns = [pre, ...write.kit.anchorCursor.currentSelectHandleBlocks];
+                ns = write.kit.page.getAtomBlocks(ns);
+                await write.kit.anchorCursor.onSelectBlocks(ns, { render: true, scroll: "top" })
+            }
+        }
+        else {
+            var block = last;
+            var next = block.nextFind(x => !x.isLine && !x.isLayout && !x.isCell);
+            if (next) {
+                event.preventDefault();
+                var br = next?.closest(x => !x.isLine)?.frameBlock;
+                if (!br) onceAutoScroll({ el: next.el, feelDis: 60, dis: 120 })
+                var ns = [...write.kit.anchorCursor.currentSelectHandleBlocks, next];
+                ns = write.kit.page.getAtomBlocks(ns);
+                await write.kit.anchorCursor.onSelectBlocks(ns, { render: true, scroll: 'bottom' })
+            }
         }
     }
-    else if (event.key == KeyboardCode.ArrowDown) {
-        var block = blocks.first();
-        var next = block.nextFind(x => !x.isLine && !x.isLayout && !x.isCell);
-        if (next) {
-            event.preventDefault();
-            var br = next?.closest(x => !x.isLine)?.frameBlock;
-            if (!br) onceAutoScroll({ el: next.el, feelDis: 60, dis: 120 })
-            write.kit.anchorCursor.onSelectBlocks([next], { render: true })
+    else {
+        var first = blocks.first();
+        var last = blocks.last();
+        if (first !== last) {
+            if (first.el && last.el && first.getVisibleBound().top > last.getVisibleBound().top) {
+                [first, last] = [last, first]
+            }
+        }
+        event.preventDefault();
+        if (event.key == KeyboardCode.ArrowUp) {
+            var block = first;
+            var pre = block.prevFind(x => !x.isLine && !x.isLayout && !x.isCell);
+            if (pre) {
+                var br = pre?.closest(x => !x.isLine)?.frameBlock;
+                if (!br) onceAutoScroll({ el: pre.el, feelDis: 60, dis: 120 })
+                await write.kit.anchorCursor.onSelectBlocks([pre], { render: true, scroll: "top" })
+            }
+        }
+        else if (event.key == KeyboardCode.ArrowDown) {
+            var block = last;
+            var next = block.hasSubChilds && block.subChilds.first() ? block.subChilds.first() : block.nextFind(x => !x.isLine && !x.isLayout && !x.isCell);
+            if (next) {
+
+                var br = next?.closest(x => !x.isLine)?.frameBlock;
+                if (!br) onceAutoScroll({ el: next.el, feelDis: 60, dis: 120 })
+                await write.kit.anchorCursor.onSelectBlocks([next], { render: true, scroll: "bottom" })
+            }
         }
     }
+
 }
 
 /**
@@ -223,7 +276,7 @@ export async function onEnterInsertNewLine(write: PageWrite, aa: AppearAnchor, e
     var page = write.kit.page;
     await InputForceStore(aa, async () => {
         page.addActionAfterEvent(async () => {
-            write.kit.anchorCursor.onFocusAppearAnchor(aa, { merge: true, render: true, at: offset + 1 })
+            write.kit.anchorCursor.onFocusAppearAnchor(aa, { merge: true, scroll: true, render: true, at: offset + 1 })
             if (typeof cb == 'function') cb()
         })
     })

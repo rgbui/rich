@@ -74,7 +74,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             block.page.addActionCompletedEvent(async () => {
                 var aa = block.appearAnchors.find(g => g.prop == operator.data.prop);
                 if (aa) {
-                    page.kit.anchorCursor.onFocusAppearAnchor(aa, { at: operator.data.new });
+                    page.kit.anchorCursor.onFocusAppearAnchor(aa, { scroll: true, at: operator.data.new });
                 }
             })
         }
@@ -85,7 +85,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             block.page.addActionCompletedEvent(async () => {
                 var aa = block.appearAnchors.find(g => g.prop == operator.data.prop);
                 if (aa) {
-                    page.kit.anchorCursor.onFocusAppearAnchor(aa, { at: operator.data.old });
+                    page.kit.anchorCursor.onFocusAppearAnchor(aa, { scroll: true, at: operator.data.old });
                 }
             })
         }
@@ -100,6 +100,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             var bs = page.findAll(g => oc.new_value.blocks.some(s => s.blockId == g.id));
             page.kit.anchorCursor.selectBlocks(bs);
             page.addActionCompletedEvent(async () => {
+                page.kit.anchorCursor.autoScroll(bs);
                 page.kit.anchorCursor.renderAnchorCursorSelection()
             })
         }
@@ -137,6 +138,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             var bs = page.findAll(g => oc.old_value.blocks.some(s => s.blockId == g.id));
             page.kit.anchorCursor.selectBlocks(bs);
             page.addActionCompletedEvent(async () => {
+                page.kit.anchorCursor.autoScroll(bs);
                 page.kit.anchorCursor.renderAnchorCursorSelection()
             })
         }
@@ -223,10 +225,10 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     });
     snapshoot.registerOperator(OperatorDirective.pageUpdateProp, async (operator, source) => {
         await page.updateProps(operator.data.new);
-        page.notifyActionPageUpdate();
+
     }, async (operator) => {
         await page.updateProps(operator.data.old);
-        page.notifyActionPageUpdate();
+
     });
     /***
      * 新的指令
@@ -289,8 +291,8 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
                 else {
                     if (Object.keys(nd).length == 1 && typeof (nd as any).content == 'string') {
                         var ba = block.appearAnchors.findLast(g => g.prop == 'content');
-                        if (ba)
-                            page.kit.anchorCursor.onFocusAppearAnchor(ba, { last: true, render: true, merge: true });
+                        if (ba && source == 'redo')
+                            page.kit.anchorCursor.onFocusAppearAnchor(ba, { last: true, scroll: true, render: true, merge: true });
                     }
                 }
             })
@@ -310,7 +312,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
                     if (Object.keys(od).length == 1 && typeof (od as any).content == 'string') {
                         var ba = block.appearAnchors.findLast(g => g.prop == 'content');
                         if (ba)
-                            page.kit.anchorCursor.onFocusAppearAnchor(ba, { last: true, render: true, merge: true });
+                            page.kit.anchorCursor.onFocusAppearAnchor(ba, { last: true, scroll: true, render: true, merge: true });
                     }
                 }
             })
@@ -357,6 +359,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             var bs = page.findAll(g => oc.new_value.blocks.some(s => s.blockId == g.id));
             page.kit.anchorCursor.selectBlocks(bs);
             page.addActionCompletedEvent(async () => {
+                page.kit.anchorCursor.autoScroll(bs);
                 page.kit.anchorCursor.renderAnchorCursorSelection()
             })
         }
@@ -393,6 +396,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             var bs = page.findAll(g => oc.old_value.blocks.some(s => s.blockId == g.id));
             page.kit.anchorCursor.selectBlocks(bs);
             page.addActionCompletedEvent(async () => {
+                page.kit.anchorCursor.autoScroll(bs);
                 page.kit.anchorCursor.renderAnchorCursorSelection()
             })
         }
@@ -431,7 +435,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         }
     }, async (operator) => {
         var oc: {
-            old_value:SnapshootBlockPos[],
+            old_value: SnapshootBlockPos[],
             new_value: SnapshootBlockPos[]
         } = operator.data as any;
         if (oc.old_value?.length > 0) {
