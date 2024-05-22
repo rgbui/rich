@@ -482,8 +482,6 @@ export class AppearAnchor {
     updateViewValue() {
         if (this.isText && this.el) {
             this.setContent(this.propValue);
-            console.log('ssxxxupdateViewValue');
-            // this.el.innerText = this.propValue;
         }
     }
     get() {

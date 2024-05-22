@@ -10,14 +10,22 @@ import { util } from "../../util/util";
 import { Button } from "../../component/view/button";
 import { CheckSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
+import { Rect } from "../../src/common/vector/point";
 
 export class WsPicker extends EventsComponent {
     async onOpen() {
         await this.Search();
-        this.forceUpdate();
+        this.forceUpdate(() => {
+            var r = Rect.fromEle(this.el);
+            // console.log('rg', r.width, r.height);
+            r.width = 350;
+            r.height = 300;
+            // console.log('r', r);
+            this.emit('update', r)
+        });
     }
     render() {
-        return <div className="bg-white w-350">
+        return <div ref={e => this.el = e} className="bg-white w-350">
             <div className="gap-t-5 gap-w-5 padding-w-5"><span className="f-12 remark"><S>选择移动到的空间</S></span></div>
             <div className="max-h-250 overflow-y">
                 {this.wss.map(ws => {
@@ -45,11 +53,11 @@ export class WsPicker extends EventsComponent {
             </div>
         </div>
     }
+    el: HTMLElement;
     wss: LinkWs[] = [];
     async Search() {
         var r = await channel.query('/query/my/wss');
         this.wss = r.wss || [];
-        this.forceUpdate();
     }
     currentWs: LinkWs;
     onSelect(ws: LinkWs) {
@@ -62,12 +70,14 @@ export class WsPicker extends EventsComponent {
 }
 
 
-export async function useWsPicker(pos: PopoverPosition) {
+export async function useWsPicker(pos: PopoverPosition)
+{
     var popover = await PopoverSingleton(WsPicker, { mask: true });
     var picker = await popover.open(pos);
+    picker.only('update', (r: Rect) => popover.updateLayout(r))
     await picker.onOpen();
     return new Promise((resolve: (link: LinkWs) => void, reject) => {
-        picker.on('change', (link: LinkWs) => {
+        picker.only('change', (link: LinkWs) => {
             resolve(link);
             popover.close();
         })

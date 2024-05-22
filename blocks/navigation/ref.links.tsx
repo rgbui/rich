@@ -173,7 +173,6 @@ export class RefLinksView extends BlockView<RefLinks> {
                             <Icon size={16} icon={DotsSvg}></Icon>
                         </span>
                     </div>
-
                 </div>
                 <div style={{
                     display: this.block.expand ? 'block' : 'none'

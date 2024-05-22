@@ -115,12 +115,12 @@ export class InputChatBox extends React.Component<{
                         ref={e => this.cp = e}
                     ></ChatInput>
                 </div>
-                <ToolTip overlay={lst('添加表情')}><span className="flex-fixed size-24 gap-l-5 round flex-center cursor item-hover"><Icon size={16} onMousedown={e => this.openEmoji(e)} icon={EmojiSvg}></Icon></span></ToolTip>
-                {this.props.disabledUploadFiles !== true && <ToolTip overlay={lst('添加附件')}><span className="flex-fixed size-24  gap-l-5 round flex-center cursor item-hover"><Icon size={16} onMousedown={e => this.onAddFile()} icon={UploadSvg}></Icon></span></ToolTip>}
+                <ToolTip overlay={lst('添加表情')}><span className="flex-fixed size-24 gap-l-5 round flex-center cursor item-hover  remark"><Icon size={16} onMousedown={e => this.openEmoji(e)} icon={EmojiSvg}></Icon></span></ToolTip>
+                {this.props.disabledUploadFiles !== true && <ToolTip overlay={lst('添加附件')}><span className="flex-fixed size-24  gap-l-5 round flex-center cursor item-hover  remark"><Icon size={16} onMousedown={e => this.onAddFile()} icon={UploadSvg}></Icon></span></ToolTip>}
                 <ToolTip overlay={<div>
                     <div className="flex"><span style={{ color: '#bbb' }}>Enter</span><span className="gap-l-5"><S>发送</S></span></div>
                     <div className="flex"><span style={{ color: '#bbb' }}>Shift+Enter</span><span className="gap-l-5"><S>换行</S></span></div>
-                </div>}><span className="flex-fixed size-24 gap-l-5 round flex-center cursor item-hover"><Icon size={16} onMousedown={e => this.onEnter()} icon={PublishSvg}></Icon></span></ToolTip>
+                </div>}><span className="flex-fixed size-24 gap-l-5 round flex-center cursor item-hover remark"><Icon size={16} onMousedown={e => this.onEnter()} icon={PublishSvg}></Icon></span></ToolTip>
             </div>
         }
         else if (this.props.display == 'redit') {

@@ -217,7 +217,7 @@ class PagePermission extends EventsComponent {
                     <Divider></Divider>
                     <div className={"item-hover h-28 round flex gap-w-5 padding-w-5" + (pr.share == 'net' ? " gap-b-5 " : "")}>
                         <span className="flex-auto flex">
-                            <Icon size={16} icon={GlobalLinkSvg}></Icon>
+                            <Icon className={'text-1'} size={16} icon={GlobalLinkSvg}></Icon>
                             <span className="gap-l-5"><S>公开至互联网</S></span>
                         </span>
                         <span className="flex-fixed">
@@ -249,7 +249,7 @@ class PagePermission extends EventsComponent {
             <Divider></Divider>
             <div className="item-hover h-28 cursor round gap-w-5 padding-w-5 flex "
                 onClick={e => this.copyLink()}>
-                <Icon size={16} icon={{ name: 'bytedance-icon', code: 'copy-link' }}></Icon><span className="gap-l-5"><S>复制页面访问链接</S></span>
+                <Icon className={'text-1'} size={16} icon={{ name: 'bytedance-icon', code: 'copy-link' }}></Icon><span className="gap-l-5"><S>复制页面访问链接</S></span>
             </div>
             <Divider></Divider>
             <div className="h-28 gap-w-5 padding-w-5 flex gap-b-5">

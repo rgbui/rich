@@ -278,6 +278,9 @@ export class PageView extends Component<{ page: Page }> {
         else if ([PageLayoutType.ppt, PageLayoutType.textChannel, PageLayoutType.board].includes(this.props.page?.pageLayout?.type)) {
             gap = 0
         }
+        if (this.page.hideDocTitle == true) {
+            gap = 0;
+        }
 
         var pd = this.props.page.getPageDataInfo();
         return <div className="shy-page" >

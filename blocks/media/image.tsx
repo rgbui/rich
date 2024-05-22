@@ -82,7 +82,7 @@ export class Image extends Block {
     }
     async didMounted() {
         try {
-            if (this.createSource == 'InputBlockSelector'&&!this.link) {
+            if (this.createSource == 'InputBlockSelector' && !this.link) {
                 var r = await useImagePicker({ roundArea: Rect.fromEle(this.el) });
                 if (r) {
                     await this.onSaveImageSize(r, true);
@@ -115,8 +115,7 @@ export class Image extends Block {
             console.error(ex);
         }
     }
-    getResolveContent()
-    {
+    getResolveContent() {
         return lst('图片')
     }
     getVisibleContentBound() {
@@ -445,8 +444,7 @@ export class Image extends Block {
                 }, { range: BlockRenderRange.self });
                 return;
             case 'preview':
-                var pics = this.page.findAll(g => g.url == BlockUrlConstant.Image).map(g => (g as Image).src)
-                await useImageViewer(this.src, pics);
+                this.openPreview()
                 return;
             case 'imageLink':
                 var rgc = await useLinkPicker({ roundArea: Rect.fromEle(this.el) }, {
@@ -458,6 +456,10 @@ export class Image extends Block {
                 return;
         }
         await super.onClickContextMenu(item, event);
+    }
+    async openPreview() {
+        var pics = this.page.findAll(g => g.url == BlockUrlConstant.Image).map(g => (g as Image).src)
+        await useImageViewer(this.src, pics);
     }
     async onContextMenuInput(item: MenuItem<string | BlockDirective>): Promise<void> {
         if (item.name == 'allowCaption') {

@@ -254,7 +254,7 @@ export class CommentListView extends React.Component<{
         this.addComment(data);
     }
     renderSendComment() {
-        return <div className="padding-5 round-8 border ">
+        return <div className="padding-5 round-8 border-light ">
             <InputChatBox
                 userid={this.userid}
                 ws={this.props.ws}
