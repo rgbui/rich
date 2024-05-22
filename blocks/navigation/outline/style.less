@@ -8,32 +8,32 @@
 
     .item {
         display    : block;
-        height     : 30px;
-        line-height: 30px;
+        // height     : 30px;
+        // line-height: 30px;
         font-size  : 14px;
         font-weight: bold;
-
         transform  : translate(-3px, 0px);
         border-left: 3px solid transparent;
 
         a {
-            color          : rgba(55, 53, 47, 1);
-            border-radius  : 4px;
-            cursor         : pointer;
-            padding        : 0px 10px;
+            // color          : rgba(55, 53, 47, 1);
+            // border-radius  : 4px;
+            // cursor         : pointer;
+            // padding        : 0px 10px;
             // margin-left    : 10px;
-            line-height    : 30px;
-            height         : 30px;
-            text-overflow  : ellipsis;
-            overflow       : hidden;
-            display        : flex;
-            justify-content: flex-start;
-            align-items    : center;
+            // line-height    : 30px;
+            // height         : 30px;
+            // text-overflow  : ellipsis;
+            // overflow       : hidden;
+            // display        : flex;
+            // justify-content: flex-start;
+            // align-items    : center;
+            color:inherit;
         }
 
         &.hover {
             a {
-                background-color: rgba(55, 53, 47, 0.08);
+                // background-color: rgba(55, 53, 47, 0.08);
                 font-weight     : bold;
             }
 
@@ -42,7 +42,9 @@
 
         &:hover {
             a {
-                background-color: rgba(55, 53, 47, 0.04);
+                font-weight     : bold;
+                // background-color: rgba(55, 53, 47, 0.04);
+                color:var(--text-color);
             }
         }
     }

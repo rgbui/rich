@@ -233,8 +233,8 @@ export class PageOutLineView extends BlockView<PageOutLine> {
         if (typeof this.height == 'number') style.height = this.height;
         return <div className='sy-block-outline relative visible-hover' style={style}>
             <div className="sy-block-outline-head pos flex-end z-1"
-                style={{ top: 0, right: 0, height: 30 }}>
-                <span className="size-24 flex-center gap-r-5 round item-hover cursor visible" onMouseDown={async e => {
+                style={{ top:0, right: 0, height: 30 }}>
+                <span className="size-24 flex-center gap-r-5 round bg-hover border-light cursor visible" onMouseDown={async e => {
                     e.stopPropagation();
                     var ele = e.currentTarget as HTMLElement;
                     try {
@@ -260,12 +260,12 @@ export class PageOutLineView extends BlockView<PageOutLine> {
     }
     renderItem(item: OutLineItemType, deep: number) {
         return <div key={item.id}>
-            <div className={"item text-over" + (this.block.hoverId == item.block.id ? " hover" : "")}>
-                <a className="flex" style={{ paddingLeft: 10 + deep * 15 }} onMouseDown={e => this.mousedownLine(item, e)}>
+            <div className={"item " + (this.block.hoverId == item.block.id ? " hover text" : "remark")}>
+                <a className="flex cursor round h-30  gap-l-10 padding-w-10 " style={{ paddingLeft: 10 + deep * 15 }} onMouseDown={e => this.mousedownLine(item, e)}>
                     <span
-                        className={"size-16 round  cursor flex-center ts " + (item.spread ? "rotate-180" : "rotate-90")}
-                        onMouseDown={e => { e.stopPropagation(); item.spread = item.spread ? false : true; this.forceUpdate() }} style={{ visibility: item.childs && item.childs.length > 0 ? "visible" : 'hidden' }}><Icon size={9} icon={TriangleSvg}></Icon></span>
-                    <span dangerouslySetInnerHTML={{ __html: item.html || item.text }}></span>
+                        className={"size-16  flex-fixed round text-1  cursor flex-center ts " + (item.spread ? "rotate-180" : "rotate-90")}
+                        onMouseDown={e => { e.stopPropagation(); item.spread = item.spread ? false : true; this.forceUpdate() }} style={{ visibility: item.childs && item.childs.length > 0 ? "visible" : 'hidden' }}><Icon size={8} icon={TriangleSvg}></Icon></span>
+                    <span className="flex-auto text-overflow" dangerouslySetInnerHTML={{ __html: item.html || item.text }}></span>
                 </a>
             </div>
             {item.spread && item.childs && item.childs.length > 0 && <div>
