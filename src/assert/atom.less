@@ -1396,6 +1396,59 @@ each(@ops, {
     text-align: center;
 }
 
+.table {
+
+    table-layout  : fixed;
+    width         : 100%;
+    border-spacing: 0;
+
+
+    thead {
+        tr {
+            background-color: rgba(43, 47, 53, .06);
+            background-color: rgb(231,232,233);
+        }
+    }
+    tbody{
+        tr {
+            &:hover {
+                background-color: rgba(43, 47, 53, .04);
+            }
+        }
+    }
+
+  
+
+    td,
+    th {
+        border-top: 1px solid rgba(43, 47, 53, .08);
+        padding   : 10px;
+        text-align: center;
+        word-break: break-all;
+
+
+        // .shy-icon {
+        //     color: #1DC63A;
+        //     fill : currentColor;
+        // }
+    }
+
+    td {
+        font-size                  : 14px;
+        // a {
+        //     display: inline-block;
+        //     border-radius: 4px;
+        //     width        : 24px;
+        //     height       : 24px;
+        //     cursor: pointer;
+        //     &:hover {
+        //         background-color: rgba(43, 47, 53, .06);
+        //     }
+        // }
+    }
+
+}
+
 .text-right {
     text-align: right;
 }
@@ -1553,6 +1606,8 @@ each(@ops, {
 .bg-p-hover,
 .r-bg-primary-hover>*,
 .r-bg-p-hover>* {
+    background-color: rgb(225, 98, 89);
+
     &:hover {
         background-color: rgb(184, 76, 78);
     }
@@ -1569,8 +1624,21 @@ each(@ops, {
 .bg-p-1-hover,
 .r-bg-p-1-hover>*,
 .r-bg-primary-1-hover>* {
+    background-color: #64a1df;
+
     &:hover {
         background-color: darken(#64a1df, 20%);
+    }
+}
+
+.bg-ghost-hover {
+    background-color: transparent;
+    color           : rgba(55, 53, 47, .65) !important;
+    border          : 1px solid #ddd;
+    font-weight     : normal;
+
+    &:hover {
+        background-color: #f5f5f5;
     }
 }
 
