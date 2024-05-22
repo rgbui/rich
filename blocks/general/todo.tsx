@@ -25,8 +25,10 @@ export class ToDo extends Block {
     }
     @prop()
     checked: boolean = false;
-    onChange(checked: boolean, event: React.MouseEvent) {
-        event.stopPropagation();
+    onChange(checked: boolean, event?: React.MouseEvent) {
+        if (event)
+            event.stopPropagation();
+        if (typeof checked == 'undefined') checked = !this.checked;
         this.onUpdateProps({ checked }, { range: BlockRenderRange.self });
     }
     get isContinuouslyCreated() {
@@ -126,9 +128,10 @@ export class ToDoView extends BlockView<ToDo> {
                                     icon={this.block.checked ? CheckSvg : CheckboxSquareSvg} ></Icon>
                             </div>
                         </div>
-                        <span className='sy-block-todo-text' style={{ lineHeight: this.block.page.lineHeight }} ><TextArea block={this.block} placeholder={lst('待办事项')}
-                            prop='content'
-                        ></TextArea>
+                        <span className='sy-block-todo-text'
+                            style={{ lineHeight: this.block.page.lineHeight }} ><TextArea block={this.block} placeholder={lst('待办事项')}
+                                prop='content'
+                            ></TextArea>
                         </span>
                     </div>
                     {this.renderComment()}

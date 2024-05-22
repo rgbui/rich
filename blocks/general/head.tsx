@@ -71,11 +71,11 @@ export class Head extends Block {
         if (this.childs.length > 0) return tag + '  ' + (await (this.childs.asyncMap(async b => await b.getMd()))).join('') + "  "
         else return tag + ' ' + this.content + "  "
     }
-    onExpand() {
+    async onExpand() {
         /**
          * 当前元素会折叠
          */
-        this.onUpdateProps({ expand: !this.expand }, { range: BlockRenderRange.self });
+        await this.onUpdateProps({ expand: !this.expand }, { range: BlockRenderRange.self });
     }
     get isExpand() {
         return this.blocks.subChilds.length > 0 && this.toggle == true && this.expand == true
@@ -114,12 +114,12 @@ export class Head extends Block {
                 }
                 if (toggle == true) {
                     await this.appendArray(rs, 0, BlockChildKey.subChilds)
-                    await this.updateProps({ expand: true },BlockRenderRange.self);
+                    await this.updateProps({ expand: true }, BlockRenderRange.self);
                 }
                 else {
                     await this.parent.appendArray(rs, this.at + 1, this.parentKey);
                 }
-                await this.updateProps({ toggle },BlockRenderRange.self)
+                await this.updateProps({ toggle }, BlockRenderRange.self)
             });
             return;
         }

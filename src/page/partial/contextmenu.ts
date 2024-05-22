@@ -364,7 +364,6 @@ export class Page$ContextMenu {
                 text: lst('创建人 ') + re.data.user.name
             });
         }
-
         if (items.length == 0) return;
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, items, {
             overflow: 'visible',
@@ -374,9 +373,6 @@ export class Page$ContextMenu {
                 }
                 else if (item.name == 'fullWidth') {
                     this.onUpdateProps({ isFullWidth: item.checked }, true);
-                }
-                else if (item.name == 'isPageContent') {
-                    this.onUpdateProps({ isPageContent: item.checked }, true);
                 }
                 else if (item.name == 'turnToPPT') {
                     this.onTurnToPPT();
@@ -391,7 +387,6 @@ export class Page$ContextMenu {
                             await this.createBlock(BlockUrlConstant.Title, {}, this.views[0], 0, 'childs');
                         }
                         await this.updateProps({ hideDocTitle: item.checked ? false : true })
-                        this.notifyActionPageUpdate();
                     });
                 }
                 else if (item.name == 'nav') {

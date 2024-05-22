@@ -20,7 +20,7 @@ export class View extends Block {
  *  但页面可以会有弹层等一些其它的视图
  */
 @view('/view')
-export class ViewComponent extends BlockView<View>{
+export class ViewComponent extends BlockView<View> {
     renderView() {
         var isMainView = this.block.page.views[0] == this.block ? true : false;
         var layoutStyle = this.block.page.getScreenStyle();
@@ -80,7 +80,7 @@ export class ViewComponent extends BlockView<View>{
                 }
             }
             return <div className={'sy-block-view'} >
-                {isContentGap && <div style={{ height: isMobileOnly ? 30 : 80 }}></div>}
+                {isContentGap && <div style={{ height: isMobileOnly ? 30 : (this.props.block.page.hideDocTitle ? 40 : 80) }}></div>}
                 <div className={'sy-block-view-wrapper'} style={layoutStyle}>
                     {this.block.page.pageTheme?.coverStyle?.display == 'inside-cover' && <PageCover page={this.block.page}></PageCover>}
                     <div style={WrapperStyle}>

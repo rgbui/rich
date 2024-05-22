@@ -439,6 +439,7 @@ export class RectUtility {
                 break;
             case 'bottom':
                 y = rountBottom;
+                
                 if (y + pos.elementArea.height > window.innerHeight) {
                     y = roundTop;
                     if (y < 0) y = roundMiddle;

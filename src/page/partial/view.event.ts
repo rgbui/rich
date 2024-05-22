@@ -194,7 +194,7 @@ export class Page$ViewEvent {
     }
     async turnLayout(this: Page,
         layoutType: PageLayoutType) {
-        this.updateProps({ requireSelectLayout: false })
+        await this.updateProps({ requireSelectLayout: false })
         var old_page = await this.get();
         switch (layoutType) {
             case PageLayoutType.doc:
@@ -249,7 +249,6 @@ export class Page$ViewEvent {
             await channel.air('/page/update/info', { id: this.pageInfo?.id, pageInfo: { pageType: this.pageLayout.type } });
             this.emit(PageDirective.changePageLayout);
             if (typeof actions == 'function') await actions();
-            this.notifyActionPageUpdate();
         }, { immediate: true, disabledJoinHistory: true });
     }
     /**
@@ -375,7 +374,7 @@ export class Page$ViewEvent {
         if (!this.isCanEdit) return;
         var codes = await emojiStore.get();
         var g = codes.randomOf().childs.randomOf();
-        this.onUpdatePageData({
+        await this.onUpdatePageData({
             icon: { name: "emoji", code: g.code }
         })
     }
@@ -412,9 +411,9 @@ export class Page$ViewEvent {
             if (this.pe.type == ElementType.Schema) {
                 var schema = await TableSchema.loadTableSchema(this.pe.id, this.ws);
                 if (schema)
-                    schema.update({ text })
+                    await schema.update({ text })
             }
-            channel.air('/page/update/info', {
+            await channel.air('/page/update/info', {
                 elementUrl: this.elementUrl,
                 pageInfo: {
                     text: text
@@ -462,6 +461,18 @@ export class Page$ViewEvent {
             cover: this.pageInfo?.cover,
             description: this.pageInfo?.description
         }
+    }
+    async loadPageParents(this: Page) {
+        var c = await channel.get('/page/query/parents',
+            {
+                ws: this.ws,
+                id: this.getPageDataInfo()?.id
+            });
+        if (c?.ok) {
+            this.parentItems = c.data.items.reverse();
+        }
+        else this.parentItems = [];
+        return this.parentItems
     }
     async onSaveAndPublish(this: Page) {
 
