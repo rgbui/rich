@@ -85,6 +85,7 @@ export class Page extends Events<PageDirective> {
     matrix: Matrix = new Matrix();
     isFullWidth: boolean = true;
     smallFont: boolean = false;
+    parentItems: LinkPageItem[] = [];
     /**
      * 是否显示大纲
      */
@@ -205,6 +206,14 @@ export class Page extends Events<PageDirective> {
                 await this.loadPageSchema();
             }
             var isForceUpdate = false;
+            var pageBarIsChange = false;
+            var os = lodash.cloneDeep(this.parentItems);
+            await this.loadPageParents();
+            var ns = lodash.cloneDeep(this.parentItems);
+            if (!lodash.isEqual(os, ns)) {
+                pageBarIsChange = true;
+            }
+
             var nextAction = () => {
                 if (this.pageInfo?.text) {
                     var title = this.find(g => g.url == BlockUrlConstant.Title) as Title;
@@ -230,6 +239,10 @@ export class Page extends Events<PageDirective> {
                     this.forceUpdate();
                 }
                 this.pageModifiedExternally = false;
+
+            }
+            if (pageBarIsChange) {
+                this.view.pageBar.forceUpdate()
             }
             if (options && (options?.width !== this.pageVisibleWidth || options?.height !== this.pageVisibleHeight)) {
                 this.pageVisibleWidth = options?.width;

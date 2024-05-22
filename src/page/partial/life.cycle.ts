@@ -82,6 +82,7 @@ export class Page$Cycle {
                 this.requireSelectLayout = false;
                 await this.loadPageSchema();
             }
+            await this.loadPageParents();
             await this.loadPageRepair();
             await this.views.eachAsync(async v => {
                 await v.loadSyncBlock()

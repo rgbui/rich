@@ -1,6 +1,7 @@
 import { Page } from "..";
 import { Title } from "../../../blocks/interaction/title";
 import { channel } from "../../../net/channel";
+import { parseElementUrl } from "../../../net/element.type";
 import { SyncMessageUrl } from "../../../net/sync.message";
 import { BlockUrlConstant } from "../../block/constant";
 import { UserAction } from "../../history/action";
@@ -14,12 +15,24 @@ export function SyncPage(page: Page) {
             if (page.view.pageBar && options?.locationId != PageLocation.pageBarUpdateInfo) {
                 page.view.pageBar.forceUpdate();
             }
+            page.forceUpdate();
+            page.views.forEach(v => {
+                v.forceManualUpdate()
+            })
             if (options?.locationId != PageLocation.pageEditTitle) {
                 var title = page.find(c => c.url == BlockUrlConstant.Title) as Title;
                 if (title) {
                     title.loadPageInfo(true);
                 }
                 page.forceUpdate();
+            }
+            var pa = page.parentItems.find(c => r.id && c.id == r.id || r.elementUrl && parseElementUrl(r.elementUrl).id == c.id);
+            if (pa) {
+                var isUpdate = false;
+                if (typeof r.pageInfo.icon != 'undefined') { pa.icon = r.pageInfo.icon; isUpdate = true }
+                if (typeof r.pageInfo.text != 'undefined') { pa.text = r.pageInfo.text; isUpdate = true }
+                if (isUpdate)
+                    page.view.pageBar.forceUpdate();
             }
         }
     })

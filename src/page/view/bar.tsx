@@ -33,6 +33,7 @@ import { useInputIconAndText } from "../../../component/view/input/iconAndText";
 import { IconArguments } from "../../../extensions/icon/declare";
 import { Rect } from "../../common/vector/point";
 import { UA } from "../../../util/ua";
+import { useSelectMenuItem } from "../../../component/view/menu";
 
 export class PageBar extends React.Component<{ page: Page }> {
     preTip: Tip;
@@ -50,6 +51,41 @@ export class PageBar extends React.Component<{ page: Page }> {
             await this.props.page.onUpdatePageData({ text: r.text || undefined, icon: r.icon || undefined }, PageLocation.pageBarUpdateInfo);
             this.forceUpdate();
         }
+    }
+    renderParents() {
+        if (this.props.page.pageLayout?.type == PageLayoutType.textChannel) return <></>
+        var rs = this.props.page.parentItems.filter(item => (item.mime == 20 || item.mime == 'pages') ? false : true);
+        rs = rs.filter(g => g.id != this.props.page.pageInfo?.id ? true : false);
+        if (rs.length == 0) return <></>
+        var cs: any[] = rs;
+        if (rs.length > 2) {
+            cs = [rs[0], '...', rs[rs.length - 1]];
+        }
+        return <>
+            {cs.map((g, i) => <span key={i} className="flex-fixed  flex">
+                <span onMouseDown={async e => {
+                    if (g == '...') {
+                        var ds = rs.slice(1, rs.length - 1);
+                        var us = await useSelectMenuItem({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) }, ds.map(d => {
+                            return {
+                                icon: getPageIcon(d),
+                                text: getPageText(d),
+                                value: d.id
+                            }
+                        }));
+                        if (us?.item) {
+                            channel.act('/page/open', { item: us.item.value })
+                        }
+                    }
+                    else
+                        channel.act('/page/open', { item: g.id })
+                }} className={"flex-fixed desk-no-drag  item-hover flex round  cursor  " + (g == '...' ? "size-24 flex-center " : "padding-h-3 padding-w-5 ")}>
+                    {g.icon && <Icon className={'gap-r-5'} size={18} icon={getPageIcon(g)}></Icon>}
+                    <span className={g == '...' ? "" : "text-overflow max-w-120"}>{g == '...' ? "..." : getPageText(g)}</span>
+                </span>
+                <span className="gap-w-5 f-18 remark" style={{ display: 'inline-block' }}>/</span>
+            </span>)}
+        </>
     }
     renderTitle() {
         if ([ElementType.SchemaData].includes(this.props.page.pe.type) && !this.props.page.isSchemaRecordViewTemplate) {
@@ -115,11 +151,12 @@ export class PageBar extends React.Component<{ page: Page }> {
         return <div className="flex-auto flex desk-drag">
             {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onPageClose()} className="desk-no-drag item-hover size-24 round cursor flex-center  gap-r-10"><Icon size={18} icon={{ name: 'byte', code: 'double-right' }}></Icon></span>}
             <span className=" round flex ">
+                {this.renderParents()}
                 <span onMouseDown={e => { this.onRenamePage(e, { text: this.props.page?.pageInfo.text, icon: this.props.page.pageInfo.icon, defaultIcon: getPageIcon(this.props.page?.pageInfo) }) }} className="flex-fixed desk-no-drag  item-hover flex round  cursor padding-h-3 padding-w-5  gap-r-10">
                     {this.props.page?.pageInfo?.icon && <Icon size={18} icon={getPageIcon(this.props.page?.pageInfo)}></Icon>}
-                    <span className={"gap-l-5 text-overflow " + (isMobileOnly ? "max-w-120" : "max-w-300")}>{getPageText(this.props.page?.pageInfo)}</span>
+                    <span className={"text-overflow max-w-250 " + (this.props.page?.pageInfo?.icon ? "gap-l-5" : "")}>{getPageText(this.props.page?.pageInfo)}</span>
                 </span>
-                <span className={"flex-auto remark text-overflow " + (isMobileOnly ? " max-w-250" : " max-w-500")}>{this.props.page?.pageInfo?.description}</span>
+                {this.props.page.pageLayout?.type == PageLayoutType.textChannel && <span className={"flex-auto remark text-overflow " + (isMobileOnly ? " max-w-250" : " max-w-500")}>{this.props.page?.pageInfo?.description}</span>}
             </span>
             {this.props.page.locker?.lock && this.props.page.isCanManage && <span onMouseDown={e => this.props.page.onLockPage()} className="desk-no-drag flex-center size-24 item-hover cursor round gap-r-10">
                 <Icon size={18} icon={LockSvg}></Icon>
