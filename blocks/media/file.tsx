@@ -36,7 +36,7 @@ export class File extends Block {
     }
     async didMounted() {
         try {
-            if (this.createSource == 'InputBlockSelector'&&!this.src?.url) {
+            if (this.createSource == 'InputBlockSelector' && !this.src?.url) {
                 var r = await useFilePicker({ roundArea: Rect.fromEle(this.el) });
                 if (r) {
                     await this.onUpdateProps({ src: r }, { range: BlockRenderRange.self, merge: true });
@@ -141,7 +141,7 @@ export class File extends Block {
     }
 }
 @view('/file')
-export class FileView extends BlockView<File>{
+export class FileView extends BlockView<File> {
     renderView() {
         return <div className='sy-block-file visible-hover' style={this.block.visibleStyle}>
             {this.block.src.name == 'none' && <div onMouseDown={e => this.block.addFile({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) })} className='sy-block-file-nofile item-hover'>
@@ -149,8 +149,10 @@ export class FileView extends BlockView<File>{
                 {!this.block.speed && <span><S>添加附件</S></span>}
                 {this.block.speed && <div className="remark gap-l-10">{this.block.speed}</div>}
             </div>}
-            {this.block.src.name != 'none' && <div className='flex padding-w-5 padding-h-5 round cursor item-hover' >
-                <span className="size-20 flex-center round item-hover"><Icon icon={PageSvg} size={18} className='text-1 '></Icon></span>
+            {this.block.src.name != 'none' && <div onMouseDown={e => {
+                window.open(this.block.src.url, '_blank')
+            }} className='flex padding-w-5 padding-h-5 round cursor item-hover' >
+                <span className="size-20 flex-center round item-hover"><Icon icon={FileSvg} size={18} className='text-1 '></Icon></span>
                 <span className='flex-fixed text-overflow flex gap-l-5'>{this.block.src?.filename}</span>
                 <span className='remark gap-l-5 f-12 flex-auto flex'>{util.byteToString(this.block.src.size)}</span>
                 <span className="flex-fixed visible gap-r-10 remark r-cursor">
@@ -165,6 +167,7 @@ export class FileView extends BlockView<File>{
                     <Tip text='属性'>
                         <Icon className={'gap-l-10'}
                             onMousedown={async e => {
+                                e.stopPropagation();
                                 var sp = e.currentTarget.closest('.visible');
                                 sp.classList.remove('visible');
                                 try {
