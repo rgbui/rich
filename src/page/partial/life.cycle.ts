@@ -261,12 +261,15 @@ export class Page$Cycle {
      * 主动通知block重新渲染
      * @param block 
      */
-    notifyActionBlockUpdate(block: Block) {
+    notifyActionBlockUpdate(...block: Block[]) {
         if (!block) return;
-        block.needUpdate = true;
+        block.forEach(b => b.needUpdate = true)
         if (!Array.isArray(this.willUpdateBlocks)) this.willUpdateBlocks = [];
-        if (!this.willUpdateBlocks.includes(block))
-            this.willUpdateBlocks.push(block);
+        block.forEach(b => {
+            if (!this.willUpdateBlocks.includes(b)) {
+                this.willUpdateBlocks.push(b)
+            }
+        })
     }
     /**
      * 主动通知block重新布局
@@ -311,7 +314,9 @@ export class Page$Cycle {
             update?: { old: Record<string, any>, new: Record<string, any> },
             turn?: { oldUrl: string, newUrl: string }
         }) {
-
+        if (window.shyConfig?.isDev) {
+            console.log('observeChange', op, options);
+        }
         /***
          * 页面引用关系同步
          */
@@ -322,16 +327,16 @@ export class Page$Cycle {
                 case 'create':
                     if (options.block?.isLine) {
                         //创建了行内块，那么同步行内块所属于的块
-                        var r = options.block.closest(x => x.isOnlyBlock);
+                        var r = options.block.closest(x => x.isContentBlock);
                         if (Array.isArray(options.block.refLinks) && options.block.refLinks.length > 0) {
                             rs.push(r);
                         }
                     }
                     else {
                         //创建了块，那么同步当前块及所有子块
-                        var r = options.block.closest(x => x.isOnlyBlock);
+                        var r = options.block.closest(x => x.isContentBlock);
                         if (r) {
-                            var subs = r.findAll(c => c.isOnlyBlock && c.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0));
+                            var subs = r.findAll(c => c.isContentBlock && c.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0));
                             rs.push(...subs);
                         }
                     }
@@ -342,7 +347,7 @@ export class Page$Cycle {
                     var od = options.update.old;
                     if (Object.keys(ns).includes('content')) {
                         //说明内容变更了，那么当前行内的信息需要同步
-                        var r = options.block.closest(x => x.isOnlyBlock);
+                        var r = options.block.closest(x => x.isContentBlock);
                         if (r && r.childs.some(s => Array.isArray(s.refLinks) && s.refLinks.length > 0)) {
                             rs.push(r);
                         }
@@ -360,7 +365,7 @@ export class Page$Cycle {
                                 dels.push(...os.map(o => o));
                             }
                         }
-                        var r = options.block.closest(x => x.isOnlyBlock);
+                        var r = options.block.closest(x => x.isContentBlock);
                         if (r && r.childs.some(s => Array.isArray(s.refLinks) && s.refLinks.length > 0)) {
                             rs.push(r);
                         }
@@ -370,7 +375,7 @@ export class Page$Cycle {
                 case 'to':
                     if (options.block.isLine) {
                         //行内块，拖放，所以只需要同步当前行
-                        var r = options.block.closest(x => x.isOnlyBlock);
+                        var r = options.block.closest(x => x.isContentBlock);
                         if (r && r.childs.some(s => Array.isArray(s.refLinks) && s.refLinks.length > 0)) {
                             rs.push(r);
                         }
@@ -385,7 +390,7 @@ export class Page$Cycle {
                     }
                     else {
                         //删除整个块，该块可能包含子块
-                        var r = options.block.closest(x => x.isOnlyBlock);
+                        var r = options.block.closest(x => x.isContentBlock);
                         if (r) {
                             var subs = r.findAll(c => Array.isArray(c.refLinks) && c.refLinks.length > 0);
                             subs.forEach(s => {
@@ -420,6 +425,7 @@ export class Page$Cycle {
             this.onError(ex);
         }
 
+
         /**
          * 同步页面的所有大纲目录
          * 这里判断当前的操作是否会影响到大纲目录
@@ -433,7 +439,7 @@ export class Page$Cycle {
                 switch (op) {
                     case 'create':
                         if (options.block.isLine) {
-                            var row = options.block.closest(x => x.isOnlyBlock);
+                            var row = options.block.closest(x => x.isContentBlock);
                             if (row?.url == BlockUrlConstant.Head) {
                                 outLineChangeBlocks.push(row);
                             }
@@ -447,15 +453,18 @@ export class Page$Cycle {
                         var ns = options.update.new;
                         var od = options.update.old;
                         if (Object.keys(ns).includes('content')) {
-                            var r = options.block.closest(x => x.isOnlyBlock);
-                            if (r && r.childs.some(s => s.url == BlockUrlConstant.Head)) {
+                            var r = options.block.closest(x => x.isContentBlock);
+                            if (r.url == BlockUrlConstant.Head) {
                                 outLineChangeBlocks.push(r);
                             }
+                        }
+                        else if (options.block.url == BlockUrlConstant.Head) {
+                            isChangeAll = true;
                         }
                         break;
                     case 'willDelete':
                         if (options.block.isLine) {
-                            var row = options.block.closest(x => x.isOnlyBlock);
+                            var row = options.block.closest(x => x.isContentBlock);
                             if (row?.url == BlockUrlConstant.Head) {
                                 outLineChangeBlocks.push(row);
                             }
@@ -467,7 +476,7 @@ export class Page$Cycle {
                     case 'from':
                     case 'to':
                         if (options.block.isLine) {
-                            var row = options.block.closest(x => x.isOnlyBlock);
+                            var row = options.block.closest(x => x.isContentBlock);
                             if (row?.url == BlockUrlConstant.Head) {
                                 outLineChangeBlocks.push(row);
                             }
@@ -477,14 +486,14 @@ export class Page$Cycle {
                         }
                         break;
                     case 'turnBefore':
-                        if (options.block.isBlock) {
+                        if (options.block.isContentBlock) {
                             if (options.block.url == BlockUrlConstant.Head) {
                                 isChangeAll = true;
                             }
                         }
                         break;
                     case 'turnAfter':
-                        if (options.block.isBlock) {
+                        if (options.block.isContentBlock) {
                             if (options.block.url == BlockUrlConstant.Head) {
                                 isChangeAll = true;
                             }
@@ -496,6 +505,9 @@ export class Page$Cycle {
                         if (!this.recordOutlineChanges.changeBlocks.includes(c.id))
                             this.recordOutlineChanges.changeBlocks.push(c.id);
                     })
+                }
+                if (window.shyConfig?.isDev) {
+                    console.log(isChangeAll, outLineChangeBlocks)
                 }
             }
             catch (ex) {
@@ -736,8 +748,13 @@ export class Page$Cycle {
             console.error(ex);
         }
         try {
+            /**
+             * 这里暂时加载延迟，有部分同步操作需要等待block的内容渲染完成
+             * 否则会出现大纲目录的更新不及时
+             */
+
             if (recordOutlineChanges.isChangeAll == true || recordOutlineChanges.changeBlocks.length > 0) {
-                var outLineBlock = this.find(g => g.url == BlockUrlConstant.Outline) as PageOutLine;
+              var outLineBlock = this.find(g => g.url == BlockUrlConstant.Outline) as PageOutLine;
                 if (outLineBlock) {
                     if (recordOutlineChanges.isChangeAll) outLineBlock.updateOutLine();
                     else {

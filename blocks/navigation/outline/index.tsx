@@ -13,6 +13,7 @@ import { Icon } from "../../../component/view/icon";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { lst } from "../../../i18n/store";
 import "./style.less";
+import { ToolTip } from "../../../component/view/tooltip";
 
 type OutLineItemType = {
     id: string,
@@ -44,7 +45,7 @@ export class PageOutLine extends Block {
     spreadCaches: { [key: string]: boolean } = {};
     @prop()
     outlineTitle = '';
-    updateOutlinesHover() {
+    updateOutlinesHover(force?: boolean) {
         var hoverId = '';
         if (this.outlines.length > 0) {
             var rs: OutLineItemType[] = []
@@ -64,7 +65,7 @@ export class PageOutLine extends Block {
                 if (r.top <= 50) hoverId = rs[rs.length - 1].block.id;
             }
         }
-        if (this.hoverId !== hoverId) {
+        if (this.hoverId !== hoverId || force == true) {
             this.hoverId = hoverId;
             this.forceManualUpdate();
         }
@@ -92,6 +93,7 @@ export class PageOutLine extends Block {
                     spread: sc,
                     childs: []
                 });
+                console.log(b, b.contentEl, b.contentEl.innerHTML, b.contentEl.innerText)
                 if (lastItem) {
                     if (level > lastItem.hLevel) {
                         itemData.parentId = lastItem.id;
@@ -133,7 +135,7 @@ export class PageOutLine extends Block {
     }
     updateOutLine() {
         this.cacOutLines();
-        this.updateOutlinesHover()
+        this.updateOutlinesHover(true)
     }
     updateHeadBlock(block: Block, forceUpdate?: boolean) {
         var ou = this.outlines.arrayJsonFind('childs', c => c.id == block.id);
@@ -233,7 +235,7 @@ export class PageOutLineView extends BlockView<PageOutLine> {
         if (typeof this.height == 'number') style.height = this.height;
         return <div className='sy-block-outline relative visible-hover' style={style}>
             <div className="sy-block-outline-head pos flex-end z-1"
-                style={{ top:0, right: 0, height: 30 }}>
+                style={{ top: 0, right: 0, height: 30 }}>
                 <span className="size-24 flex-center gap-r-5 round bg-hover border-light cursor visible" onMouseDown={async e => {
                     e.stopPropagation();
                     var ele = e.currentTarget as HTMLElement;
@@ -263,9 +265,9 @@ export class PageOutLineView extends BlockView<PageOutLine> {
             <div className={"item " + (this.block.hoverId == item.block.id ? " hover text" : "remark")}>
                 <a className="flex cursor round h-30  gap-l-10 padding-w-10 " style={{ paddingLeft: 10 + deep * 15 }} onMouseDown={e => this.mousedownLine(item, e)}>
                     <span
-                        className={"size-16  flex-fixed round text-1  cursor flex-center ts " + (item.spread ? "rotate-180" : "rotate-90")}
+                        className={"size-16 item-hover  flex-fixed round  cursor flex-center ts " + (item.spread ? "rotate-180" : "rotate-90")}
                         onMouseDown={e => { e.stopPropagation(); item.spread = item.spread ? false : true; this.forceUpdate() }} style={{ visibility: item.childs && item.childs.length > 0 ? "visible" : 'hidden' }}><Icon size={8} icon={TriangleSvg}></Icon></span>
-                    <span className="flex-auto text-overflow" dangerouslySetInnerHTML={{ __html: item.html || item.text }}></span>
+                    <ToolTip overlay={<div className="max-w-200 " dangerouslySetInnerHTML={{ __html: item.html || item.text }}></div>}><span className="flex-auto text-overflow" dangerouslySetInnerHTML={{ __html: item.html || item.text }}></span></ToolTip>
                 </a>
             </div>
             {item.spread && item.childs && item.childs.length > 0 && <div>
