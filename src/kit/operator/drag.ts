@@ -24,7 +24,10 @@ export async function PageDrag(kit: Kit, event: React.MouseEvent) {
      * 判断块的类型来决定后续的操作分类，不一定靠谱
      */
     var block = kit.page.getBlockByMouseOrPoint(event.nativeEvent);
-    if (block?.isLine) block = block.closest(x => !x.isLine);
+    if (!block && kit.page.nav) {
+        block = kit.page.views.first()
+    }
+    if (block?.isLine) block = block.closest(x => x.isContentBlock);
     if (kit.boardSelector.isSelector && block) {
         CheckBoardSelector(kit, block, event);
         return;

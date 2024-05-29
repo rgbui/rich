@@ -1,3 +1,4 @@
+
 import { AppearAnchor } from ".";
 import { Block } from "..";
 import { dom } from "../../common/dom";
@@ -24,7 +25,16 @@ export function findBlockAppear(el, predict?: (block: Block) => AppearAnchor) {
         }
     }
 }
-function findXBlockAppear(appear: AppearAnchor, start: number, top: number, bound: Rect, direction: 'left' | 'right') {
+/**
+ * 水平查找，在一定的范围内
+ * @param appear 
+ * @param start 
+ * @param top 
+ * @param bound 
+ * @param direction 
+ * @returns 
+ */
+export function findXBlockAppear(appear: AppearAnchor, start: number, top: number, bound: Rect, direction: 'left' | 'right') {
     if (direction == 'left') {
         for (var i = start - GAP; i >= bound.x; i = i - GAP) {
             var el = document.elementFromPoint(i, top) as HTMLElement;
@@ -68,6 +78,21 @@ function findXBlockAppear(appear: AppearAnchor, start: number, top: number, boun
                     var rc = el.getBoundingClientRect();
                     var lx = rc.left + rc.width;
                     if (i < lx) i = lx;
+                }
+            }
+        }
+    }
+}
+
+export function findBlockAppearByPoint(point: Point, bound: Rect) {
+    for (let i = bound.x; i <= bound.x + bound.width; i += GAP) {
+        var el = document.elementFromPoint(i, point.y) as HTMLElement;
+        if (el) {
+            var blockEl = dom(el).closest(x => (x as any)?.block ? true : false);
+            if (blockEl) {
+                var block = ((blockEl as any).block as Block);
+                if (block.isContentBlock) {
+                    return block;
                 }
             }
         }
@@ -131,18 +156,18 @@ export function AppearVisibleSeek(appear: AppearAnchor, options: {
             aa = findXBlockAppear(appear, options.left || bound.right, j, bound, 'right');
             if (aa) return aa;
         }
-        var s = appear.block.nextFind(g => g.appearAnchors.some(s => TextEle.getBounds(s.el).first().top >= eb.bottom));
+        var s = appear.block.nextFind(g => g.appearAnchors.some(s => TextEle.getBounds(s.el).first()?.top >= eb.bottom));
         if (s) {
             if (s.isLine) {
-                var row = s.closest(x => x.isBlock);
+                var row = s.closest(x => x.isContentBlock);
                 if (row) {
-                    var r = row.find(g => g.appearAnchors.some(s => TextEle.getBounds(s.el).first().containX(options.left) && TextEle.getBounds(s.el).first().top >= eb.bottom));
+                    var r = row.find(g => g.appearAnchors.some(s => TextEle.getBounds(s.el).first()?.containX(options.left) && TextEle.getBounds(s.el)?.first()?.top >= eb.bottom));
                     if (r) {
-                        return r.appearAnchors.find(s => TextEle.getBounds(s.el).first().containX(options.left) && TextEle.getBounds(s.el).first().top >= eb.bottom)
+                        return r.appearAnchors.find(s => TextEle.getBounds(s.el).first()?.containX(options.left) && TextEle.getBounds(s.el)?.first()?.top >= eb.bottom)
                     }
                 }
             }
-            return s.appearAnchors.find(s => TextEle.getBounds(s.el).first().top >= eb.bottom);
+            return s.appearAnchors.find(s => TextEle.getBounds(s.el).first()?.top >= eb.bottom);
         }
     }
     else if (options.arrow == 'up') {
@@ -153,18 +178,18 @@ export function AppearVisibleSeek(appear: AppearAnchor, options: {
             aa = findXBlockAppear(appear, options.left || bound.right, j, bound, 'right');
             if (aa) return aa;
         }
-        var s = appear.block.prevFind(g => g.appearAnchors.some(s => TextEle.getBounds(s.el).last().bottom <= eb.top));
+        var s = appear.block.prevFind(g => g.appearAnchors.some(s => TextEle.getBounds(s.el)?.last()?.bottom <= eb.top));
         if (s) {
             if (s.isLine) {
-                var row = s.closest(x => x.isBlock);
+                var row = s.closest(x => x.isContentBlock);
                 if (row) {
-                    var r = row.find(g => g.appearAnchors.some(s => TextEle.getBounds(s.el).last().containX(options.left) && TextEle.getBounds(s.el).last().bottom <= eb.top));
+                    var r = row.find(g => g.appearAnchors.some(s => TextEle.getBounds(s.el)?.last()?.containX(options.left) && TextEle.getBounds(s.el).last()?.bottom <= eb.top));
                     if (r) {
-                        return r.appearAnchors.find(s => TextEle.getBounds(s.el).last().containX(options.left) && TextEle.getBounds(s.el).last().bottom <= eb.top)
+                        return r.appearAnchors.find(s => TextEle.getBounds(s.el)?.last()?.containX(options.left) && TextEle.getBounds(s.el).last()?.bottom <= eb.top)
                     }
                 }
             }
-            return s.appearAnchors.findLast(s => TextEle.getBounds(s.el).last().bottom <= eb.top);
+            return s.appearAnchors.findLast(s => TextEle.getBounds(s.el).last()?.bottom <= eb.top);
         }
     }
 }

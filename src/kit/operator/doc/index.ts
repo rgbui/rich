@@ -1,7 +1,7 @@
 import React from "react";
 import { Kit } from "../..";
 import { Block } from "../../../block";
-import { findBlockNearAppearByPoint } from "../../../block/appear/visible.seek";
+import { findBlockAppearByPoint, findBlockNearAppearByPoint, findXBlockAppear } from "../../../block/appear/visible.seek";
 import { MouseDragger } from "../../../common/dragger";
 import { onAutoScroll, onAutoScrollStop } from "../../../common/scroll";
 import { Point, Rect } from "../../../common/vector/point";
@@ -90,16 +90,50 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                         }
                     }
                     else {
-                        var sc = block.find(c => {
-                            if (c.appearAnchors.length > 0) {
-                                var b = c.getVisibleBound();
-                                if (b.containY(ev.clientY)) return true;
+                        if (block.url == BlockUrlConstant.Col || block.url == BlockUrlConstant.Row) {
+                            if (block.url == BlockUrlConstant.Row) {
+                                var c = block.childs.find(g => g.getVisibleBound().containX(ev.clientX));
+                                if (c) block = c;
+                                else block = block.childs.last()
                             }
-                        })
-                        if (!sc)
-                            sc = block.findReverse(g => g.appearAnchors.length > 0);
-                        if (sc) {
-                            kit.anchorCursor.onFocusBlockAnchor(sc, { last: true, render: true })
+                            var sc = block.find(c => {
+                                if (c.appearAnchors.length > 0) {
+                                    var b = c.getVisibleBound();
+                                    if (b.containY(ev.clientY)) return true;
+                                }
+                            })
+                            if (!sc)
+                                sc = block.findReverse(g => g.appearAnchors.length > 0);
+                            if (sc) kit.anchorCursor.onFocusBlockAnchor(sc, { last: true, render: true })
+                            else {
+                                kit.page.onCreateTailTextSpan(block);
+                            }
+                        }
+                        else if (block.url == BlockUrlConstant.View) {
+                            var lastBlock = block.childs.last();
+                            var lbb = lastBlock.getVisibleBound();
+                            if (ev.clientY > lbb.bottom) {
+                                kit.page.onCreateTailTextSpan(block);
+                            }
+                            else if (lbb.containY(ev.clientY) && lastBlock.find(c => c.appearAnchors.length > 0)) {
+                                var ab = lastBlock.findReverse(c => c.appearAnchors.length > 0);
+                                if (ab) {
+                                    kit.anchorCursor.onFocusBlockAnchor(ab, { last: true, render: true })
+                                }
+                                else {
+                                    kit.page.onCreateTailTextSpan(block);
+                                }
+                            }
+                            else {
+                                var bv = block.getVisibleBound();
+                                var bound = new Rect(bv.x, ev.clientY - 30, bv.width, 60);
+                                var arrow = ev.clientX > bound.left + bound.width / 2 ? "left" : 'right';
+                                var po = new Point(ev.clientX, ev.clientY);
+                                var bc = findBlockAppearByPoint(po, bound);
+                                if (!bc) bc = findBlockAppearByPoint(po.move(0, -20), bound);
+                                if (!bc) bc = findBlockAppearByPoint(po.move(0, 20), bound);
+                                kit.anchorCursor.onFocusBlockAnchor(bc, { last: arrow == 'left' ? true : false, render: true })
+                            }
                         }
                     }
                 }
