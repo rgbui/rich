@@ -14,7 +14,8 @@ export class DivInput extends React.Component<{
     ignoreFilterWhitespace?: boolean,
     className?: string | string[],
     line?: boolean,
-    rf?: (e: HTMLElement) => void
+    rf?: (e: HTMLElement) => void,
+    onPaster?: (e: React.ClipboardEvent<HTMLSpanElement>) => void
 }> {
     el: HTMLElement;
     render() {
@@ -65,6 +66,7 @@ export class DivInput extends React.Component<{
                 }
                 input()
             }
+            if (typeof props.onPaster == 'function') props.onPaster(e)
         }
         async function keydown(event: React.KeyboardEvent) {
             if (event.key == 'Enter' && !event.shiftKey) {
