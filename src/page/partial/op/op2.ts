@@ -7,12 +7,13 @@ import { BlockFactory } from "../../../block/factory/block.factory";
 import { OperatorDirective, ActionDirective } from "../../../history/declare";
 import { DropDirection } from "../../../kit/handle/direction";
 import { PageDirective, PageLocation } from "../../directive";
-import { util } from "echarts";
+
 import { TableSchema } from "../../../../blocks/data-grid/schema/meta";
 import { Title } from "../../../../blocks/interaction/title";
 import { channel } from "../../../../net/channel";
 import { ElementType } from "../../../../net/element.type";
 import { BlockRenderRange } from "../../../block/enum";
+import { util } from "../../../../util/util";
 
 export class Page$Operator2 {
     /**
@@ -86,11 +87,12 @@ export class Page$Operator2 {
             }
         })
     }
-    async onBatchDelete(this: Page, blocks: Block[]) {
+    async onBatchDelete(this: Page, blocks: Block[], willDelete?: () => Promise<void>) {
         blocks = blocks.toArray(c => c);
         lodash.remove(blocks, c => c.url == BlockUrlConstant.Title);
         if (blocks.length > 0)
             await this.onAction(ActionDirective.onBatchDeleteBlocks, async () => {
+                if (typeof willDelete == 'function') await willDelete();
                 var pre = blocks.first().prevFind(c => c.isVisible && !blocks.includes(c) && !blocks.some(s => s.exists(g => g.id == c.id)) && c.isBlock);
                 if (!pre) blocks.first().nextFind(c => c.isVisible && !blocks.includes(c) && !blocks.some(s => s.exists(g => g.id == c.id)) && c.isBlock);
                 if (pre) {
@@ -124,15 +126,24 @@ export class Page$Operator2 {
         if (typeof action == 'function') await action(newBlock);
         return newBlock
     }
-    async onReplace(this: Page, block: Block, blockData: (Record<string, any> | Block) | ((Record<string, any> | Block)[]), action?: (block: Block) => Promise<void>, options?: {
+    async onReplace(this: Page, block: Block | (Block[]), blockData: (Record<string, any> | Block) | ((Record<string, any> | Block)[]), action?: (block: Block) => Promise<void>, options?: {
         disabledStore?: boolean;
         disabledSyncBlock?: boolean;
         immediate?: boolean;
     }) {
         if (!Array.isArray(blockData)) blockData = [blockData];
         var newBlock: Block = null;
+        var bs: Block[] = util.covertToArray(block);
+        var first = bs[0];
+        var rest = bs.slice(1);
         await this.onAction(ActionDirective.onReplace, async () => {
-            newBlock = await this.replace(block, blockData, action);
+
+            newBlock = await this.replace(first, blockData, action);
+            if (rest.length > 0) {
+                for (let r of rest) {
+                    await r.delete()
+                }
+            }
         }, options);
         return newBlock;
     }
@@ -221,7 +232,7 @@ export class Page$Operator2 {
                     var scroll: 'top' | 'bottom';
                     if (direction == DropDirection.top) scroll = 'top'
                     else if (direction == DropDirection.bottom) scroll = 'bottom'
-                    this.kit.anchorCursor.onSelectBlocks(blocks, { render: true, merge: true, scroll  });
+                    this.kit.anchorCursor.onSelectBlocks(blocks, { render: true, merge: true, scroll });
                 })
             }
         })
