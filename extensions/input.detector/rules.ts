@@ -75,32 +75,52 @@ export var rules: DetectorRule[] = [
     },
     {
         operator: DetectorOperator.firstLetterTurnBlock,
-        match: [/^[\d]+[\.。] /],
+        match: [/^[\d]+[\.。] $/],
         url: '/list?{listType:1}'
     },
     {
         operator: DetectorOperator.firstLetterTurnBlock,
-        match: [/^[\>》] /],
+        match: [/^a[\.。] $/],
+        url: '/list?{listType:1,listView:12}'
+    },
+    {
+        operator: DetectorOperator.firstLetterTurnBlock,
+        match: [/^A[\.。] $/],
+        url: '/list?{listType:1,listView:13}'
+    },
+    {
+        operator: DetectorOperator.firstLetterTurnBlock,
+        match: [/^i[\.。] $/],
+        url: '/list?{listType:1,listView:14}'
+    },
+    {
+        operator: DetectorOperator.firstLetterTurnBlock,
+        match: [/^[\>》] $/],
         url: '/list?{listType:2}'
     },
     {
         operator: DetectorOperator.firstLetterTurnBlock,
-        match: [/^["“] /],
+        match: [/^["“] $/],
         url: '/quote'
     },
     {
         operator: DetectorOperator.firstLetterTurnBlock,
-        match: [/^[！!]{2} /],
+        match: [/^[！!]{2} $/],
         url: '/callout'
     },
     {
         operator: DetectorOperator.firstLetterTurnBlock,
-        match: [/^[\*\-\+] /],
+        match: [/^[\*\-\+] $/],
         url: '/list?{listType:0}'
     },
     {
         operator: DetectorOperator.firstLetterTurnBlock,
-        match: [/^\[\]/, /^【】/],
+        match: [/^[\.。] $/],
+        url: '/list?{listType:0,listView:1}'
+    },
+    {
+        operator: DetectorOperator.firstLetterTurnBlock,
+        match: [/^\[\]$/, /^【】$/],
         url: '/todo'
     },
     {

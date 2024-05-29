@@ -1,4 +1,5 @@
 
+import lodash from "lodash";
 import { DetectorOperator, DetectorRule, rules } from "./rules";
 /**
  * 输入检测器
@@ -60,7 +61,7 @@ export function InputDetector(value: string, options: { rowStart?: boolean, rowE
                 }
                 break;
         }
-        return { rule: ru, value, matchValue };
+        return lodash.cloneDeep({ rule: ru, value, matchValue });
     };
 }
 
