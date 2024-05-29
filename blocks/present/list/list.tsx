@@ -94,8 +94,11 @@ export class List extends Block {
         return true;
     }
     get contentEl() {
-        if (this.el) return this.el.querySelector('[data-block-content]') as HTMLElement;
-        else return this.el;
+        if (this.el) {
+            var cc = this.el.querySelector('[data-block-content]') as HTMLElement;
+            if (cc) return cc;
+        }
+        return this.el;
     }
     async getPlain(this: Block) {
         if (this.childs.length > 0) return await this.getChildsPlain();
@@ -300,8 +303,10 @@ export class ListView extends BlockView<List> {
     }
     renderView() {
         var contentStyle: CSSProperties = this.block.contentStyle;
-        if (this.block.smallFont)
+        if (this.block.smallFont) {
             contentStyle.fontSize = this.block.page.cacSmallFont(this.block.smallFont);
+            contentStyle.lineHeight = this.block.page.fontLineRatio;
+        }
         return <div className='sy-block-list'>
             <div style={this.block.visibleStyle}>
                 <div className='sy-block-list-text' data-block-content style={contentStyle}>
@@ -310,7 +315,7 @@ export class ListView extends BlockView<List> {
                 </div>
                 {this.renderComment()}
             </div>
-            {this.block.isExpand && <div style={{paddingLeft:this.block.page.textIndent }} className='sy-block-list-subs'>
+            {this.block.isExpand && <div style={{ paddingLeft: this.block.page.textIndent }} className='sy-block-list-subs'>
                 <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>
             </div>}
         </div>

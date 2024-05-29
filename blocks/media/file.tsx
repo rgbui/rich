@@ -7,7 +7,7 @@ import { BlockView } from "../../src/block/view";
 import { Rect } from "../../src/common/vector/point";
 import { useFilePicker } from "../../extensions/file/file.picker";
 import { channel } from "../../net/channel";
-import { DotsSvg, DownloadSvg, FileSvg, PageSvg, UploadSvg } from "../../component/svgs";
+import { DotsSvg, DownloadSvg, FileSvg, UploadSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { util } from "../../util/util";
 import { lst } from "../../i18n/store";
@@ -152,7 +152,7 @@ export class FileView extends BlockView<File> {
             {this.block.src.name != 'none' && <div onMouseDown={e => {
                 window.open(this.block.src.url, '_blank')
             }} className='flex padding-w-5 padding-h-5 round cursor item-hover' >
-                <span className="size-20 flex-center round item-hover"><Icon icon={FileSvg} size={18} className='text-1 '></Icon></span>
+                <span className="size-24 flex-center round item-hover"><Icon icon={FileSvg} size={18} className='text-1 '></Icon></span>
                 <span className='flex-fixed text-overflow flex gap-l-5'>{this.block.src?.filename}</span>
                 <span className='remark gap-l-5 f-12 flex-auto flex'>{util.byteToString(this.block.src.size)}</span>
                 <span className="flex-fixed visible gap-r-10 remark r-cursor">
