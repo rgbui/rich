@@ -26,28 +26,36 @@ export class AISearchBox extends EventsComponent {
     messages: { id: string, userid?: string, asking?: boolean, prompt?: string, date: Date, content: string, refs?: { blockIds: string[], page: LinkPageItem, elementUrl: string }[] }[] = [];
     renderMessages() {
         return this.messages.map(msg => {
-            return <div key={msg.id}>
+            return <div data-ai-message={msg.id} key={msg.id}>
 
                 {msg.userid && <div className="flex-end">
-                    <div style={{ maxWidth: '80%' }} className="gap-h-20   padding-10 item-hover-focus  round-16">
+                    <div style={{ maxWidth: '80%' }} className="gap-h-10   padding-10 item-hover-focus  round-16">
                         <div dangerouslySetInnerHTML={{ __html: msg.content }}></div>
                     </div>
                 </div>}
 
-                {!msg.userid && msg.content && <div style={{ maxWidth: '80%' }} className="gap-h-20 padding-10 border shadow-s  round-16" >
+                {!msg.userid && msg.content && <div style={{ maxWidth: '80%' }} className="gap-h-10 padding-10 border-light shadow-s  round-16" >
                     <div className="break-all gap-b-10 md" dangerouslySetInnerHTML={{ __html: msg.content }}>
                     </div>
                     {msg.asking == false && <div> {msg.refs && msg.refs.length > 0 && <div className="f-12 remark gap-b-3"><S>引用页面</S></div>}
                         {msg.refs?.map(rf => {
                             return <div className="flex gap-b-5" key={rf.page?.id}>
-                                <span onMouseDown={e => this.openPage(rf)} className="flex item-hover round gap-r-5 padding-w-3 l-20 "><Icon size={16} icon={getPageIcon(rf.page)}></Icon><span className="gap-l-5">{getPageText(rf.page)}</span></span>
+                                <span onMouseDown={e => this.openPage(rf)} className="flex item-hover round gap-r-5 padding-w-3 l-20 cursor "><Icon size={18} icon={getPageIcon(rf.page)}></Icon><span className="gap-l-5">{getPageText(rf.page)}</span></span>
                                 {rf.blockIds.length > 1 && <span className="flex flex-fixed ">{rf.blockIds.map((b, i) => {
-                                    return <em onMouseDown={e => this.openPage(rf, b)} className="bg-hover bg-p-light text-p  padding-w-3 round gap-w-5 cursor" key={b}>{i}</em>
+                                    return <em onMouseDown={e => this.openPage(rf, b)} className="bg-hover bg-p-light text-p  padding-w-3 round gap-w-5 cursor" key={i}>{i}</em>
                                 })}</span>}
                             </div>
                         })}
                         <div className="flex r-gap-r-20 gap-t-20">
-                            <Button size="small" onMouseDown={e => { CopyAlert(msg.content, lst('已复制')) }} ghost icon={DuplicateSvg}><S>复制</S></Button>
+                            <Button size="small" onMouseDown={e => {
+                                var ele = (e.currentTarget as HTMLElement).closest('[data-ai-message]');
+                                console.log(ele, ele.children[0])
+                                var md = ele.querySelector('.md') as HTMLElement;
+                                var c = md.innerText;
+                                console.log('cccc', c);
+                                CopyAlert(c, lst('已复制'))
+
+                            }} ghost icon={DuplicateSvg}><S>复制</S></Button>
                             <Button size="small" onMouseDown={e => { this.tryAgain(msg) }} ghost icon={RefreshSvg} ><S>重新尝试</S></Button>
                         </div></div>}
                 </div>}
@@ -60,6 +68,8 @@ export class AISearchBox extends EventsComponent {
         elementUrl: string;
     }, blockId?: string) {
         if (!blockId) blockId = page.blockIds[0];
+        if(!blockId)blockId=undefined;
+        console.log(page.elementUrl);
         channel.act('/page/open', { elementUrl: page.elementUrl, config: { force: true, blockId: blockId } })
         this.emit('close');
     }
@@ -87,14 +97,17 @@ export class AISearchBox extends EventsComponent {
             <div style={{ paddingBottom: 50 }} className="padding-w-30  min-h-300 max-h-400 overflow-y" ref={e => this.scrollEl = e}>
                 {this.renderMessages()}
             </div>
-            <div className="flex gap-w-30 padding-w-10    border shadow-s round-16 gap-h-10 " style={{ minHeight: 36 }}>
+            <div className="flex gap-w-30 padding-w-10   border-light shadow-s round-16 gap-h-10 " style={{ minHeight: 36 }}>
                 <div className="flex-auto ">
                     <DivInput
                         value={this.prompt}
                         rf={e => this.textarea = e}
                         onInput={e => { this.prompt = e }}
                         onEnter={e => this.send()}
-                        className='min-h-20 l-20'
+                        className='min-h-20 l-20 max-h-100  overflow-y'
+                        onPaster={e => {
+                            this.emit('update')
+                        }}
                         placeholder={lst("告诉AI你想问什么...")} ></DivInput>
                 </div>
                 <ToolTip overlay={<div>
@@ -123,8 +136,8 @@ export class AISearchBox extends EventsComponent {
             this.textarea.innerHTML = '';
             var u = channel.query('/query/current/user');
             var sender = { id: util.guid(), userid: u.id, date: new Date(), content: prompt }
-            if (isTry !== true)
-                this.messages.push(sender)
+            // if (isTry !== true)
+            this.messages.push(sender)
             this.forceUpdate(() => {
                 if (this.scrollEl) {
                     this.scrollEl.scrollTop = this.scrollEl.scrollHeight;
@@ -151,8 +164,9 @@ export class AISearchBox extends EventsComponent {
                             if (typeof str == 'string') text += str;
                             cb.content = marked.parse(text + (done ? "" : "<span class='typed-print'></span>"));
                             self.forceUpdate(() => {
-                                var el = self.scrollEl.querySelector('.typed-print');
-                                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                                // var el = self.scrollEl.querySelector('.typed-print');
+                                // if (el) el.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                                self.scrollEl.scrollTop = self.scrollEl.scrollHeight;
                             });
                             if (done) {
                                 self.scrollEl.scrollTop = self.scrollEl.scrollHeight;
@@ -179,16 +193,18 @@ export class AISearchBox extends EventsComponent {
                 }
             });
             await channel.act('/cache/set', { key: this.getCacheKey(), value: this.messages })
+            this.emit('update')
         }
     }
     getCacheKey() {
         return AI_SEARCH_MESSAGES + this.ws.id;
     }
     ws: LinkWs;
-    async open(options: { ws: any }) {
+    async open(options: { ws: any, word?: string }) {
         this.ws = options.ws;
         var rs = await channel.query('/cache/get', { key: this.getCacheKey() });
         if (Array.isArray(rs)) this.messages = rs;
+        if (options?.word) this.prompt = options.word;
         if (this.scrollEl) {
             this.scrollEl.scrollTop = this.scrollEl.scrollHeight;
         }
@@ -196,8 +212,8 @@ export class AISearchBox extends EventsComponent {
     }
 }
 
-export async function useAISearchBox(options: { ws: LinkWs }) {
-    var pos: PopoverPosition = { center: true };
+export async function useAISearchBox(options: { ws: LinkWs, word?: string }) {
+    var pos: PopoverPosition = { center: true, centerTop: 100 };
     let popover = await PopoverSingleton(AISearchBox, { mask: true, frame: true, shadow: true, });
     let fv = await popover.open(pos);
     await fv.open(options);
@@ -213,5 +229,8 @@ export async function useAISearchBox(options: { ws: LinkWs }) {
         popover.only('close', () => {
             resolve(null)
         });
+        fv.only('update', () => {
+            popover.updateLayout()
+        })
     })
 }
