@@ -64,7 +64,9 @@ export class TextSpan extends Block {
     }
     get isContentEmpty() {
         if (this.childs.length == 0) {
-            return this.firstElementAppear?.isEmpty ? true : false
+            if (this.firstElementAppear)
+                return this.firstElementAppear?.isEmpty ? true : false
+            else return true;
         }
         else return false;
     }
@@ -298,6 +300,13 @@ export class TextSpan extends Block {
         if (this.isFreeBlock) return false;
         return this.allBlockKeys.includes(BlockChildKey.subChilds) && this.subChilds?.length > 0
     }
+    get contentEl() {
+        if (this.el) {
+            var cc = this.el.querySelector('[data-block-content]') as HTMLElement;
+            if (cc) return cc;
+        }
+        return this.el;
+    }
 }
 
 @view("/textspan")
@@ -322,7 +331,7 @@ export class TextSpanView extends BlockView<TextSpan> {
             </div>
         }
         return <div>
-            <div className='sy-block-text-span' style={visibleStyle}>
+            <div className='sy-block-text-span' data-block-content style={visibleStyle}>
                 <div style={style}>
                     <TextSpanArea placeholderEmptyVisible={this.block.isFreeBlock ? true : false} placeholder={placeholder} block={this.block}></TextSpanArea>
                 </div>
