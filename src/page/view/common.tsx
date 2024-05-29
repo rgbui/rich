@@ -198,7 +198,7 @@ export class DefinePageNavBar extends React.Component<{
         }
     }
     async onSearch(word: string) {
-        await useSearchBox({ ws: this.props.ws, word: word, isNav: true });
+        await useSearchBox({ ws: this.props.ws, word: word });
     }
     async openUser(event: React.MouseEvent) {
         var rect = Rect.fromEle(event.currentTarget as HTMLElement);
