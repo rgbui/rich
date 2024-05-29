@@ -7,7 +7,7 @@ import { useInputUrlSelector } from "../../../extensions/link/url";
 import { channel } from "../../../net/channel";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
-import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
+import { BlockUrlConstant } from "../../block/constant";
 import { Matrix } from "../../common/matrix";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
@@ -18,9 +18,9 @@ import { isUrl } from "./declare";
 import { inputBackspaceDeleteContent } from "./input";
 import { InputForceStore } from "./store";
 import { util } from "../../../util/util";
-import { BlockRenderRange } from "../../block/enum";
+import { onEnterInput } from "./keydown";
 
-export async function onPasteBlank(kit: Kit, event: ClipboardEvent) {
+export async function onPastePage(kit: Kit, event: ClipboardEvent) {
     if (kit.page.pageLayout?.type == PageLayoutType.board) {
         var files: File[] = Array.from(event.clipboardData.files);
         var text = event.clipboardData.getData('text/plain');
@@ -41,8 +41,8 @@ export async function onPasteBlank(kit: Kit, event: ClipboardEvent) {
                 var newBlock = await kit.page.createBlock(url, data, fra);
                 kit.boardSelector.clearSelector();
                 newBlock.mounted(() => {
-                     kit.picker.onPicker([newBlock]);
-                     kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
+                    kit.picker.onPicker([newBlock]);
+                    kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
                 })
             });
         }
@@ -78,8 +78,8 @@ export async function onPasteBlank(kit: Kit, event: ClipboardEvent) {
                                 var newBlock = await kit.page.createBlock(url, data, fra);
                                 kit.boardSelector.clearSelector();
                                 newBlock.mounted(() => {
-                                     kit.picker.onPicker([newBlock]);
-                                     kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
+                                    kit.picker.onPicker([newBlock]);
+                                    kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
                                 })
                             });
                             // this.props.change(r.data?.file as any);
@@ -107,9 +107,97 @@ export async function onPasteBlank(kit: Kit, event: ClipboardEvent) {
             });
         }
     }
+    else if ([PageLayoutType.doc, PageLayoutType.ppt].includes(kit.page.pageLayout.type)) {
+        if (kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
+            var text = event.clipboardData.getData('text/plain');
+            var files: File[] = Array.from(event.clipboardData.files);
+            var html = event.clipboardData.getData('text/html');
+            var bs: any[] = [];
+            if (!html && text || text && html && html.endsWith(text)) {
+                bs.push({ url: BlockUrlConstant.TextSpan, content: text })
+            }
+            else if (files.length > 0) {
+                for (let i = 0; i < files.length; i++) {
+                    var file = files[i];
+                    if (file.type.startsWith('image/')) {
+                        bs.push({
+                            url: '/image',
+                            initialData: { file }
+                        })
+                    }
+                    else if (file.type.startsWith('video/')) {
+                        bs.push({
+                            url: '/video',
+                            initialData: { file }
+                        })
+                    }
+                    else if (file.type.startsWith('audio/')) {
+                        bs.push({
+                            url: '/audio',
+                            initialData: { file }
+                        })
+                    }
+                    else {
+                        bs.push({
+                            url: '/file',
+                            initialData: { file }
+                        })
+                    }
+                }
+            }
+            else {
+                var ma;
+                if (ma = html.match(new RegExp(`data\\-name\="shy\\.live"[\\s]+content\\="([^"]+)"`))) {
+                    var id = ma[1];
+                    if (id) {
+                        var rs = readCopyBlocks(id);
+                        /**
+                         * 这里的bs有可能是从诗云的一个浏览器复制到另一个浏览器，
+                         * 本质上里面的内容没有缓存
+                         */
+                        if (Array.isArray(rs) && rs.length > 0) {
+                            event.preventDefault();
+                            bs = rs;
+                        }
+                    }
+                }
+                console.log('like html...');
+                event.preventDefault();
+                var mr: RegExp;
+                try {
+                    mr = new RegExp('([\\s]*<[^>]+>[\\s]*)?<[^>]+>' + util.escapeRegex(text) + '</[^>]+>')
+                }
+                catch (ex) {
+                    mr = null;
+                }
+                if (mr && html.indexOf(text) > -1 && html.match(mr)) {
+                    console.log('html---text');
+                    /**
+                     * 这里表示当前的文本就仅仅在外面包一层html，没有多个块
+                     * 列如:
+                     * text: 你好
+                     * html: <p>你好</p>
+                     */
+                    bs.push({ url: BlockUrlConstant.TextSpan, content: text })
+                }
+                else {
+                    var blocks = parseHtml(html);
+                    bs = blocks;
+                }
+            }
+            kit.page.onReplace(kit.anchorCursor.currentSelectHandleBlocks, bs);
+        }
+    }
+    else if ([PageLayoutType.textChannel].includes(kit.page.pageLayout.type)) {
+
+    }
+    else {
+
+    }
 }
 
-export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent) {
+export async function onPasteAppear(kit: Kit, aa: AppearAnchor, event: ClipboardEvent) {
+    event.stopPropagation();
     var text = event.clipboardData.getData('text/plain');
     if (aa.plain == true) {
         event.preventDefault();
@@ -120,6 +208,9 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
         var files: File[] = Array.from(event.clipboardData.files);
         var html = event.clipboardData.getData('text/html');
         kit.operator.onClearPage();
+        if (window.shyConfig?.isDev) {
+            console.log('paste', text, html, files)
+        }
         if (!html && text || text && html && html.endsWith(text)) {
             console.log('paste text');
             event.preventDefault();
@@ -182,13 +273,9 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
                     await onPasteInsertPlainText(kit, aa, text);
                     return;
                 }
-                var regexText = text.replace(/[\(\)\\\.\[\]\*\?]/g, ($, $1) => {
-                    return '\\' + $
-                })
-
                 var mr: RegExp;
                 try {
-                    mr = new RegExp('([\\s]*<[^>]+>[\\s]*)?<[^>]+>' + regexText + '</[^>]+>')
+                    mr = new RegExp('([\\s]*<[^>]+>[\\s]*)?<[^>]+>' + util.escapeRegex(text) + '</[^>]+>')
                 }
                 catch (ex) {
                     mr = null;
@@ -210,7 +297,9 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
                     return;
                 }
                 var blocks = parseHtml(html);
-                //console.log(html,blocks);
+                if (window.shyConfig?.isDev) {
+                    console.log('paster html....', html, blocks)
+                }
                 if (blocks?.length > 0) {
                     if (blocks.length == 1 && blocks[0].url == BlockUrlConstant.TextSpan) {
                         var cs = blocks[0].blocks.childs
@@ -232,94 +321,136 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
     }
 }
 async function onPasterFiles(kit: Kit, aa: AppearAnchor, files: File[]) {
-    await InputForceStore(aa, async () => {
-        var rowBlock = aa.block.closest(x => !x.isLine);
-        var firstBlock = rowBlock;
-        for (let i = 0; i < files.length; i++) {
-            var file = files[i];
-            if (file.type.startsWith('image/')) {
-                //图片
-                rowBlock = await rowBlock.visibleDownCreateBlock('/image', { initialData: { file } });
-            }
-            else if (file.type.startsWith('video/')) {
-                //图片
-                rowBlock = await rowBlock.visibleDownCreateBlock('/video', { initialData: { file } });
-            }
-            else if (file.type.startsWith('audio/')) {
-                //图片
-                rowBlock = await rowBlock.visibleDownCreateBlock('/audio', { initialData: { file } });
-            }
-            else {
-                rowBlock = await rowBlock.visibleDownCreateBlock('/file', { initialData: { file } });
-            }
+    var bs: any[] = [];
+    for (let i = 0; i < files.length; i++) {
+        var file = files[i];
+        if (file.type.startsWith('image/')) {
+            bs.push({
+                url: '/image',
+                initialData: { file }
+            })
         }
-        if (firstBlock.isContentEmpty) {
-            await firstBlock.delete();
+        else if (file.type.startsWith('video/')) {
+            bs.push({
+                url: '/video',
+                initialData: { file }
+            })
         }
-        kit.page.addActionAfterEvent(async () => {
+        else if (file.type.startsWith('audio/')) {
+            bs.push({
+                url: '/audio',
+                initialData: { file }
+            })
+        }
+        else {
+            bs.push({
+                url: '/file',
+                initialData: { file }
+            })
+        }
+    }
+    if (bs.length > 0)
+        await onPasteCreateBlocks(kit, aa, bs);
+    // await InputForceStore(aa, async () => {
+    //     var rowBlock = aa.block.closest(x => x.isContentBlock);
+    //     var firstBlock = rowBlock;
+    //     for (let i = 0; i < files.length; i++) {
+    //         var file = files[i];
+    //         if (file.type.startsWith('image/')) {
+    //             //图片
+    //             rowBlock = await rowBlock.visibleDownCreateBlock('/image', { initialData: { file } });
+    //         }
+    //         else if (file.type.startsWith('video/')) {
+    //             //图片
+    //             rowBlock = await rowBlock.visibleDownCreateBlock('/video', { initialData: { file } });
+    //         }
+    //         else if (file.type.startsWith('audio/')) {
+    //             //图片
+    //             rowBlock = await rowBlock.visibleDownCreateBlock('/audio', { initialData: { file } });
+    //         }
+    //         else {
+    //             rowBlock = await rowBlock.visibleDownCreateBlock('/file', { initialData: { file } });
+    //         }
+    //     }
+    //     if (firstBlock.isContentEmpty) {
+    //         await firstBlock.delete();
+    //     }
+    //     kit.page.addActionAfterEvent(async () => {
 
-        })
-    })
+    //     })
+    // })
 }
 async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
     if (blocks.length == 0) return;
     var sel = window.getSelection();
-    await InputForceStore(aa, async () => {
-        /**
-         * 这说明只有一行，那么在当前的位置插入它
-         */
-        if (blocks.length == 1 && blocks[0].url == BlockUrlConstant.TextSpan) {
-            var content = aa.textContent;
-            var offset = sel.focusOffset;
-            var rowBlock = aa.block.closest(x => !x.isLine);
-            var beforeText = content.slice(0, offset);
-            var lastText = content.slice(offset);
-            if (rowBlock.childs.length == 0) {
-                await rowBlock.updateProps({ content: '' },BlockRenderRange.self);
-                if (beforeText) await rowBlock.appendBlock({ url: BlockUrlConstant.Text, content: beforeText });
-                var bs = blocks[0].blocks.childs;
-                var rs = await rowBlock.appendArrayBlockData(bs, undefined, BlockChildKey.childs);
-                if (lastText) await rowBlock.appendBlock({ url: BlockUrlConstant.Text, content: lastText });
-                kit.page.addActionAfterEvent(async () => {
-                    kit.anchorCursor.onFocusBlockAnchor(rs.last(), { last: true, render: true, merge: true });
-                })
-            }
-            else {
-                await aa.block.updateProps({ content: beforeText },BlockRenderRange.self);
-                var bs = blocks[0].blocks.childs;
-                var rs = await aa.block.parent.appendArrayBlockData(bs, aa.block.at, BlockChildKey.childs);
-                if (lastText) await aa.block.parent.appendBlock({
-                    url: BlockUrlConstant.Text,
-                    pattern: await aa.block.pattern.cloneData(),
-                    content: lastText
-                });
-                if (aa.block.isContentEmpty) await aa.block.delete();
-                kit.page.addActionAfterEvent(async () => {
-                    kit.anchorCursor.onFocusBlockAnchor(rs.last(), { last: true, render: true, merge: true });
-                })
-            }
-        }
-        else {
-            var rowBlock = aa.block.closest(x => !x.isLine);
-            var firstBlock = rowBlock;
-            if (firstBlock.isContentEmpty) {
-                blocks[0].url = firstBlock.url;
-            }
-            var rs: Block[] = [];
-            for (let i = 0; i < blocks.length; i++) {
-                var bd = blocks[i];
-                rowBlock = await rowBlock.visibleDownCreateBlock(bd.url, bd);
-                rs.push(rowBlock);
-            }
-            if (firstBlock.isContentEmpty) {
-                await firstBlock.delete();
-            }
-            kit.page.addActionAfterEvent(async () => {
-                kit.anchorCursor.onSelectBlocks(rs, { render: true, merge: true });
-                // kit.anchorCursor.onFocusBlockAnchor(rowBlock, { last: true, render: true, merge: true });
-            })
-        }
-    })
+    if (sel.collapse) {
+        await onEnterInput(kit.writer, aa, null, { insertBlocks: blocks });
+    }
+    else if (kit.anchorCursor.currentSelectedBlocks.length > 0) {
+        await kit.page.onBatchDelete(kit.anchorCursor.currentSelectedBlocks, async () => {
+            var cs = kit.anchorCursor.currentSelectedBlocks.first();
+            await cs.parent.appendArrayBlockData(blocks, cs.at, cs.parentKey);
+        });
+    }
+    else {
+        await inputBackspaceDeleteContent(kit.writer, aa, null, { insertBlocks: blocks })
+    }
+    // await InputForceStore(aa, async () => {
+    //     /**
+    //      * 这说明只有一行，那么在当前的位置插入它
+    //      */
+    //     if (blocks.length == 1 && blocks[0].url == BlockUrlConstant.TextSpan) {
+    //         var content = aa.textContent;
+    //         var offset = sel.focusOffset;
+    //         var rowBlock = aa.block.closest(x => x.isContentBlock);
+    //         var beforeText = content.slice(0, offset);
+    //         var lastText = content.slice(offset);
+    //         if (rowBlock.childs.length == 0) {
+    //             await rowBlock.updateProps({ content: '' }, BlockRenderRange.self);
+    //             if (beforeText) await rowBlock.appendBlock({ url: BlockUrlConstant.Text, content: beforeText });
+    //             var bs = blocks[0].blocks.childs;
+    //             var rs = await rowBlock.appendArrayBlockData(bs, undefined, BlockChildKey.childs);
+    //             if (lastText) await rowBlock.appendBlock({ url: BlockUrlConstant.Text, content: lastText });
+    //             kit.page.addActionAfterEvent(async () => {
+    //                 kit.anchorCursor.onFocusBlockAnchor(rs.last(), { last: true, render: true, merge: true });
+    //             })
+    //         }
+    //         else {
+    //             await aa.block.updateProps({ content: beforeText }, BlockRenderRange.self);
+    //             var bs = blocks[0].blocks.childs;
+    //             var rs = await aa.block.parent.appendArrayBlockData(bs, aa.block.at, BlockChildKey.childs);
+    //             if (lastText) await aa.block.parent.appendBlock({
+    //                 url: BlockUrlConstant.Text,
+    //                 pattern: await aa.block.pattern.cloneData(),
+    //                 content: lastText
+    //             });
+    //             if (aa.block.isContentEmpty) await aa.block.delete();
+    //             kit.page.addActionAfterEvent(async () => {
+    //                 kit.anchorCursor.onFocusBlockAnchor(rs.last(), { last: true, render: true, merge: true });
+    //             })
+    //         }
+    //     }
+    //     else {
+    //         var rowBlock = aa.block.closest(x => x.isContentBlock);
+    //         var firstBlock = rowBlock;
+    //         if (firstBlock.isContentEmpty) {
+    //             blocks[0].url = firstBlock.url;
+    //         }
+    //         var rs: Block[] = [];
+    //         for (let i = 0; i < blocks.length; i++) {
+    //             var bd = blocks[i];
+    //             rowBlock = await rowBlock.visibleDownCreateBlock(bd.url, bd);
+    //             rs.push(rowBlock);
+    //         }
+    //         if (firstBlock.isContentEmpty) {
+    //             await firstBlock.delete();
+    //         }
+    //         kit.page.addActionAfterEvent(async () => {
+    //             kit.anchorCursor.onSelectBlocks(rs, { render: true, merge: true });
+    //             // kit.anchorCursor.onFocusBlockAnchor(rowBlock, { last: true, render: true, merge: true });
+    //         })
+    //     }
+    // })
 }
 async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
     if (aa.isSolid) {
