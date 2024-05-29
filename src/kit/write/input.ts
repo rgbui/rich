@@ -12,7 +12,7 @@ import { usePageLinkSelector } from "../../../extensions/link/page";
 import { forceCloseTextTool } from "../../../extensions/text.tool";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
-import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
+import { BlockChildKey, BlockUrlConstant, ParseBlockUrl } from "../../block/constant";
 import { BlockRenderRange } from "../../block/enum";
 import { KeyboardCode } from "../../common/keys";
 import { Rect } from "../../common/vector/point";
@@ -21,14 +21,13 @@ import { useTagSelector } from "../../../extensions/tag";
 import { URL_END_REGEX } from "./declare";
 import { util } from "../../../util/util";
 
-
 /**
  * 输入弹窗
  */
 export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.FormEvent) {
     if (aa.isSolid) return false;
     if (aa.plain) return false;
-    if (aa.block.url == BlockUrlConstant.Title || aa.block.closest(x => x.isOnlyBlock)?.url == BlockUrlConstant.Title) return false;
+    if (aa.block.url == BlockUrlConstant.Title || aa.block.closest(x => x.isContentBlock)?.url == BlockUrlConstant.Title) return false;
     var ev = event.nativeEvent as InputEvent;
     var sel = window.getSelection();
     var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
@@ -108,7 +107,7 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
  */
 export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: React.FormEvent) {
     if (aa.isSolid) return false;
-    if (aa.block.url == BlockUrlConstant.Title || aa.block.closest(x => x.isOnlyBlock)?.url == BlockUrlConstant.Title) return false;
+    if (aa.block.url == BlockUrlConstant.Title || aa.block.closest(x => x.isContentBlock)?.url == BlockUrlConstant.Title) return false;
     var sel = window.getSelection();
     var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
     var current = aa.textContent.slice(0, offset);
@@ -122,7 +121,7 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                 aa.setContent(nv);
                 aa.collapse(nv.length);
                 await InputForceStore(aa, async () => {
-                    var row = aa.block.closest(x => !x.isLine);
+                    var row = aa.block.closest(x => x.isContentBlock);
                     var newBlock: Block;
                     if (row.isContentEmpty) {
                         await row.visibleUpCreateBlock(rule.url, {
@@ -149,7 +148,7 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                 aa.setContent(rest);
                 aa.collapse(offset);
                 await InputForceStore(aa, async () => {
-                    var row = aa.block.closest(x => !x.isLine);
+                    var row = aa.block.closest(x => x.isContentBlock);
                     var newBlock: Block;
                     newBlock = await row.visibleUpCreateBlock(rule.url, { createSource: 'InputBlockSelector' });
                     if (row.isContentEmpty) write.kit.page.addActionAfterEvent(async () => {
@@ -168,16 +167,24 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                 aa.setContent(rest);
                 aa.collapse(0);
                 await InputForceStore(aa, async () => {
-                    var row = aa.block.closest(x => !x.isLine);
+                    var row = aa.block.closest(x => x.isContentBlock);
                     var newBlock: Block;
+                    var props: Record<string, any> = {};
                     if (rule.url == '/list?{listType:1}') {
                         var n = parseInt(current.replace(/[^0-9]/g, ''));
                         if (typeof n == 'number' && n > 1) {
                             newBlock = await row.turn(rule.url, { startNumber: n });
                         }
                     }
+                    else {
+                        var d = ParseBlockUrl(rule.url);
+                        if (d) {
+                            rule.url = d.url;
+                            props = d.data || {};
+                        }
+                    }
                     if (!newBlock)
-                        newBlock = await row.turn(rule.url);
+                        newBlock = await row.turn(rule.url, props);
                     write.kit.page.addActionAfterEvent(async () => {
                         if (newBlock.url == BlockUrlConstant.Code) {
                             (newBlock as any).onFocusCursor()
@@ -198,7 +205,7 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                 aa.collapse(mr.value.length);
                 await InputForceStore(aa, async () => {
                     var block = aa.block;
-                    var rowBlock = block.closest(x => !x.isLine);
+                    var rowBlock = block.closest(x => x.isContentBlock);
                     var pattern = await block.pattern.cloneData();
                     if (rowBlock === block) {
                         if (rowBlock.content)
@@ -252,7 +259,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
         }
         await InputForceStore(aa, async () => {
             var block = aa.block;
-            var rowBlock = block.closest(x => !x.isLine);
+            var rowBlock = block.closest(x => x.isContentBlock);
             if (block.isLine && block.prev) {
                 /**这里判断block前面有没有line */
                 var pv = block.prev;
@@ -382,7 +389,7 @@ export async function inputBackSpaceTextContent(write: PageWrite, aa: AppearAnch
     if (offset == 0) {
         await InputForceStore(aa, async () => {
             var block = aa.block;
-            var rowBlock = block.closest(x => !x.isLine);
+            var rowBlock = block.closest(x => x.isContentBlock);
             var prev = block.prev;
             var isLine = block.isLine;
             if (block.isContentEmpty && block.isLine && !aa.hasGap) await block.delete();
@@ -443,7 +450,7 @@ async function combineTextBlock(write: PageWrite, rowBlock: Block, preBlock?: Bl
     if (typeof preBlock == 'undefined')
         preBlock = rowBlock.prev;
     if (preBlock.hasSubChilds && preBlock.subChilds.length > 0) {
-        var g = preBlock.findReverse(c => c.isVisible && c.isBlock);
+        var g = preBlock.findReverse(c => c.isVisible && c.isContentBlock);
         if (g) {
             preBlock = g;
         }
@@ -508,6 +515,7 @@ export async function inputBackspaceDeleteContent(write: PageWrite,
         insertBlocks?: any[]
     }) {
     if (event) event.preventDefault();
+    console.log('xxxx,delete ba')
     await InputForceStore(aa, async () => {
         var sel = window.getSelection();
         var deleteText = util.getSafeSelRange(sel)?.cloneContents()?.textContent;
@@ -622,7 +630,7 @@ export async function inputBackspaceDeleteContent(write: PageWrite,
 
 
 export async function onSpaceInputUrl(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent,) {
-  
+
     if (aa?.isText) {
         var rowBlock = aa.block.closest(x => x.isBlock);
         if (rowBlock.url == BlockUrlConstant.Title) return;

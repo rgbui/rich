@@ -299,7 +299,8 @@ export interface ChannelGetMapUrls {
 	"/robots/info":{args:{ids:string[]},returnType:Promise<SockResponse<{list:any[]}>>},
 	"/get/robot":{args:{id:string},returnType:Promise<SockResponse<{robot:RobotInfo}>>},
 	"/get/workspace/template":{args:{wsId: string, pageId?: string,elementUrl?:string},returnType:Promise<SockResponse<{template:Record<string,any>}>>},
-	"/page/items":{args:{ws?:LinkWs,wsId?:string,ids:string[],sock?:any},returnType:Promise<SockResponse<{ list:any[],favs:any[]}>>},
+	"/page/items":{args:{ws?:LinkWs,wsId?:string,ids:string[],sock?:any},returnType:Promise<SockResponse<{ list:any[]}>>},
+	"/page/ws/items":{args:{ws?:LinkWs,wsId?:string,ids:string[],sock?:any},returnType:Promise<SockResponse<{ list:any[]}>>},
 	"/page/item/subs":{args:{ws:LinkWs,wsId?:string,id:string},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/parent/ids":{args:{ws:LinkWs,wsId?:string,id:string},returnType:Promise<SockResponse<{ parentIds:string[],exists:boolean }>>},
 	"/page/parent/subs":{args:{ws:LinkWs,wsId?:string,parentIds:string[]},returnType:Promise<SockResponse<{ list:any[] }>>},
@@ -320,7 +321,8 @@ export interface ChannelGetMapUrls {
 	"/current/page/preOrNext":{args:{pageId:string},returnType:Promise<SockResponse<{pre:LinkPageItem,next:LinkPageItem}>>}
 }
 export interface ChannelQueryMapUrls {
-    "/query/current/user":{args:any,returnType:UserBasic},
+    "/page/recently/viewed":{args:{wsId:string},returnType:Promise<{items:LinkPageItem[]}>},
+	"/query/current/user":{args:any,returnType:UserBasic},
 	"/current/page":{args:{},returnType:LinkPageItem},
 	"/cache/get":{args:{key:string},returnType:Promise<any>},
 	"/device/query":{args:any,returnType:Promise<string>},

@@ -870,6 +870,7 @@ body {
     visibility: visible;
 }
 
+
 .visible-hover {
     .visible {
         visibility: hidden;
@@ -910,9 +911,18 @@ body {
         display: none;
     }
 
+    .none-visible {
+        display: inline-block;
+
+    }
+
     &:hover {
         .none {
             display: inline-block;
+        }
+
+        .none-visible {
+            display: none;
         }
     }
 
@@ -920,9 +930,17 @@ body {
         display: none;
     }
 
+    .none-block-visible {
+        display: block;
+    }
+
     &:hover {
         .none-block {
             display: block;
+        }
+
+        .none-block-visible {
+            display: none;
         }
     }
 
@@ -930,9 +948,18 @@ body {
         display: none;
     }
 
+    .none-flex-visible {
+        display: flex;
+
+    }
+
     &:hover {
         .none-flex {
             display: flex;
+        }
+
+        .none-flex-visible {
+            display: none;
         }
     }
 
@@ -940,9 +967,18 @@ body {
         display: none;
     }
 
+    .none-inline-flex-visible {
+        display: inline-flex;
+
+    }
+
     &:hover {
         .none-inline-flex {
             display: inline-flex;
+        }
+
+        .none-inline-flex-visible {
+            display: none;
         }
     }
 }
@@ -1406,10 +1442,11 @@ each(@ops, {
     thead {
         tr {
             background-color: rgba(43, 47, 53, .06);
-            background-color: rgb(231,232,233);
+            background-color: rgb(231, 232, 233);
         }
     }
-    tbody{
+
+    tbody {
         tr {
             &:hover {
                 background-color: rgba(43, 47, 53, .04);
@@ -1417,7 +1454,7 @@ each(@ops, {
         }
     }
 
-  
+
 
     td,
     th {

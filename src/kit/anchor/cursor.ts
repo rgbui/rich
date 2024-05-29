@@ -151,7 +151,7 @@ export class AnchorCursor {
         var appears = findBlocksBetweenAppears(options.startAnchor.el, options.endAnchor.el);
         var rowBlocks: Block[] = [];
         appears.forEach(ap => {
-            var rb = ap.block.closest(g => g.isBlock);
+            var rb = ap.block.closest(g => g.isContentBlock);
             if (!rowBlocks.includes(rb)) rowBlocks.push(rb);
         });
         async function cb(rowBlock: Block) {
@@ -243,13 +243,13 @@ export class AnchorCursor {
      * @returns 
      */
     getAppears() {
-        if (this.startAnchor?.el && this.endAnchor?.el)
-            return findBlocksBetweenAppears(this.startAnchor.el, this.endAnchor.el);
+        if (this.startAnchor?.el && this.endAnchor?.el) return findBlocksBetweenAppears(this.startAnchor.el, this.endAnchor.el);
         else return []
     }
     /**
-     * 获取当前选中的行块
+     * 获取当前选中的块
      * 包括批量选择，光标选择
+     * 块有可能是行内块
      * @returns 
      */
     getAppearBlocks(appear?: AppearAnchor) {
@@ -268,11 +268,20 @@ export class AnchorCursor {
                     bs.push(appear.block)
                 }
                 else if (this.startAnchor) {
-                    bs.push(this.startAnchor.block.closest(x => !x.isLine))
+                    bs.push(this.startAnchor.block)
                 }
             }
         }
         return bs;
+    }
+    getAppearRowBlocks(appear?: AppearAnchor) {
+        var bs = this.getAppearBlocks(appear);
+        var rs: Block[] = [];
+        bs.forEach(b => {
+            var r = b.closest(x => x.isContentBlock);
+            if (r && !rs.includes(r)) rs.push(r)
+        })
+        return rs
     }
     adjustAnchorSorts() {
         if (this.endAnchor === this.startAnchor && this.endOffset < this.startOffset || TextEle.isBefore(this.endAnchor.el, this.startAnchor.el)) {
@@ -419,11 +428,11 @@ export class AnchorCursor {
             }
         }
         if (scroll == 'top') {
-            var br = first?.closest(x => !x.isLine)?.frameBlock;
+            var br = first?.closest(x => x.isContentBlock)?.frameBlock;
             if (!br) onceAutoScroll({ el: first.el, feelDis: 60, dis: 120 })
         }
         else if (scroll == 'bottom') {
-            var br = last?.closest(x => !x.isLine)?.frameBlock;
+            var br = last?.closest(x => x.isContentBlock)?.frameBlock;
             if (!br) onceAutoScroll({ el: last.el, feelDis: 60, dis: 120 })
         }
     }

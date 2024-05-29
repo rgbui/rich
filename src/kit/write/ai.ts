@@ -10,7 +10,7 @@ export function AiInput(write: PageWrite, aa: AppearAnchor, event: React.Keyboar
     if (event.key.toLowerCase() == ' ' || event.keyCode === 32) {
         var sel = window.getSelection();
         if (sel.focusOffset == 0 && aa.isRowStart && !aa.isSolid) {
-            var block = aa.block.closest(x => x.isBlock);
+            var block = aa.block.closest(x => x.isContentBlock);
             useAIWriteAssistant({ block })
             return true;
         }

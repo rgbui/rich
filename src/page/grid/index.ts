@@ -61,7 +61,7 @@ export class GridMap {
         if (this.panel instanceof Page) {
             this.panel.each((b) => {
                 if (b.panelGridMap === this || b.gridMap && b.parent.panelGridMap === this) {
-                    if (!b.isLine && !b.isLayout && !b.isPart)
+                    if (b.isContentBlock)
                         predict(b);
                 }
             })
@@ -69,7 +69,7 @@ export class GridMap {
         else if (this.panel instanceof Block) {
             this.panel.each(b => {
                 if (b.panelGridMap === this || b.gridMap && b.parent.panelGridMap === this) {
-                    if (!b.isLine && !b.isLayout && !b.isPart)
+                    if (b.isContentBlock)
                         predict(b);
                 }
             });

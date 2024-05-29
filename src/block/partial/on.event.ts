@@ -55,7 +55,8 @@ export class Block$Event {
         })
     }
     isHasAI(this: Block) {
-        var hasAi: boolean = true; if (this.page.ws.aiConfig?.disabled == true) {
+        var hasAi: boolean = true;
+        if (this.page.ws.aiConfig?.disabled == true) {
             hasAi = false;
         }
         else {
@@ -442,7 +443,7 @@ export class Block$Event {
              * 如果是大标题进行编辑更行，
              * 此时需要将标题的内容同步至大纲
              */
-            var c = this.closest(x => !x.isLine);
+            var c = this.closest(x =>  x.isContentBlock);
             if (c?.url == BlockUrlConstant.Head) {
                 var outline = this.page.find(x => x.url == BlockUrlConstant.Outline) as PageOutLine;
                 if (outline) {
@@ -537,7 +538,7 @@ export class Block$Event {
                     date: Date.now(),
                     userid: this.page.user.id
                 }
-            },BlockRenderRange.self);
+            }, BlockRenderRange.self);
         })
     }
     async unlock(this: Block, locked: boolean) {
@@ -547,7 +548,7 @@ export class Block$Event {
                 date: Date.now(),
                 userid: this.page.user.id
             }
-        },BlockRenderRange.self);
+        }, BlockRenderRange.self);
     }
     async onZIndex(this: Block, layer: 'top' | 'bottom') {
         await this.page.onAction(ActionDirective.onZIndex, async () => {

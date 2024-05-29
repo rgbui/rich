@@ -118,7 +118,7 @@ export class PageOnEvent {
         this.emit(PageDirective.hoverOutBlock, block);
         this.kit.handle.onCloseBlockHandle();
     }
-    async onCopyBlocks(this: Page, blocks: Block[]) {
+    async onCopyClipboarBlocks(this: Page, blocks: Block[]) {
         await storeCopyBlocks(blocks);
     }
     async onCutBlocks(this: Page, blocks: Block[]) {

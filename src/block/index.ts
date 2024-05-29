@@ -316,8 +316,13 @@ export abstract class Block extends Events {
     get isBlock(): boolean {
         return this.display !== BlockDisplay.inline
     }
-    get isOnlyBlock() {
-        return this.isBlock && !this.isPanel && !this.isLayout && !this.isCell
+    /**
+     * 判断是否是用户可以操作，关注的内容块
+     * 如表格的单元格就不是用户关注的内容块
+     * 如tab里面的page 就不是 用户关注的内容块
+     */
+    get isContentBlock() {
+        return this.isBlock && !this.isPart && !this.isLayout && !this.isCell
     }
     /***
      * 注意换行的元素不一定非得是/row，
@@ -426,6 +431,11 @@ export abstract class Block extends Events {
     get isBackspaceAutomaticallyTurnText() {
         return false;
     }
+    /**
+     * 判断当前块是否是可视的
+     * 在一些复杂的块内，块有可以被折叠了，如togglelist块，如折叠的大标题
+     * 被tab块中page不显示了，那么这个块就不是可视的
+     */
     get isVisible() {
         return this.closest(x => x.isVisibleKey(x.parentKey) == false) ? false : true
     }
@@ -520,6 +530,13 @@ export abstract class Block extends Events {
         if (this.isLayout || this.isPanel) return false;
         if (this.appearAnchors.some(s => s.isText)) return true;
         if (this.childs.length > 0 && this.childs.some(s => s.isTextContent || s.isLineSolid)) return true;
+        if ([BlockUrlConstant.TextSpan,
+        BlockUrlConstant.Head,
+        BlockUrlConstant.Todo,
+        BlockUrlConstant.Callout,
+        BlockUrlConstant.Quote,
+        BlockUrlConstant.List
+        ].includes(this.url as any)) return true;
         return false;
     }
     __appearAnchors: AppearAnchor[] = [];
@@ -638,21 +655,11 @@ export abstract class Block extends Events {
      */
     get handleBlock() {
         if (this.isPart) {
-            var c = this.closest(x => !x.isPart && x.isBlock && !x.isLayout && x.handleBlock)
-            if (c) return c.handleBlock;
+            return this.closest(x => !x.isPart && !x.isLayout);
         }
-        if (this.isLine) {
-            var c = this.closest(x => x.isBlock && !x.isLayout)
-            if (c) {
-                c = c.closest(g => g.handleBlock ? true : false);
-                if (c) return c.handleBlock;
-            }
-            return null;
-        }
-        else if (this.isLayout) {
-            return this.find(g => g.isBlock && !g.isLayout)
-        }
-        return this;
+        var r = this.closest(x => x.isContentBlock);
+        if (r) return r;
+        return null;
     }
     get isShowHandleBlock() {
         return true;
@@ -662,7 +669,7 @@ export abstract class Block extends Events {
      */
     get dropOverBlock() {
         if (this.isLine) {
-            return this.closest(x => x.isBlock && !x.isLayout)
+            return this.closest(x => x.isContentBlock)
         }
         return this;
     }

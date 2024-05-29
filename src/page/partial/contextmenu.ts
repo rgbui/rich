@@ -369,7 +369,10 @@ export class Page$ContextMenu {
             overflow: 'visible',
             input: (item) => {
                 if (item.name == 'smallText') {
-                    this.onUpdateProps({ smallFont: item.checked }, true);
+                    this.onUpdateProps({ smallFont: item.checked }, true, () => {
+                        var bs = this.findAll(c => [BlockUrlConstant.Todo, BlockUrlConstant.Callout, BlockUrlConstant.List, BlockUrlConstant.Code].includes(c.url as any));
+                        this.notifyActionBlockUpdate(...bs)
+                    });
                 }
                 else if (item.name == 'fullWidth') {
                     this.onUpdateProps({ isFullWidth: item.checked }, true);

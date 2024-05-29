@@ -522,7 +522,7 @@ export class AiWrite {
                 at + 1,
                 block.parent.hasSubChilds ? 'subChilds' : 'childs');
             bs.last().mounted(() => {
-                bs.last().page.kit.anchorCursor.onSelectBlocks(bs)
+                bs.last().page.kit.anchorCursor.onSelectBlocks(bs, { render: true, scroll: 'top' })
             })
         })
     }

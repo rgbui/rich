@@ -94,7 +94,9 @@ export interface LinkPageItem<T = {}> {
     childs?: (LinkPageItem & T)[]
     browse?: { count: number, users: string[] }
     edit?: { count?: number, users: string[] }
-    like?: { count?: number, users?: string[] }
+    like?: { count?: number, users?: string[] },
+    parent?: LinkPageItem,
+    parents?: LinkPageItem[],
 }
 
 export interface LinkWs {

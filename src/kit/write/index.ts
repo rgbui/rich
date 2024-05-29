@@ -28,12 +28,13 @@ import {
 
 import {
     MoveCursor,
+    MoveSelectBlocks,
     onEnterInput,
     onEnterInsertNewLine,
     onKeyTab,
     predictKeydown
 } from "./keydown";
-import { onPaste } from "./paste";
+import { onPasteAppear } from "./paste";
 import { AutoInputStore, InputForceStore, InputStore } from "./store";
 import { AiInput } from "./ai";
 import { useAIWriteAssistant } from "../../../extensions/ai";
@@ -85,7 +86,7 @@ export class PageWrite {
     async mousedown(aa: AppearAnchor, event: React.MouseEvent) {
         this.isCompositionstart = false;
         var sel = window.getSelection();
-        var rowBlock = aa.block.closest(x => x.isBlock);
+        var rowBlock = aa.block.closest(x => x.isContentBlock);
         if (rowBlock?.isFreeBlock) {
             if (!sel.focusNode || sel.focusNode && !rowBlock.el.contains(sel.focusNode)) {
                 this.kit.picker.onMousedownAppear(aa, event);
@@ -182,13 +183,21 @@ export class PageWrite {
             case KeyboardCode.ArrowLeft.toLowerCase():
             case KeyboardCode.ArrowRight.toLowerCase():
                 await AutoInputStore();
-                MoveCursor(this, aa, event);
+                if (this.kit.anchorCursor.currentSelectedBlocks.length == 0) {
+                    if (this.kit.page.keyboardPlate.isMetaOrCtrlAndShift() && (ek == KeyboardCode.ArrowDown.toLowerCase() || ek == KeyboardCode.ArrowUp.toLowerCase())) {
+                        var bbs = this.kit.anchorCursor.getAppearRowBlocks();
+                        MoveSelectBlocks(this, bbs, event.nativeEvent, { ctrl: true });
+                    }
+                    else {
+                        MoveCursor(this, aa, event);
+                    }
+                }
                 return;
             case KeyboardCode.Enter.toLowerCase():
                 if (this.kit.page.requireSelectLayout == true) {
                     event.preventDefault();
                     await this.kit.page.onPageTurnLayout(PageLayoutType.doc, async () => {
-                        var lastBlock = this.kit.page.findReverse(g => g.isBlock);
+                        var lastBlock = this.kit.page.findReverse(g => g.isContentBlock);
                         var newBlock: Block;
                         if (lastBlock && lastBlock.parent == this.kit.page.views.last()) {
                             newBlock = await this.kit.page.createBlock(BlockUrlConstant.TextSpan, {}, lastBlock.parent, lastBlock.at + 1);
@@ -203,7 +212,7 @@ export class PageWrite {
                     this.kit.page.emit(PageDirective.save)
                     return;
                 }
-                var ab = aa.block ? aa.block.closest(x => !x.isLine) : undefined;
+                var ab = aa.block ? aa.block.closest(x => x.isContentBlock) : undefined;
                 if (ab.isFreeBlock) {
                     await onEnterInsertNewLine(this, aa, event, () => {
                         this.kit.picker.onRePicker();
@@ -261,7 +270,7 @@ export class PageWrite {
                 break;
             case KeyboardCode.L.toLowerCase():
                 if (this.kit.page.keyboardPlate.isAltAndShift()) {
-                    var lb = aa.block.closest(x => !x.isLine);
+                    var lb = aa.block.closest(x => x.isContentBlock);
                     if (lb) {
                         event.preventDefault();
                         lb.onCopyLink()
@@ -271,7 +280,7 @@ export class PageWrite {
                 break;
             case KeyboardCode.D.toLowerCase():
                 if (this.kit.page.keyboardPlate.isMetaOrCtrl()) {
-                    var b = aa.block.closest(x => !x.isLine);
+                    var b = aa.block.closest(x => x.isContentBlock);
                     if (b) {
                         event.preventDefault();
                         if ([
@@ -298,7 +307,7 @@ export class PageWrite {
                         }
                     }
                     else {
-                        var b = aa.block.closest(x => !x.isLine);
+                        var b = aa.block.closest(x => x.isContentBlock);
                         if (b) {
                             event.preventDefault();
                             await this.kit.writer.onAskAi([b])
@@ -320,7 +329,7 @@ export class PageWrite {
                     }
                     else {
                         var bs: Block[] = [];
-                        var block = aa.block.closest(x => !x.isLine);
+                        var block = aa.block.closest(x => x.isContentBlock);
                         if (this.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
                             bs = this.kit.anchorCursor.currentSelectHandleBlocks;
                         }
@@ -397,7 +406,7 @@ export class PageWrite {
             case KeyboardCode.K8:
             case KeyboardCode.K9:
                 if (this.kit.page.keyboardPlate.isMetaOrCtrlAndOptionOrShift()) {
-                    var bs: Block[] = this.kit.anchorCursor.getAppearBlocks(aa);
+                    var bs: Block[] = this.kit.anchorCursor.getAppearRowBlocks(aa);
                     var url;
                     if (ek == KeyboardCode.K0) url = BlockUrlConstant.TextSpan;
                     else if (ek == KeyboardCode.K1) url = BlockUrlConstant.Head;
@@ -422,7 +431,7 @@ export class PageWrite {
             case KeyboardCode.M.toLowerCase():
                 if (this.kit.page.keyboardPlate.isMetaOrCtrlAndAlt()) {
                     //对当前块发表评论
-                    var block = aa.block.closest(x => !x.isLine);
+                    var block = aa.block.closest(x => x.isContentBlock);
                     if (block) {
                         event.preventDefault();
                         block.onInputComment()
@@ -430,7 +439,7 @@ export class PageWrite {
                 }
                 break;
             case KeyboardCode.Esc.toLowerCase():
-                var bs: Block[] = this.kit.anchorCursor.getAppearBlocks(aa);
+                var bs: Block[] = this.kit.anchorCursor.getAppearRowBlocks(aa);
                 if (bs.length > 0) {
                     event.preventDefault();
                     this.kit.anchorCursor.onSelectBlocks(bs, { render: true });
@@ -438,11 +447,11 @@ export class PageWrite {
                 break;
             case KeyboardCode.T.toLowerCase():
                 if (this.kit.page.keyboardPlate.isMetaOrCtrlAndAlt()) {
-                    var bs: Block[] = this.kit.anchorCursor.getAppearBlocks(aa);
+                    var bs: Block[] = this.kit.anchorCursor.getAppearRowBlocks(aa);
                     await this.kit.page.onBlocksToggle(bs);
                 }
         }
-        var r = aa.block.closest(x => !x.isLine);
+        var r = aa.block.closest(x => x.isContentBlock);
         if (r?.isFreeBlock) {
             //不做任何处理，自动键入换行符
             util.delay(50).then(() => {
@@ -462,7 +471,7 @@ export class PageWrite {
     }
     paste(aa: AppearAnchor, event: React.ClipboardEvent) {
         event.stopPropagation();
-        onPaste(this.kit, aa, event.nativeEvent);
+        onPasteAppear(this.kit, aa, event.nativeEvent);
     }
     dblclick(aa: AppearAnchor, event: React.MouseEvent) {
         this.onSelectionAll(aa);
@@ -534,7 +543,7 @@ export class PageWrite {
      */
     async onSelectionAll(aa: AppearAnchor) {
         var block = aa.block;
-        if (block.isLine) block = block.closest(x => !x.isLine);
+        if (block.isLine) block = block.closest(x => x.isContentBlock);
         var firstAppear = block.find(g => g.appearAnchors.length > 0, true)?.appearAnchors.find(g => true);
         var lastAppear = block.findReverse(g => g.appearAnchors.length > 0, true)?.appearAnchors.findLast(g => true);
         if (firstAppear && lastAppear) {
@@ -570,7 +579,7 @@ export class PageWrite {
                 }
             }
             else if (blocks.length == 1) {
-                turnBlock = blocks[0].closest(x => !x.isLine);
+                turnBlock = blocks[0].closest(x => x.isContentBlock);
             }
             var result = await useTextTool(
                 { roundArea: rect, relativeEleAutoScroll: this.kit.anchorCursor.endAnchor.el },
@@ -592,7 +601,7 @@ export class PageWrite {
                     return;
                 }
                 else if (result.command == 'askAI') {
-                    var rowBlocks = this.kit.page.getAtomBlocks(blocks.map(c => c.closest(x => x.isBlock)));
+                    var rowBlocks = this.kit.page.getAtomBlocks(blocks.map(c => c.closest(x => x.isContentBlock)));
                     this.onAskAi(rowBlocks)
                     return;
                 }
@@ -644,7 +653,7 @@ export class PageWrite {
                 }
                 else {
                     if (['/2', '/3', '/4', '/5'].includes(blockData.url)) {
-                        var rb = aa.block.closest(x => !x.isLine);
+                        var rb = aa.block.closest(x => x.isContentBlock);
                         newBlock = await rb.createBlockCol(parseInt(blockData.url.slice(1)));
                     }
                     else if (['/page'].includes(blockData.url)) {
@@ -660,7 +669,7 @@ export class PageWrite {
                         newBlock = await aa.block.visibleRightCreateBlock(offset, '/link', { ...bd, createSource: 'InputBlockSelector' });
                     }
                     else if (['/blockcomment', '/duplicate', '/delete'].includes(blockData.url)) {
-                        var block = aa.block.closest(x => !x.isLine);
+                        var block = aa.block.closest(x => x.isContentBlock);
                         if (blockData.url == '/blockcomment') {
                             await block.onInputComment()
                         }

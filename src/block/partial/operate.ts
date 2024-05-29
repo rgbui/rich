@@ -93,6 +93,7 @@ export class Block$Operator {
          */
         if (url == oldUrl) return this;
         var data = await this.getWillTurnData(url);
+        console.log(url, this.url, data, da);
         if (da) data = Object.assign(data || {}, da);
         this.page.observeChange('turnBefore', { block: this, turn: { oldUrl: oldUrl, newUrl: url } });
         var newBlock = await BlockFactory.createBlock(url, this.page, data, this.parent);
@@ -132,7 +133,7 @@ export class Block$Operator {
         return newBlocks;
     }
     async clearEmptyBlock(this: Block) {
-        var c = this.closest(x => x.isBlock);
+        var c = this.closest(x => x.isContentBlock);
         if (c.isContentEmpty) {
             await c.delete()
         }
@@ -452,7 +453,7 @@ export class Block$Operator {
         switch (direction) {
             case DropDirection.bottom:
             case DropDirection.top:
-                var row = this.closest(x => x.isBlock);
+                var row = this.closest(x => x.isContentBlock);
                 var childsKey = row.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs;
                 if (direction == DropDirection.bottom) {
                     bs = await row.parent.appendArrayBlockData(blocks, row.at + 1, childsKey);

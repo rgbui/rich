@@ -79,6 +79,7 @@ export class LangStore {
         else {
             if (typeof content == 'string') return content;
             if (checkExists) return null;
+            if (lodash.isObject(content) && !lodash.isNull(content)) return this.format(key, content)
             return key;
         }
     }

@@ -145,7 +145,7 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
     var direction = DropDirection.none;
     var drs = dropBlock.canDropDirections();
     if (dropBlock && dropBlock.isAllowDrops(dragBlocks)) {
-        if (dropBlock.isLine) dropBlock = dropBlock.closest(x => x.isBlock);
+        if (dropBlock.isLine) dropBlock = dropBlock.closest(x => x.isContentBlock);
         var bound = dropBlock.getVisibleContentBound();
         /**
          * 如果块是行

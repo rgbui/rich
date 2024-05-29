@@ -38,6 +38,7 @@ export var TextTurns = {
             case '/list?{listType:1}':
             case '/list?{listType:0}':
             case '/list?{listType:2}':
+            case '/list':
             case '/quote':
             case '/callout':
                 var data = await block.get();
@@ -49,12 +50,11 @@ export var TextTurns = {
                  * list 块转成其它块，期subChilds需要移到最外面，否则转换的不正常
                  */
                 if (block.hasSubChilds) {
-                    if (![BlockUrlConstant.List, '/todo', '/quote', '/callout'].some(s => turnToUrl.startsWith(s))) {
+                    if (![BlockUrlConstant.List, BlockUrlConstant.TextSpan, '/todo', '/quote', '/callout'].some(s => turnToUrl.startsWith(s))) {
                         if (block.subChilds.length > 0) {
                             var cs = block.subChilds.map(c => c);
                             await block.parent.appendArray(cs, block.at + 1, block.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
                         }
-
                         delete data.blocks[BlockChildKey.subChilds];
                     }
                     if (BlockUrlConstant.List == block.url)

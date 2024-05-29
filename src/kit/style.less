@@ -8,8 +8,10 @@
     justify-content: center;
     align-items    : center;
     transform      : translate(-48px, 0px);
+
     span {
-        cursor         : grab;
+        cursor: grab;
+
         &:hover {
             background-color: rgba(55, 53, 47, 0.08);
         }
@@ -18,12 +20,17 @@
 
 .shy-block-selected {
     position: relative;
+
     &::before {
         content       : '\20';
         position      : absolute;
         pointer-events: none;
-        inset         : 0px;
+        left          : 0px;
+        right         : 0px;
+        top           : 0.2rem;
+        bottom        : 0.2rem;
         background    : rgba(46, 170, 220, 0.2);
+        border-radius : 4px;
         z-index       : 81;
         opacity       : 1;
     }
@@ -31,6 +38,7 @@
 
 .shy-block-user-selected {
     position: relative;
+
     &::before {
         content       : '\20';
         position      : absolute;
@@ -57,6 +65,7 @@
 .shy-block-drag-over-sub,
 .shy-block-drag-over-inner {
     position: relative;
+
     &::after {
         content       : '\20';
         position      : absolute;
@@ -150,4 +159,3 @@
         background-color: rgba(46, 170, 220, 0.2);
     }
 }
-

@@ -679,7 +679,7 @@ export class BlockPicker {
         event.stopPropagation();
         event.preventDefault();
         var sel = window.getSelection();
-        var rowBlock = aa.block.closest(x => x.isBlock);
+        var rowBlock = aa.block.closest(x => x.isContentBlock);
         if (!this.blocks.some(s => s == rowBlock)) {
             setTimeout(() => {
                 sel.collapse(aa.block.page.viewEl);

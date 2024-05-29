@@ -280,7 +280,7 @@ export class AppearAnchor {
      * 判断是否为当前行块的最开始处的appear
      */
     get isRowStart() {
-        var row = this.block.closest(x => !x.isLine);
+        var row = this.block.closest(x => x.isContentBlock);
         if (row == this.block) {
             if (row.appearAnchors[0] === this) return true;
         }
@@ -291,7 +291,7 @@ export class AppearAnchor {
         return false;
     }
     get isRowEnd() {
-        var row = this.block.closest(x => !x.isLine);
+        var row = this.block.closest(x =>  x.isContentBlock);
         if (row == this.block) {
             if (row.appearAnchors.last() === this) return true;
         }

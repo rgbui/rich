@@ -10,7 +10,6 @@ import { Table } from "./index";
 export class TableRow extends Block {
     display = BlockDisplay.block;
     partName = 'row';
-    get isRow() { return true }
     get table() {
         return this.parent as Table;
     }

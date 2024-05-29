@@ -156,10 +156,10 @@ export async function MoveSelectBlocks(write: PageWrite, blocks: Block[], event:
         //上下移动，扩展选择
         if (event.key == KeyboardCode.ArrowUp) {
             var block = first;
-            var pre = block.prevFind(x => !x.isLine && !x.isLayout && !x.isCell);
+            var pre = block.prevFind(x => x.isContentBlock);
             if (pre) {
                 event.preventDefault();
-                var br = pre?.closest(x => !x.isLine)?.frameBlock;
+                var br = pre?.closest(x => x.isContentBlock)?.frameBlock;
                 if (!br) onceAutoScroll({ el: pre.el, feelDis: 60, dis: 120 })
                 var ns = [pre, ...write.kit.anchorCursor.currentSelectHandleBlocks];
                 ns = write.kit.page.getAtomBlocks(ns);
@@ -168,10 +168,10 @@ export async function MoveSelectBlocks(write: PageWrite, blocks: Block[], event:
         }
         else {
             var block = last;
-            var next = block.nextFind(x => !x.isLine && !x.isLayout && !x.isCell);
+            var next = block.nextFind(x => x.isContentBlock);
             if (next) {
                 event.preventDefault();
-                var br = next?.closest(x => !x.isLine)?.frameBlock;
+                var br = next?.closest(x => x.isContentBlock)?.frameBlock;
                 if (!br) onceAutoScroll({ el: next.el, feelDis: 60, dis: 120 })
                 var ns = [...write.kit.anchorCursor.currentSelectHandleBlocks, next];
                 ns = write.kit.page.getAtomBlocks(ns);
@@ -190,19 +190,19 @@ export async function MoveSelectBlocks(write: PageWrite, blocks: Block[], event:
         event.preventDefault();
         if (event.key == KeyboardCode.ArrowUp) {
             var block = first;
-            var pre = block.prevFind(x => !x.isLine && !x.isLayout && !x.isCell);
+            var pre = block.prevFind(x => x.isContentBlock);
             if (pre) {
-                var br = pre?.closest(x => !x.isLine)?.frameBlock;
+                var br = pre?.closest(x => x.isContentBlock)?.frameBlock;
                 if (!br) onceAutoScroll({ el: pre.el, feelDis: 60, dis: 120 })
                 await write.kit.anchorCursor.onSelectBlocks([pre], { render: true, scroll: "top" })
             }
         }
         else if (event.key == KeyboardCode.ArrowDown) {
             var block = last;
-            var next = block.hasSubChilds && block.subChilds.first() ? block.subChilds.first() : block.nextFind(x => !x.isLine && !x.isLayout && !x.isCell);
+            var next = block.hasSubChilds && block.subChilds.first() ? block.subChilds.first() : block.nextFind(x => x.isContentBlock);
             if (next) {
 
-                var br = next?.closest(x => !x.isLine)?.frameBlock;
+                var br = next?.closest(x => x.isContentBlock)?.frameBlock;
                 if (!br) onceAutoScroll({ el: next.el, feelDis: 60, dis: 120 })
                 await write.kit.anchorCursor.onSelectBlocks([next], { render: true, scroll: "bottom" })
             }
@@ -217,14 +217,15 @@ export async function MoveSelectBlocks(write: PageWrite, blocks: Block[], event:
  * @param aa 
  * @param event 
  */
-export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
+export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent, options?: { insertBlocks: any[] }) {
     var sel = window.getSelection();
     var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
     var page = write.kit.page;
-    event.preventDefault();
+    if (event)
+        event.preventDefault();
     await InputForceStore(aa, async () => {
         var block = aa.block;
-        var rowBlock = block.closest(x => !x.isLine);
+        var rowBlock = block.closest(x => x.isContentBlock);
         var gs = block.isLine ? block.nexts : [];
         var rest: string, text: string;
         if (aa.isText) {
@@ -253,8 +254,19 @@ export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: Re
             newBlock = await rowBlock.visibleDownCreateBlock(url, { ...continuouslyProps, blocks: { childs } });
         }
         await newBlock.appendArray(gs, undefined, BlockChildKey.childs);
+        var rs: Block[];
+        if (Array.isArray(options?.insertBlocks) && options.insertBlocks.length > 0) {
+            if (newBlock.isContentEmpty) {
+                rs = await newBlock.replaceDatas(options.insertBlocks)
+            }
+            else
+                rs = await newBlock.parent.appendArrayBlockData(options.insertBlocks, newBlock.at + 1, newBlock.parentKey);
+            if (rowBlock.isContentEmpty) await rowBlock.delete()
+        }
         page.addActionAfterEvent(async () => {
-            write.kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
+            if (rs && rs.length > 0)
+                write.kit.anchorCursor.onSelectBlocks(rs, { render: true, merge: true })
+            else write.kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
         })
     });
 }

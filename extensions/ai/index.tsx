@@ -350,7 +350,7 @@ export class AIWriteAssistant extends EventsComponent {
                             var newBlocks = await b.parent.appendArrayBlockData(blockDatas, b.at + 1, b.parentKey);
                             if (newBlocks.length > 0)
                                 newBlocks.last().mounted(() => {
-                                    this.page.kit.anchorCursor.onSelectBlocks(newBlocks, { render: true });
+                                    this.page.kit.anchorCursor.onSelectBlocks(newBlocks, { render: true, scroll: 'top' });
                                 })
                             for (let i = 0; i < bs.length; i++) {
                                 await bs[i].delete()
@@ -380,7 +380,7 @@ export class AIWriteAssistant extends EventsComponent {
                             var newBlocks = await b.parent.appendArrayBlockData(blockDatas, b.at + 1, b.parentKey);
                             if (newBlocks.length > 0)
                                 newBlocks.last().mounted(() => {
-                                    this.page.kit.anchorCursor.onSelectBlocks(newBlocks, { render: true });
+                                    this.page.kit.anchorCursor.onSelectBlocks(newBlocks, { render: true, scroll: 'bottom' });
                                 })
                         })
                         this.close()
@@ -392,7 +392,7 @@ export class AIWriteAssistant extends EventsComponent {
                     this.close()
                     break;
                 case 'try':
-                    this.page.kit.anchorCursor.onSelectBlocks(this.options.blocks, { render: true })
+                    this.page.kit.anchorCursor.onSelectBlocks(this.options.blocks, { render: true ,scroll: 'top'})
                     await this.open({ blocks: this.options.blocks, ask: this.ask });
                     this.onTry();
                     break;
@@ -641,7 +641,7 @@ export class AIWriteAssistant extends EventsComponent {
                     await onMergeListBlocks(self.page, bs);
                     bs = bs.findAll(g => g.parent == p);
                 }
-                await self.writer.page.kit.anchorCursor.onSelectBlocks(bs, { render: true })
+                await self.writer.page.kit.anchorCursor.onSelectBlocks(bs, { render: true, scroll: 'bottom'})
             }
             self.status = AIWriteStatus.asked;
             self.updateView(async () => {
@@ -773,6 +773,7 @@ export class AIWriteAssistant extends EventsComponent {
         document.removeEventListener('keydown', this.onKeydown, true);
     }
     onKeydown = (event: KeyboardEvent) => {
+        if (this.visible == false) return;
         if (event.key != KeyboardCode.Esc && [AIWriteStatus.asking, AIWriteStatus.selectionAsking].includes(this.status)) return;
         if (event.key == KeyboardCode.Esc) {
             if ([AIWriteStatus.asking, AIWriteStatus.selectionAsking].includes(this.status)) {

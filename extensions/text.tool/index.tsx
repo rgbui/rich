@@ -359,7 +359,7 @@ class TextTool extends EventsComponent {
     onSearch(event: React.MouseEvent) {
         if (this.selectionText) {
             //这里打开搜索框
-            useSearchBox({ ws: this.page.ws, word: this.selectionText, isNav: true })
+            useSearchBox({ ws: this.page.ws, word: this.selectionText })
         }
     }
     componentDidMount() {

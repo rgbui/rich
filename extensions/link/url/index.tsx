@@ -191,7 +191,7 @@ class InputUrlSelector extends InputTextPopSelector {
             left: this.pos.x
         }
         return <div>
-            {this.visible && <div className='shy-url-selector'
+            {this.visible && <div className='shy-url-selector round bg-white shadow-s border'
                 style={style}>{this.renderUrls()}</div>}
         </div>
     }

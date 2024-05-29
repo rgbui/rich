@@ -1,8 +1,10 @@
+
 import { Page } from "..";
 import { useAIWriteAssistant } from "../../../extensions/ai";
 import { UA } from "../../../util/ua";
 import { Block } from "../../block";
 import { findBlockAppear } from "../../block/appear/visible.seek";
+import { BlockUrlConstant } from "../../block/constant";
 import { KeyboardCode, KeyboardPlate } from "../../common/keys";
 import { Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
@@ -20,7 +22,10 @@ export function PageKeys(
     }, undefined, 'redo', true);
     keyboardPlate.listener(kt => kt.is(KeyboardCode.ArrowDown), (event, kt) => {
         if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
-            MoveSelectBlocks(page.kit.writer, page.kit.anchorCursor.currentSelectHandleBlocks, event)
+            MoveSelectBlocks(page.kit.writer, page.kit.anchorCursor.currentSelectHandleBlocks, event, {
+                ctrl: kt.isMetaOrCtrlAndShift(),
+                shift: kt.isShift()
+            })
         }
         if (page.requireSelectLayout && page.isCanEdit) {
             var list = Array.from(page.view.el.querySelectorAll('.shy-page-view-template-picker-items a'));
@@ -41,7 +46,10 @@ export function PageKeys(
     });
     keyboardPlate.listener(kt => kt.is(KeyboardCode.ArrowUp), (event, kt) => {
         if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
-            MoveSelectBlocks(page.kit.writer, page.kit.anchorCursor.currentSelectHandleBlocks, event)
+            MoveSelectBlocks(page.kit.writer, page.kit.anchorCursor.currentSelectHandleBlocks, event, {
+                ctrl: kt.isMetaOrCtrlAndShift(),
+                shift: kt.isShift()
+            })
         }
         if (page.requireSelectLayout && page.isCanEdit) {
             var list = Array.from(page.view.el.querySelectorAll('.shy-page-view-template-picker-items a'));
@@ -83,6 +91,14 @@ export function PageKeys(
                 link.dispatchEvent(ev);
             }
         }
+        else if (kt.isMetaOrCtrl()) {
+            if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
+                page.onBlocksSolidInput(page.kit.anchorCursor.currentSelectHandleBlocks)
+            }
+        }
+    });
+    keyboardPlate.listener(kt => kt.isMetaOrCtrl(KeyboardCode.V), async (event, kt) => {
+
     });
     keyboardPlate.listener(kt => {
         var r = UA.isMacOs && kt.is(KeyboardCode.Backspace, KeyboardCode.Delete) || !UA.isMacOs && kt.is(KeyboardCode.Delete);
@@ -100,18 +116,12 @@ export function PageKeys(
                 page.onBatchDelete(page.kit.picker.blocks);
             }
         }
-    },
-        (event, kt) => {
-
-        },
-        'delete',
-        false
-    );
+    });
     keyboardPlate.listener(kt => kt.isMetaOrCtrl(KeyboardCode.C),
         (event, kt) => {
             if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
                 event.preventDefault();
-                page.onCopyBlocks(page.kit.anchorCursor.currentSelectHandleBlocks)
+                page.onCopyClipboarBlocks(page.kit.anchorCursor.currentSelectHandleBlocks)
             }
         },
         (event, kt) => {
@@ -153,9 +163,7 @@ export function PageKeys(
         kt.isMetaOrCtrl(KeyboardCode.D)
         ,
         async (ev, k) => {
-            if (page.kit.picker.blocks.length > 0)
-            {
-                console.log('sss', page.kit.picker.blocks);
+            if (page.kit.picker.blocks.length > 0) {
                 var getCommands = async (blocks: Block[]) => {
                     var rs;
                     await blocks.eachAsync(async block => {
@@ -240,15 +248,85 @@ export function PageKeys(
                     }
                 }
             }
+            else if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
+
+            }
         }
     );
     keyboardPlate.listener(kt => kt.isMetaOrCtrl(KeyboardCode.J),
         async (ev, kt) => {
             if (ev.key.toLowerCase() == KeyboardCode.J.toLowerCase()) {
-                if (page.kit.anchorCursor.currentSelectedBlocks.length > 0) {
-                    useAIWriteAssistant({ blocks: page.kit.anchorCursor.currentSelectedBlocks.map(b => b) })
+                if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
+                    useAIWriteAssistant({ blocks: page.kit.anchorCursor.currentSelectHandleBlocks.map(b => b) })
                 }
             }
         }
     );
+    keyboardPlate.listener(kt => kt.isShift(KeyboardCode.Tab) || kt.is(KeyboardCode.Tab),
+        async (ev, kt) => {
+            if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
+                ev.preventDefault();
+                if (kt.isShift()) {
+                    page.onTab(page.kit.anchorCursor.currentSelectHandleBlocks, true);
+                }
+                else {
+                    page.onTab(page.kit.anchorCursor.currentSelectHandleBlocks, false);
+                }
+            }
+        }
+    );
+    keyboardPlate.listener(kt => kt.isMetaOrCtrlAndOptionOrShift(KeyboardCode.K0) ||
+        kt.isMetaOrCtrlAndOptionOrShift(KeyboardCode.K1) ||
+        kt.isMetaOrCtrlAndOptionOrShift(KeyboardCode.K2) ||
+        kt.isMetaOrCtrlAndOptionOrShift(KeyboardCode.K3) ||
+        kt.isMetaOrCtrlAndOptionOrShift(KeyboardCode.K4) ||
+        kt.isMetaOrCtrlAndOptionOrShift(KeyboardCode.K5) ||
+        kt.isMetaOrCtrlAndOptionOrShift(KeyboardCode.K6) ||
+        kt.isMetaOrCtrlAndOptionOrShift(KeyboardCode.K7) ||
+        kt.isMetaOrCtrlAndOptionOrShift(KeyboardCode.K8) ||
+        kt.isMetaOrCtrlAndOptionOrShift(KeyboardCode.K9),
+        (ev, kt) => {
+            var ek = KeyboardPlate.getKeyString(ev).toLowerCase();
+            if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
+                var url;
+                if (ek == KeyboardCode.K0) url = BlockUrlConstant.TextSpan;
+                else if (ek == KeyboardCode.K1) url = BlockUrlConstant.Head;
+                else if (ek == KeyboardCode.K2) url = '/head?{level:"h2"}';
+                else if (ek == KeyboardCode.K3) url = '/head?{level:"h3"}';
+                else if (ek == KeyboardCode.K4) url = '/head?{level:"h4"}';
+                else if (ek == KeyboardCode.K5) url = '/todo';
+                else if (ek == KeyboardCode.K6) url = '/list?{listType:0}';
+                else if (ek == KeyboardCode.K7) url = '/list?{listType:1}';
+                else if (ek == KeyboardCode.K8) url = '/list?{listType:2}';
+                else if (ek == KeyboardCode.K9) url = BlockUrlConstant.Link;
+                if (url) {
+                    ev.preventDefault();
+                    page.onBatchTurn(page.kit.anchorCursor.currentSelectHandleBlocks, url).then(rs => {
+                        page.kit.anchorCursor.onSelectBlocks(rs, { render: true, merge: true });
+                    })
+                }
+            }
+        }
+    );
+    keyboardPlate.listener(kt => kt.isMetaOrCtrl(KeyboardCode.D), async (ev, kt) => {
+        if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
+            page.onCopyBlocks(page.kit.anchorCursor.currentSelectHandleBlocks)
+        }
+    });
+    keyboardPlate.listener(kt => kt.only(KeyboardCode.Space), async (ev, kt) => {
+        if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
+            var pic = page.kit.anchorCursor.currentSelectHandleBlocks.find(g => g.url == BlockUrlConstant.Image);
+            if (pic) {
+                ev.preventDefault();
+                page.onBlocksSolidInput([pic])
+            }
+        }
+    })
+    keyboardPlate.listener(kt => kt.isMetaOrCtrlAndAlt(KeyboardCode.T), async (ev, kt) => {
+        if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
+
+            await page.onBlocksToggle(page.kit.anchorCursor.currentSelectHandleBlocks);
+
+        }
+    })
 }

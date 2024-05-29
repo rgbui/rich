@@ -695,14 +695,14 @@ export class Page$Operator {
                 })
             })
         }
-
     }
 
     async onInterchange(this: Page, blocks: Block[], arrow: 'down' | 'up'
     ) {
+        var first = blocks.first();
+        var last = blocks.last();
+        if (first?.url == BlockUrlConstant.Title || last?.url == BlockUrlConstant.Title) return;
         await this.onAction('onInterchange', async () => {
-            var first = blocks.first();
-            var last = blocks.last();
             if (first !== last) {
                 if (first.el && last.el && first.getVisibleBound().top > last.getVisibleBound().top) {
                     [first, last] = [last, first]
@@ -711,10 +711,10 @@ export class Page$Operator {
             // console.log(arrow)
             if (arrow == 'down') {
                 var block = last;
-                var next = block.nextFind(x => !x.isLine && !x.isLayout && !x.isCell);
+                var next = block.nextFind(x => x.isContentBlock);
                 // console.log(next);
                 if (next) {
-                    var br = next?.closest(x => !x.isLine)?.frameBlock;
+                    var br = next?.closest(x =>  x.isContentBlock)?.frameBlock;
                     if (!br) onceAutoScroll({ el: next.el, feelDis: 60, dis: 120 })
                     await next.parent.appendArray(blocks, next.at + 1, next.parentKey);
 
@@ -722,9 +722,9 @@ export class Page$Operator {
             }
             else if (arrow == 'up') {
                 var block = first;
-                var pre = block.prevFind(x => !x.isLine && !x.isLayout && !x.isCell);
+                var pre = block.prevFind(x => x.isContentBlock);
                 if (pre) {
-                    var br = pre?.closest(x => !x.isLine)?.frameBlock;
+                    var br = pre?.closest(x =>  x.isContentBlock)?.frameBlock;
                     if (!br) onceAutoScroll({ el: pre.el, feelDis: 60, dis: 120 })
                     await pre.parent.appendArray(blocks, pre.at, pre.parentKey);
                 }

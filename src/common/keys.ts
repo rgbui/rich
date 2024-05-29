@@ -29,6 +29,8 @@ export enum KeyboardCode {
     F = 'F',
     Q = 'Q',
     N = 'N',
+    T = 'T',
+    V='V',
     Esc = 'Escape',
     K0 = '0',
     K1 = '1',
@@ -201,6 +203,12 @@ export class KeyboardPlate {
     is(...codes: KeyboardCode[]) {
         return this.keys.exists(g => codes.exists(c => c.toLowerCase() == g.toLowerCase()));
     }
+    only(...codes: KeyboardCode[]) {
+        if (this.metaKey == false && this.altKey == false && this.ctrlKey == false && this.shiftKey == false) {
+            return this.keys.exists(g => codes.exists(c => c.toLowerCase() == g.toLowerCase()));
+        }
+        else return false;
+    }
     isContains(...codes: KeyboardCode[]) {
         return this.keys.length >= codes.length && codes.each(c => this.keys.exists(k => k.toLowerCase() == c.toLowerCase()))
     }
@@ -250,6 +258,18 @@ export class KeyboardPlate {
     }
     isMetaOrCtrlAndShift(code?: KeyboardCode) {
         if (UA.isMacOs && this.onlyKeys('meta', 'shift') || !UA.isMacOs && this.onlyKeys('ctrl', 'shift')) {
+            if (typeof code != 'undefined') { if (this.is(code)) return true; }
+            else return true;
+        }
+        return false;
+    }
+    /**
+     * cmd/ctrl+option/shift+key
+     * @param code 
+     * @returns 
+     */
+    isMetaOrCtrlAndOptionOrShift(code?: KeyboardCode) {
+        if (UA.isMacOs && this.onlyKeys('meta', 'alt') || !UA.isMacOs && this.onlyKeys('ctrl', 'shift')) {
             if (typeof code != 'undefined') { if (this.is(code)) return true; }
             else return true;
         }

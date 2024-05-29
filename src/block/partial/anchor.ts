@@ -12,11 +12,11 @@ export class Block$Anchor {
         url: string,
         data: Record<string, any> = {}
     ) {
-        var row = this.closest(x => x.isBlock);
+        var row = this.closest(x => x.isContentBlock);
         if (row) return await this.page.createBlock(url, { ...data }, row.parent, row.at + 1, row.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
     }
     async visibleUpCreateBlock(this: Block, url: string, data: Record<string, any>) {
-        var row = this.closest(x => x.isBlock);
+        var row = this.closest(x => x.isContentBlock);
         if (row) return await this.page.createBlock(url, { ...data }, row.parent, row.at, row.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
     }
     async visibleRightCreateBlock(this: Block, at: number, url: string, data: Record<string, any>) {
@@ -58,7 +58,7 @@ export class Block$Anchor {
         }
     }
     async createBlockCol(this: Block, col: number) {
-        var b = this.closest(x => !x.isLine);
+        var b = this.closest(x => x.isContentBlock);
         var pa = b.closest(x => x.url != BlockUrlConstant.List);
         var pr = pa.closest(x => x.url == BlockUrlConstant.Row);
         if (pr) {

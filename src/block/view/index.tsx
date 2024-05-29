@@ -42,12 +42,6 @@ export abstract class BlockView<T extends Block> extends Component<{ block: T }>
         }
         return this.renderView();
     }
-    getFontStyle() {
-        var fontStyle: CSSProperties = {};
-        fontStyle.fontSize = this.block.page.fontSize;
-        fontStyle.lineHeight = this.block.page.lineHeight;
-        return fontStyle;
-    }
     abstract renderView(): React.ReactNode
     errorRefreshTip: Tip;
     viewError: { error: Error, errorInfo: ErrorInfo } = null

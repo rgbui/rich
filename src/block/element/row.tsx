@@ -216,7 +216,7 @@ export class RowView extends BlockView<Row>{
         }
         ns.push({ icon: TrashSvg, name: 'hideAll', text: lst('隐藏所有分栏线'), checkLabel: this.block.gaps.every(c => c.type == 'none') });
         ns.push({ type: MenuItemType.divide });
-        ns.push({ type: MenuItemType.help, text: lst('了解如何使用分栏线'), url: window.shyConfig?.isUS ? "https://help.shy.red/page/40#oaUQGGbmdsAbd7BTmSAE3V" : "https://help.shy.live/page/1838#iRLc3r6MQGU5x3jD7wBDgM" })
+        ns.push({ type: MenuItemType.help, text: lst('了解如何使用分栏线'), url: window.shyConfig?.isUS ? "https://help.shy.red/page/40#oaUQGGbmdsAbd7BTmSAE3V" : "https://help.shy.live/page/1988#9iYCSyzpZYVoteceakPHup" })
         var r = await useSelectMenuItem({ roundPoint: p }, ns, {
             input(item) {
                 console.log('item', item)

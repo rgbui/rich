@@ -310,8 +310,15 @@ export class Page extends Events<PageDirective> {
                 var isFull: boolean = this.isFullWidth;
                 if (this.ws?.isPubSite) isFull = this.ws?.publishConfig.isFullWidth;
                 if (isFull) {
-                    style.marginLeft = 80;
-                    style.marginRight = 80;
+                    if(this.pageLayout?.type==PageLayoutType.ppt){
+                        style.marginLeft =80;
+                        style.marginRight =80;
+                    }
+                    else{
+                        style.marginLeft = 96;
+                        style.marginRight = 96;
+                    }
+                 
                     if (this.pageLayout?.type == PageLayoutType.textChannel) {
                         style.marginLeft = 0;
                         style.marginRight = 0;
@@ -449,6 +456,7 @@ export class Page extends Events<PageDirective> {
             sf = this.ws.publishConfig.smallFont;
         }
         if (this.pageLayout?.type == PageLayoutType.ppt) return sf ? '1.6rem' : '1.8rem'
+        if (this.pageLayout?.type == PageLayoutType.textChannel) return '1.4rem'
         return sf ? '1.4rem' : '1.6rem'
     }
     /**
@@ -466,20 +474,13 @@ export class Page extends Events<PageDirective> {
         else return this.fontSize;
     }
     get lineHeight() {
-        var sf = this.smallFont;
-        if (this.ws?.isPubSite) {
-            sf = this.ws.publishConfig.smallFont;
-        }
-        if (this.pageLayout?.type == PageLayoutType.ppt) return sf ? '2.56rem' : '2.88rem'
-        else if (this.pageLayout?.type == PageLayoutType.textChannel) return sf ? '2rem' : '2.4rem'
-        return sf ? '2rem' : '2.4rem'
+        return util.remScale(this.fontSize, this.fontLineRatio);
     }
     /**
      * 文字大小与行高的比例系数
      */
     get fontLineRatio() {
-        if (this.pageLayout?.type == PageLayoutType.ppt) return 1.6
-        else return 1.3
+        return 1.5;
     }
     private _pe: {
         type: ElementType;

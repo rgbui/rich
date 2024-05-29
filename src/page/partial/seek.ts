@@ -92,7 +92,7 @@ export class Page$Seek {
         textStyle.deleteLine = true;
         textStyle.code = true;
         textStyle.equation = false;
-        var rowBlock = blocks.first().closest(x => !x.isLine);
+        var rowBlock = blocks.first().closest(x =>  x.isContentBlock);
         if (!rowBlock) {
             console.log('not found row block', blocks);
             return textStyle;

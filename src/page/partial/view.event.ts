@@ -10,7 +10,7 @@ import { util } from "../../../util/util";
 import { Matrix } from "../../common/matrix";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
-import { onPasteBlank } from "../../kit/write/paste";
+import { onPastePage } from "../../kit/write/paste";
 import { PageLayoutType } from "../declare";
 import { PageDirective, PageLocation } from "../directive";
 import { BlockUrlConstant } from "../../block/constant";
@@ -69,9 +69,7 @@ export class Page$ViewEvent {
     }
     onPaste(this: Page, event: ClipboardEvent) {
         if (this.isPageOff) return;
-        if (this.pageLayout?.type == PageLayoutType.board) {
-            onPasteBlank(this.kit, event);
-        }
+        onPastePage(this.kit, event);
     }
     /**
      * 
