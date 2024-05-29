@@ -20,8 +20,8 @@ function parseTextBlock(element: HTMLElement[] | HTMLElement) {
         var name = node?.tagName?.toLowerCase();
         if (node instanceof Text) {
             var text = node.textContent;
-            if (text && text != '\n')
-                blocks.push({ url: '/text', content: node.textContent, ...(style || {}) })
+            // if (text && text != '\n')
+            blocks.push({ url: '/text', content: node.textContent, ...(style || {}) })
         }
         else if (name == 'a' && node.getAttribute('href')) {
             var href = node.getAttribute('href');
@@ -70,6 +70,7 @@ function parseTextBlock(element: HTMLElement[] | HTMLElement) {
                     }]
                 }
             }
+
             if (cs.length > 0) {
                 for (let i = 0; i < cs.length; i++) {
                     var ele = cs[i] as HTMLElement;
@@ -78,10 +79,10 @@ function parseTextBlock(element: HTMLElement[] | HTMLElement) {
             }
             else {
                 var text = node.textContent;
-                if (text && text != '\n')
+                if (text)
                     blocks.push({ url: '/text', content: node.textContent, ...(style || {}) })
                 else if (name == 'br') {
-                    blocks.push({ url: '/text', content: ' ', ...(style || {}) })
+                    blocks.push({ url: '/text', content: '\n', ...(style || {}) })
                 }
             }
         }
