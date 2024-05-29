@@ -82,16 +82,22 @@ export class TextContent extends Block {
      * 如果不是空白的样式的文本块，那么在尾部输入时会自动创建一个新的文本块
      */
     get isBlankPlain() {
-        if (this.link) return false;
+        if (this.getPageLink() !== null) return false;
         if (this.code == true) return false;
         var fs = this.pattern.getFontStyle();
         var fill = this.pattern.getFillStyle();
-        if (fs?.color && fs?.color != 'inherit') return false;
-        if (fill?.color && fill?.color != 'rgba(255,255,255,0)') return false;
-        if (fs?.fontStyle == 'italic') return false;
-        if (fs && (fs?.fontWeight == 'bold' || fs?.fontWeight == 700)) return false;
-        if (fs && fs?.textDecoration != 'none') return false;
+        var isBlank = true;
+        if (fill && fill.color && fill.color != 'inherit') isBlank = false;
+        if (fs && fs.color && fs.color != 'inherit' && fs.color != 'rgba(255,255,255,0)') isBlank = false;
+        if (fs && fs.fontStyle && fs.fontStyle == 'italic') isBlank = false;
+        if (fs && fs.fontWeight && (fs.fontWeight == 'bold' || fs.fontWeight == 700)) isBlank = false;
+        if (fs && fs.textDecoration && (fs.textDecoration == 'underline' || fs.textDecoration == 'line-through')) isBlank = false;
+
+        if (isBlank == false) return isBlank;
         return true;
+    }
+    get isLink() {
+        return this.getPageLink() ? true : false;
     }
     async getHtml() {
         if (this.link) {
@@ -106,7 +112,7 @@ export class TextContent extends Block {
             var url = (ws?.url || "") + "/page/" + pageId;
             return `<a data-page-id='${pageId}' data-ws-id='${ws?.id}' href='${url}'>${this.content}</a>`
         }
-        else if (this.code) return `<pre>${this.content}</pre>`
+        else if (this.code) return `<code>${this.content}</code>`
         else {
             return `<span>${this.content}</span>`
         }
@@ -224,7 +230,7 @@ export class TextContentView extends BlockView<TextContent> {
                     <Tip overlay={url}><span className="max-w-160 padding-w-3 text-overflow " style={{ width: 'auto', justifyContent: 'flex-start' }}>{url}</span></Tip>
                     <Tip text={'复制网址'}><span className="item-hover" onMouseDown={e => this.copyLink(url)} ><Icon size={16} icon={DuplicateSvg}></Icon></span></Tip>
                     {this.block.isCanEdit() && <Tip text={'编辑'}><span className="item-hover" onMouseDown={e => this.openLink(e)}><Icon size={14} icon={{ name: 'byte', code: "write" }}></Icon></span></Tip>}
-                    {this.block.isCanEdit() && <Tip text={'取消'}><span onMouseDown={e => this.onClearLink()}><Icon size={14} icon={TrashSvg}></Icon></span></Tip>}
+                    {this.block.isCanEdit() && <Tip text={'取消'}><span className="item-hover" onMouseDown={e => this.onClearLink()}><Icon size={14} icon={TrashSvg}></Icon></span></Tip>}
                 </div>}><a draggable={false} className="sy-block-text-content-link" onClick={e => {
                     this.openPage(e)
                 }} href={url}>{ta}</a></BoxTip>
@@ -235,7 +241,7 @@ export class TextContentView extends BlockView<TextContent> {
                     <Tip overlay={this.block.link.url}><span className="padding-w-3" style={{ width: 'auto' }}><Icon className={'gap-r-3'} icon={GlobalLinkSvg} size={14}></Icon><span className="max-w-160 text-overflow">{this.block.link?.url}</span></span></Tip>
                     <Tip text={'复制网址'}><span className="item-hover" onMouseDown={e => this.copyLink(this.block.link?.url)} ><Icon size={16} icon={DuplicateSvg}></Icon></span></Tip>
                     {this.block.isCanEdit() && <Tip text={'编辑'}><span className="item-hover" onMouseDown={e => this.openLink(e)}><Icon size={14} icon={{ name: 'byte', code: "write" }}></Icon></span></Tip>}
-                    {this.block.isCanEdit() && <Tip text={'取消'}><span onMouseDown={e => this.onClearLink()}><Icon size={14} icon={TrashSvg}></Icon></span></Tip>}
+                    {this.block.isCanEdit() && <Tip text={'取消'}><span className="item-hover" onMouseDown={e => this.onClearLink()}><Icon size={14} icon={TrashSvg}></Icon></span></Tip>}
                 </div>}><a draggable={false} className="sy-block-text-content-link" onClick={e => {
                     if (this.block.page.keyboardPlate.isShift()) {
                         e.preventDefault();
