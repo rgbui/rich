@@ -1,5 +1,5 @@
 import React, { CSSProperties } from "react";
-import { ArrowLeftSvg, ArrowRightSvg, BlockcolorSvg, BrowserSvg, DotsSvg, PlusSvg, TrashSvg } from "../../../component/svgs";
+import { ArrowLeftSvg, ArrowRightSvg, BlockcolorSvg,DotsSvg, PlusSvg, TrashSvg } from "../../../component/svgs";
 import { Icon, IconValueType } from "../../../component/view/icon";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
@@ -8,7 +8,6 @@ import { BlockChildKey, BlockUrlConstant } from "../../../src/block/constant";
 import { BlockFactory } from "../../../src/block/factory/block.factory";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
-import { ChildsArea } from "../../../src/block/view/appear";
 import { MouseDragger } from "../../../src/common/dragger";
 import { Point, Rect } from "../../../src/common/vector/point";
 import { ActionDirective } from "../../../src/history/declare";
@@ -265,7 +264,7 @@ export class Tab extends Block {
                 text: lst('主题'),
                 icon: { name: 'bytedance-icon', code: 'platte' },
                 childs: [
-                    { name: 'displayMode', text: lst('默认'), value: 'top-line', checkLabel: this.displayMode == 'top-line' },
+                    { name: 'displayMode', text: lst('下划线'), value: 'top-line', checkLabel: this.displayMode == 'top-line' },
                     { name: 'displayMode', text: lst('按钮'), value: 'button', checkLabel: this.displayMode == 'button' }
                 ]
             })
@@ -474,8 +473,8 @@ export class TabView extends BlockView<Tab> {
                     ...innerStyle,
                     height: this.block.autoContentHeight == true ? undefined : this.block.contentHeight
                 }}>
-                    {this.block.blocks.otherChilds.map((c,i)=>{
-                        return <div key={c.id} style={{display:this.block.tabIndex==i?'block':'none'}}>
+                    {this.block.blocks.otherChilds.map((c, i) => {
+                        return <div key={c.id} style={{ display: this.block.tabIndex == i ? 'block' : 'none' }}>
                             <c.viewComponent block={c}></c.viewComponent>
                         </div>
                     })}
