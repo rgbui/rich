@@ -1,5 +1,5 @@
 import React, { CSSProperties } from "react";
-import { ArrowLeftSvg, ArrowRightSvg, BlockcolorSvg,DotsSvg, PlusSvg, TrashSvg } from "../../../component/svgs";
+import { ArrowLeftSvg, ArrowRightSvg, BlockcolorSvg, DotsSvg, PlusSvg, TrashSvg } from "../../../component/svgs";
 import { Icon, IconValueType } from "../../../component/view/icon";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
@@ -261,7 +261,7 @@ export class Tab extends Block {
 
             var ns: MenuItem<string | BlockDirective>[] = [];
             ns.push({
-                text: lst('主题'),
+                text: lst('风格'),
                 icon: { name: 'bytedance-icon', code: 'platte' },
                 childs: [
                     { name: 'displayMode', text: lst('下划线'), value: 'top-line', checkLabel: this.displayMode == 'top-line' },
@@ -327,7 +327,7 @@ export class Tab extends Block {
                 rs.splice(dat + 1, 0, { type: MenuItemType.divide }, {
                     type: MenuItemType.help,
                     text: lst('了解如何使用标签页'),
-                    url: window.shyConfig?.isUS ? "https://help.shy.live/page/280" : "https://help.shy.live/page/280"
+                    url: window.shyConfig?.isUS ? "https://help.shy.live/page/280" : "https://help.shy.live/page/2093#5m7n3GfaUXgdGGHHfCXruB"
                 })
             }
         }
