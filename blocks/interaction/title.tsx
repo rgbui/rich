@@ -1,6 +1,6 @@
 import React from "react";
 import { Block } from "../../src/block";
-import { BlockDirective, BlockDisplay } from "../../src/block/enum";
+import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { prop, url, view } from "../../src/block/factory/observable";
 import { TextArea } from "../../src/block/view/appear";
 import { BlockView } from "../../src/block/view";
@@ -134,7 +134,11 @@ export class Title extends Block {
             return;
         }
         else if (item.name == 'text-center') {
-            await this.onUpdateProps({ align: item.checked ? 'center' : 'left' })
+            await this.onUpdateProps({ align: item.checked ? 'center' : 'left' },
+                { range: BlockRenderRange.self }, undefined, async () => {
+                    this.page.notifyActionPageUpdate()
+                }
+            )
             return;
         }
         await super.onContextMenuInput(item);
