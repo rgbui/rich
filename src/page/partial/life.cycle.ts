@@ -789,6 +789,7 @@ export class Page$Cycle {
         blocks.forEach(c => {
             if (!rs.includes(c.parentBlocks)) rs.push(c.parentBlocks)
         })
+        lodash.remove(rs, g => g ? true : false);
         rs.forEach(c => {
             var ls = c.filter(g => g.url == BlockUrlConstant.List && (g as List).listType == ListType.number && !blocks.includes(g)) as List[];
             if (ls.length > 0) {

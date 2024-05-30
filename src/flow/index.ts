@@ -5,7 +5,7 @@ import { FlowCommandFactory } from "./factory/block.factory";
 import { LinkWs } from "../page/declare";
 import { Block } from "../block";
 import { FlowView } from "./view";
-import { DuplicateSvg, PlusSvg, Edit1Svg, LinkSvg } from "../../component/svgs";
+import { DuplicateSvg,  Edit1Svg, LinkSvg } from "../../component/svgs";
 import { useSelectMenuItem } from "../../component/view/menu";
 import { MenuItemType } from "../../component/view/menu/declare";
 import { Rect } from "../common/vector/point";
