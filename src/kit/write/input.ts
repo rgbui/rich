@@ -21,6 +21,7 @@ import { useTagSelector } from "../../../extensions/tag";
 import { URL_END_REGEX } from "./declare";
 import { util } from "../../../util/util";
 
+
 /**
  * 输入弹窗
  */
@@ -244,8 +245,10 @@ export async function inputLineTail(write: PageWrite, aa: AppearAnchor, event: R
 export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
     var sel = window.getSelection();
     var isEmpty = aa.textContent == '';
+    // if (aa.textContent == '\n') isEmpty = true;
     if (aa.block.isPart) isEmpty = false;
     var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
+    if (offset == 0 && aa.textContent == '\n') return;
     if (offset == 0 || aa.isSolid && offset == 1) {
         event.preventDefault();
         /**
