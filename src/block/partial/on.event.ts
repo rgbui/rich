@@ -443,7 +443,7 @@ export class Block$Event {
              * 如果是大标题进行编辑更行，
              * 此时需要将标题的内容同步至大纲
              */
-            var c = this.closest(x =>  x.isContentBlock);
+            var c = this.closest(x => x.isContentBlock);
             if (c?.url == BlockUrlConstant.Head) {
                 var outline = this.page.find(x => x.url == BlockUrlConstant.Outline) as PageOutLine;
                 if (outline) {
@@ -503,12 +503,13 @@ export class Block$Event {
     async onUpdateProps(this: Block, props: Record<string, any>, options?: {
         range?: BlockRenderRange,
         merge?: boolean
-    }, force?: boolean) {
+    }, force?: boolean, cb?: () => Promise<void>) {
         if (typeof options == 'undefined') options = { range: BlockRenderRange.none };
         if (typeof options.range == 'undefined') options.range = BlockRenderRange.none;
         await this.page.onAction(ActionDirective.onUpdateProps, async () => {
             if (options.merge) this.page.snapshoot.merge();
             await this.updateProps(props, options.range, force);
+            if (cb) await cb();
         })
     }
     async onManualUpdateProps(this: Block,

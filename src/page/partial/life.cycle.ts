@@ -598,20 +598,18 @@ export class Page$Cycle {
                             this.willUpdateAll = false;
                             await this.forceUpdate();
                         }
-                        else {
-                            var ubs = this.willUpdateBlocks;
-                            this.willUpdateBlocks = [];
-                            await ubs.eachAsync(async (up) => {
-                                try {
-                                    if (up) await up.forceManualUpdate();
-                                }
-                                catch (ex) {
-                                    console.error('update block view', ex)
-                                    this.onError(ex);
-                                }
-                            })
-                            this.adjustListNumStr(ubs)
-                        }
+                        var ubs = this.willUpdateBlocks;
+                        this.willUpdateBlocks = [];
+                        await ubs.eachAsync(async (up) => {
+                            try {
+                                if (up) await up.forceManualUpdate();
+                            }
+                            catch (ex) {
+                                console.error('update block view', ex)
+                                this.onError(ex);
+                            }
+                        })
+                        this.adjustListNumStr(ubs)
                     }
                     catch (ex) {
                         console.error('will update view', ex);
@@ -754,7 +752,7 @@ export class Page$Cycle {
              */
 
             if (recordOutlineChanges.isChangeAll == true || recordOutlineChanges.changeBlocks.length > 0) {
-              var outLineBlock = this.find(g => g.url == BlockUrlConstant.Outline) as PageOutLine;
+                var outLineBlock = this.find(g => g.url == BlockUrlConstant.Outline) as PageOutLine;
                 if (outLineBlock) {
                     if (recordOutlineChanges.isChangeAll) outLineBlock.updateOutLine();
                     else {
