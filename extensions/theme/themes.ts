@@ -299,6 +299,39 @@ export function getCardThemes() {
             childs: [
                 {
                     text: '',
+                    name: 'style-1',
+                    pageTheme: {
+                        name: 'style-1',
+                        contentStyle: {
+                            // color: "light",
+                            // transparency: "solid",
+                            // bgStyle: { mode: 'color', color: '#fff' },
+                            round: 4,
+                            border: '1px solid #d9e1ec',
+                            shadow: '0px 1px 3px rgba(18, 18, 18, 0.1)'
+                        },
+                        coverStyle: {
+                            display: 'none'
+                        }
+                    }
+                },
+                {
+                    text: '',
+                    name: 'style-7',
+                    pageTheme: {
+                        name: 'style-7',
+                        contentStyle: {
+                            border: '0px solid #eee',
+                            round: 16,
+                            shadow: 'rgba(0, 0, 0, 0.1) 0px 4.5px 6.75px -1.125px, rgba(0, 0, 0, 0.06) 0px 2.25px 4.5px -1.125px, rgb(229, 224, 223) 0px 0px 0px 1.125px'
+                        },
+                        coverStyle: {
+                            display: 'none'
+                        }
+                    }
+                },
+                {
+                    text: '',
                     name: 'style-3',
                     pageTheme: {
                         name: 'style-3',
@@ -306,6 +339,53 @@ export function getCardThemes() {
                             border: '1px solid rgb(238, 238, 238)',
                             round: 16,
                             shadow: 'rgba(18, 18, 18, 0.1) 0px 1px 3px 0px'
+                        },
+                        coverStyle: {
+                            display: 'none'
+                        }
+                    }
+                },
+
+                {
+                    text: '',
+                    name: 'style-6',
+                    pageTheme: {
+                        name: 'style-6',
+                        contentStyle: {
+                            border: '0px solid #eee',
+                            round: 16,
+                            shadow: '0 1px 3px hsla(0,0%,7%,.1)'
+                        },
+                        coverStyle: {
+                            display: 'none'
+                        }
+                    }
+                },
+
+                {
+                    text: '',
+                    name: 'style-9',
+                    pageTheme: {
+                        name: 'style-9',
+                        contentStyle: {
+                            border: '1px solid #e7eaf3',
+                            round: 16,
+                            shadow: '0 .2rem 1.25rem rgba(0, 0, 0, .07)'
+                        },
+                        coverStyle: {
+                            display: 'none'
+                        }
+                    }
+                },
+                {
+                    text: '',
+                    name: 'style-10',
+                    pageTheme: {
+                        name: 'style-10',
+                        contentStyle: {
+                            border: '1px solid #e7eaf3',
+                            round: 16,
+                            shadow: 'none'
                         },
                         coverStyle: {
                             display: 'none'
@@ -342,81 +422,21 @@ export function getCardThemes() {
                         }
                     }
                 },
-                {
-                    text: '',
-                    name: 'style-6',
-                    pageTheme: {
-                        name: 'style-6',
-                        contentStyle: {
-                            border: '0px solid #eee',
-                            round: 16,
-                            shadow: '0 1px 3px hsla(0,0%,7%,.1)'
-                        },
-                        coverStyle: {
-                            display: 'none'
-                        }
-                    }
-                },
-                {
-                    text: '',
-                    name: 'style-7',
-                    pageTheme: {
-                        name: 'style-7',
-                        contentStyle: {
-                            border: '0px solid #eee',
-                            round: 16,
-                            shadow: 'rgba(0, 0, 0, 0.1) 0px 4.5px 6.75px -1.125px, rgba(0, 0, 0, 0.06) 0px 2.25px 4.5px -1.125px, rgb(229, 224, 223) 0px 0px 0px 1.125px'
-                        },
-                        coverStyle: {
-                            display: 'none'
-                        }
-                    }
-                },
-                {
-                    text: '',
-                    name: 'style-9',
-                    pageTheme: {
-                        name: 'style-9',
-                        contentStyle: {
-                            border: '1px solid #e7eaf3',
-                            round: 16,
-                            shadow: '0 .2rem 1.25rem rgba(0, 0, 0, .07)'
-                        },
-                        coverStyle: {
-                            display: 'none'
-                        }
-                    }
-                },
-                {
-                    text: '',
-                    name: 'style-10',
-                    pageTheme: {
-                        name: 'style-10',
-                        contentStyle: {
-                            border: '1px solid #e7eaf3',
-                            round: 16,
-                            shadow: 'none'
-                        },
-                        coverStyle: {
-                            display: 'none'
-                        }
-                    }
-                },
-                {
-                    text: '',
-                    name: 'style-11',
-                    pageTheme: {
-                        name: 'style-11',
-                        contentStyle: {
-                            border: '2px solid rgb(225, 98, 89);1px solid #eee;1px solid #eee;1px solid #eee',
-                            round: 16,
-                            shadow: 'rgba(0, 0, 0, 0.1) 0px 4.5px 6.75px -1.125px, rgba(0, 0, 0, 0.06) 0px 2.25px 4.5px -1.125px, rgb(229, 224, 223) 0px 0px 0px 1.125px'
-                        },
-                        coverStyle: {
-                            display: 'none'
-                        }
-                    }
-                }
+                // {
+                //     text: '',
+                //     name: 'style-11',
+                //     pageTheme: {
+                //         name: 'style-11',
+                //         contentStyle: {
+                //             border: '2px solid rgb(225, 98, 89);1px solid #eee;1px solid #eee;1px solid #eee',
+                //             round: 16,
+                //             shadow: 'rgba(0, 0, 0, 0.1) 0px 4.5px 6.75px -1.125px, rgba(0, 0, 0, 0.06) 0px 2.25px 4.5px -1.125px, rgb(229, 224, 223) 0px 0px 0px 1.125px'
+                //         },
+                //         coverStyle: {
+                //             display: 'none'
+                //         }
+                //     }
+                // }
             ]
         }
     ]
@@ -458,7 +478,7 @@ function getBorderWidths(borderStyle: CSSProperties) {
     }
     return bs.map(b => {
         if (!b) return 0;
-        var r= b.match(/\d+px/g)[0];
+        var r = b.match(/\d+px/g)[0];
         // var rs: string[] = b.split(' ');
         // lodash.remove(rs, c => c.trim() ? true : false);
         // var r = rs.find(c => /^\d$/.test(c[0]));

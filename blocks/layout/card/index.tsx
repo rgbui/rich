@@ -48,6 +48,7 @@ export class PageCard extends Block {
     }
     @prop()
     cardStyle: PageThemeStyle = {
+        name: 'style-1',
         contentStyle: {
             color: "light",
             transparency: "solid",
@@ -122,7 +123,7 @@ export class PageCard extends Block {
             {
                 name: 'autoContentHeight',
                 type: MenuItemType.switch,
-                checked: this.autoContentHeight,
+                checked: this.autoContentHeight ? false : true,
                 text: lst('固定高度'),
                 icon: { name: 'byte', code: 'auto-height-one' }
             }
@@ -144,7 +145,7 @@ export class PageCard extends Block {
     }
     async onContextMenuInput(this: Block, item: MenuItem<BlockDirective | string>) {
         if (item?.name == 'autoContentHeight') {
-            this.onUpdateProps({ autoContentHeight: item.checked }, { range: BlockRenderRange.self });
+            this.onUpdateProps({ autoContentHeight: item.checked ? false : true }, { range: BlockRenderRange.self });
         }
         else await super.onContextMenuInput(item);
     }

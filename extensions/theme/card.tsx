@@ -92,7 +92,7 @@ export class CardTheme extends EventsComponent {
                             this.setTheme('contentStyle.transparency', e)
                         }}
                         options={[
-                            { text: lst('纯色'), value: 'solid' },
+                            { text: lst('透明'), value: 'noborder' },
                             { text: lst('渐变'), value: 'faded' },
                             { text: lst('玻璃'), value: 'frosted' }
                         ]}></SelectBox>

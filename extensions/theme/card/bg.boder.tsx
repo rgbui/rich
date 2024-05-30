@@ -7,7 +7,7 @@ import lodash from "lodash";
 export class BgBorder extends React.Component<{
     contentStyle: PageThemeStyle['contentStyle'],
     onChange(e: PageThemeStyle['contentStyle']): void
-}>{
+}> {
     constructor(props) {
         super(props);
         this.contentStyle = props.contentStyle;
@@ -46,6 +46,7 @@ export class BgBorder extends React.Component<{
                 <Input value={(this.contentStyle.round).toString()} onChange={e => {
                     this.contentStyle.round = e;
                     this.props.onChange(lodash.cloneDeep(this.contentStyle))
+                    this.forceUpdate();
                 }}></Input>
             </div>
             <div className="remark   gap-t-10 gap-b-5 f-12">
@@ -55,6 +56,7 @@ export class BgBorder extends React.Component<{
                 <Input value={this.contentStyle.border} onChange={e => {
                     this.contentStyle.border = e;
                     this.props.onChange(lodash.cloneDeep(this.contentStyle))
+                    this.forceUpdate();
                 }}></Input>
             </div>
             <div className="remark   gap-t-10 gap-b-5 f-12">
@@ -64,6 +66,7 @@ export class BgBorder extends React.Component<{
                 <Input value={this.contentStyle.shadow} onChange={e => {
                     this.contentStyle.shadow = e;
                     this.props.onChange(lodash.cloneDeep(this.contentStyle))
+                    this.forceUpdate();
                 }}></Input>
             </div>
         </div>
