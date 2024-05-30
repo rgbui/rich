@@ -63,11 +63,16 @@ export class Page$Operator2 {
         return block;
     }
     async onCreateTailTextSpan(this: Page, panel?: Block) {
-        return new Promise(async (resolve, reject) => {
+        return await new Promise(async (resolve, reject) => {
             try {
+                panel = panel || this.views[0];
+                var lastBlock = panel.findReverse(g => g.isContentBlock);
+                if (lastBlock && lastBlock.isContentEmpty) {
+                    this.kit.anchorCursor.onFocusBlockAnchor(lastBlock, { last: true, render: true, merge: true });
+                    return;
+                }
                 await this.onAction(ActionDirective.onCreateTailTextSpan, async () => {
-                    panel = panel || this.views[0];
-                    var lastBlock = panel.findReverse(g => g.isBlock);
+
                     var newBlock: Block;
                     if (lastBlock && lastBlock.parent == panel) {
                         newBlock = await this.createBlock(BlockUrlConstant.TextSpan, {}, lastBlock.parent, lastBlock.at + 1);
