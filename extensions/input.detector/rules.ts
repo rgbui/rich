@@ -133,7 +133,7 @@ export var rules: DetectorRule[] = [
         operator: DetectorOperator.letterReplaceCreateBlock,
         match: [/\*([^*]+)\*$/],
         url: '/text',
-        matchFn: (value) => {
+        matchFn:(value) => {
             if (/\*\*([^*]+)\*$/.test(value)) return false;
             return true;
         },
@@ -150,6 +150,18 @@ export var rules: DetectorRule[] = [
         match: [/`([^`]+)`$/],
         url: '/text',
         props: { code: true }
+    },
+    {
+        operator: DetectorOperator.letterReplaceCreateBlock,
+        match: [/\$\$([^\$]+)\$\$$/],
+        url: '/katex/line',
+        // props: { code: true }
+    },
+    {
+        operator: DetectorOperator.letterReplaceCreateBlock,
+        match: [/￥￥([^￥]+)￥￥$/],
+        url: '/katex/line',
+        // props: { code: true }
     },
     // {
     //     operator: DetectorOperator.inputCharReplace,

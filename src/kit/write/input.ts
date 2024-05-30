@@ -212,7 +212,7 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                             await rowBlock.appendBlock({ url: BlockUrlConstant.Text, pattern, content: rowBlock.content });
                         await rowBlock.updateProps({ content: '' }, BlockRenderRange.self);
                     }
-                    var newBlock = await rowBlock.appendBlock({ url: BlockUrlConstant.Text, content: mr.matchValue });
+                    var newBlock = await rowBlock.appendBlock({ url: rule.url || BlockUrlConstant.Text, content: mr.matchValue });
                     if (rule.style) await newBlock.pattern.setStyles(rule.style);
                     if (rule.props) await newBlock.updateProps(rule.props, BlockRenderRange.self);
                     if (rest) await rowBlock.appendBlock({ url: BlockUrlConstant.Text, pattern, content: rest });
