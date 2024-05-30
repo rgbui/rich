@@ -11,7 +11,7 @@ import { BoxTip } from "../../../component/view/tooltip/box";
 import { ToolTip } from "../../../component/view/tooltip";
 import { DragBlockLine } from "../../../src/kit/handle/line";
 import { Icon } from "../../../component/view/icon";
-import { DragHandleSvg, DuplicateSvg, Edit1Svg, EditSvg, TrashSvg } from "../../../component/svgs";
+import { DragHandleSvg, DuplicateSvg, Edit1Svg, TrashSvg } from "../../../component/svgs";
 import { BlockUrlConstant } from "../../../src/block/constant";
 import { lst } from "../../../i18n/store";
 import { Tip } from "../../../component/view/tooltip/tip";
@@ -26,7 +26,14 @@ export class KatexLine extends Block {
         await this.renderKatex();
     }
     async renderKatex() {
-        this.katexContent = (await loadKatex()).renderToString(this.content, { throwOnError: false });
+        try {
+            this.katexContent = (await loadKatex()).renderToString(this.content, { throwOnError: false });
+        }
+        catch (ex) {
+            console.error(ex);
+            console.log('katex error:', this.content)
+            this.katexContent = this.content;
+        }
         this.forceManualUpdate()
     }
     async open(event: React.MouseEvent) {
@@ -60,12 +67,12 @@ export class KatexLine extends Block {
     }
 }
 @view('/katex/line')
-export class KatexView extends BlockView<KatexLine>{
+export class KatexView extends BlockView<KatexLine> {
     dragBlock(event: React.MouseEvent) {
         DragBlockLine(this.block, event);
     }
     boxTip: BoxTip;
-    renderView()  {
+    renderView() {
         return <span className={'sy-block-katex-line cursor ' + (this.block.opened ? " sy-block-katex-opened" : "")}
             onMouseDown={e => this.block.open(e)}>
             <BoxTip ref={e => this.boxTip = e} overlay={<div className="flex-center  padding-5 r-flex-center r-size-24 r-round r-item-hover r-cursor text">
