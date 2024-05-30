@@ -50,7 +50,7 @@ function parseTextBlock(element: HTMLElement[] | HTMLElement) {
                 font = lodash.assign(pa, font)
             }
             var isCode = undefined;
-            if (name == 'code') isCode = true;
+            if (name == 'code' || name == 'pre') isCode = true;
             if (name == 'strong' || name == 'b') font.fontWeight = 'bold';
             if (name == 'i' || name == 'em') font.fontStyle = 'italic';
             if (name == 'del' || name == 's') font.textDecoration = 'line-through';
@@ -74,7 +74,7 @@ function parseTextBlock(element: HTMLElement[] | HTMLElement) {
             if (cs.length > 0) {
                 for (let i = 0; i < cs.length; i++) {
                     var ele = cs[i] as HTMLElement;
-                    fr(ele, lodash.assign(style || { isCode }, pattern ? { pattern } : {}));
+                    fr(ele, lodash.assign(style || { code: isCode }, pattern ? { pattern } : {}));
                 }
             }
             else {
@@ -110,40 +110,52 @@ function isBold(bold) {
 function parseTable(element: HTMLElement) {
     var table = element as HTMLTableElement;
     var rowBlocks: any[] = [];
-    var firstRow = table.querySelector('thead')
-    if (firstRow?.tagName.toLowerCase() == 'thead') {
-        var tr = firstRow.children[0];
-        if (tr) {
-            var rb = { url: '/table/row', blocks: { childs: [] } }
-            /**
-             * 这是标题
-             */
-            for (var i = 0; i < tr.children.length; i++) {
-                var th = tr.children[i] as HTMLElement;
-                rb.blocks.childs.push({
-                    url: '/table/cell',
-                    blocks: { childs: parsePanel(th) }
-                })
-            }
-            rowBlocks.push(rb);
+    var rows = table.querySelectorAll('tr');
+    var props = {} as Record<string, any>;
+    if (rows.length > 0) {
+        var n = Array.from(rows).max(c => Array.from(c.children).length);
+        props = { cols: [] };
+        for (let i = 0; i < n; i++) {
+            props.cols.push({ width: 120 })
         }
-    }
-    var secondRow = table.querySelector('tbody')
-    if (secondRow?.tagName.toLowerCase() == 'tbody') {
-        var rows = Array.from(secondRow.children);
         for (let i = 0; i < rows.length; i++) {
             var rb = { url: '/table/row', blocks: { childs: [] } };
-            for (let j = 0; j < rows[i].children.length; j++) {
+            for (let j = 0; j < n; j++) {
                 var td = rows[i].children[j] as HTMLElement;
-                rb.blocks.childs.push({
+                if (td) {
+                    var tds = Array.from(td.childNodes);
+                    // console.log(tds,Array.from(td.childNodes), td, 'tds');
+                    var c;
+                    if (tds.length == 0) c = td.innerText;
+                    if (tds.length > 0) {
+                        rb.blocks.childs.push({
+                            url: '/table/cell',
+                            blocks: { childs: parsePanel(td) }
+                        })
+                    }
+                    else {
+                        if (c) rb.blocks.childs.push({
+                            url: '/table/cell',
+                            blocks: {
+                                childs: [
+                                    { url: '/textspan', content: c  }
+                                ]
+                            }
+                        })
+                        else rb.blocks.childs.push({
+                            url: '/table/cell',
+                        })
+                    }
+                }
+                else rb.blocks.childs.push({
                     url: '/table/cell',
-                    blocks: { childs: parsePanel(td) }
                 })
             }
             rowBlocks.push(rb);
         }
     }
-    return { url: '/table', blocks: { childs: rowBlocks } }
+
+    return { url: '/table', ...props, blocks: { childs: rowBlocks } }
 }
 
 function parseOl(element: HTMLElement) {
@@ -210,8 +222,9 @@ function parsefigure(element: HTMLElement) {
 
 function getTextBlock(element: HTMLElement) {
     var url = '';
+    if (element instanceof Text) return '/textspan';
     var name = element?.tagName?.toLowerCase();
-    if (name == 'p') url = '/textspan';
+    if (name == 'p' || ['span', 'label', 'code', 'pre', 'em', 'i', 'del', 's', 'strong', 'b'].includes(name)) url = '/textspan';
     else if (name == 'h1') url = '/head';
     else if (name == 'h2') url = '/head?{level:"h2"}';
     else if (name == 'h3') url = '/head?{level:"h3"}';
@@ -299,7 +312,7 @@ function parseBlock(element: HTMLElement) {
 }
 
 function parsePanel(panel: HTMLElement) {
-    var rs = Array.from(panel.children).map(c => parseBlock(c as HTMLElement));
+    var rs = Array.from(panel.childNodes).map(c => parseBlock(c as HTMLElement));
     lodash.remove(rs, g => g ? false : true);
     return rs;
 }
