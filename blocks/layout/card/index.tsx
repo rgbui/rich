@@ -123,7 +123,7 @@ export class PageCard extends Block {
                 name: 'autoContentHeight',
                 type: MenuItemType.switch,
                 checked: this.autoContentHeight,
-                text: lst('自适应高度'),
+                text: lst('固定高度'),
                 icon: { name: 'byte', code: 'auto-height-one' }
             }
         )
