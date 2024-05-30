@@ -837,76 +837,106 @@ export class PageWrite {
     }
     async onSelectionEquation(appears: AppearAnchor[], props: { equation: boolean }) {
         await this.kit.page.onAction(ActionDirective.onUpdateEquation, async () => {
+            this.kit.anchorCursor.adjustAnchorSorts();
+            var code: string = '';
             await appears.eachAsync(async appear => {
-                if (appear == this.kit.anchorCursor.startAnchor || appear == this.kit.anchorCursor.endAnchor) {
-
+                var block = appear.block;
+                if (appear == this.kit.anchorCursor.startAnchor) {
+                    var pre = this.kit.anchorCursor.startAnchor.textContent.slice(0, this.kit.anchorCursor.startOffset);
+                    var next = this.kit.anchorCursor.startAnchor.textContent.slice(this.kit.anchorCursor.startOffset);
+                    if (pre != this.kit.anchorCursor.startAnchor.textContent) {
+                        await this.kit.anchorCursor.startAnchor.block.updateProps({ content: pre }, BlockRenderRange.self)
+                    }
+                    if (next) code = next + code;
+                }
+                else if (appear == this.kit.anchorCursor.endAnchor) {
+                    var pre = this.kit.anchorCursor.endAnchor.textContent.slice(0, this.kit.anchorCursor.endOffset);
+                    var next = this.kit.anchorCursor.endAnchor.textContent.slice(this.kit.anchorCursor.endOffset);
+                    if (next != this.kit.anchorCursor.endAnchor.textContent) {
+                        await this.kit.anchorCursor.endAnchor.block.updateProps({ content: next }, BlockRenderRange.self)
+                    }
+                    if (pre) code = code + pre;
                 }
                 else {
-                    var block = appear.block;
-                    if (props.equation == true) {
-                        if (appear.isText && block.url != BlockUrlConstant.KatexLine)
-                            await block.turn(BlockUrlConstant.KatexLine)
-                    }
-                    else {
-                        if (block.url == BlockUrlConstant.KatexLine) {
-                            await block.turn(BlockUrlConstant.Text);
-                        }
+                    if ([BlockUrlConstant.Text, BlockUrlConstant.KatexLine].includes(block.url as any)) {
+                        if (block.content) code += block.content;
+                        await block.delete()
                     }
                 }
             });
-            this.kit.anchorCursor.adjustAnchorSorts();
-            var nstart: Block;
-            var nend: Block;
-            if (this.kit.anchorCursor.isAnchorAppear) {
-                if (this.kit.anchorCursor.startAnchor.isText) {
-                    var rs = await this.kit.anchorCursor.startAnchor.split([this.kit.anchorCursor.startOffset, this.kit.anchorCursor.endOffset]);
-                    if (this.kit.anchorCursor.startOffset == 0) { nstart = rs[0]; nend = rs[0] }
-                    else { nstart = rs[1]; nend = rs[1]; }
-                    if (props.equation) await nstart.turn(BlockUrlConstant.KatexLine)
+            if (code) {
+                var ab = this.kit.anchorCursor.startAnchor.block
+                var newBlock = await ab.parent.appendBlock({
+                    url: BlockUrlConstant.KatexLine,
+                    content: code
+                },
+                    ab.at + 1,
+                    ab.parentKey
+                );
+                if (ab.isContentEmpty) {
+                    await ab.delete();
                 }
-                else {
-                    if (!props.equation && this.kit.anchorCursor.startAnchor.isSolid) {
-                        if (this.kit.anchorCursor.startAnchor.block.url == BlockUrlConstant.KatexLine) {
-                            nstart = nend = await this.kit.anchorCursor.startAnchor.block.turn(BlockUrlConstant.Text);
-                        }
-                    }
+                var eb = this.kit.anchorCursor.endAnchor.block;
+                if (eb != ab && eb.isContentEmpty) {
+                    await eb.delete();
                 }
+                this.kit.page.addActionAfterEvent(async () => {
+                    this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, merge: true, render: true });
+                });
             }
-            else {
-                if (props.equation == true) {
-                    if (this.kit.anchorCursor.startAnchor.isText) {
-                        var ss = await this.kit.anchorCursor.startAnchor.split([this.kit.anchorCursor.startOffset]);
-                        nstart = ss.last();
-                        nstart = await nstart.turn(BlockUrlConstant.KatexLine);
-                    } else nstart = this.kit.anchorCursor.startAnchor.block;
-                    if (this.kit.anchorCursor.endAnchor.isText) {
-                        var es = await this.kit.anchorCursor.endAnchor.split([this.kit.anchorCursor.endOffset]);
-                        nend = es.first();
-                        nend = await nend.turn(BlockUrlConstant.KatexLine);
-                    }
-                    else nend = this.kit.anchorCursor.endAnchor.block;
-                }
-                else {
-                    if (this.kit.anchorCursor.startAnchor.isSolid && this.kit.anchorCursor.startAnchor.block.url == BlockUrlConstant.KatexLine) {
-                        nstart = await this.kit.anchorCursor.startAnchor.block.turn(BlockUrlConstant.Text);
-                    }
-                    else nstart = this.kit.anchorCursor.startAnchor.block;
-                    if (this.kit.anchorCursor.endAnchor.isSolid && this.kit.anchorCursor.endAnchor.block.url == BlockUrlConstant.KatexLine) {
-                        nend = await this.kit.anchorCursor.endAnchor.block.turn(BlockUrlConstant.Text)
-                    }
-                    else nend = this.kit.anchorCursor.endAnchor.block;
-                }
-            }
+
+            // var nstart: Block;
+            // var nend: Block;
+            // if (this.kit.anchorCursor.isAnchorAppear) {
+            //     if (this.kit.anchorCursor.startAnchor.isText) {
+            //         var rs = await this.kit.anchorCursor.startAnchor.split([this.kit.anchorCursor.startOffset, this.kit.anchorCursor.endOffset]);
+            //         if (this.kit.anchorCursor.startOffset == 0) { nstart = rs[0]; nend = rs[0] }
+            //         else { nstart = rs[1]; nend = rs[1]; }
+            //         if (props.equation) await nstart.turn(BlockUrlConstant.KatexLine)
+            //     }
+            //     else {
+            //         if (!props.equation && this.kit.anchorCursor.startAnchor.isSolid) {
+            //             if (this.kit.anchorCursor.startAnchor.block.url == BlockUrlConstant.KatexLine) {
+            //                 nstart = nend = await this.kit.anchorCursor.startAnchor.block.turn(BlockUrlConstant.Text);
+            //             }
+            //         }
+            //     }
+            // }
+            // else {
+            //     if (props.equation == true) {
+            //         if (this.kit.anchorCursor.startAnchor.isText) {
+            //             var ss = await this.kit.anchorCursor.startAnchor.split([this.kit.anchorCursor.startOffset]);
+            //             nstart = ss.last();
+            //             nstart = await nstart.turn(BlockUrlConstant.KatexLine);
+            //         } else nstart = this.kit.anchorCursor.startAnchor.block;
+            //         if (this.kit.anchorCursor.endAnchor.isText) {
+            //             var es = await this.kit.anchorCursor.endAnchor.split([this.kit.anchorCursor.endOffset]);
+            //             nend = es.first();
+            //             nend = await nend.turn(BlockUrlConstant.KatexLine);
+            //         }
+            //         else nend = this.kit.anchorCursor.endAnchor.block;
+            //     }
+            //     else {
+            //         if (this.kit.anchorCursor.startAnchor.isSolid && this.kit.anchorCursor.startAnchor.block.url == BlockUrlConstant.KatexLine) {
+            //             nstart = await this.kit.anchorCursor.startAnchor.block.turn(BlockUrlConstant.Text);
+            //         }
+            //         else nstart = this.kit.anchorCursor.startAnchor.block;
+            //         if (this.kit.anchorCursor.endAnchor.isSolid && this.kit.anchorCursor.endAnchor.block.url == BlockUrlConstant.KatexLine) {
+            //             nend = await this.kit.anchorCursor.endAnchor.block.turn(BlockUrlConstant.Text)
+            //         }
+            //         else nend = this.kit.anchorCursor.endAnchor.block;
+            //     }
+            // }
             this.kit.page.addActionAfterEvent(async () => {
-                var na = nend.appearAnchors.first()
-                this.kit.anchorCursor.onSetTextSelection(
-                    {
-                        startAnchor: nstart.appearAnchors.first(),
-                        startOffset: 0,
-                        endAnchor: na,
-                        endOffset: na?.isText ? na.textContent.length : 1
-                    }, { merge: true, render: true }
-                )
+                // var na = nend.appearAnchors.first()
+                // this.kit.anchorCursor.onSetTextSelection(
+                //     {
+                //         startAnchor: nstart.appearAnchors.first(),
+                //         startOffset: 0,
+                //         endAnchor: na,
+                //         endOffset: na?.isText ? na.textContent.length : 1
+                //     }, { merge: true, render: true }
+                // )
             });
         });
     }
