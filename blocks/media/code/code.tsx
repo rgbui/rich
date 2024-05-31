@@ -3,7 +3,6 @@ import { prop, url, view } from "../../../src/block/factory/observable";
 import React from 'react';
 import { Block } from "../../../src/block";
 import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
-import { useSelectMenuItem } from "../../../component/view/menu";
 import { Point, Rect } from "../../../src/common/vector/point";
 import { ChevronDownSvg, DotsSvg, DuplicateSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
@@ -17,6 +16,7 @@ import { ToolTip } from "../../../component/view/tooltip";
 import { ShyAlert } from "../../../component/lib/alert";
 import { CopyText } from "../../../component/copy";
 import { lst } from "../../../i18n/store";
+import { useFilterInput } from "../../../component/view/input/filter";
 const CODEMIRROR_MODE = 'CODE_MIRROR_MODE';
 
 /**
@@ -71,7 +71,7 @@ export class TextCode extends Block {
         return this.content;
     }
     onFocusCursor() {
-        console.log('cm',this.codeMirror);
+        console.log('cm', this.codeMirror);
         if (this.codeMirror) this.codeMirror.focus();
     }
     async onChangeMode(name: string) {
@@ -137,49 +137,27 @@ export class TextCode extends Block {
 
 @view('/code')
 export class TextCodeView extends BlockView<TextCode> {
-    async changeLang(e: React.MouseEvent) {
-        var vfx = (items: MenuItem[], currentItem: MenuItem) => {
-            var item = items.find(g => g.name == 'search_word');
-            if (item) {
-                if (item.value) {
-                    if ((currentItem.text as string).indexOf(item.value) == 0) {
-                        return true;
-                    }
-                    return false;
-                }
-            }
-            return true;
-        }
-        var menuItem = await useSelectMenuItem({
+    async changeLang(e: React.MouseEvent)
+    {
+        var menuItem = await useFilterInput({
             roundArea: Rect.fromEle(e.currentTarget as HTMLElement)
-        },
-            [
-                {
-                    type: MenuItemType.input,
-                    name: 'search_word',
-                    updateMenuPanel: true,
-                    value: '',
-                },
-                { type: MenuItemType.divide },
-                {
-                    type: MenuItemType.container,
-                    containerHeight: 200,
-                    childs: [
-                        { text: lst('纯文本'), name: 'plain', value: 'plain' },
-                        ...CodeMirrorModes.filter(g => g.abled).map(l => {
-                            return {
-                                text: l.label,
-                                name: l.mode,
-                                visible: vfx as any,
-                                checkLabel: this.block.language == l.mode
-                            }
-                        })
-                    ]
-                }]
-        );
+        }, {
+            options: [
+                { text: lst('纯文本'), name: 'plain', value: 'plain' },
+                ...CodeMirrorModes.filter(g => g.abled).map(l => {
+                    return {
+                        text: l.label,
+                        name: l.mode,
+                        // visible: vfx as any,
+                        checkLabel: this.block.language == l.mode
+                    }
+                })
+            ],
+            placeholder: lst('搜索语言...')
+        })
         if (menuItem) {
             try {
-                await this.block.onChangeMode(menuItem.item.name);
+                await this.block.onChangeMode(menuItem.name);
             }
             catch (ex) {
                 console.log(ex);
