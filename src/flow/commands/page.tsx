@@ -124,13 +124,15 @@ export class OpenPageUrlCommand extends FlowCommand {
         return json;
     }
     async excute() {
-        if (this.target == '_blank') window.open(this.pageUrl, '_blank')
-        else window.location.href = this.pageUrl;
+        if (this.pageUrl) {
+            if (this.target == '_blank') window.open(this.pageUrl, '_blank')
+            else window.location.href = this.pageUrl;
+        }
     }
 }
 
 @flowView('/openPage/url')
-export class OpenPageUrlCommandView extends FlowCommandView<OpenPageUrlCommand>{
+export class OpenPageUrlCommandView extends FlowCommandView<OpenPageUrlCommand> {
     renderView() {
         return <div>
             {this.renderHead(<Icon size={16} icon={LinkSvg}></Icon>,
