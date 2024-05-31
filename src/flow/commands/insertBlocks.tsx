@@ -78,6 +78,7 @@ export class InsertBlocksCommand extends FlowCommand {
         var now = new Date();
         var user = channel.query('/query/current/user')
         function getC(c) {
+            //%eee%日期%月朋
             var maps = [
                 { names: ['%DATE%', '%日期%'], value: dayjs().format('YYYY/MM/DD') },
                 { names: ['%TOMORROW%', '%明天%'], value: dayjs().add(1, 'day').format('YYYY/MM/DD') },
@@ -108,7 +109,7 @@ export class InsertBlocksCommand extends FlowCommand {
             for (let i = 0; i < maps.length; i++) {
                 var mp = maps[i];
                 mp.names.forEach(n => {
-                    c = c.replace(new RegExp(n, 'g'), mp.value);
+                    c = c.replace(new RegExp(n, 'gi'), mp.value);
                 })
             }
             return c;
@@ -152,7 +153,7 @@ export class InsertBlocksCommandView extends FlowCommandView<InsertBlocksCommand
                         { icon: { name: 'bytedance-icon', code: 'down-one' }, text: lst('按钮下面'), value: 'below' }
                     ]
                     }></SelectBox></div>
-                    <HelpText url={window.shyConfig.isUS ? "https://help.shy.red/page/72#9PCJNsSKVi9tqgmcg6RsRf" : "https://help.shy.live/page/1831#84fR6G8fevzTjHf56tZnJ9"}><S>模板变量</S></HelpText>
+                    <HelpText url={window.shyConfig.isUS ? "https://help.shy.red/page/72#9PCJNsSKVi9tqgmcg6RsRf" : "https://help.shy.live/page/279#dYKRKuFNi7TBDpVYXDfpVy"}><S>模板变量</S></HelpText>
                 </>)}
             <div className="round border bg-white">
                 {self.command.block && <self.command.block.viewComponent block={self.command.block}></self.command.block.viewComponent >}
