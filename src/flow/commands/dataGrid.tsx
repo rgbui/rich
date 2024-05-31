@@ -6,7 +6,7 @@ import { S } from "../../../i18n/view";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { Rect } from "../../common/vector/point";
 import { useDataSourceView } from "../../../extensions/data-grid/datasource";
-import { ChevronDownSvg, CloseSvg, CollectTableSvg, Edit1Svg, PlusSvg, TrashSvg } from "../../../component/svgs";
+import { ChevronDownSvg, CloseSvg,  Edit1Svg, PlusSvg, TrashSvg } from "../../../component/svgs";
 import { SelectBox } from "../../../component/view/select/box";
 import { lst } from "../../../i18n/store";
 import { BlockUrlConstant } from "../../block/constant";
@@ -135,7 +135,7 @@ function renderFieldInput(view: AddRecordsCommandView | EditRecordsCommandView, 
                 { name: 'delete', icon: TrashSvg, text: lst('删除') }
             ]
             return <span
-                className="item-hover remark round padding-w-5 padding-h-3 cursor"
+                className={"item-hover  round padding-w-5 padding-h-3 cursor " + (field.value ? " text-1" : "remark")}
                 onMouseDown={async e => {
                     var rect = Rect.fromEle(e.currentTarget as HTMLElement);
                     var dm = await useSelectMenuItem({ roundArea: rect }, dateMaps);
@@ -215,7 +215,7 @@ function renderFieldInput(view: AddRecordsCommandView | EditRecordsCommandView, 
                             onMousedown={e => {
                                 e.stopPropagation();
                                 lodash.remove(field.value, g => g == op.value);
-                                this.forceUpdate();
+                                view.forceUpdate();
                             }}
                         ></Icon>
                     </span>
@@ -223,7 +223,7 @@ function renderFieldInput(view: AddRecordsCommandView | EditRecordsCommandView, 
         case FieldType.bool:
             return <span><Switch checked={field.value} onChange={e => {
                 field.value = e;
-                this.forceUpdate();
+                view.forceUpdate();
             }}></Switch></span>
     }
 }
