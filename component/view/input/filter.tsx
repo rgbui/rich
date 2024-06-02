@@ -20,7 +20,7 @@ export class FilterInput extends EventsComponent {
         this.emit('select', item);
     }
     render() {
-        return <div className="bg-white w-250 round">
+        return <div className="bg-white w-200 round">
             <div className="gap-w-5 gap-t-10">
                 <Input
                     size="small"

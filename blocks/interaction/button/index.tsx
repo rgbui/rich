@@ -115,7 +115,7 @@ export class BlockButton extends Block {
                 { name: 'buttonStyle', text: lst('链接'), value: 'link' }
             ];
             ns.push({
-                text: lst('按钮主题'),
+                text: lst('风格'),
                 icon: { name: 'bytedance-icon', code: 'platte' },
                 childs: bts.map(b => {
                     return {
@@ -214,21 +214,24 @@ export class BlockButton extends Block {
         }
     }
     async didMounted() {
-        document.body.addEventListener('mousedown', this.otherClick, true)
+        document.addEventListener('mousedown', this.otherClick, true)
     }
     async didUnmounted() {
         popoverLayer.clear(this);
-        document.body.removeEventListener('mousedown', this.otherClick, true)
+        document.removeEventListener('mousedown', this.otherClick, true)
     }
     otherClick = async (event: MouseEvent) => {
-        var ele = event.target as HTMLElement;
-        if (!this.el) return;
-        if (this.el && ele && this.el.contains(ele))
-            return;
-        if (this.page.kit.view?.el.contains(ele))
-            return;
-        if (assyDivPanel().contains(ele)) return;
-        await (this.view as any).boxTip.close();
+        if (!this.page.isPageOff) {
+            var ele = event.target as HTMLElement;
+            if (!this.el) return;
+            if (this.el && ele && this.el.contains(ele))
+                return;
+            if (this.page.kit.view?.el?.contains(ele))
+                return;
+            if (assyDivPanel().contains(ele)) return;
+        }
+        if ((this.view as any).boxTip)
+            await (this.view as any).boxTip.close();
     }
 }
 
@@ -240,6 +243,9 @@ export class BlockButtonView extends BlockView<BlockButton> {
     }
     didMount() {
         this.load()
+    }
+    willUnmount(): void {
+        if (this.boxTip) this.boxTip.close()
     }
     async load() {
         this.oldFlow = await this.block.flow.clone();
@@ -267,6 +273,7 @@ export class BlockButtonView extends BlockView<BlockButton> {
                 cacPanel={() => {
                     return this.block.page.kit.view.toolEl;
                 }}
+                panelId={this.block.page.id}
                 zindex={1000}
                 ref={e => this.boxTip = e}
                 disableMousedownClose
@@ -333,6 +340,7 @@ export class BlockButtonView extends BlockView<BlockButton> {
         if (!lodash.isEqual(od, nf)) isUpdate = true;
         if (this.oldText != this.block.buttonText) isUpdate = true;
         if (!lodash.isEqual(this.oldIcon, this.block.buttonIcon)) isUpdate = true;
+        console.log(isUpdate, od, nf);
         if (!isUpdate) return;
         await this.block.page.onAction('updateBlock', async () => {
             if (!lodash.isEqual(od, nf))
@@ -362,7 +370,7 @@ export class BlockButtonView extends BlockView<BlockButton> {
         if (this.block.align == 'center') style.justifyContent = 'center';
         else if (this.block.align == 'right') style.justifyContent = 'flex-end'
         return <div className="flex" style={{ top: 0, left: 0, right: 0, ...style }}>
-            <div className='w-500 round padding-t-10  text' >
+            <div className='w-600 round padding-t-10  text bg-1'>
                 <div className="flex padding-w-10" onMouseDown={e => { e.stopPropagation() }}>
                     <span className="border size-24 round cursor flex-center"><Icon size={18} onMousedown={e => this.changeIcon(e)} icon={this.block.buttonIcon || { name: 'bytedance-icon', code: 'smiling-face' }}></Icon></span>
                     <span className="flex-auto gap-w-10"><Input value={this.block.buttonText} onChange={e => {
@@ -375,7 +383,7 @@ export class BlockButtonView extends BlockView<BlockButton> {
                         this.openEdit(e)
                     }}><S>保存</S></Button></span>
                 </div>
-                <div className="max-h-300  overflow-y">
+                <div className="max-h-300 gap-t-10 overflow-y">
                     {this.block.flow && <FlowView onChange={async () => {
                         await this.onSave()
                     }} flow={this.block.flow}></FlowView>}

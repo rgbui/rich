@@ -411,6 +411,11 @@ export class AnchorCursor {
         await this.kit.page.onAction('onSelectBlocks', async () => {
             if (options?.merge) this.kit.page.snapshoot.merge();
             this.selectBlocks(blocks)
+            /**
+             * 这里需要清空选区
+             */
+            var sel = window.getSelection();
+            sel.removeAllRanges();
             if (options?.render) {
                 this.renderAnchorCursorSelection()
             }

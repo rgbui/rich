@@ -69,7 +69,7 @@ export class TableSortView extends EventsComponent {
             return {
                 text,
                 value: name,
-                icon: GetFieldTypeSvg(fe.type),
+                icon: GetFieldTypeSvg(fe),
             }
         })
         return rs.flat(3)

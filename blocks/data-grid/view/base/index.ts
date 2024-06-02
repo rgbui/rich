@@ -534,7 +534,7 @@ export class DataGridView extends Block {
     }
     onSyncAddRow = lodash.debounce(async (data, id?: string, arrow: 'before' | 'after' = 'after') => {
         await this.onAddRow(data, id, arrow)
-    }, 1000)
+    },50)
     onLazySearch = lodash.debounce(async () => {
         await this.onSearch()
     }, 700);

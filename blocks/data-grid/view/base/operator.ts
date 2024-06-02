@@ -50,6 +50,9 @@ export class DataGridViewOperator {
                     if (typeof defaultValue != 'undefined')
                         row[field.name] = defaultValue
                 });
+                if(field.type == FieldType.relation){
+                    await this.loadRelationSchemas()
+                }
                 await this.createItem();
                 this.forceManualUpdate();
             }

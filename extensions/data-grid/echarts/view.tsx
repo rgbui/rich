@@ -324,7 +324,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                 ].includes(g.type) && bc?.chart_config.y_fieldId != g.id).map(f => {
                                     return {
                                         text: f.text,
-                                        icon: GetFieldTypeSvg(f.type),
+                                        icon: GetFieldTypeSvg(f),
                                         value: f.id
                                     }
                                 })]}></SelectBox>
@@ -406,7 +406,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             ].includes(g.type)).map(f => {
                                 return {
                                     text: f.text,
-                                    icon: GetFieldTypeSvg(f.type),
+                                    icon: GetFieldTypeSvg(f),
                                     value: f.id
                                 }
                             })}></SelectBox>
@@ -448,7 +448,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                     value={agg.fieldId}
                                     options={this.schema.visibleFields.findAll(g => [FieldType.number].includes(g.type)).map(f => {
                                         return {
-                                            icon: GetFieldTypeSvg(f.type),
+                                            icon: GetFieldTypeSvg(f),
                                             text: f.text,
                                             value: f.id
                                         }
@@ -549,7 +549,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             ].includes(g.type)).map(f => {
                                 return {
                                     text: f.text,
-                                    icon: GetFieldTypeSvg(f.type),
+                                    icon: GetFieldTypeSvg(f),
                                     value: f.id
                                 }
                             })}></SelectBox>
@@ -590,7 +590,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                 value={bc.chart_config?.y_fieldId}
                                 options={this.schema.visibleFields.findAll(g => [FieldType.number].includes(g.type)).map(f => {
                                     return {
-                                        icon: GetFieldTypeSvg(f.type),
+                                        icon: GetFieldTypeSvg(f),
                                         text: f.text,
                                         value: f.id
                                     }
@@ -619,7 +619,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                 value={bc.chart_config?.y1_fieldId}
                                 options={this.schema.visibleFields.findAll(g => [FieldType.number].includes(g.type)).map(f => {
                                     return {
-                                        icon: GetFieldTypeSvg(f.type),
+                                        icon: GetFieldTypeSvg(f),
                                         text: f.text,
                                         value: f.id
                                     }
@@ -651,7 +651,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                     { type: MenuItemType.divide },
                                     ...this.schema.visibleFields.findAll(g => [FieldType.number].includes(g.type)).map(f => {
                                         return {
-                                            icon: GetFieldTypeSvg(f.type),
+                                            icon: GetFieldTypeSvg(f),
                                             text: f.text,
                                             value: f.id
                                         }
@@ -685,7 +685,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                         value={bc.chart_config?.graph_fieldId}
                         options={this.schema.visibleFields.findAll(g => [FieldType.relation].includes(g.type)).map(f => {
                             return {
-                                icon: GetFieldTypeSvg(f.type),
+                                icon: GetFieldTypeSvg(f),
                                 text: f.text,
                                 value: f.id
                             }
@@ -713,7 +713,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                 { type: MenuItemType.divide },
                                 ...this.schema.visibleFields.findAll(g => [FieldType.number].includes(g.type)).map(f => {
                                     return {
-                                        icon: GetFieldTypeSvg(f.type),
+                                        icon: GetFieldTypeSvg(f),
                                         text: f.text,
                                         value: f.id
                                     }
@@ -781,7 +781,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             ].includes(g.type)).map(f => {
                                 return {
                                     text: f.text,
-                                    icon: GetFieldTypeSvg(f.type),
+                                    icon: GetFieldTypeSvg(f),
                                     value: f.id
                                 }
                             })}></SelectBox>
@@ -844,7 +844,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                 value={bc.chart_config?.y_fieldId}
                                 options={this.schema.visibleFields.findAll(g => [FieldType.number].includes(g.type)).map(f => {
                                     return {
-                                        icon: GetFieldTypeSvg(f.type),
+                                        icon: GetFieldTypeSvg(f),
                                         text: f.text,
                                         value: f.id
                                     }
@@ -920,7 +920,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                         ].includes(g.type)).map(f => {
                             return {
                                 text: f.text,
-                                icon: GetFieldTypeSvg(f.type),
+                                icon: GetFieldTypeSvg(f),
                                 value: f.id
                             }
                         })}></SelectBox>
@@ -982,7 +982,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             value={bc.chart_config?.y_fieldId}
                             options={this.schema.visibleFields.findAll(g => [FieldType.number].includes(g.type)).map(f => {
                                 return {
-                                    icon: GetFieldTypeSvg(f.type),
+                                    icon: GetFieldTypeSvg(f),
                                     text: f.text,
                                     value: f.id
                                 }

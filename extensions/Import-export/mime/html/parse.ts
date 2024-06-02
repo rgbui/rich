@@ -124,7 +124,6 @@ function parseTable(element: HTMLElement) {
                 var td = rows[i].children[j] as HTMLElement;
                 if (td) {
                     var tds = Array.from(td.childNodes);
-                    // console.log(tds,Array.from(td.childNodes), td, 'tds');
                     var c;
                     if (tds.length == 0) c = td.innerText;
                     if (tds.length > 0) {
@@ -138,7 +137,7 @@ function parseTable(element: HTMLElement) {
                             url: '/table/cell',
                             blocks: {
                                 childs: [
-                                    { url: '/textspan', content: c  }
+                                    { url: '/textspan', content: c }
                                 ]
                             }
                         })
@@ -224,7 +223,7 @@ function getTextBlock(element: HTMLElement) {
     var url = '';
     if (element instanceof Text) return '/textspan';
     var name = element?.tagName?.toLowerCase();
-    if (name == 'p' || ['span', 'label', 'code', 'pre', 'em', 'i', 'del', 's', 'strong', 'b'].includes(name)) url = '/textspan';
+    if (name == 'p' || ['span', 'font', 'label', 'code', 'pre', 'em', 'i', 'del', 's', 'strong', 'b'].includes(name)) url = '/textspan';
     else if (name == 'h1') url = '/head';
     else if (name == 'h2') url = '/head?{level:"h2"}';
     else if (name == 'h3') url = '/head?{level:"h3"}';
@@ -313,6 +312,7 @@ function parseBlock(element: HTMLElement) {
 
 function parsePanel(panel: HTMLElement) {
     var rs = Array.from(panel.childNodes).map(c => parseBlock(c as HTMLElement));
+    rs = rs.flat(-1)
     lodash.remove(rs, g => g ? false : true);
     return rs;
 }

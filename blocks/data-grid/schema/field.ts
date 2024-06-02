@@ -2,12 +2,14 @@ import lodash from "lodash";
 import { EmojiCode } from "../../../extensions/emoji/store";
 import { util } from "../../../util/util";
 import { FieldType, SysFieldTypes } from "./type";
+import { IconArguments } from "../../../extensions/icon/declare";
 
 export class Field {
     id: string;
     name: string;
     text: string;
     type: FieldType;
+    icon: IconArguments;
     load(col: Record<string, any>) {
         for (let n in this) {
             if (n.indexOf('.') > -1) delete this[n];

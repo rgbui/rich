@@ -32,6 +32,7 @@ export class MenuItemView extends React.Component<{
     checked(checked: boolean, item: MenuItem) {
         if (item.disabled) return;
         item.checked = checked;
+        item.value = checked;
         if (item.updateMenuPanel) this.props.parent.forceUpdate()
         else this.forceUpdate();
         this.props?.input(item);
@@ -190,7 +191,7 @@ export class MenuItemView extends React.Component<{
                     {item.remark && <i className="remark padding-l-5">{item.remark}</i>}
                     {item.helpUrl && <span className="flex-fixed h-20 flex"><HelpText onMouseDown={e => e.stopPropagation()} url={item.helpUrl}>{item.helpText}</HelpText></span>}
                 </span>
-                <Switch size='small' onChange={e => this.checked(e, item)} checked={item.checked ? item.checked : false}></Switch>
+                <Switch size='small' onChange={e => this.checked(e, item)} checked={(typeof item.checked == 'boolean' ? item.checked : item.value) ? true : false}></Switch>
             </div>}
             {item.type == MenuItemType.help && <div className="shy-menu-box-item-help">
                 <HelpText className={'padding-w-5'} align="left" block={item.helpInline === false ? true : false} url={item.url}>{item.text}</HelpText>

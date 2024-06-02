@@ -7,6 +7,7 @@ import { BlockUrlConstant } from "../../../src/block/constant"
 import { ChildsArea } from "../../../src/block/view/appear"
 import { ActionDirective } from "../../../src/history/declare"
 import { Point } from "../../../src/common/vector/point"
+import { PageDrag } from "../../../src/kit/operator/drag"
 
 @url('/template')
 export class TemplatePanel extends Block {
@@ -31,8 +32,7 @@ export class TemplatePanel extends Block {
 }
 
 @view('/template')
-export class TemplatePanelView extends BlockView<TemplatePanel>{
-
+export class TemplatePanelView extends BlockView<TemplatePanel> {
     async mousedown(event: React.MouseEvent) {
         if (this.block.childs.length == 0) {
             event.stopPropagation()
@@ -44,7 +44,9 @@ export class TemplatePanelView extends BlockView<TemplatePanel>{
             });
         }
         else {
-            this.block.page.kit.anchorCursor.onFocusBlockAnchor(this.block.childs.last(), { render: true });
+            PageDrag(this.block.page.kit, event);
+            // this.block.page.kit.anchorCursor.onFocusBlockAnchor(this.block.childs.last(), { render: true });
+
         }
     }
     renderView() {

@@ -607,6 +607,7 @@ export class ImageView extends BlockView<Image> {
                 <div className='sy-block-image-content-view-wrapper visible-hover' ref={e => this.imageWrapper = e} style={wStyle}>
                     {this.block.src.name != 'none' && <img
                         draggable={false}
+                        className={this.block.link?.url || this.block?.link?.pageId ? "cursor" : ""}
                         onMouseDown={e => { this.mousedown(e) }}
                         style={imageMaskStyle} onError={e => this.onError(e)}
                         src={autoImageUrl(this.block?.src?.url, this.block.originSize?.width > 1200 ? 1200 : undefined)}

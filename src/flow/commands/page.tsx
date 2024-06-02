@@ -1,6 +1,6 @@
 
 import React from "react";
-import { S } from "../../../i18n/view";
+import { S, Sp } from "../../../i18n/view";
 import { FlowCommand, FlowCommandView } from "../command";
 import { flow, flowView } from "../factory/observable";
 import { Icon } from "../../../component/view/icon";
@@ -11,7 +11,7 @@ import { channel } from "../../../net/channel";
 import lodash from "lodash";
 import { SelectBox } from "../../../component/view/select/box";
 import { lst } from "../../../i18n/store";
-import { LinkSvg } from "../../../component/svgs";
+import { GridPageDialougSvg, GridPagePageSvg, GridPageSlideSvg, LinkSvg } from "../../../component/svgs";
 import { Input } from "../../../component/view/input";
 import { PageLayoutType, getPageIcon, getPageText } from "../../page/declare";
 
@@ -83,25 +83,24 @@ export class OpenPageCommandView extends FlowCommandView<OpenPageCommand> {
     renderView() {
         return <div>
             {this.renderHead(<Icon size={16} icon={{ name: 'bytedance-icon', code: 'arrow-right-up' }}></Icon>,
-                <><S>打开页面</S><span onMouseDown={e => this.openSelectPage(e)} className="gap-l-3 padding-w-5 cursor item-hover  remark  round flex ">
+                <><S>打开页面</S><span onMouseDown={e => this.openSelectPage(e)} className="gap-w-3 padding-w-5 cursor item-hover  remark  round flex ">
                     {this.command.pageId ? <>
                         <Icon icon={getPageIcon({ icon: this.command.pageIcon, pageType: this.command.pageType })}></Icon>
                         {getPageText({
                             text: this.command.pageText,
                             pageType: this.command.pageType
                         })}
-                    </> : <S>选择页面</S>}
+                    </> : <span className="link"><S>选择页面</S></span>}
                 </span>
+                    <Sp className={'flex'} text=',以{box}方式打开' view={{
+                        box: <SelectBox hover className={'flex-fixed'} onChange={e => this.command.onUpdateProps({ openSource: e })} value={this.command.openSource} options={[
+                            { text: lst('对话框'), value: 'dialog', icon: GridPageDialougSvg, iconSize: 18 },
+                            { text: lst('右侧栏'), value: 'slide', icon: GridPageSlideSvg, iconSize: 18 },
+                            { text: lst('页面'), value: 'page', icon: GridPagePageSvg, iconSize: 18 },
+                        ]}></SelectBox>
+                    }} >以方式打开</Sp>
                 </>)}
             <div>
-                <div className="flex">
-                    <span className="flex-auto "><S>打开方式</S></span>
-                    <SelectBox hover className={'flex-fixed'} onChange={e => this.command.onUpdateProps({ openSource: e })} value={this.command.openSource} options={[
-                        { text: lst('页面打开'), value: 'page' },
-                        { text: lst('对话框打开'), value: 'dialog' },
-                        { text: lst('侧边栏打开'), value: 'slide' }
-                    ]}></SelectBox>
-                </div>
             </div>
         </div>
     }

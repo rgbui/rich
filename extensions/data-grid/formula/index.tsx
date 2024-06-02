@@ -130,7 +130,7 @@ export default class FormulaSelector extends EventsComponent {
                                 }}
                                 key={f.id}
                                 className="gap-w-5 padding-w-5 item-hover round cursor flex h-30">
-                                <span className="flex-center size-24 flex-fixed "><Icon size={14} icon={GetFieldTypeSvg(f.type)}></Icon></span>
+                                <span className="flex-center size-24 flex-fixed "><Icon size={14} icon={GetFieldTypeSvg(f)}></Icon></span>
                                 <span className="f-14 inline-block text-overflow flex-auto">{f.text}</span>
                             </div>
                         })}
@@ -189,7 +189,7 @@ export default class FormulaSelector extends EventsComponent {
                                 <div onClick={e => { fl.spread = fl.spread ? false : true; this.forceUpdate() }}
                                     className="flex font-14 padding-l-10 cursor">
                                     <span className="flex-fixed size-20 item-hover flex-center round cursor ts" style={{ transform: fl.spread ? 'rotateZ(90deg)' : 'rotateZ(0deg)' }}><Icon size={16} icon={ChevronRightSvg}></Icon></span>
-                                    <span className="flex-fixed flex-center size-24"><Icon size={16} icon={GetFieldTypeSvg(fl.type)}></Icon></span>
+                                    <span className="flex-fixed flex-center size-24"><Icon size={16} icon={GetFieldTypeSvg({type:fl.type} as any)}></Icon></span>
                                     <span className="flex-auto text-overflow f-14">{fl.text}</span>
                                 </div>
                                 {fl.spread && <div>{fl.childs.map((f, g) => {

@@ -635,7 +635,7 @@ export class Page$ContextMenu {
                 { text: lst('显示字段'), type: MenuItemType.text },
                 ...this.schema.allowFormFields.findAll(g => viewType != 'template' && g.type == FieldType.title ? false : true).toArray(uf => {
                     return {
-                        icon: GetFieldTypeSvg(uf.type),
+                        icon: GetFieldTypeSvg(uf),
                         name: uf.id,
                         text: uf.text,
                         type: MenuItemType.switch,

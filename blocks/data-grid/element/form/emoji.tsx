@@ -34,7 +34,7 @@ class FieldTextView extends BlockView<FieldText>{
                 }
             }
         }
-        var svg = GetFieldTypeSvg(this.block.field.type);
+        var svg = GetFieldTypeSvg(this.block.field);
         var v = this.block.value;
         if (typeof v == 'object' && typeof v?.count == 'number') v = v.count;
         if (lodash.isNull(v) || lodash.isUndefined(v)) v = 0;

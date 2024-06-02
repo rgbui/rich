@@ -225,7 +225,7 @@ export var util = {
         const encoder = new TextEncoder();
         const utf8Array = encoder.encode(originalString);
         const base64String = btoa(String.fromCharCode.apply(null, utf8Array));
-      
+
         return base64String;
     },
     /**
@@ -239,7 +239,7 @@ export var util = {
             return c.charCodeAt(0);
         }));
         const decodedString = decoder.decode(base64Array);
-      
+
         return decodedString;
     },
     getTextareaShowHtml(text: string) {
@@ -476,5 +476,10 @@ export var util = {
             str = String(str);
         }
         return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    },
+    toPercent(num: number, total: number = 100, decimal: number = 2) {
+        if (total == 0) return '0%';
+        var r = (Math.round(num / total * 10000) / 100).toFixed(decimal) + '%';
+       return r.replace(/\.?[0]+%$/, '%');
     }
 }

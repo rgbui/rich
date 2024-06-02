@@ -90,6 +90,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                         }
                     }
                     else {
+                        console.log('block panel',block, block.url);
                         if (block.url == BlockUrlConstant.Col || block.url == BlockUrlConstant.Row) {
                             if (block.url == BlockUrlConstant.Row) {
                                 var c = block.childs.find(g => g.getVisibleBound().containX(ev.clientX));

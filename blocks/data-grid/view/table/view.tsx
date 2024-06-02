@@ -8,7 +8,7 @@ import { GetFieldTypeSvg } from "../../schema/util"
 import { Point, Rect } from "../../../../src/common/vector/point"
 import { MouseDragger } from "../../../../src/common/dragger"
 import { DataGridTool } from "../components/tool"
-import { CheckSvg, CollectTableSvg, DotsSvg, PlusSvg } from "../../../../component/svgs"
+import { CheckSvg,DotsSvg, PlusSvg } from "../../../../component/svgs"
 import { ghostView } from "../../../../src/common/ghost"
 import { ViewField } from "../../schema/view"
 import { Spin, SpinBox } from "../../../../component/view/spin"
@@ -179,7 +179,7 @@ export class TableStoreView extends BlockView<TableStore> {
                 var icon: IconValueType;
                 if (f.type == 'check') icon = CheckSvg;
                 else if (f.type == 'rowNum') { icon = undefined; }
-                else if (f.field) icon = GetFieldTypeSvg(f.field.type);
+                else if (f.field) icon = GetFieldTypeSvg(f.field);
                 var style: CSSProperties = {
                     width: f.colWidth || 120
                 }
@@ -197,7 +197,7 @@ export class TableStoreView extends BlockView<TableStore> {
                         <Icon icon={icon} size={16}></Icon>
                     </div>}
                     <label>{text}</label>
-                    {this.block.dataGridIsCanEdit() && <div className={'sy-dg-table-head-th-property remark'} onMouseDown={async e => {
+                    {this.block.dataGridIsCanEdit() && <div className={'sy-dg-table-head-th-property remark item-light-hover round'} onMouseDown={async e => {
                         var ele = e.currentTarget as HTMLElement;
                         try {
                             ele.classList.add('hover');

@@ -86,17 +86,17 @@ export class FilterView extends React.Component<{
                     return [
                         { type: MenuItemType.divide },
                         {
-                            icon: GetFieldTypeSvg(fe.type),
+                            icon: GetFieldTypeSvg(fe),
                             text,
                             value
                         },
                         {
-                            icon: GetFieldTypeSvg(fe.type),
+                            icon: GetFieldTypeSvg(fe),
                             text: fe.text + '(' + lst('数量') + ")",
                             value: fe.id + ".$size"
                         },
                         {
-                            icon: GetFieldTypeSvg(fe.type),
+                            icon: GetFieldTypeSvg(fe),
                             text: fe.text + '(' + lst('大小') + ")",
                             value: fe.id + ".$element.size"
                         },
@@ -107,12 +107,12 @@ export class FilterView extends React.Component<{
                     return [
                         { type: MenuItemType.divide },
                         {
-                            icon: GetFieldTypeSvg(fe.type),
+                            icon: GetFieldTypeSvg(fe),
                             text,
                             value
                         },
                         {
-                            icon: GetFieldTypeSvg(fe.type),
+                            icon: GetFieldTypeSvg(fe),
                             text: fe.text + '(' + lst('大小') + ")",
                             value: fe.id + ".$element.size"
                         },
@@ -124,12 +124,12 @@ export class FilterView extends React.Component<{
                 return [
                     { type: MenuItemType.divide },
                     {
-                        icon: GetFieldTypeSvg(fe.type),
+                        icon: GetFieldTypeSvg(fe),
                         text,
                         value
                     },
                     {
-                        icon: GetFieldTypeSvg(fe.type),
+                        icon: GetFieldTypeSvg(fe),
                         text: fe.text + '(' + lst('选项数') + ")",
                         value: fe.id + ".$size"
                     },
@@ -140,12 +140,12 @@ export class FilterView extends React.Component<{
                 return [
                     { type: MenuItemType.divide },
                     {
-                        icon: GetFieldTypeSvg(fe.type),
+                        icon: GetFieldTypeSvg(fe),
                         text,
                         value
                     },
                     {
-                        icon: GetFieldTypeSvg(fe.type),
+                        icon: GetFieldTypeSvg(fe),
                         text: fe.text + '(' + lst('关联数') + ")",
                         value: fe.id + ".$size"
                     },
@@ -153,7 +153,7 @@ export class FilterView extends React.Component<{
                 ]
             }
             return {
-                icon: GetFieldTypeSvg(fe.type),
+                icon: GetFieldTypeSvg(fe),
                 text,
                 value
             }
@@ -444,7 +444,7 @@ export class FilterView extends React.Component<{
                             return {
                                 text: '@' + f.text,
                                 value: '@' + f.text,
-                                icon: GetFieldTypeSvg(f.type)
+                                icon: GetFieldTypeSvg(f)
                             }
                         }))
                     }
@@ -518,7 +518,7 @@ export class FilterView extends React.Component<{
                         return {
                             value: '@' + f.text,
                             text: '@' + f.text,
-                            type: GetFieldTypeSvg(f.type)
+                            type: GetFieldTypeSvg(f)
                         }
                     })
                 }

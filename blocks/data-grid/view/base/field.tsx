@@ -35,6 +35,7 @@ import { lst } from "../../../../i18n/store";
 import { BackgroundColorList, OptionBackgroundColorList } from "../../../../extensions/color/data";
 import { TableSchema } from "../../schema/meta";
 import { useFormula } from "../../../../extensions/data-grid/formula/lazy";
+import { GetFieldTypeSvg } from "../../schema/util";
 
 export class DataGridViewField {
     private getFieldMenuItems(this: DataGridView, viewField: ViewField) {
@@ -65,7 +66,8 @@ export class DataGridViewField {
                 items.push(...[
                     {
                         name: 'name',
-                        type: MenuItemType.input,
+                        type: MenuItemType.inputTitleAndIcon,
+                        icon: GetFieldTypeSvg(viewField?.field),
                         value: viewField?.text,
                         text: lst('编辑列名'),
                     },
@@ -122,7 +124,8 @@ export class DataGridViewField {
             items.push(...[
                 {
                     name: 'name',
-                    type: MenuItemType.input,
+                    type: MenuItemType.inputTitleAndIcon,
+                    icon: GetFieldTypeSvg(viewField.field),
                     value: viewField.field?.text,
                     text: lst('编辑列名'),
                 },
@@ -284,21 +287,21 @@ export class DataGridViewField {
                         else return true
                     },
                     childs: [
-                        {
-                            text: lst('颜色'),
-                            type: MenuItemType.color,
-                            value: viewField.field.config?.numberDisplay?.color || 'rgba(55,53,47,0.6)',
-                            name: 'config.numberDisplay.color',
-                            options: BackgroundColorList().map(f => {
-                                return {
-                                    text: f.text,
-                                    overlay: f.text,
-                                    value: f.color,
-                                    checked: lodash.isEqual(viewField.field.config?.numberDisplay?.color, f.color) ? true : false
-                                }
-                            })
-                        },
-                        { type: MenuItemType.divide },
+                        // {
+                        //     text: lst('颜色'),
+                        //     type: MenuItemType.color,
+                        //     value: viewField.field.config?.numberDisplay?.color || 'rgba(55,53,47,0.6)',
+                        //     name: 'config.numberDisplay.color',
+                        //     options: BackgroundColorList().map(f => {
+                        //         return {
+                        //             text: f.text,
+                        //             overlay: f.text,
+                        //             value: f.color,
+                        //             checked: lodash.isEqual(viewField.field.config?.numberDisplay?.color, f.color) ? true : false
+                        //         }
+                        //     })
+                        // },
+                        // { type: MenuItemType.divide },
                         {
                             text: lst('度量'),
                             label: lst('度量'),
@@ -350,8 +353,8 @@ export class DataGridViewField {
                     name: 'config.imageFormat.multipleDisplay',
                     value: viewField.field.config?.imageFormat?.multipleDisplay || "tile",
                     options: [
-                        { text: lst('平铺'), value: 'tile' ,icon:{name:'byte',code:'all-application'}},
-                        { text: lst('轮播'), value: 'carousel',icon:{name:'byte',code:'multi-picture-carousel'} }
+                        { text: lst('平铺'), value: 'tile', icon: { name: 'byte', code: 'all-application' } },
+                        { text: lst('轮播'), value: 'carousel', icon: { name: 'byte', code: 'multi-picture-carousel' } }
                     ],
                     buttonClick: 'select'
                 });
@@ -552,6 +555,7 @@ export class DataGridViewField {
                         }
                     },
                     async input(item) {
+                        console.log('input item', item);
                         if (item.name == 'includeTime') {
                             await self.onUpdateFieldConfig(viewField.field, { includeTime: item.checked });
                         }
@@ -663,14 +667,23 @@ export class DataGridViewField {
             if (isSysField) {
                 if (ReItem.value != viewField?.text) {
                     //编辑列名了
-                    this.onUpdateViewField(viewField, { text: ReItem.value })
+                    await this.onUpdateViewField(viewField, { text: ReItem.value })
+                }
+                if (!lodash.isEqual(ReItem.icon, viewField.field.icon)) {
+                    await this.onUpdateField(viewField.field, { icon: ReItem.icon })
                 }
             }
             else {
+                var props: Record<string, any> = {};
+                if (!lodash.isEqual(ReItem.icon, viewField.field.icon)) {
+                    props.icon = ReItem.icon;
+                }
                 if (ReItem.value != viewField.field?.text) {
                     //编辑列名了
-                    this.onUpdateField(viewField.field, { text: ReItem.value })
+                    props.text = ReItem.value;
                 }
+                if (Object.keys(props).length > 0)
+                    await this.onUpdateField(viewField.field, props)
             }
             if (dateCustomFormat) {
                 if (dateCustomFormat.value != viewField.field?.config?.dateFormat) {
@@ -679,7 +692,7 @@ export class DataGridViewField {
             }
             if (config_numberDisplay_decimal) {
                 if (config_numberDisplay_decimal.value != viewField.field?.config?.numberDisplay?.decimal) {
-                    await this.onUpdateFieldConfig(viewField.field, { numberDisplay: { decimal: config_numberDisplay_decimal.value } });
+                    await this.onUpdateFieldConfig(viewField.field, { 'numberDisplay.decimal': config_numberDisplay_decimal.value });
                 }
             }
             if (numberUnitCustom) {

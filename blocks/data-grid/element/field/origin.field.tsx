@@ -102,7 +102,7 @@ export class OriginFileView<T extends OriginField> extends BlockView<T> {
                     this.block.onCellMousedown(e)
                 }}>
                     <div className="remark f-12 gap-h-5 flex">
-                        <Icon size={12} icon={GetFieldTypeSvg(this.block.viewField.field?.type)}></Icon>
+                        <Icon size={12} icon={GetFieldTypeSvg(this.block.viewField.field)}></Icon>
                         <span>{this.block.viewField?.text}</span>
                     </div>
                     <div>{this.renderFieldValue()}</div>

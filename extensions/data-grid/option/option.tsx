@@ -91,16 +91,16 @@ export class TableStoreOption extends EventsComponent {
                         </span>
                     </a>
                 })}
-                <div className={(this.ovs.length > 0 ? "gap-l-5" : "")}><input
+                <div className={'flex-auto min-60 ' + (this.ovs.length > 0 ? "gap-l-5" : "")}><input
                     ref={e => this.input = e}
-                    placeholder={lst("请输入选项")}
-                    maxLength={this.value.length + 3}
+                    placeholder={lst("搜索或输入选项")}
+                    // maxLength={this.value.length + 3}
                     value={this.value}
                     className="input-placeholder-remark"
                     onInput={e => changeInput(e)} onKeyDown={e => keydown(e.nativeEvent)} /></div>
             </div>}
             <div className="bg-white overflow-y max-h-180">
-                {this.isEdit && <div className="remark gap-h-5 padding-w-10 h-20 f-12">{this.filterOptions.length > 0 ? lst('选择或创建一个选项') : lst('暂无选项')}</div>}
+                {this.isEdit&&!this.isNeedCreated && <div className="remark gap-h-5 padding-w-10 h-20 f-12">{this.filterOptions.length > 0 ? lst('选择或创建一个选项') : lst('暂无选项')}</div>}
                 <DragList
                     className={this.filterOptions.length > 0 ? 'gap-b-10' : ""}
                     onChange={change}
@@ -114,7 +114,7 @@ export class TableStoreOption extends EventsComponent {
                         </div>
                     })}
                 </DragList>
-                {this.isNeedCreated && self.isEdit && <div className={"item-hover-light h-28 gap-b-5 user-none round gap-w-5 padding-w-5 flex " + (this.focusIndex == this.filterOptions.length ? "item-hover-focus" : "")} onClick={e => this.onCreateOption()}><em><S>创建</S></em><span className="l-18 h-18 padding-w-6 f-14 bold" style={{ backgroundColor: this.optionColor }}>{this.value}</span></div>}
+                {this.isNeedCreated && self.isEdit && <div className={"item-hover-light h-28 gap-b-5 user-none round gap-w-5 padding-w-5 flex " + (this.focusIndex == this.filterOptions.length ? "item-hover-focus" : "")} onClick={e => this.onCreateOption()}><em><S>创建</S></em><span className="l-18 h-22 gap-w-3 padding-w-6 f-14 bold round" style={{ backgroundColor: this.optionColor }}>{this.value}</span></div>}
             </div>
         </div>
     }

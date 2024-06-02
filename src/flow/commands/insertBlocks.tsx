@@ -8,7 +8,7 @@ import { SelectBox } from "../../../component/view/select/box";
 import { lst } from "../../../i18n/store";
 import { Block } from "../../block";
 import { BlockFactory } from "../../block/factory/block.factory";
-import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
+import { BlockUrlConstant } from "../../block/constant";
 import { PageBlockUtil } from "../../page/common/util";
 import dayjs from "dayjs";
 import { channel } from "../../../net/channel";
@@ -57,7 +57,8 @@ export class InsertBlocksCommand extends FlowCommand {
         var bs = await this.block.blocks.childs.asyncMap(async (block) => await block.cloneData({ isButtonTemplate: true }));
         await this.setVar(bs);
         var at = this.flow.buttonBlock.at;
-        var newBlocks = await this.flow.buttonBlock.parent.appendArrayBlockData(bs, at + 1, this.flow.buttonBlock.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
+        if(this.direction == 'above') at--;
+        var newBlocks = await this.flow.buttonBlock.parent.appendArrayBlockData(bs, at + 1, this.flow.buttonBlock.parentKey);
         await PageBlockUtil.eachBlockDatas(newBlocks, async (block: Block) => {
             if (block.url == BlockUrlConstant.Link) {
                 var la = await (block as any).getLink() as PageLink;

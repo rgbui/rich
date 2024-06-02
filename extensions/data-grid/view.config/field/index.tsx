@@ -111,7 +111,7 @@ export class DataGridFields extends EventsComponent {
         function getFieldIcon(vf: ViewField) {
             if (vf.type == 'check') return { name: 'bytedance-icon', code: 'check-correct' } as IconValueType
             else if (vf.type == 'rowNum') return { name: 'bytedance-icon', code: 'list-numbers' } as IconValueType
-            else return GetFieldTypeSvg(vf.field?.type);
+            else return GetFieldTypeSvg(vf.field);
         }
         var bs = this.block.fields.filter(c => !['rowNum', 'check'].includes(c.type))
         return <div>
@@ -143,7 +143,7 @@ export class DataGridFields extends EventsComponent {
                     </div>
                     <div className="shy-table-field-view-items">{fs.map(f => {
                         return <div className={"flex h-30 padding-w-5 gap-w-5 round cursor item-hover"} key={f.id}>
-                            <span className="size-24 round flex-center flex-fixed"> <Icon size={14} icon={GetFieldTypeSvg(f.type)}></Icon></span>
+                            <span className="size-24 round flex-center flex-fixed"> <Icon size={14} icon={GetFieldTypeSvg(f)}></Icon></span>
                             <span className="flex-auto f-14">{f.text}</span>
                             <span className="size-24 round flex-center flex-fixed item-hover"><Icon className={'eye'} size={14} onClick={async () => { await self.block.onShowField(f); self.forceUpdate() }} icon={EyeHideSvg}></Icon></span>
                             {!TableSchema.isSystemField(f) && <span className="size-24 round flex-center flex-fixed item-hover"> <Icon className={'eye'} size={14} onClick={async (e) => { self.openProperty('field', f, e) }} icon={DotsSvg}></Icon></span>}
@@ -225,7 +225,7 @@ export class DataGridFields extends EventsComponent {
                     options: this.block.schema.fields.filter(g => g.type == FieldType.image).map(g => {
                         return {
                             text: g.text,
-                            icon: GetFieldTypeSvg(g.type),
+                            icon: GetFieldTypeSvg(g),
                             value: g.id
                         }
                     })
@@ -300,7 +300,7 @@ export class DataGridFields extends EventsComponent {
                                     ...(pro.required ? [] : [{ value: '', text: lst('无'), icon: { name: 'byte', code: "rectangle-one" } as any }, { type: MenuItemType.divide }]),
                                     ...self.block.schema.allVisibleFields.findAll(c => pro.types.includes(c.type)).map(c => {
                                         return {
-                                            icon: GetFieldTypeSvg(c.type),
+                                            icon: GetFieldTypeSvg(c),
                                             text: c.text,
                                             value: c.id,
                                             helpText: SysHiddenFieldTypes.includes(c.type) ? lst('系统字段') : "",
@@ -318,7 +318,7 @@ export class DataGridFields extends EventsComponent {
             </div>
             <div className="shy-table-field-view-items">{fs.map(f => {
                 return <div className={"flex h-30 round padding-w-5 gap-w-5 cursor item-hover"} key={f.id}>
-                    <span className="size-24 round flex-center flex-fixed"><Icon size={14} icon={GetFieldTypeSvg(f.type)}></Icon></span>
+                    <span className="size-24 round flex-center flex-fixed"><Icon size={14} icon={GetFieldTypeSvg(f)}></Icon></span>
                     <span className="flex-auto f-14">{f.text}</span>
                     {!TableSchema.isSystemField(f) && <span className="size-24 round flex-center flex-fixed item-hover"><Icon className={'eye'} size={14} onClick={async (e) => { self.openProperty('field', f, e) }} icon={DotsSvg}></Icon></span>}
                 </div>

@@ -26,11 +26,12 @@ export class S extends React.Component<{ text?: string, data?: Record<string, an
 export class Sp extends React.Component<{
     block?: boolean,
     text: string,
+    className?: string | (string[]),
     data?: Record<string, any>,
     view?: Record<string, JSX.Element>,
-    children: React.ReactNode
+    children?: React.ReactNode
 }> {
-    spilit(text: string): JSX.Element[] {
+    split(text: string): JSX.Element[] {
         var ps: JSX.Element[] = [];
         var te = '';
         for (let i = 0; i < text.length; i++) {
@@ -53,23 +54,32 @@ export class Sp extends React.Component<{
     }
     render() {
         var text = lst(this.props.text, this.props.data || undefined, true);
+        if (!text) text = this.props.text;
+        var classList: string[] = [];
+        if (this.props.className) {
+            if (lodash.isArray(this.props.className)) {
+                classList.push(...this.props.className);
+            } else {
+                classList.push(this.props.className);
+            }
+        }
         if (this.props.block) {
             if (text) {
                 if (lodash.isObject(this.props.view) && Object.keys(this.props.view).length > 0) {
-                    return <div>{this.spilit(text)}</div>
+                    return <div className={classList.join(' ')}>{this.split(text)}</div>
                 }
-                else return <div dangerouslySetInnerHTML={{ __html: text }}></div>;
+                else return <div className={classList.join(' ')} dangerouslySetInnerHTML={{ __html: text }}></div>;
             }
-            else return <div>{this.props.children}</div>
+            else return <div className={classList.join(' ')}>{this.props.children}</div>
         }
         else {
             if (text) {
                 if (lodash.isObject(this.props.view) && Object.keys(this.props.view).length > 0) {
-                    return <span>{this.spilit(text)}</span>
+                    return <span className={classList.join(' ')} >{this.split(text)}</span>
                 }
-                else return <span dangerouslySetInnerHTML={{ __html: text }}></span>;
+                else return <span className={classList.join(' ')} dangerouslySetInnerHTML={{ __html: text }}></span>;
             }
-            else return <span>{this.props.children}</span>
+            else return <span className={classList.join(' ')}>{this.props.children}</span>
         }
     }
     componentDidMount(): void {

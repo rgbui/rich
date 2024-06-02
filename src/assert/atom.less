@@ -775,11 +775,15 @@ body {
     --text-link-color: var(--text-p1-color);
     --text-b-color   : #64a1df;
     --text-g-color   : rgb(33, 175, 90);
-    --shadow         : rgba(15, 15, 15, 0.05) 0rem 0rem 0rem 1px, rgba(15, 15, 15, 0.1) 0rem 3px 6px, rgba(15, 15, 15, 0.2) 0rem 9px 24px;
-    --shadow-light   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
-    --shadow-s       : 0px 2px 8px rgba(25, 25, 26, .12), 0px 0px 1px rgba(25, 25, 26, .08);
-    --shadow-bottom  : 0 1px 0 rgba(6, 6, 7, 0.1), 0 1.5px 0 rgba(6, 6, 7, 0.025), 0 2px 0 rgba(6, 6, 7, 0.025);
-    --shadow-b       : var(--shadow-bottom);
+
+    --bg  : var(--white);
+    --bg-1: var(--white-1);
+
+    --shadow       : rgba(15, 15, 15, 0.05) 0rem 0rem 0rem 1px, rgba(15, 15, 15, 0.1) 0rem 3px 6px, rgba(15, 15, 15, 0.2) 0rem 9px 24px;
+    --shadow-light : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+    --shadow-s     : 0px 2px 8px rgba(25, 25, 26, .12), 0px 0px 1px rgba(25, 25, 26, .08);
+    --shadow-bottom: 0 1px 0 rgba(6, 6, 7, 0.1), 0 1.5px 0 rgba(6, 6, 7, 0.025), 0 2px 0 rgba(6, 6, 7, 0.025);
+    --shadow-b     : var(--shadow-bottom);
 
     overscroll-behavior-x: none;
 }
@@ -1598,6 +1602,13 @@ each(@ops, {
 }
 
 
+.bg {
+    background-color: var(--bg);
+}
+
+.bg-1 {
+    background-color: var(--bg-1);
+}
 
 .bg-white,
 .white,

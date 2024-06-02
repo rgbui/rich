@@ -126,7 +126,7 @@ export abstract class FlowCommandView<T extends FlowCommand> extends React.Compo
         this.props.command.view = this;
     }
     renderHead(icon: React.ReactNode, title: React.ReactNode) {
-        return <div className="flex gap-b-5 text-1">
+        return <div className="flex  text">
             <div className="flex-fixed flex">
                 <Tip text='拖动它'><span className="hover-toggle drag flex-center size-24 item-hover round cursor">
                     <Icon size={16} icon={DragHandleSvg}></Icon>{icon}
@@ -140,7 +140,7 @@ export abstract class FlowCommandView<T extends FlowCommand> extends React.Compo
         </div>
     }
     render(): React.ReactNode {
-        return <div className="bg-white round border padding-10 gap-b-10">
+        return <div className="bg-white round-8 border padding-10 gap-b-10">
             {this.renderView()}
         </div>
     }

@@ -1,15 +1,14 @@
 import React, { CSSProperties } from "react";
 import { OverlayPlacement } from ".";
 import ReactDOM from "react-dom";
-import { SyncLoad } from "../../lib/sync";
 import { ToolTipOverlay } from "./box";
 
-var sc = new SyncLoad<ToolTipOverlay>()
-var ms = new Map<HTMLElement, ToolTipOverlay>();
+var ms = new Map<HTMLElement | string, ToolTipOverlay>();
 async function openOverlay(el: HTMLElement,
     options: {
         panel: HTMLElement,
-        overlay: React.ReactNode|(()=>React.ReactNode),
+        panelId?: string,
+        overlay: React.ReactNode | (() => React.ReactNode),
         placement?: OverlayPlacement,
         disabledAutoClose?: boolean,
         boxStyle?: CSSProperties,
@@ -17,25 +16,25 @@ async function openOverlay(el: HTMLElement,
         close?: () => void;
         zindex?: number
     }) {
-    var toolTipOverlay = await sc.create((c) => {
-        var t = ms.get(options.panel);
-        if (t) return c(t)
+    var toolTipOverlay = await new Promise((resolve: (e: ToolTipOverlay) => void, reject) => {
+        var t = ms.get(options.panelId);
+        if (t) return resolve(t)
         else {
             ReactDOM.render(<ToolTipOverlay ref={e => {
-                ms.set(options.panel, e);
-                c(e)
+                ms.set(options.panelId, e);
+                resolve(e)
             }}></ToolTipOverlay>,
                 options.panel.appendChild(document.createElement('div'))
             );
         }
-    });
+    })
     toolTipOverlay.open(el, options);
     return toolTipOverlay
 }
 
 export class FixBoxTip extends React.Component<{
     disabled?: boolean,
-    overlay?: React.ReactNode|(()=>React.ReactNode),
+    overlay?: React.ReactNode | (() => React.ReactNode),
     children?: React.ReactNode,
     /**0.1s */
     mouseEnterDelay?: number;
@@ -63,10 +62,11 @@ export class FixBoxTip extends React.Component<{
     onMouseLeave?: (el: HTMLElement) => void,
     cacOverEle?: (el: HTMLElement) => HTMLElement,
     panel?: HTMLElement;
+    panelId?: string,
     cacPanel?: () => HTMLElement,
     align?: 'left' | 'right' | 'center',
     zindex?: number
-}>{
+}> {
     el: HTMLElement;
     componentDidMount() {
         if (!this.props.overlay) return;
@@ -150,6 +150,7 @@ export class FixBoxTip extends React.Component<{
         if (typeof this.props.cacPanel == 'function') panel = this.props.cacPanel();
         this.toolTipOverlay = await openOverlay(el, {
             panel,
+            panelId: this.props.panelId,
             overlay: this.props.overlay,
             placement: this.props.placement,
             disabledAutoClose: this.props.disabledMouseEnterOrLeave == true ? true : false,

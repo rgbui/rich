@@ -191,7 +191,7 @@ export class ViewChats extends React.Component<{
             }
             {!(d.id == this.editChannelText?.id) && !noUser && <UserBox userid={d.userid}>{us => {
                 return <div className="sy-channel-text-item-box" >
-                    <Avatar ws={this.props.ws} showCard user={us} userid={d.userid} size={40}></Avatar>
+                    <Avatar className="flex-fixed" ws={this.props.ws} showCard user={us} userid={d.userid} size={40}></Avatar>
                     <div className="sy-channel-text-item-wrapper" >
                         <div className="sy-channel-text-item-head">
                             <a>{us.name}</a>

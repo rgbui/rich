@@ -227,7 +227,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                     options: this.block.schema.fields.filter(g => g.type == FieldType.option || g.type == FieldType.options).map(g => {
                         return {
                             text: g.text,
-                            icon: GetFieldTypeSvg(g.type),
+                            icon: GetFieldTypeSvg(g),
                             value: g.id
                         }
                     })
@@ -244,7 +244,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                     options: this.block.schema.fields.filter(g => g.type == FieldType.date || g.type == FieldType.createDate || g.type == FieldType.modifyDate).map(g => {
                         return {
                             text: g.text,
-                            icon: GetFieldTypeSvg(g.type),
+                            icon: GetFieldTypeSvg(g),
                             value: g.id
                         }
                     })

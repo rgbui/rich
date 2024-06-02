@@ -123,7 +123,7 @@ export class TableFieldView extends EventsComponent {
                 return {
                     text: r.text,
                     value: r.id,
-                    icon: GetFieldTypeSvg(r.type),
+                    icon: GetFieldTypeSvg(r),
                     checkLabel: r.id == self.config.rollupFieldId
                 }
             }));
@@ -178,7 +178,7 @@ export class TableFieldView extends EventsComponent {
                     <label className="flex gap-b-5 remark f-12"><S>统计列</S></label>
                     <div onClick={e => selectField(e)} className="flex h-26  border-light   round item-hover-light cursor">
 
-                        <span className="flex-center  size-24  flex-fix cursor  round "> <Icon size={16} className={'text-1'} icon={GetFieldTypeSvg(self.rollTableSchema.visibleFields.find(g => g.id == this.config.rollupFieldId)?.type)}></Icon></span>
+                        <span className="flex-center  size-24  flex-fix cursor  round "> <Icon size={16} className={'text-1'} icon={GetFieldTypeSvg(self.rollTableSchema.visibleFields.find(g => g.id == this.config.rollupFieldId))}></Icon></span>
                         <span className="flex-auto ">{self.rollTableSchema.visibleFields.find(g => g.id == this.config.rollupFieldId)?.text}</span>
                         <span className="flex-fixed size-24 round  flex-center">
                             <Icon size={14} icon={ChevronDownSvg}></Icon>
@@ -262,7 +262,7 @@ export class TableFieldView extends EventsComponent {
                 <div className="gap-h-10 padding-w-10">
                     <div className="flex gap-b-5 remark f-12"><S>字段类型</S></div>
                     <div className="flex h-26 border-light round item-hover-light cursor" onClick={e => this.openSelectType(e)}>
-                        <span className="flex-center  size-24  flex-fix cursor  round "><Icon size={14} icon={GetFieldTypeSvg(this.type)}></Icon></span>
+                        <span className="flex-center  size-24  flex-fix cursor  round "><Icon size={14} icon={GetFieldTypeSvg({type:this.type} as any)}></Icon></span>
                         <span className="flex-auto ">{tm?.text}</span>
                         <span className="flex-fixed size-24 round  flex-center">
                             <Icon size={14} icon={ChevronDownSvg}></Icon>

@@ -45,10 +45,12 @@ export class ToolTipOverlay extends React.Component {
     close: () => void;
     zindex: number;
     panel?: HTMLElement;
+    panelId?:string;
     open(el: HTMLElement,
         options: {
             overlay: React.ReactNode | (() => React.ReactNode),
             panel?: HTMLElement,
+            panelId?:string,
             placement?: OverlayPlacement,
             mouseLeaveDelay?: number,
             disabledAutoClose?: boolean,
@@ -65,6 +67,7 @@ export class ToolTipOverlay extends React.Component {
         this.mouseLeaveDelay = options.mouseLeaveDelay;
         this.overlay = options.overlay;
         this.panel = options.panel;
+        this.panelId = options.panelId;
         this.placement = options.placement;
         this.boxStyle = options.boxStyle || {};
         this.disabledAutoClose = typeof options?.disabledAutoClose == 'boolean' ? options.disabledAutoClose : false;

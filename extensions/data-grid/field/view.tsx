@@ -9,7 +9,7 @@ export function getMenus() {
             return {
                 text: a.text,
                 value: a.value,
-                icon: GetFieldTypeSvg(a.value)
+                icon: GetFieldTypeSvg({type:a.value} as any)
             }
         })
     }

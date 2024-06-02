@@ -30,8 +30,9 @@ export class FieldRelation extends OriginField {
     }
     async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
         if (this.checkEdit() === false) return;
-        var fn = async () => {
-            var r = await useRelationPickData({ dist: 0, roundArea: Rect.fromEle(this.el.parentNode as HTMLElement) }, {
+        event.stopPropagation();
+        var fn = async ()=>{
+            var r = await useRelationPickData({ dist: 0, roundArea: Rect.fromEle(this.el as HTMLElement) }, {
                 field: this.viewField.field,
                 relationDatas: this.relationList,
                 isMultiple: this.viewField.field.config?.isMultiple,

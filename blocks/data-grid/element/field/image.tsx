@@ -59,7 +59,7 @@ export class FieldImageView extends OriginFileView<FieldImage> {
         }
         return images.map((img, i) => {
             return <div className="sy-field-image-item" key={i}>
-                <img className="round" src={autoImageUrl(img.url || img.src, 120)} style={style} />
+                <img className="round" src={autoImageUrl(img.url || img.src, 250)} style={style} />
             </div>
         })
     }

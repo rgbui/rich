@@ -2,15 +2,15 @@ import React from "react";
 import { Icon } from "../../../component/view/icon";
 import { FlowCommand, FlowCommandView } from "../command";
 import { flow, flowView } from "../factory/observable";
-import { S } from "../../../i18n/view";
+import { S, Sp } from "../../../i18n/view";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { Rect } from "../../common/vector/point";
 import { useDataSourceView } from "../../../extensions/data-grid/datasource";
-import { ChevronDownSvg, CloseSvg,  Edit1Svg, PlusSvg, TrashSvg } from "../../../component/svgs";
+import { ChevronDownSvg, CloseSvg, Edit1Svg, PlusSvg, TrashSvg } from "../../../component/svgs";
 import { SelectBox } from "../../../component/view/select/box";
 import { lst } from "../../../i18n/store";
 import { BlockUrlConstant } from "../../block/constant";
-import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
+import { GetFieldTypeSvg, getSchemaViewIcon } from "../../../blocks/data-grid/schema/util";
 import { FieldType } from "../../../blocks/data-grid/schema/type";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { util } from "../../../util/util";
@@ -110,7 +110,6 @@ export class AddRecordsCommand extends FlowCommand {
         }
     }
 }
-
 
 function renderFieldInput(view: AddRecordsCommandView | EditRecordsCommandView, field) {
     var fe = view.command.schema.fields.find(g => g.id == field.fieldId);
@@ -228,7 +227,6 @@ function renderFieldInput(view: AddRecordsCommandView | EditRecordsCommandView, 
     }
 }
 
-
 @flowView('/addRecords')
 export class AddRecordsCommandView extends FlowCommandView<AddRecordsCommand> {
     componentDidMount(): void {
@@ -236,25 +234,34 @@ export class AddRecordsCommandView extends FlowCommandView<AddRecordsCommand> {
             this.forceUpdate();
         })
     }
-    async openSelectTable(event: React.MouseEvent) {
-        var r = await useDataSourceView({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, { selectView: false, tableId: this.command.schemaId || undefined })
+    async openSelectTable(event: React.MouseEvent, data?: any) {
+        var r = await useDataSourceView({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
+            selectView: false,
+            tableId: this.command.schemaId || undefined
+        })
+        console.log('gggg', r);
         if (r) {
             this.command.schemaId = r as any;
             this.command.schema = await TableSchema.loadTableSchema(this.command.schemaId,
                 this.command.flow.ws
             );
             this.command.fields = [];
+            if (data) for (let n in data) this.command[n] = data[n]
             this.forceUpdate();
         }
     }
+    getVfs() {
+        var vfs = this.command.editFields.findAll(g => !this.command.fields.some(s => s.fieldId == g.id));
+        return vfs;
+    }
     async addField(event: React.MouseEvent) {
         if (!this.command.schema) return;
-        var vfs = this.command.editFields.findAll(g => !this.command.fields.some(s => s.fieldId == g.id));
+        var vfs = this.getVfs()
         if (vfs.length > 0) {
             var r = await useSelectMenuItem({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, [
                 ...vfs.map(n => {
                     return {
-                        icon: GetFieldTypeSvg(n.type),
+                        icon: GetFieldTypeSvg(n),
                         text: n.text,
                         value: n.id
                     }
@@ -267,11 +274,11 @@ export class AddRecordsCommandView extends FlowCommandView<AddRecordsCommand> {
         }
     }
     async changeField(event: React.MouseEvent, field) {
-        var vfs = this.command.editFields.findAll(g => !this.command.fields.some(s => s.fieldId == g.id));
+        var vfs = this.getVfs()
         var r = await useSelectMenuItem({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, [
             ...vfs.map(n => {
                 return {
-                    icon: GetFieldTypeSvg(n.type),
+                    icon: GetFieldTypeSvg(n),
                     text: n.text,
                     value: n.id
                 }
@@ -293,29 +300,30 @@ export class AddRecordsCommandView extends FlowCommandView<AddRecordsCommand> {
     renderView() {
         return <div>
             {this.renderHead(<Icon size={18} icon={{ name: 'byte', code: 'add' }}></Icon>,
-                <><S>添加数据至</S>
+                <>
+                    <S>添加数据至</S>
                     {this.command.schema && <span className="item-hover remark  padding-w-5 round cursor flex" onMouseDown={e => this.openSelectTable(e)}><Icon size={16} icon={this.command.schema.icon || { name: 'byte', code: 'table' }}></Icon>{this.command.schema?.text}</span>}
-                    {!this.command.schema && <span className="item-hover remark  padding-w-5 round cursor " onMouseDown={e => this.openSelectTable(e)}><S>选择数据表</S></span>}
+                    {!this.command.schema && <span className="item-hover   padding-w-5 round cursor  link" onMouseDown={e => this.openSelectTable(e)}><S>选择数据表</S></span>}
+                    {this.command.schema && <Sp className={'flex'} text='视图模板{temp}' view={{
+                        temp: <SelectBox className={'flex-fixed item-hover remark  round padding-l-5'} onChange={e => this.command.onUpdateProps({ schemaViewId: e, fields: [] })} value={this.command.schemaViewId} options={[
+                            { text: lst('无'), value: '', icon: { name: 'byte', code: 'rectangle-one' } },
+                            { type: MenuItemType.divide, visible: this.command.schema.views.findAll(g => [BlockUrlConstant.RecordPageView].includes(g.url as any)).length > 0 },
+                            ...this.command.schema.views.findAll(g => [BlockUrlConstant.RecordPageView].includes(g.url as any)).map(n => ({
+                                icon: getSchemaViewIcon(n),
+                                text: n.text,
+                                value: n.id
+                            }))
+                        ]}></SelectBox>
+                    }}></Sp>}
                 </>)}
             <div>
-                {this.command.schema && <div className="flex gap-h-10">
-                    <span className="flex-auto gap-l-10"><S>打开视图模板</S></span>
-                    <SelectBox className={'flex-fixed item-hover remark  round padding-l-5'} onChange={e => this.command.onUpdateProps({ schemaViewId: e })} value={this.command.schemaViewId} options={[
-                        { text: lst('关闭'), value: '' },
-                        { type: MenuItemType.divide, visible: this.command.schema.views.findAll(g => [BlockUrlConstant.RecordPageView].includes(g.url as any)).length > 0 },
-                        ...this.command.schema.views.findAll(g => [BlockUrlConstant.RecordPageView].includes(g.url as any)).map(n => ({
-                            text: n.text,
-                            value: n.id
-                        }))
-                    ]}></SelectBox>
-                </div>}
                 {this.command.schema && this.command.fields.map(f => {
                     var fe = this.command.schema.fields.find(g => g.id == f.fieldId);
                     return <div className="flex gap-h-10" key={f.id}>
                         <span className="flex-fixed w-120 flex-end " onMouseDown={e => this.changeField(e, f)}>
                             <span className="flex item-hover round padding-w-5 cursor">
                                 <span className="flex-center remark">
-                                    <Icon size={16} icon={GetFieldTypeSvg(fe.type)}></Icon>
+                                    <Icon size={16} icon={GetFieldTypeSvg(fe)}></Icon>
                                 </span>
                                 <span className="gap-l-5">{fe.text}</span>
                                 <Icon className={'remark'} size={16} icon={ChevronDownSvg}></Icon>
@@ -326,7 +334,7 @@ export class AddRecordsCommandView extends FlowCommandView<AddRecordsCommand> {
                         </span>
                     </div>
                 })}
-                {this.command.schema && <div onMouseDown={e => this.addField(e)}><span className="gap-l-10 item-hover remark   round padding-w-5 cursor h-24 flex flex-line"><Icon icon={PlusSvg} size={16} className={'flex-center size-20'}></Icon><S>添加字段值</S><Icon icon={ChevronDownSvg}></Icon></span></div>}
+                {this.command.schema && this.getVfs().length > 0 && <div className="gap-h-10" onMouseDown={e => this.addField(e)}><span className="gap-l-10 item-hover remark   round padding-w-5 cursor h-24 flex flex-line"><Icon icon={PlusSvg} size={16} className={'flex-center size-20'}></Icon><S>添加字段值</S><Icon icon={ChevronDownSvg}></Icon></span></div>}
             </div>
         </div>
     }
@@ -364,6 +372,7 @@ export class EditRecordsCommand extends FlowCommand {
         json.schemaId = this.schemaId;
         json.schemaViewId = this.schemaViewId;
         json.fields = lodash.cloneDeep(this.fields);
+        json.filter = lodash.cloneDeep(this.filter);
         return json;
     }
     async clone() {
@@ -371,6 +380,7 @@ export class EditRecordsCommand extends FlowCommand {
         json.schemaId = this.schemaId;
         json.schemaViewId = this.schemaViewId;
         json.fields = lodash.cloneDeep(this.fields);
+        json.filter = lodash.cloneDeep(this.filter);
         return json;
     }
     async excute() {
@@ -415,7 +425,6 @@ export class EditRecordsCommand extends FlowCommand {
                 this.flow.ws
             );
             if (this.view) this.view.forceUpdate()
-            console.log(this.schema);
         }
     }
 }
@@ -423,11 +432,14 @@ export class EditRecordsCommand extends FlowCommand {
 @flowView('/editRecords')
 export class EditRecordsCommandView extends FlowCommandView<EditRecordsCommand> {
     async openSelectTable(event: React.MouseEvent) {
-        await AddRecordsCommandView.prototype.openSelectTable.call(this, event);
+        await AddRecordsCommandView.prototype.openSelectTable.call(this, event, { filter: null });
+    }
+    getVfs() {
+        var vfs = this.command.editFields.findAll(g => !this.command.fields.some(s => s.fieldId == g.id));
+        return vfs;
     }
     async addField(event: React.MouseEvent) {
         await AddRecordsCommandView.prototype.addField.call(this, event);
-
     }
     async changeField(event: React.MouseEvent, field) {
         await AddRecordsCommandView.prototype.changeField.call(this, event, field);
@@ -449,33 +461,32 @@ export class EditRecordsCommandView extends FlowCommandView<EditRecordsCommand> 
             {this.renderHead(<Icon size={18} icon={Edit1Svg}></Icon>,
                 <><S>编辑数据</S>
                     {this.command.schema && <span className="item-hover remark  padding-w-5 round cursor flex" onMouseDown={e => this.openSelectTable(e)}><Icon size={16} className={'gap-r-3'} icon={this.command.schema.icon || { name: 'byte', code: 'table' }}></Icon>{this.command.schema?.text}</span>}
-                    {!this.command.schema && <span className="item-hover remark  padding-w-5 round cursor " onMouseDown={e => this.openSelectTable(e)}><S>选择数据表</S></span>}
+                    {!this.command.schema && <span className="item-hover remark  padding-w-5 round cursor link" onMouseDown={e => this.openSelectTable(e)}><S>选择数据表</S></span>}
+                    {this.command.schema && <Sp className={'flex'} text='视图模板{temp}' view={{
+                        temp: <SelectBox className={'flex-fixed item-hover remark  round padding-l-5'} onChange={e => this.command.onUpdateProps({ schemaViewId: e, fields: [], filter: null })} value={this.command.schemaViewId} options={[
+                            { text: lst('无'), value: '', icon: { name: 'byte', code: 'rectangle-one' } },
+                            { type: MenuItemType.divide, visible: this.command.schema.views.findAll(g => [BlockUrlConstant.RecordPageView].includes(g.url as any)).length > 0 },
+                            ...this.command.schema.views.findAll(g => [BlockUrlConstant.RecordPageView].includes(g.url as any)).map(n => ({
+                                icon: getSchemaViewIcon(n),
+                                text: n.text,
+                                value: n.id
+                            }))
+                        ]}></SelectBox>
+                    }}></Sp>}
+                    {this.command.schema && <Sp className={'gap-l-5 flex'} text='满足{filter}' view={{
+                        filter: <span onMouseDown={e => this.onFilter(e)} className="  flex-fixed item-hover remark  padding-w-5 round cursor">
+                            {this.command.filter?.items?.length || ''}<S>条件</S>
+                        </span>
+                    }}></Sp>}
                 </>)}
             <div>
-                {this.command.schema && <div className="flex gap-h-10">
-                    <span className="flex-auto gap-l-10"><S>是否打开编辑视图</S></span>
-                    <SelectBox className={'flex-fixed item-hover remark  round padding-l-5'} onChange={e => this.command.onUpdateProps({ schemaViewId: e })} value={this.command.schemaViewId} options={[
-                        { text: lst('关闭'), value: '' },
-                        { type: MenuItemType.divide, visible: this.command.schema.views.length > 0 },
-                        ...this.command.schema.views.findAll(g => [BlockUrlConstant.RecordPageView].includes(g.url as any)).map(n => ({
-                            text: n.text,
-                            value: n.id
-                        }))
-                    ]}></SelectBox>
-                </div>}
-                {this.command.schema && <div className="flex gap-h-10 ">
-                    <span className="flex-auto  gap-l-10"><S>编辑满足</S></span>
-                    <span onMouseDown={e => this.onFilter(e)} className="flex-fixed item-hover remark  padding-w-5 round cursor">
-                        {this.command.filter?.items?.length || ''}<S>条件</S>
-                    </span>
-                </div>}
                 {this.command.schema && this.command.fields.map(f => {
                     var fe = this.command.schema.fields.find(g => g.id == f.fieldId);
                     return <div className="flex gap-h-10" key={f.id}>
                         <span className="flex-fixed w-120 flex-end " onMouseDown={e => this.changeField(e, f)}>
                             <span className="flex item-hover round padding-w-5 cursor">
                                 <span className="flex-center remark">
-                                    <Icon size={16} icon={GetFieldTypeSvg(fe.type)}></Icon>
+                                    <Icon size={16} icon={GetFieldTypeSvg(fe)}></Icon>
                                 </span>
                                 <span className="gap-l-5">{fe.text}</span>
                                 <Icon className={'remark'} size={16} icon={ChevronDownSvg}></Icon>
@@ -486,45 +497,16 @@ export class EditRecordsCommandView extends FlowCommandView<EditRecordsCommand> 
                         </span>
                     </div>
                 })}
-                {this.command.schema && <div onMouseDown={e => this.addField(e)}><span className="gap-l-10 item-hover remark  round padding-w-5 cursor h-24 flex flex-line"><Icon icon={PlusSvg} size={16} className={'flex-center size-20'}></Icon><S>添加字段值</S><Icon className={'gap-l-3'} icon={ChevronDownSvg} size={14}></Icon></span></div>}
+                {this.command.schema && <div className="gap-h-10" onMouseDown={e => this.addField(e)}><span className="gap-l-10 item-hover remark  round padding-w-5 cursor h-24 flex flex-line"><Icon icon={PlusSvg} size={16} className={'flex-center size-20'}></Icon><S>添加字段值</S><Icon className={'gap-l-3'} icon={ChevronDownSvg} size={14}></Icon></span></div>}
             </div>
         </div>
     }
-}
-
-@flow('/batchEditRecords')
-export class BatchEditRecordsCommand extends FlowCommand {
-    constructor() {
-        super();
-    }
-    schemaId: string = '';
-    schema: TableSchema;
-    schemaViewId: string = '';
-    get schemaView() {
-        if (this.schema) return this.schema.views.find(g => g.id == this.schemaViewId)
+    componentDidMount() {
+        this.command.loadSchema().then(() => {
+            this.forceUpdate();
+        })
     }
 }
-
-@flowView('/batchEditRecords')
-export class BatchRecordsCommandView extends FlowCommandView<EditRecordsCommand> {
-    renderView() {
-        return <div>
-            {this.renderHead(<Icon size={16} icon={{ name: 'bytedance-icon', code: 'helpcenter' }}></Icon>,
-                <><S>添加数据至</S>
-                    {this.command.schema && <span>{this.command.schema?.text}</span>}
-                    {!this.command.schema && <span><S>数据表</S></span>}
-                    {this.command.schema && <span>
-                        {this.command.schemaView && <span>{this.command.schemaView?.text}</span>}
-                        {!this.command.schemaView && <span><S>选择视图模板</S></span>}
-                    </span>}
-                </>)}
-            <div>
-                <div><S>设置字段值</S></div>
-            </div>
-        </div>
-    }
-}
-
 
 @flow('/batchDeleteRecords')
 export class BatchDeleteRecordsCommand extends FlowCommand {

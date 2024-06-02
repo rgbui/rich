@@ -201,7 +201,7 @@ export function FieldView(props: { block: OriginFormField, className?: string | 
         return <div className={"sy-form-field-detail " + classList.join(' ')} style={block.visibleStyle}>
             <div className="gap-h-10 flex flex-top">
                 {props.block.hidePropTitle !== true && <div className="flex-fixed  h-30 w-120 flex text-1 f-14 item-hover round gap-r-10 cursor">
-                    <span className="flex-fixed size-20 flex-center  gap-l-5"><Icon size={14} icon={GetFieldTypeSvg(block.field.type)}></Icon></span>
+                    <span className="flex-fixed size-20 flex-center  gap-l-5"><Icon size={14} icon={GetFieldTypeSvg(block.field)}></Icon></span>
                     <span className="flex-auto l-30 h-30 text-overflow">{block.field.text}</span>
                 </div>}
                 <div className="flex-auto">

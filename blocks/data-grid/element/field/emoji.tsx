@@ -28,7 +28,7 @@ export class FieldEmailView extends OriginFileView<FieldEmoji>{
             if (self.block.dataGrid) await self.block.dataGrid.onDataGridTool(fn)
             else await fn()
         }
-        var svg = GetFieldTypeSvg(this.block.viewField.field.type);
+        var svg = GetFieldTypeSvg(this.block.viewField.field);
         var v = this.block.value;
         if (typeof v == 'object' && typeof v?.count == 'number') v = v.count;
         if (lodash.isNull(v) || lodash.isUndefined(v)) v = 0;

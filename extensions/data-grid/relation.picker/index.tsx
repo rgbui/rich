@@ -57,9 +57,9 @@ class RelationPicker extends EventsComponent {
             return <div>
                 <div className="gap-w-10 flex gap-h-10">
                     <span><S>在</S></span>
-                    <span className="flex-fixed flex item-hover item-hover-light-focus round padding-w-5 padding-h-3">
-                        <Icon size={16} icon={this.relationSchema.icon || {name:'byte',code:'table'}}></Icon>
-                        <span>{this.relationSchema.text}</span>
+                    <span className="flex-fixed remark flex item-hover item-hover-light-focus round padding-w-3 padding-h-1">
+                        <Icon size={16} icon={this.relationSchema.icon || { name: 'byte', code: 'table' }}></Icon>
+                        <span className="gap-l-3">{this.relationSchema.text}</span>
                     </span>
                     <span><S>中选择</S></span>
                     <HelpText url={window.shyConfig?.isUS ? "https://help.shy.red/page/69#8se82Vo9ub2CVdQfA4CGEw" : "https://help.shy.live/page/1989#bMYCF1q5T1EDj9QArqCZMj"}><S>了解如何关联数据表</S></HelpText>
@@ -122,7 +122,7 @@ class RelationPicker extends EventsComponent {
                                 if ([FieldType.text, FieldType.bool, FieldType.option, FieldType.options, FieldType.number, FieldType.creater, FieldType.user].includes(vf.type)) {
                                     className = 'w-60';
                                 }
-                                return <div className={"flex-fixed border-left border-top flex r-gap-r-5 padding-5  f-14 " + className + (this.seachList.list.length == 0 ? " border-bottom" : "")} key={vf.id}><Icon className={'remark flex-fixed'} size={16} icon={GetFieldTypeSvg(vf.type)}></Icon><span className="text-1 flex-auto text-overflow">{vf.text}</span></div>
+                                return <div className={"flex-fixed border-left border-top flex r-gap-r-5 padding-5  f-14 " + className + (this.seachList.list.length == 0 ? " border-bottom" : "")} key={vf.id}><Icon className={'remark flex-fixed'} size={16} icon={GetFieldTypeSvg(vf)}></Icon><span className="text-1 flex-auto text-overflow">{vf.text}</span></div>
                             })}</div>
                         <div>
                             {this.seachList.list.map((l, i) => {
@@ -232,7 +232,7 @@ class RelationPicker extends EventsComponent {
                 if (typeof v == 'object' && typeof v?.count == 'number') v = v.count;
                 if (lodash.isNull(v) || lodash.isUndefined(v)) v = 0;
                 var countStr = v > 0 ? `${v}` : '';
-                var svg = GetFieldTypeSvg(field.type);
+                var svg = GetFieldTypeSvg(field);
                 return <span><Icon icon={svg}></Icon>{countStr}</span>
         }
         if (!lodash.isObject(v))
@@ -268,11 +268,13 @@ class RelationPicker extends EventsComponent {
         this.relationDatas = options.relationDatas;
         this.isMultiple = options.isMultiple;
         this.relationSchema = options.relationSchema;
-        await this.onSearch();
-        this.emit('update')
+        await this.onSearch(false);
+        this.forceUpdate(() => {
+            this.emit('update')
+        })
     }
     seachList: SearchListType<Record<string, any>> = { loading: false, word: '', list: [], total: 0, size: 100, page: 1 };
-    onSearch = async () => {
+    onSearch = async (force: boolean = true) => {
         this.seachList.loading = true;
         this.forceUpdate();
         var dr = await this.relationSchema.list({
@@ -287,7 +289,8 @@ class RelationPicker extends EventsComponent {
             this.seachList.size = dr.data.size;
         }
         this.seachList.loading = false
-        this.forceUpdate();
+        if (force)
+            this.forceUpdate();
     }
     onLazySearch = lodash.debounce(this.onSearch, 700)
 }

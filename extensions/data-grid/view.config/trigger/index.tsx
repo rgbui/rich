@@ -112,7 +112,7 @@ export class DataGridTrigger extends EventsComponent {
                 ].includes(g.type)).reverse().map(f => {
                     return <div key={f.id} className="flex item-hover round h-30 padding-w-5 gap-w-5 ">
                         <Tip text='拖至页面插入'><span className="size-24 text-1 item-hover round flex-center cursor" onMouseDown={e => this.onDrag(e, { url: getFieldFilterUrl(f), refBlockId: this.block.id, refFieldId: f.id })}><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>
-                        <span className="flex-fixed gap-r-3 flex-center cursor round "><Icon size={14} icon={GetFieldTypeSvg(f.type)}></Icon></span>
+                        <span className="flex-fixed gap-r-3 flex-center cursor round "><Icon size={14} icon={GetFieldTypeSvg(f)}></Icon></span>
                         <span className="flex-auto">{f.text}</span>
                         <ToolTip overlay={lst("点击插入过滤组件块")}>
                             <span onMouseDown={e => this.block.onExtendTriggerBlock(getFieldFilterUrl(f), { refFieldId: f.id })} className="flex-fix size-24 flex-center cursor round item-hover text-1 ">
@@ -144,7 +144,7 @@ export class DataGridTrigger extends EventsComponent {
                 ].includes(g.type)).reverse().map(f => {
                     return <div key={f.id} className="flex item-hover round h-30 padding-w-5 gap-w-5 ">
                         <Tip text='拖至页面插入'><span className="size-24 text-1 item-hover round flex-center cursor" onMouseDown={e => this.onDrag(e, { url: BlockUrlConstant.DataGridFieldSort, refBlockId: this.block.id, refFieldId: f.id })}><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>
-                        <span className="flex-fixed gap-r-3 flex-center cursor round "><Icon size={14} icon={GetFieldTypeSvg(f.type)}></Icon></span>
+                        <span className="flex-fixed gap-r-3 flex-center cursor round "><Icon size={14} icon={GetFieldTypeSvg(f)}></Icon></span>
                         <span className="flex-auto">{f.text}</span>
                         <ToolTip overlay={lst("点击插入排序组件块")}>
                             <span onMouseDown={e => this.block.onExtendTriggerBlock(BlockUrlConstant.DataGridFieldSort, { refFieldId: f.id })} className="flex-fix size-24 flex-center cursor round item-hover text-1 ">

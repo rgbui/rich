@@ -95,7 +95,7 @@ export class FieldNumber extends OriginField {
 }
 
 @view('/field/number')
-export class FieldTextView extends OriginFileView<FieldNumber>{
+export class FieldTextView extends OriginFileView<FieldNumber> {
     isCom: boolean = false;
     renderFieldValue() {
         var self = this;
@@ -159,8 +159,8 @@ export class FieldTextView extends OriginFileView<FieldNumber>{
         }
         var isTable = this.block.dataGrid.url == BlockUrlConstant.DataGridTable;
         if (this.block.field.type == FieldType.autoIncrement)
-            return <div className={'sy-field-number  f-14 min-h-20' + (isTable ? "text-right" : "")}  >{this.block.value}</div>
-        else return <div className={'sy-field-number f-14' + (isTable ? "text-right" : "")}>
+            return <div className={'sy-field-number  f-14 min-h-20 ' + (isTable ? "flex-end" : "")}  >{this.block.value}</div>
+        else return <div className={'sy-field-number f-14 ' + (isTable ? "flex-end" : "")}>
             {this.block.isFocus && <input type='text'
                 placeholder={lst('输入数字')}
                 defaultValue={this.block.value}
@@ -183,13 +183,21 @@ export class FieldTextView extends OriginFileView<FieldNumber>{
         var f = this.block.field?.config?.numberDisplay?.display || 'auto';
         if (f == 'auto') return <span className="text l-22 " >{this.block.formatValue(this.block.value)}</span>
         else if (f == 'percent') {
+            var color = co || '#ddd';
             var cd = ColorUtil.parseColor(color);
             var hex = ColorUtil.toHex(cd);
-            return <div className="flex">
-                {this.block.field?.config.numberDisplay?.showNumber !== false && <span className="text l-22 flex-fixed gap-r-10 f-14" >{this.block.value}</span>}
-                <div className="flex-auto border h-8 round">
-                    <div className="round" style={{ background: hex, height: 8, maxWidth: '100%', width: (this.block.value * 100 / cc) + '%' }}></div>
+            hex = 'rgb(108, 155, 125)';
+            // var cd = ColorUtil.parseColor(color);
+            // var hex = ColorUtil.toHex(cd);
+            return <div className="flex-auto flex">
+                <div className="flex-auto  round relative" style={{
+                    backgroundColor: 'rgba(199, 198, 196, 0.5)',
+                    height: 6,
+                    boxSizing: 'border-box'
+                }}>
+                    <div className="round pos " style={{ top: 0, left: 0, bottom: 0, backgroundColor: hex, height: 6, maxWidth: '100%', width:util.toPercent(this.block.value||0,cc,1)}}></div>
                 </div>
+                {this.block.field?.config.numberDisplay?.showNumber == true && <span className="text l-22 gap-l-10 flex-fixed w-50 f-14" >{util.toPercent(this.block.value||0,cc,1)}</span>}
             </div>
         }
         else if (f == 'ring') {
@@ -199,14 +207,15 @@ export class FieldTextView extends OriginFileView<FieldNumber>{
             var cd = ColorUtil.parseColor(color);
             var hex = ColorUtil.toHex(cd);
             var isNumber = typeof this.block.value == 'number'
-            return <div className="flex">
-                {this.block.field?.config.numberDisplay?.showNumber !== false && <span className="text l-22 flex-fixed gap-r-10 f-14" >{this.block.value}</span>}
+            hex = 'rgb(108, 155, 125)';
+            return <div className="flex flex-inline">
                 {isNumber && <Ring className='flex-fixed' size={r}
                     lineWidth={d}
                     value={this.block.value}
                     percent={this.block.field?.config?.numberDisplay?.decimal || 100}
                     hoverColor={hex}
                 ></Ring>}
+                  {this.block.field?.config.numberDisplay?.showNumber == true && <span className="text l-22  gap-l-10 flex-fixed w-50 f-14" >{util.toPercent(this.block.value||0,cc,1)}</span>}
             </div>
         }
     }

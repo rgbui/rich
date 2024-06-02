@@ -44,8 +44,11 @@ import * as Gauge from "../../../src/assert/img/gauge.webp";
 import * as WordCloud from "../../../src/assert/img/word-cloud.png";
 import * as Radar from "../../../src/assert/img/radar.webp";
 import * as Summary from "../../../src/assert/img/summary.png";
+import { Field } from "./field";
 
-export function GetFieldTypeSvg(type: FieldType): IconValueType {
+export function GetFieldTypeSvg(field:Field): IconValueType {
+    if(field?.icon)return field.icon;
+    var type=field?.type;
     switch (type) {
         case FieldType.bool:
             return TypesCheckboxSvg
@@ -333,7 +336,7 @@ export function getFieldMenus() {
                 text: a.text,
                 value: a.value,
                 name: 'turnFieldType',
-                icon: GetFieldTypeSvg(a.value)
+                icon: GetFieldTypeSvg({type:a.value} as any)
             }
         })
     }

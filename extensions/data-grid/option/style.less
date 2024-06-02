@@ -1,6 +1,6 @@
 .shy-tablestore-option-selector {
     max-width              : calc(100vw - 24px);
-    width                  : 250px;
+    width                  : 400px;
     min-height             : 34px;
     border-top-left-radius : 3px;
     border-top-right-radius: 3px;
@@ -16,8 +16,9 @@
         align-items    : center;
         flex-wrap      : wrap;
         box-shadow     : rgba(55, 53, 47, 0.16) 0px -1px inset;
+
         a {
-            height         : 18px;
+            height         : 22px;
             border-radius  : 3px;
             padding        : 0px 3px;
             font-size      : 14px;
@@ -29,20 +30,21 @@
         }
 
         input {
-            font-size  : inherit;
-            line-height: inherit;
-            border     : none;
-            background : none;
-            min-width  : 60px;
-            display    : block;
-            resize     : none;
-            padding    : 0px;
-            height     : 18px;
-            outline    : none;
+            font-size     : inherit;
+            line-height   : inherit;
+            border        : none;
+            background    : none;
+            // min-width  : 60px;
+            width         : 100%;
+            display       : block;
+            resize        : none;
+            padding       : 0px;
+            height        : 22px;
+            outline       : none;
 
-            &::placeholder {
-                font-size: 12px !important;
-            }
+            // &::placeholder {
+            //     font-size: 12px !important;
+            // }
         }
     }
 }
