@@ -45,7 +45,16 @@ import { BlockRenderRange } from "../../../../src/block/enum";
  */
 export class DataGridView extends Block {
     checkItems: Record<string, any>[] = [];
-    viewProps: string[] = ['url', 'filter', 'noTitle', 'openRecordSource', 'openRecordViewId', ' createRecordSource', 'size', 'sorts'];
+    viewProps: string[] = [
+        'url',
+        // 'filter',
+        // 'sorts',
+        'noTitle',
+        'openRecordSource',
+        'openRecordViewId',
+        'createRecordSource',
+        'size'
+    ];
     @prop()
     fields: ViewField[] = [];
     @prop()
@@ -342,6 +351,9 @@ export class DataGridView extends Block {
                 if (so) Object.assign(sorts, so);
             }
         }
+        if (Object.keys(sorts).length > 1) {
+            delete sorts.createDate;
+        }
         return sorts;
     }
     async createItem() {
@@ -534,7 +546,7 @@ export class DataGridView extends Block {
     }
     onSyncAddRow = lodash.debounce(async (data, id?: string, arrow: 'before' | 'after' = 'after') => {
         await this.onAddRow(data, id, arrow)
-    },50)
+    }, 50)
     onLazySearch = lodash.debounce(async () => {
         await this.onSearch()
     }, 700);
