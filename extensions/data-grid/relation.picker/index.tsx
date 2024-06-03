@@ -55,14 +55,14 @@ class RelationPicker extends EventsComponent {
                 if (a.type == FieldType.title) return -1;
             })
             return <div>
-                <div className="gap-w-10 flex gap-h-10">
+                <div className="gap-w-10 flex gap-h-10" data-drag>
                     <span><S>在</S></span>
                     <span className="flex-fixed remark flex item-hover item-hover-light-focus round padding-w-3 padding-h-1">
                         <Icon size={16} icon={this.relationSchema.icon || { name: 'byte', code: 'table' }}></Icon>
                         <span className="gap-l-3">{this.relationSchema.text}</span>
                     </span>
                     <span><S>中选择</S></span>
-                    <HelpText url={window.shyConfig?.isUS ? "https://help.shy.red/page/69#8se82Vo9ub2CVdQfA4CGEw" : "https://help.shy.live/page/1989#bMYCF1q5T1EDj9QArqCZMj"}><S>了解如何关联数据表</S></HelpText>
+                    <HelpText onMouseDown={e => { e.stopPropagation() }} url={window.shyConfig?.isUS ? "https://help.shy.red/page/69#8se82Vo9ub2CVdQfA4CGEw" : "https://help.shy.live/page/1989#bMYCF1q5T1EDj9QArqCZMj"}><S>了解如何关联数据表</S></HelpText>
                 </div>
                 <div >
                     <div className="gap-w-10 gap-t-10 gap-b-5">

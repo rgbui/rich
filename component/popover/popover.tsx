@@ -7,6 +7,7 @@ import { popoverLayer } from "../lib/zindex";
 import { assyDiv } from "../types";
 import { Spin } from "../view/spin";
 import './style.less';
+import { MouseDragger } from "../../src/common/dragger";
 
 export class Popover<T extends React.Component> extends EventsComponent<{
     component?: { new(...args: any[]): T },
@@ -20,6 +21,7 @@ export class Popover<T extends React.Component> extends EventsComponent<{
 }> {
     visible: boolean;
     point: Point = new Point(0, 0);
+    offset: Point = new Point(0, 0);
     private el: HTMLElement;
     private pos: PopoverPosition;
     async open(pos: PopoverPosition): Promise<T> {
@@ -54,6 +56,7 @@ export class Popover<T extends React.Component> extends EventsComponent<{
             })
         }
         else this.point = pos.roundArea.leftTop;
+        this.offset = new Point(0, 0);
         return new Promise((resolve: (ins: T) => void, reject) => {
             this.forceUpdate(() => {
                 if (this.cp) { this.updateLayout(); resolve(this.cp); }
@@ -72,8 +75,8 @@ export class Popover<T extends React.Component> extends EventsComponent<{
             this.zindex = popoverLayer.zoom(this);
         }
         var style: CSSProperties = {
-            top: this.point.y,
-            left: this.point.x,
+            top: this.point.y + this.offset.y,
+            left: this.point.x + this.offset.x,
             pointerEvents: 'visible'
         }
         if (this.pos?.dockRight) {
@@ -109,13 +112,13 @@ export class Popover<T extends React.Component> extends EventsComponent<{
         if (this.props.visible == 'hidden') {
             return <div className="shy-popover-box" ref={e => this.box = e} style={{ zIndex: this.zindex, pointerEvents: 'none', display: this.visible == true ? "block" : "none" }}>
                 {this.props.mask == true && <div style={{ pointerEvents: 'visible' }} className={'shy-popover-mask' + (this.props.shadow ? " shy-popover-mask-shadow" : "")} onMouseDown={e => this.onClose(e)}></div>}
-                <div style={style} className='shy-popover shadow' ref={e => this.el = e}>{child}</div>
+                <div style={style} onMouseDown={e => this.onDrag(e)} className='shy-popover shadow' ref={e => this.el = e}>{child}</div>
             </div>
         }
         else {
             return <div className="shy-popover-box" ref={e => this.box = e} style={{ zIndex: this.zindex, pointerEvents: 'none', display: this.visible == false ? 'none' : undefined }} >{this.visible && <>
                 {this.props.mask == true && <div style={{ pointerEvents: 'visible' }} className={'shy-popover-mask' + (this.props.shadow ? " shy-popover-mask-shadow" : "")} onMouseDown={e => this.onClose(e)}></div>}
-                <div style={style} className='shy-popover  shadow' ref={e => this.el = e}>{child}</div>
+                <div style={style} onMouseDown={e => this.onDrag(e)} className='shy-popover  shadow' ref={e => this.el = e}>{child}</div>
             </>}</div>
         }
     }
@@ -190,6 +193,23 @@ export class Popover<T extends React.Component> extends EventsComponent<{
     stopMousedownClose(close?: boolean) {
         if (typeof close == 'boolean') { this._stopMousedownClose = close; return; }
         this._stopMousedownClose = true;
+    }
+    onDrag(event: React.MouseEvent) {
+        var ele = (event.target as HTMLElement).closest('[data-drag]');
+        if (ele) {
+            var self = this;
+            var old = this.offset.clone();
+            MouseDragger({
+                event,
+                moving(ev, data, isEnd, isMove) {
+                    var dx = ev.clientX - event.clientX;
+                    var dy = ev.clientY - event.clientY;
+                    self.offset.x = old.x + dx;
+                    self.offset.y = old.y + dy;
+                    self.forceUpdate();
+                }
+            })
+        }
     }
 }
 
