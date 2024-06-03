@@ -317,7 +317,8 @@ export class TextSpanView extends BlockView<TextSpan> {
         else if (this.block.align == 'left') style.textAlign = 'left';
         else style.textAlign = 'right';
         var pa = this.block.parent;
-        style.fontSize = this.block.page.cacSmallFont(this.block.smallFont)
+        if (this.block.smallFont)
+            style.fontSize = this.block.page.cacSmallFont(this.block.smallFont)
 
         var placeholder = this.block.isFreeBlock || pa?.url == BlockUrlConstant.TableCell ? lst("输入文本") : undefined;
         if (this.block.placeholder) placeholder = this.block.placeholder;
