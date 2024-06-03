@@ -35,18 +35,18 @@ export class FieldUser extends OriginField {
 }
 
 @view('/field/user')
-export class FieldTextView extends OriginFileView<FieldUser>{
+export class FieldTextView extends OriginFileView<FieldUser> {
     renderFieldValue() {
         if (this.block.field.type == FieldType.creater || this.block.field.type == FieldType.modifyer)
             return <div className='sy-field-text'>
-                {this.block.value && <Avatar size={30} userid={this.block.value}></Avatar>}
+                {this.block.value && <Avatar showName size={30} userid={this.block.value}></Avatar>}
             </div>
         else {
             var vs = this.block.value;
             if (!Array.isArray(vs) && vs) vs = [vs];
             if (!Array.isArray(vs)) vs = [];
             return <div className='sy-field-text'>
-                <UserAvatars size={30} users={vs}></UserAvatars>
+                <UserAvatars showName={vs.length > 1 ? false : true} size={30} users={vs}></UserAvatars>
             </div>
         }
     }

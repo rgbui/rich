@@ -193,10 +193,10 @@ export class TableStoreView extends BlockView<TableStore> {
                 return <div className="sy-dg-table-head-th  text-1 f-14" onMouseDown={e => this.onDragMouseField(e, f)}
                     style={style}
                     key={f?.field?.id || i}>
-                    {icon && <div className={'sy-dg-table-head-th-icon remark flex-fix size-16 flex-center gap-r-5 '} >
+                    {icon && <div className={'sy-dg-table-head-th-icon remark flex-fixed size-16 flex-center gap-r-5 '} >
                         <Icon icon={icon} size={16}></Icon>
                     </div>}
-                    <label>{text}</label>
+                    <label className="flex-auto">{text}</label>
                     {this.block.dataGridIsCanEdit() && <div className={'sy-dg-table-head-th-property remark item-light-hover round'} onMouseDown={async e => {
                         var ele = e.currentTarget as HTMLElement;
                         try {

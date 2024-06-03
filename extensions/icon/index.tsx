@@ -6,7 +6,7 @@ import { EventsComponent } from "../../component/lib/events.component";
 import { UploadView } from "../file/upload";
 import { EmojiView } from "../emoji/view";
 import { FontAwesomeView } from "../font-awesome";
-import { ByteDanceIconView } from "../byte-dance.icons";
+import { ByteDanceIconView } from "../byte-dance.icons/view";
 import { OutsideUrl } from "../link/outside";
 import { Tab } from "../../component/view/tab";
 import { IconArguments } from "./declare";
