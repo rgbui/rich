@@ -655,6 +655,7 @@ export class Block$Operator {
             isOnlyStore?: boolean
         }
     ) {
+    //    debugger
         var oldValue: Record<string, any> = {};
         var newValue: Record<string, any> = {};
         if (options?.isOnlyStore == true) {
@@ -670,6 +671,7 @@ export class Block$Operator {
                 }
             }
             else {
+
                 for (let prop in newProps) {
                     if (!lodash.isEqual(lodash.get(oldProps, prop), lodash.get(newProps, prop))) {
                         oldValue[prop] = await this.clonePropData(prop, lodash.get(oldProps, prop));

@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { EventsComponent } from "../../../../component/lib/events.component";
 import { Icon } from "../../../../component/view/icon";
 import { FieldType } from "../../../../blocks/data-grid/schema/type";
@@ -20,9 +20,10 @@ export class TableSortView extends EventsComponent {
     }
     block: DataGridView;
     oldSorts: {
+        id: string,
         field: string;
         sort: number;
-    }[];
+    }[] = [];
     onOpen(block: DataGridView) {
         this.block = block;
         this.oldSorts = lodash.cloneDeep(this.block.sorts || []);
@@ -84,7 +85,7 @@ export class TableSortView extends EventsComponent {
             name = name.split('.')[0];
         }
         var ff = this.schema.fields.find(g => g.id == name);
-        if(!ff)return[]
+        if (!ff) return []
         if ([
             FieldType.autoIncrement,
             FieldType.number,
@@ -114,54 +115,52 @@ export class TableSortView extends EventsComponent {
         ]
     }
     onStore = lodash.debounce(async () => {
-        await this.block.onManualUpdateProps({ sorts: this.oldSorts }, { sorts: this.block.sorts }, {});
-        this.oldSorts = lodash.cloneDeep(this.block.sorts);
+        await this.onForceStore();
     }, 800);
     onForceStore = async () => {
-        await this.block.onManualUpdateProps({ sorts: this.oldSorts }, { sorts: this.block.sorts }, {});
-        this.oldSorts = lodash.cloneDeep(this.block.sorts);
-        this.forceUpdate();
+        await this.block.onManualUpdateProps({ sorts: this.block.sorts }, { sorts: this.oldSorts }, {});
+        // this.oldSorts = lodash.cloneDeep(this.block.sorts);
+        await this.block.onReloadData();
     }
     render() {
         if (!this.block) return <></>;
         var self = this;
-        if (!Array.isArray(this.block.sorts)) this.block.sorts = [];
         async function addSort() {
             var f = self.schema.fields.find(g => g.type == FieldType.title);
             if (!f) f = self.schema.fields.findAll(g => g.text ? true : false).first();
-            self.block.sorts.push({ id: util.guid(), field: f.id, sort: 1 });
-            await self.block.onReloadData();
-            self.onForceStore();
+            self.oldSorts.push({ id: util.guid(), field: f.id, sort: 1 });
+            self.forceUpdate();
+            self.onStore();
         }
         async function removeSort(at: number) {
-            self.block.sorts.splice(at, 1);
-            await self.block.onReloadData();
-            self.onForceStore();
+            self.oldSorts.splice(at, 1);
+            self.forceUpdate();
+            self.onStore();
         }
         async function change(to, from) {
-            var f = self.block.sorts[from];
-            self.block.sorts.splice(from, 1);
-            self.block.sorts.splice(to, 0, f);
-            await self.block.onReloadData();
-            self.onForceStore();
+            var f = self.oldSorts[from];
+            self.oldSorts.splice(from, 1);
+            self.oldSorts.splice(to, 0, f);
+            self.forceUpdate();
+            self.onStore();
         }
-        var hasSorts = Array.isArray(self.block.sorts) && self.block.sorts.length > 0;
+        var hasSorts = Array.isArray(self.oldSorts) && self.oldSorts.length > 0;
         return <div className="f-14">
             <div className="max-h-300 overflow-y">
-                {hasSorts && <DragList onChange={change} isDragBar={e => e.closest('.shy-table-sorts-view-item') && !e.closest('.btn-icon') ? true : false}>{self.block.sorts.map((so, i) => {
+                {hasSorts && <DragList onChange={change} isDragBar={e => e.closest('.shy-table-sorts-view-item') && !e.closest('.btn-icon') ? true : false}>{self.oldSorts.map((so, i) => {
                     return <div className="shy-table-sorts-view-item flex max-h-30 padding-w-10 gap-h-10" key={i}>
                         <div className="flex-auto flex">
                             <span className="cursor size-24 drag gap-r-5 text-1 round flex-center flex-fixed item-hover">
                                 <Icon size={14} icon={DragHandleSvg}></Icon>
                             </span>
-                            <SelectBox className={'gap-r-10 '} border value={so.field} options={this.getFields()} onChange={e => { so.field = e; self.onForceStore(); }}></SelectBox>
+                            <SelectBox className={'gap-r-10 '} border value={so.field} options={this.getFields()} onChange={e => { so.field = e; self.forceUpdate(); self.onStore() }}></SelectBox>
                             <SelectBox className={'gap-r-10'} border value={so.sort} options={this.getFieldSortOptions(so)} onChange={e => {
                                 so.sort = e;
-                                self.onForceStore();
+                                self.forceUpdate(); self.onStore()
                             }}>
                             </SelectBox>
                         </div>
-                        <span className="flex-fixed flex-center size-24 round item-hover cursor  remark btn-icon"><Icon size={12} onMousedown={e => removeSort(i)} icon={CloseSvg} ></Icon></span>
+                        <span className="flex-fixed flex-center size-24 round item-hover cursor  remark btn-icon" onMouseDown={e => removeSort(i)}  ><Icon size={12} icon={CloseSvg} ></Icon></span>
                     </div>
                 })}</DragList>}
             </div>
@@ -174,7 +173,7 @@ export class TableSortView extends EventsComponent {
             </div>
             <Divider></Divider>
             <div className="h-30 padding-w-10 flex">
-                <HelpText align="left" block url={window.shyConfig?.isUS ? "https://shy.red/ws/help/page/47" : "https://shy.live/ws/help/page/1874"}><S>了解如何使用数据表排序</S></HelpText>
+                <HelpText align="left" block url={window.shyConfig?.isUS ? "https://shy.red/ws/help/page/47" : "https://help.shy.live/page/1873#rS7XybZJJ9n3CDeV8Ni5u6"}><S>了解如何使用数据表排序</S></HelpText>
             </div>
         </div>
     }
