@@ -13,6 +13,8 @@ import { IconArguments } from "../../extensions/icon/declare";
 import { DragBlockLine } from "../../src/kit/handle/line";
 import { Tip } from "../../component/view/tooltip/tip";
 import "./style.less";
+import { BlockUrlConstant } from "../../src/block/constant";
+import { Head } from "./head";
 
 @url('/emoji')
 export class Emoji extends Block {
@@ -31,7 +33,7 @@ export class Emoji extends Block {
 }
 
 @view('/emoji')
-export class EmojiView extends BlockView<Emoji>{
+export class EmojiView extends BlockView<Emoji> {
     async openEdit(event: React.MouseEvent) {
         event.stopPropagation();
         if (this.boxTip) this.boxTip.close()
@@ -50,11 +52,18 @@ export class EmojiView extends BlockView<Emoji>{
         if (icon.code && (icon as any).mime) {
             icon = { name: 'emoji', code: icon.code };
         }
+        var size = 16;
+        if (this.block.parent?.url == BlockUrlConstant.Head) {
+            var pb = (this.block.parent as Head);
+            if (pb.level == 'h1') size = size * 1.875;
+            if (pb.level == 'h2') size = size * 1.5;
+            if (pb.level == 'h3') size = size * 1.25;
+        }
         return <span>
             <BoxTip disabled={this.block.isCanEdit() ? false : true} ref={e => this.boxTip = e} overlay={<div className="flex-center  padding-5 r-flex-center r-size-24 r-round r-item-hover r-cursor text">
                 <Tip text={'拖动'}><span className="cursor-grab" onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>
                 <Tip text={'编辑'}><span onMouseDown={e => this.openEdit(e)} ><Icon size={14} icon={Edit1Svg}></Icon></span></Tip>
-            </div>}><SolidArea line block={this.block} prop='src'><Icon icon={icon} size={16}></Icon></SolidArea>
+            </div>}><SolidArea line block={this.block} prop='src'><Icon icon={icon} size={size}></Icon></SolidArea>
             </BoxTip>
         </span>
     }
