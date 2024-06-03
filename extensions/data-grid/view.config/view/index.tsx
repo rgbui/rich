@@ -264,7 +264,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
             type: MenuItemType.help,
             helpInline: true,
             text: lst('了解如何使用数据表视图'),
-            url: window.shyConfig?.isUS ? "https://help.shy.red/page/44#p6dtzzCsUHUrhyfNdrfkXh" : "https://help.shy.live/page/288#eNk3NZZyXWMCgMEMCyJRcG"
+            url: window.shyConfig?.isUS ? "https://help.shy.red/page/44#p6dtzzCsUHUrhyfNdrfkXh" : "https://help.shy.live/page/1876#rxfgx6Q8CPesdk6fwxXJDQ"
         });
         return baseItems
     }
