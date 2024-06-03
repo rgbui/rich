@@ -11,12 +11,15 @@ export class FieldPhone extends OriginField {
             this.page.kit.anchorCursor.onFocusBlockAnchor(this, { last: true })
         }, 50);
     }
+    get isDisabledInputLine() {
+        return true;
+    }
 }
 @view('/field/phone')
 export class FieldPhoneView extends OriginFileView<FieldPhone> {
     renderFieldValue() {
         return <div className='sy-field-phone  f-14'  >
-            <TextArea plain block={this.block} placeholder={lst("输入手机号")} ></TextArea>
+            <TextArea plain block={this.block} prop='value' placeholder={lst("输入手机号")} ></TextArea>
         </div>
     }
 }

@@ -9,7 +9,9 @@ import lodash from "lodash";
 
 @url('/field/emoji')
 export class FieldEmoji extends OriginField {
-
+    get isDisabledInputLine() {
+        return true;
+    }
 }
 
 @view('/field/emoji')
