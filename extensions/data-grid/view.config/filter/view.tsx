@@ -120,38 +120,38 @@ export class FilterView extends React.Component<{
                     ]
                 }
             }
-            else if (fe.type == FieldType.options) {
-                return [
-                    { type: MenuItemType.divide },
-                    {
-                        icon: GetFieldTypeSvg(fe),
-                        text,
-                        value
-                    },
-                    {
-                        icon: GetFieldTypeSvg(fe),
-                        text: fe.text + '(' + lst('选项数') + ")",
-                        value: fe.id + ".$size"
-                    },
-                    { type: MenuItemType.divide }
-                ]
-            }
-            else if (fe.type == FieldType.relation) {
-                return [
-                    { type: MenuItemType.divide },
-                    {
-                        icon: GetFieldTypeSvg(fe),
-                        text,
-                        value
-                    },
-                    {
-                        icon: GetFieldTypeSvg(fe),
-                        text: fe.text + '(' + lst('关联数') + ")",
-                        value: fe.id + ".$size"
-                    },
-                    { type: MenuItemType.divide }
-                ]
-            }
+            // else if (fe.type == FieldType.options) {
+            //     return [
+            //         { type: MenuItemType.divide },
+            //         {
+            //             icon: GetFieldTypeSvg(fe),
+            //             text,
+            //             value
+            //         },
+            //         {
+            //             icon: GetFieldTypeSvg(fe),
+            //             text: fe.text + '(' + lst('选项数') + ")",
+            //             value: fe.id + ".$size"
+            //         },
+            //         { type: MenuItemType.divide }
+            //     ]
+            // }
+            // else if (fe.type == FieldType.relation) {
+            //     return [
+            //         { type: MenuItemType.divide },
+            //         {
+            //             icon: GetFieldTypeSvg(fe),
+            //             text,
+            //             value
+            //         },
+            //         {
+            //             icon: GetFieldTypeSvg(fe),
+            //             text: fe.text + '(' + lst('关联数') + ")",
+            //             value: fe.id + ".$size"
+            //         },
+            //         { type: MenuItemType.divide }
+            //     ]
+            // }
             return {
                 icon: GetFieldTypeSvg(fe),
                 text,
@@ -579,7 +579,7 @@ export class FilterView extends React.Component<{
                         <SelectBox className={'gap-r-10'} border options={self.getComputedFields(item.field)} value={item.operator} onChange={e => { item.operator = e; self.onForceStore() }} ></SelectBox>
                         {this.renderValue(item)}
                     </div>
-                    <span className="flex-fixed visible flex-center size-24 round item-hover cursor"><Icon size={12} onMousedown={e => removeFilter(e, item)} icon={CloseSvg} ></Icon></span>
+                    <span className="flex-fixed visible flex-center size-24 round item-hover cursor" onMouseDown={e => removeFilter(e, item)}><Icon size={12} icon={CloseSvg} ></Icon></span>
                 </div>
             })}
             </div>
@@ -592,7 +592,7 @@ export class FilterView extends React.Component<{
             </div>
             <Divider></Divider>
             <div className="h-30 padding-w-14 flex">
-                <HelpText align="left" url={window.shyConfig?.isUS ? "https://shy.red/ws/help/page/46" : "https://shy.live/ws/help/page/1873"}>了解数据表筛选</HelpText>
+                <HelpText align="left" url={window.shyConfig?.isUS ? "https://shy.red/ws/help/page/46" : "https://help.shy.live/page/1873#7LdUjFCNNPGDRAFu2Zx9tF"}>了解数据表筛选</HelpText>
             </div>
         </div>
     }

@@ -23,13 +23,17 @@ export class TableFilterView extends EventsComponent {
     }
 
     onStore = lodash.debounce(async (filter: SchemaFilter) => {
+
         await this.block.onManualUpdateProps({ filter: this.oldFilters }, { filter: lodash.cloneDeep(filter) });
         await this.block.onReloadData();
         this.oldFilters = lodash.cloneDeep(this.block.filter);
     }, 800);
 
     onForceStore = async (filter: SchemaFilter) => {
-        await this.block.onManualUpdateProps({ filter: this.oldFilters }, { filter: lodash.cloneDeep(filter) });
+        // console.log(this.oldFilters, filter, this.block.filter);
+        
+        await this.block.onManualUpdateProps({ filter: this.block.filter }, { filter: lodash.cloneDeep(filter) });
+        // console.log('after', this.block.filter);
         await this.block.onReloadData();
         this.oldFilters = lodash.cloneDeep(this.block.filter);
     }
