@@ -1,11 +1,10 @@
 import lodash from "lodash";
 import React from "react";
-import { ReactNode } from "react";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { getSchemaViewIcon, getSchemaViews } from "../../../blocks/data-grid/schema/util";
 import { Confirm } from "../../../component/lib/confirm";
 import { EventsComponent } from "../../../component/lib/events.component";
-import { DotsSvg, TrashSvg } from "../../../component/svgs";
+import { DotsSvg, PlusSvg, TrashSvg } from "../../../component/svgs";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { MenuView } from "../../../component/view/menu/menu";
 import { util } from "../../../util/util";
@@ -16,6 +15,8 @@ import { lst } from "../../../i18n/store";
 import { IconValueType } from "../../../component/view/icon";
 import { useCreateDataGridView } from "../create/view";
 import { Point } from "../../../src/common/vector/point";
+import { useDataGridCreate } from "../create/select.view";
+import { onOnlyCreateDataGrid } from "../../../blocks/data-grid/template/create";
 
 export class DataSourceView extends EventsComponent {
     render() {
@@ -27,7 +28,7 @@ export class DataSourceView extends EventsComponent {
                     Object.assign(it, options);
                     self.mv.forceUpdate()
                 }
-                await schema.update(options)
+                await schema.update(options, 'DataSourceView')
                 channel.air('/page/update/info', { id: schema.id, pageInfo: options as any })
             }
         }, 800)
@@ -53,8 +54,34 @@ export class DataSourceView extends EventsComponent {
             else if (item?.name == 'deleteTable') {
                 if (await Confirm(lst('确认要删除数据表吗'))) {
                     await TableSchema.deleteTableSchema(item.value);
-                    channel.air('/page/remove', { item: { id: item.value } })
                     self.forceUpdate()
+                    channel.air('/page/remove', { item: { id: item.value } })
+                }
+            }
+            else if (item?.name == 'createTable') {
+                var dc = await useDataGridCreate({ roundPoint: Point.from(event) }, { isOnlyCreateTable: true });
+                if (dc) {
+                    console.log('rccc', dg);
+                    if (dc.source == 'dataView') {
+                        var schema = await onOnlyCreateDataGrid(dc.text, dc.url);
+                        var view = schema.listViews.first();
+                        self.emit('save', {
+                            tableId: schema.id,
+                            viewUrl: view.url,
+                            type: 'view',
+                            viewId: view.id
+                        });
+                    }
+                    else if (dc.source == 'createView') {
+                        var schema = await TableSchema.onCreate({ text: dc.text, url: dc.url });
+                        var view = schema.listViews.first();
+                        self.emit('save', {
+                            tableId: schema.id,
+                            viewUrl: view.url,
+                            type: 'view',
+                            viewId: view.id
+                        });
+                    }
                 }
             }
             else if (item.name == 'addView') {
@@ -65,8 +92,8 @@ export class DataSourceView extends EventsComponent {
                     { schema: sh }
                 );
                 if (dg) {
-                    var sv = await sh.createSchemaView(dg.text, dg.url);
-                    self.emit('save',{
+                    var sv = await sh.createSchemaView(dg.text, dg.url, null);
+                    self.emit('save', {
                         tableId: sh.id,
                         viewUrl: sv.view.url,
                         type: 'view',
@@ -181,6 +208,15 @@ export class DataSourceView extends EventsComponent {
             containerHeight: 250
         })
         items.push({ type: MenuItemType.divide });
+        if (this.createTable) {
+            items.push({
+                // type: MenuItemType.button,
+                text: lst('创建数据表'),
+                icon: PlusSvg,
+                name: 'createTable'
+            })
+            items.push({ type: MenuItemType.divide });
+        }
         items.push({
             type: MenuItemType.help,
             text: lst('了解数据表'),
@@ -190,8 +226,8 @@ export class DataSourceView extends EventsComponent {
             select={select}
             style={{
                 width: 300,
-                paddingTop:5,
-                paddingBottom:5
+                paddingTop: 5,
+                paddingBottom: 5
             }} items={items}></MenuView>
     }
     private mv: MenuView;
@@ -200,18 +236,21 @@ export class DataSourceView extends EventsComponent {
     selectView: boolean = false;
     createView: boolean = false;
     editTable: boolean = false;
+    createTable: boolean = false;
     async open(option: {
         tableId?: string,
         viewId?: string,
         selectView?: boolean,
         createView?: boolean,
-        editTable?: boolean
+        editTable?: boolean,
+        createTable?: boolean
     }) {
         this.selectView = option.selectView;
         this.createView = option.createView;
         this.currentTableId = option.tableId;
         this.currentViewId = option.viewId;
         this.editTable = option.editTable;
+        this.createTable = option.createTable;
         await TableSchema.onLoadAll()
         this.forceUpdate();
     }
@@ -223,7 +262,8 @@ export async function useDataSourceView(pos: PopoverPosition,
         viewId?: string,
         selectView?: boolean,
         createView?: boolean,
-        editTable?: boolean
+        editTable?: boolean,
+        createTable?: boolean
     }) {
     let popover = await PopoverSingleton(DataSourceView, { mask: true });
     let fv = await popover.open(pos);

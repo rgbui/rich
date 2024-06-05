@@ -714,26 +714,31 @@ export class Block$Event {
                 at = arr.findIndex(g => (typeof options.data == 'function' ? (options.data as any)(g) == true : options.data === g));
             }
             var currentData = arr[at];
-            var pos = this.getArrayItemPos(options.prop, currentData);
-            arr.splice(at, 1);
-            var cd;
-            var pm = this.pm(options.prop);
-            if (pm) {
-                if (typeof pm.get == 'function') cd = pm.get(currentData)
-                else if (typeof (currentData as any).get == 'function') cd = (currentData as any).get()
-                else cd = lodash.cloneDeep(currentData);
-            } else cd = lodash.cloneDeep(currentData);
-            this.page.notifyActionBlockSync(this);
-            if (this.page.user) {
-                await this.updateProps({
-                    editor: this.page.user.id,
-                    editDate: Date.now()
-                })
+            /**
+             * 删除项，不一定有数据
+             */
+            if (currentData) {
+                var pos = this.getArrayItemPos(options.prop, currentData);
+                arr.splice(at, 1);
+                var cd;
+                var pm = this.pm(options.prop);
+                if (pm) {
+                    if (typeof pm.get == 'function') cd = pm.get(currentData)
+                    else if (typeof (currentData as any).get == 'function') cd = (currentData as any).get()
+                    else cd = lodash.cloneDeep(currentData);
+                } else cd = lodash.cloneDeep(currentData);
+                this.page.notifyActionBlockSync(this);
+                if (this.page.user) {
+                    await this.updateProps({
+                        editor: this.page.user.id,
+                        editDate: Date.now()
+                    })
+                }
+                this.page.snapshoot.record(OperatorDirective.$array_delete, {
+                    pos,
+                    data: cd
+                }, this)
             }
-            this.page.snapshoot.record(OperatorDirective.$array_delete, {
-                pos,
-                data: cd
-            }, this)
         }
     }
     async arrayMove<T>(this: Block,

@@ -10,7 +10,8 @@ export enum PageDirective {
     focusAnchor,
     blurAnchor,
     history,
-    syncHistory,
+    syncPage,
+    syncBlock,
     /**
      * 数据保存ctrl+s
      */
@@ -52,4 +53,6 @@ export enum PageLocation {
 
 
     pageSyncRefs=4,
+
+    schemaOperate=5,
 }

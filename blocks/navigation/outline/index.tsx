@@ -93,7 +93,6 @@ export class PageOutLine extends Block {
                     spread: sc,
                     childs: []
                 });
-                console.log(b, b.contentEl, b.contentEl.innerHTML, b.contentEl.innerText)
                 if (lastItem) {
                     if (level > lastItem.hLevel) {
                         itemData.parentId = lastItem.id;

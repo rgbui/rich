@@ -82,7 +82,8 @@ export class Page$Cycle {
                 this.requireSelectLayout = false;
                 await this.loadPageSchema();
             }
-            await this.loadPageParents();
+            if (this.pe)
+                await this.loadPageParents();
             await this.loadPageRepair();
             await this.views.eachAsync(async v => {
                 await v.loadSyncBlock()
@@ -161,7 +162,7 @@ export class Page$Cycle {
         if (this.isCanEdit && isOk && actions.length > 0) {
             var seq = actions.max(g => g.seq);
             var op = actions.find(g => g.seq == seq);
-            this.emit(PageDirective.syncHistory, {
+            this.emit(PageDirective.syncPage, {
                 seq,
                 creater: op.userid,
                 force: source == 'load' ? true : false

@@ -639,7 +639,7 @@ export class Page$ContextMenu {
                         name: uf.id,
                         text: uf.text,
                         type: MenuItemType.switch,
-                        checked: this.exists(c => (c instanceof OriginFormField) && c.field.id == uf.id)
+                        checked: this.exists(c => (c instanceof OriginFormField) && c.field?.id == uf.id)
                     }
                 }),
                 { type: MenuItemType.divide },

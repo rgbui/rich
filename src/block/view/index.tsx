@@ -1,4 +1,4 @@
-import React, { CSSProperties } from "react";
+import React from "react";
 import { Component, ErrorInfo } from "react";
 import ReactDOM from 'react-dom';
 import { Block } from "..";
@@ -51,14 +51,14 @@ export abstract class BlockView<T extends Block> extends Component<{ block: T }>
             return <div className="sy-block-error border-red  bg-error round" style={this.block.visibleStyle}>
                 <div className="f-14 remark flex" style={this.block.contentStyle}>
                     {this.errorLoading && <Spin></Spin>}
-                    {!this.errorLoading && <><span className="gap-l-20 error"><S>显示出错了</S></span><Tip text='刷新' ref={e => this.errorRefreshTip = e}><span className="cursor link-red size-20" onMouseDown={async e => {
+                    {!this.errorLoading && <><span className="gap-l-20 error"><S text="局部块出错了您可以删除它">局部块出错了,您可以删除它</S></span><Tip text='刷新' ref={e => this.errorRefreshTip = e}><span className="cursor link-red size-20 flex-center" onMouseDown={async e => {
                         if (this.errorRefreshTip) this.errorRefreshTip.close()
                         this.errorLoading = true;
                         this.forceUpdate()
                         await util.delay(200);
                         this.errorLoading = false;
                         this.forceUpdate()
-                    }}><Icon size={16} icon={RefreshSvg}></Icon></span></Tip><Tip text='删除当前块'><span className="cursor link-red size-20" onMouseDown={e => { e.stopPropagation(); this.block.onDelete() }}><Icon size={16} icon={TrashSvg}></Icon></span></Tip></>}
+                    }}><Icon size={16} icon={RefreshSvg}></Icon></span></Tip><Tip text='删除当前块'><span className="cursor link-red size-20 flex-center" onMouseDown={e => { e.stopPropagation(); this.block.onDelete() }}><Icon size={16} icon={TrashSvg}></Icon></span></Tip></>}
                 </div>
             </div>
         }

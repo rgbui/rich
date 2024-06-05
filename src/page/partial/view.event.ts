@@ -401,7 +401,7 @@ export class Page$ViewEvent {
                     name: 'updateSchemaView',
                     id: this.pe.id1,
                     data: { text }
-                }])
+                }],'onUpdatePageTitle')
                 if (this.view.pageBar) this.view.pageBar.forceUpdate()
             }
         }
@@ -409,7 +409,7 @@ export class Page$ViewEvent {
             if (this.pe.type == ElementType.Schema) {
                 var schema = await TableSchema.loadTableSchema(this.pe.id, this.ws);
                 if (schema)
-                    await schema.update({ text })
+                    await schema.update({ text },'onUpdatePageTitle')
             }
             await channel.air('/page/update/info', {
                 elementUrl: this.elementUrl,
@@ -483,7 +483,7 @@ export class Page$ViewEvent {
         ].includes(this.pe.type) && !this.isSchemaRecordViewTemplate) {
             var sv = this.schema.views.find(g => g.id == this.pe.id1);
             if (sv) {
-                await this.schema.onSchemaOperate([{ id: sv.id, name: 'updateSchemaView', data }])
+                await this.schema.onSchemaOperate([{ id: sv.id, name: 'updateSchemaView', data }],'onUpdatePermissions')
                 Object.assign(sv, data);
             }
         }

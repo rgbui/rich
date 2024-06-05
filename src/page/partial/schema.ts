@@ -122,7 +122,7 @@ export class Page$Schema {
         /**
          * 比较初始值，如果一样，说明没有任何修改，返回null
          */
-        if (lodash.isEqual(this.formRowData, row) && !this.pageModifiedOrNot) {
+        if (lodash.isEqual(this.formRowData, row) || !this.pageModifiedOrNot) {
             return null;
         }
         row.icon = this.formRowData.icon;
@@ -146,15 +146,15 @@ export class Page$Schema {
             this.onPageSave();
             var newRow = await this.getSchemaRow()
             if (this.isCanEdit && newRow && Object.keys(newRow).length > 0) {
-                await this.schema.rowUpdate({ dataId: this.pe.id1, data: newRow })
+                await this.schema.rowUpdate({ dataId: this.pe.id1, data: newRow }, 'Page.onSubmitForm')
             }
         }
         else if (this.pe.type == ElementType.SchemaRecordView) {
             var newRow = await this.getSchemaRow();
             if (newRow) {
-                var r = await this.schema.rowAdd({ data: newRow, pos: { id: undefined, pos: 'after' } });
-                if (r.ok) {
-                    newRow = r.data.data;
+                var r = await this.schema.rowAdd({ data: newRow, pos: { id: undefined, pos: 'after' } }, 'Page.onSubmitForm');
+                if (r) {
+                    newRow = r.data;
                     await channel.act('/view/snap/store',
                         {
                             elementUrl: getElementUrl(ElementType.SchemaData,
@@ -235,7 +235,7 @@ export class Page$Schema {
             }
             if (value == 'doc-add') {
                 var title = self.find(g => g.url == BlockUrlConstant.Title) as Title;
-                await title.updateProps({ align: 'center' },BlockRenderRange.self)
+                await title.updateProps({ align: 'center' }, BlockRenderRange.self)
                 var button = self.find(g => g.url == BlockUrlConstant.Button && (g as BlockButton).isFormSubmit() == true) as BlockButton;
                 if (!button) {
                     var last: Block = self.findReverse(g => (g instanceof OriginFormField));
@@ -263,7 +263,7 @@ export class Page$Schema {
     async onChangeSchemaView(this: Page, viewId: string, props) {
         var view = this.schema.views.find(g => g.id == viewId);
         if (view) {
-            this.schema.onSchemaOperate([{ name: 'updateSchemaView', id: view.id, data: props }])
+            this.schema.onSchemaOperate([{ name: 'updateSchemaView', id: view.id, data: props }], "Page.onChangeSchemaView")
         }
     }
 }

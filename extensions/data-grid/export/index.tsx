@@ -72,7 +72,8 @@ class TableExportView extends EventsComponent {
                 }
             });
             ops.forEach(op => {
-                row[op.name] = op.config.options.find(c => c.value == row[op.name])?.text;
+                if (Array.isArray(op?.config?.options))
+                    row[op.name] = op.config.options.find(c => c.value == row[op.name])?.text;
             });
             ins.forEach(ig => {
                 if (row[ig.name])
@@ -207,7 +208,7 @@ class TableExportView extends EventsComponent {
                         </div>
                     </div>
                     <div className="flex gap-h-10">
-                        <label className="flex-auto"><S>内容</S></label><div className="flex-fixed"><SelectBox value={this.config.content} onChange={e => { this.config.content = e; this.forceUpdate() }} options={[{ text:lst('所有') , value: 'all' }, { text: lst('无文件或图片'), value: 'no-file' }]}></SelectBox></div>
+                        <label className="flex-auto"><S>内容</S></label><div className="flex-fixed"><SelectBox value={this.config.content} onChange={e => { this.config.content = e; this.forceUpdate() }} options={[{ text: lst('所有'), value: 'all' }, { text: lst('无文件或图片'), value: 'no-file' }]}></SelectBox></div>
                     </div>
                     <div className="flex-end gap-h-10 gap-t-20">
                         <Button ghost className="gap-r-10" onClick={e => this.onCancel()}><S>取消</S></Button> <Button onClick={e => this.onExport()}><S>导出</S></Button>
@@ -217,7 +218,7 @@ class TableExportView extends EventsComponent {
             }
             {
                 this.exporting && <div className="padding-14 min-w-250">
-                    <div className="flex gap-h-5"><Sp text={'共{total}条'} data={{total:this.total}}>共{this.total}条</Sp></div>
+                    <div className="flex gap-h-5"><Sp text={'共{total}条'} data={{ total: this.total }}>共{this.total}条</Sp></div>
                     <div className="flex">
                         <div className="flex-fixed gap-r-5"><Spin size={16}></Spin></div>
                         <div className="flex-auto border h-10 round">

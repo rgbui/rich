@@ -46,7 +46,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 icon: LoopSvg,
                 childs: [
                     { text: lst('数据表视图'), type: MenuItemType.text, helpUrl: window.shyConfig?.isUS ? "https://help.shy.red/page/44#p6dtzzCsUHUrhyfNdrfkXh" : "https://help.shy.live/page/288#eNk3NZZyXWMCgMEMCyJRcG" },
-                    ...getSchemaViews().map(v=>{
+                    ...getSchemaViews().map(v => {
                         return {
                             name: "toggleView",
                             value: v.url,
@@ -65,7 +65,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                             render(item, view) {
                                 return <div className="flex-full relative item-hover round padding-w-10 padding-h-5">
                                     <div className="flex-fixed">
-                                        <img src={c.model.image} className="obj-center round h-40 w-80" />
+                                        <img src={c.model.image} className="obj-center round h-40 w-80 border" />
                                     </div>
                                     <div className="flex-auto gap-l-10 f-14">
                                         <div>{c.model.title}</div>
@@ -184,7 +184,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                     visible: (this.block as TableStoreGallery).getCardUrl() ? false : true,
                     options: [
                         { text: lst('隐藏'), value: 'none', icon: { name: "byte", code: 'preview-close-one' } as any },
-                        { text: lst('显示'), value: 'nowrap', icon: { name: "byte", code: 'preview-open' }  as any},
+                        { text: lst('显示'), value: 'nowrap', icon: { name: "byte", code: 'preview-open' } as any },
                         { text: lst('换行显示'), value: 'wrap', icon: { name: "byte", code: 'align-left-two' } as any },
                     ]
                 },
@@ -215,7 +215,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                     visible: (this.block as TableStoreGallery).getCardUrl() ? false : true,
                     options: [
                         { text: lst('隐藏'), value: 'none', icon: { name: "byte", code: 'preview-close-one' } as any },
-                        { text: lst('显示'), value: 'nowrap', icon: { name: "byte", code: 'preview-open' }  as any},
+                        { text: lst('显示'), value: 'nowrap', icon: { name: "byte", code: 'preview-open' } as any },
                         { text: lst('换行显示'), value: 'wrap', icon: { name: "byte", code: 'align-left-two' } as any },
                     ]
                 },
@@ -286,7 +286,9 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 await self.block.onUpdateProps({ noHead: !item.checked }, { range: BlockRenderRange.self });
             }
             else if (['gallerySize', 'cardConfig.showField', 'dateFieldId', 'groupFieldId'].includes(item.name)) {
-                await self.block.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self });
+                await self.block.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self }, undefined, async () => {
+                    self.block.forceUpdateAllViews()
+                });
             }
             else if (item.name == 'viewText') {
                 if (self.block.schemaView.text != item.value)

@@ -165,6 +165,7 @@ export class FilterView extends React.Component<{
         return vs;
     }
     getComputedFields(fieldId: string) {
+        if (!fieldId) return []
         var fe = fieldId.indexOf('.') > -1 ? fieldId.split('.')[0] : fieldId;
         var ed = fieldId.indexOf('.') > -1 ? fieldId.split('.').last() : null;
         var field = this.schema.fields.find(g => g.id == fe);
@@ -482,6 +483,7 @@ export class FilterView extends React.Component<{
     }
     renderValue(item: SchemaFilter) {
         var self = this;
+        if (!item.field) return <></>
         var name = item.field.indexOf('.') > -1 ? item.field.split('.')[0] : item.field;
         var ed = item.field.indexOf('.') > -1 ? item.field.split('.').last() : null;
         var fe = this.schema.fields.find(g => g.id == name);

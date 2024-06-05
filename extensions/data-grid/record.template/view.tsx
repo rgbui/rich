@@ -61,7 +61,7 @@ class TabelSchemaFormDrop extends EventsComponent {
         if (um) {
             var name = menus[0].value;
             if (name) {
-                await this.schema.onSchemaOperate([{ name: 'createSchemaView', text: name, url }])
+                await this.schema.onSchemaOperate([{ name: 'createSchemaView', text: name, url }], this.block.id)
                 this.forceUpdate();
             }
         }
@@ -94,12 +94,12 @@ class TabelSchemaFormDrop extends EventsComponent {
         var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
         if (um) {
             if (um.item.name == 'delete') {
-                this.schema.onSchemaOperate([{ name: 'removeSchemaView', id: view.id }])
+                this.schema.onSchemaOperate([{ name: 'removeSchemaView', id: view.id }], this.block.id)
                 this.forceUpdate();
                 return;
             }
             else if (um.item.name == 'clone') {
-                this.schema.onSchemaOperate([{ name: 'duplicateSchemaView', id: view.id }])
+                this.schema.onSchemaOperate([{ name: 'duplicateSchemaView', id: view.id }], this.block.id)
                 this.forceUpdate();
                 return;
             }
@@ -111,10 +111,10 @@ class TabelSchemaFormDrop extends EventsComponent {
                 return;
             }
             else if (um.item.name == 'defaultCollect') {
-                this.schema.update({ defaultCollectFormId: view.id })
+                this.schema.update({ defaultCollectFormId: view.id }, 'TabelSchemaFormDrop')
             }
             else if (um.item.name == 'defaultEdit') {
-                this.schema.update({ defaultEditFormId: view.id })
+                this.schema.update({ defaultEditFormId: view.id }, 'TabelSchemaFormDrop')
             }
         }
         var it = menus.find(g => g.name == 'rename') as { value: string, icon: IconValueType };
@@ -130,7 +130,7 @@ class TabelSchemaFormDrop extends EventsComponent {
                 name: 'updateSchemaView',
                 id: view.id,
                 data: data
-            }])
+            }], this.block.id)
             Object.assign(view, data);
             this.forceUpdate();
             return;

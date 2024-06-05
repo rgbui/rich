@@ -4,7 +4,7 @@ import { Input } from "../../../component/view/input";
 import { PopoverSingleton } from "../../../component/popover/popover";
 import { PopoverPosition } from "../../../component/popover/position";
 import { getSchemaViewIcon, getSchemaViews } from "../../../blocks/data-grid/schema/util";
-import { CheckSvg, CloseSvg,TriangleSvg } from "../../../component/svgs";
+import { CheckSvg, CloseSvg, TriangleSvg } from "../../../component/svgs";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import lodash from "lodash";
 import { lst } from "../../../i18n/store";
@@ -35,11 +35,16 @@ export class DataGridCreate extends EventsComponent {
     schemaId: string;
     syncBlockId: string;
     render() {
+        if (this.isOnlyCreateTable) {
+            return <div className="w-400 ">
+                {this.renderCreate()}
+            </div>
+        }
         return <div className="w-400 ">
             <Tab change={e => {
                 this.emit('changeIndex')
             }}>
-                <Tab.Page item={<Tip placement='bottom' text={'新建数据表'}><Icon size={18} icon={{name:'byte',code:'table'}}></Icon></Tip>}>
+                <Tab.Page item={<Tip placement='bottom' text={'新建数据表'}><Icon size={18} icon={{ name: 'byte', code: 'table' }}></Icon></Tip>}>
                     {this.renderCreate()}
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' text={'已创建的数据表'}><Icon size={18} icon={{ name: 'byte', code: 'history' }}></Icon></Tip>}>
@@ -73,7 +78,7 @@ export class DataGridCreate extends EventsComponent {
                         self.forceUpdate()
                     }} className="flex-full relative item-hover round padding-w-10 padding-h-5">
                         <div className="flex-fixed">
-                            <img src={c.model.image} className="obj-center h-40 w-80" />
+                            <img src={c.model.image} className="obj-center h-40 w-80 round border" />
                         </div>
                         <div className="flex-auto gap-l-10 f-14">
                             <div>{c.model.title}</div>
@@ -181,16 +186,18 @@ export class DataGridCreate extends EventsComponent {
         </div>
     }
     input: Input;
-    async open() {
+    isOnlyCreateTable = false;
+    async open(options?: { isOnlyCreateTable?: boolean }) {
+        this.isOnlyCreateTable = options?.isOnlyCreateTable ? true : false;
         await TableSchema.onLoadAll()
         this.forceUpdate();
     }
 }
 
-export async function useDataGridCreate(pos: PopoverPosition) {
+export async function useDataGridCreate(pos: PopoverPosition, options?: { isOnlyCreateTable?: boolean }) {
     let popover = await PopoverSingleton(DataGridCreate, { mask: true });
     let fv = await popover.open(pos);
-    await fv.open();
+    await fv.open(options);
     return new Promise((resolve: (data: {
         schemaId?: string,
         syncBlockId?: string,

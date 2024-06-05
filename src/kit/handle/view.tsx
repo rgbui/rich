@@ -34,7 +34,7 @@ export class HandleView extends React.Component<{ handle: Handle }> {
             await self.handle.handleBlock.onHandlePlus();
         }
     }
-    private onMousedown(event: MouseEvent) {
+    onMousedown(event: MouseEvent, options?: { isOnlyDrag?: boolean, notDragFun?: (e:MouseEvent) => void }) {
         this.closeTip();
         this.handle.isDown = true;
         this.handle.isDrag = false;
@@ -89,7 +89,12 @@ export class HandleView extends React.Component<{ handle: Handle }> {
                         if (isCanDrag) onAutoScrollStop();
                         try {
                             if (self.handle.isDrag == true) await self.handle.onDropBlock()
-                            else await self.handle.onClickBlock(ev);
+                            else {
+                                if (options?.isOnlyDrag !== true)
+                                    await self.handle.onClickBlock(ev);
+                                if (typeof options?.notDragFun)
+                                    options?.notDragFun(ev)
+                            }
                         }
                         catch (ex) {
                             self.handle.kit.emit('error', ex);

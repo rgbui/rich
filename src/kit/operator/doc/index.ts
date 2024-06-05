@@ -1,7 +1,7 @@
 import React from "react";
 import { Kit } from "../..";
 import { Block } from "../../../block";
-import { findBlockAppearByPoint, findBlockNearAppearByPoint, findXBlockAppear } from "../../../block/appear/visible.seek";
+import { findBlockAppearByPoint, findBlockNearAppearByPoint } from "../../../block/appear/visible.seek";
 import { MouseDragger } from "../../../common/dragger";
 import { onAutoScroll, onAutoScrollStop } from "../../../common/scroll";
 import { Point, Rect } from "../../../common/vector/point";
@@ -36,14 +36,22 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
     var gm = block ? block.panelGridMap : kit.page.gridMap;
     var currentBlocks: Block[];
     var scrollDiv = block?.panel ? block.panel.getScrollDiv() : kit.page.getScrollDiv();
+    /**
+     * 当元素处于拖动点击时，不在允许拖选元素
+     * 一般元素是通过手柄触发的，但还有直接手动触发的如数据表中的看板元素就是手动触发的
+     */
+    var isDragBlock = kit.handle.isDown ? true : false;
     MouseDragger({
         event,
         dis: 5,
         moveStart() {
-            gm.start();
-            kit.anchorCursor.selector.setStart(Point.from(event));
+            if (!isDragBlock) {
+                gm.start();
+                kit.anchorCursor.selector.setStart(Point.from(event));
+            }
         },
         move(ev, data) {
+            if (isDragBlock) return;
             var movePoint = Point.from(ev)
             function cacSelector(dis: number) {
                 downPoint.y -= dis;
@@ -73,7 +81,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
         },
         async moveEnd(ev, isMove, data) {
             gm.over();
-            if (isMove) {
+            if (isMove && !isDragBlock) {
                 onAutoScrollStop();
                 kit.anchorCursor.selector.close();
                 if (currentBlocks) kit.anchorCursor.onSelectBlocks(currentBlocks, { render: true });
@@ -90,7 +98,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                         }
                     }
                     else {
-                        console.log('block panel',block, block.url);
+                        console.log('block panel', block, block.url);
                         if (block.url == BlockUrlConstant.Col || block.url == BlockUrlConstant.Row) {
                             if (block.url == BlockUrlConstant.Row) {
                                 var c = block.childs.find(g => g.getVisibleBound().containX(ev.clientX));

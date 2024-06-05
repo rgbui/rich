@@ -80,7 +80,7 @@ export class AddRecordsCommand extends FlowCommand {
                     data[fe.name] = lodash.cloneDeep(f.value);
                 }
             });
-            await this.schema.rowAdd({ data });
+            await this.schema.rowAdd({ data }, 'flowButtonAddRecords');
         }
         else {
             var data: Record<string, any> = {};
@@ -393,7 +393,7 @@ export class EditRecordsCommand extends FlowCommand {
                     data[fe.name] = lodash.cloneDeep(f.value);
                 }
             });
-            await this.schema.rowUpdateAll({ data, filter: this.filter }, this.flow.ws);
+            await this.schema.rowUpdateAll({ data, filter: this.filter }, 'flowButtonEditRecords');
         }
         else {
             var data: Record<string, any> = {};
@@ -414,7 +414,7 @@ export class EditRecordsCommand extends FlowCommand {
             if (dialougPage) {
                 dialougPage.onPageSave();
                 var newRow = await dialougPage.getSchemaRow();
-                if (newRow) await this.schema.rowUpdateAll({ data: newRow, filter: this.filter }, this.flow.ws);
+                if (newRow) await this.schema.rowUpdateAll({ data: newRow, filter: this.filter }, 'flowButtonEditRecords');
             }
             await channel.act('/page/dialog', { elementUrl: null });
         }

@@ -302,7 +302,7 @@ export class Page$Operator2 {
             }
             if (this.pe.type == ElementType.SchemaData) {
                 if (!this.openPageData?.pre && this.formRowData?.id) {
-                    await this.schema.rowUpdate({ dataId: this.formRowData?.id, data: this.formRowData })
+                    await this.schema.rowUpdate({ dataId: this.formRowData?.id, data: this.formRowData },'Page.onUpdatePageData')
                 }
             }
         }
@@ -313,7 +313,7 @@ export class Page$Operator2 {
                     name: 'updateSchemaView',
                     data: data,
                     id: this.pe.id1,
-                }])
+                }], 'Page.onUpdatePageData')
                 this.forceUpdate();
             }
         }
@@ -322,7 +322,7 @@ export class Page$Operator2 {
                 var schema = await TableSchema.loadTableSchema(this.pe.id, this.ws);
                 var props = lodash.pick(data, ['icon', 'description', 'text'])
                 if (schema && Object.keys(props).length > 0)
-                    schema.update(props)
+                    schema.update(props, 'Page.onUpdatePageData')
             }
             await channel.air('/page/update/info', {
                 elementUrl: this.elementUrl,

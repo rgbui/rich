@@ -66,7 +66,7 @@ class PagePermission extends EventsComponent {
         }[] = pr?.memberPermissions || [];
         async function setGlobalShare(data) {
             if (view) {
-                await self.page.schema.onSchemaOperate([{ name: 'updateSchemaView', id: view.id, data }])
+                await self.page.schema.onSchemaOperate([{ name: 'updateSchemaView', id: view.id, data }], 'PagePermission')
             }
             else {
                 await self.page.onUpdatePermissions(data);

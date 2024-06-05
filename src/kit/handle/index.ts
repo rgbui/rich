@@ -117,4 +117,16 @@ export class Handle extends Events {
     }
     isDown: Boolean;
     isDrag: boolean = false;
+    /**
+     * 直接拖动元素，没有通过把手
+     * @param block 
+     * @param event 
+     */
+    onDirectDrag(block: Block, event: MouseEvent, options?: {
+        isOnlyDrag?: boolean;
+        notDragFun?: (e: MouseEvent) => void;
+    }) {
+        this.handleBlock = block;
+        this.view.onMousedown(event, options);
+    }
 }

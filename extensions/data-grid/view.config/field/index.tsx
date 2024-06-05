@@ -66,7 +66,7 @@ export class DataGridFields extends EventsComponent {
             var isCanDeleted: boolean = true;
             if (SysFieldTypes.includes(gr.type)) isCanDeleted = false;
             var items = [
-                { name: 'name', type: MenuItemType.input, value: gr.text },
+                { name: 'name', type: MenuItemType.inputTitleAndIcon, icon: GetFieldTypeSvg(gr), value: gr.text },
                 { type: MenuItemType.divide },
                 { name: 'clone', icon: DuplicateSvg, text: lst('复制') },
                 { type: MenuItemType.divide },
@@ -87,8 +87,15 @@ export class DataGridFields extends EventsComponent {
                     self.forceUpdate();
                 }
             }
-            if (na && na.value != gr.text && na.value) {
-                await self.block.onUpdateField(gr, { text: na.value });
+            var props: Record<string, any> = {};
+            if (na && lodash.isEqual(na.value, gr.text) && na.value) {
+                props.text = na.value;
+            }
+            if (na && !lodash.isEqual(na.icon, gr.icon)) {
+                props.icon = na.icon;
+            }
+            if (Object.keys(props).length > 0) {
+                await self.block.onUpdateField(gr, props);
                 self.forceUpdate();
             }
         }
@@ -162,19 +169,29 @@ export class DataGridFields extends EventsComponent {
         var self = this;
         async function input(item) {
             if (item.name == 'cardConfig.showTemplate') {
-                await self.block.onUpdateProps({ [item.name]: item.checked }, { range: BlockRenderRange.self });
+                await self.block.onUpdateProps({ [item.name]: item.checked }, { range: BlockRenderRange.self }, undefined, async () => {
+                    self.block.forceUpdateAllViews()
+                });
                 self.forceUpdate()
             }
             else if (['gallerySize', 'dateFieldId', 'groupFieldId'].includes(item.name)) {
-                await self.block.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self });
+                await self.block.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self }, undefined, async () => {
+                    self.block.forceUpdateAllViews()
+                });
                 self.forceUpdate()
             }
             else if (['cardConfig.auto', 'cardConfig.showCover', 'cardConfig.coverAuto'].includes(item.name)) {
-                await self.block.onUpdateProps({ [item.name]: item.checked }, { range: BlockRenderRange.self });
+                await self.block.onUpdateProps({ [item.name]: item.checked }, { range: BlockRenderRange.self }, undefined, async () => {
+                    self.block.forceUpdateAllViews()
+                });
                 self.forceUpdate()
             }
             else if (['cardConfig.coverFieldId', 'cardConfig.showMode'].includes(item.name) && item.value) {
-                await self.block.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self });
+                await self.block.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self }, undefined, async () => {
+                    if (item.name == 'cardConfig.coverFieldId')
+                        await self.block.arrayRemove<ViewField>({ prop: 'fields', data: g => g.fieldId == item.value })
+                    self.block.forceUpdateAllViews()
+                });
                 self.forceUpdate()
             }
         }
@@ -185,7 +202,7 @@ export class DataGridFields extends EventsComponent {
 
         }
         var getItems = () => {
-            if ((this.block as TableStoreGallery)?.cardConfig?.showMode == 'define')  return []
+            if ((this.block as TableStoreGallery)?.cardConfig?.showMode == 'define') return []
             var baseItems: MenuItem[] = [
                 { text: lst('卡片视图'), type: MenuItemType.text },
                 {
@@ -277,7 +294,7 @@ export class DataGridFields extends EventsComponent {
                 <HelpText className={'flex-fixed'} url={window.shyConfig.isUS ? "https://help.shy.red/page/45#bL7PqQVPV559C39frqH1nR" : "https://help.shy.live/page/1872#8vxftyLXa8uJ1PDxJAuDJG"}></HelpText>
             </div>
             <div>
-                {card.model&&card.model.props.map(pro => {
+                {card.model && card.model.props.map(pro => {
                     var bp = (self.block as TableStoreGallery).cardConfig.templateProps?.props?.find(g => g.name == pro.name);
                     return <div key={pro.name} className="flex gap-h-5 padding-h-3 f-14 padding-w-5 gap-w-5 item-hover round cursor text-1">
                         <span className="flex-fixed w-100 flex-end flex remark">
