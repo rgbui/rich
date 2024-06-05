@@ -109,7 +109,7 @@ export class DataGridTrigger extends EventsComponent {
                     FieldType.sort,
                     FieldType.autoIncrement,
 
-                ].includes(g.type)).reverse().map(f => {
+                ].includes(g.type)).map(f => {
                     return <div key={f.id} className="flex item-hover round h-30 padding-w-5 gap-w-5 ">
                         <Tip text='拖至页面插入'><span className="size-24 text-1 item-hover round flex-center cursor" onMouseDown={e => this.onDrag(e, { url: getFieldFilterUrl(f), refBlockId: this.block.id, refFieldId: f.id })}><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>
                         <span className="flex-fixed gap-r-3 flex-center cursor round "><Icon size={14} icon={GetFieldTypeSvg(f)}></Icon></span>
@@ -141,7 +141,7 @@ export class DataGridTrigger extends EventsComponent {
                     FieldType.sort,
                     FieldType.autoIncrement,
 
-                ].includes(g.type)).reverse().map(f => {
+                ].includes(g.type)).map(f => {
                     return <div key={f.id} className="flex item-hover round h-30 padding-w-5 gap-w-5 ">
                         <Tip text='拖至页面插入'><span className="size-24 text-1 item-hover round flex-center cursor" onMouseDown={e => this.onDrag(e, { url: BlockUrlConstant.DataGridFieldSort, refBlockId: this.block.id, refFieldId: f.id })}><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>
                         <span className="flex-fixed gap-r-3 flex-center cursor round "><Icon size={14} icon={GetFieldTypeSvg(f)}></Icon></span>
