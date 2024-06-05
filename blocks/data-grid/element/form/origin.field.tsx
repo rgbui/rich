@@ -197,6 +197,10 @@ export class OriginFormField extends Block {
 export function FieldView(props: { block: OriginFormField, className?: string | string[], children?: JSX.Element | string | React.ReactNode }) {
     var block = props.block;
     var classList = util.covertToArray(props.className);
+    if (!block.field) return <div className="flex bg-error cursor round gap-h-5" onMouseDown={e => { block.onDelete() }} style={block.visibleStyle}>
+        <span className="f-14"><S>该字段不存在</S></span>
+        <span className="gap-l-5 size-20 flex-center"><Icon icon={TrashSvg} size={16}></Icon></span>
+    </div>
     if (block.fieldType !== 'doc-add') {
         return <div className={"sy-form-field-detail " + classList.join(' ')} style={block.visibleStyle}>
             <div className="gap-h-10 flex flex-top">

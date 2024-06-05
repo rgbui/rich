@@ -12,8 +12,9 @@ import { MenuItemType, MenuItem } from "../../../../component/view/menu/declare"
 import { lst } from "../../../../i18n/store";
 import { BlockDirective, BlockRenderRange } from "../../../../src/block/enum";
 import { S } from "../../../../i18n/view";
-import { TypesMultipleSelectSvg, TypesSelectSvg } from "../../../../component/svgs";
+import { TrashSvg, TypesMultipleSelectSvg, TypesSelectSvg } from "../../../../component/svgs";
 import { FieldType } from "../../schema/type";
+import { Icon } from "../../../../component/view/icon";
 
 @url('/form/option')
 class FieldText extends OriginFormField {
@@ -48,7 +49,7 @@ class FieldText extends OriginFormField {
     async turnForm(fieldType: any): Promise<void> {
         await super.turnForm(fieldType);
         if (this.fieldType != 'doc-add') {
-            await this.updateProps({ optionType: 'default' },BlockRenderRange.self)
+            await this.updateProps({ optionType: 'default' }, BlockRenderRange.self)
         }
     }
 }
@@ -78,7 +79,7 @@ class FieldTextView extends BlockView<FieldText> {
                             data: {
                                 config: { options: ops }
                             }
-                        })
+                        }, this.block.id)
                     }
                 }
             );
@@ -94,9 +95,12 @@ class FieldTextView extends BlockView<FieldText> {
             if (hover)
                 hover.classList.remove('item-hover-light-focus')
         }
-
     }
     renderView() {
+        if (!this.block.field) return <div className="flex bg-error cursor round  gap-h-5" onMouseDown={e => { this.block.onDelete() }} style={this.block.visibleStyle}>
+            <span className="f-14"><S>该字段不存在</S></span>
+            <span className="gap-l-5 size-20 flex-center"><Icon icon={TrashSvg} size={16}></Icon></span>
+        </div>
         var fc: FieldConfig = this.block.field.config;
         var options = this.block.field.config?.options || []
         var ops: DataGridOptionType[] = [];
