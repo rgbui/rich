@@ -81,8 +81,8 @@ export class TemplateView extends EventsComponent {
                             this.tagSpread.set(tg, this.tagSpread.get(tg) == false ? true : false);
                             // tg.spread = tg.spread ? false : true;
                             this.forceUpdate();
-                        }} className="f-12 flex  cursor gap-w-5 padding-w-5 item-hover-light">
-                            <span className={"ts size-20 flex-center flex-fixed " + (this.tagSpread.get(tg) !== false ? "" : "angle-90-")}>
+                        }} className="f-12 flex  cursor gap-w-5 ">
+                            <span className={"ts size-20 flex-center item-hover flex-fixed " + (this.tagSpread.get(tg) !== false ? "" : "angle-90-")}>
                                 <Icon className={'text-1'} size={16} icon={ChevronDownSvg}></Icon>
                             </span>
                             <span className="flex-auto">{tg}</span>
