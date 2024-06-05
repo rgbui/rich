@@ -54,6 +54,9 @@ export class Title extends Block {
     async getMd() {
         return `# ${this.page.getPageDataInfo()?.text}`
     }
+    get isContentEmpty(){
+        return !this.pageInfo?.text
+    }
     async onGetContextMenus() {
         var pd = this.page.getPageDataInfo();
         var rs: MenuItem<string | BlockDirective>[] = [];

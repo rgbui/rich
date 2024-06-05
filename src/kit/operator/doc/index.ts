@@ -88,6 +88,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
             }
             else {
                 if (block) {
+                    //console.log('block', block);
                     if (!block.isLayout) {
                         var a = findBlockNearAppearByPoint(block, Point.from(ev));
                         if (a) {
@@ -98,7 +99,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                         }
                     }
                     else {
-                        console.log('block panel', block, block.url);
+                        //console.log('block panel', block, block.url);
                         if (block.url == BlockUrlConstant.Col || block.url == BlockUrlConstant.Row) {
                             if (block.url == BlockUrlConstant.Row) {
                                 var c = block.childs.find(g => g.getVisibleBound().containX(ev.clientX));
@@ -157,6 +158,11 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                     else {
                         if ([PageLayoutType.doc, PageLayoutType.recordView].includes(kit.page.pageLayout.type))
                             kit.page.onCreateTailTextSpan(undefined);
+                        else if ([PageLayoutType.ppt].includes(kit.page.pageLayout.type)) {
+                            var lb = kit.page.views.first().findAll(c => c.url == BlockUrlConstant.CardBox).last()
+                            if (lb)
+                                kit.page.onCreateTailTextSpan(lb);
+                        }
                     }
                 }
             }
