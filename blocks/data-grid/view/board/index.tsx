@@ -12,7 +12,7 @@ import { lst } from "../../../../i18n/store";
 import { S } from "../../../../i18n/view";
 import { Spin } from "../../../../component/view/spin";
 import { useSelectMenuItem } from "../../../../component/view/menu";
-import { Rect } from "../../../../src/common/vector/point";
+import { Point, Rect } from "../../../../src/common/vector/point";
 import lodash from "lodash";
 import { Confirm } from "../../../../component/lib/confirm";
 import { MenuItemType } from "../../../../component/view/menu/declare";
@@ -124,7 +124,7 @@ export class TableStoreBoard extends DataGridView {
                 }
                 else if (r.item.name == 'deleteAllRows') {
                     if (await Confirm(lst('确定要删除分组下面的所有数据吗'))) {
-                        await this.schema.rowRemovesByFilter({ [dg.name]: dg.value })
+                        await this.schema.rowRemovesByFilter({ [dg.name]: dg.value }, this.id)
                         dg.count = 0;
                         lodash.remove(this.data, c => c[dg.name] == dg.value);
                         this.forceManualUpdate()
@@ -132,7 +132,7 @@ export class TableStoreBoard extends DataGridView {
                 }
                 else if (r.item.name == 'deleteGroup') {
                     if (await Confirm(lst('确定要删除分组吗'))) {
-                        await this.schema.rowRemovesByFilter({ [dg.name]: dg.value })
+                        await this.schema.rowRemovesByFilter({ [dg.name]: dg.value }, this.id)
                         dg.count = 0;
                         lodash.remove(this.data, c => c[dg.name] == dg.value);
                         lodash.remove(this.dataGroups, c => c.value == dg.value);
@@ -204,6 +204,15 @@ export class TableStoreBoard extends DataGridView {
 
 @view('/data-grid/board')
 export class TableStoreBoardView extends BlockView<TableStoreBoard> {
+    onDrag(event: React.MouseEvent, block: Block) {
+        // event.stopPropagation();
+        this.block.page.kit.handle.onDirectDrag(block, event.nativeEvent, {
+            isOnlyDrag: true,
+            notDragFun: (ev) => {
+                console.log(ev, 'sxxx');
+            }
+        });
+    }
     renderGroup(dg: ArrayOf<TableStoreBoard['dataGroups']>, index: number) {
         var cs = this.block.childs.findAll(g => g.mark == dg.group);
         return <div className="sy-data-grid-board-group visible-hover" key={index}>
@@ -222,7 +231,7 @@ export class TableStoreBoardView extends BlockView<TableStoreBoard> {
             </div>
             <div className="sy-data-grid-board-group-childs">
                 {cs.map(c => {
-                    return <div key={c.id}>{this.renderItem(c)}</div>
+                    return <div onMouseDown={e => this.onDrag(e, c)} key={c.id}>{this.renderItem(c)}</div>
                 })}
                 {this.block.isCanEdit() && <div onMouseDown={e => this.block.onAddGroup(dg)} className="f-12 gap-b-10 visible item-hover item-hover-light-focus flex text-1 round h-30 cursor">
                     <Icon size={18} className={'gap-l-10'} icon={PlusSvg}></Icon>
@@ -244,7 +253,7 @@ export class TableStoreBoardView extends BlockView<TableStoreBoard> {
         return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus padding-5 cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
             {this.block.willCreateSchema && <Spin></Spin>}
             <span className="size-24 flex-center remark"><Icon size={16} icon={{ name: 'byte', code: 'table' }}></Icon></span>
-            <span className="remark"><S>创建数据表格</S></span>
+            <span className="remark"><S>添加或创建数据表</S></span>
         </div>
     }
     renderAddGroup() {
@@ -280,12 +289,12 @@ export class TableStoreBoardView extends BlockView<TableStoreBoard> {
             <div className='sy-data-grid-board' onMouseEnter={e => this.block.onOver(true)}
                 onMouseLeave={e => this.block.onOver(false)}>
                 <DataGridTool block={this.block}></DataGridTool>
-                <div className="sy-data-grid-board-list">
+                {this.block.schema && <div className="sy-data-grid-board-list">
                     {this.block.dataGroups.findAll(g => this.block.hideGroups.some(s => s == g.value) ? false : true).map((dg, i) => {
                         return this.renderGroup(dg, i)
                     })}
                     {this.block.isCanEdit() && this.renderAddGroup()}
-                </div>
+                </div>}
                 {this.renderCreateTable()}
             </div>
         </div>
