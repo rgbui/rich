@@ -6,19 +6,20 @@ import { Icon } from "../../component/view/icon";
 import { PageTemplateTypeGroups } from "../../src/page/declare";
 import { IconArguments, ResourceArguments } from "../icon/declare";
 import { PopoverSingleton } from "../../component/popover/popover";
-import { ChevronDownSvg, PageSvg } from "../../component/svgs";
+import { ChevronDownSvg, PageSvg, SearchSvg } from "../../component/svgs";
 import { channel } from "../../net/channel";
 import { S } from "../../i18n/view";
 import { Input } from "../../component/view/input";
 import { ElementType, getElementUrl } from "../../net/element.type";
 import { lst } from "../../i18n/store";
 import lodash from "lodash";
+import { SelectBox } from "../../component/view/select/box";
 
 export interface PageTemplateType {
     id: string,
     text: string,
     icon: IconArguments,
-    classify: string,
+    classify: string[],
     description: string,
     file: ResourceArguments,
     type: 'page' | 'workspace',
@@ -37,12 +38,28 @@ export class TemplateView extends EventsComponent {
     renderSide() {
         return <div
             style={{
-                backgroundColor: 'rgb(251,251,250)',
                 borderRadius: '3px 0px 0px 3px'
             }}
-            className="flex-fixed flex flex-col flex-full w-200 border-right">
+            className="flex-fixed flex bg-1 flex-col flex-full w-250 border-shadow-right">
+            <div className="gap-w-10 gap-t-10">
+                <SelectBox
+                    border
+                    value={this.templateList.type}
+                    dropAlign="full"
+                    onChange={e => {
+                        this.templateList.type = e;
+                        this.onSearch();
+                    }}
+                    options={PageTemplateTypeGroups.map(c => {
+                        return {
+                            icon: c.icon,
+                            text: c.text,
+                            value: c.text
+                        }
+                    })}></SelectBox>
+            </div>
             <div className="flex-fixed gap-h-10 gap-w-10">
-                <Input theme="focus" placeholder={lst('搜索模板')} clear value={this.templateList.word} onEnter={e => {
+                <Input prefix={<span className="size-24 flex-center text-1"><Icon size={14} icon={SearchSvg}></Icon></span>} theme="focus" placeholder={lst('搜索模板')} clear value={this.templateList.word} onEnter={e => {
                     this.templateList.word = e;
                     this.forceUpdate();
                 }} onClear={() => {
@@ -54,21 +71,23 @@ export class TemplateView extends EventsComponent {
                 }}
                 ></Input>
             </div>
+
             <div className="flex-auto overflow-y " >
-                {!this.templateList.word && this.typeGroups.map((tg, i) => {
-                    var ts = this.templateList.list.findAll(g => g.classify == tg.text);
+                {!this.templateList.word && this.getTags().map((tg, i) => {
+                    var ts = this.templateList.list.findAll(g => g.tags.includes(tg));
                     if (ts.length == 0) return <div key={i}></div>
                     return <div className="gap-b-10 gap-t-10" key={i}>
                         <div onClick={e => {
-                            tg.spread = tg.spread ? false : true;
+                            this.tagSpread.set(tg, this.tagSpread.get(tg) == false ? true : false);
+                            // tg.spread = tg.spread ? false : true;
                             this.forceUpdate();
                         }} className="f-12 flex  cursor gap-w-5 padding-w-5 item-hover-light">
-                            <span className={"ts size-20 flex-center flex-fixed " + (tg.spread == true ? "" : "angle-90-")}>
+                            <span className={"ts size-20 flex-center flex-fixed " + (this.tagSpread.get(tg) !== false ? "" : "angle-90-")}>
                                 <Icon className={'text-1'} size={16} icon={ChevronDownSvg}></Icon>
                             </span>
-                            <span className="flex-auto">{tg.text}</span>
+                            <span className="flex-auto">{tg}</span>
                         </div>
-                        {tg.spread !== false && <div>
+                        {this.tagSpread.get(tg) !== false && <div>
                             {ts.map((tl, j) => {
                                 return <div onMouseDown={e => {
                                     this.onSetTemplate(tl);
@@ -98,12 +117,16 @@ export class TemplateView extends EventsComponent {
             </div>
         </div>
     }
-    typeGroups = PageTemplateTypeGroups;
+    // typeGroups = PageTemplateTypeGroups;
     templateList: SearchListType<PageTemplateType, { mime: string, tags: string[], type: string }> = { type: '', mime: 'page', loading: false, tags: [], total: 0, list: [], page: 1, size: 20 }
     getSearchList() {
         return this.templateList.list.filter(c => {
             return c.text?.indexOf(this.templateList.word) > -1 || c.description && c.description.indexOf(this.templateList.word) > -1
         })
+    }
+    tagSpread: Map<string, boolean> = new Map();
+    getTags() {
+        return lodash.uniq(this.templateList.list.map(c => c.tags).flat())
     }
     async onSearch() {
         try {
@@ -111,7 +134,7 @@ export class TemplateView extends EventsComponent {
             this.forceUpdate();
             var rs = await channel.get('/search/workspace/template', {
                 page: this.templateList.page,
-                word: this.templateList.word,
+                classify: this.templateList.type,
                 size: this.templateList.size
             });
             if (rs) {
@@ -181,9 +204,6 @@ export class TemplateView extends EventsComponent {
             this.forceUpdate();
         }
     }
-    onLazySearch = lodash.debounce(() => {
-        this.onSearch();
-    }, 1000);
     iframe: HTMLIFrameElement;
     async onSetTemplate(pageTemplate: PageTemplateType) {
         this.currentPageTemplate = pageTemplate;

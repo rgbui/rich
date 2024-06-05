@@ -6,7 +6,7 @@ import { Block } from "../../../block";
 import { BlockChildKey, BlockUrlConstant } from "../../../block/constant";
 import { Point, Rect } from "../../../common/vector/point";
 import { ActionDirective } from "../../../history/declare";
-import { LinkPageItem, PageLayoutType, PageTemplateTags, PageTemplateTypeGroups } from "../../declare";
+import { LinkPageItem, PageLayoutType, PageTemplateTypeGroups } from "../../declare";
 import { PageDirective } from "../../directive";
 import { useTemplateView } from "../../../../extensions/template";
 import { lst } from "../../../../i18n/store";
@@ -487,7 +487,7 @@ export class Page$Operator {
             title: lst('申请模板'),
             model: {
                 classify: tgd['classify'],
-                tags: tgd['tags'],
+                tags: Array.isArray(tgd['tags']) ? tgd['tags'].join(',') : (tgd['tags'] || ''),
                 description: tgd['description'],
                 text: tgd['text'] || this.pageInfo?.text
             },
@@ -496,16 +496,8 @@ export class Page$Operator {
                 { name: 'description', text: lst('描述'), type: 'textarea' },
                 {
                     name: 'tags',
-                    text: lst('标签'),
-                    multiple: true,
-                    type: 'select',
-                    options: PageTemplateTags.map(p => {
-                        return {
-                            text: p.text,
-                            value: p.text,
-                            type: p.type
-                        }
-                    })
+                    text: lst('标签'), type: 'input',
+                    placeholder: lst('请输入标签，用逗号或空格隔开')
                 },
                 {
                     name: 'classify',
@@ -533,6 +525,8 @@ export class Page$Operator {
                     if (g.ok) {
                         var r = await channel.post('/download/file', { url: g.data.file.url });
                         if (r.ok) {
+                            var ts = (rf.tags || '').split(/,|，|\s/).filter(c => c);
+                            lodash.remove(ts, c => c == ' ');
                             await channel.post('/create/workspace/template', {
                                 wsId: ws.id,
                                 pageId: this.pageInfo?.id,
@@ -545,7 +539,7 @@ export class Page$Operator {
                                 icon: this.pageInfo?.icon,
                                 config: {
                                     classify: rf.classify,
-                                    tags: rf.tags
+                                    tags: ts
                                 }
                             });
                         }
@@ -714,7 +708,7 @@ export class Page$Operator {
                 var next = block.nextFind(x => x.isContentBlock);
                 // console.log(next);
                 if (next) {
-                    var br = next?.closest(x =>  x.isContentBlock)?.frameBlock;
+                    var br = next?.closest(x => x.isContentBlock)?.frameBlock;
                     if (!br) onceAutoScroll({ el: next.el, feelDis: 60, dis: 120 })
                     await next.parent.appendArray(blocks, next.at + 1, next.parentKey);
 
@@ -724,7 +718,7 @@ export class Page$Operator {
                 var block = first;
                 var pre = block.prevFind(x => x.isContentBlock);
                 if (pre) {
-                    var br = pre?.closest(x =>  x.isContentBlock)?.frameBlock;
+                    var br = pre?.closest(x => x.isContentBlock)?.frameBlock;
                     if (!br) onceAutoScroll({ el: pre.el, feelDis: 60, dis: 120 })
                     await pre.parent.appendArray(blocks, pre.at, pre.parentKey);
                 }

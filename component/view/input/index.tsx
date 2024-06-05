@@ -138,7 +138,17 @@ export class Input extends React.Component<{
                     disabled={props.disabled ? true : false}
                     placeholder={props.placeholder}
                     onInput={e => onInput(e)}
+                    onFocus={e => {
+
+                        var si = (e.target).closest('.shy-input');
+                        if (si)
+                            si.classList.add('shy-inpu-focusing');
+                    }}
                     onBlur={e => {
+                        console.log(e);
+                        var si = (e.target).closest('.shy-input');
+                        if (si)
+                            si.classList.remove('shy-inpu-focusing');
                         if (props.onBlur)
                             props?.onBlur(e)
                     }}
@@ -179,7 +189,7 @@ export class Input extends React.Component<{
         this.inputEl.focus()
     }
     componentDidUpdate(prevProps) {
-        if(!lodash.isEqual(prevProps.value, this.props.value)) {
+        if (!lodash.isEqual(prevProps.value, this.props.value)) {
             this.inputEl.value = this.props.value;
         }
     }
