@@ -11,7 +11,62 @@ import { Page } from "../../../src/page";
 import { LinkWs } from "../../../src/page/declare";
 import { CardFactory } from "../template/card/factory/factory";
 import { lst } from "../../../i18n/store";
+import { PageLocation } from "../../../src/page/directive";
 
+
+export type DataStoreAction = {
+    name: 'add',
+    data?: Record<string, any>,
+    pos?: { id: string, pos: 'before' | 'after' },
+} | {
+    name: 'rank',
+    id: string,
+    data?: Record<string, any>,
+    pos?: { id: string, pos: 'before' | 'after' },
+} | {
+    name: 'batchAdd',
+    list: Record<string, any>[]
+} | {
+    name: 'remove',
+    id: string
+} | {
+    name: 'removeIds',
+    ids: string[]
+} | {
+    name: 'removeFilter',
+    filter: Record<string, any>
+} | {
+    name: 'update',
+    id: string,
+    data: Record<string, any>
+} | {
+    name: 'updateFilter',
+    filter: Record<string, any>,
+    data: Record<string, any>,
+    directFilter?: boolean
+} | {
+    name: 'updateObject',
+    id: string,
+    fieldName: string,
+    data: Record<string, any>
+}
+
+export type SchemaAction = { name: 'createSchemaView', text: string, url: string }
+    | { name: 'addField', field: { text: string, type: FieldType, config?: Record<string, any> } }
+    | { name: 'updateField', fieldId: string, data: Record<string, any> }
+    | { name: 'removeSchemaView', id: string }
+    | { name: 'duplicateSchemaView', id: string, data?: { snap: any } }
+    | { name: 'updateSchemaView', id: string, data: Record<string, any> }
+    | { name: 'changeSchemaView', id: string, data: { url: string } }
+    | { name: 'updateSchema', id: string, data: Record<string, any> }
+    | { name: 'deleteSchema', id: string }
+    | { name: 'moveSchemaView', id: string, data: { from: number, to: number } }
+    | { name: 'removeField', fieldId: string }
+    | {
+        name: 'turnField',
+        fieldId: string,
+        data: Record<string, any>
+    }
 
 export interface TableSchemaView {
     id: string,
@@ -192,23 +247,40 @@ export class TableSchema {
             text: field.text
         }, this);
     }
-    rowAdd(args: { data: Record<string, any>, pos?: { id: string, pos: 'before' | 'after' } }) {
-        return channel.put('/datastore/add', Object.assign({ schemaId: this.id }, args));
+    rowAdd(args: { data: Record<string, any>, pos?: { id: string, pos: 'before' | 'after' } }, locationId: string) {
+        return this.onDataStoreOperate([{ name: 'add', data: args.data, pos: args.pos }], locationId)
     }
-    rowUpdateAll(args: { data: Record<string, any>, filter: Record<string, any> }, ws: LinkWs) {
-        return channel.patch('/datastore/row/update', { schemaId: this.id, ...args, ws })
+    rowUpdateAll(args: { data: Record<string, any>, filter: Record<string, any> }, locationId: string) {
+        return this.onDataStoreOperate([{ name: 'updateFilter', filter: args.filter, data: args.data }], locationId)
     }
-    rowRank(args: { id: string, pos: { id: string, pos: 'before' | 'after' } }) {
-        return channel.put('/datastore/rank', Object.assign({ schemaId: this.id }, args));
+    rowRank(args: { id: string, data?: Record<string, any>, pos: { id: string, pos: 'before' | 'after' } }, locationId: string) {
+        return this.onDataStoreOperate([{ name: 'rank', data: args.data, id: args.id, pos: args.pos }], locationId)
     }
-    rowRemove(id: string) {
-        return channel.del('/datastore/remove', Object.assign({ schemaId: this.id }, { dataId: id }));
+    rowRemove(id: string, locationId: string) {
+        return this.onDataStoreOperate([{ name: 'remove', id }], locationId)
     }
-    rowRemoves(ids: string[]) {
-        return channel.del('/datastore/remove/ids', Object.assign({ schemaId: this.id }, { ids }));
+    rowRemoves(ids: string[], locationId: string) {
+        return this.onDataStoreOperate([{ name: 'removeIds', ids }], locationId)
     }
-    rowRemovesByFilter(filter: Record<string, any>) {
-        return channel.del('/datastore/remove/filter', Object.assign({ schemaId: this.id }, { filter }));
+    rowRemovesByFilter(filter: Record<string, any>, locationId: string) {
+        return this.onDataStoreOperate([{ name: 'removeFilter', filter }], locationId)
+    }
+    rowUpdate(args: { dataId: string, data: Record<string, any> }, locationId: string) {
+        return this.onDataStoreOperate([{ name: "update", id: args.dataId, data: args.data }], locationId)
+    }
+    rowUpdateFieldObject(args: { rowId: string, fieldName: string, data: Record<string, any> }, locationId: string) {
+        return this.onDataStoreOperate([{ name: 'updateObject', id: args.rowId, fieldName: args.fieldName, data: args.data }], locationId)
+    }
+    async onDataStoreOperate(actions: DataStoreAction[], locationId: string) {
+        var rc = await channel.air('/datastore/operate', {
+            operate: {
+                actions,
+                schemaId: this.id,
+                date: new Date(),
+                operate: 'onDataStoreOperate'
+            }
+        }, { locationId: locationId });
+        return rc.data.actions[0]
     }
     async rowGetPrevAndNext(id: string, ws: LinkWs) {
         return await channel.get('/datastore/query/pre_next', { ws, schemaId: this.id, id })
@@ -224,14 +296,9 @@ export class TableSchema {
         }
         else return []
     })
-    rowUpdate(args: { dataId: string, data: Record<string, any> }) {
-        return channel.patch('/datastore/update', Object.assign({ schemaId: this.id }, args));
-    }
+
     async checkSubmit(page: Page) {
         return channel.get('/datastore/exists/user/submit', { schemaId: this.id, ws: page.ws });
-    }
-    rowUpdateFieldObject(args: { rowId: string, fieldName: string, data: Record<string, any> }) {
-        return channel.put('/datastore/row/object/update', Object.assign({ schemaId: this.id }, args));
     }
     list(options: {
         page: number,
@@ -278,63 +345,41 @@ export class TableSchema {
     distinct(options: { filter?: Record<string, any>, field: string }, ws: LinkWs) {
         return channel.get('/datastore/query/distinct', Object.assign({ schemaId: this.id, ws: ws }, options))
     }
-    fieldAdd(field: { text: string, type: FieldType, config?: Record<string, any> }) {
-        return this.onSchemaOperate([{ name: 'addField', field }])
+    fieldAdd(field: { text: string, type: FieldType, config?: Record<string, any> }, locationId: string) {
+        return this.onSchemaOperate([{ name: 'addField', field: field as any }], locationId)
     }
-    fieldRemove(fieldId: string) {
-        return this.onSchemaOperate([{ name: 'removeField', fieldId }])
+    fieldRemove(fieldId: string, locationId: string) {
+        return this.onSchemaOperate([{ name: 'removeField', fieldId }], locationId)
     }
-    fieldUpdate(args: { fieldId: string, data: Record<string, any> }) {
+    fieldUpdate(args: { fieldId: string, data: Record<string, any> }, locationId: string) {
         return this.onSchemaOperate([{
             name: 'updateField',
             fieldId: args.fieldId,
             data: args.data
-        }])
+        }], locationId)
     }
-    turnField(args: { fieldId: string, text: string, type: FieldType, config?: Record<string, any> }) {
-        return channel.put('/schema/operate', {
-            operate: {
-                schemaId: this.id,
-                date: new Date(),
-                actions: [{ name: 'turnField', ...args }]
-            }
-        })
+    turnField(args: { fieldId: string, data: { text: string, type: FieldType, config?: Record<string, any> } }, locationId: string) {
+        return this.onSchemaOperate([{
+            name: 'turnField',
+            fieldId: args.fieldId,
+            data: args.data
+        }], locationId)
     }
-    async update(props: Record<string, any>) {
+    async update(props: Record<string, any>, locationId: string) {
         return await this.onSchemaOperate([{
             name: 'updateSchema',
+            id: this.id,
             data: props
-        }])
+        }], locationId)
     }
-    /*
-     * 
-     * { name: 'createSchemaView', text: r.text, url: r.url }
-     * { name: 'addField', field: { text: '状态', type: FieldType.option } }
-     * { name: 'updateField',fieldId:string, data: Record<string, any>}
-     * { name: 'removeSchemaView', id: view.id }
-     * { name: 'duplicateSchemaView',id:view.id,data:{snap:any}}
-     * { name: 'updateSchemaView', id: view.id, data: { text: it.value } }
-     * { name: 'changeSchemaView',id:view.id,data:{url:string}}
-     * { name: 'updateSchema', data: { text: it.value } }
-     * { name: 'moveSchemaView',id:view.id,data:{from:number,to:number}}
-     * { name:'removeField',fieldId:string }
-     */
-    async onSchemaOperate(actions: {
-        name: 'createSchemaView' | 'addField' | 'updateField' | 'removeSchemaView' | 'duplicateSchemaView' | 'updateSchemaView' | 'changeSchemaView' | 'updateSchema' | 'moveSchemaView' | 'removeField',
-        text?: string,
-        url?: string,
-        field?: Record<string, any>,
-        id?: string,
-        data?: Record<string, any>,
-        fieldId?: string
-    }[]) {
-        var result = await channel.put('/schema/operate', {
+    async onSchemaOperate(actions: SchemaAction[], locationId: string) {
+        var result = await channel.air('/schema/operate', {
             operate: {
                 schemaId: this.id,
                 date: new Date(),
                 actions
             }
-        });
+        }, { locationId: locationId || PageLocation.schemaOperate });
         actions.forEach((action, i) => {
             var re = result.data.actions[i];
             switch (action.name) {
@@ -385,11 +430,23 @@ export class TableSchema {
                 case 'removeField':
                     this.fields.remove(c => c.id == action.fieldId)
                     break;
+                case 'turnField':
+                    var f = this.fields.find(c => c.id == action.fieldId);
+                    if (f) {
+                        f.type = action.data.type;
+                        f.text = action.data.text;
+                        f.config = action.data.config;
+                        f.config = Object.assign(f.config || {}, action.data.config || {})
+                    }
+                    // field.type = type;
+                    // if (options.text) field.text = options.text;
+                    // if (options.config) Object.assign(field.config, options.config);
+                    break;
             }
         })
         return result;
     }
-    async createSchemaView(text: string, url: string) {
+    async createSchemaView(text: string, url: string, locationId: string) {
         var cm = CardFactory.CardModels.get(url)?.model;
         var viewUrl = url;
         var viewProps: Record<string, any>;
@@ -433,7 +490,7 @@ export class TableSchema {
                 }
             })
         }
-        var result = await this.onSchemaOperate(actions)
+        var result = await this.onSchemaOperate(actions, locationId)
         var oneAction = result.data.actions.first();
         if (result.data.actions.length > 1) {
             var action = result.data.actions[1];
@@ -456,7 +513,10 @@ export class TableSchema {
     }
     static schemas: Map<string, TableSchema> = new Map();
     static isLoadAll: boolean = false;
-    static async loadTableSchema(schemaId: string, ws: LinkWs): Promise<TableSchema> {
+    static async loadTableSchema(schemaId: string, ws: LinkWs, force?: boolean): Promise<TableSchema> {
+        if (force) {
+            this.schemas.delete(schemaId);
+        }
         var schema = this.schemas.get(schemaId);
         if (schema) return schema;
         else {
@@ -468,7 +528,7 @@ export class TableSchema {
             schema = new TableSchema(schema);
         }
         this.schemas.set(schema.id, schema as TableSchema);
-        return schema;
+        return schema as TableSchema;
     }
     static async getSchemas() {
         return Array.from(this.schemas.values());
@@ -514,6 +574,13 @@ export class TableSchema {
     }
     static async deleteTableSchema(schemaId: string) {
         await channel.del('/schema/delete', { id: schemaId });
+        var result = await channel.air('/schema/operate', {
+            operate: {
+                schemaId: schemaId,
+                date: new Date(),
+                actions: [{ name: 'deleteSchema', id: schemaId }]
+            }
+        }, { locationId: 'deleteTableSchema' });
         this.schemas.delete(schemaId);
     }
     static async getTableSchema(schemaId: string) {

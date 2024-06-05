@@ -23,10 +23,10 @@ import { DotsSvg, DuplicateSvg, Edit1Svg, EmojiSvg } from "../../../../component
 import { Icon } from "../../../../component/view/icon";
 import "./style.less";
 import { lst } from "../../../../i18n/store";
-
 import { CopyAlert } from "../../../../component/copy";
 import { useIconPicker } from "../../../../extensions/icon";
 import { Rect } from "../../../../src/common/vector/point";
+import { TableStoreBoard } from "../board";
 
 @url('/data-grid/item')
 export class TableStoreItem extends Block {
@@ -78,7 +78,7 @@ export class TableStoreItem extends Block {
         await this.schema.rowUpdate({
             dataId: this.dataRow.id,
             data: { [field.name]: value }
-        })
+        }, this.dataGrid?.id || (this.id + 'TableStoreItem'))
     }
     async onUpdateCellProps(props: Record<string, any>) {
         Object.assign(this.dataRow, props);
@@ -87,7 +87,7 @@ export class TableStoreItem extends Block {
         await this.schema.rowUpdate({
             dataId: this.dataRow.id,
             data: { ...props }
-        })
+        }, this.dataGrid?.id || (this.id + 'TableStoreItem'))
     }
     async onUpdateCellInteractive(field: Field) {
         var r = await channel.patch('/interactive/emoji', {
@@ -148,7 +148,7 @@ export class TableStoreItem extends Block {
     async onUpdateFieldSchema(viewField: ViewField, data) {
         data = util.clone(data);
         viewField.field.update(data);
-        await this.schema.fieldUpdate({ fieldId: viewField.field.id, data })
+        await this.schema.fieldUpdate({ fieldId: viewField.field.id, data }, this.dataGrid?.id || '')
         if (this.dataGrid) {
             this.dataGrid.onNotifyReferenceBlocks()
         }
@@ -268,20 +268,28 @@ export class TableStoreItem extends Block {
         switch (direction) {
             case DropDirection.bottom:
             case DropDirection.top:
+                var props = {};
+                if (this.dataGrid?.url == BlockUrlConstant.DataGridBoard) {
+                    var name = (this.dataGrid as TableStoreBoard).groupField?.name;
+                    props[name] = this.dataRow[name]
+                }
                 var result = await this.schema.rowRank({
                     id: dragRow.dataRow.id,
+                    data: props,
                     pos: {
                         id: this.dataRow.id,
-                        pos: DropDirection.bottom == direction ? "after" : 'before'
+                        pos: DropDirection.bottom == direction ? "after" : 'before',
                     }
-                });
-                if (result.ok) {
-                    if (result.data?.isCacSort)
+                }, this.dataGrid?.id || (this.id + 'TableStoreItem'));
+                if (result) {
+                    if (result?.isCacSort)
                         this.page.addActionCompletedEvent(async () => {
                             this.dataGrid.onReloadData()
                         })
                     else {
-                        dragRow.dataRow.sort = result.data.sort;
+                        if (Object.keys(props).length > 0)
+                            Object.assign(dragRow.dataRow, props);
+                        dragRow.dataRow.sort = result.sort;
                         this.page.addActionCompletedEvent(async () => {
                             this.dataGrid.onSortRank()
                         })
@@ -302,12 +310,15 @@ export class TableStoreItem extends Block {
         var icon = await useIconPicker({ roundArea: Rect.fromEle(this.el) }, this.dataRow.icon);
         if (typeof icon != 'undefined') {
             await this.dataGrid.onRowUpdate(this.dataRow.id, { icon })
-            this.forceManualUpdate();
+            this.dataRow.icon = icon;
+            this.childs.forEach(c => {
+                c.forceManualUpdate();
+            })
         }
     }
 }
 @view('/data-grid/item')
-export class TableStoreItemView extends BlockView<TableStoreItem>{
+export class TableStoreItemView extends BlockView<TableStoreItem> {
     renderItems() {
         return <div className='sy-data-grid-item relative'>
             <div className="r-gap-b-10">
@@ -332,7 +343,7 @@ export class TableStoreItemView extends BlockView<TableStoreItem>{
                 <div className="sy-data-grid-card-items r-gap-b-10">
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                 </div>
-                {this.block.isCanEdit() && <div onMouseDown={e => this.block.onOpenMenu(e)} className="pos visible top-5 right-5 flex-center size-24 round item-hover bg-white cursor">
+                {this.block.isCanEdit() && <div onMouseDown={e => { e.stopPropagation(); this.block.onOpenMenu(e) }} className="pos visible top-5 right-5 flex-center size-24 round item-hover bg-white cursor">
                     <Icon size={20} icon={DotsSvg}></Icon>
                 </div>}
             </div>

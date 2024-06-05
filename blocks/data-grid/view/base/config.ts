@@ -149,7 +149,7 @@ export class DataGridViewConfig {
                             }
                             if (rg?.item) {
                                 if (rg?.item.name == 'delete') {
-                                    self.schema.onSchemaOperate([{ name: 'removeSchemaView', id: item.value }])
+                                    self.schema.onSchemaOperate([{ name: 'removeSchemaView', id: item.value }], self.id)
                                     items.arrayJsonRemove('childs', g => g === item);
                                     mp.updateItems(items);
                                 }
@@ -167,7 +167,7 @@ export class DataGridViewConfig {
                             if (Object.keys(props).length > 0) {
                                 await self.schema.onSchemaOperate([
                                     { name: 'updateSchemaView', id: item.value, data: props }
-                                ]);
+                                ], self.id);
                                 if (typeof props.text != 'undefined') item.text = lodash.cloneDeep(props.text);
                                 if (typeof props.icon != 'undefined') item.icon = lodash.cloneDeep(props.icon);
                                 mp.updateItems(items);
@@ -317,7 +317,8 @@ export class DataGridViewConfig {
                 viewId: this.syncBlockId,
                 selectView: true,
                 // editTable: true,
-                createView: true
+                createView: true,
+                createTable: true
             });
             if (g) {
                 if (typeof g != 'string' && g.type == 'view') {

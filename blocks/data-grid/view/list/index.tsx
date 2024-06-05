@@ -50,7 +50,7 @@ export class TableStoreListView extends BlockView<TableStoreList> {
         if (this.block.isLoadingData) return <></>
         return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus padding-5 cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
             <span className="size-24 flex-center remark"><Icon size={16} icon={{ name: 'byte', code: 'table' }}></Icon></span>
-            <span className="remark"><S>创建数据表格</S></span>
+            <span className="remark"><S>添加或创建数据表</S></span>
         </div>
     }
     renderView() {

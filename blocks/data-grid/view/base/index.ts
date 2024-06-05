@@ -7,7 +7,7 @@ import { Pattern } from "../../../../src/block/pattern";
 import { Point, Rect } from "../../../../src/common/vector/point";
 import { ActionDirective } from "../../../../src/history/declare";
 import { SchemaFilter } from "../../schema/filter";
-import { TableSchema } from "../../schema/meta";
+import { DataStoreAction, SchemaAction, TableSchema } from "../../schema/meta";
 import { ViewField } from "../../schema/view";
 import { DataGridTurns } from "../../turn";
 import { TableStoreItem } from "../item";
@@ -34,6 +34,7 @@ import { onCreateDataGridTemplate } from "../../template/create";
 import { DataGridTab } from "../tab";
 import { PageLayoutType } from "../../../../src/page/declare";
 import { BlockRenderRange } from "../../../../src/block/enum";
+
 
 /**
  * 
@@ -93,6 +94,9 @@ export class DataGridView extends Block {
     }
     get schemaView() {
         if (this.schema) return this.schema.views.find(g => g.id == this.syncBlockId);
+    }
+    get isSchemaViewError() {
+        if (this.schema && this.syncBlockId) return !this.schema.views.some(s => s.id == this.syncBlockId);
     }
     data: Record<string, any>[] = [];
     userEmojis: Record<string, string[]> = {};
@@ -215,6 +219,8 @@ export class DataGridView extends Block {
             else this.page.snapLoadLocker.push({ url: this.elementUrl, count: 0, date: Date.now() })
 
             var r = await channel.get('/view/snap/query', { ws: this.page.ws, elementUrl: this.elementUrl });
+            if(window.shyConfig?.isDev)
+            console.log('gggg',r,this);
             if (r.ok) {
                 var data;
                 try {
@@ -333,7 +339,7 @@ export class DataGridView extends Block {
         return f
     }
     getSearchSorts() {
-        var sorts: Record<string, any> = { createDate: -1 };
+        var sorts: Record<string, any> = { sort: -1 };
         if (Array.isArray(this.sorts) && this.sorts.length > 0) {
             this.sorts.forEach(s => {
                 var sn = s.field.indexOf('.') > -1 ? s.field.split('.')[0] : s.field;
@@ -352,7 +358,7 @@ export class DataGridView extends Block {
             }
         }
         if (Object.keys(sorts).length > 1) {
-            delete sorts.createDate;
+            delete sorts.sort;
         }
         return sorts;
     }
@@ -377,6 +383,12 @@ export class DataGridView extends Block {
     }
     async didMounted(force: boolean = true) {
         await this.loadDataGrid(force);
+        channel.sync('/datastore/operate', this.syncDatastore as any);
+        channel.sync('/schema/operate', this.syncDataSchema as any);
+    }
+    async didUnmounted() {
+        channel.off('/datastore/operate', this.syncDatastore as any);
+        channel.off('/schema/operate', this.syncDataSchema as any);
     }
     isLoading: boolean = false;
     async loadDataGrid(force: boolean = true) {
@@ -421,7 +433,7 @@ export class DataGridView extends Block {
         if (this.willCreateSchema) return;
         this.willCreateSchema = true;
         try {
-            if (!this.schemaId) {
+            if (!this.schema) {
                 /***
                  * 
                  * 这里表示对于当前的块进行创建或选择数据表视图
@@ -501,7 +513,7 @@ export class DataGridView extends Block {
                     }
                 }
             }
-        ]);
+        ], this.id);
         this.forceManualUpdate()
     }
     get elementUrl() {
@@ -554,6 +566,155 @@ export class DataGridView extends Block {
         var rect = event instanceof Point ? new Rect(event.x, event.y, 0, 0) : Rect.fromEvent(event);
         await this.onOpenViewSettings(rect)
     }
+    syncDataSchema = async (r: {
+        operate: {
+            operate?: string;
+            schemaId: string;
+            date?: Date;
+            actions: any[];
+        };
+    }, options?: {
+        locationId?: string | number;
+        sockId?: string;
+    }) => {
+        console.log('syncDataSchema', r, options);
+        if (r?.operate?.schemaId) {
+            if (r?.operate.schemaId == this.schemaId) {
+                if (options?.locationId == this.id) return;
+                var act: SchemaAction = r.operate.actions[0];
+                if (act) {
+                    switch (act.name) {
+                        case 'createSchemaView':
+                        case 'removeSchemaView':
+                        case 'updateSchemaView':
+                        case 'updateSchema':
+                        case 'duplicateSchemaView':
+                        case 'changeSchemaView':
+                        case 'moveSchemaView':
+                            var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
+                            this.schema = tc;
+                            if (act.name == 'removeSchemaView') {
+                                if (act.id == this.syncBlockId) {
+                                    //ShyAlert('当前视图已被删除，将自动切换到默认视图')
+                                    var view = this.schema.listViews.first();
+                                    this.onDataGridTurnView(view.id)
+                                }
+                            }
+                            break;
+                        case 'addField':
+                            var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
+                            this.schema = tc;
+                            break;
+                        case 'updateField':
+                            var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
+                            this.schema = tc;
+                            if (this.fields.some(s => s.field?.id == (act as any).id)) {
+                                // await this.createItem();
+                                this.forceManualUpdate();
+                            }
+                            break;
+                        case 'removeField':
+                            var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
+                            this.schema = tc;
+                            if (this.fields.some(s => s.fieldId == (act as any).id)) {
+                                lodash.remove(this.fields, s => s.fieldId == (act as any).id);
+                                await this.createItem();
+                                this.forceManualUpdate();
+                            }
+                            break;
+                        case 'turnField':
+                            var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
+                            this.schema = tc;
+                            if (this.fields.some(s => s.fieldId == (act as any).id)) {
+                                // await this.createItem();
+                                this.onLozyReloadData();
+                                this.forceManualUpdate();
+                            }
+                            break;
+                        case 'deleteSchema':
+                            this.schema = null;
+                            await this.loadDataGrid();
+                            break;
+                    }
+                }
+            }
+        }
+    }
+    syncDatastore = async (r: {
+        operate: {
+            operate?: string;
+            schemaId: string;
+            date?: Date;
+            actions: any[];
+        };
+    }, options?: {
+        locationId?: string | number;
+        sockId?: string;
+    }) => {
+        console.log('syncDatastore', r, options);
+        if (r?.operate?.schemaId) {
+            if (r?.operate.schemaId == this.schemaId) {
+                if (options?.locationId == this.id) return;
+                var act: DataStoreAction = r.operate.actions[0];
+                if (act) {
+                    switch (act.name) {
+                        case 'add':
+                            if (options.locationId == 'Page.onSubmitForm' || options.locationId == 'flowButtonAddRecords') {
+                                this.data.push(act.data);
+                                this.total += 1;
+                                await this.createItem();
+                                this.forceManualUpdate();
+                                this.onNotifyPageReferenceBlocks();
+                            }
+
+                            break;
+                        case 'batchAdd':
+                            if (options.locationId == '') {
+
+                            }
+
+                        case 'update':
+                            var dr = this.data.find(g => g.id == (act as any).id);
+                            if (dr) {
+                                dr = Object.assign(dr, (act as any).data);
+                                await this.createItem();
+                                this.forceManualUpdate();
+                            }
+                            break;
+                        case 'remove':
+                            var dr = this.data.find(g => g.id == (act as any).id);
+                            if (dr) {
+                                lodash.remove(this.data, g => g.id == (act as any).id);
+                                this.total -= 1;
+                                this.onNotifyPageReferenceBlocks();
+                                await this.createItem();
+                                this.forceManualUpdate();
+                            }
+
+                            break;
+                        case 'removeIds':
+                            var drs = this.data.filter(g => (act as any).ids.includes(g.id));
+                            if (drs.length > 0) {
+                                lodash.remove(this.data, g => (act as any).ids.includes(g.id));
+                                this.total -= (act as any).ids.length;
+                                this.onNotifyPageReferenceBlocks();
+                                await this.createItem();
+                                this.forceManualUpdate();
+                            }
+                            break;
+                        case 'removeFilter':
+                            this.onLozyReloadData();
+                            break;
+                        case 'updateFilter':
+                            this.onLozyReloadData();
+                            break;
+                        case 'updateObject':
+                            break;
+                    }
+                }
+            }
+        }
+    }
     get dataGridTab() {
         if (this.parent?.url == BlockUrlConstant.DataGridTabPage) {
             return this.parent.parent as DataGridTab;
@@ -580,6 +741,18 @@ export class DataGridView extends Block {
         var r = super.getVisibleHandleCursorPoint();
         r = r.move(0, 3);
         return r;
+    }
+    onLozyReloadData = lodash.debounce(async () => {
+        await this.onReloadData();
+    }, 1000)
+    forceUpdateAllViews() {
+
+        this.childs.forEach(c => {
+            c.forceManualUpdate();
+            c.childs.forEach(cc => {
+                cc.forceManualUpdate();
+            })
+        })
     }
 }
 

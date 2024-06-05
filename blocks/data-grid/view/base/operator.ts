@@ -39,7 +39,7 @@ export class DataGridViewOperator {
                 text: result.text,
                 type: result.type,
                 config: result.config
-            });
+            }, this.id);
             if (fieldData.ok) {
                 var field = this.schema.fields.find(g => g.id == fieldData.data.actions[0].id);
                 if (typeof at == 'undefined') at = this.fields.length;
@@ -50,7 +50,7 @@ export class DataGridViewOperator {
                     if (typeof defaultValue != 'undefined')
                         row[field.name] = defaultValue
                 });
-                if(field.type == FieldType.relation){
+                if (field.type == FieldType.relation) {
                     await this.loadRelationSchemas()
                 }
                 await this.createItem();
@@ -71,7 +71,7 @@ export class DataGridViewOperator {
                 text: result.text,
                 type: result.type,
                 config: result.config
-            });
+            }, this.id);
             if (fieldData.ok) {
                 var field = this.schema.fields.find(g => g.id == fieldData.data.actions[0].id)
                 var vf = this.schema.createViewField(field);
@@ -99,7 +99,7 @@ export class DataGridViewOperator {
                 text: result.text,
                 type: result.type,
                 config: result.config
-            });
+            }, this.id);
             if (fieldData.ok) {
                 var field = this.schema.fields.find(g => g.id == fieldData.data.actions[0].id)
                 var vf = this.schema.createViewField(field);
@@ -117,7 +117,7 @@ export class DataGridViewOperator {
     async onUpdateField(this: DataGridView, field: Field, data: Record<string, any>) {
         // await this.page.onAction(ActionDirective.onSchemaUpdateField, async () => {
         // this.page.notifyActionBlockSync(this);
-        await this.schema.fieldUpdate({ fieldId: field.id, data });
+        await this.schema.fieldUpdate({ fieldId: field.id, data }, this.id);
         field.load(data);
         this.onNotifyReferenceBlocks()
         await this.createItem();
@@ -154,7 +154,7 @@ export class DataGridViewOperator {
             var field = viewField.field;
             this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
                 // this.page.notifyActionBlockSync(this);
-                var r = await this.schema.fieldRemove(field.id);
+                var r = await this.schema.fieldRemove(field.id, this.id);
                 if (r.ok) {
                     await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.fieldId == field.id })
                     await this.createItem();
@@ -167,7 +167,7 @@ export class DataGridViewOperator {
         if (force == true || await Confirm(lst('确定要删除该列吗'))) {
             await this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
                 // this.page.notifyActionBlockSync(this);
-                var r = await this.schema.fieldRemove(field.id);
+                var r = await this.schema.fieldRemove(field.id, this.id);
                 if (r.ok) {
                     await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.fieldId == field.id })
                     await this.createItem();
@@ -238,11 +238,11 @@ export class DataGridViewOperator {
         var field = viewField.field;
         // await this.page.onAction(ActionDirective.onSchemaTurnField, async () => {
         // this.page.notifyActionBlockSync(this);
-        var r = await this.schema.turnField({ fieldId: field.id, text: options.text, type: type, config: options.config });
+        var r = await this.schema.turnField({ fieldId: field.id, data: { text: options.text, type: type, config: options.config } }, this.id);
         if (r.ok) {
-            field.type = type;
-            if (options.text) field.text = options.text;
-            if (options.config) Object.assign(field.config, options.config);
+            // field.type = type;
+            // if (options.text) field.text = options.text;
+            // if (options.config) Object.assign(field.config, options.config);
             await this.loadData();
             await this.createItem();
             this.forceManualUpdate();
@@ -254,11 +254,19 @@ export class DataGridViewOperator {
      * 
      */
     async onDataGridChangeView(this: DataGridView, url: string) {
+        var newBlock: Block;
         await this.page.onAction('onDataGridChangeView', async () => {
-            await this.dataGridChangeView(url);
+            newBlock = await this.dataGridChangeView(url);
         }, { disabledSyncBlock: true })
+        if (newBlock)
+            await newBlock.page.onAction('onSaveSyncBlocks', async () => {
+                {
+                    await newBlock.updateProps({ editor: newBlock.page.user?.id, editDate: new Date() });
+                }
+            }, { immediate: true, disabledJoinHistory: false, })
     }
     async onDataGridChangeViewByTemplate(this: DataGridView, url: string) {
+        var newBlock: Block;
         await this.page.onAction('onDataGridChangeViewByTemplate', async () => {
             var cm = CardFactory.CardModels.get(url)?.model;
             var viewUrl = cm.forUrls[0];
@@ -287,14 +295,20 @@ export class DataGridViewOperator {
                     }
                 }
             });
-            await this.dataGridChangeView(viewUrl, viewProps);
+            newBlock = await this.dataGridChangeView(viewUrl, viewProps);
         }, { disabledSyncBlock: true })
+        if (newBlock)
+            await newBlock.page.onAction('onSaveSyncBlocks', async () => {
+                {
+                    await newBlock.updateProps({ editor: newBlock.page.user?.id, editDate: new Date() });
+                }
+            }, { immediate: true, disabledJoinHistory: false, })
     }
     async dataGridChangeView(this: DataGridView, url: string, viewProps?: Record<string, any>) {
         var dt = this.dataGridTab;
         var view = this.schema.views.find(g => g.id == this.syncBlockId);
         var actions: any[] = [{ name: 'changeSchemaView', id: this.syncBlockId, data: { url } }];
-        await this.schema.onSchemaOperate(actions);
+        await this.schema.onSchemaOperate(actions, this.id);
         var bs = this.referenceBlockers;
         var at = this.at;
         var pa = this.parent;
@@ -313,7 +327,7 @@ export class DataGridViewOperator {
                             { text: lst('已完成'), value: util.guid(), color: opbs.randomOf()?.color },
                         ]
                     }
-                });
+                }, this.id);
                 console.log(this.schema);
             }
         }
@@ -327,7 +341,7 @@ export class DataGridViewOperator {
             pk
         ) as DataGridView;
         if (viewProps && Object.keys(viewProps).length > 0) {
-            await newBlock.updateProps(viewProps,BlockRenderRange.self);
+            await newBlock.updateProps(viewProps, BlockRenderRange.self);
         }
         else {
             if ([
@@ -345,11 +359,11 @@ export class DataGridViewOperator {
                         showMode: 'default',
                         templateProps: {}
                     }
-                },BlockRenderRange.self);
+                }, BlockRenderRange.self);
             }
         }
         for (let i = 0; i < bs.length; i++) {
-            await bs[i].updateProps({ refBlockId: newBlock.id },BlockRenderRange.self)
+            await bs[i].updateProps({ refBlockId: newBlock.id }, BlockRenderRange.self)
         }
         bs.forEach(c => {
             newBlock.registerReferenceBlocker(c);
@@ -358,6 +372,7 @@ export class DataGridViewOperator {
         if (dt) {
             await dt.updateView(newBlock);
         }
+        return newBlock;
     }
     /**
      * 将表格切换成其它视图
@@ -398,10 +413,10 @@ export class DataGridViewOperator {
             pk
         ) as DataGridView;
         if (viewProps && Object.keys(viewProps).length > 0) {
-            await newBlock.updateProps(viewProps,BlockRenderRange.self);
+            await newBlock.updateProps(viewProps, BlockRenderRange.self);
         }
         for (let i = 0; i < bs.length; i++) {
-            await bs[i].updateProps({ refBlockId: newBlock.id },BlockRenderRange.self)
+            await bs[i].updateProps({ refBlockId: newBlock.id }, BlockRenderRange.self)
         }
         bs.forEach(c => {
             newBlock.registerReferenceBlocker(c);
@@ -421,7 +436,7 @@ export class DataGridViewOperator {
             name: 'duplicateSchemaView',
             id: this.schemaView.id,
             data: { snap: await this.getSyncString() }
-        }]);
+        }], this.id);
         var act = r?.data?.actions[0];
         if (act.id) {
             this.onDataGridTurnView(act.id);
@@ -432,10 +447,10 @@ export class DataGridViewOperator {
             name: 'moveSchemaView',
             id: this.schemaView.id,
             data: { from, to }
-        }]);
+        }], this.id);
     }
     async onSchemaViewCreate(this: DataGridView, text: string, url: string) {
-        var sv = await this.schema.createSchemaView(text, url);
+        var sv = await this.schema.createSchemaView(text, url, this.id);
         await this.onDataGridTurnView(sv.view.id, sv.props);
     }
     async onSchemaViewUpdate(this: DataGridView, viewId: string, data: { text?: string, icon?: IconValueType }) {
@@ -446,7 +461,7 @@ export class DataGridViewOperator {
                 id: viewId,
                 data: data
             }
-        ]);
+        ], this.id);
         self.forceManualUpdate()
         if (this.dataGridTab) {
             this.dataGridTab.forceManualUpdate();
@@ -454,25 +469,25 @@ export class DataGridViewOperator {
     }
     async onUpdateSorts(this: DataGridView, sorts: { field: string, sort: number }[]) {
         await this.page.onAction(ActionDirective.onDataGridUpdateSorts, async () => {
-            // this.page.notifyActionBlockSync(this);
-            await this.updateProps({ sorts },BlockRenderRange.self)
+            await this.updateProps({ sorts }, BlockRenderRange.self)
         })
     }
     async onUpdateFilter(this: DataGridView, filter: SchemaFilter) {
         await this.page.onAction(ActionDirective.onDataGridUpdateFilter, async () => {
-            // this.page.notifyActionBlockSync(this);
-            await this.updateProps({ filter },BlockRenderRange.self)
+            await this.updateProps({ filter }, BlockRenderRange.self)
         })
     }
     async onAddFilter(this: DataGridView, viewField: ViewField) {
         await this.page.onAction(ActionDirective.onDataGridUpdateFilter, async () => {
-            // this.page.notifyActionBlockSync(this);
+
             var newFilter = SchemaFilterJoin(this.filter, {
-                operator: '$contain',
+                operator: '$isNotNull',
                 field: viewField.field.id,
-                value: ''
+                // value: ''
             }, this.filter?.logic || "and")
-            await this.updateProps({ filter: newFilter },BlockRenderRange.self)
+            console.log(newFilter, 'ss');
+
+            await this.updateProps({ filter: newFilter }, BlockRenderRange.self)
         });
         var rect = this.getVisibleContentBound();
         rect.height = 20;
@@ -500,7 +515,7 @@ export class DataGridViewOperator {
             // this.page.notifyActionBlockSync(this);
             // if (visible == true) await this.arrayPush({ prop: 'fields', data: new ViewField({ type: 'rowNum', colWidth: 80, text: "No." }, this.schema), at: 0 })
             // else await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.type == 'rowNum' });
-            await this.updateProps({ breakRow: visible },BlockRenderRange.self);
+            await this.updateProps({ breakRow: visible }, BlockRenderRange.self);
             await this.createItem();
             this.forceManualUpdate();
         })
@@ -511,7 +526,7 @@ export class DataGridViewOperator {
         else if (value == 'none' && !newFields.some(s => s.type == 'check')) return
         await this.page.onAction(ActionDirective.onDataGridShowCheck, async () => {
             // this.page.notifyActionBlockSync(this);
-            await this.updateProps({ checkRow: value },BlockRenderRange.self);
+            await this.updateProps({ checkRow: value }, BlockRenderRange.self);
             if (value == 'checkbox') await this.arrayPush({ prop: 'fields', at: 0, data: new ViewField({ colWidth: 80, type: 'check', text: lst('选择') }, this.schema) })
             else await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.type == 'check' })
             await this.createItem();
@@ -558,7 +573,7 @@ export class DataGridViewOperator {
             if (!(this.pageIndex >= 1 && this.pageIndex <= totalPage)) {
                 this.pageIndex = 1;
             }
-            await this.updateProps({ size },BlockRenderRange.self);
+            await this.updateProps({ size }, BlockRenderRange.self);
             await this.onLoadingAction(async () => {
                 await this.loadData();
                 this.forceManualUpdate();
@@ -635,7 +650,8 @@ export class DataGridViewOperator {
             tableId: this.schema.id,
             viewId: this.syncBlockId,
             selectView: true,
-            editTable: true
+            editTable: true,
+            createTable: true
         });
         if (g) {
             if (typeof g != 'string' && g.type == 'view') {
@@ -656,6 +672,7 @@ export class DataGridViewOperator {
             })
         })
     }
+
     async onSortRank(this: DataGridView) {
         var c = lodash.cloneDeep(this.data);
         this.data = c.sort((x, y) => {
@@ -670,7 +687,7 @@ export class DataGridViewOperator {
         if (typeof ids == 'undefined') ids = this.checkItems.map(c => c.id);
         if (ids.length > 0) {
             if (await Confirm(lst(`确定删除这些数据吗`))) {
-                await this.schema.rowRemoves(ids);
+                await this.schema.rowRemoves(ids, this.id);
                 this.onReloadData()
                 ShyAlert(lst('删除成功'))
             }

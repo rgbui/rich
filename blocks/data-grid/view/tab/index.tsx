@@ -79,7 +79,8 @@ export class DataGridTab extends Block {
                 tableId: this.dataGridBlock.schema.id,
                 viewId: this.dataGridBlock.syncBlockId,
                 selectView: true,
-                createView: true
+                createView: true,
+                createTable:true
             });
             if (g) {
                 if (typeof g != 'string' && g.type == 'view') {
@@ -236,7 +237,7 @@ export class DataGridTab extends Block {
                                 );
                                 if (rg?.item) {
                                     if (rg?.item.name == 'delete') {
-                                        self.dataGridBlock.schema.onSchemaOperate([{ name: 'removeSchemaView', id: item.value }])
+                                        self.dataGridBlock.schema.onSchemaOperate([{ name: 'removeSchemaView', id: item.value }],self.dataGridBlock.id)
                                         items.arrayJsonRemove('childs', g => g === item);
                                         mp.updateItems(items);
                                     }
@@ -255,7 +256,7 @@ export class DataGridTab extends Block {
                                 if (Object.keys(props).length > 0) {
                                     await self.dataGridBlock.schema.onSchemaOperate([
                                         { name: 'updateSchemaView', id: item.value, data: props }
-                                    ]);
+                                    ],self.dataGridBlock.id);
                                     if (props.text) item.text = props.text || item.text;
                                     if (props.icon) item.icon = props.icon || item.icon;
                                     mp.updateItems(items);

@@ -6,6 +6,32 @@ import { CardFactory } from "./card/factory/factory";
 import { util } from "../../../util/util";
 import { BlockRenderRange } from "../../../src/block/enum";
 
+
+export async function onOnlyCreateDataGrid(text: string, url: string) {
+    var g = CardFactory.getCardModel(url);
+    var vs = typeof g.createViews == 'function' ? await g.createViews() : lodash.cloneDeep(g.views || []);
+    vs.forEach(v => {
+        v.text = text + "-" + v.text;
+    })
+    var r = await channel.put('/schema/create/define', {
+        text: text,
+        fields: g.props.map(pro => {
+            return {
+                id: pro.name,
+                text: pro.text,
+                type: pro.types[0],
+                config: lodash.cloneDeep(pro.config)
+            }
+        }),
+        views: vs,
+        datas: typeof g.createDataList == 'function' ? await g.createDataList() : lodash.cloneDeep(g.dataList || [])
+    });
+    if (r.ok) {
+        var schema = await TableSchema.cacheSchema(r.data.schema);
+        return schema;
+    }
+}
+
 export async function onCreateDataGridTemplate(
     text: string,
     block: DataGridView,
@@ -13,7 +39,7 @@ export async function onCreateDataGridTemplate(
 ) {
     var g = CardFactory.getCardModel(url);
     var vs = typeof g.createViews == 'function' ? await g.createViews() : lodash.cloneDeep(g.views || []);
-    vs.forEach(v=>{
+    vs.forEach(v => {
         v.text = text + "-" + v.text;
     })
     var r = await channel.put('/schema/create/define', {
@@ -40,7 +66,7 @@ export async function onCreateDataGridTemplate(
                     schemaId: schema.id,
                     syncBlockId: view.id,
                     fields: viewfields,
-                },BlockRenderRange.self)
+                }, BlockRenderRange.self)
                 if (typeof g.blockViewHandle == 'function') await g.blockViewHandle(block, g)
                 else {
                     var ps = g.props.toArray(pro => {
@@ -66,7 +92,7 @@ export async function onCreateDataGridTemplate(
                                 props: ps
                             }
                         }
-                    },BlockRenderRange.self);
+                    }, BlockRenderRange.self);
                 }
             })
         }
@@ -106,7 +132,7 @@ export async function onCreateDataGridTemplate(
                                 props: ps
                             }
                         }
-                    },BlockRenderRange.self);
+                    }, BlockRenderRange.self);
                 }
             })
         }

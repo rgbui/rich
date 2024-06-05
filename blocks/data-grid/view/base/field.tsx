@@ -32,7 +32,7 @@ import { DataGridOptionType } from "../../schema/field";
 import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
 import { lst } from "../../../../i18n/store";
-import { BackgroundColorList, OptionBackgroundColorList } from "../../../../extensions/color/data";
+import { OptionBackgroundColorList } from "../../../../extensions/color/data";
 import { TableSchema } from "../../schema/meta";
 import { useFormula } from "../../../../extensions/data-grid/formula/lazy";
 import { GetFieldTypeSvg } from "../../schema/util";

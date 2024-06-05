@@ -12,8 +12,8 @@ import { FieldType } from "../../schema/type";
 export class DataGridViewData {
     async onRemoveRow(this: DataGridView, id: string) {
         if (id) await this.page.onAction(ActionDirective.onSchemaRowDelete, async () => {
-            var r = await this.schema.rowRemove(id);
-            if (r.ok) {
+            var r = await this.schema.rowRemove(id, this.id);
+            if (r) {
                 var row: Block = this.blocks.childs.find(g => (g as TableStoreItem).dataRow.id == id);
                 if (row) await row.delete()
                 lodash.remove(this.data, g => g.id == id);
@@ -43,7 +43,6 @@ export class DataGridViewData {
                     initData
                 }
             })
-            await this.loadDataGrid();
         })
     }
     async onOpenEditForm(this: DataGridView, id: string, forceUrl?: '/page/open' | '/page/dialog' | '/page/slide') {
@@ -73,7 +72,6 @@ export class DataGridViewData {
                     initData
                 }
             })
-            await this.loadDataGrid();
         })
     }
     async onAddRow(this: DataGridView, data, id?: string, arrow: 'before' | 'after' = 'after') {
@@ -81,9 +79,9 @@ export class DataGridViewData {
             id = this.data.last()?.id
         }
         var newRow;
-        var r = await this.schema.rowAdd({ data, pos: { id: id, pos: arrow } });
-        if (r.ok) {
-            newRow = r.data.data;
+        var r = await this.schema.rowAdd({ data, pos: { id: id, pos: arrow } }, this.id);
+        if (r) {
+            newRow = r.data;
             var at = this.data.findIndex(g => g.id == id);
             if (arrow == 'after') at += 1;
             this.data.insertAt(at, newRow);
@@ -101,7 +99,7 @@ export class DataGridViewData {
             rj[n] = oldItem[n];
         }
         if (!util.valueIsEqual(rj, data)) {
-            var r = await this.schema.rowUpdate({ dataId: id, data: util.clone(data) });
+            var r = await this.schema.rowUpdate({ dataId: id, data: util.clone(data) }, this.id);
             if (r.ok) {
                 Object.assign(oldItem, data);
                 await this.createItem();
@@ -124,7 +122,7 @@ export class DataGridViewData {
                 dr[f.name] = undefined;
             }
         })
-        var r = await this.schema.rowAdd({ data: dr, pos: { id: data.id, pos: 'after' } });
+        var r = await this.schema.rowAdd({ data: dr, pos: { id: data.id, pos: 'after' } }, this.id);
         if (r) {
             var at = this.data.findIndex(g => g.id == data.id);
             this.data.insertAt(at, dr);

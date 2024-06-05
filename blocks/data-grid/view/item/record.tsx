@@ -73,7 +73,7 @@ export class DataGridItemRecord extends Block {
         await this.schema.rowUpdate({
             dataId: this.dataRow.id,
             data: { [viewField.field.name]: value }
-        })
+        }, this.id)
     }
     async loadSchema() {
         if (this.schemaId && !this.schema) {
@@ -146,7 +146,7 @@ export class DataGridItemRecord extends Block {
             this.dataRow = await this.schema.rowGet(this.dataId);
         }
     }
-    get elementUrl(){
+    get elementUrl() {
         return getElementUrl(ElementType.SchemaData, this.schema.id, this.dataId)
     }
     get dataLink() {
@@ -154,7 +154,7 @@ export class DataGridItemRecord extends Block {
     }
 }
 @view('/data-grid/record')
-export class DataGridItemRecordView extends BlockView<DataGridItemRecord>{
+export class DataGridItemRecordView extends BlockView<DataGridItemRecord> {
     renderItem() {
         if (this.block.cardConfig.showMode == 'define' && this.block.cardConfig.templateProps.url) {
             var CV = CardFactory.getCardView(this.block.cardConfig.templateProps.url);
