@@ -11,7 +11,8 @@ import { FieldType } from "../../schema/type";
 @url('/field/date')
 export class FieldDate extends OriginField {
     get dateString() {
-        if (this.value === null) return ''
+
+        if (!(this.value instanceof Date)) return ''
         var r = dayjs(this.value);
         var format = this.field?.config?.dateFormat || 'YYYY年MM月DD日'
         return r.format(format)
@@ -34,7 +35,7 @@ export class FieldDate extends OriginField {
     }
 }
 @view('/field/date')
-export class FieldTextView extends OriginFileView<FieldDate>{
+export class FieldTextView extends OriginFileView<FieldDate> {
     renderFieldValue() {
         return <div className='sy-field-date  flex  f-14' style={{ width: '100%' }} onMouseDown={e => this.block.onCellMousedown(e)}>{this.block.dateString}</div>
     }
