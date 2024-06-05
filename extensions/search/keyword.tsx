@@ -242,7 +242,13 @@ export class SearchBox extends EventsComponent {
     recentItems: LinkPageItem[] = [];
     async loadRecent() {
         var r = await channel.query('/page/recently/viewed', { wsId: this.ws?.id });
-        this.recentItems = r.items;
+        var items: LinkPageItem[] = [];
+        r.items.forEach(c => {
+            if (items.some(s => s.id == c.id)) return;
+            items.push(c);
+        })
+
+        this.recentItems = items;
     }
     searchList: SearchListType<{ id: string, creater: string, score?: string, title?: string, content: string }, { isOnlySearchTitle?: boolean, editDate?: number, createDate?: number, pages: LinkPageItem[] }> = { editDate: -1, createDate: null, isOnlySearchTitle: false, loading: false, list: [], pages: [], total: 0, page: 1, size: 20 };
     onForceSearch = async () => {
