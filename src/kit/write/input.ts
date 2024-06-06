@@ -18,7 +18,7 @@ import { KeyboardCode } from "../../common/keys";
 import { Rect } from "../../common/vector/point";
 import { InputForceStore, InputStore } from "./store";
 import { useTagSelector } from "../../../extensions/tag";
-import { URL_END_REGEX } from "./declare";
+
 import { util } from "../../../util/util";
 
 
@@ -518,7 +518,6 @@ export async function inputBackspaceDeleteContent(write: PageWrite,
         insertBlocks?: any[]
     }) {
     if (event) event.preventDefault();
-    console.log('xxxx,delete ba')
     await InputForceStore(aa, async () => {
         var sel = window.getSelection();
         var deleteText = util.getSafeSelRange(sel)?.cloneContents()?.textContent;
@@ -633,36 +632,46 @@ export async function inputBackspaceDeleteContent(write: PageWrite,
 
 
 export async function onSpaceInputUrl(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent,) {
-
     if (aa?.isText) {
-        var rowBlock = aa.block.closest(x => x.isBlock);
+        var rowBlock = aa.block.closest(x => x.isContentBlock);
         if (rowBlock.url == BlockUrlConstant.Title) return;
+        if (!rowBlock.isSupportTextStyle) return;
         var content = aa.textContent;
-        if (URL_END_REGEX.test(content)) {
-            var ma = content.match(URL_END_REGEX);
+        var sel = window.getSelection();
+        var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
+        var pre = content.slice(0, offset);
+        var next = content.slice(offset);
+        var urlRegex = /https?:\/\/([\d\-a-zA-Z\.]+)(:[\d]+)?([\?\/a-zA-Z\d&\=\-\.]+)? ?/g;
+        if (urlRegex.test(pre)) {
+            var ma = pre.match(urlRegex);
             var url = ma[0];
+            pre = pre.slice(0, 0 - url.length);
             event.preventDefault();
             await InputForceStore(aa, async () => {
                 if (aa.block.isLine) {
-                    await aa.block.updateProps({ content: content.slice(0, 0 - url.length) }, BlockRenderRange.self);
-                    var newBlock = await write.kit.page.createBlock(BlockUrlConstant.Text, { content: url, link: { url } }, aa.block.parent, aa.block.at, 'childs')
+                    await aa.block.updateProps({ content: pre }, BlockRenderRange.self);
+                    var newBlock = await write.kit.page.createBlock(BlockUrlConstant.Text, { content: url, link: { url } }, aa.block.parent, aa.block.at + 1, aa.block.parentKey);
+                    if (next) {
+                        var nb = await aa.block.cloneData();
+                        nb.content = next;
+                        aa.block.parent.appendArrayBlockData([nb], aa.block.at + 2, aa.block.parentKey);
+                    }
+                    if (aa.block.isContentEmpty) await aa.block.delete();
                     aa.block.page.addActionAfterEvent(async () => {
                         write.kit.anchorCursor.onFocusBlockAnchor(newBlock, { merge: true, last: true, render: true })
                     });
-                    if (aa.block.isContentEmpty) await aa.block.delete();
                 }
                 else {
                     await aa.block.updateProps({ content: '' }, BlockRenderRange.self);
-                    var rest = content.slice(0, 0 - url.length);
-                    if (rest) await aa.block.appendArrayBlockData([
-                        { url: BlockUrlConstant.Text, content: content.slice(0, 0 - url.length) },
-                        { url: BlockUrlConstant.Text, content: url, link: { url } }
-                    ], 0, 'childs');
-                    else await aa.block.appendArrayBlockData([
-                        { url: BlockUrlConstant.Text, content: url, link: { url } }
-                    ], 0, 'childs');
+                    var bs: any[] = [];
+                    if (pre) bs.push({ url: BlockUrlConstant.Text, content: pre });
+                    bs.push({ url: BlockUrlConstant.Text, content: url, link: { url } });
+                    if (next) bs.push({ url: BlockUrlConstant.Text, content: next });
+                    var newBs = await aa.block.appendArrayBlockData(bs, 0, 'childs');
+                    var newBlock = newBs.first();
+                    if (pre) newBlock = newBs[1];
                     aa.block.page.addActionAfterEvent(async () => {
-                        write.kit.anchorCursor.onFocusBlockAnchor(aa.block.childs.last(), { merge: true, last: true, render: true })
+                        write.kit.anchorCursor.onFocusBlockAnchor(newBlock, { merge: true, last: true, render: true })
                     })
                 }
             });

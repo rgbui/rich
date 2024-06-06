@@ -28,7 +28,7 @@ export function isUrl(url: string) {
 }
 
 
-export var URL_END_REGEX = new RegExp(strRegex + "$");
+//export var URL_END_REGEX = new RegExp(strRegex + "$");
 
 
 export function getTextLink(text) {
