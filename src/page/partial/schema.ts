@@ -90,10 +90,10 @@ export class Page$Schema {
                 })
             }
             var fs = this.schema.fields.findAll(g => [FieldType.like, FieldType.oppose, FieldType.love].includes(g.type))
-            var es = fs.map(f => {
-                return getElementUrl(ElementType.SchemaFieldNameData, this.schema.id, f.name, this.formRowData.id)
-            })
             if (this.formRowData) {
+                var es = fs.map(f => {
+                    return getElementUrl(ElementType.SchemaFieldNameData, this.schema.id, f.name, this.formRowData.id)
+                })
                 var rgc = await channel.get('/user/interactives',
                     {
 
