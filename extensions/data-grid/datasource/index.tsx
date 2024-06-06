@@ -17,6 +17,8 @@ import { useCreateDataGridView } from "../create/view";
 import { Point } from "../../../src/common/vector/point";
 import { useDataGridCreate } from "../create/select.view";
 import { onOnlyCreateDataGrid } from "../../../blocks/data-grid/template/create";
+import { Spin } from "../../../component/view/spin";
+import { S } from "../../../i18n/view";
 
 export class DataSourceView extends EventsComponent {
     render() {
@@ -62,9 +64,12 @@ export class DataSourceView extends EventsComponent {
                 var dc = await useDataGridCreate({ roundPoint: Point.from(event) }, { isOnlyCreateTable: true });
                 if (dc) {
                     console.log('rccc', dg);
+                    self.createTableing = true;
+                    self.forceUpdate();
                     if (dc.source == 'dataView') {
                         var schema = await onOnlyCreateDataGrid(dc.text, dc.url);
                         var view = schema.listViews.first();
+                        self.createTableing = false;
                         self.emit('save', {
                             tableId: schema.id,
                             viewUrl: view.url,
@@ -75,6 +80,7 @@ export class DataSourceView extends EventsComponent {
                     else if (dc.source == 'createView') {
                         var schema = await TableSchema.onCreate({ text: dc.text, url: dc.url });
                         var view = schema.listViews.first();
+                        self.createTableing = false;
                         self.emit('save', {
                             tableId: schema.id,
                             viewUrl: view.url,
@@ -222,15 +228,19 @@ export class DataSourceView extends EventsComponent {
             text: lst('了解数据表'),
             url: window.shyConfig?.isUS ? "https://help.shy.red/page/38#3qfPYqnTJCwwQ6P9zYx8Q8" : "https://help.shy.live/page/285#xcmSsiEKkYt3pgKVwyDHxJ"
         })
-        return <MenuView ref={e => this.mv = e} input={input}
-            select={select}
-            style={{
-                width: 300,
-                paddingTop: 5,
-                paddingBottom: 5
-            }} items={items}></MenuView>
+        return <div>
+            {this.createTableing && <div className="h-30 flex-center"><Spin></Spin><S>正在创建数据表...</S></div>}
+            <MenuView ref={e => this.mv = e} input={input}
+                select={select}
+                style={{
+                    width: 300,
+                    paddingTop: 5,
+                    paddingBottom: 5
+                }} items={items}></MenuView>
+        </div>
     }
     private mv: MenuView;
+    createTableing: boolean = false;
     currentTableId: string = '';
     currentViewId?: string = '';
     selectView: boolean = false;

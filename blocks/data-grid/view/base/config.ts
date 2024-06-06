@@ -9,7 +9,8 @@ import {
     SortSvg,
     LoopSvg,
     UnlockSvg,
-    DatasourceSvg
+    DatasourceSvg,
+    RefreshSvg
 } from "../../../../component/svgs";
 
 import { useSelectMenuItem } from "../../../../component/view/menu";
@@ -247,6 +248,7 @@ export class DataGridViewConfig {
         await this.onDataGridTool(async () => {
             var menus: MenuItem<BlockDirective | string>[] = [
                 { text: lst('复制视图链接'), icon: LinkSvg, name: 'copylink' },
+                { text: lst('重新加载数据...'), icon: RefreshSvg, name: 'reload' },
                 { type: MenuItemType.divide },
                 { text: lst('视图设置...'), icon: { name: 'byte', code: 'setting-one' }, name: 'view' },
                 { text: lst('字段设置...'), icon: { name: 'byte', code: 'list-checkbox' }, name: 'propertys' },
@@ -278,6 +280,9 @@ export class DataGridViewConfig {
             });
             if (um) {
                 switch (um.item.name) {
+                    case 'reload':
+                        await this.onReloadData();
+                        break;
                     case 'copylink':
                         this.onCopyViewLink();
                         break;
