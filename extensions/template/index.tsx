@@ -82,7 +82,7 @@ export class TemplateView extends EventsComponent {
                             // tg.spread = tg.spread ? false : true;
                             this.forceUpdate();
                         }} className="f-12 flex  cursor gap-w-5 ">
-                            <span className={"ts size-20 flex-center item-hover flex-fixed " + (this.tagSpread.get(tg) !== false ? "" : "angle-90-")}>
+                            <span className={"ts size-20 flex-center round item-hover flex-fixed " + (this.tagSpread.get(tg) !== false ? "" : "angle-90-")}>
                                 <Icon className={'text-1'} size={16} icon={ChevronDownSvg}></Icon>
                             </span>
                             <span className="flex-auto">{tg}</span>
@@ -118,7 +118,7 @@ export class TemplateView extends EventsComponent {
         </div>
     }
     // typeGroups = PageTemplateTypeGroups;
-    templateList: SearchListType<PageTemplateType, { mime: string, tags: string[], type: string }> = { type: '', mime: 'page', loading: false, tags: [], total: 0, list: [], page: 1, size: 20 }
+    templateList: SearchListType<PageTemplateType, { mime: string, tags: string[], type: string }> = { type: '个人', mime: 'page', loading: false, tags: [], total: 0, list: [], page: 1, size: 20 }
     getSearchList() {
         return this.templateList.list.filter(c => {
             return c.text?.indexOf(this.templateList.word) > -1 || c.description && c.description.indexOf(this.templateList.word) > -1
