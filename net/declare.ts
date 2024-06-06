@@ -302,7 +302,7 @@ export interface ChannelGetMapUrls {
 	"/page/items":{args:{ws?:LinkWs,wsId?:string,ids:string[],sock?:any},returnType:Promise<SockResponse<{ list:any[]}>>},
 	"/page/ws/items":{args:{ws?:LinkWs,wsId?:string,ids:string[],sock?:any},returnType:Promise<SockResponse<{ list:any[]}>>},
 	"/page/item/subs":{args:{ws:LinkWs,wsId?:string,id:string},returnType:Promise<SockResponse<{ list:any[] }>>},
-	"/page/parent/ids":{args:{ws:LinkWs,wsId?:string,id:string},returnType:Promise<SockResponse<{ parentIds:string[],exists:boolean }>>},
+	"/page/parent/ids":{args:{ws:LinkWs,wsId?:string,id:string,recover?:boolean},returnType:Promise<SockResponse<{ parentIds:string[],exists:boolean }>>},
 	"/page/parent/subs":{args:{ws:LinkWs,wsId?:string,parentIds:string[]},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/item":{args:{ws?:LinkWs,id?:string,sn?:number},returnType:Promise<SockResponse<{ item:Record<string,any> }>>},
 	"/page/word/query":{args:{ws:LinkWs,wsId?:string,word?:string,size?:number},returnType:Promise<SockResponse<{list:LinkPageItem[],total:number,page:number,size:number}>>},
