@@ -558,10 +558,10 @@ export class DataGridTabView extends BlockView<DataGridTab> {
                             return <div onMouseDown={e => {
                                 e.stopPropagation();
                                 this.block.onDraggerItem(e, index)
-                            }} className={"sy-data-grid-tab-item flex-center  " + (index == this.block.tabIndex ? "sy-data-grid-tab-item-hover" : "")} key={index}>
+                            }} className={"sy-data-grid-tab-item b-500 flex-center  " + (index == this.block.tabIndex ? "sy-data-grid-tab-item-hover" : "")} key={index}>
                                 <div className={"flex  round cursor max-w-220 f-14 " + (this.block.displayMode == 'button' ? "" : " item-hover")}>
-                                    <div className="size-24 flex-center  "><Icon icon={getSchemaViewIcon(v)} className={' ' + (this.block.tabIndex == index ? " text" : " remark")} size={16}></Icon></div>
-                                    <span className={"gap-r-5 f-14 " + (this.block.tabIndex == index ? "bold" : "")}>{v?.text || item.viewText}</span>
+                                    <div className="size-24 flex-center  "><Icon fontColorInherit icon={getSchemaViewIcon(v)}  size={16}></Icon></div>
+                                    <span className={"gap-r-5 f-14 "}>{v?.text || item.viewText}</span>
                                 </div>
                             </div>
                         })}

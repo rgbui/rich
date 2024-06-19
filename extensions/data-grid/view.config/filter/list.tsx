@@ -113,7 +113,7 @@ export class DataGridFilterList extends EventsComponent {
             <DragList onChange={change} isDragBar={e => e.closest('.drag-item') && !e.closest('[item-btn]') ? true : false}>
                 {this.filters.map(f => {
                     return <div className="flex item-hover padding-w-5 h-30  round drag-item" key={f.id}>
-                        <span className="flex-fixed flex-center size-24 round item-hover  cursor"><Icon size={16} icon={DragHandleSvg}></Icon></span>
+                        <span className="flex-fixed flex-center size-24 round   grab"><Icon size={16} icon={DragHandleSvg}></Icon></span>
                         <span className="flex-fixed flex-center size-24"><Icon size={16} icon={f.icon || { name: 'bytedance-icon', code: 'association' }}></Icon></span>
                         <span className="flex-auto">{f.text}</span>
                         <span className="flex-center size-24 round item-hover cursor" item-btn={'true'} onMouseDown={e => this.openEdit(e, f)}><Icon size={16} icon={Edit1Svg}></Icon></span>

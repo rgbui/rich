@@ -9,7 +9,7 @@ import { util } from "../../../../util/util";
 import { ViewField } from "../../schema/view";
 import { DataGridView } from "../base";
 import { createFieldBlock } from "./service";
-import trash from "../../../../src/assert/svg/trash.svg";
+
 import { BlockUrlConstant } from "../../../../src/block/constant";
 import { TableStoreGallery } from "../gallery";
 import { autoImageUrl, ElementType, getElementUrl } from "../../../../net/element.type";
@@ -19,7 +19,7 @@ import { channel } from "../../../../net/channel";
 import { FieldType } from "../../schema/type";
 import lodash from "lodash";
 import { OriginField } from "../../element/field/origin.field";
-import { DotsSvg, DuplicateSvg, Edit1Svg, EmojiSvg } from "../../../../component/svgs";
+import { DotsSvg, DuplicateSvg, Edit1Svg, EmojiSvg, TrashSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import "./style.less";
 import { lst } from "../../../../i18n/store";
@@ -27,10 +27,14 @@ import { CopyAlert } from "../../../../component/copy";
 import { useIconPicker } from "../../../../extensions/icon";
 import { Rect } from "../../../../src/common/vector/point";
 import { TableStoreBoard } from "../board";
+import { SearchListType } from "../../../../component/types";
+import { BlockFactory } from "../../../../src/block/factory/block.factory";
+
 
 @url('/data-grid/item')
-export class TableStoreItem extends Block {
+export class TableGridItem extends Block {
     dataId: string;
+    blocks: { childs: Block[], subChilds: Block[] } = { childs: [], subChilds: [] };
     get elementUrl() {
         return getElementUrl(ElementType.SchemaData, this.dataGrid.schema.id, this.dataId)
     }
@@ -47,14 +51,18 @@ export class TableStoreItem extends Block {
         else return -1;
     }
     get schema() {
-        return (this.parent as DataGridView).schema;
+        return this.dataGrid.schema;
     }
     get fields() {
-        return (this.parent as DataGridView).fields;
+        return this.dataGrid.fields;
     }
     get dataGrid() {
         if (this.parent instanceof DataGridView) {
             return this.parent;
+        }
+        else {
+            var c = this.closest(g => g instanceof DataGridView) as DataGridView;
+            return c
         }
     }
     async createElements() {
@@ -73,8 +81,8 @@ export class TableStoreItem extends Block {
     async onUpdateCellValue(field: Field, value: any) {
         value = util.clone(value);
         this.dataRow[field.name] = value;
-        var dr = this.dataGrid.data.find(g => g.id == this.dataRow.id);
-        dr[field.name] = value;
+        // var dr = this.dataGrid.data.find(g => g.id == this.dataRow.id);
+        // dr[field.name] = value;
         await this.schema.rowUpdate({
             dataId: this.dataRow.id,
             data: { [field.name]: value }
@@ -82,8 +90,8 @@ export class TableStoreItem extends Block {
     }
     async onUpdateCellProps(props: Record<string, any>) {
         Object.assign(this.dataRow, props);
-        var dr = this.dataGrid.data.find(g => g.id == this.dataRow.id);
-        if (dr) Object.assign(dr, props)
+        // var dr = this.dataGrid.data.find(g => g.id == this.dataRow.id);
+        // if (dr) Object.assign(dr, props)
         await this.schema.rowUpdate({
             dataId: this.dataRow.id,
             data: { ...props }
@@ -190,7 +198,7 @@ export class TableStoreItem extends Block {
         items.push({ type: MenuItemType.divide })
         items.push({
             name: BlockDirective.delete,
-            icon: trash,
+            icon: TrashSvg,
             text: lst('删除'),
             label: "Delete"
         });
@@ -244,7 +252,7 @@ export class TableStoreItem extends Block {
     isAllowDrops(dragBlocks: Block[]) {
         if (dragBlocks.length == 1) {
             var dg = dragBlocks[0];
-            if (dg instanceof TableStoreItem && dg.dataGrid === this.dataGrid) {
+            if (dg instanceof TableGridItem && dg.dataGrid === this.dataGrid) {
                 if (dg === this) return false;
                 return true;
             }
@@ -252,7 +260,7 @@ export class TableStoreItem extends Block {
         return false;
     }
     isCanDropHere(dropBlock: Block) {
-        if (dropBlock instanceof TableStoreItem && dropBlock.dataGrid == this.dataGrid) {
+        if (dropBlock instanceof TableGridItem && dropBlock.dataGrid == this.dataGrid) {
             return true;
         }
         return false
@@ -264,14 +272,26 @@ export class TableStoreItem extends Block {
         ]
     }
     async drop(blocks: Block[], direction: DropDirection) {
-        var dragRow = blocks[0] as TableStoreItem;
+        var dragRow = blocks[0] as TableGridItem;
         switch (direction) {
             case DropDirection.bottom:
             case DropDirection.top:
-                var props = {};
+                var props: Record<string, any> = {};
                 if (this.dataGrid?.url == BlockUrlConstant.DataGridBoard) {
                     var name = (this.dataGrid as TableStoreBoard).groupField?.name;
                     props[name] = this.dataRow[name]
+                }
+                if (this.dataGrid.schema.allowSubs) {
+                    if ([BlockUrlConstant.DataGridList, BlockUrlConstant.DataGridTable].includes(this.dataGrid.url as any)) {
+                        if (this.subSpread) {
+                            props.parentId = this.dataRow.id;
+                        }
+                        else {
+                            if (dragRow.dataRow.parentId != this.dataRow.parentId) {
+                                props.parentId = this.dataRow.parentId ?? null;
+                            }
+                        }
+                    }
                 }
                 var result = await this.schema.rowRank({
                     id: dragRow.dataRow.id,
@@ -316,9 +336,82 @@ export class TableStoreItem extends Block {
             })
         }
     }
+    subDeep: number = 0;
+    subList: SearchListType<Record<string, any>, { loaded: boolean }> = { loaded: false, list: [], loading: false, error: '', total: 0, size: 200, page: 1, word: '' };
+    get subDataList() {
+        return this.dataGrid.data.filter(g => g.parentId == this.dataId);
+    }
+    get subSpread() {
+        return this.dataGrid.subMapSpread.get(this.dataId) == true ? true : false
+    }
+    async onLoadSubs(force?: boolean) {
+        if (this.subList.loaded && force != true) return;
+        this.subList.loading = true;
+        this.forceManualUpdate();
+        try {
+            var r = await this.dataGrid.schema.gridSubList({
+                parentId: this.dataId,
+                page: this.subList.page,
+                size: this.subList.size,
+                filter: this.dataGrid.getSearchFilter(),
+            }, this.dataGrid.page.ws)
+            if (r.ok) {
+                r.data.list.forEach(g => {
+                    if (!this.dataGrid.data.exists(c => c.id == g.id))
+                        this.dataGrid.data.push(g);
+                })
+                await this.dataGrid.loadRelationDatas(this.dataId);
+                await this.dataGrid.loadDataInteraction(this.dataId);
+                this.subList.total = r.data.total;
+                this.subList.loaded = true;
+                await this.createSubItems();
+            }
+        }
+        catch (ex) {
+            console.error(ex)
+        }
+        finally {
+            this.subList.loading = false;
+        }
+    }
+    async onSpreadSub() {
+        this.dataGrid.subMapSpread.set(this.dataId, !this.subSpread);
+        await this.onLoadSubs();
+        this.forceManualUpdate();
+    }
+    async createSubItems(isForce?: boolean) {
+        this.blocks.subChilds = [];
+        var list = this.subDataList;
+        for (let i = 0; i < list.length; i++) {
+            var row = list[i];
+            var rowBlock: TableGridItem = await BlockFactory.createBlock(this.url, this.page, {
+                mark: i,
+                subDeep: this.subDeep + 1,
+                dataId: row.id
+            }, this) as TableGridItem;
+            this.blocks.subChilds.push(rowBlock);
+            await rowBlock.createElements();
+        }
+        if (isForce) {
+            this.forceManualUpdate();
+        }
+    }
+    async onAddSub(event: React.MouseEvent) {
+        var data = {
+            parentId: this.dataId
+        }
+        var id = this.subDataList.last()?.id;
+        var r = await this.schema.rowAdd({ data, pos: { id: id, pos: 'after' } }, this.id);
+        if (r) {
+            var newRow = r.data;
+            this.dataRow.subCount = (this.dataRow.subCount || 0) + 1;
+            this.dataGrid.data.push(newRow);
+            await this.createSubItems(true)
+        }
+    }
 }
 @view('/data-grid/item')
-export class TableStoreItemView extends BlockView<TableStoreItem> {
+export class TableStoreItemView extends BlockView<TableGridItem> {
     renderItems() {
         return <div className='sy-data-grid-item relative'>
             <div className="r-gap-b-10">

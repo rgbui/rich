@@ -24,6 +24,7 @@ import { IconValueType } from "../../../../component/view/icon";
 import { CardFactory } from "../../template/card/factory/factory";
 import { TableSchema } from "../../schema/meta";
 import { OptionBackgroundColorList } from "../../../../extensions/color/data";
+import { useSelectMenuItem } from "../../../../component/view/menu";
 
 export class DataGridViewOperator {
     async onAddField(this: DataGridView, event: Rect, at?: number) {
@@ -53,8 +54,7 @@ export class DataGridViewOperator {
                 if (field.type == FieldType.relation) {
                     await this.loadRelationSchemas()
                 }
-                await this.createItem();
-                this.forceManualUpdate();
+                await this.createItem(true);
             }
         });
     }
@@ -81,8 +81,7 @@ export class DataGridViewOperator {
                     if (typeof defaultValue != 'undefined')
                         row[field.name] = defaultValue
                 });
-                await this.createItem();
-                this.forceManualUpdate();
+                await this.createItem(true);
             }
         });
     }
@@ -109,8 +108,7 @@ export class DataGridViewOperator {
                     if (typeof defaultValue != 'undefined')
                         row[field.name] = defaultValue
                 });
-                await this.createItem();
-                this.forceManualUpdate();
+                await this.createItem(true);
             }
         });
     }
@@ -120,8 +118,7 @@ export class DataGridViewOperator {
         await this.schema.fieldUpdate({ fieldId: field.id, data }, this.id);
         field.load(data);
         this.onNotifyReferenceBlocks()
-        await this.createItem();
-        this.forceManualUpdate();
+        await this.createItem(true);
         // });
     }
     async onUpdateFieldConfig(this: DataGridView, field: Field, configProps: Record<string, any>) {
@@ -665,7 +662,7 @@ export class DataGridViewOperator {
     }
     async onReloadData(this: DataGridView) {
         await this.onLoadingAction(async () => {
-            await this.loadData();
+            await this.loadDataGridData();
             await this.createItem();
             this.referenceBlockers.forEach(b => {
                 b.forceManualUpdate();
@@ -702,5 +699,30 @@ export class DataGridViewOperator {
     }
     async onExport(this: DataGridView) {
         await useTableExport(this)
+    }
+    async onOpenGroupHead(this: DataGridView, dg, event: React.MouseEvent) {
+        var isHide = this.groupView?.hideGroups?.some(s => lodash.isEqual(s, dg.value));
+        var r = await useSelectMenuItem({
+            roundArea: Rect.fromEle(event.currentTarget as HTMLElement)
+        },
+            [{
+                text: isHide ? lst('显示分组') : lst('隐藏分组'),
+                name: 'hide',
+                icon: { name: 'byte', code: isHide ? "preview-open" : 'preview-close-one' }
+            }])
+        if (r?.item) {
+            var gv = lodash.cloneDeep(this.groupView);
+            if (!Array.isArray(gv.hideGroups)) gv.hideGroups = [];
+            if (!gv.hideGroups.some(s => lodash.isEqual(s, dg.value))) {
+                gv.hideGroups.push(dg.value);
+            }
+            else {
+                lodash.remove(gv.hideGroups, s => lodash.isEqual(s, dg.value));
+            }
+            console.log('ggg', gv);
+            await this.onUpdateProps({ groupView: gv },
+                { range: BlockRenderRange.self }
+            );
+        }
     }
 }

@@ -107,7 +107,7 @@ export class TableStoreOption extends EventsComponent {
                     isDragBar={e => e.closest('.shy-tablestore-option-item-icon') ? true : false}>
                     {this.filterOptions.map((op, i) => {
                         return <div className={"cursor flex visible-hover item-hover-light h-30 gap-h-2 user-none round gap-w-5 padding-w-5 " + (this.focusIndex == i ? "item-hover-light-focus" : "")} key={op.text} onClick={e => this.setOption(op)} >
-                            {this.isEdit && <span className="shy-tablestore-option-item-icon size-20 flex-center flex-fixed cursor item-hover round text-1"><Icon icon={DragHandle} size={14}></Icon></span>}
+                            {this.isEdit && <span className="shy-tablestore-option-item-icon size-20 flex-center flex-fixed grab  round text-1"><Icon icon={DragHandle} size={14}></Icon></span>}
                             <span className="text-overflow flex-auto gap-w-4 "><em className=" f-14  padding-w-6 round h-22 f-14 l-22 " style={{ display: 'inline-block', backgroundColor: op.color }}>{op.text}</em></span>
                             {this.ovs.some(c => c.value == op.value) && <span className="flex-fixed size-20 flex-center gap-r-3 text-1"><Icon size={16} icon={CheckSvg}></Icon></span>}
                             {this.isEdit && <span className="visible size-20 flex-center flex-fixed cursor item-hover round" onClick={e => this.configOption(op, e)}><Icon icon={Dots} size={16}></Icon></span>}

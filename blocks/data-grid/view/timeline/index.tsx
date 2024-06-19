@@ -7,7 +7,7 @@ import { ChildsArea } from "../../../../src/block/view/appear";
 import { FieldType } from "../../schema/type";
 import { DataGridView } from "../base";
 import { TableStoreBoard } from "../board";
-import { TableStoreItem } from "../item";
+import { TableGridItem } from "../item";
 import "./style.less";
 
 @url('/data-grid/timeline')
@@ -47,7 +47,7 @@ export class TableStoreCalendar extends DataGridView {
                 var r = await this.schema.list({
                     page: 1,
                     filter: { [name]: { $gte: new Date(this.startDate), $lte: new Date(this.endDate) } }
-                },this.page.ws);
+                }, this.page.ws);
                 if (r.ok) {
                     this.data = r.data.list;
                     r.data.list.forEach(row => {
@@ -66,24 +66,27 @@ export class TableStoreCalendar extends DataGridView {
             }
         }
     }
-    async createItem() {
+    async createItem(isForce?: boolean) {
         this.blocks.childs = [];
         for (let i = 0; i < this.dataGroups.length; i++) {
             var dg = this.dataGroups[i];
-            var list = this.data.findAll(g => {
+            var list = this.data.findAll(c => c.parentId ? false : true).findAll(g => {
                 var value = this.getModeValue(g);
                 if (value) return dg.group == value;
             })
             await list.eachAsync(async row => {
-                var rowBlock: TableStoreItem = await BlockFactory.createBlock('/data-grid/item', this.page, { mark: dg.group, dataRow: row }, this) as TableStoreItem;
+                var rowBlock: TableGridItem = await BlockFactory.createBlock('/data-grid/item', this.page, { mark: dg.group, dataRow: row }, this) as TableGridItem;
                 this.blocks.childs.push(rowBlock);
                 await rowBlock.createElements();
             })
         }
+        if (isForce) {
+            this.forceManualUpdate()
+        }
     }
 }
 @view('/data-grid/timeline')
-export class TableStoreCalendarView extends BlockView<TableStoreCalendar>{
+export class TableStoreCalendarView extends BlockView<TableStoreCalendar> {
     renderGroup(dg: ArrayOf<TableStoreBoard['data']>, index: number) {
         var cs = this.block.childs.findAll(g => g.mark == dg.group);
         return <div className="sy-data-grid-timeline-group" key={index}>
@@ -95,7 +98,7 @@ export class TableStoreCalendarView extends BlockView<TableStoreCalendar>{
             </div>
         </div>
     }
-    renderView()  {
+    renderView() {
         return <div className='sy-data-grid-timeline'>
             <div className='sy-data-grid-timelines'>{this.block.dataGroups.map((dg, i) => {
                 return this.renderGroup(dg, i)

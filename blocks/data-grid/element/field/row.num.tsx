@@ -9,7 +9,7 @@ export class FieldRowNum extends OriginField {
 export class FieldRowNumView extends OriginFileView<FieldRowNum>{
     renderFieldValue() {
         return <div className='sy-field-row-num  f-14' >
-            {this.block.item.dataIndex + 1}
+            {this.block.dataGridItem.dataIndex + 1}
         </div>
     }
 }

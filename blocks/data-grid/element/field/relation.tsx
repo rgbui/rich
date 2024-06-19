@@ -79,7 +79,7 @@ export class FieldRelationView extends OriginFileView<FieldRelation> {
 export class FieldRollup extends OriginField {
     get relationList() {
         var gs = this.dataGrid.relationDatas.get(this.field.config?.rollupTableId) || [];
-        var item: FieldRelation = this.item.childs.find(g => (g instanceof FieldRelation) && g.field.config.relationTableId == this.field.config?.rollupTableId) as any;
+        var item: FieldRelation = this.dataGridItem.childs.find(g => (g instanceof FieldRelation) && g.field.config.relationTableId == this.field.config?.rollupTableId) as any;
         if (item) {
             var vs: string[] = item.value;
             if (!Array.isArray(vs)) vs = [];

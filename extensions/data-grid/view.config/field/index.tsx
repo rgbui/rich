@@ -133,12 +133,12 @@ export class DataGridFields extends EventsComponent {
                     onChange={onChange}
                     isDragBar={e => e.closest('.shy-table-field-view-item') && !e.closest('.eye') ? true : false}
                     className="shy-table-field-view-items">{bs.map(f => {
-                        return <div className={"shy-table-field-view-item round flex h-30 padding-w-5 gap-w-5 cursor  item-hover"} key={f.fieldId || f.type}>
-                            <span className="size-24 round flex-center flex-fixed item-hover"> <em className={'drag size-24 flex-center text-1'} ><Icon size={16} icon={DragHandleSvg}></Icon></em></span>
+                        return <div className={"shy-table-field-view-item round flex h-30 padding-w-5 gap-w-5 grab  item-hover"} key={f.fieldId || f.type}>
+                            <span className="size-24 round flex-center flex-fixed "> <em className={'drag size-24 flex-center text-1'} ><Icon size={16} icon={DragHandleSvg}></Icon></em></span>
                             <span className="flex-center flex-fixed"><Icon size={14} icon={getFieldIcon(f)}></Icon></span>
                             <span className="flex-auto f-14 gap-l-3">{f.text}</span>
-                            <span className="size-24 round flex-center flex-fixed item-hover"><Icon className={'eye'} size={14} onClick={async () => { await self.block.onHideField(f); self.forceUpdate() }} icon={EyeSvg}></Icon></span>
-                            <span className={"size-24 round flex-center flex-fixed" + (f.field ? "  item-hover" : " remark")}><Icon className={'eye'} size={14} onClick={async (e) => { self.openProperty('view', f, e) }} icon={DotsSvg}></Icon></span>
+                            <span className="size-24 round flex-center flex-fixed item-hover cursor"><Icon className={'eye'} size={14} onClick={async () => { await self.block.onHideField(f); self.forceUpdate() }} icon={EyeSvg}></Icon></span>
+                            <span className={"size-24 round flex-center flex-fixed   " + (f.field ? " cursor  item-hover" : "  remark")}><Icon className={'eye'} size={14} onClick={async (e) => { self.openProperty('view', f, e) }} icon={DotsSvg}></Icon></span>
                         </div>
                     })}</DragList>
                 {fs.length > 0 && <>

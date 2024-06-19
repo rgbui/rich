@@ -1,7 +1,7 @@
 
 import React, { CSSProperties } from "react";
 import { TableStoreGallery } from "../../view/gallery";
-import { TableStoreItem } from "../../view/item";
+import { TableGridItem } from "../../view/item";
 import { DataGridItemRecord } from "../../view/item/record";
 import { useImageFilePicker } from "../../../../extensions/file/image.picker";
 import { Rect } from "../../../../src/common/vector/point";
@@ -29,7 +29,7 @@ import { BlockDirective, BlockRenderRange } from "../../../../src/block/enum";
 import { CopyAlert } from "../../../../component/copy";
 
 export class CardView extends React.Component<{
-    item: DataGridItemRecord | TableStoreItem,
+    item: DataGridItemRecord | TableGridItem,
     dataGrid: DataGridView | DataGridItemRecord
 }> {
     get dataGrid() {
@@ -57,7 +57,7 @@ export class CardView extends React.Component<{
         return getElementUrl(ElementType.SchemaData, this.dataGrid.schema.id, this.dataRow.id)
     }
     getRowIndex() {
-        if (this.props.item instanceof TableStoreItem) return this.props.item.dataIndex;
+        if (this.props.item instanceof TableGridItem) return this.props.item.dataIndex;
         else return -1;
     }
     getFields(name: string) {
@@ -160,7 +160,7 @@ export class CardView extends React.Component<{
             var field: Field;
             if (fs.length > 1) field = fs.find(g => g.type != FieldType.cover)
             else field = fs[0];
-            if (this.props.item instanceof TableStoreItem) {
+            if (this.props.item instanceof TableGridItem) {
                 if (updateFileName) {
                     var uf = this.schema.fields.find(c => c.name == updateFileName);
                     var filename = resource.filename;
@@ -178,7 +178,7 @@ export class CardView extends React.Component<{
         }
     }
     async deleteItem() {
-        if (this.props.item instanceof TableStoreItem || this.props.dataGrid instanceof TableStoreList) {
+        if (this.props.item instanceof TableGridItem || this.props.dataGrid instanceof TableStoreList) {
             if (await Confirm(lst("确定要删除吗")))
                 await (this.props.dataGrid as DataGridView).onRemoveRow(this.props.item.dataRow.id);
         }
@@ -310,7 +310,7 @@ export class CardView extends React.Component<{
             return
         }
         var field: Field = this.getFields(name).first();
-        if (this.props.item instanceof TableStoreItem) {
+        if (this.props.item instanceof TableGridItem) {
             await this.props.item.onUpdateCellInteractive(field);
             this.forceUpdate()
         }

@@ -58,7 +58,7 @@ export class TableStoreCalendar extends DataGridView {
             }
         }
     }
-    async createItem() {
+    async createItem(isForce?: boolean) {
 
     }
     async onPrevMonth() {

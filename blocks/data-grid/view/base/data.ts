@@ -2,7 +2,7 @@
 import { Block } from "../../../../src/block";
 import { ActionDirective } from "../../../../src/history/declare";
 import { util } from "../../../../util/util";
-import { TableStoreItem } from "../item";
+import { TableGridItem } from "../item";
 import { DataGridView } from ".";
 import { channel } from "../../../../net/channel";
 import { getElementUrl, ElementType } from "../../../../net/element.type";
@@ -14,7 +14,7 @@ export class DataGridViewData {
         if (id) await this.page.onAction(ActionDirective.onSchemaRowDelete, async () => {
             var r = await this.schema.rowRemove(id, this.id);
             if (r) {
-                var row: Block = this.blocks.childs.find(g => (g as TableStoreItem).dataRow.id == id);
+                var row: Block = this.blocks.childs.find(g => (g as TableGridItem).dataRow.id == id);
                 if (row) await row.delete()
                 lodash.remove(this.data, g => g.id == id);
                 this.total -= 1;
@@ -87,8 +87,7 @@ export class DataGridViewData {
             this.data.insertAt(at, newRow);
             this.total += 1;
             this.onNotifyPageReferenceBlocks();
-            await this.createItem();
-            this.forceManualUpdate();
+            await this.createItem(true);
         }
         return lodash.cloneDeep(newRow);
     }
@@ -102,8 +101,7 @@ export class DataGridViewData {
             var r = await this.schema.rowUpdate({ dataId: id, data: util.clone(data) }, this.id);
             if (r.ok) {
                 Object.assign(oldItem, data);
-                await this.createItem();
-                this.forceManualUpdate();
+                await this.createItem(true);
             }
         }
     }
@@ -128,8 +126,7 @@ export class DataGridViewData {
             this.data.insertAt(at, dr);
             this.total += 1;
             await this.onNotifyPageReferenceBlocks();
-            await this.createItem();
-            this.forceManualUpdate();
+            await this.createItem(true);
         }
     }
 }

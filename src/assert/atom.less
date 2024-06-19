@@ -473,6 +473,14 @@ item-selected:选中的效果
     }
 }
 
+.item-hover-warn,
+.r-item-hover-warn>* {
+    &:hover {
+        background-color: rgba(55, 53, 47, 0.08);
+        color           : var(--warn-color)
+    }
+}
+
 .item-hover-define,
 .r-item-hover-color>* {
     &:hover {
@@ -688,6 +696,13 @@ item-selected:选中的效果
     text-decoration: underline;
 }
 
+.underline-image {
+    background-image   : linear-gradient(to right, rgba(55, 53, 47, 0.16) 0%, rgba(55, 53, 47, 0.16) 100%);
+    background-repeat  : repeat-x;
+    background-position: 0px 100%;
+    background-size    : 100% 1px;
+}
+
 .underline-hover {
     &:hover {
         text-decoration: underline;
@@ -761,6 +776,7 @@ body {
     --white-1          : var(--white-smoke);
     --border-color     : rgba(55, 53, 47, 0.16);
     --black            : #000;
+    --warn-color       : rgb(225, 98, 89);
     --text-color       : rgba(55, 53, 47);
     --text             : var(--text-color);
     --text-color-1     : rgba(55, 53, 47, 0.8);
@@ -1124,7 +1140,7 @@ cursor鼠标
     cursor: row-resize;
 }
 
-.cursor-grab {
+.cursor-grab,.grab {
     cursor: grab;
 }
 

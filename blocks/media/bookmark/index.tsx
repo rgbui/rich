@@ -186,10 +186,10 @@ export class BookmarkView extends BlockView<Bookmark> {
         if (!this.block.bookmarkInfo) return <div style={this.block.visibleStyle}><div style={this.block.contentStyle}>
             {this.renderEmpty()}</div></div>
         return <div style={this.block.visibleStyle}><div
-            className='sy-block-bookmark relative'
+            className='sy-block-bookmark relative  visible-hover'
             style={this.block.contentStyle}
         >
-            <a className='sy-block-bookmark-link visible-hover' draggable={false} href={this.block.bookmarkUrl} target='_blank' >
+            <a className='sy-block-bookmark-link' draggable={false} href={this.block.bookmarkUrl} target='_blank' >
                 <div className="sy-block-bookmark-content" style={{ marginRight: this.block.imageWidth > 180 && this.block.imageWidth < 250 ? this.block.imageWidth : 0 }}>
                     {this.block.bookmarkInfo.title && <div className="sy-block-bookmark-title">{this.block.bookmarkInfo.title}</div>}
                     {this.block.bookmarkInfo.description && <div className="sy-block-bookmark-description">{this.block.bookmarkInfo.description}</div>}

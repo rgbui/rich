@@ -59,12 +59,12 @@ export class DataGridTrigger extends EventsComponent {
                 <div className="remark f-12 padding-w-10 gap-w-5 gap-t-10"><S text='查询按钮'>查询按钮</S></div>
                 <div>
                     <div className="flex item-hover round h-30 padding-w-5 gap-w-5   ">
-                        <Tip text='拖至页面插入'><span className="size-24 text-1 item-hover round flex-center cursor" onMouseDown={e => this.onDrag(e, { url: BlockUrlConstant.DataGridLatestOrHot, refBlockId: this.block.id })}><Icon size={14} icon={DragHandleSvg}></Icon></span></Tip>
+                        <Tip text='拖至页面插入'><span className="size-24 text-1  round flex-center grab" onMouseDown={e => this.onDrag(e, { url: BlockUrlConstant.DataGridLatestOrHot, refBlockId: this.block.id })}><Icon size={14} icon={DragHandleSvg}></Icon></span></Tip>
                         <span className="flex-center gap-r-3 round"><Icon size={14} icon={{ name: 'bytedance-icon', code: 'fire' }}></Icon></span><span><S>最新最热</S></span>
                         <span className="flex-auto flex-end"><Tip text={'插入到页面'}><span className="size-24 flex-center item-hover round cursor  text-1  " onMouseDown={e => { this.block.onExtendTriggerBlock(BlockUrlConstant.DataGridLatestOrHot, { refBlockId: this.block.id }) }}><Icon size={18} icon={PlusSvg}></Icon></span></Tip></span>
                     </div>
                     <div className="flex item-hover round h-30 padding-w-5 gap-w-5   ">
-                        <Tip text='拖至页面插入'><span className="size-24 text-1 item-hover round flex-center cursor" onMouseDown={e => this.onDrag(e, { url: BlockUrlConstant.DataGridOptionRule, refBlockId: this.block.id })}><Icon size={14} icon={DragHandleSvg}></Icon></span></Tip>
+                        <Tip text='拖至页面插入'><span className="size-24 text-1  round flex-center grab" onMouseDown={e => this.onDrag(e, { url: BlockUrlConstant.DataGridOptionRule, refBlockId: this.block.id })}><Icon size={14} icon={DragHandleSvg}></Icon></span></Tip>
                         <span className="flex-center gap-r-3 round"><Icon size={14} icon={{ name: 'bytedance-icon', code: 'association' }}></Icon></span><span><S>自定义查询规则</S></span>
                         <span className="flex-auto flex-end"><Tip text={'插入到页面'}><span className="size-24 flex-center item-hover round cursor text-1  " onMouseDown={e => { this.block.onExtendTriggerBlock(BlockUrlConstant.DataGridOptionRule, { refBlockId: this.block.id }) }}><Icon size={18} icon={PlusSvg}></Icon></span></Tip></span>
                     </div>
@@ -72,7 +72,7 @@ export class DataGridTrigger extends EventsComponent {
                 <div className="remark f-12 padding-w-10 gap-w-5 gap-t-10"><S text='表单按钮'>表单</S></div>
                 <div>
                     {this.block.schema.recordViews.map(rv => {
-                        return <div key={rv.id} className="flex item-hover round h-30 padding-w-5 gap-w-5  cursor"><Tip text='拖至页面插入'><span className="size-24 text-1 item-hover round flex-center" onMouseDown={e => this.onDrag(e, {
+                        return <div key={rv.id} className="flex item-hover round h-30 padding-w-5 gap-w-5  grab"><Tip text='拖至页面插入'><span className="size-24 text-1  round flex-center" onMouseDown={e => this.onDrag(e, {
                             url: BlockUrlConstant.Button,
                             buttonText: lst('添加') + this.block.schema.text,
                             flow: {
@@ -111,7 +111,7 @@ export class DataGridTrigger extends EventsComponent {
 
                 ].includes(g.type)).map(f => {
                     return <div key={f.id} className="flex item-hover round h-30 padding-w-5 gap-w-5 ">
-                        <Tip text='拖至页面插入'><span className="size-24 text-1 item-hover round flex-center cursor" onMouseDown={e => this.onDrag(e, { url: getFieldFilterUrl(f), refBlockId: this.block.id, refFieldId: f.id })}><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>
+                        <Tip text='拖至页面插入'><span className="size-24 text-1  round flex-center grab" onMouseDown={e => this.onDrag(e, { url: getFieldFilterUrl(f), refBlockId: this.block.id, refFieldId: f.id })}><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>
                         <span className="flex-fixed gap-r-3 flex-center cursor round "><Icon size={14} icon={GetFieldTypeSvg(f)}></Icon></span>
                         <span className="flex-auto">{f.text}</span>
                         <ToolTip overlay={lst("点击插入过滤组件块")}>
@@ -143,7 +143,7 @@ export class DataGridTrigger extends EventsComponent {
 
                 ].includes(g.type)).map(f => {
                     return <div key={f.id} className="flex item-hover round h-30 padding-w-5 gap-w-5 ">
-                        <Tip text='拖至页面插入'><span className="size-24 text-1 item-hover round flex-center cursor" onMouseDown={e => this.onDrag(e, { url: BlockUrlConstant.DataGridFieldSort, refBlockId: this.block.id, refFieldId: f.id })}><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>
+                        <Tip text='拖至页面插入'><span className="size-24 text-1  round flex-center grab" onMouseDown={e => this.onDrag(e, { url: BlockUrlConstant.DataGridFieldSort, refBlockId: this.block.id, refFieldId: f.id })}><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>
                         <span className="flex-fixed gap-r-3 flex-center cursor round "><Icon size={14} icon={GetFieldTypeSvg(f)}></Icon></span>
                         <span className="flex-auto">{f.text}</span>
                         <ToolTip overlay={lst("点击插入排序组件块")}>

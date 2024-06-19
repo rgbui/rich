@@ -9,11 +9,11 @@ import { S } from "../../../../i18n/view";
 export class FieldCheck extends OriginField {
     onRowEdit(e: React.MouseEvent) {
         if (this.checkEdit() === false) return;
-        this.dataGrid.onOpenEditForm(this.item.dataRow.id);
+        this.dataGrid.onOpenEditForm(this.dataGridItem.dataRow.id);
     }
     onRowDelete(e: React.MouseEvent) {
         if (this.checkEdit() === false) return;
-        this.dataGrid.onBatchDelete([this.item.dataRow.id]);
+        this.dataGrid.onBatchDelete([this.dataGridItem.dataRow.id]);
     }
 }
 

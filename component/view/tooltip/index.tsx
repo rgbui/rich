@@ -32,11 +32,13 @@ class ToolTipOverlay extends React.Component {
     placement: OverlayPlacement = 'top';
     arrowStyle?: CSSProperties = {};
     overlayStyle?: CSSProperties = {};
+    showArrow: boolean = false;
     open(el: HTMLElement,
         options: {
             overlay: React.ReactNode,
             placement?: OverlayPlacement,
             mouseLeaveDelay?: number;
+            showArrow?: boolean;
         }) {
         this.tipEl = el;
         this.fvs.bind(this.tipEl);
@@ -44,6 +46,7 @@ class ToolTipOverlay extends React.Component {
         this.mouseLeaveDelay = options.mouseLeaveDelay;
         this.overlay = options.overlay;
         this.placement = options.placement;
+        this.showArrow = options?.showArrow ? true : false;
 
         if (!this.placement) this.placement = 'top';
         this.visible = true;
@@ -66,6 +69,10 @@ class ToolTipOverlay extends React.Component {
             var overlayRect = Rect.fromEle(this.overlayEl);
             var size = 16;
             this.arrowStyle = {};
+            if (this.showArrow !== true) {
+                this.arrowStyle.display = 'none';
+                size = 8;
+            }
             this.overlayStyle = {};
             var pc = this.placement;
             var e = this.el.querySelector('.shy-tooltip-arrow') as HTMLElement;
@@ -171,7 +178,7 @@ export class ToolTip extends React.Component<{
     mouseLeaveDelay?: number;
     placement?: OverlayPlacement,
     mouseenter?: (event: MouseEvent, tip: ToolTip) => void
-}>{
+}> {
     el: HTMLElement;
     componentDidMount() {
         if (!this.props.overlay) return;

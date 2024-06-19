@@ -11,16 +11,21 @@ import { DataGridTool } from "../components/tool";
 import { TableStoreListItem } from "./row";
 import { CardConfig } from "../item/service";
 import { S } from "../../../../i18n/view";
+import { DataGridGroup } from "../components/group";
 
 @url('/data-grid/list')
 export class TableStoreList extends DataGridView {
-    async createItem() {
+    async createItem(isForce?: boolean) {
         this.blocks.childs = [];
-        for (let i = 0; i < this.data.length; i++) {
-            var row = this.data[i];
+        var ds = this.data.filter(g => g.parentId ? false : true)
+        for (let i = 0; i < ds.length; i++) {
+            var row = ds[i];
             var rowBlock: TableStoreListItem = await BlockFactory.createBlock('/data-grid/list/row', this.page, { mark: i, dataId: row.id }, this) as TableStoreListItem;
             this.blocks.childs.push(rowBlock);
             await rowBlock.createElements();
+        }
+        if (isForce) {
+            this.forceManualUpdate()
         }
     }
     @prop()
@@ -61,13 +66,17 @@ export class TableStoreListView extends BlockView<TableStoreList> {
                     onMouseLeave={e => this.block.onOver(false)}
                 ><DataGridTool block={this.block}></DataGridTool>
                     {!this.block.noTitle && <Divider hidden={this.block.dataGridTab ? true : false}></Divider>}
-                    <ChildsArea childs={this.block.childs}></ChildsArea>
-                    {this.block.dataGridIsCanEdit() && !this.block.isCardAuto && <div
-                        onMouseDown={e => { e.stopPropagation(); this.block.onSyncAddRow({}, undefined, 'after') }}
-                        className="flex cursor item-hover round padding-5 f-14 remark">
-                        <Icon size={18} icon={PlusSvg}></Icon>
-                        <span><S>新增</S></span>
-                    </div>}
+                    <DataGridGroup block={this.block} renderRowContent={(b, c, g) => {
+                        return <div>
+                            <ChildsArea childs={c}></ChildsArea>
+                            {this.block.dataGridIsCanEdit() && !this.block.isCardAuto && <div
+                                onMouseDown={e => { e.stopPropagation(); this.block.onSyncAddRow({}, undefined, 'after') }}
+                                className="flex cursor item-hover round padding-5 f-14 remark">
+                                <Icon size={18} icon={PlusSvg}></Icon>
+                                <span><S>新增</S></span>
+                            </div>}
+                        </div>
+                    }}></DataGridGroup>
                     {this.renderCreateTable()}
                 </div></div>
             {this.renderComment()}

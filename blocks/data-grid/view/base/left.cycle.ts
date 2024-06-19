@@ -49,10 +49,22 @@ export class DataGridViewLife {
             this.relationSchemas = await TableSchema.loadListSchema(tableIds, this.page);
         }
     }
-    async loadRelationDatas(this: DataGridView,) {
+    /***
+     * 加载当前页面视图数据
+     */
+    async loadDataGridData(this: DataGridView) {
+        await this.loadData();
+        await this.loadRelationDatas();
+        await this.loadDataInteraction();
+    }
+
+    async loadRelationDatas(this: DataGridView, parentId?: string) {
         if (this.relationSchemas.length > 0) {
             var maps: { key: string, ids: string[] }[] = [];
             this.data.forEach(row => {
+                if (parentId && row.parentId != parentId) {
+                    return;
+                }
                 this.fields.each(f => {
                     if (f?.field?.type == FieldType.relation) {
                         var vs = row[f?.field.name];
@@ -82,30 +94,69 @@ export class DataGridViewLife {
             })
         }
     }
+    /**
+     * 仅加载表格数据，
+     * 不包括关联的数据
+     * 不包括交互的数据
+     * @param this 
+     */
     async loadData(this: DataGridView) {
         if (this.schema) {
             await this.onLoadingAction(async () => {
-                var r = await this.schema.list({
-                    page: this.pageIndex,
-                    size: this.size,
-                    filter: this.getSearchFilter(),
-                    sorts: this.getSearchSorts()
-                }, this.page.ws);
-                if (r.data) {
-                    this.data = Array.isArray(r.data.list) ? r.data.list : [];
-                    this.total = r.data?.total || 0;
-                    this.size = r.data.size;
-                    this.pageIndex = r.data.page;
+                if (this.hasGroup) {
+                    var rc = await this.schema.gridList({
+                        page: this.pageIndex,
+                        size: this.size,
+                        filter: this.getSearchFilter(),
+                        sorts: this.getSearchSorts(),
+                        groupView: this.groupView
+                    }, this.page.ws);
+                    if (rc.ok) {
+                        this.dataGroupHeads = []
+                        this.data = [];
+                        var gf = this.schema.fields.find(g => g.id == this.groupView.groupId);
+                        rc.data.groupList.forEach(gl => {
+                            this.dataGroupHeads.push({
+                                id: gl.id,
+                                spread: false,
+                                count: gl.count,
+                                total: gl.total,
+                                value: gl.id,
+                                text: gl.id as any
+                            })
+                            gl.list.forEach(g => {
+                                g.__group = gl.id;
+                                this.data.push(g);
+                            })
+                        })
+                    }
+                }
+                else {
+                    var r = await this.schema.list({
+                        page: this.pageIndex,
+                        size: this.size,
+                        filter: this.getSearchFilter(),
+                        sorts: this.getSearchSorts()
+                    }, this.page.ws);
+                    if (r.data) {
+                        this.data = Array.isArray(r.data.list) ? r.data.list : [];
+                        this.total = r.data?.total || 0;
+                        this.size = r.data.size;
+                        this.pageIndex = r.data.page;
+                    }
                 }
             })
         }
     }
-    async loadDataInteraction(this: DataGridView) {
+    async loadDataInteraction(this: DataGridView, parentId?: string) {
         if (!this.page.isSign) return;
         if (this.schema) {
             var fs = this.schema.fields.findAll(g => [FieldType.like, FieldType.oppose, FieldType.vote, FieldType.love].includes(g.type))
             if (fs.length > 0) {
                 var ds = this.data.findAll(g => {
+                    if (parentId && g.parentId != parentId) {
+                        return false;
+                    }
                     return fs.some(f => typeof g[f.name]?.count == 'number' && g[f.name]?.count > 0)
                 });
                 var ids = ds.map(d => d.id);
@@ -117,7 +168,20 @@ export class DataGridViewLife {
                         es: fs.map(f => getElementUrl(ElementType.SchemaFieldNameData, this.schema.id, f.name, ids[0]))
                     });
                     if (r.ok) {
-                        this.userEmojis = r.data.list;
+                        if (parentId) {
+                            for (let n in r.data.list) {
+                                var um = this.userEmojis[n];
+                                if (!um) {
+                                    um = [];
+                                    this.userEmojis[n] = um;
+                                }
+                                r.data.list[n].forEach(id => {
+                                    if (!um.includes(id)) um.push(id)
+                                })
+                            }
+                        }
+                        else
+                            this.userEmojis = r.data.list;
                     }
                 }
             }

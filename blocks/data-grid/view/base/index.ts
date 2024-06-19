@@ -10,7 +10,7 @@ import { SchemaFilter } from "../../schema/filter";
 import { DataStoreAction, SchemaAction, TableSchema } from "../../schema/meta";
 import { ViewField } from "../../schema/view";
 import { DataGridTurns } from "../../turn";
-import { TableStoreItem } from "../item";
+import { TableGridItem } from "../item";
 import { DataGridTool } from "../components/tool";
 import { Mix } from "../../../../util/mix";
 import { DataGridViewLife } from "./left.cycle";
@@ -34,7 +34,7 @@ import { onCreateDataGridTemplate } from "../../template/create";
 import { DataGridTab } from "../tab";
 import { PageLayoutType } from "../../../../src/page/declare";
 import { BlockRenderRange } from "../../../../src/block/enum";
-
+import { GroupHeadType, GroupIdType, GroupViewType } from "../declare";
 
 /**
  * 
@@ -64,6 +64,12 @@ export class DataGridView extends Block {
     filter: SchemaFilter = {};
     @prop()
     schemaId: string;
+    @prop()
+    groupView: GroupViewType;
+    get hasGroup() {
+        if (Array.isArray(this.schema?.fields))
+            return this.groupView?.groupId && this.schema?.fields.find(g => g.id == this.groupView.groupId)
+    }
     @prop()
     showRowNum: boolean = false;
     @prop()
@@ -99,6 +105,7 @@ export class DataGridView extends Block {
         if (this.schema && this.syncBlockId) return !this.schema.views.some(s => s.id == this.syncBlockId);
     }
     data: Record<string, any>[] = [];
+    dataGroupHeads: GroupHeadType[] = [];
     userEmojis: Record<string, string[]> = {};
     isLoadingData: boolean = false;
     async onLoadingAction(fn: () => Promise<void>) {
@@ -219,8 +226,8 @@ export class DataGridView extends Block {
             else this.page.snapLoadLocker.push({ url: this.elementUrl, count: 0, date: Date.now() })
 
             var r = await channel.get('/view/snap/query', { ws: this.page.ws, elementUrl: this.elementUrl });
-            if(window.shyConfig?.isDev)
-            console.log('gggg',r,this);
+            if (window.shyConfig?.isDev)
+                console.log('gggg', r, this);
             if (r.ok) {
                 var data;
                 try {
@@ -362,16 +369,23 @@ export class DataGridView extends Block {
         }
         return sorts;
     }
-    async createItem() {
+    /**
+     * 将数据重新渲染到数据表格中...
+     */
+    async createItem(isForce?: boolean) {
         this.blocks.childs = [];
-        for (let i = 0; i < this.data.length; i++) {
-            var row = this.data[i];
-            var rowBlock: TableStoreItem = await BlockFactory.createBlock('/data-grid/item', this.page, {
+        var ds = this.data.filter(g => g.parentId ? false : true);
+        for (let i = 0; i < ds.length; i++) {
+            var row = ds[i];
+            var rowBlock: TableGridItem = await BlockFactory.createBlock('/data-grid/item', this.page, {
                 mark: i,
                 dataId: row.id
-            }, this) as TableStoreItem;
+            }, this) as TableGridItem;
             this.blocks.childs.push(rowBlock);
             await rowBlock.createElements();
+        }
+        if (isForce) {
+            this.forceManualUpdate();
         }
     }
     async createdDidMounted(): Promise<void> {
@@ -399,10 +413,13 @@ export class DataGridView extends Block {
             await this.loadSchema();
             if (this.schema) {
                 await this.loadViewFields();
-                await this.loadData();
                 await this.loadRelationSchemas();
-                await this.loadRelationDatas();
-                await this.loadDataInteraction();
+
+                await this.loadDataGridData();
+
+
+
+
                 await this.createItem();
                 await this.onNotifyReferenceBlocks();
                 if (this.view && force) this.view.forceUpdate();
@@ -618,8 +635,8 @@ export class DataGridView extends Block {
                             this.schema = tc;
                             if (this.fields.some(s => s.fieldId == (act as any).id)) {
                                 lodash.remove(this.fields, s => s.fieldId == (act as any).id);
-                                await this.createItem();
-                                this.forceManualUpdate();
+                                await this.createItem(true);
+
                             }
                             break;
                         case 'turnField':
@@ -662,8 +679,7 @@ export class DataGridView extends Block {
                             if (options.locationId == 'Page.onSubmitForm' || options.locationId == 'flowButtonAddRecords') {
                                 this.data.push(act.data);
                                 this.total += 1;
-                                await this.createItem();
-                                this.forceManualUpdate();
+                                await this.createItem(true);
                                 this.onNotifyPageReferenceBlocks();
                             }
 
@@ -677,8 +693,7 @@ export class DataGridView extends Block {
                             var dr = this.data.find(g => g.id == (act as any).id);
                             if (dr) {
                                 dr = Object.assign(dr, (act as any).data);
-                                await this.createItem();
-                                this.forceManualUpdate();
+                                await this.createItem(true);
                             }
                             break;
                         case 'remove':
@@ -687,8 +702,7 @@ export class DataGridView extends Block {
                                 lodash.remove(this.data, g => g.id == (act as any).id);
                                 this.total -= 1;
                                 this.onNotifyPageReferenceBlocks();
-                                await this.createItem();
-                                this.forceManualUpdate();
+                                await this.createItem(true);
                             }
 
                             break;
@@ -698,8 +712,7 @@ export class DataGridView extends Block {
                                 lodash.remove(this.data, g => (act as any).ids.includes(g.id));
                                 this.total -= (act as any).ids.length;
                                 this.onNotifyPageReferenceBlocks();
-                                await this.createItem();
-                                this.forceManualUpdate();
+                                await this.createItem(true);
                             }
                             break;
                         case 'removeFilter':
@@ -754,6 +767,8 @@ export class DataGridView extends Block {
             })
         })
     }
+
+    subMapSpread: Map<string, boolean> = new Map();
 }
 
 export interface DataGridView extends DataGridViewLife { }

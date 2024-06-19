@@ -29,7 +29,7 @@ import {
     TypesTitleSvg,
     VideoSvg
 } from "../../../component/svgs";
-import { MenuItemType } from "../../../component/view/menu/declare";
+import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { TableSchemaView } from "./meta";
 import lodash from "lodash";
 import { lst } from "../../../i18n/store";
@@ -46,9 +46,9 @@ import * as Radar from "../../../src/assert/img/radar.webp";
 import * as Summary from "../../../src/assert/img/summary.png";
 import { Field } from "./field";
 
-export function GetFieldTypeSvg(field:Field): IconValueType {
-    if(field?.icon)return field.icon;
-    var type=field?.type;
+export function GetFieldTypeSvg(field: Field): IconValueType {
+    if (field?.icon) return field.icon;
+    var type = field?.type;
     switch (type) {
         case FieldType.bool:
             return TypesCheckboxSvg
@@ -336,11 +336,47 @@ export function getFieldMenus() {
                 text: a.text,
                 value: a.value,
                 name: 'turnFieldType',
-                icon: GetFieldTypeSvg({type:a.value} as any)
+                icon: GetFieldTypeSvg({ type: a.value } as any)
             }
         })
     }
     return getSchemaFieldMenus(map);
 }
 
+
+export function getFieldStatItems(type: FieldType) {
+    if (!type) return [];
+    var items: MenuItem[] = [
+        { text: lst('无'), value: 'none' },
+        { text: lst('总行数'), value: 'total' },
+        { text: lst('唯一值'), value: 'uniqueValue' },
+        { text: lst('未填写'), value: 'notFilled' },
+        { text: lst('已填写'), value: 'filled' },
+        { text: lst('未填写占比'), value: 'notFilledPercent' },
+        { text: lst('已填写占比'), value: 'filledPercent' },
+    ];
+    if ([FieldType.date, FieldType.createDate, FieldType.modifyDate].includes(type)) {
+        items.push(
+            ...[
+                { type: MenuItemType.divide },
+                { text: lst('最早'), value: 'dateMin' },
+                { text: lst('最晚'), value: 'dateMax' },
+                { text: lst('日期范围'), value: 'dateRange' },
+            ]
+        )
+    }
+    if ([FieldType.number, FieldType.autoIncrement, FieldType.price].includes(type)) {
+        items.push(
+            ...[
+                { type: MenuItemType.divide },
+                { text: lst('求和'), value: 'sum' },
+                { text: lst('平均'), value: 'agv' },
+                { text: lst('最小'), value: 'min' },
+                { text: lst('最大'), value: 'max' },
+                { text: lst('数字范围'), value: 'range' },
+            ]
+        )
+    }
+    return items;
+}
 

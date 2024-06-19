@@ -12,6 +12,7 @@ import { LinkWs } from "../../../src/page/declare";
 import { CardFactory } from "../template/card/factory/factory";
 import { lst } from "../../../i18n/store";
 import { PageLocation } from "../../../src/page/directive";
+import { GroupIdType } from "../view/declare";
 
 
 export type DataStoreAction = {
@@ -142,6 +143,7 @@ export class TableSchema {
     creater: string;
     createDate: Date;
     fields: Field[] = [];
+    allowSubs: boolean = false;
     icon: IconArguments;
     cover: CoverMask;
     locker: {
@@ -296,7 +298,6 @@ export class TableSchema {
         }
         else return []
     })
-
     async checkSubmit(page: Page) {
         return channel.get('/datastore/exists/user/submit', { schemaId: this.id, ws: page.ws });
     }
@@ -327,6 +328,61 @@ export class TableSchema {
             group: string
         }, ws: LinkWs) {
         return channel.get('/datastore/group', Object.assign({ schemaId: this.id, ws: ws }, options));
+    }
+    gridList(options: {
+        page: number,
+        size?: number,
+        filter?: Record<string, any>,
+        directFilter?: Record<string, any>,
+        sorts?: Record<string, -1 | 1>,
+        projects?: string[];
+        isIgnoreCount?: boolean;
+        groupView?: any,
+    }, ws: LinkWs) {
+        return channel.get('/datastore/dataGrid/list', Object.assign({ schemaId: this.id, ws: ws }, options));
+    }
+    gridSubList(options: {
+        parentId: string,
+        page: number,
+        size?: number,
+        filter?: Record<string, any>,
+        groupFilter?: Record<string, any>,
+        sorts?: Record<string, -1 | 1>,
+        projects?: string[];
+
+    }, ws: LinkWs) {
+        return channel.get('/datastore/dataGrid/sub/list', Object.assign({ schemaId: this.id, ws: ws }, options));
+    }
+    boardGroup(options: {
+        filter?: Record<string, any>,
+        page?: number,
+        size?: number,
+        sorts?: Record<string, 1 | -1>,
+        group: string,
+        hideGroups?: string[],
+        isIgnoreEmpty?: boolean,
+        isStatTotal?: boolean,
+        groupView?: any,
+    }, ws: LinkWs) {
+        return channel.get('/datastore/board/statistics', Object.assign({ schemaId: this.id, ws: ws }, options));
+    }
+    boardFieldStat(
+        options: {
+            filter?: Record<string, any>,
+            group: string,
+            hideGroups?: string[],
+            isIgnoreEmpty?: boolean, stat: { fieldId: string, stat: string }
+        }, ws: LinkWs) {
+        return channel.get('/datastore/board/stat/fields', Object.assign({ schemaId: this.id, ws: ws }, options))
+    }
+    statFields(options: {
+        groupFilters?: {
+            id: GroupIdType;
+            filter: Record<string, any>;
+        }[],
+        stats: { fieldId: string, stat: string }[], filter?: Record<string, any>
+    }, ws: LinkWs) {
+        return channel.get('/datastore/stat/fields', Object.assign({ schemaId: this.id, ws: ws }, options as any));
     }
     statistics(options: {
         page?: number,
@@ -599,7 +655,17 @@ export class TableSchema {
         else return []
     })
     static fieldIsDate(field: Field) {
+        if (!field) return false;
         return [FieldType.date, FieldType.modifyDate, FieldType.createDate].includes(field.type);
+    }
+    static fieldIsNumber(field: Field) {
+        if (!field) return false;
+        return [
+            FieldType.sort,
+            FieldType.number,
+            FieldType.price,
+            FieldType.autoIncrement
+        ].includes(field.type)
     }
     static fieldValueIsArray(field: Field) {
         return IsArrayValueFieldTypes.includes(field.type)

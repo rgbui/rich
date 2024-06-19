@@ -33,6 +33,34 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
     getItems() {
         var self = this;
         var cms = CardFactory.getCardModels(this.schema);
+        var newAddItems: MenuItem[] = [];
+        if (this.block.url != BlockUrlConstant.DataGridCalendar) {
+            if (this.block.url == BlockUrlConstant.DataGridBoard) {
+                newAddItems.push({
+                    text: lst('看板分组'),
+                    value: (this.block as TableStoreBoard).groupFieldId,
+                    name: 'groupFieldId',
+                    type: MenuItemType.select,
+                    options: this.block.schema.fields.filter(g => g.type == FieldType.option || g.type == FieldType.options).map(g => {
+                        return {
+                            text: g.text,
+                            icon: GetFieldTypeSvg(g),
+                            value: g.id
+                        }
+                    })
+                })
+            }
+            newAddItems.push({
+                text: '子数据',
+                name: 'allowSubs',
+                type: MenuItemType.select,
+                value: this.block.schema.allowSubs,
+                options: [
+                    { text: lst('关闭'), value: false },
+                    { text: lst('启用'), value: true }
+                ]
+            })
+        }
         var baseItems: MenuItem[] = [
             {
                 value: this.block.schemaView.text,
@@ -87,6 +115,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 ]
             },
             { type: MenuItemType.divide },
+            ...newAddItems,
             {
                 text: lst('每次加载的数量'),
                 value: this.block.size,
@@ -219,19 +248,19 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                         { text: lst('换行显示'), value: 'wrap', icon: { name: "byte", code: 'align-left-two' } as any },
                     ]
                 },
-                {
-                    text: lst('看板分类字段'),
-                    value: (this.block as TableStoreBoard).groupFieldId,
-                    name: 'groupFieldId',
-                    type: MenuItemType.select,
-                    options: this.block.schema.fields.filter(g => g.type == FieldType.option || g.type == FieldType.options).map(g => {
-                        return {
-                            text: g.text,
-                            icon: GetFieldTypeSvg(g),
-                            value: g.id
-                        }
-                    })
-                },
+                // {
+                //     text: lst('看板分类字段'),
+                //     value: (this.block as TableStoreBoard).groupFieldId,
+                //     name: 'groupFieldId',
+                //     type: MenuItemType.select,
+                //     options: this.block.schema.fields.filter(g => g.type == FieldType.option || g.type == FieldType.options).map(g => {
+                //         return {
+                //             text: g.text,
+                //             icon: GetFieldTypeSvg(g),
+                //             value: g.id
+                //         }
+                //     })
+                // },
             ])
         }
         else if (this.block.url == BlockUrlConstant.DataGridCalendar) {
@@ -274,6 +303,9 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
             if (item.name == 'size') self.block.onChangeSize(item.value)
             else if (item.name == 'noTitle') self.block.onUpdateProps({ noTitle: !item.checked }, { range: BlockRenderRange.self });
             else if (['openRecordViewId', 'openRecordSource', 'createRecordSource'].includes(item.name)) self.block.onUpdateProps({ [item.name]: item.value }, {})
+            else if (item.name == 'allowSubs') {
+                await self.block.schema.onSchemaOperate([{ name: 'updateSchema', id: self.block.schema.id, data: { allowSubs: item.value } }], 'DataGridViewConfig');
+            }
             else if (item.name == 'showRowNum') self.block.onShowRowNum(item.checked);
             else if (item.name == 'breakRow') self.block.onBreakRow(item.checked);
             else if (item.name == 'checkRow') {

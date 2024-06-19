@@ -145,7 +145,7 @@ export class CardPin extends CardView {
         var pics = this.getValue<ResourceArguments[]>('pic');
         var tags = this.getValue<{ text: string, color: string }[]>('tags', FieldType.option);
         var hasPic = Array.isArray(pics) && pics.length > 0;
-        var author = this.getValue<string[]>('author')[0];
+        var author = this.getValue<string[]>('author',FieldType.creater)[0];
         var title = this.getValue<string>('title');
         var remark = this.getValue<string>('remark');
         var date = this.getValue<Date>('date');

@@ -327,7 +327,7 @@ export class DataGridViewConfig {
             });
             if (g) {
                 if (typeof g != 'string' && g.type == 'view') {
-                    var s = this.schemaId == g.tableId ? this.schema : await TableSchema.loadTableSchema(g.tableId, this.page.ws);
+                    var s =await TableSchema.loadTableSchema(g.tableId, this.page.ws);
                     var sv = s.listViews.find(c => c.id == (g as any).viewId)
                     var viewData = {
                         url: BlockUrlConstant.DataGridTab,

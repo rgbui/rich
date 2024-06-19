@@ -150,7 +150,7 @@ export class TableSortView extends EventsComponent {
                 {hasSorts && <DragList onChange={change} isDragBar={e => e.closest('.shy-table-sorts-view-item') && !e.closest('.btn-icon') ? true : false}>{self.oldSorts.map((so, i) => {
                     return <div className="shy-table-sorts-view-item flex max-h-30 padding-w-10 gap-h-10" key={i}>
                         <div className="flex-auto flex">
-                            <span className="cursor size-24 drag gap-r-5 text-1 round flex-center flex-fixed item-hover">
+                            <span className="grab size-24 drag gap-r-5 text-1 round flex-center flex-fixed ">
                                 <Icon size={14} icon={DragHandleSvg}></Icon>
                             </span>
                             <SelectBox className={'gap-r-10 '} border value={so.field} options={this.getFields()} onChange={e => { so.field = e; self.forceUpdate(); self.onStore() }}></SelectBox>

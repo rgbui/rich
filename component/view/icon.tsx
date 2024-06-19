@@ -3,7 +3,6 @@ import React, { CSSProperties, Suspense, lazy } from 'react';
 import { IconArguments } from '../../extensions/icon/declare';
 import { getEmoji } from '../../net/element.type';
 import { PageSvg } from '../svgs';
-import { ByteIcons } from '../../extensions/byte-dance.icons/icon/byte-dance.icons';
 import { LazyByteIcon } from '../../extensions/byte-dance.icons/icon/lazy';
 
 export type IconValueType = string | SvgrComponent | JSX.Element | IconArguments
@@ -15,6 +14,7 @@ export function Icon(props: {
     rotate?: number,
     size?: number | 'none',
     fontSize?: number,
+    fontColorInherit?: boolean,
     className?: string[] | string,
     style?: CSSProperties,
     wrapper?: boolean
@@ -80,8 +80,11 @@ export function Icon(props: {
         }
         switch (pc.name) {
             case 'font-awesome':
+                var color = pc.color || 'currentColor';
+                if (color == 'inherit') color = 'currentColor';
+                if (props.fontColorInherit) color = 'currentColor';
                 Object.assign(style, {
-                    color: pc.color || '#000',
+                    color: color,
                     fontSize: props.size == 'none' ? undefined : props.size,
                     lineHeight: props.size == 'none' ? undefined : props.size + 'px',
                     width: props.size == 'none' ? undefined : (props.size) || 20,
@@ -104,6 +107,7 @@ export function Icon(props: {
                 });
                 var color = pc.color || 'currentColor';
                 if (color == 'inherit') color = 'currentColor';
+                if (props.fontColorInherit) color = 'currentColor';
                 classList.push('shy-icon-inner-svg');
                 return <Suspense fallback={<span className={classList.join(" ")} style={style}>.</span>}>
                     <LazyByteIcon

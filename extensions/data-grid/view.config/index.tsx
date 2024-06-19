@@ -10,11 +10,12 @@ import { DataGridTrigger } from "./trigger";
 import { BlockUrlConstant } from "../../../src/block/constant";
 import { PageLayoutType } from "../../../src/page/declare";
 import { lst } from "../../../i18n/store";
+import { TableGroupView } from "./group";
 
 export default class DataGridConfig extends EventsComponent {
     dataGrid: DataGridView
     onOpen(dataGrid: DataGridView,
-        mode?: 'view' | 'field' | 'sort' | 'filter' | 'group') {
+        mode?: 'view' | 'field' | 'sort' | 'filter' | 'group' | 'trigger') {
         this.dataGrid = dataGrid;
         if (this.dataGridViewConfig)
             this.dataGridViewConfig.onOpen(this.dataGrid);
@@ -26,10 +27,13 @@ export default class DataGridConfig extends EventsComponent {
             this.tableSortView.onOpen(this.dataGrid);
         if (this.dataGridTrigger)
             this.dataGridTrigger.onOpen(this.dataGrid);
+        if(this.dataGroupView) 
+            this.dataGroupView.onOpen(this.dataGrid);
         if (mode == 'field' && this.tab) this.tab.onFocus(1)
         if (mode == 'filter' && this.tab) this.tab.onFocus(2)
         if (mode == 'sort' && this.tab) this.tab.onFocus(3)
         if (mode == 'group' && this.tab) this.tab.onFocus(4)
+        if (mode == 'trigger' && this.tab) this.tab.onFocus(5)
         this.forceUpdate()
     }
     dataGridViewConfig: DataGridViewConfig;
@@ -37,6 +41,7 @@ export default class DataGridConfig extends EventsComponent {
     tableFilterView: TableFilterView;
     tableSortView: TableSortView;
     dataGridTrigger: DataGridTrigger;
+    dataGroupView: TableGroupView;
     tab: Tab;
     render() {
         if (this.dataGrid?.page?.pageLayout?.type != PageLayoutType.db)
@@ -53,6 +58,9 @@ export default class DataGridConfig extends EventsComponent {
                     </Tab.Page>
                     <Tab.Page item={lst('排序')}>
                         <TableSortView ref={e => this.tableSortView = e}></TableSortView>
+                    </Tab.Page>
+                    <Tab.Page item={lst('分组')}>
+                        <TableGroupView ref={e => this.dataGroupView = e}></TableGroupView>
                     </Tab.Page>
                     <Tab.Page item={lst('触发器')}>
                         <DataGridTrigger ref={e => this.dataGridTrigger = e}></DataGridTrigger>
