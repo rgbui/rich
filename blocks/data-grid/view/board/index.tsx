@@ -176,28 +176,51 @@ export class TableStoreBoard extends DataGridView {
             }
         }
     }
-    async createItem(isForce?: boolean) {
-        this.blocks.childs = [];
-        var name = this.groupField.name;
-        for (let i = 0; i < this.dataGroups.length; i++) {
-            var dg = this.dataGroups[i];
-            var list = this.data.findAll(g => g.parentId ? false : true).findAll(x => {
-                if (lodash.isNull(dg.value) && (lodash.isUndefined(x[name]) || lodash.isNull(x[name]))) return true;
-                else if (x[name] == dg.value) return true;
-                else return false;
-            });
-            await list.eachAsync(async row => {
-                var rowBlock: TableGridItem = await BlockFactory.createBlock('/data-grid/item', this.page, { mark: dg.value, dataId: row.id }, this) as TableGridItem;
-                this.blocks.childs.push(rowBlock);
-                await rowBlock.createElements();
-            })
-        }
-        if (isForce) this.forceManualUpdate();
-    }
-    async onAddGroup(dg: ArrayOf<TableStoreBoard['dataGroups']>) {
+    // async createItem(isForce?: boolean) {
+    //     this.blocks.childs = [];
+    //     var name = this.groupField.name;
+    //     for (let i = 0; i < this.dataGroups.length; i++) {
+    //         var dg = this.dataGroups[i];
+    //         var list = this.data.findAll(g => g.parentId ? false : true).findAll(x => {
+    //             if (lodash.isNull(dg.value) && (lodash.isUndefined(x[name]) || Array.isArray(x[name]) && lodash.isEqual(x[name], []) || lodash.isNull(x[name]))) return true;
+    //             else if (x[name] === dg.value || Array.isArray(x[name] && x[name].includes(dg.value))) return true;
+    //             else return false;
+    //         });
+    //         await list.eachAsync(async row => {
+    //             var rowBlock: TableGridItem = await BlockFactory.createBlock('/data-grid/item', this.page, {
+    //                 dataId: row.id
+    //             }, this) as TableGridItem;
+    //             this.blocks.childs.push(rowBlock);
+    //             await rowBlock.createElements();
+    //         })
+    //     }
+    //     if (isForce) this.forceManualUpdate();
+    // }
+    // async createOneItem(data: Record<string, any>, isForce?: boolean) {
+    //     lodash.remove(this.blocks.childs, g => (g as TableGridItem).dataId == data.id);
+    //     var rowBlock: TableGridItem = await BlockFactory.createBlock('/data-grid/item', this.page, {
+    //         dataId: data.id
+    //     }, this) as TableGridItem;
+    //     this.blocks.childs.push(rowBlock);
+    //     await rowBlock.createElements();
+    //     if (isForce) this.forceManualUpdate();
+    // }
+    async onAddGroup(dg: ArrayOf<TableStoreBoard['dataGroups']>, groupHead?: GroupHeadType) {
         if (dg?.name) {
-            //dg.count += 1;
-            await this.onAddRow({ [dg.name]: dg.value });
+            var ds = this.groupStats.find(g => g.groupId == dg.value)
+            if (groupHead) ds = this.groupStats.find(g => g.groupId == dg.value && lodash.isEqual(g.groupViewId, groupHead.id));
+            if (ds && typeof ds.count == 'number') ds.count += 1;
+            var props = this.getGroupCreateDataProps(groupHead);
+            if (groupHead && Object.keys(props).length > 0) {
+                if (typeof groupHead.count == 'number') groupHead.count += 1;
+            }
+            props[dg.name] = dg.value;
+            await this.onSyncAddRow(props, undefined, undefined, groupHead ? false : true, async (row) => {
+                if (groupHead) {
+                    row.__group = groupHead.id;
+                    this.forceManualUpdate()
+                }
+            });
         }
     }
     async onOpenGroupEdit(dg: ArrayOf<TableStoreBoard['dataGroups']>, event: React.MouseEvent, groupHead?: GroupHeadType) {
@@ -248,10 +271,8 @@ export class TableStoreBoard extends DataGridView {
                     }
                 }
                 else if (r.item.name == 'addRow') {
-                    var ds = this.groupStats.find(g => g.groupId == dg.value)
-                    if (groupHead) ds = this.groupStats.find(g => g.groupId == dg.value && lodash.isEqual(g.groupViewId, groupHead.id));
-                    if (ds && typeof ds.count == 'number') ds.count += 1;
-                    await this.onAddGroup(dg);
+
+                    await this.onAddGroup(dg, groupHead);
                     if (isS) ShyAlert(lst('添加成功'))
                 }
             }

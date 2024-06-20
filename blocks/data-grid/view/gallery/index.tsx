@@ -11,6 +11,7 @@ import { S } from "../../../../i18n/view";
 import { Spin, SpinBox } from "../../../../component/view/spin";
 import { DataGridGroup } from "../components/group";
 import { GalleryContent } from "./content";
+import { Divider } from "../../../../component/view/grid";
 
 @url('/data-grid/gallery')
 export class TableStoreGallery extends DataGridView {
@@ -53,11 +54,17 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery> {
                 onMouseEnter={e => this.block.onOver(true)}
                 onMouseLeave={e => this.block.onOver(false)}>
                 <DataGridTool block={this.block}></DataGridTool>
+                {!this.block.noTitle && <>
+                    <Divider hidden={this.block.dataGridTab ? true : false}></Divider>
+                    {!this.block.dataGridTab && <div className="padding-5"></div>}
+                </>}
                 {this.renderCreateTable()}
                 <SpinBox spin={this.block.isLoadingData}>
-                    <DataGridGroup block={this.block} renderRowContent={(b, c, g) => {
-                        return <GalleryContent groupHead={g} block={b} childs={c}></GalleryContent>
-                    }}></DataGridGroup>
+                    <DataGridGroup
+                        block={this.block}
+                        renderRowContent={(b, c, g) => {
+                            return <GalleryContent groupHead={g} block={b} childs={c}></GalleryContent>
+                        }}></DataGridGroup>
                 </SpinBox>
             </div>
         </div>

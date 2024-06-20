@@ -10,7 +10,7 @@ export type GroupViewType = {
         customs: { min: number, max: number, text: string }[]
     }
     hideEmptyGroup: boolean,
-    hideGroups: string[],
+    hideGroups: GroupIdType[],
     sort: 'asc' | 'desc',
     stat: string,
     statFieldId: string

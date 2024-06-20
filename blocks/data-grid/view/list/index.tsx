@@ -76,7 +76,18 @@ export class TableStoreListView extends BlockView<TableStoreList> {
                                     onMouseDown={e => {
                                         e.stopPropagation();
                                         var id = cs.last()?.id;
-                                        this.block.onSyncAddRow({}, id, 'after')
+                                        var props = b.getGroupCreateDataProps(g);
+                                        if (g && Object.keys(props).length > 0) {
+                                            if (typeof g.count == 'number') {
+                                                g.count += 1;
+                                            }
+                                        }
+                                        this.block.onSyncAddRow(props, id, 'after', g ? false : true, async (row) => {
+                                            if (g) {
+                                                row.__group = g.id;
+                                                this.block.forceManualUpdate()
+                                            }
+                                        })
                                     }}
                                     className="flex cursor item-hover round padding-5 f-14 remark">
                                     <Icon size={18} icon={PlusSvg}></Icon>

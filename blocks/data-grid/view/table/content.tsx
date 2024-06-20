@@ -71,11 +71,28 @@ export class DataGridTableContent extends React.Component<{
     renderBody() {
         var self = this;
         if (this.block.data) {
+            var cs = this.props.childs || this.block.childs;
+            console.log('ccc', cs);
             return <div className='sy-dg-table-body'>
-                <ChildsArea childs={this.props.childs || this.block.childs}></ChildsArea>
+                <ChildsArea childs={cs}></ChildsArea>
                 {this.block.isCanAddRow() && <div
                     style={{ width: this.block.sumWidth + 'px' }}
-                    onMouseDown={e => { e.stopPropagation(); self.block.onSyncAddRow({}, undefined, 'after') }}
+                    onMouseDown={e => {
+                        e.stopPropagation();
+                        var props = this.block.getGroupCreateDataProps(this.props.groupHead)
+                        if (this.props.groupHead && Object.keys(props).length > 0) {
+                            if (typeof this.props.groupHead.count == 'number') {
+                                this.props.groupHead.count += 1;
+                            }
+                        }
+                        self.block.onSyncAddRow(props,
+                            cs.last()?.id, 'after', false, async (row) => {
+                                if (this.props.groupHead)
+                                    row.__group = this.props.groupHead.id;
+                                await this.block.loadSchemaStats()
+                                this.block.forceManualUpdate()
+                            })
+                    }}
                     className="sy-dg-table-add padding-w-5 item-hover">
                     <ToolTip overlay={lst('添加新行')}><span className="flex flex-inline cursor  round padding-w-5">
                         <span className="size-24 round flex-center "><Icon size={18} icon={PlusSvg}></Icon></span>
@@ -84,7 +101,7 @@ export class DataGridTableContent extends React.Component<{
                 </div>}
             </div>
         }
-        else return <Spin block></Spin>
+        else return <></>
     }
     renderStat() {
         return <div className="flex sy-dg-table-row">
@@ -105,7 +122,9 @@ export class DataGridTableContent extends React.Component<{
                 if (this.props.groupHead) {
                     sfl = this.block.groupstatFieldsList.groupStats.find(c => lodash.isEqual(c.id, this.props.groupHead.value))?.groupStats
                 }
-                var sf = sfl.find(g => g.fieldId == f.fieldId);
+
+                var sf = sfl ? sfl.find(g => g.fieldId == f.fieldId) : null;
+                if (sf?.stat == 'none') sf = null;
                 var sff = this.block.schema.fields.find(g => g.id == f.fieldId)
                 var si = getFieldStatItems(sff.type).find(c => c.value == sf?.stat)
                 var rv = () => {

@@ -375,15 +375,41 @@ export class DataGridView extends Block {
     async createItem(isForce?: boolean) {
         this.blocks.childs = [];
         var ds = this.data.filter(g => g.parentId ? false : true);
+        var subUrl = '/data-grid/item';
+        if (this.url == BlockUrlConstant.DataGridTable) {
+            subUrl = '/data-grid/table/row'
+        }
+        else if (this.url == BlockUrlConstant.DataGridList) {
+            subUrl = '/data-grid/list/row'
+        }
         for (let i = 0; i < ds.length; i++) {
             var row = ds[i];
-            var rowBlock: TableGridItem = await BlockFactory.createBlock('/data-grid/item', this.page, {
+            var rowBlock: TableGridItem = await BlockFactory.createBlock(subUrl, this.page, {
                 mark: i,
                 dataId: row.id
             }, this) as TableGridItem;
             this.blocks.childs.push(rowBlock);
             await rowBlock.createElements();
         }
+        if (isForce) {
+            this.forceManualUpdate();
+        }
+    }
+    async createOneItem(data: Record<string, any>, isForce?: boolean) {
+        var subUrl = '/data-grid/item';
+        if (this.url == BlockUrlConstant.DataGridTable) {
+            subUrl = '/data-grid/table/row'
+        }
+        else if (this.url == BlockUrlConstant.DataGridList) {
+            subUrl = '/data-grid/list/row'
+        }
+        lodash.remove(this.blocks.childs, g => (g as TableGridItem).dataId == data.id)
+        var rowBlock: TableGridItem = await BlockFactory.createBlock(subUrl, this.page, {
+            mark: this.data.length,
+            dataId: data.id
+        }, this) as TableGridItem;
+        this.blocks.childs.push(rowBlock);
+        await rowBlock.createElements();
         if (isForce) {
             this.forceManualUpdate();
         }
@@ -581,8 +607,9 @@ export class DataGridView extends Block {
         var ws = this.page.ws;
         return `[${this.schemaView?.text}](${ws.url + '/resource?elementUrl=' + window.encodeURIComponent(this.elementUrl)})`
     }
-    onSyncAddRow = lodash.debounce(async (data, id?: string, arrow: 'before' | 'after' = 'after') => {
-        await this.onAddRow(data, id, arrow)
+    onSyncAddRow = lodash.debounce(async (data, id?: string, arrow: 'before' | 'after' = 'after', force: boolean = true, action?: (newRow: Record<string, any>) => Promise<void>) => {
+        var newRow = await this.onAddRow(data, id, arrow, force)
+        if (action) await action(newRow)
     }, 50)
     onLazySearch = lodash.debounce(async () => {
         await this.onSearch()

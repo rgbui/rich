@@ -1,12 +1,10 @@
 
 import {
-    FilterSvg,
     TrashSvg,
     DotsSvg,
     DuplicateSvg,
     LinkSvg,
     LockSvg,
-    SortSvg,
     LoopSvg,
     UnlockSvg,
     DatasourceSvg,
@@ -252,8 +250,8 @@ export class DataGridViewConfig {
                 { type: MenuItemType.divide },
                 { text: lst('视图设置...'), icon: { name: 'byte', code: 'setting-one' }, name: 'view' },
                 { text: lst('字段设置...'), icon: { name: 'byte', code: 'list-checkbox' }, name: 'propertys' },
-                { text: lst('过滤设置...'), icon: FilterSvg, name: 'filter' },
-                { text: lst('排序设置...'), icon: SortSvg, name: 'sort' },
+                { text: lst('过滤设置...'), icon: { name: 'byte', code: 'filter' }, name: 'filter' },
+                { text: lst('排序设置...'), icon: { name: "byte", code: 'sort-two' }, name: 'sort' },
                 { type: MenuItemType.divide },
                 {
                     text: lst('锁定数据表'),

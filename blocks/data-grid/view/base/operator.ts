@@ -25,6 +25,8 @@ import { CardFactory } from "../../template/card/factory/factory";
 import { TableSchema } from "../../schema/meta";
 import { OptionBackgroundColorList } from "../../../../extensions/color/data";
 import { useSelectMenuItem } from "../../../../component/view/menu";
+import { GroupHeadType } from "../declare";
+import dayjs from "dayjs";
 
 export class DataGridViewOperator {
     async onAddField(this: DataGridView, event: Rect, at?: number) {
@@ -708,7 +710,7 @@ export class DataGridViewOperator {
     async onExport(this: DataGridView) {
         await useTableExport(this)
     }
-    async onOpenGroupHead(this: DataGridView, dg, event: React.MouseEvent) {
+    async onOpenGroupHead(this: DataGridView, dg: GroupHeadType, event: React.MouseEvent) {
         var isHide = this.groupView?.hideGroups?.some(s => lodash.isEqual(s, dg.value));
         var r = await useSelectMenuItem({
             roundArea: Rect.fromEle(event.currentTarget as HTMLElement)
@@ -731,5 +733,65 @@ export class DataGridViewOperator {
                 { range: BlockRenderRange.self }
             );
         }
+    }
+    getGroupCreateDataProps(this: DataGridView, dg: GroupHeadType) {
+        var props: Record<string, any> = {
+
+        }
+        if(!dg)return props;
+        var gf = this.schema.fields.find(g => g.id == this.groupView.groupId);
+        if ([FieldType.creater, FieldType.modifyer, FieldType.user].includes(gf.type)) {
+            if (gf.type == FieldType.user) {
+                props[gf.name] = lodash.isNull(dg.value) ? null : [dg.value]
+            }
+        }
+        else if ([
+            FieldType.date,
+            FieldType.createDate,
+            FieldType.modifyDate
+        ].includes(gf.type)) {
+            if (gf.type == FieldType.date) {
+                if (this.groupView.by == 'year') {
+                    var c = dayjs().year(typeof dg.value == 'number' ? dg.value : parseFloat(dg.text))
+                    props[gf.name] = c.toDate();
+                }
+                else if (this.groupView.by == 'month') {
+                    var c = dayjs(dg.value as string, 'YYYY-MM')
+                    props[gf.name] = c.toDate();
+                }
+                else if (this.groupView.by == 'day') {
+                    var c = dayjs(dg.value as string, 'YYYY-MM-DD')
+                    props[gf.name] = c.toDate();
+                }
+                else if (this.groupView.by == 'week') {
+                    var year = parseInt(dg.text.split('~')[0]);
+                    var week = parseInt(dg.text.split('~')[1]);
+                    var wd = dayjs().year(year).week(week + 1).startOf('week')
+                    props[gf.name] = wd.toDate()
+                }
+            }
+        }
+        else if ([FieldType.option, FieldType.options].includes(gf.type)) {
+            if (!lodash.isNull(dg.value))
+                props[gf.name] = [dg.value]
+        }
+        else if ([FieldType.number, FieldType.autoIncrement, FieldType.sort, FieldType.price].includes(gf.type)) {
+            if ([FieldType.number, FieldType.price].includes(gf.type)) {
+                var dv = dg.value as { min: number, max: number }
+                if (typeof dv?.min == 'number')
+                    props[gf.name] = dv?.min;
+            }
+        }
+        else {
+            if ([FieldType.text,
+                FieldType.title,
+                FieldType.link,
+                FieldType.phone,
+                FieldType.email,
+                FieldType.bool
+            ].includes(gf.type))
+                props[gf.name] = dg.value;
+        }
+        return props;
     }
 }

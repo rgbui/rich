@@ -1,8 +1,6 @@
 
 import { prop, url } from "../../../../src/block/factory/observable";
 import { DataGridView } from '../base';
-import { BlockFactory } from '../../../../src/block/factory/block.factory';
-import { DataGridTableItem } from './row';
 import "./style.less";
 import { FieldType } from "../../schema/type";
 import lodash from "lodash";
@@ -57,19 +55,6 @@ export class TableStore extends DataGridView {
             error: '',
             groupStats: []
         }
-    async createItem(isForce?: boolean) {
-        this.blocks.childs = [];
-        var ds = this.data.filter(g => g.parentId ? false : true);
-        for (let i = 0; i < ds.length; i++) {
-            var row = ds[i];
-            var rowBlock: DataGridTableItem = await BlockFactory.createBlock('/data-grid/table/row', this.page, { mark: i, dataId: row.id }, this) as DataGridTableItem;
-            this.blocks.childs.push(rowBlock);
-            await rowBlock.createElements();
-        }
-        if (isForce) {
-            this.forceManualUpdate()
-        }
-    }
     onOver(isOver: boolean) {
         if (isOver == false && (this.view as any) && (this.view as any).isMoveLine == false && (this.view as any).subline) {
             (this.view as any).subline.style.display = 'none';

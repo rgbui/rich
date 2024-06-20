@@ -55,9 +55,9 @@ export class DataGridGroup extends React.Component<{
                             var year = parseInt(dg.text.split('~')[0]);
                             var week = parseInt(dg.text.split('~')[1]);
                             var wd = dayjs().year(year).week(week + 1);
-                            text = wd.format('YYYY/MM/DD') + "~" + wd.endOf('week').format('YYYY/MM/DD');
+                            text = wd.startOf('week').format('YYYY/MM/DD') + "~" + wd.endOf('week').format('YYYY/MM/DD');
                             if (ls.isCn) {
-                                text = year + "年" + week + "周(" + wd.format('MM/DD') + "~" + wd.endOf('week').format('MM/DD') + ")"
+                                text = year + "年" + week + "周(" + wd.startOf('week').format('MM/DD') + "~" + wd.endOf('week').format('MM/DD') + ")"
                             }
                             // var d=dayjs().year(year).week(week).startOf('week').format('YYYY/MM/DD');
                         }
@@ -106,7 +106,14 @@ export class DataGridGroup extends React.Component<{
                                     ele.classList.add('visible')
                                 }
                             }} className="visible remark gap-l-10 flex-center flex-fixed size-24 item-hover cursor round"><Icon icon={DotsSvg}></Icon></span></ToolTip>}
-                            {this.block.isCanEdit() && <ToolTip overlay={<S>添加新行</S>}><span onMouseDown={e => { e.stopPropagation(); this.block.onOpenAddForm() }} className="visible remark gap-l-10  flex-center  flex-fixed size-24 item-hover cursor round"><Icon icon={PlusSvg}></Icon></span></ToolTip>}
+                            {this.block.isCanEdit() && <ToolTip overlay={<S>添加新行</S>}><span onMouseDown={e => {
+                                e.stopPropagation();
+                                var props = this.block.getGroupCreateDataProps(dg);
+                                if(dg&&Object.keys(props).length>0){
+                                    if(typeof dg.count=='number') dg.count+=1;
+                                }
+                                this.block.onOpenAddForm(undefined, undefined, undefined, props)
+                            }} className="visible remark gap-l-10  flex-center  flex-fixed size-24 item-hover cursor round"><Icon icon={PlusSvg}></Icon></span></ToolTip>}
                         </div>
                         {dg.spread !== false && <div className="gap-b-10">
                             {this.props.renderRowContent(this.block, cs, dg)}

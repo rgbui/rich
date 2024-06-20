@@ -18,6 +18,7 @@ import { ViewField } from "../../schema/view"
 import { CardFactory } from "../../template/card/factory/factory"
 import { Icon } from "../../../../component/view/icon"
 import { ToolTip } from "../../../../component/view/tooltip"
+import { DataGridTableItem } from "../table/row"
 
 export class BoardContent extends React.Component<{
     block: Block,
@@ -98,7 +99,13 @@ export class BoardContent extends React.Component<{
     }
     renderGroup(dg: ArrayOf<TableStoreBoard['dataGroups']>, index: number) {
         var bs = this.props.childs || this.block.childs;
-        var cs = bs.findAll(g => g.mark == dg.value);
+        var name = dg.name;
+        var cs = bs.findAll(g => {
+            var x = (g as DataGridTableItem).dataRow;
+            if (lodash.isNull(dg.value) && (lodash.isUndefined(x[name]) || Array.isArray(x[name]) && lodash.isEqual(x[name], []) || lodash.isNull(x[name]))) return true;
+            else if (x[name] === dg.value || Array.isArray(x[name]) && x[name].includes(dg.value)) return true;
+            else return false;
+        })
         var ds = this.block.groupStats.find(g => g.groupId == dg.value)
         if (this.props.groupHead) ds = this.block.groupStats.find(g => g.groupId == dg.value && lodash.isEqual(g.groupViewId, this.props.groupHead.id));
 
@@ -115,7 +122,7 @@ export class BoardContent extends React.Component<{
                         e.stopPropagation();
                         this.block.onOpenGroupEdit(dg, e, this.props.groupHead);
                     }} className="flex-center flex-fixed cursor size-24 round item-hover"><Icon size={16} icon={DotsSvg}></Icon></div>
-                    <div onMouseDown={e => this.block.onAddGroup(dg)} className="flex-center flex-fixed cursor size-24 round item-hover">
+                    <div onMouseDown={e => this.block.onAddGroup(dg, this.props.groupHead)} className="flex-center flex-fixed cursor size-24 round item-hover">
                         <Icon icon={PlusSvg} size={16}></Icon>
                     </div>
                 </div>
@@ -125,7 +132,7 @@ export class BoardContent extends React.Component<{
                 {cs.map(c => {
                     return <div onMouseDown={e => this.onDrag(e, c)} key={c.id}>{this.renderItem(c)}</div>
                 })}
-                {this.block.isCanEdit() && <ToolTip overlay={lst('新增数据')}><div onMouseDown={e => this.block.onAddGroup(dg)} className=" gap-b-10 visible item-hover item-hover-light-focus flex-center text-1 round h-30 cursor">
+                {this.block.isCanEdit() && <ToolTip overlay={lst('新增数据')}><div onMouseDown={e => this.block.onAddGroup(dg, this.props.groupHead)} className=" gap-b-10 visible item-hover item-hover-light-focus flex-center text-1 round h-30 cursor">
                     <Icon size={18} icon={PlusSvg}></Icon>
                 </div></ToolTip>
                 }

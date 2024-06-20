@@ -7,11 +7,10 @@ import {
     ChevronDownSvg,
     CloseSvg,
     DotsSvg,
-    FilterSvg,
     MaximizeSvg,
     PlusSvg,
-    SearchSvg,
-    SortSvg
+    SearchSvg
+   
 } from "../../../../component/svgs";
 import { PageLayoutType } from "../../../../src/page/declare";
 import { S } from "../../../../i18n/view";

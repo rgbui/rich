@@ -74,7 +74,7 @@ export class DataGridViewData {
             })
         })
     }
-    async onAddRow(this: DataGridView, data, id?: string, arrow: 'before' | 'after' = 'after') {
+    async onAddRow(this: DataGridView, data, id?: string, arrow: 'before' | 'after' = 'after', force: boolean = true) {
         if (typeof id == 'undefined') {
             id = this.data.last()?.id
         }
@@ -87,9 +87,9 @@ export class DataGridViewData {
             this.data.insertAt(at, newRow);
             this.total += 1;
             this.onNotifyPageReferenceBlocks();
-            await this.createItem(true);
+            await this.createOneItem(newRow, force);
         }
-        return lodash.cloneDeep(newRow);
+        return newRow;
     }
     async onRowUpdate(this: DataGridView, id: string, data: Record<string, any>) {
         var oldItem = this.data.find(g => g.id == id);
@@ -101,7 +101,7 @@ export class DataGridViewData {
             var r = await this.schema.rowUpdate({ dataId: id, data: util.clone(data) }, this.id);
             if (r.ok) {
                 Object.assign(oldItem, data);
-                await this.createItem(true);
+                await this.createOneItem(oldItem, true);
             }
         }
     }
@@ -126,7 +126,7 @@ export class DataGridViewData {
             this.data.insertAt(at, dr);
             this.total += 1;
             await this.onNotifyPageReferenceBlocks();
-            await this.createItem(true);
+            await this.createOneItem(dr, true);
         }
     }
 }
