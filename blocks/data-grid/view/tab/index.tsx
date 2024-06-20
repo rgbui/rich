@@ -156,7 +156,6 @@ export class DataGridTab extends Block {
         await this.onDataGridTool(async () => {
             var self = this;
             var view = self.dataGridBlock?.schemaView;
-
             var items: MenuItem<BlockDirective | string>[] = [];
             if (view) {
                 items = [
@@ -239,14 +238,14 @@ export class DataGridTab extends Block {
                                 var rs: MenuItem<BlockDirective | string>[] = [];
                                 if (item.value == view?.id) {
                                     rs.push(...[
-                                        {
-                                            name: 'name',
-                                            type: MenuItemType.inputTitleAndIcon,
-                                            icon: getSchemaViewIcon(view),
-                                            value: item.text,
-                                            text: lst('编辑视图名'),
-                                        },
-                                        { type: MenuItemType.divide },
+                                        // {
+                                        //     name: 'name',
+                                        //     type: MenuItemType.inputTitleAndIcon,
+                                        //     icon: getSchemaViewIcon(view),
+                                        //     value: item.text,
+                                        //     text: lst('编辑视图名'),
+                                        // },
+                                        // { type: MenuItemType.divide },
                                         { name: 'duplicate', icon: DuplicateSvg, text: lst('复制') }
                                     ])
                                 }
@@ -285,6 +284,7 @@ export class DataGridTab extends Block {
                                     props.icon = rn.icon;
                                 }
                                 if (Object.keys(props).length > 0) {
+                                    console.log('gggg', props);
                                     await self.dataGridBlock.schema.onSchemaOperate([
                                         { name: 'updateSchemaView', id: item.value, data: props }
                                     ], self.dataGridBlock.id);
@@ -466,8 +466,7 @@ export class DataGridTab extends Block {
             if (g) return g as DataGridView;
         }
     }
-    async updateTabItems(block: DataGridView,tabIndex?: number)
-    {
+    async updateTabItems(block: DataGridView, tabIndex?: number) {
         var items: DataGridTab['tabItems'] = lodash.cloneDeep(this.tabItems);
         var index = tabIndex ?? this.tabIndex;
         if (items[index]) {
@@ -534,8 +533,7 @@ export class DataGridTab extends Block {
             text: lst('主题'),
             icon: { name: 'bytedance-icon', code: 'platte' },
             childs: [
-                // { name: 'displayMode', text: lst('卡片'), value: 'border', checkLabel: this.displayMode == 'border' },
-                { name: 'displayMode', text: lst('线型'), value: 'top-line', checkLabel: this.displayMode == 'top-line' },
+                { name: 'displayMode', text: lst('下划线'), value: 'top-line', checkLabel: this.displayMode == 'top-line' },
                 { name: 'displayMode', text: lst('按钮'), value: 'button', checkLabel: this.displayMode == 'button' }
             ]
         })
@@ -587,16 +585,16 @@ export class DataGridTabView extends BlockView<DataGridTab> {
             onMouseLeave={e => this.block.onOver(false)}
             style={this.block.visibleStyle}>
             <div style={this.block.contentStyle}>
-                <div className={"flex sy-data-grid-tab-items " + (" sy-data-grid-tab-" + this.block.displayMode + " ") + (this.block.align == 'center' ? "flex-center" : "")}>
-                    <div className={"flex-auto " + tabClassList.join(" ")}>
-                        {this.block.tabItems.map((item, index) => {
+                <div className={"flex flex-nowrap sy-data-grid-tab-items " + (" sy-data-grid-tab-" + this.block.displayMode + " ") + (this.block.align == 'center' ? "flex-center" : "")}>
+                    <div className={"flex-auto text-overflow " + tabClassList.join(" ")}>
+                        {this.block.tabItems.map((item,index)=>{
                             var tr = this.block.refTables.find(c => c.id == item.schemaId);
                             var v = tr?.listViews.find(c => c.id == item.viewId);
-                            return <div onMouseDown={e => {
+                            return <div onMouseDown={e =>{
                                 e.stopPropagation();
                                 this.block.onDraggerItem(e, index)
                             }} className={"sy-data-grid-tab-item b-500 flex-center  " + (index == this.block.tabIndex ? "sy-data-grid-tab-item-hover" : "")} key={index}>
-                                <div className={"flex  round cursor max-w-220 f-14 " + (this.block.displayMode == 'button' ? "" : " item-hover")}>
+                                <div className={"flex  round cursor max-w-220 f-14 padding-w-3 " + (this.block.displayMode == 'button' ? "" : " item-hover")}>
                                     <div className="size-24 flex-center  "><Icon fontColorInherit icon={getSchemaViewIcon(v)} size={16}></Icon></div>
                                     <span className={"gap-r-5 f-14 "}>{v?.text || item.viewText}</span>
                                 </div>
