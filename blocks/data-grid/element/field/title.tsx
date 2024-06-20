@@ -1,4 +1,4 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import { url, view } from "../../../../src/block/factory/observable";
 import { TextArea } from "../../../../src/block/view/appear";
 import { OriginField, OriginFileView } from "./origin.field";
@@ -54,10 +54,17 @@ export class FieldTextView extends OriginFileView<FieldText> {
             BlockUrlConstant.DataGridBoard,
             BlockUrlConstant.DataGridGallery
         ].includes(this.block.dataGrid.url as any);
+        var isList = [BlockUrlConstant.DataGridTable, BlockUrlConstant.DataGridList].includes(this.block.dataGrid.url as any)
 
         var isSub = [BlockUrlConstant.DataGridTable, BlockUrlConstant.DataGridList].includes(this.block.dataGrid.url as any) && this.block.dataGrid.schema?.allowSubs;
+        var textStyle: CSSProperties = {
 
-        return <div className={'flex l-20 flex-top sy-field-title  ' + (isCard ? " f-14 bold" : " b-500 f-14")} onKeyDown={e => this.keydown(e)} onMouseMove={e => this.move(e)}>
+        }
+        if (isList) {
+            textStyle.textDecoration = 'underline';
+            textStyle.textDecorationColor = 'rgba(22, 22, 22, 0.3)';
+        }
+        return <div className={'flex l-20 flex-top sy-field-title f-14  ' + (isCard ? "  bold" : " b-500 ")} onKeyDown={e => this.keydown(e)} onMouseMove={e => this.move(e)}>
 
             {isSub && <span className={" size-24 inline-flex remark gap-r-3 round item-hover cursor flex-center ts " + (this.block.dataGridItem.subSpread ? "angle-90 " : (this.block.dataGridItem.dataRow.subCount > 0 ? "" : " visible"))} onMouseDown={async e => {
                 e.stopPropagation();
@@ -73,7 +80,7 @@ export class FieldTextView extends OriginFileView<FieldText> {
                 icon: this.block.dataGridItem?.dataRow?.icon
             })}></Icon></span>}
 
-            <TextArea plain block={this.block} prop='value' placeholder={lst("标题")} ></TextArea>
+            <TextArea style={textStyle} plain block={this.block} prop='value' placeholder={lst("标题")} ></TextArea>
             {([
                 BlockUrlConstant.DataGridTable,
                 BlockUrlConstant.DataGridList
@@ -84,7 +91,7 @@ export class FieldTextView extends OriginFileView<FieldText> {
                     transform: 'translateY(-2px)'
                 }}
                 onClick={e => this.block.openPage()}
-                className="sy-field-title-button visible flex-center f-12 text-1 border-light  round padding-w-5 padding-h-1 cursor">
+                className="sy-field-title-button visible flex-center f-12 text-1 border shadow-s bg-hover  round padding-w-5 padding-h-1 cursor">
                     <em><S>打开</S></em>
                 </span>}
         </div>
