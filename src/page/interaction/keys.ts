@@ -1,5 +1,7 @@
 
 import { Page } from "..";
+import { TableGridItem } from "../../../blocks/data-grid/view/item";
+import { closeSelectMenutItem } from "../../../component/view/menu";
 import { useAIWriteAssistant } from "../../../extensions/ai";
 import { UA } from "../../../util/ua";
 import { Block } from "../../block";
@@ -109,12 +111,21 @@ export function PageKeys(
         if (!(b && cursorNode && b.el.contains(cursorNode))) {
             if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
                 event.preventDefault();
-                page.onBatchDelete(page.kit.anchorCursor.currentSelectHandleBlocks);
+                var cs = page.kit.anchorCursor.currentSelectHandleBlocks;
+                if (cs.some(s => s instanceof TableGridItem)) {
+                    var gs = cs.filter(g => g instanceof TableGridItem);
+                    for (let g of gs) {
+                        (g as TableGridItem).dataGrid.onRemoveRow((g as TableGridItem).dataId)
+                    }
+                }
+                else
+                    page.onBatchDelete(page.kit.anchorCursor.currentSelectHandleBlocks);
             }
             if (page.kit.picker.blocks.length > 0) {
                 event.preventDefault();
                 page.onBatchDelete(page.kit.picker.blocks);
             }
+            closeSelectMenutItem()
         }
     });
     keyboardPlate.listener(kt => kt.isMetaOrCtrl(KeyboardCode.C),

@@ -22,6 +22,16 @@ export async function Singleton<T extends React.Component>(CP: { new(...args: an
         }} />, assyDiv());
     })
 }
+/**
+ * 仅仅查询，不会创建实例
+ * @param CP 
+ * @param nickName 
+ * @returns 
+ */
+export  function SingletonGet<T extends React.Component>(CP: { new(...args: any[]): T }, nickName?: string) {
+    if (maps.has(nickName)) return (maps.get(nickName) as T)
+        if (maps.has(CP) && !nickName) return (maps.get(CP) as T)
+}
 
 var ms = new Map();
 export async function LazySingleton<T extends React.Component>(CP: React.LazyExoticComponent<(new (...args: any[]) => T)>, nickName?: string) {
@@ -35,4 +45,15 @@ export async function LazySingleton<T extends React.Component>(CP: React.LazyExo
             resolve(e as T);
         }} /></Suspense>, assyDiv());
     })
+}
+
+/**
+ *  仅仅查询，不会创建实例
+ * @param CP 
+ * @param nickName 
+ * @returns 
+ */
+export function LazySingletonGet<T extends React.Component>(CP: React.LazyExoticComponent<(new (...args: any[]) => T)>, nickName?: string) {
+    if (ms.has(nickName)) return (ms.get(nickName) as T)
+    if (ms.has(CP) && !nickName) return (ms.get(CP) as T)
 }

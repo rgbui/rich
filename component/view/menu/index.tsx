@@ -1,6 +1,6 @@
 import React from "react";
 import { PopoverPosition } from "../../popover/position";
-import { Singleton } from "../../lib/Singleton";
+import { Singleton, SingletonGet } from "../../lib/Singleton";
 import { EventsComponent } from "../../lib/events.component";
 import { MenuBox } from "./box";
 import { MenuItem } from "./declare";
@@ -38,7 +38,7 @@ export class MenuPanel<T> extends EventsComponent {
     visible: boolean = false;
     private options: { height?: number, width?: number, overflow?: 'auto' | 'visible' } = {};
     onClose(e: React.MouseEvent) {
-       
+
         if (e) {
             e.stopPropagation();
             e.preventDefault();
@@ -142,4 +142,18 @@ export async function useSelectMenuItem<T = string>(pos: PopoverPosition, menus:
             resolve(null);
         });
     })
+}
+
+/**
+ * 主动关闭菜单
+ * 当按捷键时，需要主动关闭菜单
+ * @param nickName 
+ */
+export async function closeSelectMenutItem<T = string>(nickName?: 'second' | 'three' | 'selectBox') {
+    var menuPanel = SingletonGet<MenuPanel<T>>(MenuPanel, nickName);
+    if (menuPanel) {
+        if (menuPanel.visible == true) {
+            menuPanel.close();
+        }
+    }
 }
