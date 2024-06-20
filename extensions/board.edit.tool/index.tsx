@@ -23,7 +23,7 @@ import { TurnShapes } from "./shapes";
 import { BorderBoxStyle, ShapeStroke } from "./stroke";
 import { lst } from "../../i18n/store";
 import lodash from "lodash";
-import { popoverLayer } from "../../component/lib/zindex";
+import { tipLayer } from "../../component/lib/zindex";
 import { MouseDragger } from "../../src/common/dragger";
 import { SelectBox } from "../../component/view/select/box";
 import { BlockUrlConstant } from "../../src/block/constant";
@@ -47,7 +47,7 @@ export class BoardEditTool extends EventsComponent {
         var style: CSSProperties = {
             top: this.point.y,
             left: this.point.x,
-            zIndex: popoverLayer.zoom(this)
+            zIndex: tipLayer.zoom(this)
         };
         var self = this;
         if (self.blocks.some(s => s.isLock))
@@ -589,7 +589,7 @@ export class BoardEditTool extends EventsComponent {
         }
     }
     componentWillUnmount(): void {
-        popoverLayer.clear(this);
+        tipLayer.clear(this);
     }
 }
 

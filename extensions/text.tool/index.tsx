@@ -29,7 +29,7 @@ import { dom } from "../../src/common/dom";
 import { util } from "../../util/util";
 import { useSearchBox } from "../search/keyword";
 import { Page } from "../../src/page";
-import { popoverLayer } from "../../component/lib/zindex";
+import {  tipLayer } from "../../component/lib/zindex";
 import { isUrl } from "../../src/kit/write/declare";
 import { UA } from "../../util/ua";
 import { S } from "../../i18n/view";
@@ -108,7 +108,7 @@ class TextTool extends EventsComponent {
         var style: CSSProperties = {
             top: this.point.y,
             left: this.point.x,
-            zIndex: popoverLayer.zoom(this)
+            zIndex: tipLayer.zoom(this)
         };
         return <div tabIndex={1} onMouseUp={e => e.stopPropagation()} ref={el => this.el = el}>
             {this.selection.rects.length > 0 &&
@@ -367,7 +367,7 @@ class TextTool extends EventsComponent {
     }
     componentWillUnmount() {
         document.removeEventListener('mousedown', this.onGlobalMousedown, true);
-        popoverLayer.clear(this);
+        tipLayer.clear(this);
     }
     async onOpenBlockSelector(event: React.MouseEvent) {
         event.stopPropagation();
