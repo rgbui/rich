@@ -13,7 +13,7 @@ import {
 } from "../../../../component/svgs";
 import { S } from "../../../../i18n/view";
 import { lst } from "../../../../i18n/store";
-import { Spin } from "../../../../component/view/spin";
+import { Spin, SpinBox } from "../../../../component/view/spin";
 import { Tip } from "../../../../component/view/tooltip/tip";
 import { getPageIcon } from "../../../../src/page/declare";
 import './style.less';
@@ -144,6 +144,7 @@ export class TableStoreCalendarView extends BlockView<TableStoreCalendar> {
         </>
     }
     renderCreateTable() {
+        if (this.block.isLoading) return <Spin block></Spin>
         return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus padding-5 cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
             {this.block.willCreateSchema && <Spin></Spin>}
             <span className="size-24 flex-center remark"><Icon size={16} icon={{ name: 'byte', code: 'table' }}></Icon></span>
@@ -155,23 +156,27 @@ export class TableStoreCalendarView extends BlockView<TableStoreCalendar> {
         var day = dayjs(this.block.date);
         return <div style={this.block.visibleStyle}>
             <div style={this.block.contentStyle} >
-                <div className='sy-data-grid-calendar'  onMouseMove={e => this.block.onOver(true)} onMouseEnter={e => this.block.onOver(true)}
+                <div className='sy-data-grid-calendar'
+                    onMouseMove={e => this.block.onOver(true)}
+                    onMouseEnter={e => this.block.onOver(true)}
                     onMouseLeave={e => this.block.onOver(false)}>
                     <DataGridTool block={this.block}></DataGridTool>
-                    <div className="sy-data-grid-calendar-head" onMouseDown={e => e.stopPropagation()}>
-                        <div className="sy-data-grid-calendar-head-date">
-                            <label className="bold f-14">{day.format(lst('YYYY年MM月'))}</label>
-                        </div>
-                        <div className="sy-data-grid-calendar-head-operator">
-                            <span className="icon"><Icon size={16} onClick={e => this.block.onPrevMonth()} icon={ChevronLeftSvg}></Icon></span>
-                            <label className="f-14">{now.isSame(day, 'date') ? lst("今天") : (day.get('date'))}</label>
-                            <span className="icon"><Icon size={16} onClick={e => this.block.onNextMonth()} icon={ChevronRightSvg}></Icon></span>
-                        </div>
-                    </div>
-                    <div className="sy-data-grid-calendar-cells">
-                        {this.renderMonth()}
-                    </div>
                     {this.renderCreateTable()}
+                    <SpinBox spin={this.block.isLoadingData}>
+                        <div className="sy-data-grid-calendar-head" onMouseDown={e => e.stopPropagation()}>
+                            <div className="sy-data-grid-calendar-head-date">
+                                <label className="bold f-14">{day.format(lst('YYYY年MM月'))}</label>
+                            </div>
+                            <div className="sy-data-grid-calendar-head-operator">
+                                <span className="icon"><Icon size={16} onClick={e => this.block.onPrevMonth()} icon={ChevronLeftSvg}></Icon></span>
+                                <label className="f-14">{now.isSame(day, 'date') ? lst("今天") : (day.get('date'))}</label>
+                                <span className="icon"><Icon size={16} onClick={e => this.block.onNextMonth()} icon={ChevronRightSvg}></Icon></span>
+                            </div>
+                        </div>
+                        <div className="sy-data-grid-calendar-cells">
+                            {this.renderMonth()}
+                        </div>
+                    </SpinBox>
                 </div>
             </div>
             {this.renderComment()}

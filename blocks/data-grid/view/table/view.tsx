@@ -4,7 +4,7 @@ import { Icon } from "../../../../component/view/icon"
 import { view } from "../../../../src/block/factory/observable"
 import { BlockView } from "../../../../src/block/view"
 import { DataGridTool } from "../components/tool"
-import { Spin } from "../../../../component/view/spin"
+import { Spin, SpinBox } from "../../../../component/view/spin"
 import { S } from "../../../../i18n/view"
 import { DataGridTableContent, DataGridTableHead } from "./content"
 import { Rect } from "../../../../src/common/vector/point"
@@ -16,8 +16,7 @@ dayjs.extend(weekOfYear)
 @view('/data-grid/table')
 export class TableStoreView extends BlockView<TableStore> {
     renderCreateTable() {
-        if (this.block.isLoading) return <></>
-        if (this.block.isLoadingData) return <></>
+        if (this.block.isLoading) return <Spin block></Spin>
         return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus padding-5 cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
             {this.block.willCreateSchema && <Spin></Spin>}
             {!this.block.willCreateSchema && <> <span className="size-24 flex-center remark"><Icon size={16} icon={{ name: 'byte', code: 'table' }}></Icon></span>
@@ -37,6 +36,7 @@ export class TableStoreView extends BlockView<TableStore> {
                 >
                     {this.block.isLoading && <Spin block></Spin>}
                     {this.block.schema && <DataGridTool block={this.block}></DataGridTool>}
+                    {this.renderCreateTable()}
                     {this.block.schema && this.block.noHead !== true && <div
                         ref={e => {
                             this.headScrollEl = e;
@@ -51,12 +51,13 @@ export class TableStoreView extends BlockView<TableStore> {
                             display: 'none'
                         }}><DataGridTableHead style={{ backgroundColor: '#fff' }} block={this.block}></DataGridTableHead>
                     </div>}
-                    <div className="sy-dg-table-content" >
-                        <DataGridGroup block={this.block} renderRowContent={(b, c, g) => {
-                            return <DataGridTableContent groupHead={g} block={b} childs={c}></DataGridTableContent>
-                        }}></DataGridGroup>
-                    </div>
-                    {this.renderCreateTable()}
+                    <SpinBox spin={this.block.isLoadingData}>
+                        <div className="sy-dg-table-content" >
+                            <DataGridGroup block={this.block} renderRowContent={(b, c, g) => {
+                                return <DataGridTableContent groupHead={g} block={b} childs={c}></DataGridTableContent>
+                            }}></DataGridGroup>
+                        </div>
+                    </SpinBox>
                 </div>
             </div>
             {this.renderComment()}

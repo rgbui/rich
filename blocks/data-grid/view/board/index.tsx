@@ -10,7 +10,7 @@ import { EyeHideSvg, EyeSvg, PlusSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import { lst } from "../../../../i18n/store";
 import { S } from "../../../../i18n/view";
-import { Spin } from "../../../../component/view/spin";
+import { Spin, SpinBox } from "../../../../component/view/spin";
 import { useSelectMenuItem } from "../../../../component/view/menu";
 import { Rect } from "../../../../src/common/vector/point";
 import lodash from "lodash";
@@ -348,8 +348,7 @@ export class TableStoreBoard extends DataGridView {
 @view('/data-grid/board')
 export class TableStoreBoardView extends BlockView<TableStoreBoard> {
     renderCreateTable() {
-        if (this.block.isLoading) return <></>
-        if (this.block.isLoadingData) return <></>
+        if (this.block.isLoading) return <Spin block></Spin>
         return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus padding-5 cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
             {this.block.willCreateSchema && <Spin></Spin>}
             <span className="size-24 flex-center remark"><Icon size={16} icon={{ name: 'byte', code: 'table' }}></Icon></span>
@@ -364,10 +363,12 @@ export class TableStoreBoardView extends BlockView<TableStoreBoard> {
                 onMouseLeave={e => this.block.onOver(false)}>
                 <DataGridTool block={this.block}></DataGridTool>
                 {this.block.hasGroup && <Divider></Divider>}
-                <DataGridGroup block={this.block} renderRowContent={(b, c, g) => {
-                    return <BoardContent groupHead={g} block={b} childs={c}></BoardContent>
-                }}></DataGridGroup>
                 {this.renderCreateTable()}
+                <SpinBox spin={this.block.isLoadingData}>
+                    <DataGridGroup block={this.block} renderRowContent={(b, c, g) => {
+                        return <BoardContent groupHead={g} block={b} childs={c}></BoardContent>
+                    }}></DataGridGroup>
+                </SpinBox>
             </div>
         </div>
             {this.renderComment()}

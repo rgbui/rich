@@ -45,20 +45,16 @@ export abstract class BlockView<T extends Block> extends Component<{ block: T }>
     abstract renderView(): React.ReactNode
     errorRefreshTip: Tip;
     viewError: { error: Error, errorInfo: ErrorInfo } = null
-    errorLoading: boolean = false;
     renderViewError() {
         if (this.viewError) {
             return <div className="sy-block-error border-red  bg-error round" style={this.block.visibleStyle}>
                 <div className="f-14 remark flex" style={this.block.contentStyle}>
-                    {this.errorLoading && <Spin></Spin>}
-                    {!this.errorLoading && <><span className="gap-l-20 error"><S text="局部块出错了您可以删除它">局部块出错了,您可以删除它</S></span><Tip text='刷新' ref={e => this.errorRefreshTip = e}><span className="cursor link-red size-20 flex-center" onMouseDown={async e => {
+                    <span className="gap-l-20 error"><S text="局部块出错了您可以删除它">局部出错了，您可以刷新或删除它</S></span><Tip text='刷新' ref={e => this.errorRefreshTip = e}><span className="gap-l-10 cursor link-red size-20 round item-hover flex-center" onMouseDown={async e => {
+                        e.stopPropagation();
                         if (this.errorRefreshTip) this.errorRefreshTip.close()
-                        this.errorLoading = true;
+                        this.viewError = null;
                         this.forceUpdate()
-                        await util.delay(200);
-                        this.errorLoading = false;
-                        this.forceUpdate()
-                    }}><Icon size={16} icon={RefreshSvg}></Icon></span></Tip><Tip text='删除当前块'><span className="cursor link-red size-20 flex-center" onMouseDown={e => { e.stopPropagation(); this.block.onDelete() }}><Icon size={16} icon={TrashSvg}></Icon></span></Tip></>}
+                    }}><Icon size={16} icon={RefreshSvg}></Icon></span></Tip><Tip text='删除当前块'><span className="gap-l-10 cursor link-red size-20 round item-hover flex-center" onMouseDown={e => { e.stopPropagation(); this.block.onDelete() }}><Icon size={16} icon={TrashSvg}></Icon></span></Tip>
                 </div>
             </div>
         }

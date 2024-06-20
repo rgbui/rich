@@ -71,7 +71,7 @@ export class DataGridTableContent extends React.Component<{
     renderBody() {
         var self = this;
         if (this.block.data) {
-            return <SpinBox spin={this.block.isLoadingData}><div className='sy-dg-table-body'>
+            return <div className='sy-dg-table-body'>
                 <ChildsArea childs={this.props.childs || this.block.childs}></ChildsArea>
                 {this.block.isCanAddRow() && <div
                     style={{ width: this.block.sumWidth + 'px' }}
@@ -82,7 +82,7 @@ export class DataGridTableContent extends React.Component<{
                         <span className="f-14"><S>新增</S></span>
                     </span></ToolTip>
                 </div>}
-            </div></SpinBox>
+            </div>
         }
         else return <Spin block></Spin>
     }

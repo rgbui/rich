@@ -125,7 +125,7 @@ export class DataGridViewOperator {
         await this.onUpdateField(field, nc);
     }
     async onUpdateViewField(this: DataGridView, viewField: ViewField, data: Record<string, any>) {
-        await this.page.onAction(ActionDirective.onSchemaUpdateField,async ()=>{
+        await this.page.onAction(ActionDirective.onSchemaUpdateField, async () => {
             await this.arrayUpdate<ViewField>({
                 prop: 'fields',
                 data: g => g.type && viewField.type == g.type || g.fieldId == viewField.fieldId,
@@ -662,8 +662,14 @@ export class DataGridViewOperator {
             }
         }
     }
-    async onReloadData(this: DataGridView) {
+    async onReloadData(this: DataGridView, beforeAction?: () => Promise<void>) {
         await this.onLoadingAction(async () => {
+            try {
+                if (typeof beforeAction == 'function') await beforeAction()
+            }
+            catch (ex) {
+                console.error(ex);
+            }
             await this.loadDataGridData();
             await this.createItem();
             this.referenceBlockers.forEach(b => {

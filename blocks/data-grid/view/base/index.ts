@@ -395,8 +395,8 @@ export class DataGridView extends Block {
             }
         }
     }
-    async didMounted(force: boolean = true) {
-        await this.loadDataGrid(force);
+    async didMounted() {
+        await this.loadDataGrid();
         channel.sync('/datastore/operate', this.syncDatastore as any);
         channel.sync('/schema/operate', this.syncDataSchema as any);
     }
@@ -405,11 +405,10 @@ export class DataGridView extends Block {
         channel.off('/schema/operate', this.syncDataSchema as any);
     }
     isLoading: boolean = false;
-    async loadDataGrid(force: boolean = true) {
+    async loadDataGrid() {
         try {
             this.isLoading = true;
             if (this.view) this.view.forceUpdate();
-            // await util.delay(1000 * 30);
             await this.loadSchema();
             if (this.schema) {
                 await this.loadViewFields();
@@ -417,7 +416,6 @@ export class DataGridView extends Block {
                 await this.loadDataGridData();
                 await this.createItem();
                 await this.onNotifyReferenceBlocks();
-                if (this.view && force) this.view.forceUpdate();
             }
             this.emit('loadDataGrided');
         }
@@ -646,7 +644,6 @@ export class DataGridView extends Block {
                             if (this.fields.some(s => s.fieldId == (act as any).id)) {
                                 lodash.remove(this.fields, s => s.fieldId == (act as any).id);
                                 await this.createItem(true);
-
                             }
                             break;
                         case 'turnField':

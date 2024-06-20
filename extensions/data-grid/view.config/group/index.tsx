@@ -14,6 +14,7 @@ import { Icon } from "../../../../component/view/icon";
 import { TableSchema } from "../../../../blocks/data-grid/schema/meta";
 import { Divider } from "../../../../component/view/grid";
 import { HelpText } from "../../../../component/view/text";
+import { BlockRenderRange } from "../../../../src/block/enum";
 
 export class TableGroupView extends EventsComponent {
     get schema() {
@@ -55,8 +56,10 @@ export class TableGroupView extends EventsComponent {
         await this.onForceStore();
     }, 800);
     onForceStore = async () => {
-        await this.block.onManualUpdateProps({ groupView: this.block.groupView }, { groupView: this.oldGroup }, {});
-        await this.block.onReloadData();
+
+        await this.block.onReloadData(async () => {
+            await this.block.onManualUpdateProps({ groupView: this.block.groupView }, { groupView: this.oldGroup }, {range:BlockRenderRange.none});
+        });
     }
     render() {
 
@@ -270,7 +273,7 @@ export class TableGroupView extends EventsComponent {
                     this.onStore();
                 }}></Switch></span>
             </div> */}
-            
+
             <Divider></Divider>
             {sf && <div onMouseDown={e => {
                 this.oldGroup.abled = false;

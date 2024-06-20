@@ -6,6 +6,7 @@ import { channel } from "../../../../net/channel";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
 import lodash from "lodash";
 
+
 export class DataGridViewLife {
     async loadSchema(this: DataGridView) {
         if (this.schemaId && !this.schema) {
@@ -54,6 +55,9 @@ export class DataGridViewLife {
      */
     async loadDataGridData(this: DataGridView) {
         await this.loadData();
+        if (window.shyConfig?.isDev) {
+            //await util.delay(10000);
+        }
         await this.loadRelationDatas();
         await this.loadDataInteraction();
     }
@@ -102,77 +106,75 @@ export class DataGridViewLife {
      */
     async loadData(this: DataGridView) {
         if (this.schema) {
-            await this.onLoadingAction(async () => {
-                if (this.hasGroup) {
-                    var rc = await this.schema.gridList({
-                        page: this.pageIndex,
-                        size: this.size,
-                        filter: this.getSearchFilter(),
-                        sorts: this.getSearchSorts(),
-                        groupView: this.groupView
-                    }, this.page.ws);
-                    if (rc.ok) {
-                        this.dataGroupHeads = []
-                        this.data = [];
-                        rc.data.groupList.forEach(gl => {
-                            this.dataGroupHeads.push({
-                                id: gl.id,
-                                spread: false,
-                                count: gl.count,
-                                total: gl.total,
-                                value: gl.id,
-                                text: gl.id as any
-                            })
-                            gl.list.forEach(g => {
-                                g.__group = gl.id;
-                                this.data.push(g);
-                            })
+            if (this.hasGroup) {
+                var rc = await this.schema.gridList({
+                    page: this.pageIndex,
+                    size: this.size,
+                    filter: this.getSearchFilter(),
+                    sorts: this.getSearchSorts(),
+                    groupView: this.groupView
+                }, this.page.ws);
+                if (rc.ok) {
+                    this.dataGroupHeads = []
+                    this.data = [];
+                    rc.data.groupList.forEach(gl => {
+                        this.dataGroupHeads.push({
+                            id: gl.id,
+                            spread: false,
+                            count: gl.count,
+                            total: gl.total,
+                            value: gl.id,
+                            text: gl.id as any
                         })
-                        if (this.groupView.sort == 'asc') {
-                            this.dataGroupHeads.sort((a, b) => {
-                                if (lodash.isNull(b.id)) return -1;
-                                if (typeof (a.id as any)?.min == 'number') {
-                                    return (a.id as any).min > (b.id as any).min ? 1 : -1
-                                }
-                                return a.id > b.id ? 1 : -1
-                            })
-                            var nd = this.dataGroupHeads.find(g => lodash.isNull(g.id));
-                            if (nd) {
-                                lodash.remove(this.dataGroupHeads, c => lodash.isNull(c.id));
-                                this.dataGroupHeads.splice(0, 0, nd);
+                        gl.list.forEach(g => {
+                            g.__group = gl.id;
+                            this.data.push(g);
+                        })
+                    })
+                    if (this.groupView.sort == 'asc') {
+                        this.dataGroupHeads.sort((a, b) => {
+                            if (lodash.isNull(b.id)) return -1;
+                            if (typeof (a.id as any)?.min == 'number') {
+                                return (a.id as any).min > (b.id as any).min ? 1 : -1
                             }
+                            return a.id > b.id ? 1 : -1
+                        })
+                        var nd = this.dataGroupHeads.find(g => lodash.isNull(g.id));
+                        if (nd) {
+                            lodash.remove(this.dataGroupHeads, c => lodash.isNull(c.id));
+                            this.dataGroupHeads.splice(0, 0, nd);
                         }
-                        else if (this.groupView.sort == 'desc') {
-                            this.dataGroupHeads.sort((a, b) => {
-                                if (lodash.isNull(a.id)) return -1;
-                                if (typeof (a.id as any)?.min == 'number') {
-                                    return (a.id as any).min < (b.id as any).min ? 1 : -1
-                                }
-                                return a.id < b.id ? 1 : -1
-                            })
-                            var nd = this.dataGroupHeads.find(g => lodash.isNull(g.id));
-                            if (nd) {
-                                lodash.remove(this.dataGroupHeads, c => lodash.isNull(c.id));
-                                this.dataGroupHeads.push(nd);
+                    }
+                    else if (this.groupView.sort == 'desc') {
+                        this.dataGroupHeads.sort((a, b) => {
+                            if (lodash.isNull(a.id)) return -1;
+                            if (typeof (a.id as any)?.min == 'number') {
+                                return (a.id as any).min < (b.id as any).min ? 1 : -1
                             }
+                            return a.id < b.id ? 1 : -1
+                        })
+                        var nd = this.dataGroupHeads.find(g => lodash.isNull(g.id));
+                        if (nd) {
+                            lodash.remove(this.dataGroupHeads, c => lodash.isNull(c.id));
+                            this.dataGroupHeads.push(nd);
                         }
                     }
                 }
-                else {
-                    var r = await this.schema.list({
-                        page: this.pageIndex,
-                        size: this.size,
-                        filter: this.getSearchFilter(),
-                        sorts: this.getSearchSorts()
-                    }, this.page.ws);
-                    if (r.data) {
-                        this.data = Array.isArray(r.data.list) ? r.data.list : [];
-                        this.total = r.data?.total || 0;
-                        this.size = r.data.size;
-                        this.pageIndex = r.data.page;
-                    }
+            }
+            else {
+                var r = await this.schema.list({
+                    page: this.pageIndex,
+                    size: this.size,
+                    filter: this.getSearchFilter(),
+                    sorts: this.getSearchSorts()
+                }, this.page.ws);
+                if (r.data) {
+                    this.data = Array.isArray(r.data.list) ? r.data.list : [];
+                    this.total = r.data?.total || 0;
+                    this.size = r.data.size;
+                    this.pageIndex = r.data.page;
                 }
-            })
+            }
         }
     }
     async loadDataInteraction(this: DataGridView, parentId?: string) {

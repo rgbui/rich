@@ -22,20 +22,14 @@ export class TableFilterView extends EventsComponent {
         this.forceUpdate();
     }
 
-    onStore = lodash.debounce(async (filter: SchemaFilter) => {
-
-        await this.block.onManualUpdateProps({ filter: this.oldFilters }, { filter: lodash.cloneDeep(filter) });
-        await this.block.onReloadData();
-        this.oldFilters = lodash.cloneDeep(this.block.filter);
+    onStore = lodash.debounce(async () => {
+        await this.onForceStore();
     }, 800);
 
-    onForceStore = async (filter: SchemaFilter) => {
-        // console.log(this.oldFilters, filter, this.block.filter);
-        
-        await this.block.onManualUpdateProps({ filter: this.block.filter }, { filter: lodash.cloneDeep(filter) });
-        // console.log('after', this.block.filter);
-        await this.block.onReloadData();
-        this.oldFilters = lodash.cloneDeep(this.block.filter);
+    onForceStore = async () => {
+        await this.block.onReloadData(async () => {
+            await this.block.onManualUpdateProps({ filter: this.block.filter }, { filter: lodash.cloneDeep(this.oldFilters) });
+        });
     }
 
     render() {
@@ -45,10 +39,12 @@ export class TableFilterView extends EventsComponent {
             schema={this.schema}
             formSchema={this.formSchema}
             onInput={e => {
-                this.onStore(e)
+                this.oldFilters = e;
+                this.onStore()
             }}
             onChange={e => {
-                this.onForceStore(e)
+                this.oldFilters = e;
+                this.onForceStore()
             }}
             ws={this.block.page.ws}
         ></FilterView>

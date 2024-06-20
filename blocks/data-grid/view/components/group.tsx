@@ -30,15 +30,17 @@ export class DataGridGroup extends React.Component<{
             if (this.block.hasGroup) {
                 var gf = this.block.schema.fields.find(g => g.id == this.block.groupView.groupId);
                 function renderGroupHead(dg) {
+
                     if (lodash.isNull(dg.value))
                         return <span className="flex-fixed padding-w-5 ">无 <span className="b-500">{gf.text}</span> 数据</span>
                     if ([FieldType.creater, FieldType.modifyer, FieldType.user].includes(gf.type))
                         return <span className="flex-fixed gap-r-3">
-                            <Avatar userid={dg.text} size={28}></Avatar>
+                            <Avatar showName middle hideStatus userid={dg.value} size={28}></Avatar>
                         </span>
-                    else if ([FieldType.date,
-                    FieldType.createDate,
-                    FieldType.modifyDate
+                    else if ([
+                        FieldType.date,
+                        FieldType.createDate,
+                        FieldType.modifyDate
                     ].includes(gf.type)) {
                         var text = dg.text;
                         if (ls.isCn) {
@@ -66,7 +68,7 @@ export class DataGridGroup extends React.Component<{
                     else if ([FieldType.option, FieldType.options].includes(gf.type)) {
                         var op = gf.config?.options.find(o => o.value == dg.value);
                         var style = { backgroundColor: op?.color, lineheight: '20px' };
-                        return <span style={style} className="f-14 round gap-w-3 flex-fixed padding-w-5 b-500">{op.text}</span>
+                        return <span style={style} className="f-14 round gap-w-3 flex-fixed padding-w-5 b-500">{op?.text}</span>
                     }
                     else if ([FieldType.number, FieldType.autoIncrement, FieldType.sort, FieldType.price].includes(gf.type)) {
                         var text = dg.text;
@@ -74,14 +76,14 @@ export class DataGridGroup extends React.Component<{
                         if (di && typeof di.min == 'number') {
                             text = di.min + '-' + di.max;
                         }
-                        return <span className="flex-fixed text-overflow max-w-250 padding-w-5 b-500">{dg.text}</span>
+                        return <span className="flex-fixed text-overflow max-w-250 padding-w-5 b-500">{text}</span>
                     }
                     return <span className="flex-fixed text-overflow max-w-250 padding-w-5 b-500">{dg.text}</span>
                 }
                 var rdg = (dg, i) => {
                     var cs = this.block.childs.findAll(g => {
                         var dr = (g as DataGridTableItem).dataRow as Record<string, any>;
-                        return lodash.isEqual(dr.__group, dg.value);
+                        return lodash.isEqual(dr?.__group, dg.value);
                     })
                     return <div className="visible-hover" key={i}>
                         <div data-sy-table='group-head' className="flex min-h-28 padding-h-5">
@@ -137,7 +139,6 @@ export class DataGridGroup extends React.Component<{
             }
             else {
                 return this.props.renderRowContent(this.block, this.block.childs, undefined)
-                // return <DataGridTableContent block={this.block} ></DataGridTableContent>
             }
         }
         else return <></>

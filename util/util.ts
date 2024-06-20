@@ -22,6 +22,11 @@ export var util = {
         });
         return json;
     },
+    /**
+     *  延迟执行毫秒
+     * @param time 
+     * @returns 
+     */
     delay(time) {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
