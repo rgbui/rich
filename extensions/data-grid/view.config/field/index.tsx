@@ -88,7 +88,7 @@ export class DataGridFields extends EventsComponent {
                 }
             }
             var props: Record<string, any> = {};
-            if (na && lodash.isEqual(na.value, gr.text) && na.value) {
+            if (na && !lodash.isEqual(na.value, gr.text) && na.value) {
                 props.text = na.value;
             }
             if (na && !lodash.isEqual(na.icon, gr.icon)) {
@@ -136,7 +136,7 @@ export class DataGridFields extends EventsComponent {
                         return <div className={"shy-table-field-view-item round flex h-30 padding-w-5 gap-w-5 grab  item-hover"} key={f.fieldId || f.type}>
                             <span className="size-24 round flex-center flex-fixed "> <em className={'drag size-24 flex-center text-1'} ><Icon size={16} icon={DragHandleSvg}></Icon></em></span>
                             <span className="flex-center flex-fixed"><Icon size={14} icon={getFieldIcon(f)}></Icon></span>
-                            <span className="flex-auto f-14 gap-l-3">{f.text}</span>
+                            <span className="flex-auto f-14 gap-l-3">{f.field?.text || f.text}</span>
                             <span className="size-24 round flex-center flex-fixed item-hover cursor"><Icon className={'eye'} size={14} onClick={async () => { await self.block.onHideField(f); self.forceUpdate() }} icon={EyeSvg}></Icon></span>
                             <span className={"size-24 round flex-center flex-fixed   " + (f.field ? " cursor  item-hover" : "  remark")}><Icon className={'eye'} size={14} onClick={async (e) => { self.openProperty('view', f, e) }} icon={DotsSvg}></Icon></span>
                         </div>
