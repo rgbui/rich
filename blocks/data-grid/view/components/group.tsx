@@ -29,8 +29,7 @@ export class DataGridGroup extends React.Component<{
         if (this.block.schema) {
             if (this.block.hasGroup) {
                 var gf = this.block.schema.fields.find(g => g.id == this.block.groupView.groupId);
-                function renderGroupHead(dg)
-                {
+                function renderGroupHead(dg) {
                     if (lodash.isNull(dg.value))
                         return <span className="flex-fixed padding-w-5 ">无 <span className="b-500">{gf.text}</span> 数据</span>
                     if ([FieldType.creater, FieldType.modifyer, FieldType.user].includes(gf.type))
@@ -87,14 +86,23 @@ export class DataGridGroup extends React.Component<{
                     return <div className="visible-hover" key={i}>
                         <div data-sy-table='group-head' className="flex min-h-28 padding-h-5">
                             <span className={'size-24 flex-center round item-hover cursor ts ' + (dg.spread !== false ? "rotate-180" : "rotate-90")} onMouseDown={e => {
+                                e.stopPropagation();
                                 dg.spread = dg.spread === false ? true : false;
                                 this.forceUpdate();
                             }}> <Icon size={10} icon={TriangleSvg}></Icon></span>
                             {renderGroupHead(dg)}
                             <span className="flex-fixed padding-w-3 min-w-24 border-box round flex-center  item-hover cursor remark">{dg.count}</span>
-                            {this.block.isCanEdit() && <ToolTip overlay={<S>属性</S>}><span onMouseDown={e => {
+                            {this.block.isCanEdit() && <ToolTip overlay={<S>属性</S>}><span onMouseDown={async e => {
                                 e.stopPropagation();
-                                this.block.onOpenGroupHead(dg, e)
+                                var ele = e.currentTarget as HTMLElement;
+                                ele.classList.remove('visible')
+                                try {
+                                    await this.block.onOpenGroupHead(dg, e)
+                                }
+                                catch (ex) { console.error(ex) }
+                                finally {
+                                    ele.classList.add('visible')
+                                }
                             }} className="visible remark gap-l-10 flex-center flex-fixed size-24 item-hover cursor round"><Icon icon={DotsSvg}></Icon></span></ToolTip>}
                             {this.block.isCanEdit() && <ToolTip overlay={<S>添加新行</S>}><span onMouseDown={e => { e.stopPropagation(); this.block.onOpenAddForm() }} className="visible remark gap-l-10  flex-center  flex-fixed size-24 item-hover cursor round"><Icon icon={PlusSvg}></Icon></span></ToolTip>}
                         </div>

@@ -239,7 +239,6 @@ export class AddRecordsCommandView extends FlowCommandView<AddRecordsCommand> {
             selectView: false,
             tableId: this.command.schemaId || undefined
         })
-        console.log('gggg', r);
         if (r) {
             this.command.schemaId = r as any;
             this.command.schema = await TableSchema.loadTableSchema(this.command.schemaId,

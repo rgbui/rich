@@ -15,103 +15,17 @@ import { lst } from "../../../i18n/store";
 import { IconValueType } from "../../../component/view/icon";
 import { useCreateDataGridView } from "../create/view";
 import { Point } from "../../../src/common/vector/point";
-import { useDataGridCreate } from "../create/select.view";
-import { onOnlyCreateDataGrid } from "../../../blocks/data-grid/template/create";
 import { Spin } from "../../../component/view/spin";
 import { S } from "../../../i18n/view";
 
+
 export class DataSourceView extends EventsComponent {
-    render() {
+    getItems() {
         var self = this;
-        var saveTable = lodash.debounce(async (schema: TableSchema, options?: { text?: string, icon?: IconValueType }) => {
-            if (options) {
-                var it = self.mv.props.items.find(g => g.value == schema.id);
-                if (it) {
-                    Object.assign(it, options);
-                    self.mv.forceUpdate()
-                }
-                await schema.update(options, 'DataSourceView')
-                channel.air('/page/update/info', { id: schema.id, pageInfo: options as any })
-            }
-        }, 800)
-        async function input(item) {
-            if (item.name == 'name') {
-                var dr: Record<string, any> = {};
-                if (item.value != item.data.text) dr.text = item.value;
-                if (!lodash.isEqual(item.icon, item.data.icon)) dr.icon = item.icon;
-                if (Object.keys(dr).length > 0)
-                    saveTable(item.data, dr);
-            }
-        }
-        async function select(item, event?: MouseEvent) {
-            // console.log(item, event);
-            // var r = Rect.fromEle(event.currentTarget as HTMLElement);
-            if (item?.name == 'table') {
-                // self.onChange(item.value);
-                self.emit('save', item.value);
-            }
-            else if (item?.name == 'view') {
-                self.emit('save', item.value);
-            }
-            else if (item?.name == 'deleteTable') {
-                if (await Confirm(lst('确认要删除数据表吗'))) {
-                    await TableSchema.deleteTableSchema(item.value);
-                    self.forceUpdate()
-                    channel.air('/page/remove', { item: { id: item.value } })
-                }
-            }
-            else if (item?.name == 'createTable') {
-                var dc = await useDataGridCreate({ roundPoint: Point.from(event) }, { isOnlyCreateTable: true });
-                if (dc) {
-                    console.log('rccc', dg);
-                    self.createTableing = true;
-                    self.forceUpdate();
-                    if (dc.source == 'dataView') {
-                        var schema = await onOnlyCreateDataGrid(dc.text, dc.url);
-                        var view = schema.listViews.first();
-                        self.createTableing = false;
-                        self.emit('save', {
-                            tableId: schema.id,
-                            viewUrl: view.url,
-                            type: 'view',
-                            viewId: view.id
-                        });
-                    }
-                    else if (dc.source == 'createView') {
-                        var schema = await TableSchema.onCreate({ text: dc.text, url: dc.url });
-                        var view = schema.listViews.first();
-                        self.createTableing = false;
-                        self.emit('save', {
-                            tableId: schema.id,
-                            viewUrl: view.url,
-                            type: 'view',
-                            viewId: view.id
-                        });
-                    }
-                }
-            }
-            else if (item.name == 'addView') {
-                var po = Point.from(event)
-                var sh = await TableSchema.getTableSchema(item.value);
-                var dg = await useCreateDataGridView(
-                    { roundPoint: po },
-                    { schema: sh }
-                );
-                if (dg) {
-                    var sv = await sh.createSchemaView(dg.text, dg.url, null);
-                    self.emit('save', {
-                        tableId: sh.id,
-                        viewUrl: sv.view.url,
-                        type: 'view',
-                        viewId: sv.view.id
-                    });
-                }
-            }
-        }
         var items: MenuItem[] = [];
         var rs: MenuItem[] = [];
         items.push({ type: MenuItemType.text, text: this.selectView ? lst('选择数据表视图') : lst('选择表格') })
-        var list = Array.from(TableSchema.schemas.values());
+        var list = this.schemas;
         list = lodash.sortBy(list, g => 0 - g.createDate.getTime())
         list.forEach((rd) => {
             var btns = undefined
@@ -228,6 +142,65 @@ export class DataSourceView extends EventsComponent {
             text: lst('了解数据表'),
             url: window.shyConfig?.isUS ? "https://help.shy.red/page/38#3qfPYqnTJCwwQ6P9zYx8Q8" : "https://help.shy.live/page/285#xcmSsiEKkYt3pgKVwyDHxJ"
         })
+        return items;
+    }
+    render() {
+        var self = this;
+        var saveTable = lodash.debounce(async (schema: TableSchema, options?: { text?: string, icon?: IconValueType }) => {
+            if (options) {
+                await schema.update(options, 'DataSourceView')
+                self.mv.forceUpdateItems(self.getItems())
+                channel.air('/page/update/info', {
+                    id: schema.id,
+                    pageInfo: options as any
+                })
+            }
+        }, 800)
+        async function input(item) {
+            if (item.name == 'name') {
+                var dr: Record<string, any> = {};
+                if (item.value != item.data.text) dr.text = item.value;
+                if (!lodash.isEqual(item.icon, item.data.icon)) dr.icon = item.icon;
+                if (Object.keys(dr).length > 0)
+                    saveTable(item.data, dr);
+            }
+        }
+        async function select(item, event?: MouseEvent) {
+            if (item?.name == 'table') {
+                self.emit('save', item.value);
+            }
+            else if (item?.name == 'view') {
+                self.emit('save', item.value);
+            }
+            else if (item?.name == 'deleteTable') {
+                if (await Confirm(lst('确认要删除数据表吗'))) {
+                    await TableSchema.deleteTableSchema(item.value);
+                    self.forceUpdate()
+                    channel.air('/page/remove', { item: { id: item.value } })
+                }
+            }
+            else if (item?.name == 'createTable') {
+                self.emit('createTable');
+            }
+            else if (item.name == 'addView') {
+                var po = Point.from(event)
+                var sh = await TableSchema.getTableSchema(item.value);
+                var dg = await useCreateDataGridView(
+                    { roundPoint: po },
+                    { schema: sh }
+                );
+                if (dg) {
+                    var sv = await sh.createSchemaView(dg.text, dg.url, null);
+                    self.emit('save', {
+                        tableId: sh.id,
+                        viewUrl: sv.view.url,
+                        type: 'view',
+                        viewId: sv.view.id
+                    });
+                }
+            }
+        }
+        var items = this.getItems();
         return <div>
             {this.createTableing && <div className="h-30 flex-center"><Spin></Spin><S>正在创建数据表...</S></div>}
             <MenuView ref={e => this.mv = e} input={input}
@@ -247,6 +220,7 @@ export class DataSourceView extends EventsComponent {
     createView: boolean = false;
     editTable: boolean = false;
     createTable: boolean = false;
+    schemas: TableSchema[] = [];
     async open(option: {
         tableId?: string,
         viewId?: string,
@@ -262,6 +236,7 @@ export class DataSourceView extends EventsComponent {
         this.editTable = option.editTable;
         this.createTable = option.createTable;
         await TableSchema.onLoadAll()
+        this.schemas = TableSchema.getSchemas();
         this.forceUpdate();
     }
 }
@@ -274,7 +249,7 @@ export async function useDataSourceView(pos: PopoverPosition,
         createView?: boolean,
         editTable?: boolean,
         createTable?: boolean
-    }) {
+    }, createTableCallback?: () => void) {
     let popover = await PopoverSingleton(DataSourceView, { mask: true });
     let fv = await popover.open(pos);
     fv.open(option);
@@ -286,6 +261,11 @@ export async function useDataSourceView(pos: PopoverPosition,
         fv.only('save', (g) => {
             resolve(g);
             popover.close();
+        })
+        fv.only('createTable', () => {
+            popover.close();
+            resolve(undefined);
+            createTableCallback?.();
         })
         popover.only('close', () => {
             resolve(undefined);

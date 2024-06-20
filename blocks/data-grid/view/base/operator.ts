@@ -112,22 +112,20 @@ export class DataGridViewOperator {
             }
         });
     }
-    async onUpdateField(this: DataGridView, field: Field, data: Record<string, any>) {
-        // await this.page.onAction(ActionDirective.onSchemaUpdateField, async () => {
-        // this.page.notifyActionBlockSync(this);
+    async onUpdateField(this: DataGridView,
+        field: Field,
+        data: Record<string, any>) {
         await this.schema.fieldUpdate({ fieldId: field.id, data }, this.id);
         field.load(data);
         this.onNotifyReferenceBlocks()
         await this.createItem(true);
-        // });
     }
     async onUpdateFieldConfig(this: DataGridView, field: Field, configProps: Record<string, any>) {
         var nc: Record<string, any> = util.extendKey(configProps, 'config');
         await this.onUpdateField(field, nc);
     }
     async onUpdateViewField(this: DataGridView, viewField: ViewField, data: Record<string, any>) {
-        await this.page.onAction(ActionDirective.onSchemaUpdateField, async () => {
-            // this.page.notifyActionBlockSync(this);
+        await this.page.onAction(ActionDirective.onSchemaUpdateField,async ()=>{
             await this.arrayUpdate<ViewField>({
                 prop: 'fields',
                 data: g => g.type && viewField.type == g.type || g.fieldId == viewField.fieldId,
@@ -367,7 +365,7 @@ export class DataGridViewOperator {
         })
         this.page.notifyActionBlockUpdate(newBlock.parent);
         if (dt) {
-            await dt.updateView(newBlock);
+            await dt.updateTabItems(newBlock);
         }
         return newBlock;
     }
@@ -425,7 +423,7 @@ export class DataGridViewOperator {
             }
         })
         if (dt) {
-            await dt.updateView(newBlock);
+            await dt.updateTabItems(newBlock);
         }
     }
     async onCopySchemaView(this: DataGridView) {
@@ -604,8 +602,10 @@ export class DataGridViewOperator {
     }
     onOver(this: DataGridView, isOver: boolean) {
         if (this.dataGridTool && this.dataGridTool.isOpenTool) return;
-        this.isOver = isOver;
-        if (this.dataGridTool) this.dataGridTool.forceUpdate();
+        if (!lodash.isEqual(this.isOver, isOver)) {
+            this.isOver = isOver;
+            if (this.dataGridTool) this.dataGridTool.forceUpdate();
+        }
     }
     onCopyViewLink(this: DataGridView) {
         var url = this.page.ws.resolve({ elementUrl: getElementUrl(ElementType.SchemaView, this.schema.id, this.schemaView.id) })
@@ -649,6 +649,8 @@ export class DataGridViewOperator {
             selectView: true,
             editTable: true,
             createTable: true
+        }, () => {
+            this.onDataGridCreate()
         });
         if (g) {
             if (typeof g != 'string' && g.type == 'view') {
@@ -719,7 +721,6 @@ export class DataGridViewOperator {
             else {
                 lodash.remove(gv.hideGroups, s => lodash.isEqual(s, dg.value));
             }
-            console.log('ggg', gv);
             await this.onUpdateProps({ groupView: gv },
                 { range: BlockRenderRange.self }
             );
