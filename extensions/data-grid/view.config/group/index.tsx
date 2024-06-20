@@ -7,7 +7,6 @@ import { FieldType } from "../../../../blocks/data-grid/schema/type";
 import { GetFieldTypeSvg } from "../../../../blocks/data-grid/schema/util";
 import { lst } from "../../../../i18n/store";
 import { S } from "../../../../i18n/view";
-import { Switch } from "../../../../component/view/switch";
 import { InputNumber } from "../../../../component/view/input/number";
 import { Input } from "../../../../component/view/input";
 import { PlusSvg, TrashSvg } from "../../../../component/svgs";
@@ -263,14 +262,15 @@ export class TableGroupView extends EventsComponent {
                 </div>
             </div>
 
-            <div className="padding-w-10 gap-5 round flex  min-h-28 item-hover">
+            {/* <div className="padding-w-10 gap-5 round flex  min-h-28 item-hover">
                 <span className="flex-auto">{lst('隐藏空内容分组')}</span>
                 <span className="flex-fixed"><Switch checked={this.oldGroup.hideEmptyGroup} onChange={e => {
                     this.oldGroup.hideEmptyGroup = e;
                     this.forceUpdate();
                     this.onStore();
                 }}></Switch></span>
-            </div>
+            </div> */}
+            
             <Divider></Divider>
             {sf && <div onMouseDown={e => {
                 this.oldGroup.abled = false;
@@ -278,13 +278,13 @@ export class TableGroupView extends EventsComponent {
                 this.forceUpdate();
                 this.onStore();
             }} className="padding-w-10 gap-5 remark cursor round flex  min-h-28 item-hover-warn">
-                <span className="size-24 flex-center">
+                <span className="size-16 gap-r-3 flex-center">
                     <Icon size={16} icon={TrashSvg}></Icon>
                 </span>
                 <span>移除分组</span>
             </div>
             }
-            <div className="gap-w-10">
+            <div className="gap-l-15 gap-r-10">
                 <HelpText url='s'><S>了解数据表分组</S></HelpText>
             </div>
 
