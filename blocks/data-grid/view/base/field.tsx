@@ -555,7 +555,6 @@ export class DataGridViewField {
                         }
                     },
                     async input(item) {
-                        console.log('input item', item);
                         if (item.name == 'includeTime') {
                             await self.onUpdateFieldConfig(viewField.field, { includeTime: item.checked });
                         }
@@ -665,12 +664,16 @@ export class DataGridViewField {
                 }
             }
             if (isSysField) {
+                var props: Record<string, any> = {};
                 if (ReItem.value != viewField?.text) {
-                    //编辑列名了
-                    await this.onUpdateViewField(viewField, { text: ReItem.value })
+                    props.text = ReItem.value;
                 }
                 if (!lodash.isEqual(ReItem.icon, viewField.field.icon)) {
-                    await this.onUpdateField(viewField.field, { icon: ReItem.icon })
+                    props.icon = ReItem.icon;
+                }
+                if (Object.keys(props).length > 0) {
+                    if (viewField?.field) await this.onUpdateField(viewField.field, props)
+                    else await this.onUpdateViewField(viewField, props)
                 }
             }
             else {

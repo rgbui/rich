@@ -1,8 +1,11 @@
+import { IconValueType } from "../../../component/view/icon";
+import { IconArguments } from "../../../extensions/icon/declare";
 import { util } from "../../../util/util";
 import { TableSchema } from "./meta";
 import { FieldType, SysFieldTypes } from "./type";
 export class ViewField {
     id: string;
+    icon?: IconArguments;
     fieldId?: string;
     text?: string;
     colWidth: number = 120;
@@ -39,7 +42,8 @@ export class ViewField {
             'fieldId',
             'text',
             'colWidth',
-            'type'
+            'type',
+            'icon'
         ];
         keys.forEach(n => {
             json[n] = util.clone(this[n]);

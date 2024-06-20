@@ -567,7 +567,7 @@ export class TableSchema {
             view: this.views.find(c => c.id == oneAction.id)
         }
     }
-    static schemas: Map<string, TableSchema> = new Map();
+    private static schemas: Map<string, TableSchema> = new Map();
     static isLoadAll: boolean = false;
     static async loadTableSchema(schemaId: string, ws: LinkWs, force?: boolean): Promise<TableSchema> {
         if (force) {
@@ -586,7 +586,7 @@ export class TableSchema {
         this.schemas.set(schema.id, schema as TableSchema);
         return schema as TableSchema;
     }
-    static async getSchemas() {
+    static getSchemas() {
         return Array.from(this.schemas.values());
     }
     static async loadListSchema(schemaIds: string[], page: Page) {
