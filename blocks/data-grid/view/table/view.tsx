@@ -31,6 +31,7 @@ export class TableStoreView extends BlockView<TableStore> {
                     (this.block.noBorder ? " sy-dg-table-no-border" : "") +
                     (this.block.noHead ? " sy-dg-table-no-header" : "")
                 }
+                    onMouseMove={e => this.block.onOver(true)}
                     onMouseEnter={e => this.block.onOver(true)}
                     onMouseLeave={e => this.block.onOver(false)}
                 >

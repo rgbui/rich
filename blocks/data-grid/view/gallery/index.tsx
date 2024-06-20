@@ -50,6 +50,7 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery> {
     renderView() {
         return <div style={this.block.visibleStyle}><div style={this.block.contentStyle}>
             <div className='sy-data-grid-gallery'
+             onMouseMove={e => this.block.onOver(true)}
                 onMouseEnter={e => this.block.onOver(true)}
                 onMouseLeave={e => this.block.onOver(false)}>
                 <DataGridTool block={this.block}></DataGridTool>

@@ -155,7 +155,7 @@ export class TableStoreCalendarView extends BlockView<TableStoreCalendar> {
         var day = dayjs(this.block.date);
         return <div style={this.block.visibleStyle}>
             <div style={this.block.contentStyle} >
-                <div className='sy-data-grid-calendar' onMouseEnter={e => this.block.onOver(true)}
+                <div className='sy-data-grid-calendar'  onMouseMove={e => this.block.onOver(true)} onMouseEnter={e => this.block.onOver(true)}
                     onMouseLeave={e => this.block.onOver(false)}>
                     <DataGridTool block={this.block}></DataGridTool>
                     <div className="sy-data-grid-calendar-head" onMouseDown={e => e.stopPropagation()}>
