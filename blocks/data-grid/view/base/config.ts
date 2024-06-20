@@ -324,10 +324,65 @@ export class DataGridViewConfig {
                 // editTable: true,
                 createView: true,
                 createTable: true
+            }, async () => {
+                // var s = await TableSchema.loadTableSchema(g.tableId, this.page.ws);
+                var sv = this.schema.listViews.find(c => c.id == (g as any).viewId)
+                var viewData = {
+                    url: BlockUrlConstant.DataGridTab,
+                    tabIndex: 1,
+                    tabItems: [
+                        {
+                            schemaId: this.schemaId,
+                            viewId: this.syncBlockId,
+                            viewText: this.schemaView?.text,
+                            viewIcon: this.schemaView?.icon
+                        },
+                        {
+                            schemaId: this.schemaId,
+                            viewId: this.syncBlockId,
+                            viewText: this.schemaView?.text,
+                            viewIcon: this.schemaView?.icon
+                        }
+                    ],
+                    blocks: {
+                        childs: [],
+                        otherChilds: [
+                            {
+                                url: BlockUrlConstant.DataGridTabPage,
+                                blocks: {
+                                    childs: [
+                                        {
+                                            url: this.url,
+                                            schemaId: this.schemaId,
+                                            syncBlockId: this.syncBlockId
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                url: BlockUrlConstant.DataGridTabPage,
+                                blocks: {
+                                    childs: [
+                                        {
+                                            url: sv.url,
+                                            schemaId: this.schemaId,
+                                            syncBlockId: this.syncBlockId
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                }
+                var newBlock = await this.page.onReplace(this, viewData, undefined, {
+                    disabledSyncBlock: true
+                });
+                var nb = newBlock.otherChilds.last().childs.first() as DataGridView;
+                await nb.onAddCreateTableView()
             });
             if (g) {
                 if (typeof g != 'string' && g.type == 'view') {
-                    var s =await TableSchema.loadTableSchema(g.tableId, this.page.ws);
+                    var s = await TableSchema.loadTableSchema(g.tableId, this.page.ws);
                     var sv = s.listViews.find(c => c.id == (g as any).viewId)
                     var viewData = {
                         url: BlockUrlConstant.DataGridTab,

@@ -7,30 +7,7 @@ import { util } from "../../../util/util";
 import { BlockRenderRange } from "../../../src/block/enum";
 
 
-export async function onOnlyCreateDataGrid(text: string, url: string) {
-    var g = CardFactory.getCardModel(url);
-    var vs = typeof g.createViews == 'function' ? await g.createViews() : lodash.cloneDeep(g.views || []);
-    vs.forEach(v => {
-        v.text = text + "-" + v.text;
-    })
-    var r = await channel.put('/schema/create/define', {
-        text: text,
-        fields: g.props.map(pro => {
-            return {
-                id: pro.name,
-                text: pro.text,
-                type: pro.types[0],
-                config: lodash.cloneDeep(pro.config)
-            }
-        }),
-        views: vs,
-        datas: typeof g.createDataList == 'function' ? await g.createDataList() : lodash.cloneDeep(g.dataList || [])
-    });
-    if (r.ok) {
-        var schema = await TableSchema.cacheSchema(r.data.schema);
-        return schema;
-    }
-}
+
 
 export async function onCreateDataGridTemplate(
     text: string,
@@ -94,6 +71,9 @@ export async function onCreateDataGridTemplate(
                         }
                     }, BlockRenderRange.self);
                 }
+                if (block.dataGridTab) {
+                    await block.dataGridTab.updateTabItems(block)
+                }
             })
         }
         else {
@@ -133,6 +113,9 @@ export async function onCreateDataGridTemplate(
                             }
                         }
                     }, BlockRenderRange.self);
+                }
+                if ((newBlock as DataGridView).dataGridTab) {
+                    await (newBlock as DataGridView).dataGridTab.updateTabItems((newBlock as DataGridView))
                 }
             })
         }
