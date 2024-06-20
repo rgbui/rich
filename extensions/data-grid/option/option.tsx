@@ -25,7 +25,7 @@ export class TableStoreOption extends EventsComponent {
         var self = this;
         function keydown(event: KeyboardEvent) {
             if (event.key == KeyboardCode.Enter) {
-                if (self.isNeedCreated && self.isEdit && self.focusIndex == self.filterOptions.length) self.onCreateOption();
+                if (self.isNeedCreated && self.focusIndex == -1) self.onCreateOption();
                 else self.setOption(self.filterOptions[self.focusIndex]);
             }
             else if (event.key == KeyboardCode.Backspace) {
@@ -35,26 +35,37 @@ export class TableStoreOption extends EventsComponent {
             }
             else if (event.key == KeyboardCode.ArrowDown) {
                 if (self.focusIndex >= self.filterOptions.length - 1) {
-                    if (self.isNeedCreated && self.isEdit && self.focusIndex == self.filterOptions.length) self.focusIndex = self.filterOptions.length;
-                    else self.focusIndex = 0;
+                    return
                 }
                 else { self.focusIndex++; }
-                self.forceUpdate()
+                self.forceUpdate(() => {
+                    var lf = self.el.querySelector('.item-hover-light-focus') as HTMLElement;
+                    if (lf) {
+                        lf.scrollIntoView({ block: 'center' })
+                    }
+                })
             }
             else if (event.key == KeyboardCode.ArrowUp) {
+                if (self.focusIndex == -1) return;
                 if (self.focusIndex == 0) {
-                    if (self.isNeedCreated && self.isEdit) self.focusIndex = self.filterOptions.length;
-                    else self.focusIndex = self.filterOptions.length - 1;
+                    if (self.isNeedCreated) self.focusIndex = -1;
                 }
                 else {
                     self.focusIndex--;
                 }
-                self.forceUpdate()
+                self.forceUpdate(() => {
+                    var lf = self.el.querySelector('.item-hover-light-focus') as HTMLElement;
+                    if (lf) {
+                        lf.scrollIntoView({ block: 'center' })
+                    }
+                })
             }
         }
         function changeInput(event: React.FormEvent<HTMLInputElement>) {
             self.value = (event.target as HTMLInputElement).value;
             self.value = self.value.trim();
+            if (self.isNeedCreated) self.focusIndex = -1;
+            else self.focusIndex = 0;
             self.forceUpdate()
         }
         function change(to: number, from: number) {
@@ -73,7 +84,7 @@ export class TableStoreOption extends EventsComponent {
             self.forceUpdate()
             self.emit('changeOptions', lodash.cloneDeep(self.options))
         }
-        return <div className="shy-tablestore-option-selector">
+        return <div ref={e => this.el = e} className="shy-tablestore-option-selector">
             {!(this.isEdit == false && this.multiple == false) && <div className="shy-tablestore-option-selector-input">
                 {this.ovs.map(ov => {
                     return <a key={ov.value} className="gap-r-5 gap-h-3" style={{ backgroundColor: ov.color }}>
@@ -100,7 +111,9 @@ export class TableStoreOption extends EventsComponent {
                     onInput={e => changeInput(e)} onKeyDown={e => keydown(e.nativeEvent)} /></div>
             </div>}
             <div className="bg-white overflow-y max-h-180">
-                {this.isEdit&&!this.isNeedCreated && <div className="remark gap-h-5 padding-w-10 h-20 f-12">{this.filterOptions.length > 0 ? lst('选择或创建一个选项') : lst('暂无选项')}</div>}
+                {this.isEdit && !this.isNeedCreated && <div className="remark gap-h-5 padding-w-10 h-20 f-12">{this.filterOptions.length > 0 ? lst('选择或创建一个选项') : lst('暂无选项')}</div>}
+                {this.isNeedCreated && <div className={"item-hover-light h-28 gap-h-5 user-none round gap-w-5 padding-w-5 flex " + (this.focusIndex == -1 ? "item-hover-light-focus" : "")} onClick={e => this.onCreateOption()}><em><S>创建</S></em><span className="l-18 h-22 gap-w-3 padding-w-6 f-14 bold round" style={{ backgroundColor: this.optionColor }}>{this.value}</span></div>}
+
                 <DragList
                     className={this.filterOptions.length > 0 ? 'gap-b-10' : ""}
                     onChange={change}
@@ -114,12 +127,13 @@ export class TableStoreOption extends EventsComponent {
                         </div>
                     })}
                 </DragList>
-                {this.isNeedCreated && self.isEdit && <div className={"item-hover-light h-28 gap-b-5 user-none round gap-w-5 padding-w-5 flex " + (this.focusIndex == this.filterOptions.length ? "item-hover-focus" : "")} onClick={e => this.onCreateOption()}><em><S>创建</S></em><span className="l-18 h-22 gap-w-3 padding-w-6 f-14 bold round" style={{ backgroundColor: this.optionColor }}>{this.value}</span></div>}
+
             </div>
         </div>
     }
+    el: HTMLElement;
     get isNeedCreated() {
-        return this.value && !(this.options.length > 0 && this.options.some(s => s.text == this.value)) ? true : false;
+        return this.value && this.isEdit && !(this.options.length > 0 && this.options.some(s => s.text == this.value)) ? true : false;
     }
     get optionColor() {
         var oc = OptionBackgroundColorList().findAll(g => !this.options.some(o => o.color == g.color)).randomOf()?.color;
@@ -130,7 +144,7 @@ export class TableStoreOption extends EventsComponent {
     }
     focusIndex: number = 0;
     get filterOptions() {
-        return this.options.filter(g => g.text == this.value || !this.value);
+        return this.options.filter(g => this.value && g.text.startsWith(this.value) || !this.value);
     }
     onCreateOption() {
         var text = this.value.trim();
