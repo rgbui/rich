@@ -26,18 +26,18 @@ class Layer {
     private init() {
         switch (this.type) {
             case LayerType.popover:
-                this.min = 80000;
-                this.max = 90000;
+                this.min = 10000;
+                this.max = 50000;
                 this.index = this.min;
                 break;
             case LayerType.rise:
                 this.min = 1000;
-                this.max = 80000;
+                this.max = 10000;
                 this.index = this.min;
                 break;
             case LayerType.tip:
-                this.min = 90000;
-                this.max = 100000;
+                this.min = 50000;
+                this.max = 80000;
                 this.index = this.min;
                 break;
         }
