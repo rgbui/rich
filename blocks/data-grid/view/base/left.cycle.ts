@@ -114,7 +114,6 @@ export class DataGridViewLife {
                     if (rc.ok) {
                         this.dataGroupHeads = []
                         this.data = [];
-                        var gf = this.schema.fields.find(g => g.id == this.groupView.groupId);
                         rc.data.groupList.forEach(gl => {
                             this.dataGroupHeads.push({
                                 id: gl.id,
@@ -129,6 +128,34 @@ export class DataGridViewLife {
                                 this.data.push(g);
                             })
                         })
+                        if (this.groupView.sort == 'asc') {
+                            this.dataGroupHeads.sort((a, b) => {
+                                if (lodash.isNull(b.id)) return -1;
+                                if (typeof (a.id as any)?.min == 'number') {
+                                    return (a.id as any).min > (b.id as any).min ? 1 : -1
+                                }
+                                return a.id > b.id ? 1 : -1
+                            })
+                            var nd = this.dataGroupHeads.find(g => lodash.isNull(g.id));
+                            if (nd) {
+                                lodash.remove(this.dataGroupHeads, c => lodash.isNull(c.id));
+                                this.dataGroupHeads.splice(0, 0, nd);
+                            }
+                        }
+                        else if (this.groupView.sort == 'desc') {
+                            this.dataGroupHeads.sort((a, b) => {
+                                if (lodash.isNull(a.id)) return -1;
+                                if (typeof (a.id as any)?.min == 'number') {
+                                    return (a.id as any).min < (b.id as any).min ? 1 : -1
+                                }
+                                return a.id < b.id ? 1 : -1
+                            })
+                            var nd = this.dataGroupHeads.find(g => lodash.isNull(g.id));
+                            if (nd) {
+                                lodash.remove(this.dataGroupHeads, c => lodash.isNull(c.id));
+                                this.dataGroupHeads.push(nd);
+                            }
+                        }
                     }
                 }
                 else {
