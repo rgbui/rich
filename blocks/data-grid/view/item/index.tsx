@@ -436,7 +436,7 @@ export class TableStoreItemView extends BlockView<TableGridItem> {
                 <div className="sy-data-grid-card-items r-gap-b-10">
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                 </div>
-                {this.block.isCanEdit() && <div onMouseDown={e => { e.stopPropagation(); this.block.onOpenMenu(e) }} className="pos visible top-5 right-5 flex-center size-24 round item-hover bg-white cursor">
+                {this.block.isCanEdit() && <div onMouseDown={e => { e.stopPropagation(); this.block.onOpenMenu(e) }} className="pos visible top-5 right-5 remark flex-center size-24 round bg-hover shadow-s border cursor">
                     <Icon size={20} icon={DotsSvg}></Icon>
                 </div>}
             </div>
@@ -446,7 +446,7 @@ export class TableStoreItemView extends BlockView<TableGridItem> {
                 <div className="r-gap-b-10">
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                 </div>
-                {this.block.isCanEdit() && <div onMouseDown={e => this.block.onOpenMenu(e)} className="pos visible top-5 right-5 flex-center size-24 visible round item-hover bg-white cursor">
+                {this.block.isCanEdit() && <div onMouseDown={e => this.block.onOpenMenu(e)} className="pos visible top-5 right-5  remark flex-center size-24 visible round bg-hover shadow-s border cursor">
                     <Icon size={20} icon={DotsSvg}></Icon>
                 </div>
                 }

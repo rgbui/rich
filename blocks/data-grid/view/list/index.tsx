@@ -62,15 +62,20 @@ export class TableStoreListView extends BlockView<TableStoreList> {
         return <div style={this.block.visibleStyle}>
             <div style={this.block.contentStyle}>
                 <div className='sy-data-grid-list'
+                 onMouseMove={e => this.block.onOver(true)}
                     onMouseEnter={e => this.block.onOver(true)}
                     onMouseLeave={e => this.block.onOver(false)}
                 ><DataGridTool block={this.block}></DataGridTool>
                     {!this.block.noTitle && <Divider hidden={this.block.dataGridTab ? true : false}></Divider>}
-                    <DataGridGroup block={this.block} renderRowContent={(b, c, g) => {
+                    <DataGridGroup block={this.block} renderRowContent={(b, cs, g) => {
                         return <div>
-                            <ChildsArea childs={c}></ChildsArea>
+                            <ChildsArea childs={cs}></ChildsArea>
                             {this.block.dataGridIsCanEdit() && !this.block.isCardAuto && <div
-                                onMouseDown={e => { e.stopPropagation(); this.block.onSyncAddRow({}, undefined, 'after') }}
+                                onMouseDown={e => {
+                                    e.stopPropagation();
+                                    var id = cs.last()?.id;
+                                    this.block.onSyncAddRow({}, id, 'after')
+                                }}
                                 className="flex cursor item-hover round padding-5 f-14 remark">
                                 <Icon size={18} icon={PlusSvg}></Icon>
                                 <span><S>新增</S></span>

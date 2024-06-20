@@ -58,7 +58,7 @@ export class DataGridCreate extends EventsComponent {
         var self = this;
         var cms = CardFactory.getCardModels();
         return <div className="gap-t-10">
-            <div className="f-12 remark flex"
+            <div className="f-12 remark flex gap-b-5"
                 onMouseDown={e => {
                     this.cmsSpread = this.cmsSpread !== false ? false : true;
                     this.forceUpdate(() => {
@@ -67,7 +67,7 @@ export class DataGridCreate extends EventsComponent {
                     });
                 }}>
                 <span className={"flex-fixed item-hover cursor round  size-16 flex-center ts " + (this.cmsSpread !== false ? "angle-180 " : "angle-90 ")}><Icon size={8} icon={TriangleSvg}></Icon></span>
-                <span className="flex-fixed item-hover cursor">选择数据表模板</span>
+                <span className="flex-fixed item-hover cursor round">选择数据表模板</span>
             </div>
             {this.cmsSpread && <div className="max-h-200   gap-w-10 overflow-y">
                 {cms.map((c, i) => {
@@ -94,7 +94,7 @@ export class DataGridCreate extends EventsComponent {
     }
     rsSpreads: { [key: string]: boolean } = {};
     renderTables() {
-        var list = Array.from(TableSchema.schemas.values());
+        var list =TableSchema.getSchemas(); 
         list = lodash.sortBy(list, g => 0 - g.createDate.getTime())
         var self = this;
         var srs = getSchemaViews()
@@ -140,7 +140,7 @@ export class DataGridCreate extends EventsComponent {
         if (this.source == 'createView') {
             self.emit('save', {
                 text: self.inputViewText || lst('未命名数据表'),
-                url: BlockUrlConstant.DataGridTable,
+                url: this.url,
                 source: this.source
             })
         }
@@ -162,6 +162,7 @@ export class DataGridCreate extends EventsComponent {
         }
     }
     renderCreate() {
+        var views = getSchemaViews();
         return <div className=" gap-t-10">
             <div className="gap-w-10"><Input placeholder={lst('数据表名称')} value={this.inputViewText}
                 onChange={e => {
@@ -170,9 +171,25 @@ export class DataGridCreate extends EventsComponent {
                 onEnter={e => {
                     this.inputViewText = e;
                 }} ></Input></div>
+            <div className="h-10"></div>
+            {views.map(v => {
+                return <div className="flex h-30 padding-w-5 gap-w-10  item-hover round cursor" onMouseDown={e => {
+                    this.url = v.url;
+                    this.source = 'createView';
+                    this.forceUpdate();
+                }} key={v.url}>
+                    <span className="flex-fixed size-20 flex-center">
+                        <Icon size={16} icon={getSchemaViewIcon(v as any)}></Icon>
+                    </span>
+                    <span className="flex-auto">{v.text}</span>
+                    <label className="flex-fixed">{this.url == v.url && <Icon size={16} icon={CheckSvg}></Icon>}</label>
+                </div>
+            })}
+
             <div className="gap-w-10 gap-b-10">{this.renderCms()}</div>
             {this.source == 'dataView' && <div onMouseDown={e => {
                 this.source = 'createView';
+                this.url = BlockUrlConstant.DataGridTable;
                 this.forceUpdate(() => {
                     this.emit('update')
                 });
@@ -189,6 +206,7 @@ export class DataGridCreate extends EventsComponent {
     isOnlyCreateTable = false;
     async open(options?: { isOnlyCreateTable?: boolean }) {
         this.isOnlyCreateTable = options?.isOnlyCreateTable ? true : false;
+        this.url = BlockUrlConstant.DataGridTable;
         await TableSchema.onLoadAll()
         this.forceUpdate();
     }

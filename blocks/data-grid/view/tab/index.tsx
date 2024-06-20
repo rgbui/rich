@@ -80,7 +80,38 @@ export class DataGridTab extends Block {
                 viewId: this.dataGridBlock.syncBlockId,
                 selectView: true,
                 createView: true,
-                createTable:true
+                createTable: true
+            }, async () => {
+                var s = this.dataGridBlock.schema;
+                var view = this.dataGridBlock.schema.listViews.find(c => c.id == (g as any).viewId);
+                await this.page.onAction('onTabAddItem', async () => {
+                    var items = lodash.cloneDeep(this.tabItems);
+                    items.push({
+                        schemaId: s.id,
+                        viewId: view.id,
+                        viewText: view.text,
+                        viewIcon: view.icon
+                    });
+                    await this.updateProps({ tabItems: items }, BlockRenderRange.self);
+                    await this.page.createBlock(BlockUrlConstant.DataGridTabPage, {
+                        blocks: {
+                            childs: [
+                                {
+                                    url: view.url,
+                                    schemaId: s.id,
+                                    syncBlockId: view.id
+                                }
+                            ]
+                        }
+                    },
+                        this,
+                        this.blocks.otherChilds.length,
+                        BlockChildKey.otherChilds
+                    );
+                    this.tabIndex = this.tabItems.length - 1;
+                });
+                var nb = this.otherChilds.last().childs.first() as DataGridView;
+                await nb.onAddCreateTableView()
             });
             if (g) {
                 if (typeof g != 'string' && g.type == 'view') {
@@ -237,7 +268,7 @@ export class DataGridTab extends Block {
                                 );
                                 if (rg?.item) {
                                     if (rg?.item.name == 'delete') {
-                                        self.dataGridBlock.schema.onSchemaOperate([{ name: 'removeSchemaView', id: item.value }],self.dataGridBlock.id)
+                                        self.dataGridBlock.schema.onSchemaOperate([{ name: 'removeSchemaView', id: item.value }], self.dataGridBlock.id)
                                         items.arrayJsonRemove('childs', g => g === item);
                                         mp.updateItems(items);
                                     }
@@ -256,7 +287,7 @@ export class DataGridTab extends Block {
                                 if (Object.keys(props).length > 0) {
                                     await self.dataGridBlock.schema.onSchemaOperate([
                                         { name: 'updateSchemaView', id: item.value, data: props }
-                                    ],self.dataGridBlock.id);
+                                    ], self.dataGridBlock.id);
                                     if (props.text) item.text = props.text || item.text;
                                     if (props.icon) item.icon = props.icon || item.icon;
                                     mp.updateItems(items);
@@ -435,17 +466,23 @@ export class DataGridTab extends Block {
             if (g) return g as DataGridView;
         }
     }
-    async updateView(dg: DataGridView) {
-        var items = lodash.cloneDeep(this.tabItems);
-        var item = items[this.tabIndex];
-        item.schemaId = dg.schemaId;
-        item.viewId = dg.syncBlockId;
-        if (!this.refTables.some(s => s.id == item.schemaId)) {
-            if (dg.schema && dg.schema?.id == item.schemaId) {
-                this.refTables.push(dg.schema);
+    async updateTabItems(block: DataGridView,tabIndex?: number)
+    {
+        var items: DataGridTab['tabItems'] = lodash.cloneDeep(this.tabItems);
+        var index = tabIndex ?? this.tabIndex;
+        if (items[index]) {
+            items[index].schemaId = block.schemaId;
+            items[index].viewId = block.syncBlockId;
+            if (block.schemaView) {
+                items[index].viewText = block.schemaView?.text;
+                items[index].viewIcon = block.schemaView?.icon;
             }
-            else {
-                var s = await TableSchema.loadTableSchema(item.schemaId, this.page.ws);
+        }
+        if (lodash.isEqual(items, this.tabItems)) return;
+        var sr = items.findAll(c => !this.refTables.some(s => s.id == c.schemaId));
+        if (sr.length > 0) {
+            for (let i = 0; i < sr.length; i++) {
+                var s = await TableSchema.loadTableSchema(sr[i].schemaId, this.page.ws);
                 this.refTables.push(s);
             }
         }
@@ -560,7 +597,7 @@ export class DataGridTabView extends BlockView<DataGridTab> {
                                 this.block.onDraggerItem(e, index)
                             }} className={"sy-data-grid-tab-item b-500 flex-center  " + (index == this.block.tabIndex ? "sy-data-grid-tab-item-hover" : "")} key={index}>
                                 <div className={"flex  round cursor max-w-220 f-14 " + (this.block.displayMode == 'button' ? "" : " item-hover")}>
-                                    <div className="size-24 flex-center  "><Icon fontColorInherit icon={getSchemaViewIcon(v)}  size={16}></Icon></div>
+                                    <div className="size-24 flex-center  "><Icon fontColorInherit icon={getSchemaViewIcon(v)} size={16}></Icon></div>
                                     <span className={"gap-r-5 f-14 "}>{v?.text || item.viewText}</span>
                                 </div>
                             </div>
