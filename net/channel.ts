@@ -49,7 +49,7 @@ class Channel {
     air<K extends keyof ChannelAirMapUrls>(url: K, args: ChannelAirMapUrls[K]['args'], options?: { locationId?: string|number }): ChannelAirMapUrls[K]['returnType'] {
         return channelService.excute(MethodType.air, url, args, options) as any;
     }
-    fire<K extends keyof ChannelFireMapUrls>(url: K, args?: ChannelFireMapUrls[K]['args'], options?: { locationId?: string|number, sockId?: string }): ChannelFireMapUrls[K]['returnType'] {
+    fire<K extends keyof ChannelFireMapUrls>(url: K, args?: ChannelFireMapUrls[K]['args'], options?: { locationId?: string|number, sockId?: string,userid?:string }): ChannelFireMapUrls[K]['returnType'] {
         return channelService.fire(url, args, options) as any;
     }
     off<K extends keyof ChannelOffMapUrls>(url: K, handle?: ChannelOffMapUrls[K]['args']) {

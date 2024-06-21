@@ -35,6 +35,7 @@ import { DataGridTab } from "../tab";
 import { PageLayoutType } from "../../../../src/page/declare";
 import { BlockRenderRange } from "../../../../src/block/enum";
 import { GroupHeadType, GroupViewType } from "../declare";
+import { util } from "../../../../util/util";
 
 /**
  * 
@@ -414,6 +415,14 @@ export class DataGridView extends Block {
             this.forceManualUpdate();
         }
     }
+    async deleteOneItem(data: Record<string, any> | (Record<string, any>[]), isForce?: boolean) {
+        var ds = util.covertToArray(data);
+        var cs = this.blocks.childs.findAll(g => ds.some(d => d.id == (g as TableGridItem).dataId));
+        lodash.remove(this.blocks.childs, g => ds.some(d => d.id == (g as TableGridItem).dataId));
+        if (isForce && cs.length > 0) {
+            this.forceManualUpdate();
+        }
+    }
     async createdDidMounted(): Promise<void> {
         if (this.createSource == 'InputBlockSelector' || this.createSource == 'pageTurnLayout') {
             if (!this.schemaId) {
@@ -630,6 +639,7 @@ export class DataGridView extends Block {
         sockId?: string;
     }) => {
         console.log('syncDataSchema', r, options);
+        if (this.dataGridIsCanEdit() == false) return;
         if (r?.operate?.schemaId) {
             if (r?.operate.schemaId == this.schemaId) {
                 if (options?.locationId == this.id) return;
@@ -661,7 +671,6 @@ export class DataGridView extends Block {
                             var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
                             this.schema = tc;
                             if (this.fields.some(s => s.field?.id == (act as any).id)) {
-                                // await this.createItem();
                                 this.forceManualUpdate();
                             }
                             break;
@@ -670,16 +679,14 @@ export class DataGridView extends Block {
                             this.schema = tc;
                             if (this.fields.some(s => s.fieldId == (act as any).id)) {
                                 lodash.remove(this.fields, s => s.fieldId == (act as any).id);
-                                await this.createItem(true);
+                                this.forceManualUpdate();
                             }
                             break;
                         case 'turnField':
                             var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
                             this.schema = tc;
                             if (this.fields.some(s => s.fieldId == (act as any).id)) {
-                                // await this.createItem();
-                                this.onLozyReloadData();
-                                this.forceManualUpdate();
+                                await this.onLozyReloadData();
                             }
                             break;
                         case 'deleteSchema':
@@ -703,6 +710,7 @@ export class DataGridView extends Block {
         sockId?: string;
     }) => {
         console.log('syncDatastore', r, options);
+        if (this.dataGridIsCanEdit() == false) return;
         if (r?.operate?.schemaId) {
             if (r?.operate.schemaId == this.schemaId) {
                 if (options?.locationId == this.id) return;
@@ -713,21 +721,19 @@ export class DataGridView extends Block {
                             if (options.locationId == 'Page.onSubmitForm' || options.locationId == 'flowButtonAddRecords') {
                                 this.data.push(act.data);
                                 this.total += 1;
-                                await this.createItem(true);
+                                await this.createOneItem(act.data, true)
                                 this.onNotifyPageReferenceBlocks();
                             }
-
                             break;
                         case 'batchAdd':
                             if (options.locationId == '') {
 
                             }
-
                         case 'update':
                             var dr = this.data.find(g => g.id == (act as any).id);
                             if (dr) {
-                                dr = Object.assign(dr, (act as any).data);
-                                await this.createItem(true);
+                                Object.assign(dr, (act as any).data);
+                                await this.createOneItem(dr, true)
                             }
                             break;
                         case 'remove':
@@ -736,9 +742,8 @@ export class DataGridView extends Block {
                                 lodash.remove(this.data, g => g.id == (act as any).id);
                                 this.total -= 1;
                                 this.onNotifyPageReferenceBlocks();
-                                await this.createItem(true);
+                                await this.deleteOneItem(dr, true);
                             }
-
                             break;
                         case 'removeIds':
                             var drs = this.data.filter(g => (act as any).ids.includes(g.id));
@@ -746,7 +751,7 @@ export class DataGridView extends Block {
                                 lodash.remove(this.data, g => (act as any).ids.includes(g.id));
                                 this.total -= (act as any).ids.length;
                                 this.onNotifyPageReferenceBlocks();
-                                await this.createItem(true);
+                                await this.deleteOneItem(drs, true)
                             }
                             break;
                         case 'removeFilter':
@@ -789,8 +794,9 @@ export class DataGridView extends Block {
         r = r.move(0, 3);
         return r;
     }
-    onLozyReloadData = lodash.debounce(async () => {
+    onLozyReloadData = lodash.debounce(async (action?: () => Promise<void>) => {
         await this.onReloadData();
+        if (action) await action();
     }, 1000)
     forceUpdateAllViews() {
 
