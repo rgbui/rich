@@ -17,7 +17,6 @@ export class FieldText extends OriginField {
         this.dataGrid.onOpenEditForm(this.dataGridItem.dataRow.id);
     }
     onCellMousedown(event: React.MouseEvent<Element, MouseEvent>): void {
-        console.log('xxx');
         setTimeout(() => {
             this.page.kit.anchorCursor.onFocusBlockAnchor(this, { last: true })
         }, 50);
@@ -62,7 +61,7 @@ export class FieldTextView extends OriginFileView<FieldText> {
         }
         if (isList) {
             textStyle.textDecoration = 'underline';
-            textStyle.textDecorationColor = 'rgba(22, 22, 22, 0.3)';
+            textStyle.textDecorationColor = 'rgba(22, 22, 22, 0.1)';
         }
         return <div className={'flex l-20 flex-top sy-field-title f-14  ' + (isCard ? "  bold" : " b-500 ")} onKeyDown={e => this.keydown(e)} onMouseMove={e => this.move(e)}>
 
