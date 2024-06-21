@@ -34,7 +34,7 @@ export class TableStoreView extends BlockView<TableStore> {
                     onMouseEnter={e => this.block.onOver(true)}
                     onMouseLeave={e => this.block.onOver(false)}
                 >
-                    {this.block.isLoading && <Spin block></Spin>}
+
                     {this.block.schema && <DataGridTool block={this.block}></DataGridTool>}
                     {this.renderCreateTable()}
                     {this.block.schema && this.block.noHead !== true && <div
