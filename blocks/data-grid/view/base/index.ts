@@ -36,6 +36,7 @@ import { PageLayoutType } from "../../../../src/page/declare";
 import { BlockRenderRange } from "../../../../src/block/enum";
 import { GroupHeadType, GroupViewType } from "../declare";
 import { util } from "../../../../util/util";
+import { DataGridTableItem } from "../table/row";
 
 /**
  * 
@@ -411,6 +412,14 @@ export class DataGridView extends Block {
         }, this) as TableGridItem;
         this.blocks.childs.push(rowBlock);
         await rowBlock.createElements();
+        if (isForce) {
+            this.forceManualUpdate();
+        }
+    }
+    async createRowsItem(isForce?: boolean) {
+        for (let c of this.blocks.childs) {
+            await (c as DataGridTableItem).createElements()
+        }
         if (isForce) {
             this.forceManualUpdate();
         }

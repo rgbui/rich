@@ -271,8 +271,36 @@ export var OnlyFieldTypes: FieldType[] = [
     FieldType.like,
     FieldType.oppose,
     FieldType.love,
+    FieldType.vote,
     FieldType.parentId,
     FieldType.subs
+]
+
+/**
+ * 支持转换的字段
+ */
+export var SupportTurnFieldTypes: FieldType[] = [
+    FieldType.text,
+    FieldType.number,
+    FieldType.price,
+    FieldType.option,
+    FieldType.options,
+    FieldType.bool,
+    FieldType.date,
+    FieldType.image,
+    FieldType.audio,
+    FieldType.video,
+    FieldType.file,
+    FieldType.user,
+    FieldType.email,
+    FieldType.phone,
+    FieldType.link,
+    FieldType.geolocation,
+    FieldType.relation,
+    FieldType.rollup,
+    FieldType.formula,
+    FieldType.emoji,
+    FieldType.button
 ]
 
 /**
@@ -280,6 +308,7 @@ export var OnlyFieldTypes: FieldType[] = [
  */
 export var DisabledSortFieldTypes: FieldType[] = [
     FieldType.formula,
+    FieldType.button,
     FieldType.rollup,
     FieldType.cover,
     FieldType.icon,

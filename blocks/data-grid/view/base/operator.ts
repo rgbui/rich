@@ -150,12 +150,10 @@ export class DataGridViewOperator {
         if (force == true || await Confirm(lst('确定要删除该列吗'))) {
             var field = viewField.field;
             this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
-                // this.page.notifyActionBlockSync(this);
                 var r = await this.schema.fieldRemove(field.id, this.id);
                 if (r.ok) {
                     await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.fieldId == field.id })
-                    await this.createItem();
-                    this.forceManualUpdate();
+                    await this.createRowsItem(true);
                 }
             });
         }
@@ -163,12 +161,10 @@ export class DataGridViewOperator {
     async onDeleteField(this: DataGridView, field: Field, force?: boolean) {
         if (force == true || await Confirm(lst('确定要删除该列吗'))) {
             await this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
-                // this.page.notifyActionBlockSync(this);
                 var r = await this.schema.fieldRemove(field.id, this.id);
                 if (r.ok) {
                     await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.fieldId == field.id })
-                    await this.createItem();
-                    this.forceManualUpdate();
+                    await this.createRowsItem(true);
                 }
             });
         }
@@ -233,18 +229,12 @@ export class DataGridViewOperator {
     }
     async onTurnField(this: DataGridView, viewField: ViewField, type: FieldType, options: { text?: string, config?: Record<string, any> }) {
         var field = viewField.field;
-        // await this.page.onAction(ActionDirective.onSchemaTurnField, async () => {
-        // this.page.notifyActionBlockSync(this);
+        console.log(field.type)
         var r = await this.schema.turnField({ fieldId: field.id, data: { text: options.text, type: type, config: options.config } }, this.id);
+        console.log(field.type)
         if (r.ok) {
-            // field.type = type;
-            // if (options.text) field.text = options.text;
-            // if (options.config) Object.assign(field.config, options.config);
-            await this.loadData();
-            await this.createItem();
-            this.forceManualUpdate();
+            await this.onReloadData()
         }
-        // });
     }
     /**
      * 将当前表格切换成相对应的视图url
@@ -738,7 +728,7 @@ export class DataGridViewOperator {
         var props: Record<string, any> = {
 
         }
-        if(!dg)return props;
+        if (!dg) return props;
         var gf = this.schema.fields.find(g => g.id == this.groupView.groupId);
         if ([FieldType.creater, FieldType.modifyer, FieldType.user].includes(gf.type)) {
             if (gf.type == FieldType.user) {
@@ -784,11 +774,11 @@ export class DataGridViewOperator {
         }
         else {
             if ([FieldType.text,
-                FieldType.title,
-                FieldType.link,
-                FieldType.phone,
-                FieldType.email,
-                FieldType.bool
+            FieldType.title,
+            FieldType.link,
+            FieldType.phone,
+            FieldType.email,
+            FieldType.bool
             ].includes(gf.type))
                 props[gf.name] = dg.value;
         }

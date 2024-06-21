@@ -1,4 +1,3 @@
-import { IconValueType } from "../../../component/view/icon";
 import { IconArguments } from "../../../extensions/icon/declare";
 import { util } from "../../../util/util";
 import { TableSchema } from "./meta";

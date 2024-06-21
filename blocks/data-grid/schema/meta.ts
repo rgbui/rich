@@ -492,7 +492,7 @@ export class TableSchema {
                         f.type = action.data.type;
                         f.text = action.data.text;
                         f.config = action.data.config;
-                        f.config = Object.assign(f.config || {}, action.data.config || {})
+                        // f.config = Object.assign(f.config || {}, action.data.config || {})
                     }
                     // field.type = type;
                     // if (options.text) field.text = options.text;

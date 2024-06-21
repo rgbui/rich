@@ -72,7 +72,6 @@ export class DataGridTableContent extends React.Component<{
         var self = this;
         if (this.block.data) {
             var cs = this.props.childs || this.block.childs;
-            console.log('ccc', cs);
             return <div className='sy-dg-table-body'>
                 <ChildsArea childs={cs}></ChildsArea>
                 {this.block.isCanAddRow() && <div
@@ -341,9 +340,7 @@ export class DataGridTableHead extends React.Component<{ block: Block, style?: C
                 if (f.type == 'check') icon = CheckSvg;
                 else if (f.type == 'rowNum') { icon = undefined; }
                 else if (f.field) icon = GetFieldTypeSvg(f.field);
-                if ((icon as any)?.color) {
-                    (icon as any).color = 'inherit';
-                }
+              
                 var style: CSSProperties = {
                     width: f.colWidth || 120
                 }
@@ -358,7 +355,7 @@ export class DataGridTableHead extends React.Component<{ block: Block, style?: C
                     style={style}
                     key={f?.field?.id || i}>
                     {icon && <div className={'sy-dg-table-head-th-icon remark flex-fixed size-16 flex-center gap-r-5 '} >
-                        <Icon icon={icon} size={16}></Icon>
+                        <Icon fontColorInherit icon={icon} size={16}></Icon>
                     </div>}
                     <label className="flex-auto">{text}</label>
                     {this.block.dataGridIsCanEdit() && <div className={'sy-dg-table-head-th-property remark item-light-hover round'} onMouseDown={async e => {

@@ -29,7 +29,7 @@ import { BlockDirective } from "../../../../src/block/enum";
 import { Rect, Point } from "../../../../src/common/vector/point";
 import { util } from "../../../../util/util";
 import { DataGridOptionType } from "../../schema/field";
-import { FieldType } from "../../schema/type";
+import { FieldType, SupportTurnFieldTypes } from "../../schema/type";
 import { ViewField } from "../../schema/view";
 import { lst } from "../../../../i18n/store";
 import { OptionBackgroundColorList } from "../../../../extensions/color/data";
@@ -132,11 +132,11 @@ export class DataGridViewField {
                 { type: MenuItemType.divide },
                 {
                     name: 'editProperty',
-                    disabled: viewField.field.type == FieldType.title ? true : false,
+                    visible: SupportTurnFieldTypes.includes(viewField.field.type) ? true : false,
                     icon: { name: "bytedance-icon", code: 'write' } as any,
                     text: lst('编辑字段')
                 },
-                { type: MenuItemType.divide },
+                { type: MenuItemType.divide, visible: SupportTurnFieldTypes.includes(viewField.field.type) ? true : false, },
                 { name: 'sortAsc', icon: { name: 'byte', code: 'sort-amount-up' } as any, text: ascText },
                 { name: 'sortDesc', icon: { name: 'byte', code: 'sort-amount-down' } as any, text: descText },
                 { name: 'filter', icon: FilterSvg, text: lst('按该字段筛选') },
@@ -586,6 +586,7 @@ export class DataGridViewField {
             var dateCustomFormat = items.arrayJsonFind('childs', g => g.name == 'dateCustomFormat');
             var numberUnitCustom = items.arrayJsonFind('childs', g => g.name == 'numberUnitCustom');
             var config_numberDisplay_decimal = items.arrayJsonFind('childs', g => g.name == 'config.numberDisplay.decimal');
+
             if (re) {
                 if (re.item.name == 'hide') {
                     this.onHideField(viewField);
@@ -597,12 +598,18 @@ export class DataGridViewField {
                     );
                     if (r) {
                         if (r.type == viewField.field.type) {
-                            var rd = util.extendKey(r.config, 'config')
-                            await this.onUpdateField(viewField.field, { text: r.text, ...rd })
+                            var props: Record<string, any> = { text: r.text };
+                            if (r.config) {
+                                props.config = Object.assign({}, viewField.field.config || {}, r.config)
+                            }
+                            await this.onUpdateField(viewField.field, props)
                         }
                         else {
-                            var rd = util.extendKey(r.config, 'config')
-                            await this.onTurnField(viewField, r.type, { text: r.text, ...rd });
+                            var props: Record<string, any> = { text: r.text };
+                            if (r.config) {
+                                props.config = Object.assign({}, viewField.field.config || {}, r.config)
+                            }
+                            await this.onTurnField(viewField, r.type, props);
                         }
                     }
                 }
@@ -662,6 +669,7 @@ export class DataGridViewField {
                 else if (re.item.name == 'openRelation') {
                     await self.onOpenSchemaPage(viewField.field.config.relationTableId)
                 }
+                return;
             }
             if (isSysField) {
                 var props: Record<string, any> = {};

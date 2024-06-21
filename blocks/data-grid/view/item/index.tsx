@@ -72,6 +72,9 @@ export class TableGridItem extends Block {
             if (field) {
                 var block = await createFieldBlock(field, this);
                 if (block) this.blocks.childs.push(block);
+                else{
+                    console.log('not found field',field);
+                }
             }
             else {
                 console.log(this, this.fields);
