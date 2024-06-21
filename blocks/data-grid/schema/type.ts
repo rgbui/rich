@@ -210,6 +210,10 @@ export enum FieldType {
      * 弃用
      */
     rich = 9000,
+    /**
+     * 预览
+     */
+    pageContentPreview=10000,
 }
 
 /**
