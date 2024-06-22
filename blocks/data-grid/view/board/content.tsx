@@ -19,6 +19,8 @@ import { CardFactory } from "../../template/card/factory/factory"
 import { Icon } from "../../../../component/view/icon"
 import { ToolTip } from "../../../../component/view/tooltip"
 import { DataGridTableItem } from "../table/row"
+import { TableGridItem } from "../item"
+import { GenreConsistency } from "../../../../net/genre"
 
 export class BoardContent extends React.Component<{
     block: Block,
@@ -31,14 +33,21 @@ export class BoardContent extends React.Component<{
     get groupHead() {
         return this.props.groupHead;
     }
-    onDrag(event: React.MouseEvent, block: Block) {
-        // event.stopPropagation();
-        this.block.page.kit.handle.onDirectDrag(block, event.nativeEvent, {
-            isOnlyDrag: true,
-            notDragFun: (ev) => {
-                console.log(ev, 'sxxx');
-            }
-        });
+    onDrag(event: React.MouseEvent,
+        block: TableGridItem) {
+        if (this.block.dataGridIsCanEdit()) {
+            // event.stopPropagation();
+            this.block.page.kit.handle.onDirectDrag(block, event.nativeEvent, {
+                isOnlyDrag: true,
+                notDragFun: (ev) => {
+                    console.log(ev, 'sxxx');
+                    this.block.onOpenEditForm(block.dataId)
+                }
+            });
+        }
+        else {
+            this.block.onOpenEditForm(block.dataId)
+        }
     }
     async onOpenFieldStat(e: React.MouseEvent) {
         var getField = (f: ViewField) => {
@@ -109,7 +118,12 @@ export class BoardContent extends React.Component<{
         var ds = this.block.groupStats.find(g => g.groupId == dg.value)
         if (this.props.groupHead) ds = this.block.groupStats.find(g => g.groupId == dg.value && lodash.isEqual(g.groupViewId, this.props.groupHead.id));
 
-        return <div className="sy-data-grid-board-group visible-hover" key={index}>
+        return <div
+            className="sy-data-grid-board-group visible-hover"
+            data-block-drop-panel={JSON.stringify(GenreConsistency.transform({
+                [this.block.groupField.name]: dg.value
+            }))}
+            key={index}>
             <div className="sy-data-grid-board-group-head">
                 <span className="flex-auto">
                     {!dg.group && <span className="text-1"><Sp text={'无{group}的数据'}
@@ -130,7 +144,7 @@ export class BoardContent extends React.Component<{
             </div>
             <div className="sy-data-grid-board-group-childs">
                 {cs.map(c => {
-                    return <div onMouseDown={e => this.onDrag(e, c)} key={c.id}>{this.renderItem(c)}</div>
+                    return <div onMouseDown={e => this.onDrag(e, c as any)} key={c.id}>{this.renderItem(c)}</div>
                 })}
                 {this.block.isCanEdit() && <ToolTip overlay={lst('新增数据')}><div onMouseDown={e => this.block.onAddGroup(dg, this.props.groupHead)} className=" gap-b-10 visible item-hover item-hover-light-focus flex-center text-1 round h-30 cursor">
                     <Icon size={18} icon={PlusSvg}></Icon>

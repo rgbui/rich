@@ -415,15 +415,36 @@ export class Block$LifeCycle {
         };
         return isLine ? ps.join('') : ps.join('  \n');
     }
-    dropEnter(this: Block, direction: DropDirection) {
+    dropEnter(this: Block, direction: DropDirection, dropEl?: HTMLElement) {
         var dire = DropDirection[direction];
         var className = 'shy-block-drag-over-' + dire;
-        if (!this.el.classList.contains(className)) {
+        if (dropEl) {
             dom(this.el).removeClass(g => g.startsWith('shy-block-drag-over'));
-            this.el.classList.add(className);
+            var ds = Array.from(this.el.querySelectorAll('[data-block-drop-panel]'));
+            ds.forEach(d => {
+                dom(d).removeClass(g => g.startsWith('shy-block-drag-over'));
+            });
+            if (!dropEl.classList.contains(className))
+                dropEl.classList.add(className);
+        }
+        else {
+            if (!this.el.classList.contains(className)) {
+                dom(this.el).removeClass(g => g.startsWith('shy-block-drag-over'));
+                this.el.classList.add(className);
+            }
+            var ds = Array.from(this.el.querySelectorAll('[data-block-drop-panel]'));
+            ds.forEach(d => {
+                dom(d).removeClass(g => g.startsWith('shy-block-drag-over'));
+            });
         }
     }
     dropLeave(this: Block) {
         dom(this.el).removeClass(g => g.startsWith('shy-block-drag-over'));
+        if (this.page.viewEl) {
+            var ds = Array.from(this.page.viewEl.querySelectorAll('[data-block-drop-panel]'));
+            ds.forEach(d => {
+                dom(d).removeClass(g => g.startsWith('shy-block-drag-over'));
+            });
+        }
     }
 }

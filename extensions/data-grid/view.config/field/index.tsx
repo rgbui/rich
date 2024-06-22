@@ -43,6 +43,36 @@ export class DataGridFields extends EventsComponent {
         this.block = block;
         this.forceUpdate();
     }
+    renderAllFields() {
+        var self = this;
+        return <div>
+            <div className="gap-t-10">
+                <span className="remark flex-auto f-12 gap-l-8"><S>所有的字段</S></span>
+            </div>
+            <div className="shy-table-field-view max-h-300 overflow-y">
+                {
+                    <div className="shy-table-field-view-items">{this.schema.visibleFields.map(f => {
+                        return <div className={"flex h-30 padding-w-5 gap-w-5 round cursor item-hover"} key={f.id}>
+                            <span className="size-24 round flex-center flex-fixed"> <Icon size={14} icon={GetFieldTypeSvg(f)}></Icon></span>
+                            <span className="flex-auto f-14">{f.text}</span>
+                            {!TableSchema.isSystemField(f) && <span className="size-24 round flex-center flex-fixed item-hover"> <Icon className={'eye'} size={14} onClick={async (e) => { self.openProperty('field', f, e) }} icon={DotsSvg}></Icon></span>}
+                        </div>
+                    })}</div>
+                }
+            </div>
+            <Divider></Divider>
+            <div onClick={e => this.addField(e)} className="flex h-30  item-hover padding-w-5 gap-w-5 round cursor text-1 f-14 ">
+                <span className="size-20 round flex-center flex-fixed cursor">
+                    <Icon size={18} icon={PlusSvg}></Icon>
+                </span>
+                <span className="flex-auto"><S>添加字段</S></span>
+            </div>
+            <Divider></Divider>
+            <div className="h-30 padding-w-10 flex">
+                <HelpText align="left" block url={window.shyConfig?.isUS ? "https://help.shy.red/page/43#2PRKjiNkLmU6w4xciiy1t1" : "https://help.shy.live/page/1871#gVnf6Ar2iF5wa2fS2KpLws"}><S>了解如何使用数据表字段</S></HelpText>
+            </div>
+        </div>
+    }
     renderTable() {
         return <div className="shy-table-field-view gap-t-10">
             {this.renderFields()}
@@ -350,7 +380,7 @@ export class DataGridFields extends EventsComponent {
             BlockUrlConstant.DataGridBoard,
             BlockUrlConstant.DataGridList,
             BlockUrlConstant.DataGridGallery].includes(this.block.url as any)) return this.renderCard()
-        else if (this.block.url == BlockUrlConstant.DataGridCalendar) return this.renderTable()
+        else if (this.block.url == BlockUrlConstant.DataGridCalendar) return this.renderAllFields()
         else return this.renderTable()
     }
 }

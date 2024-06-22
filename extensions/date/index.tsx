@@ -53,6 +53,9 @@ export class DatePicker extends EventsComponent {
             i += 1;
         }
         var weeks: string[] = [lst('一'), lst('二'), lst('三'), lst('四'), lst('五'), lst('六'), lst('日')];
+        if (window.shyConfig?.isUS) {
+            weeks = [lst('日'), lst('一'), lst('二'), lst('三'), lst('四'), lst('五'), lst('六')];
+        }
         return <div className='shy-date-picker-days'>
             <div className='shy-date-picker-days-week'>
                 {weeks.map(we => {

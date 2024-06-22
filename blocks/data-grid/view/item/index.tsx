@@ -29,6 +29,8 @@ import { Rect } from "../../../../src/common/vector/point";
 import { TableStoreBoard } from "../board";
 import { SearchListType } from "../../../../component/types";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
+import { TableStoreCalendar } from "../calendar";
+import dayjs from "dayjs";
 
 
 @url('/data-grid/item')
@@ -67,13 +69,14 @@ export class TableGridItem extends Block {
     }
     async createElements() {
         this.blocks.childs = [];
+        if (this.url == '/data-grid/calendar/item') return
         for (let i = 0; i < this.fields.length; i++) {
             var field = this.fields[i];
             if (field) {
                 var block = await createFieldBlock(field, this);
                 if (block) this.blocks.childs.push(block);
-                else{
-                    console.log('not found field',field);
+                else {
+                    console.log('not found field', field);
                 }
             }
             else {
@@ -255,7 +258,7 @@ export class TableGridItem extends Block {
     isAllowDrops(dragBlocks: Block[]) {
         if (dragBlocks.length == 1) {
             var dg = dragBlocks[0];
-            if (dg instanceof TableGridItem && dg.dataGrid === this.dataGrid) {
+            if (dg instanceof TableGridItem && dg.dataGrid?.schemaId === this.dataGrid?.schemaId) {
                 if (dg === this) return false;
                 return true;
             }
@@ -263,7 +266,7 @@ export class TableGridItem extends Block {
         return false;
     }
     isCanDropHere(dropBlock: Block) {
-        if (dropBlock instanceof TableGridItem && dropBlock.dataGrid == this.dataGrid) {
+        if (dropBlock instanceof TableGridItem && dropBlock.dataGrid?.schemaId == this.dataGrid?.schemaId) {
             return true;
         }
         return false
@@ -274,15 +277,27 @@ export class TableGridItem extends Block {
             DropDirection.bottom
         ]
     }
-    async drop(blocks: Block[], direction: DropDirection) {
+    async drop(blocks: Block[],
+        direction: DropDirection,
+        dropData?: Record<string, any>) {
         var dragRow = blocks[0] as TableGridItem;
-        switch (direction) {
+        switch (direction)
+        {
             case DropDirection.bottom:
             case DropDirection.top:
                 var props: Record<string, any> = {};
                 if (this.dataGrid?.url == BlockUrlConstant.DataGridBoard) {
                     var name = (this.dataGrid as TableStoreBoard).groupField?.name;
                     props[name] = this.dataRow[name]
+                }
+                else if (this.dataGrid?.url == BlockUrlConstant.DataGridCalendar) {
+                    var name = (this.dataGrid as TableStoreCalendar).dateField?.name;
+                    var d = dayjs(dragRow.dataRow[name]);
+                    var c = dayjs(this.dataRow[name]);
+                    d = d.year(c.year());
+                    d = d.month(c.month());
+                    d = d.date(c.date());
+                    props[name] = d.toDate()
                 }
                 if (this.dataGrid.schema.allowSubs) {
                     if ([BlockUrlConstant.DataGridList, BlockUrlConstant.DataGridTable].includes(this.dataGrid.url as any)) {
@@ -316,6 +331,15 @@ export class TableGridItem extends Block {
                         this.page.addActionCompletedEvent(async () => {
                             this.dataGrid.onSortRank()
                         })
+                    }
+                }
+                break;
+            case DropDirection.inner:
+                if (dropData && Object.keys(dropData).length > 0) {
+                    var r = await this.schema.rowUpdate({ dataId: dragRow.dataRow.id, data: dropData }, this.dataGrid?.id || (this.id + 'TableStoreItem'));
+                    if (r) {
+                        Object.assign(dragRow.dataRow, dropData);
+                        dragRow.dataGrid.createOneItem(dragRow.dataRow,true);
                     }
                 }
                 break;

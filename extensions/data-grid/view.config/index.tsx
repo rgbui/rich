@@ -27,7 +27,7 @@ export default class DataGridConfig extends EventsComponent {
             this.tableSortView.onOpen(this.dataGrid);
         if (this.dataGridTrigger)
             this.dataGridTrigger.onOpen(this.dataGrid);
-        if(this.dataGroupView) 
+        if (this.dataGroupView)
             this.dataGroupView.onOpen(this.dataGrid);
         if (mode == 'field' && this.tab) this.tab.onFocus(1)
         if (mode == 'filter' && this.tab) this.tab.onFocus(2)
@@ -59,7 +59,7 @@ export default class DataGridConfig extends EventsComponent {
                     <Tab.Page item={lst('排序')}>
                         <TableSortView ref={e => this.tableSortView = e}></TableSortView>
                     </Tab.Page>
-                    <Tab.Page item={lst('分组')}>
+                    <Tab.Page item={lst('分组')} visible={[BlockUrlConstant.DataGridCalendar].includes(this.dataGrid?.url as any) ? false : true} >
                         <TableGroupView ref={e => this.dataGroupView = e}></TableGroupView>
                     </Tab.Page>
                     <Tab.Page item={lst('触发器')}>

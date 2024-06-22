@@ -65,6 +65,8 @@ export class Handle extends Events {
     dragBlocks: Block[] = [];
     dropBlock: Block;
     dropDirection: DropDirection;
+    dropData: Record<string, any>;
+    dropEl: HTMLElement;
     onDropOverBlock(willDropBlock: Block, event: MouseEvent) {
         if (willDropBlock) {
             var db = this.dragBlocks.find(g => {
@@ -93,7 +95,9 @@ export class Handle extends Events {
         if (willDropBlock) {
             this.dropDirection = dr.direction;
             this.dropBlock = dr.dropBlock;
-            this.dropBlock.dropEnter(this.dropDirection);
+            this.dropData = dr.dropData;
+            this.dropEl = dr.dropEl;
+            this.dropBlock.dropEnter(this.dropDirection, this.dropEl);
         }
     }
     onDropEnd() {
@@ -108,7 +112,7 @@ export class Handle extends Events {
     }
     async onDropBlock() {
         if (this.dragBlocks.length > 0 && this.dropBlock) {
-            await this.kit.page.onBatchDragBlocks(this.dragBlocks, this.dropBlock, this.dropDirection);
+            await this.kit.page.onBatchDragBlocks(this.dragBlocks, this.dropBlock, this.dropDirection,this.dropData);
         }
     }
     async onClickBlock(event: MouseEvent) {

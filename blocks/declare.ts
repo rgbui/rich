@@ -45,6 +45,7 @@ import "./data-grid/view/table/row";
 
 import './data-grid/view/board';
 import './data-grid/view/calendar';
+import "./data-grid/view/calendar/item";
 import './data-grid/view/gallery';
 import './data-grid/view/list';
 import "./data-grid/view/list/row";

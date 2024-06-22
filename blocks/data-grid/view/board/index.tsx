@@ -27,6 +27,8 @@ import { DataGridGroup } from "../components/group";
 import { BoardContent } from "./content";
 import { GroupHeadType, GroupIdType } from "../declare";
 import { Divider } from "../../../../component/view/grid";
+import { DropDirection } from "../../../../src/kit/handle/direction";
+import { Block } from "../../../../src/block";
 
 @url('/data-grid/board')
 export class TableStoreBoard extends DataGridView {
@@ -176,35 +178,6 @@ export class TableStoreBoard extends DataGridView {
             }
         }
     }
-    // async createItem(isForce?: boolean) {
-    //     this.blocks.childs = [];
-    //     var name = this.groupField.name;
-    //     for (let i = 0; i < this.dataGroups.length; i++) {
-    //         var dg = this.dataGroups[i];
-    //         var list = this.data.findAll(g => g.parentId ? false : true).findAll(x => {
-    //             if (lodash.isNull(dg.value) && (lodash.isUndefined(x[name]) || Array.isArray(x[name]) && lodash.isEqual(x[name], []) || lodash.isNull(x[name]))) return true;
-    //             else if (x[name] === dg.value || Array.isArray(x[name] && x[name].includes(dg.value))) return true;
-    //             else return false;
-    //         });
-    //         await list.eachAsync(async row => {
-    //             var rowBlock: TableGridItem = await BlockFactory.createBlock('/data-grid/item', this.page, {
-    //                 dataId: row.id
-    //             }, this) as TableGridItem;
-    //             this.blocks.childs.push(rowBlock);
-    //             await rowBlock.createElements();
-    //         })
-    //     }
-    //     if (isForce) this.forceManualUpdate();
-    // }
-    // async createOneItem(data: Record<string, any>, isForce?: boolean) {
-    //     lodash.remove(this.blocks.childs, g => (g as TableGridItem).dataId == data.id);
-    //     var rowBlock: TableGridItem = await BlockFactory.createBlock('/data-grid/item', this.page, {
-    //         dataId: data.id
-    //     }, this) as TableGridItem;
-    //     this.blocks.childs.push(rowBlock);
-    //     await rowBlock.createElements();
-    //     if (isForce) this.forceManualUpdate();
-    // }
     async onAddGroup(dg: ArrayOf<TableStoreBoard['dataGroups']>, groupHead?: GroupHeadType) {
         if (dg?.name) {
             var ds = this.groupStats.find(g => g.groupId == dg.value)
@@ -327,6 +300,21 @@ export class TableStoreBoard extends DataGridView {
     }
     get isCardAuto() {
         return this.cardConfig?.auto || this.cardConfig?.showMode == 'define'
+    }
+    async drop(blocks: Block[],
+        direction: DropDirection,
+        dropData?: Record<string, any>) {
+
+        var dragRow = blocks[0] as TableGridItem;
+        if (direction == DropDirection.inner && dropData && Object.keys(dropData).length > 0) {
+            var ke = Object.keys(dropData)[0];
+            await this.schema.rowUpdate({ dataId: dragRow.dataRow.id, data: dropData }, this?.id);
+            var d = dragRow.dataGrid.data.find(c => c.id == dragRow.dataRow.id);
+            Object.assign(d, dropData);
+            this.forceManualUpdate();
+            return;
+        }
+        await super.drop(blocks, direction, dropData);
     }
     // async loadSchemaStats() {
     //     if (!this.statField?.fieldId) return;

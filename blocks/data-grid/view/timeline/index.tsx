@@ -11,7 +11,7 @@ import { TableGridItem } from "../item";
 import "./style.less";
 
 @url('/data-grid/timeline')
-export class TableStoreCalendar extends DataGridView {
+export class TableStoreTimeLine extends DataGridView {
     @prop()
     startDate: number;
     @prop()
@@ -85,8 +85,9 @@ export class TableStoreCalendar extends DataGridView {
         }
     }
 }
+
 @view('/data-grid/timeline')
-export class TableStoreCalendarView extends BlockView<TableStoreCalendar> {
+export class TableStoreCalendarView extends BlockView<TableStoreTimeLine> {
     renderGroup(dg: ArrayOf<TableStoreBoard['data']>, index: number) {
         var cs = this.block.childs.findAll(g => g.mark == dg.group);
         return <div className="sy-data-grid-timeline-group" key={index}>

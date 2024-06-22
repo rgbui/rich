@@ -2,6 +2,7 @@
 
 
 import { Kit } from "..";
+import { GenreConsistency } from "../../../net/genre";
 import { Block } from "../../block";
 import { BlockUrlConstant } from "../../block/constant";
 import { Point, Rect } from "../../common/vector/point";
@@ -58,8 +59,25 @@ export enum DropDirection {
  * 
  */
 export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block, event: MouseEvent) {
+    var dropData: Record<string, any>;
+    var dropEl: HTMLElement;
     var fr: 'left' | 'right' | 'bottom' | 'none' = 'none';
     var ele = event.target as HTMLElement;
+    /**
+     * 这里是为了处理数据表格中分组的拖放情况
+     * 数据表格有多个组的容器的情况
+     */
+    if (dropBlock && [BlockUrlConstant.DataGridCalendar, BlockUrlConstant.DataGridBoard].includes(dropBlock.url as any) && (dropEl = ele.closest('[data-block-drop-panel]'))) {
+        dropData = GenreConsistency.parse(JSON.parse(dropEl.getAttribute('data-block-drop-panel')));
+        if (dropBlock && dropBlock.isAllowDrops(dragBlocks)) {
+            return {
+                direction: DropDirection.inner,
+                dropBlock,
+                dropData,
+                dropEl
+            };
+        }
+    }
     var point = Point.from(event);
     var oldDropBlock = dropBlock;
     var pb = dropBlock?.getVisiblePanelBound();
@@ -81,12 +99,16 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
             if ((innerBlock && innerBlock.childs.length > 0))
                 return {
                     direction: DropDirection.none,
-                    dropBlock: undefined
+                    dropBlock: undefined,
+                    dropData,
+                    dropEl
                 }
             else
                 return {
                     direction: DropDirection.inner,
-                    dropBlock: oldDropBlock
+                    dropBlock: oldDropBlock,
+                    dropData,
+                    dropEl
                 }
         }
         /**
@@ -121,7 +143,9 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
         if (!dropBlock) {
             return {
                 direction: DropDirection.none,
-                dropBlock: undefined
+                dropBlock: undefined,
+                dropData,
+                dropEl
             }
         }
         /**
@@ -182,7 +206,12 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
             if (Array.isArray(drs) && drs.length > 0 && !drs.includes(direction)) {
                 direction = DropDirection.none
             }
-            return { direction: direction, dropBlock };
+            return {
+                direction: direction,
+                dropBlock,
+                dropData,
+                dropEl
+            };
         }
         /**
          * 如果当前的dropBlock是一个格子，
@@ -193,10 +222,18 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
          */
         if (dropBlock.isCell) {
             if (dropBlock.isEmptyCell) {
-                return { direction: DropDirection.inner, dropBlock };
+                return {
+                    direction: DropDirection.inner, dropBlock,
+                    dropData,
+                    dropEl
+                };
             }
             if (dropBlock.isPart)
-                return { direction: DropDirection.inner, dropBlock };
+                return {
+                    direction: DropDirection.inner, dropBlock,
+                    dropData,
+                    dropEl
+                };
         }
         /**
          * dropBlock是容器，如tab块
@@ -235,8 +272,7 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
                 direction = DropDirection.top;
             }
             else if (point.y > bound.top + bound.height * 0.4) {
-                if (dropBlock.hasSubChilds)
-                {
+                if (dropBlock.hasSubChilds) {
                     direction = DropDirection.sub;
                     if (point.x - bound.left < 30) {
                         direction = DropDirection.bottom;
@@ -246,7 +282,12 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
             }
         }
     }
-    if (dropBlock && !dropBlock.isAllowDrops(dragBlocks)) return { direction: DropDirection.none, dropBlock: undefined };
+    if (dropBlock && !dropBlock.isAllowDrops(dragBlocks)) return {
+        direction: DropDirection.none,
+        dropData,
+        dropEl,
+        dropBlock: undefined
+    };
     if (Array.isArray(drs) && drs.length > 0 && !drs.includes(direction)) {
         direction = DropDirection.none
     }
@@ -260,7 +301,9 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
     ].includes(direction) && dropBlock.url == BlockUrlConstant.Title) {
         return {
             direction: DropDirection.none,
-            dropBlock: undefined
+            dropBlock: undefined,
+            dropData,
+            dropEl
         }
     }
     if (direction == DropDirection.left || direction == DropDirection.right) {
@@ -274,7 +317,9 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
     }
     return {
         direction: direction,
-        dropBlock
+        dropBlock,
+        dropData,
+        dropEl
     };
 }
 

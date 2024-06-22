@@ -352,7 +352,7 @@ export class Block$Operator {
      * @param blocks 
      * @param direction 
      */
-    async drop(this: Block, blocks: Block[], direction: DropDirection) {
+    async drop(this: Block, blocks: Block[], direction: DropDirection, dropData?: Record<string, any>) {
         if (blocks.some(s => s.isLine)) throw 'line blokc is not drop';
         switch (direction) {
             case DropDirection.bottom:
@@ -655,7 +655,7 @@ export class Block$Operator {
             isOnlyStore?: boolean
         }
     ) {
-    //    debugger
+        //    debugger
         var oldValue: Record<string, any> = {};
         var newValue: Record<string, any> = {};
         if (options?.isOnlyStore == true) {

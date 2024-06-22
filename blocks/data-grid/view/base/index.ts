@@ -384,6 +384,9 @@ export class DataGridView extends Block {
         else if (this.url == BlockUrlConstant.DataGridList) {
             subUrl = '/data-grid/list/row'
         }
+        else if(this.url==BlockUrlConstant.DataGridCalendar){
+            subUrl='/data-grid/calendar/item'
+        }
         for (let i = 0; i < ds.length; i++) {
             var row = ds[i];
             var rowBlock: TableGridItem = await BlockFactory.createBlock(subUrl, this.page, {
@@ -404,6 +407,9 @@ export class DataGridView extends Block {
         }
         else if (this.url == BlockUrlConstant.DataGridList) {
             subUrl = '/data-grid/list/row'
+        }
+        else if(this.url==BlockUrlConstant.DataGridCalendar){
+            subUrl='/data-grid/calendar/item'
         }
         lodash.remove(this.blocks.childs, g => (g as TableGridItem).dataId == data.id)
         var rowBlock: TableGridItem = await BlockFactory.createBlock(subUrl, this.page, {
@@ -695,7 +701,7 @@ export class DataGridView extends Block {
                             var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
                             this.schema = tc;
                             if (this.fields.some(s => s.fieldId == (act as any).id)) {
-                                await this.onLozyReloadData();
+                                await this.onLazyReloadData();
                             }
                             break;
                         case 'deleteSchema':
@@ -764,10 +770,10 @@ export class DataGridView extends Block {
                             }
                             break;
                         case 'removeFilter':
-                            this.onLozyReloadData();
+                            this.onLazyReloadData();
                             break;
                         case 'updateFilter':
-                            this.onLozyReloadData();
+                            this.onLazyReloadData();
                             break;
                         case 'updateObject':
                             break;
@@ -803,10 +809,14 @@ export class DataGridView extends Block {
         r = r.move(0, 3);
         return r;
     }
-    onLozyReloadData = lodash.debounce(async (action?: () => Promise<void>) => {
+    onLazyReloadData = lodash.debounce(async (action?: () => Promise<void>) => {
         await this.onReloadData();
         if (action) await action();
     }, 1000)
+    onLazy100ReloadData = lodash.debounce(async (action?: () => Promise<void>) => {
+        await this.onReloadData();
+        if (action) await action();
+    }, 100)
     forceUpdateAllViews() {
 
         this.childs.forEach(c => {

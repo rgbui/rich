@@ -2,13 +2,11 @@ import React from "react";
 import { PlusSvg } from "../../../../component/svgs";
 import { Divider } from "../../../../component/view/grid";
 import { Icon } from "../../../../component/view/icon";
-import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { ChildsArea } from "../../../../src/block/view/appear";
 import { DataGridView } from "../base";
 import { DataGridTool } from "../components/tool";
-import { TableStoreListItem } from "./row";
 import { CardConfig } from "../item/service";
 import { S } from "../../../../i18n/view";
 import { DataGridGroup } from "../components/group";
@@ -16,19 +14,6 @@ import { Spin, SpinBox } from "../../../../component/view/spin";
 
 @url('/data-grid/list')
 export class TableStoreList extends DataGridView {
-    async createItem(isForce?: boolean) {
-        this.blocks.childs = [];
-        var ds = this.data.filter(g => g.parentId ? false : true)
-        for (let i = 0; i < ds.length; i++) {
-            var row = ds[i];
-            var rowBlock: TableStoreListItem = await BlockFactory.createBlock('/data-grid/list/row', this.page, { mark: i, dataId: row.id }, this) as TableStoreListItem;
-            this.blocks.childs.push(rowBlock);
-            await rowBlock.createElements();
-        }
-        if (isForce) {
-            this.forceManualUpdate()
-        }
-    }
     @prop()
     cardConfig: CardConfig = {
         auto: false,
@@ -99,6 +84,5 @@ export class TableStoreListView extends BlockView<TableStoreList> {
                 </div></div>
             {this.renderComment()}
         </div>
-
     }
 }

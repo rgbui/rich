@@ -216,7 +216,7 @@ export class Page$Operator2 {
      * @param to 
      * @param arrow 
      */
-    async onBatchDragBlocks(this: Page, blocks: Block[], to: Block, direction: DropDirection) {
+    async onBatchDragBlocks(this: Page, blocks: Block[], to: Block, direction: DropDirection, dropData?: Record<string, any>) {
         /**
          * 就是将blocks append 到to 下面
          */
@@ -224,15 +224,16 @@ export class Page$Operator2 {
             if (this.keyboardPlate.isAlt()) {
                 var blockDatas = await blocks.asyncMap(async b => b.cloneData());
                 var bs = await to.dropBlockDatas(blockDatas, direction);
-                this.addActionAfterEvent(async () => {
-                    var scroll: 'top' | 'bottom';
-                    if (direction == DropDirection.top) scroll = 'top'
-                    else if (direction == DropDirection.bottom) scroll = 'bottom'
-                    this.kit.anchorCursor.onSelectBlocks(bs, { render: true, merge: true, scroll });
-                })
+                if (bs.length > 0)
+                    this.addActionAfterEvent(async () => {
+                        var scroll: 'top' | 'bottom';
+                        if (direction == DropDirection.top) scroll = 'top'
+                        else if (direction == DropDirection.bottom) scroll = 'bottom'
+                        this.kit.anchorCursor.onSelectBlocks(bs, { render: true, merge: true, scroll });
+                    })
             }
             else {
-                await to.drop(blocks, direction);
+                await to.drop(blocks, direction, dropData);
                 this.addActionAfterEvent(async () => {
                     var scroll: 'top' | 'bottom';
                     if (direction == DropDirection.top) scroll = 'top'
@@ -302,7 +303,7 @@ export class Page$Operator2 {
             }
             if (this.pe.type == ElementType.SchemaData) {
                 if (!this.openPageData?.pre && this.formRowData?.id) {
-                    await this.schema.rowUpdate({ dataId: this.formRowData?.id, data: this.formRowData },'Page.onUpdatePageData')
+                    await this.schema.rowUpdate({ dataId: this.formRowData?.id, data: this.formRowData }, 'Page.onUpdatePageData')
                 }
             }
         }
