@@ -1,54 +1,5 @@
 .sy-data-grid-calendar {
-    &-head {
-        display        : flex;
-        justify-content: center;
-        align-items    : flex-start;
 
-        &-date {
-            flex-shrink: 0;
-            flex-grow  : 0;
-            width      : 120px;
-        }
-
-        &-operator {
-            flex-shrink    : 1;
-            flex-grow      : 1;
-            display        : flex;
-            justify-content: flex-end;
-            align-items    : center;
-
-            .shy-icon {
-                svg {
-                    fill: rgba(55, 53, 47, 0.4);
-                }
-
-                border-radius: 4px;
-
-                :hover {
-                    background-color: rgba(55, 53, 47, 0.08);
-                }
-            }
-
-            .icon {
-                width          : 24px;
-                height         : 24px;
-                border-radius  : 4px;
-                cursor         : pointer;
-                display        : inline-flex;
-                justify-content: center;
-                align-items    : center;
-
-                &:hover {
-                    background-color: rgba(55, 53, 47, 0.08);
-                }
-            }
-
-            label {
-                display: inline-block;
-                margin : 0px 10px;
-            }
-        }
-    }
 
     &-cells {
         margin-top: 10px;
@@ -69,12 +20,9 @@
         }
 
         &-days {
-            display        : flex;
-            justify-content: flex-start;
-            align-items    : flex-start;
-            flex-wrap      : wrap;
-            border-left    : 1px solid rgb(233, 233, 231);
-            border-top     : 1px solid rgb(233, 233, 231);
+            flex-wrap  : wrap;
+            border-left: 1px solid rgb(233, 233, 231);
+            border-top : 1px solid rgb(233, 233, 231);
 
             .sy-data-grid-calendar-cell {
                 box-sizing   : border-box;
@@ -82,27 +30,27 @@
                 border-bottom: 1px solid rgb(233, 233, 231);
                 cursor       : default;
                 background   : white;
-                height       : 124px;
+                height   : 124px;
                 width        : calc(100%/7);
 
                 &-head {
                     height: 30px;
 
                     label {
-                        float       : right;
-                        font-size   : 14px;
-                        margin-top  : 4px;
-                        margin-right: 10px;
-                        height      : 24px;
-                        line-height : 24px;
-                        text-align  : right;
-                        transition  : color 100ms ease-out 0s;
-                        color       : rgba(55, 53, 47, 0.4);
+                        float          : left;
+                        font-size      : 14px;
+                        margin-top     : 4px;
+                        margin-left    : 10px;
+                        height         : 24px;
+                        line-height    : 24px;
+                        text-align     : right;
+                        transition     : color 100ms ease-out 0s;
+                        // color       : rgba(55, 53, 47, 0.4);
 
                         &.now {
-                            width:24px;
-                            height:24px;
-                            text-align: center;
+                            width           : 24px;
+                            height          : 24px;
+                            text-align      : center;
                             background-color: var(--text-p-color);
                             color           : #fff;
                             border-radius   : 50%;
