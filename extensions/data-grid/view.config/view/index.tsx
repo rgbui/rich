@@ -143,10 +143,11 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 name: 'createRecordSource',
                 type: MenuItemType.select,
                 optionIconSize: 18,
+                optionIconClassName: 'remark',
                 options: [
-                    { text: lst('对话框'), value: 'dialog', icon: GridPageDialougSvg, iconSize: 18 },
-                    { text: lst('右侧栏'), value: 'slide', icon: GridPageSlideSvg, iconSize: 18 },
-                    { text: lst('页面'), value: 'page', icon: GridPagePageSvg, iconSize: 18 },
+                    { text: lst('对话框'), value: 'dialog', iconClassName: 'remark', icon: GridPageDialougSvg, iconSize: 18 },
+                    { text: lst('右侧栏'), value: 'slide', iconClassName: 'remark', icon: GridPageSlideSvg, iconSize: 18 },
+                    { text: lst('页面'), value: 'page', iconClassName: 'remark', icon: GridPagePageSvg, iconSize: 18 },
                 ]
             },
             {
@@ -154,11 +155,11 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 value: this.block.openRecordSource,
                 name: 'openRecordSource',
                 type: MenuItemType.select,
-                optionIconSize: 18,
+                optionIconSize: 18, optionIconClassName: 'remark',
                 options: [
-                    { text: lst('对话框'), value: 'dialog', icon: GridPageDialougSvg, iconSize: 18 },
-                    { text: lst('右侧栏'), value: 'slide', icon: GridPageSlideSvg, iconSize: 18 },
-                    { text: lst('页面'), value: 'page', icon: GridPagePageSvg, iconSize: 18 },
+                    { text: lst('对话框'), value: 'dialog', iconClassName: 'remark', icon: GridPageDialougSvg, iconSize: 18 },
+                    { text: lst('右侧栏'), value: 'slide', iconClassName: 'remark', icon: GridPageSlideSvg, iconSize: 18 },
+                    { text: lst('页面'), value: 'page', iconClassName: 'remark', icon: GridPagePageSvg, iconSize: 18 },
                 ]
             },
             {
@@ -317,10 +318,13 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
             else if (item.name == 'noHead') {
                 await self.block.onUpdateProps({ noHead: !item.checked }, { range: BlockRenderRange.self });
             }
-            else if (['gallerySize', 'cardConfig.showField', 'dateFieldId', 'groupFieldId'].includes(item.name)) {
-                await self.block.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self }, undefined, async () => {
-                    self.block.forceUpdateAllViews()
-                });
+            else if (['gallerySize'].includes(item.name)) {
+                await self.block.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.none });
+                self.block.forceUpdateAllViews();
+            }
+            else if (['cardConfig.showField', 'dateFieldId', 'groupFieldId'].includes(item.name)) {
+                await self.block.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.none });
+                await self.block.onLazy100ReloadData();
             }
             else if (item.name == 'viewText') {
                 if (self.block.schemaView.text != item.value)

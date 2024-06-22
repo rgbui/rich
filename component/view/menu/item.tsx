@@ -16,6 +16,7 @@ import { Avatar } from "../avator/face";
 import { HelpText } from "../text";
 import { useIconPicker } from "../../../extensions/icon";
 import { IconArguments } from "../../../extensions/icon/declare";
+import { util } from "../../../util/util";
 
 export class MenuItemView extends React.Component<{
     item: MenuItem,
@@ -155,7 +156,7 @@ export class MenuItemView extends React.Component<{
             }}>
             {(item.type == MenuItemType.item || !item.type) && <ToolTip overlay={item.overlay} placement={item.placement || 'right'} ><div className={'shy-menu-box-item-option' + (item.disabled == true ? " disabled" : "")}
                 onMouseDown={e => this.select(item, e.nativeEvent)}>
-                {item.icon && <i className={"flex-center flex-line  text-1 " + (item.iconSize > 20 ? "" : "size-20")}><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
+                {item.icon && <i className={"flex-center flex-line  text-1 "+(util.covertToArray(item.iconClassName).join(' ')) + (item.iconSize > 20 ? "" : " size-20")}><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
                 {item.renderIcon && item.renderIcon(item, this)}
                 <span className='shy-menu-box-item-option-text text-overflow flex'>
                     {item.text}{item.remark && <i className="remark padding-l-5">{item.remark}</i>}
@@ -184,7 +185,7 @@ export class MenuItemView extends React.Component<{
             </div>}
             {item.type == MenuItemType.user && <div onMouseDown={e => this.select(item, e.nativeEvent)} className="shy-menu-box-item-user"><Avatar userid={item.userid} middle showName size={item.size || 30}></Avatar></div>}
             {item.type == MenuItemType.switch && <div className='shy-menu-box-item-switch'>
-                {item.icon && <i className="flex-center flex-inline size-20 text-1"><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
+                {item.icon && <i className="flex-center flex-inline size-20 text-1"><Icon icon={item.icon} className={(util.covertToArray(item.iconClassName).join(' '))} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
                 {item.renderIcon && item.renderIcon(item, this)}
                 <span className="shy-menu-box-item-switch-text  flex">
                     {item.text}
@@ -203,7 +204,7 @@ export class MenuItemView extends React.Component<{
             </div>}
             {item.type == MenuItemType.inputTitleAndIcon && <div className="shy-menu-box-item-input-icon flex">
                 <div onMouseDown={e => this.changeIcon(item, e)} className="cursor flex-fixed size-20 flex-center gap-r-10 round item-hover border">
-                    <Icon icon={item.icon} size={item.iconSize || 16}></Icon>
+                    <Icon icon={item.icon} className={(util.covertToArray(item.iconClassName).join(' '))} size={item.iconSize || 16}></Icon>
                 </div>
                 <div className="flex-auto"><Input size={'small'}
                     value={item.value}
@@ -219,14 +220,14 @@ export class MenuItemView extends React.Component<{
             </div>}
             {item.type == MenuItemType.button && <div className="shy-menu-box-item-button"><Button icon={item.icon} disabled={item.disabled} block onClick={e => item.buttonClick != 'click' ? this.select(item, e.nativeEvent) : this.click(item, e)}>{item.text}</Button></div>}
             {item.type == MenuItemType.select && <div className="shy-menu-box-item-select">
-                {item.icon && <i className="flex-center flex-inline size-20 flex-fixed text-1"><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
+                {item.icon && <i className="flex-center flex-inline size-20 flex-fixed text-1"><Icon className={(util.covertToArray(item.iconClassName).join(' '))} icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
                 {item.renderIcon && item.renderIcon(item, this)}
                 <span className='shy-menu-box-item-option-text flex-auto'>{item.text}
                     {item.remark && <i className="remark padding-l-5">{item.remark}</i>}
                     {item.helpUrl && <span className="flex-fixed h-20 flex"><HelpText onMouseDown={e => e.stopPropagation()} url={item.helpUrl}>{item.helpText}</HelpText></span>}
                 </span>
                 <span className="shy-menu-box-item-select-value flex  flex-fixed" onMouseDown={e => this.openSelectMenu(item, e)}>
-                    {item?.options?.find(g => g.value == item.value)?.icon && <span className="flex-center flex-inline size-20 flex-fixed text-1"><Icon size={item.optionIconSize ? item.optionIconSize : 16} icon={item?.options?.find(g => g.value == item.value)?.icon}></Icon></span>}
+                    {item?.options?.find(g => g.value == item.value)?.icon && <span className="flex-center flex-inline size-20 flex-fixed text-1"><Icon size={item.optionIconSize ? item.optionIconSize : 16} className={util.covertToArray(item.optionIconClassName).join(' ')} icon={item?.options?.find(g => g.value == item.value)?.icon}></Icon></span>}
                     <em className="text-over flex-auto max-w-100">{item?.options?.find(g => g.value == item.value)?.text}</em>
                     <Icon className={'flex-fixed'} size={16} icon={ChevronDownSvg}></Icon>
                 </span>
@@ -245,7 +246,7 @@ export class MenuItemView extends React.Component<{
             {item.type == MenuItemType.drag && <ToolTip overlay={item.overlay} placement={item.placement || 'right'} ><div data-drag={item.drag}
                 onMouseDown={e => this.select(item, e.nativeEvent)} className="shy-menu-box-item-drag">
                 <em className={'drag'} onMouseDown={e => { e.stopPropagation() }}><Icon size={12} icon={DragHandleSvg}></Icon></em>
-                {item.icon && <Icon style={{ marginRight: 5 }} icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon>}
+                {item.icon && <Icon style={{ marginRight: 5 }} icon={item.icon} className={(util.covertToArray(item.iconClassName).join(' '))} size={item.iconSize ? item.iconSize : 16}></Icon>}
                 {item.renderIcon && item.renderIcon(item, this)}
                 {item.renderContent && <div className="flex-auto">{item.renderContent(item, this)}</div>}
                 {item.text && <span className='shy-menu-box-item-drag-text text-overflow'>{item.text}</span>}

@@ -15,6 +15,7 @@ export type MenuItem<T = string> = {
     render?: (item: MenuItem<T>, view?: MenuItemView) => JSX.Element,
     renderContent?: (item: MenuItem<T>, view?: MenuItemView) => JSX.Element,
     iconSize?: number,
+    iconClassName?:string|(string[]),
     label?: string,
     checkLabel?: boolean,
     forceHasChilds?: boolean,
@@ -23,6 +24,7 @@ export type MenuItem<T = string> = {
     childsStyle?: CSSProperties,
     options?: MenuItem<T>[],
     optionIconSize?: number,
+    optionIconClassName?:string|(string[]),
     /**
      * 当type为 MenuItemType.select 时有效
      */
