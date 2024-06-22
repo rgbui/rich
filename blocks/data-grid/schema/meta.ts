@@ -268,10 +268,10 @@ export class TableSchema {
         return this.onDataStoreOperate([{ name: 'removeFilter', filter }], locationId)
     }
     rowUpdate(args: { dataId: string, data: Record<string, any> }, locationId: string) {
-        return this.onDataStoreOperate([{ name: "update", id: args.dataId, data: args.data }], locationId)
+        return this.onDataStoreOperate([{ name: "update", id: args.dataId, data: lodash.cloneDeep(args.data) }], locationId)
     }
     rowUpdateFieldObject(args: { rowId: string, fieldName: string, data: Record<string, any> }, locationId: string) {
-        return this.onDataStoreOperate([{ name: 'updateObject', id: args.rowId, fieldName: args.fieldName, data: args.data }], locationId)
+        return this.onDataStoreOperate([{ name: 'updateObject', id: args.rowId, fieldName: args.fieldName, data: lodash.cloneDeep(args.data) }], locationId)
     }
     async onDataStoreOperate(actions: DataStoreAction[], locationId: string) {
         var rc = await channel.air('/datastore/operate', {
