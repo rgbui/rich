@@ -54,7 +54,7 @@ export class Sp extends React.Component<{
     }
     render() {
         var text = lst(this.props.text, this.props.data || undefined, true);
-        if (!text) text = this.props.text;
+        if (!text && lodash.isObject(this.props.view)) text = this.props.text;
         var classList: string[] = [];
         if (this.props.className) {
             if (lodash.isArray(this.props.className)) {
