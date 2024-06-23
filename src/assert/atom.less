@@ -1088,6 +1088,12 @@ body {
     object-position: center center;
 }
 
+.object-top,
+.obj-top {
+    object-fit     : cover;
+    object-position: center top;
+}
+
 .overflow {
     overflow: auto;
 }
@@ -1650,7 +1656,12 @@ each(@ops, {
 
 .bg-dark,
 .r-bg-dark>* {
+
     background-color: rgba(0, 0, 0, .6)
+}
+
+.bg-button-dark {
+    background-color: #242424;
 }
 
 .bg-dark-1,
