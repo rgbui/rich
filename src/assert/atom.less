@@ -336,13 +336,13 @@ position的布局
 @cols: 2, 3, 4;
 
 each(@cols, {
-        .col-@{value}, .col-@{value}-c5 {
+        .col-@{value}, .col-@{value}-g5 {
             display        : flex;
             justify-content: flex-start;
             flex-wrap      : wrap;
 
             >* {
-                width       : calc((100/@value+0%) - 0.5rem);
+                width       : calc(100% / @value - 0.5rem * @value / (@value - 1));
                 margin-right: 0.5rem;
 
                 &:last-child {
@@ -351,59 +351,59 @@ each(@cols, {
             }
         }
 
-        .col-@{value}-c10 {
+        .col-@{value}-g10 {
             display        : flex;
             justify-content: flex-start;
             flex-wrap      : wrap;
 
             >* {
-                width       : calc((100/@value+0%) - 1rem);
+                width       : calc(100% / @value - 1rem * @value / (@value - 1));
                 margin-right: 1rem;
 
                 &:last-child {
-                    margin-right:1rem;
+                    margin-right: 0rem;
                 }
             }
         }
 
-        .col-@{value}-c20 {
+        .col-@{value}-g20 {
             display        : flex;
             justify-content: flex-start;
             flex-wrap      : wrap;
 
             >* {
-                width       : calc((100/@value+0%) - 2rem);
+                width       : calc(100% / @value - 2rem * @value / (@value - 1));
                 margin-right: 2rem;
 
                 &:last-child {
-                    margin-right:2rem;
+                    margin-right: 0rem;
                 }
             }
         }
 
 
-        .col-@{value}-c30 {
+        .col-@{value}-g30 {
             display        : flex;
             justify-content: flex-start;
             flex-wrap      : wrap;
 
             >* {
-                width       : calc((100/@value+0%) - 3rem);
+                width       : calc(100% / @value - 3rem * @value / (@value - 1));
                 margin-right: 3rem;
 
                 &:last-child {
-                    margin-right:3rem;
+                    margin-right: 0rem;
                 }
             }
         }
 
-        .col-@{value}-c40 {
+        .col-@{value}-g40 {
             display        : flex;
             justify-content: flex-start;
             flex-wrap      : wrap;
 
             >* {
-                width       : calc((100/@value+0%) - 4rem);
+                width       : calc(100% / @value - 4rem * @value / (@value - 1));
                 margin-right: 4rem;
 
                 &:last-child {
@@ -774,12 +774,13 @@ item-selected:选中的效果
 
 body {
     --white            : #fff;
-    --white-smoke      : rgb(251, 251, 250);
+    --white-smoke      : #fbfbfa;
     --white-1          : var(--white-smoke);
     --border-color     : rgba(55, 53, 47, 0.16);
     --black            : #000;
     --warn-color       : rgb(225, 98, 89);
     --text-color       : rgba(55, 53, 47);
+    --high-light-color : #faa700;
     --text             : var(--text-color);
     --text-color-1     : rgba(55, 53, 47, 0.8);
     --text-color-remark: rgba(55, 53, 47, 0.5);
@@ -792,10 +793,13 @@ body {
     --text-p1-color  : #558eda;
     --text-link-color: var(--text-p1-color);
     --text-b-color   : #64a1df;
-    --text-g-color   : rgb(33, 175, 90);
+    --text-b-1-color : #9d34da;
+    --text-g-color   : #21af5a;
+    --hight-red-color: #ff76ad;
 
     --bg  : var(--white);
     --bg-1: var(--white-1);
+    --bg-2: #f6f5f4;
 
     --shadow       : rgba(15, 15, 15, 0.05) 0rem 0rem 0rem 1px, rgba(15, 15, 15, 0.1) 0rem 3px 6px, rgba(15, 15, 15, 0.2) 0rem 9px 24px;
     --shadow-light : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
@@ -812,6 +816,15 @@ body {
 
 .text-1 {
     color: var(--text-color-1);
+}
+.text-p1-color{
+    color: var(--text-p1-color);
+
+}
+
+.text-high-light,
+.text-high {
+    color: var(--high-light-color);
 }
 
 .text-purple,
@@ -1106,6 +1119,10 @@ body {
 .overflow-y {
     overflow-y: auto;
     overflow-y: overlay;
+}
+.overflow-x{
+    overflow-x:auto;
+    
 }
 
 .overlay-y {
@@ -1635,6 +1652,11 @@ each(@ops, {
     background-color: var(--bg-1);
 }
 
+.bg-2 {
+    background-color: var(--bg-2);
+
+}
+
 .bg-white,
 .white,
 .r-white>*,
@@ -1661,7 +1683,14 @@ each(@ops, {
 }
 
 .bg-button-dark {
-    background-color: #242424;
+    background-color: #000;
+    color           : #fff;
+    border          : 1px solid #000;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, .7);
+        border          : 1px solid rgba(0, 0, 0, .7);
+    }
 }
 
 .bg-dark-1,
@@ -1685,6 +1714,7 @@ each(@ops, {
 .r-bg-primary-hover>*,
 .r-bg-p-hover>* {
     background-color: rgb(225, 98, 89);
+    color           : #fff;
 
     &:hover {
         background-color: rgb(184, 76, 78);
@@ -1702,7 +1732,8 @@ each(@ops, {
 .bg-p-1-hover,
 .r-bg-p-1-hover>*,
 .r-bg-primary-1-hover>* {
-    background-color: #64a1df;
+    background-color: rgb(100, 161, 223);
+    color           : #fff;
 
     &:hover {
         background-color: darken(#64a1df, 20%);
