@@ -53,6 +53,7 @@ export class FieldTextView extends OriginFileView<FieldText> {
             BlockUrlConstant.DataGridBoard,
             BlockUrlConstant.DataGridGallery
         ].includes(this.block.dataGrid.url as any);
+
         var isList = [BlockUrlConstant.DataGridTable, BlockUrlConstant.DataGridList].includes(this.block.dataGrid.url as any)
 
         var isSub = [BlockUrlConstant.DataGridTable, BlockUrlConstant.DataGridList].includes(this.block.dataGrid.url as any) && this.block.dataGrid.schema?.allowSubs;
@@ -61,7 +62,7 @@ export class FieldTextView extends OriginFileView<FieldText> {
         }
         if (isList) {
             textStyle.textDecoration = 'underline';
-            textStyle.textDecorationColor = 'rgba(22, 22, 22, 0.1)';
+            textStyle.textDecorationColor = 'rgba(22, 22, 22, 0.2)';
         }
         return <div className={'flex l-20 flex-top sy-field-title f-14  ' + (isCard ? "  bold" : " b-500 ")} onKeyDown={e => this.keydown(e)} onMouseMove={e => this.move(e)}>
 
@@ -74,7 +75,7 @@ export class FieldTextView extends OriginFileView<FieldText> {
                 {!this.block.dataGridItem.subList.loading && <Icon size={18} icon={{ name: "byte", code: "right" }}></Icon>}
             </span>}
 
-            {!(!this.block.dataGridItem?.dataRow?.icon && isCard) && <span className="size-20 flex-center inline-flex remark gap-r-3"><Icon size={isCard ? 20 : 18} icon={getPageIcon({
+            {this.block.dataGridItem?.dataRow?.icon && <span className="size-20 flex-center inline-flex remark gap-r-3"><Icon size={isCard ? 20 : 18} icon={getPageIcon({
                 pageType: PageLayoutType.doc,
                 icon: this.block.dataGridItem?.dataRow?.icon
             })}></Icon></span>}
