@@ -20,7 +20,6 @@ import { CheckBoardSelector } from "../../board.selector/selector";
  * 
  */
 export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
-
     /**
    * 先判断toolBoard工具栏有没有被使用，
    * 如果有使用，则根据工具栏来进行下一步操作
@@ -30,7 +29,6 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
         return;
     }
     else kit.boardSelector.close()
-
     kit.anchorCursor.renderSelectBlocks([]);
     var downPoint = Point.from(event);
     var gm = block ? block.panelGridMap : kit.page.gridMap;
@@ -41,17 +39,21 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
      * 一般元素是通过手柄触发的，但还有直接手动触发的如数据表中的看板元素就是手动触发的
      */
     var isDragBlock = kit.handle.isDown ? true : false;
+    /**
+     * 数据表页面，不允许拖动
+     */
+    var isDisabledDrag = kit.page.pageLayout.type == PageLayoutType.db;
     MouseDragger({
         event,
         dis: 5,
         moveStart() {
-            if (!isDragBlock) {
+            if (!isDragBlock && !isDisabledDrag) {
                 gm.start();
                 kit.anchorCursor.selector.setStart(Point.from(event));
             }
         },
         move(ev, data) {
-            if (isDragBlock) return;
+            if (isDragBlock || isDisabledDrag) return;
             var movePoint = Point.from(ev)
             function cacSelector(dis: number) {
                 downPoint.y -= dis;
@@ -81,7 +83,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
         },
         async moveEnd(ev, isMove, data) {
             gm.over();
-            if (isMove && !isDragBlock) {
+            if (isMove && !isDragBlock && !isDisabledDrag) {
                 onAutoScrollStop();
                 kit.anchorCursor.selector.close();
                 if (currentBlocks) kit.anchorCursor.onSelectBlocks(currentBlocks, { render: true });

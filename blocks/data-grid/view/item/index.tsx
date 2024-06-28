@@ -67,7 +67,7 @@ export class TableGridItem extends Block {
             return c
         }
     }
-    async createElements(isForce?:boolean) {
+    async createElements(isForce?: boolean) {
         this.blocks.childs = [];
         if (this.url == '/data-grid/calendar/item') return
         for (let i = 0; i < this.fields.length; i++) {
@@ -83,15 +83,13 @@ export class TableGridItem extends Block {
                 console.log(this, this.fields);
             }
         }
-        if(isForce){
-            this.forceManualUpdate();
+        if (isForce) {
+            await this.forceManualUpdate();
         }
     }
     async onUpdateCellValue(field: Field, value: any) {
         value = util.clone(value);
         this.dataRow[field.name] = value;
-        // var dr = this.dataGrid.data.find(g => g.id == this.dataRow.id);
-        // dr[field.name] = value;
         await this.schema.rowUpdate({
             dataId: this.dataRow.id,
             data: { [field.name]: value }
@@ -99,8 +97,6 @@ export class TableGridItem extends Block {
     }
     async onUpdateCellProps(props: Record<string, any>) {
         Object.assign(this.dataRow, props);
-        // var dr = this.dataGrid.data.find(g => g.id == this.dataRow.id);
-        // if (dr) Object.assign(dr, props)
         await this.schema.rowUpdate({
             dataId: this.dataRow.id,
             data: { ...props }
@@ -284,8 +280,7 @@ export class TableGridItem extends Block {
         direction: DropDirection,
         dropData?: Record<string, any>) {
         var dragRow = blocks[0] as TableGridItem;
-        switch (direction)
-        {
+        switch (direction) {
             case DropDirection.bottom:
             case DropDirection.top:
                 var props: Record<string, any> = {};
@@ -342,7 +337,7 @@ export class TableGridItem extends Block {
                     var r = await this.schema.rowUpdate({ dataId: dragRow.dataRow.id, data: dropData }, this.dataGrid?.id || (this.id + 'TableStoreItem'));
                     if (r) {
                         Object.assign(dragRow.dataRow, dropData);
-                        dragRow.dataGrid.createOneItem(dragRow.dataRow,true);
+                        dragRow.dataGrid.createOneItem(dragRow.dataRow, true);
                     }
                 }
                 break;

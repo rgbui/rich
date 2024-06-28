@@ -53,9 +53,9 @@ export class DataGridView extends Block {
         // 'filter',
         // 'sorts',
         'noTitle',
-        'openRecordSource',
-        'openRecordViewId',
-        'createRecordSource',
+        // 'openRecordSource',
+        // 'openRecordViewId',
+        // 'createRecordSource',
         'size'
     ];
     @prop()
@@ -411,16 +411,15 @@ export class DataGridView extends Block {
         else if (this.url == BlockUrlConstant.DataGridCalendar) {
             subUrl = '/data-grid/calendar/item'
         }
-        lodash.remove(this.blocks.childs, g => (g as TableGridItem).dataId == data.id)
+        var at = this.blocks.childs.findIndex(g => (g as TableGridItem).dataId == data.id);
+        this.blocks.childs.splice(at, 1);
         var rowBlock: TableGridItem = await BlockFactory.createBlock(subUrl, this.page, {
             mark: this.data.length,
             dataId: data.id
         }, this) as TableGridItem;
-        this.blocks.childs.push(rowBlock);
-        await rowBlock.createElements();
-        if (isForce) {
-            this.forceManualUpdate();
-        }
+        this.blocks.childs.splice(at, 0, rowBlock);
+        await rowBlock.createElements(isForce);
+        if(isForce)  this.forceManualUpdate();
     }
     async createRowsItem(isForce?: boolean) {
         for (let c of this.blocks.childs) {
@@ -748,6 +747,7 @@ export class DataGridView extends Block {
                             var dr = this.data.find(g => g.id == (act as any).id);
                             if (dr) {
                                 Object.assign(dr, (act as any).data);
+                                console.log('up....', dr);
                                 await this.createOneItem(dr, true)
                             }
                             break;
@@ -818,7 +818,6 @@ export class DataGridView extends Block {
         if (action) await action();
     }, 100)
     forceUpdateAllViews() {
-
         this.childs.forEach(c => {
             c.forceManualUpdate();
             c.childs.forEach(cc => {
