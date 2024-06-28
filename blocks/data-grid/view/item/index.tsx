@@ -67,7 +67,7 @@ export class TableGridItem extends Block {
             return c
         }
     }
-    async createElements() {
+    async createElements(isForce?:boolean) {
         this.blocks.childs = [];
         if (this.url == '/data-grid/calendar/item') return
         for (let i = 0; i < this.fields.length; i++) {
@@ -82,6 +82,9 @@ export class TableGridItem extends Block {
             else {
                 console.log(this, this.fields);
             }
+        }
+        if(isForce){
+            this.forceManualUpdate();
         }
     }
     async onUpdateCellValue(field: Field, value: any) {

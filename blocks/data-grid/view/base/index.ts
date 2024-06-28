@@ -384,8 +384,8 @@ export class DataGridView extends Block {
         else if (this.url == BlockUrlConstant.DataGridList) {
             subUrl = '/data-grid/list/row'
         }
-        else if(this.url==BlockUrlConstant.DataGridCalendar){
-            subUrl='/data-grid/calendar/item'
+        else if (this.url == BlockUrlConstant.DataGridCalendar) {
+            subUrl = '/data-grid/calendar/item'
         }
         for (let i = 0; i < ds.length; i++) {
             var row = ds[i];
@@ -408,8 +408,8 @@ export class DataGridView extends Block {
         else if (this.url == BlockUrlConstant.DataGridList) {
             subUrl = '/data-grid/list/row'
         }
-        else if(this.url==BlockUrlConstant.DataGridCalendar){
-            subUrl='/data-grid/calendar/item'
+        else if (this.url == BlockUrlConstant.DataGridCalendar) {
+            subUrl = '/data-grid/calendar/item'
         }
         lodash.remove(this.blocks.childs, g => (g as TableGridItem).dataId == data.id)
         var rowBlock: TableGridItem = await BlockFactory.createBlock(subUrl, this.page, {
@@ -424,7 +424,7 @@ export class DataGridView extends Block {
     }
     async createRowsItem(isForce?: boolean) {
         for (let c of this.blocks.childs) {
-            await (c as DataGridTableItem).createElements()
+            await (c as DataGridTableItem).createElements(isForce)
         }
         if (isForce) {
             this.forceManualUpdate();
