@@ -17,6 +17,8 @@ import { S } from "../../i18n/view";
 import { TrashSvg } from "../../component/svgs";
 dayjs.extend(customParseFormat);
 import "./style.less";
+import lodash from "lodash";
+import { ToolTip } from "../../component/view/tooltip";
 
 export class DatePicker extends EventsComponent {
     date: Date = new Date();
@@ -120,12 +122,27 @@ export class DatePicker extends EventsComponent {
         this.updateInput();
         this.onChange();
     }
+    onToday() {
+        this.date = dayjs().toDate();
+        this.updateInput();
+        this.onChange();
+    }
+    lazyChangeDate = lodash.debounce((value: string) => {
+        this.changeDate(value);
+    }, 500)
     changeDate(value: string) {
         value = value.trim();
+        var rs = value.split('/');
+        if (rs.length == 3) {
+            if (rs[0].length == 2) rs[0] = '20' + rs[0];
+            else if (rs[1].length == 1) rs[1] = '0' + rs[1];
+            else if (rs[2].length == 1) rs[2] = '0' + rs[2];
+            value = rs.join('/');
+        }
         var v = dayjs(value, "YYYY/MM/DD");
         this.error = '';
         if (!v.isValid() || (v.month() >= 12 || v.month() < 0 || v.date() > 31 || v.date() <= 0)) {
-            this.error = lst('解析日期错误');
+            this.error = lst('日期格式错误', '日期格式错误，格式为：YYYY/MM/DD');
             this.forceUpdate();
         }
         else {
@@ -168,18 +185,24 @@ export class DatePicker extends EventsComponent {
         return <div className='shy-date-picker'>
             {this.error && <div className="shy-date-picker-error">{this.error}</div>}
             <div className={"shy-date-picker-input padding-w-10" + (this.error ? " shy-date-picker-input-error" : "")}>
-                <div><input type='text' ref={e => this.inputDate = e} defaultValue={dj.format('YYYY/MM/DD')} onBlur={e => this.changeDate((e.target as HTMLInputElement).value)} /></div>
+                <div><input type='text'
+                    ref={e => this.inputDate = e}
+                    defaultValue={dj.format('YYYY/MM/DD')}
+                    onChange={e => {
+                        this.lazyChangeDate((e.target as HTMLInputElement).value);
+                    }}
+                    onBlur={e => this.lazyChangeDate((e.target as HTMLInputElement).value)}
+                /></div>
                 {this.includeTime && <><span></span><div><input ref={e => this.inputTime = e} type='text' defaultValue={dj.format('HH:mm')} onBlur={e => this.changeTime((e.target as HTMLInputElement).value)} /></div></>}
             </div>
             <div className='shy-date-picker-head gap-w-10'>
                 <div className='shy-date-picker-head-title'>
-                    <span style={{ cursor: 'pointer' }}>{dj.year()}<S>年</S></span>
-                    <span style={{ cursor: 'pointer' }}>{dj.month() + 1}<S>月</S></span>
-                    <span>{dj.date()}<S>日</S></span>
+                    <span>{dj.year()}<S>年</S>{dj.month() + 1}<S>月</S>{dj.date()}<S>日</S></span>
                 </div>
                 <div className='shy-date-picker-head-operators'>
-                    <a><Icon size={14} onClick={e => this.onReduce(e)} icon={chevronLeft}></Icon></a>
-                    <a><Icon size={14} onClick={e => this.onAdd(e)} icon={chevronRight}></Icon></a>
+                    <a className="padding-w-5 f-14 gap-r-3" style={{ width: 30 }} onClick={e => this.onToday()}><S>今天</S></a>
+                    <ToolTip overlay={lst('上个月')}><a><Icon size={14} onClick={e => this.onReduce(e)} icon={chevronLeft}></Icon></a></ToolTip>
+                    <ToolTip overlay={lst('下个月')}><a><Icon size={14} onClick={e => this.onAdd(e)} icon={chevronRight}></Icon></a></ToolTip>
                 </div>
             </div>
             {this.renderDays()}
