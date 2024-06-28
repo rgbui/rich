@@ -21,14 +21,12 @@ import { useTagSelector } from "../../../extensions/tag";
 
 import { util } from "../../../util/util";
 
-
 /**
  * 输入弹窗
  */
 export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.FormEvent) {
     if (aa.isSolid) return false;
-    if (aa.plain) return false;
-    if (aa.block.url == BlockUrlConstant.Title || aa.block.closest(x => x.isContentBlock)?.url == BlockUrlConstant.Title) return false;
+    if (aa.isPlainText) return false;
     var ev = event.nativeEvent as InputEvent;
     var sel = window.getSelection();
     var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
@@ -108,7 +106,8 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
  */
 export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: React.FormEvent) {
     if (aa.isSolid) return false;
-    if (aa.block.url == BlockUrlConstant.Title || aa.block.closest(x => x.isContentBlock)?.url == BlockUrlConstant.Title) return false;
+    if (aa.isPlainText) return false;
+
     var sel = window.getSelection();
     var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
     var current = aa.textContent.slice(0, offset);
@@ -227,9 +226,7 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
     }
     return false;
 }
-export async function inputLineTail(write: PageWrite, aa: AppearAnchor, event: React.FormEvent) {
-    return false;
-}
+
 
 /**
  * 将要回车删除

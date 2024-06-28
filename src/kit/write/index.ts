@@ -12,7 +12,7 @@ import { BlockCssName } from "../../block/pattern/css";
 import { MouseDragger } from "../../common/dragger";
 import { KeyboardCode, KeyboardPlate } from "../../common/keys";
 import { TextEle } from "../../common/text.ele";
-import { Point, Rect, RectUtility } from "../../common/vector/point";
+import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
 import { PageLayoutType } from "../../page/declare";
 import { PageDirective } from "../../page/directive";
@@ -20,7 +20,6 @@ import {
     inputBackspaceDeleteContent,
     inputBackSpaceTextContent,
     inputDetector,
-    inputLineTail,
     inputPop,
     keydownBackspaceTextContent,
     onSpaceInputUrl
@@ -530,11 +529,7 @@ export class PageWrite {
          * https://developer.mozilla.org/zh-CN/docs/Web/API/InputEvent/inputType
          */
         else if (inputEvent.inputType == 'deleteContentBackward' && await inputBackSpaceTextContent(this, aa, event)) { return; }
-        /**
-         * 这里判断是否为输入到当前line块的末尾，且为当前row块的尾部。
-         * 因为这样会导致输入的时候一直输入到line块中，或者空格一下  该功能暂时不做
-         */
-        else if (await inputLineTail(this, aa, event)) { }
+      
         await InputStore(aa);
     }
     /**
