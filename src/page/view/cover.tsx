@@ -32,7 +32,7 @@ export class PageCover extends React.Component<{ page: Page }>{
                 event.stopPropagation();
                 var r = await useImagePicker({ roundArea: Rect.fromEvent(event) }, { gallery: true });
                 if (r) {
-                    await page.onUpdatePageCover({ cover: { url: r.url, thumb: r.thumb, top: 50, abled: true } }, true)
+                    await page.onUpdatePageCover({  url: r.url, thumb: r.thumb, top: 50, abled: true  }, true)
                 }
             }
             function startPosition(event: React.MouseEvent) {
@@ -59,7 +59,7 @@ export class PageCover extends React.Component<{ page: Page }>{
                 })
             }
             function savePostion() {
-                page.onUpdatePageCover({ 'cover.top': self.top });
+                page.onUpdatePageCover({ 'top': self.top });
                 self.startPos = false;
                 self.forceUpdate();
             }

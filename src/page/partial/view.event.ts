@@ -4,9 +4,7 @@ import { Page } from "..";
 import { closeBoardEditTool } from "../../../extensions/board.edit.tool";
 import { emojiStore } from "../../../extensions/emoji/store";
 import { useIconPicker } from "../../../extensions/icon";
-
 import { channel } from "../../../net/channel";
-import { util } from "../../../util/util";
 import { Matrix } from "../../common/matrix";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
@@ -24,6 +22,8 @@ import { forceCloseTextTool } from "../../../extensions/text.tool";
 import { ShyAlert } from "../../../component/lib/alert";
 import { UA } from "../../../util/ua";
 import { MouseDragger } from "../../common/dragger";
+import lodash from "lodash";
+import { IconArguments } from "../../../extensions/icon/declare";
 
 export class Page$ViewEvent {
     /**
@@ -349,24 +349,63 @@ export class Page$ViewEvent {
         if (!this.isCanEdit) return;
         var pd = this.getPageDataInfo();
         if (pd.cover?.abled && toggle !== false) {
-            this.onUpdatePageCover({ 'cover.abled': false }, true);
+            this.onUpdatePageCover({ 'abled': false }, true);
         }
         else {
             if (pd.cover?.url) {
-                this.onUpdatePageCover({ 'cover.abled': true }, true);
+                this.onUpdatePageCover({ 'abled': true }, true);
             }
             else {
                 var g = GalleryPics().randomOf().childs.randomOf();
                 this.onUpdatePageCover({
-                    cover: {
-                        abled: true,
-                        url: g.url,
-                        thumb: g.thumb,
-                        top: 50
-                    }
+                    abled: true,
+                    url: g.url,
+                    thumb: g.thumb,
+                    top: 50
                 }, true);
             }
         }
+    }
+    async onAddDescription(this: Page, toggle?: boolean) {
+        var pd = this.getPageDataInfo();
+        var des = lodash.cloneDeep(pd.description);
+        if (!des) {
+            des = { abled: toggle, text: '' }
+        }
+        else {
+            if (typeof toggle == 'undefined') toggle = des?.abled ? false : true;
+            if (typeof des == 'string') des = {
+                text: des,
+                abled: true
+            }
+            des.abled = toggle;
+        }
+        await this.onAction('onAddDescription', async () => {
+            var title = this.find(c => c.url == BlockUrlConstant.Title);
+            if (des.abled == true) {
+                var b = this.find(c => c.url == BlockUrlConstant.PageDescription);
+                if (!b) {
+                    await this.createBlock(BlockUrlConstant.PageDescription, {}, title.parent, title.at + 1, title.parentKey)
+                }
+            }
+            else {
+                var b = this.find(c => c.url == BlockUrlConstant.PageDescription);
+                if (b) await b.delete()
+            }
+            await this.onUpdatePageData({ description: des });
+            if (des.abled) {
+                b = this.find(c => c.url == BlockUrlConstant.PageDescription);
+                this.addActionCompletedEvent(async () => {
+                    this.kit.anchorCursor.onFocusBlockAnchor(b, { merge: true, last: true, render: true })
+                })
+            }
+            else {
+                this.addActionCompletedEvent(async () => {
+                    if (this.hideDocTitle !== true)
+                        this.kit.anchorCursor.onFocusBlockAnchor(title, { merge: true, render: true })
+                })
+            }
+        })
     }
     async onAddIcon(this: Page) {
         if (!this.isCanEdit) return;
@@ -389,9 +428,14 @@ export class Page$ViewEvent {
         text: string,
         locationId?: PageLocation
     ) {
-        // this.onceStopRenderByPageInfo = true;
-        if (!this.isSchemaRecordViewTemplate && [ElementType.SchemaRecordView, ElementType.SchemaData, ElementType.SchemaView].includes(this.pe.type)) {
+        // console.log(text, locationId, 'textl');
+        if (!this.isSchemaRecordViewTemplate && [
+            ElementType.SchemaRecordView,
+            ElementType.SchemaRecordViewData,
+            ElementType.SchemaData
+        ].includes(this.pe.type)) {
             this.formRowData.title = text;
+            await this.onUpdatePageData({ title: text });
             if (this.view.pageBar) this.view.pageBar.forceUpdate()
         }
         else if (this.isSchemaRecordViewTemplate) {
@@ -401,7 +445,7 @@ export class Page$ViewEvent {
                     name: 'updateSchemaView',
                     id: this.pe.id1,
                     data: { text }
-                }],'onUpdatePageTitle')
+                }], 'onUpdatePageTitle')
                 if (this.view.pageBar) this.view.pageBar.forceUpdate()
             }
         }
@@ -409,7 +453,7 @@ export class Page$ViewEvent {
             if (this.pe.type == ElementType.Schema) {
                 var schema = await TableSchema.loadTableSchema(this.pe.id, this.ws);
                 if (schema)
-                    await schema.update({ text },'onUpdatePageTitle')
+                    await schema.update({ text }, 'onUpdatePageTitle')
             }
             await channel.air('/page/update/info', {
                 elementUrl: this.elementUrl,
@@ -419,19 +463,42 @@ export class Page$ViewEvent {
             }, { locationId: locationId || PageLocation.pageUpdateInfo })
         }
     }
-    async onUpdateDescription(this: Page, text: string) {
-        this.onUpdatePageData({ description: text });
+    async onUpdateDescription(
+        this: Page,
+        text: string,
+        locationId?: PageLocation
+    ) {
+        await this.onUpdatePageData({ description: { text } });
         if (this.view.pageBar) this.view.pageBar.forceUpdate()
     }
     async onUpdatePageCover(this: Page, data: Record<string, any>, isUpdate?: boolean) {
         var c = this.getPageDataInfo().cover;
-        if (!c) c = {}
-        else c = { cover: c };
-        util.setKey(c, data);
-        await this.onUpdatePageData(c);
+        if (!c) c = {} as any
+        c = lodash.cloneDeep(c);
+        Object.assign(c, data);
+        await this.onUpdatePageData({ cover: c });
     }
-    getPageDataInfo(this: Page) {
-        if ([ElementType.SchemaData, ElementType.SchemaRecordView, ElementType.SchemaView].includes(this.pe.type) && !this.isSchemaRecordViewTemplate) {
+    getPageDataInfo(this: Page): {
+        id: string,
+        text: string,
+        icon: IconArguments,
+        cover: {
+            abled: boolean,
+            url: string,
+            thumb: string,
+            top: number
+        },
+        description: {
+            abled: boolean,
+            text: string
+
+        }
+
+    } {
+        if ([ElementType.SchemaData,
+        ElementType.SchemaRecordViewData,
+        ElementType.SchemaRecordView,
+        ElementType.SchemaView].includes(this.pe.type) && !this.isSchemaRecordViewTemplate) {
             return {
                 id: this.formRowData.id,
                 text: this.formRowData.title,
@@ -483,7 +550,7 @@ export class Page$ViewEvent {
         ].includes(this.pe.type) && !this.isSchemaRecordViewTemplate) {
             var sv = this.schema.views.find(g => g.id == this.pe.id1);
             if (sv) {
-                await this.schema.onSchemaOperate([{ id: sv.id, name: 'updateSchemaView', data }],'onUpdatePermissions')
+                await this.schema.onSchemaOperate([{ id: sv.id, name: 'updateSchemaView', data }], 'onUpdatePermissions')
                 Object.assign(sv, data);
             }
         }

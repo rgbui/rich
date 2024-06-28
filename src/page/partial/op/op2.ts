@@ -281,6 +281,7 @@ export class Page$Operator2 {
         });
     }
     async onUpdatePageData(this: Page, data: Record<string, any>, locationId?: PageLocation) {
+
         for (let n in data) {
             if (lodash.isUndefined(data[n])) {
                 delete data[n];
@@ -289,10 +290,14 @@ export class Page$Operator2 {
         if ([
             ElementType.SchemaData,
             ElementType.SchemaRecordView,
-            ElementType.SchemaView
+            ElementType.SchemaView,
+            ElementType.SchemaRecordViewData
         ].includes(this.pe.type) && !this.isSchemaRecordViewTemplate) {
-            data.title = data.text;
-            delete data.text;
+            if (typeof data.text == 'string') {
+                data.title = data.text;
+                delete data.text;
+            }
+
             Object.assign(this.formRowData, data);
             this.forceUpdate();
             this.view.pageBar?.forceUpdate();
@@ -301,8 +306,9 @@ export class Page$Operator2 {
                 await (tb as Title).loadPageInfo();
                 tb.forceManualUpdate()
             }
-            if (this.pe.type == ElementType.SchemaData) {
-                if (!this.openPageData?.pre && this.formRowData?.id) {
+
+            if (this.pe.type == ElementType.SchemaData || this.pe.type == ElementType.SchemaRecordViewData) {
+                if (this.formRowData?.id) {
                     await this.schema.rowUpdate({ dataId: this.formRowData?.id, data: this.formRowData }, 'Page.onUpdatePageData')
                 }
             }
@@ -319,16 +325,18 @@ export class Page$Operator2 {
             }
         }
         else {
-            if (this.pe.type == ElementType.Schema) {
-                var schema = await TableSchema.loadTableSchema(this.pe.id, this.ws);
-                var props = lodash.pick(data, ['icon', 'description', 'text'])
-                if (schema && Object.keys(props).length > 0)
-                    schema.update(props, 'Page.onUpdatePageData')
+            var props = lodash.pick(data, ['icon', 'cover', 'description', 'text'])
+            if (Object.keys(props).length > 0) {
+                if (this.pe.type == ElementType.Schema) {
+                    var schema = await TableSchema.loadTableSchema(this.pe.id, this.ws);
+                    if (schema && Object.keys(props).length > 0)
+                        schema.update(props, 'Page.onUpdatePageData')
+                }
+                await channel.air('/page/update/info', {
+                    elementUrl: this.elementUrl,
+                    pageInfo: data
+                }, { locationId: locationId || PageLocation.pageUpdateInfo })
             }
-            await channel.air('/page/update/info', {
-                elementUrl: this.elementUrl,
-                pageInfo: data
-            }, { locationId: locationId || PageLocation.pageUpdateInfo })
         }
     }
     async onCopyBlocks(this: Page, blocks: Block[]) {
