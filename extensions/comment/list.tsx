@@ -29,7 +29,7 @@ export class CommentListView extends React.Component<{
     ws?: LinkWs,
     onChange?: (props: Record<string, any>) => void,
     contentHeight?: number
-   
+
 }> {
     list: WsCommentType[] = [];
     total = 0;
@@ -116,6 +116,8 @@ export class CommentListView extends React.Component<{
     }
     async addComment(data: ChatInputType, event?: React.MouseEvent) {
         if (this.checkSign() == false) return;
+        var dc = data?.content?.trim();
+        if (!dc) return;
         if (event) event.preventDefault();
         if (data) {
             var l: WsCommentType = this.currentReply && this.currentReply?.id == data.replyId ? this.currentReply : null;
@@ -123,7 +125,7 @@ export class CommentListView extends React.Component<{
                 elementUrl: this.elementUrl,
                 parentId: data.replyId,
                 rootId: l?.rootId ?? null,
-                content: data.content,
+                content: dc,
                 mentions: data.mentions,
                 files: data.files
             });
@@ -274,8 +276,8 @@ export class CommentListView extends React.Component<{
         this.spread = true;
         this.forceUpdate();
     }
-    onFocusInput(){
-        if(this.inputChatBox){
+    onFocusInput() {
+        if (this.inputChatBox) {
             this.inputChatBox.onFocus()
         }
     }
