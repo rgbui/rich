@@ -111,7 +111,8 @@ export interface LinkWs {
     text: string
     icon: IconArguments
     cover: IconArguments
-    datasource: 'private-clound' | 'public-clound' | 'private-local'
+    datasource: 'private-cloud' | 'public-cloud' | 'private-local';
+    datasourceClientId:string;
     accessWorkspace?: 'none' | 'embed';
     /**
      * 0:不公开 

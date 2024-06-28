@@ -264,10 +264,13 @@ export class Page$Cycle {
      */
     notifyActionBlockUpdate(...block: Block[]) {
         if (!block) return;
-        block.forEach(b => b.needUpdate = true)
+        block.forEach(b => {
+            if (b)
+                b.needUpdate = true
+        })
         if (!Array.isArray(this.willUpdateBlocks)) this.willUpdateBlocks = [];
         block.forEach(b => {
-            if (!this.willUpdateBlocks.includes(b)) {
+            if (b && !this.willUpdateBlocks.includes(b)) {
                 this.willUpdateBlocks.push(b)
             }
         })

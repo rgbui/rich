@@ -425,8 +425,10 @@ export var util = {
         if (typeof price == 'string') {
             price = parseFloat(price);
         }
-        if (isNaN(price)) return '0.00';
-        return price.toFixed(2);
+        if (isNaN(price) || lodash.isNull(price) || lodash.isUndefined(price)) return '0.00';
+        if (typeof price == 'number')
+            return price.toFixed(2);
+        else return '0.00';
     },
     neighborDeWeight<T>(list: T[], predict?: (t: T) => any) {
         var array: T[] = [];
@@ -485,6 +487,6 @@ export var util = {
     toPercent(num: number, total: number = 100, decimal: number = 2) {
         if (total == 0) return '0%';
         var r = (Math.round(num / total * 10000) / 100).toFixed(decimal) + '%';
-       return r.replace(/\.?[0]+%$/, '%');
+        return r.replace(/\.?[0]+%$/, '%');
     }
 }

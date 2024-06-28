@@ -235,6 +235,7 @@ export var SysFieldTypes: FieldType[] = [
     FieldType.autoIncrement,
     FieldType.sort,
     FieldType.id,
+    FieldType.parentId,
     FieldType.deleted
 ]
 
@@ -249,6 +250,7 @@ export var SysHiddenFieldTypes: FieldType[] = [
     FieldType.plain,
     FieldType.thumb,
     FieldType.deleted,
+    FieldType.parentId,
     FieldType.sort
 ]
 
@@ -260,7 +262,7 @@ export var OnlyFieldTypes: FieldType[] = [
     FieldType.modifyDate,
     FieldType.createDate,
     FieldType.creater,
-    FieldType.cover,
+    FieldType.cover, FieldType.parentId,
     FieldType.icon,
     FieldType.title,
     FieldType.comment,
@@ -312,6 +314,7 @@ export var SupportTurnFieldTypes: FieldType[] = [
  */
 export var DisabledSortFieldTypes: FieldType[] = [
     FieldType.formula,
+    FieldType.parentId,
     FieldType.button,
     FieldType.rollup,
     FieldType.cover,
@@ -327,6 +330,7 @@ export var DisabledSortFieldTypes: FieldType[] = [
  */
 export var DisabledFormFieldTypes: FieldType[] = [
     FieldType.formula,
+    FieldType.parentId,
     FieldType.rollup,
     FieldType.modifyDate,
     FieldType.modifyer,
@@ -360,6 +364,7 @@ export var IsArrayValueFieldTypes: FieldType[] = [
  */
 export type FieldTypeExample = {
     [FieldType.id]: string,
+    [FieldType.parentId]:string,
     [FieldType.deleted]: boolean,
     [FieldType.title]: string,
     [FieldType.icon]: IconArguments,

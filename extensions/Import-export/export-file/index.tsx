@@ -10,7 +10,8 @@ import { S } from "../../../i18n/view";
 import { HelpText } from "../../../component/view/text";
 
 export default class ExportFile extends EventsComponent {
-    render() {
+    render()
+    {
         return <div className="w-300 round padding-14">
             <div className="flex">
                 <span className="flex-auto remark f-12 "><S>仅支持单文件导出</S></span>
@@ -19,13 +20,7 @@ export default class ExportFile extends EventsComponent {
                 </div>
             </div>
             <div className="gap-b-10 gap-t-5">
-                <SelectBox dropAlign="full" border options={[
-                    { text: 'Markdown', value: "markdown" },
-                    // { text: 'HTML', value: 'html' },
-                    { text: 'PDF', value: 'pdf' },
-                    { text: lst('图片'), value: 'png' },
-                    { text: 'JSON', value: 'json' }
-                ]} value={this.type} onChange={e => { this.type = e; this.forceUpdate() }}></SelectBox>
+                <SelectBox dropAlign="full" border options={this.getOptions()} value={this.type} onChange={e => { this.type = e; this.forceUpdate() }}></SelectBox>
             </div>
             <div>
                 <Button block onClick={(e, b) => this.onExport(b)}><S>导出</S></Button>
@@ -34,8 +29,24 @@ export default class ExportFile extends EventsComponent {
     }
     page: Page;
     type: string = 'markdown';
+    getOptions() {
+        if (this.page.ws.datasource == 'private-local') {
+            return [
+                { text: 'Markdown', value: "markdown" },
+                { text: 'JSON', value: 'json' }
+            ]
+        }
+        return [
+            { text: 'Markdown', value: "markdown" },
+            // { text: 'HTML', value: 'html' },
+            { text: 'PDF', value: 'pdf' },
+            { text: lst('图片'), value: 'png' },
+            { text: 'JSON', value: 'json' }
+        ]
+    }
     onOpen(options: { page: Page }) {
         this.page = options.page;
+        this.forceUpdate();
     }
     async onExport(button: Button) {
         button.loading = true;

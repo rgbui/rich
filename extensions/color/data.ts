@@ -175,6 +175,9 @@ export var BoardBorderColorList = () => {
 
 
 
+
+
+
 const Key = 'last.text.cache.font.color';
 export var SetTextCacheFontColor = async (name: string, color: any) => {
     await channel.act('/cache/set', {
@@ -189,3 +192,5 @@ export var GetTextCacheFontColor = async () => {
         color: r.color as any
     }
 }
+
+

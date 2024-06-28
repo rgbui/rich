@@ -211,7 +211,7 @@ export interface ChannelPutMapUrls {
 	"/open/weixin/bind":{args:{weixinOpen:any},returnType:Promise<SockResponse<void>>},
 	"/open/sign":{args:{},returnType:Promise<SockResponse<{user:Record<string,any>,guid:string,token:string}>>},
 	"/user/report":{args:{report:{userid:string,tags:string[],reason:string,reportElementUrl?:string,wsId?:string,reportContent?:string}},returnType:Promise<SockResponse<void>>},
-	"/ws/create":{args:{text:string,dataServiceAddress?:string,datasource?: "private-clound" | "public-clound" | "private-local",templateUrl?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>,pids:any[]}>>},
+	"/ws/create":{args:{text:string,serviceAddress?:string,datasource?: "private-cloud" | "public-cloud" | "private-local",datasourceClientId?:string,templateUrl?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>,pids:any[]}>>},
 	"/ws/invite/create":{args:any,returnType:Promise<SockResponse<{code:string}>>},
 	"/ws/invite/join":{args:{wsId:string,sock?:any,agree?:boolean,username:string},returnType:Promise<SockResponse<void>>},
 	"/ws/channel/send":{args:{ sockId?: string,wsId?: string,roomId: string,content?: string,replyId?: string, files?:any[],refs?:any[],mentions?:string[],robotId?:string,isRobotSend?: boolean,newLine?: boolean},returnType:Promise<SockResponse<{id:string,seq:number,createDate:Date}>>},

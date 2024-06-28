@@ -56,7 +56,6 @@ export class CommentView extends BlockView<Comment> {
             <div style={this.block.contentStyle}>
                 <CommentListView
                     ws={this.props.block.page.ws}
-                  
                     displayFormat={this.props.block.displayFormat || "comment"}
                     userid={this.props.block.page.user.id}
                     elementUrl={this.props.block.getCommentElementUrl()}

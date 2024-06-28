@@ -20,8 +20,7 @@ import { SockResponse } from "../../net/declare";
 import {
     ElementType,
     autoImageUrl,
-    getElementUrl,
-    getEmoji
+    getElementUrl
 } from "../../net/element.type";
 import { KeyboardCode } from "../../src/common/keys";
 import { Rect } from "../../src/common/vector/point";
@@ -149,8 +148,8 @@ export class ViewChats extends React.Component<{
         return <div data-channel-text-id={d.id} className={"sy-channel-text-item" + (noUser ? " no-user" : "")} key={d.id}>
             {d.reply && <div className="sy-channel-text-item-reply">
                 <UserBox userid={d.reply.userid}>{us => {
-                    return < ><Avatar ws={this.props.ws} showCard user={us} userid={d.userid} size={16}></Avatar>
-                        <div className="sy-channel-text-item-reply-content f-12 text-overflow">{this.renderContent(d.reply)}</div>
+                    return < ><Avatar className="flex-fixed" ws={this.props.ws} showCard user={us} userid={d.userid} size={16}></Avatar>
+                        <div className="sy-channel-text-item-reply-content flex-auto f-12 text-overflow">{this.renderContent(d.reply)}</div>
                     </>
                 }}</UserBox>
             </div>}
