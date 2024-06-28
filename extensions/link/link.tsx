@@ -53,17 +53,14 @@ class LinkEditor extends EventsComponent {
         }
     }
     onInput(e: string) {
-        console.log(e);
         this.spread = true;
         /**
          * 说明是网址开头的
          */
         if (e && (e.startsWith('http://') || e.startsWith('https://'))) {
-            // this.name = 'outside';
-            this.selectIndex = 0;
+            this.name = 'outside';
+            this.spread = false;
             this.url = e;
-            this.isSearch = true;
-            this.links = [];
             this.forceUpdate();
         }
         else if (e) {

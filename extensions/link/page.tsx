@@ -11,6 +11,10 @@ import { Spin } from "../../component/view/spin";
 import { util } from "../../util/util";
 import { channel } from "../../net/channel";
 import "./style.less";
+import { Rect } from "../../src/common/vector/point";
+import { Page } from "../../src/page";
+import { S } from "../../i18n/view";
+import { UA } from "../../util/ua";
 
 /**
  * 用户输入[[触发
@@ -18,6 +22,51 @@ import "./style.less";
 class PageLinkSelector extends InputTextPopSelector<LinkPageItem> {
     prefix = ['[[', '【【'];
     selectDeep: number = 1;
+    async open(round: Rect, text: string, callback: (...args: any[]) => void, page: Page) {
+        this.page = page;
+        if ((!text || text && this.prefix[0].length > 1 && this.prefix.map(c => c.slice(0, 1)).some(g => g == text)) && this.visible) {
+            this.close()
+            return this.visible
+        }
+        this._select = callback;
+        this.round = round;
+        this.pos = round.leftBottom;
+        var newText = text;
+        this.prefix.forEach(p => {
+            newText = newText.replace(p, '');
+        })
+        this.text = newText;
+        //判断当前的text是否不满足格式，结束下拦
+        if (this.predictInput(this.text) == false) {
+            this.close();
+            return this.visible;
+        }
+        /**
+        * 说明搜索了，为空，然后又输入了，就默认关闭
+        */
+        if (this.searchWord && this.text.startsWith(this.searchWord) && this.list.length == 0) {
+            // if (this.continuousSearchEmpty == true) {
+            //     this.close();
+            //     return this.visible;
+            // }
+        }
+        if (this.text) {
+            this.visible = true;
+            //说明要搜索
+            if (this.lazyTime == 0) this.search()
+            else this.syncSearch()
+        }
+        else {
+            if (this.visible == false) {
+                //说明要全查
+                await this.searchAll()
+            }
+            this.visible = true;
+            if (this.lazyTime == 0) this.search()
+            else this.syncSearch()
+        }
+        return this.visible;
+    }
     async searchByWord(word: string) {
         if (this.allList.total > 0 && this.allList.total < this.allList.size) {
             return this.allList.list.findAll(g => g.text && g.text.startsWith(word) || g.text.indexOf(word) > -1);
@@ -49,6 +98,14 @@ class PageLinkSelector extends InputTextPopSelector<LinkPageItem> {
                     <span className="flex-fixed flex flex-center size-24 item-hover round"> <Icon size={16} icon={getPageIcon(link)}></Icon></span>
                     <span className="flex-auto f-14 text-overflow">{link.text || '新页面'}</span></a>
             })}
+            <div className={"flex  remark padding-w-10 padding-h-3 " + (this.list.length > 0 ? "border-top" : "")}>
+                <span className="flex-fixed size-14 flex-center"><Icon size={14} icon={{ name: 'byte', code: 'arrow-up' }}></Icon></span>
+                <span className="flex-fixed size-14 flex-center  gap-r-10"><Icon size={14} icon={{ name: 'byte', code: 'arrow-down' }}></Icon></span>
+                <span className="flex-fixed f-12 gap-r-5"><S>选择</S></span>
+                <span className="flex-fixed size-14 flex-center gap-r-10">{UA.isMacOs ? <Icon size={14} icon={{ name: 'byte', code: 'corner-down-left' }}></Icon> : "enter"}</span>
+                <span className="flex-fixed f-12 gap-r-5"><S>结束</S></span>
+                <span className="flex-fixed f-12 gap-r-10">space</span>
+            </div>
         </div>
     }
     render() {
