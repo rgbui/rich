@@ -131,7 +131,7 @@ export class DataGridFields extends EventsComponent {
         }
     }
     renderFields() {
-        var fs = this.schema.visibleFields.findAll(g => g.text && !this.block.fields.some(s => s.fieldId == g.id) ? true : false);
+
         var self = this;
         async function onShowAll() {
             await self.block.onShowAllField();
@@ -150,7 +150,14 @@ export class DataGridFields extends EventsComponent {
             else if (vf.type == 'rowNum') return { name: 'bytedance-icon', code: 'list-numbers' } as IconValueType
             else return GetFieldTypeSvg(vf.field);
         }
+        var fs = this.schema.visibleFields.findAll(g => g.text && !this.block.fields.some(s => s.fieldId == g.id) ? true : false);
         var bs = this.block.fields.filter(c => !['rowNum', 'check'].includes(c.type))
+        var title: ViewField;
+        if (this.block.url == BlockUrlConstant.DataGridList) {
+            title = bs.find(c => c.field?.type == FieldType.title)
+            lodash.remove(bs, c => c.field?.type == FieldType.title)
+        }
+
         return <div>
             <div className="max-h-200 overflow-y">
                 <div className="flex padding-w-10 " style={{ paddingLeft: 5 }}>
@@ -159,12 +166,19 @@ export class DataGridFields extends EventsComponent {
                         <Icon size={14} icon={EyeSvg}></Icon>
                     </span></Tip>
                 </div>
+                {title && <div className={"shy-table-field-view-item round flex h-30 padding-w-5 gap-w-5   item-hover "} >
+                    <span className="size-24 round flex-center flex-fixed "><em className={' size-24 flex-center remark '} ><Icon size={16} icon={DragHandleSvg}></Icon></em></span>
+                    <span className="flex-center flex-fixed"><Icon size={14} icon={getFieldIcon(title)}></Icon></span>
+                    <span className="flex-auto f-14 gap-l-3">{title.field?.text || title.text}</span>
+                    <span className="size-24 round flex-center flex-fixed item-hover cursor"><Icon className={'eye'} size={14} onClick={async () => { await self.block.onHideField(title); self.forceUpdate() }} icon={EyeSvg}></Icon></span>
+                    <span className={"size-24 round flex-center flex-fixed   " + (title.field ? " cursor  item-hover" : "  remark")}><Icon className={'eye'} size={14} onClick={async (e) => { self.openProperty('view', title, e) }} icon={DotsSvg}></Icon></span>
+                </div>}
                 <DragList
                     onChange={onChange}
-                    isDragBar={e => e.closest('.shy-table-field-view-item') && !e.closest('.eye') ? true : false}
-                    className="shy-table-field-view-items">{bs.map(f => {
-                        return <div className={"shy-table-field-view-item round flex h-30 padding-w-5 gap-w-5 grab  item-hover"} key={f.fieldId || f.type}>
-                            <span className="size-24 round flex-center flex-fixed "> <em className={'drag size-24 flex-center text-1'} ><Icon size={16} icon={DragHandleSvg}></Icon></em></span>
+                    isDragBar={e => e.closest('.shy-table-field-view-item') && !e.closest('.eye') && !e.closest('.disabled') ? true : false}
+                    className="shy-table-field-view-items">{bs.map((f, i) => {
+                        return <div className={"shy-table-field-view-item round flex h-30 padding-w-5 gap-w-5 grab  item-hover "} key={f.fieldId || f.type}>
+                            <span className="size-24 round flex-center flex-fixed "><em className={'drag size-24 flex-center text-1 '} ><Icon size={16} icon={DragHandleSvg}></Icon></em></span>
                             <span className="flex-center flex-fixed"><Icon size={14} icon={getFieldIcon(f)}></Icon></span>
                             <span className="flex-auto f-14 gap-l-3">{f.field?.text || f.text}</span>
                             <span className="size-24 round flex-center flex-fixed item-hover cursor"><Icon className={'eye'} size={14} onClick={async () => { await self.block.onHideField(f); self.forceUpdate() }} icon={EyeSvg}></Icon></span>
