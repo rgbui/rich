@@ -113,6 +113,7 @@ import "./at/now";
 
 import './navigation/link';
 import './interaction/title';
+import './interaction/description';
 import "./navigation/outline/index";
 import './navigation/ref.links';
 import './navigation/links';

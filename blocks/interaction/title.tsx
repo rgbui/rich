@@ -54,7 +54,7 @@ export class Title extends Block {
     async getMd() {
         return `# ${this.page.getPageDataInfo()?.text}`
     }
-    get isContentEmpty(){
+    get isContentEmpty() {
         return !this.pageInfo?.text
     }
     async onGetContextMenus() {
@@ -72,7 +72,7 @@ export class Title extends Block {
             name: 'addIcon',
             text: lst('添加图标...'),
             type: MenuItemType.switch,
-            checked: pd?.icon?.abled ? false : true,
+            checked: pd?.icon ? false : true,
             icon: EmojiSvg
         })
         rs.push({
@@ -133,7 +133,7 @@ export class Title extends Block {
         }
         else if (item.name == 'addCover') {
             if (item.checked) await this.page.onAddCover()
-            else await this.page.onUpdatePageCover({ 'cover.abled': false }, true);
+            else await this.page.onUpdatePageCover({ 'abled': false }, true);
             return;
         }
         else if (item.name == 'text-center') {
@@ -213,6 +213,7 @@ export class TitleView extends BlockView<Title> {
             {isAdd && (!pd?.icon || !pd.cover?.abled) && <div className='flex h-24 visible r-item-hover f-14 r-cursor r-gap-r-10 r-padding-w-6 r-padding-h-3 r-round remark r-flex-center gap-b-10' >
                 {!pd?.icon && <a className="remark" onMouseDown={e => { this.block.page.onAddIcon(); this.forceUpdate() }}><Icon size={16} icon={EmojiSvg}></Icon><span className="gap-l-5"><S>添加图标</S></span></a>}
                 {!pd.cover?.abled && <a className="remark" onMouseDown={e => this.block.page.onAddCover()}><Icon size={16} icon={PicSvg}></Icon><span className="gap-l-5"><S>添加封面</S></span></a>}
+                {this.block.page.pageLayout.type == PageLayoutType.db && <a className="remark" onMouseDown={e => this.block.page.onAddDescription(pd?.description?.abled == false ? true : false)}><Icon size={16} icon={{ name: "byte", code: 'attention' }}></Icon><span className="gap-l-5">{pd?.description?.abled ? <S>隐藏描述</S> : <S>添加描述</S>}</span></a>}
             </div>}
             {!pd && <div className='sy-block-page-info-loading'>
                 <Spin></Spin>
@@ -225,7 +226,7 @@ export class TitleView extends BlockView<Title> {
                     className={'shy-text-empty-font-inherit'}
                     placeholderEmptyVisible
                     plain
-                    html={this.block.pageInfo?.text}
+                    html={pd?.text}
                 ></TextArea></span>
             </div>}
             {this.renderComment()}

@@ -66,7 +66,7 @@ export class PageView extends Component<{ page: Page }> {
             channel.act('/shy/share', {
                 type: 'updateTimelineShareData',
                 title: pd.text,
-                description: pd.description,
+                description: (typeof pd.description == 'string' ? pd.description : pd.description?.text) || '',
                 url: this.page.pageUrl
             })
         }

@@ -46,7 +46,7 @@ export interface LinkPageItem<T = {}> {
     text?: string;
     icon?: IconArguments,
     sn?: number,
-    description?: string,
+    description?: {abled:boolean, text: string},
     pageType?: PageLayoutType,
     elementUrl?: string,
     url?: string,

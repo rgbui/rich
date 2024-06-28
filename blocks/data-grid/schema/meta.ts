@@ -74,7 +74,7 @@ export interface TableSchemaView {
     text: string,
     icon: IconArguments,
     cover?: { abled: boolean, url: string, thumb: string, top: number },
-    description: string,
+    description: { abled: boolean, text: string },
     url: string,
 
     /**

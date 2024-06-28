@@ -45,6 +45,7 @@ export enum PageLocation {
      */
     pageUpdateInfo = 1,
     pageEditTitle=3,
+    pageEditDescription=6,
 
     /**
      * page bar的更新
