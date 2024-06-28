@@ -36,6 +36,13 @@ export class AppearAnchor {
     get isSolid() {
         return this.appear == BlockAppear.solid;
     }
+    get isPlainText() {
+        var aa = this;
+        if (aa.plain) return true
+        if (aa.block.url == BlockUrlConstant.Title || aa.block.closest(x => x.isContentBlock)?.url == BlockUrlConstant.Title) return true
+        if (aa.block.isSupportTextStyle == false || (aa.block.closest(c => c.isSupportTextStyle == false) ? true : false)) return true
+        return false;
+    }
     get textContent() {
         if (this.isText) {
             return TextEle.getTextContent(this.el);
@@ -291,7 +298,7 @@ export class AppearAnchor {
         return false;
     }
     get isRowEnd() {
-        var row = this.block.closest(x =>  x.isContentBlock);
+        var row = this.block.closest(x => x.isContentBlock);
         if (row == this.block) {
             if (row.appearAnchors.last() === this) return true;
         }
