@@ -27,7 +27,7 @@ export class UserPicker extends EventsComponent {
             <Divider></Divider>
             <div className="max-h-300 overflow-y">
                 {this.loading && <Spin></Spin>}
-                {!this.loading && this.links.map((link,i)=>{
+                {!this.loading && this.links.map((link, i) => {
                     return <div onMouseDown={e => this.onSelect(link)} className={"h-30 gap-h-5 padding-w-14 flex item-hover round cursor" + ((i) == this.selectIndex ? " item-hover-light-focus" : "")} key={link.id}>
                         <Avatar size={24} showName userid={(link as any).id}></Avatar>
                         <span className="gap-l-10">{link.name}</span>
@@ -110,7 +110,9 @@ export class UserPicker extends EventsComponent {
         this.load().then(g => {
             this.loading = false;
             this.selectIndex = 0;
-            this.forceUpdate();
+            this.forceUpdate(() => {
+                this.emit('update');
+            });
         })
     }
     onSelect(link: UserBasic) {
@@ -153,6 +155,9 @@ export async function useUserPicker(pos: PopoverPosition, ws: LinkWs, options?: 
             popover.close();
             resolve(value);
         });
+        fv.only('update', () => {
+            popover.updateLayout();
+        })
         fv.only('close', () => {
             popover.close();
             resolve(null);

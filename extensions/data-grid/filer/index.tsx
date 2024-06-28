@@ -57,20 +57,22 @@ export class DataGridFileViewer extends EventsComponent {
     }
     async uploadFile(event: React.MouseEvent) {
         var resource: ResourceArguments;
+        var ele = event.currentTarget as HTMLElement;
+        var rect = Rect.fromEle(ele);
         if (this.mime == 'image') {
-            resource = await useImageFilePicker({ roundArea: Rect.fromEvent(event) })
+            resource = await useImageFilePicker({ roundArea: rect })
         }
         else if (this.mime == 'file') {
-            resource = await useFilePicker({ roundArea: Rect.fromEvent(event) })
+            resource = await useFilePicker({ roundArea: rect })
         }
         else if (this.mime == 'audio') {
-            resource = await useAudioPicker({ roundArea: Rect.fromEvent(event) })
+            resource = await useAudioPicker({ roundArea: rect })
         }
         else if (this.mime == 'video') {
-            resource = await useVideoPicker({ roundArea: Rect.fromEvent(event) })
+            resource = await useVideoPicker({ roundArea: rect })
         }
         else if (this.mime == 'user') {
-            var r = await useUserPicker({ roundArea: Rect.fromEvent(event) }, undefined, { ignoreUserAll: true });
+            var r = await useUserPicker({ roundArea: rect }, undefined, { ignoreUserAll: true });
             if (r && !this.resources.includes(r.id as any)) {
                 resource = r.id as any;
             }
