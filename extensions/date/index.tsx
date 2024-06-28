@@ -142,7 +142,7 @@ export class DatePicker extends EventsComponent {
         var v = dayjs(value, "YYYY/MM/DD");
         this.error = '';
         if (!v.isValid() || (v.month() >= 12 || v.month() < 0 || v.date() > 31 || v.date() <= 0)) {
-            this.error = lst('日期格式错误', '日期格式错误，格式为：YYYY/MM/DD');
+            this.error = lst('日期格式错误', '日期格式错误(YYYY/MM/DD)');
             this.forceUpdate();
         }
         else {
