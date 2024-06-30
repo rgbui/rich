@@ -58,11 +58,13 @@ class AtUserSelector extends InputTextPopSelector<UserBasic> {
                 blockData: {
                     url: '/user/mention',
                     isLine: true,
-                    refLinks: [{
-                        id: util.guid(),
-                        type: "mention",
-                        userid: (r as any).userid,
-                    }]
+                    data: {
+                        refLinks: [{
+                            id: util.guid(),
+                            type: "mention",
+                            userid: (r as any).userid,
+                        }]
+                    }
                 }
             }
         }

@@ -6,7 +6,7 @@ import { prop, url, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
 import { SolidArea } from "../../src/block/view/appear";
 import { BoxTip } from "../../component/view/tooltip/box";
-import { DragHandleSvg, EditSvg } from "../../component/svgs";
+import { DragHandleSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { DragBlockLine } from "../../src/kit/handle/line";
 import { useUserPicker } from "../../extensions/at/picker";
@@ -18,8 +18,8 @@ import { PopoverPosition } from "../../component/popover/position";
 import { util } from "../../util/util";
 import { lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
-import "./style.less";
 import { RefPageLink } from "../../extensions/link/declare";
+import "./style.less";
 
 @url('/user/mention')
 export class ShyMention extends Block {
@@ -77,22 +77,22 @@ export class ShyMentionView extends BlockView<ShyMention> {
     username: string = '';
     renderView() {
         var rf = (this.block.refLinks || [])[0];
-        if (!rf?.userid) return <span onMouseDown={e => this.openUser({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) })} className="remark bg-error round cursor">
+        if (!rf?.userid) return <span onMouseDown={e => this.openUser({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) })}><SolidArea block={this.block} prop={'userid'} ><span className="remark bg-error round cursor  gap-w-3">
             @<S>某人</S>
-        </span>
+        </span></SolidArea></span>
         return <span onMouseDown={e => this.openUserCard(e)} >
-            <BoxTip disabled={this.block.isCanEdit() ? false : true} ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center">
-                <Tip text={'拖动'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></a></Tip>
-                {rf.userid !== 'all' && rf.userid && <Tip text={'打开'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.openUserCard(e)}><Icon size={16} icon={{ name: 'byte', code: 'people-top-card' }}></Icon></a></Tip>}
-                <Tip text={'编辑'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.openUser({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) })}><Icon size={16} icon={{ name: 'byte', code: 'write' }}></Icon></a></Tip>
+            <BoxTip disabled={this.block.isCanEdit() ? false : true} ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center padding-5 remark">
+                <Tip text={'拖动'}><a className="flex-center size-24 round item-hover  cursor " onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></a></Tip>
+                {rf.userid !== 'all' && rf.userid && <Tip text={'打开'}><a className="flex-center size-24 round item-hover  cursor " onMouseDown={e => this.openUserCard(e)}><Icon size={16} icon={{ name: 'byte', code: 'people-top-card' }}></Icon></a></Tip>}
+                <Tip text={'编辑'}><a className="flex-center size-24 round item-hover  cursor " onMouseDown={e => this.openUser({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) })}><Icon size={16} icon={{ name: 'byte', code: 'write' }}></Icon></a></Tip>
             </div>}><SolidArea block={this.block} prop={'userid'} >
-                    {rf.userid == 'all' && <span className='sy-block-mention'>@所有人</span>}
+                    {rf.userid == 'all' && <span className='sy-block-mention gap-w-3'>@所有人</span>}
                     {rf.userid != 'all' && rf.userid && <UserBox userid={rf.userid}>{(user) => {
                         this.username = user.name;
-                        return <span className='sy-block-mention' >@<span>{user.name}</span></span>
+                        return <span className='sy-block-mention gap-w-3' >@<span>{user.name}</span></span>
                     }}
                     </UserBox>}
-                    {!rf.userid && <span className='sy-block-mention'>@</span>}
+                    {!rf.userid && <span className='sy-block-mention gap-w-3'>@</span>}
                 </SolidArea>
             </BoxTip>
         </span>

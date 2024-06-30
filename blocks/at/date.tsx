@@ -7,7 +7,7 @@ import { BlockView } from "../../src/block/view";
 import dayjs from "dayjs";
 import { useDatePicker } from "../../extensions/date";
 import { Rect } from "../../src/common/vector/point";
-import { DragHandleSvg, EditSvg } from "../../component/svgs";
+import { DragHandleSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { BoxTip } from "../../component/view/tooltip/box";
 import { DragBlockLine } from "../../src/kit/handle/line";
@@ -45,18 +45,21 @@ export class ShyDate extends Block {
     }
 }
 @view('/mention/date')
-export class ShyDateView extends BlockView<ShyDate>{
+export class ShyDateView extends BlockView<ShyDate> {
     boxTip: BoxTip;
     dragBlock(event: React.MouseEvent) {
         DragBlockLine(this.block, event);
     }
     renderView() {
         return <span className='sy-block-date' onMouseDown={e => this.block.openDate(e)} >
-            <BoxTip disabled={this.block.isCanEdit()?false:true} ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center">
-                <Tip text={'拖动'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></a></Tip>
-                <Tip text={'编辑'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.block.openDate(e)}><Icon size={16} icon={EditSvg}></Icon></a></Tip>
+            <BoxTip disabled={this.block.isCanEdit() ? false : true} ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center remark padding-5">
+                <Tip text={'拖动'}><a className="flex-center size-24 round item-hover  cursor " onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></a></Tip>
+                <Tip text={'编辑'}><a className="flex-center size-24 round item-hover  cursor " onMouseDown={e => this.block.openDate(e)}><Icon size={16} icon={{name:"byte",code:"write"}}></Icon></a></Tip>
             </div>}>
-                <SolidArea prop='date' block={this.block}>@{dayjs(this.block.date).format('YYYY-MM-DD')}</SolidArea>
+                <SolidArea prop='date' block={this.block}>
+                    <Icon className={'gap-w-3'} icon={{ name: 'byte', code: 'alarm-clock' }}></Icon>
+                    <span>{dayjs(this.block.date).format('YYYY-MM-DD')}</span>
+                </SolidArea>
             </BoxTip>
         </span>
     }
