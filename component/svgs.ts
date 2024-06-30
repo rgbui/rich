@@ -202,6 +202,8 @@ import TableBottomInsertSvg from "../src/assert/svg/table.bottom.insert.svg";
 import TableClearCellSvg from "../src/assert/svg/table.clear.cell.svg";
 import TableDeleteColSvg from "../src/assert/svg/table.delete.col.svg";
 import TableDeleteRowSvg from "../src/assert/svg/table.delete.row.svg";
+import TableHeaderSvg from "../src/assert/svg/table.header.svg";
+import TableLeftHeaderSvg from "../src/assert/svg/table.left.header.svg";
 import TableLeftInsertSvg from "../src/assert/svg/table.left.insert.svg";
 import TableRightInsertSvg from "../src/assert/svg/table.right.insert.svg";
 import TableSvg from "../src/assert/svg/table.svg";
@@ -451,6 +453,8 @@ TableBottomInsertSvg,
 TableClearCellSvg,
 TableDeleteColSvg,
 TableDeleteRowSvg,
+TableHeaderSvg,
+TableLeftHeaderSvg,
 TableLeftInsertSvg,
 TableRightInsertSvg,
 TableSvg,

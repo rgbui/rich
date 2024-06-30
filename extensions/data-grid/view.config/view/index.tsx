@@ -20,6 +20,7 @@ import { lst } from "../../../../i18n/store";
 import { CardFactory } from "../../../../blocks/data-grid/template/card/factory/factory";
 import { Icon } from "../../../../component/view/icon";
 import DataGridConfig from "..";
+import { ViewField } from "../../../../blocks/data-grid/schema/view";
 
 export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> {
     get schema() {
@@ -187,6 +188,70 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 ]
             }
         ]
+
+        var cardItems: MenuItem[] = [];
+        if (this.block.url == BlockUrlConstant.DataGridBoard || this.block.url == BlockUrlConstant.DataGridGallery) {
+            if ((this.block as TableStoreGallery)?.cardConfig?.showMode == 'define') {
+                cardItems = [];
+            }
+            else {
+                var imgFields = this.block.schema.fields.filter(g => g.type == FieldType.image);
+                cardItems = [
+                    // { text: lst('卡片视图'), type: MenuItemType.text },
+                    {
+                        name: 'cardConfig.auto',
+                        text: lst("卡片高度自适应"),
+                        type: MenuItemType.switch,
+                        checked: (this.block as TableStoreGallery).cardConfig?.auto,
+                    },
+                    {
+                        name: 'cardConfig.showCover',
+                        text: lst("显示封面"),
+                        type: MenuItemType.switch,
+                        updateMenuPanel: true,
+                        checked: (this.block as TableStoreGallery).cardConfig?.showCover,
+                    },
+                    {
+                        name: 'cardConfig.coverAuto',
+                        text: lst("封面高度自适应"),
+                        visible: (items) => {
+                            var item = items.find(g => g.name == 'cardConfig.showCover');
+                            if (item.checked) return true;
+                            else return false;
+                        },
+                        type: MenuItemType.switch,
+                        checked: (this.block as TableStoreGallery).cardConfig?.coverAuto,
+                    },
+                    {
+                        text: lst('封面字段'),
+                        value: (this.block as TableStoreGallery).cardConfig?.coverFieldId || '',
+                        name: 'cardConfig.coverFieldId',
+                        type: MenuItemType.select,
+                        visible: (items) => {
+                            var item = items.find(g => g.name == 'cardConfig.showCover');
+                            if (item.checked) return true;
+                            else return false;
+                        },
+                        options: [
+                            { text: lst('无'), value: '' },
+                            { text: lst('页面封面'), value: 'pageCover' },
+                            // { text: lst('页面内容'), value: 'pageContent' },
+                            ...(imgFields.length == 0 ? [] : [
+                                // { type: MenuItemType.divide },
+                                { type: MenuItemType.text, text: lst('字段') }
+                            ]),
+                            ...imgFields.map(g => {
+                                return {
+                                    text: g.text,
+                                    icon: GetFieldTypeSvg(g),
+                                    value: g.id
+                                }
+                            })
+                        ]
+                    }
+                ]
+            }
+        }
         if (this.block.url == BlockUrlConstant.DataGridTable) {
             if (!this.block.isDefineViewTemplate)
                 baseItems.splice(baseItems.length, 0, ...[
@@ -232,7 +297,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                         { text: '5' + lst('列'), value: 5 },
                         { text: '6' + lst('列'), value: 6 }
                     ]
-                }])
+                }, ...cardItems])
         }
         else if (this.block.url == BlockUrlConstant.DataGridBoard) {
             baseItems.splice(baseItems.length, 0, ...[
@@ -249,6 +314,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                         { text: lst('换行显示'), value: 'wrap', icon: { name: "byte", code: 'align-left-two' } as any },
                     ]
                 },
+                ...cardItems
                 // {
                 //     text: lst('看板分类字段'),
                 //     value: (this.block as TableStoreBoard).groupFieldId,
@@ -318,10 +384,10 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
             else if (item.name == 'noHead') {
                 await self.block.onUpdateProps({ noHead: !item.checked }, { range: BlockRenderRange.self });
             }
-            else if (['gallerySize'].includes(item.name)) {
-                await self.block.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.none });
-                self.block.forceUpdateAllViews();
-            }
+            // else if (['gallerySize'].includes(item.name)) {
+            //     await self.block.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self });
+            //     // self.block.forceUpdateAllViews();
+            // }
             else if (['cardConfig.showField', 'dateFieldId', 'groupFieldId'].includes(item.name)) {
                 await self.block.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.none });
                 await self.block.onLazy100ReloadData();
@@ -334,6 +400,32 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
             }
             else if (item.name == 'lock') {
                 self.block.onTableSchemaLock(item.checked);
+            }
+            else if (item.name == 'cardConfig.showTemplate') {
+                await self.block.onUpdateProps({ [item.name]: item.checked }, { range: BlockRenderRange.self }, undefined, async () => {
+                    self.block.forceUpdateAllViews()
+                });
+                self.forceUpdate()
+            }
+            else if (['gallerySize', 'dateFieldId', 'groupFieldId'].includes(item.name)) {
+                await self.block.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self }, undefined, async () => {
+                    self.block.forceUpdateAllViews()
+                });
+                self.forceUpdate()
+            }
+            else if (['cardConfig.auto', 'cardConfig.showCover', 'cardConfig.coverAuto'].includes(item.name)) {
+                await self.block.onUpdateProps({ [item.name]: item.checked }, { range: BlockRenderRange.self }, undefined, async () => {
+                    self.block.forceUpdateAllViews()
+                });
+                self.forceUpdate()
+            }
+            else if (['cardConfig.coverFieldId', 'cardConfig.showMode'].includes(item.name) && item.value) {
+                await self.block.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self }, undefined, async () => {
+                    if (item.name == 'cardConfig.coverFieldId')
+                        await self.block.arrayRemove<ViewField>({ prop: 'fields', data: g => g.fieldId == item.value })
+                    self.block.forceUpdateAllViews()
+                });
+                self.forceUpdate()
             }
         }
         function select(item, event) {

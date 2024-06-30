@@ -190,7 +190,6 @@ export class Block$Operator {
                 await this.delete();
             }
         }
-        this.page.notifyActionBlockUpdate(this);
     }
     async insertBefore(this: Block, to: Block, childsKey?: string) {
         await to.parent.append(this,
@@ -222,8 +221,8 @@ export class Block$Operator {
                     })
                 }
             }
-            this.page.notifyActionBlockUpdate(this);
             this.page.notifyActionBlockUpdate(this.parent);
+            this.page.notifyActionBlockUpdate(this);
             this.page.notifyActionBlockResetLayout(this.parent);
             delete this.parent;
         }

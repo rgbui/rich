@@ -9,14 +9,15 @@ import { S } from "../../../i18n/view";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
 import { CheckSvg } from "../../svgs";
+import { toLower } from "lodash";
 
 export class FilterInput extends EventsComponent {
-    items: MenuItem[] = [];
-    options: MenuItem[] = [];
+    items: (MenuItem & { words: string[] })[] = [];
+    options: (MenuItem & { words: string[] })[] = [];
     focusIndex: number = 1;
     word: string = '';
     placeholder = '';
-    onSelect(item: MenuItem) {
+    onSelect(item: MenuItem & { words: string[] }) {
         this.emit('select', item);
     }
     render() {
@@ -50,7 +51,7 @@ export class FilterInput extends EventsComponent {
                     }}
                     onChange={e => {
                         this.word = e;
-                        this.items = this.options.filter(g => g.text.indexOf(e) >= 0);
+                        this.items = this.options.filter(g => Array.isArray(g.words) && g.words.some(c => c, toLower().indexOf(e.toLowerCase()) > -1) || g.text.toLowerCase().indexOf(e.toLowerCase()) >= 0);
                         this.forceUpdate();
                     }}></Input>
             </div>
@@ -75,7 +76,7 @@ export class FilterInput extends EventsComponent {
             </div>
         </div>
     }
-    open(options: { options: MenuItem[], placeholder: string }) {
+    open(options: { options: MenuItem & { words: string[] }[], placeholder: string }) {
         this.options = options.options;
         this.placeholder = options.placeholder || '';
         this.items = this.options.map(o => o);
@@ -86,7 +87,7 @@ export class FilterInput extends EventsComponent {
 }
 
 export async function useFilterInput(pos: PopoverPosition, options: {
-    options: MenuItem[],
+    options: (MenuItem & { words: string[] })[],
     placeholder: string
 }) {
     let popover = await PopoverSingleton(FilterInput, { mask: true });

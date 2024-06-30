@@ -52,7 +52,15 @@ export class Field {
 export interface DataGridOptionType {
     text: string,
     value: string,
-    color: string;
+    /**
+     * 旧的option bg color
+     */
+    color?: string;
+    /**
+     * 新的option增加fill及textColor
+     */
+    fill?:string;
+    textColor?:string;
 }
 
 export interface FieldConfig {

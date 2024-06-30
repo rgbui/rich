@@ -8,7 +8,7 @@ import { FieldType } from "../../../schema/type";
 import { CardModel, CardViewCom } from "../factory/observable";
 import { CardView } from "../view";
 import { Icon } from "../../../../../component/view/icon";
-import { BackgroundColorList } from "../../../../../extensions/color/data";
+import { BackgroundColorList, OptionColorRandom } from "../../../../../extensions/color/data";
 import * as Card9 from "../../../../../src/assert/img/card/card9.png";
 import lodash from "lodash";
 
@@ -32,15 +32,15 @@ CardModel('/job', () => ({
             types: [FieldType.options, FieldType.option],
             config: {
                 options: [
-                    { text: lst('五险一金'), value: '1', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('定期体检'), value: '2', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('加班补助'), value: '3', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('年终奖'), value: '4', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('带薪年假'), value: '5', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('员工旅游'), value: '6', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('通讯补贴'), value: '7', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('节日福利'), value: '8', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('零食下午茶'), value: '9', color: BackgroundColorList().randomOf()?.color }
+                    { text: lst('五险一金'), value: '1',...OptionColorRandom() },
+                    { text: lst('定期体检'), value: '2', ...OptionColorRandom() },
+                    { text: lst('加班补助'), value: '3', ...OptionColorRandom() },
+                    { text: lst('年终奖'), value: '4', ...OptionColorRandom() },
+                    { text: lst('带薪年假'), value: '5', ...OptionColorRandom() },
+                    { text: lst('员工旅游'), value: '6', ...OptionColorRandom()},
+                    { text: lst('通讯补贴'), value: '7', ...OptionColorRandom() },
+                    { text: lst('节日福利'), value: '8', ...OptionColorRandom() },
+                    { text: lst('零食下午茶'), value: '9', ...OptionColorRandom() }
                 ]
             },
             required: true
@@ -52,15 +52,15 @@ CardModel('/job', () => ({
             types: [FieldType.option],
             config: {
                 options: [
-                    { text: lst('不限'), value: '1', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('在校生'), value: '2', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('应届生'), value: '3', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('经验不限'), value: '4', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('1年以内'), value: '5', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('1-3年'), value: '6', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('3-5年'), value: '7', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('5-10年'), value: '8', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('10年以上'), value: '9', color: BackgroundColorList().randomOf()?.color }
+                    { text: lst('不限'), value: '1', ...OptionColorRandom() },
+                    { text: lst('在校生'), value: '2', ...OptionColorRandom() },
+                    { text: lst('应届生'), value: '3', ...OptionColorRandom() },
+                    { text: lst('经验不限'), value: '4', ...OptionColorRandom() },
+                    { text: lst('1年以内'), value: '5', ...OptionColorRandom() },
+                    { text: lst('1-3年'), value: '6', ...OptionColorRandom() },
+                    { text: lst('3-5年'), value: '7', ...OptionColorRandom() },
+                    { text: lst('5-10年'), value: '8', ...OptionColorRandom() },
+                    { text: lst('10年以上'), value: '9', ...OptionColorRandom() }
                 ]
             }, required: true
         },
@@ -70,11 +70,11 @@ CardModel('/job', () => ({
             types: [FieldType.option],
             config: {
                 options: [
-                    { text: lst('不限'), value: '1', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('大专'), value: '2', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('本科'), value: '3', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('硕士'), value: '4', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('博士'), value: '5', color: BackgroundColorList().randomOf()?.color },
+                    { text: lst('不限'), value: '1', ...OptionColorRandom() },
+                    { text: lst('大专'), value: '2', ...OptionColorRandom() },
+                    { text: lst('本科'), value: '3', ...OptionColorRandom() },
+                    { text: lst('硕士'), value: '4', ...OptionColorRandom() },
+                    { text: lst('博士'), value: '5', ...OptionColorRandom() },
                 ]
             }, required: true
         },
@@ -84,13 +84,13 @@ CardModel('/job', () => ({
             types: [FieldType.option, FieldType.text],
             config: {
                 options: [
-                    { text: lst('面谈'), value: '1', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('3K以下'), value: '2', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('3-5K'), value: '3', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('5-10K'), value: '4', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('10-20K'), value: '5', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('20-50K'), value: '6', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('50K以上'), value: '7', color: BackgroundColorList().randomOf()?.color },
+                    { text: lst('面谈'), value: '1', ...OptionColorRandom() },
+                    { text: lst('3K以下'), value: '2', ...OptionColorRandom() },
+                    { text: lst('3-5K'), value: '3', ...OptionColorRandom() },
+                    { text: lst('5-10K'), value: '4', ...OptionColorRandom() },
+                    { text: lst('10-20K'), value: '5', ...OptionColorRandom() },
+                    { text: lst('20-50K'), value: '6', ...OptionColorRandom() },
+                    { text: lst('50K以上'), value: '7', ...OptionColorRandom() },
                 ]
             }, required: true
         },
@@ -108,11 +108,11 @@ CardModel('/job', () => ({
             name: 'companySize', text: lst('公司规模'), types: [FieldType.option],
             config: {
                 options: [
-                    { text: lst('0-20人'), value: '1', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('20-99人'), value: '2', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('100-499人'), value: '3', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('500-999人'), value: '4', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('10000人以上'), value: '5', color: BackgroundColorList().randomOf()?.color }
+                    { text: lst('0-20人'), value: '1', ...OptionColorRandom() },
+                    { text: lst('20-99人'), value: '2', ...OptionColorRandom() },
+                    { text: lst('100-499人'), value: '3', ...OptionColorRandom() },
+                    { text: lst('500-999人'), value: '4', ...OptionColorRandom() },
+                    { text: lst('10000人以上'), value: '5', ...OptionColorRandom() }
                 ]
             }
         }

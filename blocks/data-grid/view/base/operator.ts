@@ -23,7 +23,7 @@ import { lst } from "../../../../i18n/store";
 import { IconValueType } from "../../../../component/view/icon";
 import { CardFactory } from "../../template/card/factory/factory";
 import { TableSchema } from "../../schema/meta";
-import { OptionBackgroundColorList } from "../../../../extensions/color/data";
+import {  OptionColorRandom } from "../../../../extensions/color/data";
 import { useSelectMenuItem } from "../../../../component/view/menu";
 import { GroupHeadType } from "../declare";
 import dayjs from "dayjs";
@@ -303,19 +303,18 @@ export class DataGridViewOperator {
         await this.delete();
         if (url == BlockUrlConstant.DataGridBoard) {
             if (!this.schema.fields.some(s => s.type == FieldType.option || s.type == FieldType.options)) {
-                var opbs = OptionBackgroundColorList();
+               
                 await this.schema.fieldAdd({
                     text: lst('状态'),
                     type: FieldType.option,
                     config: {
                         options: [
-                            { text: lst('未开始'), value: util.guid(), color: opbs.randomOf()?.color },
-                            { text: lst('进行中'), value: util.guid(), color: opbs.randomOf()?.color },
-                            { text: lst('已完成'), value: util.guid(), color: opbs.randomOf()?.color },
+                            { text: lst('未开始'), value: util.guid(), ...OptionColorRandom()},
+                            { text: lst('进行中'), value: util.guid(), ...OptionColorRandom()},
+                            { text: lst('已完成'), value: util.guid(), ...OptionColorRandom() },
                         ]
                     }
                 }, this.id);
-                console.log(this.schema);
             }
         }
         var newBlock = await this.page.createBlock(url,
@@ -347,6 +346,9 @@ export class DataGridViewOperator {
                         templateProps: {}
                     }
                 }, BlockRenderRange.self);
+                if (newBlock.url == BlockUrlConstant.DataGridBoard) {
+                    await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.fieldId == (newBlock as any).groupFieldId })
+                }
             }
         }
         for (let i = 0; i < bs.length; i++) {

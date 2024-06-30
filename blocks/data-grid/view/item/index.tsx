@@ -31,6 +31,8 @@ import { SearchListType } from "../../../../component/types";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { TableStoreCalendar } from "../calendar";
 import dayjs from "dayjs";
+import { ToolTip } from "../../../../component/view/tooltip";
+import { S } from "../../../../i18n/view";
 
 
 @url('/data-grid/item')
@@ -249,7 +251,7 @@ export class TableGridItem extends Block {
         }
     }
     async onHandlePlus() {
-        await this.dataGrid.onSyncAddRow({}, this.dataRow.id, 'after');
+        await this.dataGrid.onSyncAddRow({}, this.dataRow.id, 'after',true);
     }
     get isAllowDrop(): boolean {
         return true;
@@ -451,30 +453,42 @@ export class TableStoreItemView extends BlockView<TableGridItem> {
         var ga = this.block.dataGrid as TableStoreGallery;
         if (ga.cardConfig.showCover) {
             var field = this.block.schema.fields.find(g => g.id == ga.cardConfig.coverFieldId);
-            var imageData;
+            var imageData, top = 50;
             if (field) imageData = this.block.dataRow[field.name];
             if (Array.isArray(imageData)) imageData = imageData[0];
+            else if (ga.cardConfig.coverFieldId == 'pageCover') {
+                if (this.block.dataRow.cover && this.block.dataRow.cover['url'] && this.block.dataRow.cover.abled) {
+                    imageData = { url: this.block.dataRow.cover['url'] };
+                    top = this.block.dataRow.cover['top'] || 50;
+                }
+            }
             return <div className='sy-data-grid-item sy-data-grid-card visible-hover'>
-                <div className="sy-data-grid-card-cover">
-                    {imageData && <img style={{ maxHeight: ga.cardConfig.coverAuto ? "auto" : 200 }} src={autoImageUrl(imageData.url, 500)} />}
-                </div>
-                <div className="sy-data-grid-card-items r-gap-b-10">
+                {imageData && <div className="sy-data-grid-card-cover border-light-b">
+                    <img onDragStart={e => false} style={{
+                        objectFit: 'cover',
+                        objectPosition: '50% ' + (top) + '%',
+                        maxHeight: ga.cardConfig.coverAuto ? "auto" : 180
+                    }} src={autoImageUrl(imageData.url, 500)} />
+                </div>}
+                <div className="sy-data-grid-card-items padding-w-10 padding-h-5 r-gap-h-5 ">
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                 </div>
-                {this.block.isCanEdit() && <div onMouseDown={e => { e.stopPropagation(); this.block.onOpenMenu(e) }} className="pos visible top-5 right-5 remark flex-center size-24 round bg-hover shadow-s border cursor">
-                    <Icon size={20} icon={DotsSvg}></Icon>
+                <div></div>
+                {this.block.isCanEdit() && <div className="pos visible top-5 right-5 remark flex-center round  shadow-s border cursor">
+                    <ToolTip overlay={<S>编辑</S>}><span onMouseDown={e => { e.stopPropagation(); this.block.dataGrid.onOpenEditForm(this.block.dataRow.id); }} className="round-l-4 bg-hover size-24 flex-center cursor border-right"><Icon size={16} icon={{ name: 'byte', code: 'write' }}></Icon></span></ToolTip>
+                    <ToolTip overlay={<S text="复制删除">复制、删除</S>}><span onMouseDown={e => { e.stopPropagation(); this.block.onOpenMenu(e); }} className="round-r-4 bg-hover size-24 flex-center cursor"><Icon size={20} icon={DotsSvg}></Icon></span></ToolTip>
                 </div>}
             </div>
         }
         else {
             return <div className='sy-data-grid-item visible-hover'>
-                <div className="r-gap-b-10">
+                <div className="r-gap-h-5 padding-w-10 padding-h-5 r-gap-h-5">
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                 </div>
-                {this.block.isCanEdit() && <div onMouseDown={e => this.block.onOpenMenu(e)} className="pos visible top-5 right-5  remark flex-center size-24 visible round bg-hover shadow-s border cursor">
-                    <Icon size={20} icon={DotsSvg}></Icon>
-                </div>
-                }
+                {this.block.isCanEdit() && <div className="pos visible top-5 right-5 remark flex-center round  shadow-s border cursor">
+                    <ToolTip overlay={<S>编辑</S>}><span onMouseDown={e => { e.stopPropagation(); this.block.dataGrid.onOpenEditForm(this.block.dataRow.id); }} className="round-l-4 bg-hover size-24 flex-center cursor border-right"><Icon size={16} icon={{ name: 'byte', code: 'write' }}></Icon></span></ToolTip>
+                    <ToolTip overlay={<S text="复制删除">复制、删除</S>}><span onMouseDown={e => { e.stopPropagation(); this.block.onOpenMenu(e); }} className="round-r-4 bg-hover size-24 flex-center cursor"><Icon size={20} icon={DotsSvg}></Icon></span></ToolTip>
+                </div>}
             </div>
         }
     }

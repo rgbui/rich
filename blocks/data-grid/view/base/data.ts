@@ -84,7 +84,7 @@ export class DataGridViewData {
             newRow = r.data;
             var at = this.data.findIndex(g => g.id == id);
             if (arrow == 'after') at += 1;
-            this.data.insertAt(at, newRow);
+            this.data.splice(at,0,newRow);
             this.total += 1;
             this.onNotifyPageReferenceBlocks();
             await this.createOneItem(newRow, force);

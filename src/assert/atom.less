@@ -1132,17 +1132,20 @@ body {
 .overscroll-contain {
     overscroll-behavior: contain;
 }
-
-.scroll-hidden::-webkit-scrollbar-thumb,
-.scroll-hidden::-webkit-scrollbar-track {
-    visibility      : hidden;
-    background-color: transparent;
-    border-width    : none;
-
-    &:hover {
+.scroll-hidden{
+    &::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+    }
+    &::-webkit-scrollbar-thumb {
         visibility: hidden;
     }
+    &::-webkit-scrollbar-track {
+        visibility: hidden;
+    }
+
 }
+
 
 /**
 cursor鼠标

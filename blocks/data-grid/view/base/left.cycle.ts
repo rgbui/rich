@@ -5,6 +5,7 @@ import { DataGridView } from ".";
 import { channel } from "../../../../net/channel";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
 import lodash from "lodash";
+import { BlockUrlConstant } from "../../../../src/block/constant";
 
 
 export class DataGridViewLife {
@@ -16,9 +17,15 @@ export class DataGridViewLife {
     async loadViewFields(this: DataGridView) {
         if (this.fields.length == 0) {
             this.fields = this.schema.getViewFields()
+            if (this.url == BlockUrlConstant.DataGridBoard) {
+                lodash.remove(this.fields, c => c.fieldId == (this as any).groupFieldId);
+            }
         } else {
             if (!this.fields.every(s => s.fieldId || s.type ? true : false)) {
                 this.fields = this.schema.getViewFields()
+                if (this.url == BlockUrlConstant.DataGridBoard) {
+                    lodash.remove(this.fields, c => c.fieldId == (this as any).groupFieldId);
+                }
             }
             this.fields.each(f => {
                 f.schema = this.schema;

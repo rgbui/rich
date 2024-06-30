@@ -3,10 +3,9 @@ import { BlockView } from "../../../../src/block/view";
 import React from 'react';
 import { DataGridView } from "../base";
 import { FieldType } from "../../schema/type";
-import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { TableGridItem } from "../item";
 import { DataGridTool } from "../components/tool";
-import { EyeHideSvg, EyeSvg, PlusSvg } from "../../../../component/svgs";
+import { CheckSvg, EyeHideSvg, EyeSvg, PlusSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import { lst } from "../../../../i18n/store";
 import { S } from "../../../../i18n/view";
@@ -29,6 +28,8 @@ import { GroupHeadType, GroupIdType } from "../declare";
 import { Divider } from "../../../../component/view/grid";
 import { DropDirection } from "../../../../src/kit/handle/direction";
 import { Block } from "../../../../src/block";
+import { ScrollXDataGridBoard } from "./xscroll";
+import { ObserverWidth } from "../../../../src/common/Observer.width";
 
 @url('/data-grid/board')
 export class TableStoreBoard extends DataGridView {
@@ -54,6 +55,7 @@ export class TableStoreBoard extends DataGridView {
         name: string,
         group: string,
         color: string,
+        fill: string,
         value: string,
     }[] = [];
     async loadData() {
@@ -73,6 +75,7 @@ export class TableStoreBoard extends DataGridView {
                             name: name,
                             group: op.text,
                             color: op.color,
+                            fill: op.fill,
                             value: op.value,
                         }
                     });
@@ -81,6 +84,7 @@ export class TableStoreBoard extends DataGridView {
                         group: null,
                         value: null,
                         color: null,
+                        fill: null
                     })
                 }
                 if (this.hasGroup) {
@@ -201,11 +205,30 @@ export class TableStoreBoard extends DataGridView {
             var isS = this.hideGroups.some(s => s == dg.value)
             var r = await useSelectMenuItem({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, [
                 { name: isS ? "cancel" : 'hidden', icon: isS ? EyeHideSvg : EyeSvg, text: isS ? lst('取消隐藏') : lst('隐藏') },
-                { type: MenuItemType.divide },
-                { name: 'addRow', icon: PlusSvg, text: lst('新增数据') },
-                { type: MenuItemType.divide },
+                // { type: MenuItemType.divide },
+                // { name: 'addRow', icon: PlusSvg, text: lst('新增数据') },
+                // { type: MenuItemType.divide },
                 { name: 'deleteAllRows', icon: { name: 'bytedance-icon', code: 'clear' }, text: lst('删除数据') },
-                { name: 'deleteGroup', icon: { name: 'bytedance-icon', code: 'delete-two' }, text: lst('删除数据及分组') }
+                { name: 'deleteGroup', icon: { name: 'bytedance-icon', code: 'delete-two' }, text: lst('删除数据及分组') },
+                { type: MenuItemType.divide },
+                { type: MenuItemType.text, text: lst('颜色') },
+                ...OptionBackgroundColorList().map(b => {
+                    return {
+                        name: 'color',
+                        value: { fill: b.fill, textColor: b.color },
+                        text: b.text,
+                        type: MenuItemType.custom,
+                        render(item) {
+                            return <div className="flex padding-w-5 gap-w-5 h-30 item-hover round cursor">
+                                <span className="flex-fixed size-20 gap-l-3 round gap-r-10 border" style={{ backgroundColor: item.value.fill, color: item.value.textColor }}></span>
+                                <span className="flex-auto text f-14">{b.text}</span>
+                                {(dg.color && dg.color == item.value.fill || dg.color == item.value.fill) &&
+                                    <span className="flex-fixed size-24 flex-center"><Icon size={16} icon={CheckSvg}></Icon></span>
+                                }
+                            </div>
+                        }
+                    }
+                }),
             ]);
             if (r?.item) {
                 if (r.item.name == 'hidden') {
@@ -248,14 +271,29 @@ export class TableStoreBoard extends DataGridView {
                     await this.onAddGroup(dg, groupHead);
                     if (isS) ShyAlert(lst('添加成功'))
                 }
+                else if (r.item.name == 'color') {
+                    dg.color = r.item.value.textColor;
+                    dg.fill = r.item.value.fill;
+                    var ops = lodash.cloneDeep(this.groupField.config?.options)
+                    var opp = ops?.find(op => op.value == dg.value);
+                    if (opp) {
+                        opp.textColor = r.item.value.textColor;
+                        opp.fill = r.item.value.fill;
+                    }
+                    var cfg = lodash.cloneDeep(this.groupField.config);
+                    cfg.options = ops;
+                    await this.onUpdateField(this.groupField, { config: cfg });
+                }
             }
         })
     }
     async onAddNewGroup(event: React.MouseEvent) {
         await this.onDataGridTool(async () => {
             var ops = lodash.cloneDeep(this.groupField.config.options || []);
-            var or = OptionBackgroundColorList().find(g => ops.some(s => s.color == g.color) ? false : true);
-            var op: DataGridOptionType = { text: '', value: util.guid(), color: or?.color || OptionBackgroundColorList[0].color };
+            var or = OptionBackgroundColorList().findAll(g => ops.some(s => s.color && s.color == g.fill || s.fill && s.fill == g.fill) ? false : true).randomOf();
+            if (!or) or = OptionBackgroundColorList().randomOf();
+
+            var op: DataGridOptionType = { text: '', value: util.guid(), fill: or.fill, textColor: or.color };
             await this.onOpenFieldOptions(ops, op, event);
             if (op.text) {
                 ops.push(op);
@@ -267,6 +305,7 @@ export class TableStoreBoard extends DataGridView {
                     group: op.text,
                     value: op.value,
                     color: op.color,
+                    fill: op.fill
                     // count: 0
                 })
                 await this.onUpdateField(this.groupField, { config });
@@ -374,13 +413,32 @@ export class TableStoreBoardView extends BlockView<TableStoreBoard> {
                 {this.block.hasGroup && <Divider></Divider>}
                 {this.renderCreateTable()}
                 <SpinBox spin={this.block.isLoadingData}>
-                    <DataGridGroup block={this.block} renderRowContent={(b, c, g) => {
-                        return <BoardContent groupHead={g} block={b} childs={c}></BoardContent>
-                    }}></DataGridGroup>
+                    <ScrollXDataGridBoard ref={e => this.xd = e} block={this.block}>
+                        <DataGridGroup block={this.block} renderRowContent={(b, c, g) => {
+                            return <BoardContent groupHead={g} block={b} childs={c}></BoardContent>
+                        }}></DataGridGroup>
+                    </ScrollXDataGridBoard>
                 </SpinBox>
             </div>
         </div>
             {this.renderComment()}
         </div>
     }
+    didMount(): void {
+        if (this.block.el) {
+            ObserverWidth.width(this.block.el, this.widthChange)
+        }
+    }
+    willUnmount(): void {
+        if (this.block.el) {
+            ObserverWidth.cancel(this.block.el);
+        }
+    }
+
+    xd: ScrollXDataGridBoard;
+    widthChange = lodash.debounce(() => {
+        if (this.xd) {
+            this.xd.AdjustWidth()
+        }
+    }, 300)
 }

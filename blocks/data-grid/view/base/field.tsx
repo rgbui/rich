@@ -427,7 +427,7 @@ export class DataGridViewField {
                                         name: 'optionItem',
                                         type: MenuItemType.drag,
                                         renderContent() {
-                                            return <span className="round padding-w-5 f-14 padding-h-2  l-16" style={{ backgroundColor: op.color }}>{op.text}</span>
+                                            return <span className="round padding-w-5 f-14 padding-h-2  l-16" style={{ backgroundColor: op?.fill||op?.color, color: op.textColor }}>{op.text}</span>
                                         },
                                         btns: [{ name: 'editOptionOption', icon: DotsSvg }]
                                     }
@@ -460,14 +460,14 @@ export class DataGridViewField {
             ...OptionBackgroundColorList().map(b => {
                 return {
                     name: 'color',
-                    value: b.color,
+                    value: { fill: b.fill, textColor: b.color },
                     text: b.text,
                     type: MenuItemType.custom,
                     render(item) {
                         return <div className="flex padding-w-5 gap-w-5 h-30 item-hover round cursor">
-                            <span className="flex-fixed size-20 gap-l-3 round gap-r-10 border" style={{ backgroundColor: item.value }}></span>
+                            <span className="flex-fixed size-20 gap-l-3 round gap-r-10 border" style={{ backgroundColor: item.value.fill, color: item.value.textColor }}></span>
                             <span className="flex-auto text f-14">{b.text}</span>
-                            {option.color == item.value &&
+                            {(option.color && option.color == item.value?.fill || option.fill == item.value.fill) &&
                                 <span className="flex-fixed size-24 flex-center"><Icon size={16} icon={CheckSvg}></Icon></span>
                             }
                         </div>
@@ -483,7 +483,8 @@ export class DataGridViewField {
         var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus, { nickName: 'second' });
         if (um) {
             if (um.item.name == 'color') {
-                option.color = um.item.value;
+                option.fill = um.item.value.fill;
+                option.textColor = um.item.value.color;
             }
             else if (um.item.name == 'delete') {
                 options.remove(o => o === option);
@@ -495,7 +496,7 @@ export class DataGridViewField {
                 ShyAlert(lst('当前标签项已存在'));
             }
             else {
-                option.text = name;
+                option.text = name as string;
             }
         }
     }
@@ -534,8 +535,9 @@ export class DataGridViewField {
                             }
                             else if (item.name == 'addOption') {
                                 var ops = lodash.cloneDeep(viewField.field?.config?.options || []);
-                                var or = OptionBackgroundColorList().find(g => ops.some(s => s.color == g.color) ? false : true);
-                                var op: DataGridOptionType = { text: '', value: util.guid(), color: or?.color || OptionBackgroundColorList[0].color };
+                                var or = OptionBackgroundColorList().findAll(g => ops.some(s => s.color && s.color == g.fill || s.fill && s.fill == g.fill) ? false : true).randomOf();
+                                if (!or) or = OptionBackgroundColorList().randomOf();
+                                var op: DataGridOptionType = { text: '', value: util.guid(), fill: or.fill, textColor: or.color };
                                 await self.onOpenFieldOptions(ops, op, ev);
                                 if (op.text) {
                                     ops.push(op);

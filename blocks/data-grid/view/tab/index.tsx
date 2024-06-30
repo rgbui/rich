@@ -24,6 +24,8 @@ import { useDataSourceView } from "../../../../extensions/data-grid/datasource";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { util } from "../../../../util/util";
 import "./style.less";
+import { TextEle } from "../../../../src/common/text.ele";
+import { ObserverWidth } from "../../../../src/common/Observer.width";
 
 @url('/data-grid/tab')
 export class DataGridTab extends Block {
@@ -72,9 +74,8 @@ export class DataGridTab extends Block {
         }
         this.forceManualUpdate();
     }
-    async onOpenAddTabView(event: React.MouseEvent) {
+    async onOpenAddTabView(rect: Rect) {
         await this.onDataGridTool(async () => {
-            var rect = Rect.fromEle(event.currentTarget as HTMLElement);
             var g = await useDataSourceView({ roundArea: rect }, {
                 tableId: this.dataGridBlock.schema.id,
                 viewId: this.dataGridBlock.syncBlockId,
@@ -494,12 +495,15 @@ export class DataGridTab extends Block {
     isOver: boolean = false;
     onOver(isOver: boolean) {
         if (this.renderToolOperators && this.renderToolOperators.isOpenTool) return;
-        this.isOver = isOver;
-        if (this.refPlus) {
-            if (this.isOver) this.refPlus.style.display = 'flex';
-            else this.refPlus.style.display = 'none';
+        if (!lodash.isEqual(this.isOver, isOver)) {
+            this.isOver = isOver;
+            if (this.refPlus) {
+                if (this.isOver) this.refPlus.style.display = 'flex';
+                else this.refPlus.style.display = 'none';
+            }
+            if (this.renderToolOperators) this.renderToolOperators.forceUpdate();
         }
-        if (this.renderToolOperators) this.renderToolOperators.forceUpdate();
+
     }
     renderToolOperators: RenderToolOperators;
     async onDataGridTool(fn: () => Promise<void>) {
@@ -575,36 +579,147 @@ export class DataGridTab extends Block {
 
 @view('/data-grid/tab')
 export class DataGridTabView extends BlockView<DataGridTab> {
+    didMount(): void {
+        if (this.refHead)
+            ObserverWidth.width(this.refHead, () => this.resizeWidth())
+    }
+    willUnmount(): void {
+        if (this.refHead)
+            ObserverWidth.cancel(this.refHead);
+    }
+    resizeObserver: ResizeObserver
+    spreadIndex: number = -1;
+    resizeWidth = lodash.debounce(() => {
+        if (this.isOpenMoreMenu) return;
+        var width = this.refHead.clientWidth;
+        width -= 30;
+        var fontStyle = TextEle.getFontStyle(this.refHead);
+        fontStyle.fontWeight = '500';
+        fontStyle.fontSize = '14px';
+        fontStyle.lineHeight = 24;
+        var wsList: number[] = [];
+        var sum = 0;
+        var sumLastIndex = -1;
+        for (let i = 0; i < this.block.tabItems.length; i++) {
+            var item = this.block.tabItems[i];
+            var tr = this.block.refTables.find(c => c.id == item.schemaId);
+            var v = tr?.listViews.find(c => c.id == item.viewId);
+            var text = v?.text || this.block.tabItems[i].viewText;
+            var wd = TextEle.wordWidth(text, fontStyle);
+            var cw = 24 + 11 + 4 + wd;
+            if (cw > 220) cw = 230
+            wsList.push(cw);
+            if (sum + cw > width && sumLastIndex == -1) {
+                sumLastIndex = i - 1;
+            }
+            else sum += cw;
+        }
+        if (sumLastIndex > -1) {
+            if (this.block.tabIndex <= sumLastIndex) {
+                //说明聚焦的tab在可视范围内
+            }
+            else {
+                //说明聚焦的tab不在可视范围内
+                //这里计算退几个tab，才能让聚焦的tab在可视范围内
+                var tf = wsList[this.block.tabIndex];
+                var dn = sumLastIndex;
+                for (let n = sumLastIndex; n >= 0; n--) {
+                    var s = sum - wsList[n];
+                    if (s + tf < width) {
+                        dn = n;
+                        break;
+                    }
+                    else sum = s;
+                }
+                sumLastIndex = dn;
+            }
+        }
+        this.spreadIndex = sumLastIndex;
+        console.log('gggg', this.spreadIndex);
+        this.forceUpdate();
+    }, 300)
+    refHead: HTMLElement;
+    isOpenMoreMenu: boolean = false;
+    async openMoreView(event: React.MouseEvent) {
+        var items: MenuItem[] = [];
+        var self = this;
+        this.block.tabItems.map((item, i) => {
+            var tr = this.block.refTables.find(c => c.id == item.schemaId);
+            var v = tr?.listViews.find(c => c.id == item.viewId);
+            items.push({
+                text: v.text || item.viewText,
+                icon: getSchemaViewIcon(v),
+                value: i,
+                checkLabel: i == this.block.tabIndex
+            })
+        })
+        if (items.length > 0)
+            items.push({ type: MenuItemType.divide })
+        items.push({ name: 'addView', type: MenuItemType.button, text: lst('添加视图') })
+        var rect = Rect.fromEle(event.currentTarget as HTMLElement)
+        var r = await useSelectMenuItem({ roundArea: lodash.cloneDeep(rect) }, items);
+        if (r && r.item) {
+            if (r.item.name == 'addView') {
+                this.block.onOpenAddTabView(rect)
+            }
+            else {
+                self.block.tabIndex = r.item.value;
+                self.block.forceManualUpdate()
+            }
+        }
+    }
     renderView(): React.ReactNode {
         var tabClassList: string[] = ['flex'];
         if (this.block.align == 'center') tabClassList.push('flex-center');
         else if (this.block.align == 'right') tabClassList.push('flex-end');
         return <div
             className="sy-data-grid-tab"
+            onMouseMove={e => this.block.onOver(true)}
             onMouseEnter={e => this.block.onOver(true)}
             onMouseLeave={e => this.block.onOver(false)}
             style={this.block.visibleStyle}>
             <div style={this.block.contentStyle}>
                 <div className={"flex flex-nowrap sy-data-grid-tab-items " + (" sy-data-grid-tab-" + this.block.displayMode + " ") + (this.block.align == 'center' ? "flex-center" : "")}>
-                    <div className={"flex-auto text-overflow " + tabClassList.join(" ")}>
-                        {this.block.tabItems.map((item,index)=>{
+                    <div ref={e => this.refHead = e} className={"flex-auto text-overflow " + tabClassList.join(" ")}>
+                        {this.block.tabItems.map((item, index) => {
                             var tr = this.block.refTables.find(c => c.id == item.schemaId);
                             var v = tr?.listViews.find(c => c.id == item.viewId);
-                            return <div onMouseDown={e =>{
+                            return <div onMouseDown={e => {
                                 e.stopPropagation();
                                 this.block.onDraggerItem(e, index)
-                            }} className={"sy-data-grid-tab-item b-500 flex-center  " + (index == this.block.tabIndex ? "sy-data-grid-tab-item-hover" : "")} key={index}>
-                                <div className={"flex  round cursor max-w-220 f-14 padding-w-3 " + (this.block.displayMode == 'button' ? "" : " item-hover")}>
+                            }}
+                                style={{
+                                    display: this.spreadIndex > -1 && this.spreadIndex >= index || this.spreadIndex == -1 || index == this.block.tabIndex ? "flex" : "none"
+                                }}
+                                className={"sy-data-grid-tab-item b-500 flex-fixed flex-center  " + (index == this.block.tabIndex ? "sy-data-grid-tab-item-hover" : "")} key={index}>
+                                <div className={"flex  round cursor max-w-220 f-14 padding-l-3 padding-r-8 " + (this.block.displayMode == 'button' ? "" : " item-hover")}>
                                     <div className="size-24 flex-center  "><Icon fontColorInherit icon={getSchemaViewIcon(v)} size={16}></Icon></div>
-                                    <span className={"gap-r-5 f-14 "}>{v?.text || item.viewText}</span>
+                                    <span data-item-text className={"f-14 "}>{v?.text || item.viewText}</span>
                                 </div>
                             </div>
                         })}
-                        {this.block.isCanEdit() && <Tip text="添加视图"><div
+                        {this.spreadIndex > -1 && <Tip text="更多"><div
+                            onMouseDown={async e => {
+                                e.stopPropagation();
+                                try {
+                                    this.isOpenMoreMenu = true;
+                                    await this.openMoreView(e)
+                                }
+                                catch (ex) {
+
+                                }
+                                finally {
+                                    this.isOpenMoreMenu = false;
+                                }
+                            }}
+                            className="sy-data-grid-tab-item-plus flex-center round size-20 gap-l-5 item-hover cursor">
+                            <Icon size={16} icon={DotsSvg}></Icon>
+                        </div></Tip>}
+                        {this.spreadIndex == -1 && this.block.isCanEdit() && <Tip text="添加视图"><div
                             ref={e => this.block.refPlus = e}
                             style={{ display: this.block.isOver ? "flex" : "none" }}
                             onMouseDown={e => {
-                                this.block.onOpenAddTabView(e)
+                                this.block.onOpenAddTabView(Rect.fromEle(e.currentTarget as HTMLElement))
                             }} className="sy-data-grid-tab-item-plus flex-center round size-20 gap-l-5 item-hover cursor">
                             <Icon size={16} icon={PlusSvg}></Icon>
                         </div></Tip>}

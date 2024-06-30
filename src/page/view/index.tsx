@@ -241,10 +241,10 @@ export class PageView extends Component<{ page: Page }> {
         var isFull = this.page.isFullWidth;
         if (this.page.ws.isPubSite) isFull = this.page.ws?.publishConfig.isFullWidth;
         return <div className={"shy-page-view-content-nav" + (isFull ? "" : " shy-page-view-content-nav-center")}>
-            <div className="shy-page-view-content-nav-left">
+            <div className="shy-page-view-content-nav-left" style={{ position: 'relative', zIndex: 3 }}>
                 <ChildsArea childs={[this.page.views[0]]}></ChildsArea>
             </div>
-            <div className="shy-page-view-content-nav-right" style={{ top: 0, marginTop: isFirstDocTitle ? 70 : 0 }}>
+            <div className="shy-page-view-content-nav-right" style={{ zIndex: 1, top: 0, marginTop: isFirstDocTitle ? 70 : 0 }}>
                 <ChildsArea childs={[this.page.views[1]]}></ChildsArea>
             </div>
         </div>

@@ -67,7 +67,7 @@ export class DataGridGroup extends React.Component<{
                     }
                     else if ([FieldType.option, FieldType.options].includes(gf.type)) {
                         var op = gf.config?.options.find(o => o.value == dg.value);
-                        var style = { backgroundColor: op?.color, lineheight: '20px' };
+                        var style = { backgroundColor: op?.fill||op?.color, color: op?.textColor, lineheight: '20px' };
                         return <span style={style} className="f-14 round gap-w-3 flex-fixed padding-w-5 b-500">{op?.text}</span>
                     }
                     else if ([FieldType.number, FieldType.autoIncrement, FieldType.sort, FieldType.price].includes(gf.type)) {
@@ -109,8 +109,8 @@ export class DataGridGroup extends React.Component<{
                             {this.block.isCanEdit() && <ToolTip overlay={<S>添加新行</S>}><span onMouseDown={e => {
                                 e.stopPropagation();
                                 var props = this.block.getGroupCreateDataProps(dg);
-                                if(dg&&Object.keys(props).length>0){
-                                    if(typeof dg.count=='number') dg.count+=1;
+                                if (dg && Object.keys(props).length > 0) {
+                                    if (typeof dg.count == 'number') dg.count += 1;
                                 }
                                 this.block.onOpenAddForm(undefined, undefined, undefined, props)
                             }} className="visible remark gap-l-10  flex-center  flex-fixed size-24 item-hover cursor round"><Icon icon={PlusSvg}></Icon></span></ToolTip>}

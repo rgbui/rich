@@ -27,7 +27,7 @@ export class DragList extends React.Component<{
                             ghostView.load(item, { point: Point.from(ev) });
                             item.style.visibility = 'hidden';
                         },
-                        moving(ev, da, isEnd) {
+                        moving(ev, da, isEnd, isM) {
                             var newTarget = ev.target as HTMLElement;
                             var newItem = dom(newTarget).closest(x => x.parentElement === self.el) as HTMLElement;
                             if (newItem) {
@@ -43,7 +43,7 @@ export class DragList extends React.Component<{
                                     }
                                 }
                             }
-                            if (isEnd) {
+                            if (isEnd && isM) {
                                 ghostView.unload();
                                 if (self.el) {
                                     cs = Array.from(self.el.children);

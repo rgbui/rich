@@ -15,6 +15,8 @@ import {
     TableClearCellSvg,
     TableDeleteColSvg,
     TableDeleteRowSvg,
+    TableHeaderSvg,
+    TableLeftHeaderSvg,
     TableLeftInsertSvg,
     TableRightInsertSvg,
     TableTopInsertSvg
@@ -22,7 +24,7 @@ import {
 import { Icon } from "../../../component/view/icon";
 import { ghostView } from "../../../src/common/ghost";
 import { ToolTip } from "../../../component/view/tooltip";
-import { S } from "../../../i18n/view";
+import { S, Sp } from "../../../i18n/view";
 import { BoardBlockSelector, BoardPointType } from "../../../src/block/partial/board";
 import { BoardDrag } from "../../../src/kit/operator/board";
 import { useSelectMenuItem } from "../../../component/view/menu";
@@ -42,7 +44,7 @@ export class Table extends Block {
     cols: { width: number }[] = [];
     async created() {
         if (this.cols.length == 0) {
-            await this.updateProps({ cols: [{ width: COL_WIDTH }, { width: COL_WIDTH }] },BlockRenderRange.self);
+            await this.updateProps({ cols: [{ width: COL_WIDTH }, { width: COL_WIDTH }] }, BlockRenderRange.self);
             await this.page.createBlock('/table/row',
                 { blocks: { childs: [{ url: '/table/cell' }, { url: '/table/cell' }] } },
                 this);
@@ -57,7 +59,7 @@ export class Table extends Block {
     async didMounted() {
         if (this.childs.length == 0) {
             await this.page.onAction(ActionDirective.onErrorRepairDidMounte, async () => {
-                await this.updateProps({ cols: [{ width: COL_WIDTH }] },BlockRenderRange.self);
+                await this.updateProps({ cols: [{ width: COL_WIDTH }] }, BlockRenderRange.self);
                 await this.page.createBlock('/table/row',
                     { blocks: { childs: [{ url: '/table/cell' }] } },
                     this);
@@ -630,10 +632,19 @@ export class Table extends Block {
                 }
             },
             {
-
                 text: lst('均分列宽'),
                 name: 'agvCols',
                 icon: { name: 'byte', code: 'horizontal-tidy-up' }
+            },
+            {
+                text: lst('标题行'),
+                name: 'rowHeader',
+                icon: TableHeaderSvg
+            },
+            {
+                text: lst('标题列'),
+                name: 'colHeader',
+                icon: TableLeftHeaderSvg
             },
             {
                 text: lst('行列转换'),
@@ -679,6 +690,28 @@ export class Table extends Block {
                 }, BlockRenderRange.self)
             })
             return;
+        }
+        else if (item.name == 'rowHeader') {
+            await this.page.onAction('rowHeader', async () => {
+                var row = this.childs[0];
+                await row.childs.eachAsync(async cell => {
+                    await cell.pattern.setFillStyle({ mode: 'color', color: 'rgb(247,246,243)' })
+                    await cell.childs.eachAsync(async c => {
+                        await c.pattern.setFontStyle({ fontWeight: 'bold' })
+                    })
+                })
+            })
+        }
+        else if (item.name == 'colHeader') {
+            await this.page.onAction('colHeader', async () => {
+                await this.childs.eachAsync(async row => {
+                    var cell = row.childs[0];
+                    await cell.pattern.setFillStyle({ mode: 'color', color: 'rgb(247,246,243)' })
+                    await cell.childs.eachAsync(async c => {
+                        await c.pattern.setFontStyle({ fontWeight: 'bold' })
+                    })
+                })
+            })
         }
         else if (item.name == 'rowColTurn') {
             await this.page.onAction('rowColTurn', async () => {
@@ -1257,17 +1290,17 @@ export class TableView extends BlockView<Table> {
                     <div className='sy-block-table-subline' onMouseDown={e => this.onMousedownLine(e)} ref={e => this.subline = e}></div>
                     <div className='sy-block-table-subline-x' ref={e => this.sublineX = e}></div>
                     <div onMouseDown={e => this.onMousedownDrag(e, 'top')} ref={e => this.topDrag = e} className="sy-block-table-top-drag ">
-                        <span className="flex-center cursor round padding-h-5 padding-w-2 rotate-90 pos-center item-hover-button" >
+                        <ToolTip overlay={<Sp text="点击操作列拖拽更换位置">点击操作列<br />拖拽更换位置</Sp>}><span className="flex-center cursor round padding-h-5 padding-w-2 rotate-90 pos-center item-hover-button" >
                             <Icon size={10} icon={DragHandleSvg}></Icon>
-                        </span>
+                        </span></ToolTip>
                     </div>
                     <div onMouseDown={e => this.onMousedownDrag(e, 'left')} ref={e => this.leftDrag = e} className="sy-block-table-left-drag">
-                        <span className="flex-center cursor round padding-w-2 padding-h-5 pos-center item-hover-button">
+                        <ToolTip overlay={<Sp text="点击操作行拖拽更换位置">点击操作行<br />拖拽更换位置</Sp>}><span className="flex-center cursor round padding-w-2 padding-h-5 pos-center item-hover-button">
                             <Icon size={10} icon={DragHandleSvg}></Icon>
-                        </span>
+                        </span></ToolTip>
                     </div>
                     <ToolTip overlay={<div><S>点击添加行</S><br /><S>拖动批量创建行</S></div>}><div onMouseDown={e => this.onMousedownResize(e, 'bottom')} ref={e => this.bottomPlus = e} className="sy-block-table-bottom-plus"><span className="size-20 round flex-center item-hover-button"><Icon size={14} icon={PlusSvg}></Icon></span></div></ToolTip>
-                    <ToolTip overlay={<div><S>点击添加列</S><br /><S>拖动批量创建列</S></div>}><div onMouseDown={e => this.onMousedownResize(e, 'right')} ref={e => this.rightPlus = e} className="sy-block-table-right-plus"><span className="size-20 round  flex-center item-hover-button"><Icon size={14} icon={PlusSvg}></Icon></span></div></ToolTip>
+                    <ToolTip placement="left" overlay={<div><S>点击添加列</S><br /><S>拖动批量创建列</S></div>}><div onMouseDown={e => this.onMousedownResize(e, 'right')} ref={e => this.rightPlus = e} className="sy-block-table-right-plus"><span className="size-20 round  flex-center item-hover-button"><Icon size={14} icon={PlusSvg}></Icon></span></div></ToolTip>
                     <ToolTip overlay={<div><S>点击添加行列</S><br /><S>拖动批量创建行列</S></div>}><div onMouseDown={e => this.onMousedownResize(e, 'resize')} ref={e => this.resizePlus = e} className="sy-block-table-resize-plus"><span className="size-20 round  flex-center item-hover-button"><Icon size={14} icon={PlusSvg}></Icon></span></div></ToolTip>
                     {this.block.isFreeBlock && <div
                         ref={e => this.tableOperator = e}

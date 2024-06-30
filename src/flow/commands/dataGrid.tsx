@@ -185,7 +185,7 @@ function renderFieldInput(view: AddRecordsCommandView | EditRecordsCommandView, 
                 }
             }
             if (!op) return <span className="item-hover remark round padding-h-3 padding-w-5 cursor" onMouseDown={e => selectOp(e)}><S>选择项</S></span>
-            return <span className="padding-w-5 round cursor  f-14 padding-h-2  l-16 " onMouseDown={e => selectOp(e)} style={{ background: op.color }}>{op?.text}</span>
+            return <span className="padding-w-5 round cursor  f-14 padding-h-2  l-16 " onMouseDown={e => selectOp(e)} style={{ background: op?.fill||op?.color, color: op.textColor }}>{op?.text}</span>
         case FieldType.options:
             var ops = (fe.config?.options || []).findAll(g => Array.isArray(field.value) && field.value.includes(g.value));
             var selectOp = async (event) => {
@@ -205,7 +205,7 @@ function renderFieldInput(view: AddRecordsCommandView | EditRecordsCommandView, 
                     return <span key={op.value}
                         className="padding-w-5 round cursor flex"
                         onMouseDown={e => selectOp(e)}
-                        style={{ background: op.color }}>
+                        style={{ background: op?.fill||op?.color, color: op.textColor }}>
                         <em className="gap-r-3  f-14 padding-h-2  l-16 ">{op?.text}</em>
                         <Icon
                             size={12}

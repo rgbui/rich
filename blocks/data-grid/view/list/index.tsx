@@ -11,6 +11,8 @@ import { CardConfig } from "../item/service";
 import { S } from "../../../../i18n/view";
 import { DataGridGroup } from "../components/group";
 import { Spin, SpinBox } from "../../../../component/view/spin";
+import { DataGridTableItem } from "../table/row";
+import { TableGridItem } from "../item";
 
 @url('/data-grid/list')
 export class TableStoreList extends DataGridView {
@@ -60,7 +62,7 @@ export class TableStoreListView extends BlockView<TableStoreList> {
                                 {this.block.dataGridIsCanEdit() && !this.block.isCardAuto && <div
                                     onMouseDown={e => {
                                         e.stopPropagation();
-                                        var id = cs.last()?.id;
+                                        var id = (cs.last() as DataGridTableItem)?.dataId;
                                         var props = b.getGroupCreateDataProps(g);
                                         if (g && Object.keys(props).length > 0) {
                                             if (typeof g.count == 'number') {
@@ -70,7 +72,11 @@ export class TableStoreListView extends BlockView<TableStoreList> {
                                         this.block.onSyncAddRow(props, id, 'after', g ? false : true, async (row) => {
                                             if (g) {
                                                 row.__group = g.id;
-                                                this.block.forceManualUpdate()
+                                                await this.block.forceManualUpdate();
+                                                var newRow = this.block.childs.find(c => (c as TableGridItem).dataId == g.id);
+                                                if (newRow) {
+                                                    this.block.page.kit.anchorCursor.onFocusBlockAnchor(newRow)
+                                                }
                                             }
                                         })
                                     }}

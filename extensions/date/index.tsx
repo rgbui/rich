@@ -132,11 +132,11 @@ export class DatePicker extends EventsComponent {
     }, 500)
     changeDate(value: string) {
         value = value.trim();
-        var rs = value.split('/');
+        var rs = value.split(/\/|\-|~|、/g);
         if (rs.length == 3) {
             if (rs[0].length == 2) rs[0] = '20' + rs[0];
-            else if (rs[1].length == 1) rs[1] = '0' + rs[1];
-            else if (rs[2].length == 1) rs[2] = '0' + rs[2];
+            if (rs[1].length == 1) rs[1] = '0' + rs[1];
+            if (rs[2].length == 1) rs[2] = '0' + rs[2];
             value = rs.join('/');
         }
         var v = dayjs(value, "YYYY/MM/DD");

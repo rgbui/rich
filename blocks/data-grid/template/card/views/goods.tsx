@@ -9,7 +9,7 @@ import { autoImageUrl } from "../../../../../net/element.type";
 import { Icon } from "../../../../../component/view/icon";
 import { util } from "../../../../../util/util";
 import { Sp } from "../../../../../i18n/view";
-import { BackgroundColorList } from "../../../../../extensions/color/data";
+import { BackgroundColorList,OptionColorRandom } from "../../../../../extensions/color/data";
 import { DotsSvg, UploadSvg } from "../../../../../component/svgs";
 import { MenuItem, MenuItemType } from "../../../../../component/view/menu/declare";
 import { BlockDirective, BlockRenderRange } from "../../../../../src/block/enum";
@@ -38,9 +38,9 @@ CardModel('/goods', () => ({
             types: [FieldType.options, FieldType.option],
             config: {
                 options: [
-                    { text: lst('包邮'), value: '1', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('新品'), value: '2', color: BackgroundColorList().randomOf()?.color },
-                    { text: lst('赚送险费'), value: '3', color: BackgroundColorList().randomOf()?.color }
+                    { text: lst('包邮'), value: '1',...OptionColorRandom() },
+                    { text: lst('新品'), value: '2', ...OptionColorRandom() },
+                    { text: lst('赚送险费'), value: '3', ...OptionColorRandom() }
                 ]
             },
             required: true

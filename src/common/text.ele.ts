@@ -22,9 +22,11 @@ export class TextEle {
                     fontStyle.lineHeight = dom(e as HTMLElement).style('lineHeight');
             }
             if (!/^[\d\.]+px$/.test(fontStyle.lineHeight)) {
-                throw new Error('the font lineHeight is not number' + fontStyle.lineHeight)
+                fontStyle.lineHeight = '20px';
+                // throw new Error('the font lineHeight is not number' + fontStyle.lineHeight)
             }
-            fontStyle.lineHeight = parseInt(fontStyle.lineHeight.replace('px', ''));
+            else
+                fontStyle.lineHeight = parseInt(fontStyle.lineHeight.replace('px', ''));
             fontStyle.letterSpacing = parseInt(fontStyle.letterSpacing.replace('px', ''));
             if (isNaN(fontStyle.letterSpacing)) fontStyle.letterSpacing = 0;
             return fontStyle;
@@ -245,7 +247,10 @@ export class TextEle {
         }
         var lineHeight: string = fontStyle.lineHeight as any;
         if (typeof lineHeight == 'number') lineHeight = lineHeight + 'px';
-        __g.font = `${fontStyle.fontStyle} ${fontStyle.fontVariant} ${fontStyle.fontWeight} ${fontStyle.fontSize}/${lineHeight} ${fontStyle.fontFamily}`;
+        var ft = `${fontStyle.fontStyle} ${fontStyle.fontVariant} ${fontStyle.fontWeight} ${fontStyle.fontSize}/${lineHeight} ${fontStyle.fontFamily || ''}`;
+        ft = `${fontStyle.fontWeight} ${fontStyle.fontSize}/${lineHeight} ${fontStyle.fontFamily || ''}`;
+        __g.font = ft
+        // console.log('ggg',ft, __g.font)
         var ls = 0;
         if (typeof fontStyle.letterSpacing != 'number') {
             ls = parseFloat((fontStyle.letterSpacing as any).replace('px', ''));

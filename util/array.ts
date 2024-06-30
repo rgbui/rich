@@ -86,6 +86,7 @@ interface Array<T> {
 if (typeof Array.prototype.eachAsync == 'undefined') {
 
     Array.prototype.randomOf = function () {
+        if(this.length==0)return null;
         var at = parseInt((this.length * Math.random()).toString());
         return this[at];
     }

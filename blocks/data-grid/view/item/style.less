@@ -5,17 +5,16 @@
     background   : white;
     overflow     : hidden;
     transition   : background 100ms ease-out 0s;
-    padding      : 10px;
+    box-sizing   : border-box;
     margin       : 0px;
-    position: relative;
-    &:hover{
-        background: rgba(55,53,54,0.05);
+    position     : relative;
+    &:hover {
+        background: rgba(55, 53, 54, 0.05);
     }
 }
 
 .sy-data-grid-card {
     padding: 0px;
-
     .sy-data-grid-card-cover {
         img {
             width          : 100%;
@@ -23,9 +22,5 @@
             object-position: center center;
             max-height     : 200px;
         }
-    }
-
-    .sy-data-grid-card-items {
-        padding: 10px;
     }
 }

@@ -6,8 +6,6 @@ import { S } from "../../../i18n/view";
 import { RefreshSvg, TrashSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { Tip } from "../../../component/view/tooltip/tip";
-import { util } from "../../../util/util";
-import { Spin } from "../../../component/view/spin";
 import { Rect } from "../../common/vector/point";
 import { ToolTip } from "../../../component/view/tooltip";
 
@@ -36,7 +34,6 @@ export abstract class BlockView<T extends Block> extends Component<{ block: T }>
         return false
     }
     render() {
-        //console.log(this.block.url, this.block.id);
         if (this.viewError) {
             return this.renderViewError();
         }
@@ -65,14 +62,12 @@ export abstract class BlockView<T extends Block> extends Component<{ block: T }>
         this.block.page.onError(error);
         this.forceUpdate();
     }
-    UNSAFE_componentWillMount(): void {
-        this.block.isMounted = true;
-    }
     componentDidUpdate(prevProps: Readonly<{ block: T; }>, prevState: Readonly<{}>, snapshot?: any): void {
         this.block.el = ReactDOM.findDOMNode(this) as HTMLDivElement;
+        this.block.isMed = true;
     }
     componentDidMount() {
-        this.block.isMounted = true;
+        this.block.isMed = true;
         this.block.el = ReactDOM.findDOMNode(this) as HTMLDivElement;
         if (this.block.el) {
             (this.block.el as any).block = this.block;
@@ -92,7 +87,7 @@ export abstract class BlockView<T extends Block> extends Component<{ block: T }>
         if (typeof this.willUnmount == 'function') {
             this.willUnmount();
         }
-        this.block.isMounted = false;
+        this.block.isMed = false;
     }
     willUnmount() {
         try {

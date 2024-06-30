@@ -21,6 +21,7 @@ import { S, Sp } from "../../i18n/view";
 import { UA } from "../../util/ua";
 import "./style.less";
 import { KeyboardCode } from "../../src/common/keys";
+import { MenuItemType } from "../../component/view/menu/declare";
 
 export class SearchBox extends EventsComponent {
     searchInput: Input;
@@ -76,13 +77,14 @@ export class SearchBox extends EventsComponent {
                             options={[
                                 { text: lst('编辑时间'), value: 1, icon: { name: 'bytedance-icon', code: 'arrow-up' } },
                                 { text: lst('编辑时间'), value: -1, icon: { name: 'bytedance-icon', code: 'arrow-down' } },
+                                { type: MenuItemType.divide },
                                 { text: lst('创建时间'), value: 3, icon: { name: 'bytedance-icon', code: 'arrow-up' } },
                                 { text: lst('创建时间'), value: 2, icon: { name: 'bytedance-icon', code: 'arrow-down' } },
                             ]}></SelectBox>
                     </span>
                 </span>
             </div>}
-            <div ref={e => this.scrollEl = e} className="padding-h-10 overflow-y max-h-300">
+            <div ref={e => this.scrollEl = e} className="padding-b-10 overflow-y max-h-300">
                 {!this.searchList.word && this.renderRecent()}
                 {this.searchList.word && <div>
                     {this.searchList.loading && <Spin block></Spin>}
@@ -113,7 +115,7 @@ export class SearchBox extends EventsComponent {
             }
             this.forceUpdate(() => {
                 if (this.scrollEl) {
-                    (this.scrollEl.querySelector('.item-hover-focus') as HTMLElement).scrollIntoView({ block: 'nearest', behavior: 'smooth', inline: 'nearest' })
+                    (this.scrollEl.querySelector('.item-hover-focus') as HTMLElement)?.scrollIntoView({ block: 'nearest', behavior: 'smooth', inline: 'nearest' })
                 }
             })
         }
@@ -125,7 +127,7 @@ export class SearchBox extends EventsComponent {
             }
             this.forceUpdate(() => {
                 if (this.scrollEl) {
-                    (this.scrollEl.querySelector('.item-hover-focus') as HTMLElement).scrollIntoView({ block: 'nearest', behavior: 'smooth', inline: 'nearest' })
+                    (this.scrollEl.querySelector('.item-hover-focus') as HTMLElement)?.scrollIntoView({ block: 'nearest', behavior: 'smooth', inline: 'nearest' })
                 }
             })
         }
@@ -157,8 +159,8 @@ export class SearchBox extends EventsComponent {
                         <Icon size={18} icon={{ name: 'byte', code: 'corner-up-right' }}></Icon>
                     </span>
                 </div>}
-                <div className="flex h-30 padding-w-5 gap-w-5">
-                    <span className="remark"><Sp text={'共{count}条匹配结果'} data={{ count: this.searchList.total }}>共0条匹配结果</Sp></span>
+                <div className="flex gap-h-5 padding-w-5 gap-w-5">
+                    <span className="remark f-12"><Sp text={'共{count}条匹配结果'} data={{ count: this.searchList.total }}>共0条匹配结果</Sp></span>
                     <span></span>
                 </div>
 

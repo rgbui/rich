@@ -19,7 +19,7 @@ import { MenuItem, MenuItemType } from "../../../../../component/view/menu/decla
 import { BlockDirective, BlockRenderRange } from "../../../../../src/block/enum";
 import { util } from "../../../../../util/util";
 import { loadPageUrlData } from "../../create";
-import { OptionBackgroundColorList } from "../../../../../extensions/color/data";
+import {  OptionColorRandom } from "../../../../../extensions/color/data";
 import { Divider } from "../../../../../component/view/grid";
 
 /**
@@ -57,17 +57,17 @@ CardModel('/article', () => ({
                     {
                         text: lst('生活'),
                         value: '1',
-                        color: OptionBackgroundColorList().randomOf().color
+                       ...OptionColorRandom()
                     },
                     {
                         text: lst('工作'),
                         value: '2',
-                        color: OptionBackgroundColorList().randomOf().color
+                        ...OptionColorRandom()
                     },
                     {
                         text: lst('咨询'),
                         value: '3',
-                        color: OptionBackgroundColorList().randomOf().color
+                        ...OptionColorRandom()
                     }
                 ]
             }

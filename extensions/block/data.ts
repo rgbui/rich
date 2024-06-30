@@ -33,7 +33,11 @@ import {
 import { lst } from '../../i18n/store';
 import B from "../../src/assert/img/bilibili.ico";
 import M from "../../src/assert/img/163.music.ico";
-
+import FG from "../../src/assert/img/figma.png";
+import MG from "../../src/assert/img/mastergo.png";
+import VQQ from "../../src/assert/img/vqq.ico";
+import YK from "../../src/assert/img/youku.png";
+import YB from "../../src/assert/img/youtube.png";
 export function getBlockSelectData() {
     var BlockSelectorData: BlockGroup[] = [
         {
@@ -65,7 +69,7 @@ export function getBlockSelectData() {
                 { text: lst('链接'), url: '/link', icon: LinkSvg, label: lst("/链接"), labels: ['/link', '/lianjie', '/lj', '/wz'] },
                 { text: lst('面包屑导航'), url: '/links', icon: { name: 'byte', code: "navigation", rotate: 90, }, label: lst("/面包屑"), labels: ['/links', '/urls', '/mbx', '/mianbaoxie', '/bread', '/breadcrumb'] },
                 { text: lst('标签'), url: '/tag', icon: { name: "byte", code: 'hashtag-key' }, label: lst('/标签'), labels: ['/tag', '/biaoqian', '/bq'] },
-                { text: lst("书签"), url: '/bookmark', icon: BookSvg, label: lst('/书签'), labels: ['/wzsq', '/webbook','/book', '/shuqian', '/sq', '/bookmark'] },
+                { text: lst("书签"), url: '/bookmark', icon: BookSvg, label: lst('/书签'), labels: ['/wzsq', '/webbook', '/book', '/shuqian', '/sq', '/bookmark'] },
                 { text: lst('页面'), url: '/page', icon: PageSvg, label: lst('/页面'), labels: ['/page', '/ye', '/yemian', '/wz'] },
                 // { text: lst('二维码'), url: '/qr', icon: MentionSvg, label: lst("/二维码"), labels: ['/qr', '/wz', '/ewm'] },
                 // { text: lst('目录树'),icon:{name:'byte',code:'document-folder'}, url: '/tree/links', icon: MentionSvg, label: lst('/目录树'), labels: ['/tree', '/note', '/mls', '/mulushu', '/tree/links'] },
@@ -95,7 +99,7 @@ export function getBlockSelectData() {
             childs: [
 
                 { text: lst("图标"), icon: { name: 'bytedance-icon', code: 'oval-love-two' }, url: '/icon', label: lst('/图标'), labels: ['/tb', '/icon', '/tubiao', '/logo'] },
-                { text: lst("图片"), icon: PicSvg, url: '/image', label: lst('/图片'), labels: ['/tp','/图像', '/tupian', '/img', '/image', '/picture'] },
+                { text: lst("图片"), icon: PicSvg, url: '/image', label: lst('/图片'), labels: ['/tp', '/图像', '/tupian', '/img', '/image', '/picture'] },
                 { text: lst('轮播'), icon: { name: 'byte', code: 'multi-picture-carousel' }, url: '/carousel/image', label: lst('/轮播'), labels: ['/tplb', '/lb', '/lunbo ', '/tupianlunbo', '/carousel', '/images', '/pics'] },
                 { text: lst("音频"), icon: AudioSvg, url: '/audio', label: lst('/音频'), labels: ['/yp', '/yinping', '/audio'] },
                 { text: lst("视频"), icon: VideoSvg, url: '/video', label: lst('/视频'), labels: ['/sp', '/shiping', '/video'] },
@@ -143,7 +147,7 @@ export function getBlockSelectData() {
             text: lst('行内块'),
             childs: [
 
-                { text: lst("日期"), icon: TimeSvg, isLine: true, url: '/mention/date', label: lst('/日期'), labels: ['/date', '/rq', '/reminder', '/riqi'] },
+                { text: lst("日期"), icon: TimeSvg, isLine: true, url: '/mention/date', label: lst('/日期'), labels: ['/date', '/时间', '/time', '/rq', '/reminder', '/riqi'] },
                 { text: lst("提及"), icon: MentionSvg, isLine: true, url: '/user/mention', label: lst('/@'), labels: ['/mention', '/@', '/at'] },
                 { text: lst("行内公式"), icon: { name: 'byte', code: 'block' }, data: { content: 'a+b' }, url: "/katex/line", label: lst("/公式"), labels: ['/sxgs', lst("/行内公式"), lst("/行内数学公式"), lst('/公式'), '/shuxuegongshi', '/latex', '/math'] },
                 { text: lst("行内表情"), icon: EmojiSvg, isLine: true, url: "/emoji", label: lst("/表情"), labels: ['/bq', '/biaoqing', '/emoji'] },
@@ -154,8 +158,13 @@ export function getBlockSelectData() {
             text: lst('嵌入'),
             childs: [
                 { text: lst('嵌入网址'), icon: EmbedSvg, url: "/embed", label: lst('/嵌入'), labels: ['/qianru', '/qr', '/embed'] },
-                { text: lst('嵌入网易云音乐'), icon: { name: 'image', url: M }, data: { embedType: 'music.163' }, url: "/embed", label: lst('/网易云音乐'), labels: ['/163', '/we', '/music', '/embed'] },
-                { text: lst('嵌入B站'), icon: { name: 'image', url: B }, url: "/embed", data: { embedType: 'bilibili' }, label: lst('/B站'), labels: ['/b', '/bilibili', '/bb', '/embed'] },
+                { text: lst('嵌入网易云音乐'), icon: { name: 'image', url: M }, data: { embedType: 'music.163' }, url: "/embed", label: lst('/网易云音乐'), labels: ['/163', '/app', '/we', '/music', '/embed'] },
+                { text: lst('嵌入B站'), icon: { name: 'image', url: B }, url: "/embed", data: { embedType: 'bilibili' }, label: lst('/B站'), labels: ['/b', '/sp', '/app', '/bilibili', '/bb', '/embed'] },
+                { text: lst('嵌入腾讯视频'), icon: { name: 'image', url: VQQ }, url: '/embed', data: { embedType: 'vqq' }, label: lst('/腾讯视频'), labels: ['/vqq', '/app', '/sp', '/video', '/embed'] },
+                { text: lst('嵌入优酷视频'), icon: { name: 'image', url: YK }, url: '/embed', data: { embedType: 'youku' }, label: lst('/优酷视频'), labels: ['/youku', '/app', '/sp', '/video', '/embed'] },
+                { text: lst('嵌入YouTube视频'), icon: { name: 'image', url: YB }, url: '/embed', data: { embedType: 'ytob' }, label: lst('/YouTube视频'), labels: ['/app', '/youtube', '/sp', '/video', '/embed'] },
+                { text: lst('嵌入Figma'), icon: { name: 'image', url: FG }, url: '/embed', data: { embedType: 'figma' }, label: lst('/Figma'), labels: ['/app', '/figma', '/design', '/embed'] },
+                { text: lst('嵌入MasterGO'), icon: { name: 'image', url: MG }, url: '/embed', data: { embedType: 'mastergo' }, label: lst('/MasterGO'), labels: ['/app', '/mastergo', '/design', '/embed'] },
             ]
         },
         {

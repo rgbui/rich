@@ -105,7 +105,11 @@ export class CardView extends React.Component<{
                         var v = util.covertToArray(value);
                         return v.map(g => {
                             var op = field.config.options.find(c => c.value == g);
-                            if (op?.text) return { text: op.text, color: op.color };
+                            if (op?.text) return {
+                                text: op.text,
+                                fill: op.fill,
+                                textColor: op.textColor
+                            };
                             else return { text: g };
                         }) as any
                         break;

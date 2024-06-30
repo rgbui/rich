@@ -33,10 +33,10 @@ export class TableStoreListItemView extends BlockView<TableStoreListItem> {
         var title = this.block.childs.find(g => (g as OriginField).url == '/field/title');
         var cs = this.block.childs.findAll(g => g !== title);
         return <div>
-            <div className="flex item-light-hover round padding-l-5 padding-r-10 min-h-30 visible-hover ">
+            <div className="flex item-light-hover round padding-5  min-h-30 visible-hover ">
                 <div onMouseDown={e => {
                     (title as OriginField).onCellMousedown(e)
-                }} className="flex-fixed bold cursor min-w-200"
+                }} className="flex-fixed bold cursor min-w-200 max-w-400 "
                     style={{
                         paddingLeft: this.block.subDeep * 24
                     }}>

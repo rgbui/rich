@@ -112,7 +112,7 @@ export class DataGridView extends Block {
     isLoadingData: boolean = false;
     async onLoadingAction(fn: () => Promise<void>) {
         this.isLoadingData = true;
-        if (this.isMounted) this.forceManualUpdate()
+        if (this.isMed) this.forceManualUpdate()
         try {
             await fn();
         }
@@ -120,7 +120,7 @@ export class DataGridView extends Block {
             console.error(ex)
         }
         this.isLoadingData = false;
-        if (this.isMounted) this.forceManualUpdate()
+        if (this.isMed) this.forceManualUpdate()
     }
     isEmoji(field: Field, rowId: string) {
         var isOp = this.userEmojis[field.name]?.includes(rowId)
@@ -412,14 +412,21 @@ export class DataGridView extends Block {
             subUrl = '/data-grid/calendar/item'
         }
         var at = this.blocks.childs.findIndex(g => (g as TableGridItem).dataId == data.id);
-        this.blocks.childs.splice(at, 1);
+        if (at > -1) {
+            this.blocks.childs.splice(at, 1);
+        }
+        else {
+            var c = this.data.findIndex(g => g.id == data.id);
+            if (c > -1) at = c;
+        }
         var rowBlock: TableGridItem = await BlockFactory.createBlock(subUrl, this.page, {
             mark: this.data.length,
             dataId: data.id
         }, this) as TableGridItem;
+        if (at == -1) at = this.blocks.childs.length;
         this.blocks.childs.splice(at, 0, rowBlock);
         await rowBlock.createElements(isForce);
-        if(isForce)  this.forceManualUpdate();
+        if (isForce) this.forceManualUpdate();
     }
     async createRowsItem(isForce?: boolean) {
         for (let c of this.blocks.childs) {

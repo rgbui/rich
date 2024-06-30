@@ -76,7 +76,7 @@ export class Callout extends TextSpan {
         if (!this.isCanEdit()) return;
         var icon = await useIconPicker({ roundArea: Rect.fromEvent(e) }, this.calloutIcon);
         if (typeof icon != 'undefined') {
-            this.onUpdateProps({ calloutIcon: icon }, { range: BlockRenderRange.self })
+            await this.onUpdateProps({ calloutIcon: icon }, { range: BlockRenderRange.self })
         }
     }
     @prop()
@@ -105,6 +105,7 @@ export class CalloutView extends BlockView<Callout> {
         delete style.paddingTop;
         delete style.paddingBottom;
         delete style.paddingRight;
+        console.log('gggg','cc',this.block.calloutIcon);
         return <div style={this.block.visibleStyle}><div className='sy-block-callout flex-top padding-16' style={{
             ...style,
             paddingLeft: 12

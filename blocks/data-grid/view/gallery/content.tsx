@@ -17,6 +17,14 @@ export class GalleryContent extends React.Component<{
         var childs = this.props.childs || this.block.childs;
         var eles: JSX.Element[] = [];
         var size = this.block.gallerySize || 3;
+        if (size == -1) {
+            var w = 800;
+            if (this.block.el) {
+                w = this.block.el.clientWidth;
+                if (w == 0) w = 800;
+            }
+            size = Math.floor(w / 220)
+        }
         if (typeof size != 'number') size = 3;
         var gap = 20;
         if (isMobileOnly) { size = 2; gap = 8; }

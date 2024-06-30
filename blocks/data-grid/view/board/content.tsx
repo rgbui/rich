@@ -21,6 +21,7 @@ import { ToolTip } from "../../../../component/view/tooltip"
 import { DataGridTableItem } from "../table/row"
 import { TableGridItem } from "../item"
 import { GenreConsistency } from "../../../../net/genre"
+import { useInputIconAndText } from "../../../../component/view/input/iconAndText"
 
 export class BoardContent extends React.Component<{
     block: Block,
@@ -40,7 +41,7 @@ export class BoardContent extends React.Component<{
             this.block.page.kit.handle.onDirectDrag(block, event.nativeEvent, {
                 isOnlyDrag: true,
                 notDragFun: (ev) => {
-                    console.log(ev, 'sxxx');
+
                     this.block.onOpenEditForm(block.dataId)
                 }
             });
@@ -106,6 +107,26 @@ export class BoardContent extends React.Component<{
             await this.block.onUpdateProps({ statField: r.item.value });
         }
     }
+    async onChangeGroupTitle(dg: ArrayOf<TableStoreBoard['dataGroups']>, event: React.MouseEvent) {
+        var r = await useInputIconAndText({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) },
+            {
+                text: dg.group,
+                ignoreIcon: true
+            });
+        if (r) {
+            if (r.text && r.text != dg.group) {
+                dg.group = r.text;
+                var ops = lodash.cloneDeep(this.block.groupField.config?.options)
+                var opp = ops?.find(op => op.value == dg.value);
+                if (opp) {
+                    opp.text = r.text;
+                }
+                var cfg = lodash.cloneDeep(this.block.groupField.config);
+                cfg.options = ops;
+                await this.block.onUpdateField(this.block.groupField, { config: cfg });
+            }
+        }
+    }
     renderGroup(dg: ArrayOf<TableStoreBoard['dataGroups']>, index: number) {
         var bs = this.props.childs || this.block.childs;
         var name = dg.name;
@@ -128,21 +149,24 @@ export class BoardContent extends React.Component<{
                 <span className="flex-auto">
                     {!dg.group && <span className="text-1"><Sp text={'无{group}的数据'}
                         view={{ group: <em className="bold padding-w-3">{this.block.groupField.text}</em> }}></Sp></span>}
-                    {dg.group && <span className="text-overflow padding-w-6 f-14 padding-h-2  l-16" style={{ backgroundColor: dg.color || undefined }}>{dg.group || lst('未定义')}</span>}
+                    {dg.group && <span onMouseDown={e => {
+                        e.stopPropagation();
+                        this.onChangeGroupTitle(dg, e);
+                    }} className="text-overflow cursor padding-w-6 f-14 padding-h-2  l-16" style={{ backgroundColor: dg.color || undefined }}>{dg.group || lst('未定义')}</span>}
                     <label>{ds?.count}</label>
                 </span>
                 {this.block.isCanEdit() && <div className="flex-fixed flex">
                     <div onMouseDown={e => {
                         e.stopPropagation();
                         this.block.onOpenGroupEdit(dg, e, this.props.groupHead);
-                    }} className="flex-center flex-fixed cursor size-24 round item-hover"><Icon size={16} icon={DotsSvg}></Icon></div>
-                    <div onMouseDown={e => this.block.onAddGroup(dg, this.props.groupHead)} className="flex-center flex-fixed cursor size-24 round item-hover">
-                        <Icon icon={PlusSvg} size={16}></Icon>
-                    </div>
+                    }} className="visible flex-center flex-fixed cursor size-24 round item-hover remark"><Icon size={16} icon={DotsSvg}></Icon></div>
+                    <ToolTip overlay={<S>添加记录</S>}><div onMouseDown={e => this.block.onAddGroup(dg, this.props.groupHead)} className="visible remark flex-center flex-fixed cursor size-24 round item-hover">
+                        <Icon icon={PlusSvg} size={18}></Icon>
+                    </div></ToolTip>
                 </div>
                 }
             </div>
-            <div className="sy-data-grid-board-group-childs">
+            <div className="sy-data-grid-board-group-childs gap-t-5">
                 {cs.map(c => {
                     return <div onMouseDown={e => this.onDrag(e, c as any)} key={c.id}>{this.renderItem(c)}</div>
                 })}
@@ -166,8 +190,6 @@ export class BoardContent extends React.Component<{
             hgs.remove(c => c === null);
             hgs.push(null)
         }
-
-        var gf = this.block.groupField
         return <div className="sy-data-grid-board-group visible-hover" >
             <div className="item-hover flex-center round h-30 cursor remark" onMouseDown={e => this.block.onAddNewGroup(e)}><Icon icon={PlusSvg}></Icon><S>新增分组</S></div>
             {hgs.length > 0 && hgs.map(hg => {
@@ -179,7 +201,7 @@ export class BoardContent extends React.Component<{
                     <span className="flex-auto">
                         {!dg.group && <span className="text-1"><Sp text={'无{group}的数据'}
                             view={{ group: <em className="bold padding-w-3">{this.block.groupField.text}</em> }}></Sp></span>}
-                        {dg.group && <span className="text-overflow padding-w-6  f-14 padding-h-2  l-16 round " style={{ backgroundColor: dg?.color }}>{dg?.group}</span>}
+                        {dg.group && <span className="text-overflow padding-w-6  f-14 padding-h-2  l-16 round cursor" style={{ backgroundColor: dg?.color }}>{dg?.group}</span>}
                         <label className="remark f-12 gap-l-5">{ds?.count}</label>
                     </span>
                     <Tip text='取消隐藏分组'><span onMouseDown={e => {

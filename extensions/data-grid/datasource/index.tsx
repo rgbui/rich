@@ -183,10 +183,10 @@ export class DataSourceView extends EventsComponent {
                 self.emit('createTable');
             }
             else if (item.name == 'addView') {
-                var po = Point.from(event)
+                // var po = Point.from(event)
                 var sh = await TableSchema.getTableSchema(item.value);
                 var dg = await useCreateDataGridView(
-                    { roundPoint: po },
+                    self.pos,
                     { schema: sh }
                 );
                 if (dg) {
@@ -220,7 +220,7 @@ export class DataSourceView extends EventsComponent {
     createView: boolean = false;
     editTable: boolean = false;
     createTable: boolean = false;
-    schemas: TableSchema[] = [];
+    schemas: TableSchema[] = []; pos: PopoverPosition
     async open(option: {
         tableId?: string,
         viewId?: string,
@@ -228,13 +228,14 @@ export class DataSourceView extends EventsComponent {
         createView?: boolean,
         editTable?: boolean,
         createTable?: boolean
-    }) {
+    }, pos: PopoverPosition) {
         this.selectView = option.selectView;
         this.createView = option.createView;
         this.currentTableId = option.tableId;
         this.currentViewId = option.viewId;
         this.editTable = option.editTable;
         this.createTable = option.createTable;
+        this.pos = lodash.cloneDeep(pos);
         await TableSchema.onLoadAll()
         this.schemas = TableSchema.getSchemas();
         this.forceUpdate();
@@ -252,7 +253,7 @@ export async function useDataSourceView(pos: PopoverPosition,
     }, createTableCallback?: () => void) {
     let popover = await PopoverSingleton(DataSourceView, { mask: true });
     let fv = await popover.open(pos);
-    fv.open(option);
+    fv.open(option,pos);
     return new Promise((resolve: (data: string | { tableId: string, viewId: string, type: 'view' | 'form', viewUrl?: string }) => void, reject) => {
         fv.only('close', () => {
             popover.close();

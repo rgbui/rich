@@ -213,7 +213,7 @@ export enum FieldType {
     /**
      * 预览
      */
-    pageContentPreview=10000,
+    pageContentPreview = 10000,
 }
 
 /**
@@ -236,7 +236,8 @@ export var SysFieldTypes: FieldType[] = [
     FieldType.sort,
     FieldType.id,
     FieldType.parentId,
-    FieldType.deleted
+    FieldType.deleted,
+    FieldType.pageContentPreview
 ]
 
 /**
@@ -251,8 +252,10 @@ export var SysHiddenFieldTypes: FieldType[] = [
     FieldType.thumb,
     FieldType.deleted,
     FieldType.parentId,
-    FieldType.sort
+    FieldType.sort,
+    FieldType.pageContentPreview
 ]
+
 
 /**
  * 只能创建一次性的字段
@@ -279,8 +282,10 @@ export var OnlyFieldTypes: FieldType[] = [
     FieldType.love,
     FieldType.vote,
     FieldType.parentId,
-    FieldType.subs
+    FieldType.subs,
+    FieldType.pageContentPreview
 ]
+
 
 /**
  * 支持转换的字段
@@ -323,8 +328,10 @@ export var DisabledSortFieldTypes: FieldType[] = [
     FieldType.description,
     FieldType.thumb,
     FieldType.sort,
-    FieldType.deleted
+    FieldType.deleted,
+    FieldType.pageContentPreview
 ]
+
 /**
  * 禁用表单的字段
  */
@@ -346,7 +353,8 @@ export var DisabledFormFieldTypes: FieldType[] = [
     FieldType.autoIncrement,
     FieldType.sort,
     FieldType.id,
-    FieldType.deleted
+    FieldType.deleted,
+    FieldType.pageContentPreview
 ]
 
 export var IsArrayValueFieldTypes: FieldType[] = [
@@ -364,12 +372,18 @@ export var IsArrayValueFieldTypes: FieldType[] = [
  */
 export type FieldTypeExample = {
     [FieldType.id]: string,
-    [FieldType.parentId]:string,
+    [FieldType.parentId]: string,
     [FieldType.deleted]: boolean,
     [FieldType.title]: string,
     [FieldType.icon]: IconArguments,
-    [FieldType.description]: string,
-    [FieldType.cover]: ResourceArguments,
+    [FieldType.description]: { abled: boolean, text: string },
+    [FieldType.pageContentPreview]: object[],
+    [FieldType.cover]: {
+        abled: boolean;
+        url: string;
+        thumb: string;
+        top: number;
+    },
     [FieldType.plain]: string,
     [FieldType.thumb]: ResourceArguments[],
     [FieldType.autoIncrement]: number,

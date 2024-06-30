@@ -84,10 +84,11 @@ export class TableStoreOption extends EventsComponent {
             self.forceUpdate()
             self.emit('changeOptions', lodash.cloneDeep(self.options))
         }
+        var oc = this.optionColor;
         return <div ref={e => this.el = e} className="shy-tablestore-option-selector">
             {!(this.isEdit == false && this.multiple == false) && <div className="shy-tablestore-option-selector-input">
                 {this.ovs.map(ov => {
-                    return <a key={ov.value} className="gap-r-5 gap-h-3" style={{ backgroundColor: ov.color }}>
+                    return <a key={ov.value} className="gap-r-5 gap-h-3" style={{ backgroundColor: ov.fill||ov.color,color:ov.textColor }}>
                         <span className="max-w-80 text-overflow inline-block">{ov.text}</span>
                         <span className={'gap-l-5 cursor remark flex-center item-hover round'} >
                             <Icon icon={CloseSvg} size={10}
@@ -112,7 +113,10 @@ export class TableStoreOption extends EventsComponent {
             </div>}
             <div className="bg-white overflow-y max-h-180">
                 {this.isEdit && !this.isNeedCreated && <div className="remark gap-h-5 padding-w-10 h-20 f-12">{this.filterOptions.length > 0 ? lst('选择或创建一个选项') : lst('暂无选项')}</div>}
-                {this.isNeedCreated && <div className={"item-hover-light h-28 gap-h-5 user-none round gap-w-5 padding-w-5 flex " + (this.focusIndex == -1 ? "item-hover-light-focus" : "")} onClick={e => this.onCreateOption()}><em><S>创建</S></em><span className="l-18 h-22 gap-w-3 padding-w-6 f-14 bold round" style={{ backgroundColor: this.optionColor }}>{this.value}</span></div>}
+                {this.isNeedCreated && <div className={"item-hover-light h-28 gap-h-5 user-none round gap-w-5 padding-w-5 flex " + (this.focusIndex == -1 ? "item-hover-light-focus" : "")} onClick={e => this.onCreateOption()}><em><S>创建</S></em><span className="l-18 h-22 gap-w-3 padding-w-6 f-14 bold round" style={{
+                    backgroundColor: oc.fill,
+                    color: oc.color
+                }}>{this.value}</span></div>}
 
                 <DragList
                     className={this.filterOptions.length > 0 ? 'gap-b-10' : ""}
@@ -121,7 +125,7 @@ export class TableStoreOption extends EventsComponent {
                     {this.filterOptions.map((op, i) => {
                         return <div className={"cursor flex visible-hover item-hover-light h-30 gap-h-2 user-none round gap-w-5 padding-w-5 " + (this.focusIndex == i ? "item-hover-light-focus" : "")} key={op.text} onClick={e => this.setOption(op)} >
                             {this.isEdit && <span className="shy-tablestore-option-item-icon size-20 flex-center flex-fixed grab  round text-1"><Icon icon={DragHandle} size={14}></Icon></span>}
-                            <span className="text-overflow flex-auto gap-w-4 "><em className=" f-14  padding-w-6 round h-22 f-14 l-22 " style={{ display: 'inline-block', backgroundColor: op.color }}>{op.text}</em></span>
+                            <span className="text-overflow flex-auto gap-w-4 "><em className=" f-14  padding-w-6 round h-22 f-14 l-22 " style={{ display: 'inline-block', backgroundColor: op.fill||op.color,color:op.textColor }}>{op.text}</em></span>
                             {this.ovs.some(c => c.value == op.value) && <span className="flex-fixed size-20 flex-center gap-r-3 text-1"><Icon size={16} icon={CheckSvg}></Icon></span>}
                             {this.isEdit && <span className="visible size-20 flex-center flex-fixed cursor item-hover round" onClick={e => this.configOption(op, e)}><Icon icon={Dots} size={16}></Icon></span>}
                         </div>
@@ -136,10 +140,10 @@ export class TableStoreOption extends EventsComponent {
         return this.value && this.isEdit && !(this.options.length > 0 && this.options.some(s => s.text == this.value)) ? true : false;
     }
     get optionColor() {
-        var oc = OptionBackgroundColorList().findAll(g => !this.options.some(o => o.color == g.color)).randomOf()?.color;
+        var oc = OptionBackgroundColorList().findAll(g => !this.options.some(o => o.color && o.color == g.fill || o.fill && o.fill == g.fill)).randomOf();
         if (oc) return oc;
         else {
-            return OptionBackgroundColorList().randomOf()?.color;
+            return OptionBackgroundColorList().randomOf();
         }
     }
     focusIndex: number = 0;
@@ -150,7 +154,8 @@ export class TableStoreOption extends EventsComponent {
         var text = this.value.trim();
         this.value = '';
         if (!this.options.some(s => s.text == text)) {
-            var op = { value: util.guid(), text: text, color: this.optionColor };
+            var oc = this.optionColor;
+            var op = { value: util.guid(), text: text, fill: oc.fill, textColor: oc.color };
             this.options.push(op);
             this.emit('changeOptions', lodash.cloneDeep(this.options))
             this.setOption(op);
@@ -212,14 +217,14 @@ export class TableStoreOption extends EventsComponent {
             ...OptionBackgroundColorList().map(b => {
                 return {
                     name: 'color',
-                    value: b.color,
+                    value: { fill: b.fill, textColor: b.color },
                     text: b.text,
                     type: MenuItemType.custom,
                     render(item) {
                         return <div className="flex gap-w-5 padding-w-5 round h-30 item-hover cursor">
-                            <span className="flex-fixed size-20 gap-l-3 round gap-r-10 border" style={{ backgroundColor: item.value }}></span>
+                            <span className="flex-fixed size-20 gap-l-3 round gap-r-10 border" style={{ backgroundColor: item.value.fill, color: item.value.textColor }}></span>
                             <span className="flex-auto text f-14 text-overflow">{b.text}</span>
-                            {option.color == item.value &&
+                            {(option.color && option.color == item.value.fill || option.fill&&option.fill == item.value.fill) &&
                                 <span className="flex-fixed size-24 flex-center"><Icon size={16} icon={CheckSvg}></Icon></span>
                             }
                         </div>
@@ -232,7 +237,8 @@ export class TableStoreOption extends EventsComponent {
         var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
         if (um) {
             if (um.item.name == 'color') {
-                option.color = um.item.value;
+                option.fill = um.item.value.fill;
+                option.textColor = um.item.value.textColor;
                 this.forceUpdate();
                 this.emit('changeOptions', lodash.cloneDeep(this.options));
             }
@@ -248,7 +254,7 @@ export class TableStoreOption extends EventsComponent {
                 ShyAlert(lst('当前标签项已存在。'))
             }
             else {
-                option.text = name;
+                option.text = name as string;
                 this.emit('changeOptions', lodash.cloneDeep(this.options));
                 this.forceUpdate();
             }

@@ -17,8 +17,7 @@ import {
 import { Rect } from "../../../../src/common/vector/point";
 import { DragList } from "../../../../component/view/drag.list";
 import { BlockUrlConstant } from "../../../../src/block/constant";
-import { MenuView } from "../../../../component/view/menu/menu";
-import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
+import { MenuItemType } from "../../../../component/view/menu/declare";
 import { FieldType, SysFieldTypes, SysHiddenFieldTypes } from "../../../../blocks/data-grid/schema/type";
 import { TableStoreGallery } from "../../../../blocks/data-grid/view/gallery";
 import { BlockRenderRange } from "../../../../src/block/enum";
@@ -245,63 +244,7 @@ export class DataGridFields extends EventsComponent {
         function click(item) {
 
         }
-        var getItems = () => {
-            if ((this.block as TableStoreGallery)?.cardConfig?.showMode == 'define') return []
-            var baseItems: MenuItem[] = [
-                { text: lst('卡片视图'), type: MenuItemType.text },
-                {
-                    name: 'cardConfig.auto',
-                    text: lst("高度自适应"),
-                    type: MenuItemType.switch,
-                    checked: (this.block as TableStoreGallery).cardConfig?.auto,
-                },
-                {
-                    name: 'cardConfig.showCover',
-                    text: lst("显示封面"),
-                    type: MenuItemType.switch,
-                    updateMenuPanel: true,
-                    checked: (this.block as TableStoreGallery).cardConfig?.showCover,
-                },
-                {
-                    name: 'cardConfig.coverAuto',
-                    text: lst("封面高度"),
-                    visible: (items) => {
-                        var item = items.find(g => g.name == 'cardConfig.showCover');
-                        if (item.checked) return true;
-                        else return false;
-                    },
-                    type: MenuItemType.switch,
-                    checked: (this.block as TableStoreGallery).cardConfig?.coverAuto,
-                },
-                {
-                    text: lst('封面字段'),
-                    value: (this.block as TableStoreGallery).cardConfig?.coverFieldId,
-                    name: 'cardConfig.coverFieldId',
-                    type: MenuItemType.select,
-                    visible: (items) => {
-                        var item = items.find(g => g.name == 'cardConfig.showCover');
-                        if (item.checked) return true;
-                        else return false;
-                    },
-                    options: this.block.schema.fields.filter(g => g.type == FieldType.image).map(g => {
-                        return {
-                            text: g.text,
-                            icon: GetFieldTypeSvg(g),
-                            value: g.id
-                        }
-                    })
-                }
-            ]
-            return baseItems
-        }
-        var items = getItems();
         return <div className="shy-table-field-view">
-            {items.length > 0 && <MenuView
-                input={input}
-                select={select}
-                click={click}
-                style={{ maxHeight: 300, paddingTop: 10, paddingBottom: 10, overflowY: 'auto' }}
-                items={items}></MenuView>}
             {!this.block.getCardUrl() && this.renderFields()}
             {this.block.getCardUrl() && this.renderCardView()}
             <Divider></Divider>

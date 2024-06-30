@@ -51,7 +51,7 @@ export class FieldTextView extends OriginFileView<FieldOption> {
         if (!Array.isArray(ops)) ops = [];
         return <div className='sy-field-option flex  flex-wrap' >
             {ops.map(op => {
-                return <span key={op.value} className="text-overflow  f-14 padding-h-2  l-16 " style={{ backgroundColor: op?.color }}>{op?.text || <i>&nbsp;</i>}</span>
+                return <span key={op.value} className="text-overflow  f-14 padding-h-2  l-16 " style={{ backgroundColor: op?.fill||op?.color,color:op.textColor }}>{op?.text || <i>&nbsp;</i>}</span>
             })}
         </div>
     }

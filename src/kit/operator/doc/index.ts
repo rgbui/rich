@@ -34,6 +34,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
     var gm = block ? block.panelGridMap : kit.page.gridMap;
     var currentBlocks: Block[];
     var scrollDiv = block?.panel ? block.panel.getScrollDiv() : kit.page.getScrollDiv();
+    if(!scrollDiv) scrollDiv = kit.page.getScrollDiv();
     /**
      * 当元素处于拖动点击时，不在允许拖选元素
      * 一般元素是通过手柄触发的，但还有直接手动触发的如数据表中的看板元素就是手动触发的
@@ -152,7 +153,10 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                 else {
                     /**这里得找页面的最末尾块 */
                     var lastBlock = kit.page.getViewLastBlock();
-                    if (lastBlock && lastBlock.isContentEmpty && lastBlock.appearAnchors.some(s => s.isText)) {
+                    if (lastBlock && lastBlock.isContentEmpty && ([
+                        BlockUrlConstant.View,
+                        BlockUrlConstant.CardBox
+                    ].includes(lastBlock.parent?.url as any)) && lastBlock.appearAnchors.some(s => s.isText)) {
                         var r = lastBlock.getVisibleBound();
                         if (r.isCross(new Rect(0, 0, window.innerWidth, window.innerHeight)))
                             kit.anchorCursor.onFocusBlockAnchor(lastBlock, { last: true, render: true });

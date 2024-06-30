@@ -569,7 +569,11 @@ export abstract class Block extends Events {
     get isSupportTextStyle() {
         return true;
     }
-    isMounted: boolean = false;
+    /**
+     * 标记当前块是否处于已渲染的状态
+     * 原isMounted可能与react的isMounted冲突
+     */
+    isMed: boolean = false;
     /**
      * 标记当前块是否更新，
      * 在block view中决定 shouldComponentUpdate是否更新
@@ -621,7 +625,8 @@ export abstract class Block extends Events {
             }
         }
         return new Promise((resolve, reject) => {
-            if (this.view && this.isMounted) {
+
+            if (this.view && this.isMed) {
                 this.appearAnchors.forEach(aa => {
                     aa.updateViewValue();
                 })
@@ -630,12 +635,13 @@ export abstract class Block extends Events {
                 this.view.setState({ seq: seq }, () => {
                     resolve(true);
                 })
-                // this.view.forceUpdate(() => {
-                //     // console.log('block view forceUpdate', this.appearAnchors);
-                //     resolve(true);
-                // })
             }
-            else resolve(true);
+            else {
+                if (this.view && this.isMed == false) {
+                    console.warn(' may be is error,block is not mounted', this.id, this.url)
+                }
+                resolve(true);
+            }
         })
     }
     isBefore(block: Block) {

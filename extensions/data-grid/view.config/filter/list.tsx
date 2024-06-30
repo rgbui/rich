@@ -116,7 +116,7 @@ export class DataGridFilterList extends EventsComponent {
                         <span className="flex-fixed flex-center size-24 round   grab"><Icon size={16} icon={DragHandleSvg}></Icon></span>
                         <span className="flex-fixed flex-center size-24"><Icon size={16} icon={f.icon || { name: 'bytedance-icon', code: 'association' }}></Icon></span>
                         <span className="flex-auto">{f.text}</span>
-                        <span className="flex-center size-24 round item-hover cursor" item-btn={'true'} onMouseDown={e => this.openEdit(e, f)}><Icon size={16} icon={Edit1Svg}></Icon></span>
+                        <span className="flex-center size-24 round item-hover cursor" item-btn={'true'} onMouseDown={e => this.openEdit(e, f)}><Icon size={16} icon={{name:'byte',code:'write'}}></Icon></span>
                         <span className="flex-center size-24 round item-hover cursor" item-btn={'true'} onMouseDown={e => this.openProperty(e, f)}><Icon size={18} icon={DotsSvg}></Icon></span>
                     </div>
                 })}

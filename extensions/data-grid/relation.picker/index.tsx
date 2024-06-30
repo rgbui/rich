@@ -195,7 +195,7 @@ class RelationPicker extends EventsComponent {
                 var os = ops.findAll(g => vs.some(s => s == g.value));
                 return <div className="flex">
                     {os.map((o, i) => {
-                        return <span className="padding-w-5 cursor round" key={i} style={{ backgroundColor: o.color }}>{o.text}</span>
+                        return <span className="padding-w-5 cursor round" key={i} style={{ backgroundColor: o.fill||o.color,color:o.textColor }}>{o.text}</span>
                     })}
                 </div>
             case FieldType.creater:
