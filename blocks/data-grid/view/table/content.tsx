@@ -2,7 +2,7 @@ import React, { CSSProperties } from "react";
 import { Block } from "../../../../src/block";
 import { CheckSvg, DotsSvg, PlusSvg } from "../../../../component/svgs";
 import { Icon, IconValueType } from "../../../../component/view/icon";
-import { SpinBox, Spin } from "../../../../component/view/spin";
+import {  Spin } from "../../../../component/view/spin";
 import { ToolTip } from "../../../../component/view/tooltip";
 import { lst } from "../../../../i18n/store";
 import { S } from "../../../../i18n/view";
@@ -18,6 +18,7 @@ import { ViewField } from "../../schema/view";
 import { util } from "../../../../util/util";
 import dayjs from "dayjs";
 import { DataGridView } from "../base";
+import { DataGridTableItem } from "./row";
 
 
 export class DataGridTableContent extends React.Component<{
@@ -85,7 +86,7 @@ export class DataGridTableContent extends React.Component<{
                             }
                         }
                         self.block.onSyncAddRow(props,
-                            cs.last()?.id, 'after', false, async (row) => {
+                            (cs.last() as DataGridTableItem)?.dataId, 'after', false, async (row) => {
                                 if (this.props.groupHead)
                                     row.__group = this.props.groupHead.id;
                                 await this.block.loadSchemaStats()
@@ -186,13 +187,14 @@ export class DataGridTableHead extends React.Component<{ block: Block, style?: C
         if (!this.block.schema) return;
         if (this.isDragMouseField) return;
 
-        var box = this.block.el.querySelector('.sy-dg-table-content') as HTMLElement;
+        //var box = this.block.el.querySelector('.sy-dg-table-content') as HTMLElement;
         var head = (this.el as HTMLElement);
         if (!head) return;
-        var boxRect = Rect.fromEle(box);
+        // var boxRect = Rect.fromEle(box);
         var tableHeadRect = Rect.fromEle(head);
-        var scrollLeft = box.scrollLeft;
-        var tableLeft = boxRect.left - scrollLeft;
+        // var scrollLeft = box.scrollLeft;
+        // var tableLeft = boxRect.left - scrollLeft;
+        var tableLeft = tableHeadRect.left;
         var w = 0;
         var gap = 5;
         var index = -1;
@@ -210,7 +212,8 @@ export class DataGridTableHead extends React.Component<{ block: Block, style?: C
                 }
             }
         }
-        if (index > -1) {
+        if (index > -1&&index<this.block.fields.length)
+        {
             this.subline.style.display = 'block';
             this.subline.style.left = w + 'px';
             this.subline.style.height = tableHeadRect.height + 'px';
@@ -332,7 +335,7 @@ export class DataGridTableHead extends React.Component<{ block: Block, style?: C
         return <div ref={e => this.el = e} style={{
             minWidth: this.block.sumWidth,
             ...(this.props.style || {})
-        }} onMouseLeave={e => this.mouseleaveHead(e)} className="sy-dg-table-head" onMouseMove={e => this.mousemove(e.nativeEvent)}>
+        }} onMouseLeave={e => this.mouseleaveHead(e)} className="sy-dg-table-head relative" onMouseMove={e => this.mousemove(e.nativeEvent)}>
             <div className='sy-dg-table-subline' onMouseDown={e => this.onMousedownLine(e)} ref={e => this.subline = e}></div>
             {this.block.fields.map((f, i) => {
                 var text = f.field?.text || f.text;
@@ -340,7 +343,7 @@ export class DataGridTableHead extends React.Component<{ block: Block, style?: C
                 if (f.type == 'check') icon = CheckSvg;
                 else if (f.type == 'rowNum') { icon = undefined; }
                 else if (f.field) icon = GetFieldTypeSvg(f.field);
-              
+
                 var style: CSSProperties = {
                     width: f.colWidth || 120
                 }

@@ -6,11 +6,14 @@ import { BlockView } from "../../../../src/block/view"
 import { DataGridTool } from "../components/tool"
 import { Spin, SpinBox } from "../../../../component/view/spin"
 import { S } from "../../../../i18n/view"
-import { DataGridTableContent, DataGridTableHead } from "./content"
+import { DataGridTableContent } from "./content"
 import { Rect } from "../../../../src/common/vector/point"
 import dayjs from "dayjs"
 import weekOfYear from "dayjs/plugin/weekOfYear"
 import { DataGridGroup } from "../components/group"
+import { ScrollXDataGrid } from "./xscroll"
+import lodash from "lodash"
+import { ObserverWidth } from "../../../../src/common/Observer.width"
 dayjs.extend(weekOfYear)
 
 @view('/data-grid/table')
@@ -37,68 +40,44 @@ export class TableStoreView extends BlockView<TableStore> {
 
                     {this.block.schema && <DataGridTool block={this.block}></DataGridTool>}
                     {this.renderCreateTable()}
-                    {this.block.schema && this.block.noHead !== true && <div
-                        ref={e => {
-                            this.headScrollEl = e;
-                            this.bindScroll();
-                        }}
-                        className="scroll-hidden"
-                        style={{
-                            overflowX: 'auto',
-                            zIndex: 1,
-                            position: 'sticky',
-                            top: 0,
-                            display: 'none'
-                        }}><DataGridTableHead style={{ backgroundColor: '#fff' }} block={this.block}></DataGridTableHead>
-                    </div>}
+
                     <SpinBox spin={this.block.isLoadingData}>
-                        <div className="sy-dg-table-content" >
+                        <ScrollXDataGrid ref={e => this.xd = e} className="sy-dg-table-content" block={this.block}>
                             <DataGridGroup block={this.block} renderRowContent={(b, c, g) => {
                                 return <DataGridTableContent groupHead={g} block={b} childs={c}></DataGridTableContent>
                             }}></DataGridGroup>
-                        </div>
+                        </ScrollXDataGrid>
                     </SpinBox>
                 </div>
             </div>
             {this.renderComment()}
         </div>
     }
-    headScrollEl: HTMLElement;
     async didMount() {
         var sd = this.props.block.page.getScrollDiv() as HTMLElement;
         if (sd) sd.addEventListener('scroll', this._scroll)
-        var box = this.block.el.querySelector('.sy-dg-table-content');
-        if (box) {
-            box.addEventListener('scroll', this.content_scroll);
+        if (this.block.el) {
+            ObserverWidth.width(this.block.el, this.widthChange)
         }
     }
-
     willUnmount() {
         var sd = this.props.block.page.getScrollDiv() as HTMLElement;
         if (sd) sd.removeEventListener('scroll', this._scroll);
-        var box = this.block.el.querySelector('.sy-dg-table-content');
-        if (box) {
-            box.removeEventListener('scroll', this.content_scroll);
-        }
-        if (this.headScrollEl) {
-            this.headScrollEl.removeEventListener('scroll', this.head_scroll);
-        }
-    }
-    bindScroll() {
-        if (this.headScrollEl) {
-            this.headScrollEl.removeEventListener('scroll', this.head_scroll);
-            this.headScrollEl.addEventListener('scroll', this.head_scroll);
+        if (this.block.el) {
+            ObserverWidth.cancel(this.block.el);
         }
     }
     _scroll = (e) => {
         if (this.block.schema && this.block.noHead != true) {
             var div = this.props.block.page.getScrollDiv() as HTMLElement;
             if (div) {
+                var headScrollEl = this.block.el.querySelector('.scroll-hidden') as HTMLElement;
                 var el = this.block.el;
                 var db = Rect.fromEle(div);
                 var box = this.block.el.querySelector('.sy-dg-table-content');
                 if (box) {
-                    this.headScrollEl.scrollLeft = box.scrollLeft;
+                    if (headScrollEl)
+                        headScrollEl.scrollLeft = box.scrollLeft;
 
                 }
                 var rs = Array.from(el.querySelectorAll('.sy-dg-table-body'));
@@ -107,30 +86,21 @@ export class TableStoreView extends BlockView<TableStore> {
                         var r = rs[i] as HTMLElement;
                         var rb = Rect.fromEle(r);
                         if (db.top > rb.top && db.top < rb.bottom) {
-                            this.headScrollEl.style.display = 'block';
+                            if (headScrollEl)
+                                headScrollEl.style.display = 'block';
                             return
                         }
                     }
                 }
-                this.headScrollEl.style.display = 'none';
+                if (headScrollEl)
+                    headScrollEl.style.display = 'none';
             }
         }
     }
-    content_scroll = (e) => {
-        var box = this.block.el.querySelector('.sy-dg-table-content');
-        if (box) {
-            this.headScrollEl.scrollLeft = box.scrollLeft;
-            var group_heads = this.block.el.querySelectorAll('[data-sy-table="group-head"]');
-            group_heads.forEach(h => {
-                (h as HTMLElement).style.transform = `translateX(${box.scrollLeft}px)`;
-                // (h as HTMLElement).style.marginLeft = `${box.scrollLeft}px`;
-            })
+    xd: ScrollXDataGrid;
+    widthChange = lodash.debounce(() => {
+        if (this.xd) {
+            this.xd.AdjustWidth()
         }
-    }
-    head_scroll = (e) => {
-        var box = this.block.el.querySelector('.sy-dg-table-content');
-        if (box) {
-            box.scrollLeft = this.headScrollEl.scrollLeft;
-        }
-    }
+    }, 300)
 }
