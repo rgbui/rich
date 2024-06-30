@@ -6,7 +6,6 @@ import { PopoverPosition } from "../../component/popover/position";
 import { EmbedType } from "./url/embed.url";
 import { Input } from "../../component/view/input";
 import { Button } from "../../component/view/button";
-import { lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
 import { HelpText } from "../../component/view/text";
 
@@ -18,9 +17,14 @@ class OutSideUrlInput extends EventsComponent {
     render() {
         var placeholder = 'https://...';
         if (this.isEmbed) {
-            if (this.embedType == 'amap') placeholder = lst('请输入高德地图网址');
-            if (this.embedType == 'bilibili') placeholder = 'https://www.bilibili.com/video/BV1pt411C78a';
-            if (this.embedType == 'music.163') placeholder = 'https://music.163.com/#/song?id=1392990601';
+          
+            if (this.embedType == 'bilibili') placeholder = 'https://www.bilibili.com/video/***';
+            else if (this.embedType == 'music.163') placeholder = 'https://music.163.com/#/song?id=***';
+            else if (this.embedType == 'figma') placeholder = 'https://www.figma.com/file/***';
+            else if (this.embedType == 'mastergo') placeholder = 'https://mastergo.com/goto/***';
+            else if (this.embedType == 'vqq') placeholder = 'https://v.qq.com/x/cover/***';
+            else if(this.embedType=='youku') placeholder = 'https://v.youku.com/v_show/id_***==.html';
+            else if(this.embedType=='ytob') placeholder = 'https://www.youtube.com/watch?v=***';
         }
         return <div className='gap-10 w-350' >
 
@@ -34,11 +38,14 @@ class OutSideUrlInput extends EventsComponent {
             </div>
 
             <div className="gap-t-10" style={{ marginLeft: -3 }}>
-
-                {this.embedType == '' && <HelpText align="left" url={window.shyConfig?.isUS ? "https://help.shy.live/page/270#qwNuJC5aEquidQgYi5qg2u" : "https://help.shy.live/page/270#qwNuJC5aEquidQgYi5qg2u"} ><S>了解如何嵌入网址</S></HelpText>}
-                {this.embedType == 'amap' && <HelpText align="left" url={window.shyConfig?.isUS ? "https://help.shy.live/page/270#nhsrgEfQp9PDyHdGuWdftf" : "https://help.shy.live/page/270#nhsrgEfQp9PDyHdGuWdftf"} ><S>了解如何嵌入高德地图</S></HelpText>}
-                {this.embedType == 'bilibili' && <HelpText align="left" url={window.shyConfig?.isUS ? "https://help.shy.live/page/270#5gKEXYbh25oZmav8nWw8rt" : "https://help.shy.live/page/270#5gKEXYbh25oZmav8nWw8rt"} ><S>了解如何嵌入B站视频</S></HelpText>}
-                {this.embedType == 'music.163' && <HelpText align="left" url={window.shyConfig?.isUS ? "https://help.shy.live/page/270#dbrjkrxsrcAdhVFPNnvaTa" : "https://help.shy.live/page/270#dbrjkrxsrcAdhVFPNnvaTa"} ><S>了解如何嵌入网易云音乐的歌曲</S></HelpText>}
+                {this.embedType == '' && <HelpText align="left" url={window.shyConfig?.isUS ? "https://help.shy.live/page/270#qwNuJC5aEquidQgYi5qg2u" : "https://help.shy.live/page/1895#5pnuHiArkgFbBHEx9J2trj"} ><S>了解如何嵌入网址</S></HelpText>}
+                {this.embedType == 'bilibili' && <HelpText align="left" url={window.shyConfig?.isUS ? "https://help.shy.live/page/270#5gKEXYbh25oZmav8nWw8rt" : "https://help.shy.live/page/1895#5pnuHiArkgFbBHEx9J2trjt"} ><S>了解如何嵌入B站视频</S></HelpText>}
+                {this.embedType == 'music.163' && <HelpText align="left" url={window.shyConfig?.isUS ? "https://help.shy.live/page/270#dbrjkrxsrcAdhVFPNnvaTa" : "https://help.shy.live/page/1895#5pnuHiArkgFbBHEx9J2trj"} ><S>了解如何嵌入网易云音乐的歌曲</S></HelpText>}
+                {this.embedType == 'figma' && <HelpText align="left" url={window.shyConfig?.isUS ? "https://help.shy.live/page/270#nhsrgEfQp9PDyHdGuWdftf" : "https://help.shy.live/page/1895#5pnuHiArkgFbBHEx9J2trj"} ><S>了解如何嵌入Figma文件</S></HelpText>}
+                {this.embedType == 'mastergo' && <HelpText align="left" url={window.shyConfig?.isUS ? "https://help.shy.live/page/270#nhsrgEfQp9PDyHdGuWdftf" : "https://help.shy.live/page/1895#5pnuHiArkgFbBHEx9J2trj"} ><S>了解如何嵌入MasterGO文件</S></HelpText>}
+                {this.embedType == 'vqq' && <HelpText align="left" url={window.shyConfig?.isUS ? "https://help.shy.live/page/270#nhsrgEfQp9PDyHdGuWdftf" : "https://help.shy.live/page/1895#5pnuHiArkgFbBHEx9J2trj"} ><S>了解如何嵌入腾讯视频</S></HelpText>}
+                {this.embedType == 'youku' && <HelpText align="left" url={window.shyConfig?.isUS ? "https://help.shy.live/page/270#nhsrgEfQp9PDyHdGuWdftf" : "https://help.shy.live/page/1895#5pnuHiArkgFbBHEx9J2trj"} ><S>了解如何嵌入优酷视频</S></HelpText>}
+                {this.embedType == 'ytob' && <HelpText align="left" url={window.shyConfig?.isUS ? "https://help.shy.live/page/270#nhsrgEfQp9PDyHdGuWdftf" : "https://help.shy.live/page/1895#5pnuHiArkgFbBHEx9J2trj"} ><S>了解如何嵌入YouTube视频</S></HelpText>}
                 {this.embedType == 'bookmark' && <HelpText align="left" url={window.shyConfig?.isUS ? "https://help.shy.live/page/269#gxcRqJXWfdDa1TUKzvp5yo" : "https://help.shy.live/page/269#gxcRqJXWfdDa1TUKzvp5yo"} ><S>了解如何使用网址书签</S></HelpText>}
 
             </div>

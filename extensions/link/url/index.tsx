@@ -10,6 +10,11 @@ import { BookSvg, EmbedSvg, LinkSvg, PageSvg, TableSvg } from "../../../componen
 import { Icon, IconValueType } from "../../../component/view/icon";
 import B from "../../../src/assert/img/bilibili.ico";
 import M from "../../../src/assert/img/163.music.ico";
+import FB from "../../../src/assert/img/figma.png";
+import MG from "../../../src/assert/img/mastergo.png";
+import VQQ from "../../../src/assert/img/vqq.ico";
+import YK from "../../../src/assert/img/youku.png";
+import YB from "../../../src/assert/img/youtube.png";
 import { lst } from "../../../i18n/store";
 import { Page } from "../../../src/page";
 import { channel } from "../../../net/channel";
@@ -36,14 +41,70 @@ class InputUrlSelector extends InputTextPopSelector {
             this.urlTexts = [
                 { icon: LinkSvg, text: lst('网址'), name: 'url', url: '/text', isLine: true },
                 { icon: BookSvg, text: lst('书签'), name: 'bookmark', url: '/bookmark' },
-                {
-                    icon: { name: 'image', url: cr?.embedType == 'music.163' ? M : B },
-                    text: cr?.embedType == 'music.163' ? lst("嵌入网易云音乐") : lst('嵌入B站'),
-                    name: 'embed',
-                    url: '/embed'
-                },
+                // {
+                //     icon: { name: 'image', url: cr?.embedType == 'music.163' ? M : B },
+                //     text: cr?.embedType == 'music.163' ? lst("嵌入网易云音乐") : lst('嵌入B站'),
+                //     name: 'embed',
+                //     url: '/embed'
+                // },
                 { icon: { name: 'bytedance-icon', code: 'text' }, text: lst('纯文本'), name: 'text', url: '/text', isLine: true },
             ];
+            if (cr?.embedType == 'figma') {
+                this.urlTexts.unshift({
+                    icon: { name: 'image', url: FB },
+                    text: lst('嵌入Figma'),
+                    name: 'embed',
+                    url: '/embed'
+                })
+            }
+            else if (cr?.embedType == 'bilibili') {
+                this.urlTexts.unshift({
+                    icon: { name: 'image', url: B },
+                    text: lst('嵌入B站'),
+                    name: 'embed',
+                    url: '/embed'
+                })
+            }
+            else if (cr?.embedType == 'mastergo') {
+                this.urlTexts.unshift({
+                    icon: { name: 'image', url: MG },
+                    text: lst('嵌入MasterGo'),
+                    name: 'embed',
+                    url: '/embed'
+                })
+            }
+            else if (cr?.embedType == 'music.163') {
+                this.urlTexts.unshift({
+                    icon: { name: 'image', url: M },
+                    text: lst('嵌入网易云音乐'),
+                    name: 'embed',
+                    url: '/embed'
+                })
+            }
+            else if (cr?.embedType == 'vqq') {
+                this.urlTexts.unshift({
+                    icon: { name: 'image', url: VQQ },
+                    text: lst('嵌入腾讯视频'),
+                    name: 'embed',
+                    url: '/embed'
+                })
+            }
+            else if (cr?.embedType == 'youku') {
+                this.urlTexts.unshift({
+                    icon: { name: 'image', url:YK },
+                    text: lst('嵌入优酷视频'),
+                    name: 'embed',
+                    url: '/embed'
+                })
+            }
+            else if (cr?.embedType == 'ytob') {
+                this.urlTexts.unshift({
+                    icon: { name: 'image', url: YB },
+                    text: lst('嵌入Youtube视频'),
+                    name: 'embed',
+                    url: '/embed'
+                })
+            }
         }
         if (this.page.ws.isWsUrl(this.url)) {
             var ur = new window.URL(this.url);
