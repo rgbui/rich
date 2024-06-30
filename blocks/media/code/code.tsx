@@ -27,7 +27,7 @@ const CODEMIRROR_MODE = 'CODE_MIRROR_MODE';
 export class TextCode extends Block {
     display = BlockDisplay.block;
     @prop()
-    language: string = 'plain';
+    language: string = 'javascript';
     get isSupportTextStyle() {
         return false;
     }
@@ -48,7 +48,7 @@ export class TextCode extends Block {
     codeMirror: any;
     async renderCode() {
         var CodeMirror = await loadCodeMirror();
-        var codeMode = getCodeMirrorModes().find(g => g.mode == this.language);
+        var codeMode = getCodeMirrorModes().find(g => g.mode&&g.mode == this.language||Array.isArray(g.modes)&&g.modes.includes(this.language));
         if (codeMode) await codeMode.load();
         this.codeMirror = CodeMirror(this.el.querySelector('.sy-block-code-content'), {
             lineNumbers: this.lineNumbers,
@@ -78,7 +78,7 @@ export class TextCode extends Block {
         await this.page.onAction('onChangeMode', async () => {
             await this.updateProps({ language: name }, BlockRenderRange.self);
             if (this.codeMirror) {
-                var codeMode = getCodeMirrorModes().find(g => g.mode == this.language);
+                var codeMode = getCodeMirrorModes().find(g => g.mode&&g.mode == this.language||Array.isArray(g.modes)&&g.modes.includes(this.language));
                 if (codeMode) await codeMode.load();
                 this.codeMirror.setOption('mode', this.language);
                 channel.act('/cache/set', { key: CODEMIRROR_MODE, value: this.language })
@@ -143,11 +143,12 @@ export class TextCodeView extends BlockView<TextCode> {
             roundArea: Rect.fromEle(e.currentTarget as HTMLElement)
         }, {
             options: [
-                { text: lst('纯文本'), name: 'plain', value: 'plain' },
+                { text: lst('纯文本'),words:[], name: 'plain', value: 'plain' },
                 ...CodeMirrorModes.filter(g => g.abled).map(l => {
                     return {
                         text: l.label,
                         name: l.mode,
+                        words:l.words?l.words:[],
                         // visible: vfx as any,
                         checkLabel: this.block.language == l.mode
                     }

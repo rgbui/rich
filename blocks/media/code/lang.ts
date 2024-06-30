@@ -143,156 +143,253 @@ export function getCodeMirrorModes() {
         { mode: "yacas", load: async () => await import('../../../src/assert/codemirror/mode/yacas/yacas.js') },
         { mode: "yaml", load: async () => await import('../../../src/assert/codemirror/mode/yaml/yaml.js') },
         { mode: "yaml-frontmatter", load: async () => await import('../../../src/assert/codemirror/mode/yaml-frontmatter/yaml-frontmatter.js') },
-        { mode: "z80", load: async () => await import('../../../src/assert/codemirror/mode/z80/z80.js') }]
+        { mode: "z80", load: async () => await import('../../../src/assert/codemirror/mode/z80/z80.js') },
+        {
+            mode: 'text/html',
+            load: async () => {
+                await import('../../../src/assert/codemirror/mode/htmlmixed/htmlmixed.js');
+                await import('../../../src/assert/codemirror/mode/xml/xml.js');
+                await import('../../../src/assert/codemirror/mode/javascript/javascript.js');
+                await import('../../../src/assert/codemirror/mode/css/css.js');
+            }
+        },
+        {
+            mode: 'text/x-less',
+            load: async () => await import('../../../src/assert/codemirror/mode/css/css.js')
+        },
+        {
+            mode: 'application/json',
+            load: async () => await import('../../../src/assert/codemirror/mode/javascript/javascript.js')
+        },
+        {
+            mode: 'application/ld+json',
+            load: async () => await import('../../../src/assert/codemirror/mode/javascript/javascript.js')
+        },
+        {
+            mode: 'application/manifest+json',
+            load: async () => await import('../../../src/assert/codemirror/mode/javascript/javascript.js')
+        },
+        {
+            mode: 'application/typescript',
+            load: async () => await import('../../../src/assert/codemirror/mode/javascript/javascript.js')
+        },
+        {
+            modes: ["text/x-csrc", "text/x-c++src", 'text/x-csharp', "text/x-objectivec", "text/x-scala", "text/x-kotlin"],
+            load: async () => {
+                await import('../../../src/assert/codemirror/mode/clike/clike.js');
+
+            }
+        },
+        {
+            modes: ['application/x-ejs', 'application/x-aspx', 'application/x-jsp'],
+            load: async () => {
+                await import('../../../src/assert/codemirror/mode/htmlmixed/htmlmixed.js');
+            }
+        },
+        {
+            modes: ['text/x-sql',
+                'text/x-mariadb',
+                'text/x-mssql',
+                'text/x-plsql',
+                'text/x-pgsql',
+                'text/x-cassandra',
+                'text/x-sqlite'
+            ],
+            load: async () => {
+                await import('../../../src/assert/codemirror/mode/sql/sql.js');
+
+            }
+        }
+    ]
 }
 
 
 export var CodeMirrorModes = [
-    { label: "python", abled: true, mode: "python" },
-    { label: "c#", abled: true, mode: "clike" },
-    { label: "css", abled: true, mode: "css" },
-    { label: "go", abled: true, mode: "go" },
-    { label: "markdown", abled: true, mode: "markdown" },
-    { label: "r", abled: true, mode: "r" },
-    { label: "yaml", abled: true, mode: "yaml" },
-    { label: "xml", abled: true, mode: "xml" },
-    { label: "dart", abled: true, mode: "dart" },
-    { label: "javascript", abled: true, mode: "javascript" },
-    { label: "rust", abled: true, mode: "rust" },
-    { label: "vue", abled: true, mode: "vue" },
-    { label: "lua", abled: true, mode: "lua" },
-    { label: "jsx", abled: true, mode: "jsx" },
-    { label: "swift", abled: true, mode: "swift" },
-    { label: "sql", abled: true, mode: "sql" },
-    { label: "php", abled: true, mode: "php" },
-    { label: "protobuf", abled: true, mode: "protobuf" },
-    { label: "nginx", abled: true, mode: "nginx" },
-    { label: "shell", abled: true, mode: "shell" },
+    { label: 'HTML', abled: true, mode: 'text/html' },
+    { label: "CSS", abled: true, mode: "css" },
+    { label: 'TypeScript', words: ['ts'], abled: true, mode: 'text/typescript' },
+    { label: "Vue", abled: true, mode: "vue" },
+    { label: "React", abled: true, mode: "jsx" },
+    { label: "JavaScript", words: ['js'], abled: true, mode: "javascript" },
+    { label: "Python", abled: true, mode: "python" },
+    { label: "Java", abled: true, mode: "text/x-java" },
+    { label: "GO", abled: true, mode: "go" },
+    { label: 'MySQL', abled: true, mode: 'text/x-sql' },
+    { label: "PHP", abled: true, mode: "php" },
+    { label: "Objective-C", abled: true, mode: "text/x-objectivec" },
+    { label: "R", abled: true, mode: "r" },
+    { label: "Json", abled: true, mode: 'application/json' },
+    { label: "Yaml", abled: true, mode: "yaml" },
+    { label: "Nginx", abled: true, mode: "nginx" },
+    { label: "Shell", abled: true, mode: "shell" },
+    { label: "C", abled: true, mode: "text/x-csrc" },
+    { label: "C++", abled: true, mode: "text/x-c++src" },
+    { label: 'C#', abled: true, mode: 'text/x-csharp' },
+  
+    { label: "Dart", abled: true, mode: "dart" },
+    { label: "Scala", abled: true, mode: "text/x-scala" },
+    { label: "Kotlin", abled: true, mode: "text/x-kotlin" },
+
+   
+  
+    { label: "markdown", words: ['md'], abled: true, mode: "markdown" },
+  
+    // { label: "htmlmixed", mode: "htmlmixed" },
+   
+  
+    { label: "XML", abled: true, mode: "xml" },
+   
+  
+    { label: 'LESS', mode: 'text/x-less' },
+    { label: 'SCSS', mode: 'text/x-scss' },
+  
+    { label: "Jsonld", able: true, mode: 'application/ld+json' },
+    { label: 'Manifest', able: true, mode: 'application/manifest+json' },
+  
+    { label: "Rust", abled: true, mode: "rust" },
+   
+    { label: "Lua", abled: true, mode: "lua" },
+    { label: "ejs", mode: 'application/x-ejs' },
+    { label: "ASP.NET", mode: 'application/x-aspx' },
+    { label: "JSP", mode: 'application/x-jsp' },
+ 
+    { label: "Swift", abled: true, mode: "swift" },
+
+ 
+    { label: 'MariaDB', abled: true, mode: 'text/x-mariadb' },
+    { label: 'MSSQL', abled: true, mode: 'text/x-mssql' },
+    { label: 'PLSQL', abled: true, mode: 'text/x-plsql' },
+    { label: 'PgSQL', abled: true, mode: 'text/x-pgsql' },
+    { label: 'Cassandra', abled: true, mode: 'text/x-cassandra' },
+    { label: 'SQLite', abled: true, mode: 'text/x-sqlite' },
+
+
+    // { label: "sql", abled: true, mode: "sql" },
+
+    { label: "ProtoBuf", abled: true, mode: "protobuf" },
+   
     { label: "mbox", abled: true, mode: "mbox" },
-    { label: "htmlmixed", mode: "htmlmixed" },
+    { label: "Apl", mode: "apl" },
+    // { label: "asciiarmor", mode: "asciiarmor" },
+    { label: "ASN.1", mode: "asn.1" },
+    { label: "Asterisk dialplan", mode: "asterisk" },
+    { label: "Brainfuck", mode: "brainfuck" },
 
-
-    { label: "apl", mode: "apl" },
-    { label: "asciiarmor", mode: "asciiarmor" },
-    { label: "asn.1", mode: "asn.1" },
-    { label: "asterisk", mode: "asterisk" },
-    { label: "brainfuck", mode: "brainfuck" },
-
-    { label: "clojure", abled: true, mode: "clojure" },
-    { label: "cmake", abled: true, mode: "cmake" },
-    { label: "cobol", mode: "cobol" },
-    { label: "coffeescript", abled: true, mode: "coffeescript" },
-    { label: "commonlisp", mode: "commonlisp" },
-    { label: "crystal", mode: "crystal" },
-    { label: "cypher", mode: "cypher" },
-    { label: "d", mode: "d" },
+    { label: "Clojure", abled: true, mode: "clojure" },
+    { label: "Cmake", abled: true, mode: "cmake" },
+    { label: "COBOL", mode: "cobol" },
+    { label: "Coffeescript", abled: true, mode: "coffeescript" },
+    { label: "Common Lisp", mode: "commonlisp" },
+    { label: "Crystal", mode: "crystal" },
+    { label: "Cypher", mode: "cypher" },
+    { label: "D", mode: "d" },
 
     { label: "diff", mode: "diff" },
-    { label: "django", abled: true, mode: "django" },
-    { label: "dockerfile", abled: true, mode: "dockerfile" },
-    { label: "dtd", mode: "dtd" },
-    { label: "dylan", mode: "dylan" },
-    { label: "ebnf", mode: "ebnf" },
-    { label: "ecl", mode: "ecl" },
-    { label: "eiffel", mode: "eiffel" },
-    { label: "elm", mode: "elm" },
-    { label: "erlang", abled: true, mode: "erlang" },
-    { label: "factor", mode: "factor" },
-    { label: "fcl", mode: "fcl" },
-    { label: "forth", mode: "forth" },
-    { label: "fortran", mode: "fortran" },
-    { label: "gas", mode: "gas" },
-    { label: "gfm", mode: "gfm" },
-    { label: "gherkin", mode: "gherkin" },
+    { label: "Django", abled: true, mode: "django" },
+    { label: "Dockerfile", abled: true, mode: "dockerfile" },
+    { label: "DTD", mode: "dtd" },
+    { label: "Dylan", mode: "dylan" },
+    { label: "EBNF", mode: "ebnf" },
+    { label: "ECL", mode: "ecl" },
+    { label: "Eiffel", mode: "eiffel" },
+    { label: "Elm", mode: "elm" },
+    { label: "Erlang", abled: true, mode: "erlang" },
+    { label: "Factor", mode: "factor" },
+    { label: "F#", mode: "fcl" },
+    { label: "Forth", mode: "forth" },
+    { label: "Fortran", mode: "fortran" },
+    { label: "Gas", mode: "gas" },
+    { label: "Gfm", mode: "gfm" },
+    { label: "Gherkin", mode: "gherkin" },
 
 
-    { label: "groovy", mode: "groovy" },
-    { label: "haml", abled: true, mode: "haml" },
-    { label: "handlebars", mode: "handlebars" },
-    { label: "haskell", abled: true, mode: "haskell" },
-    { label: "haskell-literate", abled: true, mode: "haskell-literate" },
-    { label: "haxe", abled: true, mode: "haxe" },
-    { label: "htmlembedded", mode: "htmlembedded" },
+    { label: "Groovy", mode: "groovy" },
+    { label: "HAML", abled: true, mode: "haml" },
+    { label: "Handlebars", mode: "handlebars" },
+    { label: "Haskell", abled: true, mode: "haskell" },
+    { label: "Haskell (Literate)", abled: true, mode: "haskell-literate" },
+    { label: "Haxe", abled: true, mode: "haxe" },
+    // { label: "htmlembedded", mode: "htmlembedded" },
 
-    { label: "http", abled: true, mode: "http" },
-    { label: "idl", mode: "idl" },
+    { label: "HTTP", abled: true, mode: "http" },
+    { label: "IDL", mode: "idl" },
 
-    { label: "jinja2", mode: "jinja2" },
+    { label: "Jinja2", mode: "jinja2" },
 
-    { label: "julia", mode: "julia" },
-    { label: "livescript", mode: "livescript" },
+    { label: "Julia", mode: "julia" },
+    { label: "LiveScript", mode: "livescript" },
 
 
-    { label: "mathematica", mode: "mathematica" },
+    { label: "Mathematica", mode: "mathematica" },
 
-    { label: "meta.js", mode: "meta.js" },
-    { label: "mirc", mode: "mirc" }, { label: "mllike", mode: "mllike" },
-    { label: "modelica", mode: "modelica" },
-    { label: "mscgen", mode: "mscgen" },
-    { label: "mumps", mode: "mumps" },
+    // { label: "meta.js", mode: "meta.js" },
+    { label: "mIRC", mode: "mirc" }, { label: "mllike", mode: "mllike" },
+    { label: "Modelica", mode: "modelica" },
+    { label: "MscGen", mode: "mscgen" },
+    { label: "MUMPS", mode: "mumps" },
 
-    { label: "nsis", abled: true, mode: "nsis" },
-    { label: "ntriples", mode: "ntriples" },
-    { label: "octave", mode: "octave" },
-    { label: "oz", mode: "oz" },
-    { label: "pascal", mode: "pascal" },
-    { label: "pegjs", mode: "pegjs" },
-    { label: "perl", abled: true, mode: "perl" },
+    { label: "NSIS", abled: true, mode: "nsis" },
+    { label: "N-Triples/N-Quads", mode: "ntriples" },
+    { label: "Octave", mode: "octave" },
+    { label: "Oz", mode: "oz" },
+    { label: "Pascal", mode: "pascal" },
+    { label: "PEG.js", mode: "pegjs" },
+    { label: "Perl", abled: true, mode: "perl" },
 
-    { label: "pig", mode: "pig" },
-    { label: "powershell", abled: true, mode: "powershell" },
-    { label: "properties", mode: "properties" },
+    { label: "Pig", mode: "pig" },
+    { label: "PowerShell", abled: true, mode: "powershell" },
+    { label: "Properties files", mode: "properties" },
 
-    { label: "pug", mode: "pug" },
-    { label: "puppet", mode: "puppet" },
+    { label: "Pug", mode: "pug" },
+    { label: "Puppet", mode: "puppet" },
 
-    { label: "q", mode: "q" },
+    { label: "Q", mode: "q" },
 
-    { label: "rpm", mode: "rpm" },
-    { label: "rst", mode: "rst" },
-    { label: "ruby", mode: "ruby" },
+    { label: "RPM", mode: "rpm" },
+    { label: "reStructuredText", mode: "rst" },
+    { label: "Ruby", mode: "ruby" },
 
-    { label: "sas", mode: "sas" },
-    { label: "sass", abled: true, mode: "sass" },
-    { label: "scheme", abled: true, mode: "scheme" },
+    { label: "SAS", mode: "sas" },
+    { label: "SASS", abled: true, mode: "sass" },
+    { label: "Scheme", abled: true, mode: "scheme" },
 
-    { label: "sieve", mode: "sieve" },
-    { label: "slim", mode: "slim" },
-    { label: "smalltalk", mode: "smalltalk" },
-    { label: "smarty", mode: "smarty" },
-    { label: "solr", mode: "solr" },
-    { label: "soy", mode: "soy" },
-    { label: "sparql", mode: "sparql" },
-    { label: "spreadsheet", mode: "spreadsheet" },
+    { label: "Sieve", mode: "sieve" },
+    { label: "Slim", mode: "slim" },
+    { label: "Smalltalk", mode: "smalltalk" },
+    { label: "Smarty", mode: "smarty" },
+    { label: "Solr", mode: "solr" },
+    { label: "Soy", mode: "soy" },
+    { label: "Sparql", mode: "sparql" },
+    { label: "Spreadsheet", mode: "spreadsheet" },
 
-    { label: "stex", mode: "stex" },
-    { label: "stylus", abled: true, mode: "stylus" },
+    { label: "sTeX, LaTeX", mode: "stex" },
+    { label: "Stylus", abled: true, mode: "stylus" },
 
-    { label: "tcl", mode: "tcl" },
-    { label: "textile", mode: "textile" },
-    { label: "tiddlywiki", mode: "tiddlywiki" },
-    { label: "tiki", mode: "tiki" },
-    { label: "toml", mode: "toml" },
-    { label: "tornado", mode: "tornado" },
-    { label: "troff", mode: "troff" },
-    { label: "ttcn", mode: "ttcn" },
-    { label: "ttcn-cfg", mode: "ttcn-cfg" },
-    { label: "turtle", mode: "turtle" },
-    { label: "twig", mode: "twig" },
-    { label: "vb", abled: true, mode: "vb" },
-    { label: "vbscript", abled: true, mode: "vbscript" },
-    { label: "velocity", mode: "velocity" },
-    { label: "verilog", mode: "verilog" },
-    { label: "vhdl", mode: "vhdl" },
+    { label: "Tcl", mode: "tcl" },
+    { label: "Textile", mode: "textile" },
+    { label: "Tiddlywiki", mode: "tiddlywiki" },
+    { label: "Tiki", mode: "tiki" },
+    { label: "TOML", mode: "toml" },
+    { label: "Tornado (templating language)", mode: "tornado" },
+    { label: "troff (for manpages)", mode: "troff" },
+    { label: "TTCN", mode: "ttcn" },
+    { label: "TTCN Configuration", mode: "ttcn-cfg" },
+    { label: "Turtle", mode: "turtle" },
+    { label: "Twig", mode: "twig" },
+    { label: "Vb", abled: true, mode: "vb" },
+    { label: "VbScript", abled: true, mode: "vbscript" },
+    { label: "Velocity", mode: "velocity" },
+    { label: "Verilog", mode: "verilog" },
+    { label: "Vhdl", mode: "vhdl" },
 
-    { label: "wast", mode: "wast" },
-    { label: "webidl", mode: "webidl" },
+    { label: "Wast", mode: "wast" },
+    { label: "Webidl", mode: "webidl" },
 
-    { label: "xquery", mode: "xquery" },
-    { label: "yacas", mode: "yacas" },
+    { label: "XQuery", mode: "xquery" },
+    { label: "Yacas", mode: "yacas" },
 
-    { label: "yaml-frontmatter", mode: "yaml-frontmatter" },
-    { label: "z80", mode: "z80" }]
+    { label: "YAML frontmatter", mode: "yaml-frontmatter" },
+    { label: "Z80", mode: "z80" }]
 
 
 
