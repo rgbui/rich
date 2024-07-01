@@ -6,7 +6,7 @@ import { ChannelTextType } from "./declare";
 import { KeyboardCode } from "../../../src/common/keys";
 import { ChannelTextView } from "./view/view";
 import lodash from "lodash";
-import { ElementType, getElementUrl } from "../../../net/element.type";
+import { ElementType, getElementUrl, parseElementUrl } from "../../../net/element.type";
 import { Rect } from "../../../src/common/vector/point";
 import { util } from "../../../util/util";
 import { AtomPermission } from "../../../src/page/permission";
@@ -25,7 +25,10 @@ export class ChannelText extends Block {
         return getElementUrl(ElementType.Room, this.roomId);
     }
     pageIndex: number = 1;
-    isLast: boolean = false;
+    /**
+     * 是否加载完毕
+     */
+    isChatsOver: boolean = false;
     unreadTip: { seq: number, count: number, date: number } = null;
     async onClearUnread() {
         this.unreadTip = null;
@@ -34,31 +37,41 @@ export class ChannelText extends Block {
     }
     loading: boolean = false;
     async loadChannelTextDatas() {
-        var localSeq = this.pageIndex == 1 ? await this.getLocalSeq() : null;
-        var r = await channel.get('/ws/channel/list',
-            {
-                roomId: this.roomId,
-                page: this.pageIndex,
-                seq: localSeq?.seq || undefined,
-                ws: this.page.ws
-            }
-        );
-        if (r.ok) {
-            if (localSeq) {
-                if (r.data.unreadCount) {
-                    this.unreadTip = { seq: localSeq.seq, count: r.data.unreadCount, date: localSeq.date }
+        var hasIncrementChats = false;
+        try {
+            var localSeq = this.pageIndex == 1 ? await this.getLocalSeq() : null;
+            var r = await channel.get('/ws/channel/list',
+                {
+                    roomId: this.roomId,
+                    page: this.pageIndex,
+                    seq: localSeq?.seq || undefined,
+                    ws: this.page.ws
                 }
-            }
-            if (Array.isArray(r.data.list)) {
-                if (r.data.list.length == 0) { this.isLast = true; }
-                r.data.list.forEach(d => {
-                    if (!this.chats.some(c => c.id == d.id)) {
-                        this.chats.push(d)
+            );
+            if (r.ok) {
+                if (localSeq) {
+                    if (r.data.unreadCount) {
+                        this.unreadTip = { seq: localSeq.seq, count: r.data.unreadCount, date: localSeq.date }
                     }
-                })
+                }
+                if (Array.isArray(r.data.list)) {
+                    if (r.data.list.length == 0) { this.isChatsOver = true; }
+                    else if (r.data.list.length > 0) hasIncrementChats = true;
+                    r.data.list.forEach(d => {
+                        if (!this.chats.some(c => c.id == d.id)) {
+                            this.chats.push(d)
+                        }
+                    })
+                }
+                if (this.pageIndex == 1)
+                    this.setLocalSeq(this.chats.max(x => x.seq));
             }
-            if (this.pageIndex == 1)
-                this.setLocalSeq(this.chats.max(x => x.seq));
+        }
+        catch (ex) {
+            console.error(ex);
+        }
+        finally {
+            return hasIncrementChats;
         }
     }
     abledSend: boolean = false;
@@ -67,28 +80,32 @@ export class ChannelText extends Block {
         if (!this.isAllow(AtomPermission.channelEdit, AtomPermission.channelSpeak)) {
             this.abledSend = false;
         }
-        if (this.page.pageInfo?.speak == 'only') {
+        if (this.pageInfo?.speak == 'only') {
             var r = await channel.get('/ws/channel/abled/send', { ws: this.page.ws, roomId: this.roomId });
             if (r.ok) {
                 this.abledSend = r.data.abled;
             }
             else this.abledSend = false;
         }
-        else if (this.page.pageInfo?.speak == 'unspeak') {
+        else if (this.pageInfo?.speak == 'unspeak') {
             this.abledSend = false;
         }
-        if (force == true) this.view.forceUpdate();
+        if (force == true) this.forceManualUpdate()
     }
     async didMounted(): Promise<void> {
         this.loading = true;
-        this.view.forceUpdate();
+        await this.forceManualUpdate();
+        await this.loadPageInfo();
         await this.loadChannelTextDatas();
         await this.loadHasAbledSend();
         this.loading = false;
-        this.view.forceUpdate(() => (this.view as any).updateScroll());
+        await this.forceManualUpdate();
+        (this.view as any).updateScroll()
+
         channel.sync('/ws/channel/notify', this.channelNotify);
         channel.sync('/ws/channel/patch/notify', this.patchNotify);
         channel.sync('/ws/channel/emoji/notify', this.emojiNotify);
+        channel.sync('/page/update/info', this.updatePageInfo);
         this.page.keyboardPlate.listener(g => g.is(KeyboardCode.Esc), (ev) => { }, (ev) => {
             var v: ChannelTextView = this.view as any;
             v.editChannelText = null;
@@ -99,7 +116,9 @@ export class ChannelText extends Block {
         if (this.roomId == data.roomId) {
             this.chats.push(data as any);
             this.setLocalSeq(this.chats.max(x => x.seq));
-            this.view.forceUpdate(() => (this.view as any).updateScroll());
+            this.forceManualUpdate().then(()=>{
+                (this.view as any).updateScroll()
+            })
         }
     }
     patchNotify = (data: {
@@ -132,8 +151,29 @@ export class ChannelText extends Block {
             this.view.forceUpdate();
         }
     }
+    updatePageInfo = (r: { id: string, elementUrl: string, pageInfo: LinkPageItem }) => {
+        var isUpdate: boolean = false;
+        if (r.elementUrl && parseElementUrl(r.elementUrl).type == ElementType.Room && parseElementUrl(r.elementUrl)?.id == this.roomId) {
+            isUpdate = true;
+        }
+        else if (r.id == this.roomId) {
+            isUpdate = true;
+        }
+        if (isUpdate) {
+            if (this.pageInfo) {
+                Object.assign(this.pageInfo, r.pageInfo);
+                if (r.pageInfo?.speak) {
+                    this.loadHasAbledSend(true)
+                }
+                else this.forceManualUpdate()
+            }
+        }
+    }
     async didUnmounted() {
         channel.off('/ws/channel/notify', this.channelNotify);
+        channel.off('/ws/channel/patch/notify', this.patchNotify);
+        channel.off('/ws/channel/emoji/notify', this.emojiNotify);
+        channel.off('/page/update/info', this.updatePageInfo);
         this.page.keyboardPlate.off(this.id);
     }
     async getLocalSeq(): Promise<{ seq: number, date: number }> {
@@ -152,16 +192,17 @@ export class ChannelText extends Block {
     get cacheSeqKey() {
         return [this.id, this.roomId, 'seq'].join("/")
     }
-    scrollTopLoad = lodash.throttle(async () => {
-        if (this.isLast == false) {
+    scrollTopLoad = lodash.debounce(async () => {
+        if (this.isChatsOver == false) {
             if (this.loading) return;
             this.pageIndex += 1;
             this.loading = true;
-            this.view.forceUpdate();
+            this.forceManualUpdate();
             var td = this.chats.findMin(g => g.createDate.getTime());
-            await this.loadChannelTextDatas();
+            var isIncrementChats = await this.loadChannelTextDatas();
             this.loading = false;
-            this.view.forceUpdate(async () => {
+            await this.forceManualUpdate();
+            if (isIncrementChats) {
                 var ce = (this.view as any).contentEl as HTMLElement
                 var it = ce.querySelector(`[data-channel-text-id='${td.id}']`);
                 if (it) {
@@ -172,19 +213,17 @@ export class ChannelText extends Block {
                 if (it) {
                     ce.scrollTop = Rect.fromEle(it as HTMLElement).top - Rect.fromEle(ce).top;
                 }
-            });
+            }
         }
     }, 1200)
     pageInfo: LinkPageItem = null;
     async loadPageInfo() {
-        if (this.page.pageInfo) {
-            this.pageInfo = {
-                id: this.page.pageInfo.id,
-                text: this.page.pageInfo.text,
-                icon: this.page.pageInfo.icon,
-                description: this.page.pageInfo.description
-            };
-            this.forceManualUpdate()
+        var r = await channel.get('/page/query/info', {
+            ws: this.page.ws,
+            id: this.roomId
+        });
+        if (r.ok) {
+            this.pageInfo = r.data;
         }
     }
     async getMd() {

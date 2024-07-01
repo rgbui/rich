@@ -9,7 +9,7 @@ import { channel } from "../../../../net/channel";
 import { view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { TextEle } from "../../../../src/common/text.ele";
-import { LinkPageItem, PageLayoutType } from "../../../../src/page/declare";
+import { PageLayoutType } from "../../../../src/page/declare";
 import { util } from "../../../../util/util";
 import { ChannelTextType } from "../declare";
 import { RenderChats } from "./chats";
@@ -63,19 +63,6 @@ export class ChannelTextView extends BlockView<ChannelText> {
             </div>
         }
         else return <></>
-    }
-    async didMount() {
-        channel.sync('/page/update/info', this.updatePageInfo);
-        await this.block.loadPageInfo();
-    }
-    updatePageInfo = (r: { id: string, elementUrl: string, pageInfo: LinkPageItem }) => {
-        var page = this.props.block.page;
-        if (r.elementUrl && page.elementUrl === r.elementUrl || r.id && r.id == r.pageInfo.id) {
-            this.forceUpdate();
-        }
-    }
-    willUnmount() {
-        channel.off('/page/update/info', this.updatePageInfo);
     }
     async redit(d: ChannelTextType) {
         this.inputChatBox.onReplaceInsert(d.content);
@@ -234,6 +221,7 @@ export class ChannelTextView extends BlockView<ChannelText> {
             style.position = 'relative';
             // style.overflowY = 'auto';
         }
+        var isSpeak: boolean = this.block.abledSend;
         return <div style={style}>
             <div onWheel={this.wheel}
                 ref={e => this.contentEl = e}
@@ -247,8 +235,8 @@ export class ChannelTextView extends BlockView<ChannelText> {
                 </div>
                 <div className="sy-channel-text-content  padding-b-150 ">
                     {this.block && this.renderPageTitle()}
-                    {this.block.pageIndex > 2 && this.block.isLast && <div className="sy-channel-text-tip f-12 remark">无记录了</div>}
-                    {this.block.loading && <div className="sy-channel-text-loading"><Spin></Spin></div>}
+                    {this.block.pageIndex > 2 && this.block.isChatsOver && <div className="sy-channel-text-tip f-12 remark">无记录了</div>}
+                    <div className="sy-channel-text-loading h-30">{this.block.loading && <Spin></Spin>}</div>
                     {RenderChats(this.block, {
                         reditChat: (d) => this.redit(d),
                         replyChat: (d) => this.reply(d)
@@ -256,32 +244,18 @@ export class ChannelTextView extends BlockView<ChannelText> {
                 </div>
             </div>
             <div className="sy-channel-text-input" data-shy-page-no-focus onMouseDown={e => e.stopPropagation()}>
-                <div className="sy-channel-text-input-wrapper">
+                <div className="sy-channel-text-input-wrapper bg-3">
                     <InputChatBox
                         ws={this.block.page.ws}
-                        disabled={this.block.abledSend && this.block.page.user?.id ? false : true}
-                        placeholder={this.block.abledSend && this.block.page.user?.id ? lst("回车提交") : (this.block.page.user?.id ? lst("您不能发言") : lst("请登录发言"))}
+                        disabled={isSpeak ? false : true}
+                        placeholder={isSpeak ? lst("回车提交") : (this.block.page.user?.id ? lst("您不能发言") : lst("请登录发言"))}
                         ref={e => this.inputChatBox = e}
                         onChange={e => this.onInput(e)}
-                    // searchUser={this.searchUser}
-                    // searchRobots={this.searchRobot}
                     ></InputChatBox>
                 </div>
             </div>
         </div>
     }
-    // searchUser = async (text: string) => {
-    //     var r = await channel.get('/ws/member/word/query', { word: text, ws: this.block.page.ws });
-    //     if (r.ok) {
-    //         return r.data.list.map(c => {
-    //             return {
-    //                 ...c,
-    //                 id: c.userid,
-    //             }
-    //         }) as any
-    //     }
-    //     else return []
-    // }
 
     get isPageLayoutTextChannel() {
         return this.block.page.pageLayout.type == PageLayoutType.textChannel;

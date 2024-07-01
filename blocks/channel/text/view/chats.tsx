@@ -50,9 +50,10 @@ export function RenderChats(
     var reportChat = async (d: ChannelTextType) => {
 
     }
+    var isSpeak: boolean = block.abledSend
     return <ViewChats
         ws={block.page.ws}
-        readonly={block.abledSend && block.page.user?.id ? false : true}
+        readonly={isSpeak ? false : true}
         user={block.page.user}
         chats={block.chats}
         redit={props.reditChat}
