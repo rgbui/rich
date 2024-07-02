@@ -71,7 +71,6 @@
                         border          : none;
                         white-space     : pre-wrap;
                         font-family     : Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
-                        ;
                     }
 
                     pre {
@@ -132,22 +131,18 @@
             }
         }
 
-        // .sy-channel-text-edited-tip {
-        //     // font-size: 12px;
-        // }
-
         .sy-channel-text-item-head {
             display        : flex;
             justify-content: flex-start;
             align-items    : center;
-            height         : 20px;
+            height         : 22px;
 
             a {
                 display           : inline-flex;
                 justify-content   : center;
                 align-items       : center;
-                // font-size      : 1.2rem;
-                font-weight       : bold;
+                font-size: 16px;
+                font-weight: 600;
                 color             : var(--text-color);
             }
 
@@ -155,7 +150,8 @@
                 display       : inline-block;
                 margin-left   : 5px;
                 font-size     : 1.2rem;
-                color         : var(--text-muted);
+                font-weight: 500;
+                color         : var(--remark);
                 vertical-align: baseline;
             }
         }
@@ -375,6 +371,9 @@
     }
 
     .shy-user-channel-chat-content {
+        font-size: 16px;
+        font-weight: 400;
+        color:var(--text);
         b {
             font-weight: bold;
         }

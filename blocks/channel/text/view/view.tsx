@@ -28,7 +28,10 @@ export class ChannelTextView extends BlockView<ChannelText> {
         var model = { text: pd?.text || '', description: description || '' }
         var f = await useForm({
             head: false,
-            fields: [{ name: 'text', placeholder: lst('话题...'), text: lst('频道名称'), type: 'input' }, { name: 'description', text: lst('频道描述'), type: 'textarea' }],
+            fields: [
+                { name: 'text', placeholder: lst('话题...'), text: lst('频道名称'), type: 'input' },
+                { name: 'description', text: lst('频道描述'), type: 'textarea' }
+            ],
             title: lst('编辑讨论话题'),
             remark: '',
             footer: false,
@@ -45,6 +48,7 @@ export class ChannelTextView extends BlockView<ChannelText> {
                     text: f.description
                 }
             }
+            console.log(props);
             await this.props.block.page.onUpdatePageData({ ...props });
         }
     }

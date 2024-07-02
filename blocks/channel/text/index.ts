@@ -153,6 +153,7 @@ export class ChannelText extends Block {
     }
     updatePageInfo = (r: { id: string, elementUrl: string, pageInfo: LinkPageItem }) => {
         var isUpdate: boolean = false;
+       
         if (r.elementUrl && parseElementUrl(r.elementUrl).type == ElementType.Room && parseElementUrl(r.elementUrl)?.id == this.roomId) {
             isUpdate = true;
         }
@@ -162,6 +163,7 @@ export class ChannelText extends Block {
         if (isUpdate) {
             if (this.pageInfo) {
                 Object.assign(this.pageInfo, r.pageInfo);
+              
                 if (r.pageInfo?.speak) {
                     this.loadHasAbledSend(true)
                 }

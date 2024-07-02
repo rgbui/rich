@@ -720,20 +720,20 @@ item-selected:选中的效果
 }
 
 .remark {
-    color: rgba(55, 53, 47, 0.5);
+    color: var(--remark);
 }
 
 .placeholder-remark,
 .input-placeholder-remark,
 .p-remark {
     &::placeholder {
-        color: rgba(55, 53, 47, 0.5) !important;
+        color: var(--remark) !important;
     }
 }
 
 .remark-important,
 .remark-im {
-    color: rgba(55, 53, 47, 0.5) !important;
+    color: var(--remark) !important;
 }
 
 .text-white {
@@ -773,18 +773,24 @@ item-selected:选中的效果
 }
 
 body {
-    --white            : #fff;
-    --white-smoke      : rgb(251, 251, 250);
-    --white-1          : var(--white-smoke);
-    --border-color     : rgba(55, 53, 47, 0.16);
-    --black            : #000;
-    --warn-color       : rgb(225, 98, 89);
-    --text-color       : rgba(55, 53, 47);
+    --white       : #fff;
+    --white-smoke : rgb(251, 251, 250);
+    --white-1     : var(--white-smoke);
+    --border-color: rgba(55, 53, 47, 0.16);
+    --black       : #000;
+    --warn-color  : rgb(225, 98, 89);
+    --text-color  : rgb(55, 53, 47);
+    /**
+    在--text-color基础上，文字颜色加重
+    */
+    --text-w-color: rgb(95, 94, 91);
+
     --high-light-color : #faa700;
     --text             : var(--text-color);
     --text-color-1     : rgba(55, 53, 47, 0.8);
-    --text-color-remark: rgba(55, 53, 47, 0.5);
+    --text-color-remark: rgba(55, 53, 47, 0.6);
     --remark           : var(--text-color-remark);
+    --text-remark      : var(--text-color-remark);
     --text-purple      : rgb(189, 115, 232);
     --text-p-color     : rgb(225, 98, 89);
 
@@ -813,6 +819,10 @@ body {
 
 .text {
     color: var(--text-color);
+}
+
+.text-w,.text-w-color {
+    color: var(--text-w-color);
 }
 
 .text-1 {
