@@ -29,8 +29,12 @@ class InputIconAndText extends EventsComponent {
     }
     el: HTMLDivElement;
     render() {
+        // console.log('ggg',this.icon,this.defaultIcon, this.icon || this.defaultIcon)
         return <div className="flex w-400 bg-white shadow padding-10 round" ref={e => this.el = e}>
-            {this.ignoreIcon == false && <span onMouseDown={e => this.onChangeIcon(e)} className="flex-fixed size-24 border round cursor flex-center gap-r-10"><Icon icon={this.icon || this.defaultIcon} size={16}></Icon></span>}
+            {this.ignoreIcon == false && <span onMouseDown={e => this.onChangeIcon(e)} className="flex-fixed size-24 border round cursor flex-center gap-r-10"><Icon
+                icon={this.icon || this.defaultIcon}
+                size={16}></Icon></span>
+            }
             <span className="flex-auto">
                 <Input
                     value={this.text}

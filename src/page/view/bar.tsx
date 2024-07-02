@@ -48,7 +48,7 @@ export class PageBar extends React.Component<{ page: Page }> {
         if (this.props.page.openSource !== 'page') return;
         var r = await useInputIconAndText({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, options);
         if (r) {
-            await this.props.page.onUpdatePageData({ text: r.text || undefined, icon: r.icon || undefined }, PageLocation.pageBarUpdateInfo);
+            await this.props.page.onUpdatePageData({ text: r.text || undefined, icon: r.icon }, PageLocation.pageBarUpdateInfo);
             this.forceUpdate();
         }
     }
@@ -152,7 +152,7 @@ export class PageBar extends React.Component<{ page: Page }> {
             {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onPageClose()} className="desk-no-drag item-hover size-24 round cursor flex-center  gap-r-10"><Icon size={18} icon={{ name: 'byte', code: 'double-right' }}></Icon></span>}
             <span className=" round flex ">
                 {this.renderParents()}
-                <span onMouseDown={e => { this.onRenamePage(e, { text: this.props.page?.pageInfo.text, icon: this.props.page.pageInfo.icon, defaultIcon: getPageIcon(this.props.page?.pageInfo) }) }} className="flex-fixed desk-no-drag  item-hover flex round  cursor padding-h-3 padding-w-5  gap-r-10">
+                <span onMouseDown={e => { this.onRenamePage(e, { text: this.props.page?.pageInfo.text, icon: this.props.page.pageInfo.icon, defaultIcon: getPageIcon({pageType:this.props.page?.pageInfo?.pageType}) }) }} className="flex-fixed desk-no-drag  item-hover flex round  cursor padding-h-3 padding-w-5  gap-r-10">
                     {this.props.page?.pageInfo?.icon && <Icon size={18} icon={getPageIcon(this.props.page?.pageInfo)}></Icon>}
                     <span className={"text-overflow max-w-250 " + (this.props.page?.pageInfo?.icon ? "gap-l-5" : "")}>{getPageText(this.props.page?.pageInfo)}</span>
                 </span>
