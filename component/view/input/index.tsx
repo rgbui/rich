@@ -7,6 +7,7 @@ import "./style.less";
 import lodash from "lodash";
 
 export class Input extends React.Component<{
+    focusSelectionAll?: boolean,
     style?: CSSProperties,
     inputStyle?: CSSProperties,
     disabled?: boolean,
@@ -191,6 +192,20 @@ export class Input extends React.Component<{
     componentDidUpdate(prevProps) {
         if (!lodash.isEqual(prevProps.value, this.props.value)) {
             this.inputEl.value = this.props.value;
+        }
+    }
+    componentDidMount() {
+        if (this.props.focusSelectionAll) {
+            if (this.inputEl) {
+                console.log('focus this.inputEl...');
+                setTimeout(() => {
+                    if (this.inputEl) {
+                        this.inputEl.select();
+                        this.inputEl.focus();
+                    }
+                }, 200);
+
+            }
         }
     }
 }

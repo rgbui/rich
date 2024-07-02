@@ -197,16 +197,16 @@ export class MenuItemView extends React.Component<{
             {item.type == MenuItemType.help && <div className="shy-menu-box-item-help">
                 <HelpText className={'padding-w-5'} align="left" block={item.helpInline === false ? true : false} url={item.url}>{item.text}</HelpText>
             </div>}
-            {item.type == MenuItemType.input && !item.label && <div className="shy-menu-box-item-input"><Input size={'small'} value={item.value} onEnter={e => { item.value = e; this.select(item) }} onChange={e => { item.value = e; this.input(e, item) }} placeholder={item.placeholder || item.text}></Input></div>}
+            {item.type == MenuItemType.input && !item.label && <div className="shy-menu-box-item-input"><Input focusSelectionAll size={'small'} value={item.value} onEnter={e => { item.value = e; this.select(item) }} onChange={e => { item.value = e; this.input(e, item) }} placeholder={item.placeholder || item.text}></Input></div>}
             {item.type == MenuItemType.input && item.label && <div className="flex shy-menu-box-item-input">
                 <span className="flex-fixed">{item.label}</span>
-                <span className="flex-auto gap-l-20"><Input size={'small'} value={item.value} onEnter={e => { item.value = e; this.select(item) }} onChange={e => { item.value = e; this.input(e, item) }} placeholder={item.placeholder || item.text}></Input></span>
+                <span className="flex-auto gap-l-20"><Input focusSelectionAll size={'small'} value={item.value} onEnter={e => { item.value = e; this.select(item) }} onChange={e => { item.value = e; this.input(e, item) }} placeholder={item.placeholder || item.text}></Input></span>
             </div>}
             {item.type == MenuItemType.inputTitleAndIcon && <div className="shy-menu-box-item-input-icon flex">
                 <div onMouseDown={e => this.changeIcon(item, e)} className="cursor flex-fixed size-20 flex-center gap-r-10 round item-hover border">
                     <Icon icon={item.icon} className={(util.covertToArray(item.iconClassName).join(' '))} size={item.iconSize || 16}></Icon>
                 </div>
-                <div className="flex-auto"><Input size={'small'}
+                <div className="flex-auto"><Input focusSelectionAll size={'small'}
                     value={item.value}
                     onEnter={e => {
                         item.value = e;
