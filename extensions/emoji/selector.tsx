@@ -8,6 +8,8 @@ import { getEmoji } from "../../net/element.type";
 import { Tip } from "../../component/view/tooltip/tip";
 import { Spin } from "../../component/view/spin";
 import { S } from "../../i18n/view";
+import { Icon } from "../../component/view/icon";
+import { UA } from "../../util/ua";
 
 
 /**
@@ -70,8 +72,24 @@ class EmojiSelector extends InputTextPopSelector<EmojiCode> {
             display: this.visible ? "block" : 'none'
         }
         return <div className='emoji-selectors  shadow-s' onScroll={e => this.onScroll(e)} style={style}>
-            {!this.searchWord && this.renderEmojis()}
-            {this.searchWord && this.renderSearchs()}
+            <div className="eimoji-selectors-body overflow-y" style={{ maxHeight: '36vh' }}>
+                {!this.searchWord && this.renderEmojis()}
+                {this.searchWord && this.renderSearchs()}
+            </div>
+            {!this.searchWord && <div className="flex border-top remark padding-w-10 padding-h-3">
+
+                <span className="flex-fixed size-14 flex-center"><Icon size={14} icon={{ name: 'byte', code: 'arrow-left' }}></Icon></span>
+                <span className="flex-fixed size-14 flex-center"><Icon size={14} icon={{ name: 'byte', code: 'arrow-right' }}></Icon></span>
+                <span className="flex-fixed f-12 gap-r-10"><S>左右</S></span>
+
+                <span className="flex-fixed size-14 flex-center"><Icon size={14} icon={{ name: 'byte', code: 'arrow-up' }}></Icon></span>
+                <span className="flex-fixed size-14 flex-center"><Icon size={14} icon={{ name: 'byte', code: 'arrow-down' }}></Icon></span>
+                <span className="flex-fixed f-12 gap-r-10"><S>上下</S></span>
+
+                <span className="flex-fixed size-14 flex-center">{UA.isMacOs ? <Icon size={14} icon={{ name: 'byte', code: 'corner-down-left' }}></Icon> : "enter"}</span>
+                <span className="flex-fixed f-12 gap-r-10"><S>选择</S></span>
+
+            </div>}
         </div>
     }
     private scrollIndex = 0;
@@ -213,9 +231,11 @@ class EmojiSelector extends InputTextPopSelector<EmojiCode> {
                 blockData: {
                     url: '/emoji',
                     isLine: true,
-                    src: {
-                        name: 'emoji',
-                        code: this.searchCode
+                    data: {
+                        src: {
+                            name: 'emoji',
+                            code: this.searchCode
+                        }
                     }
                 }
             }
