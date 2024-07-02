@@ -15,6 +15,7 @@ import { Tip } from "../../component/view/tooltip/tip";
 import "./style.less";
 import { BlockUrlConstant } from "../../src/block/constant";
 import { Head } from "./head";
+import { PageLayoutType } from "../../src/page/declare";
 
 @url('/emoji')
 export class Emoji extends Block {
@@ -53,11 +54,14 @@ export class EmojiView extends BlockView<Emoji> {
             icon = { name: 'emoji', code: icon.code };
         }
         var size = 16;
+        if (this.block.page.pageLayout.type == PageLayoutType.ppt) {
+            size = 20;
+        }
         var classList: string[] = [];
         if (this.block.parent?.url == BlockUrlConstant.Head) {
             var pb = (this.block.parent as Head);
             if (pb.level == 'h1') { size = size * 1.8; classList.push('padding-w-5'); }
-            if (pb.level == 'h2') {size = size * 1.5;classList.push('padding-w-5');}
+            if (pb.level == 'h2') { size = size * 1.5; classList.push('padding-w-5'); }
             if (pb.level == 'h3') size = size * 1.25;
         }
         return <span className={classList.join(' ')}>
