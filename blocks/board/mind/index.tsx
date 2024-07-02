@@ -252,6 +252,9 @@ export class FlowMind extends Block {
         if (this.isMindRoot) return 0;
         else return (this.parent as FlowMind).deep + 1;
     }
+    get isSingleMind() {
+        return this.subChilds.length == 0 && this.otherChilds.length == 0
+    }
     async onPickerMousedown(selector: BoardBlockSelector, event: React.MouseEvent) {
         var self = this;
         if (selector.type == BoardPointType.mindAdd) {
@@ -260,7 +263,7 @@ export class FlowMind extends Block {
                 var pa: FlowMind = this;
                 var at: number;
                 if (selector.arrows.every(g => [PointArrow.top, PointArrow.center].includes(g))) {
-                    if (this.isMindRoot) { await this.updateProps({ direction: 'y' },BlockRenderRange.self); keys = 'subChilds'; }
+                    if (this.isMindRoot) { await this.updateProps({ direction: 'y' }, BlockRenderRange.self); keys = 'subChilds'; }
                     else {
                         if (this.mindDirection == 'x') {
                             pa = this.parent as FlowMind;
@@ -273,7 +276,7 @@ export class FlowMind extends Block {
                     }
                 }
                 else if (selector.arrows.every(g => [PointArrow.bottom, PointArrow.center].includes(g))) {
-                    if (this.isMindRoot) { await this.updateProps({ direction: 'y' },BlockRenderRange.self); keys = 'otherChilds'; }
+                    if (this.isMindRoot) { await this.updateProps({ direction: 'y' }, BlockRenderRange.self); keys = 'otherChilds'; }
                     else {
                         if (this.mindDirection == 'x') {
                             pa = this.parent as FlowMind;
@@ -286,7 +289,7 @@ export class FlowMind extends Block {
                     }
                 }
                 else if (selector.arrows.every(g => [PointArrow.middle, PointArrow.right].includes(g))) {
-                    if (this.isMindRoot) { await this.updateProps({ direction: 'x' },BlockRenderRange.self); keys = 'otherChilds'; }
+                    if (this.isMindRoot) { await this.updateProps({ direction: 'x' }, BlockRenderRange.self); keys = 'otherChilds'; }
                     else {
                         if (this.mindDirection == 'x') {
                             keys = 'otherChilds';
@@ -300,7 +303,7 @@ export class FlowMind extends Block {
                 }
                 else if (selector.arrows.every(g => [PointArrow.middle, PointArrow.left].includes(g))) {
                     if (this.isMindRoot) {
-                        await this.updateProps({ direction: 'x' },BlockRenderRange.self);
+                        await this.updateProps({ direction: 'x' }, BlockRenderRange.self);
                         keys = 'subChilds';
                     }
                     else {
@@ -322,9 +325,8 @@ export class FlowMind extends Block {
                 );
                 newBlock.mounted(async () => {
                     this.renderAllMinds();
-                    this.mindRoot.view.forceUpdate(() => {
-                        self.page.kit.picker.onPicker([newBlock], { merge: true });
-                    })
+                    await this.mindRoot.forceManualUpdate();
+                    self.page.kit.picker.onPicker([newBlock], { merge: true });
                 })
             })
         }
@@ -597,6 +599,21 @@ export class FlowMind extends Block {
                 var { width, height } = block.fixedSize;
                 var rect = new Rect(0, 0, width, height);
                 var nrect = rect.transformToRect(block.globalWindowMatrix);
+                var dis = nrect.middleCenter.dis(crect.middleCenter);
+                if (dis > 200) return false;
+                if (this.subChilds.length > 0 && this.otherChilds.length > 0) {
+                    return false;
+                }
+                if (this.subChilds.length > 0 && this.otherChilds.length == 0) {
+                    if (!block.isMindRoot && block.parentKey != 'subChilds') {
+                        return false
+                    }
+                }
+                else if (this.subChilds.length == 0 && this.otherChilds.length > 0) {
+                    if (!block.isMindRoot && block.parentKey != 'otherChilds') {
+                        return false
+                    }
+                }
                 bs.push({
                     rect: nrect,
                     dis: nrect.middleCenter.dis(crect.middleCenter),
@@ -609,94 +626,127 @@ export class FlowMind extends Block {
             else return false;
         })
         if (bs.length > 0) {
-
             var r = bs.findMin(g => g.dis)
             if (r) {
-                if (r.block.mindRoot.mindDirection == 'x') {
-                    if (crect.left > r.rect.right && r.block.parentKey == 'otherChilds') {
-                        this.moveTo = {
-                            block: r.block,
-                            rect: r.rect,
-                            at: r.block.blocks[r.block.parentKey].length,
-                            childKey: r.block.parentKey,
-                            posBlock: r.block
-                        };
+
+                if (r.block.mindRoot.mindDirection == 'x' || r.block.mindRoot.mindDirection == 'none') {
+                    var isLeft: boolean = crect.left > r.rect.right;
+                    var isRight = crect.right < r.rect.left
+                    var isTop = crect.top < r.rect.top;
+                    var isBottom = crect.bottom > r.rect.bottom;
+                    if (r.block.isMindRoot) {
+                        isLeft = crect.left > r.rect.center;
+                        isRight = crect.right < r.rect.center;
+                        if (isLeft && this.subChilds.length == 0) {
+                            this.moveTo = {
+                                block: r.block,
+                                rect: r.rect,
+                                at: r.block.blocks['otherChilds'].length,
+                                childKey: 'otherChilds',
+                                posBlock: r.block
+                            };
+                        }
+                        else if (isRight && this.otherChilds.length == 0) {
+                            this.moveTo = {
+                                block: r.block,
+                                rect: r.rect,
+                                at: r.block.blocks['subChilds'].length,
+                                childKey: 'subChilds',
+                                posBlock: r.block
+                            };
+                        }
                     }
-                    else if (crect.right < r.rect.left && r.block.parentKey == 'subChilds') {
-                        this.moveTo = {
-                            block: r.block, rect: r.rect,
-                            at: r.block.blocks[r.block.parentKey].length,
-                            childKey: r.block.parentKey,
-                            posBlock: r.block
-                        };
-                    }
-                    else if (crect.top < r.rect.top) {
-                        var { width, height } = (r.block.parent as FlowMind).fixedSize;
-                        var rect = new Rect(0, 0, width, height);
-                        var nrect = rect.transformToRect((r.block.parent as FlowMind).globalWindowMatrix);
-                        this.moveTo = {
-                            rect: nrect,
-                            block: r.block.parent as FlowMind,
-                            at: r.block.at,
-                            childKey: r.block.parentKey as any,
-                            posBlock: r.block
-                        };
-                    }
-                    else if (crect.top > r.rect.top) {
-                        var { width, height } = (r.block.parent as FlowMind).fixedSize;
-                        var rect = new Rect(0, 0, width, height);
-                        var nrect = rect.transformToRect((r.block.parent as FlowMind).globalWindowMatrix);
-                        this.moveTo = {
-                            rect: nrect,
-                            block: r.block.parent as FlowMind,
-                            at: r.block.at + 1,
-                            childKey: r.block.parentKey as any,
-                            posBlock: r.block
-                        };
+                    else {
+                        if (r.block.parentKey == 'subChilds' && this.otherChilds.length == 0 || r.block.parentKey == 'otherChilds' && this.subChilds.length == 0) {
+                            var k = r.block.parentKey;
+                            if (isLeft) {
+                                this.moveTo = {
+                                    block: r.block,
+                                    rect: r.rect,
+                                    at: r.block.blocks[k].length,
+                                    childKey: k,
+                                    posBlock: r.block
+                                };
+                            }
+                            else if (isTop) {
+                                this.moveTo = {
+                                    block: r.block.parent as FlowMind,
+                                    rect: r.rect,
+                                    at: r.block.at,
+                                    childKey: k,
+                                    posBlock: r.block
+                                };
+                            }
+                            else if (isBottom) {
+                                this.moveTo = {
+                                    block: r.block.parent as FlowMind,
+                                    rect: r.rect,
+                                    at: r.block.at + 1,
+                                    childKey: k,
+                                    posBlock: r.block
+                                };
+                            }
+                        }
                     }
                 }
-                else {
-                    if (crect.top > r.rect.bottom && r.block.parentKey == 'otherChilds') {
-                        this.moveTo = {
-                            rect: r.rect,
-                            block: r.block,
-                            at: r.block.blocks[r.block.parentKey].length,
-                            childKey: r.block.parentKey,
-                            posBlock: r.block
-                        };
+                else if (r.block.mindRoot.mindDirection == 'y') {
+                    var isLeft: boolean = crect.bottom > r.rect.bottom;
+                    var isRight = crect.top < r.rect.top
+                    var isTop = crect.right < r.rect.right;
+                    var isBottom = crect.left > r.rect.left;
+                    if (r.block.isMindRoot) {
+                        isLeft = crect.bottom > r.rect.middle;
+                        isRight = crect.bottom < r.rect.middle;
+                        if (isLeft && this.subChilds.length == 0) {
+                            this.moveTo = {
+                                block: r.block,
+                                rect: r.rect,
+                                at: r.block.blocks['otherChilds'].length,
+                                childKey: 'otherChilds',
+                                posBlock: r.block
+                            };
+                        }
+                        else if (isRight && this.otherChilds.length == 0) {
+                            this.moveTo = {
+                                block: r.block,
+                                rect: r.rect,
+                                at: r.block.blocks['subChilds'].length,
+                                childKey: 'subChilds',
+                                posBlock: r.block
+                            };
+                        }
                     }
-                    else if (crect.bottom > r.rect.top && r.block.parentKey == 'subChilds') {
-                        this.moveTo = {
-                            rect: r.rect,
-                            block: r.block,
-                            at: r.block.blocks[r.block.parentKey].length,
-                            childKey: r.block.parentKey,
-                            posBlock: r.block
-                        };
-                    }
-                    else if (crect.left < r.rect.left) {
-                        var { width, height } = (r.block.parent as FlowMind).fixedSize;
-                        var rect = new Rect(0, 0, width, height);
-                        var nrect = rect.transformToRect((r.block.parent as FlowMind).globalWindowMatrix);
-                        this.moveTo = {
-                            rect: nrect,
-                            block: r.block.parent as FlowMind,
-                            at: r.block.parent.at,
-                            childKey: r.block.parentKey as any,
-                            posBlock: r.block
-                        };
-                    }
-                    else if (crect.left > r.rect.left) {
-                        var { width, height } = (r.block.parent as FlowMind).fixedSize;
-                        var rect = new Rect(0, 0, width, height);
-                        var nrect = rect.transformToRect((r.block.parent as FlowMind).globalWindowMatrix);
-                        this.moveTo = {
-                            rect: nrect,
-                            block: r.block.parent as FlowMind,
-                            at: r.block.at + 1,
-                            childKey: r.block.parentKey as any,
-                            posBlock: r.block
-                        };
+                    else {
+                        if (r.block.parentKey == 'subChilds' && this.otherChilds.length == 0 || r.block.parentKey == 'otherChilds' && this.subChilds.length == 0) {
+                            var k = r.block.parentKey;
+                            if (isLeft) {
+                                this.moveTo = {
+                                    block: r.block,
+                                    rect: r.rect,
+                                    at: r.block.blocks[k].length,
+                                    childKey: k,
+                                    posBlock: r.block
+                                };
+                            }
+                            else if (isTop) {
+                                this.moveTo = {
+                                    block: r.block.parent as FlowMind,
+                                    rect: r.rect,
+                                    at: r.block.at,
+                                    childKey: k,
+                                    posBlock: r.block
+                                };
+                            }
+                            else if (isBottom) {
+                                this.moveTo = {
+                                    block: r.block.parent as FlowMind,
+                                    rect: r.rect,
+                                    at: r.block.at + 1,
+                                    childKey: k,
+                                    posBlock: r.block
+                                };
+                            }
+                        }
                     }
                 }
             }
@@ -706,7 +756,7 @@ export class FlowMind extends Block {
             var p = this.moveTo.rect.middleCenter;
             var t = crect.middleCenter;
             if (this.moveTo.block.mindRoot) {
-                if (this.moveTo.block.mindRoot.mindDirection == 'x') {
+                if (this.moveTo.block.mindRoot.mindDirection == 'x' || this.moveTo.block.mindRoot.mindDirection == 'none') {
                     p = this.moveTo.childKey == 'subChilds' ? this.moveTo.rect.leftMiddle : this.moveTo.rect.rightMiddle;
                     t = this.moveTo.childKey == 'subChilds' ? crect.rightMiddle : crect.leftMiddle;
                 }
@@ -751,6 +801,9 @@ export class FlowMind extends Block {
         var oldMindRoot: FlowMind, currentMindRoot: FlowMind;
         if (this.moveTo?.block?.mindRoot) {
             oldMindRoot = this.mindRoot;
+            if (this.moveTo.block.mindRoot.direction == 'none') {
+                await this.moveTo.block.mindRoot.updateProps({ direction: "x" })
+            }
             await this.moveTo.block.append(this, this.moveTo.at, this.moveTo.childKey);
             currentMindRoot = this.mindRoot;
         }
@@ -860,7 +913,7 @@ export class FlowMind extends Block {
                 block.fixedWidth = bw;
                 block.isDragSize = true;
                 block.updateRenderLines();
-                block.view.forceUpdate();
+                block.forceManualUpdate();
                 block.page.kit.picker.view.forceUpdate();
                 if (isEnd) {
                     block.page.onAction(ActionDirective.onResizeBlock, async () => {

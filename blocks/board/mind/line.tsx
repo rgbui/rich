@@ -27,7 +27,7 @@ export class FlowMindLine extends React.Component<{ mind: FlowMind }>{
             this.rightOrigin,
             ...this.rightPoints,
         ]).extend(20);
-        this.forceUpdate();
+      this.forceUpdate()
     }
     renderLines() {
         return <>

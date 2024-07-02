@@ -332,7 +332,7 @@ export class Line extends Block {
         }
     }
     async didMounted() {
-        this.view.forceUpdate();
+        this.forceManualUpdate();
     }
     async get(args?: { syncBlock: boolean },
         options?: { emptyChilds?: boolean }) {
