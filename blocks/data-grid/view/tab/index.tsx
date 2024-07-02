@@ -27,6 +27,7 @@ import "./style.less";
 import { TextEle } from "../../../../src/common/text.ele";
 import { ObserverWidth } from "../../../../src/common/Observer.width";
 
+
 @url('/data-grid/tab')
 export class DataGridTab extends Block {
     get allBlockKeys(): BlockChildKey[] {
@@ -591,6 +592,7 @@ export class DataGridTabView extends BlockView<DataGridTab> {
     spreadIndex: number = -1;
     resizeWidth = lodash.debounce(() => {
         if (this.isOpenMoreMenu) return;
+        if (!this.refHead) return;
         var width = this.refHead.clientWidth;
         width -= 30;
         var fontStyle = TextEle.getFontStyle(this.refHead);

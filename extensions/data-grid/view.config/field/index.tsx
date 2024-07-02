@@ -3,28 +3,25 @@ import { ReactNode } from "react";
 import { GetFieldTypeSvg, searchFieldItems } from "../../../../blocks/data-grid/schema/util";
 import { DataGridView } from "../../../../blocks/data-grid/view/base";
 import { EventsComponent } from "../../../../component/lib/events.component";
-import { Icon, IconValueType } from "../../../../component/view/icon";
+import { Icon } from "../../../../component/view/icon";
 import { Divider } from "../../../../component/view/grid";
 import {
     DotsSvg,
     DragHandleSvg,
-    DuplicateSvg,
     EyeHideSvg,
     EyeSvg,
-    PlusSvg,
-    TrashSvg
+    PlusSvg
 } from "../../../../component/svgs";
 import { Rect } from "../../../../src/common/vector/point";
 import { DragList } from "../../../../component/view/drag.list";
 import { BlockUrlConstant } from "../../../../src/block/constant";
 import { MenuItemType } from "../../../../component/view/menu/declare";
-import { FieldType, SysFieldTypes, SysHiddenFieldTypes } from "../../../../blocks/data-grid/schema/type";
+import { FieldType, SysHiddenFieldTypes } from "../../../../blocks/data-grid/schema/type";
 import { TableStoreGallery } from "../../../../blocks/data-grid/view/gallery";
 import { BlockRenderRange } from "../../../../src/block/enum";
 import { SelectBox } from "../../../../component/view/select/box";
 import { Field } from "../../../../blocks/data-grid/schema/field";
 import { ViewField } from "../../../../blocks/data-grid/schema/view";
-import { useSelectMenuItem } from "../../../../component/view/menu";
 import { CardFactory } from "../../../../blocks/data-grid/template/card/factory/factory";
 import { lst } from "../../../../i18n/store";
 import { S } from "../../../../i18n/view";
@@ -54,7 +51,7 @@ export class DataGridFields extends EventsComponent {
                         return <div className={"flex h-30 padding-w-5 gap-w-5 round cursor item-hover"} key={f.id}>
                             <span className="size-24 round flex-center flex-fixed"> <Icon size={14} icon={GetFieldTypeSvg(f)}></Icon></span>
                             <span className="flex-auto f-14">{f.text}</span>
-                            {!TableSchema.isSystemField(f) && <span className="size-24 round flex-center flex-fixed item-hover"> <Icon className={'eye'} size={14} onClick={async (e) => { self.openProperty('field', f, e) }} icon={DotsSvg}></Icon></span>}
+                            {!TableSchema.isSystemField(f) && <span className="size-24 round flex-center flex-fixed item-hover"> <Icon className={'eye'} size={14} onClick={async (e) => { self.openProperty(f, e) }} icon={DotsSvg}></Icon></span>}
                         </div>
                     })}</div>
                 }
@@ -88,46 +85,9 @@ export class DataGridFields extends EventsComponent {
             </div>
         </div>
     }
-    async openProperty(type: 'field' | 'view', viewField: ViewField | Field, event: React.MouseEvent) {
-        var self = this;
-        var gr = type == "view" ? (viewField as any).field as Field : (viewField as Field);
-        if (gr) {
-            var isCanDeleted: boolean = true;
-            if (SysFieldTypes.includes(gr.type)) isCanDeleted = false;
-            var items = [
-                { name: 'name', type: MenuItemType.inputTitleAndIcon, icon: GetFieldTypeSvg(gr), value: gr.text },
-                { type: MenuItemType.divide },
-                { name: 'clone', icon: DuplicateSvg, text: lst('复制') },
-                { type: MenuItemType.divide },
-                { name: 'delete', disabled: isCanDeleted ? false : true, icon: TrashSvg, text: lst('删除') }
-            ];
-            var na = items[0];
-            var r = await useSelectMenuItem(
-                { roundArea: Rect.fromEvent(event) },
-                items,
-            );
-            if (r?.item) {
-                if (r.item.name == 'delete') {
-                    await self.block.onDeleteField(gr, true);
-                    self.forceUpdate();
-                }
-                else if (r.item.name == 'clone') {
-                    await self.block.onCloneField(gr);
-                    self.forceUpdate();
-                }
-            }
-            var props: Record<string, any> = {};
-            if (na && !lodash.isEqual(na.value, gr.text) && na.value) {
-                props.text = na.value;
-            }
-            if (na && !lodash.isEqual(na.icon, gr.icon)) {
-                props.icon = na.icon;
-            }
-            if (Object.keys(props).length > 0) {
-                await self.block.onUpdateField(gr, props);
-                self.forceUpdate();
-            }
-        }
+    async openProperty(field: Field, event: React.MouseEvent) {
+        await this.block.onOpenFieldConfig(event, field, undefined);
+        this.forceUpdate()
     }
     renderFields() {
 
@@ -145,9 +105,7 @@ export class DataGridFields extends EventsComponent {
             self.forceUpdate();
         }
         function getFieldIcon(vf: ViewField) {
-            if (vf.type == 'check') return { name: 'bytedance-icon', code: 'check-correct' } as IconValueType
-            else if (vf.type == 'rowNum') return { name: 'bytedance-icon', code: 'list-numbers' } as IconValueType
-            else return GetFieldTypeSvg(vf.field);
+            return GetFieldTypeSvg(vf.field);
         }
         var fs = this.schema.visibleFields.findAll(g => g.text && !this.block.fields.some(s => s.fieldId == g.id) ? true : false);
         var bs = this.block.fields.filter(c => !['rowNum', 'check'].includes(c.type))
@@ -170,7 +128,7 @@ export class DataGridFields extends EventsComponent {
                     <span className="flex-center flex-fixed"><Icon size={14} icon={getFieldIcon(title)}></Icon></span>
                     <span className="flex-auto f-14 gap-l-3">{title.field?.text || title.text}</span>
                     <span className="size-24 round flex-center flex-fixed item-hover cursor"><Icon className={'eye'} size={14} onClick={async () => { await self.block.onHideField(title); self.forceUpdate() }} icon={EyeSvg}></Icon></span>
-                    <span className={"size-24 round flex-center flex-fixed   " + (title.field ? " cursor  item-hover" : "  remark")}><Icon className={'eye'} size={14} onClick={async (e) => { self.openProperty('view', title, e) }} icon={DotsSvg}></Icon></span>
+                    <span className={"size-24 round flex-center flex-fixed   " + (title.field ? " cursor  item-hover" : "  remark")}><Icon className={'eye'} size={14} onClick={async (e) => { self.openProperty(title.field, e) }} icon={DotsSvg}></Icon></span>
                 </div>}
                 <DragList
                     onChange={onChange}
@@ -181,7 +139,7 @@ export class DataGridFields extends EventsComponent {
                             <span className="flex-center flex-fixed"><Icon size={14} icon={getFieldIcon(f)}></Icon></span>
                             <span className="flex-auto f-14 gap-l-3">{f.field?.text || f.text}</span>
                             <span className="size-24 round flex-center flex-fixed item-hover cursor"><Icon className={'eye'} size={14} onClick={async () => { await self.block.onHideField(f); self.forceUpdate() }} icon={EyeSvg}></Icon></span>
-                            <span className={"size-24 round flex-center flex-fixed   " + (f.field ? " cursor  item-hover" : "  remark")}><Icon className={'eye'} size={14} onClick={async (e) => { self.openProperty('view', f, e) }} icon={DotsSvg}></Icon></span>
+                            <span className={"size-24 round flex-center flex-fixed   " + (f.field ? " cursor  item-hover" : "  remark")}><Icon className={'eye'} size={14} onClick={async (e) => { self.openProperty(f.field, e) }} icon={DotsSvg}></Icon></span>
                         </div>
                     })}</DragList>
                 {fs.length > 0 && <>
@@ -196,7 +154,7 @@ export class DataGridFields extends EventsComponent {
                             <span className="size-24 round flex-center flex-fixed"> <Icon size={14} icon={GetFieldTypeSvg(f)}></Icon></span>
                             <span className="flex-auto f-14">{f.text}</span>
                             <span className="size-24 round flex-center flex-fixed item-hover"><Icon className={'eye'} size={14} onClick={async () => { await self.block.onShowField(f); self.forceUpdate() }} icon={EyeHideSvg}></Icon></span>
-                            {!TableSchema.isSystemField(f) && <span className="size-24 round flex-center flex-fixed item-hover"> <Icon className={'eye'} size={14} onClick={async (e) => { self.openProperty('field', f, e) }} icon={DotsSvg}></Icon></span>}
+                            <span className="size-24 round flex-center flex-fixed item-hover"> <Icon className={'eye'} size={14} onClick={async (e) => { self.openProperty(f, e) }} icon={DotsSvg}></Icon></span>
                         </div>
                     })}</div>
                 </>}
@@ -237,12 +195,6 @@ export class DataGridFields extends EventsComponent {
                 });
                 self.forceUpdate()
             }
-        }
-        function select(item) {
-
-        }
-        function click(item) {
-
         }
         return <div className="shy-table-field-view">
             {!this.block.getCardUrl() && this.renderFields()}
@@ -324,7 +276,7 @@ export class DataGridFields extends EventsComponent {
                 return <div className={"flex h-30 round padding-w-5 gap-w-5 cursor item-hover"} key={f.id}>
                     <span className="size-24 round flex-center flex-fixed"><Icon size={14} icon={GetFieldTypeSvg(f)}></Icon></span>
                     <span className="flex-auto f-14">{f.text}</span>
-                    {!TableSchema.isSystemField(f) && <span className="size-24 round flex-center flex-fixed item-hover"><Icon className={'eye'} size={14} onClick={async (e) => { self.openProperty('field', f, e) }} icon={DotsSvg}></Icon></span>}
+                    <span className="size-24 round flex-center flex-fixed item-hover"><Icon className={'eye'} size={14} onClick={async (e) => { self.openProperty(f, e) }} icon={DotsSvg}></Icon></span>
                 </div>
             })}</div>
         </div >

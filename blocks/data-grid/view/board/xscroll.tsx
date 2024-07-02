@@ -24,7 +24,7 @@ export class ScrollXDataGridBoard extends React.Component<{
         if (!this.isScrollX) return;
         var bo = Rect.fromEle(this.props.block.page.root);
         var cr = Rect.fromEle(this.sx);
-        if (cr.width == 0 && !this.block.dataGridTab.el) {
+        if (cr.width == 0 && this.block.dataGridTab&&!this.block.dataGridTab?.el) {
             this.block.dataGridTab.mounted(() => {
                 this.AdjustWidth()
             })

@@ -28,7 +28,7 @@ import { useOpenEmoji } from "../../../../extensions/emoji";
 import { BlockDirective } from "../../../../src/block/enum";
 import { Rect, Point } from "../../../../src/common/vector/point";
 import { util } from "../../../../util/util";
-import { DataGridOptionType } from "../../schema/field";
+import { DataGridOptionType, Field } from "../../schema/field";
 import { FieldType, SupportTurnFieldTypes } from "../../schema/type";
 import { ViewField } from "../../schema/view";
 import { lst } from "../../../../i18n/store";
@@ -38,75 +38,35 @@ import { useFormula } from "../../../../extensions/data-grid/formula/lazy";
 import { GetFieldTypeSvg } from "../../schema/util";
 
 export class DataGridViewField {
-    private getFieldMenuItems(this: DataGridView, viewField: ViewField) {
+    private getFieldMenuItems(this: DataGridView, field: Field, viewField: ViewField) {
         var items: MenuItem<BlockDirective | string>[] = [];
-        var tips: MenuItem<BlockDirective | string>[] = [{ type: MenuItemType.divide },
-        { type: MenuItemType.help, text: lst('了解如何使用数据表字段'), url: window.shyConfig?.isUS ? "https://help.shy.red/page/43#2PRKjiNkLmU6w4xciiy1t1" : "https://help.shy.live/page/1871#gVnf6Ar2iF5wa2fS2KpLws" }]
-        if (viewField.type || [FieldType.autoIncrement].includes(viewField?.field?.type)) {
-            if (viewField.type == 'rowNum') {
-                items.push(...[
-                    {
-                        name: 'name',
-                        type: MenuItemType.input,
-                        value: viewField?.text,
-                        text: lst('编辑列名'),
-                    },
-                    { type: MenuItemType.divide },
-                    { name: 'leftInsert', icon: ArrowLeftSvg, text: lst('在左侧添加字段') },
-                    { name: 'rightInsert', icon: ArrowRightSvg, text: lst('在右侧添加字段') },
-                    { type: MenuItemType.divide },
-                    {
-                        name: 'hide',
-                        icon: HideSvg,
-                        text: lst('隐藏列')
-                    }, ...tips
-                ]);
-            }
-            else {
-                items.push(...[
-                    {
-                        name: 'name',
-                        type: MenuItemType.inputTitleAndIcon,
-                        icon: GetFieldTypeSvg(viewField?.field),
-                        value: viewField?.text,
-                        text: lst('编辑列名'),
-                    },
-                    { type: MenuItemType.divide },
-                    { name: 'leftInsert', icon: ArrowLeftSvg, text: lst('在左侧添加字段') },
-                    { name: 'rightInsert', icon: ArrowRightSvg, text: lst('在右侧添加字段') },
-                    { type: MenuItemType.divide },
-                    {
-                        name: 'hide',
-                        icon: HideSvg,
-                        text: lst('隐藏列')
-                    }
-                ]);
-                if (viewField?.field?.type == FieldType.autoIncrement) {
-                    items.addRange(4, [
-                        { name: 'sortAsc', icon: { name: 'byte', code: 'sort-amount-up' } as any, text: lst('按 1 → 10 升序排序') },
-                        { name: 'sortDesc', icon: { name: 'byte', code: 'sort-amount-down' } as any, text: lst('按 10 → 1 降序排序') },
-                        { name: 'filter', icon: FilterSvg, text: lst('按该字段筛选') },
-                    ])
-                    items.push(...[
-                        {
-                            name: 'clone',
-                            icon: DuplicateSvg,
-                            text: lst('复制列')
-                        },
-                        {
-                            name: 'deleteProperty',
-                            icon: TrashSvg,
-                            text: lst('删除字段')
-                        }
-                    ])
-                }
-                items.push(...tips)
-            }
+        var tips: MenuItem<BlockDirective | string>[] = [
+            { type: MenuItemType.divide },
+            { type: MenuItemType.help, text: lst('了解如何使用数据表字段'), url: window.shyConfig?.isUS ? "https://help.shy.red/page/43#2PRKjiNkLmU6w4xciiy1t1" : "https://help.shy.live/page/1871#gVnf6Ar2iF5wa2fS2KpLws" }
+        ]
+        if (viewField?.type) {
+            items.push(...[
+                {
+                    name: 'name',
+                    type: MenuItemType.input,
+                    value: viewField?.text,
+                    text: lst('编辑列名'),
+                },
+                { type: MenuItemType.divide },
+                { name: 'leftInsert', icon: ArrowLeftSvg, text: lst('在左侧添加字段') },
+                { name: 'rightInsert', icon: ArrowRightSvg, text: lst('在右侧添加字段') },
+                { type: MenuItemType.divide },
+                {
+                    name: 'hide',
+                    icon: HideSvg,
+                    text: lst('隐藏列')
+                }, ...tips
+            ]);
         }
         else {
             var descText = lst('按 Z → A 降序排序');
             var ascText = lst('按 A → Z 升序排序');
-            if (TableSchema.fieldIsDate(viewField.field)) {
+            if (TableSchema.fieldIsDate(field)) {
                 descText = lst('按时间降序排序');
                 ascText = lst('按时间升序排序');
             }
@@ -116,27 +76,29 @@ export class DataGridViewField {
                 FieldType.comment,
                 FieldType.browse,
                 FieldType.like,
-                FieldType.vote
-            ].includes(viewField.field.type)) {
+                FieldType.vote,
+                FieldType.autoIncrement
+            ].includes(field.type)) {
                 descText = lst('按 10 → 1 降序排序');
                 ascText = lst('按 1 → 10 升序排序');
             }
+
             items.push(...[
                 {
                     name: 'name',
                     type: MenuItemType.inputTitleAndIcon,
-                    icon: GetFieldTypeSvg(viewField.field),
-                    value: viewField.field?.text,
+                    icon: GetFieldTypeSvg(field),
+                    value: field?.text,
                     text: lst('编辑列名'),
                 },
                 { type: MenuItemType.divide },
                 {
                     name: 'editProperty',
-                    visible: SupportTurnFieldTypes.includes(viewField.field.type) ? true : false,
+                    visible: SupportTurnFieldTypes.includes(field.type) ? true : false,
                     icon: { name: "bytedance-icon", code: 'write' } as any,
                     text: lst('编辑字段')
                 },
-                { type: MenuItemType.divide, visible: SupportTurnFieldTypes.includes(viewField.field.type) ? true : false, },
+                { type: MenuItemType.divide, visible: SupportTurnFieldTypes.includes(field.type) ? true : false, },
                 { name: 'sortAsc', icon: { name: 'byte', code: 'sort-amount-up' } as any, text: ascText },
                 { name: 'sortDesc', icon: { name: 'byte', code: 'sort-amount-down' } as any, text: descText },
                 { name: 'filter', icon: FilterSvg, text: lst('按该字段筛选') },
@@ -151,25 +113,25 @@ export class DataGridViewField {
                 {
                     name: 'clone',
                     icon: DuplicateSvg,
-                    disabled: TableSchema.isSystemField(viewField.field),
+                    disabled: TableSchema.isOnlyFieldTypes(field),
                     text: lst('复制列')
                 },
                 {
                     name: 'deleteProperty',
                     icon: TrashSvg,
-                    disabled: TableSchema.isSystemField(viewField.field),
+                    disabled: TableSchema.isSystemField(field),
                     text: lst('删除字段')
                 },
                 ...tips
             ]);
-            if (viewField.field?.type == FieldType.date) {
+            if (field?.type == FieldType.date) {
                 var dateItems: MenuItem<BlockDirective | string>[] = [];
                 var day = dayjs(new Date());
                 dateItems.push(...[
                     {
                         name: 'dateCustomFormat',
                         type: MenuItemType.input,
-                        value: viewField?.field?.config?.dateFormat || lst('YYYY年MM月DD日'),
+                        value: field?.config?.dateFormat || lst('YYYY年MM月DD日'),
                         text: lst('编辑日期格式'),
                     },
                     { type: MenuItemType.divide },
@@ -215,23 +177,23 @@ export class DataGridViewField {
                     type: MenuItemType.switch,
                     name: 'includeTime',
                     icon: { name: "bytedance-icon", code: 'time' },
-                    checked: viewField?.field?.config?.includeTime ? true : false
+                    checked: field?.config?.includeTime ? true : false
                 });
             }
-            else if (viewField.field?.type == FieldType.number) {
+            else if (field?.type == FieldType.number) {
                 var dateItems: MenuItem<BlockDirective | string>[] = [];
                 dateItems.push(...[
-                    { name: 'numberFormat', text: lst('数字'), value: 'number', checkLabel: viewField.field.config?.numberFormat == 'number' },
-                    { name: 'numberFormat', text: lst('整数'), value: 'int', checkLabel: viewField.field.config?.numberFormat == 'int' },
-                    { name: 'numberFormat', text: lst('千分位'), value: '1000', checkLabel: viewField.field.config?.numberFormat == '1000' },
-                    { name: 'numberFormat', text: lst('两位小数'), value: '0.00', checkLabel: viewField.field.config?.numberFormat == '0.00' },
-                    { name: 'numberFormat', text: lst('百分比'), value: '%', checkLabel: viewField.field.config?.numberFormat == '%' },
+                    { name: 'numberFormat', text: lst('数字'), value: 'number', checkLabel: field.config?.numberFormat == 'number' },
+                    { name: 'numberFormat', text: lst('整数'), value: 'int', checkLabel: field.config?.numberFormat == 'int' },
+                    { name: 'numberFormat', text: lst('千分位'), value: '1000', checkLabel: field.config?.numberFormat == '1000' },
+                    { name: 'numberFormat', text: lst('两位小数'), value: '0.00', checkLabel: field.config?.numberFormat == '0.00' },
+                    { name: 'numberFormat', text: lst('百分比'), value: '%', checkLabel: field.config?.numberFormat == '%' },
                     { type: MenuItemType.divide },
-                    { name: 'numberFormat', text: lst('人民币'), value: '￥', checkLabel: viewField.field.config?.numberFormat == '￥' },
-                    { name: 'numberFormat', text: lst('美元'), value: '$', checkLabel: viewField.field.config?.numberFormat == '$' },
-                    { name: 'numberFormat', text: lst('欧元'), value: '€', checkLabel: viewField.field.config?.numberFormat == '€' },
-                    { name: 'numberFormat', text: lst('日元'), value: 'JP¥', checkLabel: viewField.field.config?.numberFormat == 'JP¥' },
-                    { name: 'numberFormat', text: lst('港元'), value: 'HK$', checkLabel: viewField.field.config?.numberFormat == 'HK$' },
+                    { name: 'numberFormat', text: lst('人民币'), value: '￥', checkLabel: field.config?.numberFormat == '￥' },
+                    { name: 'numberFormat', text: lst('美元'), value: '$', checkLabel: field.config?.numberFormat == '$' },
+                    { name: 'numberFormat', text: lst('欧元'), value: '€', checkLabel: field.config?.numberFormat == '€' },
+                    { name: 'numberFormat', text: lst('日元'), value: 'JP¥', checkLabel: field.config?.numberFormat == 'JP¥' },
+                    { name: 'numberFormat', text: lst('港元'), value: 'HK$', checkLabel: field.config?.numberFormat == 'HK$' },
                     { type: MenuItemType.divide },
                     {
                         text: lst('自定义格式'),
@@ -239,13 +201,13 @@ export class DataGridViewField {
                             {
                                 name: 'numberUnitCustom',
                                 type: MenuItemType.input,
-                                value: viewField.field.config?.numberFormat?.indexOf('{value}') > -1 ? viewField.field.config?.numberFormat : '',
+                                value: field.config?.numberFormat?.indexOf('{value}') > -1 ? field.config?.numberFormat : '',
                                 text: lst('输入数字格式'),
                             },
                             { type: MenuItemType.divide },
-                            { name: 'numberUnit', text: 'm/s', value: '{value}m/s', checkLabel: viewField.field.config?.numberFormat == 'number' },
-                            { name: 'numberUnit', text: 'kg', value: '{value}kg', checkLabel: viewField.field.config?.numberFormat == 'number' },
-                            { name: 'numberUnit', text: ' °c', value: '{value}°c', checkLabel: viewField.field.config?.numberFormat == 'number' }
+                            { name: 'numberUnit', text: 'm/s', value: '{value}m/s', checkLabel: field.config?.numberFormat == 'number' },
+                            { name: 'numberUnit', text: 'kg', value: '{value}kg', checkLabel: field.config?.numberFormat == 'number' },
+                            { name: 'numberUnit', text: ' °c', value: '{value}°c', checkLabel: field.config?.numberFormat == 'number' }
                         ]
                     },
                     /**
@@ -261,7 +223,7 @@ export class DataGridViewField {
                     type: MenuItemType.select,
                     icon: { name: 'byte', code: 'sales-report' },
                     name: 'config.numberDisplay.display',
-                    value: viewField.field.config?.numberDisplay?.display || 'auto',
+                    value: field.config?.numberDisplay?.display || 'auto',
                     options: [
                         { text: lst('数字'), value: 'auto', icon: TypesNumberSvg },
                         { text: lst('进度条'), value: 'percent', icon: { name: 'byte', code: 'percentage' } },
@@ -290,14 +252,14 @@ export class DataGridViewField {
                         // {
                         //     text: lst('颜色'),
                         //     type: MenuItemType.color,
-                        //     value: viewField.field.config?.numberDisplay?.color || 'rgba(55,53,47,0.6)',
+                        //     value: field.config?.numberDisplay?.color || 'rgba(55,53,47,0.6)',
                         //     name: 'config.numberDisplay.color',
                         //     options: BackgroundColorList().map(f => {
                         //         return {
                         //             text: f.text,
                         //             overlay: f.text,
                         //             value: f.color,
-                        //             checked: lodash.isEqual(viewField.field.config?.numberDisplay?.color, f.color) ? true : false
+                        //             checked: lodash.isEqual(field.config?.numberDisplay?.color, f.color) ? true : false
                         //         }
                         //     })
                         // },
@@ -306,27 +268,27 @@ export class DataGridViewField {
                             text: lst('度量'),
                             label: lst('度量'),
                             type: MenuItemType.input,
-                            value: viewField.field.config?.numberDisplay?.decimal || 100,
+                            value: field.config?.numberDisplay?.decimal || 100,
                             name: 'config.numberDisplay.decimal'
                         },
                         { type: MenuItemType.divide },
                         {
                             text: lst('数字'),
                             type: MenuItemType.switch,
-                            checked: viewField.field.config?.numberDisplay?.showNumber ? true : false,
+                            checked: field.config?.numberDisplay?.showNumber ? true : false,
                             name: 'config.numberDisplay.showNumber',
                             icon: { name: 'byte', code: 'preview-open' }
                         }
                     ]
                 });
             }
-            else if (viewField.field.type == FieldType.image) {
+            else if (field.type == FieldType.image) {
                 items.insertAt(4, {
                     text: lst('图片展示'),
                     type: MenuItemType.select,
                     name: 'config.imageFormat.display',
                     icon: { name: 'bytedance-icon', code: 'picture-one' },
-                    value: viewField.field.config?.imageFormat?.display || "thumb",
+                    value: field.config?.imageFormat?.display || "thumb",
                     options: [
                         { text: lst('略缩图'), value: 'thumb', icon: { name: 'byte', code: 'new-picture' } },
                         { text: lst('自适应'), value: 'auto', icon: { name: 'byte', code: 'moving-picture' } }
@@ -340,7 +302,7 @@ export class DataGridViewField {
                     name: 'isMultiple',
                     icon: { name: "bytedance-icon", code: 'more-two' },
                     updateMenuPanel: true,
-                    checked: viewField?.field?.config?.isMultiple ? true : false
+                    checked: field?.config?.isMultiple ? true : false
                 });
                 items.insertAt(6, {
                     text: lst('多张图片展示'),
@@ -351,7 +313,7 @@ export class DataGridViewField {
                     },
                     type: MenuItemType.select,
                     name: 'config.imageFormat.multipleDisplay',
-                    value: viewField.field.config?.imageFormat?.multipleDisplay || "tile",
+                    value: field.config?.imageFormat?.multipleDisplay || "tile",
                     options: [
                         { text: lst('平铺'), value: 'tile', icon: { name: 'byte', code: 'all-application' } },
                         { text: lst('轮播'), value: 'carousel', icon: { name: 'byte', code: 'multi-picture-carousel' } }
@@ -360,9 +322,9 @@ export class DataGridViewField {
                 });
                 items.insertAt(7, { type: MenuItemType.divide });
             }
-            else if ([FieldType.file, FieldType.user].includes(viewField.field?.type)) {
+            else if ([FieldType.file, FieldType.user].includes(field?.type)) {
                 var text = lst('允许多文件');
-                if (viewField.field.type == FieldType.user)
+                if (field.type == FieldType.user)
                     text = lst('允许多用用户');
                 items.insertAt(5, {
                     text: text,
@@ -370,21 +332,22 @@ export class DataGridViewField {
                     name: 'isMultiple',
                     icon: { name: "bytedance-icon", code: 'more-two' },
                     updateMenuPanel: true,
-                    checked: viewField?.field?.config?.isMultiple ? true : false
+                    checked: field?.config?.isMultiple ? true : false
                 });
                 items.insertAt(6, {
                     type: MenuItemType.divide
                 })
             }
-            else if (viewField.field?.type == FieldType.formula) {
+            else if (field?.type == FieldType.formula) {
                 items.insertAt(4, {
                     text: lst('编辑公式'),
                     name: 'formula',
                     icon: { name: 'byte', code: 'formula' }
                 });
-                items.removeAll(g => ['sortDesc', 'sortAsc', 'filter'].includes((g as any).name));
+                // items.removeAll(g => ['sortDesc', 'sortAsc', 'filter'].includes((g as any).name));
+                items.splice(items.findIndex(c => c.name == 'sortAsc'), 4);
             }
-            else if (viewField.field?.type == FieldType.relation) {
+            else if (field?.type == FieldType.relation) {
                 items.insertAt(4, {
                     text: lst('打开关联表'),
                     name: 'openRelation',
@@ -395,13 +358,13 @@ export class DataGridViewField {
                     type: MenuItemType.switch,
                     name: 'isMultiple',
                     icon: { name: 'bytedance-icon', code: 'one-to-many' },
-                    checked: viewField?.field?.config?.isMultiple ? true : false
+                    checked: field?.config?.isMultiple ? true : false
                 });
                 items.insertAt(6, {
                     type: MenuItemType.divide
                 })
             }
-            else if (viewField.field?.type == FieldType.emoji) {
+            else if (field?.type == FieldType.emoji) {
                 items.insertAt(4, {
                     text: lst('更换表情'),
                     name: 'emoji',
@@ -411,7 +374,7 @@ export class DataGridViewField {
                     type: MenuItemType.divide
                 })
             }
-            else if (viewField.field?.type == FieldType.option || viewField.field.type == FieldType.options) {
+            else if (field?.type == FieldType.option || field.type == FieldType.options) {
                 items.insertAt(3, { type: MenuItemType.divide });
                 items.insertAt(4, {
                     text: lst('选项'),
@@ -421,20 +384,20 @@ export class DataGridViewField {
                             type: MenuItemType.container,
                             name: 'optionContainer',
                             childs: [
-                                ...(viewField.field.config?.options || []).map(op => {
+                                ...(field.config?.options || []).map(op => {
                                     return {
                                         value: op.value,
                                         name: 'optionItem',
                                         type: MenuItemType.drag,
                                         renderContent() {
-                                            return <span className="round padding-w-5 f-14 padding-h-2  l-16" style={{ backgroundColor: op?.fill||op?.color, color: op.textColor }}>{op.text}</span>
+                                            return <span className="round padding-w-5 f-14 padding-h-2  l-16" style={{ backgroundColor: op?.fill || op?.color, color: op.textColor }}>{op.text}</span>
                                         },
                                         btns: [{ name: 'editOptionOption', icon: DotsSvg }]
                                     }
                                 })
                             ]
                         },
-                        ...((viewField.field.config?.options || []).length > 0 ? [{ type: MenuItemType.divide }] : []),
+                        ...((field.config?.options || []).length > 0 ? [{ type: MenuItemType.divide }] : []),
                         {
                             type: MenuItemType.button,
                             text: lst('添加选项'),
@@ -445,8 +408,12 @@ export class DataGridViewField {
                     ]
                 });
             }
-            else if (viewField.field?.type == FieldType.rollup) {
+            else if (field?.type == FieldType.rollup) {
                 items.splice(items.findIndex(c => c.name == 'sortAsc'), 4);
+            }
+            if (!viewField) {
+                lodash.remove(items, g =>
+                    ['sortAsc', 'sortDesc', 'filter', 'leftInsert', 'rightInsert', 'hide'].includes(g.name as any))
             }
         }
         return items;
@@ -500,15 +467,18 @@ export class DataGridViewField {
             }
         }
     }
-    async onOpenFieldConfig(this: DataGridView,
+    async onOpenFieldConfig(
+        this: DataGridView,
         event: React.MouseEvent | MouseEvent,
+        field: Field,
         viewField: ViewField) {
         event.stopPropagation();
         var self = this;
         var rp = Rect.fromEvent(event);
         await this.onDataGridTool(async () => {
-            var isSysField: boolean = viewField.type || viewField?.field?.type == FieldType.autoIncrement ? true : false;
-            var items = this.getFieldMenuItems(viewField);
+            var isSysField: boolean = viewField?.type ? true : false;
+            var items = this.getFieldMenuItems(field, viewField);
+            items = util.neighborDeWeight(items, c => (c.name + "") + c.type);
             var re = await useSelectMenuItem(
                 {
                     roundArea: rp,
@@ -521,31 +491,31 @@ export class DataGridViewField {
                         try {
                             if (item.name == 'optionItem') {
                                 if (name == 'editOptionOption') {
-                                    var ops = lodash.cloneDeep(viewField.field.config.options);
+                                    var ops = lodash.cloneDeep(field?.config?.options) || [];
                                     var op = ops.find(g => g.value == item.value);
                                     await self.onOpenFieldOptions(ops, op, ev);
-                                    if (JSON.stringify(ops) != JSON.stringify(viewField.field.config.options)) {
-                                        var config = lodash.cloneDeep(viewField?.field?.config);
+                                    if (JSON.stringify(ops) != JSON.stringify(field.config.options)) {
+                                        var config = lodash.cloneDeep(field?.config);
                                         if (typeof config == 'undefined') config = {};
                                         config.options = ops;
-                                        await self.onUpdateField(viewField.field, { config });
-                                        mp.updateItems(self.getFieldMenuItems(viewField))
+                                        await self.onUpdateField(field, { config });
+                                        mp.updateItems(self.getFieldMenuItems(field, viewField))
                                     }
                                 }
                             }
                             else if (item.name == 'addOption') {
-                                var ops = lodash.cloneDeep(viewField.field?.config?.options || []);
+                                var ops = lodash.cloneDeep(field?.config?.options || []);
                                 var or = OptionBackgroundColorList().findAll(g => ops.some(s => s.color && s.color == g.fill || s.fill && s.fill == g.fill) ? false : true).randomOf();
                                 if (!or) or = OptionBackgroundColorList().randomOf();
                                 var op: DataGridOptionType = { text: '', value: util.guid(), fill: or.fill, textColor: or.color };
                                 await self.onOpenFieldOptions(ops, op, ev);
                                 if (op.text) {
                                     ops.push(op);
-                                    var config = lodash.cloneDeep(viewField?.field?.config);
+                                    var config = lodash.cloneDeep(field?.config);
                                     if (typeof config == 'undefined') config = {};
                                     config.options = ops;
-                                    await self.onUpdateField(viewField.field, { config });
-                                    mp.updateItems(self.getFieldMenuItems(viewField))
+                                    await self.onUpdateField(field, { config });
+                                    mp.updateItems(self.getFieldMenuItems(field, viewField))
                                 }
                             }
                         }
@@ -558,18 +528,18 @@ export class DataGridViewField {
                     },
                     async input(item) {
                         if (item.name == 'includeTime') {
-                            await self.onUpdateFieldConfig(viewField.field, { includeTime: item.checked });
+                            await self.onUpdateFieldConfig(field, { includeTime: item.checked });
                         }
                         else if (item.name == 'isMultiple') {
-                            await self.onUpdateFieldConfig(viewField.field, { isMultiple: item.checked });
+                            await self.onUpdateFieldConfig(field, { isMultiple: item.checked });
                         }
                         else if (item.name == 'optionContainer') {
                             var [from, to] = item.value;
-                            var ops = lodash.cloneDeep(viewField.field.config.options);
+                            var ops = lodash.cloneDeep(field.config.options);
                             var f = ops[from];
                             ops.remove(g => g === f);
                             ops.insertAt(to, f);
-                            await self.onUpdateFieldConfig(viewField.field, { options: ops });
+                            await self.onUpdateFieldConfig(field, { options: ops });
                         }
                         else if ([
                             'config.numberDisplay.showNumber',
@@ -579,7 +549,7 @@ export class DataGridViewField {
                             'config.numberDisplay.color'
                         ].includes(item.name as string)) {
                             var n = (item.name as string).replace('config.', '');
-                            await self.onUpdateFieldConfig(viewField.field, { [n]: item.value });
+                            await self.onUpdateFieldConfig(field, { [n]: item.value });
                         }
                     }
                 }
@@ -588,7 +558,6 @@ export class DataGridViewField {
             var dateCustomFormat = items.arrayJsonFind('childs', g => g.name == 'dateCustomFormat');
             var numberUnitCustom = items.arrayJsonFind('childs', g => g.name == 'numberUnitCustom');
             var config_numberDisplay_decimal = items.arrayJsonFind('childs', g => g.name == 'config.numberDisplay.decimal');
-
             if (re) {
                 if (re.item.name == 'hide') {
                     this.onHideField(viewField);
@@ -596,22 +565,22 @@ export class DataGridViewField {
                 else if (re.item.name == 'editProperty') {
                     var r = await useTableStoreAddField(
                         { roundArea: rp },
-                        { field: viewField.field, dataGrid: self }
+                        { field: field, dataGrid: self }
                     );
                     if (r) {
-                        if (r.type == viewField.field.type) {
+                        if (r.type == field.type) {
                             var props: Record<string, any> = { text: r.text };
                             if (r.config) {
-                                props.config = Object.assign({}, viewField.field.config || {}, r.config)
+                                props.config = Object.assign({}, field.config || {}, r.config)
                             }
-                            await this.onUpdateField(viewField.field, props)
+                            await this.onUpdateField(field, props)
                         }
                         else {
                             var props: Record<string, any> = { text: r.text };
                             if (r.config) {
-                                props.config = Object.assign({}, viewField.field.config || {}, r.config)
+                                props.config = Object.assign({}, field.config || {}, r.config)
                             }
-                            await this.onTurnField(viewField, r.type, props);
+                            await this.onTurnField(field, r.type, props);
                         }
                     }
                 }
@@ -622,39 +591,39 @@ export class DataGridViewField {
                     this.onAddField(rp, this.fields.findIndex(g => g == viewField) + 1);
                 }
                 else if (re.item.name == 'clone') {
-                    this.onCloneViewField(viewField);
+                    this.onCloneViewField(field, viewField);
                 }
                 else if (re.item.name == 'deleteProperty') {
-                    this.onDeleteViewField(viewField);
+                    this.onDeleteViewField(field);
                 }
                 else if (re.item.name == 'filter') {
-                    this.onAddFilter(viewField);
+                    this.onAddFilter(field);
                 }
                 else if (re.item.name == 'sortDesc') {
-                    this.onSetSortField(viewField, -1);
+                    this.onSetSortField(field, -1);
                 }
                 else if (re.item.name == 'sortAsc') {
-                    this.onSetSortField(viewField, 1);
+                    this.onSetSortField(field, 1);
                 }
                 else if (re?.item.name == 'dateFormat') {
                     if (dateCustomFormat) dateCustomFormat.value = re.item.value;
-                    await this.onUpdateFieldConfig(viewField.field, { dateFormat: re.item.value })
+                    await this.onUpdateFieldConfig(field, { dateFormat: re.item.value })
                 }
                 else if (re?.item.name == 'numberFormat' || re?.item.name == 'numberUnit') {
                     numberUnitCustom.value = re.item.value;
-                    await this.onUpdateFieldConfig(viewField.field, { numberFormat: re.item.value });
+                    await this.onUpdateFieldConfig(field, { numberFormat: re.item.value });
                 }
                 else if (re.item.name == 'formula') {
                     var formula = await useFormula({ roundArea: rp }, {
                         schema: this.schema,
-                        formula: viewField.field.config.formula?.formula || ''
+                        formula: field.config.formula?.formula || ''
                     });
-                    if (!lodash.isUndefined(formula)) await this.onUpdateFieldConfig(viewField.field, { formula });
+                    if (!lodash.isUndefined(formula)) await this.onUpdateFieldConfig(field, { formula });
                 }
                 else if (re.item.name == 'emoji') {
                     var rc = await useOpenEmoji({ roundArea: rp });
                     if (rc) {
-                        await self.onUpdateFieldConfig(viewField.field, { emoji: rc });
+                        await self.onUpdateFieldConfig(field, { emoji: rc });
                     }
                 }
                 else if (
@@ -666,10 +635,10 @@ export class DataGridViewField {
                         'config.numberDisplay.color'
                     ].includes(re.item.name as any)) {
                     var n = (re.item.name as string).replace('config.', '');
-                    await self.onUpdateFieldConfig(viewField.field, { [n]: re.item.value });
+                    await self.onUpdateFieldConfig(field, { [n]: re.item.value });
                 }
                 else if (re.item.name == 'openRelation') {
-                    await self.onOpenSchemaPage(viewField.field.config.relationTableId)
+                    await self.onOpenSchemaPage(field.config.relationTableId)
                 }
                 return;
             }
@@ -678,39 +647,39 @@ export class DataGridViewField {
                 if (ReItem.value != viewField?.text) {
                     props.text = ReItem.value;
                 }
-                if (!lodash.isEqual(ReItem.icon, viewField.field.icon)) {
+                if (!lodash.isEqual(ReItem.icon, field.icon)) {
                     props.icon = ReItem.icon;
                 }
                 if (Object.keys(props).length > 0) {
-                    if (viewField?.field) await this.onUpdateField(viewField.field, props)
+                    if (field) await this.onUpdateField(field, props)
                     else await this.onUpdateViewField(viewField, props)
                 }
             }
             else {
                 var props: Record<string, any> = {};
-                if (!lodash.isEqual(ReItem.icon, viewField.field.icon)) {
+                if (!lodash.isEqual(ReItem.icon, field.icon)) {
                     props.icon = ReItem.icon;
                 }
-                if (ReItem.value != viewField.field?.text) {
+                if (ReItem.value != field?.text) {
                     //编辑列名了
                     props.text = ReItem.value;
                 }
                 if (Object.keys(props).length > 0)
-                    await this.onUpdateField(viewField.field, props)
+                    await this.onUpdateField(field, props)
             }
             if (dateCustomFormat) {
-                if (dateCustomFormat.value != viewField.field?.config?.dateFormat) {
-                    await this.onUpdateFieldConfig(viewField.field, { dateFormat: dateCustomFormat.value });
+                if (dateCustomFormat.value != field?.config?.dateFormat) {
+                    await this.onUpdateFieldConfig(field, { dateFormat: dateCustomFormat.value });
                 }
             }
             if (config_numberDisplay_decimal) {
-                if (config_numberDisplay_decimal.value != viewField.field?.config?.numberDisplay?.decimal) {
-                    await this.onUpdateFieldConfig(viewField.field, { 'numberDisplay.decimal': config_numberDisplay_decimal.value });
+                if (config_numberDisplay_decimal.value != field?.config?.numberDisplay?.decimal) {
+                    await this.onUpdateFieldConfig(field, { 'numberDisplay.decimal': config_numberDisplay_decimal.value });
                 }
             }
             if (numberUnitCustom) {
-                if (numberUnitCustom.value && numberUnitCustom.value != viewField.field.config.numberFormat) {
-                    await this.onUpdateFieldConfig(viewField.field, { numberFormat: numberUnitCustom.value });
+                if (numberUnitCustom.value && numberUnitCustom.value != field.config.numberFormat) {
+                    await this.onUpdateFieldConfig(field, { numberFormat: numberUnitCustom.value });
                 }
             }
         })

@@ -23,7 +23,7 @@ import { lst } from "../../../../i18n/store";
 import { IconValueType } from "../../../../component/view/icon";
 import { CardFactory } from "../../template/card/factory/factory";
 import { TableSchema } from "../../schema/meta";
-import {  OptionColorRandom } from "../../../../extensions/color/data";
+import { OptionColorRandom } from "../../../../extensions/color/data";
 import { useSelectMenuItem } from "../../../../component/view/menu";
 import { GroupHeadType } from "../declare";
 import dayjs from "dayjs";
@@ -60,13 +60,13 @@ export class DataGridViewOperator {
             }
         });
     }
-    async onCloneViewField(this: DataGridView, viewField: ViewField) {
+    async onCloneViewField(this: DataGridView, field: Field, viewField: ViewField) {
         var result = {
-            text: viewField.field.text + lst('副本'),
-            type: viewField.field.type,
-            config: lodash.cloneDeep(viewField.field.config)
+            text: field.text + lst('副本'),
+            type: field.type,
+            config: lodash.cloneDeep(field.config)
         };
-        var at = this.fields.findIndex(g => g === viewField) + 1;
+
         this.page.onAction(ActionDirective.onSchemaCreateField, async () => {
             // this.page.notifyActionBlockSync(this);
             var fieldData = await this.schema.fieldAdd({
@@ -76,8 +76,11 @@ export class DataGridViewOperator {
             }, this.id);
             if (fieldData.ok) {
                 var field = this.schema.fields.find(g => g.id == fieldData.data.actions[0].id)
-                var vf = this.schema.createViewField(field);
-                await this.arrayPush({ prop: 'fields', data: vf, at });
+                if (viewField) {
+                    var at = this.fields.findIndex(g => g === viewField) + 1;
+                    var vf = this.schema.createViewField(field);
+                    await this.arrayPush({ prop: 'fields', data: vf, at });
+                }
                 this.data.forEach(row => {
                     var defaultValue = field.getDefaultValue();
                     if (typeof defaultValue != 'undefined')
@@ -146,9 +149,9 @@ export class DataGridViewOperator {
             this.forceManualUpdate();
         });
     }
-    async onDeleteViewField(this: DataGridView, viewField: ViewField, force?: boolean) {
+    async onDeleteViewField(this: DataGridView, field:Field, force?: boolean) {
         if (force == true || await Confirm(lst('确定要删除该列吗'))) {
-            var field = viewField.field;
+            
             this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
                 var r = await this.schema.fieldRemove(field.id, this.id);
                 if (r.ok) {
@@ -209,16 +212,16 @@ export class DataGridViewOperator {
             this.forceManualUpdate();
         });
     }
-    async onSetSortField(this: DataGridView, viewField: ViewField, sort?: 0 | 1 | -1) {
-        if (this.sorts.some(s => s.field == viewField.field.id && s.sort == sort)) {
+    async onSetSortField(this: DataGridView, field: Field, sort?: 0 | 1 | -1) {
+        if (this.sorts.some(s => s.field == field.id && s.sort == sort)) {
             return;
         }
         await this.page.onAction(ActionDirective.onTablestoreUpdateViewField, async () => {
             // this.page.notifyActionBlockSync(this);
             var sos = lodash.cloneDeep(this.sorts);
-            var so = sos.find(g => g.field == viewField.field.id);
+            var so = sos.find(g => g.field ==field.id);
             if (so) so.sort = sort;
-            else sos.push({ id: util.guid(), field: viewField.field.id, sort });
+            else sos.push({ id: util.guid(), field:field.id, sort });
             await this.manualUpdateProps({ sorts: this.sorts }, { sorts: sos });
             await this.loadData();
             await this.createItem();
@@ -227,11 +230,10 @@ export class DataGridViewOperator {
         rect.height = 20;
         await this.onOpenViewConfig(rect, 'sort')
     }
-    async onTurnField(this: DataGridView, viewField: ViewField, type: FieldType, options: { text?: string, config?: Record<string, any> }) {
-        var field = viewField.field;
-        console.log(field.type)
+    async onTurnField(this: DataGridView, field: Field, type: FieldType, options: { text?: string, config?: Record<string, any> }) {
+
         var r = await this.schema.turnField({ fieldId: field.id, data: { text: options.text, type: type, config: options.config } }, this.id);
-        console.log(field.type)
+
         if (r.ok) {
             await this.onReloadData()
         }
@@ -303,14 +305,14 @@ export class DataGridViewOperator {
         await this.delete();
         if (url == BlockUrlConstant.DataGridBoard) {
             if (!this.schema.fields.some(s => s.type == FieldType.option || s.type == FieldType.options)) {
-               
+
                 await this.schema.fieldAdd({
                     text: lst('状态'),
                     type: FieldType.option,
                     config: {
                         options: [
-                            { text: lst('未开始'), value: util.guid(), ...OptionColorRandom()},
-                            { text: lst('进行中'), value: util.guid(), ...OptionColorRandom()},
+                            { text: lst('未开始'), value: util.guid(), ...OptionColorRandom() },
+                            { text: lst('进行中'), value: util.guid(), ...OptionColorRandom() },
                             { text: lst('已完成'), value: util.guid(), ...OptionColorRandom() },
                         ]
                     }
@@ -466,16 +468,13 @@ export class DataGridViewOperator {
             await this.updateProps({ filter }, BlockRenderRange.self)
         })
     }
-    async onAddFilter(this: DataGridView, viewField: ViewField) {
+    async onAddFilter(this: DataGridView, field:Field) {
         await this.page.onAction(ActionDirective.onDataGridUpdateFilter, async () => {
 
             var newFilter = SchemaFilterJoin(this.filter, {
                 operator: '$isNotNull',
-                field: viewField.field.id,
-                // value: ''
+                field: field.id,
             }, this.filter?.logic || "and")
-            console.log(newFilter, 'ss');
-
             await this.updateProps({ filter: newFilter }, BlockRenderRange.self)
         });
         var rect = this.getVisibleContentBound();

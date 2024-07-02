@@ -11,7 +11,7 @@ export class ViewField {
     schema: TableSchema;
     type?: 'rowNum' | 'check' | undefined;
     get field() {
-        if (this.fieldId) return this.schema.fields.find(g => g.id == this.fieldId);
+        if (this.fieldId&&this.schema) return this.schema.fields.find(g => g.id == this.fieldId);
     }
     constructor(
         options?: Partial<ViewField>,

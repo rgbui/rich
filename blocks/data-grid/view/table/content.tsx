@@ -365,7 +365,7 @@ export class DataGridTableHead extends React.Component<{ block: Block, style?: C
                         var ele = e.currentTarget as HTMLElement;
                         try {
                             ele.classList.add('hover');
-                            await this.block.onOpenFieldConfig(e, f);
+                            await this.block.onOpenFieldConfig(e,f.field, f);
                         }
                         catch (ex) {
 

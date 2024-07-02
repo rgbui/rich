@@ -4,7 +4,7 @@ import { CoverMask, IconArguments } from "../../../extensions/icon/declare";
 import { channel } from "../../../net/channel";
 import { BlockUrlConstant } from "../../../src/block/constant";
 import { Field } from "./field";
-import { DisabledFormFieldTypes, DisabledSortFieldTypes, FieldType, IsArrayValueFieldTypes, SysFieldTypes, SysHiddenFieldTypes } from "./type";
+import { DisabledFormFieldTypes, DisabledSortFieldTypes, FieldType, IsArrayValueFieldTypes, OnlyFieldTypes, SysFieldTypes, SysHiddenFieldTypes } from "./type";
 import { ViewField } from "./view";
 import { AtomPermission } from "../../../src/page/permission";
 import { Page } from "../../../src/page";
@@ -672,6 +672,9 @@ export class TableSchema {
     }
     static isSystemField(field: Field) {
         return SysFieldTypes.includes(field.type)
+    }
+    static isOnlyFieldTypes(field:Field){
+        return OnlyFieldTypes.includes(field.type)
     }
 }
 
