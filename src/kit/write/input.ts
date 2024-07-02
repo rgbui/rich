@@ -20,6 +20,7 @@ import { InputForceStore, InputStore } from "./store";
 import { useTagSelector } from "../../../extensions/tag";
 
 import { util } from "../../../util/util";
+import lodash from "lodash";
 
 /**
  * 输入弹窗
@@ -208,8 +209,7 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                     var rowBlock = block.closest(x => x.isContentBlock);
                     var pattern = await block.pattern.cloneData();
                     if (rowBlock === block) {
-                        if (rowBlock.content)
-                            await rowBlock.appendBlock({ url: BlockUrlConstant.Text, pattern, content: rowBlock.content });
+                        if (rowBlock.content) await rowBlock.appendBlock({ url: BlockUrlConstant.Text, pattern, content: rowBlock.content });
                         await rowBlock.updateProps({ content: '' }, BlockRenderRange.self);
                     }
                     var newBlock = await rowBlock.appendBlock({ url: rule.url || BlockUrlConstant.Text, content: mr.matchValue });
@@ -242,8 +242,8 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
 export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
     var sel = window.getSelection();
     var isEmpty = aa.textContent == '';
-    // if (aa.textContent == '\n') isEmpty = true;
     if (aa.block.isPart) isEmpty = false;
+    if (aa.isSolid) isEmpty = false;
     var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
     if (offset == 0 && aa.textContent == '\n') return;
     if (offset == 0 || aa.isSolid && offset == 1) {
@@ -263,71 +263,51 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
             if (block.isLine && block.prev) {
                 /**这里判断block前面有没有line */
                 var pv = block.prev;
-                var isSolidDelete: boolean = false;
-                if (aa.isSolid) {
-                    await block.delete();
-                    isSolidDelete = true;
+                if (aa.isSolid && offset == 1) {
+                    await block.delete()
                 }
-                else if (isEmpty) await block.delete()
-                if (!isSolidDelete && pv.appearAnchors.some(s => s.isText)) {
-                    await pv.updateProps({ content: pv.content.slice(0, pv.content.length - 1) }, BlockRenderRange.self);
-                }
-                if (pv.isContentEmpty) {
-                    var fr = pv.prev;
-                    await pv.delete();
-                    pv = fr;
+                else {
+                    if (block.isContentEmpty) {
+                        await block.delete();
+                    }
+                    if (pv.appearAnchors.some(s => s.isText)) {
+                        await pv.updateProps({ content: pv.content.slice(0, pv.content.length - 1) }, BlockRenderRange.self);
+                        if (pv.isContentEmpty) {
+                            var fr = pv.prev;
+                            await pv.delete();
+                            pv = fr;
+                        }
+                    }
+                    else {
+                        var fr = pv.prev;
+                        await pv.delete();
+                        pv = fr;
+                    }
                 }
                 write.kit.page.addActionAfterEvent(async () => {
                     if (pv) await write.kit.anchorCursor.onFocusBlockAnchor(pv, { last: true, render: true, merge: true });
                     else await write.kit.anchorCursor.onFocusBlockAnchor(rowBlock, { render: true, merge: true });
                 });
             }
-            else if (aa.isSolid) {
-                if (offset == 1) {
+            else {
+                if (aa.isSolid && offset == 1) {
                     await block.delete();
                     write.kit.page.addActionAfterEvent(async () => {
                         write.kit.anchorCursor.onFocusBlockAnchor(rowBlock, { render: true, last: false });
                     });
+                    return
                 }
                 else {
-                    if (rowBlock && rowBlock?.prev?.isTextBlock && rowBlock?.prev?.url != BlockUrlConstant.Title) {
-                        //这个需要合并块
-                        var lastPreBlock = await combineTextBlock(write, rowBlock);
-                        write.kit.page.addActionAfterEvent(async () => {
-                            write.kit.anchorCursor.onFocusBlockAnchor(lastPreBlock, { last: true, render: true, merge: true });
-                        });
-                        return
+                    if (block.isLine && block.isContentEmpty) await block.delete()
+                    if (rowBlock.isFreeBlock) {
+                        //不做任何处理
+                        return;
                     }
-                    if (rowBlock.isTextBlock && !rowBlock?.prev && !(rowBlock.parent?.isPanel || rowBlock.parent?.isCell || rowBlock.parent?.isLayout)) {
-                        //这个父块合并子块的内容
-                        return await combindSubBlock(write, rowBlock);
-                    }
-                    /***
-                     * 这个回车啥也没干，光标跳动
-                     */
-                    var prevAppearBlock = rowBlock.prevFind(x => x.appearAnchors.length > 0);
-                    if (prevAppearBlock) {
-                        write.kit.page.addActionAfterEvent(async () => {
-                            write.kit.anchorCursor.onFocusBlockAnchor(prevAppearBlock, { last: true, render: true, merge: true });
-                        });
-                    }
-                    if (rowBlock.isContentEmpty && !(!rowBlock?.prev && (rowBlock.parent?.isPanel || rowBlock.parent?.isLayout || rowBlock?.parent?.isCell))) {
-                        await rowBlock.delete();
-                    }
-                }
-                // write.kit.page.addUpdateEvent(async () => {
-                //     write.kit.anchorCursor.onFocusBlockAnchor(rowBlock, { render: true, merge: true });
-                // });
-                return;
-            }
-            else {
-                if (isEmpty && block.isLine) await block.delete()
-                if (!rowBlock.isFreeBlock) {
                     /**
-                                    * 如果满足转换，
-                                    * 则自动转换,如果是list块，且有子块，则不自动转换
-                                    *  */
-                    if (rowBlock.isBackspaceAutomaticallyTurnText) {
+                    * 如果满足转换，
+                    * 则自动转换,如果是list块，且有子块，则不自动转换
+                    * */
+                    else if (rowBlock.isBackspaceAutomaticallyTurnText) {
                         var newBlock = await rowBlock.turn(BlockUrlConstant.TextSpan);
                         write.kit.page.addActionAfterEvent(async () => {
                             write.kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
@@ -335,39 +315,96 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                         return;
                     }
                     //这里判断块前面没有同级的块，所以这里考虑能否升级
-                    if (rowBlock?.parent?.hasSubChilds && !rowBlock.next) {
+                    else if (rowBlock?.parent?.hasSubChilds && (!rowBlock.next || !rowBlock.prev)) {
                         var rp = rowBlock.parent;
                         await rowBlock.insertAfter(rp);
+                        if (rowBlock.allBlockKeys.includes(BlockChildKey.subChilds) && !rowBlock.prev) {
+                            var gs = rowBlock.parent.subChilds.map(g => g);
+                            lodash.remove(gs, c => c == rowBlock);
+                            if (gs.length > 0)
+                                await rowBlock.appendArray(gs, 0, 'subChilds')
+                        }
                         write.kit.page.addActionAfterEvent(async () => {
                             write.kit.anchorCursor.onFocusBlockAnchor(rowBlock, { render: true, merge: true });
                         });
                         return;
                     }
-                    if (rowBlock.isTextBlock && rowBlock?.prev?.isTextBlock && rowBlock?.prev?.url != BlockUrlConstant.Title) {
+                    else if (rowBlock.isTextBlock && rowBlock.prev?.url == BlockUrlConstant.Title) {
+                        var title = rowBlock.prev;
+                        var subs = rowBlock.subChilds.map(s => s);
+                        if (subs.length > 0) {
+                            await rowBlock.parent.appendArray(subs, rowBlock.at + 1, rowBlock.parentKey);
+                        }
+                        var content = rowBlock.childs.length > 0 ? rowBlock.childs.map(c => (c.content || '')).join('') : rowBlock.content;
+                        if (content) {
+                            var pageTitle = rowBlock.page.getPageDataInfo()?.text || '';
+                            await rowBlock.page.onUpdatePageTitle(pageTitle + content);
+                        }
+                        await rowBlock.delete();
+                        write.kit.page.addActionAfterEvent(async () => {
+                            write.kit.anchorCursor.onFocusBlockAnchor(title, { last: true, render: true, merge: true });
+                        });
+                    }
+                    else if (rowBlock.isTextBlock && rowBlock?.prev?.isTextBlock && rowBlock?.prev?.url != BlockUrlConstant.Title) {
                         //这个需要合并块
-                        var lastPreBlock = await combineTextBlock(write, rowBlock);
+                        var lastPreBlock = await combineRowBlocks(write, rowBlock);
                         write.kit.page.addActionAfterEvent(async () => {
                             write.kit.anchorCursor.onFocusBlockAnchor(lastPreBlock, { last: true, render: true, merge: true });
                         });
                         return
                     }
-                    if (rowBlock.isTextBlock && !rowBlock?.prev && !(rowBlock.parent?.isPanel || rowBlock.parent?.isCell || rowBlock.parent?.isLayout)) {
-                        //这个父块合并子块的内容
-                        return await combindSubBlock(write, rowBlock);
+                    else {
+                        /***
+                         * 这个回车啥也没干，光标跳动
+                        */
+                        var prevAppearBlock = rowBlock.prevFind(x => x.appearAnchors.length > 0);
+                        if (prevAppearBlock) {
+                            write.kit.page.addActionAfterEvent(async () => {
+                                write.kit.anchorCursor.onFocusBlockAnchor(prevAppearBlock, { last: true, render: true, merge: true });
+                            });
+                            if (rowBlock.isContentEmpty) {
+                                await rowBlock.delete();
+                            }
+                        }
                     }
                 }
-                /***
-                 * 这个回车啥也没干，光标跳动
-                 */
-                var prevAppearBlock = rowBlock.prevFind(x => x.appearAnchors.length > 0);
-                if (prevAppearBlock) {
-                    write.kit.page.addActionAfterEvent(async () => {
-                        write.kit.anchorCursor.onFocusBlockAnchor(prevAppearBlock, { last: true, render: true, merge: true });
-                    });
-                    if (rowBlock.isContentEmpty) {
-                        await rowBlock.delete();
-                    }
-                }
+                // if (isEmpty && block.isLine) await block.delete()
+                // if (!rowBlock.isFreeBlock) {
+
+                //     //这里判断块前面没有同级的块，所以这里考虑能否升级
+                //     if (rowBlock?.parent?.hasSubChilds && !rowBlock.next) {
+                //         var rp = rowBlock.parent;
+                //         await rowBlock.insertAfter(rp);
+                //         write.kit.page.addActionAfterEvent(async () => {
+                //             write.kit.anchorCursor.onFocusBlockAnchor(rowBlock, { render: true, merge: true });
+                //         });
+                //         return;
+                //     }
+                //     if (rowBlock.isTextBlock && rowBlock?.prev?.isTextBlock && rowBlock?.prev?.url != BlockUrlConstant.Title) {
+                //         //这个需要合并块
+                //         var lastPreBlock = await combineTextBlock(write, rowBlock);
+                //         write.kit.page.addActionAfterEvent(async () => {
+                //             write.kit.anchorCursor.onFocusBlockAnchor(lastPreBlock, { last: true, render: true, merge: true });
+                //         });
+                //         return
+                //     }
+                //     if (rowBlock.isTextBlock && !rowBlock?.prev && !(rowBlock.parent?.isPanel || rowBlock.parent?.isCell || rowBlock.parent?.isLayout)) {
+                //         //这个父块合并子块的文本内容
+                //         return await combindSubBlock(write, rowBlock);
+                //     }
+                // }
+                // /***
+                //  * 这个回车啥也没干，光标跳动
+                //  */
+                // var prevAppearBlock = rowBlock.prevFind(x => x.appearAnchors.length > 0);
+                // if (prevAppearBlock) {
+                //     write.kit.page.addActionAfterEvent(async () => {
+                //         write.kit.anchorCursor.onFocusBlockAnchor(prevAppearBlock, { last: true, render: true, merge: true });
+                //     });
+                //     if (rowBlock.isContentEmpty) {
+                //         await rowBlock.delete();
+                //     }
+                // }
             }
         });
     }
@@ -442,11 +479,11 @@ async function combindSubBlock(write: PageWrite, rowBlock: Block) {
 }
 
 /**
- * 合并块
+ * 合并两行rowBlocks
  * @param write 
  * @param rowBlock 
  */
-async function combineTextBlock(write: PageWrite, rowBlock: Block, preBlock?: Block) {
+async function combineRowBlocks(write: PageWrite, rowBlock: Block, preBlock?: Block) {
     if (typeof preBlock == 'undefined')
         preBlock = rowBlock.prev;
     if (preBlock.hasSubChilds && preBlock.subChilds.length > 0) {
@@ -455,14 +492,13 @@ async function combineTextBlock(write: PageWrite, rowBlock: Block, preBlock?: Bl
             preBlock = g;
         }
     }
-    var lastPreBlock = preBlock.childs.last();
-    if (preBlock.childs.length == 0) {
+    var lastPreBlock = preBlock.childs.last()
+    if (preBlock.childs.length == 0 && preBlock.content) {
         var content = preBlock.content;
         await preBlock.updateProps({ content: '' }, BlockRenderRange.self);
         var pattern = await preBlock.pattern.cloneData();
-        if (content != '')
-            await preBlock.appendBlock({ url: BlockUrlConstant.Text, content, pattern });
-        lastPreBlock = preBlock.childs.last();
+        await preBlock.appendBlock({ url: BlockUrlConstant.Text, content, pattern });
+        lastPreBlock = preBlock.childs.last()
     }
     /**
      * 这里判断rowBlock里面是否有子的childs,
@@ -479,7 +515,7 @@ async function combineTextBlock(write: PageWrite, rowBlock: Block, preBlock?: Bl
         }
     }
     else {
-        if (rowBlock.content != '')
+        if (rowBlock.content)
             await preBlock.appendBlock({ url: BlockUrlConstant.Text, content: rowBlock.content, pattern: await rowBlock.pattern.cloneData() })
     }
     if (rowBlock.subChilds.length > 0) {
@@ -492,6 +528,7 @@ async function combineTextBlock(write: PageWrite, rowBlock: Block, preBlock?: Bl
     }
     if (!rowBlock.isPart)
         await rowBlock.delete();
+
     if (!lastPreBlock) {
         lastPreBlock = preBlock.childs.first();
     }
@@ -598,7 +635,7 @@ export async function inputBackspaceDeleteContent(write: PageWrite,
                 }
             }
             if (startBlock && endBlock && startBlock !== endBlock) {
-                focusB = await combineTextBlock(write, endBlock, startBlock)
+                focusB = await combineRowBlocks(write, endBlock, startBlock)
             }
         }
         await rowBlocks.eachAsync(async (b) => {

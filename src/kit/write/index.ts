@@ -163,7 +163,10 @@ export class PageWrite {
         /**
          * 判断是否阻止输入
          */
-        if (predictKeydown(this, aa, event) == false) { event.preventDefault(); return; }
+        if (predictKeydown(this, aa, event) == false) {
+            event.preventDefault();
+            return;
+        }
         /**
          * 这里如果当前的按键事件触发了，那么这里将不做任何处理。
          * keyboardPlate是处于capture模式，是先触发的，这里做拦截，由页面去处理
@@ -529,7 +532,7 @@ export class PageWrite {
          * https://developer.mozilla.org/zh-CN/docs/Web/API/InputEvent/inputType
          */
         else if (inputEvent.inputType == 'deleteContentBackward' && await inputBackSpaceTextContent(this, aa, event)) { return; }
-      
+
         await InputStore(aa);
     }
     /**
@@ -644,7 +647,7 @@ export class PageWrite {
                             })
                         }
                     }
-                    console.log('bd',blockData,blockData.url,bd);
+                    console.log('bd', blockData, blockData.url, bd);
                     newBlock = await aa.block.visibleRightCreateBlock(offset, blockData.url, { ...bd, createSource: 'InputBlockSelector' });
                 }
                 else {

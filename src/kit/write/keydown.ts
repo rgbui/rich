@@ -50,53 +50,79 @@ export function predictKeydown(write: PageWrite, aa: AppearAnchor, event: React.
 
 export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
     var sel = window.getSelection();
-    // var br = aa.block.closest(x => !x.isLine)?.frameBlock;
     if (event.key == KeyboardCode.ArrowLeft) {
-        // if (!br)
-        //     onceAutoScroll({ el: aa.el, feelDis: 60, dis: 120 })
-        if (aa.isSolid && aa.isSolidPos(sel.focusNode, 1)) {
-            event.preventDefault();
-            write.kit.anchorCursor.onFocusAppearAnchor(aa, { render: true, scroll: true, at: 0 })
-            return;
-        }
-        if (aa.isStart(sel.focusNode, sel.focusOffset)) {
-            //这里找到当前aa前面的AppearAnchor，然后光标移到尾部，这里需要判断相邻的两个元素之间是否紧挨着
-            var prevAA = aa.visibleLeft();
-            if (prevAA) {
+        if (aa.isSolid) {
+            if (aa.isSolidPos(sel.focusNode, 1)) {
                 event.preventDefault();
-                write.kit.anchorCursor.onFocusAppearAnchor(prevAA, { render: true, scroll: true, last: prevAA.isBeforeNear(aa) ? -1 : true })
+                write.kit.anchorCursor.onFocusAppearAnchor(aa, { render: true, scroll: true, at: 0 })
             }
             else {
-                //这说明光标处于当前文档的头部
+                var prevAA = aa.visibleLeft();
+                if (prevAA) {
+                    /**
+                     * 判断是否为同一行
+                     */
+                    var isRow = aa.block.closest(g => g.isContentBlock) === prevAA.block.closest(g => g.isContentBlock);
+                    event.preventDefault();
+                    write.kit.anchorCursor.onFocusAppearAnchor(prevAA, {
+                        render: true,
+                        scroll: true,
+                        last: isRow ? -1 : true
+                    })
+                }
             }
-            return;
+        }
+        else {
+            if (aa.isStart(sel.focusNode, sel.focusOffset)) {
+                var prevAA = aa.visibleLeft();
+                if (prevAA) {
+                    event.preventDefault();
+                    var isRow = aa.block.closest(g => g.isContentBlock) === prevAA.block.closest(g => g.isContentBlock);
+                    write.kit.anchorCursor.onFocusAppearAnchor(prevAA, {
+                        render: true,
+                        scroll: true,
+                        last: isRow ? -1 : true
+                    })
+                }
+            }
         }
     }
     else if (event.key == KeyboardCode.ArrowRight) {
-        // if (!br)
-        //     onceAutoScroll({ el: aa.el, feelDis: 60, dis: 120 })
-        if (aa.isSolid && aa.isSolidPos(sel.focusNode, 0)) {
-            event.preventDefault();
-            write.kit.anchorCursor.onFocusAppearAnchor(aa, { render: true, scroll: true, last: true })
-            return;
-        }
-        if (aa.isEnd(sel.focusNode, sel.focusOffset)) {
-            var downAA = aa.visibleRight();
-            if (downAA) {
+        if (aa.isSolid) {
+            if (aa.isSolidPos(sel.focusNode, 0)) {
                 event.preventDefault();
-                write.kit.anchorCursor.onFocusAppearAnchor(downAA, { render: true, scroll: true, at: downAA.isAfterNear(aa) ? 1 : 0 })
-            } else {
-                //说明光标处于文档的尾部
+                write.kit.anchorCursor.onFocusAppearAnchor(aa, { render: true, scroll: true, last: true })
+                return;
             }
-            return;
+            else {
+                var nextAA = aa.visibleRight();
+                if (nextAA) {
+                    event.preventDefault();
+                    var isRow = aa.block.closest(g => g.isContentBlock) === nextAA.block.closest(g => g.isContentBlock);
+                    write.kit.anchorCursor.onFocusAppearAnchor(nextAA, {
+                        render: true,
+                        scroll: true,
+                        at: isRow ? 1 : 0
+                    })
+                }
+            }
+        }
+        else if (aa.isEnd(sel.focusNode, sel.focusOffset)) {
+            var nextAA = aa.visibleRight();
+            if (nextAA) {
+                event.preventDefault();
+                var isRow = aa.block.closest(g => g.isContentBlock) === nextAA.block.closest(g => g.isContentBlock);
+                write.kit.anchorCursor.onFocusAppearAnchor(nextAA, {
+                    render: true,
+                    scroll: true,
+                    at: isRow ? 1 : 0
+                })
+            }
         }
     }
     else if (event.key == KeyboardCode.ArrowDown) {
-
         var range = util.getSafeSelRange(sel);
         var rect = aa.textContent == '' || aa.isSolid ? Rect.fromEle(aa.el) : Rect.fromEle(range);
-        // if (!br)
-        //     onceAutoScroll({ el: aa.el, point: rect.leftMiddle, feelDis: 60, dis: 120 })
         range = util.getSafeSelRange(sel);
         rect = aa.textContent == '' || aa.isSolid ? Rect.fromEle(aa.el) : Rect.fromEle(range);
         var rects = TextEle.getBounds(aa.el);
@@ -105,18 +131,16 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
             /**
              * 说明向下移动
              */
-            var downAA = aa.visibleDown(rect.leftMiddle.x);
-            if (downAA) {
+            var nextAA = aa.visibleDown(rect.leftMiddle.x);
+            if (nextAA) {
                 event.preventDefault();
-                // if (!br) onceAutoScroll({ el: downAA.el, feelDis: 60, dis: 120 })
-                write.kit.anchorCursor.onFocusAppearAnchor(downAA, { render: true, scroll: true, left: rect.left, y: rects.last().bottom + lineHeight / 2 })
+                write.kit.anchorCursor.onFocusAppearAnchor(nextAA, { render: true, scroll: true, left: rect.left, y: rects.last().bottom + lineHeight / 2 })
             }
         }
     }
     else if (event.key == KeyboardCode.ArrowUp) {
         var range = util.getSafeSelRange(sel);
         var rect = aa.textContent == '' || aa.isSolid ? Rect.fromEle(aa.el) : Rect.fromEle(range);
-        // if (!br) onceAutoScroll({ el: aa.el, point: rect.leftMiddle, feelDis: 60, dis: 120 });
         range = util.getSafeSelRange(sel);
         rect = aa.textContent == '' || aa.isSolid ? Rect.fromEle(aa.el) : Rect.fromEle(range);
         var rects = TextEle.getBounds(aa.el);
@@ -128,7 +152,6 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
             var upAA = aa.visibleUp(rect.leftMiddle.x);
             if (upAA) {
                 event.preventDefault();
-                // if (!br) onceAutoScroll({ el: upAA.el, feelDis: 60, dis: 120 })
                 write.kit.anchorCursor.onFocusAppearAnchor(upAA, { render: true, scroll: true, left: rect.left, last: true, y: rects.first().top + lineHeight / 2 })
             }
         }
@@ -306,7 +329,10 @@ export async function onKeyTab(write: PageWrite, aa: AppearAnchor, event: React.
         if (!b) return false;
         if (b.hasSubChilds) return true;
         else {
-            if (b.url == BlockUrlConstant.TextSpan) return true;
+            if ([BlockUrlConstant.TextSpan,
+            BlockUrlConstant.Callout,
+            BlockUrlConstant.Quote
+            ].includes(b.url as any)) return true;
         }
         return false;
     }
@@ -338,7 +364,7 @@ export async function onKeyTab(write: PageWrite, aa: AppearAnchor, event: React.
                 }
             }
             else {
-                pa.parent.appendArray([rowBlock, ...rest], pa.at + 1, hs(pa.parent) ? 'subChilds' : 'childs')
+                await pa.parent.appendArray([rowBlock, ...rest], pa.at + 1, hs(pa.parent) ? 'subChilds' : 'childs')
             }
         }
         else {
