@@ -156,7 +156,7 @@ export class PageBar extends React.Component<{ page: Page }> {
                     {this.props.page?.pageInfo?.icon && <Icon size={18} icon={getPageIcon(this.props.page?.pageInfo)}></Icon>}
                     <span className={"text-overflow max-w-250 " + (this.props.page?.pageInfo?.icon ? "gap-l-5" : "")}>{getPageText(this.props.page?.pageInfo)}</span>
                 </span>
-                {this.props.page.pageLayout?.type == PageLayoutType.textChannel && <span className={"flex-auto remark text-overflow " + (isMobileOnly ? " max-w-250" : " max-w-500")}>{this.props.page?.pageInfo?.description}</span>}
+                {this.props.page.pageLayout?.type == PageLayoutType.textChannel && <span className={"flex-auto remark text-overflow " + (isMobileOnly ? " max-w-250" : " max-w-500")}>{this.props.page?.pageInfo?.description?.text}</span>}
             </span>
             {this.props.page.locker?.lock && this.props.page.isCanManage && <span onMouseDown={e => this.props.page.onLockPage()} className="desk-no-drag flex-center size-24 item-hover cursor round gap-r-10">
                 <Icon size={18} icon={LockSvg}></Icon>

@@ -468,7 +468,7 @@ export class Page$ViewEvent {
         text: string,
         locationId?: PageLocation
     ) {
-        await this.onUpdatePageData({ description: { text } });
+        await this.onUpdatePageData({ description: { text } }, locationId);
         if (this.view.pageBar) this.view.pageBar.forceUpdate()
     }
     async onUpdatePageCover(this: Page, data: Record<string, any>, isUpdate?: boolean) {
