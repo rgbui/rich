@@ -13,19 +13,50 @@ export function InsertSelectionText(text: string) {
         // 建一个空Range 
         range = document.createRange();
         // 插入内容 
-        var cons = window.document.createTextNode(text);
-        if (container.nodeType == 3) {// 如是一个TextNode 
-            (container as Text).insertData(pos, cons.nodeValue);
-            // 改变光标位置 
-            range.setEnd(container, pos + cons.nodeValue.length);
-            range.setStart(container, pos + cons.nodeValue.length);
-        } else {// 如果是一个HTML Node 
-            var afternode = container.childNodes[pos];
-            container.insertBefore(cons, afternode);
-            range.setEnd(cons, cons.nodeValue.length);
-            range.setStart(cons, cons.nodeValue.length);
+        var ts = text.split(/\n/g);
+        if (ts.length == 1 && container.nodeType == 3) {
+            (container as Text).insertData(pos, ts[0]);
+            range.setStart(container, pos);
+            range.setEnd(container, pos + ts[0].length);
+            sel.addRange(range);
         }
-        sel.addRange(range);
+        else {
+            var nt = (container as Text);
+            var rest: string;
+            var next: Node;
+            var pa: Node;
+            if (container.nodeType == 3) {
+                rest = nt.textContent.slice(pos);
+                nt.textContent = nt.textContent.slice(0, pos);
+                next = nt.nextSibling;
+                pa = nt.parentNode;
+            }
+            else {
+                next = container.childNodes[pos];
+                pa = container
+            }
+            var nn: Node;
+            for (let i = 0; i < ts.length; i++) {
+                var newT = document.createTextNode(ts[i]);
+                if (next) pa.insertBefore(newT, next)
+                else pa.appendChild(newT)
+                nn = newT;
+                if (i !== ts.length - 1) {
+                    var br = document.createElement('br');
+                    if (next) pa.insertBefore(br, next)
+                    else pa.appendChild(br)
+                    nn = br;
+                }
+            }
+            if (nn) {
+                if (nn instanceof Text) sel.collapse(nn, nn.textContent.length);
+                else sel.collapse(nn, Array.from(nn.childNodes).findIndex(x => x == nn));
+            }
+            if (rest) {
+                if (next) pa.insertBefore(document.createTextNode(rest), next)
+                else pa.appendChild(document.createTextNode(rest))
+            }
+        }
     }
 }
 

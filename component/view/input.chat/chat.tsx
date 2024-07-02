@@ -239,6 +239,9 @@ export class ChatInput extends React.Component<{ box?: InputChatBox, }> {
 
     }
     paste = async (event: React.ClipboardEvent<HTMLDivElement>) => {
+        if (this.tool.visible) {
+            this.tool.hide()
+        }
         event.preventDefault();
         var files: File[] = Array.from(event.clipboardData.files);
         var text = event.clipboardData.getData('text/plain');

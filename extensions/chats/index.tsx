@@ -166,7 +166,7 @@ export class ViewChats extends React.Component<{
                                     </span>}
                                     <span>{util.showTime(d.createDate)}</span>
                                 </div>
-                                <div className="sy-channel-text-item-edited-content-input  item-hover-focus">
+                                <div className="sy-channel-text-item-edited-content-input   bg-3 ">
                                     <InputChatBox
                                         userid={this.currentUser?.id}
                                         display='redit'
