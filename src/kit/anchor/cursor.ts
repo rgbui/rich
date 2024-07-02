@@ -331,7 +331,7 @@ export class AnchorCursor {
             }
         })
     }
-    focusAppearAnchor(aa: AppearAnchor, options?: { at?: number, last?: boolean | number, left?: number, y?: number }) {
+    focusAppearAnchor(aa: AppearAnchor,options?: { at?: number, last?: boolean | number, left?: number, y?: number }) {
         var sel = window.getSelection();
         if (typeof options?.left == 'number') {
             var bounds = TextEle.getBounds(aa.el);
@@ -342,9 +342,30 @@ export class AnchorCursor {
         }
         else {
             var pos = 0;
-            if (options?.last && aa.isText) pos = aa.textContent.length + (typeof options.last == 'number' ? options.last : 0);
-            else if (options?.last && aa.isSolid) pos = 1;
-            else pos = options?.at || 0;
+            if (typeof options.last !== 'undefined') {
+                if (options.last == true) {
+                    if (aa.isText)
+                        pos = aa.textContent.length;
+                    else if (aa.isSolid)
+                        pos = 1
+                }
+                else if (typeof options.last == 'number') {
+                    if (aa.isText)
+                        pos = aa.textContent.length + options.last;
+                    else if (aa.isSolid) {
+                        pos = 1 + options.last;
+                        if (pos >= 1) pos = 1;
+                        else if (pos <= 0) pos = 0;
+                    }
+                }
+            }
+            else if (typeof options.at == 'number') {
+                pos = options.at;
+                if (aa.isSolid) {
+                    if (pos >= 1) pos = 1;
+                    else if (pos <= 0) pos = 0;
+                }
+            }
             /**
              * 这里需要加个empty,
              * 因为重复点击某个位置，该光标会消失，原因未知

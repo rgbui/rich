@@ -99,13 +99,12 @@ export class CalloutView extends BlockView<Callout> {
     renderView() {
         var style = this.block.contentStyle;
         var bg = style.backgroundColor?.replace(/ /g, '')
-        if (bg == 'rgba(255,255,255,0)' || bg == 'rgb(255,255,255,0)') style.border = '1px solid rgb(233, 231, 231)';
+        if (bg == 'rgba(255,255,255,0)' || bg == 'rgba(255,255,255)'||bg=='rgb(255,255,255)') style.border = '1px solid rgb(233, 231, 231)';
         else style.border = '1px solid rgba(233,231,231,0)';
         if (this.block.smallFont) style.fontSize = this.block.page.cacSmallFont(this.block.smallFont)
         delete style.paddingTop;
         delete style.paddingBottom;
         delete style.paddingRight;
-        console.log('gggg','cc',this.block.calloutIcon);
         return <div style={this.block.visibleStyle}><div className='sy-block-callout flex-top padding-16' style={{
             ...style,
             paddingLeft: 12

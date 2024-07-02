@@ -29,7 +29,7 @@ export var FontColorList = () => [
 export var BackgroundColorList = () => {
     // return OptionBackgroundColorList();
     return [
-        { color: 'rgba(255,255,255)', text: lst('默认') },
+        { color: 'rgb(255,255,255)', text: lst('默认') },
         { color: 'rgb(241,241,239)', text: lst('灰色') },
         { color: 'rgb(244,238,238)', text: lst('棕色') },
         { color: 'rgb(251,236,221)', text: lst('橙色') },
@@ -64,16 +64,16 @@ export var BackgroundColorList = () => {
  */
 export var OptionBackgroundColorList = () => {
     var cs = [
-        { fill: 'rgba(227,226,224,0.5)', color: 'rgb(50,48,44)', text: lst('浅灰') },
-        { fill: 'rgb(227,226,224)', color: 'rgb(50,48,44)', text: lst('灰色') },
-        { fill: 'rgb(238,224,218)', color: 'rgb(68,42,30)', text: lst('棕色') },
-        { fill: 'rgb(250,222,201)', color: 'rgb(73,41,14)', text: lst('橙色') },
-        { fill: 'rgb(253,236,200)', color: 'rgb(64,44,27)', text: lst('黄色') },
-        { fill: 'rgb(219,237,219)', color: 'rgb(28,56,41)', text: lst('绿色') },
-        { fill: 'rgb(211,229,239)', color: 'rgb(24,51,71)', text: lst('蓝色') },
-        { fill: 'rgb(232,222,238)', color: 'rgb(65,36,84)', text: lst('紫色') },
-        { fill: 'rgb(245,224,233)', color: 'rgb(76,35,55)', text: lst('粉色') },
-        { fill: 'rgb(255,226,221)', color: 'rgb(93,23,21)', text: lst('红色') },
+        // { fill: 'rgba(227,226,224,0.5)', color: 'rgb(50,48,44)', text: lst('浅灰') },
+        // { fill: 'rgb(227,226,224)', color: 'rgb(50,48,44)', text: lst('灰色') },
+        // { fill: 'rgb(238,224,218)', color: 'rgb(68,42,30)', text: lst('棕色') },
+        // { fill: 'rgb(250,222,201)', color: 'rgb(73,41,14)', text: lst('橙色') },
+        // { fill: 'rgb(253,236,200)', color: 'rgb(64,44,27)', text: lst('黄色') },
+        // { fill: 'rgb(219,237,219)', color: 'rgb(28,56,41)', text: lst('绿色') },
+        // { fill: 'rgb(211,229,239)', color: 'rgb(24,51,71)', text: lst('蓝色') },
+        // { fill: 'rgb(232,222,238)', color: 'rgb(65,36,84)', text: lst('紫色') },
+        // { fill: 'rgb(245,224,233)', color: 'rgb(76,35,55)', text: lst('粉色') },
+        // { fill: 'rgb(255,226,221)', color: 'rgb(93,23,21)', text: lst('红色') },
 
 
         // { fill: 'rgb(143, 149, 158)', color: '#fff', text: lst('深灰') },
@@ -90,17 +90,17 @@ export var OptionBackgroundColorList = () => {
 
 
         // { color: 'rgba(255,255,255,0)', text: lst('默认') },
-        // { color: 'rgba(237,233,235,0.5)', text: lst('白灰') },
-        // { color: 'rgba(217,211,215,0.5)', text: lst('暗银') },
-        // { color: 'rgba(247,214,183,0.5)', text: lst('幼杏') },
-        // { color: 'rgba(255,193,153,0.5)', text: lst('鲜橘') },
-        // { color: 'rgba(252,246,189,0.5)', text: lst('淡黄') },
-        // { color: 'rgba(205,243,220,0.5)', text: lst('浅绿') },
-        // { color: 'rgba(169,222,249,0.5)', text: lst('天蓝') },
-        // { color: 'rgba(189,201,255,0.5)', text: lst('雾蓝') },
-        // { color: 'rgba(239,218,251,0.5)', text: lst('轻紫') },
-        // { color: 'rgba(234,202,220,0.5)', text: lst('熏粉') },
-        // { color: 'rgba(253,198,200,0.5)', text: lst('将红') },
+        { fill: 'rgba(237,233,235,1)',color:'var(--text-color)', text: lst('白灰') },
+        { fill: 'rgba(217,211,215,1)',color:'var(--text-color)', text: lst('暗银') },
+        { fill: 'rgba(247,214,183,1)',color:'var(--text-color)', text: lst('幼杏') },
+        { fill: 'rgba(255,193,153,1)',color:'var(--text-color)', text: lst('鲜橘') },
+        { fill: 'rgba(252,246,189,1)',color:'var(--text-color)', text: lst('淡黄') },
+        { fill: 'rgba(205,243,220,1)',color:'var(--text-color)', text: lst('浅绿') },
+        { fill: 'rgba(169,222,249,1)',color:'var(--text-color)', text: lst('天蓝') },
+        { fill: 'rgba(189,201,255,1)',color:'var(--text-color)', text: lst('雾蓝') },
+        { fill: 'rgba(239,218,251,1)',color:'var(--text-color)', text: lst('轻紫') },
+        { fill: 'rgba(234,202,220,1)',color:'var(--text-color)', text: lst('熏粉') },
+        { fill: 'rgba(253,198,200,1)',color:'var(--text-color)', text: lst('将红') },
     ]
     // .map(c => {
     //     return {

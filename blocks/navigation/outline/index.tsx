@@ -226,7 +226,7 @@ export class PageOutLineView extends BlockView<PageOutLine> {
     didMount(): void {
         this.block.updateOutLine()
         this.height = window.innerHeight - 70;
-        this.forceUpdate()
+        this.block.forceManualUpdate();
     }
     height: number = null;
     renderView() {

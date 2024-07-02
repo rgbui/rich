@@ -154,8 +154,18 @@ export class DatePicker extends EventsComponent {
             this.forceUpdate();
         }
     }
+    lazyChangeTime = lodash.debounce((value: string) => {
+        this.changeTime(value);
+    }
+        , 500)
     changeTime(value: string) {
         value = value.trim();
+        var vs = value.split(/:|：/g);
+        if (vs.length == 2) {
+            if (vs[0].length == 1) vs[0] = '0' + vs[0];
+            if (vs[1].length == 1) vs[1] = '0' + vs[1];
+        }
+        value = vs.join(':');
         var v = dayjs('2008/09/01 ' + value, "YYYY/MM/DD HH:mm");
         this.error = '';
         if (!v.isValid() || (v.hour() < 0 || v.hour() > 23 || v.minute() < 0 || v.minute() > 59)) {
@@ -193,7 +203,7 @@ export class DatePicker extends EventsComponent {
                     }}
                     onBlur={e => this.lazyChangeDate((e.target as HTMLInputElement).value)}
                 /></div>
-                {this.includeTime && <><span></span><div><input ref={e => this.inputTime = e} type='text' defaultValue={dj.format('HH:mm')} onBlur={e => this.changeTime((e.target as HTMLInputElement).value)} /></div></>}
+                {this.includeTime && <><span></span><div><input ref={e => this.inputTime = e} type='text' defaultValue={dj.format('HH:mm')} onChange={e => this.lazyChangeTime((e.target as HTMLInputElement).value)} onBlur={e => this.lazyChangeTime((e.target as HTMLInputElement).value)} /></div></>}
             </div>
             <div className='shy-date-picker-head gap-w-10'>
                 <div className='shy-date-picker-head-title'>

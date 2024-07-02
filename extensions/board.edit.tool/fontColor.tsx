@@ -139,9 +139,9 @@ export function FontTextAlign(props: {
             className=" bg-white shadow-s round">
             <div className="h-30 flex r-item-hover r-round r-cursor r-gap-w-5">
                 {aligns.map((g, i) => {
-                    return <ToolTip overlay={g.text}><span onMouseDown={e => {
+                    return <ToolTip key={i}  overlay={g.text}><span onMouseDown={e => {
                             props.change(g.value);
-                        }} key={i} className={"flex-center size-24 round" + (props.align == g.value ? " item-hover-focus link" : "item-hover-light")}>
+                        }}className={"flex-center size-24 round" + (props.align == g.value ? " item-hover-focus link" : "item-hover-light")}>
                             <Icon icon={g.icon as any} size={16}></Icon>
                         </span>
                     </ToolTip>

@@ -498,7 +498,7 @@ export abstract class Block extends Events {
     get isContentEmpty() {
         if (this.isPart) return false;
         if (this.isLine) {
-            if (this.content == '') return true;
+            if (this.content == '' && !this.appearAnchors.some(s => s.isSolid)) return true;
         }
         else {
             if (this.isTextBlock) {

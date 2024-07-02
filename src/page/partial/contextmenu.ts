@@ -141,18 +141,18 @@ export class Page$ContextMenu {
                     name: 'theme',
                 },
                 { type: MenuItemType.divide },
-                {
-                    text: lst('小部件'),
-                    icon: FieldsSvg,
-                    childs: [
-                        { name: 'onlyDisplayContent', text: lst('标题'), type: MenuItemType.switch, checked: this.hideDocTitle ? false : true, icon: NoteSvg },
-                        { name: 'pageUpvotedOrShared', text: lst('点赞分享'), icon: { name: 'bytedance-icon', code: 'send' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PageUpvotedOrShared) },
-                        { name: 'showComment', text: lst("评论"), icon: { name: 'byte', code: 'message' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
-                        { type: MenuItemType.divide },
-                        { type: MenuItemType.help, url: window.shyConfig?.isUS ? "https://help.shy.red/page/68#sm8Eix3mziuLx83RnrUYw8" : "https://help.shy.live/page/1988#5ChJozytSL93WbD7Uxy8sk", text: lst('了解如何使用小部件') }
-                    ]
-                },
-                { type: MenuItemType.divide },
+                // {
+                //     text: lst('小部件'),
+                //     icon: FieldsSvg,
+                //     childs: [
+                //         { name: 'onlyDisplayContent', text: lst('标题'), type: MenuItemType.switch, checked: this.hideDocTitle ? false : true, icon: NoteSvg },
+                //         { name: 'pageUpvotedOrShared', text: lst('点赞分享'), icon: { name: 'bytedance-icon', code: 'send' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PageUpvotedOrShared) },
+                //         { name: 'showComment', text: lst("评论"), icon: { name: 'byte', code: 'message' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
+                //         { type: MenuItemType.divide },
+                //         { type: MenuItemType.help, url: window.shyConfig?.isUS ? "https://help.shy.red/page/68#sm8Eix3mziuLx83RnrUYw8" : "https://help.shy.live/page/1988#5ChJozytSL93WbD7Uxy8sk", text: lst('了解如何使用小部件') }
+                //     ]
+                // },
+                // { type: MenuItemType.divide },
                 { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? lst("除消编辑保护") : lst("编辑保护"), icon: this.locker?.lock ? LockSvg : UnlockSvg },
                 {
                     name: 'copy', text: lst('拷贝'), icon: DuplicateSvg,
