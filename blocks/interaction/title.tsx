@@ -205,10 +205,20 @@ export class TitleView extends BlockView<Title> {
         var isAdd: boolean = this.block.page.isSupportCover;
         if (!this.block.page.isCanEdit) isAdd = false;
         var pd = this.block.page.getPageDataInfo();
+        var placeholder = getPageText({ pageType: this.block?.pageInfo?.pageType })
         var isAddForm = false;
         if (this.block.page.pe.type == ElementType.SchemaRecordView) {
             var sv = this.block.page.schema.recordViews.find(x => x.id == this.block.page.pe.id1);
-            if (sv.formType == 'doc-add') isAddForm = true;;
+            if (sv.formType == 'doc-add' && !this.block.page.isSchemaRecordViewTemplate) isAddForm = true;
+            if (this.block.page.isSchemaRecordViewTemplate) {
+                placeholder = lst('数据模板名')
+            }
+            else {
+                placeholder = lst('添加{text}记录', { text: this.block.page.schema.text })
+            }
+        }
+        else if (this.block.page.pe.type == ElementType.SchemaData || this.block.page.pe.type == ElementType.SchemaRecordViewData) {
+            placeholder = lst('添加{text}记录', { text: this.block.page.schema.text })
         }
 
         if (this.block.page.hideDocTitle) return <div className="sy-block-page-info visible-hover" style={{
@@ -232,7 +242,7 @@ export class TitleView extends BlockView<Title> {
             {pd && <div className='sy-block-page-info-head'>
                 <span className='sy-block-page-info-head-title'><TextArea
                     block={this.block}
-                    placeholder={getPageText({ pageType: this.block?.pageInfo?.pageType })}
+                    placeholder={placeholder}
                     prop='pageInfo.text'
                     className={'shy-text-empty-font-inherit'}
                     placeholderEmptyVisible

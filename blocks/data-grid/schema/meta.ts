@@ -53,7 +53,7 @@ export type DataStoreAction = {
     data: Record<string, any>
 }
 
-export type SchemaAction = { name: 'createSchemaView', text: string, url: string , data?: Record<string, any>}
+export type SchemaAction = { name: 'createSchemaView', text: string, url: string, data?: Record<string, any> }
     | { name: 'addField', field: { text: string, type: FieldType, config?: Record<string, any> } }
     | { name: 'updateField', fieldId: string, data: Record<string, any> }
     | { name: 'removeSchemaView', id: string }
@@ -646,8 +646,8 @@ export class TableSchema {
         }
         return rs;
     }
-    static async onCreate(data: { text: string, url: string }) {
-        var r = await channel.put('/schema/create', { text: data.text, url: data.url });
+    static async onCreate(data: { text: string, url: string, id?: string }) {
+        var r = await channel.put('/schema/create', { id: data.id, text: data.text, url: data.url });
         if (r.ok) {
             var schemaData = r.data.schema;
             var schema = new TableSchema(schemaData);
@@ -655,8 +655,7 @@ export class TableSchema {
             return schema;
         }
     }
-    static async onLoadAll()
-    {
+    static async onLoadAll() {
         if (this.isLoadAll) return;
         var r = await channel.get('/schema/list');
         if (r.ok) {

@@ -28,7 +28,6 @@ export class OriginFormField extends Block {
     get schema() {
         if (this.page.schema) return this.page.schema;
     }
-
     get fromType(): 'doc' | 'doc-add' | 'doc-detail' {
         if (this.page.pe.type == ElementType.SchemaData) return 'doc';
         if (!this.page.schema) return 'doc';
@@ -192,9 +191,6 @@ export class OriginFormField extends Block {
         }
         return point;
     }
-    // async turnForm(fieldType) {
-    //     await this.updateProps({ fieldType: fieldType }, BlockRenderRange.self);
-    // }
     isCanEdit() {
         return this.page.isCanEditRow;
     }
@@ -209,9 +205,11 @@ export function FieldView(props: { block: OriginFormField, className?: string | 
     </div>
     if (block.fromType !== 'doc-add') {
         return <div className={"sy-form-field-detail " + classList.join(' ')} style={block.visibleStyle}>
-            <div className="gap-h-10 flex flex-top">
-                {props.block.hidePropTitle !== true && <div className="flex-fixed  h-30 w-120 flex text-1 f-14 item-hover round gap-r-10 cursor">
-                    <span className="flex-fixed size-20 flex-center  gap-l-5"><Icon size={14} icon={GetFieldTypeSvg(block.field)}></Icon></span>
+            <div className="gap-h-5 flex flex-top">
+                {props.block.hidePropTitle !== true && <div onMouseDown={e=>{
+                    if(block.isCanEdit())block.onContextmenu(e.nativeEvent)
+                }} className="flex-fixed  h-30 w-120 flex text-1 f-14 item-hover round gap-r-10 cursor">
+                    <span className="flex-fixed size-20 flex-center  gap-l-5"><Icon size={16} icon={GetFieldTypeSvg(block.field)}></Icon></span>
                     <span className="flex-auto l-30 h-30 text-overflow">{block.field.text}</span>
                 </div>}
                 <div className="flex-auto">
@@ -222,7 +220,7 @@ export function FieldView(props: { block: OriginFormField, className?: string | 
         </div>
     }
     return <div style={block.visibleStyle} className={'sy-form-field ' + classList.join(' ')} onMouseDown={e => e.stopPropagation()}>
-        <div className="gap-t-10 gap-b-30">
+        <div className="gap-t-10 gap-b-20">
             {block.field && <div className="sy-form-field-box">
                 <div className="flex gap-t-5">
                     {props.block.hidePropTitle !== true && <label className="b-500 f-16">{block.field.text}</label>}

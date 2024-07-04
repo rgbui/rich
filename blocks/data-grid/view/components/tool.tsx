@@ -111,7 +111,6 @@ export class DataGridTool extends React.Component<{ block: DataGridView }> {
         var props = this.props;
         props.block.dataGridTool = this;
         var view = props.block.schema?.views?.find(g => g.id == props.block.syncBlockId)
-    console.log(view,props.block.isCanEdit());
         if (!view) return <></>
         if (props.block.noTitle) {
             if (props.block.isCanEdit())
