@@ -7,7 +7,6 @@ import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../../../src/
 import { prop } from "../../../../src/block/factory/observable";
 import { TextArea } from "../../../../src/block/view/appear";
 import { GetFieldTypeSvg } from "../../schema/util";
-import { ShyAlert } from "../../../../component/lib/alert";
 import { lst } from "../../../../i18n/store";
 import { S } from "../../../../i18n/view";
 import lodash from "lodash";
@@ -29,8 +28,20 @@ export class OriginFormField extends Block {
     get schema() {
         if (this.page.schema) return this.page.schema;
     }
-    @prop()
-    fieldType: 'doc' | 'doc-add' | 'doc-detail' = 'doc';
+
+    get fromType(): 'doc' | 'doc-add' | 'doc-detail' {
+        if (this.page.pe.type == ElementType.SchemaData) return 'doc';
+        if (!this.page.schema) return 'doc';
+        if (this.page.pe.type == ElementType.SchemaRecordViewData) {
+            var sv = this.schema.views.find(g => g.id == this.page.pe.id1);
+            if (sv) return sv.formType;
+        }
+        else if (this.page.pe.type == ElementType.SchemaRecordView) {
+            var sv = this.schema.views.find(g => g.id == this.page.pe.id1);
+            if (sv) return sv.formType;
+        }
+        return 'doc';
+    }
     @prop()
     fieldId: string;
     @prop()
@@ -119,7 +130,7 @@ export class OriginFormField extends Block {
         var rs = await super.onGetContextMenus();
         lodash.remove(rs, c => c.name == 'color');
         var items: MenuItem<BlockDirective | string>[] = [];
-        if (this.fieldType == 'doc-add') {
+        if (this.fromType == 'doc-add') {
             items.push({
                 name: 'required',
                 text: lst('必填'),
@@ -167,21 +178,13 @@ export class OriginFormField extends Block {
     }
     checkEdit() {
         if (!this.isCanEdit()) {
-            ShyAlert(lst('请先登录'))
-            return false;
-        }
-        return true;
-    }
-    checkSign() {
-        if (!this.page.isSign) {
-            ShyAlert(lst('请先登录'))
             return false;
         }
         return true;
     }
     getVisibleHandleCursorPoint() {
         var point = super.getVisibleHandleCursorPoint();
-        if (this.fieldType == 'doc-add') {
+        if (this.fromType == 'doc-add') {
             point = point.move(0, 10);
         }
         else {
@@ -189,8 +192,11 @@ export class OriginFormField extends Block {
         }
         return point;
     }
-    async turnForm(fieldType) {
-        await this.updateProps({ fieldType: fieldType }, BlockRenderRange.self);
+    // async turnForm(fieldType) {
+    //     await this.updateProps({ fieldType: fieldType }, BlockRenderRange.self);
+    // }
+    isCanEdit() {
+        return this.page.isCanEditRow;
     }
 }
 
@@ -201,7 +207,7 @@ export function FieldView(props: { block: OriginFormField, className?: string | 
         <span className="f-14"><S>该字段不存在</S></span>
         <span className="gap-l-5 size-20 flex-center"><Icon icon={TrashSvg} size={16}></Icon></span>
     </div>
-    if (block.fieldType !== 'doc-add') {
+    if (block.fromType !== 'doc-add') {
         return <div className={"sy-form-field-detail " + classList.join(' ')} style={block.visibleStyle}>
             <div className="gap-h-10 flex flex-top">
                 {props.block.hidePropTitle !== true && <div className="flex-fixed  h-30 w-120 flex text-1 f-14 item-hover round gap-r-10 cursor">

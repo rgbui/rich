@@ -19,7 +19,7 @@ export class FieldEmailView extends OriginFileView<FieldEmoji>{
     renderFieldValue() {
         var self = this;
         async function mousedown(event: React.MouseEvent) {
-            if (self.block.checkSign() === false) return;
+            if (self.block.isCanEdit() === false) return;
             var fn = async () => {
                 var r = await self.block.dataGridItem.onUpdateCellInteractive(self.block.viewField.field)
                 if (r) {

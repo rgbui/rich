@@ -15,7 +15,7 @@ class FieldText extends OriginFormField {
     inputType: 'input' | 'textarea' = 'input';
     async onGetContextMenus() {
         var items = await super.onGetContextMenus();
-        if (this.fieldType == 'doc-add' && [FieldType.text].includes(this.field.type)) {
+        if (this.fromType == 'doc-add' && [FieldType.text].includes(this.field.type)) {
             var at = items.findIndex(c => c.name == 'required');
             items.splice(at - 1, 0,
                 { type: MenuItemType.divide },
@@ -50,14 +50,14 @@ class FieldTextView extends BlockView<FieldText> {
                 self.block.onChange((event.target as HTMLInputElement).value);
             }
         }
-        if (this.block.fieldType == 'doc-detail') {
+        if (this.block.fromType == 'doc-detail') {
             return <FieldView block={this.block}>
                 <div className={this.block.value ? "" : "remark f-14"}>{this.block.value || <S>空内容</S>}</div>
             </FieldView>
         }
         return <FieldView block={this.block}>
             {this.block.inputType == 'input' && <input
-                className={this.block.fieldType == 'doc-add' ? "sy-form-field-input-value" : "padding-w-10 round sy-doc-field-input-value item-hover"}
+                className={this.block.fromType == 'doc-add' ? "sy-form-field-input-value" : "padding-w-10 round sy-doc-field-input-value item-hover"}
                 type='text'
                 placeholder={lst('输入') + this.block.field?.text}
                 data-shy-page-no-focus={true}

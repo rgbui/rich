@@ -25,8 +25,8 @@ class FieldTextView extends BlockView<FieldText>{
             }
         }
         var self = this;
-        if (this.block.fieldType == 'doc-detail') return <div className={typeof this.block.value != 'number' ? "f-14 remark" : ""}>{typeof this.block.value == 'number' ? this.block.value.toString() : <S>空内容</S>}</div>
-        if (this.block.fieldType == 'doc-add') return <InputNumber
+        if (this.block.fromType == 'doc-detail') return <div className={typeof this.block.value != 'number' ? "f-14 remark" : ""}>{typeof this.block.value == 'number' ? this.block.value.toString() : <S>空内容</S>}</div>
+        if (this.block.fromType == 'doc-add') return <InputNumber
             value={this.block.value}
             placeholder={lst('请输入') + this.block.field?.text}
             onChange={e => this.block.onInput(e)}

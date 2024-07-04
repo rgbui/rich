@@ -70,7 +70,6 @@ export class OriginField extends Block {
     }
     checkEdit() {
         if (!this.isCanEdit()) {
-            ShyAlert(lst('请先登录'))
             return false;
         }
         return true;
@@ -81,6 +80,10 @@ export class OriginField extends Block {
             return false;
         }
         return true;
+    }
+    isCanEdit() {
+      
+        return this.dataGrid?.isCanEditRow(this.dataGridItem.dataRow);
     }
 }
 

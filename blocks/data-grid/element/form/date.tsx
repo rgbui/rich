@@ -100,9 +100,9 @@ class FieldTextView extends BlockView<FieldText> {
     }
     renderView() {
         return <FieldView block={this.block}>
-            {this.block.fieldType == 'doc-detail' && <div className={this.block.dateString ? "" : 'f-14 remark'}>{this.block.dateString}</div>}
-            {this.block.fieldType == 'doc-add' && <DateInput value={this.block.value} onChange={e => { this.block.onChange(e) }}></DateInput>}
-            {this.block.fieldType == 'doc' && <div className="item-hover-light padding-w-10 rounc padding-h-2 flex text" onMouseDown={e => this.mousedown(e)}>{this.block.dateString}</div>}
+            {this.block.fromType == 'doc-detail' && <div className={this.block.dateString ? "" : 'f-14 remark'}>{this.block.dateString}</div>}
+            {this.block.fromType == 'doc-add' && <DateInput value={this.block.value} onChange={e => { this.block.onChange(e) }}></DateInput>}
+            {this.block.fromType == 'doc' && <div className="item-hover-light padding-w-10 rounc padding-h-2 flex text" onMouseDown={e => this.mousedown(e)}>{this.block.dateString}</div>}
         </FieldView>
     }
 }

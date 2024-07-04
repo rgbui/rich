@@ -117,20 +117,20 @@ class FormFieldImageView extends BlockView<FormFieldImage> {
     renderImages(images: { url: string }[]) {
         var isCarousel = this.block.imageFormat?.multipleDisplay == 'carousel';
         if (images.length == 1) isCarousel = false;
-        if (images.length == 0 && this.block.fieldType == 'doc-detail') return <div className="f-14 remark"><S>空内容</S></div>
+        if (images.length == 0 && this.block.fromType == 'doc-detail') return <div className="f-14 remark"><S>空内容</S></div>
         if (isCarousel) {
             var settings = {
                 autoplay: true,
                 renderCenterLeftControls: () => <></>,
                 renderCenterRightControls: () => <></>
             };
-            return <div className={this.block.fieldType == 'doc-add' ? "" : "gap-w-10"}>
+            return <div className={this.block.fromType == 'doc-add' ? "" : "gap-w-10"}>
                 <Slick  {...settings}>
                     {images.map((img, i) => {
                         return <div
                             className={"relative visible-hover"}
                             key={i}>
-                            {this.block.fieldType != 'doc-detail' && <Tip text='属性'><span
+                            {this.block.fromType != 'doc-detail' && <Tip text='属性'><span
                                 onClick={e => this.openProperty(img, e)}
                                 className="pos-top-right flex-center size-20  bg-dark-1 text-white round cursor visible">
                                 <Icon size={16} icon={DotsSvg}></Icon>
@@ -143,12 +143,12 @@ class FormFieldImageView extends BlockView<FormFieldImage> {
             </div>
         }
         else {
-            return <div className={"flex flex-top " + (this.block.fieldType == 'doc-add' ? "" : "gap-w-10")}>
+            return <div className={"flex flex-top " + (this.block.fromType == 'doc-add' ? "" : "gap-w-10")}>
                 {images.map((img, i) => {
                     return <div
                         className={"relative visible-hover   gap-b-10 " + (images.length > 1 || this.isCanPlus() ? "gap-r-10 " : "")}
                         key={i}>
-                        {this.block.fieldType != 'doc-detail' && <Tip text='属性'><span
+                        {this.block.fromType != 'doc-detail' && <Tip text='属性'><span
                             onClick={e => this.openProperty(img, e)}
                             className="pos-top-right flex-center size-20  bg-dark-1 text-white circle cursor visible">
                             <Icon size={16} icon={DotsSvg}></Icon>
@@ -165,7 +165,7 @@ class FormFieldImageView extends BlockView<FormFieldImage> {
     isCanPlus() {
         var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);
         if (!this.block.field?.config?.isMultiple && vs.length > 1) vs = [vs.first()]
-        return (vs.length < 1 || this.block.field?.config?.isMultiple) && this.block.fieldType != 'doc-detail'
+        return (vs.length < 1 || this.block.field?.config?.isMultiple) && this.block.fromType != 'doc-detail'
     }
     renderView() {
         var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);

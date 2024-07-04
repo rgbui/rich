@@ -18,7 +18,7 @@ class FieldTextView extends BlockView<FieldText>{
     renderView() {
         var self = this;
         async function mousedown(event: React.MouseEvent) {
-            if (self.block.checkSign() === false) return;
+            if (self.block.checkEdit() === false) return;
             var r = await self.block.onUpdateCellInteractive(self.block.field)
             if (r) {
                 self.block.onChange(r.data);
@@ -70,7 +70,7 @@ class FieldTextView extends BlockView<FieldText>{
             }
         }
         return <FieldView block={this.block}>
-            <div className={this.block.fieldType == 'doc' ? "gap-w-10" : ""}>
+            <div className={this.block.fromType == 'doc' ? "gap-w-10" : ""}>
                 <label onMouseDown={e => mousedown(e)}>{sp}</label>
             </div>
         </FieldView>

@@ -51,7 +51,7 @@ class FormFieldFileView extends BlockView<FormFieldFile> {
         var text = lst('添加文件');
         if (this.block.field?.type == FieldType.video) text = lst('添加视频')
         else if (this.block.field?.type == FieldType.audio) text = lst('添加音频')
-        return <div className={this.block.fieldType == 'doc' ? "" : ""}>
+        return <div className={this.block.fromType == 'doc' ? "" : ""}>
             {files.length > 0 && <div className="gap-b-5 padding-w-10  round item-hover  round">
                 {files.map((img,i)=>{
                     return <div className="h-30  cursor flex  visible-hover" key={i}>
@@ -60,18 +60,18 @@ class FormFieldFileView extends BlockView<FormFieldFile> {
                             <span className="flex-fixed text-overflow gap-w-5">{img.filename}</span>
                         </a>
                         <span className="flex-auto"></span>
-                        {this.block.isCanEdit() && this.block.fieldType != 'doc-detail' && <span onClick={e => this.deleteImage(img)} className="flex-fixed visible size-20 round cursor flex-center item-hover remark "><Icon size={14} icon={CloseSvg}></Icon></span>}
+                        {this.block.isCanEdit() && this.block.fromType != 'doc-detail' && <span onClick={e => this.deleteImage(img)} className="flex-fixed visible size-20 round cursor flex-center item-hover remark "><Icon size={14} icon={CloseSvg}></Icon></span>}
                     </div>
                 })}
             </div>}
-            {files.length == 0 && this.block.fieldType == 'doc-detail' && <div className="f-14 remark"><S>空内容</S></div>}
+            {files.length == 0 && this.block.fromType == 'doc-detail' && <div className="f-14 remark"><S>空内容</S></div>}
             {this.isCanPlus() && <div className={"flex " + (files.length > 0 ? "visible" : "")}><span className={"item-hover-light-focus item-hover round padding-w-5 f-12   cursor flex text-1"} onClick={e => this.block.uploadFile({ roundArea: Rect.fromEvent(e) })}><Icon size={16} icon={PlusSvg}></Icon><span >{text}</span></span></div>}
         </div>
     }
     isCanPlus() {
         var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);
         if (!this.block.field?.config?.isMultiple && vs.length > 1) vs = [vs.first()]
-        return (vs.length < 1 || vs.length > 1 && this.block.field?.config?.isMultiple) && this.block.fieldType != 'doc-detail'
+        return (vs.length < 1 || vs.length > 1 && this.block.field?.config?.isMultiple) && this.block.fromType != 'doc-detail'
     }
     renderView() {
         var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);

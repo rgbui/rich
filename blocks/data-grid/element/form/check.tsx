@@ -16,10 +16,10 @@ class FieldText extends OriginFormField {
 class FieldTextView extends BlockView<FieldText>{
     renderView() {
         return <FieldView block={this.block}>
-            {this.block.fieldType == 'doc-detail' && <div >
+            {this.block.fromType == 'doc-detail' && <div >
                 <CheckBox checked={this.block.value}>{this.block.checkLabel}</CheckBox>
             </div>}
-            {this.block.fieldType != 'doc-detail' && <div className={this.block.fieldType == 'doc-add' ? "" : "padding-w-10"}><div className="flex">
+            {this.block.fromType != 'doc-detail' && <div className={this.block.fromType == 'doc-add' ? "" : "padding-w-10"}><div className="flex">
                 <div className="flex-fixed" onMouseDown={e => { e.stopPropagation() }}><CheckBox
                     checked={this.block.value}
                     onChange={e => {

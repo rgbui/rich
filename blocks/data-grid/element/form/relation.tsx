@@ -77,19 +77,19 @@ class FormFieldRelationView extends BlockView<FormFieldRelation> {
                             <Icon size={16} icon={getPageIcon({ icon: r[icon.name] })}></Icon>
                         </span>
                         <span className="flex-auto f-14 text-overflow">{getPageText({ text: r[f?.name] })}</span>
-                        {this.block.fieldType != 'doc-detail' && <Tip text='移除'><span onClick={e => this.block.onDeleteData(e, r.id)} className="flex-fixed size-20 item-hover  flex-center visible round">
+                        {this.block.fromType != 'doc-detail' && <Tip text='移除'><span onClick={e => this.block.onDeleteData(e, r.id)} className="flex-fixed size-20 item-hover  flex-center visible round">
                             <Icon size={12} icon={CloseSvg}></Icon>
                         </span></Tip>}
                     </div>
                 })}
             </div>}
-            {this.block.relationList.length == 0 && this.block.fieldType == 'doc-detail' && <span className="f-12 remark"><S>空内容</S></span>}
-            {(this.block.field.config?.isMultiple || (!(this.block.relationList.length > 0))) && this.block.fieldType != 'doc-detail' && <div className={"flex " + (this.block.relationList.length > 0 ? " visible" : "")}><span className={"item-hover-light-focus item-hover round padding-w-5 f-12   cursor flex text-1"} onClick={e => this.block.onSelectData(e)}><Icon size={16} icon={PlusSvg}></Icon><span ><S>添加关联</S></span></span></div>}
+            {this.block.relationList.length == 0 && this.block.fromType == 'doc-detail' && <span className="f-12 remark"><S>空内容</S></span>}
+            {(this.block.field.config?.isMultiple || (!(this.block.relationList.length > 0))) && this.block.fromType != 'doc-detail' && <div className={"flex " + (this.block.relationList.length > 0 ? " visible" : "")}><span className={"item-hover-light-focus item-hover round padding-w-5 f-12   cursor flex text-1"} onClick={e => this.block.onSelectData(e)}><Icon size={16} icon={PlusSvg}></Icon><span ><S>添加关联</S></span></span></div>}
         </div>
     }
     renderView() {
         return <FieldView block={this.block} className={'visible-hover'}>
-            <div className={this.block.fieldType == 'doc' ? "gap-w-10" : ""}>
+            <div className={this.block.fromType == 'doc' ? "gap-w-10" : ""}>
                 {this.renderList()}
             </div>
         </FieldView>

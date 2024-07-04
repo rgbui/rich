@@ -22,7 +22,7 @@ class FieldText extends OriginFormField {
     optionType: 'default' | 'select' | 'checkList' = 'default';
     async onGetContextMenus() {
         var items = await super.onGetContextMenus();
-        if (this.fieldType == 'doc-add') {
+        if (this.fromType == 'doc-add') {
             var index = items.findIndex(g => g.name == 'required');
             items.splice(index, 0, {
                 name: 'optionType',
@@ -46,16 +46,10 @@ class FieldText extends OriginFormField {
         }
         return await super.onContextMenuInput(item);
     }
-    async turnForm(fieldType: any): Promise<void> {
-        await super.turnForm(fieldType);
-        if (this.fieldType != 'doc-add') {
-            await this.updateProps({ optionType: 'default' }, BlockRenderRange.self)
-        }
-    }
 }
 
 @view('/form/option')
-class FieldTextView extends BlockView<FieldText> {
+class FieldTextView extends BlockView<FieldText>{
     async mousedown(event: React.MouseEvent) {
         if (this.block.checkEdit() === false) return;
         var hover = this.block.el.querySelector('.item-hover-light');
@@ -114,7 +108,7 @@ class FieldTextView extends BlockView<FieldText> {
         var self = this;
         function renderSelectOptions() {
             if (self.block.optionType == 'select') {
-                return <SelectBox className={self.block.fieldType == 'doc-add' ? "sy-form-field-input-value" : "  padding-h-5 round item-hover-light padding-w-10 "} border dropAlign="full" value={fc?.isMultiple ? ops.map(o => o.value) : ops?.first()?.value} multiple={fc?.isMultiple ? true : false} options={options} onChange={e => {
+                return <SelectBox className={self.block.fromType == 'doc-add' ? "sy-form-field-input-value" : "  padding-h-5 round item-hover-light padding-w-10 "} border dropAlign="full" value={fc?.isMultiple ? ops.map(o => o.value) : ops?.first()?.value} multiple={fc?.isMultiple ? true : false} options={options} onChange={e => {
                     self.block.onChange(e);
                 }}></SelectBox>
             }
@@ -148,15 +142,15 @@ class FieldTextView extends BlockView<FieldText> {
                     </div>
                 }
             }
-            return <div className={"flex " + (self.block.fieldType == 'doc-add' ? "sy-form-field-input-value" : "  padding-h-5 round item-hover-light padding-w-10 " + (ops.length == 0 ? " h-20" : ""))} onMouseDown={e => self.mousedown(e)}>
+            return <div className={"flex " + (self.block.fromType == 'doc-add' ? "sy-form-field-input-value" : "  padding-h-5 round item-hover-light padding-w-10 " + (ops.length == 0 ? " h-20" : ""))} onMouseDown={e => self.mousedown(e)}>
                 {ops.map(op => {
                     return <span key={op.value} className="gap-r-10 padding-w-5 f-14 padding-h-2  l-16 round cursor" style={{ background: op?.fill||op?.color,color:op.textColor }}>{op.text}</span>
                 })}
             </div>
         }
         return <FieldView block={this.block}>
-            {this.block.fieldType != 'doc-detail' && renderSelectOptions()}
-            {this.block.fieldType == 'doc-detail' && <div className="flex">
+            {this.block.fromType != 'doc-detail' && renderSelectOptions()}
+            {this.block.fromType == 'doc-detail' && <div className="flex">
                 {ops.map(op => {
                     return <span key={op.value} className="gap-r-10 padding-w-5 f-14 padding-h-2  l-16  round cursor" style={{ background: op?.fill||op?.color,color:op.textColor }}>{op.text}</span>
                 })}
