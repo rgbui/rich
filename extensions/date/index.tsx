@@ -34,9 +34,17 @@ export class DatePicker extends EventsComponent {
             if (typeof options.includeTime == 'boolean') this.includeTime = options.includeTime
         }
         this.forceUpdate(() => {
+            this.updateInput();
             this.emit('update')
+            if (this.inputTime) {
+                this.inputTime.focus();
+                this.inputTime.setSelectionRange(this.inputTime.value.length, this.inputTime.value.length)
+            }
+            else if (this.inputDate) {
+                this.inputDate.focus();
+                this.inputDate.setSelectionRange(this.inputDate.value.length, this.inputDate.value.length)
+            }
         })
-        this.updateInput();
     }
     private renderDays(): JSX.Element {
         var dj = dayjs(this.date);

@@ -9,12 +9,12 @@ import lodash from "lodash";
 import { MenuItemType } from "../../component/view/menu/declare";
 import { PopoverPosition } from "../../component/popover/position";
 
-export class DateInput extends React.Component<{ value: Date, format?: string, onChange: (e: Date) => void }>{
+export class DateInput extends React.Component<{ value: Date, format?: string, onChange: (e: Date) => void }> {
     render() {
         var self = this;
         async function mousedown(e: React.MouseEvent) {
             var r = await useDatePicker({ roundArea: Rect.fromEvent(e) }, self.props.value);
-            if (r) {
+            if (typeof r != 'undefined') {
                 self.props.onChange(r);
             }
         }
@@ -31,7 +31,7 @@ export class DynamicDateInput extends React.Component<{
     mode: 'year' | 'month' | 'day' | 'hour' | 'week',
     size?: 'small' | 'default' | 'large',
     onChange: (e: number | string) => void
-}>{
+}> {
     render() {
         var self = this;
         var options = [

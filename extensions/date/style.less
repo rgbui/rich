@@ -17,16 +17,14 @@
     }
 
     &-input {
-        display           : flex;
-        justify-content   : flex-start;
-        align-items       : center;
-        height            : 28px;
-        line-height       : 1.2;
-        background        : rgba(242, 241, 238, 0.6);
-        // padding-left   : 8px;
-        // padding-right  : 8px;
-        font-size         : 14px;
-        box-shadow        : rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+        height         : 28px;
+        line-height    : 1.2;
+        background     : rgba(242, 241, 238, 0.6);
+        font-size      : 14px;
+        box-shadow     : rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
 
         div {
             flex-grow  : 1;
@@ -57,12 +55,11 @@
     }
 
     &-head {
-        display           : flex;
-        align-items       : center;
-        justify-content   : flex-start;
-        height            : 30px;
-        // margin-left    : 14px;
-        // margin-right   : 14px;
+        display        : flex;
+        align-items    : center;
+        justify-content: flex-start;
+        height         : 30px;
+        user-select    : none;
 
         &-title {
             flex-grow      : 1;
@@ -84,11 +81,11 @@
         }
 
         &-operators {
-            flex-shrink    : 0;
+            flex-shrink       : 0;
             // width          : 80px;
-            display        : inline-flex;
-            align-items    : center;
-            justify-content: flex-end;
+            display           : inline-flex;
+            align-items       : center;
+            justify-content   : flex-end;
 
             a {
                 width          : 24px;
@@ -117,6 +114,7 @@
         margin-left  : 14px;
         margin-right : 14px;
         margin-bottom: 14px;
+        user-select  : none;
 
         &-week {
             display        : flex;
