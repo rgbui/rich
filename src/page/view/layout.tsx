@@ -11,10 +11,14 @@ export class PageLayoutView extends React.Component<{
     children?: React.ReactNode
 }> {
     render(): React.ReactNode {
+        if (this.props.page.isDeny) {
+            return this.renderDenyPage();
+        }
         if (this.error) return this.renderErrorPage();
         if ([ElementType.SchemaData, ElementType.SchemaRecordView].includes(this.props.page.pe.type) && !this.props.page.schema) {
             return this.renderNotDataSource();
         }
+       
         var pageContentStyle: CSSProperties = {}
         if (this.props.page.pageTheme?.bgStyle) {
             var bs = this.props.page.pageTheme.bgStyle;
@@ -37,7 +41,7 @@ export class PageLayoutView extends React.Component<{
         var props = this.props;
         var type = props.page.pageLayout?.type;
         var mh = props.page.pageVisibleHeight ? (props.page.pageVisibleHeight + 'px') : '100%';
-        if (type == PageLayoutType.doc || type == PageLayoutType.recordView) {
+        if (type == PageLayoutType.doc) {
             var style: CSSProperties = { minHeight: mh, width: '100%', ...pageContentStyle };
             return <div className='shy-page-layout shy-page-layout-doc' style={style}>
                 {props.children}
@@ -134,7 +138,7 @@ export class PageLayoutView extends React.Component<{
     error: string = '';
     renderErrorPage() {
         if (this.error) {
-            return <div>
+            return <div className="gap-t-100">
                 <div className="flex-center padding-40">
                     <span><S>页面出错了</S></span>
                 </div>
@@ -161,6 +165,12 @@ export class PageLayoutView extends React.Component<{
                         this.props.page.onPageRemove()
                     }}><S>删除页面</S></a></span>
             </div>
+        </div>
+    }
+    renderDenyPage() {
+        return <div className="flex-center min-h-300">
+            {this.props.page.isSign && <S>您没有权限访问页面</S>}
+            {!this.props.page.isSign && <S>您需要登录才能访问页面</S>}
         </div>
     }
     componentDidCatch?(error: Error, errorInfo: ErrorInfo): void {
