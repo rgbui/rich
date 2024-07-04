@@ -42,8 +42,10 @@ import { lst } from "../../../i18n/store";
 import { Block } from "../../block";
 import { UA } from "../../../util/ua";
 import lodash from "lodash";
+
 export class Page$ContextMenu {
-    async onPageContextmenu(this: Page, event: React.MouseEvent) {
+    async onPageContextmenu(this: Page, event: React.MouseEvent)
+    {
         var items: MenuItem<BlockDirective | string>[] = [];
         var robots = (await this.ws.getWsRobots()).filter(g => g.disabledWiki !== true);
         if (this.pageLayout.type == PageLayoutType.doc) {
@@ -95,8 +97,7 @@ export class Page$ContextMenu {
                 {
                     name: 'turnToPPT',
                     text: lst('转换为PPT'),
-                    icon: { name: 'byte', code: 'cycle-one' },
-                    // label: UA.isMacOs ? "⌘+Shift+P" : "Ctrl+Shift+P"
+                    icon: { name: 'byte',code: 'cycle-one' }
                 },
                 {
                     name: 'copy',
@@ -568,9 +569,7 @@ export class Page$ContextMenu {
                 this.kit.writer.onAskAi(blocks)
                 break;
             default:
-                await blocks.eachAsync(async (block) => {
-                    await block.onClickContextMenu(item, event, { merge: true });
-                })
+                await blocks.eachAsync(async (block) => { await block.onClickContextMenu(item, event, { merge: true }); })
         }
     }
     async onOpenFormMenu(this: Page, event: React.MouseEvent) {
@@ -626,7 +625,7 @@ export class Page$ContextMenu {
                     visible: viewType == 'data-origin-edit' ? false : true
                 },
                 { text: lst('显示字段'), type: MenuItemType.text },
-                ...this.schema.allowFormFields.findAll(g => (viewType == 'data-origin-edit' || viewType == 'data-template-edit' || viewType == 'add-data' && view.formType != 'doc-add') && g.type == FieldType.title ? false : true).toArray(uf => {
+                ...this.schema.allowFormFields.findAll(g => !(viewType == 'template' && view.formType == 'doc-add') && g.type == FieldType.title ? false : true).toArray(uf => {
                     return {
                         icon: GetFieldTypeSvg(uf),
                         name: uf.id,

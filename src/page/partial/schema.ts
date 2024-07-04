@@ -79,12 +79,15 @@ export class Page$Schema {
                     }
                 }
                 else if (this.pe.type == ElementType.SchemaRecordView && !this.isSchemaRecordViewTemplate) {
-                    var r = this.find(g => (g as OriginFormField).field?.name == 'title');
-                    if (r) {
-                        lodash.remove(r.parentBlocks, g => g == r);
+                    var sv = this.schema.views.find(g => g.id == this.pe.id1);
+                    if (sv.formType != 'doc-add') {
+                        var r = this.find(g => (g as OriginFormField).field?.name == 'title');
+                        if (r) {
+                            lodash.remove(r.parentBlocks, g => g == r);
+                        }
                     }
                     if (this.user?.id) {
-                        var sv = this.schema.views.find(g => g.id == this.pe.id1);
+
                         if (sv.disabledUserMultiple == true) {
                             var re = await this.schema.checkSubmit(this);
                             if (re.ok && re.data.data) {
@@ -310,10 +313,17 @@ export class Page$Schema {
                         });
                     }
                 }
+                var r = GetFieldFormBlockInfo(this.schema.fields.find(c => c.type == FieldType.title));
+                await title.visibleDownCreateBlock(r.url, { ...r, fieldMode: 'detail' });
             }
             else {
+                var title = self.find(g => g.url == BlockUrlConstant.Title) as Title;
+                await title.updateProps({ align: 'left' }, BlockRenderRange.self)
                 var button = self.find(g => g.url == BlockUrlConstant.Button && (g as BlockButton).isFormSubmit() == true) as BlockButton;
                 if (button) await button.delete();
+                var tf = this.schema.fields.find(c => c.type == FieldType.title);
+                var titleFormField = self.find(g => g instanceof OriginFormField && g.fieldId == tf.id) as Title;
+                if (titleFormField) await titleFormField.delete();
             }
             await this.schema.onSchemaOperate([{
                 name: 'updateSchemaView',
