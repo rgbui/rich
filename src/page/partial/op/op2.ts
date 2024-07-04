@@ -68,8 +68,10 @@ export class Page$Operator2 {
                 panel = panel || this.views[0];
                 var lastBlock = panel.findReverse(g => g.isContentBlock);
                 if (lastBlock && lastBlock.isContentEmpty) {
-                    this.kit.anchorCursor.onFocusBlockAnchor(lastBlock, { last: true, render: true, merge: true });
-                    return;
+                    if (lastBlock.isVisible) {
+                        this.kit.anchorCursor.onFocusBlockAnchor(lastBlock, { last: true, render: true, merge: true });
+                        return;
+                    }
                 }
                 await this.onAction(ActionDirective.onCreateTailTextSpan, async () => {
 
