@@ -125,12 +125,19 @@ export class Head extends Block {
         }
         await super.onContextMenuInput(item);
     }
-    isVisbileKey(key: BlockChildKey) {
-        if (!this.toggle && key == BlockChildKey.subChilds) return false;
-        if (this.toggle) {
-            if (this.expand == false && key == BlockChildKey.subChilds) return false;
+    isRelativeVisible(sub:Block)
+    {
+        if(this.toggle){
+            if(this.expand==false){
+                if(this.subChilds.includes(sub))return false;
+            }
         }
-        return super.isVisibleKey(key);
+        return true;
+        // if (!this.toggle && key == BlockChildKey.subChilds) return false;
+        // if (this.toggle) {
+        //     if (this.expand == false && key == BlockChildKey.subChilds) return false;
+        // }
+        // return super.isRelativeVisible(key);
     }
     get contentEl() {
         if (this.el) return this.el.querySelector('[data-block-content]') as HTMLElement;

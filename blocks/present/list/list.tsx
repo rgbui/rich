@@ -74,11 +74,11 @@ export class List extends Block {
         if (this.childs.length > 0) return []
         return this.__appearAnchors;
     }
-    isVisbileKey(key: BlockChildKey) {
+    isRelativeVisible(sub: Block) {
         if (this.listType == ListType.toggle) {
-            if (this.expand == false && key == BlockChildKey.subChilds) return false;
+            if (this.expand == false && this.subChilds.includes(sub)) return false;
         }
-        return super.isVisibleKey(key);
+        return true;
     }
     async onGetTurnUrls() {
         var urls = TextTurns.blockDatas();

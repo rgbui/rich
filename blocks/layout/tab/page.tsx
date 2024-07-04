@@ -26,6 +26,7 @@ export class TabPage extends Block {
         style.padding = 0
         return style;
     }
+   
     get handleBlock(): Block {
         return this.myTab
     }

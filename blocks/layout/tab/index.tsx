@@ -92,6 +92,13 @@ export class Tab extends Block {
             })
         })
     }
+    isRelativeVisible(sub: Block) {
+        if (this.otherChilds.includes(sub)) {
+            var at = this.otherChilds.indexOf(sub);
+            if (at != this.tabIndex) return false;
+        }
+        return true;
+    }
     async onTabeItemContextmenu(event: React.MouseEvent, at: number) {
         if (!this.isCanEdit()) return;
         var item = this.tabItems[at];
