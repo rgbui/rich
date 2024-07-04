@@ -24,7 +24,11 @@ export class Handle extends Events {
         }
         else if (this.handleBlock && !this.handleBlock.isFreeBlock) {
             var pos = this.handleBlock.getVisibleHandleCursorPoint();
-            if (pos) {
+            /**
+             * 这里有可能post获取的不对，point要么是new Point(0,0)
+             * 要么是bound 为(0,0,width=0,height=0)
+             */
+            if (pos && pos.x > 10 && pos.y > 10) {
                 var handleEl = this.view.handleEle;
                 var top = pos.y - 14;
                 //top = pos.y;
@@ -37,6 +41,9 @@ export class Handle extends Events {
                 else {
                     plusEl.style.visibility = 'hidden';
                 }
+            }
+            else if (pos) {
+                console.error(this.handleBlock, pos);
             }
         }
         else {
@@ -112,7 +119,7 @@ export class Handle extends Events {
     }
     async onDropBlock() {
         if (this.dragBlocks.length > 0 && this.dropBlock) {
-            await this.kit.page.onBatchDragBlocks(this.dragBlocks, this.dropBlock, this.dropDirection,this.dropData);
+            await this.kit.page.onBatchDragBlocks(this.dragBlocks, this.dropBlock, this.dropDirection, this.dropData);
         }
     }
     async onClickBlock(event: MouseEvent) {
