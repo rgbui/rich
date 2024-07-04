@@ -153,6 +153,14 @@ export class Page$Cycle {
         }, {
             disabledStore: true
         })
+        if(source=='notify'){
+            try{
+                this.kit.collaboration.renderUserAction(actions)
+            }
+            catch(ex){
+                console.error(ex);
+            }
+        }
         await this.loadPageRepair();
         if (this.isCanEdit && isOk && actions.length > 0) {
             var seq = actions.max(g => g.seq);

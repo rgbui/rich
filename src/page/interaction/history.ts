@@ -4,7 +4,13 @@ import { DataGridView } from "../../../blocks/data-grid/view/base";
 import { BlockRenderRange } from "../../block/enum";
 import { Matrix } from "../../common/matrix";
 import { OperatorDirective } from "../../history/declare";
-import { AppearCursorPos, HistorySnapshoot, SnapshootBlockPos, SnapshootBlockPropPos, SnapshootBlockStylePos, SnapshootDataGridViewPos } from "../../history/snapshoot";
+import {
+    AppearCursorPos,
+    HistorySnapshoot,
+    SnapshootBlockPos,
+    SnapshootBlockPropPos,
+    SnapshootBlockStylePos
+} from "../../history/snapshoot";
 import { PageDirective } from "../directive";
 import { ElementType } from "../../../net/element.type";
 
@@ -209,6 +215,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
 
     });
     snapshoot.registerOperator(OperatorDirective.pageTurnLayout, async (operator, source) => {
+        console.log('OperatorDirective.pageTurnLayout', operator, source);
         if (!page.pageLayout) page.pageLayout = { type: operator.data.new };
         else page.pageLayout.type = operator.data.new;
         if (operator.data.new_page_data) {
@@ -234,7 +241,30 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
      * 新的指令
      * 原来的仍然需要使用
      */
-    snapshoot.registerOperator(OperatorDirective.$create, async (operator, source) => {
+    snapshoot.registerOperator(OperatorDirective.$create, async (operator, source, action) => {
+        var dr = operator.data;
+        if (!page.exists(c => c.id == dr.data.id)) {
+            var block = await page.createBlock(dr.data.url,
+                dr.data,
+                page.find(x => x.id == dr.pos.parentId),
+                dr.pos.at,
+                dr.pos.childKey
+            );
+        }
+    }, async (operator) => {
+        var dr = operator.data;
+        var block = page.find(x => x.id == dr.data.id);
+        if (block) {
+            await block.delete()
+        }
+    });
+    snapshoot.registerOperator(OperatorDirective.$delete, async (operator, source, action) => {
+        var dr = operator.data;
+        var block = page.find(x => x.id == dr.data.id);
+        if (block) {
+            await block.delete()
+        }
+    }, async (operator) => {
         var dr = operator.data;
         if (!page.exists(c => c.id == dr.data.id))
             await page.createBlock(dr.data.url,
@@ -243,30 +273,8 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
                 dr.pos.at,
                 dr.pos.childKey
             );
-    }, async (operator) => {
-        var dr = operator.data;
-        var block = page.find(x => x.id == dr.data.id);
-        if (block) {
-            await block.delete()
-        }
     });
-    snapshoot.registerOperator(OperatorDirective.$delete, async (operator, source) => {
-        var dr = operator.data;
-        var block = page.find(x => x.id == dr.data.id);
-        if (block) {
-            await block.delete()
-        }
-    }, async (operator) => {
-        var dr = operator.data;
-        if (!page.exists(c => c.id == dr.data.id))
-            await page.createBlock(dr.data.url,
-                dr.data,
-                page.find(x => x.id == dr.pos.parentId),
-                dr.pos.at,
-                dr.pos.childKey
-            );
-    });
-    snapshoot.registerOperator(OperatorDirective.$move, async (operator, source) => {
+    snapshoot.registerOperator(OperatorDirective.$move, async (operator, source, action) => {
         var dr = operator.data;
         var block = page.find(x => x.id == dr.from.blockId);
         var parent = page.find(x => x.id == dr.to.parentId);
@@ -277,7 +285,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         var parent = page.find(x => x.id == dr.from.parentId);
         await parent.append(block, dr.from.at, dr.from.childKey)
     });
-    snapshoot.registerOperator(OperatorDirective.$update, async (operator, source) => {
+    snapshoot.registerOperator(OperatorDirective.$update, async (operator, source, action) => {
         var dr: { pos: SnapshootBlockPropPos, old_value: any, new_value: any, render: BlockRenderRange } = operator.data as any;
         var block = page.find(x => x.id == dr.pos.blockId);
         if (block) {
@@ -323,37 +331,6 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             old_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] },
             new_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] }
         } = operator.data as any;
-        // if (source == 'notifyView')
-        // {
-
-        //     if (oc.new_value.blocks?.length > 0) {
-        //         var bs = page.findAll(g => oc.new_value.blocks.some(s => s.blockId == g.id));
-        //         page.addActionCompletedEvent(async () => {
-        //             page.kit.collaboration.renderBlocks(action.userid, bs);
-        //         })
-        //     }
-        //     else {
-        //         if (!(oc.new_value.start && oc.new_value.end)) return;
-        //         var startBlock = page.find(x => x.id == oc.new_value.start.blockId);
-        //         if (startBlock) {
-        //             var startAppear = startBlock.appearAnchors.find(g => g.prop == oc.new_value.start.prop);
-        //             var endBlock = oc.new_value.end.blockId == startBlock?.id ? startBlock : page.find(x => x.id == oc.new_value.end.blockId);
-        //             var endAppear = endBlock.appearAnchors.find(g => g.prop == oc.new_value.end.prop);
-        //             var selection = ({
-        //                 startAnchor: startAppear,
-        //                 startOffset: oc.new_value.start.offset,
-        //                 endAnchor: endAppear,
-        //                 endOffset: oc.new_value.end.offset
-        //             });
-        //             page.addActionCompletedEvent(async () => {
-        //                 page.kit.collaboration.renderSelection(action.userid, selection);
-        //             })
-        //         }
-        //         else {
-        //             console.error('not found cursor pos block')
-        //         }
-        //     }
-        // }
         if (source == 'notify' || source == 'notifyView' || source == 'load' || source == 'loadSyncBlock') return;
         if (oc.new_value.blocks?.length > 0) {
             var bs = page.findAll(g => oc.new_value.blocks.some(s => s.blockId == g.id));
@@ -432,6 +409,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         if (oc.new_value?.length > 0) {
             var bs = page.findAll(g => oc.old_value.some(s => s.blockId == g.id));
             page.kit.picker.pick(bs);
+
         }
     }, async (operator) => {
         var oc: {
@@ -443,7 +421,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             page.kit.picker.pick(bs);
         }
     });
-    snapshoot.registerOperator(OperatorDirective.$insert_style, async (operator, source) => {
+    snapshoot.registerOperator(OperatorDirective.$insert_style, async (operator, source, action) => {
         var oc: {
             pos: SnapshootBlockStylePos,
             data: Record<string, any>
@@ -451,6 +429,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         var block = page.find(g => g.id == oc.pos.blockId);
         if (block) {
             await block.pattern.createStyle(oc.data);
+
         }
     }, async (operator) => {
         var oc: {
@@ -462,7 +441,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             await block.pattern.deleteStyle(oc.data.id);
         }
     });
-    snapshoot.registerOperator(OperatorDirective.$delete_style, async (operator, source) => {
+    snapshoot.registerOperator(OperatorDirective.$delete_style, async (operator, source, action) => {
         var oc: {
             pos: SnapshootBlockStylePos,
             data: Record<string, any>
@@ -470,6 +449,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         var block = page.find(g => g.id == oc.pos.blockId);
         if (block) {
             await block.pattern.deleteStyle(oc.data.id);
+
         }
     }, async (operator) => {
         var oc: {
@@ -481,7 +461,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             await block.pattern.createStyle(oc.data);
         }
     });
-    snapshoot.registerOperator(OperatorDirective.$merge_style, async (operator, source) => {
+    snapshoot.registerOperator(OperatorDirective.$merge_style, async (operator, source, action) => {
         var oc: {
             pos: SnapshootBlockStylePos,
             old_value: any,
@@ -502,7 +482,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             await block.pattern.updateStyle(oc.pos.styleId, oc.old_value);
         }
     });
-    snapshoot.registerOperator(OperatorDirective.$array_update, async (operator, source) => {
+    snapshoot.registerOperator(OperatorDirective.$array_update, async (operator, source, action) => {
         var dr = operator.data;
         var block = page.find(x => x.id == dr.pos.blockId);
         if (block) {
@@ -519,7 +499,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             await block.arrayUpdate({ prop: dr.pos.prop, data: ar, update: dr.old_value })
         }
     });
-    snapshoot.registerOperator(OperatorDirective.$array_delete, async (operator, source) => {
+    snapshoot.registerOperator(OperatorDirective.$array_delete, async (operator, source, action) => {
         var dr = operator.data;
         var block = page.find(x => x.id == dr.pos.blockId);
         if (block) {
@@ -532,7 +512,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             await block.arrayPush({ prop: dr.pos.prop, data: await block.createPropObject(dr.pos.prop, dr.data), at: dr.pos.arrayAt })
         }
     });
-    snapshoot.registerOperator(OperatorDirective.$array_move, async (operator, source) => {
+    snapshoot.registerOperator(OperatorDirective.$array_move, async (operator, source, action) => {
         var dr = operator.data;
         var block = page.find(x => x.id == dr.pos.blockId);
         if (block) {
@@ -545,7 +525,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             await block.arrayMove({ prop: dr.pos.prop, from: dr.to, to: dr.from })
         }
     });
-    snapshoot.registerOperator(OperatorDirective.$array_create, async (operator, source) => {
+    snapshoot.registerOperator(OperatorDirective.$array_create, async (operator, source, action) => {
         var dr = operator.data;
         var block = page.find(x => x.id == dr.pos.blockId);
         if (block) {
@@ -558,7 +538,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             await block.arrayRemove({ prop: dr.pos.prop, at: dr.pos.arrayAt })
         }
     });
-    snapshoot.registerOperator(OperatorDirective.$turn, async (operator) => {
+    snapshoot.registerOperator(OperatorDirective.$turn, async (operator, source, action) => {
         var dr = operator.data;
         var block = page.find(x => x.id == dr.pos.blockId);
         if (block) {

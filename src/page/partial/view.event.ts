@@ -212,6 +212,7 @@ export class Page$ViewEvent {
                 this.pageLayout.type = layoutType;
                 var view = this.views[0];
                 var schema = await TableSchema.onCreate({
+                    id: this.pageInfo.id,
                     text: this.pageInfo?.text || lst('表格'),
                     url: BlockUrlConstant.DataGridTable
                 });

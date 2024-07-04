@@ -133,11 +133,6 @@ export class PageBar extends React.Component<{ page: Page }> {
             var sv = this.props.page.schema.views.find(g => g.id == this.props.page.pe.id1);
             return <div className="flex-auto flex desk-drag">
                 {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onPageClose()} className="desk-no-drag item-hover size-24 round cursor flex-center  gap-r-10"><Icon size={18} icon={{ name: 'byte', code: 'double-right' }}></Icon></span>}
-                <span onMouseDown={e => this.props.page.onPrev()} className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5">
-                    {this.props.page.schema?.icon && <Icon size={18} className={'text-1'} icon={this.props.page.schema?.icon || { name: 'byte', code: 'table' }}></Icon>}
-                    <span className="gap-l-5">{this.props.page.schema?.text}</span>
-                </span>
-                <span className="desk-no-drag flex-center remark gap-w-2"><Icon icon={ChevronRightSvg} size={18}></Icon></span>
                 <span onMouseDown={e => { this.onRenamePage(e, { text: sv?.text, icon: sv?.icon, defaultIcon: { name: 'byte', code: 'table' } }) }} className="desk-no-drag item-hover round flex  cursor padding-h-3 padding-w-5 gap-r-10">
                     <Icon className={'text-1'} size={18} icon={sv?.icon || PageSvg}></Icon>
                     <span className="gap-l-5">{sv?.text || ''}</span>
@@ -149,7 +144,9 @@ export class PageBar extends React.Component<{ page: Page }> {
             </div>
         }
         return <div className="flex-auto flex desk-drag">
-            {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onPageClose()} className="desk-no-drag item-hover size-24 round cursor flex-center  gap-r-10"><Icon size={18} icon={{ name: 'byte', code: 'double-right' }}></Icon></span>}
+            {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onPageClose()}
+                className="desk-no-drag item-hover size-24 round cursor flex-center  gap-r-10"><Icon size={18}
+                    icon={{ name: 'byte', code: 'double-right' }}></Icon></span>}
             <span className=" round flex ">
                 {this.renderParents()}
                 <span onMouseDown={e => { this.onRenamePage(e, { text: this.props.page?.pageInfo.text, icon: this.props.page.pageInfo.icon, defaultIcon: getPageIcon({ pageType: this.props.page?.pageInfo?.pageType }) }) }} className="flex-fixed desk-no-drag  item-hover flex round  cursor padding-h-3 padding-w-5  gap-r-10">
@@ -208,7 +205,9 @@ export class PageBar extends React.Component<{ page: Page }> {
             this.users.push(this.props.page.user?.id)
         }
         return <div className="gap-r-10">
-            {(this.users.length > 1 || this.users.length == 1 && this.props.page.user?.id && this.users[0] != this.props.page.user?.id) && <UserAvatars limit={5} size={30} users={this.users}></UserAvatars>}
+            {(this.users.length > 1 || this.users.length == 1 && this.props.page.user?.id && this.users[0] != this.props.page.user?.id) && <UserAvatars
+                hideStatus={true}
+                limit={5} showName={false} size={30} users={this.users}></UserAvatars>}
         </div>
     }
     toLogin() {
