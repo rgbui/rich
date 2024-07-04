@@ -330,4 +330,15 @@ export class ColorUtil {
         rgb.a = hsv.a;
         return this.toRGBA(rgb);
     }
+    /**
+     * 
+     * @param color 
+     * @param opacity  透明度为[0,1]
+     * @returns 
+     */
+    static opacity(color: string, opacity: number) {
+        var hsv = this.parseColor(color)
+        hsv.a = opacity*100;
+        return this.toRGBA(hsv);
+    }
 }
