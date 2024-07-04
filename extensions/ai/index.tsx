@@ -392,7 +392,7 @@ export class AIWriteAssistant extends EventsComponent {
                     this.close()
                     break;
                 case 'try':
-                    this.page.kit.anchorCursor.onSelectBlocks(this.options.blocks, { render: true ,scroll: 'top'})
+                    this.page.kit.anchorCursor.onSelectBlocks(this.options.blocks, { render: true, scroll: 'top' })
                     await this.open({ blocks: this.options.blocks, ask: this.ask });
                     this.onTry();
                     break;
@@ -404,7 +404,6 @@ export class AIWriteAssistant extends EventsComponent {
                     if (await CanSupportFeature(PayFeatureCheck.aiImage, self.page.ws))
                         self.aiImage({ prompt: self.ask })
                     break;
-
             }
         }
     }
@@ -641,7 +640,7 @@ export class AIWriteAssistant extends EventsComponent {
                     await onMergeListBlocks(self.page, bs);
                     bs = bs.findAll(g => g.parent == p);
                 }
-                await self.writer.page.kit.anchorCursor.onSelectBlocks(bs, { render: true, scroll: 'bottom'})
+                await self.writer.page.kit.anchorCursor.onSelectBlocks(bs, { render: true, scroll: 'bottom' })
             }
             self.status = AIWriteStatus.asked;
             self.updateView(async () => {
@@ -779,16 +778,22 @@ export class AIWriteAssistant extends EventsComponent {
             if ([AIWriteStatus.asking, AIWriteStatus.selectionAsking].includes(this.status)) {
                 this.onEsc();
                 if (this.status == AIWriteStatus.asking)
-                    this.status = AIWriteStatus.willAsk;
-                else if (this.status == AIWriteStatus.selectionWillAsking) {
-                    this.status = AIWriteStatus.selectionWillAsk;
+                    this.status = AIWriteStatus.asked;
+                else if (this.status == AIWriteStatus.selectionAsking) {
+                    this.status = AIWriteStatus.selectionAsked;
                 }
                 this.updateView(() => {
                     this.focusTextarea()
                 })
             }
-            if ([AIWriteStatus.willAsk, AIWriteStatus.asked, AIWriteStatus.selectionAsked, AIWriteStatus.selectionWillAsk].includes(this.status)) {
+            else if ([AIWriteStatus.willAsk, AIWriteStatus.asked, AIWriteStatus.selectionAsked, AIWriteStatus.selectionWillAsk].includes(this.status)) {
                 this.close()
+            }
+        }
+        else if (event.key == KeyboardCode.Delete || event.key == KeyboardCode.Backspace) {
+            if ([AIWriteStatus.willAsk, AIWriteStatus.asked, AIWriteStatus.selectionAsked, AIWriteStatus.selectionWillAsk].includes(this.status)) {
+                if (!this.ask)
+                    this.close()
             }
         }
         else if (event.key == KeyboardCode.R) {
@@ -825,8 +830,10 @@ export class AIWriteAssistant extends EventsComponent {
     }
     onTry() {
         try {
-            if (this.controller)
+            if (this.controller) {
                 this.controller.abort()
+                this.controller = null;
+            }
         }
         catch (ex) {
             console.error(ex);
@@ -847,8 +854,12 @@ export class AIWriteAssistant extends EventsComponent {
     }
     onEsc() {
         try {
-            if (this.controller)
+            if (this.controller) {
                 this.controller.abort()
+
+                this.controller = null;
+            }
+
         }
         catch (ex) {
             console.error(ex)
