@@ -194,7 +194,7 @@ export interface ChannelPatchMapUrls {
 	"/interactive/emoji":{args:{elementUrl:string,fieldName:string},returnType:Promise<SockResponse<{count:number,exists:boolean,otherCount?:number,otherId?:string,otherExists:boolean}>>}
 }
 export interface ChannelPutMapUrls {
-    "/schema/create":{args:{text:string,wsId?:string,url:string},returnType:Promise<SockResponse<{schema:Partial<TableSchema>}>>},
+    "/schema/create":{args:{text:string,id?:string,wsId?:string,url:string},returnType:Promise<SockResponse<{schema:Partial<TableSchema>}>>},
 	"/schema/create/define":{args:{text:string,wsId?:string,fields?:any[],views?:any[],datas?:any[]},returnType:Promise<SockResponse<{schema:Partial<TableSchema>}>>},
 	"/device/sign":{args:any,returnType:Promise<void>},
 	"/paw/sign":{args:{phone:string,paw:string,inviteCode:string,weixinOpen:Record<string,any>},returnType:Promise<SockResponse<{user:Record<string,any>,guid:string,token:string}>>},

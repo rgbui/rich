@@ -103,31 +103,16 @@ export class PageWrite {
          * 
          */
         var cr = TextEle.getCursorRangeByPoint(Point.from(event));
-        // console.log('cccc', cr, sel.focusNode, sel.focusOffset);
-        // var timer;
         if (cr?.node && aa.el.contains(cr?.node)) {
             anchorNode = cr.node;
             anchorOffset = cr.offset;
-            //this.kit.anchorCursor.onCollapse(aa, cr.offset);
         }
-        // else timer = setTimeout(() => {
-        //     // this.kit.anchorCursor.onCatchWindowSelection();
-        // }, 100);
         MouseDragger({
             event,
             dis: 5,
             allowSelection: true,
             moveStart() {
-                /**
-                 * 鼠标刚按下，sel.anchorNode不一定有，
-                 * 当有想选区的举动时，这时sel.anchorNode可能有了，如果没有就强算一个坐标
-                 */
-                // anchorNode = sel.anchorNode;
-                // anchorOffset = sel.anchorOffset;
-                // if (!anchorNode) {
-                //     anchorNode = aa.firstTextNode;
-                // }
-                // if (timer) { clearTimeout(timer); timer = undefined; }
+
             },
             move(ev, data) {
                 var currentAppear = findBlockAppear(ev.target);

@@ -437,9 +437,14 @@ export abstract class Block extends Events {
      * 被tab块中page不显示了，那么这个块就不是可视的
      */
     get isVisible() {
-        return this.closest(x => x.isVisibleKey(x.parentKey) == false) ? false : true
+        return this.closest(x => x.parent && x.parent.isRelativeVisible(x) == false) ? false : true
     }
-    isVisibleKey(key: BlockChildKey) {
+    /**
+     * 判断子块相对于当前的父块，是否处于显示状态
+     * @param sub 
+     * @returns 
+     */
+    isRelativeVisible(sub: Block) {
         return true;
     }
     getVisibleBound() {

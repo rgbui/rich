@@ -211,14 +211,13 @@ export class PageView extends Component<{ page: Page }> {
             this.forceUpdate();
         }
     }
-    renderPageTemplate()
-    {
+    renderPageTemplate() {
         return <div className="shy-page-view-template-picker" style={this.page.getScreenStyle()}>
             {this.turnLayoutLoading && <div className="flex"><Loading1></Loading1><S>创建页面中...</S></div>}
             {!this.turnLayoutLoading && <>
                 <div className="remark f-16"><S text='回车开始编辑'>回车开始编辑，或者从下方选择创建</S></div>
                 <div className="shy-page-view-template-picker-items b-500 remark" onMouseDown={e => { e.stopPropagation() }}>
-                    
+
                     <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={18} icon={PageSvg} ></Icon><span><S>页面</S></span></a>
                     <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.db)}><Icon size={18} icon={{ name: 'byte', code: 'table' }} ></Icon><span><S>数据表</S></span></a>
                     <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.ppt)}><Icon size={18} icon={DocCardsSvg} ></Icon><span>PPT</span></a>
@@ -229,7 +228,6 @@ export class PageView extends Component<{ page: Page }> {
                 <div className="shy-page-view-template-picker-items gap-t-20 b-500  remark" onMouseDown={e => { e.stopPropagation() }}>
                     <div className="remark f-12 bold"><S>选择模板、AI创作或导入</S></div>
                     <a onMouseDown={e => this.page.onOpenTemplate()}><Icon size={17} icon={{ name: 'bytedance-icon', code: 'page-template' }}></Icon><span><S >选择模板创建...</S></span></a>
-                    {/* <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={18} icon={PageSvg} ></Icon><span><S>空白页面</S></span></a> */}
                     {!(this.page.ws.aiConfig?.disabled == true) && <>
                         <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc, { useAi: true })}><Icon size={18} icon={AiStartSvg}></Icon><span><S>用AI开始创作...</S></span></a>
                         {/* <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.docCard, { useAi: true })}><Icon size={20} icon={MagicSvg}></Icon><span><S>用AI开始生成PPT...</S></span></a> */}

@@ -387,6 +387,10 @@ export class Rect {
         var ps = rects.map(r => [r.leftTop, r.rightBottom]).flat();
         return new Polygon(...ps).bound;
     }
+    static getTopStartFromRects(rects:Rect[]){
+        var r=rects.findMin(c=>c.top);
+        return r.leftTop;
+    }
     transformToRect(matrix: Matrix) {
         var t = this.leftTop;
         var e = this.rightBottom;
