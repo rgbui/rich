@@ -1,11 +1,10 @@
 import lodash from "lodash";
 import ReactDOM from "react-dom";
 import { Page } from "..";
-import { channel } from "../../../net/channel";
-import { ElementType } from "../../../net/element.type";
 import { Block } from "../../block";
 import { PageDirective } from "../directive";
 import { storeCopyBlocks } from "../common/copy";
+import { channel } from "../../../net/channel";
 
 export class PageOnEvent {
     onPageSave(this: Page) {
@@ -14,31 +13,20 @@ export class PageOnEvent {
     onPageClose(this: Page) {
         this.emit(PageDirective.close);
     }
-    async onBack(this: Page) {
-        if (ElementType.SchemaRecordView == this.pe.type) {
+    async onPrev(this: Page) {
+        if (this.openPageData?.pre) {
+            var openSource = this.openPageData.pre.openSource;
+            var elementUrl = this.openPageData.pre.elementUrl;
             var url: '/page/open' | '/page/dialog' | '/page/slide' = '/page/dialog'
-            if (this.openSource == 'page') url = '/page/open'
-            else if (this.openSource == 'slide') url = '/page/slide'
+            if (openSource == 'page') url = '/page/open'
+            else if (openSource == 'slide') url = '/page/slide'
             await channel.act(url, {
-                elementUrl: this.elementUrl,
+                elementUrl: elementUrl,
                 config: { wait: false, force: true }
             })
-            return;
         }
-        if (this.openSource == 'page') {
-            if (this.isCanEdit) {
-                if ([ElementType.SchemaData, ElementType.SchemaRecordView].includes(this.pe.type)) {
-                    await this.onSubmitForm();
-                }
-                else {
-                    this.onPageSave();
-                }
-            }
-            this.emit(PageDirective.back);
-        }
-        else this.onPageClose();
     }
-   
+
     onUnmount(this: Page) {
         ReactDOM.unmountComponentAtNode(this.root);
     }

@@ -1,7 +1,9 @@
 import lodash from "lodash";
-import { PageLayoutType } from "./declare";
 import { lst } from "../../i18n/store";
-import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
+import { MenuItem } from "../../component/view/menu/declare";
+import { LinkPageItem } from "./declare";
+import { TableSchemaView } from "../../blocks/data-grid/schema/meta";
+import { WorkspaceRole } from "../../types/user";
 
 /**
  * 基本的权限点列表
@@ -10,69 +12,35 @@ import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
  */
 export enum AtomPermission {
 
-    /**
-     * 所有权限
-     */
-    all = -1,
-    /**
-     * 页面的权限管理
-     */
-    docEdit = 1,
-    docExport = 2,
-    docView = 3,
-    docComment = 4,
-    docNotAllow = 5,
-    /**
-     * 频道的日常管理
-     */
-    channelEdit = 10,
-    channelSpeak = 11,
-    channelView = 12,
-    channelNotAllow = 13,
-    /**
-     * 数据表格编辑
-     */
-    dbEdit = 20,
-    /**
-     * 数据表格数据编辑
-     */
-    dbEditRow = 21,
-    /**
-     * 仅添加数据
-     */
-    dbAddRow = 22,
-    /**
-     * 数据不能被访问
-     */
-    dbNotAllow = 23,
-    dbView = 24,
-    /**
-     * 允许管理空间
-     */
-    wsEdit = 31,
-    /**
-     * 仅允许分配成员权限
-     */
-    wsMemeberPermissions = 32,
-    /**
-     * 空间不能被管理
-     */
-    wsNotAllow = 33,
+    pageFull = 110,
+    pageEdit = 120,
+    pageComment = 130,
+    pageView = 140,
+    pageDeny = 150,
+
+    dbFull = 210,
+    dbEdit = 220,
+    dbEditRow = 230,
+    dbAddRow = 240,
+    dbView = 250,
+    dbComment = 260,
+    dbDeny = 270,
+
+    wsFull = 310,
+    wsEdit = 320,
+    wsView = 330,
+    wsDeny = 340,
+
 }
 /**
  * 
  * @returns 返回正常用户的基本权限
  */
-export function getCommonPerssions() {
+export function getCommonPermission() {
     return [
-        AtomPermission.docComment,
-        AtomPermission.docView,
-        AtomPermission.docExport,
-        AtomPermission.channelSpeak,
-        AtomPermission.channelView,
-        AtomPermission.wsNotAllow,
-        AtomPermission.dbAddRow,
-        AtomPermission.dbView,
+        AtomPermission.pageComment,
+        AtomPermission.dbComment,
+        AtomPermission.wsDeny
     ]
 }
 /**
@@ -81,21 +49,18 @@ export function getCommonPerssions() {
  */
 export function getEditOwnPerssions() {
     return [
-        ...getCommonPerssions(),
-        AtomPermission.docEdit,
-        AtomPermission.wsEdit,
-        AtomPermission.channelEdit,
-        AtomPermission.dbEdit,
-        AtomPermission.dbEditRow,
-        AtomPermission.dbEditRow,
+        AtomPermission.pageFull,
+        AtomPermission.dbFull,
+        AtomPermission.wsFull
     ]
 }
 
-export function getNotAccessPerssions() {
+export function getDenyPermission() {
     return [
-        AtomPermission.docNotAllow,
-        AtomPermission.channelNotAllow,
-        AtomPermission.dbNotAllow,
+        AtomPermission.pageDeny,
+        AtomPermission.dbDeny,
+        AtomPermission.wsDeny
+
     ]
 }
 /**
@@ -112,66 +77,139 @@ export function getAllAtomPermission() {
     return ps;
 }
 
-export function getAtomPermissionComputedChanges(pageType: PageLayoutType, vs: AtomPermission[], v: AtomPermission) {
-    if ([PageLayoutType.board, PageLayoutType.doc, PageLayoutType.ppt].includes(pageType)) {
-        if ([AtomPermission.docComment, AtomPermission.docExport].includes(v)) lodash.remove(vs, g => ![AtomPermission.docExport, AtomPermission.docComment].includes(g))
-        else if ([AtomPermission.dbEditRow, AtomPermission.docEdit, AtomPermission.dbAddRow].includes(v)) lodash.remove(vs, g => ![AtomPermission.dbEditRow, AtomPermission.docEdit, AtomPermission.dbAddRow].includes(g))
-        else vs = []
-        if (!vs.includes(v)) vs.push(v)
-        return vs;
+export function getAtomPermissionComputedChanges(pageType: 'page' | 'db' | 'ws' | 'pageAndDb', vs: AtomPermission[], v: AtomPermission) {
+    if (pageType == 'pageAndDb')
+        lodash.remove(vs, g => AtomPermission[g].startsWith('page') || AtomPermission[g].startsWith('db'));
+    else
+        lodash.remove(vs, g => AtomPermission[g].startsWith(pageType));
+    vs.push(v);
+    return vs;
+}
+
+export function getAllPermissionOptions(){
+    return[
+        { text: lst('所有权限'), value: AtomPermission.pageFull },
+        { text: lst('可编辑'), value: AtomPermission.pageEdit },
+        { text: lst('可评论'), value: AtomPermission.pageComment },
+        { text: lst('可查看'), value: AtomPermission.pageView },
+        { text: lst('无权限'), value: AtomPermission.pageDeny },
+
+        { text: lst('所有权限'), value: AtomPermission.dbFull },
+        { text: lst('可编辑'), value: AtomPermission.dbEdit },
+        { text: lst('可编辑行'), value: AtomPermission.dbEditRow },
+        { text: lst('可添加行'), value: AtomPermission.dbAddRow },
+        { text: lst('可评论'), value: AtomPermission.dbComment },
+        { text: lst('可查看'), value: AtomPermission.dbView },
+        { text: lst('无权限'), value: AtomPermission.dbDeny },
+
+        { text: lst('所有权限'), value: AtomPermission.wsFull },
+        { text: lst('可编辑'), value: AtomPermission.wsEdit },
+        { text: lst('可查看'), value: AtomPermission.wsView },
+        { text: lst('无权限'), value: AtomPermission.wsDeny },
+
+    ]
+}
+
+export function getAtomPermissionOptions(pageType: 'page' | 'db' | 'ws' | 'pageAndDb'): MenuItem[] {
+    if (pageType == 'page') {
+        return [
+            { text: lst('所有权限'), value: AtomPermission.pageFull },
+            { text: lst('可编辑'), value: AtomPermission.pageEdit },
+            { text: lst('可评论'), value: AtomPermission.pageComment },
+            { text: lst('可查看'), value: AtomPermission.pageView },
+            { text: lst('无权限'), value: AtomPermission.pageDeny },
+        ]
     }
-    else if ([PageLayoutType.textChannel].includes(pageType)) {
-        vs = []
-        if (!vs.includes(v)) vs.push(v)
-        return vs;
+    else if (pageType == 'db') {
+        return [
+            { text: lst('所有权限'), value: AtomPermission.dbFull },
+            { text: lst('可编辑'), value: AtomPermission.dbEdit },
+            { text: lst('可编辑行'), value: AtomPermission.dbEditRow },
+            { text: lst('可添加行'), value: AtomPermission.dbAddRow },
+            { text: lst('可评论'), value: AtomPermission.dbComment },
+            { text: lst('可查看'), value: AtomPermission.dbView },
+            { text: lst('无权限'), value: AtomPermission.dbDeny },
+        ]
     }
-    else if ([PageLayoutType.db]) {
-        if ([AtomPermission.dbEditRow, AtomPermission.dbAddRow].includes(v)) lodash.remove(vs, g => ![AtomPermission.dbEditRow, AtomPermission.dbAddRow].includes(g))
-        else vs = []
-        if (!vs.includes(v)) vs.push(v)
-        return vs;
+    else if (pageType == 'ws') {
+        return [
+            { text: lst('所有权限'), value: AtomPermission.wsFull },
+            { text: lst('可编辑'), value: AtomPermission.wsEdit },
+            { text: lst('可查看'), value: AtomPermission.wsView },
+            { text: lst('无权限'), value: AtomPermission.wsDeny },
+        ]
+    }
+    else if (pageType == 'pageAndDb') {
+        return [
+            { text: lst('所有权限'), value: AtomPermission.pageFull },
+            { text: lst('可编辑'), value: AtomPermission.pageEdit },
+            { text: lst('可编辑行'), value: AtomPermission.dbEditRow },
+            { text: lst('可添加行'), value: AtomPermission.dbAddRow },
+            { text: lst('可评论'), value: AtomPermission.pageComment },
+            { text: lst('可查看'), value: AtomPermission.pageView },
+            { text: lst('无权限'), value: AtomPermission.pageDeny },
+        ]
     }
 }
 
-export function getAtomPermissionOptions(pageType: PageLayoutType): MenuItem[] {
-    if ([PageLayoutType.board, PageLayoutType.doc, PageLayoutType.ppt].includes(pageType)) {
-        return [
-            { text: lst('所有权限'), value: AtomPermission.all },
-            { type: MenuItemType.divide },
-            { text: lst('编辑'), value: AtomPermission.docEdit },
-            { text: lst('编辑数据'), value: AtomPermission.dbEditRow },
-            { text: lst('添加数据'), value: AtomPermission.dbAddRow },
-            { type: MenuItemType.divide },
-            { text: lst('评论'), value: AtomPermission.docComment },
-            { text: lst('浏览'), value: AtomPermission.docView },
-            { type: MenuItemType.divide },
-            { text: lst('无权限'), value: AtomPermission.docNotAllow },
-        ]
+
+
+export function mergeAtomPermission(ps: AtomPermission[], newPs: AtomPermission[]) {
+    var ns = ['page', 'db', 'ws'];
+    var pss: AtomPermission[] = [];
+    for (let n of ns) {
+        var ps1 = ps.filter(g => AtomPermission[g] && AtomPermission[g].startsWith(n));
+        var ps2 = newPs.filter(g => AtomPermission[g] && AtomPermission[g].startsWith(n));
+        pss.push(Math.min(...ps1.concat(ps2)));
     }
-    else if ([PageLayoutType.textChannel].includes(pageType)) {
-        return [
-            { text: lst('所有权限'), value: AtomPermission.all },
-            { type: MenuItemType.divide },
-            { text: lst('编辑'), value: AtomPermission.channelEdit },
-            { type: MenuItemType.divide },
-            { text: lst('发言'), value: AtomPermission.channelSpeak },
-            { text: lst('浏览'), value: AtomPermission.channelView },
-            { type: MenuItemType.divide },
-            { text: lst('无权限'), value: AtomPermission.channelNotAllow },
-        ]
-    }
-    else if ([PageLayoutType.db]) {
-        return [
-            { text: lst('所有权限'), value: AtomPermission.all },
-            { type: MenuItemType.divide },
-            { text: lst('编辑'), value: AtomPermission.dbEdit },
-            { text: lst('编辑数据'), value: AtomPermission.dbEditRow },
-            { text: lst('添加数据'), value: AtomPermission.dbAddRow },
-            { type: MenuItemType.divide },
-            { text: lst('浏览'), value: AtomPermission.dbView },
-            { type: MenuItemType.divide },
-            { text: lst('无权限'), value: AtomPermission.dbNotAllow },
-        ]
-    }
+    return pss;
 }
 
+
+export type PageSourcePermission = {
+    source: 'workspacePublicAccess',
+    data: { access: 1 | 0 },
+    permissions: AtomPermission[]
+} | {
+
+    source: 'pageItem',
+    data: LinkPageItem,
+    permissions: AtomPermission[]
+} | {
+    source: 'wsOwner',
+    permissions: AtomPermission[]
+} | {
+    /**
+     * 数据表 表单
+     */
+    source: 'SchemaRecordView',
+    data: Partial<TableSchemaView>,
+    permissions: AtomPermission[]
+} | {
+    source: 'SchemaData',
+    /**
+     * 当前的数据，
+     * 权限在data.config中
+     */
+    data: Record<string, any>,
+    permissions: AtomPermission[]
+} |
+{
+    source: 'wsRole',
+    /**
+     * 角色的id
+     */
+    data: WorkspaceRole[],
+    permissions: AtomPermission[]
+} | {
+    /**
+ * 空间所有用户
+ */
+    source: 'wsAllUser',
+    permissions: AtomPermission[]
+}
+    | {
+        source: 'schema',
+        data: Partial<TableSchemaView>,
+        permissions: AtomPermission[]
+    }

@@ -7,7 +7,7 @@ import { UserAction } from "../src/history/action";
 import { RobotInfo, UserBasic, UserStatus, WorkspaceMember } from "../types/user";
 import { ResourceArguments } from "../extensions/icon/declare";
 import { PayFeatureCheck } from "../component/pay";
-import { AtomPermission } from "../src/page/permission";
+import { AtomPermission, PageSourcePermission } from "../src/page/permission";
 import { WsConsumeType } from "./ai/cost";
 export type SockResponse<T, U = string> = {
         /**
@@ -231,7 +231,7 @@ export interface ChannelGetMapUrls {
 	"/page/query/info":{args:{ ws?: LinkWs,sn?:number, id?: string,elementUrl?:string},returnType:Promise<SockResponse<LinkPageItem>>},
 	"/page/query/parents":{args:{ ws?: LinkWs, id?: string,sn?:number},returnType:Promise<SockResponse<{items:LinkPageItem[]}>>},
 	"/page/query/elementUrl":{args:{ws?: LinkWs,elementUrl?:string},returnType:Promise<LinkPageItem>},
-	"/page/allow":{args:{elementUrl:string},returnType:Promise<Promise<{ isOwner?: boolean,isWs?: boolean,netPermissions?: AtomPermission[],item?:LinkPageItem,permissions?: AtomPermission[],memberPermissions?:{userid?:string,roleId?:string,permissions?: AtomPermission[]}[]}>>},
+	"/page/allow":{args:{elementUrl:string},returnType:Promise<PageSourcePermission>},
 	"/schema/query":{args:{ws:LinkWs,wsId?:string,id:string},returnType:Promise<{ok:boolean,data:{schema:Partial<TableSchema>},warn:string}>},
 	"/schema/list":{args:{ws:LinkWs,wsId?:string,page?:number,size?:number},returnType:Promise<SockResponse<{total:number,list:Partial<TableSchema>[],page:number,size:number}>>},
 	"/schema/ids/list":{args:{ws:LinkWs,wsId?:string,ids:string[]},returnType:Promise<SockResponse<{list:Partial<TableSchema>[]}>>},
@@ -249,7 +249,7 @@ export interface ChannelGetMapUrls {
 	"/datastore/board/stat/fields":{args:{groupFilters?: { id: string, filter: Record<string, any> }[],ws:LinkWs,wsId?:string,schemaId:string,group?:string,stat:{fieldId:string,stat:string},filter?:Record<string, any>,hideGroups?:string[],isIgnoreEmpty?:boolean},returnType:Promise<SockResponse<{stats?:{id:string,value:number|Date,total?:number|Date}[],groupStats?:({fieldId:string,stat:string,value:number,total?:number}[])[]}>>},
 	"/datastore/dataGrid/list":{args:{ws:LinkWs,wsId?:string,groupView?:any,schemaId:string,page?:number,size?:number,filter?:Record<string, any>,sorts?:Record<string, 1|-1>,projects?: string[],isIgnoreCount?: boolean},returnType:Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number,groupList?: { id: string|{min:number,max:number}, count: number, total?: number, list: any[] }[]},warn:string}>},
 	"/datastore/dataGrid/sub/list":{args:{parentId:string, ws:LinkWs,wsId?:string,groupFilter?:any,schemaId:string,page?:number,size?:number,filter?:Record<string, any>,sorts?:Record<string, 1|-1>,projects?: string[]},returnType:Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number},warn:string}>},
-	"/datastore/exists/user/submit":{args:{ws:LinkWs,wsId?:string,schemaId:string},returnType:Promise<SockResponse<{exists:boolean}>>},
+	"/datastore/exists/user/submit":{args:{ws:LinkWs,wsId?:string,schemaId:string},returnType:Promise<SockResponse<{data:Record<string,any>}>>},
 	"/sign":{args:any,returnType:Promise<SockResponse<{user:Record<string,any>,rk:string,uk:string,token:string}>>},
 	"/sign/out":{args:any,returnType:Promise<SockResponse<void>>},
 	"/phone/check/sign":{args:{phone:string},returnType:Promise<{ok:boolean,warn:string,data:{sign:boolean}}>},

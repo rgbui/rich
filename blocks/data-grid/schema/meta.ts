@@ -6,13 +6,14 @@ import { BlockUrlConstant } from "../../../src/block/constant";
 import { Field } from "./field";
 import { DisabledFormFieldTypes, DisabledSortFieldTypes, FieldType, IsArrayValueFieldTypes, OnlyFieldTypes, SysFieldTypes, SysHiddenFieldTypes } from "./type";
 import { ViewField } from "./view";
-import { AtomPermission } from "../../../src/page/permission";
+import { AtomPermission, PageSourcePermission } from "../../../src/page/permission";
 import { Page } from "../../../src/page";
 import { LinkWs } from "../../../src/page/declare";
 import { CardFactory } from "../template/card/factory/factory";
 import { lst } from "../../../i18n/store";
 import { PageLocation } from "../../../src/page/directive";
 import { GroupIdType } from "../view/declare";
+import { ElementType, getElementUrl } from "../../../net/element.type";
 
 
 export type DataStoreAction = {
@@ -52,7 +53,7 @@ export type DataStoreAction = {
     data: Record<string, any>
 }
 
-export type SchemaAction = { name: 'createSchemaView', text: string, url: string }
+export type SchemaAction = { name: 'createSchemaView', text: string, url: string , data?: Record<string, any>}
     | { name: 'addField', field: { text: string, type: FieldType, config?: Record<string, any> } }
     | { name: 'updateField', fieldId: string, data: Record<string, any> }
     | { name: 'removeSchemaView', id: string }
@@ -76,6 +77,10 @@ export interface TableSchemaView {
     cover?: { abled: boolean, url: string, thumb: string, top: number },
     description: { abled: boolean, text: string },
     url: string,
+
+
+    formType: 'doc' | 'doc-add' | 'doc-detail';
+
 
     /**
      * 以下属性只有表单、清单的时候才起作用
@@ -110,7 +115,7 @@ export interface TableSchemaView {
      * 空间成员权限，
      * 可以指定角色，也可以指定具体的人
      */
-    memberPermissions: { roleId: string, userid: string, permissions: AtomPermission[] }[];
+    memberPermissions: { roleId: string, permissions: AtomPermission[] }[];
 
 }
 
@@ -151,6 +156,31 @@ export class TableSchema {
         date: number,
         userid: string
     }
+    get ElementUrl() {
+        return getElementUrl(ElementType.Schema, this.id);
+    }
+    sourcePermission: PageSourcePermission;
+    /**
+   * 是否为公开
+   * net 互联网公开
+   * nas 网络存储
+   * local 本地存储
+  */
+    share: 'net' | 'nas' | 'local';
+
+    /**
+     * 互联网是否公开，如果公开的权限是什么
+     */
+    netPermissions: AtomPermission[];
+    /**
+     * 外部邀请的用户权限
+     */
+    inviteUsersPermissions: { userid: string, permissions: AtomPermission[] }[];
+    /**
+     * 空间成员权限，
+     * 可以指定角色，也可以指定具体的人
+     */
+    memberPermissions: { roleId: string, permissions: AtomPermission[] }[];
     /**
      * 可以被用户感知显示的字段
      * 用户可以选择显示的字段
@@ -219,6 +249,13 @@ export class TableSchema {
             return types.includes(f.type)
         }
         return false;
+    }
+    async cacPermissions() {
+        this.sourcePermission = await channel.get('/page/allow', { elementUrl: this.ElementUrl })
+    }
+    isAllow(...ps: AtomPermission[]): boolean {
+        if (!this.sourcePermission) return false;
+        return this.sourcePermission.permissions.some(p => ps.includes(p))
     }
     views: TableSchemaView[] = [];
     get recordViews() {
@@ -618,7 +655,8 @@ export class TableSchema {
             return schema;
         }
     }
-    static async onLoadAll() {
+    static async onLoadAll()
+    {
         if (this.isLoadAll) return;
         var r = await channel.get('/schema/list');
         if (r.ok) {
@@ -673,7 +711,7 @@ export class TableSchema {
     static isSystemField(field: Field) {
         return SysFieldTypes.includes(field.type)
     }
-    static isOnlyFieldTypes(field:Field){
+    static isOnlyFieldTypes(field: Field) {
         return OnlyFieldTypes.includes(field.type)
     }
 }

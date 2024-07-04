@@ -88,16 +88,16 @@ export class PageBar extends React.Component<{ page: Page }> {
         </>
     }
     renderTitle() {
-        if ([ElementType.SchemaData].includes(this.props.page.pe.type) && !this.props.page.isSchemaRecordViewTemplate) {
+        if ([ElementType.SchemaData, ElementType.SchemaRecordViewData].includes(this.props.page.pe.type)) {
             return <div className="flex-auto flex desk-drag">
                 {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onPageClose()} className="desk-no-drag item-hover size-24 round cursor flex-center gap-r-10 "><Icon size={18} icon={{ name: 'byte', code: 'double-right' }}></Icon></span>}
                 {(this.props.page.openSource == 'dialog' || this.props.page.openSource == 'slide') && <>
-                    <Tip text='展开为整页' ref={e => this.expendTip = e}><span onMouseDown={e => { this.expendTip.close(); this.props.page.onFormOpen('page') }} className="desk-no-drag size-24   flex-center round item-hover cursor gap-r-10"><Icon size={15} icon={ArrowZoomSvg}></Icon></span></Tip>
-                    <Tip ref={e => this.preTip = e} text='上一条'><span onMouseDown={e => { this.preTip.close(); this.props.page.onFormOpen('prev') }} className={"desk-no-drag size-24  flex-center round item-hover cursor gap-r-10" + (this.props.page.formPreRow ? " " : " remark")}><Icon icon={{ name: 'bytedance-icon', code: 'up' }} size={20} ></Icon></span></Tip>
-                    <Tip ref={e => this.nextTip = e} text='下一条'><span onMouseDown={e => { this.nextTip.close(); this.props.page.onFormOpen('next') }} className={"desk-no-drag  size-24  flex-center round item-hover cursor gap-r-10" + (this.props.page.formNextRow ? " " : " remark")}><Icon icon={{ name: 'bytedance-icon', code: 'down' }} size={20} ></Icon></span></Tip></>
+                    <Tip text='展开为整页' ref={e => this.expendTip = e}><span onMouseDown={e => { this.expendTip.close(); this.props.page.onPageViewTurn('page') }} className="desk-no-drag size-24   flex-center round item-hover cursor gap-r-10"><Icon size={15} icon={ArrowZoomSvg}></Icon></span></Tip>
+                    <Tip ref={e => this.preTip = e} text='上一条'><span onMouseDown={e => { this.preTip.close(); this.props.page.onPageViewTurn('prev') }} className={"desk-no-drag size-24  flex-center round item-hover cursor gap-r-10" + (this.props.page.formPreRow ? " " : " remark")}><Icon icon={{ name: 'bytedance-icon', code: 'up' }} size={20} ></Icon></span></Tip>
+                    <Tip ref={e => this.nextTip = e} text='下一条'><span onMouseDown={e => { this.nextTip.close(); this.props.page.onPageViewTurn('next') }} className={"desk-no-drag  size-24  flex-center round item-hover cursor gap-r-10" + (this.props.page.formNextRow ? " " : " remark")}><Icon icon={{ name: 'bytedance-icon', code: 'down' }} size={20} ></Icon></span></Tip></>
                 }
                 {this.props.page.openSource == 'page' && <>
-                    {this.props.page?.openPageData?.pre && <><span onMouseDown={e => this.props.page.onBack()} className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5 ">
+                    {this.props.page?.openPageData?.pre && <><span onMouseDown={e => this.props.page.onPrev()} className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5 ">
                         {this.props.page?.openPageData?.pre?.icon && <Icon size={18} icon={getPageIcon(this.props.page?.openPageData?.pre)}></Icon>}
                         <span className="gap-l-5">{getPageText(this.props.page?.openPageData?.pre)}</span>
                     </span>
@@ -110,10 +110,10 @@ export class PageBar extends React.Component<{ page: Page }> {
                 {this.saving && <span className="flex-center size-24"><Loading2 remark className={'op-7'} size={16}></Loading2></span>}
             </div>
         }
-        else if ([ElementType.SchemaView, ElementType.SchemaRecordView].includes(this.props.page.pe.type) && !this.props.page.isSchemaRecordViewTemplate) {
+        else if ([ElementType.SchemaRecordView].includes(this.props.page.pe.type) && !this.props.page.isSchemaRecordViewTemplate) {
             return <div className="flex-auto flex desk-drag">
                 {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onPageClose()} className="desk-no-drag item-hover  round cursor flex-center size-24  gap-r-10"><Icon size={18} icon={{ name: 'byte', code: 'double-right' }}></Icon></span>}
-                {this.props.page.openSource == 'page' && this.props.page?.openPageData?.pre && <><span onMouseDown={e => this.props.page.onBack()} className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5 ">
+                {this.props.page.openSource == 'page' && this.props.page?.openPageData?.pre && <><span onMouseDown={e => this.props.page.onPrev()} className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5 ">
                     {this.props.page?.openPageData?.pre?.icon && <Icon size={18} icon={getPageIcon(this.props.page?.openPageData?.pre)}></Icon>}
                     <span className="gap-l-5">{getPageText(this.props.page?.openPageData?.pre)}</span>
                 </span>
@@ -133,7 +133,7 @@ export class PageBar extends React.Component<{ page: Page }> {
             var sv = this.props.page.schema.views.find(g => g.id == this.props.page.pe.id1);
             return <div className="flex-auto flex desk-drag">
                 {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onPageClose()} className="desk-no-drag item-hover size-24 round cursor flex-center  gap-r-10"><Icon size={18} icon={{ name: 'byte', code: 'double-right' }}></Icon></span>}
-                <span onMouseDown={e => this.props.page.onBack()} className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5">
+                <span onMouseDown={e => this.props.page.onPrev()} className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5">
                     {this.props.page.schema?.icon && <Icon size={18} className={'text-1'} icon={this.props.page.schema?.icon || { name: 'byte', code: 'table' }}></Icon>}
                     <span className="gap-l-5">{this.props.page.schema?.text}</span>
                 </span>
@@ -152,7 +152,7 @@ export class PageBar extends React.Component<{ page: Page }> {
             {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onPageClose()} className="desk-no-drag item-hover size-24 round cursor flex-center  gap-r-10"><Icon size={18} icon={{ name: 'byte', code: 'double-right' }}></Icon></span>}
             <span className=" round flex ">
                 {this.renderParents()}
-                <span onMouseDown={e => { this.onRenamePage(e, { text: this.props.page?.pageInfo.text, icon: this.props.page.pageInfo.icon, defaultIcon: getPageIcon({pageType:this.props.page?.pageInfo?.pageType}) }) }} className="flex-fixed desk-no-drag  item-hover flex round  cursor padding-h-3 padding-w-5  gap-r-10">
+                <span onMouseDown={e => { this.onRenamePage(e, { text: this.props.page?.pageInfo.text, icon: this.props.page.pageInfo.icon, defaultIcon: getPageIcon({ pageType: this.props.page?.pageInfo?.pageType }) }) }} className="flex-fixed desk-no-drag  item-hover flex round  cursor padding-h-3 padding-w-5  gap-r-10">
                     {this.props.page?.pageInfo?.icon && <Icon size={18} icon={getPageIcon(this.props.page?.pageInfo)}></Icon>}
                     <span className={"text-overflow max-w-250 " + (this.props.page?.pageInfo?.icon ? "gap-l-5" : "")}>{getPageText(this.props.page?.pageInfo)}</span>
                 </span>
@@ -266,7 +266,7 @@ export class PageBar extends React.Component<{ page: Page }> {
             {isSearch && <Tip placement="bottom" text='空间搜索'><span onMouseDown={async e => { await useSearchBox({ ws: this.props.page.ws }) }}><Icon size={18} icon={SearchSvg}></Icon></span></Tip>}
             {/* {isAi && <span onMouseDown={async e => { await useAISearchBox({ ws: this.props.page.ws }) }}><Icon  size={18} icon={AiStartSvg}></Icon></span>} */}
             {isPublish && <Tip placement="bottom" text='页面权限协作与分享'><span onMouseDown={e => this.props.page.onOpenPublish(e)} ><Icon size={18} icon={PublishSvg}></Icon></span></Tip>}
-            {isContextMenu && <Tip placement="bottom" text='页面设置'><span onMouseDown={e => this.props.page.onPageContextmenu(e)} ><Icon size={18} icon={DotsSvg}></Icon></span></Tip>}
+            {isContextMenu && isCanEdit && <Tip placement="bottom" text='页面设置'><span onMouseDown={e => this.props.page.onPageContextmenu(e)} ><Icon size={18} icon={DotsSvg}></Icon></span></Tip>}
             {!isCanEdit && ws.access == 0 && !ws.isMember && <span className="size-30 gap-r-30"><Avatar size={32} userid={user.id}></Avatar></span>}
         </div>
         else if (this.props.page.openSource == 'page') return <div className="flex r-flex-center  r-gap-r-10 ">

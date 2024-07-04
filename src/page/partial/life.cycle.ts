@@ -40,17 +40,17 @@ export class Page$Cycle {
     /**
      * 标记当前页面是否加载的是默认的数据
      */
-    loadDefault: boolean = false;
+    loadedDefaultData: boolean = false;
     async load(this: Page, data?: Record<string, any>, operates?: ViewOperate[]) {
         try {
             if (!data || typeof data == 'object' && Object.keys(data).length == 0) {
                 //这里加载默认的页面数据
                 data = this.getDefaultData();
-                this.loadDefault = true;
+                this.loadedDefaultData = true;
             }
             else {
                 this.requireSelectLayout = false;
-                this.loadDefault = false;
+                this.loadedDefaultData = false;
             }
             await this.emit(PageDirective.loading);
             for (var n in data) {
@@ -72,11 +72,6 @@ export class Page$Cycle {
                     this.pageLayout = Object.assign(this.pageLayout || {}, { type: PageLayoutType.textChannel });
                 }
                 else this.pageLayout = Object.assign(this.pageLayout || {}, { type: PageLayoutType.doc });
-            }
-            if ([
-                PageLayoutType.recordView
-            ].some(s => s == this.pageLayout.type)) {
-                this.requireSelectLayout = false;
             }
             if (this.pe && [ElementType.SchemaRecordView, ElementType.SchemaRecordViewData, ElementType.Schema, ElementType.SchemaData].includes(this.pe.type)) {
                 this.requireSelectLayout = false;
@@ -128,11 +123,11 @@ export class Page$Cycle {
             }
         }
         if (typeof this.pageLayout == 'undefined') this.pageLayout = Object.assign(this.pageLayout, { type: PageLayoutType.doc });
-        if ([
-            PageLayoutType.recordView,
-        ].some(s => s == this.pageLayout.type)) {
-            this.requireSelectLayout = false;
-        }
+        // if ([
+        //     PageLayoutType.recordView,
+        // ].some(s => s == this.pageLayout.type)) {
+        //     this.requireSelectLayout = false;
+        // }
         if (this.pe && [ElementType.SchemaRecordView, ElementType.Schema, ElementType.SchemaData].includes(this.pe.type)) {
             this.requireSelectLayout = false;
             await this.loadPageSchema();
@@ -186,7 +181,6 @@ export class Page$Cycle {
         if (typeof this.matrix != 'undefined' && typeof this.matrix.getValues == 'function')
             json.matrix = this.matrix.getValues();
         json.nav = this.nav;
-        json.formType = this.formType;
         json.views = await this.views.asyncMap(async x => {
             return await x.get()
         })
@@ -906,7 +900,7 @@ export class Page$Cycle {
                     await v.delete()
                 })
             }
-            if (this.requireSelectLayout == true) {
+            if (this.requireSelectLayout == true&&this.pageInfo) {
                 var items = await this.pageInfo.getSubItems();
                 if (items.length > 0) {
                     await this.updateProps({

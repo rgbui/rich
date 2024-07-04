@@ -34,7 +34,7 @@ import { isMobileOnly } from "react-device-detect";
 import { dom } from '../common/dom';
 import { DataGridView } from '../../blocks/data-grid/view/base';
 import { Link } from '../../blocks/navigation/link';
-import { AtomPermission } from './permission';
+import { AtomPermission, PageSourcePermission } from './permission';
 import { closeBoardEditTool } from '../../extensions/board.edit.tool';
 import "./style.less";
 import { PageOnEvent } from './partial/on.event';
@@ -237,9 +237,11 @@ export class Page extends Events<PageDirective> {
                 });
                 if (isForceUpdate == false && this.pageModifiedExternally) {
                     this.forceUpdate();
+                    this.views.forEach(v => {
+                        v.forceManualUpdate()
+                    })
                 }
                 this.pageModifiedExternally = false;
-
             }
             if (pageBarIsChange) {
                 this.view.pageBar.forceUpdate()
@@ -310,15 +312,15 @@ export class Page extends Events<PageDirective> {
                 var isFull: boolean = this.isFullWidth;
                 if (this.ws?.isPubSite) isFull = this.ws?.publishConfig.isFullWidth;
                 if (isFull) {
-                    if(this.pageLayout?.type==PageLayoutType.ppt){
-                        style.marginLeft =80;
-                        style.marginRight =80;
+                    if (this.pageLayout?.type == PageLayoutType.ppt) {
+                        style.marginLeft = 80;
+                        style.marginRight = 80;
                     }
-                    else{
+                    else {
                         style.marginLeft = 96;
                         style.marginRight = 96;
                     }
-                 
+
                     if (this.pageLayout?.type == PageLayoutType.textChannel) {
                         style.marginLeft = 0;
                         style.marginRight = 0;
@@ -348,21 +350,39 @@ export class Page extends Events<PageDirective> {
      * 标记当前页面是否是需要编辑，还是不能编辑
      * 如数所表格，打开一条记录，该记录页面是可以编辑的
      */
-    edit: boolean = false;
     get isCanEdit() {
         if (this.locker?.lock) return false;
         if (!this.isSign) return false;
         if (this.readonly) return false;
         if (this.ws?.isPubSite) return false;
-        if (this.edit) return true;
         if (isMobileOnly) return false;
+        if (this.currentPermissions?.source == 'wsOwner') return true;
         return this.isAllow(...[
-            AtomPermission.all,
-            AtomPermission.docEdit,
-            AtomPermission.channelEdit,
             AtomPermission.dbEdit,
-            AtomPermission.wsEdit
+            AtomPermission.dbFull,
+            AtomPermission.pageFull,
+            AtomPermission.pageEdit,
         ])
+    }
+    /**
+     * 只有当页面为 ElementType.SchemaRecordView&& !this.isSchemaRecordViewTemplate 相当于添加数据
+     * ElementType.SchemaData || ElementType.SchemaRecordViewData
+     * 时， isCanEditRow 才会生效
+     */
+    get isCanEditRow() {
+        var r = this.isCanEdit;
+        if (r) return r;
+        if (this.pe.type == ElementType.SchemaRecordView && !this.isSchemaRecordViewTemplate) {
+            return this.isAllow(AtomPermission.dbAddRow, AtomPermission.dbEditRow)
+        }
+        if (this.pe.type == ElementType.SchemaData || this.pe.type == ElementType.SchemaRecordViewData) {
+            var c = this.isAllow(AtomPermission.dbEditRow);
+            if (c) return c;
+            if (this.isAllow(AtomPermission.dbAddRow)) {
+                if (this.formRowData.creater == this.user.id) return true;
+            }
+        }
+        return false;
     }
     /**
      * 这里主要是计算是否能编辑
@@ -379,50 +399,33 @@ export class Page extends Events<PageDirective> {
         if (options.ignoreReadonly !== true)
             if (this.readonly) return false;
         if (this.ws?.isPubSite) return false;
-        if (this.edit) return true;
         if (isMobileOnly) return false;
+        if (this.currentPermissions?.source == 'wsOwner') return true;
         return this.isAllow(...[
-            AtomPermission.all,
-            AtomPermission.docEdit,
-            AtomPermission.channelEdit,
+            AtomPermission.pageFull,
+            AtomPermission.pageEdit,
             AtomPermission.dbEdit,
-            AtomPermission.wsEdit
+            AtomPermission.dbFull,
         ])
     }
     get isCanManage() {
         if (!this.isSign) return false;
         if (this.ws?.isPubSite) return false;
-        if (this.currentPermissions?.isOwner) return true;
-        return this.isAllow(...[AtomPermission.all])
+        if (this.currentPermissions?.source == 'wsOwner') return true;
+        return this.isAllow(...[AtomPermission.pageFull, AtomPermission.dbFull])
     }
-    currentPermissions: {
-        item?: LinkPageItem,
-        isOwner?: boolean;
-        isWs?: boolean;
-        netPermissions?: AtomPermission[];
-        permissions?: AtomPermission[];
-        memberPermissions?: { userid?: string, roleId?: string, permissions?: AtomPermission[] }[];
-    }
-    async cachCurrentPermissions() {
+    currentPermissions: PageSourcePermission
+    async cacCurrentPermissions() {
         this.currentPermissions = await channel.get('/page/allow', { elementUrl: this.elementUrl });
+        console.log(this.currentPermissions, 'currentPermissions')
     }
     isAllow(...ps: AtomPermission[]) {
         var g = this.currentPermissions;
         if (!g) return false;
-        if (g.isOwner) return true;
-        var atoms = ps;
-        if (g.isWs) {
-            if (Array.isArray(g.permissions)) return g.permissions.some(s => atoms.includes(s))
-        }
-        else if (Array.isArray(g.memberPermissions)) {
-            for (let i = g.memberPermissions.length - 1; i >= 0; i--) {
-                var mp = g.memberPermissions[i];
-                if (mp.permissions.some(s => atoms.includes(s))) return true;
-            }
-        }
-        else if (Array.isArray(g.netPermissions)) {
-            return g.netPermissions.some(s => atoms.includes(s))
-        }
+        if (Array.isArray(g.permissions)) return g.permissions.some(s => ps.includes(s));
+    }
+    get isDeny() {
+        return this.isAllow(AtomPermission.dbDeny, AtomPermission.pageDeny);
     }
     /**
      * 是否支持宽屏及窄屏的切换
@@ -507,7 +510,7 @@ export class Page extends Events<PageDirective> {
     getScrollDiv(el?: HTMLElement): HTMLElement {
         if (this.pageLayout?.type == PageLayoutType.textChannel) {
             var tc = this.find(g => g.url == BlockUrlConstant.TextChannel);
-            if (tc) {
+            if (tc && (tc.view as any)) {
                 return (tc.view as any).contentEl;
             }
         }
@@ -541,6 +544,8 @@ export class Page extends Events<PageDirective> {
             icon: any;
             cover: any;
             description: any;
+            openSource: Page['openSource'],
+            elementUrl: string
         },
         formData?: Record<string, any>
     }

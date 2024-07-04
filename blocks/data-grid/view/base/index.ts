@@ -615,8 +615,27 @@ export class DataGridView extends Block {
         if (url) return true;
         else return false;
     }
+    isAllow(...ps: AtomPermission[]): boolean {
+        if (this.page.pageLayout?.type == PageLayoutType.db) {
+            return this.page.isAllow(...ps)
+        }
+        else {
+            return this.schema?.isAllow(...ps)
+        }
+    }
+    isCanEdit(): boolean {
+        if (this.schema?.locker?.lock == true) return false;
+        if (this.page.locker?.lock == true) return false;
+        if (this.page.isSign == false) return false;
+        return this.isAllow(
+            AtomPermission.dbEdit,
+            AtomPermission.pageFull,
+            AtomPermission.pageEdit,
+            AtomPermission.dbFull)
+    }
     isCanLocker() {
         if (this.schema?.locker?.lock == true) return true;
+        if (this.page.locker?.lock == true) return true;
         return false;
     }
     dataGridIsCanEdit() {
@@ -624,14 +643,26 @@ export class DataGridView extends Block {
     }
     isCanAddRow() {
         if (!this.page.isSign) return false;
-        if (this.isCanLocker()) return false;
-        return this.isAllow(AtomPermission.dbAddRow)
+        return this.isAllow(
+            AtomPermission.dbAddRow,
+            AtomPermission.pageFull,
+            AtomPermission.pageEdit,
+            AtomPermission.dbEdit,
+            AtomPermission.dbEditRow,
+            AtomPermission.dbFull
+        )
     }
     isCanEditRow(row) {
         if (!this.page.isSign) return false;
-        if (this.isCanLocker()) return false;
-        if (row && row.creater == this.page.user.id) return true;
-        return this.isAllow(AtomPermission.dbEditRow)
+        if (this.isAllow(
+            AtomPermission.dbEditRow,
+            AtomPermission.pageFull,
+            AtomPermission.pageEdit,
+            AtomPermission.dbEdit,
+            AtomPermission.dbFull
+        )) return true;
+        if (row && row.creater == this.page.user?.id && this.isAllow(AtomPermission.dbAddRow)) return true;
+        return false
     }
     async getMd() {
         var ws = this.page.ws;
@@ -676,6 +707,7 @@ export class DataGridView extends Block {
                         case 'moveSchemaView':
                             var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
                             this.schema = tc;
+                            await this.schema.cacPermissions();
                             if (act.name == 'removeSchemaView') {
                                 if (act.id == this.syncBlockId) {
                                     //ShyAlert('当前视图已被删除，将自动切换到默认视图')
@@ -687,10 +719,12 @@ export class DataGridView extends Block {
                         case 'addField':
                             var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
                             this.schema = tc;
+                            await this.schema.cacPermissions();
                             break;
                         case 'updateField':
                             var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
                             this.schema = tc;
+                            await this.schema.cacPermissions();
                             if (this.fields.some(s => s.field?.id == (act as any).id)) {
                                 this.forceManualUpdate();
                             }
@@ -698,6 +732,7 @@ export class DataGridView extends Block {
                         case 'removeField':
                             var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
                             this.schema = tc;
+                            await this.schema.cacPermissions();
                             if (this.fields.some(s => s.fieldId == (act as any).id)) {
                                 lodash.remove(this.fields, s => s.fieldId == (act as any).id);
                                 this.forceManualUpdate();
@@ -706,6 +741,7 @@ export class DataGridView extends Block {
                         case 'turnField':
                             var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
                             this.schema = tc;
+                            await this.schema.cacPermissions();
                             if (this.fields.some(s => s.fieldId == (act as any).id)) {
                                 await this.onLazyReloadData();
                             }

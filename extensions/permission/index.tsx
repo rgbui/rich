@@ -16,20 +16,20 @@ import { Page } from "../../src/page";
 
 import {
     AtomPermission,
+    getAllPermissionOptions,
     getAtomPermissionComputedChanges,
     getAtomPermissionOptions
 } from "../../src/page/permission";
 
 import { PopoverSingleton } from "../../component/popover/popover";
 import { PopoverPosition } from "../../component/popover/position";
-import { getPageText } from "../../src/page/declare";
+import { PageLayoutType, getPageText } from "../../src/page/declare";
 import { UserBox } from "../../component/view/avator/user";
 import { S } from "../../i18n/view";
 import { lst } from "../../i18n/store";
 import { Tip } from "../../component/view/tooltip/tip";
-import { ElementType } from "../../net/element.type";
-import { TableSchemaView } from "../../blocks/data-grid/schema/meta";
 import { HelpText } from "../../component/view/text";
+import { ElementType } from "../../net/element.type";
 
 class PagePermission extends EventsComponent {
     constructor(props) {
@@ -46,31 +46,13 @@ class PagePermission extends EventsComponent {
     }
     render() {
         var pr = this.page ? this.page?.getPermissions() : undefined;
-        var view: TableSchemaView;
-        if (this.page && this.page?.pe?.type == ElementType.SchemaRecordView) {
-            view = this.page.schema.recordViews.find(g => g.id == this.page.pe.id1);
-            if (view) {
-                pr = {
-                    share: view.share,
-                    memberPermissions: view.memberPermissions,
-                    netPermissions: view.netPermissions,
-                    inviteUsersPermissions: view.inviteUsersPermissions
-                }
-            }
-        }
         var self = this;
         var ps: {
             roleId?: string;
-            userid?: string;
             permissions: AtomPermission[];
         }[] = pr?.memberPermissions || [];
         async function setGlobalShare(data) {
-            if (view) {
-                await self.page.schema.onSchemaOperate([{ name: 'updateSchemaView', id: view.id, data }], 'PagePermission')
-            }
-            else {
-                await self.page.onUpdatePermissions(data);
-            }
+            await self.page.onUpdatePermissions(data);
             self.forceUpdate()
         }
         async function addPermission(event: React.MouseEvent) {
@@ -99,8 +81,7 @@ class PagePermission extends EventsComponent {
                                     <span className='flex-fixed gap-l-5'>{r.text}</span>
                                     {Array.isArray(pr.memberPermissions) && pr.memberPermissions.some(s => s.roleId == r.id) && <label className='flex-auto flex-end'><Icon className={'gap-r-8'} size={16} icon={CheckSvg}></Icon></label>}
                                 </div>
-                            },
-                            // disabled: (pr?.memberPermissions || []).some(s => s.roleId == r.id)
+                            }
                         }
                     })
                 ]
@@ -112,18 +93,23 @@ class PagePermission extends EventsComponent {
                 else if (r.item.name == 'addRole') {
                     if (!Array.isArray(pr.memberPermissions)) pr.memberPermissions = [];
                     if (pr.memberPermissions.some(s => s.roleId == r.item.value)) return;
-                    pr.memberPermissions.push({
-                        roleId: r.item.value,
-                        permissions: [AtomPermission.docComment]
-                    });
-                    await setGlobalShare({ 'memberPermissions': pr.memberPermissions });
+                    if (self.page.pageLayout?.type == PageLayoutType.db)
+                        pr.memberPermissions.push({
+                            roleId: r.item.value,
+                            permissions: [AtomPermission.dbEditRow]
+                        });
+                    else
+                        pr.memberPermissions.push({
+                            roleId: r.item.value,
+                            permissions: [AtomPermission.pageView]
+                        });
+                    await setGlobalShare({ memberPermissions: pr.memberPermissions });
                 }
             }
         }
         async function remove(mp) {
-            // console.log(JSON.stringify(ps), JSON.stringify(mp), 'ps mp...');
-            lodash.remove(pr.memberPermissions as any[], p => p.userid && p.userid == mp.userid || p.roleId && p.roleId == mp.roleId);
-            await setGlobalShare({ 'memberPermissions': pr.memberPermissions });
+            lodash.remove(pr.memberPermissions as any[], p => p.roleId && p.roleId == mp.roleId);
+            await setGlobalShare({ memberPermissions: pr.memberPermissions });
         }
         function getRoles(roleId) {
             if (roleId == 'all') return lst('@所有人')
@@ -133,10 +119,40 @@ class PagePermission extends EventsComponent {
                 <span>{role?.text}</span>
             </>
         }
-        if (!pr) return <div className='w-300 min-h-60'></div>
+        if (!pr) return <div className='w-400 min-h-60'></div>
         var cp = this.page.currentPermissions;
-        var as = getAtomPermissionOptions(this.page.pageLayout.type);
-        return <div className='w-300 min-h-60 padding-t-10 round f-14'>
+        var permissonOptions = getAllPermissionOptions();
+        var permissonType: "page" | "db" = 'page';
+        if (this.page.pageLayout.type == PageLayoutType.db) {
+            permissonType = 'db';
+        }
+        else if (this.page.pe.type == ElementType.SchemaRecordView || this.page.pe.type == ElementType.SchemaData || this.page.pe.type == ElementType.SchemaRecordViewData) {
+            permissonType = 'db';
+        }
+        function showPermissonsSource() {
+            if (cp.source == 'wsOwner') return <span><S>权限继承超级管理员</S></span>
+            if (cp.source == 'wsAllUser') return <span><S>权限继承空间所有人</S></span>
+            if (cp.source == 'pageItem' && (cp as any).data.id != self.page.pageInfo?.id) return <span className="flex-inline flex-center"><S>权限继承</S><span className="item-hover-focus gap-w-5  gap-l-3  padding-w-5 round cursor ">{getPageText((cp as any).data)}</span></span>
+            if (cp.source == 'pageItem' && (cp as any).data.id == self.page.pageInfo?.id) return <span><S>权限来源于当前页面</S></span>
+            if (cp.source == 'SchemaData') return <span><S>权限来源于数据</S></span>
+            if (cp.source == 'SchemaRecordView') return <span className="flex-inline flex-center"><S>权限来源于数据模板</S><span className="item-hover-focus padding-w-5 gap-l-3 round cursor ">{(cp as any).data.text}</span></span>
+            if (cp.source == 'wsRole') return <span><S>权限继承角色&nbsp;</S>{cp.data.map(c => c.text).join(",")}</span>
+            if (cp.source == 'workspacePublicAccess') return <span><S>权限来源于空间公开互联网</S></span>
+        }
+        var myPermissonText = '';
+        if (Array.isArray(cp?.permissions) && cp.permissions.length > 0) {
+            var nss = cp.permissions.map(p => {
+                if (AtomPermission[p]?.startsWith('ws')) return ''
+                if (!AtomPermission[p]) return '';
+                if (AtomPermission[p].startsWith(permissonType)) {
+                    return permissonOptions.find(a => a.value == p)?.text
+                }
+                return '';
+            });
+            myPermissonText = lodash.uniq(nss.filter(g => g ? true : false)).join(",")
+        }
+
+        return <div className='w-400 min-h-60 padding-t-10 round f-14'>
             <div className="flex round gap-w-5 padding-w-5 ">
                 <div className="flex-auto">
                     <UserBox userid={this.page.user.id}>{(user) => {
@@ -145,27 +161,15 @@ class PagePermission extends EventsComponent {
                             <div className="flex-auto">
                                 <div className="h-20 l-20">{user.name}</div>
                                 <span className="remark f-12 l-20">
-                                    {cp.item && <span className="flex-inline flex-center"><S>权限继承</S><span className="item-hover-focus padding-w-5 round cursor padding-h-2">{getPageText(cp.item)}</span></span>}
-                                    {cp.isOwner && <span><S>权限继承超级管理员</S></span>}
-                                    {cp.isWs && <span><S>权限继承所有人</S></span>}
+                                    {showPermissonsSource()}
                                 </span>
                             </div>
                         </div>
                     }}</UserBox>
                 </div>
                 <div className="flex-fixed f-12 remark">
-                    {cp.isOwner && <span className="item-hover-focus round padding-w-3 padding-h-2 cursor "><S>所有权限</S></span>}
-                    {cp.isWs && <span className="item-hover-focus round padding-w-3 padding-h-2  cursor ">{cp.permissions.map(p => {
-                        return as.find(a => a.value == p)?.text
-                    }).filter(g => g ? true : false).join(",")}</span>}
-                    {Array.isArray(cp.netPermissions) && cp.netPermissions.length > 0 && <span className="item-hover-focus round padding-w-3  padding-h-2  cursor">{cp.netPermissions.map(p => {
-                        return as.find(a => a.value == p)?.text
-                    }).filter(g => g ? true : false).join(",")}</span>}
-                    {Array.isArray(cp.memberPermissions) && cp.memberPermissions.length > 0 && <span className="item-hover-focus round padding-w-3 padding-h-2  cursor">{cp.memberPermissions.map(c => {
-                        return c.permissions.map(p => {
-                            return as.find(a => a.value == p)?.text
-                        })
-                    }).flat(4).filter(g => g ? true : false).join(",")}</span>}
+                    {cp.source == 'wsOwner' && <span className="item-hover-focus round padding-w-3 padding-h-2 cursor "><S>所有权限</S></span>}
+                    {cp.source !== 'wsOwner' && myPermissonText && <span className="item-hover-focus round padding-w-3 padding-h-2  cursor ">{myPermissonText}</span>}
                 </div>
             </div>
             {
@@ -177,9 +181,8 @@ class PagePermission extends EventsComponent {
                     </div>
                     <div>
                         {ps.map((mp, id) => {
-                            return <div className="flex item-hover gap-t-5 h-28  gap-w-5 padding-w-5  round" key={id}>
+                            return <div className="flex item-hover gap-5 min-h-28 padding-w-5   padding-h-5  round" key={id}>
                                 <div className="flex-fixed flex">
-                                    {mp.userid && <Avatar size={30} userid={mp.userid}></Avatar>}
                                     {mp.roleId && getRoles(mp.roleId)}
                                 </div>
                                 <div className="flex-auto flex flex-end">
@@ -188,11 +191,10 @@ class PagePermission extends EventsComponent {
                                             dropWidth={150}
                                             multiple
                                             border
-                                            small
                                             computedChanges={async (vs, v) => {
-                                                return getAtomPermissionComputedChanges(this.page.pageLayout.type, vs, v);
+                                                return getAtomPermissionComputedChanges(permissonType, vs, v);
                                             }}
-                                            options={getAtomPermissionOptions(this.page.pageLayout.type)}
+                                            options={getAtomPermissionOptions(permissonType)}
                                             value={mp.permissions || []}
                                             onChange={async e => {
                                                 if (!Array.isArray(mp.permissions)) {
@@ -221,25 +223,31 @@ class PagePermission extends EventsComponent {
                             <span className="gap-l-5"><S>公开至互联网</S></span>
                         </span>
                         <span className="flex-fixed">
-                            <Switch checked={pr?.share == 'net' ? true : false} onChange={e => setGlobalShare({ share: e ? "net" : 'nas' })}></Switch>
+                            <Switch checked={pr?.share == 'net' ? true : false} onChange={e => {
+                                var props = { share: e ? "net" : 'nas' } as any;
+                                if (e) {
+                                    if (!pr.netPermissions) {
+                                        if (this.page.pageLayout?.type == PageLayoutType.db) {
+                                            props.netPermissions = [AtomPermission.dbView]
+                                        }
+                                        else props.netPermissions = [AtomPermission.pageView]
+                                    }
+                                }
+                                setGlobalShare(props)
+                            }}></Switch>
                         </span>
                     </div>
                     {pr.share == 'net' && <>
-                        <div className="flex h-28 gap-t-5 item-hover round flex gap-w-5 padding-w-5">
+                        <div className="flex item-hover gap-5 min-h-28 padding-w-5   padding-h-5  round">
                             <div className="flex-auto text-overflow">
                                 <S>页面公开访问</S>
                             </div>
                             <div className="flex-fixed f-12">
                                 <SelectBox
                                     border
-                                    small
-                                    multiple
-                                    computedChanges={async (vs, v) => {
-                                        return getAtomPermissionComputedChanges(this.page.pageLayout.type, vs, v);
-                                    }}
-                                    options={getAtomPermissionOptions(this.page.pageLayout.type)}
-                                    value={pr.netPermissions || []}
-                                    onChange={e => { setGlobalShare({ 'netPermissions': e }) }}
+                                    options={getAtomPermissionOptions(permissonType).slice(1, -1)}
+                                    value={pr.netPermissions[0]}
+                                    onChange={e => { setGlobalShare({ 'netPermissions': [e] }) }}
                                 ></SelectBox>
                             </div>
                         </div>

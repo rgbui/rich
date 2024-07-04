@@ -4,6 +4,8 @@ import { S } from "../../../i18n/view";
 import { FlowCommand, FlowCommandView } from "../command";
 import { flow, flowView } from "../factory/observable";
 import { Icon } from "../../../component/view/icon";
+import { ShyAlert } from "../../../component/lib/alert";
+import { lst } from "../../../i18n/store";
 
 @flow('/form/submit')
 export class ConfirmCommand extends FlowCommand {
@@ -12,7 +14,13 @@ export class ConfirmCommand extends FlowCommand {
     }
     async excute() {
         if (this.flow.buttonBlock) {
-            await this.flow.buttonBlock.page.onSubmitForm({ isClose: true });
+            var page = this.flow.buttonBlock.page;
+            await page.onSubmitForm();
+            if (page.openSource == 'dialog' || page.openSource == 'slide')
+                await page.onPageClose();
+            else {
+                ShyAlert(lst('数据已保存'))
+            }
         }
     }
 }

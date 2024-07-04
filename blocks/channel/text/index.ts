@@ -77,7 +77,7 @@ export class ChannelText extends Block {
     abledSend: boolean = false;
     async loadHasAbledSend(force?: boolean) {
         this.abledSend = true;
-        if (!this.isAllow(AtomPermission.channelEdit, AtomPermission.channelSpeak)) {
+        if (!this.isAllow(AtomPermission.pageEdit,AtomPermission.dbEdit,AtomPermission.dbFull,AtomPermission.pageFull)) {
             this.abledSend = false;
         }
         if (this.pageInfo?.speak == 'only') {

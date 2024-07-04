@@ -62,7 +62,7 @@ export class PageOrNextView extends BlockView<PageOrNext> {
                     if (this.block.prePageInfo)
                         channel.act('/page/open', { item: this.block.prePageInfo?.id })
                     else if (this.block.page.formPreRow)
-                        this.block.page.onFormOpen('prev')
+                        this.block.page.onPageViewTurn('prev')
                 }}>
                 <span className={"flex-center flex-fixed " + (ss ? "flex-center size-20 cursor item-hover round" : "")} ><Icon className={'remark-im'} size={arrowSize} icon={{ name: 'byte', code: 'left' }}></Icon></span>
                 <div className="flex-auto ">
@@ -76,7 +76,7 @@ export class PageOrNextView extends BlockView<PageOrNext> {
                     if (this.block.nextPageInfo)
                         channel.act('/page/open', { item: this.block.nextPageInfo?.id })
                     else if (this.block.page.formNextRow)
-                        this.block.page.onFormOpen('next')
+                        this.block.page.onPageViewTurn('next')
                 }}>
                 <div className="flex-auto">
                     <span className={'block flex remark-im  f-14   '}><S>下一篇</S></span>

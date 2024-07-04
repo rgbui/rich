@@ -17,6 +17,7 @@ export function TextArea(props: {
     default?: string,
     isHtml?: boolean,
     isBlock?: boolean,
+    canEdit?: boolean,
     className?: string | (string[])
 }) {
     var prop = props.prop;
@@ -32,7 +33,8 @@ export function TextArea(props: {
             defaultValue: props.default
         }),
     };
-    if (props.block.isCanEdit()) {
+    var ce = typeof props.canEdit == 'boolean' ? props.canEdit : props.block.isCanEdit();
+    if (ce) {
         ps = {
             ref: ps.ref,
             suppressContentEditableWarning: true,
@@ -56,6 +58,7 @@ export function TextArea(props: {
     var html = props.html;
     if (typeof html == 'undefined') html = lodash.get(props.block, props.prop);
     if (html == '' && typeof props.default != 'undefined') html = props.default;
+    if (lodash.isUndefined(html) || lodash.isNull(html) || lodash.isNaN(html)) html = ''
     var classList: string[] = ['shy-appear-text'];
     if (props.className) {
         if (Array.isArray(props.className)) classList.push(...props.className)

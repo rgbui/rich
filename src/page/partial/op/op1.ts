@@ -566,7 +566,6 @@ export class Page$Operator {
                 var b = GetFieldFormBlockInfo(field);
                 if (b) {
                     var view = this.views[0];
-                    (b as any).fieldType = this.formType;
                     var newBlock = await this.createBlock(b.url, b, view, view.childs.length);
                     if (this.formRowData)
                         await newBlock.updateProps({ value: field.getValue(this.formRowData) }, BlockRenderRange.self)

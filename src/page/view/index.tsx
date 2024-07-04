@@ -211,7 +211,8 @@ export class PageView extends Component<{ page: Page }> {
             this.forceUpdate();
         }
     }
-    renderPageTemplate() {
+    renderPageTemplate()
+    {
         return <div className="shy-page-view-template-picker" style={this.page.getScreenStyle()}>
             {this.turnLayoutLoading && <div className="flex"><Loading1></Loading1><S>创建页面中...</S></div>}
             {!this.turnLayoutLoading && <>

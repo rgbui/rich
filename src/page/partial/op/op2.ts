@@ -325,7 +325,16 @@ export class Page$Operator2 {
             }
         }
         else {
-            var props = lodash.pick(data, ['icon', 'cover', 'description', 'text'])
+            var props = lodash.pick(data, [
+                'icon',
+                'cover',
+                'description',
+                'text',
+                'share',
+                'netPermissions',
+                'inviteUsersPermissions',
+                'memberPermissions'
+            ])
             if (Object.keys(props).length > 0) {
                 if (this.pe.type == ElementType.Schema) {
                     var schema = await TableSchema.loadTableSchema(this.pe.id, this.ws);

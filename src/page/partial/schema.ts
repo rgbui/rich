@@ -16,6 +16,10 @@ import { Block } from "../../block";
 import { BlockRenderRange } from "../../block/enum";
 
 export class Page$Schema {
+    /**
+     * 表示数据已提交
+     */
+    dataSubmitId: string;
     formRowData: Record<string, any>;
     formUserEmojis: Record<string, string[]> = {};
     formPreRow: Record<string, any>;
@@ -41,9 +45,9 @@ export class Page$Schema {
                 }
             }
             else {
-                if (this.loadDefault == true) {
+                if (this.loadedDefaultData == true) {
                     var cs: Record<string, any>[] = this.schema.allowFormFields.toArray(field => {
-                        if (field?.type == FieldType.title && this.isSchemaRecordViewTemplate) return undefined;
+                        if (field?.type == FieldType.title && (this.pe.type == ElementType.SchemaData || this.pe.type == ElementType.SchemaRecordView || this.pe.type == ElementType.SchemaRecordViewData)) return undefined;
                         var r = GetFieldFormBlockInfo(field);
                         if (r) return Object.assign({
                             fieldMode: 'detail'
@@ -52,15 +56,13 @@ export class Page$Schema {
                     cs.splice(0, 0, { url: BlockUrlConstant.Title })
                     this.views = [];
                     await this.loadViews({ views: [{ url: BlockUrlConstant.View, blocks: { childs: cs } }] })
-                    this.loadDefault = false;
+                    this.loadedDefaultData = false;
                 }
-                if (!this.isSchemaRecordViewTemplate) {
+                if (this.pe.type == ElementType.SchemaData || this.pe.type == ElementType.SchemaRecordViewData) {
                     var r = this.find(g => (g as OriginFormField).field?.name == 'title');
                     if (r) {
                         lodash.remove(r.parentBlocks, g => g == r);
                     }
-                }
-                if (this.pe.type == ElementType.SchemaData || this.pe.type == ElementType.SchemaRecordViewData) {
                     var rg = await this.schema.rowGetPrevAndNext(this.pe.type == ElementType.SchemaRecordViewData ? this.pe.id2 : this.pe.id1, this.ws);
                     if (rg) {
                         this.formRowData = lodash.cloneDeep(rg.data.data);
@@ -74,6 +76,30 @@ export class Page$Schema {
                                 }
                             }
                         })
+                    }
+                }
+                else if (this.pe.type == ElementType.SchemaRecordView && !this.isSchemaRecordViewTemplate) {
+                    var r = this.find(g => (g as OriginFormField).field?.name == 'title');
+                    if (r) {
+                        lodash.remove(r.parentBlocks, g => g == r);
+                    }
+                    if (this.user?.id) {
+                        var sv = this.schema.views.find(g => g.id == this.pe.id1);
+                        if (sv.disabledUserMultiple == true) {
+                            var re = await this.schema.checkSubmit(this);
+                            if (re.ok && re.data.data) {
+                                this.formRowData = re.data.data;
+                                this.dataSubmitId = this.formRowData.id;
+                                this.each(g => {
+                                    if (g instanceof OriginFormField) {
+                                        var f = g.field;
+                                        if (f) {
+                                            g.value = g.field.getValue(this.formRowData);
+                                        }
+                                    }
+                                })
+                            }
+                        }
                     }
                 }
                 if (typeof this.formRowData == 'undefined') {
@@ -90,23 +116,27 @@ export class Page$Schema {
                 })
             }
             var fs = this.schema.fields.findAll(g => [FieldType.like, FieldType.oppose, FieldType.love].includes(g.type))
-            if (this.formRowData) {
+            if (this.formRowData && this.formRowData.id) {
                 var es = fs.map(f => {
                     return getElementUrl(ElementType.SchemaFieldNameData, this.schema.id, f.name, this.formRowData.id)
                 })
-                var rgc = await channel.get('/user/interactives',
-                    {
+                if (es.length > 0) {
+                    var rgc = await channel.get('/user/interactives',
+                        {
 
-                        schemaId: this.schema?.id,
-                        ids: [this.formRowData.id],
-                        ws: this.ws,
-                        es: es
-                    });
-                if (rgc.ok) {
-                    this.formUserEmojis = rgc.data.list;
-                    this.forceUpdate();
+                            schemaId: this.schema?.id,
+                            ids: [this.formRowData.id],
+                            ws: this.ws,
+                            es: es
+                        });
+                    if (rgc.ok) {
+                        this.formUserEmojis = rgc.data.list;
+                        this.forceUpdate();
+                    }
                 }
+
             }
+            this.formRowData = lodash.cloneDeep(this.formRowData);
         }
     }
     async getSchemaRow(this: Page) {
@@ -122,12 +152,16 @@ export class Page$Schema {
         /**
          * 比较初始值，如果一样，说明没有任何修改，返回null
          */
-        if (lodash.isEqual(this.formRowData, row) || !this.pageModifiedOrNot) {
+        if (lodash.isEqual(this.formRowData, row)) {
             return null;
+        }
+        if ([ElementType.SchemaData, ElementType.SchemaRecordViewData].includes(this.pe.type)) {
+            var title = this.find(c => c.url == BlockUrlConstant.Title) as Title;
+            if (title)
+                row.title = title.content;
         }
         row.icon = this.formRowData.icon;
         row.cover = this.formRowData.cover;
-        row.title = this.formRowData.title;
         row.plain = await this.getPlain();
         row.plain = row.plain.slice(0, 200);
         row.thumb = await this.getThumb();
@@ -136,48 +170,67 @@ export class Page$Schema {
     /**
     * 
     * @param this 
-    * @param options {
-    *   isClose:是否关闭页面
-    *   isFormBlank:是否清空表单
-    * }
+    *  
+    *  
     */
-    async onSubmitForm(this: Page, options?: { isClose?: boolean, isFormMargin?: boolean }) {
-        if (this.pe.type == ElementType.SchemaData) {
-            this.onPageSave();
+    async onSubmitForm(this: Page) {
+        if (this.pe.type == ElementType.SchemaData || this.pe.type == ElementType.SchemaRecordViewData) {
             var newRow = await this.getSchemaRow()
-            if (this.isCanEdit && newRow && Object.keys(newRow).length > 0) {
+            if (newRow && Object.keys(newRow).length > 0) {
                 await this.schema.rowUpdate({ dataId: this.pe.id1, data: newRow }, 'Page.onSubmitForm')
             }
         }
         else if (this.pe.type == ElementType.SchemaRecordView) {
             var newRow = await this.getSchemaRow();
-            if (newRow) {
+            if (this.dataSubmitId) {
+                if (newRow && Object.keys(newRow).length > 0) {
+                    await this.schema.rowUpdate({ dataId: this.dataSubmitId, data: newRow }, 'Page.onSubmitForm')
+                }
+            }
+            else if (newRow) {
                 var r = await this.schema.rowAdd({ data: newRow, pos: { id: undefined, pos: 'after' } }, 'Page.onSubmitForm');
                 if (r) {
                     newRow = r.data;
-                    await channel.act('/view/snap/store',
-                        {
-                            elementUrl: getElementUrl(ElementType.SchemaData,
-                                this.schema.id,
-                                newRow.id
-                            ),
-                            seq: 0,
-                            plain: await this.getPlain(),
-                            thumb: await this.getThumb(),
-                            content: await this.getString(),
-                            text: newRow.title,
-                        })
+                    var sv = this.schema.views.find(g => g.id == this.pe.id1);
+                    if (this.isCanEdit && sv.formType != 'doc-add')
+                        await channel.act('/view/snap/store',
+                            {
+                                elementUrl: getElementUrl(ElementType.SchemaData,
+                                    this.schema.id,
+                                    newRow.id
+                                ),
+                                seq: 0,
+                                plain: await this.getPlain(),
+                                thumb: await this.getThumb(),
+                                content: await this.getString(),
+                                text: newRow.title,
+                            }
+                        )
                 }
             }
         }
-        if (options?.isClose)
-            this.onPageClose()
     }
-    async onFormOpen(this: Page, source: Page['openSource'] | 'next' | 'prev' | 'template') {
+    /**
+     * 切换页面的不同展示模式
+     * 1. 将对话框 转成页面
+     * 2. 将表单转成数据模板管理模式
+     * 3. 打开数据记录的上一条，下一条
+     * @param this 
+     * @param source 
+     */
+    async onPageViewTurn(this: Page, source: Page['openSource'] | 'next' | 'prev' | 'template') {
+        /**
+         * 这个表示将当前对话框模式，
+         * 转变成页面模板
+         */
         if (source == 'page') {
             await channel.act('/page/open', { elementUrl: this.elementUrl, config: { force: true, wait: false } });
             this.onPageClose();
         }
+        /**
+         * 这个表示将当前表单 转变成 数据模板管理模式
+         * 
+         */
         else if (source == 'template') {
             var url: '/page/open' | '/page/dialog' | '/page/slide' = '/page/dialog'
             if (this.openSource == 'page') url = '/page/open'
@@ -188,6 +241,9 @@ export class Page$Schema {
             })
         }
         else {
+            /**
+             * 这个表示当前数据记录的上一条，下一条
+             */
             var url: '/page/open' | '/page/dialog' | '/page/slide' = '/page/dialog'
             if (this.openSource == 'page') url = '/page/open'
             else if (this.openSource == 'slide') url = '/page/slide'
@@ -201,7 +257,7 @@ export class Page$Schema {
             }
         }
     }
-    formType: 'doc' | 'doc-add' | 'doc-detail' = 'doc';
+
     /**
      * 判断当前页面在数据表中是什么类型
      * add 表单，添加新数据（需要指定模板）
@@ -210,28 +266,30 @@ export class Page$Schema {
      * template 模板页面，用于管理设置模板
      */
     getPageSchemaRecordType(this: Page) {
-        var viewType: "add" | 'template-edit' | 'origin-edit' | 'template' = null;
+        var viewType: "add-data" | 'data-template-edit' | 'data-origin-edit' | 'template' = null;
         if (this.pe.type == ElementType.SchemaData) {
-            viewType = 'origin-edit'
+            viewType = 'data-origin-edit'
         }
         else if (this.pe.type == ElementType.SchemaRecordViewData) {
-            viewType = 'template-edit'
+            viewType = 'data-template-edit'
         }
         else if (this.pe.type == ElementType.SchemaRecordView) {
             if (this.isSchemaRecordViewTemplate) {
                 viewType = 'template'
             }
-            else viewType = 'add'
+            else viewType = 'add-data'
         }
         return viewType;
     }
     async onTurnForm(this: Page, value: 'doc' | 'doc-add' | 'doc-detail') {
         var self = this;
         await this.onAction('onTurnForm', async () => {
+            var sv = this.schema.views.find(g => g.id == this.pe.id1);
+            if (sv) sv.formType = value;
             var fs = this.findAll(g => g instanceof OriginFormField) as OriginFormField[];
             for (let i = 0; i < fs.length; i++) {
                 var off = fs[i];
-                await off.turnForm(value);
+                this.notifyActionBlockUpdate(off)
             }
             if (value == 'doc-add') {
                 var title = self.find(g => g.url == BlockUrlConstant.Title) as Title;
@@ -257,7 +315,11 @@ export class Page$Schema {
                 var button = self.find(g => g.url == BlockUrlConstant.Button && (g as BlockButton).isFormSubmit() == true) as BlockButton;
                 if (button) await button.delete();
             }
-            await this.updateProps({ formType: value })
+            await this.schema.onSchemaOperate([{
+                name: 'updateSchemaView',
+                id: this.pe.id1,
+                data: { formType: value }
+            }], 'Page.onTurnForm')
         })
     }
     async onChangeSchemaView(this: Page, viewId: string, props) {

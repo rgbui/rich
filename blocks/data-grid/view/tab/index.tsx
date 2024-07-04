@@ -25,7 +25,7 @@ import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { util } from "../../../../util/util";
 import "./style.less";
 import { TextEle } from "../../../../src/common/text.ele";
-import { ObserverWidth } from "../../../../src/common/Observer.width";
+import { ObserverWidth } from "../../../../src/common/observer.width";
 
 
 @url('/data-grid/tab')

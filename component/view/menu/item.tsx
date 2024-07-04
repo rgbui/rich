@@ -28,7 +28,13 @@ export class MenuItemView extends React.Component<{
 }> {
     el: HTMLElement;
     select(item: MenuItem, event?: MouseEvent) {
-        if (item.disabled != true) this.props?.select(item, event);
+        if (item.disabled) return;
+        if (item.selectInput == true) {
+            if (item.updateMenuPanel) this.props.parent.forceUpdate()
+            else this.forceUpdate()
+            this.props?.input(item);
+        }
+        else this.props?.select(item, event);
     }
     checked(checked: boolean, item: MenuItem) {
         if (item.disabled) return;
@@ -156,7 +162,7 @@ export class MenuItemView extends React.Component<{
             }}>
             {(item.type == MenuItemType.item || !item.type) && <ToolTip overlay={item.overlay} placement={item.placement || 'right'} ><div className={'shy-menu-box-item-option' + (item.disabled == true ? " disabled" : "")}
                 onMouseDown={e => this.select(item, e.nativeEvent)}>
-                {item.icon && <i className={"flex-center flex-line  text-1 "+(util.covertToArray(item.iconClassName).join(' ')) + (item.iconSize > 20 ? "" : " size-20")}><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
+                {item.icon && <i className={"flex-center flex-line  text-1 " + (util.covertToArray(item.iconClassName).join(' ')) + (item.iconSize > 20 ? "" : " size-20")}><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
                 {item.renderIcon && item.renderIcon(item, this)}
                 <span className='shy-menu-box-item-option-text text-overflow flex'>
                     {item.text}{item.remark && <i className="remark padding-l-5">{item.remark}</i>}

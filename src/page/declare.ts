@@ -16,7 +16,7 @@ export enum PageLayoutType {
     //#region db
     db = 20,
     // formView = 21,
-    recordView = 22,
+    // recordView = 22,
     /**
      * 从表里选择一些数据的页面窗体
      */
@@ -24,7 +24,7 @@ export enum PageLayoutType {
     /**
      * schema view
      */
-    dbView = 24,
+    // dbView = 24,
     //#endregion
 
     /**
@@ -319,45 +319,3 @@ export var PageTemplateTypeGroups: { icon: IconValueType, visible?: boolean, spr
     // }
 ]
 
-// export var PageTemplateTags: MenuItem[] = [
-//     { text: '个人工作' },
-//     { text: '业余爱好' },
-//     { text: '旅行' },
-//     { text: '键康运动' },
-//     { text: '食品与营养' },
-//     { text: '个人财务' },
-//     { text: '住房' },
-//     { type: MenuItemType.divide },
-//     { text: '学习' },
-//     { text: '俱乐部' },
-//     { text: '职业建设' },
-//     { text: '教学' },
-//     { text: '学校申请' },
-//     { text: '学术研究' },
-//     { text: '知识库' },
-//     { type: MenuItemType.divide },
-//     { text: '公司网站' },
-//     { text: '人员与组织' },
-//     { text: '内部通讯和更新' },
-//     { text: '路线图和日历' },
-//     { text: '问题跟踪' },
-//     { text: '规划与目标' },
-//     { text: '指南' },
-//     { type: MenuItemType.divide },
-//     { text: '论坛' },
-//     { text: '贴子' },
-//     { text: '图文' },
-//     { type: MenuItemType.divide },
-//     { text: '产品' },
-//     { text: '营销' },
-//     { text: '工程' },
-//     { text: '设计' },
-//     { text: '启动' },
-//     { text: '运营' },
-//     { type: MenuItemType.divide },
-//     { text: '销售量' },
-//     { text: '招聘' },
-//     { text: '人力资源' },
-//     { text: '供应商' },
-//     { text: "私人" }
-// ]

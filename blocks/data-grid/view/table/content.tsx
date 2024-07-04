@@ -2,7 +2,7 @@ import React, { CSSProperties } from "react";
 import { Block } from "../../../../src/block";
 import { CheckSvg, DotsSvg, PlusSvg } from "../../../../component/svgs";
 import { Icon, IconValueType } from "../../../../component/view/icon";
-import {  Spin } from "../../../../component/view/spin";
+import { Spin } from "../../../../component/view/spin";
 import { ToolTip } from "../../../../component/view/tooltip";
 import { lst } from "../../../../i18n/store";
 import { S } from "../../../../i18n/view";
@@ -61,7 +61,7 @@ export class DataGridTableContent extends React.Component<{
         return <div ref={e => this.el = e}>
             {this.block.schema && this.block.noHead !== true && this.renderHead()}
             {this.block.schema && this.renderBody()}
-            {this.block.schema && this.renderStat()}
+            {this.block.schema && this.block.dataGridIsCanEdit() && this.renderStat()}
         </div>
     }
     renderHead() {
@@ -212,8 +212,7 @@ export class DataGridTableHead extends React.Component<{ block: Block, style?: C
                 }
             }
         }
-        if (index > -1&&index<this.block.fields.length)
-        {
+        if (index > -1 && index < this.block.fields.length) {
             this.subline.style.display = 'block';
             this.subline.style.left = w + 'px';
             this.subline.style.height = tableHeadRect.height + 'px';
@@ -365,7 +364,7 @@ export class DataGridTableHead extends React.Component<{ block: Block, style?: C
                         var ele = e.currentTarget as HTMLElement;
                         try {
                             ele.classList.add('hover');
-                            await this.block.onOpenFieldConfig(e,f.field, f);
+                            await this.block.onOpenFieldConfig(e, f.field, f);
                         }
                         catch (ex) {
 

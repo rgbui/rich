@@ -583,13 +583,14 @@ export class Page$ContextMenu {
                 {
                     name: 'viewDisplay',
                     type: MenuItemType.buttonOptions,
-                    value: this.formType,
+                    value: view.formType || 'doc',
+                    visible: viewType == 'template' ? true : false,
                     options: [
                         {
                             text: lst('默认'),
                             value: 'doc',
                             icon: { name: 'bytedance-icon', code: 'editor' },
-                            overlay: lst('数据浏览编辑')
+                            overlay: lst('编辑数据单')
                         },
                         {
                             text: lst('表单'),
@@ -601,39 +602,31 @@ export class Page$ContextMenu {
                             text: lst('清单'),
                             value: 'doc-detail',
                             icon: { name: 'bytedance-icon', code: 'doc-detail' },
-                            overlay: lst('只读的数据清单')
+                            overlay: lst('展示数据')
                         }
                     ]
                 },
-                { type: MenuItemType.divide },
+                { type: MenuItemType.divide, visible: viewType == 'template' ? true : false },
                 {
                     icon: { name: 'bytedance-icon', code: 'one-key' },
                     name: 'disabledUserMultiple',
                     text: lst('仅允许提交一次'),
                     type: MenuItemType.switch,
                     checked: view?.disabledUserMultiple,
-                    visible: viewType == 'template' ? true : false
-                },
-                {
-                    icon: { name: 'bytedance-icon', code: 'personal-privacy' },
-                    name: 'allowAnonymous',
-                    text: lst('允许匿名提交'),
-                    type: MenuItemType.switch,
-                    checked: view?.allowAnonymous,
-                    visible: viewType == 'template' ? true : false
+                    visible: viewType == 'template' && view.formType == 'doc-add' ? true : false
                 },
                 {
                     name: 'editForm',
                     icon: { name: 'bytedance-icon', code: 'arrow-right-up' },
                     text: lst('编辑模板'),
-                    visible: viewType == 'add' || viewType == 'template-edit'
+                    visible: viewType == 'add-data' || viewType == 'data-template-edit'
                 },
                 {
                     type: MenuItemType.gap,
-                    visible: viewType == 'origin-edit' ? false : true
+                    visible: viewType == 'data-origin-edit' ? false : true
                 },
                 { text: lst('显示字段'), type: MenuItemType.text },
-                ...this.schema.allowFormFields.findAll(g => viewType != 'template' && g.type == FieldType.title ? false : true).toArray(uf => {
+                ...this.schema.allowFormFields.findAll(g => (viewType == 'data-origin-edit' || viewType == 'data-template-edit' || viewType == 'add-data' && view.formType != 'doc-add') && g.type == FieldType.title ? false : true).toArray(uf => {
                     return {
                         icon: GetFieldTypeSvg(uf),
                         name: uf.id,
@@ -682,7 +675,7 @@ export class Page$ContextMenu {
         )
         if (r) {
             if (r.item.name == 'editForm') {
-                self.onFormOpen('template');
+                self.onPageViewTurn('template');
             }
             else if (r.item.name == 'hideAllFields') {
                 self.onAction('hideAllFields', async () => {

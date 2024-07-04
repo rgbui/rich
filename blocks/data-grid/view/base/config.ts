@@ -31,6 +31,7 @@ import { useDataGridConfig } from "../../../../extensions/data-grid/view.config/
 
 export class DataGridViewConfig {
     async onOpenViewSettings(this: DataGridView, rect: Rect) {
+        if(!this.dataGridIsCanEdit())return;
         var self = this;
         var view = this.schemaView;
         await this.onDataGridTool(async () => {
@@ -232,6 +233,7 @@ export class DataGridViewConfig {
     }
     async onOpenViewConfig(this: DataGridView, rect: Rect, mode?: 'view' | 'field' | 'sort' | 'filter' | 'group') {
         var self = this;
+        if(!this.dataGridIsCanEdit())return;
         await self.onDataGridTool(async () => {
             await useDataGridConfig(
                 { roundArea: rect },
@@ -242,6 +244,7 @@ export class DataGridViewConfig {
         })
     }
     async onOpenViewProperty(this: DataGridView, rect: Rect) {
+        if(!this.dataGridIsCanEdit())return;
         var self = this;
         await this.onDataGridTool(async () => {
             var menus: MenuItem<BlockDirective | string>[] = [

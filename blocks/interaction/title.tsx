@@ -18,6 +18,8 @@ import { UA } from "../../util/ua";
 import { util } from "../../util/util";
 import { PageLocation } from "../../src/page/directive";
 import "./style.less";
+import { ElementType } from "../../net/element.type";
+import { AtomPermission } from "../../src/page/permission";
 
 @url('/title')
 export class Title extends Block {
@@ -186,6 +188,9 @@ export class Title extends Block {
         }
         else return false;
     }
+    isCanEdit(): boolean {
+        return this.page.isCanEditRow;
+    }
 }
 @view('/title')
 export class TitleView extends BlockView<Title> {
@@ -200,6 +205,12 @@ export class TitleView extends BlockView<Title> {
         var isAdd: boolean = this.block.page.isSupportCover;
         if (!this.block.page.isCanEdit) isAdd = false;
         var pd = this.block.page.getPageDataInfo();
+        var isAddForm = false;
+        if (this.block.page.pe.type == ElementType.SchemaRecordView) {
+            var sv = this.block.page.schema.recordViews.find(x => x.id == this.block.page.pe.id1);
+            if (sv.formType == 'doc-add') isAddForm = true;;
+        }
+
         if (this.block.page.hideDocTitle) return <div className="sy-block-page-info visible-hover" style={{
             ...this.block.visibleStyle,
             display: 'none'
@@ -226,7 +237,8 @@ export class TitleView extends BlockView<Title> {
                     className={'shy-text-empty-font-inherit'}
                     placeholderEmptyVisible
                     plain
-                    html={pd?.text}
+                    html={pd?.text || ''}
+                    canEdit={isAddForm ? false : undefined}
                 ></TextArea></span>
             </div>}
             {this.renderComment()}

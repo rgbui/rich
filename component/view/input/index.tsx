@@ -200,8 +200,9 @@ export class Input extends React.Component<{
                 console.log('focus this.inputEl...');
                 setTimeout(() => {
                     if (this.inputEl) {
-                        this.inputEl.select();
+                        // this.inputEl.select();
                         this.inputEl.focus();
+                        this.inputEl.setSelectionRange(this.inputEl.value.length, this.inputEl.value.length)
                     }
                 }, 200);
 

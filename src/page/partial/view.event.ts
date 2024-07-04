@@ -38,17 +38,19 @@ export class Page$ViewEvent {
      * 
      */
     onMousedown(this: Page, event: React.MouseEvent) {
+        if (this.isDeny) return;
         if (event.button == 2 && UA.isWindows && this.isBoard) {
             this.onDragMousedown(event);
             return;
         }
-        if (this.pageLayout.type == PageLayoutType.board) {
+        if (this.pageLayout && this.pageLayout.type == PageLayoutType.board) {
             if (this.kit.page.isCanEdit)
                 this.kit.boardSelector.onShow(this.root, { page: this.kit.page });
         }
         this.kit.operator.mousedown(event);
     }
     onMouseDownCapture(this: Page, event: React.MouseEvent) {
+        if (this.isDeny) return;
         /**
          * 部分块的mousedown事件被拦截了，此时通过onMouseDownCapture优先处理一些动作
          */
@@ -57,9 +59,11 @@ export class Page$ViewEvent {
         }
     }
     onMousemove(this: Page, event: MouseEvent) {
+        if (this.isDeny) return;
         this.kit.operator.mousemove(event);
     }
     onMouseup(this: Page, event: MouseEvent) {
+        if (this.isDeny) return;
         this.kit.operator.mouseup(event);
     }
     onFocusCapture(this: Page, event: FocusEvent) {
@@ -68,6 +72,7 @@ export class Page$ViewEvent {
 
     }
     onPaste(this: Page, event: ClipboardEvent) {
+        if (this.isDeny) return;
         if (this.isPageOff) return;
         onPastePage(this.kit, event);
     }
@@ -79,6 +84,7 @@ export class Page$ViewEvent {
     private lastTriggerTime;
     onWheel(this: Page, event: React.WheelEvent) {
         if (this.readonly) return;
+        if (this.isDeny) return;
         this.kit.handle.onCloseBlockHandle();
         if (this.isBoard) {
             var ele = event.target as HTMLElement;
@@ -156,12 +162,14 @@ export class Page$ViewEvent {
      */
     onKeydown(this: Page, event: KeyboardEvent) {
         if (this.isPageOff == true) return;
+        if (this.isDeny) return;
         var ele = event.target as HTMLElement;
         if (ele && (ele === document.body || this.view.el === ele || this.view.el.contains(ele))) {
             this.keyboardPlate.keydown(event);
         }
     }
     onKeyup(this: Page, event: KeyboardEvent) {
+        if (this.isDeny) return;
         // console.log(event,event.key,event.code,this.keyboardPlate.keys,'keyup');
         this.keyboardPlate.keyup(event);
     }
@@ -169,6 +177,7 @@ export class Page$ViewEvent {
 
     }
     async onUndo(this: Page) {
+        if (this.isDeny) return;
         forceCloseTextTool()
         closeBoardEditTool();
         if (this.snapshoot.historyRecord.isCanUndo)
@@ -180,6 +189,7 @@ export class Page$ViewEvent {
         else ShyAlert(lst('没有可撤销的操作'))
     }
     async onRedo(this: Page) {
+        if (this.isDeny) return;
         forceCloseTextTool()
         closeBoardEditTool();
         if (this.snapshoot.historyRecord.isCanRedo)
@@ -493,21 +503,33 @@ export class Page$ViewEvent {
             text: string
 
         }
-
     } {
-        if ([ElementType.SchemaData,
-        ElementType.SchemaRecordViewData,
-        ElementType.SchemaRecordView,
-        ElementType.SchemaView].includes(this.pe.type) && !this.isSchemaRecordViewTemplate) {
+        if ([
+            ElementType.SchemaData,
+            ElementType.SchemaRecordViewData,
+            ElementType.SchemaRecordView,
+        ].includes(this.pe.type) && !this.isSchemaRecordViewTemplate) {
+            if (this.pe.type == ElementType.SchemaRecordView) {
+                var sr = this.schema.views.find(g => g.id == this.pe.id1);
+                if (sr && sr.formType == 'doc-add') {
+                    return {
+                        id: sr.id,
+                        text: sr.text,
+                        icon: sr.icon,
+                        cover: sr.cover,
+                        description: sr.description
+                    }
+                }
+            }
             return {
-                id: this.formRowData.id,
-                text: this.formRowData.title,
-                icon: this.formRowData.icon,
-                cover: this.formRowData.cover,
-                description: this.formRowData.description
+                id: this.formRowData?.id,
+                text: this.formRowData?.title,
+                icon: this.formRowData?.icon,
+                cover: this.formRowData?.cover,
+                description: this.formRowData?.description
             }
         }
-        else if (this.isSchemaRecordViewTemplate) {
+        else if (this.pe.type == ElementType.SchemaRecordView && this.isSchemaRecordViewTemplate) {
             var sr = this.schema.views.find(g => g.id == this.pe.id1);
             if (sr) {
                 return {
@@ -544,31 +566,29 @@ export class Page$ViewEvent {
     }
     async onUpdatePermissions(this: Page, data: Record<string, any>) {
         if ([
-            ElementType.SchemaData,
             ElementType.SchemaRecordView,
-            ElementType.SchemaView
-        ].includes(this.pe.type) && !this.isSchemaRecordViewTemplate) {
+        ].includes(this.pe.type)) {
             var sv = this.schema.views.find(g => g.id == this.pe.id1);
             if (sv) {
-                await this.schema.onSchemaOperate([{ id: sv.id, name: 'updateSchemaView', data }], 'onUpdatePermissions')
-                Object.assign(sv, data);
+                await this.schema.onSchemaOperate([{ name: 'updateSchemaView', id: sv.id, data: data }], 'onUpdatePermissions')
             }
         }
-        else if ([ElementType.SchemaData].includes(this.pe.type)) {
+        else if ([ElementType.SchemaData, ElementType.SchemaRecordViewData].includes(this.pe.type)) {
             if (typeof this.formRowData.config == 'undefined') this.formRowData.config = {};
-            Object.assign(this.formRowData.config, data);
+            var cfg = lodash.cloneDeep(this.formRowData.config);
+            Object.assign(cfg, data);
+            await this.schema.rowUpdate({ dataId: this.formRowData.id, data: { config: cfg } }, 'onUpdatePermissions')
         }
         else {
-            Object.assign(this._pageItem, data);
             await this.onUpdatePageData(data);
         }
-        await this.cachCurrentPermissions();
+        await this.cacCurrentPermissions();
     }
     getPermissions(this: Page) {
         if ([
             ElementType.SchemaRecordView,
-            ElementType.SchemaView
-        ].includes(this.pe.type) && !this.isSchemaRecordViewTemplate) {
+            // ElementType.SchemaView
+        ].includes(this.pe.type)) {
             var sv = this.schema.views.find(g => g.id == this.pe.id1);
             return {
                 share: sv.share,
@@ -590,21 +610,21 @@ export class Page$ViewEvent {
         }
         else if ([ElementType.SchemaData].includes(this.pe.type)) {
             return {
-                share: this.formRowData.share,
+                share: this.formRowData.confg.share,
 
                 /**
                  * 互联网是否公开，如果公开的权限是什么
                  */
-                netPermissions: this.formRowData.netPermissions,
+                netPermissions: this.formRowData.confg.netPermissions,
                 /**
                  * 外部邀请的用户权限
                  */
-                inviteUsersPermissions: this.formRowData.inviteUsersPermissions,
+                inviteUsersPermissions: this.formRowData.confg.inviteUsersPermissions,
                 /**
                  * 空间成员权限，
                  * 可以指定角色，也可以指定具体的人
                  */
-                memberPermissions: this.formRowData.memberPermissions
+                memberPermissions: this.formRowData.confg.memberPermissions
             }
         }
         return {

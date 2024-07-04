@@ -73,7 +73,13 @@ export type MenuItem<T = string> = {
     /**
      * 用户的头像size
      */
-    size?: number
+    size?: number,
+    /**
+     * 正常触发select时，菜单会关闭，
+     * 如果设置为true，则走input传递的方法
+     * 菜单不会关闭
+     */
+    selectInput?:boolean
 }
 
 export enum MenuItemType {

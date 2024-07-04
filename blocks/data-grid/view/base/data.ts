@@ -34,6 +34,8 @@ export class DataGridViewData {
         if (forceUrl) url = forceUrl;
         if (typeof initData == 'undefined') initData = {};
         initData.pre = this.page.getPageDataInfo();
+        initData.openSource = this.page.openSource;
+        initData.elementUrl = this.page.elementUrl;
         await this.onDataGridTool(async () => {
             await channel.act(url, {
                 elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, vid),
@@ -63,6 +65,8 @@ export class DataGridViewData {
         }
         var initData: Record<string, any> = {};
         initData.pre = this.page.getPageDataInfo();
+        initData.openSource = this.page.openSource;
+        initData.elementUrl = this.page.elementUrl;
         await this.onDataGridTool(async () => {
             await channel.act(url, {
                 elementUrl: elementUrl,
@@ -84,7 +88,7 @@ export class DataGridViewData {
             newRow = r.data;
             var at = this.data.findIndex(g => g.id == id);
             if (arrow == 'after') at += 1;
-            this.data.splice(at,0,newRow);
+            this.data.splice(at, 0, newRow);
             this.total += 1;
             this.onNotifyPageReferenceBlocks();
             await this.createOneItem(newRow, force);

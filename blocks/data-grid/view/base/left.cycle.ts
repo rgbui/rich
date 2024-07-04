@@ -12,6 +12,7 @@ export class DataGridViewLife {
     async loadSchema(this: DataGridView) {
         if (this.schemaId && !this.schema) {
             this.schema = await TableSchema.loadTableSchema(this.schemaId, this.page.ws);
+            await this.schema.cacPermissions()
         }
     }
     async loadViewFields(this: DataGridView) {

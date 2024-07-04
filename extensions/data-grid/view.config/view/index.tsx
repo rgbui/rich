@@ -178,7 +178,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                         helpUrl: window.shyConfig?.isUS ? "https://help.shy.red/page/42#6HAcf3LaXVpVtWnGU4LwuR" : "https://help.shy.live/page/1870#miDzBhMDdknUCHNkZvQbaM"
                     },
                     { type: MenuItemType.divide },
-                    ...this.schema.recordViews.map(rd => {
+                    ...this.schema.recordViews.findAll(g => g.formType != 'doc-add').map(rd => {
                         return {
                             text: rd.text,
                             value: rd.id,

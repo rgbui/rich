@@ -13,7 +13,7 @@ import weekOfYear from "dayjs/plugin/weekOfYear"
 import { DataGridGroup } from "../components/group"
 import { ScrollXDataGrid } from "./xscroll"
 import lodash from "lodash"
-import { ObserverWidth } from "../../../../src/common/Observer.width"
+import { ObserverWidth } from "../../../../src/common/observer.width"
 dayjs.extend(weekOfYear)
 
 @view('/data-grid/table')

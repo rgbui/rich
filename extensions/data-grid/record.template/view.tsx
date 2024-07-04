@@ -4,7 +4,7 @@
 import React, { ReactNode } from "react";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { useSelectMenuItem } from "../../../component/view/menu";
-import { MenuItemType } from "../../../component/view/menu/declare";
+import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { channel } from "../../../net/channel";
 import { Point } from "../../../src/common/vector/point";
 import { PopoverSingleton } from "../../../component/popover/popover";
@@ -48,8 +48,35 @@ class TabelSchemaFormDrop extends EventsComponent {
         })
     }
     async onAdd(event: React.MouseEvent, url: string) {
-        var menus = [
+        var menus: MenuItem[] = [
             { text: lst('数据模板名'), name: 'name', value: '', type: MenuItemType.input },
+            { type: MenuItemType.divide },
+            {
+                name: 'viewDisplay',
+                type: MenuItemType.buttonOptions,
+                value: 'doc',
+                selectInput: true,
+                options: [
+                    {
+                        text: lst('默认'),
+                        value: 'doc',
+                        icon: { name: 'bytedance-icon', code: 'editor' },
+                        overlay: lst('编辑数据')
+                    },
+                    {
+                        text: lst('表单'),
+                        value: 'doc-add',
+                        icon: { name: 'bytedance-icon', code: 'doc-add' },
+                        overlay: lst('收集数据')
+                    },
+                    {
+                        text: lst('清单'),
+                        value: 'doc-detail',
+                        icon: { name: 'bytedance-icon', code: 'doc-detail' },
+                        overlay: lst('展示数据')
+                    }
+                ]
+            },
             { type: MenuItemType.divide },
             {
                 type: MenuItemType.button,
@@ -57,11 +84,19 @@ class TabelSchemaFormDrop extends EventsComponent {
                 name: 'create'
             }
         ]
-        var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
+        var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus as any);
         if (um) {
             var name = menus[0].value;
+            var formType = menus[1].value || 'doc';
             if (name) {
-                await this.schema.onSchemaOperate([{ name: 'createSchemaView', text: name, url }], this.block.id)
+                await this.schema.onSchemaOperate([{
+                    name: 'createSchemaView',
+                    text: name,
+                    url,
+                    data: {
+                        formType
+                    }
+                }], this.block.id)
                 this.forceUpdate();
             }
         }

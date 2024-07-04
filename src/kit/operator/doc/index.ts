@@ -162,7 +162,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                             kit.anchorCursor.onFocusBlockAnchor(lastBlock, { last: true, render: true });
                     }
                     else {
-                        if ([PageLayoutType.doc, PageLayoutType.recordView].includes(kit.page.pageLayout.type))
+                        if ([PageLayoutType.doc].includes(kit.page.pageLayout.type))
                             kit.page.onCreateTailTextSpan(undefined);
                         else if ([PageLayoutType.ppt].includes(kit.page.pageLayout.type)) {
                             var lb = kit.page.views.first().findAll(c => c.url == BlockUrlConstant.CardBox).last()

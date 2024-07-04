@@ -29,7 +29,7 @@ import { Divider } from "../../../../component/view/grid";
 import { DropDirection } from "../../../../src/kit/handle/direction";
 import { Block } from "../../../../src/block";
 import { ScrollXDataGridBoard } from "./xscroll";
-import { ObserverWidth } from "../../../../src/common/Observer.width";
+import { ObserverWidth } from "../../../../src/common/observer.width";
 
 @url('/data-grid/board')
 export class TableStoreBoard extends DataGridView {

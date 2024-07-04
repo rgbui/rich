@@ -7,6 +7,7 @@ import { ChildsArea } from '../view/appear';
 import { PageLayoutType } from '../../page/declare';
 import { isMobileOnly } from 'react-device-detect';
 import { PageCover } from '../../page/view/cover';
+import { S } from '../../../i18n/view';
 
 @url('/view')
 export class View extends Block {
@@ -21,6 +22,8 @@ export class View extends Block {
  */
 @view('/view')
 export class ViewComponent extends BlockView<View> {
+
+    submitedSpread = false;
     renderView() {
         var isMainView = this.block.page.views[0] == this.block ? true : false;
         var layoutStyle = this.block.page.getScreenStyle();
@@ -84,7 +87,20 @@ export class ViewComponent extends BlockView<View> {
                 <div className={'sy-block-view-wrapper'} style={layoutStyle}>
                     {this.block.page.pageTheme?.coverStyle?.display == 'inside-cover' && <PageCover page={this.block.page}></PageCover>}
                     <div style={WrapperStyle}>
-                        <ChildsArea childs={this.block.childs}></ChildsArea>
+                        {this.block.page.dataSubmitId && this.submitedSpread == false && <div onMouseDown={e => {
+                            this.submitedSpread = true;
+                            this.block.forceManualUpdate()
+                        }} className='flex-center'>
+                            <div className='w-400 padding-h-10 flex-center round bg-white shadow-s border-light'>
+                                <span className='gap-r-3'><S>您已提交过1份数据</S></span>
+                                <span className='cursor link'>重新编辑</span>
+                            </div>
+                        </div>}
+                        <div style={{
+                            display: this.block.page.dataSubmitId && this.submitedSpread == false ? "none" : "block"
+                        }}>
+                            <ChildsArea childs={this.block.childs}></ChildsArea>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -97,7 +113,22 @@ export class ViewComponent extends BlockView<View> {
             }
             layoutStyle = {}
             return <div className='sy-block-view' style={layoutStyle} >
-                <div style={WrapperStyle}><ChildsArea childs={this.block.childs}></ChildsArea></div>
+                <div style={WrapperStyle}>
+                    {this.block.page.dataSubmitId && this.submitedSpread == false && <div onMouseDown={e => {
+                        this.submitedSpread = true;
+                        this.block.forceManualUpdate()
+                    }} className='flex-center'>
+                        <div className='w-400 padding-h-10 flex-center round bg-white shadow-s border-light'>
+                            <span className='gap-r-3'><S>您已提交过1份数据</S></span>
+                            <span className='cursor link'>重新编辑</span>
+                        </div>
+                    </div>}
+                    <div style={{
+                        display: this.block.page.dataSubmitId && this.submitedSpread == false ? "none" : "block"
+                    }}>
+                        <ChildsArea childs={this.block.childs}></ChildsArea>
+                    </div>
+                </div>
             </div>
         }
     }
