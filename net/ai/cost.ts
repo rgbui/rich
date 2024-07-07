@@ -71,6 +71,8 @@ export enum WsConsumeType {
     glm_4 = 101,
     glm_4v = 102,
     charglm_3 = 103,
+    glm_4_air = 104,
+    glm_4_flash = 105,
     cogview_3 = 110,
     glm_embedding_2 = 111
 
@@ -155,6 +157,8 @@ export function getWsConsumeType(type: WsConsumeType) {
             return 'glm-4';
         case WsConsumeType.glm_4v:
             return 'glm-4v';
+        // glm_4_air=104,
+        // glm_4_flash=105,
         case WsConsumeType.cogview_3:
             return 'cogview-3';
         case WsConsumeType.charglm_3:
@@ -183,9 +187,11 @@ export function getAiModelOptions() {
         { type: MenuItemType.help, helpInline: true, text: 'Learn about GPT supported by Shy', url: 'https://help.shy.red/page/62#9MZQerw5daPi4YuNpAK39u' }
     ] : [
         { text: lst('智谱'), type: MenuItemType.text },
-        { text: 'Glm-3-turbo', value: WsConsumeType.glm_3_turbo },
+        { text: 'Glm-4-flash', value: WsConsumeType.glm_4_flash },
+        { text: 'Glm-4-air', value: WsConsumeType.glm_4_air },
         { text: 'Glm-4', value: WsConsumeType.glm_4 },
-        { text: 'Glm-4V', value: WsConsumeType.glm_4v },
+        { text: 'Glm-3-turbo', value: WsConsumeType.glm_3_turbo },
+        // { text: 'Glm-4V', value: WsConsumeType.glm_4v },
         { text: lst('百度千帆'), type: MenuItemType.text, label: '文言一心' },
         { text: 'ERNIE-Bot-turbo', value: WsConsumeType.ERNIE_Bot_turbo },
         { text: 'ERNIE-Bot', value: WsConsumeType.ERNIE_Bot },
@@ -244,7 +250,7 @@ export function getAiDefaultModel(model: WsConsumeType, type?: 'text' | 'image' 
     else {
         switch (type) {
             case 'text':
-                return WsConsumeType.glm_3_turbo
+                return WsConsumeType.glm_4_flash
             case 'image':
                 return WsConsumeType.cogview_3
             case 'embedding':

@@ -153,11 +153,11 @@ export class Page$Cycle {
         }, {
             disabledStore: true
         })
-        if(source=='notify'){
-            try{
+        if (source == 'notify') {
+            try {
                 this.kit.collaboration.renderUserAction(actions)
             }
-            catch(ex){
+            catch (ex) {
                 console.error(ex);
             }
         }
@@ -209,16 +209,45 @@ export class Page$Cycle {
         return zipFile;
     }
     async getPlain(this: Page) {
-        return (await this.views.asyncMap(async v => await v.getPlain())).join(" ");
+        var plain = (await this.views.asyncMap(async v => await v.getPlain())).join(" ");
+        return plain.slice(0, 150);
     }
     async getMd(this: Page) {
         return (await this.views.asyncMap(async v => await v.getMd())).join(" \n");
     }
-    async getThumb(this: Page) {
-        var r = this.findAll(g => g.url == BlockUrlConstant.Image && ((g as Image).src ? true : false));
-        if (r) {
-            return lodash.cloneDeep((r as Image[]).map(i => i.src));
-        }
+    async getPreviewContent(this: Page) {
+        var bs: Block[] = [];
+        this.each(b => {
+            if ([
+                BlockUrlConstant.TextSpan,
+                BlockUrlConstant.Todo,
+                BlockUrlConstant.Mind,
+                BlockUrlConstant.Callout,
+                BlockUrlConstant.Code,
+                BlockUrlConstant.Head,
+                BlockUrlConstant.Katex,
+                BlockUrlConstant.List,
+                BlockUrlConstant.Quote,
+                BlockUrlConstant.Measure,
+                BlockUrlConstant.Note,
+                BlockUrlConstant.Shape
+            ].includes(b.url as any)) {
+                bs.push(b);
+            }
+            if (bs.length > 10) return false;
+        })
+        return JSON.stringify(await bs.asyncMap(async b => await b.get()));
+    }
+    async getThumb(this: Page)
+    {
+        var bs: Block[] = [];
+        this.each(b=>{
+            if ([BlockUrlConstant.Image].includes(b.url as any) && (b as Image).src) {
+                bs.push(b);
+            }
+            if (bs.length > 8) return false;
+        })
+        return lodash.cloneDeep(bs.map(c => (c as Image).src));
     }
     async loadFile(this: Page, blob: Blob) {
         if (blob) {
@@ -793,7 +822,7 @@ export class Page$Cycle {
         var bs: List[] = [];
         var rs: (Block[])[] = [];
         blocks.forEach(c => {
-            if (c.parentBlocks&&!rs.includes(c.parentBlocks)) rs.push(c.parentBlocks)
+            if (c.parentBlocks && !rs.includes(c.parentBlocks)) rs.push(c.parentBlocks)
         })
         rs.forEach(c => {
             var ls = c.filter(g => g.url == BlockUrlConstant.List && (g as List).listType == ListType.number && !blocks.includes(g)) as List[];
@@ -908,7 +937,7 @@ export class Page$Cycle {
                     await v.delete()
                 })
             }
-            if (this.requireSelectLayout == true&&this.pageInfo) {
+            if (this.requireSelectLayout == true && this.pageInfo) {
                 var items = await this.pageInfo.getSubItems();
                 if (items.length > 0) {
                     await this.updateProps({

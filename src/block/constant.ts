@@ -61,6 +61,7 @@ export enum BlockUrlConstant {
     PageAuthor = '/page/author',
     PageUpvotedOrShared = '/page/UpvotedOrShared',
     PageDescription='/pageDescription',
+    Measure='/measure'
 }
 
 export function BlockUrlResolve(url: BlockUrlConstant, data?: Record<string, any>) {

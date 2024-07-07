@@ -221,7 +221,6 @@ export interface ChannelPutMapUrls {
 	"/ws/comment/send":{args:{elementUrl: string,wsId?: string, parentId: string, rootId: string,content: string,mentions?:string[],files?:any[]},returnType:Promise<SockResponse<{data:any}>>},
 	"/ws/comment/emoji":{args:{wsId?: string, elementUrl: string},returnType:Promise<SockResponse<{count:number,exists?:boolean}>>},
 	"/page/item/create":{args:{wsId?:string,data:Record<string,any>},returnType:Promise<SockResponse<{ item:Record<string,any> }>>},
-	"/view/snap/direct":{args:{wsId?:string,  elementUrl: string, content: any,plain?:string,text?:string,thumb?:any },returnType:Promise<Promise<void>>},
 	"/bookmark/url":{args:{url:string},returnType:Promise<SockResponse<{title:string,description:string,image:ResourceArguments,icon:ResourceArguments}>>},
 	"/tag/create":{args:{tag:string,wsId?:string},returnType:Promise<SockResponse<{id:string,tag:string,workspaceId:string,rootId:string,creater:string,createDate:Date}>>},
 	"/import/page/data":{args:{text?:string,wsId?:string,parentId?:string,mime:number,pageData:Record<string,any>|string,plain?:string},returnType:Promise<SockResponse<{item:any}>>}

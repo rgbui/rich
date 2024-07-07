@@ -43,7 +43,8 @@ export class Handle extends Events {
                 }
             }
             else if (pos) {
-                console.error(this.handleBlock, pos);
+                if (pos.x < 10 && pos.y < 10)
+                    console.error(this.handleBlock, pos);
             }
         }
         else {
