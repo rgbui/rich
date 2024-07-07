@@ -37,6 +37,7 @@ export class Avatar extends React.Component<{
         channel.off('/user/basic/sync', this.syncUpdate)
     }
     isUn: boolean = false;
+    imgIsError = false;
     syncUpdate = (user: UserBasic) => {
         if (this.props.userid && this.user) {
             if (this.props.userid == user.id) {
@@ -86,7 +87,10 @@ export class Avatar extends React.Component<{
         var size = this.props.size ? this.props.size : 20;
         var renderIcon = () => {
             if (user) {
-                if (user?.avatar) return <img style={{ width: size, height: size }} src={autoImageUrl(user.avatar.url, 120)} />
+                if (user?.avatar && !this.imgIsError) return <img onError={e => {
+                    this.imgIsError = true;
+                    this.forceUpdate();
+                }} style={{ width: size, height: size }} src={autoImageUrl(user.avatar.url, 120)} />
                 if (user?.name) return <span style={{ width: size, height: size, fontSize: size * 0.6, lineHeight: size + 'px' }}
                     className='shy-avatar-name'>{user.name.slice(0, 1)}</span>
             }
