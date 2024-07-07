@@ -184,14 +184,14 @@ export class Input extends React.Component<{
     }
     updateValue(value) {
         if (this.inputEl)
-            this.inputEl.value = value;
+            this.inputEl.value = value||'';
     }
     focus() {
         this.inputEl.focus()
     }
     componentDidUpdate(prevProps) {
         if (!lodash.isEqual(prevProps.value, this.props.value)) {
-            this.inputEl.value = this.props.value;
+            this.inputEl.value = this.props.value||'';
         }
     }
     componentDidMount() {
