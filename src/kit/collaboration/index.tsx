@@ -201,8 +201,8 @@ export class Collaboration extends React.Component<{ kit: Kit }> {
                 }}>
                     <UserBox userid={u.userid}>{(user) => {
                         return <div className="flex h-24" style={{ position: 'absolute', top: -30, left: 0 }}  >
-                            {user.avatar?.url && <Avatar className="flex-center" user={user} size={24}></Avatar>}
-                            <span style={{ backgroundColor: u.color, height: 18 }} className="gap-l-5 round l-18 padding-w-4 text-white">{user.name}</span>
+                            {user.avatar?.url && <Avatar className="flex-center flex-fixed" user={user} size={24}></Avatar>}
+                            <span style={{ backgroundColor: u.color, height: 18 }} className="gap-l-5 text-nowrap round l-18 padding-w-4 text-white">{user.name}</span>
                         </div>
                     }}</UserBox>
                     {u.rects.map((re,i) => {
