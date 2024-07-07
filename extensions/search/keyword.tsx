@@ -175,12 +175,15 @@ export class SearchBox extends EventsComponent {
                 })}</div>
         }
         return this.searchList.list.map(r => {
-            return <div key={r.id} className="padding-10 item-hover round cursor" onMouseDown={e => this.onSelect(r)}>
+            var pa = this.searchList.pages.find(s => s.id == r.id);
+            return <div key={r.id} className="padding-10 item-hover round cursor" onMouseDown={e => this.onSelect(pa)}>
                 <div className="flex">
-                    <span className="flex-line flex-center size-20 round remark gap-r-5"><Icon size={16} icon={getPageIcon(r)}></Icon></span>
-                    <span className="text f-14">{getPageText(r)}</span>
+                    <span className="flex-line flex-fixed flex-center size-20 round remark gap-r-5"><Icon size={16} icon={getPageIcon(pa)}></Icon></span>
+                    <span className="text f-14 flex-auto bold">{getPageText(pa)}</span>
+                    <span className="flex-fixed remark f-12">{util.showTime(r.editDate || r.createDate)}</span>
                 </div>
-                <div className="remark f-14">{r.content}</div>
+                <div className="text-1 f-12 l-20"
+                    dangerouslySetInnerHTML={{ __html: r.content }}></div>
             </div>
         })
     }
@@ -252,7 +255,7 @@ export class SearchBox extends EventsComponent {
 
         this.recentItems = items;
     }
-    searchList: SearchListType<{ id: string, creater: string, score?: string, title?: string, content: string }, { isOnlySearchTitle?: boolean, editDate?: number, createDate?: number, pages: LinkPageItem[] }> = { editDate: -1, createDate: null, isOnlySearchTitle: false, loading: false, list: [], pages: [], total: 0, page: 1, size: 20 };
+    searchList: SearchListType<{ id: string, creater: string, score?: string,createDate?:Date,editDate?:Date, title?: string, content: string }, { isOnlySearchTitle?: boolean, editDate?: number, createDate?: number, pages: LinkPageItem[] }> = { editDate: -1, createDate: null, isOnlySearchTitle: false, loading: false, list: [], pages: [], total: 0, page: 1, size: 20 };
     onForceSearch = async () => {
         if (this.searchList.word) {
             this.searchList.loading = true;
