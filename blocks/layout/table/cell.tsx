@@ -55,6 +55,7 @@ export class TableCell extends Block {
 @view('/table/cell')
 export class TableCellView extends BlockView<TableCell>{
     async mousedown(event: React.MouseEvent) {
+        if(!this.block.isCanEdit())return;
         if (event.button == 2) return;
         if (this.block.childs.length == 0) {
             event.stopPropagation()
@@ -67,6 +68,7 @@ export class TableCellView extends BlockView<TableCell>{
         }
     }
     async onContextMenu(event: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>) {
+        if(!this.block.isCanEdit())return;
         event.preventDefault();
         event.stopPropagation();
         try {

@@ -48,6 +48,7 @@ export class TabPage extends Block {
 @view('/tab/page')
 export class TabPageView extends BlockView<TabPage>{
     async mousedown(event: React.MouseEvent) {
+        if(!this.block.isCanEdit())return;
         if (this.block.childs.length == 0) {
             event.stopPropagation()
             await this.block.page.onAction(ActionDirective.onCreateBlockByEnter, async () => {
