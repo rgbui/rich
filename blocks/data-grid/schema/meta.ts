@@ -438,34 +438,34 @@ export class TableSchema {
     distinct(options: { filter?: Record<string, any>, field: string }, ws: LinkWs) {
         return channel.get('/datastore/query/distinct', Object.assign({ schemaId: this.id, ws: ws }, options))
     }
-    fieldAdd(field: { text: string, type: FieldType, config?: Record<string, any> }, locationId: string) {
+    fieldAdd(field: { text: string, type: FieldType, config?: Record<string, any> }, locationId: string|PageLocation) {
         return this.onSchemaOperate([{ name: 'addField', field: field as any }], locationId)
     }
     fieldRemove(fieldId: string, locationId: string) {
         return this.onSchemaOperate([{ name: 'removeField', fieldId }], locationId)
     }
-    fieldUpdate(args: { fieldId: string, data: Record<string, any> }, locationId: string) {
+    fieldUpdate(args: { fieldId: string, data: Record<string, any> }, locationId: string|PageLocation) {
         return this.onSchemaOperate([{
             name: 'updateField',
             fieldId: args.fieldId,
             data: args.data
         }], locationId)
     }
-    turnField(args: { fieldId: string, data: { text: string, type: FieldType, config?: Record<string, any> } }, locationId: string) {
+    turnField(args: { fieldId: string, data: { text: string, type: FieldType, config?: Record<string, any> } }, locationId:string|PageLocation) {
         return this.onSchemaOperate([{
             name: 'turnField',
             fieldId: args.fieldId,
             data: args.data
         }], locationId)
     }
-    async update(props: Record<string, any>, locationId: string) {
+    async update(props: Record<string, any>, locationId: string|PageLocation) {
         return await this.onSchemaOperate([{
             name: 'updateSchema',
             id: this.id,
             data: props
         }], locationId)
     }
-    async onSchemaOperate(actions: SchemaAction[], locationId: string) {
+    async onSchemaOperate(actions: SchemaAction[], locationId: string|PageLocation) {
         var result = await channel.air('/schema/operate', {
             operate: {
                 schemaId: this.id,
@@ -539,7 +539,7 @@ export class TableSchema {
         })
         return result;
     }
-    async createSchemaView(text: string, url: string, locationId: string) {
+    async createSchemaView(text: string, url: string, locationId: string|PageLocation) {
         var cm = CardFactory.CardModels.get(url)?.model;
         var viewUrl = url;
         var viewProps: Record<string, any>;

@@ -446,7 +446,7 @@ export class Page$ViewEvent {
             ElementType.SchemaData
         ].includes(this.pe.type)) {
             this.formRowData.title = text;
-            await this.onUpdatePageData({ title: text });
+            await this.onUpdatePageData({ title: text }, locationId || PageLocation.pageUpdateInfo);
             if (this.view.pageBar) this.view.pageBar.forceUpdate()
         }
         else if (this.isSchemaRecordViewTemplate) {
@@ -456,7 +456,7 @@ export class Page$ViewEvent {
                     name: 'updateSchemaView',
                     id: this.pe.id1,
                     data: { text }
-                }], 'onUpdatePageTitle')
+                }], locationId || PageLocation.pageUpdateInfo)
                 if (this.view.pageBar) this.view.pageBar.forceUpdate()
             }
         }
@@ -464,7 +464,7 @@ export class Page$ViewEvent {
             if (this.pe.type == ElementType.Schema) {
                 var schema = await TableSchema.loadTableSchema(this.pe.id, this.ws);
                 if (schema)
-                    await schema.update({ text }, 'onUpdatePageTitle')
+                    await schema.update({ text }, locationId || PageLocation.pageUpdateInfo)
             }
             await channel.air('/page/update/info', {
                 elementUrl: this.elementUrl,

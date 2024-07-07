@@ -303,11 +303,14 @@ export class Page$Operator2 {
             Object.assign(this.formRowData, data);
             this.forceUpdate();
             this.view.pageBar?.forceUpdate();
-            var tb = this.find(c => c.url == BlockUrlConstant.Title);
-            if (tb) {
-                await (tb as Title).loadPageInfo();
-                tb.forceManualUpdate()
+            if (locationId != PageLocation.pageEditTitle) {
+                var tb = this.find(c => c.url == BlockUrlConstant.Title);
+                if (tb) {
+                    await (tb as Title).loadPageInfo();
+                    tb.forceManualUpdate()
+                }
             }
+
 
             if (this.pe.type == ElementType.SchemaData || this.pe.type == ElementType.SchemaRecordViewData) {
                 if (this.formRowData?.id) {

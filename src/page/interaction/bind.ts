@@ -22,6 +22,7 @@ export function SyncPage(page: Page)
             page.views.forEach(v => {
                 v.forceManualUpdate()
             })
+            //console.log('eeee',options?.locationId)
             if (options?.locationId != PageLocation.pageEditTitle) {
                 var title = page.find(c => c.url == BlockUrlConstant.Title) as Title;
                 if (title) {

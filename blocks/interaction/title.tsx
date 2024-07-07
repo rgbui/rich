@@ -19,7 +19,6 @@ import { util } from "../../util/util";
 import { PageLocation } from "../../src/page/directive";
 import "./style.less";
 import { ElementType } from "../../net/element.type";
-import { AtomPermission } from "../../src/page/permission";
 
 @url('/title')
 export class Title extends Block {
@@ -195,7 +194,6 @@ export class Title extends Block {
 @view('/title')
 export class TitleView extends BlockView<Title> {
     async didMount() {
-        // channel.sync('/page/update/info', this.updatePageInfo);
         this.block.loadPageInfo();
         this.forceUpdate(() => {
             this.block.onFocusPageTitle();
