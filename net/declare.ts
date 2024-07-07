@@ -7,7 +7,7 @@ import { UserAction } from "../src/history/action";
 import { RobotInfo, UserBasic, UserStatus, WorkspaceMember } from "../types/user";
 import { ResourceArguments } from "../extensions/icon/declare";
 import { PayFeatureCheck } from "../component/pay";
-import { AtomPermission, PageSourcePermission } from "../src/page/permission";
+import { PageSourcePermission } from "../src/page/permission";
 import { WsConsumeType } from "./ai/cost";
 export type SockResponse<T, U = string> = {
         /**
@@ -207,7 +207,7 @@ export interface ChannelPutMapUrls {
 	"/friend/agree":{args:{id:string},returnType:Promise<SockResponse<{userFriend:Record<string,any>}>>},
 	"/user/chat/send":{args:{roomId:string,content?:string,files?:any,tos:string[],replyId?:string},returnType:Promise<SockResponse<{id:string,seq:number,createDate:Date}>>},
 	"/user/chat/emoji":{args:{id:string,roomId:string,emoji:{emojiId: string, code?: string}},returnType:Promise<SockResponse<{emoji:{emojiId: string, code?: string,count:number}}>>},
-	"/create/qr_pay/order":{args:{subject: string,body: string,price: number,count: number,amount?: number,kind: string},returnType:Promise<SockResponse<{orderId:string,code:string}>>},
+	"/create/qr_pay/order":{args:{subject: string,body: string,price: number,count: number,amount?: number,kind: string,free:number,rate:number},returnType:Promise<SockResponse<{orderId:string,code:string}>>},
 	"/open/weixin/bind":{args:{weixinOpen:any},returnType:Promise<SockResponse<void>>},
 	"/open/sign":{args:{},returnType:Promise<SockResponse<{user:Record<string,any>,guid:string,token:string}>>},
 	"/user/report":{args:{report:{userid:string,tags:string[],reason:string,reportElementUrl?:string,wsId?:string,reportContent?:string}},returnType:Promise<SockResponse<void>>},
