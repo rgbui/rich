@@ -159,9 +159,9 @@ export class Page$Schema {
             return null;
         }
         if ([ElementType.SchemaData, ElementType.SchemaRecordViewData].includes(this.pe.type)) {
-            var title = this.find(c => c.url == BlockUrlConstant.Title) as Title;
-            if (title)
-                row.title = title.content;
+            // var title = this.find(c => c.url == BlockUrlConstant.Title) as Title;
+            // if (title)
+            //     row.title = this.getPageDataInfo().text
         }
         row.icon = this.formRowData.icon;
         row.cover = this.formRowData.cover;
@@ -179,6 +179,7 @@ export class Page$Schema {
     async onSubmitForm(this: Page) {
         if (this.pe.type == ElementType.SchemaData || this.pe.type == ElementType.SchemaRecordViewData) {
             var newRow = await this.getSchemaRow()
+            console.log('ggg', newRow);
             if (newRow && Object.keys(newRow).length > 0) {
                 await this.schema.rowUpdate({ dataId: this.pe.id1, data: newRow }, 'Page.onSubmitForm')
             }
