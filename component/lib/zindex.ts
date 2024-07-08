@@ -7,6 +7,10 @@ export enum LayerType {
      */
     tip,
     /**
+     * 页面弹窗，相比popover更低一些
+     */
+    page,
+    /**
      * 弹窗对话框（用来交互处理的）
      */
     popover,
@@ -26,8 +30,13 @@ class Layer {
     private init() {
         switch (this.type) {
             case LayerType.popover:
-                this.min = 10000;
+                this.min = 20000;
                 this.max = 50000;
+                this.index = this.min;
+                break;
+            case LayerType.page:
+                this.min = 10000;
+                this.max = 20000;
                 this.index = this.min;
                 break;
             case LayerType.rise:
@@ -71,4 +80,5 @@ class Layer {
 export var popoverLayer = new Layer(LayerType.popover);
 export var tipLayer = new Layer(LayerType.tip);
 export var riseLayer = new Layer(LayerType.rise);
+export var pageLayer = new Layer(LayerType.page);
 

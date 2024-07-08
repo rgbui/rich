@@ -44,8 +44,7 @@ import { UA } from "../../../util/ua";
 import lodash from "lodash";
 
 export class Page$ContextMenu {
-    async onPageContextmenu(this: Page, event: React.MouseEvent)
-    {
+    async onPageContextmenu(this: Page, event: React.MouseEvent) {
         var items: MenuItem<BlockDirective | string>[] = [];
         var robots = (await this.ws.getWsRobots()).filter(g => g.disabledWiki !== true);
         if (this.pageLayout.type == PageLayoutType.doc) {
@@ -65,7 +64,7 @@ export class Page$ContextMenu {
                     childs: [
                         { name: 'onlyDisplayContent', text: lst('标题'), type: MenuItemType.switch, checked: this.hideDocTitle ? false : true, icon: HSvg },
                         { name: 'showCover', text: lst('封面'), type: MenuItemType.switch, checked: this.pageInfo?.cover?.abled && this.pageInfo?.cover.url ? true : false, icon: PicSvg },
-                        { name: 'pageAuthor', text: lst('作者'), icon: { name: 'bytedance-icon', code: 'edit-name' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PageAuthor) },
+                        { name: 'pageAuthor', text: lst('编辑人'), icon: { name: 'bytedance-icon', code: 'edit-name' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PageAuthor) },
                         { type: MenuItemType.divide },
                         { name: 'showComment', text: lst("评论"), icon: { name: 'byte', code: 'message' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                         { name: 'pageUpvotedOrShared', text: lst('点赞分享'), icon: { name: 'bytedance-icon', code: 'send' }, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PageUpvotedOrShared) },
@@ -97,7 +96,7 @@ export class Page$ContextMenu {
                 {
                     name: 'turnToPPT',
                     text: lst('转换为PPT'),
-                    icon: { name: 'byte',code: 'cycle-one' }
+                    icon: { name: 'byte', code: 'cycle-one' }
                 },
                 {
                     name: 'copy',
@@ -192,7 +191,7 @@ export class Page$ContextMenu {
                     childs: [
                         { name: 'onlyDisplayContent', text: lst('标题'), type: MenuItemType.switch, checked: this.hideDocTitle ? false : true, icon: HSvg },
                         {
-                            name: 'pageAuthor', text: lst('作者'), icon: { name: 'bytedance-icon', code: 'edit-name' },
+                            name: 'pageAuthor', text: lst('编辑人'), icon: { name: 'bytedance-icon', code: 'edit-name' },
                             type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.PageAuthor)
                         },
                         { type: MenuItemType.divide },
