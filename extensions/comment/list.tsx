@@ -29,7 +29,6 @@ export class CommentListView extends React.Component<{
     ws?: LinkWs,
     onChange?: (props: Record<string, any>) => void,
     contentHeight?: number
-
 }> {
     list: WsCommentType[] = [];
     total = 0;

@@ -68,7 +68,7 @@ export class ChatInputPop extends React.Component<{
             this.forceUpdate(() => {
                 var eg = this.el.querySelector('.item-hover-focus');
                 if (eg) {
-                    (eg as HTMLElement).scrollIntoView();
+                    (eg as HTMLElement).scrollIntoView({ block: 'center', inline: 'center'});
                 }
             })
         }
@@ -78,7 +78,7 @@ export class ChatInputPop extends React.Component<{
             this.forceUpdate(() => {
                 var eg = this.el.querySelector('.item-hover-focus');
                 if (eg) {
-                    (eg as HTMLElement).scrollIntoView();
+                    (eg as HTMLElement).scrollIntoView({ block: 'center', inline: 'center'});
                 }
             })
         }
@@ -115,6 +115,7 @@ export class ChatInputPop extends React.Component<{
             return await this.props.cp.box.props.searchUser(text)
         var r = await channel.get('/ws/member/word/query', { word: text, ws: this.props.cp.box.props.ws });
         if (r.ok) {
+            console.log('ggg',r.data);
             return r.data.list.map(c => {
                 return {
                     ...c,

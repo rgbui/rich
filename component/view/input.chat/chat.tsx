@@ -16,6 +16,7 @@ export class ChatInput extends React.Component<{ box?: InputChatBox, }> {
         return this.props.box;
     }
     keydown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+        event.stopPropagation();
         var key = event.key.toLowerCase();
         var isShift = event.shiftKey;
         if (this.currentCommand) {
@@ -185,6 +186,7 @@ export class ChatInput extends React.Component<{ box?: InputChatBox, }> {
         }
     }
     keyup = (event: React.KeyboardEvent<HTMLDivElement>) => {
+        event.stopPropagation();
         if (event.nativeEvent.isComposing) return;
         if (this.userPop.visible == true) {
             this.userPop.keyup()
@@ -199,9 +201,10 @@ export class ChatInput extends React.Component<{ box?: InputChatBox, }> {
         //     this.props.onInput(this.getValue())
     }
     mousedown = (event: React.MouseEvent) => {
-
+        event.stopPropagation();
     }
     mouseup = (event: React.MouseEvent) => {
+        event.stopPropagation();
         if (this.tool.visible == true) {
             this.tool.hide()
         }
@@ -239,6 +242,7 @@ export class ChatInput extends React.Component<{ box?: InputChatBox, }> {
 
     }
     paste = async (event: React.ClipboardEvent<HTMLDivElement>) => {
+        event.stopPropagation();
         if (this.tool.visible) {
             this.tool.hide()
         }
@@ -300,6 +304,7 @@ export class ChatInput extends React.Component<{ box?: InputChatBox, }> {
     }
     userPop: ChatInputPop;
     selectUser = (user: UserBasic) => {
+        console.log('ssss',user);
         var sel = window.getSelection();
         var node = sel.focusNode as Node;
         var offset = sel.focusOffset;
