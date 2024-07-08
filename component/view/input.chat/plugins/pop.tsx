@@ -1,5 +1,4 @@
 import React, { CSSProperties } from "react";
-import { ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { UserBasic } from "../../../../types/user";
 import { Point, Rect } from "../../../../src/common/vector/point";
@@ -12,16 +11,14 @@ import { lst } from "../../../../i18n/store";
 import { S } from "../../../../i18n/view";
 import { channel } from "../../../../net/channel";
 import { util } from "../../../../util/util";
-
+import { tipLayer } from "../../../lib/zindex";
 
 /**
  * 
  * https://www.zhangxinxu.com/wordpress/2022/08/gitee-feishu-okr-at-mention/
  * 
- * 
  */
 export class ChatInputPop extends React.Component<{
-
     select: (user: UserBasic) => void,
     cp: ChatInput
 }> {
@@ -45,7 +42,7 @@ export class ChatInputPop extends React.Component<{
                 rect = Rect.fromEle(this.props.cp.richEl)
             }
             this.point = rect.clone().leftBottom.move(0, 10)
-            this.users=await this.searchUser()
+            this.users = await this.searchUser()
         }
         catch (ex) {
             console.error(ex)
@@ -68,7 +65,7 @@ export class ChatInputPop extends React.Component<{
             this.forceUpdate(() => {
                 var eg = this.el.querySelector('.item-hover-focus');
                 if (eg) {
-                    (eg as HTMLElement).scrollIntoView({ block: 'center', inline: 'center'});
+                    (eg as HTMLElement).scrollIntoView({ block: 'center', inline: 'center' });
                 }
             })
         }
@@ -78,14 +75,13 @@ export class ChatInputPop extends React.Component<{
             this.forceUpdate(() => {
                 var eg = this.el.querySelector('.item-hover-focus');
                 if (eg) {
-                    (eg as HTMLElement).scrollIntoView({ block: 'center', inline: 'center'});
+                    (eg as HTMLElement).scrollIntoView({ block: 'center', inline: 'center' });
                 }
             })
         }
     }
     select(user: UserBasic) {
-        if (user)
-            this.props.select(user);
+        if (user) this.props.select(user);
         this.hide()
     }
     back() {
@@ -95,7 +91,6 @@ export class ChatInputPop extends React.Component<{
         // }
     }
     keyup() {
-        console.log('keyup...')
         var content = this.node == this.props.cp.richEl ? this.props.cp.richEl.innerHTML : this.node.textContent;
         var word = content.slice(this.nodeOffset);
         if (word && word.startsWith('@')) {
@@ -115,7 +110,6 @@ export class ChatInputPop extends React.Component<{
             return await this.props.cp.box.props.searchUser(text)
         var r = await channel.get('/ws/member/word/query', { word: text, ws: this.props.cp.box.props.ws });
         if (r.ok) {
-            console.log('ggg',r.data);
             return r.data.list.map(c => {
                 return {
                     ...c,
@@ -149,18 +143,18 @@ export class ChatInputPop extends React.Component<{
             this.loading = false;
             this.forceUpdate()
         }
-    }, 300)
+    },300)
     users: UserBasic[] = [];
     el: HTMLElement;
     point: Point = new Point();
     loading: boolean = false;
-    render(): ReactNode {
+    render() {
         var style: CSSProperties = {
             top: this.point.y - 30,
             left: this.point.x,
             userSelect: 'none',
             transform: 'translate(0px, -100%)',
-            zIndex: '10000'
+            zIndex: tipLayer.zoom(this)
         };
         if (this.visible) style.display = 'block';
         else style.display = 'none';
@@ -196,6 +190,7 @@ export class ChatInputPop extends React.Component<{
         return this._panel;
     }
     componentWillUnmount(): void {
+        tipLayer.clear(this);
         if (this.panel) this.panel.remove()
     }
     selectIndex = 0;

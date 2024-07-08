@@ -8,7 +8,7 @@ import lodash from "lodash";
 import { Avatar } from "../../avator/face";
 import { Line } from "../../grid";
 import { S } from "../../../../i18n/view";
-
+import { tipLayer } from "../../../lib/zindex";
 
 export class ChatCommandInput extends React.Component<{
     cp: ChatInput,
@@ -58,7 +58,7 @@ export class ChatCommandInput extends React.Component<{
             width: this.rect.width,
             height: this.rect.height,
             userSelect: 'none',
-            zIndex: '10000'
+            zIndex: tipLayer.zoom(this)
         };
         if (this.visible) style.display = 'block';
         else style.display = 'none';
@@ -137,6 +137,7 @@ export class ChatCommandInput extends React.Component<{
         this.showRobotId = this.robots[0].id;
     }
     componentWillUnmount(): void {
+        tipLayer.clear(this);
         if (this.panel) this.panel.remove()
     }
     keydown(key: string) {

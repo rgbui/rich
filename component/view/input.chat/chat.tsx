@@ -273,6 +273,7 @@ export class ChatInput extends React.Component<{ box?: InputChatBox, }> {
         else {
             style.minHeight = 24;
         }
+        if(this.box.props.fontSize) style.fontSize = this.box.props.fontSize;
         var v = this.box.props.value;
         return <div>
             <div className={"text shy-rich-view" + (this.isQuote ? " shy-rich-view-quote" : "")}
@@ -304,7 +305,7 @@ export class ChatInput extends React.Component<{ box?: InputChatBox, }> {
     }
     userPop: ChatInputPop;
     selectUser = (user: UserBasic) => {
-        console.log('ssss',user);
+      
         var sel = window.getSelection();
         var node = sel.focusNode as Node;
         var offset = sel.focusOffset;

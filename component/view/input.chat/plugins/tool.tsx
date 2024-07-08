@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { Point, Rect } from "../../../../src/common/vector/point";
 import { CodeSvg, QuoteSvg } from "../../../svgs";
 import { Icon } from "../../icon";
+import { tipLayer } from "../../../lib/zindex";
 
 export class InputChatTool extends React.Component<{
     click: (command: 'bold' | 'delete' | 'code' | 'quote' | 'italic') => void
@@ -37,7 +38,7 @@ export class InputChatTool extends React.Component<{
             left: this.point.x,
             top: this.point.y,
             userSelect: 'none',
-            zIndex: '10000'
+            zIndex: tipLayer.zoom(this)
         }
         if (this.visible == false) style.display = 'none'
         return createPortal(<div
@@ -67,6 +68,7 @@ export class InputChatTool extends React.Component<{
         return this._panel;
     }
     componentWillUnmount(): void {
+        tipLayer.clear(this);
         if (this.panel) this.panel.remove()
     }
 }

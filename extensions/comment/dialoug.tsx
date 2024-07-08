@@ -16,7 +16,9 @@ export class CommentDialoug extends EventsComponent {
                     <div className="row-2" dangerouslySetInnerHTML={{ __html: this.resolvedHtml }}></div>
                 </div>
                 <div className="flex-fixed">
-                    <Button onMouseDown={e => this.onResolve()} ghost><S>已解决</S></Button>
+                    <Button 
+                    onMouseDown={e => this.onResolve()} 
+                    ghost><S>已解决</S></Button>
                 </div>
             </div>}
             {this.elementUrl && <CommentListView
@@ -27,6 +29,9 @@ export class CommentDialoug extends EventsComponent {
                 elementUrl={this.elementUrl}
                 ws={this.ws}
                 contentHeight={200}
+                onSend={()=>{
+                    this.emit('update')
+                }}
             ></CommentListView>}
         </div>
     }

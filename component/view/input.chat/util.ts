@@ -16,7 +16,7 @@ export function InsertSelectionText(text: string) {
         var ts = text.split(/\n/g);
         if (ts.length == 1 && container.nodeType == 3) {
             (container as Text).insertData(pos, ts[0]);
-            range.setStart(container, pos);
+            range.setStart(container, pos + ts[0].length);
             range.setEnd(container, pos + ts[0].length);
             sel.addRange(range);
         }

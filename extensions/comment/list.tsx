@@ -28,7 +28,8 @@ export class CommentListView extends React.Component<{
     displayFormat?: 'comment' | 'answer' | 'discuss',
     ws?: LinkWs,
     onChange?: (props: Record<string, any>) => void,
-    contentHeight?: number
+    contentHeight?: number,
+    onSend?:()=>void
 }> {
     list: WsCommentType[] = [];
     total = 0;
@@ -146,7 +147,9 @@ export class CommentListView extends React.Component<{
                     this.list.push(r.data.data);
                     this.total += 1;
                 }
-                this.forceUpdate()
+                this.forceUpdate(()=>{
+                    if(typeof this.props.onSend == 'function') this.props.onSend()
+                })
             }
         }
     }
@@ -257,6 +260,7 @@ export class CommentListView extends React.Component<{
     renderSendComment() {
         return <div className="padding-5 round-8 border-light ">
             <InputChatBox
+                fontSize={14}
                 userid={this.userid}
                 ws={this.props.ws}
                 placeholder={lst("发表评论...")}
