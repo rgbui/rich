@@ -13,7 +13,7 @@ import { OriginField, OriginFileView } from "./origin.field";
 export class FieldRelation extends OriginField {
     get relationList() {
         var rs: any[] = [];
-        var vs: string[] = this.value;
+        var vs: string[] = lodash.cloneDeep(this.value);
         if (!Array.isArray(vs)) vs = [];
         if (vs.length == 0) return [];
         if (!this.field.config?.isMultiple) {
@@ -31,7 +31,7 @@ export class FieldRelation extends OriginField {
     async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
         if (this.checkEdit() === false) return;
         event.stopPropagation();
-        var fn = async ()=>{
+        var fn = async () => {
             var r = await useRelationPickData({ dist: 0, roundArea: Rect.fromEle(this.el as HTMLElement) }, {
                 field: this.viewField.field,
                 relationDatas: this.relationList,
@@ -41,6 +41,7 @@ export class FieldRelation extends OriginField {
             });
             if (r) {
                 var ids = r.map(r => r.id);
+                console.log('dddd', ids, lodash.cloneDeep(this.value), 'xxx');
                 await this.onUpdateCellValue(ids);
                 await this.dataGrid.loadRelationDatas();
                 this.forceManualUpdate();
@@ -75,54 +76,5 @@ export class FieldRelationView extends OriginFileView<FieldRelation> {
     }
 }
 
-@url('/field/rollup')
-export class FieldRollup extends OriginField {
-    get relationList() {
-        var gs = this.dataGrid.relationDatas.get(this.field.config?.rollupTableId) || [];
-        var item: FieldRelation = this.dataGridItem.childs.find(g => (g instanceof FieldRelation) && g.field.config.relationTableId == this.field.config?.rollupTableId) as any;
-        if (item) {
-            var vs: string[] = item.value;
-            if (!Array.isArray(vs)) vs = [];
-            if (vs.length == 0) return [];
-            if (!item.field.config?.isMultiple) {
-                vs = vs.slice(0, 1);
-            }
-            return gs.findAll(g => vs.includes(g.id));
-        }
-        return []
-    }
-    get relationSchema() {
-        return this.dataGrid.relationSchemas.find(g => g.id == this.field.config?.rollupTableId)
-    }
-    async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
 
-    }
-}
-
-@view('/field/rollup')
-export class FieldRollupView extends OriginFileView<FieldRollup> {
-    renderFieldValue() {
-        var str: string = '';
-        var list = this.block.relationList;
-        var field = this.block.relationSchema?.fields?.find(g => g.id == this.block.field.config?.rollupFieldId);
-        if (this.block.field.config?.rollupStatistic == '$count') {
-            str = list.length.toString();
-        }
-        else if (this.block.field.config?.rollupStatistic == '$sum') {
-            str = lodash.sum(list.map(c => c[field?.name])).toString()
-        } else if (this.block.field.config?.rollupStatistic == '$agv') {
-            str = (lodash.sum(list.map(c => c[field?.name])) / list.length).toString()
-        } else if (this.block.field.config?.rollupStatistic == '$min') {
-            var va = list.min(g => g[field?.name])
-            if (typeof va != 'undefined') str = va.toString()
-        } else if (this.block.field.config?.rollupStatistic == '$max') {
-            var va = list.max(g => g[field?.name])
-            if (typeof va != 'undefined') str = va.toString()
-        }
-
-        return <div className='sy-field-relation f-14' onMouseDown={e => this.block.onCellMousedown(e)}>
-            {str}
-        </div>
-    }
-}
 

@@ -23,7 +23,6 @@ export class FieldEmailView extends OriginFileView<FieldEmoji>{
             var fn = async () => {
                 var r = await self.block.dataGridItem.onUpdateCellInteractive(self.block.viewField.field)
                 if (r) {
-                    self.block.value = r;
                     self.forceUpdate()
                 }
             }

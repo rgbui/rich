@@ -22,8 +22,7 @@ export class FieldAudio extends OriginField {
                 isMultiple: this.field?.config?.isMultiple ? true : false
             });
             if (Array.isArray(rs)) {
-                this.value = rs;
-                this.onUpdateCellValue(this.value);
+                await this.onUpdateCellValue(rs);
                 this.forceManualUpdate();
             }
         }

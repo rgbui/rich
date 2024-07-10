@@ -15,7 +15,9 @@ import { Icon } from "../../../../component/view/icon";
 
 export class OriginField extends Block {
     display = BlockDisplay.block;
-    value: any;
+    get value() {
+        return this.dataGridItem.dataRow[this.field?.name];
+    }
     get isSupportTextStyle() {
         return false;
     }
@@ -32,8 +34,10 @@ export class OriginField extends Block {
         var text = lodash.get(this, appear.prop);
         await this.dataGridItem.onUpdateCellValue(this.viewField.field, text);
     }
+    async onOnlyUpdateValue(value: any) {
+        await this.dataGridItem.onOnlyUpdateCellValue(this.viewField.field, value);
+    }
     async onUpdateCellValue(value) {
-        this.value = value;
         await this.dataGridItem.onUpdateCellValue(this.viewField.field, value);
     }
     async changeProps(oldProps: Record<string, any>, newProps: Record<string, any>) {
@@ -44,7 +48,7 @@ export class OriginField extends Block {
         }
     }
     async onUpdateCellFieldSchema(props: Record<string, any>) {
-        this.dataGridItem.onUpdateFieldSchema(this.viewField, props);
+        await this.dataGridItem.onUpdateFieldSchema(this.viewField.field, props);
     }
     get dataGridItem() {
         return this.parent as TableGridItem
@@ -82,7 +86,7 @@ export class OriginField extends Block {
         return true;
     }
     isCanEdit() {
-      
+
         return this.dataGrid?.isCanEditRow(this.dataGridItem.dataRow);
     }
 }

@@ -22,8 +22,8 @@ export class FieldImage extends OriginField {
                 isMultiple: this.field?.config?.isMultiple ? true : false
             });
             if (Array.isArray(rs)) {
-                this.value = rs;
-                this.onUpdateCellValue(this.value);
+
+                await this.onUpdateCellValue(rs);
                 this.forceManualUpdate();
             }
         }
@@ -53,7 +53,7 @@ export class FieldImageView extends OriginFileView<FieldImage> {
                 renderCenterLeftControls: () => <></>,
                 renderCenterRightControls: () => <></>
             };
-            return <div onMouseDown={e => {  }}><Slick {...settings}>{images.map((img, i) => {
+            return <div onMouseDown={e => { }}><Slick {...settings}>{images.map((img, i) => {
                 return <img key={i} className="round" src={autoImageUrl(img.url || img.src, 250)} style={style} />
             })}</Slick></div>
         }

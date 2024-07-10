@@ -27,7 +27,7 @@ export class FieldDate extends OriginField {
                 includeTime: this.field?.config?.includeTime ? true : false
             });
             if (typeof pickDate != 'undefined') {
-                this.onUpdateProps({ value: pickDate }, { range: BlockRenderRange.self });
+               await this.onUpdateProps({ value: pickDate }, { range: BlockRenderRange.self });
             }
         }
         if (this.dataGrid) await this.dataGrid.onDataGridTool(fn)

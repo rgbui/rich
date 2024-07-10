@@ -21,8 +21,8 @@ export class FieldVideo extends OriginField {
                 isMultiple: this.field?.config?.isMultiple ? true : false
             });
             if (Array.isArray(rs)) {
-                this.value = rs;
-                this.onUpdateCellValue(this.value);
+
+                await this.onUpdateCellValue(rs);
                 this.forceManualUpdate();
             }
         }
@@ -32,7 +32,7 @@ export class FieldVideo extends OriginField {
 }
 
 @view('/field/video')
-export class FieldVideoView extends OriginFileView<FieldVideo>{
+export class FieldVideoView extends OriginFileView<FieldVideo> {
     renderImages(images: { url: string }[]) {
         var style: CSSProperties = {};
         style.width = '100%';

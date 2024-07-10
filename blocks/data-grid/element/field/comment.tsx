@@ -10,8 +10,7 @@ import { useCommentListView } from "../../../../extensions/comment/dialoug";
 
 @url('/field/comment')
 export class FieldComment extends OriginField {
-    async onOpenCommentView(event: React.MouseEvent)
-    {
+    async onOpenCommentView(event: React.MouseEvent) {
         if (this.isCanEdit() === false) return;
         var fn = async () => {
             var r = await useCommentListView(null, {
@@ -31,7 +30,7 @@ export class FieldComment extends OriginField {
                     v.count = r;
                 }
                 else v = { count: r, format: 'comment', users: [this.page.user] };
-                this.value = v;
+                await this.onOnlyUpdateValue(v);
                 this.forceManualUpdate();
             }
         }
