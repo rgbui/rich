@@ -1,33 +1,25 @@
 import { FieldType } from "./type";
 import {
-    AudioSvg,
     CollectionBoardSvg,
     CollectionCalendarSvg,
     CollectionGallerySvg,
     CollectionListSvg,
     EmojiSvg,
-    FileSvg,
     LikeSvg,
     LoveSvg,
     OpposeSvg,
     PicSvg,
     TypesButtonSvg,
     TypesCheckboxSvg,
-    TypesCreateAtSvg,
-    TypesDateSvg,
     TypesEmailSvg,
     TypesFormulaSvg,
     TypesLinkSvg,
     TypesMultipleSelectSvg,
     TypesNumberSvg,
-    TypesPersonSvg,
     TypesPhoneSvg,
-    TypesRelationSvg,
-    TypesRollupSvg,
     TypesSelectSvg,
     TypesStringSvg,
-    TypesTitleSvg,
-    VideoSvg
+    TypesTitleSvg
 } from "../../../component/svgs";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { TableSchemaView } from "./meta";
@@ -57,13 +49,13 @@ export function GetFieldTypeSvg(field: Field): IconValueType {
         case FieldType.options:
             return TypesMultipleSelectSvg
         case FieldType.file:
-            return FileSvg
+            return { name: 'byte', code: 'link' }
         case FieldType.image:
             return PicSvg
         case FieldType.audio:
-            return AudioSvg;
+            return { name: 'byte', code: 'audio-file' };
         case FieldType.video:
-            return VideoSvg;
+            return { name: 'byte', code: 'video-two' };
         case FieldType.link:
             return TypesLinkSvg
         case FieldType.phone:
@@ -71,9 +63,9 @@ export function GetFieldTypeSvg(field: Field): IconValueType {
         case FieldType.email:
             return TypesEmailSvg
         case FieldType.date:
-            return TypesDateSvg
+            return { name: 'byte', code: 'calendar-dot' }
         case FieldType.user:
-            return TypesPersonSvg
+            return { name: 'byte', code: 'people' }
         case FieldType.text:
             return TypesStringSvg
         case FieldType.number:
@@ -82,15 +74,15 @@ export function GetFieldTypeSvg(field: Field): IconValueType {
             return TypesFormulaSvg
         case FieldType.createDate:
         case FieldType.modifyDate:
-            return TypesCreateAtSvg
+            return { name: 'byte', code: 'time' }
         case FieldType.creater:
-            return { name: 'byte', code: 'people' }
+            return { name: 'byte', code: 'me' }
         case FieldType.modifyer:
-            return { name: 'byte', code: 'edit-name' }
+            return { name: 'byte', code: 'me' }
         case FieldType.relation:
-            return TypesRelationSvg;
+            return { name: 'byte',code: 'transform' };
         case FieldType.rollup:
-            return TypesRollupSvg;
+            return { name: 'byte', code: 'find' };
         case FieldType.comment:
             return { name: 'byte', code: 'message' };
         case FieldType.button:
@@ -281,14 +273,14 @@ export function getSchemaFieldMenus(map: (list: any) => any) {
             { text: lst('文件'), value: FieldType.file },
             { text: lst('用户'), value: FieldType.user },
             { text: lst('邮箱'), value: FieldType.email },
-            { text: lst('手机号'), value: FieldType.phone },
+            { text: lst('电话'), value: FieldType.phone },
             { text: lst('网址'), value: FieldType.link },
         ]),
         { type: MenuItemType.text, text: lst('高级') },
         ...map([
             // { text: '位置', value: FieldType.geolocation },
             { text: lst('关联'), value: FieldType.relation },
-            { text: lst('统计'), value: FieldType.rollup },
+            { text: lst('查询引用'), value: FieldType.rollup },
             { text: lst('公式'), value: FieldType.formula },
         ]),
         { type: MenuItemType.text, text: lst('交互') },

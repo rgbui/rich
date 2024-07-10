@@ -51,6 +51,10 @@ export type DataStoreAction = {
     id: string,
     fieldName: string,
     data: Record<string, any>
+} | {
+    name: 'updateDoubleRelation',
+    fieldName: string,
+    data: { id: string, count: number, refId: string }[]
 }
 
 export type SchemaAction = { name: 'createSchemaView', text: string, url: string, data?: Record<string, any> }
@@ -252,6 +256,7 @@ export class TableSchema {
     }
     async cacPermissions() {
         this.sourcePermission = await channel.get('/page/allow', { elementUrl: this.ElementUrl })
+        console.log('gggxx', this.sourcePermission);
     }
     isAllow(...ps: AtomPermission[]): boolean {
         if (!this.sourcePermission) return false;
@@ -438,34 +443,34 @@ export class TableSchema {
     distinct(options: { filter?: Record<string, any>, field: string }, ws: LinkWs) {
         return channel.get('/datastore/query/distinct', Object.assign({ schemaId: this.id, ws: ws }, options))
     }
-    fieldAdd(field: { text: string, type: FieldType, config?: Record<string, any> }, locationId: string|PageLocation) {
+    fieldAdd(field: { text: string, type: FieldType, config?: Record<string, any> }, locationId: string | PageLocation) {
         return this.onSchemaOperate([{ name: 'addField', field: field as any }], locationId)
     }
     fieldRemove(fieldId: string, locationId: string) {
         return this.onSchemaOperate([{ name: 'removeField', fieldId }], locationId)
     }
-    fieldUpdate(args: { fieldId: string, data: Record<string, any> }, locationId: string|PageLocation) {
+    fieldUpdate(args: { fieldId: string, data: Record<string, any> }, locationId: string | PageLocation) {
         return this.onSchemaOperate([{
             name: 'updateField',
             fieldId: args.fieldId,
             data: args.data
         }], locationId)
     }
-    turnField(args: { fieldId: string, data: { text: string, type: FieldType, config?: Record<string, any> } }, locationId:string|PageLocation) {
+    turnField(args: { fieldId: string, data: { text: string, type: FieldType, config?: Record<string, any> } }, locationId: string | PageLocation) {
         return this.onSchemaOperate([{
             name: 'turnField',
             fieldId: args.fieldId,
             data: args.data
         }], locationId)
     }
-    async update(props: Record<string, any>, locationId: string|PageLocation) {
+    async update(props: Record<string, any>, locationId: string | PageLocation) {
         return await this.onSchemaOperate([{
             name: 'updateSchema',
             id: this.id,
             data: props
         }], locationId)
     }
-    async onSchemaOperate(actions: SchemaAction[], locationId: string|PageLocation) {
+    async onSchemaOperate(actions: SchemaAction[], locationId: string | PageLocation) {
         var result = await channel.air('/schema/operate', {
             operate: {
                 schemaId: this.id,
@@ -539,7 +544,7 @@ export class TableSchema {
         })
         return result;
     }
-    async createSchemaView(text: string, url: string, locationId: string|PageLocation) {
+    async createSchemaView(text: string, url: string, locationId: string | PageLocation) {
         var cm = CardFactory.CardModels.get(url)?.model;
         var viewUrl = url;
         var viewProps: Record<string, any>;

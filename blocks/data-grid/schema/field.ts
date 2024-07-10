@@ -10,6 +10,7 @@ export class Field {
     text: string;
     type: FieldType;
     icon: IconArguments;
+    visible: boolean;
     load(col: Record<string, any>) {
         for (let n in this) {
             if (n.indexOf('.') > -1) delete this[n];
@@ -29,7 +30,9 @@ export class Field {
             name: this.name,
             text: this.text,
             type: this.type,
-            config: lodash.cloneDeep(this.config)
+            config: lodash.cloneDeep(this.config),
+            icon: this.icon,
+            visible: this.visible
         }
     }
     config?: FieldConfig;
@@ -59,14 +62,17 @@ export interface DataGridOptionType {
     /**
      * 新的option增加fill及textColor
      */
-    fill?:string;
-    textColor?:string;
+    fill?: string;
+    textColor?: string;
 }
 
 export interface FieldConfig {
     options?: DataGridOptionType[];
     isMultiple?: boolean,
     relationTableId?: string,
+    relationDouble?: boolean,
+    relationFieldText?: string,
+    relationFieldId?: string,
     rollupTableId?: string,
     rollupFieldId?: string,
     rollupStatistic?: string,

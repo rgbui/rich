@@ -163,8 +163,8 @@ export enum FieldType {
      */
     share = 7030,
     /**
- * 弃用
- */
+    * 弃用
+    */
     donate = 7040,
     /**
  * 弃用
@@ -183,7 +183,7 @@ export enum FieldType {
      */
     vote = 7072,
     /**
-     * 反对
+     * 反对,暂时不用，集成至like，当like开启时，oppose才有效果
      */
     oppose = 7073,
 
@@ -199,11 +199,10 @@ export enum FieldType {
      */
     report = 7090,
 
-
     /**
-   * 文章
-   * 弃用
-   */
+    * 文章
+    * 弃用
+    */
     blog = 8000,
     /**
      * 富文本
@@ -265,7 +264,8 @@ export var OnlyFieldTypes: FieldType[] = [
     FieldType.modifyDate,
     FieldType.createDate,
     FieldType.creater,
-    FieldType.cover, FieldType.parentId,
+    FieldType.cover,
+    FieldType.parentId,
     FieldType.icon,
     FieldType.title,
     FieldType.comment,
@@ -365,6 +365,7 @@ export var IsArrayValueFieldTypes: FieldType[] = [
     FieldType.video,
     FieldType.file,
     FieldType.relation
+
 ]
 
 /***
@@ -404,6 +405,7 @@ export type FieldTypeExample = {
     [FieldType.audio]: ResourceArguments[],
     [FieldType.user]: string[],
     [FieldType.bool]: boolean,
+    [FieldType.relation]: string[],
     [FieldType.browse]: { users: string[], count: number },
     [FieldType.like]: { users: string[], count: number },
     [FieldType.love]: { users: string[], count: number },
