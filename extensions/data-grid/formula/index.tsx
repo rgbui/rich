@@ -189,7 +189,7 @@ export default class FormulaSelector extends EventsComponent {
                                 <div onClick={e => { fl.spread = fl.spread ? false : true; this.forceUpdate() }}
                                     className="flex font-14 padding-l-10 cursor">
                                     <span className="flex-fixed size-20 item-hover flex-center round cursor ts" style={{ transform: fl.spread ? 'rotateZ(90deg)' : 'rotateZ(0deg)' }}><Icon size={16} icon={ChevronRightSvg}></Icon></span>
-                                    <span className="flex-fixed flex-center size-24"><Icon size={16} icon={GetFieldTypeSvg({type:fl.type} as any)}></Icon></span>
+                                    <span className="flex-fixed flex-center size-24"><Icon size={16} icon={GetFieldTypeSvg({ type: fl.type } as any)}></Icon></span>
                                     <span className="flex-auto text-overflow f-14">{fl.text}</span>
                                 </div>
                                 {fl.spread && <div>{fl.childs.map((f, g) => {

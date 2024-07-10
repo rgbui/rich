@@ -91,6 +91,7 @@ export class DataGridViewLife {
                             maps.push({ key: f?.field.config.relationTableId, ids: vs })
                         }
                     }
+                    
                 })
             });
             await maps.eachAsync(async (vr) => {

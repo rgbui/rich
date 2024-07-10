@@ -29,6 +29,7 @@ import { TableSchema } from "../../../../blocks/data-grid/schema/meta";
 import { HelpText } from "../../../../component/view/text";
 import { Tip } from "../../../../component/view/tooltip/tip";
 import lodash from "lodash";
+import { util } from "../../../../util/util";
 
 export class DataGridFields extends EventsComponent {
     get schema() {
@@ -100,8 +101,14 @@ export class DataGridFields extends EventsComponent {
             await self.block.onHideAllField();
             self.forceUpdate();
         }
-        async function onChange(to: number, from: number) {
-            await self.block.onMoveViewField(to, from);
+        async function onChange(to: number, from: number, bs: ViewField[]) {
+            var fe = bs[from];
+            lodash.remove(bs, (c, g) => g == from)
+            bs.splice(to, 0, fe);
+            var fssAll = self.block.fields.map(c => c);
+            lodash.remove(fssAll, (c, g) => bs.includes(c));
+            var fss = fssAll.concat(bs) as ViewField[];
+            await self.block.onReplaceViewField(fss);
             self.forceUpdate();
         }
         function getFieldIcon(vf: ViewField) {
@@ -131,7 +138,7 @@ export class DataGridFields extends EventsComponent {
                     <span className={"size-24 round flex-center flex-fixed   " + (title.field ? " cursor  item-hover" : "  remark")}><Icon className={'eye'} size={14} onClick={async (e) => { self.openProperty(title.field, e) }} icon={DotsSvg}></Icon></span>
                 </div>}
                 <DragList
-                    onChange={onChange}
+                    onChange={(t, f) => { onChange(t, f, bs) }}
                     isDragBar={e => e.closest('.shy-table-field-view-item') && !e.closest('.eye') && !e.closest('.disabled') ? true : false}
                     className="shy-table-field-view-items">{bs.map((f, i) => {
                         return <div className={"shy-table-field-view-item round flex h-30 padding-w-5 gap-w-5 grab  item-hover "} key={f.fieldId || f.type}>

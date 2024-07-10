@@ -457,7 +457,7 @@ export class FilterView extends React.Component<{
                 }
             }
             return <div onMouseDown={e => mousedown(item, e)} className="border box-border round h-26 padding-w-14 flex-center gap-r-10">
-                {(op?.fill||op?.color) && <span className="circle border-light size-20 gap-r-5" style={{ background: op?.fill||op?.color,color:op?.textColor }}></span>}
+                {(op?.fill||op?.color) && <span className="circle border-light size-16 gap-r-5" style={{ background: op?.fill||op?.color,color:op?.textColor }}></span>}
                 <span>{op?.text || lst('请选择一项')}</span>
             </div>
         }

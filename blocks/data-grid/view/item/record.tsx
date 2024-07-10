@@ -78,6 +78,7 @@ export class DataGridItemRecord extends Block {
     async loadSchema() {
         if (this.schemaId && !this.schema) {
             this.schema = await TableSchema.loadTableSchema(this.schemaId, this.page.ws);
+            if (this.schema) await this.schema.cacPermissions()
         }
     }
     async loadViewFields() {
@@ -99,7 +100,8 @@ export class DataGridItemRecord extends Block {
     async loadRelationSchemas() {
         var tableIds: string[] = [];
         this.fields.each(f => {
-            if (f.field?.type == FieldType.relation) {
+            if (f.field?.type == FieldType.relation)
+            {
                 if (f.field.config.relationTableId) {
                     tableIds.push(f.field.config.relationTableId);
                 }

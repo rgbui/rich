@@ -66,6 +66,7 @@ export class TableSortView extends EventsComponent {
             else if (fe.type == FieldType.relation) {
                 // text = text + "." + lst('关联记录数')
             }
+           
 
             return {
                 text,
@@ -118,7 +119,7 @@ export class TableSortView extends EventsComponent {
         await this.onForceStore();
     }, 800);
     onForceStore = async () => {
-        await this.block.onReloadData( async ()=>{
+        await this.block.onReloadData(async () => {
             await this.block.onManualUpdateProps({ sorts: this.block.sorts }, { sorts: this.oldSorts }, {});
         });
     }

@@ -63,6 +63,8 @@ export class DataGridChart extends DataGridView {
     async loadSchema() {
         if (this.schemaId && !this.schema) {
             this.schema = await TableSchema.loadTableSchema(this.schemaId, this.page.ws)
+            if(this.schema)
+                await this.schema.cacPermissions();
         }
     }
     data: any[] = [];

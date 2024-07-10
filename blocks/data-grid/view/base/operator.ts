@@ -35,30 +35,61 @@ export class DataGridViewOperator {
             { roundArea: event },
             { dataGrid: self }
         );
-        if (!result) return;
-        await this.page.onAction(ActionDirective.onSchemaCreateField, async () => {
-            // this.page.notifyActionBlockSync(this);
-            var fieldData = await this.schema.fieldAdd({
-                text: result.text,
-                type: result.type,
-                config: result.config
-            }, this.id);
-            if (fieldData.ok) {
-                var field = this.schema.fields.find(g => g.id == fieldData.data.actions[0].id);
+        if (!result || !result?.text) return;
+        var vs = this.schema.fields.find(g => g.visible === false && g.type == result.type);
+        if (vs) {
+            await this.page.onAction(ActionDirective.onSchemaCreateField, async () => {
+                await this.schema.fieldUpdate({ fieldId: vs.id, data: { visible: true } }, this.id);
+                var vf = this.schema.createViewField(vs);
                 if (typeof at == 'undefined') at = this.fields.length;
-                var vf = this.schema.createViewField(field);
                 await this.arrayPush({ prop: 'fields', data: vf, at });
-                this.data.forEach(row => {
-                    var defaultValue = field.getDefaultValue();
-                    if (typeof defaultValue != 'undefined')
-                        row[field.name] = defaultValue
-                });
-                if (field.type == FieldType.relation) {
-                    await this.loadRelationSchemas()
-                }
                 await this.createItem(true);
-            }
-        });
+            });
+        }
+        else
+            await this.page.onAction(ActionDirective.onSchemaCreateField, async () => {
+                var fieldData = await this.schema.fieldAdd({
+                    text: result.text,
+                    type: result.type,
+                    config: result.config
+                }, this.id);
+                if (fieldData.ok) {
+                    var field = this.schema.fields.find(g => g.id == fieldData.data.actions[0].id);
+                    if (typeof at == 'undefined') at = this.fields.length;
+                    var vf = this.schema.createViewField(field);
+                    await this.arrayPush({ prop: 'fields', data: vf, at });
+                    this.data.forEach(row => {
+                        var defaultValue = field.getDefaultValue();
+                        if (typeof defaultValue != 'undefined')
+                            row[field.name] = defaultValue
+                    });
+                    if (field.type == FieldType.relation) {
+                        await this.loadRelationSchemas()
+                        if (result.config?.relationDouble) {
+                            var rs = this.relationSchemas.find(c => c.id == result.config.relationTableId);
+                            var nff = await rs.fieldAdd({
+                                text: result.config?.relationFieldText,
+                                type: FieldType.relation,
+                                config: {
+                                    relationTableId: this.schema.id,
+                                    relationFieldId: field.id,
+                                    relationDouble: true,
+                                    relationFieldText: field.text
+                                }
+                            }, this.id)
+                            var cfg = lodash.cloneDeep(field.config) || {};
+                            cfg.relationFieldId = nff.data.actions[0].id;
+                            await this.schema.fieldUpdate({
+                                fieldId: field.id,
+                                data: {
+                                    config: cfg
+                                }
+                            }, this.id)
+                        }
+                    }
+                    await this.createItem(true);
+                }
+            });
     }
     async onCloneViewField(this: DataGridView, field: Field, viewField: ViewField) {
         var result = {
@@ -142,16 +173,25 @@ export class DataGridViewOperator {
         });
     }
     async onMoveViewField(this: DataGridView, to: number, from: number) {
-        this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
+        await this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
             // this.page.notifyActionBlockSync(this);
             await this.arrayMove({ prop: 'fields', from, to })
             await this.createItem();
             this.forceManualUpdate();
         });
     }
-    async onDeleteViewField(this: DataGridView, field:Field, force?: boolean) {
+    async onReplaceViewField(this: DataGridView, fields: ViewField[]) {
+        await this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
+            // this.page.notifyActionBlockSync(this);
+            // await this.arrayMove({ prop: 'fields', from, to })
+            await this.updateProps({ fields }, BlockRenderRange.self)
+            await this.createItem();
+            this.forceManualUpdate();
+        });
+    }
+    async onDeleteViewField(this: DataGridView, field: Field, force?: boolean) {
         if (force == true || await Confirm(lst('确定要删除该列吗'))) {
-            
+
             this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
                 var r = await this.schema.fieldRemove(field.id, this.id);
                 if (r.ok) {
@@ -219,9 +259,9 @@ export class DataGridViewOperator {
         await this.page.onAction(ActionDirective.onTablestoreUpdateViewField, async () => {
             // this.page.notifyActionBlockSync(this);
             var sos = lodash.cloneDeep(this.sorts);
-            var so = sos.find(g => g.field ==field.id);
+            var so = sos.find(g => g.field == field.id);
             if (so) so.sort = sort;
-            else sos.push({ id: util.guid(), field:field.id, sort });
+            else sos.push({ id: util.guid(), field: field.id, sort });
             await this.manualUpdateProps({ sorts: this.sorts }, { sorts: sos });
             await this.loadData();
             await this.createItem();
@@ -468,7 +508,7 @@ export class DataGridViewOperator {
             await this.updateProps({ filter }, BlockRenderRange.self)
         })
     }
-    async onAddFilter(this: DataGridView, field:Field) {
+    async onAddFilter(this: DataGridView, field: Field) {
         await this.page.onAction(ActionDirective.onDataGridUpdateFilter, async () => {
 
             var newFilter = SchemaFilterJoin(this.filter, {

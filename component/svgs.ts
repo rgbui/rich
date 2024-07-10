@@ -219,8 +219,6 @@ import TreeListSvg from "../src/assert/svg/treeList.svg";
 import TriangleSvg from "../src/assert/svg/triangle.svg";
 import TypesButtonSvg from "../src/assert/svg/types.button.svg";
 import TypesCheckboxSvg from "../src/assert/svg/types.checkbox.svg";
-import TypesCreateAtSvg from "../src/assert/svg/types.create.at.svg";
-import TypesCreateBySvg from "../src/assert/svg/types.create.by.svg";
 import TypesDateSvg from "../src/assert/svg/types.date.svg";
 import TypesEmailSvg from "../src/assert/svg/types.email.svg";
 import TypesFileSvg from "../src/assert/svg/types.file.svg";
@@ -470,8 +468,6 @@ TreeListSvg,
 TriangleSvg,
 TypesButtonSvg,
 TypesCheckboxSvg,
-TypesCreateAtSvg,
-TypesCreateBySvg,
 TypesDateSvg,
 TypesEmailSvg,
 TypesFileSvg,

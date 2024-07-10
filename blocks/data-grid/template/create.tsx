@@ -34,6 +34,7 @@ export async function onCreateDataGridTemplate(
     });
     if (r.ok) {
         var schema = await TableSchema.cacheSchema(r.data.schema);
+        
         var autoCreateUrl = vs.find(c => c.autoCreate)?.url || schema.listViews.first().url;
         var view = schema.views.find(g => g.url == autoCreateUrl);
         if (view.url == block.url) {

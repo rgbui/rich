@@ -553,6 +553,7 @@ export class DataGridView extends Block {
             }
             else if (dg.source == 'createView') {
                 this.schema = await TableSchema.onCreate({ text: dg.text, url: this.url });
+                if(this.schema)await this.schema.cacPermissions()
                 var view = this.schema.listViews.first();
                 viewUrl = view.url;
                 if (viewUrl == this.url) await this.page.onAction(ActionDirective.onCreateTableSchema, async () => {

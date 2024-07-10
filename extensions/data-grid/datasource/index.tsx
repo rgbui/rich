@@ -14,7 +14,6 @@ import { channel } from "../../../net/channel";
 import { lst } from "../../../i18n/store";
 import { IconValueType } from "../../../component/view/icon";
 import { useCreateDataGridView } from "../create/view";
-import { Point } from "../../../src/common/vector/point";
 import { Spin } from "../../../component/view/spin";
 import { S } from "../../../i18n/view";
 
@@ -116,7 +115,7 @@ export class DataSourceView extends EventsComponent {
                     name: 'table',
                     text: rd.text,
                     value: rd.id,
-                    // label: util.showTime(rd.createDate),
+                    remark: util.showTime(rd.createDate),
                     icon: (rd as any).icon || { name: 'byte', code: 'table' },
                     checkLabel: rd.id == this.currentTableId,
                 })
@@ -253,7 +252,7 @@ export async function useDataSourceView(pos: PopoverPosition,
     }, createTableCallback?: () => void) {
     let popover = await PopoverSingleton(DataSourceView, { mask: true });
     let fv = await popover.open(pos);
-    fv.open(option,pos);
+    fv.open(option, pos);
     return new Promise((resolve: (data: string | { tableId: string, viewId: string, type: 'view' | 'form', viewUrl?: string }) => void, reject) => {
         fv.only('close', () => {
             popover.close();

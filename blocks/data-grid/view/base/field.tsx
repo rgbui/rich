@@ -568,6 +568,7 @@ export class DataGridViewField {
                         { field: field, dataGrid: self }
                     );
                     if (r) {
+                        if (!r.text) return;
                         if (r.type == field.type) {
                             var props: Record<string, any> = { text: r.text };
                             if (r.config) {

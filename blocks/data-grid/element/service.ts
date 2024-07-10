@@ -51,6 +51,7 @@ export function GetFieldFormBlockInfo(field: Field) {
             }
             break;
         case FieldType.relation:
+      
             return {
                 url: '/form/relation',
                 fieldId: field.id
