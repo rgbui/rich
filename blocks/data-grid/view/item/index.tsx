@@ -91,11 +91,49 @@ export class TableGridItem extends Block {
     }
     async onUpdateCellValue(field: Field, value: any) {
         value = util.clone(value);
+        var oldValue = lodash.cloneDeep(value);
         this.dataRow[field.name] = value;
         await this.schema.rowUpdate({
             dataId: this.dataRow.id,
             data: { [field.name]: value }
-        }, this.dataGrid?.id || (this.id + 'TableStoreItem'))
+        },this.dataGrid?.id || (this.id + 'TableStoreItem'))
+        if (field.type == FieldType.relation && field.config?.relationDouble == true) {
+            var rs = this.dataGrid.relationSchemas.find(g => g.id == field.config.relationFieldId);
+            if (rs) {
+                if (!Array.isArray(oldValue)) oldValue = [];
+                var newValue = lodash.cloneDeep(value);
+                if (!Array.isArray(newValue)) newValue = [];
+                var ps: { id: string, count: number, refId: string }[] = [];
+                (oldValue as string[]).forEach(od => {
+                    ps.push({
+                        id: od,
+                        count: -1,
+                        refId: this.dataRow.id
+                    })
+                });
+                (newValue as string[]).forEach(nd => {
+                    var nf = ps.find(c => c.id == nd);
+                    if (nf) nf.count += 1;
+                    else {
+                        ps.push({
+                            id: nd,
+                            count: 1,
+                            refId: this.dataRow.id
+                        })
+                    }
+
+                })
+                lodash.remove(ps, c => c.count == 0);
+                var rf = rs.fields.find(c => c.id == field.config?.relationFieldId);
+                if (rf) {
+                    await rs.onDataStoreOperate([{
+                        name: 'updateDoubleRelation',
+                        fieldName: rf.name,
+                        data: ps
+                    }], this.dataGrid?.id || (this.id + 'TableStoreItem'))
+                }
+            }
+        }
     }
     async onUpdateCellProps(props: Record<string, any>) {
         Object.assign(this.dataRow, props);
@@ -251,7 +289,7 @@ export class TableGridItem extends Block {
         }
     }
     async onHandlePlus() {
-        await this.dataGrid.onSyncAddRow({}, this.dataRow.id, 'after',true);
+        await this.dataGrid.onSyncAddRow({}, this.dataRow.id, 'after', true);
     }
     get isAllowDrop(): boolean {
         return true;
