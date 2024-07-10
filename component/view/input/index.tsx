@@ -38,9 +38,14 @@ export class Input extends React.Component<{
         var self = this;
         var props = this.props;
         self.inputEl.value = '';
-        self.forceUpdate()
+        self.forceUpdate(() => {
+            setTimeout(() => {
+                this.focus()
+            }, 50);
+        })
         props.onChange && props.onChange('');
         props.onClear && props.onClear()
+
     }
     drop: {
         items: MenuItem[],
@@ -184,14 +189,18 @@ export class Input extends React.Component<{
     }
     updateValue(value) {
         if (this.inputEl)
-            this.inputEl.value = value||'';
+            this.inputEl.value = value || '';
     }
     focus() {
-        this.inputEl.focus()
+        if (this.inputEl) {
+            // this.inputEl.select();
+            this.inputEl.focus();
+            this.inputEl.setSelectionRange(this.inputEl.value.length, this.inputEl.value.length)
+        }
     }
     componentDidUpdate(prevProps) {
         if (!lodash.isEqual(prevProps.value, this.props.value)) {
-            this.inputEl.value = this.props.value||'';
+            this.inputEl.value = this.props.value || '';
         }
     }
     componentDidMount() {
@@ -199,11 +208,7 @@ export class Input extends React.Component<{
             if (this.inputEl) {
                 console.log('focus this.inputEl...');
                 setTimeout(() => {
-                    if (this.inputEl) {
-                        // this.inputEl.select();
-                        this.inputEl.focus();
-                        this.inputEl.setSelectionRange(this.inputEl.value.length, this.inputEl.value.length)
-                    }
+                    this.focus()
                 }, 200);
 
             }

@@ -133,7 +133,8 @@ export async function useSelectMenuItem<T = string>(pos: PopoverPosition, menus:
     })
     return new Promise((resolve: (data: { item: MenuItem<T>, event: MouseEvent }) => void, reject) => {
         menuPanel.only('select', (item, event) => {
-            resolve({ item, event });
+            if (item) resolve({ item, event });
+            else resolve(null);
         });
         menuPanel.only('error', (error: Error) => {
             reject(error);

@@ -22,14 +22,14 @@ export class MenuItemView extends React.Component<{
     item: MenuItem,
     deep: number,
     parent: MenuPanel<any> | MenuView,
-    select: (item: MenuItem, event?: MouseEvent) => void,
+    select: (item: MenuItem, event?: MouseEvent | KeyboardEvent) => void,
     input: (item: MenuItem) => void,
     click: (item: MenuItem, event?: React.MouseEvent, clickName?: string) => void
 }> {
     el: HTMLElement;
-    select(item: MenuItem, event?: MouseEvent) {
-        if (item.disabled) return;
-        if (item.selectInput == true) {
+    select(item: MenuItem, event?: MouseEvent | KeyboardEvent) {
+        if (item?.disabled) return;
+        if (item?.selectInput == true) {
             if (item.updateMenuPanel) this.props.parent.forceUpdate()
             else this.forceUpdate()
             this.props?.input(item);
@@ -203,10 +203,10 @@ export class MenuItemView extends React.Component<{
             {item.type == MenuItemType.help && <div className="shy-menu-box-item-help">
                 <HelpText className={'padding-w-5'} align="left" block={item.helpInline === false ? true : false} url={item.url}>{item.text}</HelpText>
             </div>}
-            {item.type == MenuItemType.input && !item.label && <div className="shy-menu-box-item-input"><Input focusSelectionAll size={'small'} value={item.value} onEnter={e => { item.value = e; this.select(item) }} onChange={e => { item.value = e; this.input(e, item) }} placeholder={item.placeholder || item.text}></Input></div>}
+            {item.type == MenuItemType.input && !item.label && <div className="shy-menu-box-item-input"><Input focusSelectionAll size={'small'} value={item.value} onEnter={(e, ee) => { item.value = e; this.select(null, ee.nativeEvent) }} onChange={e => { item.value = e; this.input(e, item) }} placeholder={item.placeholder || item.text}></Input></div>}
             {item.type == MenuItemType.input && item.label && <div className="flex shy-menu-box-item-input">
                 <span className="flex-fixed">{item.label}</span>
-                <span className="flex-auto gap-l-20"><Input focusSelectionAll size={'small'} value={item.value} onEnter={e => { item.value = e; this.select(item) }} onChange={e => { item.value = e; this.input(e, item) }} placeholder={item.placeholder || item.text}></Input></span>
+                <span className="flex-auto gap-l-20"><Input focusSelectionAll size={'small'} value={item.value} onEnter={(e, ee) => { item.value = e; this.select(null, ee.nativeEvent) }} onChange={e => { item.value = e; this.input(e, item) }} placeholder={item.placeholder || item.text}></Input></span>
             </div>}
             {item.type == MenuItemType.inputTitleAndIcon && <div className="shy-menu-box-item-input-icon flex">
                 <div onMouseDown={e => this.changeIcon(item, e)} className="cursor flex-fixed size-20 flex-center gap-r-10 round item-hover border">
@@ -214,9 +214,10 @@ export class MenuItemView extends React.Component<{
                 </div>
                 <div className="flex-auto"><Input focusSelectionAll size={'small'}
                     value={item.value}
-                    onEnter={e => {
-                        item.value = e;
-                        this.select(item)
+                    onEnter={(value, e) => {
+                        item.value = value;
+                        console.log('ggg', value);
+                        this.select(null, e.nativeEvent)
                     }}
                     onChange={e => {
                         item.value = e;
