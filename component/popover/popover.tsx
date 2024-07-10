@@ -161,11 +161,13 @@ export class Popover<T extends React.Component> extends EventsComponent<{
             this.onClose();
         }
     }
-    updateLayout(rect?: Rect) {
+    updateLayout(rect?: Rect | { width?: number, height?: number }) {
         if (this.pos.fixPoint) return;
         var pos = this.pos;
         if (this.el) {
-            var b = rect ? rect : Rect.from(this.el.getBoundingClientRect());
+            var b = rect instanceof Rect && rect ? rect : Rect.from(this.el.getBoundingClientRect());
+            if (rect && rect.width) b.width = rect.width;
+            if (rect && rect.height) b.height = rect.height;
             if (pos.center == true) {
                 this.point = new Point(
                     (window.innerWidth - b.width) / 2,
@@ -177,6 +179,7 @@ export class Popover<T extends React.Component> extends EventsComponent<{
             }
             else if (pos.roundArea) {
                 pos.elementArea = b;
+                console.log('cac pos', pos, 'rect', rect);
                 var newPoint = RectUtility.cacPopoverPosition(pos);
                 if (!this.point.equal(newPoint)) {
                     this.point = newPoint;
