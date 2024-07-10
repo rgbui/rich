@@ -244,8 +244,7 @@ export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: Re
     var sel = window.getSelection();
     var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
     var page = write.kit.page;
-    if (event)
-        event.preventDefault();
+    if (event) event.preventDefault();
     await InputForceStore(aa, async () => {
         var block = aa.block;
         var rowBlock = block.closest(x => x.isContentBlock);

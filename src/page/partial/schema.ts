@@ -29,6 +29,8 @@ export class Page$Schema {
     async loadPageSchema(this: Page) {
         if (!this.schema) {
             this.schema = await TableSchema.loadTableSchema(this.pe.id, this.ws);
+            if (this.schema)
+                await this.schema.cacPermissions()
         }
         if (this.schema) {
             if (this.pe.type == ElementType.Schema || this.pe.type == ElementType.SchemaView) {
@@ -179,7 +181,6 @@ export class Page$Schema {
     async onSubmitForm(this: Page) {
         if (this.pe.type == ElementType.SchemaData || this.pe.type == ElementType.SchemaRecordViewData) {
             var newRow = await this.getSchemaRow()
-            console.log('ggg', newRow);
             if (newRow && Object.keys(newRow).length > 0) {
                 await this.schema.rowUpdate({ dataId: this.pe.id1, data: newRow }, 'Page.onSubmitForm')
             }

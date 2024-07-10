@@ -632,7 +632,6 @@ export class PageWrite {
                             })
                         }
                     }
-                    console.log('bd', blockData, blockData.url, bd);
                     newBlock = await aa.block.visibleRightCreateBlock(offset, blockData.url, { ...bd, createSource: 'InputBlockSelector' });
                 }
                 else {
@@ -691,7 +690,6 @@ export class PageWrite {
                         }
                     });
             });
-
         }
         var blockData = args[0];
         var sel = window.getSelection();
