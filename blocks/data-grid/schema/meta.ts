@@ -54,6 +54,7 @@ export type DataStoreAction = {
 } | {
     name: 'updateDoubleRelation',
     fieldName: string,
+    isMultiple?:boolean,
     data: { id: string, count: number, refId: string }[]
 }
 

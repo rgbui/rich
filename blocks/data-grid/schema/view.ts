@@ -53,9 +53,9 @@ export class ViewField {
         return new ViewField(this.get(), this.schema)
     }
     getValue(row) {
-        if (SysFieldTypes.includes(this.field.type)) {
-            return row[FieldType[this.field.type]];
-        }
+        // if (SysFieldTypes.includes(this.field.type)) {
+        //     return row[FieldType[this.field.type]];
+        // }
         if (this?.field?.name) return row[this.field.name];
     }
     isSame(vf: ViewField) {

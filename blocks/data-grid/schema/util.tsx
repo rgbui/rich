@@ -80,7 +80,7 @@ export function GetFieldTypeSvg(field: Field): IconValueType {
         case FieldType.modifyer:
             return { name: 'byte', code: 'me' }
         case FieldType.relation:
-            return { name: 'byte',code: 'transform' };
+            return { name: 'byte', code: 'transform' };
         case FieldType.rollup:
             return { name: 'byte', code: 'find' };
         case FieldType.comment:
@@ -341,12 +341,22 @@ export function getFieldStatItems(type: FieldType) {
     var items: MenuItem[] = [
         { text: lst('无'), value: 'none' },
         { text: lst('总行数'), value: 'total' },
-        { text: lst('唯一值'), value: 'uniqueValue' },
+        { text: lst('计数唯一值'), value: 'uniqueValue' },
         { text: lst('未填写'), value: 'notFilled' },
         { text: lst('已填写'), value: 'filled' },
         { text: lst('未填写占比'), value: 'notFilledPercent' },
         { text: lst('已填写占比'), value: 'filledPercent' },
     ];
+    if ([FieldType.bool].includes(type)) {
+        items = [
+            { text: lst('无'), value: 'none' },
+            { text: lst('总行数'), value: 'total' },
+            { text: lst('已选中行数'), value: 'checked' },
+            { text: lst('未选中行数'), value: 'notChecked' },
+            { text: lst('已选中占比'), value: 'checkedPercent' },
+            { text: lst('未选中占比'), value: 'notCheckedPercent' },
+        ]
+    }
     if ([FieldType.date, FieldType.createDate, FieldType.modifyDate].includes(type)) {
         items.push(
             ...[

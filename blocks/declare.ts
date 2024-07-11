@@ -74,6 +74,7 @@ import "./data-grid/element/field/phone";
 import "./data-grid/element/field/email";
 import "./data-grid/element/field/emoji";
 import "./data-grid/element/field/relation";
+import "./data-grid/element/field/rollup";
 import "./data-grid/element/field/comment";
 import "./data-grid/element/field/button";
 import "./data-grid/element/field/formula";

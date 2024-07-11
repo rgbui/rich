@@ -1,4 +1,5 @@
 import { IconArguments, ResourceArguments } from "../../../extensions/icon/declare"
+import { Field } from "./field"
 
 /**
  * 这里定义字段类型 
@@ -412,4 +413,16 @@ export type FieldTypeExample = {
     [FieldType.vote]: { users: string[], count: number },
     [FieldType.emoji]: { users: string[], count: number },
     [FieldType.comment]: { users: string[], count: number },
+}
+/***
+ * 
+ * 一串字段，获取支持rollup显示引用的数据表里面的字段
+ */
+export function getFilterRollupFields(fields: Field[]) {
+    if (!Array.isArray(fields)) return [];
+    return fields.filter(f => ![
+        FieldType.rollup,
+        FieldType.relation,
+        FieldType.formula
+    ].includes(f.type))
 }
