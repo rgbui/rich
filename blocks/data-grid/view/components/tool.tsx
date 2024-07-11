@@ -20,6 +20,7 @@ import { Tip } from "../../../../component/view/tooltip/tip";
 import { DataGridTab } from "../tab";
 import "./style.less";
 import { ToolTip } from "../../../../component/view/tooltip";
+import { BlockUrlConstant } from "../../../../src/block/constant";
 
 export class RenderToolOperators extends React.Component<{ block: DataGridView, dataGridTab?: DataGridTab }> {
     isOpenTool: boolean = false;
@@ -27,7 +28,8 @@ export class RenderToolOperators extends React.Component<{ block: DataGridView, 
         var props = this.props;
         var self = this;
         var is = true;
-        if (props.dataGridTab) is = props.dataGridTab.isOver || props.block.searchTitle.focus == true
+        if (props.dataGridTab) is = props.dataGridTab.isOver || props.block.searchTitle.focus == true;
+        if (props.block.url == BlockUrlConstant.DataGridCharts) is = false;
         if (is) return <div className="flex-end flex-nowrap">
             {props.block.isCanEdit() && <>
                 <ToolTip overlay={<S>视图配置</S>}><label className="item-hover round padding-w-5 h-24 flex-center flex-fixed flex-nowrap  cursor gap-r-10 text-1 " onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEle(e.currentTarget as HTMLElement))}><Icon size={16} icon={{ name: 'byte', code: 'setting-one' }}></Icon><span className="f-14 "><S>视图配置</S></span></label></ToolTip>
@@ -161,7 +163,7 @@ export class DataGridTool extends React.Component<{ block: DataGridView }> {
             </div>
             {(props.block.isOver || true || props.block.searchTitle.focus == true) && <div
                 className="flex-auto  overflow-hidden"
-               >
+            >
                 <RenderToolOperators block={this.props.block}></RenderToolOperators>
             </div>}
         </div>
