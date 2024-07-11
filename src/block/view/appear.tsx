@@ -59,6 +59,7 @@ export function TextArea(props: {
     if (typeof html == 'undefined') html = lodash.get(props.block, props.prop);
     if (html == '' && typeof props.default != 'undefined') html = props.default;
     if (lodash.isUndefined(html) || lodash.isNull(html) || lodash.isNaN(html)) html = ''
+    console.log('show title', html, typeof html);
     var classList: string[] = ['shy-appear-text'];
     if (props.className) {
         if (Array.isArray(props.className)) classList.push(...props.className)
@@ -68,15 +69,12 @@ export function TextArea(props: {
     if (props.placeholderSmallFont) classList.push('shy-text-placeholder-small-font');
     if (props.isBlock) {
         ps.style.display = 'block';
-        // ps.style.whiteSpace = 'nowrap';
-        // props.style = { ...props.style, display: 'block' }
     }
     if (props.isBlock) {
-        //if (props.isHtml) return <div className={classList.join(" ")} dangerouslySetInnerHTML={{ __html: html }} {...(ps as any)}></div>
+
         return <div className={classList.join(" ")} {...(ps as any)} dangerouslySetInnerHTML={{ __html: html }} ></div>
     }
     else {
-        //if (props.isHtml) return <span className={classList.join(" ")} dangerouslySetInnerHTML={{ __html: html }} {...ps}></span>
         return <span className={classList.join(" ")} {...ps} dangerouslySetInnerHTML={{ __html: html }} ></span>
     }
 }

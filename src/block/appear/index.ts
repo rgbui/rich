@@ -52,9 +52,13 @@ export class AppearAnchor {
         return this.el.querySelector('.shy-appear-solid-content') as HTMLElement
     }
     setContent(value: string) {
+        if (lodash.isUndefined(value) || lodash.isNull(value) || lodash.isNaN(value)) value = ''
+        else if (typeof value != 'string') value = (value as any).toString();
         this.el.innerHTML = value;
     }
     appendContent(value: string) {
+        if (lodash.isUndefined(value) || lodash.isNull(value) || lodash.isNaN(value)) value = ''
+        else if (typeof value != 'string') value = (value as any).toString();
         this.el.innerHTML = (this.textContent + '') + value;
     }
     get isEmpty() {
