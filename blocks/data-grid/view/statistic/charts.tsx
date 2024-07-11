@@ -13,6 +13,12 @@ import { FieldType } from "../../schema/type";
 import { loadGraph, renderEcharts } from "./render";
 import { SchemaFilter, SchemaFilterJoin } from "../../schema/filter";
 import { getDateRange } from "../../../../extensions/date/input";
+import { Spin } from "../../../../component/view/spin";
+import { S } from "../../../../i18n/view";
+import { useSelectMenuItem } from "../../../../component/view/menu";
+import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
+import { lst } from "../../../../i18n/store";
+import { util } from "../../../../util/util";
 
 @url('/data-grid/charts')
 export class DataGridChart extends DataGridView {
@@ -46,12 +52,15 @@ export class DataGridChart extends DataGridView {
         targetValue?: number,
         color?: string,
     } = {
-            sort_x: 'none'
+            sort_x: 'none',
+            theme: 'wonderland',
+            x_fieldIdUnit: 'month',
+            group_fieldIdUnit: 'month',
         }
     @prop()
     align: 'left' | 'right' | 'center' = 'center';
     @prop()
-    canvasWith: number = 300;
+    canvasWidth: number = 300;
     @prop()
     canvasHeight: number = 200;
     async onGetTurnUrls() {
@@ -63,7 +72,7 @@ export class DataGridChart extends DataGridView {
     async loadSchema() {
         if (this.schemaId && !this.schema) {
             this.schema = await TableSchema.loadTableSchema(this.schemaId, this.page.ws)
-            if(this.schema)
+            if (this.schema)
                 await this.schema.cacPermissions();
         }
     }
@@ -276,10 +285,23 @@ export class DataGridChart extends DataGridView {
         await this.loadDataGrid();
     }
     async loadDataGrid() {
-        await this.loadSchema();
-        await this.loadData();
-        await this.renderEcharts();
-        this.forceManualUpdate();
+        try {
+            this.isLoading = true;
+            if (this.view) this.forceManualUpdate()
+            await this.loadSchema();
+            if (this.schema) {
+                await this.loadData();
+                await this.renderEcharts();
+                this.emit('loadDataGrided');
+            }
+        }
+        catch (ex) {
+
+        }
+        finally {
+            this.isLoading = false;
+            if (this.view) this.forceManualUpdate()
+        }
     }
     myChart
     async onOpenEchartsConfig(rect: Rect) {
@@ -298,10 +320,61 @@ export class DataGridChart extends DataGridView {
     async onOpenViewConfig(rect: Rect, mode?: 'view' | 'field' | 'sort' | 'filter' | 'group') {
         await this.onOpenEchartsConfig(rect);
     }
+    async onDataGridCreate(rect?: Rect) {
+        if (!rect) {
+            rect = Rect.fromEle(this.el);
+            rect = new Rect(rect.left, rect.top, 200, 40)
+        }
+        await TableSchema.onLoadAll()
+        var schemas = TableSchema.getSchemas();
+        var items: MenuItem[] = [];
+        items.push({ type: MenuItemType.input, name: 'name', placeholder: '请输入图表名称' })
+        var rs: MenuItem[] = [];
+        schemas.forEach(sch => {
+            rs.push({
+                type: MenuItemType.item,
+                text: sch.text,
+                icon: sch.icon,
+                value: sch.id,
+                remark: util.showTime(sch.createDate)
+            })
+        })
+        items.push({ type: MenuItemType.gap });
+        items.push({
+            type: MenuItemType.select,
+            name: 'schemaId',
+            options: rs,
+            text: lst('选择数据源')
+        })
+        items.push({ type: MenuItemType.gap });
+        items.push({
+            type: MenuItemType.button,
+            text: lst('创建图表'),
+            buttonClick: 'select'
+        })
+        var rc = await useSelectMenuItem({ roundArea: rect }, items);
+        var sid = items.find(c => c.name == 'schemaId')?.value as string;
+        console.log(sid,)
+        if (sid) {
+            this.schema = await TableSchema.loadTableSchema(sid, this.page.ws);
+            var name = items.find(g => g.name == 'name')?.value || lst('数据图表');
+            var sv = await this.schema.createSchemaView(name, this.url, this.id);
+            this.page.onAction('openView', async () => {
+                await this.updateProps({
+                    schemaId: this.schema.id,
+                    syncBlockId: sv.view.id
+                })
+            }, {
+                disabledSyncBlock: true
+            });
+            this.schema.cacPermissions();
+            await this.loadDataGrid();
+        }
+    }
 }
 
 @view('/data-grid/charts')
-export class DataGridChartView extends BlockView<DataGridChart>{
+export class DataGridChartView extends BlockView<DataGridChart> {
     onMousedown(event: React.MouseEvent, operator: 'bottom-right' | 'bottom-left') {
         event.stopPropagation();
         var el = this.block.el;
@@ -310,7 +383,7 @@ export class DataGridChartView extends BlockView<DataGridChart>{
         MouseDragger<{ event: React.MouseEvent, realWidth: number, realHeight: number }>({
             event,
             moveStart(ev, data) {
-                data.realWidth = self.block.canvasWith;
+                data.realWidth = self.block.canvasWidth;
                 data.realHeight = self.block.canvasHeight;
                 data.event = ev as any;
                 self.forceUpdate();
@@ -329,7 +402,7 @@ export class DataGridChartView extends BlockView<DataGridChart>{
                 self.imageWrapper.style.height = height + "px";
                 if (self.block.myChart) self.block.myChart.resize({ width: width, height: height });
                 if (isEnd) {
-                    self.block.onUpdateProps({ canvasWith: width, canvasHeight: height });
+                    self.block.onUpdateProps({ canvasWidth: width, canvasHeight: height });
                     self.forceUpdate();
                 }
             }
@@ -337,56 +410,73 @@ export class DataGridChartView extends BlockView<DataGridChart>{
     }
     imageWrapper: HTMLDivElement;
     renderView() {
+        return <div className='sy-dg-charts' style={this.block.visibleStyle}>
+            <div style={this.block.contentStyle}>
+                {this.renderCreateTable()}
+                {this.renderContent()}
+                {this.renderComment()}
+            </div>
+        </div>
+    }
+    renderCreateTable() {
+        if (this.block.isLoading) return <Spin block></Spin>
+        return !this.block.schema && this.block.page.isCanEdit && <div className="item-hover item-hover-focus padding-5 cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
+            <span className="size-24 flex-center remark"><Icon size={16} icon={{ name: 'byte', code: 'table' }}></Icon></span>
+            <span className="remark"><S>选择数据源创建图表</S></span>
+        </div>
+    }
+    renderContent() {
         var style: CSSProperties = {
             justifyContent: 'center'
         }
         if (this.block.align == 'left') style.justifyContent = 'flex-start';
         else if (this.block.align == 'right') style.justifyContent = 'flex-end';
-        return <div className='sy-dg-charts' style={this.block.visibleStyle}>
-            <div className="flex-center" style={style}>
-                <div className="relative visible-hover" ref={e => this.imageWrapper = e} style={{ width: this.block.canvasWith, height: this.block.canvasHeight }}>
-                    <div className="sy-dg-echarts-view w100 h100"
-                        style={{
-                            display: ['summary'].includes(this.block.chart_type) ? 'none' : 'block'
-                        }} ></div>
-                    {this.block.chart_type == 'summary' && <div className="flex-center flex-col  w100 h100">
-                        <div className="gap-h-10" style={{ fontSize: 20, fontWeight: 'bold', lineHeight: '20px' }}>{this.block.schemaView?.text}</div>
-                        {this.block.chart_config.remark && <div className="gap-h-10 text-1 f-14" style={{ fontSize: 20, lineHeight: 20 }}>{this.block.chart_config.remark}</div>}
-                        <div className="gap-t-20 gap-b-10" style={{ fontSize: 40, fontWeight: 'bold', lineHeight: '50px', color: this.block.chart_config?.color }}>{this.block.statisticValue}</div>
-                        {this.block.chart_config?.targetValue && <div className="remark f-14">
-                            <span>{(this.block.statisticValue * 100 / this.block.chart_config?.targetValue).toFixed(2)}%</span>
-                        </div>}
+        if (!this.block.schema) style.display = 'none';
+        return <div className="flex-center" style={style}>
+            <div className="relative visible-hover  border  round " ref={e => this.imageWrapper = e} style={{
+                width: this.block.canvasWidth,
+                height: this.block.canvasHeight
+            }}>
+                <div className="sy-dg-echarts-view w100 h100"
+                    style={{
+                        display: ['summary'].includes(this.block.chart_type) ? 'none' : 'block'
+                    }} ></div>
+                {this.block.chart_type == 'summary' && <div className="flex-center flex-col  w100 h100">
+                    <div className="gap-h-10" style={{ fontSize: 20, fontWeight: 'bold', lineHeight: '20px' }}>{this.block.schemaView?.text}</div>
+                    {this.block.chart_config.remark && <div className="gap-h-10 text-1 f-14" style={{ fontSize: 20, lineHeight: 20 }}>{this.block.chart_config.remark}</div>}
+                    <div className="gap-t-20 gap-b-10" style={{ fontSize: 40, fontWeight: 'bold', lineHeight: '50px', color: this.block.chart_config?.color }}>{this.block.statisticValue}</div>
+                    {this.block.chart_config?.targetValue && <div className="remark f-14">
+                        <span>{(this.block.statisticValue * 100 / this.block.chart_config?.targetValue).toFixed(2)}%</span>
                     </div>}
-                    {this.block.isCanEdit() && <>
-                        <div className="sy-block-resize-bottom-right visible" onMouseDown={e => this.onMousedown(e, 'bottom-right')}></div>
-                        <div className="sy-block-resize-bottom-left visible" onMouseDown={e => this.onMousedown(e, 'bottom-left')}></div>
-                        <div className="flex visible pos-top-right gap-10 ">
-                            <span onMouseDown={async e => {
-                                e.stopPropagation();
-                                var pa = e.currentTarget.parentElement;
-                                pa.classList.remove('visible');
-                                try {
-                                    await this.block.onOpenEchartsConfig(Rect.fromEle(e.currentTarget as HTMLElement));
-                                }
-                                catch (ex) {
+                </div>}
+                {this.block.isCanEdit() && <>
+                    <div className="sy-block-resize-bottom-right visible" onMouseDown={e => this.onMousedown(e, 'bottom-right')}></div>
+                    <div className="sy-block-resize-bottom-left visible" onMouseDown={e => this.onMousedown(e, 'bottom-left')}></div>
+                    <div className="flex visible pos-top-right top-5 right-5 flex-center round  shadow-s border ">
+                        <span onMouseDown={async e => {
+                            e.stopPropagation();
+                            var pa = e.currentTarget.parentElement;
+                            pa.classList.remove('visible');
+                            try {
+                                await this.block.onOpenEchartsConfig(Rect.fromEle(e.currentTarget as HTMLElement));
+                            }
+                            catch (ex) {
 
-                                }
-                                finally {
-                                    pa.classList.add('visible');
-                                }
-                            }} className="size-24 round flex-center bg-dark cursor  text-white gap-r-10"><Icon size={18} icon={SettingsSvg}></Icon></span>
-                            <span onMouseDown={async e => {
-                                e.stopPropagation();
-                                var pa = e.currentTarget.parentElement;
-                                pa.classList.remove('visible');
-                                await this.block.onContextmenu(e.nativeEvent);
+                            }
+                            finally {
                                 pa.classList.add('visible');
-                            }} className="size-24 round flex-center bg-dark cursor  text-white "><Icon size={18} icon={DotsSvg}></Icon></span>
-                        </div>
-                    </>}
-                </div>
+                            }
+                        }} className="round-l-4 bg-hover size-24 flex-center cursor border-right"><Icon size={18} icon={SettingsSvg}></Icon></span>
+                        <span onMouseDown={async e => {
+                            e.stopPropagation();
+                            var pa = e.currentTarget.parentElement;
+                            pa.classList.remove('visible');
+                            await this.block.onContextmenu(e.nativeEvent);
+                            pa.classList.add('visible');
+                        }} className="round-r-4 bg-hover size-24 flex-center cursor"><Icon size={18} icon={DotsSvg}></Icon></span>
+                    </div>
+                </>}
             </div>
-            {this.renderComment()}
         </div>
     }
 }

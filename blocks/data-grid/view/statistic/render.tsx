@@ -38,11 +38,17 @@ export async function loadDataGridEcharts(dg: DataGridChart, echarts) {
     var ele = dg.el?.querySelector('.sy-dg-echarts-view') as HTMLElement;
     if (ele) {
         if (typeof dg.myChart == 'undefined') {
-            dg.myChart = echarts.init(ele, dg.chart_config?.theme || undefined);
+            dg.myChart = echarts.init(ele, dg.chart_config?.theme || undefined, {
+                width: dg.canvasWidth,
+                height: dg.canvasHeight
+            });
         }
         else {
             dg.myChart.dispose();
-            dg.myChart = echarts.init(ele, dg.chart_config?.theme || undefined);
+            dg.myChart = echarts.init(ele, dg.chart_config?.theme || undefined, {
+                width: dg.canvasWidth,
+                height: dg.canvasHeight
+            });
         }
     }
     //    var th= dg.myChart.getTheme(dg.chart_config?.theme|| undefined);
@@ -78,7 +84,7 @@ export async function renderEcharts(dg: DataGridChart) {
         if (isGuid) return lodash.uniqBy(rs, g => g)
         return rs;
     }
-    
+
     var echarts = await loadEchart();
     await loadDataGridEcharts(dg, echarts);
     var groups: string[] = [];
@@ -93,7 +99,8 @@ export async function renderEcharts(dg: DataGridChart) {
             title: {
                 text: dg.schemaView?.text,
                 subtext: dg.chart_config?.remark,
-                left: 'center'
+                left: 'center',
+                top: 0 // 调整标题的垂直位置
             },
             series: [
                 {
@@ -123,7 +130,6 @@ export async function renderEcharts(dg: DataGridChart) {
         var unit = dg.chart_config?.x_fieldIdUnit;
         var sd = getDateRange(dg.chart_config?.calendarHeatmap_value, dg.chart_config?.x_fieldIdUnit);
         var ds: [string, number][] = [];
-
         for (let i = 0; i < 366; i++) {
             var s = i == 0 ? dayjs(sd.start) : dayjs(sd.start).add(i, 'day');
             var dt = s.format('YYYY-MM-DD');
@@ -142,7 +148,6 @@ export async function renderEcharts(dg: DataGridChart) {
                 break;
             }
         }
-
         var option: EChartsOption = {
             visualMap: {
                 show: false,
@@ -167,7 +172,8 @@ export async function renderEcharts(dg: DataGridChart) {
             title: {
                 text: dg.schemaView?.text,
                 subtext: dg.chart_config?.remark,
-                left: 'center'
+                left: 'center',
+                top: 0 // 调整标题的垂直位置
             },
             legend: [
                 {
@@ -220,7 +226,8 @@ export async function renderEcharts(dg: DataGridChart) {
             title: {
                 text: dg.schemaView?.text,
                 subtext: dg.chart_config?.remark,
-                left: 'center'
+                left: 'center',
+                top: 0 // 调整标题的垂直位置
             },
             series: [{
                 type: 'wordCloud',
@@ -326,7 +333,8 @@ export async function renderEcharts(dg: DataGridChart) {
                 title: {
                     text: dg.schemaView?.text,
                     subtext: dg.chart_config?.remark,
-                    left: 'center'
+                    left: 'center',
+                    top: 0 // 调整标题的垂直位置
                 },
                 xAxis: {
                     type: 'category',
@@ -367,14 +375,28 @@ export async function renderEcharts(dg: DataGridChart) {
                         title: {
                             text: dg.schemaView?.text,
                             subtext: dg.chart_config?.remark,
-                            left: 'center'
+                            // top: 'middle'
+                            left: 'center',
+                            top: 0 // 调整标题的垂直位置
                         },
                         tooltip: {
                             trigger: 'item'
                         },
                         legend: {
-                            orient: 'vertical',
-                            left: 'left'
+                            left: 'center',
+                            top: dg.chart_config?.remark ? 40 : 30,// 确保图例在标题下方
+                            type: 'scroll', // 开启滚动模式
+                            orient: 'horizontal', // 水平排列
+                            //left: 10, // 调整图例左边距
+                            //right: 10, // 调整图例右边距
+                            // 如果需要页按钮
+                            pageButtonItemGap: 5, // 页按钮之间的间隔
+                            pageButtonGap: 5, // 页按钮和图例项之间的间隔
+                            // 可以设置图例的宽度和高度，确保它们足够容纳所有图例项
+                            width: '80%', // 根据实际需要调整宽度
+                            height: 50 // 根据实际需要调整高度
+                            // orient: 'horizontal',
+                            // top: 'middle'
                         },
                         series: [
                             {
@@ -403,7 +425,8 @@ export async function renderEcharts(dg: DataGridChart) {
                         title: {
                             text: dg.schemaView?.text,
                             subtext: dg.chart_config?.remark,
-                            left: 'center'
+                            left: 'center',
+                            top: 0 // 调整标题的垂直位置
                         },
                         tooltip: {
                             trigger: 'item'
@@ -475,7 +498,8 @@ export async function renderEcharts(dg: DataGridChart) {
                         title: {
                             text: dg.schemaView?.text,
                             subtext: dg.chart_config?.remark,
-                            left: 'center'
+                            left: 'center',
+                            top: 0 // 调整标题的垂直位置
                         },
                         tooltip: { trigger: 'axis' },
                         legend: {
@@ -521,20 +545,35 @@ export async function renderEcharts(dg: DataGridChart) {
                         title: {
                             text: dg.schemaView?.text,
                             subtext: dg.chart_config?.remark,
-                            left: 'center'
+                            left: 'center',
+                            top: 0 // 调整标题的垂直位置
                         },
                         tooltip: {
                             trigger: 'item',
                             formatter: '{a}<br/>{b} : {c}'
                         },
-                        toolbox: {
-                            feature: {
-                                dataView: { readOnly: false },
-                                restore: {},
-                                saveAsImage: {}
-                            }
-                        },
+                        // toolbox: {
+                        //     feature: {
+                        //         dataView: { readOnly: false },
+                        //         restore: {},
+                        //         saveAsImage: {}
+                        //     }
+                        // },
                         legend: {
+                            left: 'center',
+                            top: dg.chart_config?.remark ? 40 : 30,// 确保图例在标题下方
+                            type: 'scroll', // 开启滚动模式
+                            orient: 'horizontal', // 水平排列
+                            //left: 10, // 调整图例左边距
+                            //right: 10, // 调整图例右边距
+                            // 如果需要页按钮
+                            pageButtonItemGap: 5, // 页按钮之间的间隔
+                            pageButtonGap: 5, // 页按钮和图例项之间的间隔
+                            // 可以设置图例的宽度和高度，确保它们足够容纳所有图例项
+                            width: '80%', // 根据实际需要调整宽度
+                            height: 50, // 根据实际需要调整高度
+                            // orient: 'horizontal',
+                            // top: 'middle'
                             data: xs
                         },
                         series: [
@@ -602,7 +641,8 @@ export async function renderEcharts(dg: DataGridChart) {
                 title: {
                     text: dg.schemaView?.text,
                     subtext: dg.chart_config?.remark,
-                    left: 'center'
+                    left: 'center',
+                    top: 0 // 调整标题的垂直位置
                 },
                 xAxis: {
                     type: 'category',
@@ -646,14 +686,27 @@ export async function renderEcharts(dg: DataGridChart) {
                         title: {
                             text: dg.schemaView?.text,
                             subtext: dg.chart_config?.remark,
-                            left: 'center'
+                            left: 'center',
+                            top: 0 // 调整标题的垂直位置
                         },
                         tooltip: {
                             trigger: 'item'
                         },
                         legend: {
-                            orient: 'vertical',
-                            left: 'left'
+                            left: 'center',
+                            top: dg.chart_config?.remark ? 40 : 30,// 确保图例在标题下方
+                            type: 'scroll', // 开启滚动模式
+                            orient: 'horizontal', // 水平排列
+                            //left: 10, // 调整图例左边距
+                            //right: 10, // 调整图例右边距
+                            // 如果需要页按钮
+                            pageButtonItemGap: 5, // 页按钮之间的间隔
+                            pageButtonGap: 5, // 页按钮和图例项之间的间隔
+                            // 可以设置图例的宽度和高度，确保它们足够容纳所有图例项
+                            width: '80%', // 根据实际需要调整宽度
+                            height: 50 // 根据实际需要调整高度
+                            // orient: 'horizontal',
+                            // top: 'middle'
                         },
                         series: await xs2.asyncMap(async x => {
                             return {
@@ -678,7 +731,7 @@ export async function renderEcharts(dg: DataGridChart) {
                         title: {
                             text: dg.schemaView?.text,
                             subtext: dg.chart_config?.remark,
-                            left: 'center'
+                            //  top: 'middle'
                         },
                         legend: {
                             right: '10%',
@@ -754,20 +807,35 @@ export async function renderEcharts(dg: DataGridChart) {
                         title: {
                             text: dg.schemaView?.text,
                             subtext: dg.chart_config?.remark,
-                            left: 'center'
+                            left: 'center',
+                            top: 0 // 调整标题的垂直位置
                         },
                         tooltip: {
                             trigger: 'item',
                             formatter: '{a} <br/>{b} : {c}%'
                         },
-                        toolbox: {
-                            feature: {
-                                dataView: { readOnly: false },
-                                restore: {},
-                                saveAsImage: {}
-                            }
-                        },
+                        // toolbox: {
+                        //     feature: {
+                        //         dataView: { readOnly: false },
+                        //         restore: {},
+                        //         saveAsImage: {}
+                        //     }
+                        // },
                         legend: {
+                            left: 'center',
+                            top: dg.chart_config?.remark ? 40 : 30,// 确保图例在标题下方
+                            type: 'scroll', // 开启滚动模式
+                            orient: 'horizontal', // 水平排列
+                            //left: 10, // 调整图例左边距
+                            //right: 10, // 调整图例右边距
+                            // 如果需要页按钮
+                            pageButtonItemGap: 5, // 页按钮之间的间隔
+                            pageButtonGap: 5, // 页按钮和图例项之间的间隔
+                            // 可以设置图例的宽度和高度，确保它们足够容纳所有图例项
+                            width: '80%', // 根据实际需要调整宽度
+                            height: 50, // 根据实际需要调整高度
+                            // orient: 'horizontal',
+                            // top: 'middle'
                             data: xsValues
                         },
                         series: await xs2.asyncMap(async x => {

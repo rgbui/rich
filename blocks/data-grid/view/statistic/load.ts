@@ -3,43 +3,43 @@ import { lst } from '../../../../i18n/store';
 import { channel } from '../../../../net/channel';
 import { util } from '../../../../util/util';
 var sc = new SyncLoad<any>()
-
-export function getEchartTheme() {
+export function getEchartTheme()
+{
     return [
-        {
-            text:lst('白垩'),
-            name: 'chalk',
-            html: `<a class="theme-plan-group" title="chalk" style="background-color: rgb(41, 52, 65);">
-        <div class="theme-plan-color" style="background-color: rgb(252, 151, 175);">
-        </div><div class="theme-plan-color" style="background-color: rgb(135, 247, 207);">
-        </div><div class="theme-plan-color" style="background-color: rgb(247, 244, 148);">
-        </div><div class="theme-plan-color" style="background-color: rgb(114, 204, 255);">
-        </div><div class="theme-plan-color" style="background-color: rgb(247, 197, 160);">
-        </div><div class="theme-plan-color" style="background-color: rgb(212, 164, 235);">
-        </div><div class="theme-plan-color" style="background-color: rgb(210, 245, 166);">
-        </div><div class="theme-plan-color" style="background-color: rgb(118, 242, 242);">
-        </div>
-      </a>`,
-            load: async () => await import('./data/chalk.json')
-        },
-        {  text:lst('暗黑'),
-            name: 'dark',
-            html: `<a class="theme-plan-group" title="dark" style="background-color: rgb(51, 51, 51);">
-        <div class="theme-plan-color" style="background-color: rgb(221, 107, 102);">
-        </div><div class="theme-plan-color" style="background-color: rgb(117, 154, 160);">
-        </div><div class="theme-plan-color" style="background-color: rgb(230, 157, 135);">
-        </div><div class="theme-plan-color" style="background-color: rgb(141, 193, 169);">
-        </div><div class="theme-plan-color" style="background-color: rgb(234, 126, 83);">
-        </div><div class="theme-plan-color" style="background-color: rgb(238, 221, 120);">
-        </div><div class="theme-plan-color" style="background-color: rgb(115, 163, 115);">
-        </div><div class="theme-plan-color" style="background-color: rgb(115, 185, 188);">
-        </div><div class="theme-plan-color" style="background-color: rgb(114, 137, 171);">
-        </div><div class="theme-plan-color" style="background-color: rgb(145, 202, 140);">
-        </div><div class="theme-plan-color" style="background-color: rgb(244, 159, 66);">
-        </div>
-      </a>`,
-            load: async () => await import('./data/dark.json')
-        },
+    //     {
+    //         text:lst('白垩'),
+    //         name: 'chalk',
+    //         html: `<a class="theme-plan-group" title="chalk" style="background-color: rgb(41, 52, 65);">
+    //     <div class="theme-plan-color" style="background-color: rgb(252, 151, 175);">
+    //     </div><div class="theme-plan-color" style="background-color: rgb(135, 247, 207);">
+    //     </div><div class="theme-plan-color" style="background-color: rgb(247, 244, 148);">
+    //     </div><div class="theme-plan-color" style="background-color: rgb(114, 204, 255);">
+    //     </div><div class="theme-plan-color" style="background-color: rgb(247, 197, 160);">
+    //     </div><div class="theme-plan-color" style="background-color: rgb(212, 164, 235);">
+    //     </div><div class="theme-plan-color" style="background-color: rgb(210, 245, 166);">
+    //     </div><div class="theme-plan-color" style="background-color: rgb(118, 242, 242);">
+    //     </div>
+    //   </a>`,
+    //         load: async () => await import('./data/chalk.json')
+    //     },
+    //     {  text:lst('暗黑'),
+    //         name: 'dark',
+    //         html: `<a class="theme-plan-group" title="dark" style="background-color: rgb(51, 51, 51);">
+    //     <div class="theme-plan-color" style="background-color: rgb(221, 107, 102);">
+    //     </div><div class="theme-plan-color" style="background-color: rgb(117, 154, 160);">
+    //     </div><div class="theme-plan-color" style="background-color: rgb(230, 157, 135);">
+    //     </div><div class="theme-plan-color" style="background-color: rgb(141, 193, 169);">
+    //     </div><div class="theme-plan-color" style="background-color: rgb(234, 126, 83);">
+    //     </div><div class="theme-plan-color" style="background-color: rgb(238, 221, 120);">
+    //     </div><div class="theme-plan-color" style="background-color: rgb(115, 163, 115);">
+    //     </div><div class="theme-plan-color" style="background-color: rgb(115, 185, 188);">
+    //     </div><div class="theme-plan-color" style="background-color: rgb(114, 137, 171);">
+    //     </div><div class="theme-plan-color" style="background-color: rgb(145, 202, 140);">
+    //     </div><div class="theme-plan-color" style="background-color: rgb(244, 159, 66);">
+    //     </div>
+    //   </a>`,
+    //         load: async () => await import('./data/dark.json')
+    //     },
         {
             text:lst('厄索斯'),
             name: 'essos',
@@ -105,20 +105,20 @@ export function getEchartTheme() {
       </a>`,
             load: async () => await import('./data/macarons.json')
         },
-        {
-            text:lst('紫色'),
-            name: 'purple-passion',
-            html: `<a class="theme-plan-group" title="purple-passion" style="background-color: rgb(91, 92, 110);">
-        <div class="theme-plan-color" style="background-color: rgb(138, 124, 168);">
-        </div><div class="theme-plan-color" style="background-color: rgb(224, 152, 199);">
-        </div><div class="theme-plan-color" style="background-color: rgb(143, 211, 232);">
-        </div><div class="theme-plan-color" style="background-color: rgb(113, 102, 158);">
-        </div><div class="theme-plan-color" style="background-color: rgb(204, 112, 175);">
-        </div><div class="theme-plan-color" style="background-color: rgb(124, 180, 204);">
-        </div>
-      </a>`,
-            load: async () => await import('./data/purple-passion.json')
-        },
+    //     {
+    //         text:lst('紫色'),
+    //         name: 'purple-passion',
+    //         html: `<a class="theme-plan-group" title="purple-passion" style="background-color: rgb(91, 92, 110);">
+    //     <div class="theme-plan-color" style="background-color: rgb(138, 124, 168);">
+    //     </div><div class="theme-plan-color" style="background-color: rgb(224, 152, 199);">
+    //     </div><div class="theme-plan-color" style="background-color: rgb(143, 211, 232);">
+    //     </div><div class="theme-plan-color" style="background-color: rgb(113, 102, 158);">
+    //     </div><div class="theme-plan-color" style="background-color: rgb(204, 112, 175);">
+    //     </div><div class="theme-plan-color" style="background-color: rgb(124, 180, 204);">
+    //     </div>
+    //   </a>`,
+    //         load: async () => await import('./data/purple-passion.json')
+    //     },
         {
             text:lst('罗马'),
             name: 'roma',
