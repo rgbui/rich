@@ -88,14 +88,21 @@ export class MenuItemView extends React.Component<{
     }
     async openSelectMenu(item: MenuItem, event: React.MouseEvent) {
         var el = event.currentTarget as HTMLElement;
+        var options = item.options;
+        if (typeof item.cacOptions == 'function') {
+            var items = this.props.parent instanceof MenuView ? (this.props.parent.props.items) : (this.props.parent.menus);
+            options = await item.cacOptions(items, item);
+            item.options = options;
+        }
         var r = await useSelectMenuItem({ dist: 3, roundArea: Rect.fromEle(el), align: 'end' },
-            item.options.map(op => {
+            options.map(op => {
                 return {
                     ...op,
                     checkLabel: item.value == op.value
                 }
             }),
             {
+                height: 300,
                 nickName: 'selectBox',
                 width: item.selectDropWidth || undefined
             }
@@ -160,7 +167,7 @@ export class MenuItemView extends React.Component<{
                     this.el['data-menu-item'] = this;
                 }
             }}>
-            {(item.type == MenuItemType.item || !item.type) && <ToolTip overlay={item.overlay} placement={item.placement || 'right'} ><div className={'shy-menu-box-item-option' + (item.disabled == true ? " disabled" : "")}
+            {(item.type == MenuItemType.item || !item.type) && <ToolTip overlay={item.overlay} placement={item.placement || 'right'} ><div className={'shy-menu-box-item-option' + (item.disabled == true ? " disabled" : "") + (item.warn ? " warn" : "")}
                 onMouseDown={e => this.select(item, e.nativeEvent)}>
                 {item.icon && <i className={"flex-center flex-line  text-1 " + (util.covertToArray(item.iconClassName).join(' ')) + (item.iconSize > 20 ? "" : " size-20")}><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
                 {item.renderIcon && item.renderIcon(item, this)}
@@ -226,14 +233,14 @@ export class MenuItemView extends React.Component<{
                     placeholder={item.placeholder || item.text}></Input></div>
             </div>}
             {item.type == MenuItemType.button && <div className="shy-menu-box-item-button"><Button icon={item.icon} disabled={item.disabled} block onClick={e => item.buttonClick != 'click' ? this.select(item, e.nativeEvent) : this.click(item, e)}>{item.text}</Button></div>}
-            {item.type == MenuItemType.select && <div className="shy-menu-box-item-select">
+            {item.type == MenuItemType.select && <div onMouseDown={e => this.openSelectMenu(item, e)} className="shy-menu-box-item-select">
                 {item.icon && <i className="flex-center flex-inline size-20 flex-fixed text-1"><Icon className={(util.covertToArray(item.iconClassName).join(' '))} icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
                 {item.renderIcon && item.renderIcon(item, this)}
                 <span className='shy-menu-box-item-option-text flex-auto'>{item.text}
                     {item.remark && <i className="remark padding-l-5">{item.remark}</i>}
                     {item.helpUrl && <span className="flex-fixed h-20 flex"><HelpText onMouseDown={e => e.stopPropagation()} url={item.helpUrl}>{item.helpText}</HelpText></span>}
                 </span>
-                <span className="shy-menu-box-item-select-value flex  flex-fixed" onMouseDown={e => this.openSelectMenu(item, e)}>
+                <span className="shy-menu-box-item-select-value flex  flex-fixed" >
                     {item?.options?.find(g => g.value == item.value)?.icon && <span className="flex-center flex-inline size-20 flex-fixed text-1"><Icon size={item.optionIconSize ? item.optionIconSize : 16} className={util.covertToArray(item.optionIconClassName).join(' ')} icon={item?.options?.find(g => g.value == item.value)?.icon}></Icon></span>}
                     <em className="text-over flex-auto max-w-100">{item?.options?.find(g => g.value == item.value)?.text}</em>
                     <Icon className={'flex-fixed'} size={16} icon={ChevronDownSvg}></Icon>
@@ -289,5 +296,14 @@ export class MenuItemView extends React.Component<{
             </div>}
             {item?.childs?.length > 0 && this.hover && <MenuBox style={this.props.item.childsStyle || {}} parent={this.props.parent} select={this.props.select} click={this.props.click} input={this.props.input} items={item.childs} ref={e => this.menubox = e} deep={this.props.deep}></MenuBox>}
         </div>
+    }
+    componentDidMount(): void {
+        if (this.props.item?.type == MenuItemType.select && typeof this.props.item.options == 'undefined' && typeof this.props.item.cacOptions == 'function') {
+            var items = this.props.parent instanceof MenuView ? (this.props.parent.props.items) : (this.props.parent.menus);
+            this.props.item.cacOptions(items, this.props.item).then(e => {
+                this.props.item.options = e;
+                this.forceUpdate();
+            })
+        }
     }
 }

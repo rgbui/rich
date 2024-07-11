@@ -84,20 +84,35 @@
             cursor: default;
 
             .shy-icon {
-                color   : rgba(55, 53, 47, 0.6);
-                // fill : rgba(55, 53, 47, 0.6);
+                color   : var(--text-color-remark);
+                // fill : rgba(55, 53, 47, 0.6);;
             }
 
             .shy-menu-box-item-option-text {
-                color: rgba(55, 53, 47, 0.6);
+                color: var(--text-color-remark);
             }
 
             label {
-                color: rgba(55, 53, 47, 0.6);
+                color: var(--text-color-remark);
             }
 
             &:hover {
                 background-color: transparent;
+            }
+        }
+
+        &.warn {
+            &:hover {
+                .shy-icon {
+                    color   : var(--text-p-color);
+                    // fill : rgba(55, 53, 47, 0.6);
+                }
+                .shy-menu-box-item-option-text {
+                    color: var(--text-p-color);
+                }
+                label {
+                    color: var(--text-p-color);
+                }
             }
         }
     }

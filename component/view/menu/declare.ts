@@ -6,6 +6,7 @@ import { MenuItemView } from "./item"
 
 export type MenuItem<T = string> = {
     name?: T,
+    warn?: boolean,
     type?: MenuItemType,
     text?: string,
     icon?: IconValueType,
@@ -15,7 +16,7 @@ export type MenuItem<T = string> = {
     render?: (item: MenuItem<T>, view?: MenuItemView) => JSX.Element,
     renderContent?: (item: MenuItem<T>, view?: MenuItemView) => JSX.Element,
     iconSize?: number,
-    iconClassName?:string|(string[]),
+    iconClassName?: string | (string[]),
     label?: string,
     checkLabel?: boolean,
     forceHasChilds?: boolean,
@@ -23,8 +24,9 @@ export type MenuItem<T = string> = {
     childsPos?: PopoverPosition,
     childsStyle?: CSSProperties,
     options?: MenuItem<T>[],
+    cacOptions?: (items: MenuItem[], item: MenuItem<T>) => Promise<MenuItem<T>[]>,
     optionIconSize?: number,
-    optionIconClassName?:string|(string[]),
+    optionIconClassName?: string | (string[]),
     /**
      * 当type为 MenuItemType.select 时有效
      */
@@ -79,7 +81,7 @@ export type MenuItem<T = string> = {
      * 如果设置为true，则走input传递的方法
      * 菜单不会关闭
      */
-    selectInput?:boolean
+    selectInput?: boolean
 }
 
 export enum MenuItemType {
