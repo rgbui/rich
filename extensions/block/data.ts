@@ -6,6 +6,10 @@ import {
     BrowserSvg,
     ButtonSvg,
     CalloutSvg,
+    CollectionBoardSvg,
+    CollectionCalendarSvg,
+    CollectionGallerySvg,
+    CollectionListSvg,
     DividerSvg,
     DuplicateSvg,
     EmbedSvg,
@@ -38,6 +42,7 @@ import MG from "../../src/assert/img/mastergo.png";
 import VQQ from "../../src/assert/img/vqq.ico";
 import YK from "../../src/assert/img/youku.png";
 import YB from "../../src/assert/img/youtube.png";
+
 export function getBlockSelectData() {
     var BlockSelectorData: BlockGroup[] = [
         {
@@ -111,7 +116,22 @@ export function getBlockSelectData() {
         {
             text: lst('数据'),
             childs: [
-                { text: lst('数据表'), icon: { name: 'byte', code: 'table' }, url: "/data-grid/table", label: lst('/数据'), labels: ['/data', lst('/表格'), '/grid', '/gridview', '/table', '/bg', '/biaoge', '/shuju', '/sj', '/shujubiaoge', '/sjbg'] },
+
+                { text: lst('数据表'), icon: { name: 'byte', code: 'table' }, url: "/data-grid/table", label: lst('/数据'), labels: ['/data', '/数据表', lst('/表格'), '/grid', '/gridview', '/table', '/bg', '/biaoge', '/shuju', '/sj', '/shujubiaoge', '/sjbg'] },
+                { text: lst('数据卡片'), icon: CollectionGallerySvg, url: "/data-grid/gallery", label: lst('/数据卡片'), labels: ['/data', '/数据表', lst('/表格'), '/grid', '/gridview', '/table', '/card', '/datacard', '/kapian', '/kp'] },
+                { text: lst('数据列表'), icon: CollectionListSvg, url: "/data-grid/list", label: lst('/数据列表'), labels: ['/data', '/数据表', lst('/表格'), '/grid', '/gridview', '/table', '/list', '/datalist', '/libiao', '/lb'] },
+                { text: lst('看板'), icon: CollectionBoardSvg, url: "/data-grid/board", label: lst('/看板'), labels: ['/data', '/数据表', lst('/表格'), '/grid', '/gridview', '/table', '/board', '/kanban', '/kb'] },
+                { text: lst('日历'), icon: CollectionCalendarSvg, url: "/data-grid/calendar", label: lst('/日历'), labels: ['/data', '/数据表', lst('/表格'), '/grid', '/gridview', '/table', '/calendar', '/rili', '/rl'] },
+                { text: lst('图表'), icon: { name: 'bytedance-icon', code: 'chart-pie-one' }, url: "/data-grid/charts", label: lst('/统计图'), labels: ['/data', lst('/表格'), '/grid', '/gridview', '/table', '/echarts', '/charts', '/tongji', '/tj', '/tubiao', '/tb'] },
+                { text: lst('折线图'), icon: { name: 'byte', code: 'chart-line' }, url: '/data-grid/charts?{"chart_type":"line"}', label: lst('/折线图'), labels: ['/data', lst('/表格'), '/grid', '/gridview', '/table', '/echarts', '/charts', '/tongji', '/tj', '/tubiao', '/tb', '/zhexiantu', '/zxt'] },
+                { text: lst('柱状图'), icon: { name: 'byte', code: 'chart-histogram' }, url: '/data-grid/charts?{"chart_type":"bar"}', label: lst('/柱状图'), labels: ['/data', lst('/表格'), '/grid', '/gridview', '/table', '/echarts', '/charts', '/tongji', '/tj', '/tubiao', '/tb', '/zhuzhuangtu', '/zzt'] },
+                { text: lst('饼图'), icon: { name: 'byte', code: 'chart-pie' }, url: '/data-grid/charts?{"chart_type":"pie"}', label: lst('/饼图'), labels: ['/data', lst('/表格'), '/grid', '/gridview', '/table', '/echarts', '/charts', '/tongji', '/tj', '/tubiao', '/tb', '/bingtu', '/bt'] },
+                { text: lst('雷达图'), icon: { name: 'byte', code: 'radar-chart' }, url: '/data-grid/charts?{"chart_type":"radar"}', label: lst('/雷达图'), labels: ['/data', lst('/表格'), '/grid', '/gridview', '/table', '/echarts', '/charts', '/tongji', '/tj', '/tubiao', '/tb', '/leidatu', '/ldt'] },
+                { text: lst('散点图'), icon: { name: 'byte', code: 'chart-scatter' }, url: '/data-grid/charts?{"chart_type":"scatter"}', label: lst('/散点图'), labels: ['/data', lst('/表格'), '/grid', '/gridview', '/table', '/echarts', '/charts', '/tongji', '/tj', '/tubiao', '/tb', '/sandiantu', '/sdt'] },
+                { text: lst('漏斗图'), icon: { name: 'byte', code: 'filter' }, url: '/data-grid/charts?{"chart_type":"funnel"}', label: lst('/漏斗图'), labels: ['/data', lst('/表格'), '/grid', '/gridview', '/table', '/echarts', '/charts', '/tongji', '/tj', '/tubiao', '/tb', '/loudoutu', '/ldt'] },
+                { text: lst('仪表盘'), icon: { name: 'byte', code: 'speed-one' }, url: '/data-grid/charts?{"chart_type":"gauge"}', label: lst('/仪表盘'), labels: ['/data', lst('/表格'), '/grid', '/gridview', '/table', '/echarts', '/charts', '/tongji', '/tj', '/tubiao', '/tb', '/yibiaopan', '/ybp'] },
+                { text: lst('统计与指标'), icon: { name: 'byte', code: 'mark' }, url: '/data-grid/charts?{"chart_type":"summary"}', label: lst('/漏斗图'), labels: ['/data', lst('/表格'), '/grid', '/gridview', '/table', '/echarts', '/charts', '/tongji', '/tj', '/tubiao', '/tb', '/tongji', '/tj'] },
+                { text: lst('字符云'), icon: { name: 'byte', code: 'cloudy' }, url: '/data-grid/charts?{"chart_type":"wordCloud"}', label: lst('/漏斗图'), labels: ['/data', lst('/表格'), '/grid', '/gridview', '/table', '/echarts', '/charts', '/tongji', '/tj', '/tubiao', '/tb', '/zifuyun', '/zfy'] },
 
                 //网盘 图片库 音乐库 视频库
             ]
@@ -132,15 +152,9 @@ export function getBlockSelectData() {
                         '/sosearch',
                         '/shousuo', '/ss']
                 },
-                { text: lst('作者'), url: '/page/author', icon: { name: 'bytedance-icon', code: 'edit-name' }, label: lst('/作者'), labels: ['/author', '/writer', '/zuoze', '/zz'] },
+                { text: lst('编辑人'), url: '/page/author', icon: { name: 'bytedance-icon', code: 'edit-name' }, label: lst('/作者'), labels: ['/author', '/writer', '/zuoze', '/zz'] },
                 { text: lst('点赞分享'), url: '/page/UpvotedOrShared', icon: { name: 'bytedance-icon', code: "send" }, label: lst('/分享'), labels: ['/share', '/dz', '/dianzan', '/like'] },
                 { text: lst('评论'), url: '/comments', icon: { name: 'byte', code: 'message' }, label: lst('/评论'), labels: ['/comment', '/pinglun', '/pl', '/message'] },
-            ]
-        },
-        {
-            text: lst('图表'),
-            childs: [
-
             ]
         },
         {

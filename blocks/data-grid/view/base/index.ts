@@ -464,7 +464,7 @@ export class DataGridView extends Block {
     async loadDataGrid() {
         try {
             this.isLoading = true;
-            if (this.view) this.view.forceUpdate();
+            if (this.view) this.forceManualUpdate()
             await this.loadSchema();
             if (this.schema) {
                 await this.loadViewFields();
@@ -480,11 +480,11 @@ export class DataGridView extends Block {
         }
         finally {
             this.isLoading = false;
-            if (this.view) this.view.forceUpdate();
+            if (this.view) this.forceManualUpdate()
         }
     }
-    async onAddCreateTableView() {
-        var r = Rect.fromEle(this.el);
+    async onAddCreateTableView(rect?: Rect) {
+        var r = rect || Rect.fromEle(this.el);
         var newRect = new Rect(r.left, r.top - (this.noTitle ? 40 : 0), r.width, 40);
         var dg = await useCreateDataGridView(
             { roundArea: newRect },
@@ -519,24 +519,18 @@ export class DataGridView extends Block {
             this.willCreateSchema = false;
         }
     }
-    async onDataGridCreate() {
-        var rect = Rect.fromEle(this.el);
-        var newRect = new Rect(rect.left, rect.top, 200, 40)
-        var dg = await useDataGridCreate({ roundArea: newRect });
+    async onDataGridCreate(rect?: Rect) {
+        if (!rect) {
+            rect = Rect.fromEle(this.el);
+            rect = new Rect(rect.left, rect.top, 200, 40)
+        }
+        var dg = await useDataGridCreate({ roundArea: rect }, { url: this.url });
         if (dg) {
             if (this.view) this.view.forceUpdate();
             var viewUrl: string = '';
             if (dg.schemaId) {
                 viewUrl = dg.url;
-                if (viewUrl == dg.url) await this.page.onAction('SelectTableSchema', async () => {
-                    await this.updateProps({
-                        schemaId: dg.schemaId,
-                        syncBlockId: dg.syncBlockId
-                    }, BlockRenderRange.self);
-                    if (this.dataGridTab)
-                        await this.dataGridTab.updateTabItems(this)
-                }, { disabledSyncBlock: true })
-                else await this.page.onReplace(this, {
+                await this.page.onReplace(this, {
                     url: dg.url,
                     schemaId: dg.schemaId,
                     syncBlockId: dg.syncBlockId
@@ -552,21 +546,12 @@ export class DataGridView extends Block {
                 viewUrl = view.url;
             }
             else if (dg.source == 'createView') {
-                this.schema = await TableSchema.onCreate({ text: dg.text, url: this.url });
-                if(this.schema)await this.schema.cacPermissions()
-                var view = this.schema.listViews.first();
+                var schema = await TableSchema.onCreate({ text: dg.text, url: this.url });
+                var view = schema.listViews.first();
                 viewUrl = view.url;
-                if (viewUrl == this.url) await this.page.onAction(ActionDirective.onCreateTableSchema, async () => {
-                    await this.updateProps({
-                        schemaId: this.schema.id,
-                        syncBlockId: view.id
-                    }, BlockRenderRange.self)
-                    if (this.dataGridTab)
-                        await this.dataGridTab.updateTabItems(this)
-                }, { disabledSyncBlock: true });
-                else await this.page.onReplace(this, {
+                await this.page.onReplace(this, {
                     url: viewUrl,
-                    schemaId: this.schema.id,
+                    schemaId: schema.id,
                     syncBlockId: view.id
                 }, async (b) => {
                     if ((b as DataGridView).dataGridTab)

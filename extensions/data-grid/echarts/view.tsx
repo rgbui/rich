@@ -62,9 +62,13 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
         function click(item) {
 
         }
-        return <MenuView input={input} select={select} click={click} style={{
-            paddingTop: 10,
-        }} items={this.getItems()}></MenuView>
+        return <MenuView
+            input={input}
+            select={select}
+            click={click}
+            style={{
+                paddingTop: 10,
+            }} items={this.getItems()}></MenuView>
     }
     get bc() {
         return (this.block as any) as DataGridChart;
@@ -75,15 +79,15 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
             if (f) {
                 if (f.config?.relationTableId == this.schema.id) return false;
             }
-            return <div className="error f-12"><S text='graph统计意义'>存在关联字段且关联表指向自身，关系图才有意义</S></div>
+            return <div className="remark f-14 padding-w-10"><S text='graph统计意义'>存在关联字段且关联表指向自身，关系图才有意义</S></div>
         }
         else if (this.bc?.chart_type == 'radar') {
             var ns = this.schema.visibleFields.findAll(g => g.type == FieldType.number);
-            if (ns.length < 3) return <div className="error f-12"><S text='radar统计意义'>存在至少三个数值字段的统计,雷达图才有意义</S></div>
+            if (ns.length < 3) return <div className="remark f-14 padding-w-10"><S text='radar统计意义'>存在至少三个数值字段的统计,雷达图才有意义</S></div>
         }
         else if (this.bc?.chart_type == 'scatter') {
             var ns = this.schema.visibleFields.findAll(g => g.type == FieldType.number);
-            if (ns.length < 2) return <div className="error f-12"><S text='scatter统计意义'>存在两到三个数值字段的统计，散点图才有意义</S></div>
+            if (ns.length < 2) return <div className="remark f-14 padding-w-10"><S text='scatter统计意义'>存在两到三个数值字段的统计，散点图才有意义</S></div>
         }
         return false;
     }
@@ -166,7 +170,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             textAlign="right"
                             value={bc.chart_config?.theme}
                             dropHeight={150}
-                            dropWidth={230}
+                            dropWidth={300}
                             onChange={async e => {
                                 await bc.onUpdateProps({ 'chart_config.theme': e }, { range: BlockRenderRange.self })
                                 await bc.didMounted();
@@ -179,11 +183,11 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                     type: MenuItemType.custom,
                                     render(item, view) {
                                         return <div className="flex gap-h-5 padding-w-10 cursor round item-hover">
+                                            <div className="flex-auto flex-end  " dangerouslySetInnerHTML={{ __html: ec.html }}></div>
+                                            <span className="flex-fixed gap-l-10 text-1 w-60">{item.text}</span>
                                             <span className="flex-fixed size-24 flex-center">
                                                 {item.value == bc.chart_config?.theme && <Icon size={18} icon={CheckSvg}></Icon>}
                                             </span>
-                                            <span className="flex-fixed gap-r-10 text-1 w-60">{item.text}</span>
-                                            <div className="flex-auto flex-end " dangerouslySetInnerHTML={{ __html: ec.html }}></div>
                                         </div>
                                     },
                                 }
@@ -289,7 +293,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                     <div className={"flex-auto flex-end " + (this.schema.isType(bc.chart_config?.group_fieldId, FieldType.createDate, FieldType.date, FieldType.modifyDate) ? " flex-end" : "")}>
                         <SelectBox
                             textAlign="right"
-                            value={bc.chart_config?.group_fieldId||''}
+                            value={bc.chart_config?.group_fieldId || ''}
                             dropHeight={150}
                             onChange={async e => {
                                 var sf = this.block.schema.visibleFields.find(g => g.id == e);

@@ -40,7 +40,7 @@ export class TableStoreList extends DataGridView {
 export class TableStoreListView extends BlockView<TableStoreList> {
     renderCreateTable() {
         if (this.block.isLoading) return <Spin block></Spin>
-        return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus padding-5 cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
+        return !this.block.schema && this.block.page.isCanEdit && <div className="item-hover item-hover-focus padding-5 cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
             <span className="size-24 flex-center remark"><Icon size={16} icon={{ name: 'byte', code: 'table' }}></Icon></span>
             <span className="remark"><S>添加或创建数据表</S></span>
         </div>

@@ -391,7 +391,7 @@ export class FilterView extends React.Component<{
                         type: MenuItemType.custom,
                         render(it) {
                             return <div className="flex padding-w-5 gap-w-5 h-30 item-hover round cursor">
-                                <span className="flex-fixed size-20 round gap-r-10 border" style={{ backgroundColor: op?.fill||op?.color,color:op.textColor }}></span>
+                                <span className="flex-fixed size-20 round gap-r-10 border" style={{ backgroundColor: op?.fill || op?.color, color: op.textColor }}></span>
                                 <span className="flex-auto text f-14">{op.text}</span>
                                 {util.covertToArray(item.value).includes(it.value) && <span className="flex-fixed size-24 flex-center"><Icon size={16} icon={CheckSvg}></Icon></span>}
                             </div>
@@ -408,7 +408,7 @@ export class FilterView extends React.Component<{
             }
             return <div onMouseDown={e => mousedown(item, e)} className="border box-border round h-26 max-w-120 text-overflow padding-w-10 flex-center gap-r-10">
                 {ops.map(op => {
-                    return <span className="text-overflow round padding-w-6  f-14 padding-h-2  l-16 gap-r-5" key={op.value} style={{ background:op?.fill||op?.color,color:op?.textColor }}>{op?.text || lst('请选择一项')}</span>
+                    return <span className="text-overflow round padding-w-6  f-14 padding-h-2  l-16 gap-r-5" key={op.value} style={{ background: op?.fill || op?.color, color: op?.textColor }}>{op?.text || lst('请选择一项')}</span>
                 })}
                 {ops.length == 0 && <span>{lst('请选择一项')}</span>}
             </div>
@@ -429,7 +429,7 @@ export class FilterView extends React.Component<{
                         type: MenuItemType.custom,
                         render(it) {
                             return <div className="flex padding-w-14 h-30 item-hover round cursor">
-                                <span className="flex-fixed size-20 round gap-r-10 border" style={{ backgroundColor: op?.fill||op?.color,color:op.textColor }}></span>
+                                <span className="flex-fixed size-20 round gap-r-10 border" style={{ backgroundColor: op?.fill || op?.color, color: op.textColor }}></span>
                                 <span className="flex-auto text f-14">{op.text}</span>
                                 {it.value == item.value && <span className="flex-fixed size-24 flex-center"><Icon size={16} icon={CheckSvg}></Icon></span>}
                             </div>
@@ -457,7 +457,7 @@ export class FilterView extends React.Component<{
                 }
             }
             return <div onMouseDown={e => mousedown(item, e)} className="border box-border round h-26 padding-w-14 flex-center gap-r-10">
-                {(op?.fill||op?.color) && <span className="circle border-light size-16 gap-r-5" style={{ background: op?.fill||op?.color,color:op?.textColor }}></span>}
+                {(op?.fill || op?.color) && <span className="circle border-light size-16 gap-r-5" style={{ background: op?.fill || op?.color, color: op?.textColor }}></span>}
                 <span>{op?.text || lst('请选择一项')}</span>
             </div>
         }
@@ -558,7 +558,7 @@ export class FilterView extends React.Component<{
         }
         return <div className="f-14">
             <div className="h-30 flex padding-w-10 gap-w-5 gap-h-10 text-1 f-14">
-                <S>筛选符合下方</S><em className="gap-w-5"><SelectBox small value={self.filter.logic} border options={[
+                <S>筛选符合下方</S><em className="gap-w-5"><SelectBox value={self.filter.logic} border options={[
                     { text: lst('任意'), value: 'or' },
                     { text: lst('所有'), value: 'and' }
                 ]} onChange={e => {

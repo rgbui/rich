@@ -17,7 +17,6 @@ import { useCreateDataGridView } from "../create/view";
 import { Spin } from "../../../component/view/spin";
 import { S } from "../../../i18n/view";
 
-
 export class DataSourceView extends EventsComponent {
     getItems() {
         var self = this;
@@ -34,7 +33,7 @@ export class DataSourceView extends EventsComponent {
                 if (Array.isArray(rd.views) && rd.views.length > 0) {
                     cs.push({ type: MenuItemType.text, text: lst('视图') })
                     var srs = getSchemaViews();
-                    cs.push(...rd.views.findAll(g => srs.some(s => s.url == g.url)).map(rv => {
+                    cs.push(...rd.listViews.map(rv => {
                         return {
                             text: rv.text,
                             value: {
@@ -90,14 +89,16 @@ export class DataSourceView extends EventsComponent {
                             text: lst('删除数据表'),
                             name: 'deleteTable',
                             icon: TrashSvg,
-                            value: rd.id
+                            value: rd.id,
+                            warn: true
                         })
                     }
                     else cs.push({
                         text: lst('删除数据表'),
                         name: 'deleteTable',
                         icon: TrashSvg,
-                        value: rd.id
+                        value: rd.id,
+                        warn: true
                     })
                 }
                 rs.push({
@@ -205,7 +206,7 @@ export class DataSourceView extends EventsComponent {
             <MenuView ref={e => this.mv = e} input={input}
                 select={select}
                 style={{
-                    width: 300,
+                    width: this.width || 300,
                     paddingTop: 5,
                     paddingBottom: 5
                 }} items={items}></MenuView>
@@ -220,14 +221,16 @@ export class DataSourceView extends EventsComponent {
     editTable: boolean = false;
     createTable: boolean = false;
     schemas: TableSchema[] = []; pos: PopoverPosition
+    width: number;
     async open(option: {
         tableId?: string,
         viewId?: string,
         selectView?: boolean,
         createView?: boolean,
         editTable?: boolean,
-        createTable?: boolean
+        createTable?: boolean, width?: number
     }, pos: PopoverPosition) {
+        this.width = option.width
         this.selectView = option.selectView;
         this.createView = option.createView;
         this.currentTableId = option.tableId;
@@ -248,8 +251,10 @@ export async function useDataSourceView(pos: PopoverPosition,
         selectView?: boolean,
         createView?: boolean,
         editTable?: boolean,
-        createTable?: boolean
-    }, createTableCallback?: () => void) {
+        createTable?: boolean,
+        width?: number
+    },
+    createTableCallback?: () => void) {
     let popover = await PopoverSingleton(DataSourceView, { mask: true });
     let fv = await popover.open(pos);
     fv.open(option, pos);

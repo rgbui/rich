@@ -29,13 +29,13 @@ import { BlockDirective } from "../../../../src/block/enum";
 import { Rect, Point } from "../../../../src/common/vector/point";
 import { util } from "../../../../util/util";
 import { DataGridOptionType, Field } from "../../schema/field";
-import { FieldType, SupportTurnFieldTypes } from "../../schema/type";
+import { FieldType, getFilterRollupFields, SupportTurnFieldTypes } from "../../schema/type";
 import { ViewField } from "../../schema/view";
 import { lst } from "../../../../i18n/store";
 import { OptionBackgroundColorList } from "../../../../extensions/color/data";
 import { TableSchema } from "../../schema/meta";
 import { useFormula } from "../../../../extensions/data-grid/formula/lazy";
-import { GetFieldTypeSvg } from "../../schema/util";
+import { getFieldStatItems, GetFieldTypeSvg } from "../../schema/util";
 
 export class DataGridViewField {
     private getFieldMenuItems(this: DataGridView, field: Field, viewField: ViewField) {
@@ -82,7 +82,6 @@ export class DataGridViewField {
                 descText = lst('按 10 → 1 降序排序');
                 ascText = lst('按 1 → 10 升序排序');
             }
-
             items.push(...[
                 {
                     name: 'name',
@@ -119,6 +118,7 @@ export class DataGridViewField {
                 {
                     name: 'deleteProperty',
                     icon: TrashSvg,
+                    warn: true,
                     disabled: TableSchema.isSystemField(field),
                     text: lst('删除字段')
                 },
@@ -364,6 +364,63 @@ export class DataGridViewField {
                     type: MenuItemType.divide
                 })
             }
+            else if (field?.type == FieldType.rollup) {
+                items.insertAt(4, {
+                    text: lst('关联数据表'),
+                    name: 'config.rollupTableId',
+                    type: MenuItemType.select,
+                    value: field.config?.rollupTableId,
+                    options: this.relationSchemas.map(c => {
+                        return {
+                            icon: c.icon || { name: 'byte', code: 'table' },
+                            text: c.text,
+                            value: c.id,
+                            checkLabel: c.id == field.config?.rollupTableId
+                        }
+                    })
+                });
+                items.insertAt(5, {
+                    text: lst('字段'),
+                    name: 'config.rollupFieldId',
+                    type: MenuItemType.select,
+                    value: field.config?.rollupFieldId,
+                    cacOptions: async (items, item) => {
+                        var rt = items.find(g => g.name == 'config.rollupTableId');
+                        return getFilterRollupFields(this.relationSchemas.find(c => c.id == rt.value)?.visibleFields).map(r => {
+                            return {
+                                text: r.text,
+                                value: r.id,
+                                icon: GetFieldTypeSvg(r),
+                                checkLabel: r.id == field.config?.rollupFieldId
+                            }
+                        })
+                    }
+                });
+                items.insertAt(6, {
+                    text: lst('计算'),
+                    name: 'config.rollupStatistic',
+                    value: field.config?.rollupStatistic,
+                    type: MenuItemType.select,
+                    cacOptions: async (items, item) => {
+                        var rt = items.find(g => g.name == 'config.rollupTableId');
+                        var rf = items.find(g => g.name == 'config.rollupFieldId');
+                        var f = this.relationSchemas.find(c => c.id == rt.value)?.visibleFields?.find(g => g.id == rf.value);
+                        var statMenus = getFieldStatItems(f?.type);
+                        statMenus.splice(0, 1, {
+                            text: lst('显示原值'),
+                            value: 'origin',
+                        }, {
+                            text: lst('显示唯一原值'),
+                            value: 'uniqueOrigin',
+                        }, { type: MenuItemType.divide });
+                        return statMenus;
+                    }
+                });
+                items.insertAt(7, {
+                    type: MenuItemType.divide
+                })
+                items.splice(items.findIndex(c => c.name == 'sortAsc'), 4);
+            }
             else if (field?.type == FieldType.emoji) {
                 items.insertAt(4, {
                     text: lst('更换表情'),
@@ -407,9 +464,6 @@ export class DataGridViewField {
                         }
                     ]
                 });
-            }
-            else if (field?.type == FieldType.rollup) {
-                items.splice(items.findIndex(c => c.name == 'sortAsc'), 4);
             }
             if (!viewField) {
                 lodash.remove(items, g =>
@@ -546,11 +600,15 @@ export class DataGridViewField {
                             'config.numberDisplay.display',
                             'config.imageFormat.display',
                             'config.imageFormat.multipleDisplay',
-                            'config.numberDisplay.color'
+                            'config.numberDisplay.color',
+                            'config.rollupTableId',
+                            'config.rollupFieldId',
+                            'config.rollupStatistic'
                         ].includes(item.name as string)) {
                             var n = (item.name as string).replace('config.', '');
                             await self.onUpdateFieldConfig(field, { [n]: item.value });
                         }
+
                     }
                 }
             );
@@ -574,7 +632,8 @@ export class DataGridViewField {
                             if (r.config) {
                                 props.config = Object.assign({}, field.config || {}, r.config)
                             }
-                            await this.onUpdateField(field, props)
+                            if (!lodash.isEqual(props, { text: field.text, config: field.config }))
+                                await this.onUpdateField(field, props)
                         }
                         else {
                             var props: Record<string, any> = { text: r.text };

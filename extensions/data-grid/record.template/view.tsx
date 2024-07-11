@@ -1,7 +1,7 @@
 
 
 
-import React, { ReactNode } from "react";
+import React from "react";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
@@ -87,17 +87,21 @@ class TabelSchemaFormDrop extends EventsComponent {
         var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus as any);
         if (um) {
             var name = menus[0].value;
-            var formType = menus[1].value || 'doc';
+            var formType = menus.find(c => c.name == 'viewDisplay')?.value || 'doc';
             if (name) {
-                await this.schema.onSchemaOperate([{
+                var rc = await this.schema.onSchemaOperate([{
                     name: 'createSchemaView',
                     text: name,
                     url,
                     data: {
                         formType
                     }
-                }], this.block.id)
-                this.forceUpdate();
+                }], this.block.id);
+                var rd = rc.data.actions[0];
+                if (rd) {
+                    await this.onOpenTemplate(rd, true);
+                }
+                else this.forceUpdate();
             }
         }
     }

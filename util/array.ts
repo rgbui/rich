@@ -86,7 +86,7 @@ interface Array<T> {
 if (typeof Array.prototype.eachAsync == 'undefined') {
 
     Array.prototype.randomOf = function () {
-        if(this.length==0)return null;
+        if (this.length == 0) return null;
         var at = parseInt((this.length * Math.random()).toString());
         return this[at];
     }
@@ -607,7 +607,7 @@ if (typeof Array.prototype.eachAsync == 'undefined') {
                 }
             }
             else if (typeof fn == 'undefined') v = x;
-            if (v != undefined) {
+            if (typeof v != 'undefined') {
                 if (typeof max == "undefined") { max = v; }
                 if (typeof max == 'number' && v > max) { max = v; }
             }
@@ -638,7 +638,7 @@ if (typeof Array.prototype.eachAsync == 'undefined') {
                 }
             }
             else if (typeof fn == 'undefined') v = x;
-            if (v != undefined) {
+            if (typeof v != 'undefined') {
                 if (max == undefined) { max = v; }
                 if (typeof max == 'number' && v < max) { max = v; }
             }
@@ -650,7 +650,7 @@ if (typeof Array.prototype.eachAsync == 'undefined') {
         return this.find((z: any) => {
             if (typeof fn == 'string' && z[fn] == max) return true;
             else if (typeof fn == 'function' && fn(z) == max) return true;
-            else if (typeof fn == 'undefined' && z == max) return true;
+            else if (typeof fn == 'undefined' && z === max) return true;
         })
     }
     Array.prototype.average = function (fn) {

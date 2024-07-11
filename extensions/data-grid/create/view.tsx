@@ -27,7 +27,10 @@ export class DataGridCreateView extends EventsComponent {
     viewMayBeText: string = '';
     render() {
         return <div className="w-300">
-            <div className="gap-w-10 gap-h-10"><Input placeholder={lst('数据表视图')} value={this.viewText} onChange={e => { this.viewText = e }}  ></Input></div>
+            <div className="gap-w-10 gap-h-10"><Input
+                placeholder={lst('数据表视图')}
+                value={this.viewText}
+                onChange={e => { this.viewText = e }}  ></Input></div>
             <div>
                 <div className="flex padding-w-10 h-30 f-14 r-padding-w-10 r-round r-gap-r-10 r-h-24 r-flex-center r-cursor" >
                     <span onMouseDown={e => { this.mode = 'base'; this.forceUpdate() }} className={(this.mode == 'base' ? "item-hover-light-focus" : "item-hover")}><S>视图</S></span>
@@ -42,7 +45,7 @@ export class DataGridCreateView extends EventsComponent {
                 </div>
             </div>
             <div className="gap-w-10 gap-h-10">
-                <Button onMouseDown={e => this.onSave()} block><Icon size={18} icon={PlusSvg}></Icon><S>创建视图</S></Button>
+                <Button onMouseDown={e => this.onSave()} block><Icon size={18} icon={PlusSvg}></Icon><S>创建数据表视图</S></Button>
             </div>
             <div className="gap-w-10 gap-b-5">
                 <HelpText url={window.shyConfig?.isUS ? "https://help.shy.red/page/44#p6dtzzCsUHUrhyfNdrfkXh" : "https://help.shy.live/page/288#eNk3NZZyXWMCgMEMCyJRcG"}><S>了解如何创建数据表视图</S></HelpText>
@@ -106,6 +109,7 @@ export class DataGridCreateView extends EventsComponent {
                 return <div key={i} className="flex h-30  padding-w-10  item-hover round cursor" onMouseDown={e => {
                     this.url = v.url;
                     this.source = 'tableView';
+                    this.viewMayBeText = v.text;
                     this.forceUpdate();
                 }}>
                     <span className="flex-fixed size-20 flex-center">
@@ -119,8 +123,9 @@ export class DataGridCreateView extends EventsComponent {
     }
     onSave() {
         var self = this;
+        var text = self.viewText || self.viewMayBeText;
         self.emit('save', {
-            text: self.viewText || self.viewMayBeText,
+            text: text,
             url: self.url,
             source: self.source
         })

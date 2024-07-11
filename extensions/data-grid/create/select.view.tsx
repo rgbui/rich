@@ -94,7 +94,7 @@ export class DataGridCreate extends EventsComponent {
     }
     rsSpreads: { [key: string]: boolean } = {};
     renderTables() {
-        var list =TableSchema.getSchemas(); 
+        var list = TableSchema.getSchemas();
         list = lodash.sortBy(list, g => 0 - g.createDate.getTime())
         var self = this;
         var srs = getSchemaViews()
@@ -165,11 +165,13 @@ export class DataGridCreate extends EventsComponent {
         var views = getSchemaViews();
         return <div className=" gap-t-10">
             <div className="gap-w-10"><Input placeholder={lst('数据表名称')} value={this.inputViewText}
+                focusSelectionAll
                 onChange={e => {
                     this.inputViewText = e
                 }}
                 onEnter={e => {
                     this.inputViewText = e;
+                    this.onSave()
                 }} ></Input></div>
             <div className="h-10"></div>
             {views.map(v => {
@@ -204,15 +206,18 @@ export class DataGridCreate extends EventsComponent {
     }
     input: Input;
     isOnlyCreateTable = false;
-    async open(options?: { isOnlyCreateTable?: boolean }) {
+    async open(options?: { url?: string, source?: 'tableView' | 'dataView' | 'createView', isOnlyCreateTable?: boolean }) {
         this.isOnlyCreateTable = options?.isOnlyCreateTable ? true : false;
         this.url = BlockUrlConstant.DataGridTable;
+        if (options?.url) this.url = options.url;
+        if (options?.source) this.source = options.source;
+        else this.source = 'createView'
         await TableSchema.onLoadAll()
         this.forceUpdate();
     }
 }
 
-export async function useDataGridCreate(pos: PopoverPosition, options?: { isOnlyCreateTable?: boolean }) {
+export async function useDataGridCreate(pos: PopoverPosition, options?: { url?: string, source?: 'tableView' | 'dataView' | 'createView', isOnlyCreateTable?: boolean }) {
     let popover = await PopoverSingleton(DataGridCreate, { mask: true });
     let fv = await popover.open(pos);
     await fv.open(options);
@@ -221,6 +226,11 @@ export async function useDataGridCreate(pos: PopoverPosition, options?: { isOnly
         syncBlockId?: string,
         url?: string,
         text?: string,
+        /**
+         * createView 表示创建新的数据表
+         * tableView 表示选择已存在的数据表
+         * dataView 表示选择数据表模板
+         */
         source?: 'tableView' | 'dataView' | 'createView'
 
     }) => void, reject) => {

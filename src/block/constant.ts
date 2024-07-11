@@ -36,6 +36,7 @@ export enum BlockUrlConstant {
     DataGridBoard = '/data-grid/board',
     DataGridTab = '/data-grid/tab',
     DataGridTabPage = '/data-grid/tab/page',
+    DataGridCharts = '/data-grid/charts',
     RefLinks = '/ref/links',
     Link = '/link',
     Todo = '/todo',
@@ -53,15 +54,15 @@ export enum BlockUrlConstant {
     BoardImage = '/board/image',
     RecordPageView = '/data-grid/page/record',
     Table = '/table',
-    TableRow='/table/row',
+    TableRow = '/table/row',
     TableCell = '/table/cell',
     BoardPageCard = '/board/page/card',
     PagePreOrNext = '/page/preOrNext',
     Card = '/card',
     PageAuthor = '/page/author',
     PageUpvotedOrShared = '/page/UpvotedOrShared',
-    PageDescription='/pageDescription',
-    Measure='/measure'
+    PageDescription = '/pageDescription',
+    Measure = '/measure'
 }
 
 export function BlockUrlResolve(url: BlockUrlConstant, data?: Record<string, any>) {

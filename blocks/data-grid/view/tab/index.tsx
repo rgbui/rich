@@ -85,7 +85,7 @@ export class DataGridTab extends Block {
                 createTable: true
             }, async () => {
                 var s = this.dataGridBlock.schema;
-                var view = this.dataGridBlock.schema.listViews.find(c => c.id == (g as any).viewId);
+                var view = this.dataGridBlock.schemaView;
                 await this.page.onAction('onTabAddItem', async () => {
                     var items = lodash.cloneDeep(this.tabItems);
                     items.push({
@@ -113,7 +113,7 @@ export class DataGridTab extends Block {
                     this.tabIndex = this.tabItems.length - 1;
                 });
                 var nb = this.otherChilds.last().childs.first() as DataGridView;
-                await nb.onAddCreateTableView()
+                await nb.onDataGridCreate(rect)
             });
             if (g) {
                 if (typeof g != 'string' && g.type == 'view') {

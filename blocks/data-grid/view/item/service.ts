@@ -4,6 +4,7 @@ import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { DataGridItemRecord } from "./record";
 import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
+
 export async function createFieldBlock(viewField: ViewField, block: TableGridItem | DataGridItemRecord) {
     var cellContent: Block;
     var row = block.dataRow;
@@ -23,21 +24,21 @@ export async function createFieldBlock(viewField: ViewField, block: TableGridIte
         switch (field.type) {
             case FieldType.title:
                 cellContent = await BlockFactory.createBlock('/field/title', page, {
-                    value: viewField.getValue(row),
+                    // value: viewField.getValue(row),
                     viewField
                 }, block);
                 break;
             case FieldType.id:
             case FieldType.text:
                 cellContent = await BlockFactory.createBlock('/field/text', page, {
-                    value: viewField.getValue(row),
+                    // value: viewField.getValue(row),
                     viewField
                 }, block);
                 break;
             case FieldType.autoIncrement:
             case FieldType.number:
                 cellContent = await BlockFactory.createBlock('/field/number', page, {
-                    value: viewField.getValue(row),
+                    // value: viewField.getValue(row),
                     viewField
                 }, block);
                 break;
@@ -45,14 +46,14 @@ export async function createFieldBlock(viewField: ViewField, block: TableGridIte
             case FieldType.createDate:
             case FieldType.date:
                 cellContent = await BlockFactory.createBlock('/field/date', page, {
-                    value: viewField.getValue(row),
+                    // value: viewField.getValue(row),
                     viewField
                 }, block);
                 break;
             case FieldType.options:
             case FieldType.option:
                 cellContent = await BlockFactory.createBlock('/field/option', page, {
-                    value: viewField.getValue(row),
+                    // value: viewField.getValue(row),
                     viewField
                 }, block);
                 break;
@@ -61,13 +62,13 @@ export async function createFieldBlock(viewField: ViewField, block: TableGridIte
             case FieldType.modifyer:
                 cellContent = await BlockFactory.createBlock('/field/user', page, {
                     viewField,
-                    value: viewField.getValue(row),
+                    // value: viewField.getValue(row),
                 }, block);
                 break;
             case FieldType.bool:
                 cellContent = await BlockFactory.createBlock('/field/check', page, {
                     viewField,
-                    value: viewField.getValue(row),
+                    // value: viewField.getValue(row),
                 }, block);
                 break;
             case FieldType.oppose:
@@ -77,61 +78,61 @@ export async function createFieldBlock(viewField: ViewField, block: TableGridIte
             case FieldType.vote:
                 cellContent = await BlockFactory.createBlock('/field/emoji', page, {
                     viewField,
-                    value: viewField.getValue(row),
+                    // value: viewField.getValue(row),
                 }, block);
                 break;
             case FieldType.relation:
                 cellContent = await BlockFactory.createBlock('/field/relation', page, {
                     viewField,
-                    value: viewField.getValue(row),
+                    // value: viewField.getValue(row),
                 }, block);
                 break;
             case FieldType.file:
                 cellContent = await BlockFactory.createBlock('/field/file', page, {
                     viewField,
-                    value: viewField.getValue(row),
+                    // value: viewField.getValue(row),
                 }, block);
                 break;
             case FieldType.image:
                 cellContent = await BlockFactory.createBlock('/field/image', page, {
                     viewField,
-                    value: viewField.getValue(row),
+                    // value: viewField.getValue(row),
                 }, block);
                 break;
             case FieldType.audio:
                 cellContent = await BlockFactory.createBlock('/field/audio', page, {
                     viewField,
-                    value: viewField.getValue(row),
+                    // value: viewField.getValue(row),
                 }, block);
                 break;
             case FieldType.video:
                 cellContent = await BlockFactory.createBlock('/field/video', page, {
                     viewField,
-                    value: viewField.getValue(row),
+                    // value: viewField.getValue(row),
                 }, block);
                 break;
             case FieldType.comment:
                 cellContent = await BlockFactory.createBlock('/field/comment', page, {
                     viewField,
-                    value: viewField.getValue(row),
+                    // value: viewField.getValue(row),
                 }, block);
                 break;
             case FieldType.email:
                 cellContent = await BlockFactory.createBlock('/field/email', page, {
                     viewField,
-                    value: viewField.getValue(row),
+                    // value: viewField.getValue(row),
                 }, block);
                 break;
             case FieldType.phone:
                 cellContent = await BlockFactory.createBlock('/field/phone', page, {
                     viewField,
-                    value: viewField.getValue(row),
+                    // value: viewField.getValue(row),
                 }, block);
                 break;
             case FieldType.link:
                 cellContent = await BlockFactory.createBlock('/field/url', page, {
                     viewField,
-                    value: viewField.getValue(row),
+                    // value: viewField.getValue(row),
                 }, block);
                 break;
             case FieldType.formula:
@@ -143,19 +144,19 @@ export async function createFieldBlock(viewField: ViewField, block: TableGridIte
             case FieldType.button:
                 cellContent = await BlockFactory.createBlock('/field/button', page, {
                     viewField,
-                    value: viewField.getValue(row),
+                    // value: viewField.getValue(row),
                 }, block);
                 break;
             case FieldType.rollup:
                 cellContent = await BlockFactory.createBlock('/field/rollup', page, {
                     viewField,
-                    value: viewField.getValue(row),
+                    // value: viewField.getValue(row),
                 }, block);
                 break;
             case FieldType.browse:
                 cellContent = await BlockFactory.createBlock('/field/browse', page, {
                     viewField,
-                    value: viewField.getValue(row),
+                    // value: viewField.getValue(row),
                 }, block);
                 break;
         }

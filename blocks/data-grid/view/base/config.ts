@@ -31,7 +31,7 @@ import { useDataGridConfig } from "../../../../extensions/data-grid/view.config/
 
 export class DataGridViewConfig {
     async onOpenViewSettings(this: DataGridView, rect: Rect) {
-        if(!this.dataGridIsCanEdit())return;
+        if (!this.dataGridIsCanEdit()) return;
         var self = this;
         var view = this.schemaView;
         await this.onDataGridTool(async () => {
@@ -211,7 +211,7 @@ export class DataGridViewConfig {
                     self.onCopySchemaView();
                 }
                 else if (r.item.name == 'addView') {
-                    await self.onAddCreateTableView();
+                    await self.onAddCreateTableView(rect);
                 }
             }
             if (rname) {
@@ -233,7 +233,7 @@ export class DataGridViewConfig {
     }
     async onOpenViewConfig(this: DataGridView, rect: Rect, mode?: 'view' | 'field' | 'sort' | 'filter' | 'group') {
         var self = this;
-        if(!this.dataGridIsCanEdit())return;
+        if (!this.dataGridIsCanEdit()) return;
         await self.onDataGridTool(async () => {
             await useDataGridConfig(
                 { roundArea: rect },
@@ -244,7 +244,7 @@ export class DataGridViewConfig {
         })
     }
     async onOpenViewProperty(this: DataGridView, rect: Rect) {
-        if(!this.dataGridIsCanEdit())return;
+        if (!this.dataGridIsCanEdit()) return;
         var self = this;
         await this.onDataGridTool(async () => {
             var menus: MenuItem<BlockDirective | string>[] = [
@@ -316,9 +316,9 @@ export class DataGridViewConfig {
     }
     async onOpenAddTabView(this: DataGridView, event: React.MouseEvent) {
         var self = this;
-        self.onDataGridTool(async () => {
+        self.onDataGridTool(async ()=>{
             var rect = Rect.fromEle(event.currentTarget as HTMLElement);
-            var g = await useDataSourceView({ roundArea: rect }, {
+            var g = await useDataSourceView({ roundArea: rect },{
                 tableId: this.schema.id,
                 viewId: this.syncBlockId,
                 selectView: true,
@@ -326,8 +326,6 @@ export class DataGridViewConfig {
                 createView: true,
                 createTable: true
             }, async () => {
-                // var s = await TableSchema.loadTableSchema(g.tableId, this.page.ws);
-                var sv = this.schema.listViews.find(c => c.id == (g as any).viewId)
                 var viewData = {
                     url: BlockUrlConstant.DataGridTab,
                     tabIndex: 1,
@@ -365,7 +363,7 @@ export class DataGridViewConfig {
                                 blocks: {
                                     childs: [
                                         {
-                                            url: sv.url,
+                                            url: this.url,
                                             schemaId: this.schemaId,
                                             syncBlockId: this.syncBlockId
                                         }
@@ -379,7 +377,7 @@ export class DataGridViewConfig {
                     disabledSyncBlock: true
                 });
                 var nb = newBlock.otherChilds.last().childs.first() as DataGridView;
-                await nb.onAddCreateTableView()
+                await nb.onDataGridCreate(rect)
             });
             if (g) {
                 if (typeof g != 'string' && g.type == 'view') {

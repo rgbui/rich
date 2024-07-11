@@ -1,10 +1,10 @@
 import { PopoverPosition } from "../../../component/popover/position";
 import { PopoverSingleton } from "../../../component/popover/popover";
-import { FieldType, OnlyFieldTypes } from "../../../blocks/data-grid/schema/type";
+import { FieldType, getFilterRollupFields, OnlyFieldTypes } from "../../../blocks/data-grid/schema/type";
 import { Field, FieldConfig } from "../../../blocks/data-grid/schema/field";
 import React from "react";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
-import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
+import { getFieldStatItems, GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { ChevronDownSvg } from "../../../component/svgs";
 import { useSelectMenuItem } from "../../../component/view/menu";
@@ -48,8 +48,10 @@ export class TableFieldView extends EventsComponent {
     }
     async openSelectRelationTable(event: React.MouseEvent) {
         event.stopPropagation();
-        var r = await useDataSourceView({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
-            tableId: this.config.relationTableId
+        var rect = Rect.fromEle(event.currentTarget as HTMLElement);
+        var r = await useDataSourceView({ roundArea: rect }, {
+            tableId: this.config.relationTableId,
+            width: rect.width
         });
         if (r) this.onChangeConfig({ relationTableId: r as string });
     }
@@ -160,13 +162,13 @@ export class TableFieldView extends EventsComponent {
                 </div>
                 <div className="gap-h-5  h-28 gap-w-5 padding-w-5 flex round item-hover-light cursor">
                     <span className="flex-auto "><S>是否双向关联</S></span>
-                    <div className="flex-fixed"><Switch onChange={e => this.onChangeConfig({ relationDouble: e })} checked={this.config?.relationDouble ? true : false}></Switch></div>
+                    <div className="flex-fixed"><Switch disabled={this.fieldId ? true : false} onChange={e => this.onChangeConfig({ relationDouble: e })} checked={this.config?.relationDouble ? true : false}></Switch></div>
                 </div>
 
                 {this.config?.relationDouble && <div className="gap-h-5 gap-w-5 padding-w-5">
                     <div className="remark f-12"><S>创建关联字段</S></div>
                     <div className="h-26 cursor">
-                        <Input placeholder={this.dataGrid.schema?.text} value={this.config.relationFieldText} onChange={e => {
+                        <Input readonly={this.fieldId ? true : false} placeholder={this.dataGrid.schema?.text} value={this.config.relationFieldText} onChange={e => {
                             this.config.relationFieldText = e;
                             this.forceUpdate()
                         }}></Input>
@@ -186,36 +188,36 @@ export class TableFieldView extends EventsComponent {
                 <S text="没有关联的表无法聚合统计">没有关联的数据表,无法搜索引用</S>
             </div>
         </>
-        var sums = [
-            { text: lst('数量'), value: '$count', icon: { name: 'byte', code: 'preschool' } },
-            { text: lst('聚合'), type: MenuItemType.text },
-            { text: lst('平均'), value: '$agv', icon: { name: 'byte', code: 'average' } },
-            { text: lst('求和'), value: '$sum', icon: { name: 'byte', code: 'formula' } },
-            { text: lst('最小'), value: '$min', icon: { name: 'byte', code: 'min' } },
-            { text: lst('最大'), value: '$max', icon: { name: 'byte', code: 'maximum' } }
-        ]
         async function selectRelationTable(event: React.MouseEvent) {
-            var r = await useSelectMenuItem({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, ts.map(r => {
+            var rect = Rect.fromEle(event.currentTarget as HTMLElement)
+            var r = await useSelectMenuItem({ roundArea: rect }, ts.map(r => {
                 return {
+
                     text: r.text,
                     value: r.id,
                     checkLabel: r.id == self.config.rollupTableId
                 }
-            }));
+            }), {
+                width: rect.width,
+            });
             if (r?.item) {
                 self.config.rollupTableId = r.item.value;
                 self.loadTypeDatas(true)
             }
         }
+        var vfs = getFilterRollupFields(self.rollTableSchema.visibleFields)
         async function selectField(event: React.MouseEvent) {
-            var r = await useSelectMenuItem({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, self.rollTableSchema.visibleFields.map(r => {
+            var rect = Rect.fromEle(event.currentTarget as HTMLElement)
+            var r = await useSelectMenuItem({ roundArea: rect }, vfs.map(r => {
                 return {
                     text: r.text,
                     value: r.id,
                     icon: GetFieldTypeSvg(r),
                     checkLabel: r.id == self.config.rollupFieldId
                 }
-            }));
+            }), {
+                width: rect.width,
+            });
             if (r?.item) {
                 self.config.rollupFieldId = r.item.value;
                 var f = self.rollTableSchema.visibleFields.find(g => g.id == self.config.rollupFieldId);
@@ -225,25 +227,27 @@ export class TableFieldView extends EventsComponent {
                 self.loadTypeDatas(true)
             }
         }
+        var f = vfs.find(g => g.id == self.config.rollupFieldId);
+        var statMenus = getFieldStatItems(f?.type);
+        statMenus.splice(0, 1, {
+            text: lst('显示原值'),
+            value: 'origin',
+        }, {
+            text: lst('显示唯一原值'),
+            value: 'uniqueOrigin',
+        }, { type: MenuItemType.divide });
         async function selectS(event: React.MouseEvent) {
-            var menus = sums;
-            var f = self.rollTableSchema.visibleFields.find(g => g.id == self.config.rollupFieldId);
-            if (f) {
-                if (![FieldType.number, FieldType.autoIncrement].includes(f.type)) {
-                    menus = [
-                        { text: lst('数量'), value: '$count', icon: { name: 'byte', code: 'preschool' } }
-                    ];
-                }
-            }
-            var r = await useSelectMenuItem({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, menus.map(r => {
+            var rect = Rect.fromEle(event.currentTarget as HTMLElement)
+            var r = await useSelectMenuItem({ roundArea: rect }, statMenus.map(r => {
                 return {
                     text: r.text,
                     value: r.value,
-                    icon: r.icon as any,
                     type: r.type,
                     checkLabel: self.config.rollupStatistic == r.value
                 }
-            }));
+            }), {
+                width: rect.width,
+            });
             if (r?.item) {
                 self.config.rollupStatistic = r.item.value;
                 self.forceUpdate()
@@ -252,7 +256,7 @@ export class TableFieldView extends EventsComponent {
         var tt = ts.find(g => g.id == this.config.rollupTableId)
         return <>
             <div onClick={e => selectRelationTable(e)} className="gap-h-5  h-28 gap-w-5 padding-w-5 flex round item-hover-light cursor">
-                <div className="flex-auto "><S>关联表格</S></div>
+                <div className="flex-auto "><S>关联数据表</S></div>
                 <div
                     className="flex flex-fixed  remark">
                     <span className="flex-center  size-24  flex-fix cursor  round "><Icon size={14} icon={tt?.icon || { name: 'byte', code: 'table' }}></Icon></span>
@@ -263,9 +267,9 @@ export class TableFieldView extends EventsComponent {
                 </div>
             </div>
             {self.rollTableSchema?.visibleFields && <>
-                <div className="gap-h-5  h-28 gap-w-5 padding-w-5 flex round item-hover-light cursor">
-                    <label className="flex-auto "><S>统计列</S></label>
-                    <div onClick={e => selectField(e)} className="flex remark flex-fixed ">
+                <div onClick={e => selectField(e)} className="gap-h-5  h-28 gap-w-5 padding-w-5 flex round item-hover-light cursor">
+                    <label className="flex-auto "><S>字段</S></label>
+                    <div className="flex remark flex-fixed ">
                         <span className="flex-center  size-20  flex-fix cursor  round "> <Icon size={16} className={'text-1'} icon={GetFieldTypeSvg(self.rollTableSchema.visibleFields.find(g => g.id == this.config.rollupFieldId))}></Icon></span>
                         <span className="flex-auto ">{self.rollTableSchema.visibleFields.find(g => g.id == this.config.rollupFieldId)?.text}</span>
                         <span className="flex-fixed size-20 round  flex-center">
@@ -274,10 +278,10 @@ export class TableFieldView extends EventsComponent {
                     </div>
                 </div>
                 {this.config.rollupFieldId && <div onClick={e => selectS(e)} className="gap-h-5  h-28 gap-w-5 padding-w-5 flex round item-hover-light cursor">
-                    <label className="flex-auto"><S>统计</S></label>
+                    <label className="flex-auto"><S>计算</S></label>
                     <div className="flex remark flex-fixed ">
-                        <span className="flex-center  size-20  flex-fix cursor  round "> <Icon icon={sums.find(g => g.value == this.config.rollupStatistic)?.icon as any} size={16} className={'text-1'} ></Icon></span>
-                        <span className="flex-auto ">{sums.find(g => g.value == this.config.rollupStatistic)?.text}</span>
+                        <span className="flex-center  size-20  flex-fix cursor  round "> <Icon icon={statMenus.find(g => g.value == this.config.rollupStatistic)?.icon as any} size={16} className={'text-1'} ></Icon></span>
+                        <span className="flex-auto ">{statMenus.find(g => g.value == this.config.rollupStatistic)?.text}</span>
                         <span className="flex-fixed size-20 round  flex-center">
                             <Icon size={14} icon={ChevronDownSvg}></Icon>
                         </span>
@@ -336,6 +340,11 @@ export class TableFieldView extends EventsComponent {
                 if (nt) {
                     this.text = nt.text;
                     if (this.input) this.input.updateValue(this.text);
+                }
+            }
+            if (!this.fieldId) {
+                if (type == FieldType.relation) {
+                    this.config.isMultiple = true;
                 }
             }
             await this.loadTypeDatas();

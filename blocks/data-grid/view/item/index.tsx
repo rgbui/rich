@@ -91,14 +91,14 @@ export class TableGridItem extends Block {
     }
     async onUpdateCellValue(field: Field, value: any) {
         value = util.clone(value);
-        var oldValue = lodash.cloneDeep(value);
+        var oldValue = lodash.cloneDeep(this.dataRow[field.name]);
         this.dataRow[field.name] = value;
         await this.schema.rowUpdate({
             dataId: this.dataRow.id,
             data: { [field.name]: value }
-        },this.dataGrid?.id || (this.id + 'TableStoreItem'))
+        }, this.dataGrid?.id || (this.id + 'TableStoreItem'))
         if (field.type == FieldType.relation && field.config?.relationDouble == true) {
-            var rs = this.dataGrid.relationSchemas.find(g => g.id == field.config.relationFieldId);
+            var rs = this.dataGrid.relationSchemas.find(g => g.id == field.config.relationTableId);
             if (rs) {
                 if (!Array.isArray(oldValue)) oldValue = [];
                 var newValue = lodash.cloneDeep(value);
@@ -121,7 +121,6 @@ export class TableGridItem extends Block {
                             refId: this.dataRow.id
                         })
                     }
-
                 })
                 lodash.remove(ps, c => c.count == 0);
                 var rf = rs.fields.find(c => c.id == field.config?.relationFieldId);
@@ -129,11 +128,15 @@ export class TableGridItem extends Block {
                     await rs.onDataStoreOperate([{
                         name: 'updateDoubleRelation',
                         fieldName: rf.name,
+                        isMultiple: rf.config?.isMultiple,
                         data: ps
                     }], this.dataGrid?.id || (this.id + 'TableStoreItem'))
                 }
             }
         }
+    }
+    async onOnlyUpdateCellValue(field: Field, value: any) {
+        this.dataRow[field.name] = value;
     }
     async onUpdateCellProps(props: Record<string, any>) {
         Object.assign(this.dataRow, props);
@@ -198,10 +201,10 @@ export class TableGridItem extends Block {
             return ov;
         }
     }
-    async onUpdateFieldSchema(viewField: ViewField, data) {
+    async onUpdateFieldSchema(field: Field, data) {
         data = util.clone(data);
-        viewField.field.update(data);
-        await this.schema.fieldUpdate({ fieldId: viewField.field.id, data }, this.dataGrid?.id || '')
+        field.update(data);
+        await this.schema.fieldUpdate({ fieldId: field.id, data }, this.dataGrid?.id || '')
         if (this.dataGrid) {
             this.dataGrid.onNotifyReferenceBlocks()
         }
