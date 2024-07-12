@@ -16,6 +16,7 @@ import { IconValueType } from "../../../component/view/icon";
 import { useCreateDataGridView } from "../create/view";
 import { Spin } from "../../../component/view/spin";
 import { S } from "../../../i18n/view";
+import { Page } from "../../../src/page";
 
 export class DataSourceView extends EventsComponent {
     getItems() {
@@ -220,9 +221,11 @@ export class DataSourceView extends EventsComponent {
     createView: boolean = false;
     editTable: boolean = false;
     createTable: boolean = false;
+    page:Page;
     schemas: TableSchema[] = []; pos: PopoverPosition
     width: number;
     async open(option: {
+        page:Page,
         tableId?: string,
         viewId?: string,
         selectView?: boolean,
@@ -237,15 +240,16 @@ export class DataSourceView extends EventsComponent {
         this.currentViewId = option.viewId;
         this.editTable = option.editTable;
         this.createTable = option.createTable;
+        this.page=option.page
         this.pos = lodash.cloneDeep(pos);
         await TableSchema.onLoadAll()
-        this.schemas = TableSchema.getSchemas();
+        this.schemas = TableSchema.getSchemas(this.page.ws.id);
         this.forceUpdate();
     }
 }
 
 export async function useDataSourceView(pos: PopoverPosition,
-    option: {
+    option: {  page:Page,
         tableId?: string,
         viewId?: string,
         selectView?: boolean,

@@ -78,6 +78,7 @@ export class DataGridTab extends Block {
     async onOpenAddTabView(rect: Rect) {
         await this.onDataGridTool(async () => {
             var g = await useDataSourceView({ roundArea: rect }, {
+                page: this.page,
                 tableId: this.dataGridBlock.schema.id,
                 viewId: this.dataGridBlock.syncBlockId,
                 selectView: true,
@@ -286,7 +287,7 @@ export class DataGridTab extends Block {
                                     props.icon = rn.icon;
                                 }
                                 if (Object.keys(props).length > 0) {
-                                    console.log('gggg', props);
+
                                     await self.dataGridBlock.schema.onSchemaOperate([
                                         { name: 'updateSchemaView', id: item.value, data: props }
                                     ], self.dataGridBlock.id);
@@ -637,7 +638,7 @@ export class DataGridTabView extends BlockView<DataGridTab> {
             }
         }
         this.spreadIndex = sumLastIndex;
-        console.log('gggg', this.spreadIndex);
+
         this.forceUpdate();
     }, 300)
     refHead: HTMLElement;

@@ -238,6 +238,7 @@ export class AddRecordsCommandView extends FlowCommandView<AddRecordsCommand> {
     async openSelectTable(event: React.MouseEvent, data?: any) {
         var r = await useDataSourceView({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
             selectView: false,
+            page:this.command.flow.buttonBlock.page,
             tableId: this.command.schemaId || undefined
         })
         if (r) {

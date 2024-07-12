@@ -18,6 +18,7 @@ import { HelpText } from "../../../component/view/text";
 import { S } from "../../../i18n/view";
 import { util } from "../../../util/util";
 import { ToolTip } from "../../../component/view/tooltip";
+import { Page } from "../../../src/page";
 
 /**
  * 
@@ -94,7 +95,7 @@ export class DataGridCreate extends EventsComponent {
     }
     rsSpreads: { [key: string]: boolean } = {};
     renderTables() {
-        var list = TableSchema.getSchemas();
+        var list = TableSchema.getSchemas(this.page.ws?. id);
         list = lodash.sortBy(list, g => 0 - g.createDate.getTime())
         var self = this;
         var srs = getSchemaViews()
@@ -206,18 +207,20 @@ export class DataGridCreate extends EventsComponent {
     }
     input: Input;
     isOnlyCreateTable = false;
-    async open(options?: { url?: string, source?: 'tableView' | 'dataView' | 'createView', isOnlyCreateTable?: boolean }) {
+    page: Page;
+    async open(options?: { page: Page, url?: string, source?: 'tableView' | 'dataView' | 'createView', isOnlyCreateTable?: boolean }) {
         this.isOnlyCreateTable = options?.isOnlyCreateTable ? true : false;
         this.url = BlockUrlConstant.DataGridTable;
         if (options?.url) this.url = options.url;
         if (options?.source) this.source = options.source;
         else this.source = 'createView'
+        this.page = options.page;
         await TableSchema.onLoadAll()
         this.forceUpdate();
     }
 }
 
-export async function useDataGridCreate(pos: PopoverPosition, options?: { url?: string, source?: 'tableView' | 'dataView' | 'createView', isOnlyCreateTable?: boolean }) {
+export async function useDataGridCreate(pos: PopoverPosition, options?: { page: Page, url?: string, source?: 'tableView' | 'dataView' | 'createView', isOnlyCreateTable?: boolean }) {
     let popover = await PopoverSingleton(DataGridCreate, { mask: true });
     let fv = await popover.open(pos);
     await fv.open(options);

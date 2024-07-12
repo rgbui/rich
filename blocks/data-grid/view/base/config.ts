@@ -319,6 +319,7 @@ export class DataGridViewConfig {
         self.onDataGridTool(async ()=>{
             var rect = Rect.fromEle(event.currentTarget as HTMLElement);
             var g = await useDataSourceView({ roundArea: rect },{
+                page:this.page,
                 tableId: this.schema.id,
                 viewId: this.syncBlockId,
                 selectView: true,

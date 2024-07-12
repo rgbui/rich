@@ -50,6 +50,7 @@ export class TableFieldView extends EventsComponent {
         event.stopPropagation();
         var rect = Rect.fromEle(event.currentTarget as HTMLElement);
         var r = await useDataSourceView({ roundArea: rect }, {
+            page: this.dataGrid.page,
             tableId: this.config.relationTableId,
             width: rect.width
         });
@@ -360,14 +361,14 @@ export class TableFieldView extends EventsComponent {
         if (this.type == FieldType.relation) {
             if (!Array.isArray(this.relationDatas)) {
                 await TableSchema.onLoadAll()
-                this.relationDatas = TableSchema.getSchemas()
+                this.relationDatas = TableSchema.getSchemas(this.dataGrid?.page?.ws?.id)
                 isUpdate = true;
             }
         }
         else if (this.type == FieldType.rollup) {
             if (!Array.isArray(this.relationDatas)) {
                 await TableSchema.onLoadAll()
-                this.relationDatas = TableSchema.getSchemas()
+                this.relationDatas = TableSchema.getSchemas(this.dataGrid?.page?.ws?.id)
                 isUpdate = true;
             }
         }

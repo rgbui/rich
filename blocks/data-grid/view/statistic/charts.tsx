@@ -326,7 +326,7 @@ export class DataGridChart extends DataGridView {
             rect = new Rect(rect.left, rect.top, 200, 40)
         }
         await TableSchema.onLoadAll()
-        var schemas = TableSchema.getSchemas();
+        var schemas = TableSchema.getSchemas(this.page.ws?.id);
         var items: MenuItem[] = [];
         items.push({ type: MenuItemType.input, name: 'name', placeholder: '请输入图表名称' })
         var rs: MenuItem[] = [];
@@ -388,7 +388,8 @@ export class DataGridChartView extends BlockView<DataGridChart> {
                 data.event = ev as any;
                 self.forceUpdate();
             },
-            moving(ev, data, isEnd) {
+            moving(ev, data, isEnd, isM) {
+                if (!isM) return
                 var dy = ev.clientY - data.event.clientY;
                 var height = data.realHeight + dy;
                 height = Math.max(40, height);

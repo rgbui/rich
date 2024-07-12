@@ -524,7 +524,7 @@ export class DataGridView extends Block {
             rect = Rect.fromEle(this.el);
             rect = new Rect(rect.left, rect.top, 200, 40)
         }
-        var dg = await useDataGridCreate({ roundArea: rect }, { url: this.url });
+        var dg = await useDataGridCreate({ roundArea: rect }, { url: this.url,page:this.page });
         if (dg) {
             if (this.view) this.view.forceUpdate();
             var viewUrl: string = '';
