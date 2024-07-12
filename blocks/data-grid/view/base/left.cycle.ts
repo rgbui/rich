@@ -61,11 +61,9 @@ export class DataGridViewLife {
     /***
      * 加载当前页面视图数据
      */
-    async loadDataGridData(this: DataGridView)
-    {
+    async loadDataGridData(this: DataGridView) {
         await this.loadData();
-        if (window.shyConfig?.isDev)
-        {
+        if (window.shyConfig?.isDev) {
             //await util.delay(10000);
         }
         await this.loadRelationDatas();
@@ -93,7 +91,6 @@ export class DataGridViewLife {
                             maps.push({ key: f?.field.config.relationTableId, ids: vs })
                         }
                     }
-
                 })
             });
             await maps.eachAsync(async (vr) => {
@@ -131,7 +128,7 @@ export class DataGridViewLife {
                     rc.data.groupList.forEach(gl => {
                         this.dataGroupHeads.push({
                             id: gl.id,
-                            spread: false,
+                            spread: true,
                             count: gl.count,
                             total: gl.total,
                             value: gl.id,

@@ -48,7 +48,7 @@ export class ChannelTextView extends BlockView<ChannelText> {
                     text: f.description
                 }
             }
-            console.log(props);
+          
             await this.props.block.page.onUpdatePageData({ ...props });
         }
     }

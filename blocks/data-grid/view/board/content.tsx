@@ -152,7 +152,7 @@ export class BoardContent extends React.Component<{
                     {dg.group && <span onMouseDown={e => {
                         e.stopPropagation();
                         this.onChangeGroupTitle(dg, e);
-                    }} className="text-overflow cursor padding-w-6 f-14 padding-h-2  l-16" style={{ backgroundColor: dg.color || undefined }}>{dg.group || lst('未定义')}</span>}
+                    }} className="text-overflow cursor padding-w-6 f-14 padding-h-2  l-16" style={{ backgroundColor: dg.fill||dg.color || undefined,color:dg.textColor||'inherit' }}>{dg.group || lst('未定义')}</span>}
                     <label>{ds?.count}</label>
                 </span>
                 {this.block.isCanEdit() && <div className="flex-fixed flex">

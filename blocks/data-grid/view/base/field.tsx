@@ -124,7 +124,7 @@ export class DataGridViewField {
                 },
                 ...tips
             ]);
-            if (field?.type == FieldType.date) {
+            if (field?.type == FieldType.date || field?.type == FieldType.createDate || field?.type == FieldType.modifyDate) {
                 var dateItems: MenuItem<BlockDirective | string>[] = [];
                 var day = dayjs(new Date());
                 dateItems.push(...[

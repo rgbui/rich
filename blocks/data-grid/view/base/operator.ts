@@ -158,6 +158,7 @@ export class DataGridViewOperator {
     }
     async onUpdateFieldConfig(this: DataGridView, field: Field, configProps: Record<string, any>) {
         var nc: Record<string, any> = util.extendKey(configProps, 'config');
+      
         await this.onUpdateField(field, nc);
     }
     async onUpdateViewField(this: DataGridView, viewField: ViewField, data: Record<string, any>) {
@@ -677,6 +678,7 @@ export class DataGridViewOperator {
     }
     async onOpenDataSource(this: DataGridView, event: Rect) {
         var g = await useDataSourceView({ roundArea: event }, {
+            page:this.page,
             tableId: this.schema.id,
             viewId: this.syncBlockId,
             selectView: true,

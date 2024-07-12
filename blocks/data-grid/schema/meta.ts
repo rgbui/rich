@@ -156,6 +156,7 @@ export class TableSchema {
     allowSubs: boolean = false;
     icon: IconArguments;
     cover: CoverMask;
+    workspaceId:string;
     locker: {
         lock: boolean,
         date: number,
@@ -629,8 +630,8 @@ export class TableSchema {
         this.schemas.set(schema.id, schema as TableSchema);
         return schema as TableSchema;
     }
-    static getSchemas() {
-        return Array.from(this.schemas.values());
+    static getSchemas(wsId:string) {
+        return Array.from(this.schemas.values()).filter(g=>g.workspaceId == wsId    )
     }
     static async loadListSchema(schemaIds: string[], page: Page) {
         var rs: TableSchema[] = [];

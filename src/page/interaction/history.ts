@@ -215,7 +215,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
 
     });
     snapshoot.registerOperator(OperatorDirective.pageTurnLayout, async (operator, source) => {
-        console.log('OperatorDirective.pageTurnLayout', operator, source);
+      
         if (!page.pageLayout) page.pageLayout = { type: operator.data.new };
         else page.pageLayout.type = operator.data.new;
         if (operator.data.new_page_data) {

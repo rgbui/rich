@@ -34,7 +34,6 @@ import dayjs from "dayjs";
 import { ToolTip } from "../../../../component/view/tooltip";
 import { S } from "../../../../i18n/view";
 
-
 @url('/data-grid/item')
 export class TableGridItem extends Block {
     dataId: string;
@@ -478,6 +477,7 @@ export class TableGridItem extends Block {
         }
     }
 }
+
 @view('/data-grid/item')
 export class TableStoreItemView extends BlockView<TableGridItem> {
     renderItems() {

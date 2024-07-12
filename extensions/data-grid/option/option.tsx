@@ -88,7 +88,7 @@ export class TableStoreOption extends EventsComponent {
         return <div ref={e => this.el = e} className="shy-tablestore-option-selector">
             {!(this.isEdit == false && this.multiple == false) && <div className="shy-tablestore-option-selector-input">
                 {this.ovs.map(ov => {
-                    return <a key={ov.value} className="gap-r-5 gap-h-3" style={{ backgroundColor: ov.fill||ov.color,color:ov.textColor }}>
+                    return <a key={ov.value} className="gap-r-5 gap-h-3" style={{ backgroundColor: ov.fill || ov.color, color: ov.textColor }}>
                         <span className="max-w-80 text-overflow inline-block">{ov.text}</span>
                         <span className={'gap-l-5 cursor remark flex-center item-hover round'} >
                             <Icon icon={CloseSvg} size={10}
@@ -125,7 +125,7 @@ export class TableStoreOption extends EventsComponent {
                     {this.filterOptions.map((op, i) => {
                         return <div className={"cursor flex visible-hover item-hover-light h-30 gap-h-2 user-none round gap-w-5 padding-w-5 " + (this.focusIndex == i ? "item-hover-light-focus" : "")} key={op.text} onClick={e => this.setOption(op)} >
                             {this.isEdit && <span className="shy-tablestore-option-item-icon size-20 flex-center flex-fixed grab  round text-1"><Icon icon={DragHandle} size={14}></Icon></span>}
-                            <span className="text-overflow flex-auto gap-w-4 "><em className=" f-14  padding-w-6 round h-22 f-14 l-22 " style={{ display: 'inline-block', backgroundColor: op.fill||op.color,color:op.textColor }}>{op.text}</em></span>
+                            <span className="text-overflow flex-auto gap-w-4 "><em className=" f-14  padding-w-6 round h-22 f-14 l-22 " style={{ display: 'inline-block', backgroundColor: op.fill || op.color, color: op.textColor }}>{op.text}</em></span>
                             {this.ovs.some(c => c.value == op.value) && <span className="flex-fixed size-20 flex-center gap-r-3 text-1"><Icon size={16} icon={CheckSvg}></Icon></span>}
                             {this.isEdit && <span className="visible size-20 flex-center flex-fixed cursor item-hover round" onClick={e => this.configOption(op, e)}><Icon icon={Dots} size={16}></Icon></span>}
                         </div>
@@ -170,12 +170,27 @@ export class TableStoreOption extends EventsComponent {
             else lodash.remove(this.ovs, o => o.value == option.value);
         }
         else this.ovs = [option];
-        this.forceUpdate();
+        this.forceUpdate(() => {
+            if (this.multiple) setTimeout(() => {
+                this.onFocusInput()
+            }, 30);
+        });
         if (!this.multiple) this.emit('save', this.ovs.map(v => v.value));
+    }
+    onFocusInput() {
+        if (this.input) {
+            this.input.focus();
+            this.input.setSelectionRange(this.input.value.length, this.input.value.length)
+        }
     }
     onlyClearOption() {
         this.value = '';
-        this.ovs = [];
+        if (this.multiple) {
+            this.ovs = this.ovs.slice(0, this.ovs.length - 1);
+        }
+        else {
+            this.ovs = [];
+        }
         this.forceUpdate();
     }
     clearOption() {
@@ -224,7 +239,7 @@ export class TableStoreOption extends EventsComponent {
                         return <div className="flex gap-w-5 padding-w-5 round h-30 item-hover cursor">
                             <span className="flex-fixed size-20 gap-l-3 round gap-r-10 border" style={{ backgroundColor: item.value.fill, color: item.value.textColor }}></span>
                             <span className="flex-auto text f-14 text-overflow">{b.text}</span>
-                            {(option.color && option.color == item.value.fill || option.fill&&option.fill == item.value.fill) &&
+                            {(option.color && option.color == item.value.fill || option.fill && option.fill == item.value.fill) &&
                                 <span className="flex-fixed size-24 flex-center"><Icon size={16} icon={CheckSvg}></Icon></span>
                             }
                         </div>

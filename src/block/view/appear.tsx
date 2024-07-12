@@ -59,7 +59,6 @@ export function TextArea(props: {
     if (typeof html == 'undefined') html = lodash.get(props.block, props.prop);
     if (html == '' && typeof props.default != 'undefined') html = props.default;
     if (lodash.isUndefined(html) || lodash.isNull(html) || lodash.isNaN(html)) html = ''
-    console.log('show title', html, typeof html);
     var classList: string[] = ['shy-appear-text'];
     if (props.className) {
         if (Array.isArray(props.className)) classList.push(...props.className)

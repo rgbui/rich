@@ -29,7 +29,6 @@ import { TableSchema } from "../../../../blocks/data-grid/schema/meta";
 import { HelpText } from "../../../../component/view/text";
 import { Tip } from "../../../../component/view/tooltip/tip";
 import lodash from "lodash";
-import { util } from "../../../../util/util";
 
 export class DataGridFields extends EventsComponent {
     get schema() {

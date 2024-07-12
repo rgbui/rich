@@ -456,7 +456,7 @@ export class BlockPicker {
                         }
                     }
                     block.points = segs_c.slice(1, -1).map(c => c.point);
-                    console.log(block.points);
+                  
                 }
                 self.onRePicker();
                 block.forceManualUpdate();

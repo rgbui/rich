@@ -55,6 +55,7 @@ export class TableStoreBoard extends DataGridView {
         name: string,
         group: string,
         color: string,
+        textColor: string,
         fill: string,
         value: string,
     }[] = [];
@@ -76,6 +77,7 @@ export class TableStoreBoard extends DataGridView {
                             group: op.text,
                             color: op.color,
                             fill: op.fill,
+                            textColor: op.textColor,
                             value: op.value,
                         }
                     });
@@ -83,6 +85,7 @@ export class TableStoreBoard extends DataGridView {
                         name: name,
                         group: null,
                         value: null,
+                        textColor: null,
                         color: null,
                         fill: null
                     })
@@ -305,7 +308,8 @@ export class TableStoreBoard extends DataGridView {
                     group: op.text,
                     value: op.value,
                     color: op.color,
-                    fill: op.fill
+                    fill: op.fill,
+                    textColor: op.textColor
                     // count: 0
                 })
                 await this.onUpdateField(this.groupField, { config });
@@ -327,7 +331,7 @@ export class TableStoreBoard extends DataGridView {
         auto: false,
         showCover: false,
         coverFieldId: "",
-        showField: 'none',
+        showField: 'nowrap',
         coverAuto: false,
         showMode: 'default',
         templateProps: {}
@@ -397,7 +401,7 @@ export class TableStoreBoard extends DataGridView {
 export class TableStoreBoardView extends BlockView<TableStoreBoard> {
     renderCreateTable() {
         if (this.block.isLoading) return <Spin block></Spin>
-        return !this.block.schema &&this.block.page.isCanEdit && <div className="item-hover item-hover-focus padding-5 cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
+        return !this.block.schema && this.block.page.isCanEdit && <div className="item-hover item-hover-focus padding-5 cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
             {this.block.willCreateSchema && <Spin></Spin>}
             <span className="size-24 flex-center remark"><Icon size={16} icon={{ name: 'byte', code: 'table' }}></Icon></span>
             <span className="remark"><S>添加或创建数据表</S></span>
