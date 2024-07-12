@@ -64,7 +64,12 @@ export class FieldTextView extends OriginFileView<FieldText> {
             textStyle.textDecoration = 'underline';
             textStyle.textDecorationColor = 'rgba(22, 22, 22, 0.2)';
         }
-        return <div className={'flex l-20 flex-top sy-field-title f-14  ' + (isCard ? "  bold" : " b-500 ")} onKeyDown={e => this.keydown(e)} onMouseMove={e => this.move(e)}>
+        return <div className={'flex l-20 flex-top sy-field-title f-14  ' + (isCard ? "  bold" : " b-500 ")} onMouseDown={e => {
+            if (isCard) {
+                e.stopPropagation();
+                this.block.onCellMousedown(e);
+            }
+        }} onKeyDown={e => this.keydown(e)} onMouseMove={e => this.move(e)}>
 
             {isSub && <span className={" size-24 inline-flex remark gap-r-3 round item-hover cursor flex-center ts " + (this.block.dataGridItem.subSpread ? "angle-90 " : (this.block.dataGridItem.dataRow.subCount > 0 ? "" : " visible"))} onMouseDown={async e => {
                 e.stopPropagation();
@@ -80,7 +85,12 @@ export class FieldTextView extends OriginFileView<FieldText> {
                 icon: this.block.dataGridItem?.dataRow?.icon
             })}></Icon></span>}
 
-            <TextArea style={textStyle} plain block={this.block} prop='value' placeholder={lst("标题")} ></TextArea>
+            <TextArea
+                style={textStyle}
+                plain block={this.block}
+                prop='value'
+                placeholderEmptyVisible={isCard ? true : false}
+                placeholder={lst("标题")} ></TextArea>
             {([
                 BlockUrlConstant.DataGridTable,
                 BlockUrlConstant.DataGridList

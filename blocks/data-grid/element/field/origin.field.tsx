@@ -12,10 +12,13 @@ import { BlockUrlConstant } from "../../../../src/block/constant";
 import { TableStoreGallery } from "../../view/gallery";
 import { GetFieldTypeSvg } from "../../schema/util";
 import { Icon } from "../../../../component/view/icon";
+import { ToolTip } from "../../../../component/view/tooltip";
+import { FieldType } from "../../schema/type";
 
 export class OriginField extends Block {
     display = BlockDisplay.block;
-    get value() {
+    value: any;
+    get fieldValue() {
         return this.dataGridItem.dataRow[this.field?.name];
     }
     get isSupportTextStyle() {
@@ -27,17 +30,18 @@ export class OriginField extends Block {
     get isEnterCreateNewLine() {
         return false;
     }
-    get handleBlock(): Block {
+    get handleBlock() {
         return this.parent;
     }
-    async changeAppear(appear: AppearAnchor): Promise<void> {
+    async changeAppear(appear: AppearAnchor) {
         var text = lodash.get(this, appear.prop);
-        await this.dataGridItem.onUpdateCellValue(this.viewField.field, text);
+        await this.onUpdateCellValue(text);
     }
     async onOnlyUpdateValue(value: any) {
         await this.dataGridItem.onOnlyUpdateCellValue(this.viewField.field, value);
     }
     async onUpdateCellValue(value) {
+        this.value = value;
         await this.dataGridItem.onUpdateCellValue(this.viewField.field, value);
     }
     async changeProps(oldProps: Record<string, any>, newProps: Record<string, any>) {
@@ -89,6 +93,9 @@ export class OriginField extends Block {
 
         return this.dataGrid?.isCanEditRow(this.dataGridItem.dataRow);
     }
+    async initialedLoad() {
+        this.value = this.fieldValue;
+    }
 }
 
 export class OriginFileView<T extends OriginField> extends BlockView<T> {
@@ -109,19 +116,30 @@ export class OriginFileView<T extends OriginField> extends BlockView<T> {
                     this.block.onCellMousedown(e)
                 }}>
                     <div className="remark f-12 gap-h-5 flex">
-                        <Icon size={12} icon={GetFieldTypeSvg(this.block.viewField.field)}></Icon>
-                        <span>{this.block.viewField?.text}</span>
+                        <Icon className={'flex-fixed'} size={13} icon={GetFieldTypeSvg(this.block.viewField.field)}></Icon>
+                        <span className="flex-auto text-overflow  gap-l-5">{this.block.viewField?.text}</span>
                     </div>
-                    <div>{this.renderFieldValue()}</div>
+                    <div className="text-wrap ">{this.renderFieldValue()}</div>
                 </div>
             }
             else if (card?.showField == 'nowrap' && !isTitle) {
+                var classList: string[] = ['flex'];
+                if (![FieldType.comment,
+                FieldType.browse,
+                FieldType.love,
+                FieldType.like
+                ].includes(this.block.field?.type)) {
+                    classList.push('flex-top')
+                }
                 return <div onMouseDown={e => {
                     e.stopPropagation();
                     this.block.onCellMousedown(e)
-                }} className="flex flex-top">
-                    <div className="flex-fixed w-60 text-overflow  remark f-12 ">{this.block.viewField?.text}</div>
-                    <div className="flex-auto">
+                }} className={classList.join(' ')}>
+                    <ToolTip overlay={this.block.viewField?.text}><div className="flex-fixed flex flex-end w-80  remark ">
+                        <Icon className={'flex-fixed'} size={14} icon={GetFieldTypeSvg(this.block.viewField.field)}></Icon>
+                        <span className="text-overflow max-w-60 f-14 gap-l-3  flex-fixed"> {this.block.viewField?.text}</span>
+                    </div></ToolTip>
+                    <div className="flex-auto  gap-l-10 gap-r-5  text-overflow ">
                         {this.renderFieldValue()}
                     </div>
                 </div>
