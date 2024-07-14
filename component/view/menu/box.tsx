@@ -6,6 +6,8 @@ import { popoverLayer } from "../../lib/zindex";
 import { MenuItem } from "./declare";
 import { MenuItemView } from "./item";
 import { MenuView } from "./menu";
+import { S } from "../../../i18n/view";
+
 export class MenuBox extends React.Component<{
     parent: MenuPanel<any> | MenuView,
     items: MenuItem[],
@@ -14,7 +16,7 @@ export class MenuBox extends React.Component<{
     input: (item: MenuItem) => void,
     select: (item: MenuItem, event?: MouseEvent) => void,
     click: (item: MenuItem, event?: React.MouseEvent, name?: string, mv?: MenuItemView) => void
-}>{
+}> {
     render() {
         var isVisible = this.props.style?.overflow == 'visible' || this.props.items.exists(g => g.childs && g.childs.length > 0)
         return <div className='shy-menu-box' ref={e => this.el = e} style={{
@@ -25,14 +27,16 @@ export class MenuBox extends React.Component<{
             overflowY: isVisible ? "visible" : "auto",
             maxHeight: isVisible ? '100vh' : undefined,
             ...(this.style)
-        }}>{this.props.items.map((item, index) => {
-            return <MenuItemView parent={this.props.parent} key={index}
-                item={item} deep={this.props.deep + 1}
-                select={this.props.select}
-                input={this.props.input}
-                click={this.props.click}
-            ></MenuItemView>
-        })}
+        }}>
+            {this.props.items.length == 0 && <div className="flex-center remark f-14 gap-h-5"><S>没有可选项</S></div>}
+            {this.props.items.map((item, index) => {
+                return <MenuItemView parent={this.props.parent} key={index}
+                    item={item} deep={this.props.deep + 1}
+                    select={this.props.select}
+                    input={this.props.input}
+                    click={this.props.click}
+                ></MenuItemView>
+            })}
         </div>
     }
     el: HTMLElement;

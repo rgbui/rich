@@ -8,7 +8,7 @@ export function Switch(props: {
     size?: 'small'
 }) {
     function down(event: React.MouseEvent) {
-        if (props.disabled !== false) {
+        if (props.disabled !== true) {
             props.onChange(!props.checked)
         }
     }

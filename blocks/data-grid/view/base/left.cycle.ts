@@ -50,7 +50,17 @@ export class DataGridViewLife {
         this.fields.each(f => {
             if (f.field?.type == FieldType.relation) {
                 if (f.field.config.relationTableId) {
-                    tableIds.push(f.field.config.relationTableId);
+                    if (!tableIds.includes(f.field.config.relationTableId))
+                        tableIds.push(f.field.config.relationTableId);
+                }
+            }
+            if (f.field?.type == FieldType.rollup) {
+                var rf = this.schema.fields.find(g => g.type == FieldType.relation && g.id == f?.field?.config?.rollupRelationFieldId);
+                if (rf) {
+                    if (rf?.config?.relationTableId) {
+                        if (!tableIds.includes(rf.config.relationTableId))
+                            tableIds.push(rf.config.relationTableId);
+                    }
                 }
             }
         });
@@ -89,6 +99,22 @@ export class DataGridViewLife {
                         }
                         else {
                             maps.push({ key: f?.field.config.relationTableId, ids: vs })
+                        }
+                    }
+                    else if (f?.field?.type == FieldType.rollup) {
+                        var gf = this.schema.fields.find(g => g.type == FieldType.relation && g.id == f?.field?.config?.rollupRelationFieldId);
+                        if (gf) {
+                            var vs = lodash.cloneDeep(row[gf.name]);
+                            if (!Array.isArray(vs)) vs = [];
+                            var ms = maps.find(g => g.key == gf.config.relationTableId);
+                            if (Array.isArray(ms?.ids)) {
+                                vs.each(v => {
+                                    if (!ms?.ids.includes(v)) ms?.ids.push(v)
+                                })
+                            }
+                            else {
+                                maps.push({ key: gf.config.relationTableId, ids: vs })
+                            }
                         }
                     }
                 })

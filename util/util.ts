@@ -488,5 +488,11 @@ export var util = {
         if (total == 0) return '0%';
         var r = (Math.round(num / total * 10000) / 100).toFixed(decimal) + '%';
         return r.replace(/\.?[0]+%$/, '%');
+    },
+    clearObjectUndefined(obj: Record<string, any>) {
+        for (let n in obj) {
+            if (lodash.isUndefined(obj[n])) delete obj[n];
+        }
+        return obj;
     }
 }

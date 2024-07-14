@@ -7,7 +7,7 @@ import { ViewField } from "../../schema/view";
 
 export async function createFieldBlock(viewField: ViewField, block: TableGridItem | DataGridItemRecord) {
     var cellContent: Block;
-    var row = block.dataRow;
+    // var row = block.dataRow;
     var field = viewField.field;
     var page = block.page;
     if (viewField.type == 'check') {

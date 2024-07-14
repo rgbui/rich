@@ -126,7 +126,7 @@ export class DataGridTableContent extends React.Component<{
                 var sf = sfl ? sfl.find(g => g.fieldId == f.fieldId) : null;
                 if (sf?.stat == 'none') sf = null;
                 var sff = this.block.schema.fields.find(g => g.id == f.fieldId)
-                var si = getFieldStatItems(sff.type).find(c => c.value == sf?.stat)
+                var si =sff? getFieldStatItems(sff.type).find(c => c.value == sf?.stat):null;
                 var rv = () => {
                     if (['notFilledPercent', 'filledPercent'].includes(sf.stat)) {
                         return util.toPercent(sf.value as number, sf.total as number, 2)
@@ -355,7 +355,7 @@ export class DataGridTableHead extends React.Component<{ block: Block, style?: C
                 }
                 return <div className="sy-dg-table-head-th  text-1 f-14" onMouseDown={e => this.onDragMouseField(e, f)}
                     style={style}
-                    key={f?.field?.id || i}>
+                    key={i}>
                     {icon && <div className={'sy-dg-table-head-th-icon remark flex-fixed size-16 flex-center gap-r-5 '} >
                         <Icon fontColorInherit icon={icon} size={16}></Icon>
                     </div>}

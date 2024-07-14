@@ -59,6 +59,14 @@ export class DataGridChart extends DataGridView {
         }
     @prop()
     align: 'left' | 'right' | 'center' = 'center';
+
+
+    viewProps: string[] = [
+        'canvasWidth',
+        'canvasHeight',
+        'align'
+    ];
+
     @prop()
     canvasWidth: number = 300;
     @prop()

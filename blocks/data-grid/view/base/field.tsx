@@ -326,7 +326,7 @@ export class DataGridViewField {
                 var text = lst('允许多文件');
                 if (field.type == FieldType.user)
                     text = lst('允许多用用户');
-                items.insertAt(5, {
+                items.insertAt(4, {
                     text: text,
                     type: MenuItemType.switch,
                     name: 'isMultiple',
@@ -334,7 +334,7 @@ export class DataGridViewField {
                     updateMenuPanel: true,
                     checked: field?.config?.isMultiple ? true : false
                 });
-                items.insertAt(6, {
+                items.insertAt(5, {
                     type: MenuItemType.divide
                 })
             }
@@ -365,17 +365,18 @@ export class DataGridViewField {
                 })
             }
             else if (field?.type == FieldType.rollup) {
+                var rs = this.schema.fields.findAll(g => g.type == FieldType.relation);
                 items.insertAt(4, {
-                    text: lst('关联数据表'),
-                    name: 'config.rollupTableId',
+                    text: lst('关联字段'),
+                    name: 'config.rollupRelationFieldId',
                     type: MenuItemType.select,
-                    value: field.config?.rollupTableId,
-                    options: this.relationSchemas.map(c => {
+                    value: field.config?.rollupRelationFieldId,
+                    options: rs.map(c => {
                         return {
-                            icon: c.icon || { name: 'byte', code: 'table' },
+                            icon: GetFieldTypeSvg(c),
                             text: c.text,
                             value: c.id,
-                            checkLabel: c.id == field.config?.rollupTableId
+                            checkLabel: c.id == field.config?.rollupRelationFieldId
                         }
                     })
                 });
@@ -385,8 +386,9 @@ export class DataGridViewField {
                     type: MenuItemType.select,
                     value: field.config?.rollupFieldId,
                     cacOptions: async (items, item) => {
-                        var rt = items.find(g => g.name == 'config.rollupTableId');
-                        return getFilterRollupFields(this.relationSchemas.find(c => c.id == rt.value)?.visibleFields).map(r => {
+                        var rt = items.find(g => g.name == 'config.rollupRelationFieldId');
+                        var rf = this.schema.fields.find(g => g.id == rt.value)
+                        return getFilterRollupFields(this.relationSchemas.find(c => c.id == rf?.config?.relationTableId)?.visibleFields).map(r => {
                             return {
                                 text: r.text,
                                 value: r.id,
@@ -402,9 +404,10 @@ export class DataGridViewField {
                     value: field.config?.rollupStatistic,
                     type: MenuItemType.select,
                     cacOptions: async (items, item) => {
-                        var rt = items.find(g => g.name == 'config.rollupTableId');
+                        var rt = items.find(g => g.name == 'config.rollupRelationFieldId');
+                        var rff = this.schema.fields.find(g => g.id == rt.value)
                         var rf = items.find(g => g.name == 'config.rollupFieldId');
-                        var f = this.relationSchemas.find(c => c.id == rt.value)?.visibleFields?.find(g => g.id == rf.value);
+                        var f = this.relationSchemas.find(c => c.id == rff?.config?.relationTableId)?.visibleFields?.find(g => g.id == rf.value);
                         var statMenus = getFieldStatItems(f?.type);
                         statMenus.splice(0, 1, {
                             text: lst('显示原值'),
@@ -440,6 +443,7 @@ export class DataGridViewField {
                         {
                             type: MenuItemType.container,
                             name: 'optionContainer',
+                            containerHeight: 400,
                             childs: [
                                 ...(field.config?.options || []).map(op => {
                                     return {
@@ -532,7 +536,7 @@ export class DataGridViewField {
         await this.onDataGridTool(async () => {
             var isSysField: boolean = viewField?.type ? true : false;
             var items = this.getFieldMenuItems(field, viewField);
-            items = util.neighborDeWeight(items, c => (c.name + "") + c.type);
+            items = util.neighborDeWeight(items, c => (c.name || "") + (c.text || "") + c.type);
             var re = await useSelectMenuItem(
                 {
                     roundArea: rp,
@@ -601,7 +605,7 @@ export class DataGridViewField {
                             'config.imageFormat.display',
                             'config.imageFormat.multipleDisplay',
                             'config.numberDisplay.color',
-                            'config.rollupTableId',
+                            'config.rollupRelationFieldId',
                             'config.rollupFieldId',
                             'config.rollupStatistic'
                         ].includes(item.name as string)) {
@@ -717,7 +721,7 @@ export class DataGridViewField {
             }
             else {
                 var props: Record<string, any> = {};
-                if (!lodash.isEqual(ReItem.icon, field.icon)) {
+                if (typeof ReItem.icon != 'function' && !lodash.isEqual(ReItem.icon, field.icon)) {
                     props.icon = ReItem.icon;
                 }
                 if (ReItem.value != field?.text) {

@@ -3,7 +3,7 @@ import { lst } from "../../../i18n/store";
 
 
 export var constLangs = [
-    
+
     { text: 'true', url: '/const.md', hash: 'const_true' },
     { text: 'false', url: '/const.md', hash: 'const_false' },
     { text: '_now', url: '/const.md', hash: 'const_now' },
@@ -66,16 +66,16 @@ export var funLangs = [
 
     { text: 'Math.E', url: '/fun.md', hash: 'math_e' },
     { text: 'Math.PI', url: '/fun.md', hash: 'math_pi' },
-    { text: 'Math.pow', url: '/fun/pow.md', hash: 'math_pow' },
-    { text: 'Math.exp', url: '/fun/pow.md', hash: 'math_exp' },
-    { text: 'Math.abs', url: '/fun/abs.md', hash: 'math_abs' },
-    { text: 'Math.ceil', url: '/fun/abs.md', hash: 'math_ceil' },
-    { text: 'Math.floor', url: '/fun/abs.md', hash: 'math_floor' },
-    { text: 'Math.round', url: '/fun/abs.md', hash: 'math_round' },
-    { text: 'Math.cbrt', url: '/fun/abs.md', hash: 'math_cbrt' },
-    { text: 'Math.max', url: '/fun/abs.md', hash: 'math_max' },
-    { text: 'Math.min', url: '/fun/abs.md', hash: 'math_min' },
-    { text: 'Math.random', url: '/fun/random.md', hash: 'math_random' },
+    { text: 'Math.pow', url: '/fun.md', hash: 'math_pow' },
+    { text: 'Math.exp', url: '/fun.md', hash: 'math_exp' },
+    { text: 'Math.abs', url: '/fun.md', hash: 'math_abs' },
+    { text: 'Math.ceil', url: '/fun.md', hash: 'math_ceil' },
+    { text: 'Math.floor', url: '/fun.md', hash: 'math_floor' },
+    { text: 'Math.round', url: '/fun.md', hash: 'math_round' },
+    { text: 'Math.cbrt', url: '/fun.md', hash: 'math_cbrt' },
+    { text: 'Math.max', url: '/fun.md', hash: 'math_max' },
+    { text: 'Math.min', url: '/fun.md', hash: 'math_min' },
+    { text: 'Math.random', url: '/fun.md', hash: 'math_random' },
 
 
 ]
@@ -683,43 +683,43 @@ export var GetFormulaLangs = () => [
     },
     {
         text: lst('文件'),
-        spread: false, 
+        spread: false,
         type: FieldType.file,
         childs: [
             {
                 text: 'name',
                 url: '/file.md',
-                hash:"name"
+                hash: "name"
             },
             {
                 text: 'size',
                 url: '/file.md',
-                hash:"size"
+                hash: "size"
             },
             {
                 text: 'url',
                 url: '/file.md',
-                hash:"url"
+                hash: "url"
             },
             {
                 text: 'ext',
                 url: '/file.md',
-                hash:"ext"
+                hash: "ext"
             },
             {
                 text: 'mime',
                 url: '/file.md',
-                hash:"mime"
+                hash: "mime"
             },
             {
                 text: 'createDate',
                 url: '/file.md',
-                hash:"createDate"
+                hash: "createDate"
             },
             {
                 text: 'creater',
                 url: '/file.md',
-                hash:"creater"
+                hash: "creater"
             }
         ]
     },
@@ -731,32 +731,32 @@ export var GetFormulaLangs = () => [
             {
                 text: 'id',
                 url: '/user.md',
-                hash:'id'
+                hash: 'id'
             },
             {
                 text: 'name',
                 url: '/user.md',
-                hash:'name'
+                hash: 'name'
             },
             {
                 text: 'avatar',
                 url: '/user.md',
-                hash:'avatar'
+                hash: 'avatar'
             },
             {
                 text: 'roles',
                 url: '/user.md',
-                hash:'roles'
+                hash: 'roles'
             },
             {
                 text: 'count',
                 url: '/user.md',
-                hash:'count'
+                hash: 'count'
             },
             {
                 text: 'users',
                 url: '/user.md',
-                hash:'users'
+                hash: 'users'
             }
         ]
     }

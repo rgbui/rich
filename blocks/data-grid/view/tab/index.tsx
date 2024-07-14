@@ -283,7 +283,7 @@ export class DataGridTab extends Block {
                                 if (rn.value != item.text && rn.value) {
                                     props.text = rn.value;
                                 }
-                                if (!lodash.isEqual(rn.icon, item.icon)) {
+                                if (typeof rn.icon!='function'&& !lodash.isEqual(rn.icon, item.icon)) {
                                     props.icon = rn.icon;
                                 }
                                 if (Object.keys(props).length > 0) {

@@ -339,7 +339,7 @@ export var DisabledSortFieldTypes: FieldType[] = [
 export var DisabledFormFieldTypes: FieldType[] = [
     FieldType.formula,
     FieldType.parentId,
-    FieldType.rollup,
+    // FieldType.rollup,
     FieldType.modifyDate,
     FieldType.modifyer,
     // FieldType.createDate,

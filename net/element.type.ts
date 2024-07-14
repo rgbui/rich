@@ -91,6 +91,7 @@ export function getElementUrl(type: ElementType, id: string, id1?: string, id2?:
     else return `/${ElementType[type]}/${id}`
 }
 export function parseElementUrl(url: string) {
+    if(!url)return;
     var us = url.split(/\//g);
     us.removeAll(g => g.trim() ? false : true);
     if (us.includes('Field') || us.includes('FieldName') || us.includes('FieldBlog')) {

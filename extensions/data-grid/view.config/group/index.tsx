@@ -15,6 +15,7 @@ import { TableSchema } from "../../../../blocks/data-grid/schema/meta";
 import { Divider } from "../../../../component/view/grid";
 import { HelpText } from "../../../../component/view/text";
 import { BlockRenderRange } from "../../../../src/block/enum";
+import { MenuItemType } from "../../../../component/view/menu/declare";
 
 export class TableGroupView extends EventsComponent {
     get schema() {
@@ -58,7 +59,7 @@ export class TableGroupView extends EventsComponent {
     onForceStore = async () => {
 
         await this.block.onReloadData(async () => {
-            await this.block.onManualUpdateProps({ groupView: this.block.groupView }, { groupView: this.oldGroup }, {range:BlockRenderRange.none});
+            await this.block.onManualUpdateProps({ groupView: this.block.groupView }, { groupView: this.oldGroup }, { range: BlockRenderRange.none });
         });
     }
     render() {
@@ -72,7 +73,6 @@ export class TableGroupView extends EventsComponent {
             <div className="padding-w-10 gap-5 round flex min-h-28 item-hover">
                 <span className="flex-auto"><S>分组</S></span>
                 <span className="flex-fixed"><SelectBox
-
                     value={this.oldGroup?.groupId}
                     onChange={e => {
                         this.oldGroup.groupId = e;
@@ -102,7 +102,7 @@ export class TableGroupView extends EventsComponent {
                         text: lst('无'),
                         icon: { name: 'byte', code: 'rectangle-one' },
                         value: ''
-                    },
+                    }, { type: MenuItemType.divide },
                     ...this.block.schema.visibleFields.findAll(g => ![FieldType.comment,
                     FieldType.love,
                     FieldType.audio,

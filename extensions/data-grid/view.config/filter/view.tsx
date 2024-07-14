@@ -22,6 +22,7 @@ import { util } from "../../../../util/util";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import { Switch } from "../../../../component/view/switch";
 import { LinkWs } from "../../../../src/page/declare";
+import { UserBasic } from "../../../../types/user";
 
 export class FilterView extends React.Component<{
     filter: SchemaFilter,
@@ -470,7 +471,7 @@ export class FilterView extends React.Component<{
             },
                 self.props?.ws,
                 { ignoreUserAll: true }
-            );
+            )  as UserBasic;
             if (r?.id) {
                 item.value = r.id;
                 self.onForceStore();

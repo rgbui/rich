@@ -524,7 +524,7 @@ export class DataGridView extends Block {
             rect = Rect.fromEle(this.el);
             rect = new Rect(rect.left, rect.top, 200, 40)
         }
-        var dg = await useDataGridCreate({ roundArea: rect }, { url: this.url,page:this.page });
+        var dg = await useDataGridCreate({ roundArea: rect }, { url: this.url, page: this.page });
         if (dg) {
             if (this.view) this.view.forceUpdate();
             var viewUrl: string = '';
@@ -638,7 +638,7 @@ export class DataGridView extends Block {
             AtomPermission.dbFull
         )
     }
-    isCanEditRow(row) {
+    isCanEditRow(row?) {
         if (!this.page.isSign) return false;
         if (this.isAllow(
             AtomPermission.dbEditRow,
@@ -747,7 +747,10 @@ export class DataGridView extends Block {
             schemaId: string;
             date?: Date;
             actions: any[];
-        };
+        },
+        result: {
+            actions: any[];
+        },
     }, options?: {
         locationId?: string | number;
         sockId?: string;
@@ -758,13 +761,14 @@ export class DataGridView extends Block {
             if (r?.operate.schemaId == this.schemaId) {
                 if (options?.locationId == this.id) return;
                 var act: DataStoreAction = r.operate.actions[0];
+                var result = r.result.actions[0];
                 if (act) {
                     switch (act.name) {
                         case 'add':
-                            if (options.locationId == 'Page.onSubmitForm' || options.locationId == 'flowButtonAddRecords') {
-                                this.data.push(act.data);
+                            if (options?.locationId == 'Page.onSubmitForm' || options?.locationId == 'flowButtonAddRecords') {
+                                this.data.push(result.data);
                                 this.total += 1;
-                                await this.createOneItem(act.data, true)
+                                await this.createOneItem(result.data, true)
                                 this.onNotifyPageReferenceBlocks();
                             }
                             break;

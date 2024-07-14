@@ -194,6 +194,8 @@ export class Input extends React.Component<{
     focus() {
         if (this.inputEl) {
             // this.inputEl.select();
+            var sel = window.getSelection();
+            if (sel.focusNode == this.inputEl) return;
             this.inputEl.focus();
             this.inputEl.setSelectionRange(this.inputEl.value.length, this.inputEl.value.length)
         }

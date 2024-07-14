@@ -21,6 +21,7 @@ import { PopoverPosition } from "../../../component/popover/position";
 import { util } from "../../../util/util";
 import { lst } from "../../../i18n/store";
 import { UploadView } from "../../file/upload";
+import { UserBasic } from "../../../types/user";
 
 export class DataGridFileViewer extends EventsComponent {
     mime: 'file' | 'image' | 'video' | 'audio' | 'user' = 'file';
@@ -72,7 +73,7 @@ export class DataGridFileViewer extends EventsComponent {
             resource = await useVideoPicker({ roundArea: rect })
         }
         else if (this.mime == 'user') {
-            var r = await useUserPicker({ roundArea: rect }, undefined, { ignoreUserAll: true });
+            var r = await useUserPicker({ roundArea: rect }, undefined, { ignoreUserAll: true })  as UserBasic;
             if (r && !this.resources.includes(r.id as any)) {
                 resource = r.id as any;
             }
@@ -80,16 +81,29 @@ export class DataGridFileViewer extends EventsComponent {
         if (resource) {
             if (this.isMultiple) this.resources.push(resource);
             else this.resources = [resource]
-            if (this.isMultiple) this.forceUpdate()
+            if (this.isMultiple) {
+                this.forceUpdate(() => {
+                    if (this.scrollDiv) {
+                        this.scrollDiv.scrollTop = this.scrollDiv.scrollHeight;
+                    }
+                    this.emit('update')
+                })
+            }
             else this.onSave();
         }
     }
     onSaveResource(resource: ResourceArguments) {
         if (this.isMultiple) this.resources.push(resource);
         else this.resources = [resource]
-        if (this.isMultiple) this.forceUpdate()
+        if (this.isMultiple) this.forceUpdate(() => {
+            if (this.scrollDiv) {
+                this.scrollDiv.scrollTop = this.scrollDiv.scrollHeight;
+            }
+            this.emit('update')
+        })
         else this.onSave();
     }
+    scrollDiv: HTMLElement;
     render(): ReactNode {
         var self = this;
         function renderItem(resource: ResourceArguments) {
@@ -132,7 +146,7 @@ export class DataGridFileViewer extends EventsComponent {
             return text;
         }
         return <div className={"gap-h-10" + (this.mime == 'user' ? " w-180" : " w-300")}>
-            {this.resources.length > 0 && <div className="max-h-300 overflow-y padding-h-5">
+            {this.resources.length > 0 && <div ref={e => this.scrollDiv = e} className="max-h-300 overflow-y padding-h-5">
                 <DragList onChange={(e, c) => this.dragChange(e, c)}
                     isDragBar={e => e.closest('.drag') ? true : false}>
                     {this.resources.map((re, i) => {
@@ -140,7 +154,7 @@ export class DataGridFileViewer extends EventsComponent {
                             <span className="round flex-fixed drag size-24 remark flex-center cursor item-hover">
                                 <Icon icon={DragHandleSvg} size={14}></Icon>
                             </span>
-                            <div className="flex-auto">{renderItem(re)}</div>
+                            <div className="flex-auto  text-overflow">{renderItem(re)}</div>
                             <span onClick={e => this.onContextmenu(re, e)} className="round  remark text-1 flex-fixed drag size-24 flex-center cursor item-hover">
                                 <Icon icon={DotsSvg} size={18}></Icon>
                             </span>

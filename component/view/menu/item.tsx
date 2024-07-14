@@ -128,6 +128,11 @@ export class MenuItemView extends React.Component<{
         }
     }
     dragChange(to: number, from: number) {
+        var childs = this.props.item.childs;
+        var c = childs[from];
+        childs.splice(from, 1);
+        childs.splice(to, 0, c);
+
         this.props.item.value = [from, to];
         this.props?.input(this.props.item);
         this.props.item.value = undefined;
@@ -167,7 +172,7 @@ export class MenuItemView extends React.Component<{
                     this.el['data-menu-item'] = this;
                 }
             }}>
-            {(item.type == MenuItemType.item || !item.type) && <ToolTip overlay={item.overlay} placement={item.placement || 'right'} ><div className={'shy-menu-box-item-option' + (item.disabled == true ? " disabled" : "") + (item.warn ? " warn" : "")}
+            {(item.type == MenuItemType.item || !item.type) && <ToolTip overlay={item.overlay} placement={item.placement || 'right'} ><div className={'shy-menu-box-item-option' + (item.disabled == true ? " disabled" : "") + (item.warn && item.disabled !== true ? " warn" : "")}
                 onMouseDown={e => this.select(item, e.nativeEvent)}>
                 {item.icon && <i className={"flex-center flex-line  text-1 " + (util.covertToArray(item.iconClassName).join(' ')) + (item.iconSize > 20 ? "" : " size-20")}><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
                 {item.renderIcon && item.renderIcon(item, this)}

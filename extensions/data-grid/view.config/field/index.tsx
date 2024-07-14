@@ -102,7 +102,7 @@ export class DataGridFields extends EventsComponent {
         }
         async function onChange(to: number, from: number, bs: ViewField[]) {
             var fe = bs[from];
-            lodash.remove(bs, (c, g) => g == from)
+            bs.splice(from,1);
             bs.splice(to, 0, fe);
             var fssAll = self.block.fields.map(c => c);
             lodash.remove(fssAll, (c, g) => bs.includes(c));
@@ -113,7 +113,7 @@ export class DataGridFields extends EventsComponent {
         function getFieldIcon(vf: ViewField) {
             return GetFieldTypeSvg(vf.field);
         }
-        var fs = this.schema.visibleFields.findAll(g => g.text && !this.block.fields.some(s => s.fieldId == g.id) ? true : false);
+        var fs = this.schema.visibleFields.findAll(g =>g.text && !this.block.fields.some(s => s.fieldId == g.id) ? true : false);
         var bs = this.block.fields.filter(c => !['rowNum', 'check'].includes(c.type))
         var title: ViewField;
         if (this.block.url == BlockUrlConstant.DataGridList) {

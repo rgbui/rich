@@ -20,6 +20,7 @@ import { lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
 import { RefPageLink } from "../../extensions/link/declare";
 import "./style.less";
+import { UserBasic } from "../../types/user";
 
 @url('/user/mention')
 export class ShyMention extends Block {
@@ -51,7 +52,7 @@ export class ShyMentionView extends BlockView<ShyMention> {
         DragBlockLine(this.block, event);
     }
     async openUser(pos: PopoverPosition) {
-        var r = await useUserPicker(pos, this.block.page?.ws);
+        var r = await useUserPicker(pos, this.block.page?.ws) as UserBasic;
         if (r) {
             var rf = (this.block.refLinks || [])[0];
             if (!rf) {

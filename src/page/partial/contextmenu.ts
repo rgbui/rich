@@ -15,7 +15,6 @@ import {
     LinkSvg,
     LockSvg,
     MoveToSvg,
-    NoteSvg,
     OutlineSvg,
     PicSvg,
     PlatteSvg,
@@ -581,7 +580,7 @@ export class Page$ContextMenu {
                 {
                     name: 'viewDisplay',
                     type: MenuItemType.buttonOptions,
-                    value: view.formType || 'doc',
+                    value: view?.formType || 'doc',
                     visible: viewType == 'template' ? true : false,
                     options: [
                         {
@@ -611,7 +610,7 @@ export class Page$ContextMenu {
                     text: lst('仅允许提交一次'),
                     type: MenuItemType.switch,
                     checked: view?.disabledUserMultiple,
-                    visible: viewType == 'template' && view.formType == 'doc-add' ? true : false
+                    visible: viewType == 'template' && view?.formType == 'doc-add' ? true : false
                 },
                 {
                     name: 'editForm',
@@ -624,7 +623,7 @@ export class Page$ContextMenu {
                     visible: viewType == 'data-origin-edit' ? false : true
                 },
                 { text: lst('显示字段'), type: MenuItemType.text },
-                ...this.schema.allowFormFields.findAll(g => !(viewType == 'template' && view.formType == 'doc-add') && g.type == FieldType.title ? false : true).toArray(uf => {
+                ...this.schema.getFormFields(viewType == 'template' ? true : false, view?.formType || 'doc').toArray(uf => {
                     return {
                         icon: GetFieldTypeSvg(uf),
                         name: uf.id,

@@ -1,31 +1,34 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import { Field } from "../../../blocks/data-grid/schema/field";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { EventsComponent } from "../../../component/lib/events.component";
-import { CloseSvg, CollectTableSvg, SearchSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { PopoverSingleton } from "../../../component/popover/popover";
 import { PopoverPosition } from "../../../component/popover/position";
 import { SearchListType } from "../../../component/types";
 import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
-import { CheckBox } from "../../../component/view/checkbox";
-import { Spin } from "../../../component/view/spin";
 import lodash from "lodash";
 import { FieldType } from "../../../blocks/data-grid/schema/type";
 import dayjs from "dayjs";
 import { Avatar } from "../../../component/view/avator/face";
 import { UserAvatars } from "../../../component/view/avator/users";
-import { Pagination } from "../../../component/view/pagination";
 import { Input } from "../../../component/view/input";
 import { Page } from "../../../src/page";
-import { Tip } from "../../../component/view/tooltip/tip";
-import { Divider } from "../../../component/view/grid";
 import { lst } from "../../../i18n/store";
-import { S } from "../../../i18n/view";
 import { util } from "../../../util/util";
 import { ResourceArguments } from "../../icon/declare";
 import { getPageIcon, getPageText } from "../../../src/page/declare";
+import { S } from "../../../i18n/view";
 import { HelpText } from "../../../component/view/text";
+import { CheckSvg, CloseSvg, DotsSvg, DragHandleSvg, EyeHideSvg, EyeSvg, PlusSvg } from "../../../component/svgs";
+import { ToolTip } from "../../../component/view/tooltip";
+import { KeyboardCode } from "../../../src/common/keys";
+import { DragList } from "../../../component/view/drag.list";
+import { channel } from "../../../net/channel";
+import { ElementType, getElementUrl } from "../../../net/element.type";
+import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
+import { useSelectMenuItem } from "../../../component/view/menu";
+import { Rect } from "../../../src/common/vector/point";
 
 class RelationPicker extends EventsComponent {
     render() {
@@ -33,8 +36,29 @@ class RelationPicker extends EventsComponent {
             {this.renderList()}
         </div>
     }
-    renderList() {
-        if (this.relationSchema) {
+    onPick(row) {
+        this.isChange = true;
+        if (this.isMultiple) {
+            if (!this.relationDatas.some(c => c.id == row.id))
+                this.relationDatas.push(row);
+            else lodash.remove(this.relationDatas, c => c.id == row.id);
+            this.forceUpdate(() => {
+                setTimeout(() => {
+                    if (this.input) {
+                        this.input.focus()
+                    }
+                }, 100);
+            });
+        }
+        else {
+            this.relationDatas = [row];
+            this.emit('save', this.relationDatas)
+        }
+    }
+    async openShowFields(e: React.MouseEvent) {
+
+        var title = this.relationSchema.fields.find(g => g.name == 'title');
+        var getSubItems = () => {
             var vfs = this.relationSchema.fields.findAll(g => [
                 FieldType.title,
                 FieldType.text,
@@ -54,135 +78,301 @@ class RelationPicker extends EventsComponent {
             vfs.sort((a, b) => {
                 if (a.type == FieldType.title) return -1;
             })
-            return <div>
-                <div className="gap-w-10 flex gap-h-10" data-drag>
-                    <span><S>在</S></span>
-                    <span className="flex-fixed remark flex item-hover item-hover-light-focus round padding-w-3 padding-h-1">
-                        <Icon size={16} icon={this.relationSchema.icon || { name: 'byte', code: 'table' }}></Icon>
-                        <span className="gap-l-3">{this.relationSchema.text}</span>
-                    </span>
-                    <span><S>中选择</S></span>
-                    <HelpText onMouseDown={e => { e.stopPropagation() }} url={window.shyConfig?.isUS ? "https://help.shy.red/page/69#8se82Vo9ub2CVdQfA4CGEw" : "https://help.shy.live/page/1989#bMYCF1q5T1EDj9QArqCZMj"}><S>了解如何关联数据表</S></HelpText>
-                </div>
+            var subItems: MenuItem[] = [];
+            if (!this.fieldProps) this.fieldProps = [title.id];
+            var showFields: Field[] = [];
+            this.fieldProps.forEach(v => {
+                var vf = vfs.find(g => g.id == v);
+                showFields.push(vf);
+            })
+            var hideFields = vfs.filter(g => !showFields.some(s => s.id == g.id));
+            subItems.push({
+                text: lst('显示字段'),
+                type: MenuItemType.text
+            })
+            showFields.forEach(v => {
+                subItems.push({
+                    name: 'turn',
+                    text: v.text,
+                    type: MenuItemType.drag,
+                    value: v.id,
+                    icon: GetFieldTypeSvg(v),
+                    btns: v.id == title.id ? [] : [
+                        { icon: EyeSvg, name: 'hide' }
+                    ]
+                })
+            })
+            if (hideFields.length > 0) {
+                subItems.push({
+                    text: lst('隐藏字段'),
+                    name: 'hideFields',
+                    type: MenuItemType.text
+                })
+                hideFields.forEach(v => {
+                    subItems.push({
+                        name: 'turn',
+                        text: v.text,
+                        type: MenuItemType.drag,
+                        value: v.id,
+                        icon: GetFieldTypeSvg(v),
+                        btns: [
+                            { icon: EyeHideSvg, name: 'show' }
+                        ]
+                    })
+                })
+            }
+            return [{
+                type: MenuItemType.container,
+                drag: true,
+                name: 'viewContainer',
+                childs: subItems
+            }];
+        }
+        var rect = Rect.fromEle(e.currentTarget as HTMLElement)
+        await useSelectMenuItem({ roundArea: rect }, getSubItems(), {
+            input: (item, mp) => {
+                if (item.name == 'viewContainer') {
+                    var cs = item.childs;
+                    var h = cs.findIndex(g => g.name == 'hideFields');
+                    var hs = h > -1 ? cs.findAll((c, i) => i < h) : cs;
+                    lodash.remove(hs, g => g.value ? false : true);
+                    this.fieldProps = hs.map(g => g.value);
+                    lodash.remove(this.fieldProps, c => c == title.id)
+                    this.fieldProps.unshift(title.id);
+                    mp.updateItems(getSubItems())
+                    this.forceUpdate();
+                    this.changeFieldProps(this.fieldProps)
+                }
+            },
+            click: async (item, ev, name, mp) => {
+                if (name == 'hide' || name == 'show') {
+                    mp.onFree();
+                    try {
+                        if (!this.fieldProps) this.fieldProps = [];
+                        if (name == 'hide') {
+                            lodash.remove(this.fieldProps, c => c == item.value)
+                        }
+                        else if (name == 'show') {
+                            if (!this.fieldProps.includes(item.value))
+                                this.fieldProps.push(item.value)
+                        }
+                        lodash.remove(this.fieldProps, c => c == title.id)
+                        this.fieldProps.unshift(title.id);
+                        console.log(this.fieldProps, title.id, getSubItems());
+                        mp.updateItems(getSubItems())
+                        this.forceUpdate();
+                        this.changeFieldProps(this.fieldProps)
+                    }
+                    catch (ex) {
+
+                    }
+                    finally {
+                        mp.onUnfree()
+                    }
+                }
+            }
+        });
+        if (this.input) this.input.focus()
+    }
+    input: Input;
+    renderList() {
+        if (this.relationSchema) {
+            return <div ref={e => this.el = e}>
                 <div >
-                    <div className="gap-w-10 gap-t-10 gap-b-5">
-                        <Input
-                            prefix={<span className="size-24 flex-center cursor"><Icon className={'remark'} size={16} icon={SearchSvg}></Icon></span>}
-                            placeholder={lst('搜索...')}
-                            value={this.seachList.word}
-                            onChange={e => {
-                                this.seachList.word = e;
-                                this.onLazySearch();
-                            }}
-                            clear
-                            onClear={() => {
-                                this.onSearch();
-                            }}
-                            onEnter={e => {
-                                this.onSearch();
-                            }}></Input>
-                    </div>
-                    {this.relationDatas.length > 0 && <div className="flex flex-wrap min-h-30 gap-w-10">
-                        {this.relationDatas.map(r => {
-                            return <span key={r.id} className="item-hover remark round gap-r-10 padding-w-5 padding-h-3 flex cursor" onMouseDown={e => {
-                                lodash.remove(this.relationDatas, g => g.id == r.id)
-                                this.isChange = true;
-                                this.forceUpdate()
-                            }}><span className="size-20 flex-center flex-fixed"><Icon size={16} icon={getPageIcon(r)}></Icon></span>
-                                <em className="max-w-100 text-overflow gap-r-5">{getPageText({ text: r.title })}</em>
-                                <Tip text='移除选择项'><span className="size-14 flex-center item-hover round"><Icon size={12} icon={CloseSvg}></Icon></span></Tip>
-                            </span>
-                        })}
-                    </div>}
-                    <Divider></Divider>
-                </div>
-                <div className="min-h-100 max-h-400 overflow-y padding-w-10 padding-t-5 padding-b-80">
-                    <div className="overflow-x gap-t-10">
-                        <div className="flex  flex-full">
-                            <div className={"flex-fixed flex w-60 remark border-left border-top padding-5 " + (this.seachList.list.length == 0 ? " border-bottom" : "")}>
-                                {this.isMultiple && <CheckBox
-                                    checked={this.seachList.list.length > 0 && this.seachList.list.every(c => this.relationDatas.some(s => s.id == c.id))}
-                                    onChange={e => {
-                                        if (e) {
-                                            this.seachList.list.forEach(lp => {
-                                                if (!this.relationDatas.some(s => s.id == lp.id))
-                                                    this.relationDatas.push(lp)
-                                            })
+                    <div className="flex flex-auto padding-w-10 padding-h-5" style={{
+                        backgroundColor: 'rgba(242, 241, 238, 0.6)',
+                        boxShadow: 'rgba(55, 53, 47, 0.16) 0px -1px inset'
+                    }}>
+                        <div className="flex-auto" >
+                            <Input
+                                ref={e => this.input = e}
+                                focusSelectionAll
+                                noborder
+                                placeholder={lst('搜索或创建...')}
+                                value={this.seachList.word}
+                                onChange={e => {
+                                    this.seachList.word = e;
+                                    this.onLazySearch();
+                                }}
+                                onKeydown={e => {
+                                    if (e.key == KeyboardCode.ArrowDown) {
+                                        this.index += 1;
+                                        if (this.index > this.seachList.list.length - 1) this.index = 0;
+                                        this.forceUpdate(() => {
+                                            var ds = this.el.querySelector(`[data-selected="yes"]`) as HTMLElement;
+                                            if (ds) {
+                                                ds.scrollIntoView({ block: 'center', inline: 'center' });
+                                            }
+                                        })
+
+                                    }
+                                    else if (e.key == KeyboardCode.ArrowUp) {
+                                        this.index -= 1;
+                                        if (this.index < 0) this.index = this.seachList.list.length - 1;
+                                        this.forceUpdate(() => {
+                                            var ds = this.el.querySelector(`[data-selected="yes"]`) as HTMLElement;
+                                            if (ds) {
+                                                ds.scrollIntoView({ block: 'center', inline: 'center' });
+                                            }
+                                        })
+                                    }
+                                    else if (e.key == KeyboardCode.Enter) {
+                                        if (this.seachList.list.length == 0 && this.seachList.word) {
+                                            this.onAddRecord();
                                         }
                                         else {
-                                            lodash.remove(this.relationDatas, s => this.seachList.list.some(c => c.id == s.id));
+                                            var r = this.seachList.list[this.index];
+                                            this.onPick(r);
                                         }
-                                        this.isChange = true;
-                                        this.forceUpdate();
-                                    }}
-                                ><S>选择</S></CheckBox>}
-                            </div>
-                            {vfs.map(vf => {
-                                var className = 'w-120';
-                                if ([FieldType.text, FieldType.bool, FieldType.option, FieldType.options, FieldType.number, FieldType.creater, FieldType.user].includes(vf.type)) {
-                                    className = 'w-60';
-                                }
-                                return <div className={"flex-fixed border-left border-top flex r-gap-r-5 padding-5  f-14 " + className + (this.seachList.list.length == 0 ? " border-bottom" : "")} key={vf.id}><Icon className={'remark flex-fixed'} size={16} icon={GetFieldTypeSvg(vf)}></Icon><span className="text-1 flex-auto text-overflow">{vf.text}</span></div>
-                            })}</div>
-                        <div>
-                            {this.seachList.list.map((l, i) => {
-                                return <div className="flex flex-full " key={l.id + i.toString()}>
-                                    <div className={"flex-fixed w-60   border-left border-top padding-5 " + (i == this.seachList.list.length - 1 ? "border-bottom" : "")}><CheckBox
-                                        checked={this.relationDatas.some(s => s.id == l.id)}
-                                        onChange={e => {
-                                            if (this.isMultiple) {
-                                                if (e) {
-                                                    if (!this.relationDatas.some(s => s.id == l.id))
-                                                        this.relationDatas.push(l)
-                                                }
-                                                else {
-                                                    lodash.remove(this.relationDatas, s => s.id == l.id);
-                                                }
-                                            }
-                                            else {
-                                                if (e) this.relationDatas = [l]
-                                                else this.relationDatas = [];
-                                            }
-                                            this.isChange = true;
-                                            this.forceUpdate();
-                                        }}
-                                    ></CheckBox></div>
-                                    {vfs.map(vf => {
-                                        var className = 'w-120';
-                                        if ([FieldType.text, FieldType.bool, FieldType.option, FieldType.options, FieldType.number, FieldType.creater, FieldType.user].includes(vf.type)) {
-                                            className = 'w-60';
-                                        }
-                                        return <div className={"flex-fixed   border-left border-top r-gap-r-5 padding-5 " + className + (i == this.seachList.list.length - 1 ? " border-bottom" : "")} key={vf.id}>{this.getRowValue(l, vf)}</div>
-                                    })}
-                                </div>
-                            })}
+                                    }
+                                }}
+                                clear
+                                onClear={() => {
+                                    this.onSearch();
+                                }}
+                            ></Input>
                         </div>
-                        {this.seachList.loading && <Spin block></Spin>}
-                        {this.seachList.list.length == 0 && this.seachList.loading == false && <div className="flex-center h-100 remark"><S>无数据</S></div>}
+                        <div className="flex-fixed">
+                            <span onMouseDown={e => {
+                                e.stopPropagation();
+                                channel.act('/page/open', { elementUrl: getElementUrl(ElementType.Schema, this.relationSchema.id) });
+                            }} className="flex-fixed remark flex item-hover item-hover-light-focus round padding-w-3 padding-h-1">
+                                <Icon size={16} icon={this.relationSchema.icon || { name: 'byte', code: 'table' }}></Icon>
+                                <span className="gap-l-3">{this.relationSchema.text}</span>
+                            </span>
+                        </div>
                     </div>
-                    <div className="gap-h-10">
-                        <Pagination
-                            index={this.seachList.page}
-                            total={this.seachList.total}
-                            size={this.seachList.size}
-                            onChange={(e, s) => {
-                                this.seachList.page = e;
-                                this.seachList.size = s;
-                                this.onSearch()
-                            }}></Pagination>
+                </div>
+                <div className="max-h-300 overflow-y">
+                    {this.renderPickedRows()}
+                    <div className="flex  gap-w-10">
+                        <span className="flex-auto  f-12 remark"><S>选择页面</S></span>
+                        {this.changeFieldProps && this.relationDatas.length == 0 && <ToolTip overlay={<S>设置显示属性</S>}><span onMouseDown={e => this.openShowFields(e)} className="flex-fixed size-20 gap-h-3 flex-center round item-hover">
+                            <Icon icon={DotsSvg}></Icon>
+                        </span></ToolTip>}
                     </div>
+                    <div>{this.seachList.list.map((row, i) => {
+                        return <div key={row.id}>{this.renderRow(row, i)}</div>
+                    })}</div>
+                </div>
+                {this.seachList.list.length == 0 && this.seachList.word && <div className="gap-b-10" onMouseDown={e => {
+                    this.onAddRecord();
+                }}>
+                    <div className={"flex item-hover round padding-w-5 padding-h-3 gap-w-5 " + (this.index == 0 ? "item-hover-focus" : "")}>
+                        <Icon size={16} icon={PlusSvg}></Icon>
+                        <S>创建新记录</S>
+                        <span className="b-500 gap-r-5">{this.seachList.word}</span>
+                        <span onMouseDown={e => {
+                            e.stopPropagation();
+                        }} className="flex-fixed remark flex item-hover item-hover-light-focus round padding-w-3 padding-h-1">
+                            <Icon size={16} icon={this.relationSchema.icon || { name: 'byte', code: 'table' }}></Icon>
+                            <span className="gap-l-3">{this.relationSchema.text}</span>
+                        </span>
+                    </div>
+                </div>}
+                <div className="h-30 border-top flex">
+                    <HelpText onMouseDown={e => { e.stopPropagation() }} url={window.shyConfig?.isUS ? "https://help.shy.red/page/69#8se82Vo9ub2CVdQfA4CGEw" : "https://help.shy.live/page/1989#bMYCF1q5T1EDj9QArqCZMj"}><S>了解如何关联数据表</S></HelpText>
                 </div>
             </div>
         }
         else return <div></div>
     }
+    async onAddRecord() {
+        this.isChange = true;
+        var r = await this.relationSchema.rowAdd({ data: { title: this.seachList.word } }, 'RelationPicker');
+        this.seachList.list.push(r.data);
+        this.relationDatas.push(r.data);
+        this.forceUpdate()
+    }
+    renderPickedRows() {
+        if (this.relationDatas.length == 0) return <></>
+        var dragChange = (to: number, from: number) => {
+            this.isChange = true;
+            var d = this.relationDatas[from];
+            this.relationDatas.splice(from, 1);
+            this.relationDatas.splice(to, 0, d);
+            this.forceUpdate(() => {
+                setTimeout(() => {
+                    if (this.input) this.input.focus()
+                }, 100);
+            })
+        };
+        var vfs = this.getFields();
+        return <div>
+            <div className="flex gap-w-10">
+                <span className="flex-auto f-12 remark"><S>已选择</S>{this.relationDatas.length}</span>
+                {this.changeFieldProps && <ToolTip overlay={<S>设置显示属性</S>}><span onMouseDown={e => this.openShowFields(e)} className="flex-fixed size-20 gap-h-3 flex-center round item-hover">
+                    <Icon icon={DotsSvg}></Icon>
+                </span></ToolTip>}
+            </div>
+            <div><DragList onChange={(e, c) => dragChange(e, c)}
+                isDragBar={e => e.closest('.drag') ? true : false}>
+                {this.relationDatas.map(row => {
+                    return <div key={row.id} className="flex visible-hover  round item-light-hover min-h-30 cursor gap-w-5 padding-w-5">
+                        <span className="w-16 h-24 gap-r-5 remark drag flex-center" ><Icon size={14} icon={DragHandleSvg}></Icon></span>
+                        <div className="flex-auto flex text-overflow flex-wrap">
+                            {vfs.map((vf, i) => {
+                                return <div key={i} className="flex-fixed  gap-r-10">
+                                    {this.getRowValue(row, vf)}
+                                </div>
+                            })}
+                        </div>
+                        <ToolTip overlay={<S>移除选择的数据</S>}>
+                            <span onMouseDown={e => {
+                                e.stopPropagation()
+                                lodash.remove(this.relationDatas, c => c.id == row.id);
+                                this.isChange = true;
+                                this.forceUpdate(() => {
+                                    setTimeout(() => {
+                                        if (this.input) this.input.focus()
+                                    }, 100);
+                                });
+                            }} className="visible flex-fixed size-20 round flex-center item-hover">
+                                <Icon icon={CloseSvg} size={12}></Icon>
+                            </span>
+                        </ToolTip>
+                    </div>
+                })}</DragList>
+            </div>
+        </div>
+    }
+    el: HTMLElement;
+    getFields() {
+        var fps = this.fieldProps || [this.relationSchema.fields.find(g => g.name == 'title')?.id];
+        var vfs: Field[] = [];
+        if (fps) {
+            vfs = fps.map(v => {
+                return this.relationSchema.fields.find(g => g.id == v);
+            })
+        }
+        return vfs;
+    }
+    renderRow(row, i?: number) {
+        var vfs = this.getFields();
+        return <div onMouseDown={e => this.onPick(row)} data-selected={i == this.index ? "yes" : "no"} className={"flex round item-light-hover min-h-30 cursor gap-w-5 padding-w-5 " + (i === this.index ? "item-hover-focus" : "")}>
+            <div className="flex-auto flex  text-overflow flex-wrap ">
+                {vfs.map((vf, i) => {
+                    return <div key={i} className="flex-fixed gap-r-10">
+                        {this.getRowValue(row, vf)}
+                    </div>
+                })}
+            </div>
+
+            <div className="flex-fixed flex-end  ">
+                {this.relationDatas.some(c => c.id == row.id) && <span className="flex-center size-20  text-1" ><Icon size={14} icon={CheckSvg}></Icon></span>}
+            </div>
+        </div>
+    }
     getRowValue(row, field: Field) {
         var v = row[field.name];
         switch (field.type) {
             case FieldType.title:
+                var textStyle: CSSProperties = {}
+                textStyle.textDecoration = 'underline';
+                textStyle.textDecorationColor = 'rgba(22, 22, 22, 0.2)';
                 return <div className="flex">
-                    <span className="flex-fixed size-24 flex-center remark"><Icon size={18} icon={getPageIcon(row)}></Icon></span>
-                    <span className="flex-auto text-overflow ">{getPageText({ text: v })}</span>
+                    {row.icon && <span className="flex-fixed size-24 flex-center remark"><Icon size={18} icon={getPageIcon(row)}></Icon></span>}
+                    <span style={textStyle} className="flex-auto text-overflow b-500 ">{getPageText({ text: v })}</span>
                 </div>
             case FieldType.bool:
                 return <div>
@@ -195,7 +385,7 @@ class RelationPicker extends EventsComponent {
                 var os = ops.findAll(g => vs.some(s => s == g.value));
                 return <div className="flex">
                     {os.map((o, i) => {
-                        return <span className="padding-w-5 cursor round" key={i} style={{ backgroundColor: o.fill||o.color,color:o.textColor }}>{o.text}</span>
+                        return <span className="padding-w-5 cursor round" key={i} style={{ backgroundColor: o.fill || o.color, color: o.textColor }}>{o.text}</span>
                     })}
                 </div>
             case FieldType.creater:
@@ -239,20 +429,24 @@ class RelationPicker extends EventsComponent {
             return <span>{v}</span>;
         else return <span>{JSON.stringify(v)}</span>
 
-
     }
+    index: number = 0;
     isChange: boolean = false;
     field: Field;
     relationDatas: any[] = [];
     isMultiple: boolean;
     relationSchema: TableSchema;
     page: Page;
+    fieldProps?: string[];
+    changeFieldProps?: (props: string[]) => void;
     async open(options: {
         relationDatas: { id: string }[],
         relationSchema: TableSchema,
         field: Field,
         isMultiple?: boolean,
-        page: Page
+        page: Page,
+        fieldProps?: string[];
+        changeFieldProps?: (props: string[]) => void;
     }) {
         this.seachList = {
             loading: false,
@@ -268,9 +462,13 @@ class RelationPicker extends EventsComponent {
         this.relationDatas = options.relationDatas;
         this.isMultiple = options.isMultiple;
         this.relationSchema = options.relationSchema;
+        this.fieldProps = options.fieldProps;
+        this.changeFieldProps = options.changeFieldProps;
         await this.onSearch(false);
         this.forceUpdate(() => {
-            this.emit('update')
+            setTimeout(() => {
+                this.emit('update')
+            }, 100);
         })
     }
     seachList: SearchListType<Record<string, any>> = { loading: false, word: '', list: [], total: 0, size: 100, page: 1 };
@@ -287,12 +485,15 @@ class RelationPicker extends EventsComponent {
             this.seachList.total = dr.data.total;
             this.seachList.page = dr.data.page;
             this.seachList.size = dr.data.size;
+            if (this.index >= this.seachList.list.length) {
+                this.index = 0;
+            }
         }
         this.seachList.loading = false
         if (force)
             this.forceUpdate();
     }
-    onLazySearch = lodash.debounce(this.onSearch, 700)
+    onLazySearch = lodash.debounce(this.onSearch, 500)
 }
 /**
  * 挑选关联的数据
@@ -306,7 +507,9 @@ export async function useRelationPickData(pos: PopoverPosition,
         relationSchema: TableSchema,
         field: Field,
         isMultiple?: boolean,
-        page: Page
+        page: Page,
+        fieldProps?: string[];
+        changeFieldProps?: (props: string[]) => void;
     }) {
     let popover = await PopoverSingleton(RelationPicker, { mask: true });
     let fv = await popover.open(pos);

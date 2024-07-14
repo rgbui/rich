@@ -341,11 +341,11 @@ export class Page$Operator2 {
                 'memberPermissions'
             ])
             if (Object.keys(props).length > 0) {
-                if (this.pe.type == ElementType.Schema) {
-                    var schema = await TableSchema.loadTableSchema(this.pe.id, this.ws);
-                    if (schema && Object.keys(props).length > 0)
-                        schema.update(props, 'Page.onUpdatePageData')
-                }
+                // if (this.pe.type == ElementType.Schema) {
+                //     var schema = await TableSchema.loadTableSchema(this.pe.id, this.ws);
+                //     if (schema && Object.keys(props).length > 0)
+                //         schema.update(props, 'Page.onUpdatePageData')
+                // }
                 await channel.air('/page/update/info', {
                     elementUrl: this.elementUrl,
                     pageInfo: data

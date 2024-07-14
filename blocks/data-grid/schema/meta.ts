@@ -54,7 +54,7 @@ export type DataStoreAction = {
 } | {
     name: 'updateDoubleRelation',
     fieldName: string,
-    isMultiple?:boolean,
+    isMultiple?: boolean,
     data: { id: string, count: number, refId: string }[]
 }
 
@@ -156,7 +156,7 @@ export class TableSchema {
     allowSubs: boolean = false;
     icon: IconArguments;
     cover: CoverMask;
-    workspaceId:string;
+    workspaceId: string;
     locker: {
         lock: boolean,
         date: number,
@@ -192,7 +192,7 @@ export class TableSchema {
      * 用户可以选择显示的字段
      */
     get visibleFields(): Field[] {
-        var fs = this.fields.findAll(g => g.text && !SysHiddenFieldTypes.includes(g.type));
+        var fs = this.fields.findAll(g => g.visible !== false && g.text && !SysHiddenFieldTypes.includes(g.type));
         var ns = fs.findAll(g => !SysFieldTypes.includes(g.type));
         fs = fs.findAll(g => SysFieldTypes.includes(g.type));
         fs.sort((x, y) => {
@@ -203,7 +203,7 @@ export class TableSchema {
         return fs;
     }
     get allVisibleFields() {
-        var fs = this.fields.findAll(g => g.text && ![FieldType.deleted].includes(g.type));
+        var fs = this.fields.findAll(g => g.visible !== false && g.text && ![FieldType.deleted].includes(g.type));
         var ns = fs.findAll(g => !SysFieldTypes.includes(g.type));
         fs = fs.findAll(g => SysFieldTypes.includes(g.type));
         fs.sort((x, y) => {
@@ -217,7 +217,7 @@ export class TableSchema {
      * 系统创建表格时，默认创建显示的字段
      */
     get defaultViewFields() {
-        var fs = this.fields.findAll(g => g.text && (g.type == FieldType.title || !SysFieldTypes.includes(g.type)))
+        var fs = this.fields.findAll(g => g.visible !== false && g.text && (g.type == FieldType.title || !SysFieldTypes.includes(g.type)))
         var ns = fs.findAll(g => !SysFieldTypes.includes(g.type));
         fs = fs.findAll(g => SysFieldTypes.includes(g.type));
         fs.sort((x, y) => {
@@ -228,7 +228,7 @@ export class TableSchema {
         return fs;
     }
     get allowSortFields() {
-        var fs = this.fields.findAll(x => x.text && !DisabledSortFieldTypes.includes(x.type) ? true : false)
+        var fs = this.fields.findAll(x => x.visible !== false && x.text && !DisabledSortFieldTypes.includes(x.type) ? true : false)
         var ns = fs.findAll(g => !SysFieldTypes.includes(g.type));
         fs = fs.findAll(g => SysFieldTypes.includes(g.type));
         fs.sort((x, y) => {
@@ -238,8 +238,22 @@ export class TableSchema {
         fs.splice(1, 0, ...ns);
         return fs;
     }
+    getFormFields(isTemplate: boolean, formType: "doc" | "doc-add" | "doc-detail") {
+        var fs = this.fields.findAll(g => g.visible !== false && !DisabledFormFieldTypes.includes(g.type))
+        var ns = fs.findAll(g => !SysFieldTypes.includes(g.type));
+        fs = fs.findAll(g => SysFieldTypes.includes(g.type));
+        fs.sort((x, y) => {
+            if (x.type === FieldType.title) return -1;
+            else return 1;
+        })
+        fs.splice(1, 0, ...ns);
+        if (!isTemplate) {
+            lodash.remove(fs, g => g.type ==FieldType.title)
+        }
+        return fs;
+    }
     get allowFormFields() {
-        var fs = this.fields.findAll(g => !DisabledFormFieldTypes.includes(g.type))
+        var fs = this.fields.findAll(g => g.visible !== false && !DisabledFormFieldTypes.includes(g.type))
         var ns = fs.findAll(g => !SysFieldTypes.includes(g.type));
         fs = fs.findAll(g => SysFieldTypes.includes(g.type));
         fs.sort((x, y) => {
@@ -630,8 +644,8 @@ export class TableSchema {
         this.schemas.set(schema.id, schema as TableSchema);
         return schema as TableSchema;
     }
-    static getSchemas(wsId:string) {
-        return Array.from(this.schemas.values()).filter(g=>g.workspaceId == wsId    )
+    static getSchemas(wsId: string) {
+        return Array.from(this.schemas.values()).filter(g => g.workspaceId == wsId)
     }
     static async loadListSchema(schemaIds: string[], page: Page) {
         var rs: TableSchema[] = [];

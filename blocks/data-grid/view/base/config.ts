@@ -161,7 +161,7 @@ export class DataGridViewConfig {
                             var rn = rs.find(g => g.name == 'name');
                             if (!lodash.isEqual(rn.value, item.text))
                                 props.text = rn.value;
-                            if (!lodash.isEqual(rn.icon, itemView.icon)) {
+                            if (typeof rn.icon != 'function' && !lodash.isEqual(rn.icon, itemView.icon)) {
                                 props.icon = rn.icon;
                             }
                             if (Object.keys(props).length > 0) {
@@ -219,7 +219,7 @@ export class DataGridViewConfig {
                 if (rname.value != self.schemaView.text && rname.value) {
                     props.text = rname.value;
                 }
-                if (!lodash.isEqual(rname.icon, self.schemaView.icon)) {
+                if (typeof rname.icon != 'function' && !lodash.isEqual(rname.icon, self.schemaView.icon)) {
                     props.icon = rname.icon;
                 }
                 if (Object.keys(props).length > 0) {
@@ -316,10 +316,10 @@ export class DataGridViewConfig {
     }
     async onOpenAddTabView(this: DataGridView, event: React.MouseEvent) {
         var self = this;
-        self.onDataGridTool(async ()=>{
+        self.onDataGridTool(async () => {
             var rect = Rect.fromEle(event.currentTarget as HTMLElement);
-            var g = await useDataSourceView({ roundArea: rect },{
-                page:this.page,
+            var g = await useDataSourceView({ roundArea: rect }, {
+                page: this.page,
                 tableId: this.schema.id,
                 viewId: this.syncBlockId,
                 selectView: true,

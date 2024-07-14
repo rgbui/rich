@@ -54,7 +54,7 @@ export async function InputStore(appear: AppearAnchor, force: boolean = false, a
     if (force == true) await inputStore()
     else inputStoreTime = setTimeout(async () => {
         if (inputStore) await inputStore()
-    }, 7e2);
+    }, 3e2);
 }
 /**
  * 主动保存

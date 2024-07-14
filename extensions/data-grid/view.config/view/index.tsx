@@ -395,7 +395,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
             else if (item.name == 'viewText') {
                 if (self.block.schemaView.text != item.value)
                     self.onStoreViewText(item.value);
-                else if (!lodash.isEqual(self.block.schemaView.icon, item.icon))
+                else if (typeof item.icon != 'function' && !lodash.isEqual(self.block.schemaView.icon, item.icon))
                     self.block.onSchemaViewUpdate(self.block.syncBlockId, { icon: item.icon });
             }
             else if (item.name == 'lock') {

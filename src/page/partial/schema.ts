@@ -14,6 +14,7 @@ import { Title } from "../../../blocks/interaction/title";
 import { lst } from "../../../i18n/store";
 import { Block } from "../../block";
 import { BlockRenderRange } from "../../block/enum";
+import { util } from "../../../util/util";
 
 export class Page$Schema {
     /**
@@ -154,22 +155,29 @@ export class Page$Schema {
                 }
             }
         })
+
+        if (!this.isSchemaRecordViewTemplate && [ElementType.SchemaRecordView].includes(this.pe.type)) {
+            var title = this.find(c => c.url == BlockUrlConstant.Title) as Title;
+            if (title) row.title = title.pageInfo.text;
+            row.icon = this.formRowData.icon;
+            row.cover = this.formRowData.cover;
+            row.description = this.formRowData.description;
+        }
+
+        util.clearObjectUndefined(row);
+        util.clearObjectUndefined(this.formRowData);
+        
         /**
          * 比较初始值，如果一样，说明没有任何修改，返回null
          */
         if (lodash.isEqual(this.formRowData, row)) {
             return null;
         }
-        if ([ElementType.SchemaData, ElementType.SchemaRecordViewData].includes(this.pe.type)) {
-            // var title = this.find(c => c.url == BlockUrlConstant.Title) as Title;
-            // if (title)
-            //     row.title = this.getPageDataInfo().text
-        }
-        row.icon = this.formRowData.icon;
-        row.cover = this.formRowData.cover;
-        row.plain = await this.getPlain();
-        row.plain = row.plain.slice(0, 200);
+
+        var plain = await this.getPlain();
+        row.plain = plain.slice(0, 200);
         row.thumb = await this.getThumb();
+        row.pageContentPreview = await this.getPreviewContent();
         return row;
     }
     /**
@@ -181,6 +189,7 @@ export class Page$Schema {
     async onSubmitForm(this: Page) {
         if (this.pe.type == ElementType.SchemaData || this.pe.type == ElementType.SchemaRecordViewData) {
             var newRow = await this.getSchemaRow()
+            console.log('newRow', newRow);
             if (newRow && Object.keys(newRow).length > 0) {
                 await this.schema.rowUpdate({ dataId: this.pe.id1, data: newRow }, 'Page.onSubmitForm')
             }

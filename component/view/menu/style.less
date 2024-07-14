@@ -80,6 +80,23 @@
 
         .shy-menu-box-item-option-label-icon {}
 
+        &.warn {
+            &:hover {
+                .shy-icon {
+                    color   : var(--text-p-color);
+                    // fill : rgba(55, 53, 47, 0.6);
+                }
+
+                .shy-menu-box-item-option-text {
+                    color: var(--text-p-color);
+                }
+
+                label {
+                    color: var(--text-p-color);
+                }
+            }
+        }
+
         &.disabled {
             cursor: default;
 
@@ -101,20 +118,7 @@
             }
         }
 
-        &.warn {
-            &:hover {
-                .shy-icon {
-                    color   : var(--text-p-color);
-                    // fill : rgba(55, 53, 47, 0.6);
-                }
-                .shy-menu-box-item-option-text {
-                    color: var(--text-p-color);
-                }
-                label {
-                    color: var(--text-p-color);
-                }
-            }
-        }
+
     }
 
     &.focus-hover {

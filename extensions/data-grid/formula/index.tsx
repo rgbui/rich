@@ -85,6 +85,12 @@ export default class FormulaSelector extends EventsComponent {
             else if ([FieldType.bool].includes(f.type)) {
                 type = 'bool'
             }
+            else if ([FieldType.relation].includes(f.type)) {
+                type = 'array'
+            }
+            else if ([FieldType.rollup].includes(f.type)) {
+                type = 'rollup'
+            }
             var url = STATIC_URL + 'static/data-grid/formula/docs' + ((window.shyConfig?.isUS ? "/us" : "/en")) + '/example/' + type + ".md";
             var d = this.cacheDatas.get(url);
             if (!d) {
@@ -219,8 +225,8 @@ export default class FormulaSelector extends EventsComponent {
     getFields() {
         var fs = this.schema.visibleFields.findAll(g => ![
             FieldType.formula,
-            FieldType.rollup,
-            FieldType.relation
+            // FieldType.rollup,
+            // FieldType.relation
         ].includes(g.type));
         return fs;
     }
@@ -256,10 +262,11 @@ export default class FormulaSelector extends EventsComponent {
             if ([FieldType.date, FieldType.createDate, FieldType.modifyDate].includes(f.type)) type = 'date'
             else if ([FieldType.number, FieldType.autoIncrement, FieldType.sort].includes(f.type)) type = 'number'
             else if ([FieldType.bool].includes(f.type)) type = 'bool'
-            else if ([FieldType.id]) type = 'id'
-            else if ([FieldType.comment, FieldType.browse, FieldType.vote, FieldType.like, FieldType.emoji]) type = 'interaction'
-            else if ([FieldType.file, FieldType.image, FieldType.video, FieldType.audio]) type = 'file'
-            else if ([FieldType.user, FieldType.modifyer, FieldType.creater]) type = 'user'
+            else if ([FieldType.id].includes(f.type)) type = 'id'
+            else if ([FieldType.comment, FieldType.browse, FieldType.vote, FieldType.like, FieldType.emoji].includes(f.type)) type = 'interaction'
+            else if ([FieldType.file, FieldType.image, FieldType.video, FieldType.audio].includes(f.type)) type = 'file'
+            else if ([FieldType.user, FieldType.modifyer, FieldType.creater].includes(f.type)) type = 'user'
+            else if ([FieldType.relation, FieldType.rollup].includes(f.type)) type = 'array'
             else type = 'string'
             return {
                 name: f.text,
@@ -268,6 +275,7 @@ export default class FormulaSelector extends EventsComponent {
             }
         });
         args.push({ name: 'current', type: 'any', template: 'current' })
+        console.log('args', args);
         var exp = new Express(args);
         try {
             exp.parse(this.formula);

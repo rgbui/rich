@@ -158,7 +158,7 @@ export class DataGridViewOperator {
     }
     async onUpdateFieldConfig(this: DataGridView, field: Field, configProps: Record<string, any>) {
         var nc: Record<string, any> = util.extendKey(configProps, 'config');
-      
+
         await this.onUpdateField(field, nc);
     }
     async onUpdateViewField(this: DataGridView, viewField: ViewField, data: Record<string, any>) {
@@ -215,7 +215,6 @@ export class DataGridViewOperator {
     }
     async onHideField(this: DataGridView, viewField: ViewField) {
         await this.page.onAction(ActionDirective.onSchemaHideField, async () => {
-            // this.page.notifyActionBlockSync(this);
             await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.type && g.type == viewField.type || g.field?.id == viewField?.field.id })
             await this.createItem();
             this.forceManualUpdate();
@@ -224,16 +223,18 @@ export class DataGridViewOperator {
     async onShowField(this: DataGridView, field: Field) {
         if (this.fields.some(s => s.field?.id == field.id)) return;
         await this.page.onAction(ActionDirective.onSchemaShowField, async () => {
-            // this.page.notifyActionBlockSync(this);
             var newFeild = this.schema.createViewField(field);
             await this.arrayPush({ prop: 'fields', data: newFeild })
+            if (field.type == FieldType.relation || field.type == FieldType.rollup) {
+                await this.loadRelationSchemas();
+                await this.loadRelationDatas();
+            }
             await this.createItem();
             this.forceManualUpdate();
         });
     }
     async onHideAllField(this: DataGridView) {
         await this.page.onAction(ActionDirective.onSchemaShowField, async () => {
-            // this.page.notifyActionBlockSync(this);
             await this.changeFields(this.fields, this.fields.findAll(g => g.field?.type == FieldType.title));
             await this.createItem();
             this.forceManualUpdate();
@@ -241,7 +242,6 @@ export class DataGridViewOperator {
     }
     async onShowAllField(this: DataGridView) {
         await this.page.onAction(ActionDirective.onSchemaShowField, async () => {
-            // this.page.notifyActionBlockSync(this);
             var fs = this.schema.fields.filter(c => c.text && !SysHiddenFieldTypes.includes(c.type)).map(g => this.schema.createViewField(g));
             var oss = this.fields.map(f => f.clone()).filter(g => g.type ? true : false);
             fs.each(f => {
@@ -249,6 +249,10 @@ export class DataGridViewOperator {
                     oss.push(f)
             });
             await this.changeFields(this.fields, oss);
+            if (oss.some(s => s?.field?.type == FieldType.relation || s?.field?.type == FieldType.rollup)) {
+                await this.loadRelationSchemas();
+                await this.loadRelationDatas();
+            }
             await this.createItem();
             this.forceManualUpdate();
         });
@@ -678,7 +682,7 @@ export class DataGridViewOperator {
     }
     async onOpenDataSource(this: DataGridView, event: Rect) {
         var g = await useDataSourceView({ roundArea: event }, {
-            page:this.page,
+            page: this.page,
             tableId: this.schema.id,
             viewId: this.syncBlockId,
             selectView: true,

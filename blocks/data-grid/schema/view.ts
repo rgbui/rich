@@ -1,7 +1,7 @@
 import { IconArguments } from "../../../extensions/icon/declare";
 import { util } from "../../../util/util";
 import { TableSchema } from "./meta";
-import { FieldType, SysFieldTypes } from "./type";
+import { FieldType} from "./type";
 export class ViewField {
     id: string;
     icon?: IconArguments;
@@ -53,9 +53,6 @@ export class ViewField {
         return new ViewField(this.get(), this.schema)
     }
     getValue(row) {
-        // if (SysFieldTypes.includes(this.field.type)) {
-        //     return row[FieldType[this.field.type]];
-        // }
         if (this?.field?.name) return row[this.field.name];
     }
     isSame(vf: ViewField) {

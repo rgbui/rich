@@ -73,7 +73,15 @@ export interface FieldConfig {
     relationDouble?: boolean,
     relationFieldText?: string,
     relationFieldId?: string,
-    rollupTableId?: string,
+    /**
+     * 当打开relation选择框时，里面的数据显示属性是以fieldProps为准的
+     */
+    fieldProps?:string[];
+    /**
+     * 废弃
+     */
+    // rollupTableId?: string,
+    rollupRelationFieldId?: string,
     rollupFieldId?: string,
     rollupStatistic?: string,
     formula?: { formula: string, jsCode: string, exp: any, jx?: any },

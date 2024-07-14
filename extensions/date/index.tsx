@@ -36,14 +36,17 @@ export class DatePicker extends EventsComponent {
         this.forceUpdate(() => {
             this.updateInput();
             this.emit('update')
-            if (this.inputTime) {
-                this.inputTime.focus();
-                this.inputTime.setSelectionRange(this.inputTime.value.length, this.inputTime.value.length)
-            }
-            else if (this.inputDate) {
-                this.inputDate.focus();
-                this.inputDate.setSelectionRange(this.inputDate.value.length, this.inputDate.value.length)
-            }
+            setTimeout(() => {
+                if (this.inputTime) {
+                    this.inputTime.focus();
+                    this.inputTime.setSelectionRange(this.inputTime.value.length, this.inputTime.value.length)
+                }
+                else if (this.inputDate) {
+                    this.inputDate.focus();
+                    this.inputDate.setSelectionRange(this.inputDate.value.length, this.inputDate.value.length)
+                }
+            }, 50);
+
         })
     }
     private renderDays(): JSX.Element {
@@ -219,8 +222,8 @@ export class DatePicker extends EventsComponent {
                 </div>
                 <div className='shy-date-picker-head-operators'>
                     <a className="padding-w-5 f-14 gap-r-3" style={{ width: 30 }} onClick={e => this.onToday()}><S>今天</S></a>
-                    <ToolTip overlay={lst('上个月')}><a onClick={e => this.onReduce(e)}><Icon size={14}  icon={chevronLeft}></Icon></a></ToolTip>
-                    <ToolTip overlay={lst('下个月')}><a onClick={e => this.onAdd(e)}><Icon size={14}  icon={chevronRight}></Icon></a></ToolTip>
+                    <ToolTip overlay={lst('上个月')}><a onClick={e => this.onReduce(e)}><Icon size={14} icon={chevronLeft}></Icon></a></ToolTip>
+                    <ToolTip overlay={lst('下个月')}><a onClick={e => this.onAdd(e)}><Icon size={14} icon={chevronRight}></Icon></a></ToolTip>
                 </div>
             </div>
             {this.renderDays()}
@@ -231,9 +234,9 @@ export class DatePicker extends EventsComponent {
             </div>
         </div>
     }
-    private onClose() {
-        this.emit('close');
-    }
+    // private onClose() {
+    //     this.emit('close');
+    // }
 }
 
 export interface DatePicker {

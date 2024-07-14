@@ -255,7 +255,10 @@ export class Page$ViewEvent {
         actions?: () => Promise<void>) {
         await this.onAction(ActionDirective.onPageTurnLayout, async () => {
             await this.turnLayout(layoutType);
-            await channel.air('/page/update/info', { id: this.pageInfo?.id, pageInfo: { pageType: this.pageLayout.type } });
+            await channel.air('/page/update/info', {
+                id: this.pageInfo?.id,
+                pageInfo: { pageType: this.pageLayout.type }
+            });
             this.emit(PageDirective.changePageLayout);
             if (typeof actions == 'function') await actions();
         }, { immediate: true, disabledJoinHistory: true });

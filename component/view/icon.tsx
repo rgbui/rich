@@ -19,147 +19,155 @@ export function Icon(props: {
     style?: CSSProperties,
     wrapper?: boolean
 }) {
-    if (typeof props.icon == 'undefined' || !props.icon) {
-        return <i></i>
-    }
-    var classList: string[] = ['shy-icon'];
-    if (typeof props.icon == 'string' && props.icon.indexOf(':')) {
-        var [name, prefix] = props.icon.split(':');
-        classList.push(prefix);
-        classList.push(prefix + '-' + name);
-    }
-    if (Array.isArray(props.className)) {
-        classList.addRange(props.className);
-    }
-    else if (typeof props.className == 'string') classList.addRange(props.className.split(/ /g))
-    var style: CSSProperties = {};
-    if (typeof props.rotate == 'number') {
-        style.transform = `rotate(${props.rotate}deg)`
-    }
-    if (typeof props.icon == 'string') {
-        var fs = props.fontSize || props.size;
-        if (fs == 'none') fs = undefined;
-        Object.assign(style, {
-            fontSize: fs ? (typeof fs == 'number' ? fs : fs) : undefined,
-            lineHeight: fs ? (fs + 'px') : undefined,
-            width: props.size == 'none' ? undefined : (props.size) || 20,
-            height: props.size == 'none' ? undefined : (props.size) || 20,
-            ...(props.style || {})
-        });
-        return <i className={classList.join(" ")}
-            onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
-            onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }}
-            style={style}></i>
-    }
-    else if (typeof props.icon == 'function') {
-        Object.assign(style, {
-            width: props.size == 'none' ? undefined : (props.size) || 20,
-            height: props.size == 'none' ? undefined : (props.size) || 20
-            , ...(props.style || {})
-        })
-        if (props.wrapper) {
-            return <div className={classList.join(" ")}
+    try {
+        if (typeof props.icon == 'undefined' || !props.icon) {
+            return <i></i>
+        }
+        var classList: string[] = ['shy-icon'];
+        if (typeof props.icon == 'string' && props.icon.indexOf(':')) {
+            var [name, prefix] = props.icon.split(':');
+            classList.push(prefix);
+            classList.push(prefix + '-' + name);
+        }
+        if (Array.isArray(props.className)) {
+            classList.addRange(props.className);
+        }
+        else if (typeof props.className == 'string') classList.addRange(props.className.split(/ /g))
+        var style: CSSProperties = {};
+        if (typeof props.rotate == 'number') {
+            style.transform = `rotate(${props.rotate}deg)`
+        }
+        if (typeof props.icon == 'string') {
+            var fs = props.fontSize || props.size;
+            if (fs == 'none') fs = undefined;
+            Object.assign(style, {
+                fontSize: fs ? (typeof fs == 'number' ? fs : fs) : undefined,
+                lineHeight: fs ? (fs + 'px') : undefined,
+                width: props.size == 'none' ? undefined : (props.size) || 20,
+                height: props.size == 'none' ? undefined : (props.size) || 20,
+                ...(props.style || {})
+            });
+            return <i className={classList.join(" ")}
                 onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
                 onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }}
-                style={style}>
-                <props.icon style={{ width: '100%', height: '100%' }}></props.icon>
-            </div>
+                style={style}></i>
+        }
+        else if (typeof props.icon == 'function') {
+            Object.assign(style, {
+                width: props.size == 'none' ? undefined : (props.size) || 20,
+                height: props.size == 'none' ? undefined : (props.size) || 20
+                , ...(props.style || {})
+            })
+            if (props.wrapper) {
+                return <div className={classList.join(" ")}
+                    onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
+                    onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }}
+                    style={style}>
+                    <props.icon style={{ width: '100%', height: '100%' }}></props.icon>
+                </div>
+            }
+            else {
+                classList.push('shy-icon-inner-svg')
+                return <props.icon className={classList.join(" ")}
+                    onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
+                    onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }}
+                    style={style}></props.icon>
+            }
+        }
+        else if (typeof props.icon == 'object' && (props.icon as IconArguments).name) {
+            var pc = props.icon as IconArguments;
+            if (typeof pc.rotate == 'number') {
+                style.transform = `rotate(${pc.rotate}deg)`
+            }
+            switch (pc.name) {
+                case 'font-awesome':
+                    var color = pc.color || 'currentColor';
+                    if (color == 'inherit') color = 'currentColor';
+                    if (props.fontColorInherit) color = 'currentColor';
+                    Object.assign(style, {
+                        color: color,
+                        fontSize: props.size == 'none' ? undefined : props.size,
+                        lineHeight: props.size == 'none' ? undefined : props.size + 'px',
+                        width: props.size == 'none' ? undefined : (props.size) || 20,
+                        height: props.size == 'none' ? undefined : (props.size) || 20,
+                        ...(props.style || {})
+                    });
+                    return <span className={classList.join(" ")} style={style} onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
+                        onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }}>
+                        <i className={'fa fa-' + pc.code}></i>
+                    </span>
+                case 'bytedance-icon':
+                case 'byte':
+                    Object.assign(style, {
+                        // color: pc.color || 'currentColor',
+                        // fontSize: props.size == 'none' ? undefined : props.size,
+                        // lineHeight: props.size == 'none' ? undefined : props.size + 'px',
+                        // width: props.size == 'none' ? undefined : (props.size) || 20,
+                        // height: props.size == 'none' ? undefined : (props.size) || 20,
+                        ...(props.style || {})
+                    });
+                    var color = pc.color || 'currentColor';
+                    if (color == 'inherit') color = 'currentColor';
+                    if (props.fontColorInherit) color = 'currentColor';
+                    classList.push('shy-icon-inner-svg');
+                    return <Suspense fallback={<span className={classList.join(" ")} style={style}>.</span>}>
+                        <LazyByteIcon
+                            className={classList}
+                            style={style}
+                            onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
+                            onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }} size={props.size == 'none' ? undefined : (props.size) || 20} name={pc.code} color={color}></LazyByteIcon>
+                    </Suspense>
+                case 'emoji':
+                    Object.assign(style, {
+                        color: '#000',
+                        fill: '#000',
+                        fontSize: props.size == 'none' ? undefined : props.size,
+                        lineHeight: props.size == 'none' ? undefined : props.size + 'px',
+                        width: props.size == 'none' ? undefined : (props.size) || 20,
+                        height: props.size == 'none' ? undefined : (props.size) || 20
+                        , ...(props.style || {})
+                    });
+                    classList.push('ef');
+                    return <span onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
+                        onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }} dangerouslySetInnerHTML={{ __html: getEmoji(pc.code) }} className={classList.join(" ")} style={style}>
+                    </span>
+                    break;
+                case 'image':
+                case 'link':
+                    Object.assign(style, {
+                        width: props.size == 'none' ? undefined : (props.size) || 20,
+                        height: props.size == 'none' ? undefined : (props.size) || 20
+                        , ...(props.style || {})
+                    });
+                    classList.push('shy-icon-inner-img')
+                    return <img onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
+                        onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }} src={pc.url} className={classList.join(" ")} style={style} />
+                case 'none':
+                    Object.assign(style, {
+                        width: props.size == 'none' ? undefined : (props.size) || 20,
+                        height: props.size == 'none' ? undefined : (props.size) || 20
+                        , ...(props.style || {})
+                    });
+                    classList.push('shy-icon-inner-svg')
+                    return <PageSvg style={style}></PageSvg>
+            }
         }
         else {
-            classList.push('shy-icon-inner-svg')
-            return <props.icon className={classList.join(" ")}
-                onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
-                onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }}
-                style={style}></props.icon>
+            Object.assign(style, {
+                width: props.size == 'none' ? undefined : (props.size) || 20,
+                height: props.size == 'none' ? undefined : (props.size) || 20
+                , ...(props.style || {})
+            })
+            return <span onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
+                onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }} className={classList.join(" ")} style={style}>{props.icon}</span>
         }
     }
-    else if (typeof props.icon == 'object' && (props.icon as IconArguments).name) {
-        var pc = props.icon as IconArguments;
-        if (typeof pc.rotate == 'number') {
-            style.transform = `rotate(${pc.rotate}deg)`
-        }
-        switch (pc.name) {
-            case 'font-awesome':
-                var color = pc.color || 'currentColor';
-                if (color == 'inherit') color = 'currentColor';
-                if (props.fontColorInherit) color = 'currentColor';
-                Object.assign(style, {
-                    color: color,
-                    fontSize: props.size == 'none' ? undefined : props.size,
-                    lineHeight: props.size == 'none' ? undefined : props.size + 'px',
-                    width: props.size == 'none' ? undefined : (props.size) || 20,
-                    height: props.size == 'none' ? undefined : (props.size) || 20,
-                    ...(props.style || {})
-                });
-                return <span className={classList.join(" ")} style={style} onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
-                    onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }}>
-                    <i className={'fa fa-' + pc.code}></i>
-                </span>
-            case 'bytedance-icon':
-            case 'byte':
-                Object.assign(style, {
-                    // color: pc.color || 'currentColor',
-                    // fontSize: props.size == 'none' ? undefined : props.size,
-                    // lineHeight: props.size == 'none' ? undefined : props.size + 'px',
-                    // width: props.size == 'none' ? undefined : (props.size) || 20,
-                    // height: props.size == 'none' ? undefined : (props.size) || 20,
-                    ...(props.style || {})
-                });
-                var color = pc.color || 'currentColor';
-                if (color == 'inherit') color = 'currentColor';
-                if (props.fontColorInherit) color = 'currentColor';
-                classList.push('shy-icon-inner-svg');
-                return <Suspense fallback={<span className={classList.join(" ")} style={style}>.</span>}>
-                    <LazyByteIcon
-                        className={classList}
-                        style={style}
-                        onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
-                        onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }} size={props.size == 'none' ? undefined : (props.size) || 20} name={pc.code} color={color}></LazyByteIcon>
-                </Suspense>
-            case 'emoji':
-                Object.assign(style, {
-                    color: '#000',
-                    fill: '#000',
-                    fontSize: props.size == 'none' ? undefined : props.size,
-                    lineHeight: props.size == 'none' ? undefined : props.size + 'px',
-                    width: props.size == 'none' ? undefined : (props.size) || 20,
-                    height: props.size == 'none' ? undefined : (props.size) || 20
-                    , ...(props.style || {})
-                });
-                classList.push('ef');
-                return <span onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
-                    onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }} dangerouslySetInnerHTML={{ __html: getEmoji(pc.code) }} className={classList.join(" ")} style={style}>
-                </span>
-                break;
-            case 'image':
-            case 'link':
-                Object.assign(style, {
-                    width: props.size == 'none' ? undefined : (props.size) || 20,
-                    height: props.size == 'none' ? undefined : (props.size) || 20
-                    , ...(props.style || {})
-                });
-                classList.push('shy-icon-inner-img')
-                return <img onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
-                    onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }} src={pc.url} className={classList.join(" ")} style={style} />
-            case 'none':
-                Object.assign(style, {
-                    width: props.size == 'none' ? undefined : (props.size) || 20,
-                    height: props.size == 'none' ? undefined : (props.size) || 20
-                    , ...(props.style || {})
-                });
-                classList.push('shy-icon-inner-svg')
-                return <PageSvg style={style}></PageSvg>
-        }
+    catch (ex) {
+        console.error('icon error', ex);
+        console.error('icon props', props)
+        return <></>
     }
-    else {
-        Object.assign(style, {
-            width: props.size == 'none' ? undefined : (props.size) || 20,
-            height: props.size == 'none' ? undefined : (props.size) || 20
-            , ...(props.style || {})
-        })
-        return <span onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
-            onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }} className={classList.join(" ")} style={style}>{props.icon}</span>
-    }
+
 }
 
 export function IconButton(props: {

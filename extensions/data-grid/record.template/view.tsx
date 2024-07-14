@@ -161,7 +161,7 @@ class TabelSchemaFormDrop extends EventsComponent {
         if (it.value != view.text && it.value) {
             data['text'] = it.value;
         }
-        if (!lodash.isEqual(it.icon, view.icon) && it.icon) {
+        if (!lodash.isEqual(it.icon, view.icon) && it.icon&&typeof it.icon!='function') {
             data['icon'] = it.icon;
         }
         if (Object.keys(data).length > 0) {

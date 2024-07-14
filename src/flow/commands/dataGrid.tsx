@@ -29,6 +29,7 @@ import { Page } from "../../page";
 import { SchemaFilter } from "../../../blocks/data-grid/schema/filter";
 import { useCustomTableFilter } from "../../../extensions/data-grid/view.config/filter/custom";
 import { useTableStoreOption } from "../../../extensions/data-grid/option/option";
+import { UserBasic } from "../../../types/user";
 
 @flow('/addRecords')
 export class AddRecordsCommand extends FlowCommand {
@@ -162,7 +163,7 @@ function renderFieldInput(view: AddRecordsCommandView | EditRecordsCommandView, 
             return <InputNumber value={field.value} onChange={e => { field.value = e; this.forceUpdate() }}></InputNumber>
         case FieldType.user:
             var openUser = async (e: React.MouseEvent) => {
-                var ru = await useUserPicker({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) }, this.command.flow.ws, { ignoreUserAll: true });
+                var ru = await useUserPicker({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) }, this.command.flow.ws, { ignoreUserAll: true })  as UserBasic;
                 if (ru) {
                     field.value = ru.id;
                     view.forceUpdate();

@@ -7,33 +7,73 @@ import { PopoverSingleton } from "../../component/popover/popover";
 import { PopoverPosition } from "../../component/popover/position";
 import { Avatar } from "../../component/view/avator/face";
 import { KeyboardCode } from "../../src/common/keys";
-import { Divider } from "../../component/view/grid";
 import { Input } from "../../component/view/input";
 import { Spin } from "../../component/view/spin";
 import { LinkWs } from "../../src/page/declare";
 import { lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
+import { CloseSvg } from "../../component/svgs";
+import { Icon } from "../../component/view/icon";
 
 export class UserPicker extends EventsComponent {
+    onFocusInput(delay?: boolean) {
+        if (this.input) {
+            if (delay) {
+                setTimeout(() => {
+                    this.input.focus();
+                }, 100);
+            }
+            else {
+                this.input.focus();
+            }
+        }
+    }
+    input: Input;
     render() {
-        return <div className="padding-h-10 min-w-300" ref={e => this.el = e}>
-            <div className="gap-w-14">
-                <Input value={this.text} placeholder={lst('搜索用户')}
-                    onEnter={e => this.onEnter()}
-                    onKeydown={e => this.onKeydown(e)}
-                    onChange={e => { this.text = e; this.syncSearch() }}
-                ></Input>
+        return <div
+            className="padding-b-10 min-w-300"
+            ref={e => this.el = e}>
+            <div className="padding-w-10 padding-h-5" style={{
+                backgroundColor: 'rgba(242, 241, 238, 0.6)',
+                boxShadow: 'rgba(55, 53, 47, 0.16) 0px -1px inset'
+            }}>
+                {this.isMultiple && <div className="flex flex-wrap">
+                    {this.users.map((u, i) => {
+                        return <span key={i} onMouseDown={e => {
+                            this.users.splice(i, 1);
+                            this.forceUpdate(() => {
+                                this.onFocusInput(true);
+                            });
+                        }} className="flex-fixed flex padding-w-3 gap-r-5 round item-hover-light-focus">
+                            <span className="flex-auto"><Avatar size={24} userid={u.id}></Avatar></span>
+                            <span className="flex-fixed remark gap-l-3 cursor round item-hover size-20 flex-center "><Icon size={12} icon={CloseSvg}></Icon></span>
+                        </span>
+                    })}
+                    <div className="flex-auto min-60 ">
+                        <Input ref={e => this.input = e} focusSelectionAll noborder value={this.text} placeholder={lst('搜索用户')}
+                            onEnter={e => this.onEnter()}
+                            onKeydown={e => this.onKeydown(e)}
+                            onChange={e => { this.text = e; this.syncSearch() }}
+                        ></Input>
+                    </div>
+                </div>}
+                {!this.isMultiple && <div>
+                    <Input ref={e => this.input = e} focusSelectionAll noborder value={this.text} placeholder={lst('搜索用户')}
+                        onEnter={e => this.onEnter()}
+                        onKeydown={e => this.onKeydown(e)}
+                        onChange={e => { this.text = e; this.syncSearch() }}
+                    ></Input>
+                </div>}
             </div>
-            <Divider></Divider>
             <div className="max-h-300 overflow-y">
                 {this.loading && <Spin></Spin>}
                 {!this.loading && this.links.map((link, i) => {
-                    return <div onMouseDown={e => this.onSelect(link)} className={"h-30 gap-h-5 padding-w-14 flex item-hover round cursor" + ((i) == this.selectIndex ? " item-hover-light-focus" : "")} key={link.id}>
+                    return <div onMouseDown={e => this.onSelect(link)} className={"h-30 gap-h-5 padding-w-10 flex item-hover round cursor" + ((i) == this.selectIndex ? " item-hover-light-focus" : "")} key={link.id}>
                         <Avatar size={24} showName userid={(link as any).id}></Avatar>
                         <span className="gap-l-10">{link.name}</span>
                     </div>
                 })}
-                {this.links.length == 0 && <a className="remark f-12 padding-w-14 h-30 flex"><S>没有搜索到</S></a>}
+                {this.links.length == 0 && <a className="remark f-12 padding-w-10 h-30 flex"><S>没有搜索到</S></a>}
             </div>
         </div>
     }
@@ -65,14 +105,29 @@ export class UserPicker extends EventsComponent {
         else if (event.code == KeyboardCode.Enter) {
             event.stopPropagation();
             event.preventDefault();
-            var link = this.links[this.selectIndex];
-            if (link) this.onSelect(link);
+            this.onEnter();
+        }
+        else if (event.code == KeyboardCode.Delete || event.code == KeyboardCode.Backspace) {
+            if (this.isMultiple) {
+                if (!this.text && this.users.length > 0) {
+                    this.users.pop();
+                    this.forceUpdate();
+                }
+                if (!this.text && this.users.length == 0) {
+                    this.emit('close');
+                }
+            } else {
+                if (!this.text) this.emit('close');
+            }
+        }
+        else if (event.code == KeyboardCode.Esc) {
+            this.emit('close');
         }
     }
     onEnter() {
         var u = this.links[this.selectIndex];
         if (u) {
-            this.emit('change', u);
+            this.onSelect(u);
         }
     }
     syncSearch = lodash.debounce(async () => {
@@ -95,16 +150,29 @@ export class UserPicker extends EventsComponent {
         else this.links = lodash.cloneDeep(this.defaultList);
         this.loading = false;
         this.forceUpdate();
-    }, 1000)
+    }, 500)
     defaultList: UserBasic[] = [];
     ws: LinkWs;
     options?: { ignoreUserAll?: boolean }
-    open(ws: LinkWs, options?: { ignoreUserAll?: boolean }) {
+    users: UserBasic[] = [];
+    isMultiple?: boolean;
+    async open(ws: LinkWs, options?: {
+        isMultiple?: boolean,
+        users?: string[], ignoreUserAll?: boolean
+    }) {
         this.ws = ws;
         this.options = options;
         this.loading = true;
+        this.users = [];
+        if (options.users) {
+            var us = await channel.get('/users/basic', { ids: options.users });
+            if (us.ok) {
+                this.users = us.data.list;
+            }
+        }
         this.text = '';
         if (this.inputEl) this.inputEl.updateValue('');
+        this.isMultiple = options.isMultiple;
         this.links = [];
         this.forceUpdate();
         this.load().then(g => {
@@ -116,7 +184,17 @@ export class UserPicker extends EventsComponent {
         })
     }
     onSelect(link: UserBasic) {
-        this.emit('change', link);
+        if (this.isMultiple) {
+            if (!this.users.some(s => s.id == link.id)) {
+                this.users.push(link);
+                this.forceUpdate(() => {
+                    this.onFocusInput(true);
+                });
+            }
+        }
+        else {
+            this.emit('change', link);
+        }
     }
     componentDidUpdate() {
         var el = this.el.querySelector('.item-hover-light-focus') as HTMLElement;
@@ -146,24 +224,34 @@ export class UserPicker extends EventsComponent {
     }
 }
 
-export async function useUserPicker(pos: PopoverPosition, ws: LinkWs, options?: { ignoreUserAll?: boolean }) {
+export async function useUserPicker(pos: PopoverPosition, ws: LinkWs, options?: {
+    isMultiple?: boolean,
+    users?: string[],
+    ignoreUserAll?: boolean
+}) {
     let popover = await PopoverSingleton(UserPicker, { mask: true });
     let fv = await popover.open(pos);
-    fv.open(ws, options);
-    return new Promise((resolve: (data: UserBasic) => void, reject) => {
+    fv.only('update', () => {
+        popover.updateLayout();
+    })
+    await fv.open(ws, options);
+    return new Promise((resolve: (data: UserBasic | UserBasic[]) => void, reject) => {
         fv.only('change', (value) => {
             popover.close();
             resolve(value);
         });
-        fv.only('update', () => {
-            popover.updateLayout();
-        })
         fv.only('close', () => {
             popover.close();
-            resolve(null);
+            if (options.isMultiple)
+                resolve(fv.users)
+            else
+                resolve(null);
         });
         popover.only('close', () => {
-            resolve(null)
+            if (options.isMultiple)
+                resolve(fv.users)
+            else
+                resolve(null)
         });
     })
 }

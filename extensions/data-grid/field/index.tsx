@@ -18,15 +18,15 @@ import { Switch } from "../../../component/view/switch";
 import { getEmoji } from "../../../net/element.type";
 import { DataGridView } from "../../../blocks/data-grid/view/base";
 import lodash from "lodash";
-import { useDataSourceView } from "../datasource";
-import { MenuItemType } from "../../../component/view/menu/declare";
+import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { lst } from "../../../i18n/store";
 import { S } from "../../../i18n/view";
 import { HelpText } from "../../../component/view/text";
 import { useFormula } from "../formula/lazy";
-import './style.less';
 import { useFilterInput } from "../../../component/view/input/filter";
 import { IconArguments } from "../../icon/declare";
+import './style.less';
+import { util } from "../../../util/util";
 
 export class TableFieldView extends EventsComponent {
     onSave() {
@@ -39,8 +39,13 @@ export class TableFieldView extends EventsComponent {
     }
     get() {
         var self = this;
+        if (self.type == FieldType.relation && self.config.relationDouble) {
+            if (!self.config.relationFieldText) {
+                self.config.relationFieldText = self.dataGrid.schema.text;
+            }
+        }
         return {
-            text: self.text,
+            text: self.text || self.maybeFieldText,
             type: self.type,
             icon: self.icon,
             config: lodash.cloneDeep(self.config)
@@ -49,12 +54,29 @@ export class TableFieldView extends EventsComponent {
     async openSelectRelationTable(event: React.MouseEvent) {
         event.stopPropagation();
         var rect = Rect.fromEle(event.currentTarget as HTMLElement);
-        var r = await useDataSourceView({ roundArea: rect }, {
-            page: this.dataGrid.page,
-            tableId: this.config.relationTableId,
-            width: rect.width
+        var items: MenuItem[] = [];
+        items.push({ text: lst('选择关联的数据表'), type: MenuItemType.text });
+        var rs: MenuItem[] = [];
+        this.relationSchemas.forEach(g => {
+            rs.push({
+                text: g.text,
+                icon: g.icon || { name: 'byte', code: 'table' },
+                value: g.id,
+                checkLabel: g.id == this.config.relationTableId,
+                remark: util.showTime(g.createDate)
+            })
         });
-        if (r) this.onChangeConfig({ relationTableId: r as string });
+        items.push({
+            type: MenuItemType.container,
+            containerHeight: 300,
+            childs: rs
+        })
+        var r = await useSelectMenuItem({ roundArea: rect }, items);
+        if (r) {
+            var sch = this.relationSchemas.find(g => g.id == r.item.value)
+            this.maybeFieldText = sch.text;
+            await this.onChangeConfig({ relationTableId: r.item.value as string });
+        }
     }
     async openSelectType(event: React.MouseEvent) {
         event.stopPropagation();
@@ -80,6 +102,7 @@ export class TableFieldView extends EventsComponent {
         }
     }
     input: Input;
+    maybeFieldText: string = '';
     render() {
         var self = this;
         var ms = getMenus();
@@ -98,7 +121,7 @@ export class TableFieldView extends EventsComponent {
                         <Input focusSelectionAll onEnter={e => {
                             this.text = e;
                             this.onSave()
-                        }} placeholder={lst('字段名称')}
+                        }} placeholder={this.maybeFieldText || lst('字段名称')}
                             ref={e => this.input = e}
                             onChange={e => this.text = e}
                             value={this.text}></Input>
@@ -143,7 +166,7 @@ export class TableFieldView extends EventsComponent {
     }
     renderRelation() {
         if (this.type != FieldType.relation) return <></>
-        var rt = this.relationDatas.find(g => g.id == this.config.relationTableId)
+        var rt = this.relationSchemas.find(g => g.id == this.config.relationTableId)
         return <>
             <div className="gap-h-5  h-28 gap-w-5 padding-w-5 flex round item-hover-light cursor" onClick={e => this.openSelectRelationTable(e)}>
                 <div className="flex-auto gap-b-5"><S>关联表格</S></div>
@@ -169,10 +192,12 @@ export class TableFieldView extends EventsComponent {
                 {this.config?.relationDouble && <div className="gap-h-5 gap-w-5 padding-w-5">
                     <div className="remark f-12"><S>创建关联字段</S></div>
                     <div className="h-26 cursor">
-                        <Input readonly={this.fieldId ? true : false} placeholder={this.dataGrid.schema?.text} value={this.config.relationFieldText} onChange={e => {
-                            this.config.relationFieldText = e;
-                            this.forceUpdate()
-                        }}></Input>
+                        <Input readonly={this.fieldId ? true : false}
+                            placeholder={this.dataGrid.schema?.text}
+                            value={this.config.relationFieldText} onChange={e => {
+                                this.config.relationFieldText = e;
+                                this.forceUpdate()
+                            }}></Input>
                     </div>
                 </div>}
 
@@ -183,30 +208,36 @@ export class TableFieldView extends EventsComponent {
         var self = this;
         if (this.type != FieldType.rollup) return <></>;
         var rs = this.dataGrid.schema.fields.findAll(g => g.type == FieldType.relation);
-        var ts = this.relationDatas.findAll(g => rs.some(r => r.config.relationTableId == g.id));
-        if (ts.length == 0) return <>
+        if (rs.length == 0) return <>
             <div className="flex-center gap-h-5 remark">
-                <S text="没有关联的表无法聚合统计">没有关联的数据表,无法搜索引用</S>
+                <S text="没有关联的表无法检索引用">没有关联的数据表,无法检索引用</S>
             </div>
         </>
-        async function selectRelationTable(event: React.MouseEvent) {
+        var relationField = rs.find(g => g.id == this.config.rollupRelationFieldId)
+        var rollTableSchema = this.relationSchemas.find(g => g.id == relationField?.config?.relationTableId);
+        async function selectRelationFields(event: React.MouseEvent) {
             var rect = Rect.fromEle(event.currentTarget as HTMLElement)
-            var r = await useSelectMenuItem({ roundArea: rect }, ts.map(r => {
+            var r = await useSelectMenuItem({ roundArea: rect }, rs.map(r => {
                 return {
-
+                    icon: GetFieldTypeSvg(r),
                     text: r.text,
                     value: r.id,
-                    checkLabel: r.id == self.config.rollupTableId
+                    checkLabel: r.id == self.config.rollupRelationFieldId
                 }
             }), {
                 width: rect.width,
             });
             if (r?.item) {
-                self.config.rollupTableId = r.item.value;
-                self.loadTypeDatas(true)
+                self.config.rollupRelationFieldId = r.item.value;
+                var re = self.dataGrid.schema.fields.find(g => g.id == r.item.value);
+                var sch = self.relationSchemas.find(g => g.id == re.config.relationTableId);
+                if (!(self.config.rollupFieldId && sch.fields.some(g => g.id == self.config.rollupFieldId))) {
+                    self.config.rollupFieldId = sch.fields.find(g => g.type == FieldType.title)?.id;
+                }
+                self.forceUpdate();
             }
         }
-        var vfs = getFilterRollupFields(self.rollTableSchema.visibleFields)
+        var vfs = getFilterRollupFields(rollTableSchema.visibleFields)
         async function selectField(event: React.MouseEvent) {
             var rect = Rect.fromEle(event.currentTarget as HTMLElement)
             var r = await useSelectMenuItem({ roundArea: rect }, vfs.map(r => {
@@ -221,11 +252,8 @@ export class TableFieldView extends EventsComponent {
             });
             if (r?.item) {
                 self.config.rollupFieldId = r.item.value;
-                var f = self.rollTableSchema.visibleFields.find(g => g.id == self.config.rollupFieldId);
-                if (f && ![FieldType.number, FieldType.autoIncrement].includes(f.type)) {
-                    self.config.rollupStatistic = '$count';
-                }
-                self.loadTypeDatas(true)
+                self.maybeFieldText = r.item.text;
+                self.forceUpdate();
             }
         }
         var f = vfs.find(g => g.id == self.config.rollupFieldId);
@@ -254,25 +282,24 @@ export class TableFieldView extends EventsComponent {
                 self.forceUpdate()
             }
         }
-        var tt = ts.find(g => g.id == this.config.rollupTableId)
         return <>
-            <div onClick={e => selectRelationTable(e)} className="gap-h-5  h-28 gap-w-5 padding-w-5 flex round item-hover-light cursor">
-                <div className="flex-auto "><S>关联数据表</S></div>
+            <div onClick={e => selectRelationFields(e)} className="gap-h-5  h-28 gap-w-5 padding-w-5 flex round item-hover-light cursor">
+                <div className="flex-auto "><S>关联字段</S></div>
                 <div
                     className="flex flex-fixed  remark">
-                    <span className="flex-center  size-24  flex-fix cursor  round "><Icon size={14} icon={tt?.icon || { name: 'byte', code: 'table' }}></Icon></span>
-                    <span className="flex-auto ">{tt?.text}</span>
+                    <span className="flex-center  size-24  flex-fix cursor  round "><Icon size={14} icon={GetFieldTypeSvg(relationField)}></Icon></span>
+                    <span className="flex-auto ">{relationField?.text}</span>
                     <span className="flex-fixed size-24 round  flex-center">
                         <Icon size={14} icon={ChevronDownSvg}></Icon>
                     </span>
                 </div>
             </div>
-            {self.rollTableSchema?.visibleFields && <>
+            {rollTableSchema?.visibleFields && <>
                 <div onClick={e => selectField(e)} className="gap-h-5  h-28 gap-w-5 padding-w-5 flex round item-hover-light cursor">
                     <label className="flex-auto "><S>字段</S></label>
                     <div className="flex remark flex-fixed ">
-                        <span className="flex-center  size-20  flex-fix cursor  round "> <Icon size={16} className={'text-1'} icon={GetFieldTypeSvg(self.rollTableSchema.visibleFields.find(g => g.id == this.config.rollupFieldId))}></Icon></span>
-                        <span className="flex-auto ">{self.rollTableSchema.visibleFields.find(g => g.id == this.config.rollupFieldId)?.text}</span>
+                        <span className="flex-center  size-20  flex-fix cursor  round "> <Icon size={16} className={'text-1'} icon={GetFieldTypeSvg(rollTableSchema.visibleFields.find(g => g.id == this.config.rollupFieldId))}></Icon></span>
+                        <span className="flex-auto ">{rollTableSchema.visibleFields.find(g => g.id == this.config.rollupFieldId)?.text}</span>
                         <span className="flex-fixed size-20 round  flex-center">
                             <Icon size={14} icon={ChevronDownSvg}></Icon>
                         </span>
@@ -329,70 +356,65 @@ export class TableFieldView extends EventsComponent {
     async changeType(type: FieldType) {
         if (this.type != type) {
             var m = getMenus();
-            var item = m.find(g => g.value == this.type);
-            var isAutoChangeText: boolean = false;
-            if (!this.text) isAutoChangeText = true;
-            else {
-                if (item.text == this.text) isAutoChangeText = true;
-            }
             this.type = type;
-            if (isAutoChangeText) {
-                var nt = m.find(g => g.value == type);
-                if (nt) {
-                    this.text = nt.text;
-                    if (this.input) this.input.updateValue(this.text);
-                }
-            }
+            var item = m.find(g => g.value == this.type);
+            this.maybeFieldText = item?.text;
             if (!this.fieldId) {
                 if (type == FieldType.relation) {
-                    this.config.isMultiple = true;
+                    if (lodash.isUndefined(this.config.isMultiple))
+                        this.config.isMultiple = true;
+                    if (!this.config.relationTableId) {
+                        this.config.relationTableId = this.relationSchemas.find(g => g.id != this.dataGrid.schema.id)?.id;
+                        this.maybeFieldText = this.relationSchemas.find(g => g.id != this.dataGrid.schema.id)?.text;
+                    }
+                    if (!this.config.relationTableId) {
+                        this.config.relationTableId = this.dataGrid.schema.id;
+                        this.maybeFieldText = this.dataGrid.schema.text;
+                    }
+                }
+                else if (type == FieldType.user) {
+                    if (lodash.isUndefined(this.config.isMultiple))
+                        this.config.isMultiple = false
+                }
+                else if (type == FieldType.file || type == FieldType.audio || type == FieldType.video || type == FieldType.image) {
+                    if (lodash.isUndefined(this.config.isMultiple))
+                        this.config.isMultiple = true;
+                }
+                else if (type == FieldType.rollup) {
+                    if (!this.config.rollupStatistic) {
+                        this.config.rollupStatistic = 'origin'
+                    }
+                    if (this.config.rollupRelationFieldId) {
+                        if (!this.dataGrid.schema.fields.some(s => s.type == FieldType.relation && s.id == this.config.rollupRelationFieldId)) {
+                            this.config.rollupRelationFieldId = undefined;
+                        }
+                    }
+                    if (!this.config.rollupRelationFieldId) {
+                        this.config.rollupRelationFieldId = this.dataGrid.schema.fields.find(g => g.type == FieldType.relation)?.id;
+                    }
+                    var rf = this.dataGrid.schema.fields.find(g => g.id == this.config.rollupRelationFieldId);
+                    var rt = this.relationSchemas.find(g => g.id == rf.config.relationTableId);
+                    if (rt && this.config.rollupFieldId && !rt.fields.some(c => c.id == this.config.rollupFieldId)) {
+                        this.config.rollupFieldId = undefined;
+                    }
+                    if (rt && !this.config.rollupFieldId) {
+                        this.config.rollupFieldId = rt.fields.find(g => g.type == FieldType.title)?.id;
+                        this.maybeFieldText = rt.fields.find(g => g.type == FieldType.title)?.text;
+                    }
                 }
             }
-            await this.loadTypeDatas();
             this.forceUpdate();
         }
     }
-    private relationDatas: TableSchema[];
-    get rollTableSchema() {
-        if (Array.isArray(this.relationDatas)) return this.relationDatas.find(g => g.id == this.config.rollupTableId);
-    }
-    async loadTypeDatas(force?: boolean) {
-        var isUpdate: boolean = false;
-        if (this.type == FieldType.relation) {
-            if (!Array.isArray(this.relationDatas)) {
-                await TableSchema.onLoadAll()
-                this.relationDatas = TableSchema.getSchemas(this.dataGrid?.page?.ws?.id)
-                isUpdate = true;
-            }
-        }
-        else if (this.type == FieldType.rollup) {
-            if (!Array.isArray(this.relationDatas)) {
-                await TableSchema.onLoadAll()
-                this.relationDatas = TableSchema.getSchemas(this.dataGrid?.page?.ws?.id)
-                isUpdate = true;
-            }
-        }
-        if (this.type == FieldType.rollup) {
-            var rs = this.dataGrid.schema.fields.findAll(g => g.type == FieldType.relation);
-            var ts = this.relationDatas.findAll(g => rs.some(r => r.config.relationTableId == g.id));
-            if (ts.length > 0) {
-                if (ts.some(tt => tt.id == this.config.rollupTableId) == false) {
-                    this.config.rollupTableId = ts[0].id;
-                    isUpdate = true;
-                }
-            }
-        }
-        if (force == true || isUpdate) {
-            this.forceUpdate()
-        }
-    }
+    private relationSchemas: TableSchema[] = [];
+
     async onSetEmoji(e: React.MouseEvent) {
         var r = await useOpenEmoji({ roundArea: Rect.fromEvent(e) });
         if (r) {
             await this.onChangeConfig({ emoji: r })
         }
     }
-    private error: string = '';
+
     private text: string = '';
     private icon: IconArguments;
     private type: FieldType;
@@ -408,9 +430,11 @@ export class TableFieldView extends EventsComponent {
         this.type = options.field?.type || FieldType.text;
         this.icon = options?.field?.icon || null;
         this.config = lodash.cloneDeep(options.field?.config || {});
-        this.relationDatas = null;
+        this.relationSchemas = [];
         this.dataGrid = options.dataGrid;
-        await this.loadTypeDatas();
+        await TableSchema.onLoadAll()
+        this.relationSchemas = TableSchema.getSchemas(this.dataGrid?.page?.ws?.id)
+        console.log(this.relationSchemas,'relationSchemas....');
         this.forceUpdate();
     }
     async onChangeConfig(config: Partial<FieldConfig>) {

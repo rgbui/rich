@@ -161,7 +161,7 @@ export class DataSourceView extends EventsComponent {
             if (item.name == 'name') {
                 var dr: Record<string, any> = {};
                 if (item.value != item.data.text) dr.text = item.value;
-                if (!lodash.isEqual(item.icon, item.data.icon)) dr.icon = item.icon;
+                if (typeof item.icon != 'function' && !lodash.isEqual(item.icon, item.data.icon)) dr.icon = item.icon;
                 if (Object.keys(dr).length > 0)
                     saveTable(item.data, dr);
             }
@@ -221,11 +221,11 @@ export class DataSourceView extends EventsComponent {
     createView: boolean = false;
     editTable: boolean = false;
     createTable: boolean = false;
-    page:Page;
+    page: Page;
     schemas: TableSchema[] = []; pos: PopoverPosition
     width: number;
     async open(option: {
-        page:Page,
+        page: Page,
         tableId?: string,
         viewId?: string,
         selectView?: boolean,
@@ -240,7 +240,7 @@ export class DataSourceView extends EventsComponent {
         this.currentViewId = option.viewId;
         this.editTable = option.editTable;
         this.createTable = option.createTable;
-        this.page=option.page
+        this.page = option.page
         this.pos = lodash.cloneDeep(pos);
         await TableSchema.onLoadAll()
         this.schemas = TableSchema.getSchemas(this.page.ws.id);
@@ -249,7 +249,8 @@ export class DataSourceView extends EventsComponent {
 }
 
 export async function useDataSourceView(pos: PopoverPosition,
-    option: {  page:Page,
+    option: {
+        page: Page,
         tableId?: string,
         viewId?: string,
         selectView?: boolean,

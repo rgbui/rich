@@ -4,7 +4,7 @@
  * 主要是json序列化日期，导致其数据类型丢失
  * 其它的数据类型暂无需特定的转换
  */
- export var GenreConsistency = {
+export var GenreConsistency = {
     parse(json: any) {
         if (Array.isArray(json)) {
             json.forEach(j => this.parse(j))
@@ -45,6 +45,10 @@
         }
         else if (typeof json == 'object') {
             for (let m in json) {
+                if (m.endsWith('<d>') || m.endsWith('<f>') || m.endsWith('<r>')) {
+                    //已经转换过了
+                    continue
+                }
                 if (json[m] instanceof Date) {
                     json[m + "<d>"] = json[m].getTime();
                     delete json[m];

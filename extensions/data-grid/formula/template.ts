@@ -5,6 +5,9 @@ import dayjs from "dayjs";
 import { util } from "../../../util/util";
 import { channel } from "../../../net/channel";
 
+
+DeclareTypes.registerStatic('prop', { __args: ['string'], __returnType: 'any' }, 'sys.prop($args1)')
+
 /**
  * 文本
  * 
@@ -104,7 +107,7 @@ DeclareTypes.registerType('date', 'isYesterday', 'bool', 'sys.isYesterday($this)
 DeclareTypes.registerType('date', 'isTomorrow', 'bool', 'sys.isTomorrow($this)');
 DeclareTypes.registerType('date', 'isLeapYear', 'bool', 'sys.isLeapYear($this)');
 DeclareTypes.registerType('date', 'timestamp', { __args: [], __returnType: 'int' }, '$this.getTime()');
-DeclareTypes.registerType('date', 'format', { __args: ['string'], __returnType: 'string' }, 'sys.toDate($this,$args1)');
+DeclareTypes.registerType('date', 'format', { __args: ['string'], __returnType: 'string' }, 'sys.dateFormat($this,$args1)');
 DeclareTypes.registerType('date', 'add', { __args: ['int', 'string'], __returnType: 'date' }, 'sys.dateAdd($this,$args1,$args2)');
 DeclareTypes.registerType('date', 'sub', { __args: ['int', 'string'], __returnType: 'date' }, 'sys.dateAdd($this,0-$args1,$args2)');
 DeclareTypes.registerType('date', 'diff', { __args: ['date', 'string'], __returnType: 'int' }, 'sys.dateDiff($this,$args1,$args2)');
@@ -187,7 +190,7 @@ DeclareTypes.registerStatic('_workspace', 'string', 'await sys.getCurrentWorkspa
 DeclareTypes.registerStatic('_workspace_id', 'string', 'await sys.getCurrentWorkspace("id")')
 
 
-export function getRegisterFuns(page: Page) {
+export function getRegisterFuns(page: Page): Record<string, (...args: any[]) => any> {
     return {
         replaceAll(str: string, oldStr: string, newStr: string) {
             if (typeof (str as any).replaceAll === 'function') return (str as any).replaceAll(oldStr, newStr);
@@ -239,6 +242,7 @@ export function getRegisterFuns(page: Page) {
             return util.timeToString((n || new Date).getTime() - d.getTime())
         },
         showTime(d: Date, n: Date) {
+            if (!d) return '';
             return util.showTime(d, n);
         },
         toPrice(number: number, unit?: string) {
@@ -291,6 +295,11 @@ export function getRegisterFuns(page: Page) {
             var year = date.getFullYear();
             // 如果年份能被4整除但不能被100整除，或者能被400整除，则是闰年
             return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+        },
+        dateFormat(date: Date, format: string) {
+            if (!date) return '';
+            var d = dayjs(date);
+            return d.format(format);
         },
         dateAdd(date: Date, num: number, unit?: string) {
             var d = dayjs(date);
@@ -349,9 +358,9 @@ export function getRegisterFuns(page: Page) {
             for (var i = 0; i < args.length; i += 2) {
                 if (args[i]) return args[i + 1];
             }
-            if (args.length % 2 == 1) 
+            if (args.length % 2 == 1)
                 return args[args.length - 1];
-            
+
         }
     }
 }

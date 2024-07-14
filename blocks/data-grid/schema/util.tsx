@@ -341,12 +341,18 @@ export function getFieldStatItems(type: FieldType) {
     var items: MenuItem[] = [
         { text: lst('无'), value: 'none' },
         { text: lst('总行数'), value: 'total' },
-        { text: lst('计数唯一值'), value: 'uniqueValue' },
+        { text: lst('统计唯一值数量'), value: 'uniqueValue' },
         { text: lst('未填写'), value: 'notFilled' },
         { text: lst('已填写'), value: 'filled' },
         { text: lst('未填写占比'), value: 'notFilledPercent' },
         { text: lst('已填写占比'), value: 'filledPercent' },
     ];
+    if ([FieldType.rollup, FieldType.formula].includes(type)) {
+        items = [
+            { text: lst('无'), value: 'none' },
+            { text: lst('总行数'), value: 'total' }
+        ]
+    }
     if ([FieldType.bool].includes(type)) {
         items = [
             { text: lst('无'), value: 'none' },
