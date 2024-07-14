@@ -90,7 +90,6 @@ export class OriginField extends Block {
         return true;
     }
     isCanEdit() {
-
         return this.dataGrid?.isCanEditRow(this.dataGridItem.dataRow);
     }
     async initialedLoad() {
@@ -115,7 +114,7 @@ export class OriginFileView<T extends OriginField> extends BlockView<T> {
                     e.stopPropagation();
                     this.block.onCellMousedown(e)
                 }}>
-                    <div className="remark f-12 gap-h-5 flex">
+                    <div className="remark f-12 gap-t-5 flex">
                         <Icon className={'flex-fixed'} size={13} icon={GetFieldTypeSvg(this.block.viewField.field)}></Icon>
                         <span className="flex-auto text-overflow  gap-l-5">{this.block.viewField?.text}</span>
                     </div>

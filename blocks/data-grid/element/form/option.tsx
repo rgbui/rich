@@ -142,7 +142,7 @@ class FieldTextView extends BlockView<FieldText>{
                     </div>
                 }
             }
-            return <div className={"flex " + (self.block.fromType == 'doc-add' ? "sy-form-field-input-value" : "  padding-h-5 round item-hover-light padding-w-10 " + (ops.length == 0 ? " h-20" : ""))} onMouseDown={e => self.mousedown(e)}>
+            return <div className={"flex " + (self.block.fromType == 'doc-add' ? "sy-form-field-input-value" : "   round item-hover-light padding-w-10 " + (ops.length == 0 ? " min-h-30" : "min-h-30"))} onMouseDown={e => self.mousedown(e)}>
                 {ops.map(op => {
                     return <span key={op.value} className="gap-r-10 padding-w-5 f-14 padding-h-2  l-16 round cursor" style={{ background: op?.fill||op?.color,color:op.textColor }}>{op.text}</span>
                 })}

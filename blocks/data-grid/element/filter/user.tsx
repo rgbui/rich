@@ -10,6 +10,7 @@ import { S } from "../../../../i18n/view";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import { lst } from "../../../../i18n/store";
 import { BlockDirective, BlockRenderRange } from "../../../../src/block/enum";
+import { UserBasic } from "../../../../types/user";
 
 @url('/field/filter/user')
 export class SearchUser extends OriginFilterField {
@@ -69,7 +70,7 @@ export class SearchUser extends OriginFilterField {
 @view('/field/filter/user')
 export class SearchTextView extends BlockView<SearchUser> {
     async mousedown(event: React.MouseEvent) {
-        var r = await useUserPicker({ roundArea: Rect.fromEvent(event) }, this.block.page.ws, {});
+        var r = await useUserPicker({ roundArea: Rect.fromEvent(event) }, this.block.page.ws, {})  as UserBasic;
         if (r) {
             this.block.onFilter(r.id)
         }

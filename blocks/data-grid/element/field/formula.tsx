@@ -8,7 +8,7 @@ import { cacFormulaValue } from "../../../../extensions/data-grid/formula/run";
 export class FieldFormula extends OriginField {
     cacValue;
     async didMounted() {
-        this.cacValue = await cacFormulaValue(this.page, this.dataGrid.schema, this.field, this.dataGridItem.dataRow);
+        this.cacValue = await cacFormulaValue(this.page, this.dataGrid, this.field, this.dataGridItem.dataRow);
         this.forceManualUpdate()
     }
 }

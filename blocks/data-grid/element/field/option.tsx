@@ -14,13 +14,13 @@ export class FieldOption extends OriginField {
     async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
         event.stopPropagation();
         if (this.checkEdit() === false) return;
-        var el=this.el.querySelector('.sy-field-option') as HTMLElement;
-        if(!el)el=this.el;
+        var el = this.el.querySelector('.sy-field-option') as HTMLElement;
+        if (!el) el = this.el;
         var rect = Rect.fromEle(el);
         var fn = async () => {
             var fc: FieldConfig = this.field.config || {};
             var op = await useTableStoreOption({
-                dist:0,
+                dist: 0,
                 roundArea: rect
             }, this.value,
                 {
@@ -29,7 +29,7 @@ export class FieldOption extends OriginField {
                     options: fc?.options || [],
                     changeOptions: async (ops) => {
                         await this.onUpdateCellFieldSchema({ config: { options: ops } })
-                        this.dataGrid.forceManualUpdate(false,true)
+                        this.dataGrid.forceManualUpdate(false, true)
                     }
                 }
             );
@@ -51,7 +51,7 @@ export class FieldTextView extends OriginFileView<FieldOption> {
         if (!Array.isArray(ops)) ops = [];
         return <div className='sy-field-option flex  flex-wrap' >
             {ops.map(op => {
-                return <span key={op.value} className="text-overflow  f-14 padding-h-2  l-16 " style={{ backgroundColor: op?.fill||op?.color,color:op.textColor }}>{op?.text || <i>&nbsp;</i>}</span>
+                return <span key={op.value} className="text-overflow  f-14 padding-h-2  l-16 " style={{ backgroundColor: op?.fill || op?.color, color: op.textColor }}>{op?.text || <i>&nbsp;</i>}</span>
             })}
         </div>
     }

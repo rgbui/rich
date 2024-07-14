@@ -8,6 +8,8 @@ import { Rect } from "../../../../src/common/vector/point";
 import { PageLayoutType, getPageIcon, getPageText } from "../../../../src/page/declare";
 import { FieldType } from "../../schema/type";
 import { OriginField, OriginFileView } from "./origin.field";
+import { FileSvg } from "../../../../component/svgs";
+import { channel } from "../../../../net/channel";
 
 @url('/field/relation')
 export class FieldRelation extends OriginField {
@@ -21,7 +23,10 @@ export class FieldRelation extends OriginField {
         }
         var g = this.dataGrid.relationDatas.get(this.field.config?.relationTableId);
         if (Array.isArray(g)) {
-            return g.findAll(g => vs.includes(g.id))
+            vs.forEach(v => {
+                var r = g.find(g => g.id == v);
+                if (r) rs.push(r)
+            })
         }
         return rs;
     }
@@ -37,11 +42,15 @@ export class FieldRelation extends OriginField {
                 relationDatas: this.relationList,
                 isMultiple: this.viewField.field.config?.isMultiple,
                 relationSchema: this.relationSchema,
-                page: this.page
+                page: this.page,
+                fieldProps: this.viewField.field?.config?.fieldProps,
+                changeFieldProps: this.dataGrid.isCanEditRow() ? async (props) => {
+                    await this.onUpdateCellFieldSchema({ 'config.fieldProps': props })
+                } : undefined
             });
             if (r) {
+                console.log('gggg', r);
                 var ids = r.map(r => r.id);
-                console.log('dddd', ids, lodash.cloneDeep(this.value), 'xxx');
                 await this.onUpdateCellValue(ids);
                 await this.dataGrid.loadRelationDatas();
                 this.forceManualUpdate();
@@ -58,12 +67,22 @@ export class FieldRelationView extends OriginFileView<FieldRelation> {
         var f = rs?.fields?.find(g => g.type == FieldType.title);
         if (!f) f = rs?.fields.find(g => g.type == FieldType.text);
         var icon = rs?.fields.find(g => g.type == FieldType.icon);
-        return <div className='sy-field-relation-items'>{this.block.relationList?.map(r => {
+        return <div className='sy-field-relation-items flex flex-wrap'>{this.block.relationList?.map(r => {
             var url = getElementUrl(ElementType.SchemaData, rs.id, r.id);
-            return <div key={r.id}><a className="item-hover round padding-w-3 padding-h-2 flex" href={url} onClick={e => e.preventDefault()}>
-                <span className="size-24 remark flex-center flex-inline">
-                    <Icon size={18} icon={getPageIcon({ pageType: PageLayoutType.doc, icon: r[icon.name] })}></Icon>
-                </span>
+            return <div key={r.id} className="flex"><a style={{ color: 'inherit' }}
+                className="item-hover round padding-w-3  flex"
+                onMouseDown={e => {
+                    e.stopPropagation()
+                    channel.act('/page/dialog', { elementUrl: url })
+                }}
+                href={"/r?url=" + encodeURIComponent(url)}
+                onClick={e => e.preventDefault()}>
+                {r[icon.name] && <span className="size-24 remark flex-center flex-inline">
+                    <Icon size={16} icon={getPageIcon({
+                        pageType: PageLayoutType.doc,
+                        icon: r[icon.name] || FileSvg
+                    })}></Icon>
+                </span>}
                 <span style={{ maxWidth: Math.max(this.block.viewField.colWidth - 50, 60) }} className="flex-auto  text-overflow">{getPageText({ text: r[f?.name] })}</span>
             </a></div>
         })}

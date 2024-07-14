@@ -11,12 +11,13 @@ import { BlockDirective, BlockRenderRange } from "../../../../src/block/enum";
 import { lst } from "../../../../i18n/store";
 import { Block } from "../../../../src/block";
 import { DateInput } from "../../../../extensions/date/input";
+import lodash from "lodash";
 
 @url('/form/date')
 class FieldText extends OriginFormField {
     get dateString() {
         var v = this.value;
-        if (!v) v = new Date();
+        if (!(v && v instanceof Date)) return '';
         var r = dayjs(v);
         return r.format(this.dateFormat);
     }
@@ -82,11 +83,10 @@ class FieldTextView extends BlockView<FieldText> {
         if (this.block.checkEdit() === false) return;
         var hover = this.block.el.querySelector('.item-hover-light');
         try {
-            if(hover)
-            hover.classList.add('item-hover-light-focus')
+            if (hover) hover.classList.add('item-hover-light-focus')
             var el = event.target as HTMLElement;
             var pickDate = await useDatePicker({ roundArea: Rect.from(el.getBoundingClientRect()) }, this.block.value);
-            if (pickDate) {
+            if (!lodash.isUndefined(pickDate)) {
                 this.block.onChange(pickDate);
             }
         }
@@ -94,15 +94,15 @@ class FieldTextView extends BlockView<FieldText> {
 
         }
         finally {
-            if(hover)
-            hover.classList.remove('item-hover-light-focus')
+            if (hover)
+                hover.classList.remove('item-hover-light-focus')
         }
     }
     renderView() {
         return <FieldView block={this.block}>
-            {this.block.fromType == 'doc-detail' && <div className={this.block.dateString ? "" : 'f-14 remark'}>{this.block.dateString}</div>}
+            {this.block.fromType == 'doc-detail' && <div className={"min-h-30" + (this.block.dateString ? "" : 'f-14 remark')}>{this.block.dateString}</div>}
             {this.block.fromType == 'doc-add' && <DateInput value={this.block.value} onChange={e => { this.block.onChange(e) }}></DateInput>}
-            {this.block.fromType == 'doc' && <div className="item-hover-light padding-w-10 rounc padding-h-2 flex text" onMouseDown={e => this.mousedown(e)}>{this.block.dateString}</div>}
+            {this.block.fromType == 'doc' && <div className="min-h-30 item-hover-light padding-w-10 round  flex  text" onMouseDown={e => this.mousedown(e)}>{this.block.dateString}</div>}
         </FieldView>
     }
 }

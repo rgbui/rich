@@ -183,12 +183,15 @@ export class OriginFormField extends Block {
     }
     getVisibleHandleCursorPoint() {
         var point = super.getVisibleHandleCursorPoint();
-        if (this.fromType == 'doc-add') {
-            point = point.move(0, 10);
+        if (this.fromType == 'doc') {
+            point = point.move(0, 3);
         }
-        else {
-            point = point.move(0, 10);
-        }
+        // if (this.fromType == 'doc-add') {
+        //     point = point.move(0, 10);
+        // }
+        // else {
+        //     point = point.move(0, 10);
+        // }
         return point;
     }
     isCanEdit() {
@@ -206,8 +209,8 @@ export function FieldView(props: { block: OriginFormField, className?: string | 
     if (block.fromType !== 'doc-add') {
         return <div className={"sy-form-field-detail " + classList.join(' ')} style={block.visibleStyle}>
             <div className="gap-h-5 flex flex-top">
-                {props.block.hidePropTitle !== true && <div onMouseDown={e=>{
-                    if(block.isCanEdit())block.onContextmenu(e.nativeEvent)
+                {props.block.hidePropTitle !== true && <div onMouseDown={e => {
+                    if (block.isCanEdit()) block.onContextmenu(e.nativeEvent)
                 }} className="flex-fixed  h-30 w-120 flex text-1 f-14 item-hover round gap-r-10 cursor">
                     <span className="flex-fixed size-20 flex-center  gap-l-5"><Icon size={16} icon={GetFieldTypeSvg(block.field)}></Icon></span>
                     <span className="flex-auto l-30 h-30 text-overflow">{block.field.text}</span>

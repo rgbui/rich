@@ -2,7 +2,6 @@
 
 import React from "react";
 import { OriginField, OriginFileView } from "./origin.field";
-import { FieldRelation } from "./relation";
 import { url, view } from "../../../../src/block/factory/observable";
 import lodash from "lodash";
 import { util } from "../../../../util/util";
@@ -11,31 +10,31 @@ import { Field } from "../../schema/field";
 import { FieldType } from "../../schema/type";
 import { UserAvatars } from "../../../../component/view/avator/users";
 import { ResourceArguments } from "../../../../extensions/icon/declare";
-import { Tip } from "../../../../component/view/tooltip/tip";
 import { Icon } from "../../../../component/view/icon";
-import { DownloadSvg, FileSvg } from "../../../../component/svgs";
-import { autoImageUrl } from "../../../../net/element.type";
+import { FileSvg } from "../../../../component/svgs";
+import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { CheckBox } from "../../../../component/view/checkbox";
 import { GetFieldTypeSvg } from "../../schema/util";
+import { getPageIcon, PageLayoutType } from "../../../../src/page/declare";
+import { channel } from "../../../../net/channel";
+import { renderFieldElement } from "./origin.render";
 
 @url('/field/rollup')
 export class FieldRollup extends OriginField {
     get relationList() {
-        var gs = this.dataGrid.relationDatas.get(this.field.config?.rollupTableId) || [];
-        var item: FieldRelation = this.dataGridItem.childs.find(g => (g instanceof FieldRelation) && g.field.config.relationTableId == this.field.config?.rollupTableId) as any;
-        if (item) {
-            var vs: string[] = item.value;
-            if (!Array.isArray(vs)) vs = [];
-            if (vs.length == 0) return [];
-            if (!item.field.config?.isMultiple) {
-                vs = vs.slice(0, 1);
-            }
-            return gs.findAll(g => vs.includes(g.id));
+        var rf = this.dataGrid.schema.fields.find(g => g.id == this.field.config?.rollupRelationFieldId);
+        if (!rf) return []
+        var gs = this.dataGrid.relationDatas.get(rf.config?.relationTableId) || [];
+        var vs = this.dataGridItem.dataRow[rf.name] || [];
+        if (!rf.config?.isMultiple) {
+            vs = vs.slice(0, 1);
         }
-        return []
+        return gs.findAll(g => vs.includes(g.id));
     }
     get relationSchema() {
-        return this.dataGrid.relationSchemas.find(g => g.id == this.field.config?.rollupTableId)
+        var rf = this.dataGrid.schema.fields.find(g => g.id == this.field.config?.rollupRelationFieldId);
+        if (rf)
+            return this.dataGrid.relationSchemas.find(g => g.id == rf.config?.relationTableId)
     }
     async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
 
@@ -44,41 +43,82 @@ export class FieldRollup extends OriginField {
 
 @view('/field/rollup')
 export class FieldRollupView extends OriginFileView<FieldRollup> {
-    renderRefField(field: Field, values: any[]) {
+    renderRefField(field: Field, values: any[], list?: any[]) {
+        if (Array.isArray(values)) lodash.remove(values, v => lodash.isNull(v) || lodash.isUndefined(v) || v === '');
         switch (field.type) {
             case FieldType.createDate:
             case FieldType.modifyDate:
             case FieldType.date:
-                return <div>{values.map((c, i) => {
-                    return <div key={i}>{dayjs(c).format('YYYY-MM-DD')}</div>
+                var format = field?.config?.dateFormat || 'YYYY-MM-DD';
+                return <div className="flex flex-wrap">{values.map((c, i) => {
+                    return <div className="flex" key={i}>
+                        <span>{dayjs(c).format(format)}</span>
+                        <em className="gap-w-3">{i < values.length - 1 ? "," : ""}</em>
+                    </div>
                 })}</div>
                 break;
             case FieldType.autoIncrement:
             case FieldType.number:
-                return <div>{values.map((v, i) => {
-                    return <div key={i}>{v}</div>
-                })}</div>
+                var f = field?.config?.numberDisplay?.display || 'auto';
+                if (f == 'auto') {
+                    return <div className="flex" >{values.map((v, i) => {
+                        return <div className="flex" key={i}>
+                            <span>{renderFieldElement(field, v)}</span>
+                            <em className="gap-w-3">{i < values.length - 1 ? "," : ""}</em>
+                        </div>
+                    })}</div>
+                }
+                else {
+                    return <div>
+                        {values.map((v, i) => {
+                            return <div className="gap-h-5" key={i}>{renderFieldElement(field, v)}</div>
+                        })}
+                    </div>
+                }
             case FieldType.title:
+                return <div className="flex" >{list.map((v, i) => {
+                    return <div onMouseDown={e => {
+                        var eleUrl = getElementUrl(ElementType.SchemaData, this.block.relationSchema.id, v.id);
+                        channel.act('/page/dialog', { elementUrl: eleUrl });
+                    }} className="item-hover round padding-w-3  flex cursor" key={i}>
+                        {v.icon && <span className="size-24 remark flex-center flex-inline">
+                            <Icon size={16} icon={getPageIcon({
+                                pageType: PageLayoutType.doc,
+                                icon: v.icon || FileSvg
+                            })}></Icon>
+                        </span>}
+                        <span className="b-500" style={{
+                            textDecoration: 'underline',
+                            textDecorationColor: 'rgba(22, 22, 22, 0.2)',
+                            marginRight: i < list.length - 1 ? 5 : 0
+                        }}>{v.title}</span>
+                    </div>
+                })}</div>
+                break;
             case FieldType.text:
             case FieldType.phone:
             case FieldType.email:
             case FieldType.link:
-                return <div>{values.map((v, i) => {
-                    return <div key={i}>{v}</div>
+                return <div className="flex" >{values.map((v, i) => {
+                    return <div className="flex" key={i}>
+                        <span>{v}</span>
+                        <em className="gap-w-3">{i < values.length - 1 ? "," : ""}</em>
+                    </div>
                 })}</div>
                 break;
             case FieldType.option:
             case FieldType.options:
-                var ids = values.map(c => c.id).flat();
+                var ids = values.map(c => Array.isArray(c) ? c : (c ? [c] : [])).flat();
                 ids = lodash.uniq(ids);
                 var ops = field.config?.options;
                 return <span>{
                     ids.map((id, i) => {
                         var op = ops?.find(g => g.value == id);
                         if (!op) return <em key={i}></em>
-                        return <em key={i} className="round l-20 gap-r-5" style={{
-                            backgroundColor: op.fill,
-                            color: op.color || 'inherit',
+                        return <em key={i} className="text-overflow  padding-w-6 round f-14 padding-h-2  l-16 gap-r-3" style={{
+                            backgroundColor: op.fill || op.color,
+                            color: op.textColor || 'inherit',
+                            display: 'inline-block',
                         }}>{op.text}</em>
                     })
                 }</span>
@@ -86,29 +126,21 @@ export class FieldRollupView extends OriginFileView<FieldRollup> {
             case FieldType.modifyer:
             case FieldType.user:
             case FieldType.creater:
-                var userids = values.map(c => c.id).flat();
+                var userids = values.map(c => Array.isArray(c) ? c : (c ? [c] : [])).flat();
                 userids = lodash.uniq(userids);
                 return <UserAvatars users={userids}></UserAvatars>
-                break;
             case FieldType.image:
                 var images = values as ResourceArguments[];
-                return <div>{images.map((img, i) => {
-                    return <div className="sy-field-image-item" key={i}>
-                        <img className="round" src={autoImageUrl(img.url, 250)} />
-                    </div>
-                })}</div>
-                break;
+                images = images.map(c => Array.isArray(c) ? c : (c ? [c] : [])).flat();
+                return <div
+                    className={"sy-field-images" + (images.length > 1 && field?.config?.imageFormat?.display == 'thumb' ? " flex flex-wrap r-gap-r-10 r-gap-b-10" : " r-gap-h-10 r-gap-w-5")}
+                >{renderFieldElement(field, images)}</div>;
             case FieldType.audio:
             case FieldType.video:
             case FieldType.file:
                 var images = values as ResourceArguments[];
-                return <div>{images.map((img, i) => {
-                    return <div className={" padding-w-3 text-1 flex item-hover-light-focus round " + (i == images.length - 1 ? "" : "gap-b-5")} key={i}>
-                        <span className="flex-fixed size-16  flex-center gap-r-2"><Icon size={16} icon={FileSvg}></Icon></span>
-                        <span className="cursor text-overflow flex-auto" >{img.filename}</span>
-                        <Tip text={'下载文件'}><span onMouseDown={e => { e.stopPropagation(); util.downloadFile(img.url, img.filename) }} className="gap-l-5 visible size-16 flex-center item-hover round cursor flex-fixed"><Icon size={14} icon={DownloadSvg}></Icon></span></Tip>
-                    </div>
-                })}</div>
+                images = images.map(c => Array.isArray(c) ? c : (c ? [c] : [])).flat();
+                return renderFieldElement(field, images);
                 break;
             case FieldType.emoji:
                 return <div>{values.map((v, i) => {
@@ -142,13 +174,17 @@ export class FieldRollupView extends OriginFileView<FieldRollup> {
         var str: JSX.Element = <span></span>;
         var list = this.block.relationList;
         var field = this.block.relationSchema?.fields?.find(g => g.id == this.block.field.config?.rollupFieldId);
-        if (this.block.field.config?.rollupStatistic) {
+        if (this.block.field.config?.rollupStatistic&&field&&list) {
             switch (this.block.field.config?.rollupStatistic) {
                 case 'origin':
-                    str = <>{this.renderRefField(field, list.map(r => r[field.name]))}</>
+                    str = <>{this.renderRefField(field, list.map(r => r[field.name]), list)}</>
                     break;
                 case 'uniqueOrigin':
-                    str = <>{this.renderRefField(field, lodash.uniq(list.map(r => r[field.name])))}</>
+                    if (field.type == FieldType.title) {
+                        var rs = lodash.uniq(list.map(g => g.id));
+                        str = <>{this.renderRefField(field, rs.map(r => list.find(g => g.id == r)?.[field.name]), list.findAll(c => rs.includes(c.id)))}</>
+                    }
+                    else str = <>{this.renderRefField(field, lodash.uniq(list.map(r => r[field.name])))}</>
                     break;
                 case 'total':
                     str = <span>{list.length}</span>
