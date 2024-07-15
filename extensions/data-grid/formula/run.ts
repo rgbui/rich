@@ -42,6 +42,7 @@ return ${field.config.formula.jsCode}
                         var value = row[field.name];
                         var vs = Array.isArray(value) ? value : (value ? [value] : []);
                         var rs = (dataGrid.relationDatas.get(field.config?.relationTableId) || []).filter(g => vs.includes(g.id));
+                        
                         return rs.map(g => g.title);
                     }
                     else if (field.type == FieldType.rollup) {

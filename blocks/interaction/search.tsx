@@ -23,7 +23,9 @@ export class SearchWorkspace extends Block {
     @prop()
     align: 'left' | 'center' | 'right' = 'center';
     async didMounted(): Promise<void> {
-        document.addEventListener('mousedown', this.otherClick)
+        await this.onBlockReloadData(async () => {
+            document.addEventListener('mousedown', this.otherClick)
+        });
     }
     async didUnmounted(): Promise<void> {
 

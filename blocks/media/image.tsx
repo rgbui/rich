@@ -82,34 +82,36 @@ export class Image extends Block {
     }
     async didMounted() {
         try {
-            if (this.createSource == 'InputBlockSelector' && !this.link) {
-                var r = await useImagePicker({ roundArea: Rect.fromEle(this.el) });
-                if (r) {
-                    await this.onSaveImageSize(r, true);
-                }
-            }
-            if (this.initialData && this.initialData.file) {
-                this.speed = '0%';
-                this.view.forceUpdate();
-                var d = await channel.post('/ws/upload/file', {
-                    file: this.initialData.file,
-                    uploadProgress: (event) => {
-                        if (event.lengthComputable) {
-                            this.speed = `${util.byteToString(event.total)}  ${(100 * event.loaded / event.total).toFixed(2)}%`;
-                            this.forceManualUpdate();
-                        }
+            await this.onBlockReloadData(async () => {
+                if (this.createSource == 'InputBlockSelector' && !this.link) {
+                    var r = await useImagePicker({ roundArea: Rect.fromEle(this.el) });
+                    if (r) {
+                        await this.onSaveImageSize(r, true);
                     }
-                });
-                if (d.ok && d.data?.file?.url) {
-                    await this.onSaveImageSize(d.data?.file, true);
                 }
-            }
-            if (this.initialData && this.initialData.url) {
-                var d = await channel.post('/ws/download/url', { url: this.initialData.url });
-                if (d.ok && d.data?.file?.url) {
-                    await this.onSaveImageSize(d.data?.file, true);
+                if (this.initialData && this.initialData.file) {
+                    this.speed = '0%';
+                    this.view.forceUpdate();
+                    var d = await channel.post('/ws/upload/file', {
+                        file: this.initialData.file,
+                        uploadProgress: (event) => {
+                            if (event.lengthComputable) {
+                                this.speed = `${util.byteToString(event.total)}  ${(100 * event.loaded / event.total).toFixed(2)}%`;
+                                this.forceManualUpdate();
+                            }
+                        }
+                    });
+                    if (d.ok && d.data?.file?.url) {
+                        await this.onSaveImageSize(d.data?.file, true);
+                    }
                 }
-            }
+                if (this.initialData && this.initialData.url) {
+                    var d = await channel.post('/ws/download/url', { url: this.initialData.url });
+                    if (d.ok && d.data?.file?.url) {
+                        await this.onSaveImageSize(d.data?.file, true);
+                    }
+                }
+            })
         }
         catch (ex) {
             console.error(ex);

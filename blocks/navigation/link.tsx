@@ -36,9 +36,11 @@ export class Link extends Block {
         return false;
     }
     async didMounted() {
-        if (this.createSource == 'InputBlockSelector' && !this.getLink()) {
-            await this.onSelectPage({ roundArea: Rect.fromEle(this.el) })
-        }
+        await this.onBlockReloadData(async () => {
+            if (this.createSource == 'InputBlockSelector' && !this.getLink()) {
+                await this.onSelectPage({ roundArea: Rect.fromEle(this.el) })
+            }
+        })
     }
     /**
      * 为了兼容老的pageId，这里不能直接调用link

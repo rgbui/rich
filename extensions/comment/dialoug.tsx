@@ -16,12 +16,12 @@ export class CommentDialoug extends EventsComponent {
                     <div className="row-2" dangerouslySetInnerHTML={{ __html: this.resolvedHtml }}></div>
                 </div>
                 <div className="flex-fixed">
-                    <Button 
-                    onMouseDown={e => this.onResolve()} 
-                    ghost><S>已解决</S></Button>
+                    <Button
+                        onMouseDown={e => this.onResolve()}
+                        ghost><S>已解决</S></Button>
                 </div>
             </div>}
-            {this.elementUrl && <CommentListView
+            {this.elementUrl && <CommentListView autoFocus
                 ref={e => this.cv = e}
                 sort={'date'}
                 displayFormat={this.displayFormat}
@@ -29,7 +29,7 @@ export class CommentDialoug extends EventsComponent {
                 elementUrl={this.elementUrl}
                 ws={this.ws}
                 contentHeight={200}
-                onSend={()=>{
+                onSend={() => {
                     this.emit('update')
                 }}
             ></CommentListView>}
@@ -55,9 +55,12 @@ export class CommentDialoug extends EventsComponent {
         this.resolvedHtml = props.resolvedHtml;
         this.forceUpdate(() => {
             this.emit('update')
-            if (this.cv) {
-                this.cv.onFocusInput();
-            }
+            setTimeout(() => {
+                if (this.cv) {
+                    this.cv.onFocusInput();
+                }
+            }, 50);
+          
         });
     }
     getCount() {

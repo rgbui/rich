@@ -22,7 +22,9 @@ import { BlockDirective } from "../../src/block/enum";
 @url('/page/UpvotedOrShared')
 export class UpvotedOrShared extends Block {
     async didMounted() {
-        await this.loadEmojis();
+        await this.onBlockReloadData(async () => {
+            await this.loadEmojis();
+        });
     }
     async onGetContextMenus() {
         var rs = await super.onGetContextMenus();
@@ -57,7 +59,7 @@ export class UpvotedOrShared extends Block {
     userEmojis: Record<string, string[]> = {};
 }
 @view('/page/UpvotedOrShared')
-export class UpvotedOrSharedView extends BlockView<UpvotedOrShared>{
+export class UpvotedOrSharedView extends BlockView<UpvotedOrShared> {
     async onLike() {
         var elementUrl: string;
         if (this.block.page.formRowData) {

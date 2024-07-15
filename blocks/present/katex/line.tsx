@@ -23,7 +23,9 @@ export class KatexLine extends Block {
     katexContent = '';
     opened: boolean = false;
     async didMounted() {
-        await this.renderKatex();
+        await this.onBlockReloadData(async () => {
+            await this.renderKatex();
+        })
     }
     async renderKatex() {
         try {

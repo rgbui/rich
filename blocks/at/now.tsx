@@ -16,7 +16,9 @@ export class ShyNowDate extends Block {
     }
     time: number;
     async didMounted(): Promise<void> {
+        await this.onBlockReloadData(async () => {
         this.loadTime()
+        });
     }
     async didUnmounted() {
         if (this.time) {

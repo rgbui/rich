@@ -38,36 +38,38 @@ export class Audio extends Block {
         return this.__appearAnchors;
     }
     async didMounted() {
-        try {
-            if (this.createSource == 'InputBlockSelector'&&!this.src?.url) {
-                var r = await useAudioPicker({ roundArea: Rect.fromEle(this.el) });
-                if (r) {
-                    await this.onUpdateProps({ src: r }, { range: BlockRenderRange.self, merge: true });
-                }
-            }
-            if (this.initialData && this.initialData.file) {
-                var d = await channel.post('/ws/upload/file', {
-                    file: this.initialData.file, uploadProgress: (event) => {
-                        if (event.lengthComputable) {
-                            this.speed = `${util.byteToString(event.total)}${(100 * event.loaded / event.total).toFixed(2)}%`;
-                            this.forceManualUpdate();
-                        }
+        await this.onBlockReloadData(async () => {
+            try {
+                if (this.createSource == 'InputBlockSelector' && !this.src?.url) {
+                    var r = await useAudioPicker({ roundArea: Rect.fromEle(this.el) });
+                    if (r) {
+                        await this.onUpdateProps({ src: r }, { range: BlockRenderRange.self, merge: true });
                     }
-                });
-                if (d.ok && d.data?.file?.url) {
-                    await this.onUpdateProps({ src: { ...d.data?.file } }, { range: BlockRenderRange.self, merge: true });
+                }
+                if (this.initialData && this.initialData.file) {
+                    var d = await channel.post('/ws/upload/file', {
+                        file: this.initialData.file, uploadProgress: (event) => {
+                            if (event.lengthComputable) {
+                                this.speed = `${util.byteToString(event.total)}${(100 * event.loaded / event.total).toFixed(2)}%`;
+                                this.forceManualUpdate();
+                            }
+                        }
+                    });
+                    if (d.ok && d.data?.file?.url) {
+                        await this.onUpdateProps({ src: { ...d.data?.file } }, { range: BlockRenderRange.self, merge: true });
+                    }
+                }
+                if (this.initialData && this.initialData.url) {
+                    var d = await channel.post('/ws/download/url', { url: this.initialData.url });
+                    if (d.ok && d.data?.file?.url) {
+                        await this.onUpdateProps({ src: { ...d.data?.file, source: this.initialData.url } }, { range: BlockRenderRange.self, merge: true });
+                    }
                 }
             }
-            if (this.initialData && this.initialData.url) {
-                var d = await channel.post('/ws/download/url', { url: this.initialData.url });
-                if (d.ok && d.data?.file?.url) {
-                    await this.onUpdateProps({ src: { ...d.data?.file, source: this.initialData.url } }, { range: BlockRenderRange.self, merge: true });
-                }
+            catch (ex) {
+                console.error(ex);
             }
-        }
-        catch (ex) {
-            console.error(ex);
-        }
+        });
     }
     async getMd() {
         return `[${this.src?.filename || lst('音频')}](${this.src?.url})`;
@@ -102,7 +104,7 @@ export class Audio extends Block {
         var at = rs.findIndex(g => g.name == BlockDirective.comment);
         rs.splice(at, 0, ...items)
         at = rs.findIndex(g => g.name == 'color');
-        rs.splice(at,2);
+        rs.splice(at, 2);
         return rs;
     }
     async onClickContextMenu(item, event) {
@@ -130,7 +132,7 @@ export class Audio extends Block {
     }
 }
 @view('/audio')
-export class AudioView extends BlockView<Audio>{
+export class AudioView extends BlockView<Audio> {
     renderView() {
         return <div className='sy-block-audio' style={this.block.visibleStyle}>
             {this.block.src.name == 'none' && <div onMouseDown={e => this.block.addAudio({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) })} className='sy-block-audio-nofile'>
@@ -139,7 +141,7 @@ export class AudioView extends BlockView<Audio>{
                 {this.block.speed && <Remark>{this.block.speed}</Remark>}
             </div>}
             {this.block.src.name != 'none' && <div className='sy-block-audio-content'>
-                <audio  draggable={false} controls style={{ width: 'inherit', height: 'inherit' }} src={this.block.src.url}></audio>
+                <audio draggable={false} controls style={{ width: 'inherit', height: 'inherit' }} src={this.block.src.url}></audio>
             </div>}
             {this.renderComment()}
         </div>

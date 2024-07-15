@@ -25,7 +25,9 @@ import { SyncMessageUrl } from "../../net/sync.message";
 @url('/ref/links')
 export class RefLinks extends Block {
     async didMounted(): Promise<void> {
-        await this.loadList();
+        await this.onBlockReloadData(async () => {
+            await this.loadList();
+        })
     }
     @prop()
     expand: boolean = false;

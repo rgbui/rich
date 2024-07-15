@@ -29,6 +29,7 @@ export class CommentListView extends React.Component<{
     ws?: LinkWs,
     onChange?: (props: Record<string, any>) => void,
     contentHeight?: number,
+    autoFocus?:boolean,
     onSend?:()=>void
 }> {
     list: WsCommentType[] = [];
@@ -318,6 +319,9 @@ export class CommentListView extends React.Component<{
         if (typeof this.props.userid == 'string') this.userid = this.props.userid;
         if (typeof this.props.elementUrl == 'string') this.elementUrl = this.props.elementUrl;
         this.loadComment();
+        if(this.props.autoFocus){
+            this.onFocusInput()
+        }
     }
 }
 

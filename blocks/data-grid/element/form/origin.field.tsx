@@ -168,11 +168,8 @@ export class OriginFormField extends Block {
     }
     async onClickContextMenu(this: Block, item: MenuItem<BlockDirective | string>, event: MouseEvent) {
         if (item) {
-            switch (item.name) {
-                case 'hide':
-                    this.onDelete()
-                    break;
-            }
+            if (item.name == 'hide') await this.onDelete()
+            else await super.onClickContextMenu(item, event);
         }
     }
     checkEdit() {

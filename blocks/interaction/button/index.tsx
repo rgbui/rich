@@ -214,7 +214,9 @@ export class BlockButton extends Block {
         }
     }
     async didMounted() {
-        document.addEventListener('mousedown', this.otherClick, true)
+        await this.onBlockReloadData(async () => {
+            document.addEventListener('mousedown', this.otherClick, true)
+        })
     }
     async didUnmounted() {
         popoverLayer.clear(this);

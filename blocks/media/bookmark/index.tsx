@@ -30,20 +30,22 @@ export class Bookmark extends Block {
     bookmarkUrl: string = '';
     async didMounted() {
         if (!this.bookmarkInfo) {
-            if (this.initialData && this.initialData.url) {
-                await this.onLoadBookmarkByUrl(this.initialData.url, true);
-            }
-            else if (this.createSource == 'InputBlockSelector') {
-                if (this.bookmarkUrl) {
-                    await this.onLoadBookmarkByUrl(this.bookmarkUrl, true);
+            await this.onBlockReloadData(async () => {
+                if (this.initialData && this.initialData.url) {
+                    await this.onLoadBookmarkByUrl(this.initialData.url, true);
                 }
-                else {
-                    var r = await useOutSideUrlInput({ roundArea: Rect.fromEle(this.el) });
-                    if (r?.url) {
-                        await this.onLoadBookmarkByUrl(r.url, true);
+                else if (this.createSource == 'InputBlockSelector') {
+                    if (this.bookmarkUrl) {
+                        await this.onLoadBookmarkByUrl(this.bookmarkUrl, true);
+                    }
+                    else {
+                        var r = await useOutSideUrlInput({ roundArea: Rect.fromEle(this.el) });
+                        if (r?.url) {
+                            await this.onLoadBookmarkByUrl(r.url, true);
+                        }
                     }
                 }
-            }
+            });
         }
         else {
             var rect = Rect.fromEle(this.el);

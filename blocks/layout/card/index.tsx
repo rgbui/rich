@@ -27,9 +27,11 @@ import { useLinkPicker } from "../../../extensions/link/picker";
 @url('/card')
 export class PageCard extends Block {
     async didMounted(): Promise<void> {
-        if (this.blocks.childs.length == 0) {
-            this.initPageCard();
-        }
+        await this.onBlockReloadData(async () => {
+            if (this.blocks.childs.length == 0) {
+                this.initPageCard();
+            }
+        })
     }
     async initPageCard() {
         var newBlock = await BlockFactory.createBlock('/textspan',

@@ -57,20 +57,22 @@ export class Table extends Block {
         }
     }
     async didMounted() {
-        if (this.childs.length == 0) {
-            await this.page.onAction(ActionDirective.onErrorRepairDidMounte, async () => {
-                await this.updateProps({ cols: [{ width: COL_WIDTH }] }, BlockRenderRange.self);
-                await this.page.createBlock('/table/row',
-                    { blocks: { childs: [{ url: '/table/cell' }] } },
-                    this);
-                await this.page.createBlock('/table/row',
-                    { blocks: { childs: [{ url: '/table/cell' }] } },
-                    this);
-                await this.page.createBlock('/table/row',
-                    { blocks: { childs: [{ url: '/table/cell' }] } },
-                    this);
-            })
-        }
+        await this.onBlockReloadData(async () => {
+            if (this.childs.length == 0) {
+                await this.page.onAction(ActionDirective.onErrorRepairDidMounte, async () => {
+                    await this.updateProps({ cols: [{ width: COL_WIDTH }] }, BlockRenderRange.self);
+                    await this.page.createBlock('/table/row',
+                        { blocks: { childs: [{ url: '/table/cell' }] } },
+                        this);
+                    await this.page.createBlock('/table/row',
+                        { blocks: { childs: [{ url: '/table/cell' }] } },
+                        this);
+                    await this.page.createBlock('/table/row',
+                        { blocks: { childs: [{ url: '/table/cell' }] } },
+                        this);
+                })
+            }
+        })
     }
     async onAddRow(at?: number, arrow?: 'down' | 'up', isMerge?: boolean) {
         if (typeof at == 'undefined') at = this.childs.length;

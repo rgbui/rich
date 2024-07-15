@@ -20,6 +20,7 @@ import { renderEcharts } from "../../../blocks/data-grid/view/statistic/render";
 import { InputNumber } from "../../../component/view/input/number";
 import { DynamicDateInput } from "../../date/input";
 import { HelpText } from "../../../component/view/text";
+import { ColorInput } from "../../../component/view/color/input";
 
 export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChartConfig }> {
     get schema() {
@@ -133,7 +134,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
 
         }
         await this.bc.onUpdateProps(props, { range: BlockRenderRange.self })
-        await this.bc.didMounted();
+        await this.bc.onReloadData();
         this.forceUpdate()
     }
     renderPropertys() {
@@ -173,7 +174,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             dropWidth={300}
                             onChange={async e => {
                                 await bc.onUpdateProps({ 'chart_config.theme': e }, { range: BlockRenderRange.self })
-                                await bc.didMounted();
+                                await bc.onReloadData();
                                 this.forceUpdate()
                             }}
                             options={EchartThemes.map(ec => {
@@ -308,7 +309,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                     props['chart_config.group_fieldIdUnit'] = '';
                                 }
                                 await bc.onUpdateProps(props, { range: BlockRenderRange.self })
-                                await bc.didMounted();
+                                await bc.onReloadData();
                                 this.forceUpdate()
                             }}
                             options={[
@@ -339,7 +340,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                 className={'gap-l-10'}
                                 onChange={async e => {
                                     await bc.onUpdateProps({ 'chart_config.group_fieldIdUnit': e }, { range: BlockRenderRange.self })
-                                    await bc.didMounted();
+                                    await bc.onReloadData();
                                     this.forceUpdate()
                                 }}
                                 options={[
@@ -393,7 +394,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                     props['bc.chart_config.x_fieldIdUnit'] = '';
                                 }
                                 await bc.onUpdateProps(props, { range: BlockRenderRange.self })
-                                await bc.didMounted();
+                                await bc.onReloadData();
                                 this.forceUpdate()
                             }}
                             options={this.schema.visibleFields.findAll(g => [
@@ -422,7 +423,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                 value={bc.chart_config?.x_fieldIdUnit}
                                 onChange={async e => {
                                     await bc.onUpdateProps({ 'chart_config.x_fieldIdUnit': e }, { range: BlockRenderRange.self })
-                                    await bc.didMounted();
+                                    await bc.onReloadData();
                                     this.forceUpdate()
                                 }}
                                 options={[
@@ -445,7 +446,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                         { 'chart_config.aggs': bc.chart_config.aggs.map((a, ai) => i == ai ? { ...a, fieldId: e } : a) },
                                         { range: BlockRenderRange.self }
                                     )
-                                    await bc.didMounted();
+                                    await bc.onReloadData();
                                     this.forceUpdate();
                                 }}
                                     dropHeight={150}
@@ -465,7 +466,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                         { 'chart_config.aggs': bc.chart_config.aggs.map((a, ai) => i == ai ? { ...a, aggregate: e } : a) },
                                         { range: BlockRenderRange.self }
                                     )
-                                    await bc.didMounted();
+                                    await bc.onReloadData();
                                     this.forceUpdate()
                                 }}
                                 options={getSOptions()}></SelectBox></span>
@@ -475,7 +476,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                         'chart_config.aggs': bc.chart_config.aggs.map((a, ai) => i == ai ? { ...a, target: e } : a)
                                     }, {
                                         range: BlockRenderRange.self, cb: async () => {
-                                            await bc.didMounted();
+                                            await bc.onReloadData();
                                             this.forceUpdate()
                                         }
                                     })
@@ -485,7 +486,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                 {i >= 3 && <span onMouseDown={async e => {
                                     bc.chart_config.aggs.splice(i, 1);
                                     await bc.onUpdateProps({ 'chart_config.aggs': bc.chart_config.aggs }, { range: BlockRenderRange.self })
-                                    await bc.didMounted();
+                                    await bc.onReloadData();
                                     this.forceUpdate()
                                 }} className={"size-20 flex-center item-hover cursor visible round"}>
                                     <Icon icon={CloseSvg} size={14}></Icon>
@@ -506,7 +507,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             { 'chart_config.aggs': bc.chart_config.aggs },
                             { range: BlockRenderRange.self }
                         )
-                        await bc.didMounted();
+                        await bc.onReloadData();
                         this.forceUpdate();
                     }} className="flex gap-w-5 cursor  item-hover gap-h-5 padding-w-5 padding-h-3 round">
                         <Icon size={16} icon={PlusSvg}></Icon>
@@ -536,7 +537,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                     props['bc.chart_config.x_fieldIdUnit'] = '';
                                 }
                                 await bc.onUpdateProps(props, { range: BlockRenderRange.self })
-                                await bc.didMounted();
+                                await bc.onReloadData();
                                 this.forceUpdate()
                             }}
                             options={this.schema.visibleFields.findAll(g => [
@@ -565,7 +566,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                 value={bc.chart_config?.x_fieldIdUnit}
                                 onChange={async e => {
                                     await bc.onUpdateProps({ 'chart_config.x_fieldIdUnit': e }, { range: BlockRenderRange.self })
-                                    await bc.didMounted();
+                                    await bc.onReloadData();
                                     this.forceUpdate()
                                 }}
                                 options={[
@@ -587,7 +588,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                     { 'chart_config.y_fieldId': e },
                                     { range: BlockRenderRange.self }
                                 )
-                                await bc.didMounted();
+                                await bc.onReloadData();
                                 this.forceUpdate();
                             }}
                                 dropHeight={150}
@@ -604,7 +605,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             value={bc.chart_config?.y_aggregate}
                             onChange={async e => {
                                 await bc.onUpdateProps({ 'chart_config.y_aggregate': e }, { range: BlockRenderRange.self })
-                                await bc.didMounted();
+                                await bc.onReloadData();
                                 this.forceUpdate()
                             }}
                             options={getSOptions()}></SelectBox></span>
@@ -616,7 +617,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                     { 'chart_config.y1_fieldId': e },
                                     { range: BlockRenderRange.self }
                                 )
-                                await bc.didMounted();
+                                await bc.onReloadData();
                                 this.forceUpdate();
                             }}
                                 dropHeight={150}
@@ -633,7 +634,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             value={bc.chart_config?.y1_aggregate}
                             onChange={async e => {
                                 await bc.onUpdateProps({ 'chart_config.y1_aggregate': e }, { range: BlockRenderRange.self })
-                                await bc.didMounted();
+                                await bc.onReloadData();
                                 this.forceUpdate()
                             }}
                             options={getSOptions()}></SelectBox></span>
@@ -645,7 +646,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                     { 'chart_config.y2_fieldId': e },
                                     { range: BlockRenderRange.self }
                                 )
-                                await bc.didMounted();
+                                await bc.onReloadData();
                                 this.forceUpdate();
                             }}
                                 dropHeight={150}
@@ -665,7 +666,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             value={bc.chart_config?.y2_aggregate}
                             onChange={async e => {
                                 await bc.onUpdateProps({ 'chart_config.y2_aggregate': e }, { range: BlockRenderRange.self })
-                                await bc.didMounted();
+                                await bc.onReloadData();
                                 this.forceUpdate()
                             }}
                             options={getSOptions()}></SelectBox></span>}
@@ -682,7 +683,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             { 'chart_config.graph_fieldId': e },
                             { range: BlockRenderRange.self }
                         )
-                        await bc.didMounted();
+                        await bc.onReloadData();
                         this.forceUpdate();
                     }}
                         dropHeight={150}
@@ -707,7 +708,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                 { 'chart_config.y_fieldId': e },
                                 { range: BlockRenderRange.self }
                             )
-                            await bc.didMounted();
+                            await bc.onReloadData();
                             this.forceUpdate();
                         }}
                             dropHeight={150}
@@ -727,7 +728,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                         value={bc.chart_config?.y_aggregate}
                         onChange={async e => {
                             await bc.onUpdateProps({ 'chart_config.y_aggregate': e }, { range: BlockRenderRange.self })
-                            await bc.didMounted();
+                            await bc.onReloadData();
                             this.forceUpdate()
                         }}
                         options={getSOptions()}></SelectBox></span>}
@@ -752,6 +753,24 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                 })
                         }}></InputNumber></span>
                 </div>
+                <div className="flex gap-w-5 padding-w-5 padding-h-3 round gap-h-5 item-hover">
+                    <span className="flex-fixed"><S>颜色</S></span>
+                    <span className="flex-auto flex-end ">
+                        <ColorInput color={this.bc.chart_config?.color} onChange={async e => {
+                            await this.bc.onLazyUpdateProps({
+                                'chart_config.color': e
+                            },
+                                {
+                                    range: BlockRenderRange.self,
+                                    cb: async () => {
+                                        await bc.renderEcharts()
+                                        this.forceUpdate();
+                                    }
+                                })
+                            this.bc.onUpdateProps({ 'chart_config.color': e }, { range: BlockRenderRange.self })
+                        }}></ColorInput>
+                    </span>
+                </div>
             </div>
         }
         else if (bc.chart_type == 'calendarHeatmap') {
@@ -775,7 +794,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                     props['bc.chart_config.x_fieldIdUnit'] = '';
                                 }
                                 await bc.onUpdateProps(props, { range: BlockRenderRange.self })
-                                await bc.didMounted();
+                                await bc.onReloadData();
                                 this.forceUpdate()
                             }}
                             options={this.schema.visibleFields.findAll(g => [
@@ -797,7 +816,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                 value={bc.chart_config?.x_fieldIdUnit}
                                 onChange={async e => {
                                     await bc.onUpdateProps({ 'chart_config.x_fieldIdUnit': e }, { range: BlockRenderRange.self })
-                                    await bc.didMounted();
+                                    await bc.onReloadData();
                                     this.forceUpdate()
                                 }}
                                 options={[
@@ -819,14 +838,15 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                     <div className="flex-auto flex flex-end  r-round r-cursor r-padding-h-2 r-padding-w-3 r-flex-center r-w60 ">
                         <span onMouseDown={async e => {
                             await bc.onUpdateProps({ 'chart_config.y_fieldId': '' }, { range: BlockRenderRange.self })
-                            await bc.didMounted();
+                            await bc.onReloadData();
                             this.forceUpdate()
                         }}
                             className={" " + (bc.chart_config.y_fieldId ? "" : "item-hover-button")}><S>统计总数</S></span>
                         <span
                             onMouseDown={async e => {
+                                if (!numberField) return;
                                 await bc.onUpdateProps({ 'chart_config.y_fieldId': this.schema.visibleFields.find(g => g.type == FieldType.number)?.id }, { range: BlockRenderRange.self })
-                                await bc.didMounted();
+                                await bc.onReloadData();
                                 this.forceUpdate();
                             }}
                             className={" " + (bc.chart_config.y_fieldId && numberField ? "item-hover-button" : "") + (numberField ? " " : " remark")}
@@ -841,7 +861,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                     { 'chart_config.y_fieldId': e },
                                     { range: BlockRenderRange.self }
                                 )
-                                await bc.didMounted();
+                                await bc.onReloadData();
                                 this.forceUpdate();
                             }}
                                 dropHeight={150}
@@ -858,7 +878,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             value={bc.chart_config?.y_aggregate}
                             onChange={async e => {
                                 await bc.onUpdateProps({ 'chart_config.y_aggregate': e }, { range: BlockRenderRange.self })
-                                await bc.didMounted();
+                                await bc.onReloadData();
                                 this.forceUpdate()
                             }}
                             options={getSOptions()}></SelectBox></span>
@@ -879,7 +899,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                         },
                                         { range: BlockRenderRange.self }
                                     )
-                                    await bc.didMounted();
+                                    await bc.onReloadData();
                                     this.forceUpdate();
                                 }}></DynamicDateInput>
                         </span>
@@ -907,7 +927,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                 props['bc.chart_config.x_fieldIdUnit'] = '';
                             }
                             await bc.onUpdateProps(props, { range: BlockRenderRange.self })
-                            await bc.didMounted();
+                            await bc.onReloadData();
                             this.forceUpdate()
                         }}
                         options={this.schema.visibleFields.findAll(g => [
@@ -936,7 +956,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             value={bc.chart_config?.x_fieldIdUnit}
                             onChange={async e => {
                                 await bc.onUpdateProps({ 'chart_config.x_fieldIdUnit': e }, { range: BlockRenderRange.self })
-                                await bc.didMounted();
+                                await bc.onReloadData();
                                 this.forceUpdate()
                             }}
                             options={[
@@ -957,14 +977,14 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                 <div className="flex-auto flex flex-end  r-round r-cursor r-padding-h-2 r-padding-w-3 r-flex-center r-w60 ">
                     <span onMouseDown={async e => {
                         await bc.onUpdateProps({ 'chart_config.y_fieldId': '' }, { range: BlockRenderRange.self })
-                        await bc.didMounted();
+                        await bc.onReloadData();
                         this.forceUpdate()
                     }}
                         className={" " + (bc.chart_config.y_fieldId ? "" : "item-hover-button")}><S>统计总数</S></span>
                     <span
                         onMouseDown={async e => {
                             await bc.onUpdateProps({ 'chart_config.y_fieldId': this.schema.visibleFields.find(g => g.type == FieldType.number)?.id }, { range: BlockRenderRange.self })
-                            await bc.didMounted();
+                            await bc.onReloadData();
                             this.forceUpdate();
                         }}
                         className={" " + (bc.chart_config.y_fieldId && numberField ? "item-hover-button" : "") + (numberField ? " " : " remark")}
@@ -979,7 +999,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                 { 'chart_config.y_fieldId': e },
                                 { range: BlockRenderRange.self }
                             )
-                            await bc.didMounted();
+                            await bc.onReloadData();
                             this.forceUpdate();
                         }}
                             dropHeight={150}
@@ -996,7 +1016,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                         value={bc.chart_config?.y_aggregate}
                         onChange={async e => {
                             await bc.onUpdateProps({ 'chart_config.y_aggregate': e }, { range: BlockRenderRange.self })
-                            await bc.didMounted();
+                            await bc.onReloadData();
                             this.forceUpdate()
                         }}
                         options={getSOptions()}></SelectBox></span>

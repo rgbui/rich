@@ -41,15 +41,17 @@ export class DataGridItemRecord extends Block {
     relationSchemas: TableSchema[] = [];
     relationDatas: Map<string, any[]> = new Map();
     async didMounted() {
-        this.schema = await TableSchema.getTableSchema(this.schemaId)
-        if (this.schema) {
-            await this.loadViewFields();
-            await this.loadData();
-            await this.loadRelationSchemas();
-            await this.loadRelationDatas();
-            await this.createElements();
-            if (this.view) this.view.forceUpdate();
-        }
+        await this.onBlockReloadData(async () => {
+            this.schema = await TableSchema.getTableSchema(this.schemaId)
+            if (this.schema) {
+                await this.loadViewFields();
+                await this.loadData();
+                await this.loadRelationSchemas();
+                await this.loadRelationDatas();
+                await this.createElements();
+                if (this.view) this.view.forceUpdate();
+            }
+        })
     }
     async get() {
         return await super.get(undefined, { emptyChilds: true })
@@ -100,8 +102,7 @@ export class DataGridItemRecord extends Block {
     async loadRelationSchemas() {
         var tableIds: string[] = [];
         this.fields.each(f => {
-            if (f.field?.type == FieldType.relation)
-            {
+            if (f.field?.type == FieldType.relation) {
                 if (f.field.config.relationTableId) {
                     tableIds.push(f.field.config.relationTableId);
                 }

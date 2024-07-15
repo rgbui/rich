@@ -65,9 +65,11 @@ export class Embed extends Block {
         }
     }
     async didMounted() {
-        if (this.createSource == 'InputBlockSelector' && !(this.src && this.src.url)) {
-            await this.addEmbed({ roundArea: Rect.fromEle(this.el) })
-        }
+        await this.onBlockReloadData(async () => {
+            if (this.createSource == 'InputBlockSelector' && !(this.src && this.src.url)) {
+                await this.addEmbed({ roundArea: Rect.fromEle(this.el) })
+            }
+        });
     }
     getVisibleContentBound() {
         var img = this.el.querySelector('.sy-block-embed-wrapper iframe') as HTMLElement;

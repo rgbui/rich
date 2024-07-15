@@ -42,23 +42,25 @@ export class Tab extends Block {
     @prop()
     autoCarousel: number = 0;
     async didMounted(): Promise<void> {
-        var isf = false;
-        if (this.tabItems.length == 0) {
-            if (this.childs.length > 0) {
-                var cs = await this.childs.asyncMap(async c => {
-                    return { text: c.getBlockContent() };
-                })
-                this.tabItems = cs;
-                this.blocks.childs = [];
-                isf = true;
+        await this.onBlockReloadData(async () => {
+            var isf = false;
+            if (this.tabItems.length == 0) {
+                if (this.childs.length > 0) {
+                    var cs = await this.childs.asyncMap(async c => {
+                        return { text: c.getBlockContent() };
+                    })
+                    this.tabItems = cs;
+                    this.blocks.childs = [];
+                    isf = true;
+                }
+                else {
+                    await this.createInitTabItems();
+                    isf = true;
+                }
             }
-            else {
-                await this.createInitTabItems();
-                isf = true;
-            }
-        }
-        this.createCarouselTime();
-        if (isf) this.forceManualUpdate()
+            this.createCarouselTime();
+            if (isf) this.forceManualUpdate()
+        });
     }
     async createInitTabItems() {
         this.blocks.childs = [];

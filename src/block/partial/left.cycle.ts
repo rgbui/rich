@@ -228,6 +228,9 @@ export class Block$LifeCycle {
     registerPropMeta(key: string, meta: Function, isArray: boolean = false, create?: (v: any) => any, get?: (vobj: any) => any) {
         this.propMetas.push({ key, meta, isArray, create, get });
     }
+    /**
+     * 标记block的load是否完成
+     */
     isLoad = false;
     async load(this: Block, data) {
         try {
@@ -445,6 +448,56 @@ export class Block$LifeCycle {
             ds.forEach(d => {
                 dom(d).removeClass(g => g.startsWith('shy-block-drag-over'));
             });
+        }
+    }
+    /**
+     * 这里用来标记录block的数据是否加载过
+     * 不能因为view每次的didMounted，就重新加载数据
+     * 需要确保fn里面的执行的加载跟block是相关的，而不是跟view相关的，
+     * 否则会导致view上面的数据出现不存在的情况
+     * @param this 
+     * @param fn 
+     * @returns 
+     */
+    async onBlockLoadData(this: Block, fn: () => Promise<void>) {
+        if (this.blockLoadStatus?.isSuccessfully == true) return;
+        try {
+            if (!this.blockLoadStatus) this.blockLoadStatus = {
+                loading: false,
+                isSuccessfully: false,
+                isError: false,
+                errorData: null
+            }
+            this.blockLoadStatus.loading = true;
+            await fn()
+            this.blockLoadStatus.isSuccessfully = true;
+        }
+        catch (ex) {
+            this.blockLoadStatus.errorData = ex;
+            this.blockLoadStatus.isError = true;
+        }
+        finally {
+            this.blockLoadStatus.loading = false;
+        }
+    }
+    async onBlockReloadData(this: Block, fn: () => Promise<void>) {
+        try {
+            if (!this.blockLoadStatus) this.blockLoadStatus = {
+                loading: false,
+                isSuccessfully: false,
+                isError: false,
+                errorData: null
+            }
+            this.blockLoadStatus.loading = true;
+            await fn()
+            this.blockLoadStatus.isSuccessfully = true;
+        }
+        catch (ex) {
+            this.blockLoadStatus.errorData = ex;
+            this.blockLoadStatus.isError = true;
+        }
+        finally {
+            this.blockLoadStatus.loading = false;
         }
     }
 }

@@ -29,7 +29,9 @@ export class ShyTag extends Block {
             { tagId: ref.tagId, tag: ref.tagText, page: this.page })
     }
     async didMounted() {
-        this.loadTag();
+        await this.onBlockReloadData(async () => {
+            this.loadTag();
+        })
     }
     async loadTag() {
         if (Array.isArray(this.refLinks)) {
@@ -52,7 +54,7 @@ export class ShyTag extends Block {
     }
 }
 @view('/tag')
-export class ShyMentionView extends BlockView<ShyTag>{
+export class ShyMentionView extends BlockView<ShyTag> {
     boxTip: BoxTip;
     async onClearLink() {
         if (this.boxTip) this.boxTip.close();
@@ -70,7 +72,7 @@ export class ShyMentionView extends BlockView<ShyTag>{
         return <span className="sy-block-tag" onMouseDown={e => this.block.openTag(e)}>
             <BoxTip ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center  padding-5 r-flex-center r-size-24 r-round r-item-hover r-cursor text">
                 {this.block.isCanEdit() && <Tip text={'拖动'}><span onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>}
-                <Tip text={'打开标签引用'}><span onMouseDown={e => this.block.openTag(e)}><Icon size={16} icon={{name:'byte',code:'hashtag-key'}}></Icon></span></Tip>
+                <Tip text={'打开标签引用'}><span onMouseDown={e => this.block.openTag(e)}><Icon size={16} icon={{ name: 'byte', code: 'hashtag-key' }}></Icon></span></Tip>
                 {this.block.isCanEdit() && <Tip text={'取消'}><span onMouseDown={e => this.onClearLink()}><Icon size={16} icon={TrashSvg}></Icon></span></Tip>}
             </div>}>
                 <SolidArea block={this.block} prop={'userid'} >#{ref?.tagText}</SolidArea>

@@ -44,7 +44,9 @@ export class Board extends Block {
         }, (v) => v.getValues())
     }
     async didMounted() {
-        await this.loadBoard();
+        await this.onBlockReloadData(async () => {
+            await this.loadBoard();
+        });
     }
     getResolveContent(this: Block) {
         return lst('白板')

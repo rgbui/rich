@@ -6,7 +6,7 @@ import { DataGridTurns } from "../../turn";
 import { Icon } from "../../../../component/view/icon";
 import { DotsSvg, SettingsSvg } from "../../../../component/svgs";
 import { MouseDragger } from "../../../../src/common/dragger";
-import { Rect } from "../../../../src/common/vector/point";
+import { Point, Rect } from "../../../../src/common/vector/point";
 import { DataGridView } from "../base";
 import { useDataGridChartConfig } from "../../../../extensions/data-grid/echarts";
 import { FieldType } from "../../schema/type";
@@ -19,6 +19,7 @@ import { useSelectMenuItem } from "../../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import { lst } from "../../../../i18n/store";
 import { util } from "../../../../util/util";
+import { BlockRenderRange } from "../../../../src/block/enum";
 
 @url('/data-grid/charts')
 export class DataGridChart extends DataGridView {
@@ -59,7 +60,6 @@ export class DataGridChart extends DataGridView {
         }
     @prop()
     align: 'left' | 'right' | 'center' = 'center';
-
 
     viewProps: string[] = [
         'canvasWidth',
@@ -290,7 +290,9 @@ export class DataGridChart extends DataGridView {
         }
     }
     async didMounted() {
-        await this.loadDataGrid();
+        this.onBlockLoadData(async () => {
+            await this.loadDataGrid();
+        })
     }
     async loadDataGrid() {
         try {
@@ -379,6 +381,27 @@ export class DataGridChart extends DataGridView {
             await this.loadDataGrid();
         }
     }
+    getVisibleHandleCursorPoint(): Point {
+        var point = super.getVisibleHandleCursorPoint();
+        if (point) {
+            point = point.move(0, -5);
+        }
+        return point;
+    }
+    async onReloadData(this: DataGridView, beforeAction?: () => Promise<void>): Promise<void> {
+        await this.onLoadingAction(async () => {
+            try {
+                if (typeof beforeAction == 'function') await beforeAction()
+            }
+            catch (ex) {
+                console.error(ex);
+            }
+            await this.loadDataGrid();
+            this.referenceBlockers.forEach(b => {
+                b.forceManualUpdate();
+            })
+        })
+    }
 }
 
 @view('/data-grid/charts')
@@ -411,8 +434,14 @@ export class DataGridChartView extends BlockView<DataGridChart> {
                 self.imageWrapper.style.height = height + "px";
                 if (self.block.myChart) self.block.myChart.resize({ width: width, height: height });
                 if (isEnd) {
-                    self.block.onUpdateProps({ canvasWidth: width, canvasHeight: height });
-                    self.forceUpdate();
+                    self.block.page.onAction('OnUpdateProps', async () => {
+                        await self.block.updateProps({
+                            canvasWidth: width,
+                            canvasHeight: height
+                        }, BlockRenderRange.self)
+                    }, {
+                        disabledSyncBlock: true
+                    })
                 }
             }
         })
@@ -444,6 +473,7 @@ export class DataGridChartView extends BlockView<DataGridChart> {
         return <div className="flex-center" style={style}>
             <div className="relative visible-hover  border  round " ref={e => this.imageWrapper = e} style={{
                 width: this.block.canvasWidth,
+                maxWidth: '100%',
                 height: this.block.canvasHeight
             }}>
                 <div className="sy-dg-echarts-view w100 h100"
@@ -453,8 +483,8 @@ export class DataGridChartView extends BlockView<DataGridChart> {
                 {this.block.chart_type == 'summary' && <div className="flex-center flex-col  w100 h100">
                     <div className="gap-h-10" style={{ fontSize: 20, fontWeight: 'bold', lineHeight: '20px' }}>{this.block.schemaView?.text}</div>
                     {this.block.chart_config.remark && <div className="gap-h-10 text-1 f-14" style={{ fontSize: 20, lineHeight: 20 }}>{this.block.chart_config.remark}</div>}
-                    <div className="gap-t-20 gap-b-10" style={{ fontSize: 40, fontWeight: 'bold', lineHeight: '50px', color: this.block.chart_config?.color }}>{this.block.statisticValue}</div>
-                    {this.block.chart_config?.targetValue && <div className="remark f-14">
+                    <div className="gap-t-20 gap-b-10" style={{ fontSize: 100, lineHeight: '160px', color: this.block.chart_config?.color }}>{this.block.statisticValue}</div>
+                    {this.block.chart_config?.targetValue && <div className="remark f-16">
                         <span>{(this.block.statisticValue * 100 / this.block.chart_config?.targetValue).toFixed(2)}%</span>
                     </div>}
                 </div>}

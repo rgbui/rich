@@ -46,7 +46,9 @@ export class DataGridTab extends Block {
     tabIndex: number = 0;
     blocks: { childs: Block[], otherChilds: Block[] } = { childs: [], otherChilds: [] };
     async didMounted() {
-        this.loadItems();
+        await this.onBlockReloadData(async () => {
+            this.loadItems();
+        });
     }
     async loadItems() {
         var i = 0;
@@ -283,7 +285,7 @@ export class DataGridTab extends Block {
                                 if (rn.value != item.text && rn.value) {
                                     props.text = rn.value;
                                 }
-                                if (typeof rn.icon!='function'&& !lodash.isEqual(rn.icon, item.icon)) {
+                                if (typeof rn.icon != 'function' && !lodash.isEqual(rn.icon, item.icon)) {
                                     props.icon = rn.icon;
                                 }
                                 if (Object.keys(props).length > 0) {

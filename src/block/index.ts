@@ -630,7 +630,6 @@ export abstract class Block extends Events {
             }
         }
         return new Promise((resolve, reject) => {
-
             if (this.view && this.isMed) {
                 this.appearAnchors.forEach(aa => {
                     aa.updateViewValue();
@@ -932,6 +931,17 @@ export abstract class Block extends Events {
     getInnerPanelBlock() {
         return this as Block;
     }
+    blockLoadStatus: {
+        loading: boolean,
+        isSuccessfully: boolean,
+        isError: boolean,
+        errorData: Error
+    } = {
+            loading: false,
+            isSuccessfully: false,
+            isError: false,
+            errorData: null
+        };
 }
 export interface Block extends Block$Seek { }
 export interface Block extends Block$Event { }

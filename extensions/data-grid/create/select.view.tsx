@@ -95,7 +95,7 @@ export class DataGridCreate extends EventsComponent {
     }
     rsSpreads: { [key: string]: boolean } = {};
     renderTables() {
-        var list = TableSchema.getSchemas(this.page.ws?. id);
+        var list =!this.page?.ws?[]: TableSchema.getSchemas(this.page.ws?. id);
         list = lodash.sortBy(list, g => 0 - g.createDate.getTime())
         var self = this;
         var srs = getSchemaViews()

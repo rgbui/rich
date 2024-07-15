@@ -38,11 +38,13 @@ export class ShyMention extends Block {
         return `@${(this.view as any)?.username}`;
     }
     async didMounted() {
-        if (this.createSource == 'InputBlockSelector') {
-            if (!(Array.isArray(this.refLinks) && this.refLinks.length > 0)) {
-                (this.view as any).openUser({ roundArea: Rect.fromEle(this.el) })
+        await this.onBlockReloadData(async () => {
+            if (this.createSource == 'InputBlockSelector') {
+                if (!(Array.isArray(this.refLinks) && this.refLinks.length > 0)) {
+                    (this.view as any).openUser({ roundArea: Rect.fromEle(this.el) })
+                }
             }
-        }
+        })
     }
 }
 

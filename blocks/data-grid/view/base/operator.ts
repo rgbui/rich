@@ -572,11 +572,13 @@ export class DataGridViewOperator {
     }
     async onChangeFields(this: DataGridView, oldFields: ViewField[], newFields: ViewField[]) {
         await this.page.onAction(ActionDirective.onDataGridChangeFields, async () => {
-            // this.page.notifyActionBlockSync(this);
             await this.changeFields(oldFields, newFields);
+            // await this.manualUpdateProps({ fields: oldFields }, { fields: newFields }, BlockRenderRange.self, { isOnlyRecord: true });
+            // this.fields = newFields;
             await this.createItem();
             this.forceManualUpdate();
         })
+
     }
     async onCheckRow(this: DataGridView, row: Record<string, any>, checked: boolean) {
         if (checked) {

@@ -11,7 +11,9 @@ import { channel } from "../../net/channel";
 @url('/page/preOrNext')
 export class PageOrNext extends Block {
     async didMounted() {
-        await this.loadPageOrNext();
+        await this.onBlockReloadData(async () => {
+            await this.loadPageOrNext();
+        });
     }
     async loadPageOrNext() {
         if (this.page.pe.type == ElementType.SchemaRecordView) return;

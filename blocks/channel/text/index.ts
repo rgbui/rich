@@ -77,7 +77,7 @@ export class ChannelText extends Block {
     abledSend: boolean = false;
     async loadHasAbledSend(force?: boolean) {
         this.abledSend = true;
-        if (!this.isAllow(AtomPermission.pageEdit,AtomPermission.dbEdit,AtomPermission.dbFull,AtomPermission.pageFull)) {
+        if (!this.isAllow(AtomPermission.pageEdit, AtomPermission.dbEdit, AtomPermission.dbFull, AtomPermission.pageFull)) {
             this.abledSend = false;
         }
         if (this.pageInfo?.speak == 'only') {
@@ -93,30 +93,32 @@ export class ChannelText extends Block {
         if (force == true) this.forceManualUpdate()
     }
     async didMounted(): Promise<void> {
-        this.loading = true;
-        await this.forceManualUpdate();
-        await this.loadPageInfo();
-        await this.loadChannelTextDatas();
-        await this.loadHasAbledSend();
-        this.loading = false;
-        await this.forceManualUpdate();
-        (this.view as any).updateScroll()
+        await this.onBlockLoadData(async () => {
+            this.loading = true;
+            await this.forceManualUpdate();
+            await this.loadPageInfo();
+            await this.loadChannelTextDatas();
+            await this.loadHasAbledSend();
+            this.loading = false;
+            await this.forceManualUpdate();
+            (this.view as any).updateScroll()
 
-        channel.sync('/ws/channel/notify', this.channelNotify);
-        channel.sync('/ws/channel/patch/notify', this.patchNotify);
-        channel.sync('/ws/channel/emoji/notify', this.emojiNotify);
-        channel.sync('/page/update/info', this.updatePageInfo);
-        this.page.keyboardPlate.listener(g => g.is(KeyboardCode.Esc), (ev) => { }, (ev) => {
-            var v: ChannelTextView = this.view as any;
-            v.editChannelText = null;
-            v.forceUpdate();
-        }, this.id)
+            channel.sync('/ws/channel/notify', this.channelNotify);
+            channel.sync('/ws/channel/patch/notify', this.patchNotify);
+            channel.sync('/ws/channel/emoji/notify', this.emojiNotify);
+            channel.sync('/page/update/info', this.updatePageInfo);
+            this.page.keyboardPlate.listener(g => g.is(KeyboardCode.Esc), (ev) => { }, (ev) => {
+                var v: ChannelTextView = this.view as any;
+                v.editChannelText = null;
+                v.forceUpdate();
+            }, this.id)
+        })
     }
     channelNotify = (data: { workspaceId: string, roomId: string }) => {
         if (this.roomId == data.roomId) {
             this.chats.push(data as any);
             this.setLocalSeq(this.chats.max(x => x.seq));
-            this.forceManualUpdate().then(()=>{
+            this.forceManualUpdate().then(() => {
                 (this.view as any).updateScroll()
             })
         }
@@ -153,7 +155,7 @@ export class ChannelText extends Block {
     }
     updatePageInfo = (r: { id: string, elementUrl: string, pageInfo: LinkPageItem }) => {
         var isUpdate: boolean = false;
-       
+
         if (r.elementUrl && parseElementUrl(r.elementUrl).type == ElementType.Room && parseElementUrl(r.elementUrl)?.id == this.roomId) {
             isUpdate = true;
         }
@@ -163,7 +165,7 @@ export class ChannelText extends Block {
         if (isUpdate) {
             if (this.pageInfo) {
                 Object.assign(this.pageInfo, r.pageInfo);
-              
+
                 if (r.pageInfo?.speak) {
                     this.loadHasAbledSend(true)
                 }

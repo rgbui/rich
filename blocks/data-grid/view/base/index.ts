@@ -5,7 +5,6 @@ import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { prop } from "../../../../src/block/factory/observable";
 import { Pattern } from "../../../../src/block/pattern";
 import { Point, Rect } from "../../../../src/common/vector/point";
-import { ActionDirective } from "../../../../src/history/declare";
 import { SchemaFilter } from "../../schema/filter";
 import { DataStoreAction, SchemaAction, TableSchema } from "../../schema/meta";
 import { ViewField } from "../../schema/view";
@@ -33,7 +32,6 @@ import { Input } from "../../../../component/view/input";
 import { onCreateDataGridTemplate } from "../../template/create";
 import { DataGridTab } from "../tab";
 import { PageLayoutType } from "../../../../src/page/declare";
-import { BlockRenderRange } from "../../../../src/block/enum";
 import { GroupHeadType, GroupViewType } from "../declare";
 import { util } from "../../../../util/util";
 import { DataGridTableItem } from "../table/row";
@@ -229,7 +227,7 @@ export class DataGridView extends Block {
 
             var r = await channel.get('/view/snap/query', { ws: this.page.ws, elementUrl: this.elementUrl });
             if (window.shyConfig?.isDev)
-                console.log('gggg', r, this);
+                console.log('datagrid syncBlock', r, this);
             if (r.ok) {
                 var data;
                 try {
@@ -452,9 +450,11 @@ export class DataGridView extends Block {
         }
     }
     async didMounted() {
-        await this.loadDataGrid();
-        channel.sync('/datastore/operate', this.syncDatastore as any);
-        channel.sync('/schema/operate', this.syncDataSchema as any);
+        await this.onBlockLoadData(async () => {
+            await this.loadDataGrid();
+            channel.sync('/datastore/operate', this.syncDatastore as any);
+            channel.sync('/schema/operate', this.syncDataSchema as any);
+        })
     }
     async didUnmounted() {
         channel.off('/datastore/operate', this.syncDatastore as any);

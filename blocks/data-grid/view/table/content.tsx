@@ -126,7 +126,7 @@ export class DataGridTableContent extends React.Component<{
                 var sf = sfl ? sfl.find(g => g.fieldId == f.fieldId) : null;
                 if (sf?.stat == 'none') sf = null;
                 var sff = this.block.schema.fields.find(g => g.id == f.fieldId)
-                var si =sff? getFieldStatItems(sff.type).find(c => c.value == sf?.stat):null;
+                var si = sff ? getFieldStatItems(sff.type).find(c => c.value == sf?.stat) : null;
                 var rv = () => {
                     if (['notFilledPercent', 'filledPercent'].includes(sf.stat)) {
                         return util.toPercent(sf.value as number, sf.total as number, 2)
@@ -311,7 +311,7 @@ export class DataGridTableHead extends React.Component<{ block: Block, style?: C
                     }
                 }
             },
-            moveEnd(ev, isMove) {
+            async moveEnd(ev, isMove) {
                 if (isMove) {
                     self.isDragMouseField = false;
                     ghostView.unload()
@@ -325,7 +325,7 @@ export class DataGridTableHead extends React.Component<{ block: Block, style?: C
                     vs.remove(v => v.isSame(vf));
                     if (at == -1) vs.splice(0, 0, vf.clone())
                     else vs.splice(at + 1, 0, vf.clone());
-                    self.block.onChangeFields(self.block.fields, vs);
+                    await self.block.onChangeFields(self.block.fields, vs);
                 }
             }
         })
@@ -355,7 +355,7 @@ export class DataGridTableHead extends React.Component<{ block: Block, style?: C
                 }
                 return <div className="sy-dg-table-head-th  text-1 f-14" onMouseDown={e => this.onDragMouseField(e, f)}
                     style={style}
-                    key={i}>
+                    key={f.id + i.toString()}>
                     {icon && <div className={'sy-dg-table-head-th-icon remark flex-fixed size-16 flex-center gap-r-5 '} >
                         <Icon fontColorInherit icon={icon} size={16}></Icon>
                     </div>}

@@ -28,6 +28,7 @@ import { DataGridChart } from "../statistic/charts";
 import { IconValueType } from "../../../../component/view/icon";
 import { useDataSourceView } from "../../../../extensions/data-grid/datasource";
 import { useDataGridConfig } from "../../../../extensions/data-grid/view.config/lazy";
+import { PageLayoutType } from "../../../../src/page/declare";
 
 export class DataGridViewConfig {
     async onOpenViewSettings(this: DataGridView, rect: Rect) {
@@ -78,6 +79,7 @@ export class DataGridViewConfig {
                         { text: lst('配置视图'), name: 'viewConfig', icon: { name: 'byte', code: 'setting-one' } as IconValueType },
                         { type: MenuItemType.divide },
                         { text: lst('数据源'), name: 'datasource', icon: DatasourceSvg },
+                        { text: lst('重新加载数据...'), name: 'reload', icon: RefreshSvg },
                         { type: MenuItemType.divide },
                         { name: 'link', icon: LinkSvg, text: lst('复制视图链接') },
                         { type: MenuItemType.divide },
@@ -90,7 +92,7 @@ export class DataGridViewConfig {
                             url: window.shyConfig?.isUS ? "https://help.shy.red/page/38#3qfPYqnTJCwwQ6P9zYx8Q8" : "https://shy.live/ws/help/page/286"
                         }
                     ]);
-                    if (self.page.pe.type == ElementType.Schema) {
+                    if (self.page.pageLayout?.type == PageLayoutType.db) {
                         items.splice(-7 - 2, 2);
                         items.splice(-3, 1);
                     }
@@ -206,6 +208,9 @@ export class DataGridViewConfig {
                 }
                 else if (r.item.name == 'viewConfig') {
                     self.onOpenViewConfig(rect);
+                }
+                else if (r.item.name == 'reload') {
+                    self.onReloadData();
                 }
                 else if (r.item.name == 'clone') {
                     self.onCopySchemaView();

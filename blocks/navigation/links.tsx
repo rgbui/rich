@@ -14,7 +14,9 @@ import { parseElementUrl } from "../../net/element.type";
 @url('/links')
 export class LinkPaths extends Block {
     async didMounted() {
-        this.loadLinks();
+        await this.onBlockReloadData(async () => {
+            this.loadLinks();
+        })
     }
     async loadLinks() {
         this.items = await this.page.loadPageParents();

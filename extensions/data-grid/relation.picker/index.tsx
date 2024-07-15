@@ -270,7 +270,7 @@ class RelationPicker extends EventsComponent {
                         </span>
                     </div>
                 </div>}
-                <div className="h-30 border-top flex">
+                <div className="h-30 border-top flex padding-w-10">
                     <HelpText onMouseDown={e => { e.stopPropagation() }} url={window.shyConfig?.isUS ? "https://help.shy.red/page/69#8se82Vo9ub2CVdQfA4CGEw" : "https://help.shy.live/page/1989#bMYCF1q5T1EDj9QArqCZMj"}><S>了解如何关联数据表</S></HelpText>
                 </div>
             </div>

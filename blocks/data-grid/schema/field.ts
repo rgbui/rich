@@ -70,13 +70,14 @@ export interface FieldConfig {
     options?: DataGridOptionType[];
     isMultiple?: boolean,
     relationTableId?: string,
+    relationVisibleFieldId?: string,
     relationDouble?: boolean,
     relationFieldText?: string,
     relationFieldId?: string,
     /**
      * 当打开relation选择框时，里面的数据显示属性是以fieldProps为准的
      */
-    fieldProps?:string[];
+    fieldProps?: string[];
     /**
      * 废弃
      */
