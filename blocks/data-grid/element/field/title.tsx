@@ -65,6 +65,7 @@ export class FieldTextView extends OriginFileView<FieldText> {
             textStyle.textDecorationColor = 'rgba(22, 22, 22, 0.2)';
         }
         return <div className={'flex l-20 flex-top sy-field-title f-14  ' + (isCard ? "  bold" : " b-500 ")} onMouseDown={e => {
+            if(!this.block.isCanEdit())return;
             if (isCard) {
                 e.stopPropagation();
                 this.block.onCellMousedown(e);

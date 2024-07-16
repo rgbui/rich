@@ -49,10 +49,10 @@ export class FieldRelation extends OriginField {
                 } : undefined
             });
             if (r) {
-                console.log('gggg', r);
                 var ids = r.map(r => r.id);
+                if (ids.length > 0)
+                    await this.dataGrid.addRelationDatas(this.field, ids);
                 await this.onUpdateCellValue(ids);
-                await this.dataGrid.loadRelationDatas();
                 this.forceManualUpdate();
             }
         }

@@ -75,9 +75,10 @@ export class FieldNumber extends OriginField {
     }
     isFocus: boolean = false;
     onCellMousedown(event: React.MouseEvent) {
-        event.stopPropagation();
+       
         if (this.field.type == FieldType.autoIncrement) return;
         if (!this.isCanEdit()) return;
+        event.stopPropagation();
         if (this.isFocus == false) {
             this.isFocus = true;
             this.view.forceUpdate(async () => {

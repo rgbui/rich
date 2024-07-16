@@ -12,8 +12,9 @@ import "./style.less";
 @url('/field/option')
 export class FieldOption extends OriginField {
     async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
-        event.stopPropagation();
+      
         if (this.checkEdit() === false) return;
+        event.stopPropagation();
         var el = this.el.querySelector('.sy-field-option') as HTMLElement;
         if (!el) el = this.el;
         var rect = Rect.fromEle(el);

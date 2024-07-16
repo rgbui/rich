@@ -183,12 +183,12 @@ export class OriginFormField extends Block {
         if (this.fromType == 'doc') {
             point = point.move(0, 3);
         }
-        // if (this.fromType == 'doc-add') {
-        //     point = point.move(0, 10);
-        // }
-        // else {
-        //     point = point.move(0, 10);
-        // }
+        else if (this.fromType == 'doc-add') {
+            point = point.move(0, 8);
+        }
+        else {
+            point = point.move(0, 3);
+        }
         return point;
     }
     isCanEdit() {

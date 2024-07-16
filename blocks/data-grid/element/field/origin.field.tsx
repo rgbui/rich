@@ -111,7 +111,9 @@ export class OriginFileView<T extends OriginField> extends BlockView<T> {
             var isTitle = this.block.url == BlockUrlConstant.FieldTitle;
             if (card?.showField == 'wrap' && !isTitle) {
                 return <div onMouseDown={e => {
-                    e.stopPropagation();
+                    if (this.block.isCanEdit()) {
+                        e.stopPropagation();
+                    }
                     this.block.onCellMousedown(e)
                 }}>
                     <div className="remark f-12 gap-t-5 flex">
@@ -131,7 +133,9 @@ export class OriginFileView<T extends OriginField> extends BlockView<T> {
                     classList.push('flex-top')
                 }
                 return <div onMouseDown={e => {
-                    e.stopPropagation();
+                    if (this.block.isCanEdit()) {
+                        e.stopPropagation();
+                    }
                     this.block.onCellMousedown(e)
                 }} className={classList.join(' ')}>
                     <ToolTip overlay={this.block.viewField?.text}><div className="flex-fixed flex flex-end w-80  remark ">

@@ -8,7 +8,18 @@ import { cacFormulaValue } from "../../../../extensions/data-grid/formula/run";
 export class FieldFormula extends OriginField {
     cacValue;
     async didMounted() {
-        this.cacValue = await cacFormulaValue(this.page, this.dataGrid, this.field, this.dataGridItem.dataRow);
+        this.cacFieldValue()
+    }
+    async cacFieldValue() {
+        var v = await cacFormulaValue(this.page, this.dataGrid, this.field, this.dataGridItem.dataRow);
+        if (typeof v == 'number') {
+            var vt = v.toString();
+            if (vt.indexOf('.') > -1) {
+                v = v.toFixed(2);
+                v = parseFloat(v);
+            }
+        }
+        this.cacValue = v;
         this.forceManualUpdate()
     }
 }
