@@ -1,4 +1,4 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import { DataGridView } from "../base";
 import dayjs from "dayjs";
 import lodash from "lodash";
@@ -12,6 +12,8 @@ import { FieldType } from "../../schema/type";
 import { DataGridTableItem } from "../table/row";
 import { Icon } from "../../../../component/view/icon";
 import { Block } from "../../../../src/block";
+import { channel } from "../../../../net/channel";
+import { ElementType, getElementUrl } from "../../../../net/element.type";
 
 export class DataGridGroup extends React.Component<{
     block: DataGridView,
@@ -30,7 +32,6 @@ export class DataGridGroup extends React.Component<{
             if (this.block.hasGroup) {
                 var gf = this.block.schema.fields.find(g => g.id == this.block.groupView.groupId);
                 function renderGroupHead(dg) {
-
                     if (lodash.isNull(dg.value))
                         return <span className="flex-fixed padding-w-5 ">无 <span className="b-500">{gf.text}</span> 数据</span>
                     if ([FieldType.creater, FieldType.modifyer, FieldType.user].includes(gf.type))
@@ -67,8 +68,22 @@ export class DataGridGroup extends React.Component<{
                     }
                     else if ([FieldType.option, FieldType.options].includes(gf.type)) {
                         var op = gf.config?.options.find(o => o.value == dg.value);
-                        var style = { backgroundColor: op?.fill||op?.color, color: op?.textColor, lineheight: '20px' };
+                        var style = { backgroundColor: op?.fill || op?.color, color: op?.textColor, lineheight: '20px' };
                         return <span style={style} className="f-14 round gap-w-3 flex-fixed padding-w-5 b-500">{op?.text}</span>
+                    }
+                    else if ([FieldType.relation].includes(gf.type)) {
+                        var rt = self.block.relationDatas.get(gf?.config?.relationTableId)?.find(c => c.id == dg.value);
+                        var visibleName = self.block.relationSchemas.find(c => c.id == gf?.config?.relationTableId)?.fields?.find(f => f.id == gf?.config?.relationVisibleFieldId)?.name || 'title';
+                        var textStyle: CSSProperties = {};
+                        textStyle.textDecoration = 'underline';
+                        textStyle.textDecorationColor = 'rgba(22, 22, 22, 0.2)';
+                        return <span onMouseDown={e => {
+                            e.stopPropagation()
+                            channel.act('/page/dialog', { elementUrl: getElementUrl(ElementType.SchemaData, gf?.config?.relationTableId, rt.id) })
+                        }} className="flex-fixed flex  padding-w-5 cursor ">
+                            {rt?.icon && <span><Icon icon={rt?.icon}></Icon></span>}
+                            <span style={textStyle} className="flex-auto text-overflow max-w-250 b-500">{rt ? rt[visibleName] : ''}</span>
+                        </span>
                     }
                     else if ([FieldType.number, FieldType.autoIncrement, FieldType.sort, FieldType.price].includes(gf.type)) {
                         var text = dg.text;
