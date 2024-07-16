@@ -33,6 +33,7 @@ import { TableStoreCalendar } from "../calendar";
 import dayjs from "dayjs";
 import { ToolTip } from "../../../../component/view/tooltip";
 import { S } from "../../../../i18n/view";
+import { SnapRecordPage } from "../../../../src/page/common/snap";
 
 @url('/data-grid/item')
 export class TableGridItem extends Block {
@@ -96,6 +97,26 @@ export class TableGridItem extends Block {
             dataId: this.dataRow.id,
             data: { [field.name]: value }
         }, this.dataGrid?.id || (this.id + 'TableStoreItem'))
+        /**
+         * 当更新值时，需要更新公式字段值
+         */
+        var ffs = this.fields.filter(g => g.field?.type == FieldType.formula);
+        if (ffs.length > 0) {
+            this.childs.forEach(cc => {
+                // c.childs.forEach(cc => {
+                if (cc instanceof OriginField) {
+                    if (cc.url == '/field/formula') {
+                        if (typeof cc['cacFieldValue'] == 'function') {
+                            cc['cacFieldValue']();
+                        }
+                    }
+                }
+                // })
+            })
+        }
+        /**
+         * 如果是关联更新，需要考虑是否为双向的关联关系
+         */
         if (field.type == FieldType.relation && field.config?.relationDouble == true) {
             var rs = this.dataGrid.relationSchemas.find(g => g.id == field.config.relationTableId);
             if (rs) {
@@ -132,6 +153,20 @@ export class TableGridItem extends Block {
                     }], this.dataGrid?.id || (this.id + 'TableStoreItem'))
                 }
             }
+
+
+        }
+        /**
+         * 如果是关联表，那么此时需要同步更新关联引用的字段数据
+         */
+        if (field.type == FieldType.relation) {
+            this.childs.forEach(c => {
+                if (c.url == '/field/rollup') {
+                    if ((c as any).field?.config?.rollupRelationFieldId == field.id) {
+                        c.forceManualUpdate()
+                    }
+                }
+            })
         }
     }
     async onOnlyUpdateCellValue(field: Field, value: any) {
@@ -493,15 +528,54 @@ export class TableStoreItemView extends BlockView<TableGridItem> {
     renderCards() {
         var ga = this.block.dataGrid as TableStoreGallery;
         if (ga.cardConfig.showCover) {
+            if (ga.cardConfig.coverFieldId == 'pageContent') {
+                console.log(this.block.dataRow);
+                var pd = this.block.dataRow.pageContentPreview;
+                if (typeof pd == 'string') pd = JSON.parse(pd);
+                return <div className='sy-data-grid-item sy-data-grid-card visible-hover'>
+                    <div className="h-180"
+                        style={{
+                            overflow: 'hidden',
+                            background: 'rgba(55, 53, 47, 0.024)',
+                            // padding: '8px 8px 0px',
+                            boxShadow: 'rgba(55, 53, 47, 0.09) 0px -1px 0px 0px inset'
+                        }}>
+                        {pd &&<SnapRecordPage content={pd}
+                            elementUrl={getElementUrl(ElementType.SchemaData, this.block.dataGrid.schema.id, this.block.dataRow.id)}>
+                        </SnapRecordPage>}
+                    </div>
+                    <div className="sy-data-grid-card-items padding-w-10 padding-h-5 r-gap-h-5 ">
+                        <ChildsArea childs={this.block.childs}></ChildsArea>
+                    </div>
+                    <div></div>
+                    {this.block.isCanEdit() && <div className="pos visible top-5 right-5 remark flex-center round  shadow-s border cursor">
+                        <ToolTip overlay={<S>编辑</S>}><span onMouseDown={e => { e.stopPropagation(); this.block.dataGrid.onOpenEditForm(this.block.dataRow.id); }} className="round-l-4 bg-hover size-24 flex-center cursor border-right"><Icon size={16} icon={{ name: 'byte', code: 'write' }}></Icon></span></ToolTip>
+                        <ToolTip overlay={<S text="复制删除">复制、删除</S>}><span onMouseDown={e => { e.stopPropagation(); this.block.onOpenMenu(e); }} className="round-r-4 bg-hover size-24 flex-center cursor"><Icon size={20} icon={DotsSvg}></Icon></span></ToolTip>
+                    </div>}
+                </div>
+            }
             var field = this.block.schema.fields.find(g => g.id == ga.cardConfig.coverFieldId);
             var imageData, top = 50;
-            if (field) imageData = this.block.dataRow[field.name];
-            if (Array.isArray(imageData)) imageData = imageData[0];
+            if (field?.type == FieldType.image) {
+                if (field) imageData = this.block.dataRow[field.name];
+                if (Array.isArray(imageData)) imageData = imageData[0];
+            }
+            else if (field?.type == FieldType.rollup) {
+                var v = this.block.dataGrid.getRollupValue(this.block.dataRow, field);
+                if (Array.isArray(v)) imageData = v[0];
+                if (Array.isArray(imageData)) imageData = imageData[0];
+            }
             else if (ga.cardConfig.coverFieldId == 'pageCover') {
                 if (this.block.dataRow.cover && this.block.dataRow.cover['url'] && this.block.dataRow.cover.abled) {
                     imageData = { url: this.block.dataRow.cover['url'] };
                     top = this.block.dataRow.cover['top'] || 50;
                 }
+            }
+            else if (ga.cardConfig.coverFieldId == 'pageIllustration') {
+                imageData = this.block.dataRow.thumb;
+                if (Array.isArray(imageData)) imageData = imageData[0];
+                if (!imageData) imageData = null;
+                top = 50;
             }
             return <div className='sy-data-grid-item sy-data-grid-card visible-hover'>
                 {imageData && <div className="sy-data-grid-card-cover border-light-b">
