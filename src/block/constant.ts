@@ -51,6 +51,7 @@ export enum BlockUrlConstant {
     Image = '/image',
     Video = '/video',
     Audio = '/audio',
+    File='/file',
     BoardImage = '/board/image',
     RecordPageView = '/data-grid/page/record',
     Table = '/table',

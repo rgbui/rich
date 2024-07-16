@@ -605,7 +605,9 @@ export class PageWrite {
         var inputPopHandle = async (offset: number,
             blockData: BlockSelectorItem
         ) => {
+          
             await InputForceStore(this.inputPop.aa, async () => {
+             
                 var aa = this.inputPop.aa;
                 var newBlock: Block;
                 var bd = lodash.cloneDeep(blockData.data || {});

@@ -434,8 +434,10 @@ export class Block$Event {
         action?: () => Promise<void>
     }) {
         var { appear, oldValue, newValue, action } = options;
+      
         await this.page.onAction(ActionDirective.onInputText, async () => {
             await this.manualUpdateProps({ [appear.prop]: oldValue }, { [appear.prop]: newValue }, BlockRenderRange.none, { isOnlyRecord: true });
+          
             if (typeof action == 'function') await action();
             await this.changeAppear(appear);
 

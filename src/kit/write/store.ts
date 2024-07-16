@@ -6,6 +6,7 @@ var inputStore;
  * 马上保存
  */
 export async function InputForceStore(appear: AppearAnchor, action?: () => Promise<void>) {
+   
     await InputStore(appear, true, action);
 }
 /**
@@ -27,6 +28,7 @@ export async function InputStore(appear: AppearAnchor, force: boolean = false, a
         inputStoreTime = undefined
     }
 
+   
     inputStore = async function () {
         try {
             inputStore = undefined;

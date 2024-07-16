@@ -299,10 +299,14 @@ export class Page extends Events<PageDirective> {
     get scale() {
         return this.matrix.getScaling().x;
     }
-
     openSource: 'page' | 'slide' | 'dialog' | 'snap' | 'popup' = 'page';
     getScreenStyle() {
         var style: CSSProperties = {};
+        if (this.openSource == 'popup') {
+            style.marginLeft = 10;
+            style.marginRight = 10;
+            return style;
+        }
         if (isMobileOnly) {
             style.marginLeft = 20
             style.marginRight = 20

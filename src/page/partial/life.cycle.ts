@@ -17,7 +17,6 @@ import { util } from "../../../util/util";
 import { PageOutLine } from "../../../blocks/navigation/outline";
 import { channel } from "../../../net/channel";
 import { ElementType, getElementUrl } from "../../../net/element.type";
-import { QueueHandle } from "../../../component/lib/queue";
 import { Image } from "../../../blocks/media/image";
 import { ls } from "../../../i18n/store";
 import { BuildTemplate } from "../template/build";
@@ -230,7 +229,9 @@ export class Page$Cycle {
                 BlockUrlConstant.Quote,
                 BlockUrlConstant.Measure,
                 BlockUrlConstant.Note,
-                BlockUrlConstant.Shape
+                BlockUrlConstant.Shape,
+                BlockUrlConstant.Image,
+                BlockUrlConstant.Divider,
             ].includes(b.url as any)) {
                 bs.push(b);
             }
@@ -238,10 +239,9 @@ export class Page$Cycle {
         })
         return JSON.stringify(await bs.asyncMap(async b => await b.get()));
     }
-    async getThumb(this: Page)
-    {
+    async getThumb(this: Page) {
         var bs: Block[] = [];
-        this.each(b=>{
+        this.each(b => {
             if ([BlockUrlConstant.Image].includes(b.url as any) && (b as Image).src) {
                 bs.push(b);
             }
@@ -550,11 +550,6 @@ export class Page$Cycle {
             }
         }
     }
-    /**
-     * onAction在执行时，会出现并发的情况，
-     * 这时通过onActionQueue把并发的请求变成一个队列，然后有序执行
-     */
-    onActionQueue: QueueHandle;
     async onAction(this: Page,
         directive: ActionDirective | string,
         fn: () => Promise<void>,
@@ -697,8 +692,7 @@ export class Page$Cycle {
                 }
             }, options);
             try {
-                if (isTs)
-                    console.log('ts action after', window.performance.now() - ts);
+                if (isTs) console.log('ts action after', window.performance.now() - ts);
                 var events = this.actionAfterEvents;
                 this.actionAfterEvents = [];
                 this.onActionAfter(events)
@@ -708,11 +702,7 @@ export class Page$Cycle {
                 this.onError(ex);
             }
         }
-        if (typeof this.onActionQueue == 'undefined') this.onActionQueue = new QueueHandle();
-        await this.onActionQueue.create(
-            willAction
-        )
-        // await willAction();
+        await willAction();
     }
     private async onActionCompletedObserveProcess(this: Page, recordSyncRowBlocks: Page['recordSyncRowBlocks'], recordOutlineChanges: Page['recordOutlineChanges']) {
         if (!this.pageInfo?.id) return;

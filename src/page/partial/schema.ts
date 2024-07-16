@@ -16,6 +16,7 @@ import { Block } from "../../block";
 import { BlockRenderRange } from "../../block/enum";
 import { util } from "../../../util/util";
 
+
 export class Page$Schema {
     /**
      * 表示数据已提交
@@ -108,6 +109,25 @@ export class Page$Schema {
                         }
                     }
                 }
+                if (this.pe.type == ElementType.SchemaRecordView) {
+                    var sv = this.schema.views.find(g => g.id == this.pe.id1);
+                    if (sv.formType == 'doc-add') {
+                        var bf = this.find(g => g.url == BlockUrlConstant.Button && (g as BlockButton).isFormSubmit() == true);
+                        if (!bf) {
+                            var rf = this.findReverse(g => g instanceof OriginFormField);
+                            if (rf) {
+                                var dc = await BlockFactory.createBlock(BlockUrlConstant.Button, this, {
+                                    align: 'center',
+                                    buttonText: lst('提交'),
+                                    flow: {
+                                        commands: [{ url: '/form/submit' }]
+                                    }
+                                }, rf.parent);
+                                rf.parentBlocks.insertAt(rf.at + 1, dc);
+                            }
+                        }
+                    }
+                }
                 if (typeof this.formRowData == 'undefined') {
                     this.formRowData = {};
                 }
@@ -166,7 +186,7 @@ export class Page$Schema {
 
         util.clearObjectUndefined(row);
         util.clearObjectUndefined(this.formRowData);
-        
+
         /**
          * 比较初始值，如果一样，说明没有任何修改，返回null
          */
@@ -187,42 +207,44 @@ export class Page$Schema {
     *  
     */
     async onSubmitForm(this: Page) {
-        if (this.pe.type == ElementType.SchemaData || this.pe.type == ElementType.SchemaRecordViewData) {
-            var newRow = await this.getSchemaRow()
-            console.log('newRow', newRow);
-            if (newRow && Object.keys(newRow).length > 0) {
-                await this.schema.rowUpdate({ dataId: this.pe.id1, data: newRow }, 'Page.onSubmitForm')
-            }
-        }
-        else if (this.pe.type == ElementType.SchemaRecordView) {
-            var newRow = await this.getSchemaRow();
-            if (this.dataSubmitId) {
+        if (this.isCanEdit) {
+            if (this.pe.type == ElementType.SchemaData || this.pe.type == ElementType.SchemaRecordViewData) {
+                var newRow = await this.getSchemaRow()
                 if (newRow && Object.keys(newRow).length > 0) {
-                    await this.schema.rowUpdate({ dataId: this.dataSubmitId, data: newRow }, 'Page.onSubmitForm')
+                    await this.schema.rowUpdate({ dataId: this.pe.id1, data: newRow }, 'Page.onSubmitForm')
                 }
             }
-            else if (newRow) {
-                var r = await this.schema.rowAdd({ data: newRow, pos: { id: undefined, pos: 'after' } }, 'Page.onSubmitForm');
-                if (r) {
-                    newRow = r.data;
-                    var sv = this.schema.views.find(g => g.id == this.pe.id1);
-                    if (this.isCanEdit && sv.formType != 'doc-add')
-                        await channel.act('/view/snap/store',
-                            {
-                                elementUrl: getElementUrl(ElementType.SchemaData,
-                                    this.schema.id,
-                                    newRow.id
-                                ),
-                                seq: 0,
-                                plain: await this.getPlain(),
-                                thumb: await this.getThumb(),
-                                content: await this.getString(),
-                                text: newRow.title,
-                            }
-                        )
+            else if (this.pe.type == ElementType.SchemaRecordView) {
+                var newRow = await this.getSchemaRow();
+                if (this.dataSubmitId) {
+                    if (newRow && Object.keys(newRow).length > 0) {
+                        await this.schema.rowUpdate({ dataId: this.dataSubmitId, data: newRow }, 'Page.onSubmitForm')
+                    }
+                }
+                else if (newRow) {
+                    var r = await this.schema.rowAdd({ data: newRow, pos: { id: undefined, pos: 'after' } }, 'Page.onSubmitForm');
+                    if (r) {
+                        newRow = r.data;
+                        var sv = this.schema.views.find(g => g.id == this.pe.id1);
+                        if (this.isCanEdit && sv.formType != 'doc-add')
+                            await channel.act('/view/snap/store',
+                                {
+                                    elementUrl: getElementUrl(ElementType.SchemaData,
+                                        this.schema.id,
+                                        newRow.id
+                                    ),
+                                    seq: 0,
+                                    plain: await this.getPlain(),
+                                    thumb: await this.getThumb(),
+                                    content: await this.getString(),
+                                    text: newRow.title,
+                                }
+                            )
+                    }
                 }
             }
         }
+
     }
     /**
      * 切换页面的不同展示模式
