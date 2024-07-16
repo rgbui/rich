@@ -35,6 +35,7 @@ import { PageLayoutType } from "../../../../src/page/declare";
 import { GroupHeadType, GroupViewType } from "../declare";
 import { util } from "../../../../util/util";
 import { DataGridTableItem } from "../table/row";
+import { OriginField } from "../../element/field/origin.field";
 
 /**
  * 
@@ -679,66 +680,120 @@ export class DataGridView extends Block {
         console.log('syncDataSchema', r, options);
         if (this.dataGridIsCanEdit() == false) return;
         if (r?.operate?.schemaId) {
-            if (r?.operate.schemaId == this.schemaId) {
-                if (options?.locationId == this.id) return;
-                var act: SchemaAction = r.operate.actions[0];
-                if (act) {
-                    switch (act.name) {
-                        case 'createSchemaView':
-                        case 'removeSchemaView':
-                        case 'updateSchemaView':
-                        case 'updateSchema':
-                        case 'duplicateSchemaView':
-                        case 'changeSchemaView':
-                        case 'moveSchemaView':
-                            var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
-                            this.schema = tc;
-                            await this.schema.cacPermissions();
-                            if (act.name == 'removeSchemaView') {
-                                if (act.id == this.syncBlockId) {
-                                    //ShyAlert('当前视图已被删除，将自动切换到默认视图')
-                                    var view = this.schema.listViews.first();
-                                    this.onDataGridTurnView(view.id)
-                                }
-                            }
-                            break;
-                        case 'addField':
-                            var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
-                            this.schema = tc;
-                            await this.schema.cacPermissions();
-                            break;
-                        case 'updateField':
-                            var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
-                            this.schema = tc;
-                            await this.schema.cacPermissions();
-                            if (this.fields.some(s => s.field?.id == (act as any).id)) {
-                                this.forceManualUpdate();
-                            }
-                            break;
-                        case 'removeField':
-                            var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
-                            this.schema = tc;
-                            await this.schema.cacPermissions();
-                            if (this.fields.some(s => s.fieldId == (act as any).id)) {
-                                lodash.remove(this.fields, s => s.fieldId == (act as any).id);
-                                this.forceManualUpdate();
-                            }
-                            break;
-                        case 'turnField':
-                            var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
-                            this.schema = tc;
-                            await this.schema.cacPermissions();
-                            if (this.fields.some(s => s.fieldId == (act as any).id)) {
-                                await this.onLazyReloadData();
-                            }
-                            break;
-                        case 'deleteSchema':
-                            this.schema = null;
-                            await this.loadDataGrid();
-                            break;
+            // if (r?.operate.schemaId == this.schemaId) {
+            if (options?.locationId == this.id) return;
+            var act: SchemaAction = r.operate.actions[0];
+            if (act) {
+                if ([
+                    'createSchemaView',
+                    'removeSchemaView',
+                    'updateSchemaView',
+                    'updateSchema',
+                    'duplicateSchemaView',
+                    'changeSchemaView',
+                    'moveSchemaView'
+                ].includes(act.name)) {
+                    if (r?.operate?.schemaId == this.schemaId) {
+                        var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
+                        await this.schema.cacPermissions();
+                        this.schema = tc;
+                    }
+                    else if (r?.operate?.schemaId && this.relationSchemas.some(s => s.id == r.operate.schemaId)) {
+                        var tc = await TableSchema.loadTableSchema(r.operate.schemaId, this.page.ws, true)
+                        await tc.cacPermissions();
+                        this.relationSchemas = this.relationSchemas.map(s => s.id == r.operate.schemaId ? tc : s)
                     }
                 }
+                else if (['addField', 'updateField', 'turnField', 'removeField'].includes(act.name)) {
+                    if (r?.operate?.schemaId == this.schemaId) {
+                        var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
+                        await this.schema.cacPermissions();
+                        this.schema = tc;
+                    }
+                    else if (r?.operate?.schemaId && this.relationSchemas.some(s => s.id == r.operate.schemaId)) {
+                        var tc = await TableSchema.loadTableSchema(r.operate.schemaId, this.page.ws, true)
+                        await tc.cacPermissions();
+                        this.relationSchemas = this.relationSchemas.map(s => s.id == r.operate.schemaId ? tc : s)
+                    }
+                    if (act.name != 'addField') {
+                        var isUpdate = this.fields.some(s => s.id == (act as any).id)
+                        if (act.name == 'removeField') {
+                            lodash.remove(this.fields, s => s.fieldId == (act as any).id);
+                        }
+                        if (isUpdate)
+                            if (act.name == 'turnField') { this.onLazyReloadData(); }
+                            else if (act.name == 'updateField') {
+                                this.childs.forEach(row => {
+                                    row.childs.forEach(c => {
+                                        var f = c as OriginField;
+                                        if (f.field?.id == (act as any).id) { f.forceManualUpdate() }
+                                    })
+                                })
+                            }
+                            else if (act.name == 'removeField') {
+                                this.createRowsItem(true)
+                            }
+                    }
+                }
+                else if (['deleteSchema'].includes(act.name)) {
+
+                }
+                // switch (act.name) {
+                //     case 'createSchemaView':
+                //     case 'removeSchemaView':
+                //     case 'updateSchemaView':
+                //     case 'updateSchema':
+                //     case 'duplicateSchemaView':
+                //     case 'changeSchemaView':
+                //     case 'moveSchemaView':
+                //         // var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
+                //         // this.schema = tc;
+                //         // await this.schema.cacPermissions();
+                //         // if (act.name == 'removeSchemaView') {
+                //         //     if (act.id == this.syncBlockId) {
+                //         //         //ShyAlert('当前视图已被删除，将自动切换到默认视图')
+                //         //         var view = this.schema.listViews.first();
+                //         //         this.onDataGridTurnView(view.id)
+                //         //     }
+                //         // }
+                //         break;
+                //     case 'addField':
+                //         // var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
+                //         // this.schema = tc;
+                //         // await this.schema.cacPermissions();
+                //         break;
+                //     case 'updateField':
+                //         // var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
+                //         // this.schema = tc;
+                //         // await this.schema.cacPermissions();
+                //         // if (this.fields.some(s => s.field?.id == (act as any).id)) {
+                //         //     this.forceManualUpdate();
+                //         // }
+                //         break;
+                //     case 'removeField':
+                //         // var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
+                //         // this.schema = tc;
+                //         // await this.schema.cacPermissions();
+                //         // if (this.fields.some(s => s.fieldId == (act as any).id)) {
+                //         //     lodash.remove(this.fields, s => s.fieldId == (act as any).id);
+                //         //     this.forceManualUpdate();
+                //         // }
+                //         break;
+                //     case 'turnField':
+                //         // var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
+                //         // this.schema = tc;
+                //         // await this.schema.cacPermissions();
+                //         // if (this.fields.some(s => s.fieldId == (act as any).id)) {
+                //         //     await this.onLazyReloadData();
+                //         // }
+                //         break;
+                //     case 'deleteSchema':
+                //         // this.schema = null;
+                //         // await this.loadDataGrid();
+                //         break;
+                // }
             }
+            // }
         }
     }
     syncDatastore = async (r: {
@@ -765,11 +820,16 @@ export class DataGridView extends Block {
                 if (act) {
                     switch (act.name) {
                         case 'add':
-                            if (options?.locationId == 'Page.onSubmitForm' || options?.locationId == 'flowButtonAddRecords') {
-                                this.data.push(result.data);
-                                this.total += 1;
-                                await this.createOneItem(result.data, true)
-                                this.onNotifyPageReferenceBlocks();
+                            if (r?.operate.schemaId == this.schemaId) {
+                                if (options?.locationId == 'Page.onSubmitForm' || options?.locationId == 'flowButtonAddRecords') {
+                                    this.data.push(result.data);
+                                    this.total += 1;
+                                    await this.createOneItem(result.data, true)
+                                    this.onNotifyPageReferenceBlocks();
+                                }
+                            }
+                            else if (r?.operate.schemaId && this.relationDatas.has(r.operate.schemaId)) {
+                                this.relationDatas.get(r.operate.schemaId).push(result.data);
                             }
                             break;
                         case 'batchAdd':
@@ -777,29 +837,53 @@ export class DataGridView extends Block {
 
                             }
                         case 'update':
-                            var dr = this.data.find(g => g.id == (act as any).id);
-                            if (dr) {
-                                Object.assign(dr, (act as any).data);
-                                console.log('up....', dr);
-                                await this.createOneItem(dr, true)
+                            if (r?.operate.schemaId == this.schemaId) {
+                                var dr = this.data.find(g => g.id == (act as any).id);
+                                if (dr) {
+                                    Object.assign(dr, (act as any).data);
+                                    console.log('up....', dr);
+                                    await this.createOneItem(dr, true)
+                                }
+                            }
+                            else if (r?.operate.schemaId && this.relationDatas.has(r.operate.schemaId)) {
+                                var drc = this.relationDatas.get(r.operate.schemaId).find(g => g.id == (act as any).id);
+                                if (drc) {
+                                    Object.assign(drc, (act as any).data);
+                                }
                             }
                             break;
                         case 'remove':
-                            var dr = this.data.find(g => g.id == (act as any).id);
-                            if (dr) {
-                                lodash.remove(this.data, g => g.id == (act as any).id);
-                                this.total -= 1;
-                                this.onNotifyPageReferenceBlocks();
-                                await this.deleteOneItem(dr, true);
+                            if (r?.operate.schemaId == this.schemaId) {
+                                var dr = this.data.find(g => g.id == (act as any).id);
+                                if (dr) {
+                                    lodash.remove(this.data, g => g.id == (act as any).id);
+                                    this.total -= 1;
+                                    this.onNotifyPageReferenceBlocks();
+                                    await this.deleteOneItem(dr, true);
+                                }
+                            }
+                            else if (r?.operate.schemaId && this.relationDatas.has(r.operate.schemaId)) {
+                                var drc = this.relationDatas.get(r.operate.schemaId).find(g => g.id == (act as any).id);
+                                if (drc) {
+                                    lodash.remove(this.relationDatas.get(r.operate.schemaId), g => g.id == (act as any).id);
+                                }
                             }
                             break;
                         case 'removeIds':
-                            var drs = this.data.filter(g => (act as any).ids.includes(g.id));
-                            if (drs.length > 0) {
-                                lodash.remove(this.data, g => (act as any).ids.includes(g.id));
-                                this.total -= (act as any).ids.length;
-                                this.onNotifyPageReferenceBlocks();
-                                await this.deleteOneItem(drs, true)
+                            if (r?.operate.schemaId == this.schemaId) {
+                                var drs = this.data.filter(g => (act as any).ids.includes(g.id));
+                                if (drs.length > 0) {
+                                    lodash.remove(this.data, g => (act as any).ids.includes(g.id));
+                                    this.total -= (act as any).ids.length;
+                                    this.onNotifyPageReferenceBlocks();
+                                    await this.deleteOneItem(drs, true)
+                                }
+                            }
+                            else if (r?.operate.schemaId && this.relationDatas.has(r.operate.schemaId)) {
+                                var drcs = this.relationDatas.get(r.operate.schemaId).filter(g => (act as any).ids.includes(g.id));
+                                if (drcs.length > 0) {
+                                    lodash.remove(this.relationDatas.get(r.operate.schemaId), g => (act as any).ids.includes(g.id));
+                                }
                             }
                             break;
                         case 'removeFilter':
@@ -859,6 +943,24 @@ export class DataGridView extends Block {
         })
     }
     subMapSpread: Map<string, boolean> = new Map();
+    getRollupValue(row: Record<string, any>, field: Field) {
+        var rf = this.schema.fields.find(g => g.id == field.config.rollupRelationFieldId);
+        if (rf) {
+            var sch = this.relationSchemas.find(g => g.id == rf.config.relationTableId);
+            if (sch) {
+                var rollField = sch.fields.find(g => g.id == field.config.rollupFieldId);
+                if (rollField) {
+                    var ids = row[rf.name];
+                    if (!Array.isArray(ids)) ids = [];
+                    if (ids.length > 0) {
+                        var refRows = this.relationDatas.get(rf.config.relationTableId).findAll(g => ids.includes(g.id)).map(c => c[rollField.name]);
+                        return refRows;
+                    }
+                }
+            }
+        }
+        return []
+    }
 }
 
 export interface DataGridView extends DataGridViewLife { }

@@ -128,7 +128,10 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                     { text: '80' + lst('条'), value: 80 },
                     { text: '100' + lst('条'), value: 100 },
                     { text: '150' + lst('条'), value: 150 },
-                    { text: '200' + lst('条'), value: 200 }
+                    { text: '200' + lst('条'), value: 200 },
+                    { type: MenuItemType.divide },
+                    { text: '5' + lst('条'), value: 5 },
+                    { text: '10' + lst('条'), value: 10 },
                 ]
             },
             {
@@ -195,7 +198,23 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 cardItems = [];
             }
             else {
-                var imgFields = this.block.schema.fields.filter(g => g.type == FieldType.image);
+                var imgFields = this.block.schema.fields.filter(g => {
+                    if (g.type == FieldType.image) return true;
+                    if (g.type == FieldType.rollup) {
+                        var rf = this.block.schema.fields.find(f => f.id == g.config?.rollupRelationFieldId);
+                        if (rf) {
+                            var sch = this.block.relationSchemas.find(g => g.id == rf.config?.relationTableId);
+                            if (sch) {
+                                var f = sch.fields.find(c => c.id == g.config?.rollupFieldId);
+                                if (f) {
+                                    if (f.type == FieldType.image) return true;
+                                }
+                            }
+                        }
+                    }
+                    return false;
+                });
+
                 cardItems = [
                     // { text: lst('卡片视图'), type: MenuItemType.text },
                     {
@@ -235,7 +254,8 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                         options: [
                             { text: lst('无'), value: '' },
                             { text: lst('页面封面'), value: 'pageCover' },
-                            // { text: lst('页面内容'), value: 'pageContent' },
+                            { text: lst('页面内容'), value: 'pageContent' },
+                            { text: lst('页面插图'), value: 'pageIllustration' },
                             ...(imgFields.length == 0 ? [] : [
                                 // { type: MenuItemType.divide },
                                 { type: MenuItemType.text, text: lst('字段') }
@@ -284,7 +304,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                     ]
                 },
                 {
-                    text: lst('卡片列数'),
+                    text: lst('相册列数'),
                     value: (this.block as TableStoreGallery).gallerySize,
                     name: 'gallerySize',
                     type: MenuItemType.select,

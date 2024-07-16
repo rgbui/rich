@@ -118,7 +118,7 @@ export function getBlockSelectData() {
             childs: [
 
                 { text: lst('数据表'), icon: { name: 'byte', code: 'table' }, url: "/data-grid/table", label: lst('/数据'), labels: ['/data', '/数据表', lst('/表格'), '/grid', '/gridview', '/table', '/bg', '/biaoge', '/shuju', '/sj', '/shujubiaoge', '/sjbg'] },
-                { text: lst('数据卡片'), icon: CollectionGallerySvg, url: "/data-grid/gallery", label: lst('/数据卡片'), labels: ['/data', '/数据表', lst('/表格'), '/grid', '/gridview', '/table', '/card', '/datacard', '/kapian', '/kp'] },
+                { text: lst('相册'), icon: CollectionGallerySvg, url: "/data-grid/gallery", label: lst('/相册'), labels: ['/data', '/数据表', lst('/表格'), '/grid', '/gridview', '/table', 'xiangche', '/xc','/gallery','/photo'] },
                 { text: lst('数据列表'), icon: CollectionListSvg, url: "/data-grid/list", label: lst('/数据列表'), labels: ['/data', '/数据表', lst('/表格'), '/grid', '/gridview', '/table', '/list', '/datalist', '/libiao', '/lb'] },
                 { text: lst('看板'), icon: CollectionBoardSvg, url: "/data-grid/board", label: lst('/看板'), labels: ['/data', '/数据表', lst('/表格'), '/grid', '/gridview', '/table', '/board', '/kanban', '/kb'] },
                 { text: lst('日历'), icon: CollectionCalendarSvg, url: "/data-grid/calendar", label: lst('/日历'), labels: ['/data', '/数据表', lst('/表格'), '/grid', '/gridview', '/table', '/calendar', '/rili', '/rl'] },

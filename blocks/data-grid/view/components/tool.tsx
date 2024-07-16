@@ -142,7 +142,7 @@ export class DataGridTool extends React.Component<{ block: DataGridView }> {
                 </div>
             else return <></>
         }
-        else return <div className="h-30 flex">
+        else return <div className="h-36 flex">
             <div className="flex-fixed flex">
                 <label className="cursor flex round  item-hover padding-r-5  text f-14"
                     onMouseDown={e => {

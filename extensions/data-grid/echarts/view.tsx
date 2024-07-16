@@ -10,7 +10,7 @@ import { DataGridChartConfig } from ".";
 import { S } from "../../../i18n/view";
 import { SelectBox } from "../../../component/view/select/box";
 import { DataGridChart } from "../../../blocks/data-grid/view/statistic/charts";
-import { FieldType } from "../../../blocks/data-grid/schema/type";
+import { FieldType, SupportStatFieldTypes } from "../../../blocks/data-grid/schema/type";
 import { CheckSvg, CloseSvg, PlusSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { getEchartTheme } from "../../../blocks/data-grid/view/statistic/load";
@@ -315,18 +315,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             options={[
                                 { text: '无', value: '', icon: { name: 'bytedance-icon', code: 'square' } },
                                 { type: MenuItemType.divide },
-                                ...this.schema.visibleFields.findAll(g => [
-                                    FieldType.title,
-                                    FieldType.date,
-                                    FieldType.createDate,
-                                    FieldType.user,
-                                    FieldType.number,
-                                    FieldType.creater,
-                                    FieldType.option,
-                                    FieldType.options,
-                                    FieldType.modifyDate,
-                                    FieldType.modifyer
-                                ].includes(g.type) && bc?.chart_config.y_fieldId != g.id).map(f => {
+                                ...this.schema.visibleFields.findAll(g => SupportStatFieldTypes.includes(g.type) && bc?.chart_config.x_fieldId != g.id).map(f => {
                                     return {
                                         text: f.text,
                                         icon: GetFieldTypeSvg(f),
@@ -354,6 +343,23 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                         }
                     </div>
                 </div>}
+
+                {[bc.chart_type].includes('bar') && bc.chart_config?.group_fieldId &&
+                    <div className="flex gap-w-5 padding-w-5 padding-h-3 round  item-hover gap-h-5">
+                        <div className="flex-auto"><S>堆叠</S></div>
+                        <div className={"flex-fixed"}>
+                            <Switch checked={bc.chart_config?.stack}
+                                onChange={async e => {
+                                    await bc.onUpdateProps({ 'chart_config.stack': e }, { range: BlockRenderRange.self })
+                                    await renderEcharts(bc);
+                                    this.forceUpdate()
+                                }}
+                            ></Switch>
+                        </div>
+                    </div>
+                }
+
+
             </div>}
             <div className="border-top-light h-30 flex padding-w-10">
                 <HelpText url={window.shyConfig?.isUS ? "https://help.shy.red/page/74#1FDGNukNCBK8mzVbfn95vt" : "https://help.shy.live/page/1876#eRtyKsBkW5hPkruxkyGdKL"}><S>了解如何使用数据图表</S></HelpText>
@@ -397,18 +403,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                 await bc.onReloadData();
                                 this.forceUpdate()
                             }}
-                            options={this.schema.visibleFields.findAll(g => [
-                                FieldType.title,
-                                FieldType.date,
-                                FieldType.createDate,
-                                FieldType.user,
-                                FieldType.number,
-                                FieldType.creater,
-                                FieldType.option,
-                                FieldType.options,
-                                FieldType.modifyDate,
-                                FieldType.modifyer
-                            ].includes(g.type)).map(f => {
+                            options={this.schema.visibleFields.findAll(g => SupportStatFieldTypes.includes(g.type) && g.id !== bc.chart_config.group_fieldId).map(f => {
                                 return {
                                     text: f.text,
                                     icon: GetFieldTypeSvg(f),
@@ -540,18 +535,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                                 await bc.onReloadData();
                                 this.forceUpdate()
                             }}
-                            options={this.schema.visibleFields.findAll(g => [
-                                FieldType.title,
-                                FieldType.date,
-                                FieldType.createDate,
-                                FieldType.user,
-                                FieldType.number,
-                                FieldType.creater,
-                                FieldType.option,
-                                FieldType.options,
-                                FieldType.modifyDate,
-                                FieldType.modifyer
-                            ].includes(g.type)).map(f => {
+                            options={this.schema.visibleFields.findAll(g => SupportStatFieldTypes.includes(g.type)).map(f => {
                                 return {
                                     text: f.text,
                                     icon: GetFieldTypeSvg(f),
@@ -930,18 +914,7 @@ export class DataGridChartViewConfig extends EventsComponent<{ gc: DataGridChart
                             await bc.onReloadData();
                             this.forceUpdate()
                         }}
-                        options={this.schema.visibleFields.findAll(g => [
-                            FieldType.title,
-                            FieldType.date,
-                            FieldType.createDate,
-                            FieldType.user,
-                            FieldType.number,
-                            FieldType.creater,
-                            FieldType.option,
-                            FieldType.options,
-                            FieldType.modifyDate,
-                            FieldType.modifyer
-                        ].includes(g.type)).map(f => {
+                        options={this.schema.visibleFields.findAll(g => SupportStatFieldTypes.includes(g.type)).map(f => {
                             return {
                                 text: f.text,
                                 icon: GetFieldTypeSvg(f),

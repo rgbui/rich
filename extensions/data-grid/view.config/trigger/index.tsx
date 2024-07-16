@@ -1,6 +1,6 @@
 
 import React, { ReactNode } from "react";
-import { FieldType } from "../../../../blocks/data-grid/schema/type";
+import { DisabledTrggerFilterFieldTypes, DisabledTriggerSortFieldTypes, FieldType } from "../../../../blocks/data-grid/schema/type";
 import { GetFieldTypeSvg } from "../../../../blocks/data-grid/schema/util";
 import { DataGridView } from "../../../../blocks/data-grid/view/base";
 import { EventsComponent } from "../../../../component/lib/events.component";
@@ -69,7 +69,7 @@ export class DataGridTrigger extends EventsComponent {
                         <span className="flex-auto flex-end"><Tip text={'插入到页面'}><span className="size-24 flex-center item-hover round cursor text-1  " onMouseDown={e => { this.block.onExtendTriggerBlock(BlockUrlConstant.DataGridOptionRule, { refBlockId: this.block.id }) }}><Icon size={18} icon={PlusSvg}></Icon></span></Tip></span>
                     </div>
                 </div>
-                <div className="remark f-12 padding-w-10 gap-w-5 gap-t-10"><S text='表单按钮'>表单</S></div>
+                {this.block.schema.recordViews.length > 0 && <div className="remark f-12 padding-w-10 gap-w-5 gap-t-10"><S text='表单按钮'>表单按钮</S></div>}
                 <div>
                     {this.block.schema.recordViews.map(rv => {
                         return <div key={rv.id} className="flex item-hover round h-30 padding-w-5 gap-w-5  grab"><Tip text='拖至页面插入'><span className="size-24 text-1  round flex-center" onMouseDown={e => this.onDrag(e, {
@@ -93,23 +93,7 @@ export class DataGridTrigger extends EventsComponent {
                     })}
                 </div>
                 <div className="remark f-12 padding-w-10 gap-w-5 gap-t-10"><S text='字段查询'>字段查询</S></div>
-                {this.block.schema.visibleFields.findAll(g => ![
-                    // FieldType.video,
-                    FieldType.formula,
-                    FieldType.rollup,
-                    FieldType.button,
-                    FieldType.deleted,
-                    // FieldType.audio,
-                    FieldType.parentId,
-                    FieldType.like,
-                    FieldType.oppose,
-                    FieldType.love,
-                    FieldType.comment,
-                    FieldType.emoji,
-                    FieldType.sort,
-                    FieldType.autoIncrement,
-
-                ].includes(g.type)).map(f => {
+                {this.block.schema.visibleFields.findAll(g => !DisabledTrggerFilterFieldTypes.includes(g.type)).map(f => {
                     return <div key={f.id} className="flex item-hover round h-30 padding-w-5 gap-w-5 ">
                         <Tip text='拖至页面插入'><span className="size-24 text-1  round flex-center grab" onMouseDown={e => this.onDrag(e, { url: getFieldFilterUrl(f), refBlockId: this.block.id, refFieldId: f.id })}><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>
                         <span className="flex-fixed gap-r-3 flex-center cursor round "><Icon size={14} icon={GetFieldTypeSvg(f)}></Icon></span>
@@ -122,26 +106,7 @@ export class DataGridTrigger extends EventsComponent {
                     </div>
                 })}
                 <div className="remark f-12 padding-w-10 gap-w-5 gap-t-10"><S text='字段排序'>字段排序</S></div>
-                {this.block.schema.visibleFields.findAll(g => ![
-                    // FieldType.video,
-                    FieldType.formula,
-                    FieldType.rollup,
-                    FieldType.button,
-                    FieldType.deleted,
-                    // FieldType.audio,
-                    FieldType.parentId,
-                    FieldType.image,
-                    FieldType.file,
-                    FieldType.video,
-                    FieldType.like,
-                    FieldType.oppose,
-                    FieldType.love,
-                    FieldType.comment,
-                    FieldType.emoji,
-                    FieldType.sort,
-                    FieldType.autoIncrement,
-
-                ].includes(g.type)).map(f => {
+                {this.block.schema.visibleFields.findAll(g => !DisabledTriggerSortFieldTypes.includes(g.type)).map(f => {
                     return <div key={f.id} className="flex item-hover round h-30 padding-w-5 gap-w-5 ">
                         <Tip text='拖至页面插入'><span className="size-24 text-1  round flex-center grab" onMouseDown={e => this.onDrag(e, { url: BlockUrlConstant.DataGridFieldSort, refBlockId: this.block.id, refFieldId: f.id })}><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>
                         <span className="flex-fixed gap-r-3 flex-center cursor round "><Icon size={14} icon={GetFieldTypeSvg(f)}></Icon></span>

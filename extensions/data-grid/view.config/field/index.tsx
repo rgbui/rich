@@ -234,7 +234,7 @@ export class DataGridFields extends EventsComponent {
         return <div className="max-h-200 overflow-y">
             <div className="flex padding-w-14 gap-t-10 remark f-12">
                 <span className="flex-fixed  flex-center">
-                    <S text="卡片模板字段">卡片模板字段(绑定)</S>
+                    <S text="数据表模板字段">数据表模板字段(绑定)</S>
                 </span>
                 <HelpText className={'flex-fixed'} url={window.shyConfig.isUS ? "https://help.shy.red/page/45#bL7PqQVPV559C39frqH1nR" : "https://help.shy.live/page/1872#8vxftyLXa8uJ1PDxJAuDJG"}></HelpText>
             </div>
@@ -243,7 +243,7 @@ export class DataGridFields extends EventsComponent {
                     var bp = (self.block as TableStoreGallery).cardConfig.templateProps?.props?.find(g => g.name == pro.name);
                     return <div key={pro.name} className="flex gap-h-5 padding-h-3 f-14 padding-w-5 gap-w-5 item-hover round cursor text-1">
                         <span className="flex-fixed w-100 flex-end flex remark">
-                            <Tip overlay={lst('卡片属性') + ":" + searchFieldItems(pro.types).map(c => c.text).join(",")}><span className="flex remark">
+                            <Tip overlay={lst('模板字段') + ":" + searchFieldItems(pro.types).map(c => c.text).join(",")}><span className="flex remark">
                                 <span className="flex-fixed">{pro.required ? "* " : ""}</span>
                                 <span className="text-over flex-auto">{pro.text}</span>
                             </span></Tip>

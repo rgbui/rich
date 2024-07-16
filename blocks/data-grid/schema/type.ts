@@ -358,6 +358,82 @@ export var DisabledFormFieldTypes: FieldType[] = [
     FieldType.pageContentPreview
 ]
 
+/**
+ * 禁止支持分组的字段
+ */
+export var DisabledGroupFieldTypes: FieldType[] = [
+    FieldType.icon,
+    FieldType.cover,
+    FieldType.description,
+    FieldType.plain,
+    FieldType.thumb,
+    FieldType.deleted,
+    FieldType.parentId,
+    FieldType.sort,
+    FieldType.pageContentPreview,
+    FieldType.love,
+    FieldType.audio,
+    FieldType.image,
+    FieldType.video,
+    FieldType.file,
+    FieldType.browse,
+    FieldType.rollup,
+    FieldType.formula,
+    FieldType.like,
+    FieldType.id,
+    FieldType.approve
+]
+
+
+export var SupportStatFieldTypes: FieldType[] = [
+    FieldType.title,
+    FieldType.date,
+    FieldType.createDate,
+    FieldType.user,
+    FieldType.relation,
+    FieldType.number,
+    FieldType.creater,
+    FieldType.option,
+    FieldType.options,
+    FieldType.modifyDate,
+    FieldType.modifyer
+]
+export var DisabledTrggerFilterFieldTypes: FieldType[] = [
+    FieldType.formula,
+    FieldType.rollup,
+    FieldType.button,
+    FieldType.deleted,
+    // FieldType.audio,
+    FieldType.parentId,
+    FieldType.like,
+    FieldType.oppose,
+    FieldType.love,
+    FieldType.comment,
+    FieldType.emoji,
+    FieldType.sort,
+    FieldType.autoIncrement,
+]
+
+export var DisabledTriggerSortFieldTypes:FieldType[]=[
+    FieldType.formula,
+    FieldType.rollup,
+    FieldType.button,
+    FieldType.deleted,
+    // FieldType.audio,
+    FieldType.parentId,
+    FieldType.image,
+    FieldType.file,
+    FieldType.video,
+    FieldType.like,
+    FieldType.oppose,
+    FieldType.love,
+    FieldType.comment,
+    FieldType.emoji,
+    FieldType.sort,
+    FieldType.autoIncrement,
+]
+
+
 export var IsArrayValueFieldTypes: FieldType[] = [
     FieldType.option,
     FieldType.options,

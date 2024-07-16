@@ -6,6 +6,7 @@ import { channel } from "../../../../net/channel";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
 import lodash from "lodash";
 import { BlockUrlConstant } from "../../../../src/block/constant";
+import { Field } from "../../schema/field";
 
 
 export class DataGridViewLife {
@@ -47,25 +48,18 @@ export class DataGridViewLife {
     }
     async loadRelationSchemas(this: DataGridView) {
         var tableIds: string[] = [];
-        this.fields.each(f => {
-            if (f.field?.type == FieldType.relation) {
-                if (f.field.config.relationTableId) {
-                    if (!tableIds.includes(f.field.config.relationTableId))
-                        tableIds.push(f.field.config.relationTableId);
-                }
-            }
-            if (f.field?.type == FieldType.rollup) {
-                var rf = this.schema.fields.find(g => g.type == FieldType.relation && g.id == f?.field?.config?.rollupRelationFieldId);
-                if (rf) {
-                    if (rf?.config?.relationTableId) {
-                        if (!tableIds.includes(rf.config.relationTableId))
-                            tableIds.push(rf.config.relationTableId);
+        if (this.schema) {
+            this.schema.fields.each(f => {
+                if (f?.type == FieldType.relation) {
+                    if (f.config.relationTableId) {
+                        if (!tableIds.includes(f.config.relationTableId))
+                            tableIds.push(f.config.relationTableId);
                     }
                 }
+            });
+            if (tableIds.length > 0) {
+                this.relationSchemas = await TableSchema.loadListSchema(tableIds, this.page);
             }
-        });
-        if (tableIds.length > 0) {
-            this.relationSchemas = await TableSchema.loadListSchema(tableIds, this.page);
         }
     }
     /***
@@ -87,34 +81,18 @@ export class DataGridViewLife {
                 if (parentId && row.parentId != parentId) {
                     return;
                 }
-                this.fields.each(f => {
-                    if (f?.field?.type == FieldType.relation) {
-                        var vs = lodash.cloneDeep(row[f?.field.name]);
+                this.schema.fields.each(f => {
+                    if (f?.type == FieldType.relation) {
+                        var vs = lodash.cloneDeep(row[f?.name]);
                         if (!Array.isArray(vs)) vs = [];
-                        var ms = maps.find(g => g.key == f?.field.config.relationTableId);
+                        var ms = maps.find(g => g.key == f?.config.relationTableId);
                         if (Array.isArray(ms?.ids)) {
                             vs.each(v => {
                                 if (!ms?.ids.includes(v)) ms?.ids.push(v)
                             })
                         }
                         else {
-                            maps.push({ key: f?.field.config.relationTableId, ids: vs })
-                        }
-                    }
-                    else if (f?.field?.type == FieldType.rollup) {
-                        var gf = this.schema.fields.find(g => g.type == FieldType.relation && g.id == f?.field?.config?.rollupRelationFieldId);
-                        if (gf) {
-                            var vs = lodash.cloneDeep(row[gf.name]);
-                            if (!Array.isArray(vs)) vs = [];
-                            var ms = maps.find(g => g.key == gf.config.relationTableId);
-                            if (Array.isArray(ms?.ids)) {
-                                vs.each(v => {
-                                    if (!ms?.ids.includes(v)) ms?.ids.push(v)
-                                })
-                            }
-                            else {
-                                maps.push({ key: gf.config.relationTableId, ids: vs })
-                            }
+                            maps.push({ key: f?.config.relationTableId, ids: vs })
                         }
                     }
                 })
@@ -130,6 +108,30 @@ export class DataGridViewLife {
                     }
                 }
             })
+        }
+    }
+    async addRelationDatas(this: DataGridView, field: Field, ids: string[]) {
+        var rs = this.relationSchemas.find(g => g.id == field.config.relationTableId);
+        if (rs) {
+            var ds = this.relationDatas.get(field.config.relationTableId);
+            if (Array.isArray(ds)) {
+                lodash.remove(ids, c => ds.some(d => d.id == c))
+            }
+            if (ids.length > 0) {
+                var r = await rs.all({ page: 1, filter: { id: { $in: ids } } }, this.page.ws);
+                if (r.ok) {
+                    if (Array.isArray(ds)) {
+                        r.data.list.each(g => {
+                            if (!ds.some(d => d.id == g.id)) {
+                                ds.push(g);
+                            }
+                        })
+                    }
+                    else {
+                        this.relationDatas.set(field.config.relationTableId, r.data.list);
+                    }
+                }
+            }
         }
     }
     /**

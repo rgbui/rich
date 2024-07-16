@@ -157,6 +157,8 @@ export class DataGridViewConfig {
                                 }
                                 else if (rg?.item.name == 'duplicate') {
                                     self.onCopySchemaView();
+                                    mp.close();
+                                    return;
                                 }
                             }
                             var props: Record<string, any> = {};

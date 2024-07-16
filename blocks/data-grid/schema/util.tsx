@@ -246,7 +246,7 @@ export function getChartViews() {
 export function getSchemaViews() {
     return [
         { url: '/data-grid/table', text: lst('表格') },
-        { url: '/data-grid/gallery', text: lst('卡片') },
+        { url: '/data-grid/gallery', text: lst('相册') },
         { url: '/data-grid/board', text: lst('看板') },
         { url: '/data-grid/list', text: lst('列表') },
         { url: '/data-grid/calendar', text: lst('日历') }

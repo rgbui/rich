@@ -248,7 +248,7 @@ export class TableSchema {
         })
         fs.splice(1, 0, ...ns);
         if (!isTemplate) {
-            lodash.remove(fs, g => g.type ==FieldType.title)
+            lodash.remove(fs, g => g.type == FieldType.title)
         }
         return fs;
     }
@@ -645,7 +645,9 @@ export class TableSchema {
         return schema as TableSchema;
     }
     static getSchemas(wsId: string) {
-        return Array.from(this.schemas.values()).filter(g => g.workspaceId == wsId)
+        var schList = Array.from(this.schemas.values()).filter(g => g.workspaceId == wsId)
+        schList = lodash.sortBy(schList, g => g.createDate)
+        return schList;
     }
     static async loadListSchema(schemaIds: string[], page: Page) {
         var rs: TableSchema[] = [];

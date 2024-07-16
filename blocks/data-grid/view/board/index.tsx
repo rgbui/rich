@@ -331,7 +331,7 @@ export class TableStoreBoard extends DataGridView {
         auto: false,
         showCover: false,
         coverFieldId: "",
-        showField: 'nowrap',
+        showField: 'wrap',
         coverAuto: false,
         showMode: 'default',
         templateProps: {}

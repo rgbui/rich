@@ -360,7 +360,7 @@ export class DataGridViewField {
                     icon: { name: 'bytedance-icon', code: 'one-to-many' },
                     checked: field?.config?.isMultiple ? true : false
                 });
-                items.insertAt(6, {
+                items.insertAt(7, {
                     type: MenuItemType.divide
                 })
             }

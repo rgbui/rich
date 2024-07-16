@@ -3,7 +3,7 @@ import { DataGridView } from "../../../../blocks/data-grid/view/base";
 import { EventsComponent } from "../../../../component/lib/events.component";
 import React from "react";
 import { SelectBox } from "../../../../component/view/select/box";
-import { FieldType } from "../../../../blocks/data-grid/schema/type";
+import { DisabledGroupFieldTypes, FieldType } from "../../../../blocks/data-grid/schema/type";
 import { GetFieldTypeSvg } from "../../../../blocks/data-grid/schema/util";
 import { lst } from "../../../../i18n/store";
 import { S } from "../../../../i18n/view";
@@ -103,16 +103,7 @@ export class TableGroupView extends EventsComponent {
                         icon: { name: 'byte', code: 'rectangle-one' },
                         value: ''
                     }, { type: MenuItemType.divide },
-                    ...this.block.schema.visibleFields.findAll(g => ![FieldType.comment,
-                    FieldType.love,
-                    FieldType.audio,
-                    FieldType.image,
-                    FieldType.video,
-                    FieldType.file,
-                    FieldType.browse,
-                    FieldType.like,
-                    FieldType.id,
-                    FieldType.approve].includes(g.type)).map(g => {
+                    ...this.block.schema.visibleFields.findAll(g =>!DisabledGroupFieldTypes.includes(g.type)).map(g => {
                         return {
                             text: g.text,
                             icon: GetFieldTypeSvg(g),

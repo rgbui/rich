@@ -3,7 +3,7 @@ import { Icon, IconValueType } from "../../../../component/view/icon";
 import { Block } from "../../../../src/block";
 import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
-import { ArrowLeftSvg, ArrowRightSvg, DatasourceSvg, DotsSvg, DuplicateSvg, LinkSvg, LoopSvg, PlusSvg, TrashSvg } from "../../../../component/svgs";
+import { ArrowLeftSvg, ArrowRightSvg, DatasourceSvg, DotsSvg, DuplicateSvg, LinkSvg, LoopSvg, PlusSvg, RefreshSvg, TrashSvg } from "../../../../component/svgs";
 import { TableSchema } from "../../schema/meta";
 import { Tip } from "../../../../component/view/tooltip/tip";
 import { getSchemaViewIcon } from "../../schema/util";
@@ -26,6 +26,7 @@ import { util } from "../../../../util/util";
 import "./style.less";
 import { TextEle } from "../../../../src/common/text.ele";
 import { ObserverWidth } from "../../../../src/common/observer.width";
+import { PageLayoutType } from "../../../../src/page/declare";
 
 
 @url('/data-grid/tab')
@@ -201,7 +202,8 @@ export class DataGridTab extends Block {
                     },
                     { text: lst('配置视图'), name: 'viewConfig', icon: { name: 'byte', code: 'setting-one' } as IconValueType },
                     { type: MenuItemType.divide },
-                    { text: lst('数据源'), name: 'datasource', icon: DatasourceSvg },
+                    { text: lst('数据源'), visible: at == 0 && this.page.pageLayout?.type == PageLayoutType.db ? false : true, name: 'datasource', icon: DatasourceSvg },
+                    { text: lst('重新加载数据...'), name: 'reload', icon: RefreshSvg },
                     { type: MenuItemType.divide },
                     { name: 'prev', text: lst('前移'), disabled: at == 0 ? true : false, icon: ArrowLeftSvg },
                     { name: 'after', text: lst('后移'), disabled: at == this.childs.length - 1 ? true : false, icon: ArrowRightSvg },
@@ -278,6 +280,8 @@ export class DataGridTab extends Block {
                                     }
                                     else if (rg?.item.name == 'duplicate') {
                                         self.dataGridBlock.onCopySchemaView();
+                                        mp.close();
+                                        return;
                                     }
                                 }
                                 var props: Record<string, any> = {};
@@ -365,6 +369,9 @@ export class DataGridTab extends Block {
                 }
                 else if (um.item.name == 'datasource') {
                     await self.dataGridBlock.onOpenDataSource(rect);
+                }
+                else if (um.item.name == 'reload') {
+                    await self.dataGridBlock.onReloadData();
                 }
                 else if (um.item.name == 'link') {
                     await self.dataGridBlock.onCopyLink();
@@ -471,6 +478,11 @@ export class DataGridTab extends Block {
             if (g) return g as DataGridView;
         }
     }
+    async onUpdateTabItems(block: DataGridView, tabIndex?: number) {
+        await this.page.onAction('onTabUpdateItem', async () => {
+            await this.updateTabItems(block, tabIndex);
+        });
+    }
     async updateTabItems(block: DataGridView, tabIndex?: number) {
         var items: DataGridTab['tabItems'] = lodash.cloneDeep(this.tabItems);
         var index = tabIndex ?? this.tabIndex;
@@ -480,6 +492,8 @@ export class DataGridTab extends Block {
             if (block.schemaView) {
                 items[index].viewText = block.schemaView?.text;
                 items[index].viewIcon = block.schemaView?.icon;
+                lodash.remove(this.refTables, g => g.id == block.schema.id);
+                this.refTables.push(block.schema);
             }
         }
         if (lodash.isEqual(items, this.tabItems)) return;
@@ -491,6 +505,7 @@ export class DataGridTab extends Block {
             }
         }
         await this.updateProps({ tabItems: items }, BlockRenderRange.self)
+        console.log('neee', items, block.schema, 'ggg', this.refTables)
     }
     get tabPages() {
         if (this.el)
@@ -696,7 +711,8 @@ export class DataGridTabView extends BlockView<DataGridTab> {
                                 style={{
                                     display: this.spreadIndex > -1 && this.spreadIndex >= index || this.spreadIndex == -1 || index == this.block.tabIndex ? "flex" : "none"
                                 }}
-                                className={"sy-data-grid-tab-item b-500 flex-fixed flex-center  " + (index == this.block.tabIndex ? "sy-data-grid-tab-item-hover" : "")} key={index}>
+                                className={"sy-data-grid-tab-item b-500 flex-fixed flex-center  " + (index == this.block.tabIndex ? "sy-data-grid-tab-item-hover" : "")}
+                                key={index}>
                                 <div className={"flex  round cursor max-w-220 f-14 padding-l-3 padding-r-8 " + (this.block.displayMode == 'button' ? "" : " item-hover")}>
                                     <div className="size-24 flex-center  "><Icon fontColorInherit icon={getSchemaViewIcon(v)} size={16}></Icon></div>
                                     <span data-item-text className={"f-14 "}>{v?.text || item.viewText}</span>

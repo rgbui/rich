@@ -21,11 +21,16 @@ ${schema.fields.map(r => {
                     ps.push(`var ${r.name}=sys.getRollupValue('${r.id}');`);
                     return ps.join('\n') + "\n";
                 }
+                else if (r.type == FieldType.formula) {
+                    var ps: string[] = [];
+                    ps.push(`var ${r.name}= await sys.getFormulaValue('${r.id}');`);
+                    return ps.join('\n') + "\n";
+                }
                 return `var ${r.name}=row.${r.name};`
             }).join("\n")}
 return ${field.config.formula.jsCode}
                 }`
-            console.log(funCode, 'fcode');
+            //console.log(funCode, 'fcode');
             var fx = eval('(' + funCode + ')');
             var sysFuncs = getRegisterFuns(page);
             sysFuncs.getOptionValue = function (value: any, id: string) {
@@ -42,7 +47,7 @@ return ${field.config.formula.jsCode}
                         var value = row[field.name];
                         var vs = Array.isArray(value) ? value : (value ? [value] : []);
                         var rs = (dataGrid.relationDatas.get(field.config?.relationTableId) || []).filter(g => vs.includes(g.id));
-                        
+
                         return rs.map(g => g.title);
                     }
                     else if (field.type == FieldType.rollup) {
@@ -73,6 +78,14 @@ return ${field.config.formula.jsCode}
                     }
                 }
                 else throw new Error('未找到字段:' + fieldText);
+            }
+            sysFuncs.getFormulaValue = async function (fieldId: string) {
+                //这里有可能会导致公式计算相互引用，死循环的情况，所以暂时不支持
+                return '';
+                var field = schema.fields.find(g => g.id == fieldId);
+                if (field) {
+                    return await cacFormulaValue(page, dataGrid, field, row);
+                }
             }
             var result = await fx.apply(row, [row, sysFuncs])
             if (typeof result == 'undefined') result = ''

@@ -50,7 +50,7 @@ export default class DataGridConfig extends EventsComponent {
                     <Tab.Page item={lst('视图')}>
                         <DataGridViewConfig gc={this} ref={e => this.dataGridViewConfig = e} ></DataGridViewConfig>
                     </Tab.Page>
-                    <Tab.Page item={[BlockUrlConstant.DataGridBoard, BlockUrlConstant.DataGridGallery].includes(this.dataGrid?.url as any) ? lst('卡片') : lst("字段")}>
+                    <Tab.Page item={lst("字段")}>
                         <DataGridFields ref={e => this.dataGridFields = e}></DataGridFields>
                     </Tab.Page>
                     <Tab.Page item={lst('过滤')}>
@@ -72,7 +72,7 @@ export default class DataGridConfig extends EventsComponent {
                 <Tab.Page item={lst('视图')}>
                     <DataGridViewConfig gc={this} ref={e => this.dataGridViewConfig = e} ></DataGridViewConfig>
                 </Tab.Page>
-                <Tab.Page item={[BlockUrlConstant.DataGridBoard, BlockUrlConstant.DataGridGallery].includes(this.dataGrid?.url as any) ? lst('卡片') : lst("字段")}>
+                <Tab.Page item={lst("字段")}>
                     <DataGridFields ref={e => this.dataGridFields = e}></DataGridFields>
                 </Tab.Page>
                 <Tab.Page item={lst('过滤')}>

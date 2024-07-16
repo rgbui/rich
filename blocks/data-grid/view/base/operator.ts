@@ -432,6 +432,7 @@ export class DataGridViewOperator {
         var sch = this.schema;
         if (schemaId && this.schemaId != schemaId) {
             sch = await TableSchema.loadTableSchema(schemaId, this.page.ws);
+            await sch.cacPermissions();
         }
         var v = sch.views.find(g => g.id == viewId);
         var bs = this.referenceBlockers;
@@ -464,6 +465,9 @@ export class DataGridViewOperator {
             }
         })
         if (dt) {
+            if (!newBlock.schema) {
+                newBlock.schema = sch;
+            }
             await dt.updateTabItems(newBlock);
         }
     }
@@ -500,7 +504,7 @@ export class DataGridViewOperator {
         ], this.id);
         self.forceManualUpdate()
         if (this.dataGridTab) {
-            this.dataGridTab.forceManualUpdate();
+            await this.dataGridTab.onUpdateTabItems(this);
         }
     }
     async onUpdateSorts(this: DataGridView, sorts: { field: string, sort: number }[]) {
