@@ -22,6 +22,7 @@ export class TrashBox extends EventsComponent {
             <div className="gap-w-14 padding-h-10">
                 <div >
                     <Input
+                        focusSelectionAll
                         placeholder={lst('搜索{text}中被删除的页面', { text: this.ws?.text })}
                         clear
                         onClear={() => {
@@ -39,11 +40,11 @@ export class TrashBox extends EventsComponent {
             </div>
             <div>
                 <Divider></Divider>
-                <div className="flex padding-w-14">
+                {this.search.list.length > 0 && <div className="flex padding-w-14">
                     <span className="f-12 remark"><S>已删除页面</S></span>
-                </div>
+                </div>}
                 {this.search.loading && <Spin block><S>搜索中...</S></Spin>}
-                {this.search.list.length > 0&&<div className="padding-b-30">
+                {this.search.list.length > 0 && <div className="padding-b-30">
                     {this.search.list.map(pa => {
                         return <div key={pa.id} className="flex item-hover round padding-h-3  padding-w-5 gap-w-10 ">
                             {/* <span className="flex-fixed flex-center size-24 remark  round "></span> */}
@@ -59,7 +60,7 @@ export class TrashBox extends EventsComponent {
                         </div>
                     })}
                 </div>}
-                {this.search.total == 0 && !this.search.loading && <div className="flex-center gap-t-10 padding-b-30 f-12 remark"><S>无删除记录</S></div>}
+                {this.search.total == 0 && !this.search.loading && <div className="flex-center h-50 f-12 remark"><S>无删除记录</S></div>}
             </div>
         </div>
     }
