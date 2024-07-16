@@ -5,7 +5,7 @@ import { util } from '../../../../util/util';
 var sc = new SyncLoad<any>()
 export function getEchartTheme()
 {
-    return [
+   var themes= [
     //     {
     //         text:lst('白垩'),
     //         name: 'chalk',
@@ -224,6 +224,8 @@ export function getEchartTheme()
             load: async () => await import('./data/wonderland.json')
         }
     ]
+    themes.reverse();
+    return themes;
 }
 
 export async function loadEchart() {

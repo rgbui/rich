@@ -52,6 +52,10 @@ export class DataGridChart extends DataGridView {
         isRadius?: boolean,
         targetValue?: number,
         color?: string,
+        /**
+         * 表示是否为堆叠
+         */
+        stack?: boolean,
     } = {
             sort_x: 'none',
             theme: 'wonderland',
@@ -299,8 +303,10 @@ export class DataGridChart extends DataGridView {
             this.isLoading = true;
             if (this.view) this.forceManualUpdate()
             await this.loadSchema();
+            await this.loadRelationSchemas();
             if (this.schema) {
                 await this.loadData();
+                await this.loadRelationDatas();
                 await this.renderEcharts();
                 this.emit('loadDataGrided');
             }
@@ -311,6 +317,32 @@ export class DataGridChart extends DataGridView {
         finally {
             this.isLoading = false;
             if (this.view) this.forceManualUpdate()
+        }
+    }
+    async loadRelationDatas(parentId?: string) {
+        var xfield = this.schema.fields.find(g => g.id == this.chart_config?.x_fieldId)
+        if (xfield && xfield.type == FieldType.relation) {
+            var ids = this.data.map(g => g[xfield.name])
+            var sea = this.relationSchemas.find(g => g.id == xfield.config.relationTableId)
+            if (sea) {
+                var rd = await sea.all({ page: 1, filter: { id: { $in: ids } } }, this.page.ws)
+                if (rd.ok) {
+                    this.relationDatas.set(xfield.config.relationTableId, rd.data.list)
+                }
+            }
+        }
+        if (this.chart_config.group_fieldId) {
+            var gfield = this.schema.fields.find(g => g.id == this.chart_config.group_fieldId)
+            if (gfield && gfield.type == FieldType.relation) {
+                var ids = this.data.map(g => g[gfield.name])
+                var sea = this.relationSchemas.find(g => g.id == gfield.config.relationTableId)
+                if (sea) {
+                    var rd = await sea.all({ page: 1, filter: { id: { $in: ids } } }, this.page.ws)
+                    if (rd.ok) {
+                        this.relationDatas.set(gfield.config.relationTableId, rd.data.list)
+                    }
+                }
+            }
         }
     }
     myChart
@@ -362,7 +394,7 @@ export class DataGridChart extends DataGridView {
             text: lst('创建图表'),
             buttonClick: 'select'
         })
-        var rc = await useSelectMenuItem({ roundArea: rect }, items);
+        var rc = await useSelectMenuItem({ roundArea: rect }, items, { width: 300 });
         var sid = items.find(c => c.name == 'schemaId')?.value as string;
         console.log(sid,)
         if (sid) {

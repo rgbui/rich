@@ -21,6 +21,12 @@ export async function mapValue<T = (string | string[])>(
         }) as any
         else return f.config?.options.find(g => g.value == value)?.text || value as any
     }
+    else if ([FieldType.relation].includes(f.type)) {
+        return (Array.isArray(value) ? value : []).map(g => {
+            var r = dg.relationDatas?.get(f.config?.relationTableId)?.find(c => c.id == g);
+            return r?.title;
+        }) as any
+    }
     else if ([FieldType.user, FieldType.creater, FieldType.modifyer].includes(f.type)) {
         var u = await channel.get('/users/basic', { ids: util.covertToArray(value) });
         if (u.ok) {
@@ -366,9 +372,15 @@ export async function renderEcharts(dg: DataGridChart) {
                         lodash.set(option, 'series[0].smooth', true);
                     if (dg.chart_config?.isArea)
                         lodash.set(option, 'series[0].areaStyle', {});
+                    (option.xAxis as any).axisLabel = {
+                        rotate: -45  // 设置文本倾斜45度
+                    }
                     break;
                 case 'bar':
                     lodash.set(option, 'series[0].type', 'bar');
+                    (option.xAxis as any).axisLabel = {
+                        rotate: -45  // 设置文本倾斜45度
+                    }
                     break;
                 case 'pie':
                     option = {
@@ -673,12 +685,29 @@ export async function renderEcharts(dg: DataGridChart) {
                         lodash.set(option, 'series[0].smooth', true);
                     if (dg.chart_config?.isArea)
                         lodash.set(option, 'series[0].areaStyle', {});
+                    (option.xAxis as any).axisLabel = {
+                        rotate: -45  // 设置文本倾斜45度
+                    }
+
                     break;
                 case 'bar':
-                    if (Array.isArray(option.series))
-                        option.series.forEach(g => {
-                            lodash.set(g, 'type', 'bar');
-                        })
+                    // if (Array.isArray(option.series))
+                    //     option.series.forEach(g => {
+                    //         lodash.set(g, 'type', 'bar');
+                    //     })
+                    option.series = await xs2.asyncMap(async x => {
+                        return {
+                            name: await mapValue(x, groups[1], dg),
+                            stack: dg.chart_config?.stack ? groups[1] : undefined,
+                            type: 'bar',
+                            data: xs.map(c => {
+                                return ggs(c, x, yname);
+                            })
+                        }
+                    });
+                    (option.xAxis as any).axisLabel = {
+                        rotate: -45  // 设置文本倾斜45度
+                    }
                     // lodash.set(option, 'series[0].type', 'bar');
                     break;
                 case 'pie':
