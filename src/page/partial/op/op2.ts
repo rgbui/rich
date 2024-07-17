@@ -48,8 +48,8 @@ export class Page$Operator2 {
         }
         else {
             if (typeof at == 'undefined')
-                this.views.push(block);
-            else this.views.splice(at, 0, block);
+                this.views.push(block as any);
+            else this.views.splice(at, 0, block as any);
             await block.created();
             this.snapshoot.record(OperatorDirective.$create, {
                 pos: block.pos,
@@ -74,7 +74,6 @@ export class Page$Operator2 {
                     }
                 }
                 await this.onAction(ActionDirective.onCreateTailTextSpan, async () => {
-
                     var newBlock: Block;
                     if (lastBlock && lastBlock.parent == panel) {
                         newBlock = await this.createBlock(BlockUrlConstant.TextSpan, {}, lastBlock.parent, lastBlock.at + 1);
@@ -100,22 +99,24 @@ export class Page$Operator2 {
         if (blocks.length > 0)
             await this.onAction(ActionDirective.onBatchDeleteBlocks, async () => {
                 if (typeof willDelete == 'function') await willDelete();
-                var pre = blocks.first().prevFind(c => c.isVisible && !blocks.includes(c) && !blocks.some(s => s.exists(g => g.id == c.id)) && c.isBlock);
-                if (!pre) blocks.first().nextFind(c => c.isVisible && !blocks.includes(c) && !blocks.some(s => s.exists(g => g.id == c.id)) && c.isBlock);
-                if (pre) {
-                    this.kit.anchorCursor.focusBlockAnchor(pre, { last: true, render: true })
-                }
                 if (this.kit.picker.blocks.some(s => blocks.some(c => c == s))) {
-                    this.kit.picker.blocks.removeAll(s => blocks.includes(s));
-                    if (this.kit.picker.blocks.length == 0) {
-                        this.kit.picker.onCancel();
+                    this.kit.picker.pick([], { disabledOpenTool: true })
+                }
+                else {
+                    var pre = blocks.first().prevFind(c => c.isVisible && !blocks.includes(c) && !blocks.some(s => s.exists(g => g.id == c.id)) && c.isBlock);
+                    if (!pre) blocks.first().nextFind(c => c.isVisible && !blocks.includes(c) && !blocks.some(s => s.exists(g => g.id == c.id)) && c.isBlock);
+                    if (pre) {
+                        this.kit.anchorCursor.focusBlockAnchor(pre, { last: true, render: true })
                     }
-                    else this.kit.picker.onRePicker();
+                }
+                if (this.kit.boardSelector.boardBlock) {
+                    if (blocks.some(s => s == this.kit.boardSelector.boardBlock)) {
+                        this.kit.boardSelector.close();
+                    }
                 }
                 await blocks.eachAsync(async bl => {
                     await bl.delete()
                 });
-
             })
     }
     async onTurn(this: Page, block: Block, url: string, callback: (newBlock: Block, oldBlock: Block) => void) {

@@ -259,6 +259,7 @@ export class TextContentView extends BlockView<TextContent> {
         delete style.lineHeight;
         style.padding = '2px 0px';
         style.borderRadius = '2px';
+        
         return <span className={classList.join(" ")} style={style}>{ta}</span>
     }
 }

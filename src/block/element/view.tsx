@@ -8,12 +8,22 @@ import { PageLayoutType } from '../../page/declare';
 import { isMobileOnly } from 'react-device-detect';
 import { PageCover } from '../../page/view/cover';
 import { S } from '../../../i18n/view';
+import { ToolTip } from '../../../component/view/tooltip';
+import { lst } from '../../../i18n/store';
+
+
+
+import { BlockChildKey, BlockUrlConstant } from '../constant';
+import { util } from '../../../util/util';
+import { Matrix } from '../../common/matrix';
+import { Icon } from '../../../component/view/icon';
 
 @url('/view')
 export class View extends Block {
     get isView() {
         return true;
     }
+
 }
 
 /*** 在一个页面上，从视觉上有多个视图块，
@@ -127,10 +137,68 @@ export class ViewComponent extends BlockView<View> {
                         display: this.block.page.dataSubmitId && this.submitedSpread == false ? "none" : "block"
                     }}>
                         <ChildsArea childs={this.block.childs}></ChildsArea>
+                        {isDocCard && this.block.childs.length == 0 && <div>
+                            <div className="sy-block-view-card-ops flex-center padding-h-50 gap-w-50  ">
+                                {this.block.isCanEdit() && <>
+                                    <ToolTip overlay={lst('添加文档卡片')}>
+                                        <div onMouseDown={e => this.onAddCardBox(e)} className="size-30 bg-white shadow-s flex-center cursor border circle text-1 link-hover gap-r-20"><Icon size={18} icon={{ name: "byte", code: 'add' }}></Icon></div>
+                                    </ToolTip>
+                                    <ToolTip overlay={lst('添加白板卡片')}>
+                                        <div onMouseDown={e => this.onAddBoardCardBox(e)} className="size-30 bg-white shadow-s flex-center cursor border circle text-1 link-hover"> <Icon size={18} icon={{ name: 'byte', code: 'add-one' }}></Icon></div>
+                                    </ToolTip>
+                                </>}
+                            </div>
+                        </div>}
                     </div>
                 </div>
             </div>
         }
+    }
+    async onAddCardBox(event: React.MouseEvent) {
+        event.stopPropagation();
+        await this.block.page.onAction('onAddCardBox', async () => {
+            var d = {
+                url: BlockUrlConstant.CardBox,
+                blocks: {
+                    childs: [
+                        { url: BlockUrlConstant.Head }
+                    ]
+                }
+            };
+            var nb = (await this.block.appendArrayBlockData([d], 0, BlockChildKey.childs))[0];
+            nb.mounted(async () => {
+                await util.delay(100);
+                await this.block.page.onPageScroll(nb);
+                var head = nb.find(g => g.url == BlockUrlConstant.Head)
+                this.block.page.kit.anchorCursor.onFocusBlockAnchor(head, { merge: true, render: true, last: true })
+            })
+        });
+    }
+    async onAddBoardCardBox(event: React.MouseEvent) {
+        event.stopPropagation();
+        this.block.page.onAction('onAddBoardCardBox', async () => {
+            var ma = new Matrix();
+            ma.translate(30, 20);
+            var d = {
+                url: BlockUrlConstant.CardBox,
+                board: true,
+                blocks: {
+                    childs: [
+                        {
+                            url: BlockUrlConstant.TextSpan,
+                            matrix: ma.getValues(),
+                        }
+                    ]
+                }
+            };
+            var newBlock = (await this.block.appendArrayBlockData([d], 0, BlockChildKey.childs))[0];
+            newBlock.mounted(async () => {
+                await this.block.page.onPageScroll(newBlock);
+                newBlock.page.kit.boardSelector.onShow(newBlock.el, { page: newBlock.page, block: newBlock })
+                var textSpan = newBlock.find(g => g.url == BlockUrlConstant.TextSpan)
+                await this.block.page.kit.picker.onPicker([textSpan], { merge: true, disabledOpenTool: true });
+            })
+        });
     }
 }
 

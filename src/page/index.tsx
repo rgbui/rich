@@ -242,6 +242,9 @@ export class Page extends Events<PageDirective> {
                     })
                 }
                 this.pageModifiedExternally = false;
+                if (this.viewEl) {
+                    this.viewEl.focus();
+                }
             }
             if (pageBarIsChange) {
                 this.view.pageBar.forceUpdate()

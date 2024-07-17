@@ -33,14 +33,20 @@ export async function PageDrag(kit: Kit, event: React.MouseEvent) {
         CheckBoardSelector(kit, block, event);
         return;
     }
-    if (window.shyConfig?.isDev)
-        console.log('block', block)
-    if (kit.page.isBoard || block?.isFreeBlock || block?.isBoardBlock) {
 
+    if (kit.page.isBoard || block?.isFreeBlock || block?.isBoardBlock) {
+        if (window.shyConfig?.isDev)
+            console.log('board block:', block)
         event.preventDefault()
-        window.getSelection().collapse(kit.page.viewEl)
+        var sel = window.getSelection();
+        var focusNode = sel.focusNode;
+        if (!(focusNode && kit.page.viewEl.contains(focusNode))) {
+            sel.collapse(kit.page.viewEl)
+        }
         BoardDrag(kit, block, event);
     } else {
+        if (window.shyConfig?.isDev)
+            console.log('doc block:', block)
         kit.boardSelector.close();
         kit.picker.onCancel();
         DocDrag(kit, block, event);

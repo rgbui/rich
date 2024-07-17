@@ -87,6 +87,9 @@ export class PageView extends Component<{ page: Page }> {
         this.page.emit(PageDirective.mounted)
         await this.page.AutomaticHandle();
         this.loadWxShare();
+        if (this.page.viewEl) {
+            this.page.viewEl.focus();
+        }
     }
     observeOutsideDrop() {
         var isMove: boolean = false;

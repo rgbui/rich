@@ -29,7 +29,7 @@ export var FontColorList = () => [
 export var BackgroundColorList = () => {
     // return OptionBackgroundColorList();
     return [
-        { color: 'rgb(255,255,255)', text: lst('默认') },
+        { color: 'transparent', text: lst('默认') },
         { color: 'rgb(241,241,239)', text: lst('灰色') },
         { color: 'rgb(244,238,238)', text: lst('棕色') },
         { color: 'rgb(251,236,221)', text: lst('橙色') },

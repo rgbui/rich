@@ -46,6 +46,7 @@ export class CardBox extends Block {
         return matrix;
     }
     async onAddCardBox(event: React.MouseEvent) {
+        event.stopPropagation();
         this.page.onAction('onAddCardBox', async () => {
             var d = {
                 url: BlockUrlConstant.CardBox,
@@ -59,29 +60,38 @@ export class CardBox extends Block {
             var nb = await pa.appendBlock(d, this.at + 1, this.parentKey);
             this.page.addActionAfterEvent(async () => {
                 await util.delay(100);
+                await this.page.onPageScroll(nb);
                 var head = nb.find(g => g.url == BlockUrlConstant.Head)
                 this.page.kit.anchorCursor.onFocusBlockAnchor(head, { merge: true, render: true, last: true })
             })
         });
     }
     async onAddBoardCardBox(event: React.MouseEvent) {
+        event.stopPropagation();
         this.page.onAction('onAddBoardCardBox', async () => {
             var d = {
                 url: BlockUrlConstant.CardBox,
                 board: true,
                 blocks: {
                     childs: [
-                        // { url: BlockUrlConstant.Head }
+
                     ]
                 }
             };
             var pa = this.parent;
             var nb = await pa.appendBlock(d, this.at + 1, this.parentKey);
-            //this.page.addActionCompletedEvent(async () => {
-                // await util.delay(100);
-                // var head = nb.find(g => g.url == BlockUrlConstant.Head)
-                // this.page.kit.anchorCursor.onFocusBlockAnchor(head, { merge: true, render: true, last: true })
-           // })
+            var data = {} as Record<string, any>;
+            var ma = new Matrix();
+            ma.translate(30, 20);
+            data.matrix = ma.getValues()
+            var newBlock = await pa.page.createBlock(BlockUrlConstant.TextSpan, data, nb)
+            newBlock.mounted(async () => {
+                await this.page.onPageScroll(nb);
+                await util.delay(10);
+                this.page.kit.boardSelector.onShow(nb.el, { page: this.page, block: nb })
+                await this.page.kit.anchorCursor.onFocusBlockAnchor(newBlock, { merge: true, render: true, last: true })
+                await this.page.kit.picker.onPicker([newBlock], { merge: true, disabledOpenTool: true });
+            })
         });
     }
     async onOpenCardStyle(event?: React.MouseEvent) {
@@ -461,9 +471,9 @@ export class ViewComponent extends BlockView<CardBox> {
                     }} style={{
                         position: 'absolute',
                         top: self.block.cardCoverHeight - 3,
-                        left: self.block.board  ? -30 : 0,
+                        left: self.block.board ? -30 : 0,
                         height: 6,
-                        right: self.block.board  ? -30 : 0,
+                        right: self.block.board ? -30 : 0,
                         cursor: 'row-resize',
                         color: 'rgba(55, 53, 47, 0.16)',
                     }}></div>}
@@ -545,8 +555,8 @@ export class ViewComponent extends BlockView<CardBox> {
                             }}
                             style={{
                                 position: 'absolute',
-                                top: self.block.board  ? -30 : 0,
-                                bottom: self.block.board  ? -30 : 0,
+                                top: self.block.board ? -30 : 0,
+                                bottom: self.block.board ? -30 : 0,
                                 left: -3,
                                 width: 6,
                                 cursor: 'col-resize',

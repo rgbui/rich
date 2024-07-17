@@ -17,6 +17,7 @@ export class Handle extends Events {
         this.handleBlock = hoverBlock.handleBlock;
         if (this.handleBlock && this.handleBlock.isShowHandleBlock != true) return;
         var plusEl = this.view.handleEle.querySelector('.shy-selector-bar-plus') as HTMLElement;
+        // console.log('show',this.handleBlock,this.handleBlock?.isFreeBlock,this.isDown);
         if (this.isDown) {
             var handleEl = this.view.handleEle;
             handleEl.style.display = 'none';

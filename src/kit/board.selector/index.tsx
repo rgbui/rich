@@ -42,8 +42,7 @@ import { Block } from "../../block";
 export class BoardSelector extends React.Component<{
     kit: Kit
 }> {
-    constructor(props)
-    {
+    constructor(props) {
         super(props);
         // this.fvs.on('change', (offset: Point) => {
         //     if (this.visible == true && this.el)
@@ -149,21 +148,25 @@ export class BoardSelector extends React.Component<{
                     this.currentSelector.data.lineType = 'straight';
                     this.currentSelector.data.lineStart = 'none';
                     this.currentSelector.data.lineEnd = '2';
+                    e.stopPropagation();
                 }}><Icon size={32} icon={BoardArrowSvg}></Icon></div>
                 <div onMouseDown={e => {
                     this.currentSelector.data.lineType = 'straight';
                     this.currentSelector.data.lineStart = 'none';
                     this.currentSelector.data.lineEnd = 'none';
+                    e.stopPropagation();
                 }}><Icon size={32} icon={BoardArrowNoneSvg}></Icon></div>
                 <div onMouseDown={e => {
                     this.currentSelector.data.lineType = 'curve';
                     this.currentSelector.data.lineStart = 'none';
                     this.currentSelector.data.lineEnd = '2';
+                    e.stopPropagation();
                 }}><Icon size={32} icon={BoardArrowCurveSvg}></Icon></div>
                 <div onMouseDown={e => {
                     this.currentSelector.data.lineType = 'line';
                     this.currentSelector.data.lineStart = 'none';
                     this.currentSelector.data.lineEnd = '2';
+                    e.stopPropagation();
                 }}><Icon size={32} icon={BoardArrowPolylineSvg}></Icon></div>
                 {/* <div><Icon size={18} icon={BoardArrowFilletSvg}></Icon></div> */}
             </div>
@@ -396,14 +399,12 @@ export class BoardSelector extends React.Component<{
     boardBlock?: Block;
     onShow(viewEl: HTMLElement, options?: {
         page: Page,
-        block?: Block,
-        // relativeEleAutoScroll?: HTMLElement,
-        // pos?: Point
+        block?: Block
+   
     }) {
         if (this.cursorEl !== viewEl) {
             this.cursorEl = viewEl;
-            // if (options?.relativeEleAutoScroll) this.fvs.bind(options.relativeEleAutoScroll);
-
+        
             this.page = options?.page;
             this.boardBlock = options?.block;
             if (!this.boardBlock && this.page) {
@@ -426,8 +427,8 @@ export class BoardSelector extends React.Component<{
         }
     }
     close() {
-        // this.fvs.unbind();
         this.visible = false;
+        this.boardBlock = null;
         this.clearSelector();
         this.forceUpdate();
     }

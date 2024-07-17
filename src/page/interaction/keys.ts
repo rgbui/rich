@@ -108,9 +108,23 @@ export function PageKeys(
     }, (event, kt) => {
         var b = findBlockAppear(event.target as HTMLElement);
         var cursorNode = window.getSelection().focusNode;
-        if (!(b && cursorNode && b.el.contains(cursorNode))) {
+        /**
+         * 这里判断光标不在编辑区，
+         * 但是有选中的block，
+         * 说明是在编辑区外面按下删除键
+         * 这时候需要删除选中的block
+         * 有两种选中的情况，一个是在文档中批量选中，
+         * 另一个是在白板中批量选中
+         */
+        if (!(b && cursorNode && b.el.contains(cursorNode)))
+        {
             if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
                 event.preventDefault();
+                if (page.kit.boardSelector?.boardBlock) {
+                    if (page.kit.anchorCursor.currentSelectHandleBlocks.some(b => b.id == page.kit.boardSelector.boardBlock.id)) {
+                        page.kit.boardSelector.close();
+                    }
+                }
                 var cs = page.kit.anchorCursor.currentSelectHandleBlocks;
                 if (cs.some(s => s instanceof TableGridItem)) {
                     var gs = cs.filter(g => g instanceof TableGridItem);

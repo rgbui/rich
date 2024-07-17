@@ -34,7 +34,7 @@ export class HandleView extends React.Component<{ handle: Handle }> {
             await self.handle.handleBlock.onHandlePlus();
         }
     }
-    onMousedown(event: MouseEvent, options?: { isOnlyDrag?: boolean, notDragFun?: (e:MouseEvent) => void }) {
+    onMousedown(event: MouseEvent, options?: { isOnlyDrag?: boolean, notDragFun?: (e: MouseEvent) => void }) {
         this.closeTip();
         this.handle.isDown = true;
         this.handle.isDrag = false;
@@ -49,10 +49,11 @@ export class HandleView extends React.Component<{ handle: Handle }> {
                         self.handle.dragBlocks.push(c)
                 });
             } else if (self.handle.handleBlock) self.handle.dragBlocks = [self.handle.handleBlock];
-            if (self.handle.dragBlocks.length == 0) return;
+            if (self.handle.dragBlocks.length == 0) { self.handle.onDropEnd(); return; }
             if (self.handle.dragBlocks.some(s => s.isFreeBlock)) {
+                self.handle.kit.anchorCursor.onClearCursor();
                 self.handle.kit.picker.onPicker(self.handle.dragBlocks);
-                window.getSelection().collapse(self.handle.kit.page.viewEl)
+                self.handle.onDropEnd();
             }
             else {
                 var scrollDiv = self.handle.dragBlocks[0]?.panel?.getScrollDiv();
@@ -86,12 +87,13 @@ export class HandleView extends React.Component<{ handle: Handle }> {
                         }
                     },
                     async moveEnd(ev, isMove, data) {
+                        self.handle.isDown = false;
                         if (isCanDrag) onAutoScrollStop();
                         try {
-                            if (self.handle.isDrag == true) await self.handle.onDropBlock()
+                            if (self.handle.isDrag == true) self.handle.onDropBlock()
                             else {
                                 if (options?.isOnlyDrag !== true)
-                                    await self.handle.onClickBlock(ev);
+                                    self.handle.onClickBlock(ev);
                                 if (typeof options?.notDragFun)
                                     options?.notDragFun(ev)
                             }
@@ -100,6 +102,7 @@ export class HandleView extends React.Component<{ handle: Handle }> {
                             self.handle.kit.emit('error', ex);
                         }
                         finally {
+                            console.log('on finally')
                             self.handle.onDropEnd();
                             ghostView.unload();
                         }

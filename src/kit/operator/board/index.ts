@@ -16,7 +16,6 @@ export function BoardDrag(
         moveEnd?(ev, isMove, data): void
     }
 ) {
-    console.log('board drag...');
     if (kit.boardSelector.visible == false || !kit.page.isBoard) {
         if (!kit.page.isBoard) {
             var bb = block.closest(x => x.isBoardBlock);
@@ -43,11 +42,12 @@ export function BoardDrag(
     }
     var downPoint = Point.from(event);
     var gm = block?.panelGridMap || kit.page.gridMap;
-    if (block?.isLine) block = block.closest(x =>  x.isContentBlock);
+    if (block?.isLine) block = block.closest(x => x.isContentBlock);
     var beforeIsPicked = kit.picker.blocks.some(s => s == block);
     var hasBlock: boolean = block ? true : false;
     if (block?.isBoardBlock) hasBlock = false;
     var isCopy: boolean = false;
+    console.log('board drag:', block, block?.isFreeBlock);
     if (kit.page.keyboardPlate.isShift() && block?.isFreeBlock) {
         //连选
         kit.picker.onShiftPicker([block]);
@@ -56,7 +56,11 @@ export function BoardDrag(
         if (kit.picker.blocks.includes(block)) { }
         else kit.picker.onPicker([block]);
     }
-    else kit.picker.onCancel();
+    else {
+        kit.picker.onCancel();
+        // console.log('onCancelx')
+        // kit.anchorCursor.onClearCusor()
+    }
     if (kit.page.keyboardPlate.isAlt()) isCopy = true;
     async function createCopyBlocks() {
         await kit.page.onAction('createAltCopyBlocks', async () => {
@@ -171,7 +175,12 @@ export function BoardDrag(
                     closeBoardEditTool()
                 }
                 else if (kit.picker.blocks.length > 0) await openBoardEditTool(kit);
-                else closeBoardEditTool()
+                else {
+                    if (kit.anchorCursor.currentSelectHandleBlocks.length > 0)
+                        kit.anchorCursor.onClearSelectBlocks();
+                    kit.anchorCursor.onClearCursor()
+                    closeBoardEditTool()
+                }
             }
             if (options?.moveEnd) options.moveEnd(ev, isMove, data);
         }

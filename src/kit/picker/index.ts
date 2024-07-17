@@ -73,6 +73,7 @@ export class BlockPicker {
         if (this.blocks.length > 0) {
             if (this.kit.anchorCursor.currentSelectedBlocks.length > 0) {
                 this.kit.anchorCursor.selectBlocks([])
+                this.kit.anchorCursor.renderSelectBlocks([]);
             }
         }
     }
@@ -456,7 +457,7 @@ export class BlockPicker {
                         }
                     }
                     block.points = segs_c.slice(1, -1).map(c => c.point);
-                  
+
                 }
                 self.onRePicker();
                 block.forceManualUpdate();

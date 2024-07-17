@@ -331,7 +331,7 @@ export class AnchorCursor {
             }
         })
     }
-    focusAppearAnchor(aa: AppearAnchor,options?: { at?: number, last?: boolean | number, left?: number, y?: number }) {
+    focusAppearAnchor(aa: AppearAnchor, options?: { at?: number, last?: boolean | number, left?: number, y?: number }) {
         var sel = window.getSelection();
         if (typeof options?.left == 'number') {
             var bounds = TextEle.getBounds(aa.el);
@@ -490,5 +490,13 @@ export class AnchorCursor {
         currentEls.each(el => {
             el.classList.remove('shy-block-selected');
         })
+    }
+    onClearCursor() {
+        var sel = window.getSelection();
+        if (this.kit.page.viewEl)
+        {
+            sel.removeAllRanges();
+            sel.collapse(this.kit.page.viewEl);
+        }
     }
 }

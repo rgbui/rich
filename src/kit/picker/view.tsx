@@ -150,16 +150,17 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
         var b = this.picker.blocks[0];
         if (b?.page && !b.page.isBoard) {
             var bb = this.picker.kit.boardSelector.boardBlock;
-            // var bb = b.closest(x=>x.isBoardBlock);
-            var fb = bb.getVisibleContentBound();
-            delete style.bottom;
-            delete style.right;
-            var rc = Rect.fromEle(b.page.contentEl);
-            style.width = fb.width + 'px';
-            style.height = fb.height + 'px';
-            style.top = fb.top - rc.top + 'px';
-            style.left = fb.left - rc.left + 'px';
-            viewBox = `${fb.left - rc.left} ${fb.top - rc.top} ${fb.width} ${fb.height}`;
+            if (bb) {
+                var fb = bb.getVisibleContentBound();
+                delete style.bottom;
+                delete style.right;
+                var rc = Rect.fromEle(b.page.contentEl);
+                style.width = fb.width + 'px';
+                style.height = fb.height + 'px';
+                style.top = fb.top - rc.top + 'px';
+                style.left = fb.left - rc.left + 'px';
+                viewBox = `${fb.left - rc.left} ${fb.top - rc.top} ${fb.width} ${fb.height}`;
+            }
         }
         return <div className='shy-kit-picker'>
             {this.picker.visible && <svg viewBox={viewBox ?? undefined} className="shy-kit-picker-svg" style={style}>
