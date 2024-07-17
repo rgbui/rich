@@ -19,93 +19,23 @@ import { inputBackspaceDeleteContent } from "./input";
 import { InputForceStore } from "./store";
 import { util } from "../../../util/util";
 import { onEnterInput } from "./keydown";
+import { BlockRenderRange } from "../../block/enum";
 
 export async function onPastePage(kit: Kit, event: ClipboardEvent) {
     if (kit.page.pageLayout?.type == PageLayoutType.board) {
         var files: File[] = Array.from(event.clipboardData.files);
         var text = event.clipboardData.getData('text/plain');
-        var html = event.clipboardData.getData('text/html');
         kit.operator.onClearPage();
         event.preventDefault();
-        var point = kit.operator.moveEvent;
         var fra: Block = kit.page.getPageFrame();
-        var gm = fra.globalWindowMatrix;
-        var re = gm.inverseTransform(Point.from(point));
-        if (!html && text || text && html && html.endsWith(text)) {
-            await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
-                var url = BlockUrlConstant.TextSpan;
-                var data = { content: text } as any;
-                var ma = new Matrix();
-                ma.translate(re.x, re.y);
-                data.matrix = ma.getValues();
-                var newBlock = await kit.page.createBlock(url, data, fra);
-                kit.boardSelector.clearSelector();
-                newBlock.mounted(() => {
-                    kit.picker.onPicker([newBlock]);
-                    kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
-                })
-            });
-        }
-        else if (files.length > 0) {
-            for (let i = 0; i < files.length; i++) {
-                var file = files[i];
-                if (file.type.startsWith('image/')) {
-                    //图片
-                    var r = await channel.post('/ws/upload/file', {
-                        file,
-                        uploadProgress: (event) => {
-                            // console.log(event, 'ev');
-                            if (event.lengthComputable) {
-                                // this.progress = `${util.byteToString(event.total)}${(100 * event.loaded / event.total).toFixed(2)}%`;
-                                // this.forceUpdate();
-                            }
-                        }
-                    })
-                    if (r.ok) {
-                        if (r.data?.file?.url) {
-                            var size = await getImageSize(r.data.file.url);
-                            var url = BlockUrlConstant.BoardImage;
-                            var data = {
-                                originSize: size,
-                                fixedWidth: size.width,
-                                fixedHeight: size.height,
-                                src: { name: 'upload', ...r.data.file }
-                            } as any
-                            await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
-                                var ma = new Matrix();
-                                ma.translate(re.x, re.y);
-                                data.matrix = ma.getValues();
-                                var newBlock = await kit.page.createBlock(url, data, fra);
-                                kit.boardSelector.clearSelector();
-                                newBlock.mounted(() => {
-                                    kit.picker.onPicker([newBlock]);
-                                    kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
-                                })
-                            });
-                            // this.props.change(r.data?.file as any);
-                        }
-                    }
-                }
-                else {
-
-                }
+        var cfra = kit.page.getBlockByMouseOrPoint(kit.operator.moveEvent);
+        if (cfra?.isFreeBlock) {
+            var c = cfra.frameBlock;
+            if (c) {
+                if (c.url == BlockUrlConstant.Frame) fra = c;
             }
         }
-        else {
-            await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
-                var url = BlockUrlConstant.TextSpan;
-                var data = { content: text } as any;
-                var ma = new Matrix();
-                ma.translate(re.x, re.y);
-                data.matrix = ma.getValues();
-                var newBlock = await kit.page.createBlock(url, data, fra);
-                kit.boardSelector.clearSelector();
-                newBlock.mounted(() => {
-                    kit.picker.onPicker([newBlock]);
-                    kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
-                })
-            });
-        }
+        await onPasterToBoard({ kit, fra, text, files });
     }
     else if ([PageLayoutType.doc, PageLayoutType.ppt].includes(kit.page.pageLayout.type)) {
         if (kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
@@ -187,6 +117,25 @@ export async function onPastePage(kit: Kit, event: ClipboardEvent) {
             }
             kit.page.onReplace(kit.anchorCursor.currentSelectHandleBlocks, bs);
         }
+        else {
+            if (kit.operator.moveEvent) {
+                var fra = kit.page.getBlockByMouseOrPoint(kit.operator.moveEvent);
+                if (fra) {
+                    if (fra.isFreeBlock) {
+                        var c = fra.frameBlock;
+                        if (c) {
+                            fra = c;
+                        }
+                    }
+                    var text = event.clipboardData.getData('text/plain');
+                    var files: File[] = Array.from(event.clipboardData.files);
+                    if (fra.url == BlockUrlConstant.CardBox || fra.url == BlockUrlConstant.Frame || fra.url == BlockUrlConstant.Board) {
+                        event.preventDefault();
+                        await onPasterToBoard({ kit, fra, text, files });
+                    }
+                }
+            }
+        }
     }
     else if ([PageLayoutType.textChannel].includes(kit.page.pageLayout.type)) {
 
@@ -205,117 +154,129 @@ export async function onPasteAppear(kit: Kit, aa: AppearAnchor, event: Clipboard
     }
     else {
         text = text.trim();
-        var files: File[] = Array.from(event.clipboardData.files);
-        var html = event.clipboardData.getData('text/html');
-        kit.operator.onClearPage();
-        if (window.shyConfig?.isDev) {
-            console.log('paste', text, html, files)
-        }
-        if (!html && text || text && html && html.endsWith(text)) {
-            console.log('paste text');
+        var block = aa.block.closest(x => x.isContentBlock);
+        if (block.isFreeBlock) {
             event.preventDefault();
-            if (isUrl(text)) {
-                await onPasteUrl(kit, aa, text);
+            var isEmpty = block.isContentEmpty;
+            await onPasteInsertPlainText(kit, aa, text, async () => {
+                if (isEmpty) {
+                    await block.updateProps({ fixedWidth: 200 }, BlockRenderRange.self);
+                }
+            });
+        }
+        else {
+            var files: File[] = Array.from(event.clipboardData.files);
+            var html = event.clipboardData.getData('text/html');
+            kit.operator.onClearPage();
+            if (window.shyConfig?.isDev) {
+                console.log('paste', text, html, files)
             }
-            else {
-                if (!html && text.indexOf('\n') > -1) {
-                    try {
-                        html = marked.parse(text);
-                        if (html == text) {
+            if (!html && text || text && html && html.endsWith(text)) {
+                console.log('paste text');
+                event.preventDefault();
+                if (isUrl(text)) {
+                    await onPasteUrl(kit, aa, text);
+                }
+                else {
+                    if (!html && text.indexOf('\n') > -1) {
+                        try {
+                            html = marked.parse(text);
+                            if (html == text) {
+                                await onPasteInsertText(kit, aa, text);
+                                return;
+                            }
+                        }
+                        catch (ex) {
+                            aa.block.page.onError(ex);
+                            console.error(ex);
                             await onPasteInsertText(kit, aa, text);
                             return;
                         }
                     }
-                    catch (ex) {
-                        aa.block.page.onError(ex);
-                        console.error(ex);
-                        await onPasteInsertText(kit, aa, text);
-                        return;
-                    }
-                }
-                else {
-                    await onPasteInsertText(kit, aa, text);
-                    return;
-                }
-            }
-        }
-        if (files.length > 0) {
-            event.preventDefault();
-            //说明复制的是文件
-            await onPasterFiles(kit, aa, files);
-        }
-        else if (html) {
-            var ma;
-            if (ma = html.match(new RegExp(`data\\-name\="shy\\.live"[\\s]+content\\="([^"]+)"`))) {
-                var id = ma[1];
-                if (id) {
-                    var bs = readCopyBlocks(id);
-                    /**
-                     * 这里的bs有可能是从诗云的一个浏览器复制到另一个浏览器，
-                     * 本质上里面的内容没有缓存
-                     */
-                    if (Array.isArray(bs) && bs.length > 0) {
-                        event.preventDefault();
-                        await onPasteCreateBlocks(kit, aa, bs);
-                        return;
-                    }
-                }
-            }
-            try {
-                console.log('like html...');
-                event.preventDefault();
-                if (aa.block.url == BlockUrlConstant.Code) {
-                    await onPasteInsertText(kit, aa, text);
-                    return;
-                }
-                if (!aa.block.isSupportTextStyle) {
-                    console.log(' not support text style')
-                    await onPasteInsertPlainText(kit, aa, text);
-                    return;
-                }
-                var mr: RegExp;
-                try {
-                    mr = new RegExp('([\\s]*<[^>]+>[\\s]*)?<[^>]+>' + util.escapeRegex(text) + '</[^>]+>')
-                }
-                catch (ex) {
-                    mr = null;
-                }
-                if (mr && html.indexOf(text) > -1 && html.match(mr)) {
-                    console.log('html---text');
-                    /**
-                     * 这里表示当前的文本就仅仅在外面包一层html，没有多个块
-                     * 列如:
-                     * text: 你好
-                     * html: <p>你好</p>
-                     */
-                    if (isUrl(text)) {
-                        await onPasteUrl(kit, aa, text);
-                    }
                     else {
                         await onPasteInsertText(kit, aa, text);
+                        return;
                     }
-                    return;
                 }
-                var blocks = parseHtml(html);
-                if (window.shyConfig?.isDev) {
-                    console.log('paster html....', html, blocks)
-                }
-                if (blocks?.length > 0) {
-                    if (blocks.length == 1 && blocks[0].url == BlockUrlConstant.TextSpan) {
-                        var cs = blocks[0].blocks.childs
-                        if (cs.length == 1 && cs[0].url == BlockUrlConstant.Text) {
-                            var content = cs[0].content;
-                            if (isUrl(content)) await onPasteUrl(kit, aa, text)
-                            else await onPasteInsertText(kit, aa, text);
+            }
+            if (files.length > 0) {
+                event.preventDefault();
+                //说明复制的是文件
+                await onPasterFiles(kit, aa, files);
+            }
+            else if (html) {
+                var ma;
+                if (ma = html.match(new RegExp(`data\\-name\="shy\\.live"[\\s]+content\\="([^"]+)"`))) {
+                    var id = ma[1];
+                    if (id) {
+                        var bs = readCopyBlocks(id);
+                        /**
+                         * 这里的bs有可能是从诗云的一个浏览器复制到另一个浏览器，
+                         * 本质上里面的内容没有缓存
+                         */
+                        if (Array.isArray(bs) && bs.length > 0) {
+                            event.preventDefault();
+                            await onPasteCreateBlocks(kit, aa, bs);
                             return;
                         }
                     }
-                    await onPasteCreateBlocks(kit, aa, blocks);
                 }
-            }
-            catch (ex) {
-                console.error(ex);
-                await onPasteInsertText(kit, aa, text);
+                try {
+                    console.log('like html...');
+                    event.preventDefault();
+                    if (aa.block.url == BlockUrlConstant.Code) {
+                        await onPasteInsertText(kit, aa, text);
+                        return;
+                    }
+                    if (!aa.block.isSupportTextStyle) {
+                        console.log(' not support text style')
+                        await onPasteInsertPlainText(kit, aa, text);
+                        return;
+                    }
+                    var mr: RegExp;
+                    try {
+                        mr = new RegExp('([\\s]*<[^>]+>[\\s]*)?<[^>]+>' + util.escapeRegex(text) + '</[^>]+>')
+                    }
+                    catch (ex) {
+                        mr = null;
+                    }
+                    if (mr && html.indexOf(text) > -1 && html.match(mr)) {
+                        console.log('html---text');
+                        /**
+                         * 这里表示当前的文本就仅仅在外面包一层html，没有多个块
+                         * 列如:
+                         * text: 你好
+                         * html: <p>你好</p>
+                         */
+                        if (isUrl(text)) {
+                            await onPasteUrl(kit, aa, text);
+                        }
+                        else {
+                            await onPasteInsertText(kit, aa, text);
+                        }
+                        return;
+                    }
+                    var blocks = parseHtml(html);
+                    if (window.shyConfig?.isDev) {
+                        console.log('paster html....', html, blocks)
+                    }
+                    if (blocks?.length > 0) {
+                        if (blocks.length == 1 && blocks[0].url == BlockUrlConstant.TextSpan) {
+                            var cs = blocks[0].blocks.childs
+                            if (cs.length == 1 && cs[0].url == BlockUrlConstant.Text) {
+                                var content = cs[0].content;
+                                if (isUrl(content)) await onPasteUrl(kit, aa, text)
+                                else await onPasteInsertText(kit, aa, text);
+                                return;
+                            }
+                        }
+                        await onPasteCreateBlocks(kit, aa, blocks);
+                    }
+                }
+                catch (ex) {
+                    console.error(ex);
+                    await onPasteInsertText(kit, aa, text);
+                }
             }
         }
     }
@@ -351,34 +312,6 @@ async function onPasterFiles(kit: Kit, aa: AppearAnchor, files: File[]) {
     }
     if (bs.length > 0)
         await onPasteCreateBlocks(kit, aa, bs);
-    // await InputForceStore(aa, async () => {
-    //     var rowBlock = aa.block.closest(x => x.isContentBlock);
-    //     var firstBlock = rowBlock;
-    //     for (let i = 0; i < files.length; i++) {
-    //         var file = files[i];
-    //         if (file.type.startsWith('image/')) {
-    //             //图片
-    //             rowBlock = await rowBlock.visibleDownCreateBlock('/image', { initialData: { file } });
-    //         }
-    //         else if (file.type.startsWith('video/')) {
-    //             //图片
-    //             rowBlock = await rowBlock.visibleDownCreateBlock('/video', { initialData: { file } });
-    //         }
-    //         else if (file.type.startsWith('audio/')) {
-    //             //图片
-    //             rowBlock = await rowBlock.visibleDownCreateBlock('/audio', { initialData: { file } });
-    //         }
-    //         else {
-    //             rowBlock = await rowBlock.visibleDownCreateBlock('/file', { initialData: { file } });
-    //         }
-    //     }
-    //     if (firstBlock.isContentEmpty) {
-    //         await firstBlock.delete();
-    //     }
-    //     kit.page.addActionAfterEvent(async () => {
-
-    //     })
-    // })
 }
 async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
     if (blocks.length == 0) return;
@@ -480,7 +413,7 @@ async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
         }
     }
 }
-async function onPasteInsertPlainText(kit: Kit, aa: AppearAnchor, text: string) {
+async function onPasteInsertPlainText(kit: Kit, aa: AppearAnchor, text: string, cb?: () => Promise<void>) {
     var content = aa.textContent;
     var sel = window.getSelection();
     if (aa.block.url == BlockUrlConstant.Title) {
@@ -497,6 +430,7 @@ async function onPasteInsertPlainText(kit: Kit, aa: AppearAnchor, text: string) 
         aa.setContent(content.slice(0, offset) + text + content.slice(offset))
         aa.collapse(offset + text.length);
         await InputForceStore(aa, async () => {
+            if (cb) await cb();
         })
     }
     else {
@@ -506,6 +440,7 @@ async function onPasteInsertPlainText(kit: Kit, aa: AppearAnchor, text: string) 
         aa.setContent(content.slice(0, s) + text + content.slice(e));
         aa.collapse(s + text.length);
         await InputForceStore(aa, async () => {
+            if (cb) await cb();
         })
     }
 }
@@ -556,6 +491,71 @@ async function onPasteUrl(kit: Kit, aa: AppearAnchor, url: string) {
         await kit.writer.inputPop.selector.open(rect, url, (...data) => {
             kit.writer.onInputPopCreateBlock(...data);
         }, kit.page);
+    }
+}
+
+async function onPasterToBoard(options: { kit: Kit, fra: Block, text?: string, files?: File[] }) {
+    var { kit, fra, text, files } = options;
+    var gm = fra.globalWindowMatrix;
+    var re = gm.inverseTransform(Point.from(kit.operator.moveEvent));
+    if (text) {
+        await kit.page.onAction('onClipboardText', async () => {
+            var mat = new Matrix();
+            mat.translate(re.x, re.y);
+            var data: Record<string, any> = {};
+            data.content = text;
+            data.matrix = mat.getValues();
+            data.fixedWidth = 200;
+            var newBlock = await kit.page.createBlock(BlockUrlConstant.TextSpan, data, fra);
+            newBlock.mounted(async () => {
+                await kit.picker.onPicker([newBlock], { merge: true });
+                await kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, last: true, merge: true });
+            })
+        })
+    }
+    else if (files.length > 0) {
+        for (let i = 0; i < files.length; i++) {
+            var file = files[i];
+            if (file.type.startsWith('image/')) {
+                //图片
+                var r = await channel.post('/ws/upload/file', {
+                    file,
+                    uploadProgress: (event) => {
+                        // console.log(event, 'ev');
+                        if (event.lengthComputable) {
+                            // this.progress = `${util.byteToString(event.total)}${(100 * event.loaded / event.total).toFixed(2)}%`;
+                            // this.forceUpdate();
+                        }
+                    }
+                })
+                if (r.ok) {
+                    if (r.data?.file?.url) {
+                        var size = await getImageSize(r.data.file.url);
+                        var url = BlockUrlConstant.BoardImage;
+                        var width = Math.min(size.width, 300);
+                        var height = (width / size.width) * size.height;
+                        var data = {
+                            originSize: size,
+                            fixedWidth: width,
+                            fixedHeight: height,
+                            src: { name: 'upload', ...r.data.file }
+                        } as any
+                        await kit.page.onAction('onClipboardImage', async () => {
+                            var mat = new Matrix();
+                            mat.translate(re.x, re.y);
+                            data.matrix = mat.getValues();
+                            var newBlock = await kit.page.createBlock(url, data, fra);
+                            kit.boardSelector.clearSelector();
+                            newBlock.mounted(async () => {
+                                await kit.picker.onPicker([newBlock], { merge: true });
+                                // await kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
+                            })
+                        });
+                        // this.props.change(r.data?.file as any);
+                    }
+                }
+            }
+        }
     }
 }
 
