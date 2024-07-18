@@ -361,8 +361,35 @@ export class TableGridItem extends Block {
             case DropDirection.top:
                 var props: Record<string, any> = {};
                 if (this.dataGrid?.url == BlockUrlConstant.DataGridBoard) {
-                    var name = (this.dataGrid as TableStoreBoard).groupField?.name;
-                    props[name] = this.dataRow[name]
+                    try {
+                        /**
+                         * 将看板中的某一组option拖到另一组option
+                         */
+                        var db = (this.dataGrid as TableStoreBoard)
+                        var name = db.groupField?.name;
+                        var panel = blocks[0].el.closest('[data-block-drop-panel]') as HTMLElement;
+                        var pd = JSON.parse(panel.getAttribute('data-block-drop-panel'));
+                        var old = pd[name];
+                        var dragOptions = lodash.cloneDeep(dragRow[name]) || [];
+                        if (dragOptions.includes(old)) {
+                            dragOptions = dragOptions.filter(c => c !== old);
+                        }
+                        var dg = db.groupStats.find(c => c.groupId === old);
+                        if (dg && typeof dg.count == 'number') dg.count -= 1;
+                        var newPanel = this.el.closest('[data-block-drop-panel]') as HTMLElement;
+                        var newPd = JSON.parse(newPanel.getAttribute('data-block-drop-panel'));
+                        var newG = newPd[name];
+                        var ng = db.groupStats.find(c => c.groupId === newG);
+                        if (ng && typeof ng.count == 'number') ng.count += 1;
+                        if (!dragOptions.includes(newG)) {
+                            if (lodash.isNull(newG)) dragOptions = []
+                            else dragOptions.push(newG);
+                        }
+                        props[name] = dragOptions
+                    }
+                    catch (ex) {
+
+                    }
                 }
                 else if (this.dataGrid?.url == BlockUrlConstant.DataGridCalendar) {
                     var name = (this.dataGrid as TableStoreCalendar).dateField?.name;
@@ -410,10 +437,35 @@ export class TableGridItem extends Block {
                 break;
             case DropDirection.inner:
                 if (dropData && Object.keys(dropData).length > 0) {
-                    var r = await this.schema.rowUpdate({ dataId: dragRow.dataRow.id, data: dropData }, this.dataGrid?.id || (this.id + 'TableStoreItem'));
+                    var props = dropData;
+                  
+                    if (this.dataGrid?.url == BlockUrlConstant.DataGridBoard) {
+                        
+                        var db = (this.dataGrid as TableStoreBoard);
+                        var name = db.groupField?.name;
+                        var panel = blocks[0].el.closest('[data-block-drop-panel]') as HTMLElement;
+                        var pd = JSON.parse(panel.getAttribute('data-block-drop-panel'));
+                        var old = pd[name];
+                        var dragOptions = lodash.cloneDeep(dragRow[name]) || [];
+                        if (dragOptions.includes(old)) {
+                            dragOptions = dragOptions.filter(c => c !== old);
+                        }
+                        var dg = db.groupStats.find(c => c.groupId === old);
+                        if (dg && typeof dg.count == 'number') dg.count -= 1;
+                        var newG = dropData[name];
+                        var ng = db.groupStats.find(c => c.groupId === newG);
+                        if (ng && typeof ng.count == 'number') ng.count += 1;
+                        if (!dragOptions.includes(newG)) {
+                            if (lodash.isNull(newG)) dragOptions = []
+                            else dragOptions.push(newG);
+                        }
+                        props[name] = dragOptions;
+                    }
+                    var r = await this.schema.rowUpdate({ dataId: dragRow.dataRow.id, data: props }, this.dataGrid?.id || (this.id + 'TableStoreItem'));
                     if (r) {
-                        Object.assign(dragRow.dataRow, dropData);
+                        Object.assign(dragRow.dataRow, props);
                         dragRow.dataGrid.createOneItem(dragRow.dataRow, true);
+                        // dragRow.dataGrid.forceManualUpdate()
                     }
                 }
                 break;
