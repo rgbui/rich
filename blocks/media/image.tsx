@@ -175,19 +175,7 @@ export class Image extends Block {
             text: lst('图片操作'),
             icon: { name: 'byte', code: 'write' },
             childs: [
-                {
-                    name: 'preview',
-                    text: lst('查看'),
-                    icon: { name: 'bytedance-icon', code: "zoom-in" }
-                    ,
-                    disabled: this.src?.url ? false : true
-                },
-                {
-                    name: 'origin',
-                    text: lst('原图'),
-                    icon: { name: 'bytedance-icon', code: 'arrow-right-up' },
-                    disabled: this.src?.url ? false : true
-                },
+
                 {
                     text: lst('尺寸'),
                     icon: { name: 'bytedance-icon', code: 'full-screen' },
@@ -241,17 +229,7 @@ export class Image extends Block {
                     checked: this.captionAlign == 'center',
                     disabled: this.src?.url ? false : true
                 },
-                {
-                    name: 'replace',
-                    text: lst('替换'),
-                    icon: RefreshSvg
-                },
-                {
-                    name: 'download',
-                    text: lst('下载'),
-                    icon: DownloadSvg,
-                    disabled: this.src?.url ? false : true
-                }
+
             ]
         })
         items.push({
@@ -336,6 +314,33 @@ export class Image extends Block {
                 }
             ]
         });
+        items.push({
+            type: MenuItemType.divide
+        });
+        items.push(...[
+            {
+                name: 'preview',
+                text: lst('查看'),
+                icon: { name: 'bytedance-icon', code: "zoom-in" } as any,
+                disabled: this.src?.url ? false : true
+            },
+            {
+                name: 'origin',
+                text: lst('原图'),
+                icon: { name: 'bytedance-icon', code: 'arrow-right-up' } as any,
+                disabled: this.src?.url ? false : true
+            }, {
+                name: 'replace',
+                text: lst('替换'),
+                icon: RefreshSvg
+            },
+            {
+                name: 'download',
+                text: lst('下载'),
+                icon: DownloadSvg,
+                disabled: this.src?.url ? false : true
+            }
+        ]);
         items.push({
             type: MenuItemType.divide
         });
