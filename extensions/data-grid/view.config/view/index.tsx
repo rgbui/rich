@@ -262,8 +262,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                     {
                         name: 'cardConfig.coverAuto',
                         text: lst("封面高度自适应"),
-                        visible: (items) => {
-
+                        visible:(items)=>{
                             if (self.block.url == BlockUrlConstant.DataGridGallery) {
                                 var cAuto = items.find(g => g.name == 'cardConfig.auto');
                                 if (cAuto.checked == false) return false;
@@ -377,14 +376,14 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 }
             ])
         }
-        if (!(this.block as DataGridView).dataGridTab)
-            baseItems.push({
-                text: lst('显示数据表视图标题'),
-                name: 'noTitle',
-                type: MenuItemType.switch,
-                checked: (this.block as TableStore).noTitle ? false : true,
-                helpUrl: window.shyConfig?.isUS ? "https://help.shy.red/page/44#89hYGiP93L9HA319pJXRsa" : "https://help.shy.live/page/288#bkz71T3eQwAGH3q4s71hCo"
-            })
+        // if (!(this.block as DataGridView).dataGridTab)
+        //     baseItems.push({
+        //         text: lst('显示数据表视图标题'),
+        //         name: 'noTitle',
+        //         type: MenuItemType.switch,
+        //         checked: (this.block as TableStore).noTitle ? false : true,
+        //         helpUrl: window.shyConfig?.isUS ? "https://help.shy.red/page/44#89hYGiP93L9HA319pJXRsa" : "https://help.shy.live/page/288#bkz71T3eQwAGH3q4s71hCo"
+        //     })
         baseItems.push({ type: MenuItemType.divide });
         baseItems.push({
             type: MenuItemType.help,

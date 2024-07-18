@@ -88,7 +88,7 @@ export class DataGridTableContent extends React.Component<{
                         self.block.onSyncAddRow(props,
                             (cs.last() as DataGridTableItem)?.dataId, 'after', false, async (row) => {
                                 if (this.props.groupHead)
-                                    row.__group = this.props.groupHead.id;
+                                    row.__group = [this.props.groupHead.id];
                                 await this.block.loadSchemaStats()
                                 this.block.forceManualUpdate()
                             })

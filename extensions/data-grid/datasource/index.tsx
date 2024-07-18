@@ -167,6 +167,7 @@ export class DataSourceView extends EventsComponent {
             }
         }
         async function select(item, event?: MouseEvent) {
+           
             if (item?.name == 'table') {
                 self.emit('save', item.value);
             }
@@ -185,7 +186,7 @@ export class DataSourceView extends EventsComponent {
             }
             else if (item.name == 'addView') {
                 // var po = Point.from(event)
-                var sh = await TableSchema.getTableSchema(item.value);
+                var sh = TableSchema.getTableSchema(item.value);
                 var dg = await useCreateDataGridView(
                     self.pos,
                     { schema: sh }

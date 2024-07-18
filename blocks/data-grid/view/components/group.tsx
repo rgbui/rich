@@ -98,7 +98,8 @@ export class DataGridGroup extends React.Component<{
                 var rdg = (dg, i) => {
                     var cs = this.block.childs.findAll(g => {
                         var dr = (g as DataGridTableItem).dataRow as Record<string, any>;
-                        return lodash.isEqual(dr?.__group, dg.value);
+                        if (Array.isArray(dr.__group) && dr.__group.some(s => lodash.isEqual(s, dg.value))) return true;
+                        return false
                     })
                     return <div className="visible-hover" key={i}>
                         <div data-sy-table='group-head' className="flex min-h-28 padding-h-5">

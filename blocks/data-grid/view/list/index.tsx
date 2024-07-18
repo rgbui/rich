@@ -71,7 +71,7 @@ export class TableStoreListView extends BlockView<TableStoreList> {
                                         }
                                         this.block.onSyncAddRow(props, id, 'after', g ? false : true, async (row) => {
                                             if (g) {
-                                                row.__group = g.id;
+                                                row.__group = [g.id];
                                                 await this.block.forceManualUpdate();
                                                 var newRow = this.block.childs.find(c => (c as TableGridItem).dataId == g.id);
                                                 if (newRow) {

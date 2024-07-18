@@ -58,9 +58,7 @@ export class DataGridViewLife {
                 }
             });
             if (tableIds.length > 0) {
-                console.log('ref tableIds', tableIds);
                 await TableSchema.loadListSchema(tableIds, this.page);
-                console.log('ssssreturn' );
                 this.relationSchemaIds = tableIds;
             }
         }
@@ -114,6 +112,7 @@ export class DataGridViewLife {
         }
     }
     async addRelationDatas(this: DataGridView, field: Field, ids: string[]) {
+        ids = lodash.cloneDeep(ids);
         var rs = this.relationSchemas.find(g => g.id == field.config.relationTableId);
         if (rs) {
             var ds = this.relationDatas.get(field.config.relationTableId);
@@ -166,8 +165,14 @@ export class DataGridViewLife {
                             text: gl.id as any
                         })
                         gl.list.forEach(g => {
-                            g.__group = gl.id;
-                            this.data.push(g);
+                            var dg = this.data.find(c => c.id == g.id);
+                            if (dg) {
+                                dg.__group.push(gl.id);
+                            }
+                            else {
+                                g.__group = [gl.id];
+                                this.data.push(g);
+                            }
                         })
                     })
                     if (this.groupView.sort == 'asc') {
@@ -198,6 +203,7 @@ export class DataGridViewLife {
                             this.dataGroupHeads.push(nd);
                         }
                     }
+                    console.log(this.data.length);
                 }
             }
             else {
