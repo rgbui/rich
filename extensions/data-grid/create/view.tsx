@@ -123,8 +123,7 @@ export class DataGridCreateView extends EventsComponent {
     }
     onSave() {
         var self = this;
-        var text = self.viewText || self.viewMayBeText;
-        console.log('ggg',self.viewText,self.viewMayBeText)
+        var text = self.viewText || self.viewMayBeText || lst('表格');
         self.emit('save', {
             text: text,
             url: self.url,
