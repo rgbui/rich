@@ -178,34 +178,34 @@ export class DataGridFields extends EventsComponent {
     }
     renderCard() {
         var self = this;
-        async function input(item) {
-            if (item.name == 'cardConfig.showTemplate') {
-                await self.block.onUpdateProps({ [item.name]: item.checked }, { range: BlockRenderRange.self }, undefined, async () => {
-                    self.block.forceUpdateAllViews()
-                });
-                self.forceUpdate()
-            }
-            else if (['gallerySize', 'dateFieldId', 'groupFieldId'].includes(item.name)) {
-                await self.block.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self }, undefined, async () => {
-                    self.block.forceUpdateAllViews()
-                });
-                self.forceUpdate()
-            }
-            else if (['cardConfig.auto', 'cardConfig.showCover', 'cardConfig.coverAuto'].includes(item.name)) {
-                await self.block.onUpdateProps({ [item.name]: item.checked }, { range: BlockRenderRange.self }, undefined, async () => {
-                    self.block.forceUpdateAllViews()
-                });
-                self.forceUpdate()
-            }
-            else if (['cardConfig.coverFieldId', 'cardConfig.showMode'].includes(item.name) && item.value) {
-                await self.block.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self }, undefined, async () => {
-                    if (item.name == 'cardConfig.coverFieldId')
-                        await self.block.arrayRemove<ViewField>({ prop: 'fields', data: g => g.fieldId == item.value })
-                    self.block.forceUpdateAllViews()
-                });
-                self.forceUpdate()
-            }
-        }
+        // async function input(item) {
+        //     if (item.name == 'cardConfig.showTemplate') {
+        //         await self.block.onUpdateProps({ [item.name]: item.checked }, { range: BlockRenderRange.self }, undefined, async () => {
+        //             self.block.forceUpdateAllViews()
+        //         });
+        //         self.forceUpdate()
+        //     }
+        //     else if (['gallerySize', 'dateFieldId', 'groupFieldId'].includes(item.name)) {
+        //         await self.block.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self }, undefined, async () => {
+        //             self.block.forceUpdateAllViews()
+        //         });
+        //         self.forceUpdate()
+        //     }
+        //     else if (['cardConfig.auto', 'cardConfig.showCover', 'cardConfig.coverAuto'].includes(item.name)) {
+        //         await self.block.onUpdateProps({ [item.name]: item.checked }, { range: BlockRenderRange.self }, undefined, async () => {
+        //             self.block.forceUpdateAllViews()
+        //         });
+        //         self.forceUpdate()
+        //     }
+        //     else if (['cardConfig.coverFieldId', 'cardConfig.showMode'].includes(item.name) && item.value) {
+        //         await self.block.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self }, undefined, async () => {
+        //             if (item.name == 'cardConfig.coverFieldId')
+        //                 await self.block.arrayRemove<ViewField>({ prop: 'fields', data: g => g.fieldId == item.value })
+        //             self.block.forceUpdateAllViews()
+        //         });
+        //         self.forceUpdate()
+        //     }
+        // }
         return <div className="shy-table-field-view">
             {!this.block.getCardUrl() && this.renderFields()}
             {this.block.getCardUrl() && this.renderCardView()}

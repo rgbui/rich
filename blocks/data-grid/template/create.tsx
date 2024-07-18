@@ -32,49 +32,9 @@ export async function onCreateDataGridTemplate(
     });
     if (r.ok) {
         var schema = await TableSchema.cacheSchema(r.data.schema);
+        await schema.cacPermissions();
         var autoCreateUrl = vs.find(c => c.autoCreate)?.url || schema.listViews.first().url;
         var view = schema.views.find(g => g.url == autoCreateUrl);
-        // if (view.url == block.url) {
-        //     await block.page.onAction('onCreateDataGridTemplate', async () => {
-        //         var viewfields = schema.fields.findAll(c => g.props.some(pro => pro.types.includes(c.type))).map(c => schema.createViewField(c));
-        //         await block.updateProps({
-        //             schemaId: schema.id,
-        //             syncBlockId: view.id,
-        //             fields: viewfields,
-        //         }, BlockRenderRange.self)
-        //         if (typeof g.blockViewHandle == 'function') await g.blockViewHandle(block, g)
-        //         else {
-        //             var ps = g.props.toArray(pro => {
-        //                 var f = schema.fields.find(x => x.text == pro.text && x.type == pro.types[0]);
-        //                 if (f) {
-        //                     return {
-        //                         name: pro.name,
-        //                         visible: true,
-        //                         bindFieldId: f.id
-        //                     }
-        //                 }
-        //             })
-        //             await block.updateProps({
-        //                 openRecordSource: 'page',
-        //                 cardConfig: {
-        //                     auto: false,
-        //                     showCover: false,
-        //                     coverFieldId: "",
-        //                     coverAuto: false,
-        //                     showMode: 'define',
-        //                     templateProps: {
-        //                         url: g.url,
-        //                         props: ps
-        //                     }
-        //                 }
-        //             }, BlockRenderRange.self);
-        //         }
-        //         if (block.dataGridTab) {
-        //             await block.dataGridTab.updateTabItems(block)
-        //         }
-        //     })
-        // }
-        // else {
         var viewfields = schema.fields.findAll(c => g.props.some(pro => pro.types.includes(c.type))).map(c => schema.createViewField(c));
         await block.page.onReplace(block, {
             url: view.url,

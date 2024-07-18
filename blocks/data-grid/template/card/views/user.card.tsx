@@ -21,11 +21,11 @@ CardModel('/user/story', () => ({
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridGallery],
     props: [
-        { name: 'user', text: lst('用户'), types: [FieldType.user], required: true },
+        { name: 'user', text: lst('用户'), types: [FieldType.user, FieldType.creater], required: true },
+        { name: 'indr', text: lst('介绍'), types: [FieldType.text, FieldType.title], required: true },
         { name: 'title', text: lst('称呼'), types: [FieldType.title, FieldType.text] },
-        { name: 'profession', text: lst('职业'), types: [FieldType.text] },
-        { name: 'indr', text: lst('介绍'), types: [FieldType.text], required: true },
-        { name: 'address', text: lst('所在地'), types: [FieldType.text] },
+        { name: 'profession', text: lst('职业'), types: [FieldType.text, FieldType.title, FieldType.option, FieldType.options] },
+        { name: 'address', text: lst('所在地'), types: [FieldType.text, FieldType.title, FieldType.option] },
     ],
     views: [
         { url: BlockUrlConstant.DataGridTable, text: lst('用户卡'), },
@@ -34,19 +34,25 @@ CardModel('/user/story', () => ({
     ],
     dataList: [
         {
-            title: '张三',
-            indr: '诗云解决了我在工作中遇到的信息孤岛问题，可以预见，未来基于诗云的信息组织能力在非常多的场景中进行协同，可以产生巨大的威力！',
-            profession: '用户体验专家'
+            title: '赵雪',
+            user: window.shyConfig?.isDev ? undefined : ['51d9393f2d3a4f289bef315df198ca76'],
+            indr: '"诗云"这个工具帮我解决了工作中遇到的信息孤立问题。可以想象，未来在许多不同的场合，如果大家都能用诗云来组织和整理信息，那么它将极大地提升我们的协作效率，发挥出巨大的作用！',
+            profession: '用户体验专家',
+            address: '上海'
         },
         {
-            title: '李四',
-            indr: '记录的作用不在于记录行为本身，而是对未来的可检索性、可连接性与可启发性。我用诗云记录当下的灵感、思考与数据，用诗云启发与重建未来的思考与创造。',
-            profession: '作词人'
+            title: '陈真真',
+            user: window.shyConfig?.isDev ? undefined : ['02fb751585794bafb64f0c3954fd4f82'],
+            indr: '记录的目的不在于单纯的记录行为，而在于将来能够方便地查找、关联和激发新的想法。我用“诗云”这个工具来记录我当下的灵感、思考和重要信息，同时期望它能够在未来帮助我重新点燃思考的火花，促进新的创造。',
+            profession: '高中老师',
+            address: '长沙'
         },
         {
-            title: '王五',
-            indr: '我使用诗云做大量日常课业、科研、社工、社团、支教等等记录；同时由于工作原因，我需要一个几乎什么内容都可以往里写、输入快捷、方便整理与演示、可云同步的笔记平台，最令我满意的就是诗云。',
-            profession: '哈尔滨工业大学 工程物理系'
+            title: '张泽民',
+            user: window.shyConfig?.isDev ? undefined : ['d1e3fedeac2442f3baacae88aff6b732'],
+            indr: '我用诗云来记录我日常的学业、科研、社区服务、社团活动、支教等事情。同时，因为工作的关系，我需要一个能写各种内容、输入快速、整理和展示方便、还能云端同步的笔记工具，而诗云就是我最满意的选择。',
+            profession: '哈尔滨工业大学 工程物理系',
+            address: '黑河'
         }
     ]
 }))
@@ -66,7 +72,7 @@ export class CardPin extends CardView {
             onMouseDown={e => self.openEdit(e)}
             className="relative flex flex-col flex-full">
             <UserBox userid={userid}>
-                {user=>{
+                {user => {
                     return <div
                         className="padding-20 bg-white  shadow-s round border"
                     >

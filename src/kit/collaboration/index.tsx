@@ -114,7 +114,7 @@ export class Collaboration extends React.Component<{ kit: Kit }> {
         // console.log(name);
         var op = action.operators.last();
         var opName = typeof op.directive == 'number' ? OperatorDirective[op.directive] : op.directive;
-        console.log(name, opName, op);
+        // console.log(name, opName, op);
         var page = this.props.kit.page;
         if (op?.directive == OperatorDirective.$change_cursor_offset) {
             var oc: {
