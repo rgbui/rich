@@ -652,27 +652,17 @@ export class TableSchema {
         return schList;
     }
     static async loadListSchema(schemaIds: string[], page: Page) {
-        // var rs: TableSchema[] = [];
+        schemaIds=lodash.cloneDeep(schemaIds);
         for (let i = schemaIds.length - 1; i >= 0; i--) {
             var r = this.schemas.get(schemaIds[i]);
             if (r) {
-                // rs.push(r);
                 schemaIds.splice(i, 1);
             }
         }
         if (schemaIds.length > 0) {
             await this.batchSchema.get<TableSchema>(schemaIds, [page.ws])
-            // var gs = await channel.get('/schema/ids/list', { ids: schemaIds, ws: page.ws });
-            // if (gs.ok) {
-            //     rs.push(...gs.data.list.map(r => new TableSchema(r)));
-            //     rs.each(r => {
-            //         var os = this.schemas.get(r.id);
-            //         if (os.sourcePermission) r.sourcePermission = os.sourcePermission
-            //         this.schemas.set(r.id, r);
-            //     })
-            // }
         }
-        // return rs;
+       
     }
     static async onCreate(data: { text: string, url: string, id?: string }) {
         var r = await channel.put('/schema/create', { id: data.id, text: data.text, url: data.url });
