@@ -15,10 +15,10 @@ export class PageLayoutView extends React.Component<{
             return this.renderDenyPage();
         }
         if (this.error) return this.renderErrorPage();
-        if ([ElementType.SchemaData, ElementType.SchemaRecordView].includes(this.props.page.pe.type) && !this.props.page.schema) {
+        if (this.props.page.openSource != 'itemCover' && [ElementType.SchemaData, ElementType.SchemaRecordView].includes(this.props.page.pe.type) && !this.props.page.schema) {
             return this.renderNotDataSource();
         }
-       
+
         var pageContentStyle: CSSProperties = {}
         if (this.props.page.pageTheme?.bgStyle) {
             var bs = this.props.page.pageTheme.bgStyle;

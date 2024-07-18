@@ -26,13 +26,13 @@ export class Page$Schema {
     formUserEmojis: Record<string, string[]> = {};
     formPreRow: Record<string, any>;
     formNextRow: Record<string, any>;
-    schema: TableSchema;
+
     public isSchemaRecordViewTemplate: boolean
     async loadPageSchema(this: Page) {
         if (!this.schema) {
-            this.schema = await TableSchema.loadTableSchema(this.pe.id, this.ws);
-            if (this.schema)
-                await this.schema.cacPermissions()
+            var schema = await TableSchema.loadTableSchema(this.pe.id, this.ws);
+            if (schema)
+                await schema.cacPermissions()
         }
         if (this.schema) {
             if (this.pe.type == ElementType.Schema || this.pe.type == ElementType.SchemaView) {

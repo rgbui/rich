@@ -83,7 +83,7 @@ export class KatexView extends BlockView<KatexLine> {
                     <ToolTip overlay={lst('删除')}><span onMouseDown={e => this.block.onCrash(e)} ><Icon size={14} icon={TrashSvg}></Icon></span></ToolTip></>}
                 {!this.block.isCanEdit() && <Tip text='复制'><span onMouseDown={e => { e.stopPropagation(); CopyAlert(this.block.content, lst('公式已复制')) }}><Icon size={14} icon={DuplicateSvg}></Icon></span></Tip>}
             </div>}>
-                <SolidArea line prop='content' isHtml={true} block={this.block} ><span dangerouslySetInnerHTML={{ __html: this.block.katexContent }}></span></SolidArea>
+                <SolidArea  prop='content' isHtml={true} block={this.block} ><span dangerouslySetInnerHTML={{ __html: this.block.katexContent }}></span></SolidArea>
             </BoxTip>
         </span>
     }

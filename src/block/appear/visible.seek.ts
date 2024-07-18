@@ -8,6 +8,7 @@ const GAP = 10;
 export function findBlockAppear(el, predict?: (block: Block) => AppearAnchor) {
     if (el) {
         if (el instanceof Text) el = el.parentNode;
+        else if(el instanceof Comment) el=el.parentNode;
         if (typeof el.closest !== 'function') { console.log(el); return; }
         var r = el.closest('.shy-appear-text');
         if (!r) r = el.closest('.shy-appear-solid');

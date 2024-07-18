@@ -40,7 +40,7 @@ export class ColorInput extends React.Component<{
                 spellCheck={false}
                 style={{ fontSize: 14, outline: 'none', backgroundColor: 'transparent', border: 0, height: 24 }}
                 ref={e => this.input = e}
-                defaultValue={this.props.color}
+                defaultValue={this.props.color || ''}
                 onKeyDown={e => {
                     // if (e.key.toLowerCase() == 'enter')
                     //     this.change()

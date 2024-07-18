@@ -221,6 +221,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                         name: 'cardConfig.auto',
                         text: lst("卡片高度自适应"),
                         type: MenuItemType.switch,
+                        visible: (this.block.url == BlockUrlConstant.DataGridGallery),
                         checked: (this.block as TableStoreGallery).cardConfig?.auto,
                     },
                     {
@@ -229,17 +230,6 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                         type: MenuItemType.switch,
                         updateMenuPanel: true,
                         checked: (this.block as TableStoreGallery).cardConfig?.showCover,
-                    },
-                    {
-                        name: 'cardConfig.coverAuto',
-                        text: lst("封面高度自适应"),
-                        visible: (items) => {
-                            var item = items.find(g => g.name == 'cardConfig.showCover');
-                            if (item.checked) return true;
-                            else return false;
-                        },
-                        type: MenuItemType.switch,
-                        checked: (this.block as TableStoreGallery).cardConfig?.coverAuto,
                     },
                     {
                         text: lst('封面字段'),
@@ -268,6 +258,26 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                                 }
                             })
                         ]
+                    },
+                    {
+                        name: 'cardConfig.coverAuto',
+                        text: lst("封面高度自适应"),
+                        visible: (items) => {
+
+                            if (self.block.url == BlockUrlConstant.DataGridGallery) {
+                                var cAuto = items.find(g => g.name == 'cardConfig.auto');
+                                if (cAuto.checked == false) return false;
+                            }
+                            var item = items.find(g => g.name == 'cardConfig.showCover');
+                            if (item.checked) {
+                                var coverItem = items.find(g => g.name == 'cardConfig.coverFieldId');
+                                if (coverItem.value == '' || coverItem.value == 'pageContent') return false;
+                                return true;
+                            }
+                            else return false;
+                        },
+                        type: MenuItemType.switch,
+                        checked: (this.block as TableStoreGallery).cardConfig?.coverAuto,
                     }
                 ]
             }

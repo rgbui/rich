@@ -87,8 +87,13 @@ export class DataGridView extends Block {
     createRecordSource: Page['openSource'] = 'dialog';
     @prop()
     cardSettings: Record<string, any> = {};
-    schema: TableSchema;
-    relationSchemas: TableSchema[] = [];
+    get schema(){
+        return TableSchema.getTableSchema(this.schemaId)
+    }
+    relationSchemaIds:string[]=[];
+    get relationSchemas(){
+        return this.relationSchemaIds.map(id=>TableSchema.getTableSchema(id))
+    }
     relationDatas: Map<string, any[]> = new Map();
     isOver: boolean = false;
     searchTitle: { input: Input, focus: boolean, word: string } = { input: null, focus: false, word: '' };
@@ -286,7 +291,7 @@ export class DataGridView extends Block {
             rs.push({
                 field: this.schema.fields.find(g => g.name == 'title')?.id,
                 value: this.searchTitle.word,
-                operator: '$startWith'
+                operator: '$contain'
             })
         }
         if (f && rs.length > 0) {
@@ -548,6 +553,7 @@ export class DataGridView extends Block {
             }
             else if (dg.source == 'createView') {
                 var schema = await TableSchema.onCreate({ text: dg.text, url: this.url });
+                await schema.cacPermissions();
                 var view = schema.listViews.first();
                 viewUrl = view.url;
                 await this.page.onReplace(this, {
@@ -679,8 +685,8 @@ export class DataGridView extends Block {
     }) => {
         console.log('syncDataSchema', r, options);
         if (this.dataGridIsCanEdit() == false) return;
-        if (r?.operate?.schemaId) {
-            // if (r?.operate.schemaId == this.schemaId) {
+        if (r?.operate?.schemaId)
+        {
             if (options?.locationId == this.id) return;
             var act: SchemaAction = r.operate.actions[0];
             if (act) {
@@ -694,26 +700,22 @@ export class DataGridView extends Block {
                     'moveSchemaView'
                 ].includes(act.name)) {
                     if (r?.operate?.schemaId == this.schemaId) {
-                        var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
-                        await this.schema.cacPermissions();
-                        this.schema = tc;
+                        var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, { force: options?.sockId ? true : false })
+                        await tc.cacPermissions(); 
                     }
-                    else if (r?.operate?.schemaId && this.relationSchemas.some(s => s.id == r.operate.schemaId)) {
-                        var tc = await TableSchema.loadTableSchema(r.operate.schemaId, this.page.ws, true)
-                        await tc.cacPermissions();
-                        this.relationSchemas = this.relationSchemas.map(s => s.id == r.operate.schemaId ? tc : s)
+                    else if (r?.operate?.schemaId && this.relationSchemaIds.some(s => s== r.operate.schemaId)) {
+                        var tc = await TableSchema.loadTableSchema(r.operate.schemaId, this.page.ws, { force: options?.sockId ? true : false})
+                        await tc.cacPermissions(); 
                     }
                 }
                 else if (['addField', 'updateField', 'turnField', 'removeField'].includes(act.name)) {
                     if (r?.operate?.schemaId == this.schemaId) {
-                        var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, true)
-                        await this.schema.cacPermissions();
-                        this.schema = tc;
-                    }
-                    else if (r?.operate?.schemaId && this.relationSchemas.some(s => s.id == r.operate.schemaId)) {
-                        var tc = await TableSchema.loadTableSchema(r.operate.schemaId, this.page.ws, true)
+                        var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, { force: options?.sockId ? true : false })
                         await tc.cacPermissions();
-                        this.relationSchemas = this.relationSchemas.map(s => s.id == r.operate.schemaId ? tc : s)
+                    }
+                    else if (r?.operate?.schemaId && this.relationSchemaIds.some(s => s== r.operate.schemaId)) {
+                        var tc = await TableSchema.loadTableSchema(r.operate.schemaId, this.page.ws, { force: options?.sockId ? true : false })
+                        await tc.cacPermissions();
                     }
                     if (act.name != 'addField') {
                         var isUpdate = this.fields.some(s => s.id == (act as any).id)

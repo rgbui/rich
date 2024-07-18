@@ -33,6 +33,8 @@ export class TableStoreGallery extends DataGridView {
         }
     }
     get isCardAuto() {
+        var cd = this.cardConfig.coverFieldId;
+        if (cd == '' || cd == 'pageContent') return false;
         return this.cardConfig?.auto || this.cardConfig?.showMode == 'define'
     }
 }

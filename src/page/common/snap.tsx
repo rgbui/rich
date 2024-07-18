@@ -4,9 +4,6 @@ import { Page } from "..";
 import { Rect } from "../../common/vector/point";
 import { PageLayoutType } from "../declare";
 
-
-
-
 export class SnapRecordPage extends React.Component<{ elementUrl: string, content: Record<string, any> }> {
     componentDidMount(): void {
         this.bindPage();
@@ -14,7 +11,7 @@ export class SnapRecordPage extends React.Component<{ elementUrl: string, conten
     page: Page;
     async bindPage() {
         var page = this.page = new Page();
-        page.openSource = "popup"
+        page.openSource = "itemCover";
         page.isSchemaRecordViewTemplate = false;
         page.customElementUrl = this.props.elementUrl;
         page.readonly = true;
@@ -35,7 +32,8 @@ export class SnapRecordPage extends React.Component<{ elementUrl: string, conten
             }
         }
         await this.page.load({
-            url: '/page', views: [{
+            url: '/page',
+            views: [{
                 url: BlockUrlConstant.View,
                 blocks: { childs: this.props.content || [] }
             }]
@@ -57,7 +55,7 @@ export class SnapRecordPage extends React.Component<{ elementUrl: string, conten
                 bottom: 0,
                 boxShadow: 'rgba(55, 53, 47, 0.09) 0px -1px 0px 0px inset',
                 right: 0,
-                zIndex: 1000
+                zIndex: 1
             }}></div>
         </div>
     }

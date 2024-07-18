@@ -66,27 +66,33 @@ export class Page$Cycle {
                     this.views.push(dc as View);
                 }
             }
-            if (typeof this.pageLayout == 'undefined') {
-                if (this.pe.type == ElementType.Room) {
-                    this.pageLayout = Object.assign(this.pageLayout || {}, { type: PageLayoutType.textChannel });
+            if (this.openSource != 'itemCover') {
+                if (typeof this.pageLayout == 'undefined') {
+                    if (this.pe.type == ElementType.Room) {
+                        this.pageLayout = Object.assign(this.pageLayout || {}, { type: PageLayoutType.textChannel });
+                    }
+                    else this.pageLayout = Object.assign(this.pageLayout || {}, { type: PageLayoutType.doc });
                 }
-                else this.pageLayout = Object.assign(this.pageLayout || {}, { type: PageLayoutType.doc });
+                if (this.pe && [ElementType.SchemaRecordView, ElementType.SchemaRecordViewData, ElementType.Schema, ElementType.SchemaData].includes(this.pe.type)) {
+                    this.requireSelectLayout = false;
+                    await this.loadPageSchema();
+                }
+                if (this.pe)
+                    await this.loadPageParents();
+                await this.loadPageRepair();
+                await this.views.eachAsync(async v => {
+                    await v.loadSyncBlock()
+                })
+                await this.emit(PageDirective.loaded);
+                if (Array.isArray(operates) && operates.length > 0) {
+                    var ops = operates.map(op => op.operate ? op.operate : op) as any;
+                    await this.onSyncUserActions(ops, 'load');
+                }
             }
-            if (this.pe && [ElementType.SchemaRecordView, ElementType.SchemaRecordViewData, ElementType.Schema, ElementType.SchemaData].includes(this.pe.type)) {
+            else {
                 this.requireSelectLayout = false;
-                await this.loadPageSchema();
             }
-            if (this.pe)
-                await this.loadPageParents();
-            await this.loadPageRepair();
-            await this.views.eachAsync(async v => {
-                await v.loadSyncBlock()
-            })
-            await this.emit(PageDirective.loaded);
-            if (Array.isArray(operates) && operates.length > 0) {
-                var ops = operates.map(op => op.operate ? op.operate : op) as any;
-                await this.onSyncUserActions(ops, 'load');
-            }
+
         }
         catch (ex) {
             this.onError(ex);

@@ -153,6 +153,12 @@ export class DataGridViewOperator {
         data: Record<string, any>) {
         await this.schema.fieldUpdate({ fieldId: field.id, data }, this.id);
         field.load(data);
+        if (this.url == BlockUrlConstant.DataGridBoard) {
+            if (((this as any).groupFieldId == field.id)) {
+                var ops = field.config?.options;
+                lodash.remove((this as any).dataGroups as { value: any }[], d => lodash.isNull(d.value) || ops.some(s => s.value == d.value) ? false : true)
+            }
+        }
         this.onNotifyReferenceBlocks()
         await this.createItem(true);
     }
@@ -465,9 +471,6 @@ export class DataGridViewOperator {
             }
         })
         if (dt) {
-            if (!newBlock.schema) {
-                newBlock.schema = sch;
-            }
             await dt.updateTabItems(newBlock);
         }
     }

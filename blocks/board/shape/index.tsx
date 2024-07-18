@@ -31,6 +31,12 @@ export class Shape extends Block {
         var bold = this.pattern.css(BlockCssName.font)?.fontWeight;
         var ft = this.pattern.css(BlockCssName.font);
         var cs: { name: string; value?: any; }[] = [];
+        var so = this.pattern.getSvgStyle()?.strokeOpacity
+        var sw = this.pattern.getSvgStyle()?.strokeWidth
+        var fl = this.pattern.getSvgStyle()?.fillOpacity
+        if (typeof so != 'number') so = 1;
+        if (typeof sw != 'number') sw = 1;
+        if (typeof fl != 'number') fl = 1;
         cs.push({ name: 'fontSize', value: Math.round(this.pattern.css(BlockCssName.font)?.fontSize || 14) });
         cs.push({ name: 'fontWeight', value: bold == 'bold' || bold == 500 ? true : false });
         cs.push({ name: 'fontStyle', value: this.pattern.css(BlockCssName.font)?.fontStyle == 'italic' ? true : false });
@@ -39,12 +45,12 @@ export class Shape extends Block {
         cs.push({ name: 'fontFamily', value: this.pattern.css(BlockCssName.font)?.fontFamily });
 
         cs.push({ name: 'stroke', value: this.pattern.getSvgStyle()?.stroke || '#000' });
-        cs.push({ name: 'strokeOpacity', value: this.pattern.getSvgStyle()?.strokeOpacity || 1 });
-        cs.push({ name: 'strokeWidth', value: this.pattern.getSvgStyle()?.strokeWidth || 1 });
+        cs.push({ name: 'strokeOpacity', value: so });
+        cs.push({ name: 'strokeWidth', value: sw });
         cs.push({ name: 'strokeDasharray', value: this.pattern.getSvgStyle()?.strokeDasharray || 'none' })
 
         cs.push({ name: 'fillColor', value: this.pattern.getSvgStyle()?.fill || '#000' });
-        cs.push({ name: 'fillOpacity', value: this.pattern.getSvgStyle()?.fillOpacity || 1 });
+        cs.push({ name: 'fillOpacity', value: fl });
         cs.push({ name: 'turnShapes', value: this.svgName });
         return cs;
     }
@@ -134,7 +140,13 @@ export class ShapeView extends BlockView<Shape> {
         style.width = this.block.fixedWidth || 200;
         style.height = this.block.fixedHeight || 200;
         return <div className="sy-block-shape relative" style={style}>
-            {sb.render({ marginLeft: 0 - w / 2, marginTop: 0 - w / 2, width: sb.viewBox.width, height: sb.viewBox.height })}
+            {sb.render({
+                marginLeft: 0 - w / 2,
+                marginTop: 0 - w / 2,
+                width: sb.viewBox.width,
+                height: sb.viewBox.height,
+                position:"absolute"
+            })}
             <div className="pos flex-center border-box" style={
                 {
                     top: 0,

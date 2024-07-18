@@ -16,17 +16,17 @@ class FieldText extends OriginFormField {
 class FieldTextView extends BlockView<FieldText>{
     renderView() {
         return <FieldView block={this.block}>
-            {this.block.fromType == 'doc-detail' && <div >
+            {this.block.fromType == 'doc-detail' && <div className="flex min-h-30">
                 <CheckBox checked={this.block.value}>{this.block.checkLabel}</CheckBox>
             </div>}
-            {this.block.fromType != 'doc-detail' && <div className={this.block.fromType == 'doc-add' ? "" : "padding-w-10"}><div className="flex">
+            {this.block.fromType != 'doc-detail' && <div className={this.block.fromType == 'doc-add' ? "" : "padding-w-10"}><div className="flex min-h-30">
                 <div className="flex-fixed" onMouseDown={e => { e.stopPropagation() }}><CheckBox
                     checked={this.block.value}
                     onChange={e => {
                         this.block.onChange(e);
                     }}></CheckBox></div>
                 <div className="flex-auto f-14 gap-l-5">
-                    <TextArea plain placeholderEmptyVisible={true} placeholder={lst("输入待办内容")} prop="checkLabel" block={this.block} ></TextArea>
+                    <TextArea plain  placeholder={lst("输入...")} prop="checkLabel" block={this.block} ></TextArea>
                 </div>
             </div></div>}
         </FieldView>

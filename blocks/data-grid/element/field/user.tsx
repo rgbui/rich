@@ -16,7 +16,7 @@ export class FieldUser extends OriginField {
             if (!this.field?.config?.isMultiple) {
                 vs = vs.slice(0, 1);
             }
-            var fn = async ()=>{
+            var fn = async () => {
                 var rs = await useUserPicker({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, this.page.ws, {
                     ignoreUserAll: true,
                     isMultiple: this.field?.config?.isMultiple ? true : false,
@@ -39,16 +39,24 @@ export class FieldUser extends OriginField {
 export class FieldTextView extends OriginFileView<FieldUser> {
     renderFieldValue() {
         if (this.block.field.type == FieldType.creater || this.block.field.type == FieldType.modifyer)
-            return <div className='sy-field-text'>
+            return <div className='sy-field-user'>
                 {this.block.value && <Avatar showName middle hideStatus size={24} userid={this.block.value}></Avatar>}
             </div>
         else {
             var vs = this.block.value;
             if (!Array.isArray(vs) && vs) vs = [vs];
             if (!Array.isArray(vs)) vs = [];
-            return <div className='sy-field-text'>
-                <UserAvatars showName={vs.length > 1 ? false : true} size={24} users={vs}></UserAvatars>
-            </div>
+            if (this.block.field.config?.isMultiple) {
+                return <div className='sy-field-user'>
+                    <UserAvatars showName={false} size={24} users={vs}></UserAvatars>
+                </div>
+            }
+            else {
+                return <div className='sy-field-user'>
+                    {vs[0] && <Avatar showName middle hideStatus size={24} userid={vs[0]}></Avatar>}
+                </div>
+            }
+
         }
     }
 }

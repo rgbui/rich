@@ -39,7 +39,7 @@ export class DataGridTab extends Block {
     }
     @prop()
     tabItems: { schemaId: string, viewId: string, viewText?: string, viewIcon?: IconValueType }[] = [];
-    refTables: TableSchema[] = [];
+    // refTables: TableSchema[] = [];
     @prop()
     displayMode: 'border' | 'top-line' | 'button' = 'top-line';
     @prop()
@@ -55,9 +55,10 @@ export class DataGridTab extends Block {
         var i = 0;
         for (let item of this.tabItems) {
             var ts = await TableSchema.loadTableSchema(item.schemaId, this.page.ws);
-            if (!this.refTables.some(s => s.id == ts.id)) {
-                this.refTables.push(ts);
-            }
+            await ts.cacPermissions()
+            // if (!this.refTables.some(s => s.id == ts.id)) {
+            //     this.refTables.push(ts);
+            // }
             var sv = ts.listViews.find(c => c.id == item.viewId);
             if (this.otherChilds.length <= i) {
                 var nb = await BlockFactory.createBlock(BlockUrlConstant.DataGridTabPage, this.page, {
@@ -122,10 +123,7 @@ export class DataGridTab extends Block {
             if (g) {
                 if (typeof g != 'string' && g.type == 'view') {
                     var s = await TableSchema.loadTableSchema(g.tableId, this.page.ws);
-                    if (this.refTables.some(c => c.id == s.id)) {
-                        lodash.remove(this.refTables, c => c.id == s.id);
-                    }
-                    this.refTables.push(s)
+                    await s.cacPermissions();
                     var view = s.listViews.find(c => c.id == (g as any).viewId);
                     await this.page.onAction('onTabAddItem', async () => {
                         var items = lodash.cloneDeep(this.tabItems);
@@ -492,20 +490,20 @@ export class DataGridTab extends Block {
             if (block.schemaView) {
                 items[index].viewText = block.schemaView?.text;
                 items[index].viewIcon = block.schemaView?.icon;
-                lodash.remove(this.refTables, g => g.id == block.schema.id);
-                this.refTables.push(block.schema);
+                // lodash.remove(this.refTables, g => g.id == block.schema.id);
+                // this.refTables.push(block.schema);
             }
         }
         if (lodash.isEqual(items, this.tabItems)) return;
-        var sr = items.findAll(c => !this.refTables.some(s => s.id == c.schemaId));
-        if (sr.length > 0) {
-            for (let i = 0; i < sr.length; i++) {
-                var s = await TableSchema.loadTableSchema(sr[i].schemaId, this.page.ws);
-                this.refTables.push(s);
-            }
-        }
+        // var sr = items.findAll(c => !this.refTables.some(s => s.id == c.schemaId));
+        // if (sr.length > 0) {
+        //     for (let i = 0; i < sr.length; i++) {
+        //         var s = await TableSchema.loadTableSchema(sr[i].schemaId, this.page.ws);
+        //         this.refTables.push(s);
+        //     }
+        // }
         await this.updateProps({ tabItems: items }, BlockRenderRange.self)
-        console.log('neee', items, block.schema, 'ggg', this.refTables)
+        console.log('neee', items, block.schema, 'ggg')
     }
     get tabPages() {
         if (this.el)
@@ -622,7 +620,8 @@ export class DataGridTabView extends BlockView<DataGridTab> {
         var sumLastIndex = -1;
         for (let i = 0; i < this.block.tabItems.length; i++) {
             var item = this.block.tabItems[i];
-            var tr = this.block.refTables.find(c => c.id == item.schemaId);
+            var tr = TableSchema.getTableSchema(item.schemaId);
+
             var v = tr?.listViews.find(c => c.id == item.viewId);
             var text = v?.text || this.block.tabItems[i].viewText;
             var wd = TextEle.wordWidth(text, fontStyle);
@@ -655,7 +654,6 @@ export class DataGridTabView extends BlockView<DataGridTab> {
             }
         }
         this.spreadIndex = sumLastIndex;
-
         this.forceUpdate();
     }, 300)
     refHead: HTMLElement;
@@ -664,7 +662,7 @@ export class DataGridTabView extends BlockView<DataGridTab> {
         var items: MenuItem[] = [];
         var self = this;
         this.block.tabItems.map((item, i) => {
-            var tr = this.block.refTables.find(c => c.id == item.schemaId);
+            var tr = TableSchema.getTableSchema(item.schemaId);
             var v = tr?.listViews.find(c => c.id == item.viewId);
             items.push({
                 text: v.text || item.viewText,
@@ -702,7 +700,7 @@ export class DataGridTabView extends BlockView<DataGridTab> {
                 <div className={"flex flex-nowrap sy-data-grid-tab-items " + (" sy-data-grid-tab-" + this.block.displayMode + " ") + (this.block.align == 'center' ? "flex-center" : "")}>
                     <div ref={e => this.refHead = e} className={"flex-auto text-overflow " + tabClassList.join(" ")}>
                         {this.block.tabItems.map((item, index) => {
-                            var tr = this.block.refTables.find(c => c.id == item.schemaId);
+                            var tr = TableSchema.getTableSchema(item.schemaId);
                             var v = tr?.listViews.find(c => c.id == item.viewId);
                             return <div onMouseDown={e => {
                                 e.stopPropagation();

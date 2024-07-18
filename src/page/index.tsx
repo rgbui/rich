@@ -40,6 +40,7 @@ import "./style.less";
 import { PageOnEvent } from './partial/on.event';
 import { Page$Operator2 } from './partial/op/op2';
 import { Page$Schema } from './partial/schema';
+import { TableSchema } from '../../blocks/data-grid/schema/meta';
 
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
@@ -52,6 +53,9 @@ export class Page extends Events<PageDirective> {
     version: PageVersion;
 
     syncs: Record<string, any> = {};
+    get schema(): TableSchema {
+        return TableSchema.getTableSchema(this.pe.id)
+    }
     constructor(options?: {
         id?: string,
         readonly?: boolean
@@ -302,7 +306,15 @@ export class Page extends Events<PageDirective> {
     get scale() {
         return this.matrix.getScaling().x;
     }
-    openSource: 'page' | 'slide' | 'dialog' | 'snap' | 'popup' = 'page';
+    /**
+     * page : 以页面的方式打开
+     * slide : 以侧边栏的方式打开
+     * dialog : 以对话框的方式打开
+     * snap : 以快照的方式打开
+     * popup : 以弹出框的方式打开
+     * itemCover : 以数据卡片内容的方式打开
+     */
+    openSource: 'page' | 'slide' | 'dialog' | 'snap' | 'popup' | 'itemCover' = 'page';
     getScreenStyle() {
         var style: CSSProperties = {};
         if (this.openSource == 'popup') {

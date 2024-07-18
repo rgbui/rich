@@ -83,20 +83,15 @@ export function SolidArea(props: {
     block: Block,
     prop?: string,
     style?: CSSProperties,
-    /**
-     * 表示行内块 是否有间隙
-     * 意味着光标的移动不是在相邻的两个字符之间，而是在两个块之间
-     */
-    gap?: boolean,
-    isHtml?: boolean,
-    line?: boolean
+    isHtml?: boolean
 }) {
     var ps = {
         ref: (e) => props.block.elementAppear({
             el: e,
             prop: props.prop,
             appear: BlockAppear.solid,
-            hasGap: props.gap || false
+            hasGap: false,
+            // hasGap: props.gap || false
         }),
         style: props.style
     };
@@ -115,12 +110,16 @@ export function SolidArea(props: {
         onCompositionEnd: (e) => props.block.elementAppearEvent(props.prop, 'compositionend', e),
         onCompositionUpdate: (e) => props.block.elementAppearEvent(props.prop, 'compositionupdate', e)
     }
-    var line = typeof props.line == 'undefined' ? props.block.isLine : props.line;
-    if (line) return <span className='shy-appear-solid'  {...ps} >{props.block.isCanEdit() && <span className='shy-appear-solid-cursor' style={{ width: 1 }} suppressContentEditableWarning {...editProps}></span>}<span className='shy-appear-solid-content'>{props.children}</span>{props.block.isCanEdit() && <span className='shy-appear-solid-cursor' style={{ width: 1 }} suppressContentEditableWarning {...editProps}></span>}</span>
-    return <div className='shy-appear-solid flex'  {...ps} >
-        {props.block.isCanEdit() && <span className='w-1 shy-appear-solid-cursor flex-fixed' suppressContentEditableWarning {...editProps}></span>}
-        <div className='shy-appear-solid-content flex-auto'>{props.children}</div>
-        {props.block.isCanEdit() && <span className='w-1 shy-appear-solid-cursor flex-fixed' suppressContentEditableWarning {...editProps}></span>}</div>
+    // var line = typeof props.line == 'undefined' ? props.block.isLine : props.line;
+    // if (line) 
+    return <span className='shy-appear-solid'  {...ps} >{props.block.isCanEdit() && <span className='shy-appear-solid-cursor' style={{ width: 1 }} suppressContentEditableWarning {...editProps}></span>}
+        <span className='shy-appear-solid-content flex-center flex-inline'>{props.children}</span>
+        {props.block.isCanEdit() && <span className='shy-appear-solid-cursor' style={{ width: 1 }} suppressContentEditableWarning {...editProps}></span>
+        }</span>
+    // return <div className='shy-appear-solid flex'  {...ps} >
+    //     {props.block.isCanEdit() && <span className='w-1 shy-appear-solid-cursor flex-fixed' suppressContentEditableWarning {...editProps}></span>}
+    //     <div className='shy-appear-solid-content flex-auto'>{props.children}</div>
+    //     {props.block.isCanEdit() && <span className='w-1 shy-appear-solid-cursor flex-fixed' suppressContentEditableWarning {...editProps}></span>}</div>
 }
 
 export function ChildsArea(props: { childs: Block[] }) {

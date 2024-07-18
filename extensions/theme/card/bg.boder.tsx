@@ -44,6 +44,9 @@ export class BgBorder extends React.Component<{
             </div>
             <div className="flex flex-wrap text-1">
                 <Input value={(this.contentStyle.round).toString()} onChange={e => {
+                    if (/^\d+(\.\d+)?$/.test(e)) {
+                        e = parseFloat(e) as any;
+                    }
                     this.contentStyle.round = e;
                     this.props.onChange(lodash.cloneDeep(this.contentStyle))
                     this.forceUpdate();

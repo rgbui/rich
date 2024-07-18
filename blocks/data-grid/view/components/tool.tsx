@@ -49,19 +49,21 @@ export class RenderToolOperators extends React.Component<{ block: DataGridView, 
                             }
                         }
                         self.forceUpdate();
-                    }} className="flex-fixed text-1 size-24  flex-fixed item-hover round flex-center cursor"><Icon size={16} icon={SearchSvg}></Icon></span>
+                    }} className="flex-fixed text-1 size-24   item-hover round flex-center cursor"><Icon size={16} icon={SearchSvg}></Icon></span>
                     <input
                         style={{
                             width: props.block.searchTitle.focus ? '100px' : '0px',
                             transition: 'width 0.3s',
                             height: '24px',
                             lineHeight: '24px',
+                            fontWeight: 'normal',
+                            fontSize: '14px',
                             backgroundColor: 'transparent'
                             // display: props.block.searchTitle.focus ? 'inline-block' : 'none'
                         }}
                         placeholder={lst('搜索...')}
                         type="text"
-                        className="noborder flex-auto"
+                        className="noborder flex-auto text-1"
                         defaultValue={props.block.searchTitle.word}
                         onInput={e => {
                             props.block.searchTitle.word = e.currentTarget.value.trim();

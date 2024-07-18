@@ -44,9 +44,11 @@ export class MeasureView extends React.Component<{
             var value = min + Math.round((max - min) * pre);
             if (value > max) value = max;
             if (value < min) value = min;
+            console.log('sss',pre,min,max,value);
             value = Math.round(value);
             var pro = value * r;
-            pro = parseFloat(pro.toPrecision(12));
+            pro = parseFloat(pro.toPrecision(2));
+            console.log('rrr',r,pro,value);
             if (lastValue !== pro || isEnd == true) {
                 self.currentValue = pro;
                 lastValue = pro;

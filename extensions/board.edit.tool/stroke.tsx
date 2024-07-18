@@ -36,7 +36,7 @@ export function ShapeStroke(props: {
             </div>
             <div className="gap-h-10">
                 <div ><label className="remark f-12"><S>边框</S></label><span className="f-12" style={{ float: 'right' }}>{Math.round(props.strokeWidth)}</span></div>
-                <MeasureView theme="light" min={1} max={30} showValue={false} inputting={false} value={props.strokeWidth} onChange={e => { props.change('strokeWidth', e) }}></MeasureView>
+                <MeasureView theme="light" min={0} max={30} showValue={false} inputting={false} value={props.strokeWidth} onChange={e => { props.change('strokeWidth', e) }}></MeasureView>
             </div>
             <div className="gap-h-10">
                 <div className="remark f-12"><S>边框样式</S></div>

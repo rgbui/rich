@@ -135,6 +135,7 @@ export interface TableSchemaView {
  */
 export class TableSchema {
     private constructor(data) {
+        this.loadDate = new Date();
         for (var n in data) {
             if (n == 'fields') continue;
             if (['recordViews', 'listViews', 'visibleFields', 'recordViewTemplateFields'].includes(n)) continue;
@@ -147,6 +148,7 @@ export class TableSchema {
                 this.fields.push(field);
             })
     }
+    loadDate: Date;
     id: string
     url: string;
     text: string;
@@ -270,11 +272,14 @@ export class TableSchema {
         }
         return false;
     }
-    async cacPermissions() {
-        this.sourcePermission = await channel.get('/page/allow', { elementUrl: this.ElementUrl })
-        console.log('gggxx', this.sourcePermission);
+    async cacPermissions(force?: boolean) {
+        if (force == true || !this.sourcePermission)
+            this.sourcePermission = await channel.get('/page/allow', { elementUrl: this.ElementUrl })
     }
     isAllow(...ps: AtomPermission[]): boolean {
+        if (!this.sourcePermission) {
+            //  console.log('schema sourcePermission is null')
+        }
         if (!this.sourcePermission) return false;
         return this.sourcePermission.permissions.some(p => ps.includes(p))
     }
@@ -627,15 +632,12 @@ export class TableSchema {
     }
     private static schemas: Map<string, TableSchema> = new Map();
     static isLoadAll: boolean = false;
-    static async loadTableSchema(schemaId: string, ws: LinkWs, force?: boolean): Promise<TableSchema> {
-        if (force) {
-            this.schemas.delete(schemaId);
-        }
+    static async loadTableSchema(schemaId: string, ws: LinkWs, options?: { force?: boolean }): Promise<TableSchema> {
         var schema = this.schemas.get(schemaId);
-        if (schema) return schema;
-        else {
+        if (!schema || options?.force == true) {
             return await this.batchSchema.get<TableSchema>(schemaId, [ws])
         }
+        return schema;
     }
     static async cacheSchema(schema: Partial<TableSchema>) {
         if (!(schema instanceof TableSchema)) {
@@ -650,24 +652,27 @@ export class TableSchema {
         return schList;
     }
     static async loadListSchema(schemaIds: string[], page: Page) {
-        var rs: TableSchema[] = [];
+        // var rs: TableSchema[] = [];
         for (let i = schemaIds.length - 1; i >= 0; i--) {
             var r = this.schemas.get(schemaIds[i]);
             if (r) {
-                rs.push(r);
+                // rs.push(r);
                 schemaIds.splice(i, 1);
             }
         }
         if (schemaIds.length > 0) {
-            var gs = await channel.get('/schema/ids/list', { ids: schemaIds, ws: page.ws });
-            if (gs.ok) {
-                rs.push(...gs.data.list.map(r => new TableSchema(r)));
-                rs.each(r => {
-                    this.schemas.set(r.id, r);
-                })
-            }
+            await this.batchSchema.get<TableSchema>(schemaIds, [page.ws])
+            // var gs = await channel.get('/schema/ids/list', { ids: schemaIds, ws: page.ws });
+            // if (gs.ok) {
+            //     rs.push(...gs.data.list.map(r => new TableSchema(r)));
+            //     rs.each(r => {
+            //         var os = this.schemas.get(r.id);
+            //         if (os.sourcePermission) r.sourcePermission = os.sourcePermission
+            //         this.schemas.set(r.id, r);
+            //     })
+            // }
         }
-        return rs;
+        // return rs;
     }
     static async onCreate(data: { text: string, url: string, id?: string }) {
         var r = await channel.put('/schema/create', { id: data.id, text: data.text, url: data.url });
@@ -684,6 +689,8 @@ export class TableSchema {
         if (r.ok) {
             r.data.list.forEach(g => {
                 var schema = new TableSchema(g);
+                var os = this.schemas.get(schema.id);
+                if (os?.sourcePermission) schema.sourcePermission = os.sourcePermission
                 this.schemas.set(g.id, schema);
             })
         }
@@ -699,15 +706,26 @@ export class TableSchema {
         }, { locationId: 'deleteTableSchema' });
         this.schemas.delete(schemaId);
     }
-    static async getTableSchema(schemaId: string) {
+    static getTableSchema(schemaId: string) {
         return this.schemas.get(schemaId)
     }
     static batchSchema = new MergeSock(async (batchs) => {
-        var gs = await channel.get('/schema/ids/list', { ws: batchs[0]?.args[0], ids: lodash.uniq(batchs.map(b => b.id)) });
+        var ids = [];
+        batchs.forEach(b => {
+            if (Array.isArray(b.id)) {
+                ids.push(...b.id)
+            }
+            else if (typeof b.id == 'string')
+                ids.push(b.id)
+        })
+        ids = lodash.uniq(ids);
+        var gs = await channel.get('/schema/ids/list', { ws: batchs[0]?.args[0], ids: ids });
         if (gs.ok) {
             var rs: TableSchema[] = [];
             rs.push(...gs.data.list.map(r => new TableSchema(r)));
             rs.each(r => {
+                var os = this.schemas.get(r.id);
+                if (os?.sourcePermission) r.sourcePermission = os.sourcePermission
                 TableSchema.schemas.set(r.id, r);
             })
             return rs.map(r => { return { id: r.id, data: r } })

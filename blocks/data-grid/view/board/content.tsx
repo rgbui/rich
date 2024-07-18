@@ -138,7 +138,7 @@ export class BoardContent extends React.Component<{
         })
         var ds = this.block.groupStats.find(g => g.groupId == dg.value)
         if (this.props.groupHead) ds = this.block.groupStats.find(g => g.groupId == dg.value && lodash.isEqual(g.groupViewId, this.props.groupHead.id));
-
+        var op = this.block.groupField.config?.options?.find(c => c.value == dg.value);
         return <div
             className="sy-data-grid-board-group visible-hover"
             data-block-drop-panel={JSON.stringify(GenreConsistency.transform({
@@ -149,10 +149,10 @@ export class BoardContent extends React.Component<{
                 <span className="flex-auto">
                     {!dg.group && <span className="text-1"><Sp text={'无{group}的数据'}
                         view={{ group: <em className="bold padding-w-3">{this.block.groupField.text}</em> }}></Sp></span>}
-                    {dg.group && <span onMouseDown={e => {
+                    {op?.text && <span onMouseDown={e => {
                         e.stopPropagation();
                         this.onChangeGroupTitle(dg, e);
-                    }} className="text-overflow cursor padding-w-6 f-14 padding-h-2  l-16" style={{ backgroundColor: dg.fill||dg.color || undefined,color:dg.textColor||'inherit' }}>{dg.group || lst('未定义')}</span>}
+                    }} className="text-overflow cursor padding-w-6 f-14 padding-h-2  l-16" style={{ backgroundColor: op?.fill || op?.color || undefined, color: op?.textColor || 'inherit' }}>{op?.text || lst('未定义')}</span>}
                     <label>{ds?.count}</label>
                 </span>
                 {this.block.isCanEdit() && <div className="flex-fixed flex">
@@ -194,6 +194,7 @@ export class BoardContent extends React.Component<{
             <div className="item-hover flex-center round h-30 cursor remark" onMouseDown={e => this.block.onAddNewGroup(e)}><Icon icon={PlusSvg}></Icon><S>新增分组</S></div>
             {hgs.length > 0 && hgs.map(hg => {
                 var dg = this.block.dataGroups.find(c => c.value == hg)
+                var op = this.block.groupField.config?.options?.find(c => c.value == hg);
                 var ds = this.block.groupStats.find(g => g.groupId == dg.value)
                 if (this.props.groupHead) ds = this.block.groupStats.find(g => g.groupId == dg.value && lodash.isEqual(g.groupViewId, this.props.groupHead.id));
 
@@ -201,7 +202,7 @@ export class BoardContent extends React.Component<{
                     <span className="flex-auto">
                         {!dg.group && <span className="text-1"><Sp text={'无{group}的数据'}
                             view={{ group: <em className="bold padding-w-3">{this.block.groupField.text}</em> }}></Sp></span>}
-                        {dg.group && <span className="text-overflow padding-w-6  f-14 padding-h-2  l-16 round cursor" style={{ backgroundColor: dg?.color }}>{dg?.group}</span>}
+                        {op?.text && <span className="text-overflow padding-w-6  f-14 padding-h-2  l-16 round cursor" style={{ backgroundColor: op?.fill || op?.color, color: op?.textColor }}>{op?.text}</span>}
                         <label className="remark f-12 gap-l-5">{ds?.count}</label>
                     </span>
                     <Tip text='取消隐藏分组'><span onMouseDown={e => {

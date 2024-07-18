@@ -216,6 +216,7 @@ export class Page$ViewEvent {
                     text: this.pageInfo?.text || lst('表格'),
                     url: BlockUrlConstant.DataGridTable
                 });
+                await schema.cacPermissions();
                 await this.createBlock('/data-grid/table', {
                     schemaId: schema.id,
                     syncBlockId: schema.views.find(g => ![BlockUrlConstant.RecordPageView].includes(g.url as any))?.id

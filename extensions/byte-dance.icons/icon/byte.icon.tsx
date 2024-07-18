@@ -5,7 +5,7 @@ import { util } from "../../../util/util";
 export default class ByteIcon extends React.Component<{
     style?: CSSProperties,
     className?: string | (string[]),
-    size?: number,
+    size?: number | string,
     name: string,
     color: string,
     onClick?: (e: React.MouseEvent) => void,
@@ -15,8 +15,8 @@ export default class ByteIcon extends React.Component<{
         var { name, color, size } = this.props;
         var d = ByteIcons.get(name)({
             id: name as any,
-            width: size || 24,
-            height: size || 24,
+            width: (size as number) || 24,
+            height: (size as number) || 24,
             strokeWidth: 3,
             strokeLinejoin: 'round',
             strokeLinecap: 'round',

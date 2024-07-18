@@ -186,14 +186,9 @@ export class DataGridTableHead extends React.Component<{ block: Block, style?: C
         if (this.isMoveLine) return;
         if (!this.block.schema) return;
         if (this.isDragMouseField) return;
-
-        //var box = this.block.el.querySelector('.sy-dg-table-content') as HTMLElement;
         var head = (this.el as HTMLElement);
         if (!head) return;
-        // var boxRect = Rect.fromEle(box);
         var tableHeadRect = Rect.fromEle(head);
-        // var scrollLeft = box.scrollLeft;
-        // var tableLeft = boxRect.left - scrollLeft;
         var tableLeft = tableHeadRect.left;
         var w = 0;
         var gap = 5;
@@ -270,7 +265,6 @@ export class DataGridTableHead extends React.Component<{ block: Block, style?: C
                     col.colWidth = w;
                     self.isMoveLine = false;
                     self.subline.style.display = 'none';
-                    console.log('newFields', newFields, w);
                     self.block.onChangeFields(self.block.fields, newFields);
                 }
             },

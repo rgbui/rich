@@ -36,14 +36,22 @@ export class DataGridItemRecord extends Block {
     }
     @prop()
     cardSettings: Record<string, any> = {};
-    schema: TableSchema;
+    get schema() {
+        return TableSchema.getTableSchema(this.schemaId)
+    }
     dataRow: Record<string, any> = {};
-    relationSchemas: TableSchema[] = [];
+
     relationDatas: Map<string, any[]> = new Map();
+
+    relationSchemaIds: string[] = [];
+    get relationSchemas() {
+        return this.relationSchemaIds.map(id => TableSchema.getTableSchema(id))
+    }
     async didMounted() {
         await this.onBlockReloadData(async () => {
-            this.schema = await TableSchema.getTableSchema(this.schemaId)
+            await this.loadSchema();
             if (this.schema) {
+
                 await this.loadViewFields();
                 await this.loadData();
                 await this.loadRelationSchemas();
@@ -79,7 +87,7 @@ export class DataGridItemRecord extends Block {
     }
     async loadSchema() {
         if (this.schemaId && !this.schema) {
-            this.schema = await TableSchema.loadTableSchema(this.schemaId, this.page.ws);
+            await TableSchema.loadTableSchema(this.schemaId, this.page.ws);
             if (this.schema) await this.schema.cacPermissions()
         }
     }
@@ -109,7 +117,8 @@ export class DataGridItemRecord extends Block {
             }
         });
         if (tableIds.length > 0) {
-            this.relationSchemas = await TableSchema.loadListSchema(tableIds, this.page);
+            await TableSchema.loadListSchema(tableIds, this.page);
+            this.relationSchemaIds = tableIds;
         }
     }
     async loadRelationDatas() {

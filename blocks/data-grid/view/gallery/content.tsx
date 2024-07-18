@@ -32,8 +32,9 @@ export class GalleryContent extends React.Component<{
         var wd = `calc((100% - ${(size - 1) * gap}px ) / ${size})`
         // n*w + (n-1)*gap = 100%
         //w=(100%-(n-1)* gap)/n
+     
 
-        if (this.block.isCardAuto) {
+        if (this.block.isCardAuto ) {
             var rss = [];
             for (let j = 0; j < size; j++) {
                 rss.push([]);
@@ -44,7 +45,12 @@ export class GalleryContent extends React.Component<{
             }
             eles = rss.map((rs, i) => {
                 return <div className='sy-data-grid-gallery-column' style={{ width: wd, marginRight: i == rss.length - 1 ? undefined : gap, marginBottom: undefined }} key={i}>
-                    {rs.map(c => <div className="sy-data-grid-gallery-cell w100" key={c.id}>{this.renderItem(c)}</div>)}
+                    {rs.map(c => <div className="sy-data-grid-gallery-cell w100"
+                        onMouseDown={e => {
+                            e.stopPropagation();
+                            this.block.onOpenEditForm(c.id);
+                        }}
+                        key={c.id}>{this.renderItem(c)}</div>)}
                 </div>
             })
         }
@@ -58,8 +64,16 @@ export class GalleryContent extends React.Component<{
                 }
                 i += (size - 1);
                 eles.push(<div className='sy-data-grid-gallery-row' key={i}>
-                    {cs.map((c, j) => <div className="sy-data-grid-gallery-cell" style={{ width: wd, marginRight: cs.length - 1 == j ? undefined : gap, marginBottom: undefined }}
-                        key={c.id}>{this.renderItem(c)}
+                    {cs.map((c, j) => <div
+                        onMouseDown={e => {
+                            e.stopPropagation();
+                            this.block.onOpenEditForm(c.id);
+                        }}
+                        className="sy-data-grid-gallery-cell"
+                        style={{ width: wd, marginRight: cs.length - 1 == j ? undefined : gap, marginBottom: undefined }}
+                        key={c.id}>{
+                            this.renderItem(c)
+                        }
                     </div>)}
                 </div>)
             }

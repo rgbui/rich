@@ -12,7 +12,7 @@ export function Icon(props: {
     onClick?: (e: React.MouseEvent) => void,
     onMousedown?: (e: React.MouseEvent) => void,
     rotate?: number,
-    size?: number | 'none',
+    size?: number|string | 'none',
     fontSize?: number,
     fontColorInherit?: boolean,
     className?: string[] | string,
@@ -87,7 +87,7 @@ export function Icon(props: {
                     Object.assign(style, {
                         color: color,
                         fontSize: props.size == 'none' ? undefined : props.size,
-                        lineHeight: props.size == 'none' ? undefined : props.size + 'px',
+                        lineHeight: props.size == 'none' ? undefined : (typeof props.size == 'number' ? props.size + 'px' : props.size),
                         width: props.size == 'none' ? undefined : (props.size) || 20,
                         height: props.size == 'none' ? undefined : (props.size) || 20,
                         ...(props.style || {})
@@ -122,7 +122,7 @@ export function Icon(props: {
                         color: '#000',
                         fill: '#000',
                         fontSize: props.size == 'none' ? undefined : props.size,
-                        lineHeight: props.size == 'none' ? undefined : props.size + 'px',
+                        lineHeight: props.size == 'none' ? undefined : (typeof props.size == 'number' ? props.size + 'px' : props.size),
                         width: props.size == 'none' ? undefined : (props.size) || 20,
                         height: props.size == 'none' ? undefined : (props.size) || 20
                         , ...(props.style || {})

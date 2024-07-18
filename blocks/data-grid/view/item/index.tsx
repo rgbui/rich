@@ -6,7 +6,6 @@ import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { ChildsArea } from "../../../../src/block/view/appear";
 import { util } from "../../../../util/util";
-import { ViewField } from "../../schema/view";
 import { DataGridView } from "../base";
 import { createFieldBlock } from "./service";
 
@@ -529,7 +528,6 @@ export class TableStoreItemView extends BlockView<TableGridItem> {
         var ga = this.block.dataGrid as TableStoreGallery;
         if (ga.cardConfig.showCover) {
             if (ga.cardConfig.coverFieldId == 'pageContent') {
-                console.log(this.block.dataRow);
                 var pd = this.block.dataRow.pageContentPreview;
                 if (typeof pd == 'string') pd = JSON.parse(pd);
                 return <div className='sy-data-grid-item sy-data-grid-card visible-hover'>
@@ -537,10 +535,9 @@ export class TableStoreItemView extends BlockView<TableGridItem> {
                         style={{
                             overflow: 'hidden',
                             background: 'rgba(55, 53, 47, 0.024)',
-                            // padding: '8px 8px 0px',
                             boxShadow: 'rgba(55, 53, 47, 0.09) 0px -1px 0px 0px inset'
                         }}>
-                        {pd &&<SnapRecordPage content={pd}
+                        {pd && <SnapRecordPage content={pd}
                             elementUrl={getElementUrl(ElementType.SchemaData, this.block.dataGrid.schema.id, this.block.dataRow.id)}>
                         </SnapRecordPage>}
                     </div>
@@ -548,7 +545,7 @@ export class TableStoreItemView extends BlockView<TableGridItem> {
                         <ChildsArea childs={this.block.childs}></ChildsArea>
                     </div>
                     <div></div>
-                    {this.block.isCanEdit() && <div className="pos visible top-5 right-5 remark flex-center round  shadow-s border cursor">
+                    {this.block.isCanEdit() && <div style={{ zIndex: "100" }} className="pos visible top-5 right-5 remark flex-center round  shadow-s border cursor">
                         <ToolTip overlay={<S>编辑</S>}><span onMouseDown={e => { e.stopPropagation(); this.block.dataGrid.onOpenEditForm(this.block.dataRow.id); }} className="round-l-4 bg-hover size-24 flex-center cursor border-right"><Icon size={16} icon={{ name: 'byte', code: 'write' }}></Icon></span></ToolTip>
                         <ToolTip overlay={<S text="复制删除">复制、删除</S>}><span onMouseDown={e => { e.stopPropagation(); this.block.onOpenMenu(e); }} className="round-r-4 bg-hover size-24 flex-center cursor"><Icon size={20} icon={DotsSvg}></Icon></span></ToolTip>
                     </div>}

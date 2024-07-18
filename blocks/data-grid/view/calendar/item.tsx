@@ -3,7 +3,7 @@ import { BlockView } from "../../../../src/block/view";
 import { TableGridItem } from "../item";
 import React from "react";
 import { Icon } from "../../../../component/view/icon";
-import { getPageIcon } from "../../../../src/page/declare";
+import { getPageIcon, PageLayoutType } from "../../../../src/page/declare";
 import { TableStoreCalendar } from ".";
 
 @url('/data-grid/calendar/item')
@@ -20,7 +20,7 @@ export class TableStoreListItemView extends BlockView<TableStoreCalendarItem> {
         return <div onMouseDown={e => {
             dg.onDrag(e, this.block);
         }} className="sy-data-grid-calendar-item flex gap-h-5" >
-            <Icon className={'flex-fixed gap-r-5 remark'} icon={getPageIcon(this.block.dataRow.icon)} size={16}></Icon>
+            <Icon className={'flex-fixed gap-r-5 remark'} icon={getPageIcon({ pageType: PageLayoutType.doc,icon:this.block.dataRow.icon})} size={16}></Icon>
             <span className="bold f-14 flex-auto text-overflow ">{this.block.dataRow.title}</span>
         </div>
     }

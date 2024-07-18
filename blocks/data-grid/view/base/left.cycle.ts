@@ -12,8 +12,8 @@ import { Field } from "../../schema/field";
 export class DataGridViewLife {
     async loadSchema(this: DataGridView) {
         if (this.schemaId && !this.schema) {
-            this.schema = await TableSchema.loadTableSchema(this.schemaId, this.page.ws);
-            await this.schema.cacPermissions()
+            var schema = await TableSchema.loadTableSchema(this.schemaId, this.page.ws);
+            await schema.cacPermissions()
         }
     }
     async loadViewFields(this: DataGridView) {
@@ -58,7 +58,10 @@ export class DataGridViewLife {
                 }
             });
             if (tableIds.length > 0) {
-                this.relationSchemas = await TableSchema.loadListSchema(tableIds, this.page);
+                console.log('ref tableIds', tableIds);
+                await TableSchema.loadListSchema(tableIds, this.page);
+                console.log('ssssreturn' );
+                this.relationSchemaIds = tableIds;
             }
         }
     }

@@ -12,14 +12,14 @@ export class MergeSock {
     private wait: number = 5;
     private maxCount: number = 30;
     private time;
-    private events: { id: string, args: any[], callback?: (err, data) => void }[] = [];
-    private handle: (batchs: { id: string, args?: any[] }[]) => Promise<{ id: string, data: Record<string, any> }[]>
+    private events: { id: string | string[], args: any[], callback?: (err, data) => void }[] = [];
+    private handle: (batchs: { id: string | string[], args?: any[] }[]) => Promise<{ id: string, data: Record<string, any> }[]>
     constructor(handle: MergeSock['handle'], wait?: number, maxCount?: number) {
         this.handle = handle;
         if (typeof wait != 'undefined') this.wait = wait;
         if (typeof maxCount != 'undefined') this.maxCount = maxCount;
     }
-    async get<T>(id: string, args?: any[]) {
+    async get<T>(id: string | string[], args?: any[]) {
         return new Promise((resolve: (T) => void, reject) => {
             var es = {
                 id,
@@ -56,7 +56,7 @@ export class MergeSock {
         try {
             var rs = await this.handle(events);
             for (let i = 0; i < events.length; i++) {
-                events[i].callback(undefined, rs.find(g => g.id == events[i].id)?.data)
+                events[i].callback(undefined, Array.isArray(events[i].id) ? rs.filter(g => (events[i].id as string[]).includes(g.id)).map(c => c.data) : rs.find(g => g.id == events[i].id)?.data)
             }
         }
         catch (ex) {

@@ -124,6 +124,7 @@ export class DataGridCreateView extends EventsComponent {
     onSave() {
         var self = this;
         var text = self.viewText || self.viewMayBeText;
+        console.log('ggg',self.viewText,self.viewMayBeText)
         self.emit('save', {
             text: text,
             url: self.url,

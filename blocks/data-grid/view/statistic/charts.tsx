@@ -64,13 +64,11 @@ export class DataGridChart extends DataGridView {
         }
     @prop()
     align: 'left' | 'right' | 'center' = 'center';
-
     viewProps: string[] = [
         'canvasWidth',
         'canvasHeight',
         'align'
     ];
-
     @prop()
     canvasWidth: number = 300;
     @prop()
@@ -83,9 +81,9 @@ export class DataGridChart extends DataGridView {
     }
     async loadSchema() {
         if (this.schemaId && !this.schema) {
-            this.schema = await TableSchema.loadTableSchema(this.schemaId, this.page.ws)
-            if (this.schema)
-                await this.schema.cacPermissions();
+            var schema = await TableSchema.loadTableSchema(this.schemaId, this.page.ws)
+            if (schema)
+                await schema.cacPermissions();
         }
     }
     data: any[] = [];
@@ -300,10 +298,13 @@ export class DataGridChart extends DataGridView {
     }
     async loadDataGrid() {
         try {
+           
             this.isLoading = true;
             if (this.view) this.forceManualUpdate()
             await this.loadSchema();
+        console.log('xxx');
             await this.loadRelationSchemas();
+            console.log('sss',this.schema);
             if (this.schema) {
                 await this.loadData();
                 await this.loadRelationDatas();
@@ -396,9 +397,9 @@ export class DataGridChart extends DataGridView {
         })
         var rc = await useSelectMenuItem({ roundArea: rect }, items, { width: 300 });
         var sid = items.find(c => c.name == 'schemaId')?.value as string;
-        console.log(sid,)
         if (sid) {
-            this.schema = await TableSchema.loadTableSchema(sid, this.page.ws);
+            var schema = await TableSchema.loadTableSchema(sid, this.page.ws);
+            await schema.cacPermissions();
             var name = items.find(g => g.name == 'name')?.value || lst('数据图表');
             var sv = await this.schema.createSchemaView(name, this.url, this.id);
             this.page.onAction('openView', async () => {
@@ -409,7 +410,7 @@ export class DataGridChart extends DataGridView {
             }, {
                 disabledSyncBlock: true
             });
-            this.schema.cacPermissions();
+            schema.cacPermissions();
             await this.loadDataGrid();
         }
     }

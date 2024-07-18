@@ -53,19 +53,27 @@ export class FieldTextView extends OriginFileView<FieldText> {
             BlockUrlConstant.DataGridBoard,
             BlockUrlConstant.DataGridGallery
         ].includes(this.block.dataGrid.url as any);
+        var isList = [
+            BlockUrlConstant.DataGridTable,
+            BlockUrlConstant.DataGridList
+        ].includes(this.block.dataGrid.url as any)
 
-        var isList = [BlockUrlConstant.DataGridTable, BlockUrlConstant.DataGridList].includes(this.block.dataGrid.url as any)
-
-        var isSub = [BlockUrlConstant.DataGridTable, BlockUrlConstant.DataGridList].includes(this.block.dataGrid.url as any) && this.block.dataGrid.schema?.allowSubs;
+        var isSub = [
+            BlockUrlConstant.DataGridTable,
+            BlockUrlConstant.DataGridList
+        ].includes(this.block.dataGrid.url as any) && this.block.dataGrid.schema?.allowSubs;
         var textStyle: CSSProperties = {
 
         }
         if (isList) {
             textStyle.textDecoration = 'underline';
             textStyle.textDecorationColor = 'rgba(22, 22, 22, 0.2)';
+            if (this.block.dataGrid.url == BlockUrlConstant.DataGridList) {
+                textStyle.fontSize = '16px';
+            }
         }
         return <div className={'flex l-20 flex-top sy-field-title f-14  ' + (isCard ? "  bold" : " b-500 ")} onMouseDown={e => {
-            if(!this.block.isCanEdit())return;
+            if (!this.block.isCanEdit()) return;
             if (isCard) {
                 e.stopPropagation();
                 this.block.onCellMousedown(e);
