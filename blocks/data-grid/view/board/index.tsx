@@ -5,7 +5,7 @@ import { DataGridView } from "../base";
 import { FieldType } from "../../schema/type";
 import { TableGridItem } from "../item";
 import { DataGridTool } from "../components/tool";
-import { CheckSvg, EyeHideSvg, EyeSvg, PlusSvg } from "../../../../component/svgs";
+import { CheckSvg, EyeHideSvg, EyeSvg} from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import { lst } from "../../../../i18n/store";
 import { S } from "../../../../i18n/view";
@@ -108,8 +108,15 @@ export class TableStoreBoard extends DataGridView {
                             rd.forEach(rr => {
                                 rr.boardGroupList.forEach(g => {
                                     g.list.forEach(cc => {
-                                        cc.__group = rr.id;
-                                        list.push(cc);
+                                        var dc = list.find(c => c.id == cc.id);
+                                        if (dc) {
+                                            dc.__group.push(rr.id);
+                                            return;
+                                        }
+                                        else {
+                                            cc.__group = [rr.id];
+                                            list.push(cc);
+                                        }
                                     })
                                     this.groupStats.push({
                                         groupId: g.id,
@@ -170,8 +177,17 @@ export class TableStoreBoard extends DataGridView {
                     var list = [];
                     if (rc.ok) {
                         rc.data.list.each(g => {
-                            if (Array.isArray(g.list))
-                                list.push(...g.list);
+                            if (Array.isArray(g.list)) {
+                                g.list.forEach(cc => {
+                                    var dc = list.find(c => c.id == cc.id);
+                                    if (dc) {
+                                        return;
+                                    }
+                                    else {
+                                        list.push(cc);
+                                    }
+                                })
+                            }
                             if (typeof g.total == 'number') {
                                 this.groupStats.push({
                                     groupId: g.id,
@@ -197,7 +213,7 @@ export class TableStoreBoard extends DataGridView {
             props[dg.name] = dg.value;
             await this.onSyncAddRow(props, undefined, undefined, groupHead ? false : true, async (row) => {
                 if (groupHead) {
-                    row.__group = groupHead.id;
+                    row.__group = [groupHead.id];
                     this.forceManualUpdate()
                 }
             });
@@ -350,10 +366,32 @@ export class TableStoreBoard extends DataGridView {
 
         var dragRow = blocks[0] as TableGridItem;
         if (direction == DropDirection.inner && dropData && Object.keys(dropData).length > 0) {
-            var ke = Object.keys(dropData)[0];
-            await this.schema.rowUpdate({ dataId: dragRow.dataRow.id, data: dropData }, this?.id);
+            // var ke = Object.keys(dropData)[0];
+            var props = dropData;
+            var db = this;
+            var name = db.groupField?.name;
+            var panel = dragRow.el.closest('[data-block-drop-panel]') as HTMLElement;
+            var pd = JSON.parse(panel.getAttribute('data-block-drop-panel'));
+            var old = pd[name];
+            var dragOptions = lodash.cloneDeep(dragRow[name]) || [];
+            if (dragOptions.includes(old)) {
+                dragOptions = dragOptions.filter(c => c !== old);
+            }
+            var dg = db.groupStats.find(c => c.groupId === old);
+            if (dg && typeof dg.count == 'number') dg.count -= 1;
+            var newG = dropData[name];
+            var ng = db.groupStats.find(c => c.groupId === newG);
+            if (ng && typeof ng.count == 'number') ng.count += 1;
+            if (!dragOptions.includes(newG)) {
+                if (lodash.isNull(newG)) dragOptions = []
+                else dragOptions.push(newG);
+            }
+            props[name] = dragOptions;
+
+
+            await this.schema.rowUpdate({ dataId: dragRow.dataRow.id, data: props }, this?.id);
             var d = dragRow.dataGrid.data.find(c => c.id == dragRow.dataRow.id);
-            Object.assign(d, dropData);
+            Object.assign(d, props);
             this.forceManualUpdate();
             return;
         }
