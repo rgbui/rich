@@ -33,7 +33,7 @@ export class UserPicker extends EventsComponent {
         return <div
             className="padding-b-10 min-w-300"
             ref={e => this.el = e}>
-            <div className="padding-w-10 padding-h-5" style={{
+            <div className="padding-5-10 padding-h-5" style={{
                 backgroundColor: 'rgba(242, 241, 238, 0.6)',
                 boxShadow: 'rgba(55, 53, 47, 0.16) 0px -1px inset'
             }}>
