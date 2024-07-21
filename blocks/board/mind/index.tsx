@@ -24,7 +24,8 @@ import './style.less';
 @url('/flow/mind')
 export class FlowMind extends Block {
     async created() {
-        if (this.isMindRoot) {
+        if (!(this.pattern.styles && this.pattern.styles[0]?.cssList?.length > 0)) {
+            if (this.isMindRoot) {
             await this.pattern.setFontStyle({
                 fontSize: 20,
                 fontWeight: 'bold',
@@ -34,7 +35,9 @@ export class FlowMind extends Block {
         else {
             this.minBoxStyle.type = 'none'
             await this.pattern.setFillStyle({ color: 'rgb(122,122,122)' });
+        } 
         }
+       
     }
     @prop()
     direction: 'none' | 'x' | 'y' = 'none';

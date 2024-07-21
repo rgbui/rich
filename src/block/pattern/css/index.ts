@@ -21,6 +21,7 @@ export abstract class BlockCss {
     abled: boolean = true;
     cssName: BlockCssName;
     load(data) {
+        console.log('this',data);
         for (var n in data) {
             this[n] = util.clone(data[n]);
         }

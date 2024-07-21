@@ -19,10 +19,12 @@ export class Pen extends Block {
     @prop()
     pathString: string = '';
     async created() {
-        await  this.pattern.setSvgStyle({
-            strokeWidth: 3,
-            stroke: 'rgb(0,198,145)'
-        });
+        if (!(this.pattern.styles && this.pattern.styles[0]?.cssList?.length > 0)) {
+            await this.pattern.setSvgStyle({
+                strokeWidth: 3,
+                stroke: 'rgb(0,198,145)'
+            });
+        }
     }
     async getBoardEditCommand(this: Block): Promise<{ name: string; value?: any; }[]> {
         var cs: { name: string; value?: any; }[] = [];
@@ -32,10 +34,10 @@ export class Pen extends Block {
     }
     async setBoardEditCommand(name: string, value: any) {
         if (name == 'tickness') {
-            await   this.pattern.setSvgStyle({ strokeWidth: value })
+            await this.pattern.setSvgStyle({ strokeWidth: value })
         }
         else if (name == 'backgroundColor') {
-            await   this.pattern.setSvgStyle({ stroke: value })
+            await this.pattern.setSvgStyle({ stroke: value })
         }
     }
     getVisibleBound(): Rect {
@@ -50,7 +52,7 @@ export class Pen extends Block {
 }
 
 @view('/pen')
-export class PenView extends BlockView<Pen>{
+export class PenView extends BlockView<Pen> {
     renderView() {
         var vb;
         if (this.block.viewBox) {

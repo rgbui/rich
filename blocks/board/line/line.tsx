@@ -23,10 +23,12 @@ export type PortLocation = {
 @url('/line')
 export class Line extends Block {
     async created() {
-        await this.pattern.setSvgStyle({
-            strokeWidth: 3,
-            stroke: 'rgb(0,198,145)'
-        });
+        if (!(this.pattern.styles && this.pattern.styles[0]?.cssList?.length > 0)) {
+            await this.pattern.setSvgStyle({
+                strokeWidth: 3,
+                stroke: 'rgb(0,198,145)'
+            });
+        }
     }
     getBlockBoardSelector(types: BoardPointType[] = [
         BoardPointType.path,

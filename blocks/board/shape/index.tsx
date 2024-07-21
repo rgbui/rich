@@ -14,14 +14,16 @@ import { Rect } from "../../../src/common/vector/point";
 @url('/shape')
 export class Shape extends Block {
     async created() {
-        await this.pattern.setSvgStyle({
-            strokeWidth: 3,
-            stroke: 'rgb(0,198,145)'
-        });
-        await this.pattern.setFontStyle({
-            fontSize: 20,
-            color: 'rgb(0,198,145)',
-        });
+        if (!(this.pattern.styles && this.pattern.styles[0]?.cssList?.length > 0)) {
+            await this.pattern.setSvgStyle({
+                strokeWidth: 3,
+                stroke: 'rgb(0,198,145)'
+            });
+            await this.pattern.setFontStyle({
+                fontSize: 20,
+                color: 'rgb(0,198,145)',
+            });
+        }
     }
     @prop()
     fixedWidth: number = 200;
@@ -145,7 +147,7 @@ export class ShapeView extends BlockView<Shape> {
                 marginTop: 0 - w / 2,
                 width: sb.viewBox.width,
                 height: sb.viewBox.height,
-                position:"absolute"
+                position: "absolute"
             })}
             <div className="pos flex-center border-box" style={
                 {

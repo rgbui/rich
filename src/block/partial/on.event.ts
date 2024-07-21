@@ -434,10 +434,10 @@ export class Block$Event {
         action?: () => Promise<void>
     }) {
         var { appear, oldValue, newValue, action } = options;
-      
+
         await this.page.onAction(ActionDirective.onInputText, async () => {
             await this.manualUpdateProps({ [appear.prop]: oldValue }, { [appear.prop]: newValue }, BlockRenderRange.none, { isOnlyRecord: true });
-          
+
             if (typeof action == 'function') await action();
             await this.changeAppear(appear);
 
@@ -478,8 +478,10 @@ export class Block$Event {
     }
     async clone(this: Block) {
         var d = await this.cloneData();
+        console.log('ddd clone d', d);
         var pa = this.parent;
         var nb = await pa.appendBlock(d, this.at + 1, this.parentKey);
+        console.log('ggg nb', nb, await nb.get());
         return nb;
     }
     async onCopyLink(this: Block) {
