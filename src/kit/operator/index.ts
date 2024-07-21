@@ -8,6 +8,7 @@ import { onAutoScrollStop } from "../../common/scroll";
 import { PageDrag } from "./drag";
 import { Rect } from "../../common/vector/point";
 import { closeNoteSelector } from "../../../extensions/note";
+import { BlockUrlConstant } from "../../block/constant";
 
 /****
  * 鼠标点击：
@@ -47,12 +48,19 @@ export class PageOperator {
         if (this.kit.page.root.contains(ele)) {
             block = this.kit.page.getBlockByMouseOrPoint(event);
         }
+        if (this.kit.boardLine.line) {
+            if (block && (block.url == BlockUrlConstant.Line || !block.isFreeBlock)) {
+                block = undefined;
+            }
+        }
         if (!block && this.kit.boardLine.line) {
             var gm = this.kit.boardLine.line.panelGridMap;
             if (gm) {
                 var rect = new Rect(event.clientX, event.clientY, 0, 0);
-                rect = rect.extend(this.kit.boardLine.line.realPx(50));
-                var bs = gm.findBlocksByRect(rect);
+                rect = rect.extend(50);
+                var bs = gm.findBlocksByRect(rect, (b) => {
+                    return b.isFreeBlock && b.url !== BlockUrlConstant.Line && b.isCrossBlockVisibleArea(rect);
+                });
                 bs = bs.findAll(g => g.isFreeBlock);
                 var b = bs.findMin(g => g.getVisibleContentBound().middleCenter.dis(rect.middleCenter));
                 if (b) {
@@ -60,6 +68,7 @@ export class PageOperator {
                 }
             }
         }
+
         this.kit.page.onHoverBlock(block);
     }
     mouseup(event: MouseEvent) {
