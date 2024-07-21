@@ -74,7 +74,7 @@ DeclareTypes.registerStatic('Math.exp', { __args: ['number'], __returnType: 'num
  */
 DeclareTypes.registerStatic('isNull', { __args: ['any'], __returnType: 'bool' }, `$args1 ===null`)
 DeclareTypes.registerStatic('isEmpty', { __args: ['any'], __returnType: 'bool' }, `$args1===""||$args1===null||$args1===undefined||$args1?.length===0`)
-DeclareTypes.registerStatic('toInt', { __args: ['string', 'int'], __returnType: 'int' }, `toInt($args1,$args2)`);
+DeclareTypes.registerStatic('toInt', { __args: ['string', 'int'], __returnType: 'int' }, `sys.toInt($args1,$args2)`);
 DeclareTypes.registerStatic('toNumber', { __args: ['string', 'number'], __returnType: 'number' }, `sys.toNumber($args1,$args2)`);
 DeclareTypes.registerStatic('toDate', { __args: ['string', 'string'], __returnType: 'date' }, `sys.toDate($args1,$args2)`);
 DeclareTypes.registerStatic('toBool', { __args: ['any'], __returnType: 'bool' }, `sys.toBool($args1)`);
@@ -198,21 +198,37 @@ export function getRegisterFuns(page: Page): Record<string, (...args: any[]) => 
             return str.replace(reg, newStr)
         },
         toInt(str: string, def: number) {
+            if (typeof str == 'boolean') {
+                return str ? 1 : 0;
+            }
+            if (typeof str == 'undefined' || lodash.isNull(str)) {
+                if (typeof def == 'number')
+                    return def;
+                return 0;
+            }
             var n = parseFloat(str);
             if (!isNaN(n)) {
                 return Math.floor(n);
             }
             else {
                 if (typeof def == 'number') return def;
-                else return null;
+                else return 1
             }
         },
         toNumber(str: string, def: number) {
+            if (typeof str == 'boolean') {
+                return str ? 1 : 0;
+            }
+            if (typeof str == 'undefined' || lodash.isNull(str)) {
+                if (typeof def == 'number')
+                    return def;
+                return 0;
+            }
             var n = parseFloat(str);
             if (!isNaN(n)) { return n }
             if (typeof def == 'number')
                 return def;
-            else return null;
+            else return 1
         },
         toDate(str: string, format: string, def: Date) {
             var d = dayjs(str, format);
@@ -354,13 +370,14 @@ export function getRegisterFuns(page: Page): Record<string, (...args: any[]) => 
                 return page.ws[prop]
             }
         },
-        ifs(...args: any[]) {
-            for (var i = 0; i < args.length; i += 2) {
+        ifs(...args: any[])
+        {
+            var n=args.length%2==1?args.length-1:args.length;
+            for (var i = 0; i <n; i += 2) {
                 if (args[i]) return args[i + 1];
             }
             if (args.length % 2 == 1)
                 return args[args.length - 1];
-
         }
     }
 }
