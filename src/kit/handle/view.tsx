@@ -122,6 +122,9 @@ export class HandleView extends React.Component<{ handle: Handle }> {
         return <div>
             <div className='shy-selector-bar'
                 ref={e => this.handleEle = e}
+                style={{
+                    // backgroundColor:'red'
+                }}
             >
                 <Tip placement='bottom' ref={e => { this.plusToolTip = e; }} overlay={<Sp block text={'鼠标点击插入块'} data={{ key: UA.isMacOs ? "option" : "alt" }}>鼠标点击插入块<br />{UA.isMacOs ? "option" : "alt"}点击上面插入块</Sp>} >
                     <span className="shy-selector-bar-plus remark size-24 round flex-center flex-inline" onMouseDown={e => { e.stopPropagation(); this.onPlus(e) }}>

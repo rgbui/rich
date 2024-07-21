@@ -135,6 +135,7 @@ export class HistorySnapshoot extends Events {
         disabledJoinHistory?: boolean,
         disableSyncServer?: boolean
     }) {
+        
         this.declare(directive);
         try {
             if (options?.immediate) this.action.immediate = true;

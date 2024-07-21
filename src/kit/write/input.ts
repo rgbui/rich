@@ -25,7 +25,8 @@ import lodash from "lodash";
 /**
  * 输入弹窗
  */
-export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.FormEvent) {
+export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.FormEvent)
+{
     if (aa.isSolid) return false;
     if (aa.isPlainText) return false;
     var ev = event.nativeEvent as InputEvent;

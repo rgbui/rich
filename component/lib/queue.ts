@@ -37,17 +37,15 @@ export class QueueHandle {
         this.tryExcute();
     }
     private tryExcute() {
-        var g = this.acts[0];
+        var g = this.acts.shift();
         if (g) {
             if (g.action) {
                 this.isExcuting = true;
                 g.action().then(d => {
                     g.notify(d);
-                    lodash.remove(this.acts, c => c.id == g.id);
-                    this.tryExcute();
                 }).catch(err => {
                     g.notify(undefined, err);
-                    lodash.remove(this.acts, c => c.id == g.id);
+                }).finally(() => {
                     this.tryExcute();
                 })
             }

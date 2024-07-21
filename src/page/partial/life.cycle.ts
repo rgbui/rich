@@ -24,6 +24,7 @@ import { List, ListType } from "../../../blocks/present/list/list";
 import { BlockRefPageLink, RefPageLink } from "../../../extensions/link/declare";
 import { SyncPage } from "../interaction/bind";
 import { SyncMessageUrl } from "../../../net/sync.message";
+import { QueueHandle } from "../../../component/lib/queue";
 
 
 export class Page$Cycle {
@@ -556,6 +557,7 @@ export class Page$Cycle {
             }
         }
     }
+    queue: QueueHandle;
     async onAction(this: Page,
         directive: ActionDirective | string,
         fn: () => Promise<void>,
@@ -589,9 +591,10 @@ export class Page$Cycle {
         }
     ) {
         var isTs: boolean = false;
+        var actionName = typeof directive == 'number' ? ActionDirective[directive] : directive;
         var willAction = async () => {
             if (!window.shyConfig?.isPro)
-                console.log('onAction', typeof directive == 'number' ? ActionDirective[directive] : directive);
+                console.log('willAction ', actionName);
             this.actionAfterEvents = [];
             var ts = window.performance.now();
             await this.snapshoot.sync(directive, async (cb) => {
@@ -635,17 +638,19 @@ export class Page$Cycle {
                             await this.forceUpdate();
                         }
                         var ubs = this.willUpdateBlocks;
-                        this.willUpdateBlocks = [];
-                        await ubs.eachAsync(async (up) => {
-                            try {
-                                if (up) await up.forceManualUpdate();
-                            }
-                            catch (ex) {
-                                console.error('update block view', ex)
-                                this.onError(ex);
-                            }
-                        })
-                        this.adjustListNumStr(ubs)
+                        if (ubs.length > 0) {
+                            this.willUpdateBlocks = [];
+                            await ubs.eachAsync(async (up) => {
+                                try {
+                                    if (up) await up.forceManualUpdate();
+                                }
+                                catch (ex) {
+                                    console.error('update block view', ex)
+                                    this.onError(ex);
+                                }
+                            })
+                            this.adjustListNumStr(ubs)
+                        }
                     }
                     catch (ex) {
                         console.error('will update view', ex);
@@ -708,7 +713,16 @@ export class Page$Cycle {
                 this.onError(ex);
             }
         }
-        await willAction();
+        if (typeof this.queue == 'undefined') this.queue = new QueueHandle();
+        try {
+            await this.queue.create(willAction,10000);
+            if (window.shyConfig?.isDev)
+                console.log('success action', actionName);
+        }
+        catch (ex) {
+            console.error(ex);
+            console.log('action error', actionName, ex);
+        }
     }
     private async onActionCompletedObserveProcess(this: Page, recordSyncRowBlocks: Page['recordSyncRowBlocks'], recordOutlineChanges: Page['recordOutlineChanges']) {
         if (!this.pageInfo?.id) return;

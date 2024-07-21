@@ -31,11 +31,7 @@ import { util } from "../../../util/util";
 export class TableFieldView extends EventsComponent {
     onSave() {
         var self = this;
-        self.emit('save', {
-            text: self.text,
-            type: self.type,
-            config: lodash.cloneDeep(self.config)
-        });
+        self.emit('save', this.get());
     }
     get() {
         var self = this;
@@ -44,8 +40,9 @@ export class TableFieldView extends EventsComponent {
                 self.config.relationFieldText = self.dataGrid.schema.text;
             }
         }
+        var mtext = util.getListName(this.dataGrid.schema.fields, this.maybeFieldText, c => c.text)
         return {
-            text: self.text || self.maybeFieldText,
+            text: self.text || mtext,
             type: self.type,
             icon: self.icon,
             config: lodash.cloneDeep(self.config)
@@ -429,12 +426,12 @@ export class TableFieldView extends EventsComponent {
         this.text = options.field?.text || '';
         this.type = options.field?.type || FieldType.text;
         this.icon = options?.field?.icon || null;
+        this.maybeFieldText = lst('文本');
         this.config = lodash.cloneDeep(options.field?.config || {});
         this.relationSchemas = [];
         this.dataGrid = options.dataGrid;
         await TableSchema.onLoadAll()
         this.relationSchemas = TableSchema.getSchemas(this.dataGrid?.page?.ws?.id)
-        console.log(this.relationSchemas,'relationSchemas....');
         this.forceUpdate();
     }
     async onChangeConfig(config: Partial<FieldConfig>) {

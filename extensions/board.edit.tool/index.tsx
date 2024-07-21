@@ -6,7 +6,8 @@ import {
     BrokenLineSvg,
     CureSvg,
     DotsSvg,
-    DragHandleSvg
+    DragHandleSvg,
+    RefreshSvg
 } from "../../component/svgs";
 
 import { Icon } from "../../component/view/icon";
@@ -31,6 +32,7 @@ import { canvasOptions } from "./util";
 import { FixedViewScroll } from "../../src/common/scroll";
 import { AlignNineGridView } from "./align";
 import "./style.less";
+import { S } from "../../i18n/view";
 
 export class BoardEditTool extends EventsComponent {
     el: HTMLElement;
@@ -249,7 +251,7 @@ export class BoardEditTool extends EventsComponent {
         }
         else if (name == 'tickness') {
             return <div key={at} style={{ width: 90 }} className={'shy-board-edit-tool-item no-item-hover'}>
-                <MeasureView  theme="light" min={1} max={40} showValue={false} value={getValue('tickness')} inputting={false} onChange={e => { this.onChange('tickness', e) }}></MeasureView>
+                <MeasureView theme="light" min={1} max={40} showValue={false} value={getValue('tickness')} inputting={false} onChange={e => { this.onChange('tickness', e) }}></MeasureView>
             </div>
         }
         else if (name == 'fontWeight') {
@@ -365,6 +367,55 @@ export class BoardEditTool extends EventsComponent {
                 </div>
             </Tip>
         }
+        else if (name == 'crop') {
+            return <Tip key={at} placement="top" text={'裁剪'}>
+                <div onMouseDown={e => this.onChange(name, true)} className={'shy-board-edit-tool-item'}>
+                    <div className="size-20 flex-center"><Icon size={16} icon={{ name: 'byte', code: 'cutting' }}></Icon></div>
+                </div>
+            </Tip>
+        }
+        else if (name == 'link') {
+            return <Tip key={at} placement="top" text={'链接'}>
+                <div onMouseDown={e => this.onChange(name, true)} className={'shy-board-edit-tool-item'}>
+                    <div className="size-20 flex-center"><Icon size={16} icon={{ name: 'byte', code: 'link-three' }}></Icon></div>
+                </div>
+            </Tip>
+        }
+        else if (name == 'upload') {
+            return <Tip key={at} placement="top" text={'替换'}>
+                <div onMouseDown={e => this.onChange(name, true)} className={'shy-board-edit-tool-item'}>
+                    <div className="size-20 flex-center"><Icon size={16} icon={RefreshSvg}></Icon></div>
+                </div>
+            </Tip>
+        }
+        else if (name == 'look') {
+            return <Tip key={at} placement="top" text={'查看'}>
+                <div onMouseDown={e => this.onChange(name, true)} className={'shy-board-edit-tool-item'}>
+                    <div className="size-20 flex-center"><Icon size={16} icon={{ name: 'byte', code: "zoom-in" }}></Icon></div>
+                </div>
+            </Tip>
+        }
+        else if (name == 'download') {
+            return <Tip key={at} placement="top" text={'下载'}>
+                <div onMouseDown={e => this.onChange(name, true)} className={'shy-board-edit-tool-item'}>
+                    <div className="size-20 flex-center"><Icon size={16} icon={{ name: 'byte', code: 'download' }}></Icon></div>
+                </div>
+            </Tip>
+        }
+        else if (name == 'croping') {
+            return <Tip key={at} placement="top" text={'裁剪'}>
+                <div onMouseDown={e => this.onChange(name, true)} className={'shy-board-edit-tool-item'}>
+                    <S>退出裁剪</S>
+                </div>
+            </Tip>
+        }
+        else if(name=='resetCrop'){
+            return <Tip key={at} placement="top" text={'重置'}>
+                <div onMouseDown={e => this.onChange(name, true)} className={'shy-board-edit-tool-item'}>
+                    <S>重置</S>
+                </div>
+            </Tip>
+        }
     }
     getItems() {
         if (this.blocks.first().url == BlockUrlConstant.Frame) {
@@ -378,6 +429,20 @@ export class BoardEditTool extends EventsComponent {
             return [
                 "frameFormat",
                 'backgroundColor'
+            ]
+        }
+        if (this.blocks.first().url == BlockUrlConstant.BoardImage) {
+            return [
+                'crop',
+                "divider",
+                "link",
+                "divider",
+                'upload',
+                'look',
+                'download',
+                'croping',
+                "divider",
+                'resetCrop'
             ]
         }
         if (this.blocks.first().url == BlockUrlConstant.Mind) {
