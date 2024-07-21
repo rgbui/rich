@@ -751,7 +751,7 @@ export class Table extends Block {
         if (!c) return
         var r = Rect.fromEle(c);
         var p = r.leftTop;
-        p = p.move(-5, 8);
+        p = p.move(0, 6);
         return p;
     }
     getResolveContent(this: Block) {
@@ -774,11 +774,17 @@ export class TableView extends BlockView<Table> {
         var w = 0;
         var gap = 5;
         var index = -1;
+        var firstWidth = 0;
         for (let i = 0; i < tds.length; i++) {
             var col = tds[i];
             var colRect = Rect.fromEle(col);
             w += colRect.width;
             var bw = tableLeft + w;
+            if (i == 0) {
+                if (event.clientX < tableLeft + colRect.width+9) {
+                    firstWidth = colRect.width;
+                }
+            }
             if (bw - gap < event.clientX && event.clientX < bw + gap) {
                 index = i;
                 break;
@@ -843,6 +849,9 @@ export class TableView extends BlockView<Table> {
                     this.leftDrag.style.display = 'flex';
                     this.leftDrag.style.top = (trRect.top - boxRect.top) + 'px';
                     this.leftDrag.style.height = trRect.height + 'px';
+                    if (firstWidth > 0) {
+                        this.leftDrag.style.left = (firstWidth - 9) + 'px';
+                    }
                     this.leftDrag.setAttribute('data-index', s.toString());
                     isShowDragRow = true;
                 }
