@@ -57,7 +57,7 @@ export class InsertBlocksCommand extends FlowCommand {
         var bs = await this.block.blocks.childs.asyncMap(async (block) => await block.cloneData({ isButtonTemplate: true }));
         await this.setVar(bs);
         var at = this.flow.buttonBlock.at;
-        if(this.direction == 'above') at--;
+        if (this.direction == 'above') at--;
         var newBlocks = await this.flow.buttonBlock.parent.appendArrayBlockData(bs, at + 1, this.flow.buttonBlock.parentKey);
         await PageBlockUtil.eachBlockDatas(newBlocks, async (block: Block) => {
             if (block.url == BlockUrlConstant.Link) {
@@ -69,7 +69,7 @@ export class InsertBlocksCommand extends FlowCommand {
                         text: block.content
                     });
                     if (r?.data?.items?.length > 0) {
-                        await block.updateProps({ pageId: r.data.items[0].id },BlockRenderRange.self);
+                        await block.updateProps({ pageId: r.data.items[0].id }, BlockRenderRange.self);
                     }
                 }
             }
@@ -124,9 +124,9 @@ export class InsertBlocksCommand extends FlowCommand {
                     }
                 if (typeof b.content == 'string') {
                     if (b.url == BlockUrlConstant.Link) {
-                        var lb = await b.getLink() as PageLink;
-                        if (lb?.pageId) {
-                            var r = await channel.get('/page/query/info', { id: lb?.pageId });
+                        var pageId = b.pageId || b.link?.pageId;
+                        if (pageId) {
+                            var r = await channel.get('/page/query/info', { id: pageId });
                             b.content = getPageText(r.data);
                         }
                     }

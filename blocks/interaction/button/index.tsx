@@ -58,7 +58,7 @@ export class BlockButton extends Block {
     @prop()
     flow: Flow = new Flow(this, this.page.ws);
     get isSupportTextStyle(): boolean {
-        return false;
+        return true
     }
     async get() {
         var dr = await super.get();
