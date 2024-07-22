@@ -33,6 +33,10 @@ import { FixedViewScroll } from "../../src/common/scroll";
 import { AlignNineGridView } from "./align";
 import "./style.less";
 import { S } from "../../i18n/view";
+import { Input } from "../../component/view/input";
+
+import { useSelectMenuItem } from "../../component/view/menu";
+import { MenuItem } from "../../component/view/menu/declare";
 
 export class BoardEditTool extends EventsComponent {
     el: HTMLElement;
@@ -206,16 +210,11 @@ export class BoardEditTool extends EventsComponent {
         }
         else if (name == 'fontSize') {
             return <Tip key={at} placement="top" text={'字体大小'}>
-                <div className={'shy-board-edit-tool-item'} >
-                    <SelectBox
-                        value={getValue('fontSize')}
-                        onChange={e => this.onChange('fontSize', e)}
-                        dropWidth={80}
-                        dist={14}
-                        onDrop={e => {
-                            if (e) self.showDrop('');
-                        }}
-                        options={[
+                <div className={'shy-board-edit-tool-item'}
+                    onMouseDown={async e => {
+                        // e.preventDefault();
+                        e.stopPropagation();
+                        var items: MenuItem[] = [
                             { text: '12', value: 12 },
                             { text: '14', value: 14 },
                             { text: '18', value: 18 },
@@ -226,7 +225,23 @@ export class BoardEditTool extends EventsComponent {
                             { text: '80', value: 80 },
                             { text: '144', value: 144 },
                             { text: '288', value: 288 }
-                        ]}>{getValue('fontSize')}</SelectBox>
+                        ]
+                        var it = items.find(c => c.value == getValue('fontSize'))
+                        if (it) {
+                            it.checkLabel = true;
+                        }
+                        var r = await useSelectMenuItem({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) },
+                            items)
+                        if (r?.item) {
+                            this.onChange('fontSize', r.item.value)
+                        }
+                    }}
+                ><Input style={{ width: 40 }} noborder value={getValue('fontSize')} onChange={e => {
+                    var va = parseFloat(e);
+                    if (!isNaN(va)) {
+                        this.onChange('fontSize', va, true)
+                    }
+                }}></Input>
                 </div>
             </Tip>
         }
@@ -409,7 +424,7 @@ export class BoardEditTool extends EventsComponent {
                 </div>
             </Tip>
         }
-        else if(name=='resetCrop'){
+        else if (name == 'resetCrop') {
             return <Tip key={at} placement="top" text={'重置'}>
                 <div onMouseDown={e => this.onChange(name, true)} className={'shy-board-edit-tool-item'}>
                     <S>重置</S>
