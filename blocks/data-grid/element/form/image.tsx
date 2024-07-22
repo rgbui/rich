@@ -38,48 +38,49 @@ class FormFieldImage extends OriginFormField {
                 vs.push(r);
             }
             this.onChange(vs);
-            this.forceManualUpdate();
         }
     }
     async onGetContextMenus() {
         var items = await super.onGetContextMenus();
         var newItems = [];
-        newItems.push({ type: MenuItemType.divide })
-        newItems.push({
-            text: lst('图片展示'),
-            type: MenuItemType.select,
-            name: 'imageFormat.display',
-            value: this.imageFormat?.display,
-            icon: { name: 'bytedance-icon', code: 'picture-one' },
-            options: [
-                { text: lst('略缩图'), value: 'thumb', icon: { name: 'byte', code: 'new-picture' } },
-                { text: lst('自适应'), value: 'auto', icon: { name: 'byte', code: 'moving-picture' } }
-            ]
-        });
-        if (this.field?.config?.isMultiple) {
+        if (this.fromType == 'doc-detail') {
+            newItems.push({ type: MenuItemType.divide })
             newItems.push({
-                text: lst('多张图片展示'),
+                text: lst('图片展示'),
                 type: MenuItemType.select,
-                name: 'imageFormat.multipleDisplay',
-                icon: { name: "bytedance-icon", code: 'more-two' },
-                value: this.imageFormat?.multipleDisplay,
+                name: 'imageFormat.display',
+                value: this.imageFormat?.display,
+                icon: { name: 'bytedance-icon', code: 'picture-one' },
                 options: [
-                    { text: lst('平铺'), value: 'tile', icon: { name: 'byte', code: 'all-application' } },
-                    { text: lst('轮播'), value: 'carousel', icon: { name: 'byte', code: 'multi-picture-carousel' } }
+                    { text: lst('略缩图'), value: 'thumb', icon: { name: 'byte', code: 'new-picture' } },
+                    { text: lst('自适应'), value: 'auto', icon: { name: 'byte', code: 'moving-picture' } }
                 ]
             });
+            if (this.field?.config?.isMultiple) {
+                newItems.push({
+                    text: lst('多张图片展示'),
+                    type: MenuItemType.select,
+                    name: 'imageFormat.multipleDisplay',
+                    icon: { name: "bytedance-icon", code: 'more-two' },
+                    value: this.imageFormat?.multipleDisplay,
+                    options: [
+                        { text: lst('平铺'), value: 'tile', icon: { name: 'byte', code: 'all-application' } },
+                        { text: lst('轮播'), value: 'carousel', icon: { name: 'byte', code: 'multi-picture-carousel' } }
+                    ]
+                });
+            }
+            newItems.push({ type: MenuItemType.divide })
         }
-        newItems.push({ type: MenuItemType.divide })
         var at = items.findIndex(c => c.name == 'hidePropTitle' || c.name == 'required');
         items.splice(at - 1, 0, ...newItems);
         return items;
     }
     async onContextMenuInput(item: MenuItem<BlockDirective | string>) {
         if (item?.name == 'required') {
-            this.onUpdateProps({ [item?.name]: item.checked }, { range: BlockRenderRange.self });
+            await this.onUpdateProps({ [item?.name]: item.checked }, { range: BlockRenderRange.self });
         }
         else if (item?.name == 'allowRemark') {
-            this.onUpdateProps({ [item?.name]: item.checked }, { range: BlockRenderRange.self });
+            await this.onUpdateProps({ [item?.name]: item.checked }, { range: BlockRenderRange.self });
         }
         if (item?.name == 'imageFormat.display' || item?.name == 'imageFormat.multipleDisplay') {
             var d = lodash.cloneDeep(this.imageFormat);
@@ -96,7 +97,6 @@ class FormFieldImageView extends BlockView<FormFieldImage> {
         var vs = util.covertToArray(this.block.value)
         lodash.remove(vs, g => g == img);
         this.block.onChange(vs);
-        this.forceUpdate();
     }
     async openProperty(img, event: React.MouseEvent) {
         var pos = { roundArea: Rect.fromEvent(event) }
@@ -110,7 +110,7 @@ class FormFieldImageView extends BlockView<FormFieldImage> {
                 await this.block.uploadFile(pos, img);
             }
             else {
-                await this.deleteImage(img, event);
+                this.deleteImage(img, event);
             }
         }
     }
@@ -143,14 +143,14 @@ class FormFieldImageView extends BlockView<FormFieldImage> {
             </div>
         }
         else {
-            return <div className={"flex flex-top " + (this.block.fromType == 'doc-add' ? "" : "gap-w-10")}>
+            return <div className={"flex flex-top flex-wrap " + (this.block.fromType == 'doc-add' ? "" : "gap-w-10")}>
                 {images.map((img, i) => {
                     return <div
                         className={"relative visible-hover   gap-b-10 " + (images.length > 1 || this.isCanPlus() ? "gap-r-10 " : "")}
                         key={i}>
                         {this.block.fromType != 'doc-detail' && <Tip text='属性'><span
                             onClick={e => this.openProperty(img, e)}
-                            className="pos-top-right flex-center size-20  bg-dark-1 text-white circle cursor visible">
+                            className="pos-top-right flex-center size-20  bg-dark-1 text-white round cursor visible">
                             <Icon size={16} icon={DotsSvg}></Icon>
                         </span></Tip>}
                         <img src={img.url} className={"obj-center " + (this.block?.imageFormat?.display == 'thumb' ? " size-80 round" : "max-w100 max-w-300  max-h-300  round")} />

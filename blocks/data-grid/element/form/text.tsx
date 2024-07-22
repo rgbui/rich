@@ -52,7 +52,7 @@ class FieldTextView extends BlockView<FieldText> {
         }
         if (this.block.fromType == 'doc-detail') {
             return <FieldView block={this.block}>
-                <div className={this.block.value ? "" : "remark f-14"}>{this.block.value || <S>空内容</S>}</div>
+                <div className={'min-h-30 flex ' + (this.block.value ? "" : "remark f-14")}>{this.block.value || <S>空内容</S>}</div>
             </FieldView>
         }
         return <FieldView block={this.block}>

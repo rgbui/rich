@@ -1,5 +1,5 @@
 import lodash from "lodash";
-import React from "react";
+import React, { CSSProperties } from "react";
 import { CloseSvg, PlusSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import { useRelationPickData } from "../../../../extensions/data-grid/relation.picker";
@@ -12,6 +12,7 @@ import { FieldType } from "../../schema/type";
 import { FieldView, OriginFormField } from "./origin.field";
 import { S } from "../../../../i18n/view";
 import { Tip } from "../../../../component/view/tooltip/tip";
+import { ToolTip } from "../../../../component/view/tooltip";
 
 
 @url('/form/relation')
@@ -36,6 +37,7 @@ class FormFieldRelation extends OriginFormField {
     }
     async onSelectData(event: React.MouseEvent<Element, MouseEvent>) {
         if (this.checkEdit() === false) return;
+        if (this.fromType == 'doc-detail') return;
         var r = await useRelationPickData({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
             field: this.field,
             relationDatas: this.relationList,
@@ -66,32 +68,42 @@ class FormFieldRelationView extends BlockView<FormFieldRelation> {
         var f = rs?.fields?.find(g => g.type == FieldType.title);
         var icon = rs?.fields.find(g => g.type == FieldType.icon);
         if (!f) f = rs?.fields.find(g => g.type == FieldType.text);
+        var textStyle: CSSProperties = {
+
+        }
+        textStyle.textDecoration = 'underline';
+        textStyle.textDecorationColor = 'rgba(22, 22, 22, 0.2)';
         return <div>
-            {this.block.relationList?.length > 0 && <div className="gap-b-5 padding-h-5 item-hover-light-focus round ">
+            {this.block.relationList?.length > 0 && <div className="gap-b-5 ">
                 {this.block.relationList?.map(r => {
-                    return <div className="padding-h-2 padding-w-5 gap-w-5   item-hover-light   round cursor flex  visible-hover"
+                    return <div className={"h-30  round  cursor flex  visible-hover " + (this.block.fromType != 'doc-add' && this.block.fromType != 'doc-detail' ? " padding-w-10 item-hover-light" : "")}
                         onClick={e => e.preventDefault()}
                         key={r.id}
                     >
                         <span className="flex-fixed size-20  flex-center flex-inline cursor">
                             <Icon size={16} icon={getPageIcon({ icon: r[icon.name] })}></Icon>
                         </span>
-                        <span className="flex-auto f-14 text-overflow">{getPageText({ text: r[f?.name] })}</span>
-                        {this.block.fromType != 'doc-detail' && <Tip text='移除'><span onClick={e => this.block.onDeleteData(e, r.id)} className="flex-fixed size-20 item-hover  flex-center visible round">
+                        <span className={"f-14 text-overflow " + (this.block.fromType == 'doc-add' ? " gap-r-10" : "flex-auto ")}>
+                            <span className="b-500" style={textStyle}>{getPageText({ text: r[f?.name] })}</span>
+                        </span>
+                        {this.block.fromType != 'doc-detail' && <Tip text='移除记录'><span onClick={e => this.block.onDeleteData(e, r.id)} className="flex-fixed visible size-20 round cursor flex-center border shadow-s bg-hover gap-r-5">
                             <Icon size={12} icon={CloseSvg}></Icon>
                         </span></Tip>}
+                        <ToolTip overlay={<S>添加记录</S>}><span
+                            onClick={e => this.block.onSelectData(e)}
+                            className="flex-fixed visible size-20 round cursor flex-center border shadow-s bg-hover  "><Icon size={16} icon={PlusSvg}></Icon>
+                        </span></ToolTip>
                     </div>
                 })}
             </div>}
-            {this.block.relationList.length == 0 && this.block.fromType == 'doc-detail' && <span className="f-12 remark"><S>空内容</S></span>}
-            {(this.block.field.config?.isMultiple || (!(this.block.relationList.length > 0))) && this.block.fromType != 'doc-detail' && <div className={"flex " + (this.block.relationList.length > 0 ? " visible" : "")}><span className={"item-hover-light-focus item-hover round padding-w-5 f-12   cursor flex text-1"} onClick={e => this.block.onSelectData(e)}><Icon size={16} icon={PlusSvg}></Icon><span ><S>添加关联</S></span></span></div>}
+            {this.block.relationList.length == 0 && <div
+                onClick={e => this.block.onSelectData(e)}
+                className={"f-14 min-h-30 cursor f-14 flex  remark" + (this.block.fromType == 'doc' ? " item-hover-light padding-w-10" : (this.block.fromType == 'doc-add' ? " round item-hover inline-flex padding-w-5 cursor" : ""))}>{this.block.fromType == 'doc-add' ? <S>添加记录</S> : <S>空内容</S>}</div>}
         </div>
     }
     renderView() {
         return <FieldView block={this.block} className={'visible-hover'}>
-            <div className={this.block.fromType == 'doc' ? "gap-w-10" : ""}>
-                {this.renderList()}
-            </div>
+            {this.renderList()}
         </FieldView>
     }
 }

@@ -16,7 +16,7 @@ class FieldText extends OriginFormField {
     }, 700)
 }
 @view('/form/number')
-class FieldTextView extends BlockView<FieldText>{
+class FieldTextView extends BlockView<FieldText> {
     renderInput() {
         function keydown(event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) {
             if (event.key == 'Enter') {

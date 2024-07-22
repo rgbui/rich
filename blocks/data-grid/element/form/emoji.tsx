@@ -14,7 +14,7 @@ class FieldText extends OriginFormField {
 }
 
 @view('/form/emoji')
-class FieldTextView extends BlockView<FieldText>{
+class FieldTextView extends BlockView<FieldText> {
     renderView() {
         var self = this;
         async function mousedown(event: React.MouseEvent) {
@@ -23,7 +23,7 @@ class FieldTextView extends BlockView<FieldText>{
             if (r) {
                 self.block.onChange(r.data);
                 if (self.block.field.name == 'vote') {
-                   //这里不做任何处理，因为vote的数据是在其他地方处理的
+                    //这里不做任何处理，因为vote的数据是在其他地方处理的
                 }
                 else if (r.other) {
                     var name = self.block.field.name == 'like' ? FieldType[FieldType.oppose] : FieldType[FieldType.like];
@@ -58,21 +58,21 @@ class FieldTextView extends BlockView<FieldText>{
                 var isOp = isEmoji(this.block.field, self.block.page.formRowData.id);
                 sp = <span className={"min-w-40 cursor f-14 flex-center flex-inline h-24 padding-w-5 round-32 " + (isOp ? "  bg-primary text-white" : " bg-p-light text-p")}>
                     <Icon className={'gap-r-3'} size={18} icon={svg}></Icon>{countStr}</span>
-            } else if (this.block.field.type == FieldType.oppose) {
-                var isOp = isEmoji(this.block.field, self.block.page.formRowData.id);
-                sp = <span className={"min-w-40 cursor f-14 flex-center flex-inline h-24 padding-w-5 round-32 " + (isOp ? "  bg-primary text-white" : " bg-p-light text-p")}>
-                    <Icon className={'gap-r-3'} size={18} icon={svg}></Icon>{countStr}</span>
-            } else {
+            }
+            else {
                 var isOp = isEmoji(this.block.field, self.block.page.formRowData.id);
                 sp = <span className={"min-w-40 cursor f-14 flex-center flex-inline h-24 padding-w-5 round-32  " + (isOp ? "  bg-primary text-white" : " bg-p-light text-p")}>
-                    <em className={'gap-r-3 ef'} >{this.block.field.type == FieldType.emoji && this.block?.field.config?.emoji?.code}</em>
+                    <em className={'gap-r-3 ef'} >{this.block.field.type == FieldType.emoji && (this.block?.field.config?.emoji?.code || "😀")}</em>
                     {countStr}</span>
             }
         }
         return <FieldView block={this.block}>
-            <div className={this.block.fromType == 'doc' ? "gap-w-10" : ""}>
-                <label onMouseDown={e => mousedown(e)}>{sp}</label>
-            </div>
+            {this.block.fromType != 'doc-detail' && <div onMouseDown={e => mousedown(e)} className={"min-h-30  flex " + (this.block.fromType != 'doc-add' ? "padding-w-10 round item-hover-light" : "")}>
+                {sp}
+            </div>}
+            {this.block.fromType == 'doc-detail' && <div className="min-h-30">
+                {sp}
+            </div>}
         </FieldView>
     }
 }

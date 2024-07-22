@@ -1,13 +1,11 @@
 import React from "react";
-import { PlusSvg } from "../../../../component/svgs";
 import { UserAvatars } from "../../../../component/view/avator/users";
-import { Icon } from "../../../../component/view/icon";
-import { useDataGridFileViewer } from "../../../../extensions/data-grid/filer";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/vector/point";
 import { FieldView, OriginFormField } from "./origin.field";
 import { util } from "../../../../util/util";
+import { useUserPicker } from "../../../../extensions/at/picker";
 import { S } from "../../../../i18n/view";
 
 @url('/form/user')
@@ -17,13 +15,18 @@ export class FieldUser extends OriginFormField {
         var vs = this.value;
         if (!Array.isArray(vs) && vs) vs = [vs];
         if (!Array.isArray(vs)) vs = [];
-        var rs = await useDataGridFileViewer({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
-            mime: 'user',
-            resources: vs,
-            isMultiple: this.field?.config?.isMultiple ? true : false
+        if (!this.field?.config?.isMultiple) {
+            vs = vs.slice(0, 1);
+        }
+        var rs = await useUserPicker({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, this.page.ws, {
+            ignoreUserAll: true,
+            isMultiple: this.field?.config?.isMultiple ? true : false,
+            users: vs
         });
+        if (rs && !Array.isArray(rs)) rs = [rs]
         if (Array.isArray(rs)) {
-            this.value = rs;
+            var userids = rs.map(g => g.id);
+            this.value = userids;
             this.forceManualUpdate();
         }
     }
@@ -34,25 +37,27 @@ export class FieldTextView extends BlockView<FieldUser> {
     renderView() {
         var vs = util.covertToArray(this.block.value);
         return <FieldView block={this.block} className={'visible-hover'}>
-            <div className={this.block.fromType !== 'doc' ? "" : "gap-w-10"}>
-                <UserAvatars size={30} users={vs}>
-                    {(this.block.field?.config?.isMultiple || vs.length < 2) && this.block.fromType != 'doc-detail' && <span onMouseDown={async e => {
-                        var el = event.currentTarget as HTMLElement;
-                        try {
-                            el.classList.add('item-hover-focus')
-                            await this.block.onSelectUser(e)
-                        }
-                        catch (ex) {
+            <div onMouseDown={async e => {
+                if (this.block.fromType == 'doc-detail') return;
+                var ele = e.currentTarget as HTMLElement;
+                if (ele.classList.contains('item-hover-light')) {
+                    ele.classList.add('item-hover-light-focus')
+                }
+                try {
+                    e.stopPropagation();
+                    await this.block.onSelectUser(e)
+                }
+                catch (ex) {
 
-                        }
-                        finally {
-                            el.classList.remove('item-hover-focus')
-                        }
-                    }}
-                        className={"round item-hover-light-focus item-hover size-24 flex-center cursor" + (vs.length == 0 ? " " : " visible")}
-                    ><Icon size={16} icon={PlusSvg}></Icon></span>}
-                </UserAvatars>
-                {vs.length == 0 && this.block.fromType == 'doc-detail' && <span className="f-14 remark"><S>空内容</S></span>}
+                }
+                finally {
+                    ele.classList.remove('item-hover-light-focus')
+                }
+            }} className={' ' + (this.block.fromType == 'doc' ? "item-hover-light padding-w-10 round" : (this.block.fromType == 'doc-add' ? " sy-form-field-input-value" : "  "))}>
+                <div className="min-h-30">
+                    <UserAvatars size={24} users={vs}></UserAvatars>
+                    {this.block.fromType != 'doc-add' && <span className="f-14 remark" ><S>空内容</S></span>}
+                </div>
             </div>
         </FieldView>
     }

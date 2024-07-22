@@ -154,7 +154,7 @@ class FieldTextView extends BlockView<FieldText>{
                 {ops.map(op => {
                     return <span key={op.value} className="gap-r-10 padding-w-5 f-14 padding-h-2  l-16  round cursor" style={{ background: op?.fill||op?.color,color:op.textColor }}>{op.text}</span>
                 })}
-                {ops.length == 0 && <span className="f-14 remark"><S>空内容</S></span>}
+                {ops.length == 0 && <span className="f-14 remark min-h-30 flex "><S>空内容</S></span>}
             </div>}
         </FieldView>
     }

@@ -33,11 +33,11 @@ export class OriginFormField extends Block {
         if (!this.page.schema) return 'doc';
         if (this.page.pe.type == ElementType.SchemaRecordViewData) {
             var sv = this.schema.views.find(g => g.id == this.page.pe.id1);
-            if (sv) return sv.formType;
+            if (sv) return sv.formType || 'doc';
         }
         else if (this.page.pe.type == ElementType.SchemaRecordView) {
             var sv = this.schema.views.find(g => g.id == this.page.pe.id1);
-            if (sv) return sv.formType;
+            if (sv) return sv.formType || 'doc';
         }
         return 'doc';
     }
@@ -55,7 +55,7 @@ export class OriginFormField extends Block {
     }
     onChange(value: any) {
         this.value = value;
-        this.view.forceUpdate();
+        this.forceManualUpdate();
     }
     async onUpdateCellInteractive(field: Field) {
         var r = await channel.patch('/interactive/emoji', {

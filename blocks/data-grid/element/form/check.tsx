@@ -17,9 +17,9 @@ class FieldTextView extends BlockView<FieldText>{
     renderView() {
         return <FieldView block={this.block}>
             {this.block.fromType == 'doc-detail' && <div className="flex min-h-30">
-                <CheckBox checked={this.block.value}>{this.block.checkLabel}</CheckBox>
+                <CheckBox readOnly checked={this.block.value}>{this.block.checkLabel}</CheckBox>
             </div>}
-            {this.block.fromType != 'doc-detail' && <div className={this.block.fromType == 'doc-add' ? "" : "padding-w-10"}><div className="flex min-h-30">
+            {this.block.fromType != 'doc-detail' && <div className={this.block.fromType == 'doc-add' ? "" : "min-h-30 item-hover-light padding-w-10 round  "}><div className="flex min-h-30">
                 <div className="flex-fixed" onMouseDown={e => { e.stopPropagation() }}><CheckBox
                     checked={this.block.value}
                     onChange={e => {

@@ -11,13 +11,15 @@ import { OriginFormField, FieldView } from "./origin.field";
 import { lst } from "../../../../i18n/store";
 import { PopoverPosition } from "../../../../component/popover/position";
 import { useFilePicker } from "../../../../extensions/file/file.picker";
-import { Rect } from "../../../../src/common/vector/point";
 import { S } from "../../../../i18n/view";
+import { Rect } from "../../../../src/common/vector/point";
+import { ToolTip } from "../../../../component/view/tooltip";
 
 @url('/form/file')
 class FormFieldFile extends OriginFormField {
     async uploadFile(pos: PopoverPosition, img?: any) {
         if (this.checkEdit() === false) return;
+        if (this.fromType == 'doc-detail') return;
         var mime: "image" | "file" | "audio" | "video" = 'file';
         if (this.field?.type == FieldType.video) mime = 'video'
         else if (this.field?.type == FieldType.audio) mime = 'audio';
@@ -49,23 +51,33 @@ class FormFieldFileView extends BlockView<FormFieldFile> {
     }
     renderFiles(files: { filename: string, size: number, url: string }[]) {
         var text = lst('添加文件');
-        if (this.block.field?.type == FieldType.video) text = lst('添加视频')
-        else if (this.block.field?.type == FieldType.audio) text = lst('添加音频')
+        var removeText = lst('移除文件')
+        if (this.block.field?.type == FieldType.video) { text = lst('添加视频'); removeText = lst('移除视频') }
+        else if (this.block.field?.type == FieldType.audio) { text = lst('添加音频'); removeText = lst('移除音频') }
         return <div className={this.block.fromType == 'doc' ? "" : ""}>
-            {files.length > 0 && <div className="gap-b-5 padding-w-10  round item-hover  round">
-                {files.map((img,i)=>{
-                    return <div className="h-30  cursor flex  visible-hover" key={i}>
-                        <a className="link f-14 flex-fixed flex padding-w-3 round item-hover-light-focus" download={img.url} href={img.url}>
+            {files.length > 0 && <div className="gap-b-5 ">
+                {files.map((img, i) => {
+                    return <div className={"h-30    round  cursor flex  visible-hover " + (this.block.fromType != 'doc-add' && this.block.fromType != 'doc-detail' ? " padding-w-10 item-hover-light" : "")} key={i}>
+                        <a style={{ color: 'inherit' }} className="link f-14 flex-fixed flex  round " download={img.url} href={img.url}>
                             <span className="flex-fixed round  text-1 flex-center"><Icon size={16} icon={FileSvg}></Icon></span>
                             <span className="flex-fixed text-overflow gap-w-5">{img.filename}</span>
                         </a>
-                        <span className="flex-auto"></span>
-                        {this.block.isCanEdit() && this.block.fromType != 'doc-detail' && <span onClick={e => this.deleteImage(img)} className="flex-fixed visible size-20 round cursor flex-center item-hover remark "><Icon size={14} icon={CloseSvg}></Icon></span>}
+                        <span className={this.block.fromType == 'doc-add' ? "flex-fixed gap-r-10 " : " flex-auto"}></span>
+                        {this.block.isCanEdit() && this.block.fromType != 'doc-detail' && <>
+                            <ToolTip overlay={<S>{removeText}</S>}><span onClick={e => this.deleteImage(img)} className="flex-fixed visible size-20 round cursor flex-center border shadow-s bg-hover gap-r-5 "><Icon size={12} icon={CloseSvg}></Icon></span></ToolTip>
+                            <ToolTip overlay={<S>{text}</S>}><span
+                                onClick={e => this.block.uploadFile({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) }, img)}
+                                className="flex-fixed visible size-20 round cursor flex-center border shadow-s bg-hover  "><Icon size={16} icon={PlusSvg}></Icon>
+                            </span></ToolTip>
+                        </>
+                        }
                     </div>
                 })}
             </div>}
-            {files.length == 0 && this.block.fromType == 'doc-detail' && <div className="f-14 remark"><S>空内容</S></div>}
-            {this.isCanPlus() && <div className={"flex " + (files.length > 0 ? "visible" : "")}><span className={"item-hover-light-focus item-hover round padding-w-5 f-12   cursor flex text-1"} onClick={e => this.block.uploadFile({ roundArea: Rect.fromEvent(e) })}><Icon size={16} icon={PlusSvg}></Icon><span >{text}</span></span></div>}
+            {files.length == 0 && <div
+                onMouseDown={e => this.block.uploadFile({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) })}
+                className={"f-14 min-h-30 cursor f-14 flex  remark" + (this.block.fromType == 'doc' ? " item-hover-light padding-w-10" : (this.block.fromType == 'doc-add' ? " round item-hover inline-flex padding-w-5 cursor" : ""))}>{this.block.fromType == 'doc-add' ? text : <S>空内容</S>}</div>}
+
         </div>
     }
     isCanPlus() {
