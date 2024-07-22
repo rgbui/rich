@@ -4,6 +4,7 @@ import { useDataGridFileViewer } from "../../../../extensions/data-grid/filer";
 import { url, view } from "../../../../src/block/factory/observable";
 import { Rect } from "../../../../src/common/vector/point";
 import { OriginField, OriginFileView } from "./origin.field";
+
 OriginFileView
 @url('/field/video')
 export class FieldVideo extends OriginField {
@@ -28,6 +29,9 @@ export class FieldVideo extends OriginField {
         }
         if (this.dataGrid) await this.dataGrid.onDataGridTool(fn)
         else await fn()
+    }
+    get isFieldEmpty() {
+        return !this.value || (Array.isArray(this.value) && this.value.length == 0)
     }
 }
 

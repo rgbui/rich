@@ -31,6 +31,10 @@ export class FieldImage extends OriginField {
         if (this.dataGrid) await this.dataGrid.onDataGridTool(fn)
         else await fn()
     }
+    get isFieldEmpty() {
+        return !this.value || (Array.isArray(this.value) && this.value.length == 0)
+    
+    }
 }
 @view('/field/image')
 export class FieldImageView extends OriginFileView<FieldImage> {

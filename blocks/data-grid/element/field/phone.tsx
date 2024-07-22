@@ -14,6 +14,9 @@ export class FieldPhone extends OriginField {
     get isDisabledInputLine() {
         return true;
     }
+    get isFieldEmpty(){
+        return !this.value
+    }
 }
 @view('/field/phone')
 export class FieldPhoneView extends OriginFileView<FieldPhone> {

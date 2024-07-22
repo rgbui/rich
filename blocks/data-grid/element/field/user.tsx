@@ -33,6 +33,10 @@ export class FieldUser extends OriginField {
             else await fn()
         }
     }
+    get isFieldEmpty() {
+        return !this.value || (Array.isArray(this.value) && this.value.length == 0)
+    
+    }
 }
 
 @view('/field/user')

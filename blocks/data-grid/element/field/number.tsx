@@ -93,6 +93,9 @@ export class FieldNumber extends OriginField {
             })
         }
     }
+    get isFieldEmpty(){
+        return lodash.isUndefined(this.value)||lodash.isNull(this.value)||this.value==='';
+    }
 }
 
 @view('/field/number')

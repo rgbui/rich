@@ -16,6 +16,9 @@ export class FieldUrl extends OriginField {
             this.page.kit.anchorCursor.onFocusBlockAnchor(this, { last: true })
         }, 50);
     }
+    get isFieldEmpty(){
+        return !this.value
+    }
 }
 
 @view('/field/url')

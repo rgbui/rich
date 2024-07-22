@@ -17,6 +17,9 @@ export class FieldDate extends OriginField {
         var format = this.field?.config?.dateFormat || 'YYYY年MM月DD日'
         return r.format(format)
     }
+    get isFieldEmpty() {
+        return !this.value
+    }
     async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
         if (this.checkEdit() === false) return;
         if (this.field?.type == FieldType.createDate || this.field?.type == FieldType.modifyDate) return;
@@ -27,7 +30,7 @@ export class FieldDate extends OriginField {
                 includeTime: this.field?.config?.includeTime ? true : false
             });
             if (typeof pickDate != 'undefined') {
-               await this.onUpdateProps({ value: pickDate }, { range: BlockRenderRange.self });
+                await this.onUpdateProps({ value: pickDate }, { range: BlockRenderRange.self });
             }
         }
         if (this.dataGrid) await this.dataGrid.onDataGridTool(fn)

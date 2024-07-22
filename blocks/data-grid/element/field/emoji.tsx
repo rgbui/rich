@@ -59,7 +59,7 @@ export class FieldEmailView extends OriginFileView<FieldEmoji>{
             } else {
                 var isOp = self.block.dataGrid.isEmoji(this.block.viewField.field, self.block.dataGridItem.dataRow.id);
                 sp = <span className={"min-w-40 cursor f-14 flex-center flex-inline h-24 padding-w-5 round-32  " + (isOp ? "  bg-primary text-white" : " bg-p-light text-p")}>
-                    <em className={'gap-r-3 ef'} >{this.block.viewField.field.type == FieldType.emoji && this.block.viewField?.field.config?.emoji?.code}</em>
+                    <em className={'gap-r-3 ef'} >{this.block.viewField.field.type == FieldType.emoji && this.block.viewField?.field.config?.emoji?.code||"😀"}</em>
                     {countStr}</span>
             }
         }

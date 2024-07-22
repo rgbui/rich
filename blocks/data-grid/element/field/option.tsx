@@ -41,6 +41,10 @@ export class FieldOption extends OriginField {
         if (this.dataGrid) await this.dataGrid.onDataGridTool(fn)
         else await fn()
     }
+    get isFieldEmpty() {
+        return !this.value || (Array.isArray(this.value) && this.value.length == 0)
+    
+    }
 }
 @view('/field/option')
 export class FieldTextView extends OriginFileView<FieldOption> {

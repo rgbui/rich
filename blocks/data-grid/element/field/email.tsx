@@ -16,10 +16,14 @@ export class FieldEmail extends OriginField {
             }, 200);
         }
     }
+    get isFieldEmpty() {
+        return !this.value
+
+    }
 }
 @view('/field/email')
-export class FieldEmailView extends OriginFileView<FieldEmail>{
-    renderFieldValue()  {
+export class FieldEmailView extends OriginFileView<FieldEmail> {
+    renderFieldValue() {
         return <div className='sy-field-email  f-14'  >
             <TextArea plain block={this.block} prop='value' placeholder={lst("输入邮箱")} ></TextArea>
         </div>

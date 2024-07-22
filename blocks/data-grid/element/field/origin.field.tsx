@@ -95,6 +95,9 @@ export class OriginField extends Block {
     async initialedLoad() {
         this.value = this.fieldValue;
     }
+    get isFieldEmpty() {
+        return false;
+    }
 }
 
 export class OriginFileView<T extends OriginField> extends BlockView<T> {
