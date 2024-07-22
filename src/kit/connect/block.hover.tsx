@@ -1,10 +1,11 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import { Kit } from ".."
 import { Block } from "../../block";
 import { BoardBlockSelector, BoardPointType } from "../../block/partial/board";
 import "./style.less";
+import { Rect } from "../../common/vector/point";
 
-export class BoardBlockHover extends React.Component<{ kit: Kit }>{
+export class BoardBlockHover extends React.Component<{ kit: Kit }> {
     visible: boolean = false;
     block: Block;
     enter(selector: BoardBlockSelector, event: React.MouseEvent) {
@@ -37,8 +38,33 @@ export class BoardBlockHover extends React.Component<{ kit: Kit }>{
         </g>
     }
     render(): React.ReactNode {
+        var style: CSSProperties = {
+            zIndex: 10000,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: '100vw',
+            height: '100vh'
+        }
+        var viewBox
+        var b = this.block;
+        if (b?.page && !b.page.isBoard) {
+            var bb = this.props.kit.boardSelector.boardBlock;
+            if (bb) {
+                var fb = bb.getVisibleContentBound();
+                delete style.bottom;
+                delete style.right;
+                var rc = Rect.fromEle(b.page.contentEl);
+                style.width = fb.width + 'px';
+                style.height = fb.height + 'px';
+                style.top = fb.top - rc.top + 'px';
+                style.left = fb.left - rc.left + 'px';
+                viewBox = `${fb.left - rc.left} ${fb.top - rc.top} ${fb.width} ${fb.height}`;
+            }
+        }
         return <div className='shy-kit-board-hover'>
-            {this.block && <svg className="shy-kit-board-hover-svg" style={{ zIndex: 10000 }}>
+            {this.block && <svg className="shy-kit-board-hover-svg" viewBox={viewBox ?? undefined} style={style}>
                 {this.renderBlock(this.block)}
             </svg>}
         </div>
