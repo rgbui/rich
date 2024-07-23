@@ -31,6 +31,7 @@ import { BlockRenderRange } from "../../../block/enum";
 import { onceAutoScroll } from "../../../common/scroll";
 
 
+
 export class Page$Operator {
 
     async onToggleOutline(this: Page, d: { nav: boolean }) {
@@ -328,18 +329,29 @@ export class Page$Operator {
                 if (value == 'y') {
                     var first = blocks.first().getVisibleBound();
                     var second = blocks[1].getVisibleBound();
-                    var d = second.top - first.bottom;
-                    var h = first.height + d + second.height;
-                    for (let i = 2; i < blocks.length; i++) {
+                    var d: number;
+                    var isArrowDown = true;
+                    if (second.top > first.top) {
+                        if (second.top < first.bottom) d = second.top - first.bottom;
+                        else d = second.top - first.top;
+                    }
+                    else {
+                        isArrowDown = false;
+                        if (second.bottom < first.top) d = second.bottom - first.top;
+                        else d = second.top - first.top;
+                        d = Math.abs(d);
+                    }
+                    var h = first.height;
+                    if (!isArrowDown) h = 0;
+                    for (let i = 1; i < blocks.length; i++) {
                         var block = blocks[i];
-                        var cb = block.getVisibleBound();
-                        var gm = block.globalWindowMatrix;
                         var cb = block.getVisibleBound();
                         var gm = block.globalWindowMatrix;
                         var from: Point;
                         var to: Point;
                         from = gm.inverseTransform(cb.leftTop);
-                        to = gm.inverseTransform(cb.leftTop.setY(h + d));
+                        if (isArrowDown) to = gm.inverseTransform(cb.leftTop.setY(first.top + h + d));
+                        else to = gm.inverseTransform(cb.leftTop.setY(first.top - (h + d + cb.height)));
                         var moveMatrix = new Matrix();
                         moveMatrix.translateMove(from, to)
                         var newMatrix = block.currentMatrix.clone();
@@ -352,20 +364,33 @@ export class Page$Operator {
                     }
                 }
                 else if (value == 'x') {
+
                     var first = blocks.first().getVisibleBound();
                     var second = blocks[1].getVisibleBound();
-                    var d = second.left - first.left;
-                    var h = first.width + d + second.width;
-                    for (let i = 2; i < blocks.length; i++) {
+                    var d: number;
+                    var isArrowRight = true;
+                    if (second.left > first.left) {
+                        if (second.left < first.right) d = second.left - first.right;
+                        else d = second.left - first.left;
+                    }
+                    else {
+                        isArrowRight = false;
+                        if (second.right < first.left) d = second.right - first.left;
+                        else d = second.left - first.left;
+                        d = Math.abs(d);
+                    }
+
+                    var w = first.width;
+                    if (isArrowRight) w = 0;
+                    for (let i = 1; i < blocks.length; i++) {
                         var block = blocks[i];
-                        var cb = block.getVisibleBound();
-                        var gm = block.globalWindowMatrix;
                         var cb = block.getVisibleBound();
                         var gm = block.globalWindowMatrix;
                         var from: Point;
                         var to: Point;
                         from = gm.inverseTransform(cb.leftTop);
-                        to = gm.inverseTransform(cb.leftTop.setX(h + d));
+                        if (isArrowRight) to = gm.inverseTransform(cb.leftTop.setX(first.x + w + d));
+                        else to = gm.inverseTransform(cb.leftTop.setX(first.x - (w + d + cb.width)));
                         var moveMatrix = new Matrix();
                         moveMatrix.translateMove(from, to)
                         var newMatrix = block.currentMatrix.clone();
@@ -373,9 +398,34 @@ export class Page$Operator {
                         newMatrix.append(block.selfMatrix.inverted());
                         await block.updateMatrix(block.matrix, newMatrix);
                         block.moveMatrix = new Matrix();
-                        h += d;
-                        h += cb.width;
+                        w += d;
+                        w += cb.width;
                     }
+
+                    // var first = blocks.first().getVisibleBound();
+                    // var second = blocks[1].getVisibleBound();
+                    // var d = second.left - first.left;
+                    // var h = first.width + d + second.width;
+                    // for (let i = 2; i < blocks.length; i++) {
+                    //     var block = blocks[i];
+                    //     var cb = block.getVisibleBound();
+                    //     var gm = block.globalWindowMatrix;
+                    //     var cb = block.getVisibleBound();
+                    //     var gm = block.globalWindowMatrix;
+                    //     var from: Point;
+                    //     var to: Point;
+                    //     from = gm.inverseTransform(cb.leftTop);
+                    //     to = gm.inverseTransform(cb.leftTop.setX(h + d));
+                    //     var moveMatrix = new Matrix();
+                    //     moveMatrix.translateMove(from, to)
+                    //     var newMatrix = block.currentMatrix.clone();
+                    //     newMatrix.append(moveMatrix);
+                    //     newMatrix.append(block.selfMatrix.inverted());
+                    //     await block.updateMatrix(block.matrix, newMatrix);
+                    //     block.moveMatrix = new Matrix();
+                    //     h += d;
+                    //     h += cb.width;
+                    // }
                 }
             }
         });
