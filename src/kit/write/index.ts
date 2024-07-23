@@ -440,6 +440,9 @@ export class PageWrite {
         }
         var r = aa.block.closest(x => x.isContentBlock);
         if (r?.isFreeBlock) {
+            if (r.url == BlockUrlConstant.Mind && !(r as any).isMindRoot) {
+                (r.parent as any).manualRenderMindes();
+            }
             //不做任何处理，自动键入换行符
             util.delay(50).then(() => {
                 this.kit.picker.onRePicker();
@@ -605,7 +608,7 @@ export class PageWrite {
         var inputPopHandle = async (offset: number,
             blockData: BlockSelectorItem
         ) => {
-            
+
             await InputForceStore(this.inputPop.aa, async () => {
 
                 var aa = this.inputPop.aa;

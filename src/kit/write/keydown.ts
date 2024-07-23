@@ -310,6 +310,10 @@ export async function onEnterInsertNewLine(write: PageWrite, aa: AppearAnchor, e
     var page = write.kit.page;
     await InputForceStore(aa, async () => {
         page.addActionAfterEvent(async () => {
+            var r = aa.block.closest(x => x.isContentBlock);
+            if (r.url == BlockUrlConstant.Mind && !(r as any).isMindRoot) {
+                (r.parent as any).manualRenderMindes();
+            }
             write.kit.anchorCursor.onFocusAppearAnchor(aa, { merge: true, scroll: true, render: true, at: offset + 1 })
             if (typeof cb == 'function') cb()
         })
