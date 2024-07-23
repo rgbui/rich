@@ -16,7 +16,7 @@ export class UserAvatars extends React.Component<{
             return <div style={{
                 position: 'relative',
                 height: size,
-                width: size * us.length / 2
+                width: size * us.length / 2 + size / 2
             }}>
                 {us.map(u => {
                     return <div className="flex-center" style={{
@@ -25,7 +25,7 @@ export class UserAvatars extends React.Component<{
                         width: size, height: size,
                         zIndex: us.length - us.indexOf(u)
                     }} key={u}>
-                        <Avatar hideStatus={this.props.hideStatus}  showName={this.props.showName} size={size} userid={u}></Avatar>
+                        <Avatar hideStatus={this.props.hideStatus} showName={this.props.showName} size={size} userid={u}></Avatar>
                     </div>
                 })}
             </div>
