@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { Point, Rect, RectUtility } from "../../src/common/vector/point";
 import { EventsComponent } from "../lib/events.component";
 import { PopoverPosition } from "./position";
-import { popoverLayer } from "../lib/zindex";
+import { LayerType, popoverLayer, tipLayer } from "../lib/zindex";
 import { assyDiv } from "../types";
 import { Spin } from "../view/spin";
 import './style.less';
@@ -26,8 +26,15 @@ export class Popover<T extends React.Component> extends EventsComponent<{
     private pos: PopoverPosition;
     async open(pos: PopoverPosition): Promise<T> {
         this.visible = true;
-        this.maskZindex = popoverLayer.zoom(this);
-        this.zindex = popoverLayer.zoom(this);
+        if (pos.layer == LayerType.tip) {
+            this.maskZindex = tipLayer.zoom(this);
+            this.zindex = tipLayer.zoom(this);
+        }
+        else {
+            this.maskZindex = popoverLayer.zoom(this);
+            this.zindex = popoverLayer.zoom(this);
+        }
+
         this.pos = pos;
         if (this.props.visible == 'hidden') {
             if (this.box) this.box.style.display = 'block';
@@ -132,6 +139,9 @@ export class Popover<T extends React.Component> extends EventsComponent<{
     maskZindex: number;
     close() {
         popoverLayer.clear(this);
+        tipLayer.clear(this);
+
+
         this.visible = false;
         if (this.props.visible == 'hidden') {
             this.box.style.display = 'none';
@@ -179,7 +189,6 @@ export class Popover<T extends React.Component> extends EventsComponent<{
             }
             else if (pos.roundArea) {
                 pos.elementArea = b;
-                console.log('cac pos', pos, 'rect', rect);
                 var newPoint = RectUtility.cacPopoverPosition(pos);
                 if (!this.point.equal(newPoint)) {
                     this.point = newPoint;

@@ -2,7 +2,7 @@ import React, { CSSProperties } from "react";
 import { MenuPanel } from ".";
 import { PopoverPosition } from "../../popover/position";
 import { Point, Rect, RectUtility } from "../../../src/common/vector/point";
-import { popoverLayer } from "../../lib/zindex";
+import { LayerType, popoverLayer, tipLayer } from "../../lib/zindex";
 import { MenuItem } from "./declare";
 import { MenuItemView } from "./item";
 import { MenuView } from "./menu";
@@ -17,12 +17,13 @@ export class MenuBox extends React.Component<{
     select: (item: MenuItem, event?: MouseEvent) => void,
     click: (item: MenuItem, event?: React.MouseEvent, name?: string, mv?: MenuItemView) => void
 }> {
+    zindex: number;
     render() {
         var isVisible = this.props.style?.overflow == 'visible' || this.props.items.exists(g => g.childs && g.childs.length > 0)
         return <div className='shy-menu-box' ref={e => this.el = e} style={{
             top: this.point.y,
             left: this.point.x,
-            zIndex: popoverLayer.zoom(this),
+            zIndex:this.zindex,
             ...(this.props.style || {}),
             overflowY: isVisible ? "visible" : "auto",
             maxHeight: isVisible ? '100vh' : undefined,
@@ -43,6 +44,9 @@ export class MenuBox extends React.Component<{
     point = new Point(-500, -500);
     style: CSSProperties = {}
     open(pos: PopoverPosition, style?: CSSProperties) {
+        if (pos.layer == LayerType.tip)
+            this.zindex = tipLayer.zoom(this);
+        else this.zindex = popoverLayer.zoom(this);
         this.style = style || {};
         if (pos.fixPoint) this.point = pos.fixPoint;
         else this.point = pos.roundArea ? pos.roundArea.leftTop : pos.roundPoint;

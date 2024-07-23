@@ -1,4 +1,5 @@
 import { Point, Rect } from "../../src/common/vector/point";
+import { LayerType } from "../lib/zindex";
 
 export type PopoverPosition = {
     /**
@@ -46,4 +47,7 @@ export type PopoverPosition = {
      * 这里还需要考虑平移的情况（暂时不考虑）
      */
     relativeEleAutoScroll?: HTMLElement,
+
+    layer?:LayerType
+
 }

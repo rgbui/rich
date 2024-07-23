@@ -4,7 +4,7 @@ import { Singleton, SingletonGet } from "../../lib/Singleton";
 import { EventsComponent } from "../../lib/events.component";
 import { MenuBox } from "./box";
 import { MenuItem, MenuItemType } from "./declare";
-import { popoverLayer } from "../../lib/zindex";
+import { LayerType, popoverLayer,tipLayer } from "../../lib/zindex";
 import { S } from "../../../i18n/view";
 import "./style.less";
 
@@ -33,6 +33,10 @@ export class MenuPanel<T> extends EventsComponent {
             if (typeof options.mask == 'boolean') this.mask = options.mask;
             else this.mask = true;
         }
+        if (pos.layer == LayerType.tip)
+            this.zindex = tipLayer.zoom(this);
+        else this.zindex = popoverLayer.zoom(this);
+      
         this.forceUpdate(() => {
             if (this.mb) this.mb.open(pos);
         })
@@ -41,6 +45,7 @@ export class MenuPanel<T> extends EventsComponent {
         this.menus = menus;
         this.forceUpdate();
     }
+    zindex: number;
     visible: boolean = false;
     private options: { height?: number, width?: number, overflow?: 'auto' | 'visible' } = {};
     onClose(e: React.MouseEvent) {
@@ -79,7 +84,9 @@ export class MenuPanel<T> extends EventsComponent {
     mb: MenuBox;
     render() {
         return this.visible && <div className='shy-menu-panel' onContextMenu={e => { e.preventDefault() }}>
-            {this.mask && <div className='shy-menu-mask' style={{ zIndex: popoverLayer.zoom(this) }} onMouseDown={e => this.onClose(e)}></div>}
+            {this.mask && <div className='shy-menu-mask' style={{
+                zIndex: this.zindex
+            }} onMouseDown={e => this.onClose(e)}></div>}
             {this.menus.length == 0 && <div className="flex-center remark f-14 gap-h-5"><S>没有可选项</S></div>}
             <MenuBox parent={this}
                 style={{ width: this.options.width, maxHeight: this.options.height, overflow: this.options.overflow }}
@@ -96,6 +103,8 @@ export class MenuPanel<T> extends EventsComponent {
     }
     componentWillUnmount(): void {
         document.removeEventListener('mousedown', this.otherClose);
+        popoverLayer.clear(this);
+        tipLayer.clear(this);
     }
     otherClose = (e: MouseEvent) => {
         if (this.mask !== true) {

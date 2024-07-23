@@ -1,4 +1,4 @@
-
+import lodash from 'lodash';
 export enum LayerType {
     /**
      * 消息提示，
@@ -59,6 +59,14 @@ class Layer {
     zoom(user: Object): number {
         if (this.objectIndexs.some(s => s.obj === user)) {
             return this.objectIndexs.find(g => g.obj === user).index;
+        }
+        var i = this.index += 1;
+        this.objectIndexs.push({ index: i, obj: user })
+        return i;
+    }
+    nd(user: Object): number {
+        if (this.objectIndexs.some(s => s.obj === user)) {
+            lodash.remove(this.objectIndexs, g => g.obj == user);
         }
         var i = this.index += 1;
         this.objectIndexs.push({ index: i, obj: user })
