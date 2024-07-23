@@ -20,24 +20,24 @@ import { Polygon } from "../../../src/common/vector/polygon";
 import { AppearAnchor } from "../../../src/block/appear";
 import { ColorUtil } from "../../../util/color";
 import './style.less';
+import { util } from "../../../util/util";
 
 @url('/flow/mind')
 export class FlowMind extends Block {
     async created() {
         if (!(this.pattern.styles && this.pattern.styles[0]?.cssList?.length > 0)) {
             if (this.isMindRoot) {
-            await this.pattern.setFontStyle({
-                fontSize: 20,
-                fontWeight: 'bold',
-                color: 'rgb(0,198,145)',
-            });
+                await this.pattern.setFontStyle({
+                    fontSize: 20,
+                    fontWeight: 'bold',
+                    color: 'rgb(0,198,145)',
+                });
+            }
+            else {
+                this.minBoxStyle.type = 'none'
+                await this.pattern.setFillStyle({ color: 'rgb(122,122,122)' });
+            }
         }
-        else {
-            this.minBoxStyle.type = 'none'
-            await this.pattern.setFillStyle({ color: 'rgb(122,122,122)' });
-        } 
-        }
-       
     }
     @prop()
     direction: 'none' | 'x' | 'y' = 'none';
@@ -329,7 +329,10 @@ export class FlowMind extends Block {
                 newBlock.mounted(async () => {
                     this.renderAllMinds();
                     await this.mindRoot.forceManualUpdate();
-                    self.page.kit.picker.onPicker([newBlock], { merge: true });
+                    await self.page.kit.picker.onPicker([newBlock], { merge: true, disabledOpenTool: true });
+                    await util.delay(100);
+                    await self.page.kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, last: true, merge: true })
+
                 })
             })
         }
@@ -391,7 +394,7 @@ export class FlowMind extends Block {
             return { w, h }
         }
     }
-    cacChildsFlowMind(deep?: boolean) {
+    cacChildsFlowMind(deep?: boolean, isUpdateMatrixView?: boolean) {
         var fs = this.fixedSize;
         var rect = new Rect(0, 0, fs.width, fs.height);
         var offset = 100;
@@ -405,7 +408,7 @@ export class FlowMind extends Block {
             var topStart = 0 - (this.cacDirectionRange('left').h / 2 - rect.height / 2);
             if (this.subMindSpread !== false)
                 this.blocks.subChilds.each((item: FlowMind, i: number) => {
-                    if (deep) item.cacChildsFlowMind(deep);
+                    if (deep) item.cacChildsFlowMind(deep, isUpdateMatrixView);
                     var rc = item.cacDirectionRange('left');
                     var fs = item.fixedSize;
                     var matrix = new Matrix();
@@ -414,11 +417,14 @@ export class FlowMind extends Block {
                     topStart += h;
                     topStart += gap;
                     item.onlyUpdateMatrix(matrix);
+                    if (isUpdateMatrixView && item.el) {
+                        item.el.style.transform = item.matrix.getCss().transform;
+                    }
                 });
             var topStart = 0 - (this.cacDirectionRange('right').h / 2 - rect.height / 2);
             if (this.otherMindSpread !== false)
                 this.blocks.otherChilds.each((item: FlowMind, i: number) => {
-                    if (deep) item.cacChildsFlowMind(deep);
+                    if (deep) item.cacChildsFlowMind(deep, isUpdateMatrixView);
                     var rc = item.cacDirectionRange('right');
                     var fs = item.fixedSize;
                     var matrix = new Matrix();
@@ -427,6 +433,9 @@ export class FlowMind extends Block {
                     topStart += h;
                     topStart += gap;
                     item.onlyUpdateMatrix(matrix);
+                    if (isUpdateMatrixView && item.el) {
+                        item.el.style.transform = item.matrix.getCss().transform;
+                    }
                 });
         }
         else if (this.mindRoot.direction == 'y') {
@@ -438,7 +447,7 @@ export class FlowMind extends Block {
             var leftStart = rect.width / 2 - this.cacDirectionRange('top').w / 2;
             if (this.subMindSpread !== false)
                 this.blocks.subChilds.each((item: FlowMind, i: number) => {
-                    if (deep) item.cacChildsFlowMind(deep);
+                    if (deep) item.cacChildsFlowMind(deep, isUpdateMatrixView);
                     var rc = item.cacDirectionRange('top');
                     var fs = item.fixedSize;
                     var matrix = new Matrix();
@@ -447,11 +456,14 @@ export class FlowMind extends Block {
                     leftStart += w;
                     leftStart += gap;
                     item.onlyUpdateMatrix(matrix);
+                    if (isUpdateMatrixView && item.el) {
+                        item.el.style.transform = item.matrix.getCss().transform;
+                    }
                 });
             var leftStart = rect.width / 2 - this.cacDirectionRange('bottom').w / 2;
             if (this.otherMindSpread !== false)
                 this.blocks.otherChilds.each((item: FlowMind, i: number) => {
-                    if (deep) item.cacChildsFlowMind(deep);
+                    if (deep) item.cacChildsFlowMind(deep, isUpdateMatrixView);
                     var rc = item.cacDirectionRange('bottom');
                     var fs = item.fixedSize;
                     var matrix = new Matrix();
@@ -460,6 +472,9 @@ export class FlowMind extends Block {
                     leftStart += w;
                     leftStart += gap;
                     item.onlyUpdateMatrix(matrix);
+                    if (isUpdateMatrixView && item.el) {
+                        item.el.style.transform = item.matrix.getCss().transform;
+                    }
                 });
         }
     }
@@ -577,9 +592,13 @@ export class FlowMind extends Block {
     renderAllMinds() {
         this.mindRoot.renderMinds();
     }
-    renderMinds() {
+    renderMinds(isSelfUpdate: boolean = true) {
         this.cacChildsFlowMind(true);
-        this.updateRenderLines(true, true);
+        this.updateRenderLines(isSelfUpdate, true);
+    }
+    manualRenderMindes() {
+        this.cacChildsFlowMind(true, true);
+        this.updateRenderLines(false, true);
     }
     boardMoveStart(point: Point): void {
         this.moveTo = null;
@@ -931,11 +950,17 @@ export class FlowMind extends Block {
                         if (isDs == false)
                             await block.manualUpdateProps({ isDragSize: false }, { isDragSize: true }, BlockRenderRange.self);
                         block.page.addActionCompletedEvent(async () => {
-                            if (block.isMindRoot) { block.renderAllMinds(); block.forceManualUpdate(); }
-                            else { (block.parent as FlowMind).renderMinds(); block.parent.forceManualUpdate(); }
-                        })
-                        block.page.addActionAfterEvent(async () => {
-                            await block.page.kit.picker.onPicker([block], { merge: true });
+                            if (block.isMindRoot) {
+                                block.renderAllMinds();
+                                await block.forceManualUpdate();
+                            }
+                            else {
+                                (block.parent as FlowMind).renderMinds();
+                                await block.parent.forceManualUpdate();
+                            }
+                            util.delay(200).then(() => {
+                                block.page.kit.picker.onRePicker(true)
+                            })
                         })
                     })
                 }
@@ -1073,7 +1098,6 @@ export class FlowMindView extends BlockView<FlowMind> {
             style.width = 250;
             style.pointerEvents = 'none'
         }
-
         return <div className='sy-flow-mind' style={style}>
             {this.renderItem()}
             {this.renderSubChilds()}
