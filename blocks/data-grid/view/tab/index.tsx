@@ -84,6 +84,7 @@ export class DataGridTab extends Block {
             var g = await useDataSourceView({ roundArea: rect }, {
                 page: this.page,
                 tableId: this.dataGridBlock.schema.id,
+                tableIds: this?.tabItems?.map(c => c.schemaId) || [],
                 viewId: this.dataGridBlock.syncBlockId,
                 selectView: true,
                 createView: true,

@@ -438,9 +438,9 @@ export class TableGridItem extends Block {
             case DropDirection.inner:
                 if (dropData && Object.keys(dropData).length > 0) {
                     var props = dropData;
-                  
+
                     if (this.dataGrid?.url == BlockUrlConstant.DataGridBoard) {
-                        
+
                         var db = (this.dataGrid as TableStoreBoard);
                         var name = db.groupField?.name;
                         var panel = blocks[0].el.closest('[data-block-drop-panel]') as HTMLElement;
@@ -566,10 +566,13 @@ export class TableGridItem extends Block {
 
 @view('/data-grid/item')
 export class TableStoreItemView extends BlockView<TableGridItem> {
+    getFields() {
+        return this.block.childs.findAll(g => g instanceof OriginField && (g as OriginField).isFieldEmpty ? false : true)
+    }
     renderItems() {
         return <div className='sy-data-grid-item relative'>
             <div className="r-gap-b-10">
-                <ChildsArea childs={this.block.childs}></ChildsArea>
+                <ChildsArea childs={this.getFields()}></ChildsArea>
             </div>
             {this.block.isCanEdit() && <div onMouseDown={e => this.block.onOpenMenu(e)} className="pos visible top-5 right-5 flex-center  size-24 round item-hover bg-white cursor">
                 <Icon size={20} icon={DotsSvg}></Icon>
@@ -594,7 +597,7 @@ export class TableStoreItemView extends BlockView<TableGridItem> {
                         </SnapRecordPage>}
                     </div>
                     <div className="sy-data-grid-card-items padding-w-10 padding-h-5 r-gap-h-5 ">
-                        <ChildsArea childs={this.block.childs}></ChildsArea>
+                        <ChildsArea childs={this.getFields()}></ChildsArea>
                     </div>
                     <div></div>
                     {this.block.isCanEdit() && <div style={{ zIndex: "100" }} className="pos visible top-5 right-5 remark flex-center round  shadow-s border cursor">
@@ -635,7 +638,7 @@ export class TableStoreItemView extends BlockView<TableGridItem> {
                     }} src={autoImageUrl(imageData.url, 500)} />
                 </div>}
                 <div className="sy-data-grid-card-items padding-w-10 padding-h-5 r-gap-h-5 ">
-                    <ChildsArea childs={this.block.childs}></ChildsArea>
+                    <ChildsArea childs={this.getFields()}></ChildsArea>
                 </div>
                 <div></div>
                 {this.block.isCanEdit() && <div className="pos visible top-5 right-5 remark flex-center round  shadow-s border cursor">
@@ -647,7 +650,7 @@ export class TableStoreItemView extends BlockView<TableGridItem> {
         else {
             return <div className='sy-data-grid-item visible-hover'>
                 <div className="r-gap-h-5 padding-w-10 padding-h-5 r-gap-h-5">
-                    <ChildsArea childs={this.block.childs}></ChildsArea>
+                    <ChildsArea childs={this.getFields()}></ChildsArea>
                 </div>
                 {this.block.isCanEdit() && <div className="pos visible top-5 right-5 remark flex-center round  shadow-s border cursor">
                     <ToolTip overlay={<S>编辑</S>}><span onMouseDown={e => { e.stopPropagation(); this.block.dataGrid.onOpenEditForm(this.block.dataRow.id); }} className="round-l-4 bg-hover size-24 flex-center cursor border-right"><Icon size={16} icon={{ name: 'byte', code: 'write' }}></Icon></span></ToolTip>

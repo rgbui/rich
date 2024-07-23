@@ -328,6 +328,7 @@ export class DataGridViewConfig {
             var g = await useDataSourceView({ roundArea: rect }, {
                 page: this.page,
                 tableId: this.schema.id,
+                tableIds: this.dataGridTab?.tabItems?.map(c => c.schemaId) || [],
                 viewId: this.syncBlockId,
                 selectView: true,
                 // editTable: true,

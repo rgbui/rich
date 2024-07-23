@@ -693,6 +693,7 @@ export class DataGridViewOperator {
         var g = await useDataSourceView({ roundArea: event }, {
             page: this.page,
             tableId: this.schema.id,
+            tableIds: this.dataGridTab?.tabItems?.map(c => c.schemaId) || [],
             viewId: this.syncBlockId,
             selectView: true,
             editTable: true,

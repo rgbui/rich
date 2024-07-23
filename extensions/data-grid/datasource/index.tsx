@@ -123,6 +123,18 @@ export class DataSourceView extends EventsComponent {
                 })
             }
         })
+
+        var ss = rs.filter(g => this.currentTableId && g.value == this.currentTableId || Array.isArray(this.tableIds) && this.tableIds.includes(g.value));
+        var rest = rs.filter(g => !ss.includes(g))
+        if (ss.length > 0 && rest.length > 0) {
+            rs = [...ss,
+            { type: MenuItemType.divide },
+            { type: MenuItemType.text, text: this.selectView ? lst('选择其它数据表视图') : lst('选择其它表格') },
+            ...rest
+            ]
+        }
+        else rs = [...rest]
+
         items.push({
             type: MenuItemType.container,
             childs: rs,
@@ -167,7 +179,7 @@ export class DataSourceView extends EventsComponent {
             }
         }
         async function select(item, event?: MouseEvent) {
-           
+
             if (item?.name == 'table') {
                 self.emit('save', item.value);
             }
@@ -218,6 +230,7 @@ export class DataSourceView extends EventsComponent {
     createTableing: boolean = false;
     currentTableId: string = '';
     currentViewId?: string = '';
+    tableIds?: string[] = [];
     selectView: boolean = false;
     createView: boolean = false;
     editTable: boolean = false;
@@ -228,6 +241,7 @@ export class DataSourceView extends EventsComponent {
     async open(option: {
         page: Page,
         tableId?: string,
+        tableIds?: string[],
         viewId?: string,
         selectView?: boolean,
         createView?: boolean,
@@ -239,6 +253,8 @@ export class DataSourceView extends EventsComponent {
         this.createView = option.createView;
         this.currentTableId = option.tableId;
         this.currentViewId = option.viewId;
+        this.tableIds = option.tableIds;
+        if (Array.isArray(this.tableIds)) this.tableIds = lodash.uniq(this.tableIds)
         this.editTable = option.editTable;
         this.createTable = option.createTable;
         this.page = option.page
@@ -253,6 +269,7 @@ export async function useDataSourceView(pos: PopoverPosition,
     option: {
         page: Page,
         tableId?: string,
+        tableIds?: string[],
         viewId?: string,
         selectView?: boolean,
         createView?: boolean,
