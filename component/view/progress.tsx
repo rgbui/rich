@@ -11,11 +11,12 @@ export class MeasureView extends React.Component<{
     value: number,
     showValue?: boolean,
     inputting?: boolean,
+    onInput?: (value: number) => void,
     onChange: (value: number) => void,
     unit?: string,
     unitComputed?: (value: number) => number,
     theme?: 'primary' | 'dark' | 'light'
-}>{
+}> {
     constructor(props) {
         super(props);
         this.currentValue = util.nf(this.props.value, 0);
@@ -44,15 +45,14 @@ export class MeasureView extends React.Component<{
             var value = min + Math.round((max - min) * pre);
             if (value > max) value = max;
             if (value < min) value = min;
-            console.log('sss',pre,min,max,value);
             value = Math.round(value);
             var pro = value * r;
             pro = parseFloat(pro.toPrecision(2));
-            console.log('rrr',r,pro,value);
             if (lastValue !== pro || isEnd == true) {
                 self.currentValue = pro;
                 lastValue = pro;
                 self.forceUpdate();
+                if (self.props.onInput) self.props.onInput(pro)
                 if (self.props.inputting === false && isEnd == false) return;
                 self.props.onChange(pro);
             }
@@ -78,8 +78,8 @@ export class MeasureView extends React.Component<{
         return <div className='shy-measure' ref={e => this.el = e} onMouseDown={e => e.stopPropagation()} >
             <div className="shy-measure-wrapper" onMouseDown={e => this.setProgress(e)}>
                 <div className='shy-measure-progress'>
-                    <div className={'shy-measure-progress-bar ' } style={{ width: pa * 100 + '%' }}></div>
-                    <div className={"shy-measure-progress-circle "+ (this.props.theme ? 'shy-measure-progress-' + this.props.theme : "")} style={{ left: pa * 100 + '%' }}></div>
+                    <div className={'shy-measure-progress-bar '} style={{ width: pa * 100 + '%' }}></div>
+                    <div className={"shy-measure-progress-circle " + (this.props.theme ? 'shy-measure-progress-' + this.props.theme : "")} style={{ left: pa * 100 + '%' }}></div>
                 </div>
             </div>
             {props.showValue !== false && <div className='shy-measure-value'>{typeof this.props.unitComputed == 'function' ? this.props.unitComputed(this.props.value) : this.props.value}{this.props.unit}</div>}
