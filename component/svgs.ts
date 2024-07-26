@@ -193,6 +193,7 @@ import SearchSvg from "../src/assert/svg/search.svg";
 import SeoFolderSvg from "../src/assert/svg/seoFolder.svg";
 import ServerSvg from "../src/assert/svg/server.svg";
 import SettingsSvg from "../src/assert/svg/settings.svg";
+import SizeSvg from "../src/assert/svg/size.svg";
 import SlideBarFolderSvg from "../src/assert/svg/slide.bar.folder.svg";
 import SortSvg from "../src/assert/svg/sort.svg";
 import SquareplusSvg from "../src/assert/svg/squareplus.svg";
@@ -442,6 +443,7 @@ SearchSvg,
 SeoFolderSvg,
 ServerSvg,
 SettingsSvg,
+SizeSvg,
 SlideBarFolderSvg,
 SortSvg,
 SquareplusSvg,
