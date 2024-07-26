@@ -1,6 +1,6 @@
 import { BlockView } from "../../../src/block/view";
 import { prop, url, view } from "../../../src/block/factory/observable";
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { Block } from "../../../src/block";
 import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
 import { Point, Rect } from "../../../src/common/vector/point";
@@ -31,6 +31,10 @@ export class TextCode extends Block {
     get isSupportTextStyle() {
         return false;
     }
+    @prop()
+    fixedWidth: number = 300;
+    @prop()
+    fixedHeight: number = 60;
     get isEnterCreateNewLine() {
         return false;
     }
@@ -48,7 +52,7 @@ export class TextCode extends Block {
     codeMirror: any;
     async renderCode() {
         var CodeMirror = await loadCodeMirror();
-        var codeMode = getCodeMirrorModes().find(g => g.mode&&g.mode == this.language||Array.isArray(g.modes)&&g.modes.includes(this.language));
+        var codeMode = getCodeMirrorModes().find(g => g.mode && g.mode == this.language || Array.isArray(g.modes) && g.modes.includes(this.language));
         if (codeMode) await codeMode.load();
         this.codeMirror = CodeMirror(this.el.querySelector('.sy-block-code-content'), {
             lineNumbers: this.lineNumbers,
@@ -78,7 +82,7 @@ export class TextCode extends Block {
         await this.page.onAction('onChangeMode', async () => {
             await this.updateProps({ language: name }, BlockRenderRange.self);
             if (this.codeMirror) {
-                var codeMode = getCodeMirrorModes().find(g => g.mode&&g.mode == this.language||Array.isArray(g.modes)&&g.modes.includes(this.language));
+                var codeMode = getCodeMirrorModes().find(g => g.mode && g.mode == this.language || Array.isArray(g.modes) && g.modes.includes(this.language));
                 if (codeMode) await codeMode.load();
                 this.codeMirror.setOption('mode', this.language);
                 channel.act('/cache/set', { key: CODEMIRROR_MODE, value: this.language })
@@ -137,18 +141,17 @@ export class TextCode extends Block {
 
 @view('/code')
 export class TextCodeView extends BlockView<TextCode> {
-    async changeLang(e: React.MouseEvent)
-    {
+    async changeLang(e: React.MouseEvent) {
         var menuItem = await useFilterInput({
             roundArea: Rect.fromEle(e.currentTarget as HTMLElement)
         }, {
             options: [
-                { text: lst('纯文本'),words:[], name: 'plain', value: 'plain' },
+                { text: lst('纯文本'), words: [], name: 'plain', value: 'plain' },
                 ...CodeMirrorModes.filter(g => g.abled).map(l => {
                     return {
                         text: l.label,
                         name: l.mode,
-                        words:l.words?l.words:[],
+                        words: l.words ? l.words : [],
                         // visible: vfx as any,
                         checkLabel: this.block.language == l.mode
                     }
@@ -172,26 +175,36 @@ export class TextCodeView extends BlockView<TextCode> {
     }
     renderView() {
         var label = CodeMirrorModes.filter(g => g.abled).find(g => g.mode == this.block.language)?.label || '纯文本';
-        var s = {
+        var s: CSSProperties = {
             '--code-mirror-font-size': this.block.page.fontSize,
             '--code-mirror-line-height': this.block.page.lineHeight
         } as any;
-
+        var contentStyle = this.block.contentStyle;
+        if (this.block.isFreeBlock) {
+            contentStyle.width = this.block.fixedWidth;
+            contentStyle.height = this.block.fixedHeight;
+            contentStyle.boxSizing = 'border-box';
+            contentStyle.padding = '0px';
+            s.height = '100%';
+            s.boxSizing = 'border-box';
+            s.margin = '0px';
+            s.overflowY = 'auto';
+        }
+        
         return <div style={this.block.visibleStyle}>
-            <div style={this.block.contentStyle}>
-                <div
-                    className='sy-block-code'
-                    style={{
+            <div style={contentStyle}>
+                <div className='sy-block-code' style={{
+                    height: this.block.isFreeBlock ? '100%' : undefined
+                }} >
+                    <div style={{
                         ...s
-                    }}
-                    onMouseDown={e => e.stopPropagation()}>
-                    <div className='sy-block-code-box' >
+                    }} className={'sy-block-code-box ' + (this.block.isFreeBlock ? "border-light" : "")} >
                         <div className='sy-block-code-head'>
                             {this.props.block.isCanEdit() && <div className='sy-block-code-head-lang' onMouseDown={e => e.stopPropagation()} onMouseUp={e => this.changeLang(e)}>
                                 <span>{label}</span>
                                 <Icon size={14} icon={ChevronDownSvg}></Icon>
                             </div>}
-                            <ToolTip overlay={lst('复制')}><div onMouseDown={e => this.onCopy()} className="size-24 flex-center cursor item-hover round">
+                            <ToolTip overlay={lst('复制')}><div onMouseDown={e => { e.stopPropagation(); this.onCopy() }} className="size-24 flex-center cursor item-hover round">
                                 <Icon size={16} icon={DuplicateSvg}></Icon>
                             </div></ToolTip>
                             {this.props.block.isCanEdit() && <ToolTip overlay={lst('菜单')}><div onMouseDown={e => {
@@ -201,7 +214,7 @@ export class TextCodeView extends BlockView<TextCode> {
                                 <Icon size={18} icon={DotsSvg}></Icon>
                             </div></ToolTip>}
                         </div>
-                        <div className={'sy-block-code-content ' + (this.block.lineNumbers ? "padding-h-10" : "padding-10")}>
+                        <div onMouseDown={e => e.stopPropagation()} className={'sy-block-code-content ' + (this.block.lineNumbers ? (this.block.isFreeBlock ? "gap-h-10" : "padding-h-10") : (this.block.isFreeBlock ? "gap-10" : "padding-10"))}>
                         </div>
                     </div>
                 </div>

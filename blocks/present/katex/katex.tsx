@@ -15,6 +15,10 @@ import { MenuItemType } from "../../../component/view/menu/declare";
 export class KatexBlock extends Block {
     display = BlockDisplay.block;
     opened: boolean = false;
+    @prop()
+    fixedWidth: number = 300;
+    @prop()
+    fixedHeight: number = 60;
     async open(event: React.MouseEvent) {
         event.stopPropagation();
         this.opened = true;
@@ -73,17 +77,28 @@ export class KatexBlock extends Block {
 }
 
 @view('/katex')
-export class KatexView extends BlockView<KatexBlock>{
+export class KatexView extends BlockView<KatexBlock> {
     renderView() {
         var style = this.block.contentStyle;
         if (this.block.align == 'left') style.textAlign = 'left';
         else if (this.block.align == 'right') style.textAlign = 'right';
         else style.textAlign = 'center';
+        if (this.block.isFreeBlock) {
+            style.width = this.block.fixedWidth;
+            style.height = this.block.fixedHeight;
+            style.padding = '0px';
+            style.boxSizing = 'border-box';
+        }
+
         return <div style={this.block.visibleStyle}><div
-            className={'sy-block-katex' + (this.block.opened ? " sy-block-katex-opened" : "")}
-            style={style} onMouseDown={e => this.block.open(e)}>
+            className={'sy-block-katex ' + (this.block.isFreeBlock ? " sy-block-katex-free " : "") + (this.block.opened ? " sy-block-katex-opened" : "")}
+            style={style} onMouseDown={e => {
+                if (this.block.isFreeBlock) return;
+                this.block.open(e)
+            }}>
             <Katex block className='sy-block-katex-content' latex={this.block.content}></Katex>
-        </div> {this.renderComment()}
+        </div>
+            {this.renderComment()}
         </div>
     }
 }
