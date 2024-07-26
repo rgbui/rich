@@ -355,7 +355,12 @@ export var DisabledFormFieldTypes: FieldType[] = [
     FieldType.sort,
     FieldType.id,
     FieldType.deleted,
-    FieldType.pageContentPreview
+    FieldType.pageContentPreview,
+
+    FieldType.emoji,
+    FieldType.like,
+    FieldType.love,
+    FieldType.vote
 ]
 
 /**
@@ -414,7 +419,7 @@ export var DisabledTrggerFilterFieldTypes: FieldType[] = [
     FieldType.autoIncrement,
 ]
 
-export var DisabledTriggerSortFieldTypes:FieldType[]=[
+export var DisabledTriggerSortFieldTypes: FieldType[] = [
     FieldType.formula,
     FieldType.rollup,
     FieldType.button,

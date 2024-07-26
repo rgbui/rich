@@ -31,6 +31,7 @@ export function GetFieldFormBlockInfo(field: Field) {
             }
             break;
         case FieldType.option:
+        case FieldType.options:
             return {
                 url: '/form/option',
                 fieldId: field.id
@@ -51,27 +52,25 @@ export function GetFieldFormBlockInfo(field: Field) {
             }
             break;
         case FieldType.relation:
-      
+
             return {
                 url: '/form/relation',
                 fieldId: field.id
             }
             break;
         case FieldType.user:
+        case FieldType.creater:
+        case FieldType.modifyer:
             return {
                 url: '/form/user',
                 fieldId: field.id
             }
             break;
-        case FieldType.rich:
-            return {
-                url: '/form/rich',
-                fieldId: field.id
-            }
         case FieldType.emoji:
         case FieldType.like:
         case FieldType.love:
         case FieldType.oppose:
+        case FieldType.vote:
             return {
                 url: '/form/emoji',
                 fieldId: field.id
