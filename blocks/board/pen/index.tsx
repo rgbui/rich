@@ -29,14 +29,14 @@ export class Pen extends Block {
     async getBoardEditCommand(this: Block): Promise<{ name: string; value?: any; }[]> {
         var cs: { name: string; value?: any; }[] = [];
         cs.push({ name: 'tickness', value: this.pattern.getSvgStyle()?.strokeWidth || 2 });
-        cs.push({ name: 'backgroundColor', value: this.pattern.getSvgStyle()?.stroke || '#000' });
+        cs.push({ name: 'fillNoTransparentColor', value: this.pattern.getSvgStyle()?.stroke || '#000' });
         return cs;
     }
     async setBoardEditCommand(name: string, value: any) {
         if (name == 'tickness') {
             await this.pattern.setSvgStyle({ strokeWidth: value })
         }
-        else if (name == 'backgroundColor') {
+        else if (name == 'fillNoTransparentColor') {
             await this.pattern.setSvgStyle({ stroke: value })
         }
     }

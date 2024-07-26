@@ -69,12 +69,17 @@ export class Note extends Block {
         else if (this.fixedWidth == 200) stickerSize = 'medium'
         else if (this.fixedWidth == 100) stickerSize = 'small'
         cs.push({ name: 'stickerSize', value: stickerSize });
-        cs.push({ name: 'backgroundNoTransparentColor', value: this.color });
+        cs.push({ name: 'fillNoTransparentColor', value: this.color });
+        cs.push({ name: 'width', value: this.fixedWidth });
+        cs.push({ name: 'height', value: this.fixedHeight });
         return cs;
     }
     async setBoardEditCommand(name: string, value: any) {
-        if (name == 'backgroundNoTransparentColor')
-            await this.updateProps({ color: value },BlockRenderRange.self)
+        if (name == 'fillNoTransparentColor')
+            await this.updateProps({ color: value }, BlockRenderRange.self)
+        else if (['width', 'height'].includes(name)) {
+            await this.updateProps({ [name == 'width' ? "fixedWidth" : "fixedHeight"]: value }, BlockRenderRange.self)
+        }
         else (await super.setBoardEditCommand(name, value) == false)
         {
             if (name == 'stickerSize') {

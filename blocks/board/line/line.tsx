@@ -304,12 +304,16 @@ export class Line extends Block {
         cs.push({ name: 'lineType', value: this.lineType });
         cs.push({ name: 'strokeWidth', value: this.pattern.getSvgStyle()?.strokeWidth || 1 });
         cs.push({ name: 'strokeDasharray', value: this.pattern.getSvgStyle()?.strokeDasharray || 'none' })
-        cs.push({ name: 'backgroundColor', value: this.pattern.getSvgStyle()?.stroke || '#000' });
+        cs.push({ name: 'fillColor', value: this.pattern.getSvgStyle()?.stroke || '#000' });
+        cs.push({ name: 'fillOpacity', value: this.pattern.getSvgStyle()?.strokeOpacity || 1 })
         return cs;
     }
     async setBoardEditCommand(name: string, value: any) {
-        if (name == 'backgroundColor') {
+        if (name == 'fillColor') {
             await this.pattern.setSvgStyle({ stroke: value })
+        }
+        else if (name == 'fillOpacity') {
+            await this.pattern.setSvgStyle({ strokeOpacity: value })
         }
         else if (name == 'lineType') {
             await this.updateProps({ [name]: value }, BlockRenderRange.self);

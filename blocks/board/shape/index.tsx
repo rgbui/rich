@@ -1,5 +1,5 @@
 import React from "react";
-import { ShapesList } from "../../../extensions/shapes/shapes";
+import { ShapesList } from "../../../extensions/board/shapes/shapes";
 import { Block } from "../../../src/block";
 import { BlockRenderRange } from "../../../src/block/enum";
 import { prop, url, view } from "../../../src/block/factory/observable";
@@ -54,6 +54,9 @@ export class Shape extends Block {
         cs.push({ name: 'fillColor', value: this.pattern.getSvgStyle()?.fill || '#000' });
         cs.push({ name: 'fillOpacity', value: fl });
         cs.push({ name: 'turnShapes', value: this.svgName });
+        cs.push({ name: 'width', value: this.fixedWidth });
+        cs.push({ name: 'height', value: this.fixedHeight });
+        
         return cs;
     }
     get fixedSize(): { width: number; height: number; } {
@@ -67,6 +70,9 @@ export class Shape extends Block {
             var key = name;
             if (name == 'fillColor') key = 'fill';
             await this.pattern.setSvgStyle({ [key]: value })
+        }
+        else if (['width', 'height'].includes(name)) {
+            await this.updateProps({ [name == 'width' ? "fixedWidth" : "fixedHeight"]: value }, BlockRenderRange.self)
         }
         else if ((await super.setBoardEditCommand(name, value))) {
 

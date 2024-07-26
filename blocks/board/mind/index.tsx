@@ -505,6 +505,7 @@ export class FlowMind extends Block {
         cs.push({ name: 'borderColor', value: this.minBoxStyle.borderColor });
         cs.push({ name: 'borderRadius', value: this.minBoxStyle.radius });
         cs.push({ name: 'align', value: this.align });
+     
 
         return cs;
     }
@@ -525,6 +526,7 @@ export class FlowMind extends Block {
         else if (['fillColor', 'fillOpacity',].includes(name)) {
             var key = name;
             if (name == 'fillColor') key = 'fill';
+            else if (name == 'fillOpacity') key = 'fillOpacity';
             await this.pattern.setSvgStyle({ [key]: value })
         }
         else if (name == 'borderWidth') {
