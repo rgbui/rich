@@ -1,13 +1,13 @@
 import React from "react";
 import { Kit } from "..";
 import { closeBoardEditTool } from "../../../extensions/board.edit.tool";
-import { closeShapeSelector } from "../../../extensions/shapes";
+import { closeShapeSelector } from "../../../extensions/board/shapes";
 import { forceCloseTextTool } from "../../../extensions/text.tool";
 import { Block } from "../../block";
 import { onAutoScrollStop } from "../../common/scroll";
 import { PageDrag } from "./drag";
 import { Rect } from "../../common/vector/point";
-import { closeNoteSelector } from "../../../extensions/note";
+import { closeNoteSelector } from "../../../extensions/board/note";
 import { BlockUrlConstant } from "../../block/constant";
 
 /****
@@ -68,7 +68,6 @@ export class PageOperator {
                 }
             }
         }
-
         this.kit.page.onHoverBlock(block);
     }
     mouseup(event: MouseEvent) {

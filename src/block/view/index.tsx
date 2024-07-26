@@ -1,4 +1,4 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import { Component, ErrorInfo } from "react";
 import ReactDOM from 'react-dom';
 import { Block } from "..";
@@ -101,7 +101,20 @@ export abstract class BlockView<T extends Block> extends Component<{ block: T }>
     }
     renderComment() {
         if (this.block.commentCount > 0) {
-            return <ToolTip overlay={<S>点击展开评论</S>}><div className="shy-block-comment-count flex-center h-20 min-w-20 f-12 cursor" onMouseDown={e => { this.block.onInputComment(Rect.fromEle(e.currentTarget as HTMLElement)) }}>
+            var style: CSSProperties = {};
+            if (this.block.isFreeBlock) {
+                style.minWidth = this.block.realPx(20);
+                style.height = this.block.realPx(20);
+                style.fontSize = this.block.realPx(12) + 'px';
+                style.lineHeight = this.block.realPx(20) + 'px';
+            }
+            return <ToolTip overlay={<S>点击展开评论</S>}><div
+                className="shy-block-comment-count flex-center h-20 min-w-20 f-12 cursor"
+                style={style}
+                onMouseDown={e => {
+                    e.stopPropagation()
+                    this.block.onInputComment(Rect.fromEle(e.currentTarget as HTMLElement))
+                }}>
                 {this.block.commentCount}
             </div></ToolTip>
         }

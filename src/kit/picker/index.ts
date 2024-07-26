@@ -3,7 +3,7 @@ import React from "react";
 import { Kit } from "..";
 import { Line, PortLocation } from "../../../blocks/board/line/line";
 import { closeBoardEditTool } from "../../../extensions/board.edit.tool";
-import { useShapeSelector } from "../../../extensions/shapes/box";
+import { useShapeSelector } from "../../../extensions/board/shapes/box";
 import { util } from "../../../util/util";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";

@@ -106,6 +106,8 @@ export function PageKeys(
         var r = UA.isMacOs && kt.is(KeyboardCode.Backspace, KeyboardCode.Delete) || !UA.isMacOs && kt.is(KeyboardCode.Delete);
         return r;
     }, (event, kt) => {
+        console.log(event.target);
+
         var b = findBlockAppear(event.target as HTMLElement);
         var cursorNode = window.getSelection().focusNode;
         /**
@@ -116,8 +118,7 @@ export function PageKeys(
          * 有两种选中的情况，一个是在文档中批量选中，
          * 另一个是在白板中批量选中
          */
-        if (!(b && cursorNode && b.el.contains(cursorNode)))
-        {
+        if (!(b && cursorNode && b.el.contains(cursorNode))) {
             if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
                 event.preventDefault();
                 if (page.kit.boardSelector?.boardBlock) {
@@ -136,8 +137,19 @@ export function PageKeys(
                     page.onBatchDelete(page.kit.anchorCursor.currentSelectHandleBlocks);
             }
             if (page.kit.picker.blocks.length > 0) {
-                event.preventDefault();
-                page.onBatchDelete(page.kit.picker.blocks);
+                if (!page.kit.picker.blocks.some(s => s.url == BlockUrlConstant.Code)) {
+                    event.preventDefault();
+                    page.onBatchDelete(page.kit.picker.blocks);
+                }
+                else {
+                    if (cursorNode && (cursorNode as HTMLElement).tagName?.toLowerCase() == 'textarea') {
+                        //说明是在code中编辑区域
+                    }
+                    else {
+                        event.preventDefault();
+                        page.onBatchDelete(page.kit.picker.blocks);
+                    } 
+                }
             }
             closeSelectMenutItem()
         }

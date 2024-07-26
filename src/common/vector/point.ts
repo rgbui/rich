@@ -140,10 +140,12 @@ export class Point {
         return Math.sqrt(Math.pow(point.x - p2.x, 2) + Math.pow(point.y - p2.y, 2));
     }
     setX(x: number) {
-        this.x = x; return this;
+        this.x = x; 
+        return this;
     }
     setY(y: number) {
-        this.y = y; return this;
+        this.y = y; 
+        return this;
     }
 
 }

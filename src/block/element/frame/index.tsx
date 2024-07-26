@@ -20,7 +20,9 @@ import { GridMap } from '../../../page/grid';
 @url('/frame')
 export class Frame extends Block {
     async created(this: Block): Promise<void> {
-        await  this.pattern.setFillStyle({ color: '#fff' });
+        if (!(this.pattern.styles && this.pattern.styles[0]?.cssList?.length > 0)) {
+            await this.pattern.setFillStyle({ color: '#fff' });
+        }
     }
     get isEnterCreateNewLine(): boolean {
         return false;
@@ -102,13 +104,13 @@ export class Frame extends Block {
     }
     async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
         var cs: { name: string; value?: any; }[] = [];
-        cs.push({ name: 'backgroundColor', value: this.pattern.css(BlockCssName.fill)?.color || 'transparent' });
+        cs.push({ name: 'fillColor', value: this.pattern.css(BlockCssName.fill)?.color || 'transparent' });
         cs.push({ name: 'frameFormat', value: this.frameFormat })
         return cs;
     }
     async setBoardEditCommand(this: Block, name: string, value: any) {
-        if (name == 'backgroundColor')
-        await  this.pattern.setFillStyle({ color: value, mode: 'color' });
+        if (name == 'fillColor')
+            await this.pattern.setFillStyle({ color: value, mode: 'color' });
         else if (name == 'frameFormat') {
             var props: Record<string, any> = {}
             if (value == '1:1') {
@@ -139,7 +141,7 @@ export class Frame extends Block {
 }
 
 @view('/frame')
-export class FrameView extends BlockView<Frame>{
+export class FrameView extends BlockView<Frame> {
     renderView() {
         var h = 30;
         var h20 = 20;
@@ -147,6 +149,8 @@ export class FrameView extends BlockView<Frame>{
             width: this.block.fixedWidth,
             height: this.block.fixedHeight
         }, this.block.visibleStyle);
+        var contentStyle = this.block.contentStyle;
+        delete contentStyle.borderRadius;
         var gap = 0;
         var gh = 0;
         if (['pad', 'phone'].includes(this.block.frameFormat)) {
@@ -168,7 +172,7 @@ export class FrameView extends BlockView<Frame>{
                 left: gap,
                 bottom: gap,
                 right: gap,
-                ...this.block.contentStyle
+                ...contentStyle
             }}>
             </div>
             {this.renderComment()}
@@ -189,7 +193,14 @@ export class FrameView extends BlockView<Frame>{
             return <div className='pos round-16' style={{ boxSizing: 'border-box', top: h, left: 0, width: '100%', height: 'calc(100% - 30px)', border: '20px solid #444' }}></div>
         }
         else if (this.block.frameFormat == 'phone') {
-            return <div className='pos round-16' style={{ boxSizing: 'border-box', top: h, left: 0, width: '100%', height: 'calc(100% - 30px)', border: '20px solid #444' }}>
+            return <div className='pos round-16' style={{
+                boxSizing: 'border-box',
+                top: h,
+                left: 0,
+                width: '100%',
+                height: 'calc(100% - 30px)',
+                border: '20px solid #444'
+            }}>
 
             </div>
         }

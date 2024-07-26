@@ -249,8 +249,20 @@ export class Block$Event {
     async onGetBoardContextMenus(this: Block) {
         var items: MenuItem<BlockDirective | string>[] = [];
         items.push({
+            name: 'arrow-up-layer',
+            text: lst('上移一层'),
+            icon: { name: 'byte', code: 'up-two' },
+            label: UA.isMacOs ? "⌘+]" : "Ctrl+]"
+        });
+        items.push({
+            name: 'arrow-down-layer',
+            text: lst('下移一层'),
+            icon: { name: 'byte', code: 'down-two' },
+            label: UA.isMacOs ? "⌘+[" : "Ctr+["
+        });
+        items.push({
             name: BlockDirective.bringToFront,
-            text: lst('移到前面'),
+            text: lst('移到最前面'),
             icon: BoardMoveTopSvg,
             label: UA.isMacOs ? "⌘+Opt+]" : "Ctrl+Alt+]"
         });
@@ -271,6 +283,12 @@ export class Block$Event {
         });
         items.push({
             type: MenuItemType.divide
+        });
+        items.push({
+            name: BlockDirective.link,
+            text: lst('复制块链接'),
+            icon: LinkSvg,
+            label: UA.isMacOs ? "Opt+Shift+L" : "Alt+Shift+L"
         });
         items.push({
             name: BlockDirective.copy,
@@ -424,6 +442,16 @@ export class Block$Event {
                 break;
             case BlockDirective.copy:
                 await this.onClone();
+                break;
+            case BlockDirective.comment:
+                await this.onInputComment();
+                break;
+            case BlockDirective.link:
+                await this.onCopyLink();
+                break;
+            case 'arrow-up-layer':
+                break;
+            case 'arrow-down-layer':
                 break;
         }
     }
