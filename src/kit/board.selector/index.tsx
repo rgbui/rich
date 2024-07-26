@@ -11,7 +11,6 @@ import {
     BoardToolFrameSvg,
     MindSvg,
     BoardCardSvg,
-    PicSvg,
     BoardArrowCurveSvg,
     BoardArrowNoneSvg,
     BoardArrowPolylineSvg,
@@ -23,11 +22,13 @@ import {
     BoardFrameA4Svg,
     BoardFramePadSvg,
     BoardFrameWebSvg,
-    BoardFramePhoneSvg
+    BoardFramePhoneSvg,
+    UploadSvg,
+    DotsSvg
 } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
-import { closeNoteSelector, getNoteSelector } from "../../../extensions/note";
-import { closeShapeSelector, getShapeSelector } from "../../../extensions/shapes";
+import { closeNoteSelector, getNoteSelector } from "../../../extensions/board/note";
+import { closeShapeSelector, getShapeSelector } from "../../../extensions/board/shapes";
 import { channel } from "../../../net/channel";
 import { BlockUrlConstant } from "../../block/constant";
 import { FixedViewScroll } from "../../common/scroll";
@@ -38,6 +39,7 @@ import { Tip } from "../../../component/view/tooltip/tip";
 import { S } from "../../../i18n/view";
 import { Page } from "../../page";
 import { Block } from "../../block";
+import { ToolTip } from "../../../component/view/tooltip";
 
 export class BoardSelector extends React.Component<{
     kit: Kit
@@ -58,8 +60,9 @@ export class BoardSelector extends React.Component<{
             style.top = this.point.y;
             style.right = this.point.x;
         }
-        return <div className="shy-kit-board-selector"><div className="z-1000 pos w-40 padding-h-5  round-4 border shadow-s bg-white r-size-30 r-gap-l-5 r-gap-t-5 r-gap-b-5 r-item-hover r-round-4 r-cursor r-flex-center  " ref={e => this.el = e} style={style}>
-
+        return <div className="shy-kit-board-selector"><div className="z-1000 pos w-40 padding-h-5  round-4 border shadow-s bg-white r-size-30 r-gap-l-5 r-gap-t-5 r-gap-b-5 r-item-hover r-round-4 r-cursor r-flex-center  "
+            ref={e => this.el = e}
+            style={style}>
             <Tip text='文本' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.text ? "item-hover-focus" : ""}
                 onMouseDown={e => {
@@ -81,7 +84,10 @@ export class BoardSelector extends React.Component<{
             <Tip text='文档' placement={'left'}>
                 <div
                     className={this.openSelector == BoardToolOperator.card ? "item-hover-focus" : ""}
-                    onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.card, e) }}>
+                    onMouseDown={e => {
+                        e.stopPropagation();
+                        this.selector(BoardToolOperator.card, e)
+                    }}>
                     <Icon size={18} icon={BoardCardSvg} />
                 </div>
             </Tip>
@@ -110,20 +116,18 @@ export class BoardSelector extends React.Component<{
                 <Icon size={18} icon={{ name: 'byte', code: 'rectangle-one' }}></Icon>
             </div></Tip>
 
-            <Tip text='图片' placement={'left'}><div
+            {/* <Tip overlay={<S>上传图片、视频、文件</S>} placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.upload ? "item-hover-focus" : ""}
                 onMouseDown={e => {
                     e.stopPropagation();
                     this.selector(BoardToolOperator.upload, e)
                 }}>
-                {/* <Icon icon={UploadSvg}></Icon> */}
-                <Icon size={18} icon={PicSvg}></Icon>
-            </div></Tip>
+                <Icon size={18} icon={UploadSvg}></Icon>
+            </div></Tip> */}
 
             <Tip text='表格' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.table ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.table, e) }}>
-                {/* <Icon icon={UploadSvg}></Icon> */}
                 <Icon size={18} icon={{ name: 'byte', code: 'insert-table' }}></Icon>
             </div></Tip>
 
@@ -131,6 +135,18 @@ export class BoardSelector extends React.Component<{
                 className={this.openSelector == BoardToolOperator.mind ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.mind, e) }}>
                 <Icon size={18} icon={MindSvg}></Icon>
+            </div></Tip>
+
+            <Tip text='更多创作工具' placement={'left'}><div
+                className={this.openSelector == BoardToolOperator.more ? "item-hover-focus" : ""}
+                onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.more, e) }}>
+                <Icon size={22} icon={DotsSvg}></Icon>
+            </div></Tip>
+            <div className="border-top" style={{ margin: 5, height: 1, }}></div>
+            <Tip text='素材库' placement={'left'}><div
+                className={this.openSelector == BoardToolOperator.material ? "item-hover-focus" : ""}
+                onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.material, e) }}>
+                <Icon size={18} icon={{ name: 'byte', code: 'material' }}></Icon>
             </div></Tip>
         </div>
             {this.renderSelectProps()}
@@ -252,6 +268,50 @@ export class BoardSelector extends React.Component<{
                         </div>
                     </div>
                 </div>
+            </div>
+        }
+        else if (this.openSelector == BoardToolOperator.more) {
+            if (this.point) {
+                style.top = this.point.y + 100;
+                style.right = this.point.x + 60;
+                // style.width = 3 * 55 + 5;
+            }
+            return <div style={style} className="z-1000 pos w-100 padding-h-5  round-4 border-light shadow bg-white   r-gap-5 r-padding-5  r-item-hover r-round-4 r-cursor r-flex-center r-flex-col ">
+
+                <ToolTip overlay={<S>上传文件</S>}><div onMouseDown={e => {
+
+                }}><Icon size={24} icon={UploadSvg}></Icon>
+                    <div className="flex-center remark f-14"><S>上传文件</S></div>
+                </div>
+                </ToolTip>
+
+                <ToolTip overlay={<S>插入图片</S>}><div
+                    onMouseDown={e => {
+
+                    }}>
+                    <Icon size={24} icon={{ name: 'byte', code: 'add-picture' }}></Icon>
+                    <div className="flex-center remark f-14"><S>插入图片</S></div>
+                </div></ToolTip>
+
+                <ToolTip overlay={<S>内嵌网页</S>}><div onMouseDown={e => {
+
+                }}><Icon size={24} icon={{ name: 'byte', code: 'browser' }}></Icon>
+                    <div className="flex-center remark f-14"><S>内嵌网页</S></div>
+                </div></ToolTip>
+
+                <ToolTip overlay={<S>代码块</S>}><div onMouseDown={e => {
+                    this.currentSelector.url = BlockUrlConstant.Code;
+                    e.stopPropagation();
+                }}><Icon size={24} icon={{ name: 'byte', code: 'code' }}></Icon>
+                    <div className="flex-center remark f-14"><S>代码块</S></div>
+                </div></ToolTip>
+
+                <ToolTip overlay={<S>LaTex公式</S>}><div onMouseDown={e => {
+                    this.currentSelector.url = BlockUrlConstant.Katex;
+                    e.stopPropagation();
+                }}><Icon size={24} icon={{ name: 'byte', code: 'formula' }}></Icon>
+                    <div className="flex-center remark f-14"><S>LaTex公式</S></div>
+                </div></ToolTip>
 
             </div>
         }
@@ -319,46 +379,50 @@ export class BoardSelector extends React.Component<{
                 case BoardToolOperator.pen:
                     sel.url = BlockUrlConstant.Pen;
                     break;
-                case BoardToolOperator.upload:
-                    /**
-                     * 这里上传文件
-                     */
-                    var exts = ['image/*']
-                    //exts=['*']
-                    var file = await OpenFileDialoug({ exts: exts });
-                    if (file) {
-                        if (file.size > 1024 * 1024 * 1024) {
-                            ShyAlert(lst('文件过大提示', '文件过大，不支持1G以上的文件'));
-                            return;
-                        }
-                        var r = await channel.post('/ws/upload/file', {
-                            file,
-                            uploadProgress: (event) => {
-                                // console.log(event, 'ev');
-                                if (event.lengthComputable) {
-                                    // this.progress = `${util.byteToString(event.total)}${(100 * event.loaded / event.total).toFixed(2)}%`;
-                                    // this.forceUpdate();
-                                }
-                            }
-                        })
-                        if (r.ok) {
-                            if (r.data?.file?.url) {
-                                var size = await getImageSize(r.data.file.url);
-                                sel.url = BlockUrlConstant.BoardImage;
-                                sel.data = {
-                                    originSize: size,
-                                    fixedWidth: size.width,
-                                    fixedHeight: size.height,
-                                    src: { name: 'upload', ...r.data.file }
-                                }
-                                // this.props.change(r.data?.file as any);
-                            }
-                        }
-                        else {
-                            // this.forceUpdate();
-                        }
-                    }
+                case BoardToolOperator.material:
                     break;
+                // case BoardToolOperator.more:
+
+                // case BoardToolOperator.upload:
+                /**
+                 * 这里上传文件
+                 */
+                // var exts = ['image/*']
+                //exts=['*']
+                // var file = await OpenFileDialoug({ exts: exts });
+                // if (file) {
+                //     if (file.size > 1024 * 1024 * 1024) {
+                //         ShyAlert(lst('文件过大提示', '文件过大，不支持1G以上的文件'));
+                //         return;
+                //     }
+                //     var r = await channel.post('/ws/upload/file', {
+                //         file,
+                //         uploadProgress: (event) => {
+                //             // console.log(event, 'ev');
+                //             if (event.lengthComputable) {
+                //                 // this.progress = `${util.byteToString(event.total)}${(100 * event.loaded / event.total).toFixed(2)}%`;
+                //                 // this.forceUpdate();
+                //             }
+                //         }
+                //     })
+                //     if (r.ok) {
+                //         if (r.data?.file?.url) {
+                //             var size = await getImageSize(r.data.file.url);
+                //             sel.url = BlockUrlConstant.BoardImage;
+                //             sel.data = {
+                //                 originSize: size,
+                //                 fixedWidth: size.width,
+                //                 fixedHeight: size.height,
+                //                 src: { name: 'upload', ...r.data.file }
+                //             }
+                //             // this.props.change(r.data?.file as any);
+                //         }
+                //     }
+                //     else {
+                //         // this.forceUpdate();
+                //     }
+                // }
+                // break;
                 case BoardToolOperator.mind:
                     sel.url = BlockUrlConstant.Mind;
                     break;
@@ -400,11 +464,11 @@ export class BoardSelector extends React.Component<{
     onShow(viewEl: HTMLElement, options?: {
         page: Page,
         block?: Block
-   
+
     }) {
         if (this.cursorEl !== viewEl) {
             this.cursorEl = viewEl;
-        
+
             this.page = options?.page;
             this.boardBlock = options?.block;
             if (!this.boardBlock && this.page) {

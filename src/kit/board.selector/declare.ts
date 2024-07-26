@@ -1,4 +1,4 @@
-export enum BoardToolOperator{
+export enum BoardToolOperator {
     arrow,
     text,
     shape,
@@ -9,5 +9,7 @@ export enum BoardToolOperator{
     upload,
     mind,
     card,
-    table
+    table,
+    more,
+    material
 }

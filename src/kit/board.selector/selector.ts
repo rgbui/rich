@@ -248,7 +248,7 @@ export function CheckBoardSelector(
                             fixedHeight: bound.height,
                             viewBox: `0 0 ${bound.width} ${bound.height}`,
                             pathString: path.pathData
-                        },BlockRenderRange.self)
+                        }, BlockRenderRange.self)
                         path.remove();
                         if (isMounted) newBlock.forceManualUpdate();
                         kit.page.addActionAfterEvent(async () => {
@@ -259,5 +259,24 @@ export function CheckBoardSelector(
                 kit.boardSelector.clearSelector();
             }
         })
+    }
+    else {
+        if (kit.boardSelector.currentSelector.url) {
+            fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
+                var data = kit.boardSelector.currentSelector.data || {};
+                var ma = new Matrix();
+                ma.translate(re.x, re.y);
+                data.matrix = ma.getValues();
+                var newBlock = await kit.page.createBlock(kit.boardSelector.currentSelector.url, data, fra);
+                kit.boardSelector.clearSelector();
+                await setBoardBlockCache(newBlock);
+                newBlock.mounted(async () => {
+                    await kit.picker.onPicker([newBlock], { merge: true });
+                    await kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
+                })
+            });
+            return;
+        }
+        kit.boardSelector.clearSelector();
     }
 }
