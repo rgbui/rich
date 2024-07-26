@@ -5,11 +5,11 @@ import { Icon } from "../../component/view/icon";
 import { BoardBackgroundColorList, BoardTextFontColorList } from "../color/data";
 import { ColorListBox } from "../color/list";
 import { lst } from "../../i18n/store";
-import { MeasureView } from "../../component/view/progress";
 import { S } from "../../i18n/view";
 import { Divider } from "../../component/view/grid";
 import { ToolTip } from "../../component/view/tooltip";
 import { UA } from "../../util/ua";
+import { MeasureText } from "./common/Measure";
 
 export function MindLineColor(props: {
     tool: BoardEditTool,
@@ -35,8 +35,17 @@ export function MindLineColor(props: {
     </div>
 }
 
-export function LineColor(props: { name: string, tool: BoardEditTool, value: string, change?(value: string): void }) {
+export function FillColor(props: {
+    name: string,
+    tool: BoardEditTool,
+    value: string,
+    fillOpacity?: number,
+    showOpacity?: boolean,
+    noTransparent?: boolean,
+    change?(value: string, fillOpacity?: number): void
+}) {
     var colors = BoardBackgroundColorList();
+    var cs = props.noTransparent ? colors.filter(g => g.color != 'transparent') : colors;
     return <div className="shy-board-edit-font-color" >
         <div className="shy-board-edit-font-color-current  size-20 flex-center"
             onMouseDown={e => props.tool.showDrop(props.name)}>
@@ -47,8 +56,15 @@ export function LineColor(props: { name: string, tool: BoardEditTool, value: str
             }}></a>}
         </div>
         {props.tool.isShowDrop(props.name) && <div style={{ width: 230 }} className="w-160 shy-board-edit-font-color-drops">
+
+            {props.showOpacity && <div className="shy-shape-fill-opacity gap-b-10">
+                <MeasureText value={props.fillOpacity} onChange={e => {
+                    props.change(undefined, e);
+                }} ></MeasureText>
+            </div>}
+
             <ColorListBox
-                title={lst('线条颜色')}
+                title={lst('填充颜色')}
                 name={props.name}
                 colors={colors}
                 value={props.value}
@@ -59,22 +75,24 @@ export function LineColor(props: { name: string, tool: BoardEditTool, value: str
     </div>
 }
 
-export function FillFontColor(props: {
+export function FontBgColor(props: {
     tool: BoardEditTool,
     fontColor: string,
     name: string,
-    fillColor: string,
+    showBg?: boolean,
+    bgColor: string,
     noTransparent?: boolean,
-    fillOpacity?: number,
+    bgOpacity?: number,
     showOpacity?: boolean
-    change?(fontColor: string, fillColor?: string, fillOpacity?: number): void
+    change?(fontColor: string, bgColor?: string, bgOpacity?: number): void
 }) {
     var colors = BoardTextFontColorList() as { text: string, color: string }[];
-    var name = props.name || 'fillColor';
+    var name = props.name || 'bgColor';
     var bgcolors = BoardBackgroundColorList();
     colors.splice(0, 0, { color: 'transparent', text: lst('透明') });
     bgcolors.splice(0, 0, { color: 'transparent', text: lst('透明') });
     var cs = props.noTransparent ? bgcolors.filter(g => g.color != 'transparent') : bgcolors;
+    var showBg = props.showBg == false ? false : true;
     return <div className="shy-board-edit-font-color size-20" >
         <div className="shy-board-edit-font-color-current flex-center size-20 round" style={{}} onMouseDown={e => props.tool.showDrop('fontColor')}>
             <Icon style={{
@@ -91,29 +109,22 @@ export function FillFontColor(props: {
                 onChange={e => {
                     props.change(e.color, undefined, undefined)
                 }}></ColorListBox>
-            <Divider></Divider>
-            {props.showOpacity && <div className="shy-shape-fill-opacity gap-h-10">
-                <div className="shy-measure-view-label"><label className="f-12 remark"><S>透明度</S></label><span className="f-12 remark" style={{ float: 'right' }}>{props.fillOpacity}</span></div>
-                <MeasureView
-                    theme="light"
-                    min={0}
-                    ratio={0.1}
-                    max={1}
-                    showValue={false}
-                    value={props.fillOpacity}
-                    inputting={false}
-                    onChange={e => {
+            {showBg && <>
+                <Divider></Divider>
+                {props.showOpacity && <div className="shy-shape-fill-opacity gap-h-10">
+                    <MeasureText value={props.bgOpacity} onChange={e => {
                         props.change(undefined, undefined, e);
-                    }}></MeasureView>
-            </div>}
-            <ColorListBox
-                title={lst('背景色')}
-                name={name}
-                colors={cs}
-                value={props.fillColor}
-                onChange={e => {
-                    props.change(undefined, e.color, undefined);
-                }}></ColorListBox>
+                    }} ></MeasureText>
+                </div>}
+                <ColorListBox
+                    title={lst('背景色')}
+                    name={name}
+                    colors={cs}
+                    value={props.bgColor}
+                    onChange={e => {
+                        props.change(undefined, e.color, undefined);
+                    }}></ColorListBox>
+            </>}
         </div>}
     </div>
 }
@@ -140,11 +151,11 @@ export function FontTextAlign(props: {
             className=" bg-white shadow-s round">
             <div className="h-30 flex r-item-hover r-round r-cursor r-gap-w-5">
                 {aligns.map((g, i) => {
-                    return <ToolTip key={i}  overlay={g.text}><span onMouseDown={e => {
-                            props.change(g.value);
-                        }}className={"flex-center size-24 round" + (props.align == g.value ? " item-hover-focus link" : "item-hover-light")}>
-                            <Icon icon={g.icon as any} size={16}></Icon>
-                        </span>
+                    return <ToolTip key={i} overlay={g.text}><span onMouseDown={e => {
+                        props.change(g.value);
+                    }} className={"flex-center size-24 round" + (props.align == g.value ? " item-hover-focus link" : "item-hover-light")}>
+                        <Icon icon={g.icon as any} size={16}></Icon>
+                    </span>
                     </ToolTip>
                 })}
             </div></div>

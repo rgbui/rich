@@ -1,8 +1,8 @@
 import React, { CSSProperties } from "react";
-import { EventsComponent } from "../../component/lib/events.component";
-import { Singleton } from "../../component/lib/Singleton";
-import { Point } from "../../src/common/vector/point";
-import { ColorType } from "../color/data";
+import { EventsComponent } from "../../../component/lib/events.component";
+import { Singleton } from "../../../component/lib/Singleton";
+import { Point } from "../../../src/common/vector/point";
+import { ColorType } from "../../color/data";
 
 var colors: ColorType[] = [
     { color: 'rgb(245,246,248)' },

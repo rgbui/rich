@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import { EventsComponent } from "../../component/lib/events.component";
 import { Singleton } from "../../component/lib/Singleton";
 import { Point } from "../../src/common/vector/point";
-import { ShapeType } from "../shapes/shapes";
+import { ShapeType } from "../board/shapes/shapes";
 import "./style.less";
 class ShapeSelector extends EventsComponent {
     onMousedown(ct: any, event: React.MouseEvent) {

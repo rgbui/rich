@@ -9,7 +9,6 @@ import {
     DragHandleSvg,
     RefreshSvg
 } from "../../component/svgs";
-
 import { Icon } from "../../component/view/icon";
 import { MeasureView } from "../../component/view/progress";
 import { Tip } from "../../component/view/tooltip/tip";
@@ -17,14 +16,14 @@ import { Block } from "../../src/block";
 import { Point, Rect } from "../../src/common/vector/point";
 import { Polygon } from "../../src/common/vector/polygon";
 import { BlockCache } from "../../src/page/common/cache";
-import { FillFontColor, FontTextStyle, LineColor, MindLineColor, FontTextAlign } from "./fontColor";
+import { FontBgColor, FontTextStyle, FillColor, MindLineColor, FontTextAlign } from "./fontColor";
 import { FontFamily } from "./fontfamily";
 import { LineArrow, LineTypes } from "./line.arrow";
 import { TurnShapes } from "./shapes";
 import { BorderBoxStyle, ShapeStroke } from "./stroke";
 import { lst } from "../../i18n/store";
 import lodash from "lodash";
-import { tipLayer } from "../../component/lib/zindex";
+import { popoverLayer } from "../../component/lib/zindex";
 import { MouseDragger } from "../../src/common/dragger";
 import { SelectBox } from "../../component/view/select/box";
 import { BlockUrlConstant } from "../../src/block/constant";
@@ -33,10 +32,11 @@ import { FixedViewScroll } from "../../src/common/scroll";
 import { AlignNineGridView } from "./align";
 import "./style.less";
 import { S } from "../../i18n/view";
-import { Input } from "../../component/view/input";
-
-import { useSelectMenuItem } from "../../component/view/menu";
+import { closeSelectMenutItem, useSelectMenuItem } from "../../component/view/menu";
 import { MenuItem } from "../../component/view/menu/declare";
+import { ElementSize } from "./size";
+import { InputNumber } from "../../component/view/input/number";
+
 
 export class BoardEditTool extends EventsComponent {
     el: HTMLElement;
@@ -53,7 +53,7 @@ export class BoardEditTool extends EventsComponent {
         var style: CSSProperties = {
             top: this.point.y,
             left: this.point.x,
-            zIndex: tipLayer.zoom(this)
+            zIndex: popoverLayer.zoom(this)
         };
         var self = this;
         if (self.blocks.some(s => s.isLock))
@@ -211,6 +211,10 @@ export class BoardEditTool extends EventsComponent {
         else if (name == 'fontSize') {
             return <Tip key={at} placement="top" text={'字体大小'}>
                 <div className={'shy-board-edit-tool-item'}
+                    style={{
+                        paddingTop: 0,
+                        paddingBottom: 0
+                    }}
                     onMouseDown={async e => {
                         // e.preventDefault();
                         e.stopPropagation();
@@ -230,18 +234,24 @@ export class BoardEditTool extends EventsComponent {
                         if (it) {
                             it.checkLabel = true;
                         }
+                        this.showDrop('fontSize');
                         var r = await useSelectMenuItem({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) },
                             items)
                         if (r?.item) {
                             this.onChange('fontSize', r.item.value)
                         }
                     }}
-                ><Input style={{ width: 40 }} noborder value={getValue('fontSize')} onChange={e => {
-                    var va = parseFloat(e);
-                    if (!isNaN(va)) {
-                        this.onChange('fontSize', va, true)
-                    }
-                }}></Input>
+                ><InputNumber style={{ width: 60 }} inputStyle={{ height: 24 }}
+                    noborder
+                    value={getValue('fontSize')}
+                    onDeep={e => {
+                        if (typeof e == 'number' && e >= 10)
+                            this.onChange('fontSize', e)
+                    }}
+                    onChange={e => {
+                        if (typeof e == 'number' && e >= 10)
+                            this.onChange('fontSize', e, true)
+                    }}></InputNumber>
                 </div>
             </Tip>
         }
@@ -266,7 +276,7 @@ export class BoardEditTool extends EventsComponent {
         }
         else if (name == 'tickness') {
             return <div key={at} style={{ width: 90 }} className={'shy-board-edit-tool-item no-item-hover'}>
-                <MeasureView theme="light" min={1} max={40} showValue={false} value={getValue('tickness')} inputting={false} onChange={e => { this.onChange('tickness', e) }}></MeasureView>
+                <MeasureView theme="light" min={1} max={40}  value={getValue('tickness')} inputting={false} onChange={e => { this.onChange('tickness', e) }}></MeasureView>
             </div>
         }
         else if (name == 'fontWeight') {
@@ -311,33 +321,46 @@ export class BoardEditTool extends EventsComponent {
         else if (name == 'fontColor') {
             return <Tip key={at} placement="top" text={'颜色'}>
                 <div className={'shy-board-edit-tool-item'}>
-                    <FillFontColor
+                    <FontBgColor
                         tool={this}
                         noTransparent={has('backgroundNoTransparentColor')}
-                        name={has('backgroundColor') ? 'backgroundColor' : (has('backgroundNoTransparentColor') ? 'backgroundNoTransparentColor' : "fillColor")}
+                        name={has('backgroundColor') ? 'backgroundColor' : 'backgroundNoTransparentColor'}
                         fontColor={getValue('fontColor')}
-                        fillColor={getValue(has('backgroundColor') ? 'backgroundColor' : (has('backgroundNoTransparentColor') ? 'backgroundNoTransparentColor' : "fillColor"))}
+                        bgColor={getValue(has('backgroundColor') ? 'backgroundColor' : 'backgroundNoTransparentColor')}
                         change={(e, f, o) => {
                             if (typeof e != 'undefined') this.onChange('fontColor', e)
-                            if (typeof f != 'undefined') this.onChange(has('backgroundColor') ? 'backgroundColor' : (has('backgroundNoTransparentColor') ? 'backgroundNoTransparentColor' : "fillColor"), f)
-                            if (typeof o != 'undefined') this.onChange('fillOpacity', o)
+                            if (typeof f != 'undefined') this.onChange(has('backgroundColor') ? 'backgroundColor' : 'backgroundNoTransparentColor', f)
+                            if (typeof o != 'undefined') this.onChange('backgroundOpacity', o)
                         }}
-                        showOpacity={
-                            has('fillColor')
-                        }
-                        fillOpacity={getValue('fillOpacity')}
-                    ></FillFontColor>
+                        showBg={has('backgroundColor') ? true : has('backgroundNoTransparentColor')}
+                        showOpacity={has('backgroundOpacity')}
+                        bgOpacity={getValue('backgroundOpacity')}
+                    ></FontBgColor>
                 </div>
             </Tip>
         }
-        else if (name == 'backgroundColor') {
+        else if (name == 'fillColor' || name == 'fillNoTransparentColor') {
             var url = this.blocks.first().url
             if (url == BlockUrlConstant.Line || url == BlockUrlConstant.Pen) {
                 return <Tip key={at} placement="top" text={'线条颜色'}>
-                    <div className={'shy-board-edit-tool-item'}><LineColor name='backgroundColor' tool={this} value={getValue('backgroundColor')} change={e => { this.onChange('backgroundColor', e) }}></LineColor></div>
+                    <div className={'shy-board-edit-tool-item'}><FillColor name='fillColor' tool={this} value={getValue('fillColor')} change={e => { this.onChange('fillColor', e) }}></FillColor></div>
                 </Tip >
             }
-            return <div key={at}></div>
+            return <Tip key={at} placement="top" text={'填充色'}>
+                <div className={'shy-board-edit-tool-item'}><FillColor
+                    name={has('fillColor') ? 'fillColor' : "fillNoTransparentColor"}
+                    tool={this}
+                    noTransparent={has('fillNoTransparentColor')}
+                    value={getValue(has('fillColor') ? 'fillColor' : "fillNoTransparentColor")}
+                    showOpacity={has('fillOpacity')}
+                    fillOpacity={getValue('fillOpacity')}
+                    change={(e, o) => {
+                        if (e)
+                            this.onChange(has('fillColor') ? 'fillColor' : "fillNoTransparentColor", e)
+                        if (o)
+                            this.onChange('fillOpacity', o)
+                    }}></FillColor></div>
+            </Tip >
         }
         else if (name == 'borderWidth') {
             return <Tip key={at} placement="top" text={'边框'}>
@@ -379,6 +402,20 @@ export class BoardEditTool extends EventsComponent {
                             this.onChange('nine-align', e)
                         }}
                     ></AlignNineGridView>
+                </div>
+            </Tip>
+        }
+        else if (name == 'merge') {
+            return <Tip key={at} placement="top" text='合并'>
+                <div onMouseDown={e => this.onMergeBlocks()} className={'shy-board-edit-tool-item'}>
+                    <div className="size-20 flex-center"><Icon size={16} icon={{ name: 'byte', code: 'sum' }}></Icon></div>
+                </div>
+            </Tip>
+        }
+        else if (name == 'ungroup') {
+            return <Tip key={at} placement="top" text='取消合并'>
+                <div onMouseDown={e => this.onChange('ungroup')} className={'shy-board-edit-tool-item'}>
+                    <div className="size-20 flex-center"><Icon size={16} icon={{ name: 'byte', code: 'split' }}></Icon></div>
                 </div>
             </Tip>
         }
@@ -431,25 +468,54 @@ export class BoardEditTool extends EventsComponent {
                 </div>
             </Tip>
         }
+        else if (name == 'width') {
+            return <Tip key={at} placement="top" text={'宽高'}>
+                <div className={'shy-board-edit-tool-item'}>
+                    <ElementSize
+                        tool={this}
+                        name='elementSize'
+                        width={getValue('width')}
+                        height={getValue('height')}
+                        showHeight={has('height')}
+                        radius={getValue('radius')}
+                        showRadius={has('radius')}
+                        change={(e, f, o) => {
+                            if (typeof e != 'undefined') this.onChange('width', e, true);
+                            if (typeof f != 'undefined') this.onChange('height', f, true);
+                            if (typeof o != 'undefined') this.onChange('radius', o, true);
+                        }}
+                    ></ElementSize>
+                </div>
+            </Tip>
+        }
     }
     getItems() {
         if (this.blocks.first().url == BlockUrlConstant.Frame) {
             if (this.blocks.length > 1) {
-                return ["frameFormat",
-                    'backgroundColor',
+                return [
+                    "frameFormat",
+                    "fillColor",
+                    "fillOpacity",
+                    "fillNoTransparentColor",
+                    "width",
                     "divider",
-                    'nine-align'
+                    'nine-align',
+                    "merge"
                 ]
             }
             return [
                 "frameFormat",
-                'backgroundColor'
+                "fillColor",
+                "fillOpacity",
+                "fillNoTransparentColor",
+                "width",
             ]
         }
         if (this.blocks.first().url == BlockUrlConstant.BoardImage) {
             return [
                 'crop',
                 "divider",
+                "width",
                 "link",
                 "divider",
                 'upload',
@@ -460,6 +526,9 @@ export class BoardEditTool extends EventsComponent {
                 'resetCrop'
             ]
         }
+        if (this.blocks.first().url == BlockUrlConstant.Group) {
+            return ['ungroup']
+        }
         if (this.blocks.first().url == BlockUrlConstant.Mind) {
             return [
                 "mindDirection",
@@ -467,6 +536,10 @@ export class BoardEditTool extends EventsComponent {
                 "mindLineType",
                 "mindLineColor",
                 "divider",
+                "width",
+                "fillColor",
+                "fillOpacity",
+                "fillNoTransparentColor",
                 "borderWidth",
                 "stroke",
                 "divider",
@@ -490,9 +563,9 @@ export class BoardEditTool extends EventsComponent {
                 // "textDecoration",
                 "fontColor",
                 "backgroundColor",
+                "bgOpacity",
                 "backgroundNoTransparentColor",
-                "fillColor",
-                ...(this.blocks.length > 1 ? ["divider", "nine-align"] : [])
+                ...(this.blocks.length > 1 ? ["divider", "nine-align", "merge"] : [])
             ]
         }
         return [
@@ -514,6 +587,7 @@ export class BoardEditTool extends EventsComponent {
             "divider",
             "fontFamily",
             "fontSize",
+            "width",
             "divider",
             "fontWeight",
             "align",
@@ -521,17 +595,20 @@ export class BoardEditTool extends EventsComponent {
             // "textDecoration",
             "fontColor",
             "fillColor",
+            "fillOpacity",
+            "fillNoTransparentColor",
             "backgroundColor",
+            "bgOpacity",
             "backgroundNoTransparentColor",
             "divider",
             "borderWidth",
             "stroke",
-            ...(this.blocks.length > 1 ? ["divider", "nine-align"] : [])
+            ...(this.blocks.length > 1 ? ["divider", "nine-align", "merge"] : [])
         ]
     }
     renderItems() {
         var items = this.getItems();
-        lodash.remove(items, g => (g != 'divider' && g != 'nine-align') && !this.commands.some(s => s.name == g));
+        lodash.remove(items, g => (g != 'divider' && !['nine-align', "merge"].includes(g)) && !this.commands.some(s => s.name == g));
         lodash.remove(items, (g, i) => g == 'divider' && items[i - 1] == 'divider');
         if (items.indexOf('divider') == 0) {
             items = items.slice(1);
@@ -625,9 +702,9 @@ export class BoardEditTool extends EventsComponent {
             await this.reOpen();
         })
     }
-    async onChange(name: string, value: any, isLazy?: boolean, props?: Record<string, any>) {
+    async onChange(name: string, value?: any, isLazy?: boolean, props?: Record<string, any>) {
         var url = this.blocks.first().url;
-        await BlockCache.set(url, name, value);
+        if (value) await BlockCache.set(url, name, value);
         if (isLazy) this.lazySave({ name, value })
         else this.emit('save', { name, value, props });
     }
@@ -638,9 +715,12 @@ export class BoardEditTool extends EventsComponent {
         if (isLazy) this.lazySave(obj)
         else this.emit('save', obj);
     }
+    async onMergeBlocks() {
+        await this.blocks.first().page.onMergeBlocks(this.blocks);
+    }
     lazySave = lodash.debounce(async (data) => {
         this.emit('save', data);
-    }, 1000)
+    }, 600)
     close() {
         if (this.visible == true) {
             this.fvs.unbind();
@@ -654,6 +734,9 @@ export class BoardEditTool extends EventsComponent {
     showDrop(dropName: string) {
         if (this.dropName == dropName) this.dropName = '';
         else this.dropName = dropName;
+        if (this.dropName !== 'fontSize') {
+            closeSelectMenutItem()
+        }
         this.forceUpdate();
     }
     isShowDrop(dropName: string) {
@@ -669,7 +752,7 @@ export class BoardEditTool extends EventsComponent {
         }
     }
     componentWillUnmount(): void {
-        tipLayer.clear(this);
+        popoverLayer.clear(this);
     }
 }
 

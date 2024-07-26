@@ -1,8 +1,9 @@
 import React from "react";
 import { BoardEditTool } from ".";
-import { MeasureView } from "../../component/view/progress";
-import { ShapeType } from "../shapes/shapes";
+import { ShapeType } from "../board/shapes/shapes";
 import { S } from "../../i18n/view";
+import { MeasureText } from "./common/Measure";
+import { lst } from "../../i18n/store";
 
 var lineSvg = `<svg viewBox="0 0 32 32"  xmlns="http://www.w3.org/2000/svg">
 <path d="M2 15 L30 15 L30 17 L2 17Z" fill="currentColor"></path>
@@ -199,7 +200,11 @@ export function LineTypes(props: {
         ></div>
         {props.tool.isShowDrop('lineType') && <div className="shy-line-types-drops w-200">
             <div className="shy-line-types-opacity">
-                <div className=" f-12 text-1"><label><S>线条宽度</S></label><span style={{ float: 'right' }}>{Math.round(props.strokeWidth)}</span></div>
+                <MeasureText min={1}
+                    max={30} label={lst('线条宽度')} value={props.strokeWidth} onChange={e => {
+                        props.change('strokeWidth', e);
+                    }} ></MeasureText>
+                {/* <div className=" f-12 text-1"><label><S>线条宽度</S></label><span style={{ float: 'right' }}>{Math.round(props.strokeWidth)}</span></div>
                 <MeasureView
                     theme="light"
                     showValue={false}
@@ -209,7 +214,7 @@ export function LineTypes(props: {
                     inputting={false}
                     onChange={e => {
                         props.change('strokeWidth', e);
-                    }}></MeasureView>
+                    }}></MeasureView> */}
             </div>
             <div className="gap-h-10">
                 <div className=" f-12 text-1 gap-w-10"><S>线条样式</S></div>

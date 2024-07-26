@@ -1,8 +1,8 @@
 import React, { CSSProperties } from "react";
 import { ReactNode } from "react";
-import { EventsComponent } from "../../component/lib/events.component";
-import { Singleton } from "../../component/lib/Singleton";
-import { Point } from "../../src/common/vector/point";
+import { EventsComponent } from "../../../component/lib/events.component";
+import { Singleton } from "../../../component/lib/Singleton";
+import { Point } from "../../../src/common/vector/point";
 import { ShapesList, ShapeType } from "./shapes";
 
 class ShapeSelector extends EventsComponent {

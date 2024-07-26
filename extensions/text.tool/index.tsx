@@ -5,7 +5,6 @@ import { TextCommand } from "./text.command";
 import { EventsComponent } from "../../component/lib/events.component";
 import { BlockCssName, FillCss } from "../../src/block/pattern/css";
 import { Tip } from "../../component/view/tooltip/tip";
-import { useLinkPicker } from "../link/picker";
 import { useColorSelector } from "../color";
 import { Block } from "../../src/block";
 import { useSelectMenuItem } from "../../component/view/menu";
@@ -29,7 +28,7 @@ import { dom } from "../../src/common/dom";
 import { util } from "../../util/util";
 import { useSearchBox } from "../search/keyword";
 import { Page } from "../../src/page";
-import {  tipLayer } from "../../component/lib/zindex";
+import { LayerType, tipLayer } from "../../component/lib/zindex";
 import { isUrl } from "../../src/kit/write/declare";
 import { UA } from "../../util/ua";
 import { S } from "../../i18n/view";
@@ -201,7 +200,7 @@ class TextTool extends EventsComponent {
                 </Tip>
 
             </div>}
-        </div>;
+        </div>
     }
     onExcute(command: TextCommand, event: React.MouseEvent) {
         var font: Record<string, any> = {};
@@ -275,7 +274,8 @@ class TextTool extends EventsComponent {
     async onOpenFontColor(event: React.MouseEvent) {
         event.stopPropagation();
         this.blocked = true;
-        var fontColor = await useColorSelector({ roundArea: Rect.fromEvent(event) }, {
+        console.log('roundArea', Rect.fromEle(event.currentTarget as HTMLElement));
+        var fontColor = await useColorSelector({ layer: LayerType.tip, roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
             color: this.textStyle.color,
             backgroundColor: this.textStyle.fill?.color
         });
@@ -374,8 +374,9 @@ class TextTool extends EventsComponent {
         var block = this.turnBlock;
         this.blocked = true;
         var re = await useSelectMenuItem({
-            roundArea: Rect.fromEvent(event),
-            direction: 'left'
+            roundArea: Rect.fromEle(event.currentTarget as HTMLElement),
+            direction: 'left',
+            layer: LayerType.tip,
         }, await block.onGetTurnMenus());
         this.blocked = false;
         if (re) {

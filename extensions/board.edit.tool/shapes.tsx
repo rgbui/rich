@@ -1,6 +1,6 @@
 import React from "react";
 import { BoardEditTool } from ".";
-import { ShapesList } from "../shapes/shapes";
+import { ShapesList } from "../board/shapes/shapes";
 export function TurnShapes(props: {
     tool: BoardEditTool,
     change?(value: string): void,

@@ -1,7 +1,6 @@
 import React, { CSSProperties } from "react";
 import { BoardEditTool } from ".";
 import { TransparentSvg } from "../../component/svgs";
-import { MeasureView } from "../../component/view/progress";
 import { S } from "../../i18n/view";
 import { Switch } from "../../component/view/switch";
 import { Tip } from "../../component/view/tooltip/tip";
@@ -9,6 +8,7 @@ import { lst } from "../../i18n/store";
 import { BoardTextFontColorList } from "../color/data";
 import { ColorListBox } from "../color/list";
 import { Icon } from "../../component/view/icon";
+import { MeasureText } from "./common/Measure";
 
 export function ShapeStroke(props: {
     tool: BoardEditTool,
@@ -25,18 +25,27 @@ export function ShapeStroke(props: {
             width: 16,
             boxSizing: 'border-box',
             height: 16
-        }} onMouseDown={e =>props.tool.showDrop('stroke')}>
+        }} onMouseDown={e => props.tool.showDrop('stroke')}>
             {(props.stroke == 'transparent' || props.strokeOpacity == 0) && <Icon size={16} icon={TransparentSvg}></Icon>}
             {props.stroke != 'transparent' && <a className="size-16 circle" style={{ backgroundColor: props.stroke || '#000', opacity: props.strokeOpacity }}></a>}
         </div>
         {props.tool.isShowDrop('stroke') && <div style={{ width: 230 }} className="shy-shape-stroke-drops padding-w-10 text-1">
             <div className="gap-h-10">
-                <div ><label className="remark f-12"><S>透明度</S></label><span className="f-12" style={{ float: 'right' }}>{props.strokeOpacity}</span></div>
-                <MeasureView theme="light" ratio={0.1} min={0} max={1} showValue={false} inputting={false} value={props.strokeOpacity} onChange={e => { props.change('strokeOpacity', e) }}></MeasureView>
+                <MeasureText value={props.strokeOpacity} onChange={e => {
+                    props.change('strokeOpacity', e)
+                }}></MeasureText>
+                {/* <div ><label className="remark f-12"><S>透明度</S></label><span className="f-12" style={{ float: 'right' }}>{props.strokeOpacity}</span></div>
+                <MeasureView theme="light" ratio={0.1} min={0} max={1} showValue={false} inputting={false} value={props.strokeOpacity} onChange={e => {
+                    console.log('ssso','ggg');
+                    props.change('strokeOpacity', e)
+                }}></MeasureView> */}
             </div>
             <div className="gap-h-10">
-                <div ><label className="remark f-12"><S>边框</S></label><span className="f-12" style={{ float: 'right' }}>{Math.round(props.strokeWidth)}</span></div>
-                <MeasureView theme="light" min={0} max={30} showValue={false} inputting={false} value={props.strokeWidth} onChange={e => { props.change('strokeWidth', e) }}></MeasureView>
+                <MeasureText min={0} max={30} label={lst('边框')} value={props.strokeWidth} onChange={e => {
+                    props.change('strokeWidth', e)
+                }}></MeasureText>
+                {/* <div ><label className="remark f-12"><S>边框</S></label><span className="f-12" style={{ float: 'right' }}>{Math.round(props.strokeWidth)}</span></div>
+                <MeasureView theme="light" min={0} max={30} showValue={false} inputting={false} value={props.strokeWidth} onChange={e => { props.change('strokeWidth', e) }}></MeasureView> */}
             </div>
             <div className="gap-h-10">
                 <div className="remark f-12"><S>边框样式</S></div>
@@ -135,15 +144,26 @@ export function BorderBoxStyle(props: {
                 </div>
 
                 <div className="gap-h-10">
-                    <div ><label className="remark f-12"><S>圆角</S></label><span className="f-12" style={{ float: 'right' }} >{Math.round(props.borderRadius)}</span></div>
-                    <MeasureView theme="light" min={1} max={30} showValue={false} value={props.borderRadius} inputting={false} onChange={e => { props.change('borderRadius', e) }}></MeasureView>
+                    <MeasureText min={1} max={30} label={lst('圆角')} value={props.borderRadius} onChange={e => {
+                        props.change('borderRadius', e)
+                    }}></MeasureText>
+
+                    {/* <div ><label className="remark f-12"><S>圆角</S></label><span className="f-12" style={{ float: 'right' }} >{Math.round(props.borderRadius)}</span></div>
+                    <MeasureView theme="light" min={1} max={30} showValue={false} value={props.borderRadius} inputting={false} onChange={e => { props.change('borderRadius', e) }}></MeasureView> */}
                 </div>
 
                 <div className="gap-h-10">
-                    <div ><label className="remark f-12"><S>边宽</S></label><span className="f-12" style={{ float: 'right' }}>{Math.round(props.borderWidth)}</span></div>
-                    <MeasureView theme="light" min={1} max={30} showValue={false} value={props.borderWidth} inputting={false} onChange={e => { props.change('borderWidth', e) }}></MeasureView>
+                    <MeasureText
+                        min={1}
+                        max={30}
+                        label={lst('边宽')}
+                        value={props.borderWidth}
+                        onChange={e =>{
+                            props.change('borderWidth', e)
+                        }}></MeasureText>
+                    {/* <div ><label className="remark f-12"><S>边宽</S></label><span className="f-12" style={{ float: 'right' }}>{Math.round(props.borderWidth)}</span></div>
+                    <MeasureView theme="light" min={1} max={30} showValue={false} value={props.borderWidth} inputting={false} onChange={e => { props.change('borderWidth', e) }}></MeasureView> */}
                 </div>
-
                 <div className="gap-h-10"> <ColorListBox title={lst('边框色')} name={'borderColor'} colors={colors} value={props.borderColor} onChange={e => {
                     props.change('borderColor', e.color)
                 }}></ColorListBox></div>

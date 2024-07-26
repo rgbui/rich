@@ -9,6 +9,8 @@ import { ls } from "../../i18n/store";
 import { Divider } from "../../component/view/grid";
 import { UA } from "../../util/ua";
 import "./style.less";
+import { util } from "../../util/util";
+ 
 
 export type ColorValue = {
     color?: string | { color: string, grad: string },
@@ -107,17 +109,19 @@ class ColorSelector extends EventsComponent {
             this.lastColor = r;
         }
         else this.lastColor = null;
-        this.forceUpdate();
+        await util.delay(100);
+        this.forceUpdate(()=>{
+            this.emit('update');
+        });
     }
 }
 
-interface ColorSelector {
-    emit(name: 'change', data: ColorValue);
-    only(name: 'change', fn: (data: ColorValue) => void);
-}
 export async function useColorSelector(pos: PopoverPosition, options?: ColorValue) {
     let popover = await PopoverSingleton(ColorSelector, { mask: true });
     let colorSelector = await popover.open(pos);
+    colorSelector.only('update',()=>{
+        popover.updateLayout();
+    })
     await colorSelector.open(options);
     return new Promise((resolve: (data: ColorValue) => void, reject) => {
         colorSelector.only('change', (data) => {
