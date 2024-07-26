@@ -31,7 +31,7 @@ export class UserPicker extends EventsComponent {
     input: Input;
     render() {
         return <div
-            className="padding-b-10 min-w-300"
+            className="min-w-300"
             ref={e => this.el = e}>
             <div className="padding-5-10 padding-h-5" style={{
                 backgroundColor: 'rgba(242, 241, 238, 0.6)',
