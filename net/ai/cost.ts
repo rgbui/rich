@@ -5,18 +5,19 @@ import { LinkWs } from "../../src/page/declare";
 import { util } from "../../util/util";
 
 export enum WsConsumeType {
-    apiAccess = 1,//api访问量
-    bookmark = 2,//生成书签
 
-    esSearch = 3,//es搜索量
+    apiAccess = 1,//api访问量 暂时不统计
+    bookmark = 2,//生成书签 
+
+    esSearch = 3,//es搜索量 
 
 
 
-    downloadFile = 5,//下载文件产生的流量
-    uploadFile = 6,//上传文件产生的流量
+    downloadFile = 5,//下载文件产生的流量  暂时不统计
+    uploadFile = 6,//上传文件产生的流量  暂时不统计
 
-    picHandle = 7,//图片处理
-    screenshotFile = 8,//截图产生的文件
+    picHandle = 7,//图片处理 暂时不统计
+    screenshotFile = 8,//截图产生的文件 暂时不统计
 
 
     /**
@@ -25,7 +26,8 @@ export enum WsConsumeType {
     diskSpace = 20,
     docCount = 21,//文档数量（文档长度大于1000字节，算两个）
     rowCount = 22,//数据行数
-
+    fileCount = 23,//文件数
+    dauCount = 24,//日活量
     greenContent = 30,//绿色内容 审核
     greenImage = 31,//绿色图片 审核
     greenVideo = 32,//绿色视频 审核
@@ -75,14 +77,27 @@ export enum WsConsumeType {
     glm_4_flash = 105,
     cogview_3 = 110,
     glm_embedding_2 = 111
-
 }
 
 export function getConstValue(type: WsConsumeType, cost) {
     if (type == WsConsumeType.diskSpace || type == WsConsumeType.downloadFile || type == WsConsumeType.uploadFile) {
         return util.byteToString(cost);
     }
-    return cost;
+    else if (type == WsConsumeType.rowCount) {
+        return cost + '行'
+    }
+    else if (type == WsConsumeType.dauCount) {
+        return '日活' + cost;
+    }
+    else if (type == WsConsumeType.glm_embedding_2 || type == WsConsumeType.baidu_embedding) {
+        return cost + "向量tokens"
+    }
+    else if (type == WsConsumeType.pen_6 || type == WsConsumeType.stability || type == WsConsumeType.badiu_Stable_Diffusion_XL || type == WsConsumeType.cogview_3 || type == WsConsumeType.dall_2 || type == WsConsumeType.dall_3) {
+        return cost + '张'
+    }
+    else {
+        return cost + 'tokens'
+    }
 }
 
 export function getWsConsumeType(type: WsConsumeType) {
@@ -157,8 +172,10 @@ export function getWsConsumeType(type: WsConsumeType) {
             return 'glm-4';
         case WsConsumeType.glm_4v:
             return 'glm-4v';
-        // glm_4_air=104,
-        // glm_4_flash=105,
+        case WsConsumeType.glm_4_air:
+            return 'glm-4-air';
+        case WsConsumeType.glm_4_flash:
+            return 'glm-4-flash';
         case WsConsumeType.cogview_3:
             return 'cogview-3';
         case WsConsumeType.charglm_3:
