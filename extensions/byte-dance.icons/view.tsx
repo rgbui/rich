@@ -15,9 +15,13 @@ import { byteDanceStore } from "./store";
 import { ls, lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
 import { LazyByteIcon } from "./icon/lazy";
-
 const BYTE_DANCE_HISTORYS = '_bytedance_historys__';
-export class ByteDanceIconView extends React.Component<{ loaded?: () => void, onChange: (data: { code: string, color?: string }) => void }> {
+
+export class ByteDanceIconView extends React.Component<{
+    loaded?: () => void,
+    height?: number | string,
+    onChange: (data: { code: string, color?: string }) => void
+}> {
     shouldComponentUpdate(nextProps, nextStates) {
         return false;
     }
@@ -99,7 +103,7 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
     }
     renderFontColors() {
         if (!this.colorVisible) return <div></div>
-        return <div className='shy-font-awesome-colors'>
+        return <div className='shy-font-awesome-colors r-gap-b-10 flex-wrap'>
             {FontColorList().map((c, i) => {
                 return <ToolTip overlay={c.text} key={i} ><a className={'flex-center text-white ' + (lodash.isEqual(this.color, c.color) ? "hover" : "")} onMouseDown={e => this.onSetFont(c)} style={{
                     backgroundColor: c.color == 'inherit' ? "var(--text-color)" : (typeof c.color == 'string' ? c.color : undefined),
@@ -141,7 +145,9 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
                 {this.searching && <SpinBox></SpinBox>}
                 {this.renderSearch()}
             </div>}
-            {!this.word && <div className='shy-font-awesome' onScroll={e => this.onScroll(e)}>
+            {!this.word && <div className='shy-font-awesome' style={{
+                height: this.props.height || undefined
+            }} onScroll={e => this.onScroll(e)}>
                 {this.renderFontColors()}
                 {this.loading && <div className='shy-font-awesome-loading'></div>}
                 {this.loading != true && <div style={{ color: this.color == 'inherit' ? "var(--text-color)" : this.color }} className='shy-font-awesome-content'>{this.renderFontAwesomes()}</div>}
