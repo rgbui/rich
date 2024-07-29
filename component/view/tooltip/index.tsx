@@ -30,6 +30,7 @@ class ToolTipOverlay extends React.Component {
     point: Point = new Point(0, 0);
     mouseLeaveDelay?: number;
     placement: OverlayPlacement = 'top';
+    forcePlacement?: boolean;
     arrowStyle?: CSSProperties = {};
     overlayStyle?: CSSProperties = {};
     showArrow: boolean = false;
@@ -37,6 +38,7 @@ class ToolTipOverlay extends React.Component {
         options: {
             overlay: React.ReactNode,
             placement?: OverlayPlacement,
+            forcePlacement?: boolean,
             mouseLeaveDelay?: number;
             showArrow?: boolean;
         }) {
@@ -46,6 +48,7 @@ class ToolTipOverlay extends React.Component {
         this.mouseLeaveDelay = options.mouseLeaveDelay;
         this.overlay = options.overlay;
         this.placement = options.placement;
+        this.forcePlacement = options.forcePlacement;
         this.showArrow = options?.showArrow ? true : false;
 
         if (!this.placement) this.placement = 'top';
@@ -76,18 +79,20 @@ class ToolTipOverlay extends React.Component {
             this.overlayStyle = {};
             var pc = this.placement;
             var e = this.el.querySelector('.shy-tooltip-arrow') as HTMLElement;
-            if (pc == 'top') {
-                if (tipRect.top - size - overlayRect.height < 30) {
-                    pc = 'bottom'
-                    e.classList.remove('top', 'left', 'right');
-                    e.classList.add('bottom');
+            if (pc && this.forcePlacement !== true) {
+                if (pc == 'top') {
+                    if (tipRect.top - size - overlayRect.height < 30) {
+                        pc = 'bottom'
+                        e.classList.remove('top', 'left', 'right');
+                        e.classList.add('bottom');
+                    }
                 }
-            }
-            else if (pc == 'bottom') {
-                if (tipRect.bottom + size + overlayRect.height > window.innerHeight - 30) {
-                    pc = 'top'
-                    e.classList.remove('bottom', 'left', 'right');
-                    e.classList.add('top');
+                else if (pc == 'bottom') {
+                    if (tipRect.bottom + size + overlayRect.height > window.innerHeight - 30) {
+                        pc = 'top'
+                        e.classList.remove('bottom', 'left', 'right');
+                        e.classList.add('top');
+                    }
                 }
             }
             switch (pc) {
@@ -159,7 +164,8 @@ var sc = new SyncLoad<ToolTipOverlay>()
 async function openOverlay(el: HTMLElement,
     options: {
         overlay: React.ReactNode,
-        placement?: OverlayPlacement
+        placement?: OverlayPlacement,
+        forcePlacement?: boolean
     }) {
     toolTipOverlay = await sc.create((c) => {
         ReactDOM.render(<ToolTipOverlay ref={e => c(e)}></ToolTipOverlay>,
@@ -177,6 +183,7 @@ export class ToolTip extends React.Component<{
     /**0.1s */
     mouseLeaveDelay?: number;
     placement?: OverlayPlacement,
+    forcePlacement?: boolean,
     mouseenter?: (event: MouseEvent, tip: ToolTip) => void
 }> {
     el: HTMLElement;
@@ -212,7 +219,7 @@ export class ToolTip extends React.Component<{
             this.enterTime = null;
             if (typeof this.props.mouseenter == 'function')
                 this.props.mouseenter(event, this)
-            await openOverlay(this.el, { overlay: this.props.overlay, placement: this.props.placement })
+            await openOverlay(this.el, { overlay: this.props.overlay, forcePlacement: this.props.forcePlacement, placement: this.props.placement })
         }, (this.props.mouseEnterDelay || 0.6) * 1000);
     }
     mouseleave = async (event: MouseEvent) => {
@@ -225,7 +232,7 @@ export class ToolTip extends React.Component<{
     updateView() {
         this.forceUpdate(() => {
             this.el = ReactDOM.findDOMNode(this) as HTMLElement;
-            openOverlay(this.el, { overlay: this.props.overlay, placement: this.props.placement })
+            openOverlay(this.el, { overlay: this.props.overlay, forcePlacement: this.props.forcePlacement, placement: this.props.placement })
         })
     }
     render() {

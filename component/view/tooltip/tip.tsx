@@ -8,6 +8,7 @@ export class Tip extends React.Component<{
     text?:string,
     overlay?: React.ReactNode,
     placement?: 'left' | 'top' | 'bottom' | 'right',
+    forcePlacement?:boolean,
     disabled?:boolean
 }>{
     constructor(props) {
@@ -24,6 +25,7 @@ export class Tip extends React.Component<{
             mouseEnterDelay={0.8}
             mouseLeaveDelay={0.1}
             placement={this.props.placement || 'top'}
+            forcePlacement={this.props.forcePlacement}
             overlay={<div className='shy-tooltip-content'>{ov}</div>}
         >{Array.isArray(this.props.children) ? <>{this.props.children}</> : this.props.children}
         </ToolTip>

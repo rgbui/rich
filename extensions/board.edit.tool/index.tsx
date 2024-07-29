@@ -67,7 +67,7 @@ export class BoardEditTool extends EventsComponent {
             <div className={'shy-board-edit-tool-devide'} style={{ marginLeft: 0, marginTop: 0, marginBottom: 0 }}></div>
             {this.renderItems()}
             <div className={'shy-board-edit-tool-devide'}></div>
-            <Tip placement="top" text={'属性'}>
+            <Tip placement="top" forcePlacement={true}  text={'属性'}>
                 <div onMouseDown={e => this.onProperty(e)} className={'shy-board-edit-tool-item'}>
                     <span className="size-20 flex-center"><Icon size={16} icon={DotsSvg}></Icon></span>
                 </div>
@@ -85,7 +85,7 @@ export class BoardEditTool extends EventsComponent {
         }
         if (name == 'divider') return <div key={at} className={'shy-board-edit-tool-devide'}></div>
         else if (name == 'mindDirection') {
-            return <Tip key={at} placement="top" text='分支方向'>
+            return <Tip key={at} placement="top" forcePlacement={true}  text='分支方向'>
                 <div className={'shy-board-edit-tool-item'}>
                     <SelectBox
                         dist={16}
@@ -103,7 +103,7 @@ export class BoardEditTool extends EventsComponent {
             </Tip>
         }
         else if (name == 'mindLineType') {
-            return <Tip key={at} placement="top" text='线框类型'>
+            return <Tip key={at} placement="top" forcePlacement={true}  text='线框类型'>
                 <div className={'shy-board-edit-tool-item'} >
                     <SelectBox
                         dist={16}
@@ -121,14 +121,14 @@ export class BoardEditTool extends EventsComponent {
             </Tip>
         }
         else if (name == 'mindLineColor') {
-            return <Tip overlay='分支颜色' key={at}>
+            return <Tip overlay='分支颜色' placement="top" forcePlacement={true} key={at}>
                 <div className={'shy-board-edit-tool-item'}>
                     <MindLineColor tool={this} value={getValue('mindLineColor')} change={e => { this.onChange('mindLineColor', e) }}></MindLineColor>
                 </div>
             </Tip>
         }
         else if (name == 'frameFormat') {
-            return <Tip placement="top" key={at} text={'画板'}>
+            return <Tip placement="top" forcePlacement={true}  key={at} text={'画板'}>
                 <div className={'shy-board-edit-tool-item'} >
                     <SelectBox
                         dist={14}
@@ -158,14 +158,14 @@ export class BoardEditTool extends EventsComponent {
             </Tip>
         }
         else if (name == 'lineStart') {
-            return <div key={at} className="flex r-item-hover no-item-hover"><Tip placement="top" text={'开始箭头'}>
+            return <div key={at} className="flex r-item-hover no-item-hover"><Tip placement="top" forcePlacement={true}  text={'开始箭头'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <LineArrow tool={this}
                         lineStart={getValue('lineStart')}
                         change={(name, e) => this.onChange(name, e)}></LineArrow>
                 </div>
             </Tip>
-                <Tip placement="top" text={'箭头切换'}><div className={'remark size-20 flex-center round item-hover'} onMouseDown={e => {
+                <Tip placement="top" forcePlacement={true}  text={'箭头切换'}><div className={'remark size-20 flex-center round item-hover'} onMouseDown={e => {
                     this.onChangeObject({
                         lineStart: getValue('lineEnd'),
                         lineEnd: getValue('lineStart')
@@ -173,7 +173,7 @@ export class BoardEditTool extends EventsComponent {
                 }}>
                     <Icon size={14} icon={BoardRefreshSvg}></Icon>
                 </div></Tip>
-                <Tip placement="top" text={'结束箭头'}>
+                <Tip placement="top" forcePlacement={true}  text={'结束箭头'}>
                     <div className={'shy-board-edit-tool-item'}>
                         <LineArrow tool={this} lineEnd={getValue('lineEnd')}
                             change={(name, e) => this.onChange(name, e)}></LineArrow>
@@ -182,7 +182,7 @@ export class BoardEditTool extends EventsComponent {
             </div>
         }
         else if (name == 'lineType') {
-            return <Tip key={at} placement="top" text={'线形'}>
+            return <Tip key={at} placement="top" forcePlacement={true}  text={'线形'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <LineTypes tool={this}
                         lineType={getValue('lineType')}
@@ -193,14 +193,14 @@ export class BoardEditTool extends EventsComponent {
             </Tip>
         }
         else if (name == 'turnShapes') {
-            return <Tip key={at} placement="top" text={'形状'}>
+            return <Tip key={at} placement="top" forcePlacement={true}  text={'形状'}>
                 <div className={'shy-board-edit-tool-item'} >
                     <TurnShapes tool={this} change={(e) => this.onChange('turnShapes', e)} turnShapes={getValue('turnShapes')}></TurnShapes>
                 </div>
             </Tip>
         }
         else if (name == 'fontFamily') {
-            return <Tip key={at} placement="top" text={'字体'}>
+            return <Tip key={at} placement="top" forcePlacement={true}  text={'字体'}>
                 <div className={'shy-board-edit-tool-item'} >
                     <FontFamily tool={this}
                         value={getValue('fontFamily')}
@@ -209,7 +209,7 @@ export class BoardEditTool extends EventsComponent {
             </Tip>
         }
         else if (name == 'fontSize') {
-            return <Tip key={at} placement="top" text={'字体大小'}>
+            return <Tip key={at} placement="top" forcePlacement={true}  text={'字体大小'}>
                 <div className={'shy-board-edit-tool-item'}
                     style={{
                         paddingTop: 0,
@@ -256,7 +256,7 @@ export class BoardEditTool extends EventsComponent {
             </Tip>
         }
         else if (name == 'stickerSize') {
-            return <Tip key={at} placement="top" text='便利贴大小'>
+            return <Tip key={at} placement="top" forcePlacement={true}  text='便利贴大小'>
                 <div className={'shy-board-edit-tool-item'} >
                     <SelectBox
                         onDrop={e => {
@@ -280,7 +280,7 @@ export class BoardEditTool extends EventsComponent {
             </div>
         }
         else if (name == 'fontWeight') {
-            return <Tip key={at} placement="top" text='文本样式'>
+            return <Tip key={at} placement="top" forcePlacement={true}  text='文本样式'>
                 <div onMouseEnter={e => {
                     this.showDrop('text-font-style');
                 }} onMouseLeave={e => {
@@ -302,7 +302,7 @@ export class BoardEditTool extends EventsComponent {
             </Tip>
         }
         else if (name == 'align') {
-            return <Tip key={at} placement="top" text='对齐'>
+            return <Tip key={at} placement="top" forcePlacement={true}  text='对齐'>
                 <div onMouseEnter={e => {
                     this.showDrop('text-align');
                 }} onMouseLeave={e => {
@@ -319,7 +319,7 @@ export class BoardEditTool extends EventsComponent {
             </Tip>
         }
         else if (name == 'fontColor') {
-            return <Tip key={at} placement="top" text={'颜色'}>
+            return <Tip key={at} placement="top" forcePlacement={true}  text={'颜色'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <FontBgColor
                         tool={this}
@@ -342,11 +342,11 @@ export class BoardEditTool extends EventsComponent {
         else if (name == 'fillColor' || name == 'fillNoTransparentColor') {
             var url = this.blocks.first().url
             if (url == BlockUrlConstant.Line || url == BlockUrlConstant.Pen) {
-                return <Tip key={at} placement="top" text={'线条颜色'}>
+                return <Tip key={at} placement="top" forcePlacement={true}  text={'线条颜色'}>
                     <div className={'shy-board-edit-tool-item'}><FillColor name='fillColor' tool={this} value={getValue('fillColor')} change={e => { this.onChange('fillColor', e) }}></FillColor></div>
                 </Tip >
             }
-            return <Tip key={at} placement="top" text={'填充色'}>
+            return <Tip key={at} placement="top" forcePlacement={true}  text={'填充色'}>
                 <div className={'shy-board-edit-tool-item'}><FillColor
                     name={has('fillColor') ? 'fillColor' : "fillNoTransparentColor"}
                     tool={this}
@@ -363,7 +363,7 @@ export class BoardEditTool extends EventsComponent {
             </Tip >
         }
         else if (name == 'borderWidth') {
-            return <Tip key={at} placement="top" text={'边框'}>
+            return <Tip key={at} placement="top" forcePlacement={true}  text={'边框'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <BorderBoxStyle
                         tool={this}
@@ -376,7 +376,7 @@ export class BoardEditTool extends EventsComponent {
             </Tip>
         }
         else if (name == 'stroke') {
-            return <Tip key={at} placement="top" text={'边框'}>
+            return <Tip key={at} placement="top" forcePlacement={true}  text={'边框'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <ShapeStroke
                         tool={this}
@@ -389,7 +389,7 @@ export class BoardEditTool extends EventsComponent {
             </Tip>
         }
         else if (name == 'nine-align') {
-            return <Tip key={at} placement="top" text='元素对齐'>
+            return <Tip key={at} placement="top" forcePlacement={true}  text='元素对齐'>
                 <div onMouseEnter={e => {
                     this.showDrop('nine-align');
                 }} onMouseLeave={e => {
@@ -406,70 +406,70 @@ export class BoardEditTool extends EventsComponent {
             </Tip>
         }
         else if (name == 'merge') {
-            return <Tip key={at} placement="top" text='合并'>
+            return <Tip key={at} placement="top" forcePlacement={true}  text='合并'>
                 <div onMouseDown={e => this.onMergeBlocks()} className={'shy-board-edit-tool-item'}>
                     <div className="size-20 flex-center"><Icon size={16} icon={{ name: 'byte', code: 'sum' }}></Icon></div>
                 </div>
             </Tip>
         }
         else if (name == 'ungroup') {
-            return <Tip key={at} placement="top" text='取消合并'>
+            return <Tip key={at} placement="top" forcePlacement={true}  text='取消合并'>
                 <div onMouseDown={e => this.onChange('ungroup')} className={'shy-board-edit-tool-item'}>
                     <div className="size-20 flex-center"><Icon size={16} icon={{ name: 'byte', code: 'split' }}></Icon></div>
                 </div>
             </Tip>
         }
         else if (name == 'crop') {
-            return <Tip key={at} placement="top" text={'裁剪'}>
+            return <Tip key={at} placement="top" forcePlacement={true}  text={'裁剪'}>
                 <div onMouseDown={e => this.onChange(name, true)} className={'shy-board-edit-tool-item'}>
                     <div className="size-20 flex-center"><Icon size={16} icon={{ name: 'byte', code: 'cutting' }}></Icon></div>
                 </div>
             </Tip>
         }
         else if (name == 'link') {
-            return <Tip key={at} placement="top" text={'链接'}>
+            return <Tip key={at} placement="top" forcePlacement={true}  text={'链接'}>
                 <div onMouseDown={e => this.onChange(name, true)} className={'shy-board-edit-tool-item'}>
                     <div className="size-20 flex-center"><Icon size={16} icon={{ name: 'byte', code: 'link-three' }}></Icon></div>
                 </div>
             </Tip>
         }
         else if (name == 'upload') {
-            return <Tip key={at} placement="top" text={'替换'}>
+            return <Tip key={at} placement="top" forcePlacement={true}  text={'替换'}>
                 <div onMouseDown={e => this.onChange(name, true)} className={'shy-board-edit-tool-item'}>
                     <div className="size-20 flex-center"><Icon size={16} icon={RefreshSvg}></Icon></div>
                 </div>
             </Tip>
         }
         else if (name == 'look') {
-            return <Tip key={at} placement="top" text={'查看'}>
+            return <Tip key={at} placement="top" forcePlacement={true}  text={'查看'}>
                 <div onMouseDown={e => this.onChange(name, true)} className={'shy-board-edit-tool-item'}>
                     <div className="size-20 flex-center"><Icon size={16} icon={{ name: 'byte', code: "zoom-in" }}></Icon></div>
                 </div>
             </Tip>
         }
         else if (name == 'download') {
-            return <Tip key={at} placement="top" text={'下载'}>
+            return <Tip key={at} placement="top" forcePlacement={true}  text={'下载'}>
                 <div onMouseDown={e => this.onChange(name, true)} className={'shy-board-edit-tool-item'}>
                     <div className="size-20 flex-center"><Icon size={16} icon={{ name: 'byte', code: 'download' }}></Icon></div>
                 </div>
             </Tip>
         }
         else if (name == 'croping') {
-            return <Tip key={at} placement="top" text={'裁剪'}>
+            return <Tip key={at} placement="top" forcePlacement={true}  text={'裁剪'}>
                 <div onMouseDown={e => this.onChange(name, true)} className={'shy-board-edit-tool-item'}>
                     <S>退出裁剪</S>
                 </div>
             </Tip>
         }
         else if (name == 'resetCrop') {
-            return <Tip key={at} placement="top" text={'重置'}>
+            return <Tip key={at} placement="top" forcePlacement={true}  text={'重置'}>
                 <div onMouseDown={e => this.onChange(name, true)} className={'shy-board-edit-tool-item'}>
                     <S>重置</S>
                 </div>
             </Tip>
         }
         else if (name == 'width') {
-            return <Tip key={at} placement="top" text={'宽高'}>
+            return <Tip key={at} placement="top" forcePlacement={true}  text={'宽高'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <ElementSize
                         tool={this}
