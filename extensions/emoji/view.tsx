@@ -14,7 +14,7 @@ import { S } from "../../i18n/view";
 import { lst } from "../../i18n/store";
 const EMOJI_HISTORYS = '_emoji_historys__';
 
-export class EmojiView extends React.Component<{ loaded?: () => void, onChange: (emoji: EmojiCode) => void }>{
+export class EmojiView extends React.Component<{ loaded?: () => void, height?: string | number, onChange: (emoji: EmojiCode) => void }> {
     loading: boolean = true;
     private scrollIndex = 0;
     private scrollOver: boolean = false;
@@ -108,7 +108,9 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
                 {this.searching && <SpinBox></SpinBox>}
                 {this.renderSearch()}
             </div>}
-            {!this.word && <div className='shy-emoji-view' onScroll={e => this.onScroll(e)}>{this.renderEmoji()}</div>}
+            {!this.word && <div className='shy-emoji-view' style={{
+                height: this.props.height || undefined
+            }} onScroll={e => this.onScroll(e)}>{this.renderEmoji()}</div>}
         </div>
     }
     private isScrollRendering: boolean = false;

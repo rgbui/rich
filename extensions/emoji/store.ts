@@ -8,7 +8,11 @@ export type EmojiType = {
     text?: string,
     childs: EmojiCode[]
 }
+
 export type EmojiCode = {
+    type?: 'emoji' | 'emoji-gif' | 'emoji-3d',
+    src?: string,
+    lottie?: string,
     code: string,
     name: string,
     keywords: string[]

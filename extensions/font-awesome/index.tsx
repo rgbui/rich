@@ -16,7 +16,11 @@ import { ls, lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
 const FONT_AWESOME_HISTORYS = '_fontAwesome_historys__';
 
-export class FontAwesomeView extends React.Component<{ loaded?: () => void, onChange: (data: { code: string, color?: string }) => void }> {
+export class FontAwesomeView extends React.Component<{
+    height?: number|string,
+    loaded?: () => void,
+    onChange: (data: { code: string, color?: string }) => void
+}> {
     shouldComponentUpdate(nextProps, nextStates) {
         return false;
     }
@@ -97,7 +101,7 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
     }
     renderFontColors() {
         if (!this.colorVisible) return <div></div>
-        return <div className='shy-font-awesome-colors'>
+        return <div className='shy-font-awesome-colors  flex-wrap r-gap-b-10'>
             {FontColorList().map((c, i) => {
                 return <ToolTip overlay={c.text} key={i} ><a className={"flex-center text-white " + (lodash.isEqual(this.color, c.color) ? "hover" : "")} onMouseDown={e => this.onSetFont(c)} style={{
                     backgroundColor: typeof c.color == 'string' && c.color == 'inherit' ? "var(--text-color)" : typeof c.color == 'string' ? c.color : undefined,
@@ -135,7 +139,9 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
                 {this.searching && <SpinBox></SpinBox>}
                 {this.renderSearch()}
             </div>}
-            {!this.word && <div className='shy-font-awesome' onScroll={e => this.onScroll(e)}>
+            {!this.word && <div className='shy-font-awesome' style={{
+                height: this.props.height || undefined
+            }} onScroll={e => this.onScroll(e)}>
                 {this.renderFontColors()}
                 {this.loading && <div className='shy-font-awesome-loading'></div>}
                 {this.loading != true && <div style={{ color: this.color == 'inherit' ? "var(--text-color)" : this.color }} className='shy-font-awesome-content'>{this.renderFontAwesomes()}</div>}
