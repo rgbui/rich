@@ -4,7 +4,7 @@ import { Block } from "../../src/block";
 import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { url, prop, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
-import { Rect } from "../../src/common/vector/point";
+import { PointArrow, Rect } from "../../src/common/vector/point";
 import { useFilePicker } from "../../extensions/file/file.picker";
 import { channel } from "../../net/channel";
 import { DotsSvg, DownloadSvg, FileSvg, UploadSvg } from "../../component/svgs";
@@ -20,6 +20,9 @@ import "./style.less";
 
 @url('/file')
 export class File extends Block {
+    onResizeBoardSelector(arrows: PointArrow[], event: React.MouseEvent) {
+        this.onResizeScaleBoardSelector(arrows, event);
+    }
     @prop()
     src: ResourceArguments = { name: 'none' }
     display = BlockDisplay.block;
@@ -141,19 +144,33 @@ export class File extends Block {
     getResolveContent(this: Block) {
         return lst('文件')
     }
+    get fixedSize() {
+        return {
+            width: 250,
+            height: 40
+        }
+    }
 }
+
 @view('/file')
 export class FileView extends BlockView<File> {
     renderView() {
-        return <div className='sy-block-file visible-hover' style={this.block.visibleStyle}>
+        var style = this.block.visibleStyle;
+        if (this.block.isFreeBlock) {
+            var { width, height } = this.block.fixedSize;
+            style.width = width;
+            style.height = height;
+        }
+        return <div className='sy-block-file visible-hover' style={style}>
             {this.block.src.name == 'none' && <div onMouseDown={e => this.block.addFile({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) })} className='sy-block-file-nofile item-hover'>
                 <Icon className={'remark gap-r-10'} size={16} icon={FileSvg}></Icon>
                 {!this.block.speed && <span><S>添加附件</S></span>}
                 {this.block.speed && <div className="remark gap-l-10">{this.block.speed}</div>}
             </div>}
             {this.block.src.name != 'none' && <div onMouseDown={e => {
+                if (this.block.isFreeBlock) return;
                 window.open(this.block.src.url, '_blank')
-            }} className='flex padding-w-5 padding-h-5 round cursor item-hover' >
+            }} className={'flex padding-w-5 padding-h-5 round cursor ' + (this.block.isFreeBlock ? "item-hover-focus h100 w100 border-box" : "item-hover")} >
                 <span className="size-24 flex-center round item-hover"><Icon icon={FileSvg} size={18} className='text-1 '></Icon></span>
                 <span className='flex-fixed text-overflow flex gap-l-5'>{this.block.src?.filename}</span>
                 <span className='remark gap-l-5 f-12 flex-auto flex'>{util.byteToString(this.block.src.size)}</span>

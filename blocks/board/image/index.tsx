@@ -17,39 +17,14 @@ import { MouseDragger } from "../../../src/common/dragger";
 import lodash from 'lodash';
 import { BoardPointType, BoardBlockSelector } from "../../../src/block/partial/board";
 import { openBoardEditTool } from "../../../src/kit/operator/board/edit";
-import { Matrix } from "../../../src/common/matrix";
+import { channel } from "../../../net/channel";
+import { Spin } from "../../../component/view/spin";
+import { S } from "../../../i18n/view";
 
 @url('/board/image')
 export class Image extends Block {
-
     onResizeBoardSelector(arrows: PointArrow[], event: React.MouseEvent) {
-        var self = this;
-        var bound = this.getVisibleBound();
-        var gm = this.globalMatrix.clone();
-        var center = new Point(bound.width / 2, bound.height / 2);
-        var fp = gm.inverseTransform(Point.from(event));
-        var d = center.dis(new Point(fp.x, center.y));
-        var ma = this.matrix.clone();
-        MouseDragger({
-            event,
-            moveStart() {
-                closeBoardEditTool();
-            },
-            async moving(ev, data, isEnd, isMove) {
-                var tp = gm.inverseTransform(Point.from(ev));
-                var d2 = center.dis(new Point(tp.x, center.y));
-                var scale = d2 / d;
-                var newMa = new Matrix();
-                newMa.scale(scale, scale, center);
-                self.matrix = ma.appended(newMa);
-                self.forceManualUpdate();
-                self.page.kit.picker.view.forceUpdate()
-                if (isEnd) {
-                    self.onManualUpdateProps({ matrix: ma }, { matrix: self.matrix }, { range: BlockRenderRange.self });
-                    openBoardEditTool(self.page.kit);
-                }
-            }
-        })
+        this.onResizeScaleBoardSelector(arrows, event);
     }
     boardMove(from: Point, to: Point): void {
         if (this.isCrop) return;
@@ -170,10 +145,60 @@ export class Image extends Block {
         else
             await super.setBoardEditCommand(name, value)
     }
+    speed = '';
+    async didMounted() {
+        try {
+            await this.onBlockReloadData(async () => {
+                if (this.createSource == 'InputBlockSelector' && !this.src) {
+                    var r = await useImagePicker({ roundArea: Rect.fromEle(this.el) });
+                    if (r) {
+                        await this.onSaveImageSize(r, true);
+                    }
+                }
+                if (this.initialData && this.initialData.file) {
+                    this.speed = '0%';
+                    this.view.forceUpdate();
+                    var d = await channel.post('/ws/upload/file', {
+                        file: this.initialData.file,
+                        uploadProgress: (event) => {
+                            if (event.lengthComputable) {
+                                this.speed = `${util.byteToString(event.total)}  ${(100 * event.loaded / event.total).toFixed(2)}%`;
+                                this.forceManualUpdate();
+                            }
+                        }
+                    });
+                    if (d.ok && d.data?.file?.url) {
+                        await this.onSaveImageSize(d.data?.file, true);
+                    }
+                }
+                if (this.initialData && this.initialData.url) {
+                    var d = await channel.post('/ws/download/url', { url: this.initialData.url });
+                    if (d.ok && d.data?.file?.url) {
+                        await this.onSaveImageSize(d.data?.file, true);
+                    }
+                }
+                if (this.initialData && this.initialData.imageUrl) {
+                    await this.onSaveImageSize({ url: this.initialData.imageUrl }, true);
+                }
+            })
+        }
+        catch (ex) {
+            console.error(ex);
+        }
+    }
 }
+
 @view('/board/image')
 export class ImageView extends BlockView<Image> {
     renderView() {
+        if (!this.block.src) {
+            return <div className="sy-block-image" style={this.block.visibleStyle}>
+                {this.block.speed && <div className="sy-block-image-empty flex f-14">
+                    <Spin size={16}></Spin>
+                    <span className="gap-l-5"><S>上传中</S>:<i >{this.block.speed}</i></span>
+                </div>}
+            </div>
+        }
         var style = this.block.visibleStyle;
         var size = this.block.fixedSize;
         size.width = (this.block.crop?.width || size.width);
@@ -224,6 +249,8 @@ export class ImageView extends BlockView<Image> {
 
 
         var gap = 8;
+        var s = this.block.matrix.getScaling().x;
+        gap = gap / s;
         return <div style={{
             position: "absolute",
             top: 0,
@@ -355,11 +382,14 @@ export class ImageView extends BlockView<Image> {
         if (typeof oldCrop.width == 'undefined') oldCrop.width = ow;
         if (typeof oldCrop.height == 'undefined') oldCrop.height = oh;
         closeBoardEditTool();
+        var s = this.block.matrix.getScaling().x;
         MouseDragger({
             event: e,
             moving: (event, data, isEnd, isMove) => {
                 var dx = event.clientX - e.clientX;
                 var dy = event.clientY - e.clientY;
+                dx = dx / s;
+                dy = dy / s;
                 var newCrop = lodash.cloneDeep(oldCrop);
                 var newMa = ma.clone();
                 if (name == 'move') {

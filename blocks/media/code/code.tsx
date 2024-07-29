@@ -137,6 +137,21 @@ export class TextCode extends Block {
         var r = Rect.fromEle(this.el);
         return r.leftTop.move(0, 22);
     }
+    get fixedSize() {
+        var el = this.el;
+        if (!el) return {
+            width: this.fixedWidth,
+            height: this.fixedHeight
+        }
+        else {
+            var e = el.querySelector('.sy-block-code-content') as HTMLElement;
+            var r = Rect.fromEle(e);
+            return {
+                width: this.fixedWidth,
+                height: Math.max(r.height + 20, this.fixedHeight)
+            }
+        }
+    }
 }
 
 @view('/code')
@@ -181,21 +196,41 @@ export class TextCodeView extends BlockView<TextCode> {
         } as any;
         var contentStyle = this.block.contentStyle;
         if (this.block.isFreeBlock) {
-            contentStyle.width = this.block.fixedWidth;
-            contentStyle.height = this.block.fixedHeight;
-            contentStyle.boxSizing = 'border-box';
-            contentStyle.padding = '0px';
-            s.height = '100%';
-            s.boxSizing = 'border-box';
-            s.margin = '0px';
-            s.overflowY = 'auto';
+            contentStyle.width = this.block.fixedWidth + 'px';
+            contentStyle.minHeight = this.block.fixedHeight + 'px';
+            return <div
+                style={this.block.visibleStyle}>
+                <div className='sy-block-code'
+                    style={contentStyle}>
+                    <div className={'sy-block-code-box border-light w100  border-box'}
+                        style={{
+                            margin: '0px',
+                            padding: '8px',
+                            minHeight: contentStyle.minHeight
+                        }}
+                    >
+                        <div onMouseDown={e => {
+                            e.stopPropagation();
+                            if (!this.block.page.kit.picker.blocks.some(s => s == this.block)) {
+                                this.block.page.kit.picker.onPicker([this.block])
+                            }
+                        }} className="sy-block-code-content "
+                            style={{
+                                width: 'calc(100% - 20px)',
+                                minHeight: 30,
+                                // height: 'calc(100% - 20px)',
+                                ...s
+                            }}
+                        >
+                        </div>
+                    </div>
+                </div>
+                {this.renderComment()}
+            </div>
         }
-        
         return <div style={this.block.visibleStyle}>
             <div style={contentStyle}>
-                <div className='sy-block-code' style={{
-                    height: this.block.isFreeBlock ? '100%' : undefined
-                }} >
+                <div className='sy-block-code' >
                     <div style={{
                         ...s
                     }} className={'sy-block-code-box ' + (this.block.isFreeBlock ? "border-light" : "")} >
@@ -214,7 +249,9 @@ export class TextCodeView extends BlockView<TextCode> {
                                 <Icon size={18} icon={DotsSvg}></Icon>
                             </div></ToolTip>}
                         </div>
-                        <div onMouseDown={e => e.stopPropagation()} className={'sy-block-code-content ' + (this.block.lineNumbers ? (this.block.isFreeBlock ? "gap-h-10" : "padding-h-10") : (this.block.isFreeBlock ? "gap-10" : "padding-10"))}>
+                        <div
+                            onMouseDown={e => e.stopPropagation()}
+                            className={'sy-block-code-content ' + (this.block.lineNumbers ? "padding-h-10" : "padding-10")}>
                         </div>
                     </div>
                 </div>

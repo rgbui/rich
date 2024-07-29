@@ -1,10 +1,13 @@
 
 
 export function ConvertEmbed(url: string): { origin: string, url: string, embedType: EmbedType } {
-    if (/^https?\:\/\/music\.163\.com\/\#\/song\?id\=([\d]+)/.test(url)) {
-        var rs = url.match(/^https?\:\/\/music\.163\.com\/\#\/song\?id\=([\d]+)/)
-        if (rs && rs[1]) {
-            return { embedType: 'music.163', origin: url, url: `https://music.163.com/outchain/player?type=2&id=${rs[1]}&auto=0&height=66` }
+
+    //https://music.163.com/song?id=2605160936&userid=274655479
+    if (/^https?\:\/\/music\.163\.com\/(\#\/)?song\?id\=([\d]+)/.test(url)) {
+        var rs = url.match(/^https?\:\/\/music\.163\.com\/(\#\/)?song\?id\=([\d]+)/)
+        console.log('ggg music',rs);
+        if (rs && rs[2]) {
+            return { embedType: 'music.163', origin: url, url: `https://music.163.com/outchain/player?type=2&id=${rs[2]}&auto=0&height=66` }
         }
     }
     else if (/^https?\:\/\/www\.bilibili\.com\/video\/([a-zA-Z\d]+)/.test(url)) {
@@ -53,9 +56,9 @@ export function ConvertEmbed(url: string): { origin: string, url: string, embedT
             return { embedType: 'youku', origin: url, url: `https://player.youku.com/embed/${rs[1]}==` }
         }
     }
-    else {
-        return { origin: url, url, embedType: '' }
-    }
+
+    return { origin: url, url, embedType: '' }
+
 }
 
-export type EmbedType = 'music.163' | 'vqq' | 'youku' | 'ytob' | 'bilibili' | 'figma' | 'mastergo' |  "bookmark" | ''; 
+export type EmbedType = 'music.163' | 'vqq' | 'youku' | 'ytob' | 'bilibili' | 'figma' | 'mastergo' | "bookmark" | ''; 

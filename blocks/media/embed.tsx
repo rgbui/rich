@@ -61,7 +61,24 @@ export class Embed extends Block {
         var r = await useOutSideUrlInput(pos, { embedType: this.embedType, isEmbed: true });
         if (r?.url) {
             var cr = ConvertEmbed(r.url);
-            await this.onUpdateProps({ embedType: cr.embedType, origin: cr.origin, src: { name: 'link', url: cr.url } }, { range: BlockRenderRange.self })
+            var props = {
+                embedType: cr.embedType,
+                origin: cr.origin,
+                src: {
+                    name: 'link',
+                    url: cr.url
+                }
+            } as Record<string, any>;
+            if (this.isFreeBlock) {
+                if (cr?.embedType == 'music.163') {
+                    props.fixedWidth = 300;
+                }
+                else {
+                    props.fixedWidth = 350;
+                    props.fixedHeight = 200;
+                }
+            }
+            await this.onUpdateProps(props, { range: BlockRenderRange.self })
         }
     }
     async didMounted() {
@@ -172,6 +189,24 @@ export class Embed extends Block {
         }
         await super.onClickContextMenu(item, event);
     }
+    get fixedSize() {
+        if (this.src.name == 'none') {
+            return {
+                width: 250,
+                height: 40
+            }
+        }
+        if (this.embedType == 'music.163') {
+            return {
+                width: this.fixedWidth,
+                height: 90
+            }
+        }
+        return {
+            width: this.fixedWidth,
+            height: this.fixedHeight
+        }
+    }
 }
 
 @view('/embed')
@@ -230,11 +265,15 @@ export class EmbedView extends BlockView<Embed> {
         function getIframeStyle() {
             var style: CSSProperties = { height: 'inherit' };
             if (self.block.embedType == 'music.163') {
-                // style.height = 90;
-                style.margin = '0px 10px';
+
+                if (self.block.isFreeBlock) style.margin = '0px'
+                else style.margin = '0px 10px';
+                if (self.block.isFreeBlock)
+                    style.padding = '10px';
             }
             else {
-                // style.height = self.block.contentHeight;
+                if (self.block.isFreeBlock)
+                    style.padding = '10px';
             }
             return style;
         }
@@ -292,19 +331,32 @@ export class EmbedView extends BlockView<Embed> {
         if (this.block.align == 'center') contentStyle.justifyContent = 'center';
         else if (this.block.align == 'right') contentStyle.justifyContent = 'flex-end';
         else contentStyle.justifyContent = 'flex-start';
-        return <div className='sy-block-embed' style={this.block.visibleStyle}>
-            {this.block.src.name == 'none' && <div onMouseDown={e => this.block.addEmbed({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) })} className='sy-block-file-nofile'>
+        var style = this.block.visibleStyle;
+        var width = this.block.contentWidthPercent ? this.block.contentWidthPercent + "%" : undefined
+        if (this.block.isFreeBlock) {
+            style.width = this.block.fixedSize.width;
+            style.height = this.block.fixedSize.height;
+            height = this.block.fixedSize.height;
+            width = this.block.fixedSize.width + 'px';
+        }
+
+        return <div className='sy-block-embed' style={style}>
+            {this.block.src.name == 'none' && <div
+                onMouseDown={e => this.block.addEmbed({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) })}
+                className={'sy-block-file-nofile ' + (this.block.isFreeBlock ? " w100 h100 border-box" : "")}>
                 {renderEmptyTip()}
             </div>}
-            {this.block.src.name != 'none' && <div className="flex w100" style={contentStyle}><div className='sy-block-embed-wrapper' ref={e => this.imageWrapper = e} style={{ height, width: this.block.contentWidthPercent ? this.block.contentWidthPercent + "%" : undefined }}>
-                <div style={{ ...getIframeStyle(), pointerEvents: this.isResize ? "none" : 'auto' }}>
+            {this.block.src.name != 'none' && <div className="flex w100" style={contentStyle}><div className='sy-block-embed-wrapper' ref={e => this.imageWrapper = e}
+                style={{
+                    height,
+                    width: width
+                }}>
+                <div className={this.block.isFreeBlock ? " border-box round border-light" : ""} style={{ ...getIframeStyle(), pointerEvents: this.isResize ? "none" : 'auto' }}>
                     <iframe draggable={false}
-
                         referrerPolicy="origin"
-
                         src={this.block.src.url} ></iframe>
                 </div>
-                {this.block.isCanEdit() && <>
+                {this.block.isCanEdit() && !this.block.isFreeBlock && <>
                     <div className='sy-block-embed-left-resize' onMouseDown={e => this.onMousedown(e, 'left')}></div>
                     <div className='sy-block-embed-right-resize' onMouseDown={e => this.onMousedown(e, 'right')}></div>
                     {isAllowResizeHeight && <div className="sy-block-embed-height-resize" onMouseDown={e => this.onMousedown(e, 'height')}></div>}
