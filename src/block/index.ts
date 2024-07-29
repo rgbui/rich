@@ -282,6 +282,12 @@ export abstract class Block extends Events {
             paddingRight: '0.2rem',
             paddingBottom: '0.3rem'
         };
+        if (this.isFreeBlock) {
+            style.paddingTop = 0;
+            style.paddingLeft = 0;
+            style.paddingRight = 0;
+            style.paddingBottom = 0;
+        }
         if (this.isLine) {
             style = {
                 paddingTop: 0,

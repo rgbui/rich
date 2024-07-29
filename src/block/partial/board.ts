@@ -8,6 +8,7 @@ import { Point, PointArrow, Rect, RectUtility } from "../../common/vector/point"
 import { Polygon } from "../../common/vector/polygon";
 import { ActionDirective } from "../../history/declare";
 import { openBoardEditTool } from "../../kit/operator/board/edit";
+import { BlockRenderRange } from "../enum";
 
 export enum BoardPointType {
     none,
@@ -158,6 +159,12 @@ export class Block$Board {
         })
         return pickers;
     }
+    /**
+     * 对选择器进行缩放，这里主要是处理长，高的缩放
+     * @param this 
+     * @param arrows 
+     * @param event 
+     */
     onResizeBoardSelector(this: Block,
         arrows: PointArrow[],
         event: React.MouseEvent) {
@@ -231,6 +238,49 @@ export class Block$Board {
                 await openBoardEditTool(self.page.kit);
             }
         });
+    }
+    /**
+     * 对选择器进行缩放， 这里主要是通过matrix进行缩放
+     * 元素本身的大小不变，只是通过matrix进行缩放
+     * @param this 
+     * @param arrows 
+     * @param event 
+     */
+    onResizeScaleBoardSelector(this: Block, arrows: PointArrow[], event: React.MouseEvent) {
+        var self = this;
+        var { width, height } = this.fixedSize;
+        var rect = new Rect(0, 0, width, height);
+        var gm = this.globalMatrix;
+        var center = rect.middleCenter;
+        var point = gm.inverseTransform(Point.from(event));
+        var ma = this.matrix.clone();
+        MouseDragger({
+            event,
+            moveStart() {
+                closeBoardEditTool();
+            },
+            async moving(ev, data, isEnd, isMove) {
+                var ec = gm.inverseTransform(Point.from(ev));
+                var dx = ec.x - point.x;
+                var dy = ec.y - point.y;
+                if (arrows.some(s => s == PointArrow.left)) dx = -dx;
+                if (arrows.some(s => s == PointArrow.top)) dy = -dy;
+                var newWidth = width + dx;
+                var newHeight = height + dy;
+                var scaleX = newWidth / width;
+                var scaleY = newHeight / height;
+                var scale = (scaleX + scaleY) / 2;
+                var newMa = new Matrix();
+                newMa.scale(scale, scale, { x: center.x, y: center.y });
+                self.matrix = ma.appended(newMa);
+                self.forceManualUpdate();
+                self.page.kit.picker.view.forceUpdate()
+                if (isEnd) {
+                    self.onManualUpdateProps({ matrix: ma }, { matrix: self.matrix }, { range: BlockRenderRange.self });
+                    openBoardEditTool(self.page.kit);
+                }
+            }
+        })
     }
     async onPickerMousedown(this: Block, selector: BoardBlockSelector, event: React.MouseEvent) {
         console.log(selector, event);
@@ -324,8 +374,7 @@ export class Block$Board {
         this.moveMatrix = matrix;
         this.updateRenderLines(true);
     }
-    async boardMoveEnd(this: Block,from: Point,to: Point)
-    {
+    async boardMoveEnd(this: Block, from: Point, to: Point) {
         var moveMatrix = new Matrix();
         moveMatrix.translateMove(this.globalMatrix.inverseTransform(from), this.globalMatrix.inverseTransform(to))
         var newMatrix = this.currentMatrix.clone();
@@ -372,7 +421,7 @@ export class Block$Board {
         }
     }
 
-   
+
 
 }
 

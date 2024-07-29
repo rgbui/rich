@@ -53,6 +53,7 @@ export enum BlockUrlConstant {
     Audio = '/audio',
     File='/file',
     BoardImage = '/board/image',
+    Icon='/icon',
     RecordPageView = '/data-grid/page/record',
     Table = '/table',
     TableRow = '/table/row',
@@ -63,7 +64,8 @@ export enum BlockUrlConstant {
     PageAuthor = '/page/author',
     PageUpvotedOrShared = '/page/UpvotedOrShared',
     PageDescription = '/pageDescription',
-    Measure = '/measure'
+    Measure = '/measure',
+    Embed='/embed'
 }
 
 export function BlockUrlResolve(url: BlockUrlConstant, data?: Record<string, any>) {

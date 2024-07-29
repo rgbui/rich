@@ -87,7 +87,11 @@ export class Page$ViewEvent {
         if (this.isDeny) return;
         this.kit.handle.onCloseBlockHandle();
         if (this.isBoard) {
+
             var ele = event.target as HTMLElement;
+            var disabledWheel = ele?.closest('[data-wheel="disabled"]');
+            if (disabledWheel) return;
+
             var block = this.getEleBlock(ele);
             var bpc: Block;
             if (block && block.url != BlockUrlConstant.BoardPageCard) {
@@ -308,6 +312,8 @@ export class Page$ViewEvent {
     onSetMatrix(this: Page, matrix: Matrix) {
         this.matrix = matrix;
         this.view.forceUpdate();
+        if (this.kit.boardMap.visible == true)
+            this.kit.boardMap.forceUpdate();
         closeBoardEditTool();
     }
     onFitZoom(this: Page) {
@@ -339,8 +345,7 @@ export class Page$ViewEvent {
             matrix.scale(r, r, p);
         }
         this.gridMap.over();
-        this.matrix = matrix;
-        this.view.forceUpdate();
+        this.onSetMatrix(matrix); 
     }
     onMouseenter(this: Page, event: React.MouseEvent) {
         if (this.isBoard) {
