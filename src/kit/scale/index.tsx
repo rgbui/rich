@@ -13,6 +13,7 @@ export class BoardScale extends React.Component<{ kit: Kit }> {
             <Tip text='缩小'><span className="item-hover cursor size-30" onMouseDown={e => this.props.kit.page.onZoom(-1, Point.from(e))}><Icon size={18} icon={{ name: 'bytedance-icon', code: 'minus' }}  ></Icon></span></Tip>
             <Tip text='缩放至100%'><span className="text-1 f-12  cursor  padding-w-3" onMouseDown={e => this.props.kit.page.onZoom(100)}>{(this.props.kit.page.scale * 100).toFixed(0)}%</span></Tip>
             <Tip text='放大'><span className="item-hover cursor size-30" onMouseDown={e => this.props.kit.page.onZoom(1, Point.from(e))}><Icon size={18} icon={PlusSvg}  ></Icon></span></Tip>
+            <Tip text='地图'><span className="item-hover cursor size-30" onMouseDown={e => this.props.kit.boardMap.open()}><Icon size={18} icon={{name:'byte',code:'map-draw'}}  ></Icon></span></Tip>
         </div>
     }
 }

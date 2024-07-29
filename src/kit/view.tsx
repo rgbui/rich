@@ -7,8 +7,9 @@ import { BlockPickerView } from "./picker/view";
 import { BoardScale } from "./scale";
 import { SelectorView } from "./anchor/selector/view";
 import { BoardSelector } from "./board.selector";
+import { BoardMap } from "./scale/map";
 
-export class KitView extends React.Component<{ kit: Kit }>{
+export class KitView extends React.Component<{ kit: Kit }> {
     constructor(props) {
         super(props);
         this.kit.view = this;
@@ -27,6 +28,7 @@ export class KitView extends React.Component<{ kit: Kit }>{
             <Collaboration kit={this.props.kit} ref={e => this.kit.collaboration = e}></Collaboration>
             <BoardBlockHover ref={e => this.kit.boardBlockHover = e} kit={this.kit}></BoardBlockHover>
             <BoardSelector ref={e => this.kit.boardSelector = e} kit={this.kit}></BoardSelector>
+            <BoardMap kit={this.props.kit} ref={e => this.kit.boardMap = e}></BoardMap>
         </div>
     }
     get toolEl() {

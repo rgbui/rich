@@ -1,7 +1,7 @@
 import React, { CSSProperties } from "react";
 import { ReactNode } from "react";
 import { Kit } from "..";
-import { getImageSize, OpenFileDialoug } from "../../../component/file";
+import { getImageSize, OpenFileDialoug, OpenMultipleFileDialoug } from "../../../component/file";
 import { ShyAlert } from "../../../component/lib/alert";
 import {
     BoardToolTextSvg,
@@ -29,17 +29,16 @@ import {
 import { Icon } from "../../../component/view/icon";
 import { closeNoteSelector, getNoteSelector } from "../../../extensions/board/note";
 import { closeShapeSelector, getShapeSelector } from "../../../extensions/board/shapes";
-import { channel } from "../../../net/channel";
 import { BlockUrlConstant } from "../../block/constant";
 import { FixedViewScroll } from "../../common/scroll";
 import { Point, Rect } from "../../common/vector/point";
 import { BoardToolOperator } from "./declare";
-import { lst } from "../../../i18n/store";
 import { Tip } from "../../../component/view/tooltip/tip";
 import { S } from "../../../i18n/view";
 import { Page } from "../../page";
 import { Block } from "../../block";
 import { ToolTip } from "../../../component/view/tooltip";
+import { openMaterialView } from "../../../extensions/board/material";
 
 export class BoardSelector extends React.Component<{
     kit: Kit
@@ -278,33 +277,40 @@ export class BoardSelector extends React.Component<{
             }
             return <div style={style} className="z-1000 pos w-100 padding-h-5  round-4 border-light shadow bg-white   r-gap-5 r-padding-5  r-item-hover r-round-4 r-cursor r-flex-center r-flex-col ">
 
-                <ToolTip overlay={<S>上传文件</S>}><div onMouseDown={e => {
-
+                <ToolTip overlay={<S>上传文件</S>}><div onMouseDown={async e => {
+                    e.stopPropagation();
+                    var file = await OpenFileDialoug();
+                    if (file) this.openFile(file)
+                    else this.clearSelector()
                 }}><Icon size={24} icon={UploadSvg}></Icon>
                     <div className="flex-center remark f-14"><S>上传文件</S></div>
                 </div>
                 </ToolTip>
 
                 <ToolTip overlay={<S>插入图片</S>}><div
-                    onMouseDown={e => {
-
+                    onMouseDown={async e => {
+                        e.stopPropagation();
+                        var file = await OpenFileDialoug({ exts: ['image/*'] });
+                        if (file) this.openFile(file)
+                        else this.clearSelector()
                     }}>
                     <Icon size={24} icon={{ name: 'byte', code: 'add-picture' }}></Icon>
                     <div className="flex-center remark f-14"><S>插入图片</S></div>
                 </div></ToolTip>
 
                 <ToolTip overlay={<S>内嵌网页</S>}><div onMouseDown={e => {
-
+                    e.stopPropagation();
+                    this.currentSelector.url = BlockUrlConstant.Embed
                 }}><Icon size={24} icon={{ name: 'byte', code: 'browser' }}></Icon>
                     <div className="flex-center remark f-14"><S>内嵌网页</S></div>
                 </div></ToolTip>
 
-                <ToolTip overlay={<S>代码块</S>}><div onMouseDown={e => {
+                {/* <ToolTip overlay={<S>代码块</S>}><div onMouseDown={e => {
                     this.currentSelector.url = BlockUrlConstant.Code;
                     e.stopPropagation();
                 }}><Icon size={24} icon={{ name: 'byte', code: 'code' }}></Icon>
                     <div className="flex-center remark f-14"><S>代码块</S></div>
-                </div></ToolTip>
+                </div></ToolTip> */}
 
                 <ToolTip overlay={<S>LaTex公式</S>}><div onMouseDown={e => {
                     this.currentSelector.url = BlockUrlConstant.Katex;
@@ -312,7 +318,6 @@ export class BoardSelector extends React.Component<{
                 }}><Icon size={24} icon={{ name: 'byte', code: 'formula' }}></Icon>
                     <div className="flex-center remark f-14"><S>LaTex公式</S></div>
                 </div></ToolTip>
-
             </div>
         }
         else return <></>
@@ -380,49 +385,27 @@ export class BoardSelector extends React.Component<{
                     sel.url = BlockUrlConstant.Pen;
                     break;
                 case BoardToolOperator.material:
-                    break;
-                // case BoardToolOperator.more:
+                    var mv = await openMaterialView();
+                    mv.only('save', async (data) => {
+                        console.log('ddd', data);
+                        if (data.mime == 'image') {
+                            this.currentSelector.url = BlockUrlConstant.BoardImage;
+                            if (!this.currentSelector.data)
+                                this.currentSelector.data = {};
+                            this.currentSelector.data.initialData = { imageUrl: data.url };
+                        }
+                        else if (data.mime == 'icon' || data.mime == 'emoji') {
+                            this.currentSelector.url = BlockUrlConstant.Icon;
+                            this.currentSelector.data.src = data.data as any;
+                        }
+                        mv.close();
+                    });
+                    mv.only('close', () => {
 
-                // case BoardToolOperator.upload:
-                /**
-                 * 这里上传文件
-                 */
-                // var exts = ['image/*']
-                //exts=['*']
-                // var file = await OpenFileDialoug({ exts: exts });
-                // if (file) {
-                //     if (file.size > 1024 * 1024 * 1024) {
-                //         ShyAlert(lst('文件过大提示', '文件过大，不支持1G以上的文件'));
-                //         return;
-                //     }
-                //     var r = await channel.post('/ws/upload/file', {
-                //         file,
-                //         uploadProgress: (event) => {
-                //             // console.log(event, 'ev');
-                //             if (event.lengthComputable) {
-                //                 // this.progress = `${util.byteToString(event.total)}${(100 * event.loaded / event.total).toFixed(2)}%`;
-                //                 // this.forceUpdate();
-                //             }
-                //         }
-                //     })
-                //     if (r.ok) {
-                //         if (r.data?.file?.url) {
-                //             var size = await getImageSize(r.data.file.url);
-                //             sel.url = BlockUrlConstant.BoardImage;
-                //             sel.data = {
-                //                 originSize: size,
-                //                 fixedWidth: size.width,
-                //                 fixedHeight: size.height,
-                //                 src: { name: 'upload', ...r.data.file }
-                //             }
-                //             // this.props.change(r.data?.file as any);
-                //         }
-                //     }
-                //     else {
-                //         // this.forceUpdate();
-                //     }
-                // }
-                // break;
+                    })
+                    var rect = Rect.fromEle(this.el);
+                    mv.open(rect.leftTop.move(-330, 0));
+                    break;
                 case BoardToolOperator.mind:
                     sel.url = BlockUrlConstant.Mind;
                     break;
@@ -430,6 +413,7 @@ export class BoardSelector extends React.Component<{
                     sel.url = BlockUrlConstant.BoardPageCard;
             }
             this.currentSelector = sel as any;
+            console.log(this.currentSelector, 'cs...');
         }
         var cursor: string = '';
         if (this.currentSelector.url == BlockUrlConstant.TextSpan) {
@@ -448,6 +432,21 @@ export class BoardSelector extends React.Component<{
             cursor = `-webkit-image-set(url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAOdJREFUSA3tVsENwyAMLBULZI7O1G+7QlZJv5mpc2QE6kMgAUosG1nNI1hCkbHx2Qc6xd2UFkJ40JEnrSkd3ei7Oue+yRd97qKsOqkERQQNYE9lPcBxUprwhZXQ8vRi8B5gcXEucQBz7JjGBtWmdHLFrke139FejqHDGNVZDoN1IGo7qG61t06z96K2u9xpobv2UEVFwvvAPe1xeQIH51PuBN1ILDOkPZdqb5h4pQXwf1l8XJ46x5/DLEXNb6LNpzrvdo/zT7vjAcxdi2lsUG1KJ1fselRDq7W2p+1qye2hutX2qL3a7n9u0DPnQ0lkSwAAAABJRU5ErkJggg==) 2x) 8 8, auto`;
         }
         this.openCursor(cursor);
+    }
+    openFile(file: File) {
+        if (file.type.startsWith('image/')) {
+            this.currentSelector.url = BlockUrlConstant.BoardImage;
+        }
+        else if (file.type.startsWith('video/')) {
+            this.currentSelector.url = BlockUrlConstant.Video;
+        }
+        else if (file.type.startsWith('audio/')) {
+            this.currentSelector.url = BlockUrlConstant.Audio;
+        }
+        else
+            this.currentSelector.url = BlockUrlConstant.File;
+        if (!this.currentSelector.data) this.currentSelector.data = {};
+        this.currentSelector.data.initialData = { file };
     }
     clearSelector() {
         delete this.currentSelector;
