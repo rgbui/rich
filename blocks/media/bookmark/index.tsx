@@ -5,7 +5,7 @@ import { Block } from "../../../src/block";
 import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
 import { ResourceArguments } from "../../../extensions/icon/declare";
 import { useOutSideUrlInput } from "../../../extensions/link/outsite.input";
-import { Rect } from "../../../src/common/vector/point";
+import { PointArrow, Rect } from "../../../src/common/vector/point";
 import { BookSvg, DotsSvg, RefreshSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { channel } from "../../../net/channel";
@@ -23,6 +23,10 @@ import "./style.less";
 @url('/bookmark')
 export class Bookmark extends Block {
     display = BlockDisplay.block;
+    @prop()
+    fixedWidth =500;
+    @prop()
+    fixedHeight = 120;
     @prop()
     bookmarkInfo: { title: string, description: string, icon: ResourceArguments, image: ResourceArguments } = null;
     loading: boolean = false;
@@ -151,6 +155,50 @@ export class Bookmark extends Block {
         }
         return await super.onClickContextMenu(item, event);
     }
+    async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
+        var cs: { name: string; value?: any; }[] = [];
+        cs.push({ name: 'embed', value: { embedType: 'bookmark', url: this.bookmarkUrl } })
+        return cs;
+    }
+    async setBoardEditCommand(name: string, value: any) {
+        if (await super.setBoardEditCommand(name, value) == false) {
+            if (name == 'embed') {
+                setTimeout(() => {
+                    this.onLoadBookmarkByUrl(value.url)
+                }, 200);
+
+                // var cr = ConvertEmbed(value.url);
+                // var props = {
+                //     embedType: cr.embedType,
+                //     origin: cr.origin,
+                //     src: {
+                //         name: 'link',
+                //         url: cr.url
+                //     }
+                // } as Record<string, any>;
+                // if (this.isFreeBlock) {
+                //     if (cr?.embedType == 'music.163') {
+                //         props.fixedWidth = 300;
+                //     }
+                //     else {
+                //         // props.fixedWidth = 350;
+                //         // props.fixedHeight = 200;
+                //     }
+                // }
+                // await this.updateProps(props, BlockRenderRange.self)
+            }
+        }
+    }
+    get fixedSize() {
+        if (!this.el)
+            return { width: this.fixedWidth, height: this.fixedHeight }
+        var el = this.el;
+        // this.el.querySelector('.sy-block-bookmark') as HTMLElement;
+        return {
+            width: Math.max(this.fixedWidth, 500),
+            height: el.offsetHeight
+        }
+    }
 }
 
 @view('/bookmark')
@@ -187,8 +235,16 @@ export class BookmarkView extends BlockView<Bookmark> {
     renderView() {
         if (!this.block.bookmarkInfo) return <div style={this.block.visibleStyle}><div style={this.block.contentStyle}>
             {this.renderEmpty()}</div></div>
-        return <div style={this.block.visibleStyle}><div
-            className='sy-block-bookmark relative  visible-hover'
+        var style = this.block.visibleStyle;
+        if (this.block.isFreeBlock) {
+            var fs = this.block.fixedSize;
+            style.width = fs.width;
+            style.padding = 20;
+            // style.padding = 20 / this.block.matrix.getScaling().x;
+            // style.height = fs.height;
+        }
+        return <div className={(this.block.isFreeBlock ? "round  border-box item-hover-light" : "")} style={style}><div
+            className={'sy-block-bookmark relative  visible-hover '}
             style={this.block.contentStyle}
         >
             <a className='sy-block-bookmark-link' draggable={false} href={this.block.bookmarkUrl} target='_blank' >
@@ -201,7 +257,7 @@ export class BookmarkView extends BlockView<Bookmark> {
                     <img draggable={false} src={autoImageUrl(this.block.bookmarkInfo.image.url, 250)} />
                 </div>}
             </a>
-            {this.block.isCanEdit() && <div onMouseDown={e => {
+            {this.block.isCanEdit() && !this.block.isFreeBlock && <div onMouseDown={e => {
                 e.preventDefault();
                 e.stopPropagation();
                 this.block.onContextmenu(e.nativeEvent)

@@ -9,6 +9,7 @@ import { Video } from ".";
 import 'xgplayer/dist/index.min.css';
 import { I18N } from 'xgplayer'
 import ZH from 'xgplayer/es/lang/zh-cn'
+import { Rect } from "../../../src/common/vector/point";
 // 启用中文
 if (!window.shyConfig?.isUS)
     I18N.use(ZH)
@@ -39,6 +40,7 @@ export default class VideoWrapper extends React.Component<{ block: Video }> {
         if (this.videoPanel) {
             var size = await this.block.getVideoSize()
             var width = this.contentWrapper.getBoundingClientRect().width;
+            if (this.block.isFreeBlock) width = this.block.fixedWidth;
             var height = width * size.height / size.width;
             this.contentWrapper.style.height = `${height}px`;
             this.player = new Player({
@@ -111,7 +113,7 @@ export default class VideoWrapper extends React.Component<{ block: Video }> {
             35.57% 25%)`
         else if (this.block.mask == 'rect') imageMaskStyle.borderRadius = '0%';
         return <div className='sy-block-video' >
-            {!this.block.src?.url && this.block.isCanEdit() && <div onMouseDown={e => this.block.addVideo(e)} className='sy-block-video-nofile flex'>
+            {!this.block.src?.url && this.block.isCanEdit() && <div onMouseDown={e => this.block.addVideo({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) })} className='sy-block-video-nofile flex'>
                 <Icon icon={VideoSvg} size={16}></Icon>
                 {!this.block.speed && <span className="gap-w-10">添加视频</span>}
                 {this.block.speed && <span className="gap-l-5">{this.block.speed}</span>}
@@ -130,7 +132,7 @@ export default class VideoWrapper extends React.Component<{ block: Video }> {
                         muted={this.block.autoplayMuted}
                         controls={false}
                     ></video>}
-                    {this.block.isCanEdit() && <>
+                    {this.block.isCanEdit() && !this.block.isCanEdit() && <>
                         <div className='sy-block-video-left-resize' onMouseDown={e => {
                             e.stopPropagation();
                             this.onMousedown(e, 'left');

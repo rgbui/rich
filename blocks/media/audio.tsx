@@ -4,7 +4,7 @@ import { prop, url, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
 import { S, Sp } from "../../i18n/view";
 import { useAudioPicker } from "../../extensions/file/audio.picker";
-import { Rect } from "../../src/common/vector/point";
+import { PointArrow, Rect } from "../../src/common/vector/point";
 import { Block } from "../../src/block";
 import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { channel } from "../../net/channel";
@@ -17,6 +17,9 @@ import "./style.less";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { PopoverPosition } from "../../component/popover/position";
 import { CopyAlert } from "../../component/copy";
+import { getImageSize } from "../../component/file";
+import { closeBoardEditTool } from "../../extensions/board.edit.tool";
+import { useImagePicker } from "../../extensions/image/picker";
 
 /*
  * https://howlerjs.com/
@@ -32,6 +35,8 @@ export class Audio extends Block {
             await this.onUpdateProps({ src: r }, { range: BlockRenderRange.self, merge: true });
         }
     }
+    @prop()
+    fixedWidth = 300;
     speed = '';
     get appearAnchors() {
         if (this.src.name == 'none') return [];
@@ -130,11 +135,44 @@ export class Audio extends Block {
     getResolveContent(this: Block) {
         return lst('音频')
     }
+    get fixedSize() {
+        return {
+            width: Math.max(this.fixedWidth, 300),
+            height: 60
+        }
+    }
+    async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
+        var cs: { name: string; value?: any; }[] = [];
+        cs.push({ name: 'upload' });
+        cs.push({ name: 'download' });
+        return cs;
+    }
+    async setBoardEditCommand(name: string, value: any) {
+        if (name == 'upload') {
+            closeBoardEditTool();
+            setTimeout(() => {
+                this.addAudio({ roundArea: this.getVisibleBound() })
+            }, 200);
+        }
+        else if (name == 'download') {
+            await util.downloadFile(this.src?.url, (this.src?.filename) || (lst('图像')) + (this.src.ext || '.jpg'));
+        }
+        else
+            await super.setBoardEditCommand(name, value)
+    }
 }
 @view('/audio')
 export class AudioView extends BlockView<Audio> {
     renderView() {
-        return <div className='sy-block-audio' style={this.block.visibleStyle}>
+        var style = this.block.visibleStyle;
+        if (this.block.isFreeBlock) {
+            var size = this.block.fixedSize;
+            style.width = size.width;
+            style.boxSizing = 'border-box'
+            // style.height = size.height;
+            style.padding = 10;
+        }
+        return <div className={'sy-block-audio round ' + (this.block.isFreeBlock ? " item-hover-light" : "")} style={style}>
             {this.block.src.name == 'none' && <div onMouseDown={e => this.block.addAudio({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) })} className='sy-block-audio-nofile'>
                 <Icon size={16} icon={AudioSvg}></Icon>
                 {!this.block.speed && <S>添加音频</S>}

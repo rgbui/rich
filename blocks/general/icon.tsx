@@ -17,6 +17,7 @@ import { useLinkPicker } from "../../extensions/link/picker";
 import { MenuPanel } from "../../component/view/menu";
 import { ToolTip } from "../../component/view/tooltip";
 import "./style.less";
+import { BlockCssName } from "../../src/block/pattern/css";
 
 @url('/icon')
 export class BlockIcon extends Block {
@@ -143,6 +144,50 @@ export class BlockIcon extends Block {
             else this.onUpdateProps({ src: icon }, { range: BlockRenderRange.self });
         }
     }
+    get fixedSize() {
+        var size = Math.min(this.fixedWidth, this.fixedHeight);
+        return {
+            width: size,
+            height: size
+        }
+    }
+
+    async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
+        // var bold = this.pattern.css(BlockCssName.font)?.fontWeight;
+        // var ft = this.pattern.css(BlockCssName.font);
+        var cs: { name: string; value?: any; }[] = [];
+        // cs.push({ name: 'fontSize', value: Math.round(this.pattern.css(BlockCssName.font)?.fontSize || 14) });
+        // cs.push({ name: 'fontWeight', value: bold == 'bold' || bold == 500 ? true : false });
+        // cs.push({ name: 'fontStyle', value: this.pattern.css(BlockCssName.font)?.fontStyle == 'italic' ? true : false });
+        // cs.push({ name: 'textDecoration', value: this.pattern.css(BlockCssName.font)?.textDecoration });
+        cs.push({ name: 'icon', value: this.src })
+        cs.push({ name: 'fontColor', value: this.pattern.css(BlockCssName.font)?.color });
+        cs.push({ name: 'backgroundColor', value: this.pattern.css(BlockCssName.fill)?.color || 'transparent' });
+        // cs.push({ name: 'fontFamily', value: this.pattern.css(BlockCssName.font)?.fontFamily });
+        // cs.push({
+        //     name: 'fontStyle',
+        //     value: ft?.fontStyle === 'italic' || (ft?.fontStyle as any) === true ? true : false
+        // });
+        // cs.push({ name: 'link' });
+
+        // cs.push({ name: 'fillNoTransparentColor', value: this.color });
+        cs.push({ name: 'width', value: this.fixedWidth });
+        cs.push({ name: 'height', value: this.fixedHeight });
+        return cs;
+    }
+    async setBoardEditCommand(name: string, value: any) {
+        if (name == 'backgroundColor')
+            await this.pattern.setFillStyle({ color: value, mode: 'color' });
+        else if (['width', 'height'].includes(name)) {
+            await this.updateProps({ [name == 'width' ? "fixedWidth" : "fixedHeight"]: value }, BlockRenderRange.self)
+        }
+        else (await super.setBoardEditCommand(name, value) == false)
+        {
+            if (name == 'icon') {
+                await this.updateProps({ src: value }, BlockRenderRange.self)
+            }
+        }
+    }
 }
 
 @view('/icon')
@@ -172,17 +217,28 @@ export class BlockIconView extends BlockView<BlockIcon> {
         else if (this.block.align == 'left') cs.justifyContent = 'flex-start';
         else if (this.block.align == 'right') cs.justifyContent = 'flex-end';
         var gap = 10;
-        return <div style={this.block.visibleStyle}>
+        var style = this.block.visibleStyle;
+        var size = this.block.size;
+        var r = 5;
+        if (this.block.isFreeBlock) {
+            style.width = this.block.fixedSize.width;
+            style.height = this.block.fixedSize.width;
+            size = this.block.fixedSize.width;
+            var s = this.block.globalMatrix.getScaling().x;
+            gap = -10 / s;
+            r = r / s;
+        }
+        return <div className="sy-block-icon" style={style}>
             <div className="flex" style={cs}>
                 <div className="flex-center relative  visible-hover" onMouseDown={e => this.mousedown(e)} style={{
                     backgroundColor: bg,
-                    width: this.block.size + gap,
-                    height: this.block.size + gap,
-                    borderRadius: 5,
+                    width: this.block.isFreeBlock ? size : size + gap,
+                    height: this.block.isFreeBlock ? size : size + gap,
+                    borderRadius: r,
                     cursor: 'pointer'
                 }}>
-                    <Icon icon={{ ...icon }} size={this.block.size}></Icon>
-                    {this.block.isCanEdit() && <>
+                    <Icon fontColorInherit icon={{ ...icon }} size={size + gap}></Icon>
+                    {this.block.isCanEdit() && !this.block.isFreeBlock && <>
                         <div style={{ zIndex: 1000, top: -24, right: gap }}
                             className="h-24 visible  pos-top-right flex round bg-white shadow-s">
                             <ToolTip overlay={lst('更换图标')}><span onMouseDown={async e => {

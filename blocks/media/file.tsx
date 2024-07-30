@@ -17,6 +17,7 @@ import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { CopyAlert } from "../../component/copy";
 import { PopoverPosition } from "../../component/popover/position";
 import "./style.less";
+import { closeBoardEditTool } from "../../extensions/board.edit.tool";
 
 @url('/file')
 export class File extends Block {
@@ -150,6 +151,25 @@ export class File extends Block {
             height: 40
         }
     }
+    async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
+        var cs: { name: string; value?: any; }[] = [];
+        cs.push({ name: 'upload' });
+        cs.push({ name: 'download' });
+        return cs;
+    }
+    async setBoardEditCommand(name: string, value: any) {
+        if (name == 'upload') {
+            closeBoardEditTool();
+            setTimeout(() => {
+                this.addFile({ roundArea: this.getVisibleBound() })
+            }, 200);
+        }
+        else if (name == 'download') {
+            await util.downloadFile(this.src?.url, (this.src?.filename) || (lst('图像')) + (this.src.ext || '.jpg'));
+        }
+        else
+            await super.setBoardEditCommand(name, value)
+    }
 }
 
 @view('/file')
@@ -204,3 +224,4 @@ export class FileView extends BlockView<File> {
         </div>
     }
 }
+

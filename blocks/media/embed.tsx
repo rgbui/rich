@@ -25,7 +25,7 @@ import { Block } from "../../src/block";
 import { prop, url, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
 import { MouseDragger } from "../../src/common/dragger";
-import { Rect } from "../../src/common/vector/point";
+import { Point, Rect } from "../../src/common/vector/point";
 import { BlockDirective, BlockRenderRange } from "../../src/block/enum";
 import { lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
@@ -42,7 +42,6 @@ import YB from "../../src/assert/img/youtube.png";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { CopyAlert } from "../../component/copy";
 
-
 @url('/embed')
 export class Embed extends Block {
     @prop()
@@ -58,7 +57,7 @@ export class Embed extends Block {
     @prop()
     align: 'left' | 'right' | 'center' = 'center';
     async addEmbed(pos: PopoverPosition) {
-        var r = await useOutSideUrlInput(pos, { embedType: this.embedType, isEmbed: true });
+        var r = await useOutSideUrlInput(pos, { embedType: this.embedType, url: cr.origin, isEmbed: true });
         if (r?.url) {
             var cr = ConvertEmbed(r.url);
             var props = {
@@ -207,6 +206,46 @@ export class Embed extends Block {
             height: this.fixedHeight
         }
     }
+    boardMoveStart(this: Block, point: Point): void {
+        (this.view as any).isResize = true;
+        this.forceManualUpdate();
+        super.boardMoveStart(point);
+    }
+    boardMoveEnd(this: Block, from: Point, to: Point): Promise<void> {
+        (this.view as any).isResize = false;
+        this.forceManualUpdate();
+        return super.boardMoveEnd(from, to);
+    }
+    async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
+        var cs: { name: string; value?: any; }[] = [];
+        cs.push({ name: 'embed', value: { embedType: this.embedType, url: this.origin, isEmbed: true } })
+        return cs;
+    }
+    async setBoardEditCommand(name: string, value: any) {
+        if (await super.setBoardEditCommand(name, value) == false) {
+            if (name == 'embed') {
+                var cr = ConvertEmbed(value.url);
+                var props = {
+                    embedType: cr.embedType,
+                    origin: cr.origin,
+                    src: {
+                        name: 'link',
+                        url: cr.url
+                    }
+                } as Record<string, any>;
+                if (this.isFreeBlock) {
+                    if (cr?.embedType == 'music.163') {
+                        props.fixedWidth = 300;
+                    }
+                    else {
+                        // props.fixedWidth = 350;
+                        // props.fixedHeight = 200;
+                    }
+                }
+                await this.updateProps(props, BlockRenderRange.self)
+            }
+        }
+    }
 }
 
 @view('/embed')
@@ -265,15 +304,12 @@ export class EmbedView extends BlockView<Embed> {
         function getIframeStyle() {
             var style: CSSProperties = { height: 'inherit' };
             if (self.block.embedType == 'music.163') {
-
                 if (self.block.isFreeBlock) style.margin = '0px'
                 else style.margin = '0px 10px';
-                if (self.block.isFreeBlock)
-                    style.padding = '10px';
             }
-            else {
-                if (self.block.isFreeBlock)
-                    style.padding = '10px';
+            if (self.block.isFreeBlock) {
+                style.padding = 20;
+                // style.backgroundColor = 'var(--bg-1)'
             }
             return style;
         }
@@ -351,7 +387,7 @@ export class EmbedView extends BlockView<Embed> {
                     height,
                     width: width
                 }}>
-                <div className={this.block.isFreeBlock ? " border-box round border-light" : ""} style={{ ...getIframeStyle(), pointerEvents: this.isResize ? "none" : 'auto' }}>
+                <div className={this.block.isFreeBlock ? " border-box round item-hover-light" : ""} style={{ ...getIframeStyle(), pointerEvents: this.isResize ? "none" : 'auto' }}>
                     <iframe draggable={false}
                         referrerPolicy="origin"
                         src={this.block.src.url} ></iframe>

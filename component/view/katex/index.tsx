@@ -1,13 +1,12 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import { util } from "../../../util/util";
 import { loadKatex } from "./load";
-
-
 
 export function Katex(props: {
     latex: string,
     block?: boolean,
     className?: string | (string[]),
+    style?: CSSProperties,
     onMouseDown?: (event: React.MouseEvent) => void
 }) {
     var rf = React.useRef<HTMLElement>(null);
@@ -20,7 +19,7 @@ export function Katex(props: {
     React.useEffect(() => {
         load()
     }, [props.latex])
-    if (props.block) return <div onMouseDown={e=>props?.onMouseDown&&props?.onMouseDown(e)} className={cs.join(" ")} ref={e => rf.current = e}></div>
-    else return <span  onMouseDown={e=>props?.onMouseDown&&props?.onMouseDown(e)} className={cs.join(" ")} ref={e => rf.current = e}>
+    if (props.block) return <div style={props.style || {}} onMouseDown={e => props?.onMouseDown && props?.onMouseDown(e)} className={cs.join(" ")} ref={e => rf.current = e}></div>
+    else return <span style={props.style || {}} onMouseDown={e => props?.onMouseDown && props?.onMouseDown(e)} className={cs.join(" ")} ref={e => rf.current = e}>
     </span>
 }

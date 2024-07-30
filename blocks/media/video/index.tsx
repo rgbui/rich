@@ -15,6 +15,8 @@ import { MenuItemView } from "../../../component/view/menu/item";
 import { lst } from "../../../i18n/store";
 import { UA } from "../../../util/ua";
 import { Spin } from "../../../component/view/spin";
+import { closeBoardEditTool } from "../../../extensions/board.edit.tool";
+import { PopoverPosition } from "../../../component/popover/position";
 
 
 @url('/video')
@@ -33,11 +35,9 @@ export class Video extends Block {
     noVideoControl = false;
     display = BlockDisplay.block;
     speed = '';
-    async addVideo(event: React.MouseEvent) {
+    async addVideo(pos: PopoverPosition) {
         if (this.speed) return;
-        var target = event.target as HTMLElement;
-        var bound = Rect.from(target.getBoundingClientRect());
-        var r = await useVideoPicker({ roundArea: bound });
+        var r = await useVideoPicker(pos);
         if (r) {
             await this.onSaveSize(r, false);
         }
@@ -360,7 +360,47 @@ export class Video extends Block {
         }
         await super.onClickContextMenu(item, event);
     }
+    async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
+        var cs: { name: string; value?: any; }[] = [];
+        cs.push({ name: 'upload' });
+        cs.push({ name: 'download' });
+        return cs;
+    }
+    async setBoardEditCommand(name: string, value: any) {
+        if (name == 'upload') {
+            closeBoardEditTool();
+            setTimeout(() => {
+                this.addVideo({ roundArea: this.getVisibleBound() })
+            }, 200);
+        }
+        else if (name == 'download') {
+            await util.downloadFile(this.src?.url, (this.src?.filename) || (lst('图像')) + (this.src.ext || '.jpg'));
+        }
+        else
+            await super.setBoardEditCommand(name, value)
+    }
+    get fixedSize() {
+        if (!this.el)
+            return {
+                width: this.fixedWidth,
+                height: this.fixedHeight
+            }
+        var el = this.el;
+        var height
+        if (this.originSize) {
+            var size = this.originSize;
+            height = this.fixedWidth * size.height / size.width;
+        }
+        else {
+            height = el.offsetHeight;
+        }
+        return {
+            width: this.fixedWidth,
+            height: height
+        }
+    }
 }
+
 @view('/video')
 export class VideoView extends BlockView<Video> {
     async loadPlayer() {
@@ -371,7 +411,13 @@ export class VideoView extends BlockView<Video> {
     vc: any;
     renderView() {
         var VC = lazy(() => import('./video'));
-        return <div style={this.block.visibleStyle}>
+        var style = this.block.visibleStyle;
+        if (this.block.isFreeBlock) {
+            var fs = this.block.fixedSize;
+            style.width = fs.width;
+            style.height = fs.height;
+        }
+        return <div style={style}>
             <div style={this.block.contentStyle}>
                 <Suspense fallback={<Spin block></Spin>}>
                     <VC ref={e => this.vc = e} block={this.block}></VC>

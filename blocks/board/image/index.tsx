@@ -59,6 +59,13 @@ export class Image extends Block {
     getVisibleContentBound() {
         return this.getVisibleBound()
     }
+    async onSaveImageSize(d: { url?: string }, merge: boolean) {
+        var imgSize = await getImageSize(d?.url);
+        await this.onUpdateProps({
+            originSize: imgSize,
+            src: { ...d }
+        }, { range: BlockRenderRange.self, merge });
+    }
     async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
         if (this.isCrop) return [{ name: 'croping' }, { name: 'resetCrop' }];
         var cs: { name: string; value?: any; }[] = [];
@@ -69,13 +76,7 @@ export class Image extends Block {
         cs.push({ name: 'download' });
         return cs;
     }
-    async onSaveImageSize(d: { url?: string }, merge: boolean) {
-        var imgSize = await getImageSize(d?.url);
-        await this.onUpdateProps({
-            originSize: imgSize,
-            src: { ...d }
-        }, { range: BlockRenderRange.self, merge });
-    }
+   
     async setBoardEditCommand(name: string, value: any) {
 
         if (name == 'crop') {

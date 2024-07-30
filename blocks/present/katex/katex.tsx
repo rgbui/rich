@@ -2,14 +2,15 @@ import { BlockView } from "../../../src/block/view";
 import React from 'react';
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { Block } from "../../../src/block";
-import { BlockDirective, BlockDisplay } from "../../../src/block/enum";
+import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
 import { useKatexInput } from "../../../extensions/katex";
-import { Rect } from "../../../src/common/vector/point";
+import { PointArrow, Rect } from "../../../src/common/vector/point";
 import { lst } from "../../../i18n/store";
 import { CopyAlert } from "../../../component/copy";
 import { Katex } from "../../../component/view/katex";
 import "./style.less";
 import { MenuItemType } from "../../../component/view/menu/declare";
+import { BlockCssName } from "../../../src/block/pattern/css";
 
 @url('/katex')
 export class KatexBlock extends Block {
@@ -74,6 +75,45 @@ export class KatexBlock extends Block {
         }
         await super.onClickContextMenu(item, event);
     }
+    onResizeBoardSelector(arrows: PointArrow[], event: React.MouseEvent) {
+        this.onResizeScaleBoardSelector(arrows, event);
+    }
+    get fixedSize() {
+        var el = this.el.querySelector('.sy-block-katex') as HTMLElement;
+        // console.log(el);
+        if (el) {
+            var bound = Rect.fromEle(el);
+            // var s = this.globalMatrix.getScaling().x;
+            // console.log('bound', bound,s);
+            return {
+                width: el.offsetWidth,
+                height: el.offsetHeight
+            }
+        }
+        else {
+            return {
+                width: this.fixedWidth,
+                height: this.fixedHeight
+            }
+        }
+    }
+    async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
+        var cs: { name: string; value?: any; }[] = [];
+        cs.push({ name: 'katex', value: this.content })
+        cs.push({ name: 'fontColor', value: this.pattern.css(BlockCssName.font)?.color });
+        return cs;
+    }
+    async setBoardEditCommand(name: string, value: any) {
+
+        if (await super.setBoardEditCommand(name, value) == false) {
+            if (name == 'katex') {
+                await this.updateProps({ content: value }, BlockRenderRange.self)
+                setTimeout(() => {
+                    this.page.kit.picker.onPicker([this]);
+                }, 1000);
+            }
+        }
+    }
 }
 
 @view('/katex')
@@ -84,8 +124,8 @@ export class KatexView extends BlockView<KatexBlock> {
         else if (this.block.align == 'right') style.textAlign = 'right';
         else style.textAlign = 'center';
         if (this.block.isFreeBlock) {
-            style.width = this.block.fixedWidth;
-            style.height = this.block.fixedHeight;
+            // style.width = this.block.fixedWidth;
+            // style.height = this.block.fixedHeight;
             style.padding = '0px';
             style.boxSizing = 'border-box';
         }
@@ -96,7 +136,7 @@ export class KatexView extends BlockView<KatexBlock> {
                 if (this.block.isFreeBlock) return;
                 this.block.open(e)
             }}>
-            <Katex block className='sy-block-katex-content' latex={this.block.content}></Katex>
+            <Katex style={{ margin: 0 }} block className='sy-block-katex-content' latex={this.block.content || '(a-b)^2'}></Katex>
         </div>
             {this.renderComment()}
         </div>
