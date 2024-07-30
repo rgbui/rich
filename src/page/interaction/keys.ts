@@ -29,7 +29,7 @@ export function PageKeys(
                 shift: kt.isShift()
             })
         }
-        if (page.requireSelectLayout && page.isCanEdit) {
+        else if (page.requireSelectLayout && page.isCanEdit) {
             var list = Array.from(page.view.el.querySelectorAll('.shy-page-view-template-picker-items a'));
             var aindex = list.findIndex(c => c.classList.contains('hover'));
             if (aindex == -1) {
@@ -45,6 +45,22 @@ export function PageKeys(
                 }
             }
         }
+        else if (page.kit.picker.blocks.length > 0) {
+            var b = findBlockAppear(event.target as HTMLElement);
+            var cursorNode = window.getSelection().focusNode;
+            if (!(b && cursorNode && b.el.contains(cursorNode))) {
+                page.onAction('onBoardArrowMove', async ()=>{
+                    await page.kit.picker.blocks.eachAsync(async (block) => {
+                        var ma = block.matrix;
+                        var s = block.globalMatrix.getScaling().x;
+                        var na = ma.clone();
+                        na.translate(0, 10 / s);
+                        await block.updateMatrix(ma, na);
+                    });
+                    page.kit.picker.onRePicker(true);
+                })
+            }
+        }
     });
     keyboardPlate.listener(kt => kt.is(KeyboardCode.ArrowUp), (event, kt) => {
         if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
@@ -53,7 +69,7 @@ export function PageKeys(
                 shift: kt.isShift()
             })
         }
-        if (page.requireSelectLayout && page.isCanEdit) {
+        else if (page.requireSelectLayout && page.isCanEdit) {
             var list = Array.from(page.view.el.querySelectorAll('.shy-page-view-template-picker-items a'));
             var aindex = list.findIndex(c => c.classList.contains('hover'));
             if (aindex == -1) {
@@ -69,7 +85,63 @@ export function PageKeys(
                 }
             }
         }
+        else if (page.kit.picker.blocks.length > 0) {
+            var b = findBlockAppear(event.target as HTMLElement);
+            var cursorNode = window.getSelection().focusNode;
+            if (!(b && cursorNode && b.el.contains(cursorNode))) {
+                page.onAction('onBoardArrowMove', async () => {
+
+                    await page.kit.picker.blocks.eachAsync(async (block) => {
+                        var ma = block.matrix;
+                        var s = block.globalMatrix.getScaling().x;
+                        var na = ma.clone();
+                        na.translate(0, 0 - 10 / s);
+                        await block.updateMatrix(ma, na);
+                    });
+                    page.kit.picker.onRePicker(true);
+                })
+            }
+        }
     });
+    keyboardPlate.listener(kt => kt.is(KeyboardCode.ArrowLeft), (event, kt) => {
+        if (page.kit.picker.blocks.length > 0) {
+            var b = findBlockAppear(event.target as HTMLElement);
+            var cursorNode = window.getSelection().focusNode;
+            if (!(b && cursorNode && b.el.contains(cursorNode))) {
+                page.onAction('onBoardArrowMove', async () => {
+
+                    await page.kit.picker.blocks.eachAsync(async (block) => {
+                        var ma = block.matrix;
+                        var s = block.globalMatrix.getScaling().x;
+                        var na = ma.clone();
+                        na.translate(0 - 10 / s, 0);
+                        await block.updateMatrix(ma, na);
+                    });
+                    page.kit.picker.onRePicker(true);
+                })
+            }
+        }
+    });
+    keyboardPlate.listener(kt => kt.is(KeyboardCode.ArrowRight), (event, kt) => {
+        if (page.kit.picker.blocks.length > 0) {
+            var b = findBlockAppear(event.target as HTMLElement);
+            var cursorNode = window.getSelection().focusNode;
+            if (!(b && cursorNode && b.el.contains(cursorNode))) {
+                page.onAction('onBoardArrowMove', async () => {
+
+                    await page.kit.picker.blocks.eachAsync(async (block) => {
+                        var ma = block.matrix;
+                        var s = block.globalMatrix.getScaling().x;
+                        var na = ma.clone();
+                        na.translate(10 / s, 0);
+                        await block.updateMatrix(ma, na);
+                    });
+                    page.kit.picker.onRePicker(true);
+                })
+            }
+        }
+    });
+
     keyboardPlate.listener(kt => kt.is(KeyboardCode.Enter), (event, kt) => {
         if (page.requireSelectLayout && page.isCanEdit) {
 
@@ -148,7 +220,7 @@ export function PageKeys(
                     else {
                         event.preventDefault();
                         page.onBatchDelete(page.kit.picker.blocks);
-                    } 
+                    }
                 }
             }
             closeSelectMenutItem()
