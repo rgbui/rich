@@ -54,9 +54,10 @@ class OutSideUrlInput extends EventsComponent {
     }
     embedType: EmbedType;
     isEmbed: boolean;
-    open(options?: { embedType?: EmbedType, isEmbed?: boolean }) {
+    open(options?: { embedType?: EmbedType,url?:string, isEmbed?: boolean }) {
         this.embedType = options?.embedType ?? '';
         this.isEmbed = options?.isEmbed ?? false;
+        this.url=options?.url??'';
         this.forceUpdate();
     }
 }
@@ -66,7 +67,7 @@ interface OutSideUrlInput {
     emit(name: 'select', data: ResourceArguments);
 }
 
-export async function useOutSideUrlInput(pos: PopoverPosition, options?: { embedType?: EmbedType, isEmbed?: boolean }) {
+export async function useOutSideUrlInput(pos: PopoverPosition, options?: { embedType?: EmbedType, url?:string,isEmbed?: boolean }) {
     let popover = await PopoverSingleton(OutSideUrlInput);
     let outSideUrlInput = await popover.open(pos);
     outSideUrlInput.open(options);
