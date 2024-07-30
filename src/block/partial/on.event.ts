@@ -450,8 +450,10 @@ export class Block$Event {
                 await this.onCopyLink();
                 break;
             case 'arrow-up-layer':
+                this.onInOrDeIndex('up');
                 break;
             case 'arrow-down-layer':
+                this.onInOrDeIndex('down');
                 break;
         }
     }
@@ -593,6 +595,31 @@ export class Block$Event {
         if (layer == 'top') zindex = this.parent.childs.max(g => g.zindex) + 1;
         else zindex = this.parent.childs.min(g => g.zindex) - 1;
         await this.updateProps({ zindex }, BlockRenderRange.self);
+    }
+    async onInOrDeIndex(this: Block, layer: 'down' | 'up') {
+        var gm = this.panelGridMap || this.page.gridMap;
+        gm.start();
+        var bs = gm.findBlocksByRect(this.getVisibleBound());
+        lodash.sortBy(bs, g => g.zindex);
+        var index = bs.findIndex(g => g == this);
+        await this.page.onAction('onInOrDeIndex', async () => {
+            if (layer == 'up') {
+                var bn = bs[index + 1];
+                if (bn) {
+                    var gz = this.zindex;
+                    await this.updateProps({ zindex: gz == bn.zindex ? bn.zindex + 1 : bn.zindex }, BlockRenderRange.self);
+                    await bn.updateProps({ zindex: gz }, BlockRenderRange.self);
+                }
+            }
+            else if (layer == 'down') {
+                var pre = bs[index - 1];
+                if (pre) {
+                    var gz = this.zindex;
+                    await this.updateProps({ zindex: gz == pre.zindex ? pre.zindex - 1 : pre.zindex }, BlockRenderRange.self);
+                    await pre.updateProps({ zindex: gz }, BlockRenderRange.self);
+                }
+            }
+        })
     }
     /**
      * 光标输入完后触发的事件
