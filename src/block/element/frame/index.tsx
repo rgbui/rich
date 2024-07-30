@@ -75,19 +75,6 @@ export class Frame extends Block {
                     poly: new Polygon(...pr.points.map(p => gm.transform(p)))
                 }
             }))
-        // if (types.includes(BoardPointType.pathConnectPort))
-        //     pickers.push(...rect.centerPoints.map((pr, i) => {
-        //         var arrows: PointArrow[] = [];
-        //         if (i == 0) arrows = [PointArrow.top, PointArrow.center];
-        //         else if (i == 1) arrows = [PointArrow.middle, PointArrow.right];
-        //         else if (i == 2) arrows = [PointArrow.bottom, PointArrow.center]
-        //         else if (i == 3) arrows = [PointArrow.middle, PointArrow.left]
-        //         return {
-        //             type: BoardPointType.pathConnectPort,
-        //             arrows,
-        //             point: gm.transform(pr)
-        //         }
-        //     }))
         if (types.includes(BoardPointType.resizePort)) pickers.push(...rect.points.map((p, i) => {
             var arrows: PointArrow[] = [];
             if (i == 0) arrows = [PointArrow.top, PointArrow.left];
@@ -138,6 +125,7 @@ export class Frame extends Block {
             await this.updateProps({ frameFormat: value, ...props }, BlockRenderRange.self)
         }
     }
+    
 }
 
 @view('/frame')
