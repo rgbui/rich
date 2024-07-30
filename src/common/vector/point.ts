@@ -140,11 +140,11 @@ export class Point {
         return Math.sqrt(Math.pow(point.x - p2.x, 2) + Math.pow(point.y - p2.y, 2));
     }
     setX(x: number) {
-        this.x = x; 
+        this.x = x;
         return this;
     }
     setY(y: number) {
-        this.y = y; 
+        this.y = y;
         return this;
     }
 
@@ -389,8 +389,8 @@ export class Rect {
         var ps = rects.map(r => [r.leftTop, r.rightBottom]).flat();
         return new Polygon(...ps).bound;
     }
-    static getTopStartFromRects(rects:Rect[]){
-        var r=rects.findMin(c=>c.top);
+    static getTopStartFromRects(rects: Rect[]) {
+        var r = rects.findMin(c => c.top);
         return r.leftTop;
     }
     transformToRect(matrix: Matrix) {
@@ -398,10 +398,18 @@ export class Rect {
         var e = this.rightBottom;
         return new Rect(matrix.transform(t), matrix.transform(e));
     }
+    transformToBound(matrix: Matrix) {
+        var ps = this.points.map(p => matrix.transform(p));
+        return RectUtility.getPointsBound(ps);
+    }
     transformInverseToRect(matrix: Matrix) {
         var t = this.leftTop;
         var e = this.rightBottom;
         return new Rect(matrix.inverseTransform(t), matrix.inverseTransform(e));
+    }
+    transformInverseToBound(matrix: Matrix) {
+        var ps = this.points.map(p => matrix.inverseTransform(p));
+        return RectUtility.getPointsBound(ps);
     }
     transformToPoints(matrix: Matrix) {
         return this.points.map(t => matrix.transform(t));
@@ -445,7 +453,7 @@ export class RectUtility {
                 break;
             case 'bottom':
                 y = rountBottom;
-                
+
                 if (y + pos.elementArea.height > window.innerHeight) {
                     y = roundTop;
                     if (y < 0) y = roundMiddle;

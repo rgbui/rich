@@ -29,19 +29,27 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
             BoardPointType.connectPort,
             BoardPointType.resizePort
         ]);
+        var sizePick = pickers.find(c => c.type == BoardPointType.path && c.arrows.includes(PointArrow.bottom));
+        var sp = sizePick?.poly?.bound.middleCenter?.move(0, 16);
+        var scale = block.matrix.getScaling().x;
+        var spText = (block.fixedSize.width * scale).toFixed(0) + "x" + (block.fixedSize.height * scale).toFixed(0)
+
+        var rp = pickers.find(c => c.type == BoardPointType.rotatePort);
+        var rpText = block.matrix.clone().append(block.moveMatrix).getRotation().toFixed(0) + '°';
         return <g key={block.id}>
             {pickers.map((pi, i) => {
                 switch (pi.type) {
                     case BoardPointType.path:
+                        if (block.isLock) return <g key={i}></g>
                         var cursor = 'n-resize';
                         if (pi.arrows.includes(PointArrow.right)) cursor = 'e-resize';
                         else if (pi.arrows.includes(PointArrow.bottom)) cursor = 's-resize';
                         else if (pi.arrows.includes(PointArrow.left)) cursor = 'w-resize';
-                        return <path
+                        return <path key={i}
                             fillOpacity={typeof pi.fillOpacity == 'number' ? pi.fillOpacity : 0.8}
                             onMouseDown={e => { block.isLock ? undefined : this.picker.onResizeBlock(block, pi.arrows, e) }}
                             style={{ cursor: cursor }}
-                            d={pi.poly.pathString()} key={i}></path>
+                            d={pi.poly.pathString()}></path>
                     case BoardPointType.lineSplitPort:
                         return <circle onMouseDown={e => {
                             if (block.isLock) return;
@@ -134,8 +142,33 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
                         break;
                 }
             })}
+            {this.showSize && sizePick && <g style={{ pointerEvents: 'none' }}>
+                <foreignObject
+                    width={spText.length * 10}
+                    height={24}
+                    x={sp?.x - spText.length * 10 / 2}
+                    y={sp?.y - 24 / 2}
+                >
+                    <div className="flex-center f-14 text-white bg-primary round">
+                        {spText}
+                    </div>
+                </foreignObject>
+            </g>}
+            {this.showAngle && rp && <g style={{ pointerEvents: 'none' }}>
+                <foreignObject
+                    width={rpText.length * 10}
+                    height={20}
+                    x={rp.point.x + rpText.length * 10}
+                    y={rp.point.y}>
+                    <div className="flex-center f-14 text-white bg-primary round">
+                        {rpText}
+                    </div>
+                </foreignObject>
+            </g>}
         </g>
     }
+    showSize: boolean = false;
+    showAngle: boolean = false;
     render() {
         var style: CSSProperties = {
             zIndex: 10000,

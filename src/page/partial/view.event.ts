@@ -6,7 +6,7 @@ import { emojiStore } from "../../../extensions/emoji/store";
 import { useIconPicker } from "../../../extensions/icon";
 import { channel } from "../../../net/channel";
 import { Matrix } from "../../common/matrix";
-import { Point, Rect } from "../../common/vector/point";
+import { Point, Rect, RectUtility } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { onPastePage } from "../../kit/write/paste";
 import { PageLayoutType } from "../declare";
@@ -48,6 +48,10 @@ export class Page$ViewEvent {
                 this.kit.boardSelector.onShow(this.root, { page: this.kit.page });
         }
         this.kit.operator.mousedown(event);
+    }
+    onDoubleClick(this: Page, event: React.MouseEvent) {
+        if (this.isDeny) return;
+        this.kit.operator.dblclick(event);
     }
     onMouseDownCapture(this: Page, event: React.MouseEvent) {
         if (this.isDeny) return;
@@ -318,34 +322,36 @@ export class Page$ViewEvent {
     }
     onFitZoom(this: Page) {
         closeBoardEditTool();
+        var cs = this.views.first().childs;
+        var bs = cs.map(c => {
+            var size = c.fixedSize;
+            var rect = new Rect(0, 0, size.width, size.height);
+            // var gm = this.matrix.appended(c.currentMatrix);
+            rect = rect.transformToBound(c.currentMatrix);
+            return rect;
+        });
+        lodash.remove(bs, g => g ? false : true);
+        var points = bs.map(b => b.points).flat();
+        var bound = RectUtility.getPointsBound(points);
+        bound = bound.extend(100);
         var matrix = new Matrix();
-        this.gridMap.start();
-        var bound = this.gridMap.gridRange();
-        if (typeof bound != 'undefined') {
-            bound = bound.transformToRect(this.matrix.inverted());
-            bound = bound.transformToRect(this.windowMatrix.inverted());
-            bound = bound.extend(100);
-
-            var rect = Rect.fromEle(this.viewEl);
-            rect = rect.transformToRect(this.windowMatrix.inverted());
-            var visibleCenter = rect.middleCenter;
-            matrix.translate(visibleCenter.x - bound.middleCenter.x, visibleCenter.y - bound.middleCenter.y);
-
-            var wr = bound.width / rect.width;
-            var hr = bound.height / rect.height;
-            var r = Math.max(wr, hr);
-            if (r > 1) {
-                r = 1 / r;
-            }
-            else if (r < 0.3) {
-                r = 0.7
-            }
-            else r = 1;
-            var p = matrix.inverseTransform(visibleCenter);
-            matrix.scale(r, r, p);
+        var rect = Rect.fromEle(this.viewEl);
+        rect = rect.transformToRect(this.windowMatrix.inverted());
+        var visibleCenter = rect.middleCenter;
+        matrix.translate(visibleCenter.x - bound.middleCenter.x, visibleCenter.y - bound.middleCenter.y);
+        var wr = bound.width / rect.width;
+        var hr = bound.height / rect.height;
+        var r = Math.max(wr, hr);
+        if (r > 1) {
+            r = 1 / r;
         }
-        this.gridMap.over();
-        this.onSetMatrix(matrix); 
+        else if (r < 0.3) {
+            r = 0.7
+        }
+        else r = 1;
+        var p = matrix.inverseTransform(visibleCenter);
+        matrix.scale(r, r, p);
+        this.onSetMatrix(matrix);
     }
     onMouseenter(this: Page, event: React.MouseEvent) {
         if (this.isBoard) {

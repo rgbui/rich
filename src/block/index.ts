@@ -702,10 +702,10 @@ export abstract class Block extends Events {
         return this.url == BlockUrlConstant.Mind;
     }
     get isBoardBlock() {
-        return this.url == BlockUrlConstant.Board || (this.url == BlockUrlConstant.CardBox && (this as any).board == true);
+        return this.url == BlockUrlConstant.Board || this.url == BlockUrlConstant.Frame || (this.url == BlockUrlConstant.CardBox && (this as any).board == true);
     }
     get frameBlock(): Block {
-        var r = this.closest(x => x.isFrame || x.isBoardBlock);
+        var r = this.closest(x => x.isBoardBlock);
         if (r) return r;
         else {
             if (this.page.pageLayout.type == PageLayoutType.board) {
@@ -721,20 +721,21 @@ export abstract class Block extends Events {
     get isFreeBlock() {
         if (this.isPart) return false;
         if (this.isLine) return false;
+        if (this.isFrame) return true;
         if (this.isBoardBlock) return false;
         if (this.url == BlockUrlConstant.BoardPageCard) return true;
         if (this.closest(g => g.url == BlockUrlConstant.BoardPageCard)) return false;
         var table = this.closest(x => x.url == BlockUrlConstant.Table);
         if (table && table !== this) return false;
         if (this.page.pageLayout.type == PageLayoutType.board) return true;
-        return this.closest(x => x.isFrame || x.isBoardBlock) ? true : false;
+        return this.closest(x => x.isBoardBlock) ? true : false;
     }
     /**
      * 坐标系相对的块，
      * 没有就是相对于页面
      */
     get relativeBoardBlock() {
-        var rb = this.closest(x => x.isFrame || x.isBoardBlock || x.isMind || x.url == BlockUrlConstant.Group, true);
+        var rb = this.closest(x => x.isBoardBlock || x.isMind || x.url == BlockUrlConstant.Group, true);
         if (rb) return rb;
     }
     @prop()
@@ -860,17 +861,17 @@ export abstract class Block extends Events {
         return this.page.isAllow(...ps);
     }
     getBoardRelativePoint(point: Point) {
-        if (this.page.isBoard || this.isFrame || this.isFreeBlock || this.isBoardBlock)
+        if (this.page.isBoard || this.isFreeBlock || this.isBoardBlock)
             return this.globalMatrix.transform(point);
         else if (this.el) return point.relative(Rect.fromEle(this.el).leftTop);
     }
     getBoardRelativeRect(rect: Rect) {
-        if (this.page.isBoard || this.isFrame || this.isFreeBlock || this.isBoardBlock)
+        if (this.page.isBoard || this.isFreeBlock || this.isBoardBlock)
             return new Rect(this.globalMatrix.transform(rect.leftBottom), this.matrix.transform(rect.rightBottom))
         else if (this.el) return rect.relative(Rect.fromEle(this.el).leftTop)
     }
     getInverseRect(rect: Rect): Rect {
-        if (this.page.isBoard || this.isFrame || this.isFreeBlock || this.isBoardBlock)
+        if (this.page.isBoard || this.isFreeBlock || this.isBoardBlock)
             return new Rect(this.globalMatrix.inverseTransform(rect.leftBottom), this.matrix.inverseTransform(rect.rightBottom))
         else if (this.el) { var n = rect.clone(); n.moveTo(Rect.fromEle(this.el).leftTop); return n; }
     }
@@ -948,6 +949,15 @@ export abstract class Block extends Events {
             isError: false,
             errorData: null
         };
+    /**
+     * 获取当前块是否处在group中
+     */
+    get groups() {
+        return this.parents(x => x.url == BlockUrlConstant.Group && x !== this)
+    }
+    get outGroup() {
+        return this.groups.last();
+    }
 }
 export interface Block extends Block$Seek { }
 export interface Block extends Block$Event { }

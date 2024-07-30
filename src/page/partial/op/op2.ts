@@ -7,8 +7,6 @@ import { BlockFactory } from "../../../block/factory/block.factory";
 import { OperatorDirective, ActionDirective } from "../../../history/declare";
 import { DropDirection } from "../../../kit/handle/direction";
 import { PageDirective, PageLocation } from "../../directive";
-
-import { TableSchema } from "../../../../blocks/data-grid/schema/meta";
 import { Title } from "../../../../blocks/interaction/title";
 import { channel } from "../../../../net/channel";
 import { ElementType } from "../../../../net/element.type";
@@ -145,7 +143,6 @@ export class Page$Operator2 {
         var first = bs[0];
         var rest = bs.slice(1);
         await this.onAction(ActionDirective.onReplace, async () => {
-
             newBlock = await this.replace(first, blockData, action);
             if (rest.length > 0) {
                 for (let r of rest) {

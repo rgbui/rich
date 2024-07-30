@@ -24,7 +24,7 @@ export class BoardMap extends React.Component<{ kit: Kit }> {
             var blockStyle: CSSProperties = {
                 width: size.width,
                 height: size.height,
-                ...c.matrix.getCss(),
+                ...c.currentMatrix.getCss(),
                 transformOrigin: '0 0',
                 top: 0,
                 left: 0,
@@ -42,7 +42,6 @@ export class BoardMap extends React.Component<{ kit: Kit }> {
     onMove(e: React.MouseEvent) {
         var ma = this.page.matrix.clone();
         var p = Point.from(e);
-        var s = ma.getScaling().x;
         MouseDragger({
             event: e,
             moving: (event, data, isEnd, isMove) => {
@@ -79,7 +78,7 @@ export class BoardMap extends React.Component<{ kit: Kit }> {
         var bs = cs.map(c => {
             var size = c.fixedSize;
             var rect = new Rect(0, 0, size.width, size.height);
-            rect = rect.transformToRect(c.matrix);
+            rect = rect.transformToBound(c.currentMatrix);
             return rect;
         });
         lodash.remove(bs, g => g ? false : true);

@@ -4,7 +4,7 @@ import { CloseShyAlert, ShyAlert } from "../../../../component/lib/alert";
 import { channel } from "../../../../net/channel";
 import { Block } from "../../../block";
 import { BlockChildKey, BlockUrlConstant } from "../../../block/constant";
-import { Point, Rect, RectUtility } from "../../../common/vector/point";
+import { Point, Rect } from "../../../common/vector/point";
 import { ActionDirective } from "../../../history/declare";
 import { LinkPageItem, PageLayoutType, PageTemplateTypeGroups } from "../../declare";
 import { PageDirective } from "../../directive";
@@ -826,46 +826,16 @@ export class Page$Operator {
     async onMergeBlocks(this: Page, blocks: Block[]) {
         this.onAction('onMergeBlocks', async () => {
             var first = blocks.first();
-            var bs: Rect[] = [];
-            blocks.forEach(c => {
-                var { width, height } = c.fixedSize;
-                var rect = new Rect(0, 0, width, height);
-                var gm = c.globalMatrix.clone();
-                var nb = rect.transformToRect(gm);
-                bs.push(nb);
-            });
-            var nr = bs.first();
-            bs.forEach((b, i) => {
-                if (i > 0) {
-                    nr = nr.merge(b);
-                }
-            })
-            var pa = first.parent;
-            nr = nr.transformInverseToRect(pa.globalMatrix);
-
-            var ma = new Matrix();
-            ma.translate(nr.leftTop.x, nr.leftTop.y);
             var newBlock = await this.createBlock(BlockUrlConstant.Group, {
-                matrix: ma.getValues(),
-                fixedWidth: nr.width,
-                fixedHeight: nr.height
             },
                 first.parent,
                 first.at,
                 first.parentKey
             );
+            await (newBlock as any).mergeBlocks(blocks);
             newBlock.mounted(() => {
                 this.kit.picker.onPicker([newBlock], { disabledOpenTool: false, merge: true })
             })
-            for (let i = 0; i < blocks.length; i++) {
-                var b = blocks[i];
-                var r = b.getTranslation().relative(newBlock.getTranslation());
-                var nm = new Matrix();
-                nm.translate(r);
-                nm.rotate(b.matrix.getRotation(), { x: 0, y: 0 });
-                await b.updateMatrix(b.matrix, nm);
-            }
-            await newBlock.appendArray(blocks, 0, BlockChildKey.childs);
         })
     }
 }

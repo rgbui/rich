@@ -298,6 +298,15 @@ export class BoardSelector extends React.Component<{
                     <div className="flex-center remark f-14"><S>插入图片</S></div>
                 </div></ToolTip>
 
+                <ToolTip overlay={<S>网页书签</S>}><div onMouseDown={e => {
+                    e.stopPropagation();
+                    this.currentSelector.url = BlockUrlConstant.Bookmark;
+                    if (!this.currentSelector.data) this.currentSelector.data = {}
+                    this.currentSelector.data.createSource = 'InputBlockSelector';
+                }}><Icon size={24} icon={{ name: 'byte', code: 'bookmark-one' }}></Icon>
+                    <div className="flex-center remark f-14"><S>网页书签</S></div>
+                </div></ToolTip>
+
                 <ToolTip overlay={<S>内嵌网页</S>}><div onMouseDown={e => {
                     e.stopPropagation();
                     this.currentSelector.url = BlockUrlConstant.Embed
@@ -387,11 +396,10 @@ export class BoardSelector extends React.Component<{
                 case BoardToolOperator.material:
                     var mv = await openMaterialView();
                     mv.only('save', async (data) => {
-                        console.log('ddd', data);
+                        if (!this.currentSelector.data)
+                            this.currentSelector.data = {};
                         if (data.mime == 'image') {
                             this.currentSelector.url = BlockUrlConstant.BoardImage;
-                            if (!this.currentSelector.data)
-                                this.currentSelector.data = {};
                             this.currentSelector.data.initialData = { imageUrl: data.url };
                         }
                         else if (data.mime == 'icon' || data.mime == 'emoji') {

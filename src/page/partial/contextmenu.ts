@@ -35,7 +35,6 @@ import { BlockUrlConstant } from "../../block/constant";
 import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
 import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
 import { ElementType } from "../../../net/element.type";
-import { FieldType } from "../../../blocks/data-grid/schema/type";
 import { util } from "../../../util/util";
 import { lst } from "../../../i18n/store";
 import { Block } from "../../block";

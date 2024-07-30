@@ -301,6 +301,7 @@ export class PageView extends Component<{ page: Page }> {
                 onMouseDownCapture={e => this.page.onMouseDownCapture(e)}
                 onContextMenu={e => this.page.onContextMenu(e)}
                 onMouseDown={e => this.page.onMousedown(e)}
+                onDoubleClick={e=>this.page.onDoubleClick(e)}
                 onScroll={e => {
                     if (this.page.pageLayout?.type == PageLayoutType.board) {
                         e.preventDefault();
