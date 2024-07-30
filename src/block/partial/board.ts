@@ -8,6 +8,7 @@ import { Point, PointArrow, Rect, RectUtility } from "../../common/vector/point"
 import { Polygon } from "../../common/vector/polygon";
 import { ActionDirective } from "../../history/declare";
 import { openBoardEditTool } from "../../kit/operator/board/edit";
+import { Group } from "../element/group";
 import { BlockRenderRange } from "../enum";
 
 export enum BoardPointType {
@@ -171,19 +172,44 @@ export class Block$Board {
         var block = this;
         var matrix = block.matrix.clone();
         var gm = block.globalMatrix.clone();
+        var gmm = block?.panelGridMap || block.page.gridMap
+        gmm.start();
         var { width: w, height: h } = block.fixedSize;
-        var fp = gm.inverseTransform(Point.from(event));
+        var downPoint = Point.from(event);
+        var fp = gm.inverseTransform(downPoint);
         var s = gm.getScaling().x;
-        var minW = 50 / s;
+        var minW = 20 / s;
         var minH = 20 / s;
         var self = this;
+        var picker = block.page.kit.picker;
+        picker.view.showSize = false;
+        // picker.alighLines = [];
+        // picker.moveRect = block.getVisibleContentBound();
+        // var cloneMoveRect = picker.moveRect.clone();
+        // var w = block.fixedWidth;
+        // var h = block.fixedHeight;
+        // var gs: {
+        //     ox: number;
+        //     oy: number;
+        //     lines: {
+        //         arrow: 'x' | 'y';
+        //         start: Point;
+        //         end: Point;
+        //     }[];
+        // }
         MouseDragger({
             event,
             moveStart() {
                 closeBoardEditTool();
             },
             moving(ev, data, isEnd) {
-                var tp = gm.inverseTransform(Point.from(ev));
+                var to = Point.from(ev);
+                // gs = CacAlignLines(block, gmm, downPoint, to, picker.moveRect);
+                // if (typeof gs?.ox == 'number' || typeof gs?.oy == 'number') {
+                //     if (gs.ox) to.x = gs.ox + to.x;
+                //     if (gs.oy) to.y = gs.oy + to.y;
+                // }
+                var tp = gm.inverseTransform(Point.from(to));
                 var ma = new Matrix();
                 var [dx, dy] = tp.diff(fp);
                 var bw = w;
@@ -221,9 +247,32 @@ export class Block$Board {
                 block.matrix = matrix.appended(ma);
                 block.fixedHeight = bh;
                 block.fixedWidth = bw;
+                // picker.moveRect.width = cloneMoveRect.width + (bw - w);
+                // picker.moveRect.height = cloneMoveRect.height + (bh - h);
+
                 block.updateRenderLines();
                 block.forceManualUpdate();
-                block.page.kit.picker.view.forceUpdate();
+                if (block.isFrame) {
+                    var cs = block.childs;
+                    for (let i = 0; i < cs.length; i++) {
+                        var b = cs[i];
+                        var oc = matrix.clone().append(b.matrix).transform(new Point(0, 0));
+                        var nc = block.matrix.clone().append(b.matrix).inverseTransform(oc);
+                        var mb = new Matrix();
+                        mb.translate(nc.x, nc.y);
+                        b.moveMatrix = mb;
+                        b.forceManualUpdate();
+                        // var nm = b.matrix.clone().append(mb);
+                        // await b.updateMatrix(b.matrix, nm);
+                    }
+                }
+                // picker.alighLines = gs?.lines || [];
+                // picker.alighLines.forEach(ag => {
+                //     ag.start = block.page.windowMatrix.inverseTransform(ag.start);
+                //     ag.end = block.page.windowMatrix.inverseTransform(ag.end);
+                // })
+                picker.view.showSize = isEnd ? false : true;
+                picker.view.forceUpdate();
                 if (isEnd) {
                     block.page.onAction(ActionDirective.onResizeBlock, async () => {
                         if (!matrix.equals(block.matrix)) await block.updateMatrix(matrix, block.matrix);
@@ -231,6 +280,25 @@ export class Block$Board {
                             { fixedWidth: w, fixedHeight: h },
                             { fixedWidth: block.fixedWidth, fixedHeight: block.fixedHeight }
                         )
+                        if (block.isFrame) {
+                            var cs = block.childs;
+                            for (let i = 0; i < cs.length; i++) {
+                                var b = cs[i];
+                                b.moveMatrix = new Matrix();
+                                var oc = matrix.clone().append(b.matrix).transform(new Point(0, 0));
+                                var nc = block.matrix.clone().append(b.matrix).inverseTransform(oc);
+                                var mb = new Matrix();
+                                mb.translate(nc.x, nc.y);
+                                var nm = b.matrix.clone().append(mb);
+                                await b.updateMatrix(b.matrix, nm);
+                            }
+                        }
+                        var groups = block.groups;
+                        if (groups?.length > 0) {
+                            await groups.eachAsync(async g => {
+                                await (g as Group).updateGroupRange();
+                            })
+                        }
                     })
                 }
             },
@@ -274,9 +342,18 @@ export class Block$Board {
                 newMa.scale(scale, scale, { x: center.x, y: center.y });
                 self.matrix = ma.appended(newMa);
                 self.forceManualUpdate();
+                self.page.kit.picker.view.showSize = isEnd ? false : true;
                 self.page.kit.picker.view.forceUpdate()
                 if (isEnd) {
-                    self.onManualUpdateProps({ matrix: ma }, { matrix: self.matrix }, { range: BlockRenderRange.self });
+                    self.page.onAction('onManualUpdateProps', async () => {
+                        await self.manualUpdateProps({ matrix: ma }, { matrix: self.matrix }, BlockRenderRange.self)
+                        var groups = self.groups;
+                        if (groups?.length > 0) {
+                            await groups.eachAsync(async g => {
+                                await (g as Group).updateGroupRange();
+                            })
+                        }
+                    })
                     openBoardEditTool(self.page.kit);
                 }
             }
@@ -360,6 +437,7 @@ export class Block$Board {
         if (isSelfUpdate) this.forceManualUpdate()
     }
     isBoardCanMove(this: Block) {
+        if (this.isLock) return false;
         return true;
     }
     boardMoveStart(this: Block, point: Point) {
@@ -419,10 +497,13 @@ export class Block$Board {
                 await this.updateMatrix(this.matrix, nm);
             }
         }
+        var groups = this.groups;
+        if (groups?.length > 0) {
+            await groups.eachAsync(async g => {
+                await (g as Group).updateGroupRange();
+            })
+        }
     }
-
-
-
 }
 
 

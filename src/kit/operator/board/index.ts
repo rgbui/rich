@@ -16,9 +16,14 @@ export function BoardDrag(
         moveEnd?(ev, isMove, data): void
     }
 ) {
+    var outGroup = block?.outGroup;
+    if (outGroup) {
+        block = outGroup;
+    }
+
     if (kit.boardSelector.visible == false || !kit.page.isBoard) {
         if (!kit.page.isBoard) {
-            var bb = block.closest(x => x.isBoardBlock);
+            var bb = block.closest(x => x.isBoardBlock && !x.isFrame);
             if (bb) {
                 kit.boardSelector.onShow(bb?.el, {
                     block: bb,
@@ -44,8 +49,10 @@ export function BoardDrag(
     var gm = block?.panelGridMap || kit.page.gridMap;
     if (block?.isLine) block = block.closest(x => x.isContentBlock);
     var beforeIsPicked = kit.picker.blocks.some(s => s == block);
-    var hasBlock: boolean = block ? true : false;
-    if (block?.isBoardBlock) hasBlock = false;
+    var emptyIsSelection: boolean = block ? true : false;
+    if (block?.isBoardBlock) emptyIsSelection = false;
+    if (block?.isFrame && kit.picker.blocks.some(s => s == block)) emptyIsSelection = true;
+
     var isCopy: boolean = false;
     console.log('board drag:', block, block?.isFreeBlock);
     if (kit.page.keyboardPlate.isShift() && block?.isFreeBlock) {
@@ -58,8 +65,6 @@ export function BoardDrag(
     }
     else {
         kit.picker.onCancel();
-        // console.log('onCancelx')
-        // kit.anchorCursor.onClearCusor()
     }
     if (kit.page.keyboardPlate.isAlt()) isCopy = true;
     async function createCopyBlocks() {
@@ -82,12 +87,12 @@ export function BoardDrag(
                 await createCopyBlocks();
             }
             gm.start();
-            if (!hasBlock) kit.anchorCursor.selector.setStart(downPoint);
+            if (!emptyIsSelection) kit.anchorCursor.selector.setStart(downPoint);
             kit.picker.onMoveStart(downPoint);
         },
         move(ev, data) {
             var ed = Point.from(ev);
-            if (hasBlock) {
+            if (emptyIsSelection) {
                 var ox = 0;
                 var oy = 0;
                 if (Math.abs(ev.clientY - rect.top) < feel) {
@@ -102,7 +107,7 @@ export function BoardDrag(
                 else if (Math.abs(ev.clientX - rect.right) < feel) {
                     ox = -moveSize;
                 }
-                if (ox > 0 || oy > 0) {
+                if (!(ox == 0 && oy == 0)) {
                     onTimeAuto({
                         async callback(f) {
                             if (f) {
@@ -128,17 +133,56 @@ export function BoardDrag(
                 /***
                  * 这里需要基于视觉查找当前有那些块可以被选中
                  */
-
-                kit.anchorCursor.selector.setMove(ed);
-                var bs = gm.findBlocksByRect(new Rect(downPoint, ed));
-                bs = kit.page.getAtomBlocks(bs);
-                kit.picker.viewPick(bs);
+                var ox = 0;
+                var oy = 0;
+                if (Math.abs(ev.clientY - rect.top) < feel) {
+                    oy = moveSize;
+                }
+                else if (Math.abs(ev.clientY - rect.bottom) < feel) {
+                    oy = -moveSize;
+                }
+                else if (Math.abs(ev.clientX - rect.left) < feel) {
+                    ox = moveSize;
+                }
+                else if (Math.abs(ev.clientX - rect.right) < feel) {
+                    ox = -moveSize;
+                }
+                if (!(ox == 0 && oy == 0)) {
+                    onTimeAuto({
+                        async callback(f) {
+                            if (f) {
+                                kit.anchorCursor.selector.setMove(ed);
+                                var bs = gm.findBlocksByRect(new Rect(downPoint, ed));
+                                bs = kit.page.getAtomBlocks(bs);
+                                kit.picker.viewPick(bs);
+                            }
+                            else {
+                                var s = kit.page.matrix.getScaling();
+                                kit.page.matrix.translate(ox, oy);
+                                downPoint.x += ox * s.x;
+                                downPoint.y += oy * s.y;
+                                kit.anchorCursor.selector.setMove(ed);
+                                var bs = gm.findBlocksByRect(new Rect(downPoint, ed));
+                                bs = kit.page.getAtomBlocks(bs);
+                                kit.picker.viewPick(bs);
+                                kit.page.forceUpdate();
+                            }
+                        }
+                    })
+                }
+                else {
+                    onTimeAutoScrollStop()
+                    kit.anchorCursor.selector.setMove(ed);
+                    var bs = gm.findBlocksByRect(new Rect(downPoint, ed));
+                    bs = kit.page.getAtomBlocks(bs);
+                    kit.picker.viewPick(bs);
+                }
             }
         },
         async moveEnd(ev, isMove, data) {
             onTimeAutoScrollStop()
             if (isMove) {
-                if (hasBlock) {
+                if (emptyIsSelection) {
                     await kit.picker.onMoveEnd(downPoint, Point.from(ev), gm);
                 }
                 else {
@@ -146,8 +190,8 @@ export function BoardDrag(
                     kit.picker.onUpdatePicker(oldBlockPickers, kit.picker.blocks);
                 }
                 if (gm) gm.over();
-                // if (kit.picker.blocks.length > 0)
-                //     await openBoardEditTool(kit);
+                if (kit.picker.blocks.length > 0)
+                    await openBoardEditTool(kit);
             }
             else {
                 if (gm) gm.over();

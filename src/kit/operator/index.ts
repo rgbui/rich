@@ -32,6 +32,16 @@ export class PageOperator {
         if (!this.kit.page?.isCanEdit) return
         PageDrag(this.kit, event);
     }
+    dblclick(event: React.MouseEvent) {
+        var block = this.kit.page.getBlockByMouseOrPoint(event.nativeEvent);
+        if (block?.isLine) block = block.closest(x => x.isContentBlock);
+        var outBlock = block?.outGroup;
+        if (outBlock && block) {
+            if (block.isFreeBlock) {
+                this.kit.picker.onPicker([block]);
+            }
+        }
+    }
     public moveEvent: MouseEvent;
     mousemove(event: MouseEvent) {
         this.moveEvent = event;
@@ -73,6 +83,7 @@ export class PageOperator {
     mouseup(event: MouseEvent) {
 
     }
+
     /**
      * 清理页面的输入状态
      */

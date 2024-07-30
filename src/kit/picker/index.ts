@@ -22,6 +22,7 @@ import { CacAlignLines } from "./common";
 import lodash from "lodash";
 import { Segment } from "../../block/svg/segment";
 import { BoardDrag } from "../operator/board";
+import { Group } from "../../block/element/group";
 
 export class BlockPicker {
     kit: Kit;
@@ -111,6 +112,11 @@ export class BlockPicker {
         var ns = this.blocks.map(b => b);
         blocks.each(b => {
             if (!ns.some(g => g == b)) ns.push(b)
+            else {
+                if (ns.length > 1) {
+                    lodash.remove(ns, c => c == b);
+                }
+            }
         })
         await this.onPicker(ns, options);
     }
@@ -140,8 +146,10 @@ export class BlockPicker {
                 end: Point;
             }[];
         }
-        if (gm && this.blocks.length == 1 && this.moveRect)
-            gs = CacAlignLines(this.blocks[0], gm, from, to, this.moveRect);
+        if (gm && this.blocks.length == 1 && this.moveRect) {
+            if (this.blocks[0].isBoardCanMove())
+                gs = CacAlignLines(this.blocks[0], gm, from, to, this.moveRect);
+        }
         if (typeof gs?.ox == 'number' || typeof gs?.oy == 'number') {
             if (gs.ox) to.x = gs.ox + to.x;
             if (gs.oy) to.y = gs.oy + to.y;
@@ -167,8 +175,10 @@ export class BlockPicker {
                 end: Point;
             }[];
         }
-        if (gm && this.blocks.length == 1 && this.moveRect)
-            gs = CacAlignLines(this.blocks[0], gm, from, to, this.moveRect);
+        if (gm && this.blocks.length == 1 && this.moveRect) {
+            if (this.blocks[0].isBoardCanMove())
+                gs = CacAlignLines(this.blocks[0], gm, from, to, this.moveRect);
+        }
         if (typeof gs?.ox == 'number' || typeof gs?.oy == 'number') {
             if (gs.ox) to.x = gs.ox + to.x;
             if (gs.oy) to.y = gs.oy + to.y;
@@ -180,7 +190,8 @@ export class BlockPicker {
                 /**
                  * this.currentMatrix*moveMatrix=newMatrix*this.selfMatrix;
                  */
-                await bl.boardMoveEnd(from, to)
+                if (bl.isBoardCanMove())
+                    await bl.boardMoveEnd(from, to)
             });
         })
         this.view.forceUpdate();
@@ -636,12 +647,15 @@ export class BlockPicker {
                 var mc = ma.clone();
                 mc.rotate(r, center);
 
-                var willMatrix = block.currentMatrix.clone();
-                willMatrix.append(mc);
-                willMatrix.append(block.selfMatrix.inverted());
-                if (Math.abs(willMatrix.getRotation()) < 5) {
-                    var da = willMatrix.getRotation() - 5;
-                    r += da;
+                var willMatrix = block.matrix.clone().append(mc);
+                var sa = [
+                    0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180,
+                    195 - 360, 210 - 360, 225 - 360, 240 - 360, 255 - 360, 270 - 360, 285 - 360, 300 - 360, 315 - 360, 330 - 360, 345 - 360
+                ];
+                var sr = sa.find(g => Math.abs(g - willMatrix.getRotation()) < 5);
+                if (typeof sr == 'number') {
+                    var da = willMatrix.getRotation() - sr;
+                    r -= da;
                     mc = ma.clone();
                     mc.rotate(r, center);
                 }
@@ -656,6 +670,7 @@ export class BlockPicker {
                 block.moveMatrix = mc;
                 block.updateRenderLines();
                 block.view.forceUpdate();
+                self.view.showAngle = isEnd ? false : true;
                 self.view.forceUpdate();
                 if (isEnd) {
                     block.page.onAction(ActionDirective.onRotate, async () => {
@@ -664,6 +679,12 @@ export class BlockPicker {
                         newMatrix.append(block.selfMatrix.inverted());
                         await block.updateMatrix(block.matrix, newMatrix);
                         block.moveMatrix = new Matrix();
+                        var groups = block.groups;
+                        if (groups?.length > 0) {
+                            await groups.eachAsync(async g => {
+                                await (g as Group).updateGroupRange();
+                            })
+                        }
                     })
                 }
             },

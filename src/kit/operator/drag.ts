@@ -29,11 +29,11 @@ export async function PageDrag(kit: Kit, event: React.MouseEvent) {
         block = kit.page.views.first()
     }
     if (block?.isLine) block = block.closest(x => x.isContentBlock);
+   
     if (kit.boardSelector.isSelector && block) {
         CheckBoardSelector(kit, block, event);
         return;
     }
-
     if (kit.page.isBoard || block?.isFreeBlock || block?.isBoardBlock) {
         if (window.shyConfig?.isDev)
             console.log('board block:', block)
