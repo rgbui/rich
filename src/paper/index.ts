@@ -1,5 +1,11 @@
 ///<reference path='./lib/paper.d.ts'/>
 
+
+
+/**
+ * 
+ * 弃用
+ */
 var paper
 export async function loadPaper() {
     if (typeof paper == 'undefined') {

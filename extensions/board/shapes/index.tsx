@@ -2,8 +2,10 @@ import React, { CSSProperties } from "react";
 import { ReactNode } from "react";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { Singleton } from "../../../component/lib/Singleton";
-import { Point } from "../../../src/common/vector/point";
+import { Point, Rect } from "../../../src/common/vector/point";
 import { ShapesList, ShapeType } from "./shapes";
+import { S } from "../../../i18n/view";
+import { useShapeStore } from "./store";
 
 class ShapeSelector extends EventsComponent {
     onMousedown(ct: ShapeType, event: React.MouseEvent) {
@@ -28,6 +30,9 @@ class ShapeSelector extends EventsComponent {
                         dangerouslySetInnerHTML={{ __html: s.shape }}></span>
                 })}
             </div>
+            <div className="flex-center cursor gap-h-5 item-hover item-hover-light-focus round h-30" onMouseDown={e => { this.openMove(e) }}>
+                <S>更多</S>
+            </div>
         </div>
     }
     private point: Point;
@@ -36,6 +41,12 @@ class ShapeSelector extends EventsComponent {
         this.point = point;
         this.visible = true;
         this.forceUpdate()
+    }
+    async openMove(event: React.MouseEvent) {
+        var c = await useShapeStore({ roundPoint: this.point.clone() });
+        if(c){
+            this.emit('selector', c);
+        }
     }
     close(): void {
         this.visible = false;
@@ -52,7 +63,7 @@ export async function getShapeSelector() {
 }
 
 export function closeShapeSelector() {
-   if(_shapeSelector) _shapeSelector.close();
+    if (_shapeSelector) _shapeSelector.close();
 }
 
 

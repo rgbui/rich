@@ -2,9 +2,10 @@
 
 export type ShapeType = {
     name?: string,
-    shape: string,
+    shape?: string,
     text?: string,
     svg?: Record<string, any>,
+    src?: string,
     value?: string
 }
 

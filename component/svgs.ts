@@ -43,6 +43,13 @@ import BookSvg from "../src/assert/svg/book.svg";
 import BrainSvg from "../src/assert/svg/brain.svg";
 import BrokenLineSvg from "../src/assert/svg/brokenLine.svg";
 import BrowserSvg from "../src/assert/svg/browser.svg";
+import BrushPenSvg from "../src/assert/svg/brush.pen.svg";
+import BrushPen1Svg from "../src/assert/svg/brush.pen1.svg";
+import BrushPen2Svg from "../src/assert/svg/brush.pen2.svg";
+import BrushPen3Svg from "../src/assert/svg/brush.pen3.svg";
+import BrushPencilSvg from "../src/assert/svg/brush.pencil.svg";
+import BrushSvg from "../src/assert/svg/brush.svg";
+import BrushWaterSvg from "../src/assert/svg/brush.water.svg";
 import ButtonSvg from "../src/assert/svg/button.svg";
 import ButtonTemplateSvg from "../src/assert/svg/button.template.svg";
 import CalloutSvg from "../src/assert/svg/callout.svg";
@@ -293,6 +300,13 @@ BookSvg,
 BrainSvg,
 BrokenLineSvg,
 BrowserSvg,
+BrushPenSvg,
+BrushPen1Svg,
+BrushPen2Svg,
+BrushPen3Svg,
+BrushPencilSvg,
+BrushSvg,
+BrushWaterSvg,
 ButtonSvg,
 ButtonTemplateSvg,
 CalloutSvg,

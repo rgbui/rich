@@ -1,4 +1,4 @@
-import React, { CSSProperties } from "react";
+import React, { CSSProperties, SVGAttributes } from "react";
 import { Matrix } from "../../common/matrix";
 import { Rect, RectUtility } from "../../common/vector/point";
 import { ShyPath, ShyCompoundPath } from "./path";
@@ -16,18 +16,19 @@ export class ShySvg {
         this.childs.each(c => c.applyMatrix(matrix));
     }
     load(data) {
-        for (let n in data) {
-            if (n == 'viewBox') {
-                this.viewBox = new Rect(data[n][0], data[n][1], data[n][2], data[n][3])
+        if (data)
+            for (let n in data) {
+                if (n == 'viewBox' && data[n]) {
+                    this.viewBox = new Rect(data[n][0], data[n][1], data[n][2], data[n][3])
+                }
+                else if (n == 'childs' && Array.isArray(data[n])) {
+                    this.childs = data[n].map(d => {
+                        if (d.name == 'compoundPath') return new ShyCompoundPath(d)
+                        else if (d.name == 'path') return new ShyPath(d)
+                        return new ShyGroup(d);
+                    })
+                }
             }
-            else if (n == 'childs') {
-                this.childs = data[n].map(d => {
-                    if (d.name == 'compoundPath') return new ShyCompoundPath(d)
-                    else if (d.name == 'path') return new ShyPath(d)
-                    return new ShyGroup(d);
-                })
-            }
-        }
     }
     get() {
         return {
@@ -41,8 +42,28 @@ export class ShySvg {
         svg.load(d);
         return svg;
     }
-    render(style?: CSSProperties) {
-        return <svg viewBox={`${this.viewBox.x} ${this.viewBox.y} ${this.viewBox.width} ${this.viewBox.height}`} style={style || {}}>
+    render(options?: {  strokeWidth?: number, style?: CSSProperties, attrs?: SVGAttributes<SVGSVGElement> }) {
+        if (this.childs.length == 0) return <svg></svg>
+        var vb = this.viewBox;
+        if (!vb) {
+            vb = this.getBound();
+            if (vb && options?.strokeWidth) {
+                vb = vb.extend(options.strokeWidth);
+            }
+
+            if (!options) {
+                options = {}
+            }
+            if (!options?.style) {
+                options.style = {}
+            }
+            if (vb && typeof options.style.width == 'undefined') {
+                options.style.width = vb.width;
+                options.style.height = vb.height;
+            }
+        }
+        if (!vb) return <svg></svg>
+        return <svg {...(options?.attrs || {})} viewBox={`${vb.x} ${vb.y} ${vb.width} ${vb.height}`} style={options?.style || {}}>
             {this.childs.map((c, i) => c.render(i))}
         </svg>
     }
@@ -55,6 +76,16 @@ export class ShySvg {
     }
     extend(d: number) {
         this.viewBox = this.viewBox.extend(d);
+    }
+    getBound() {
+        var bs: Rect[] = [];
+        this.childs.forEach(p => {
+            var b = p.getBound();
+            if (b)
+                bs.push(p.getBound());
+        })
+        if (bs.length == 0) return null;
+        return RectUtility.getPointsBound(bs.map(b => b.points).flat());
     }
 }
 
@@ -82,6 +113,16 @@ export class ShyGroup {
     }
     render(index: number) {
         return <g key={index}>{this.paths.map((pa, index) => pa.render(index))}</g>
+    }
+    getBound() {
+        var bs: Rect[] = [];
+        this.paths.forEach(p => {
+            var b = p.getBound();
+            if (b)
+                bs.push(p.getBound());
+        })
+        if (bs.length == 0) return null;
+        return RectUtility.getPointsBound(bs.map(b => b.points).flat());
     }
 }
 

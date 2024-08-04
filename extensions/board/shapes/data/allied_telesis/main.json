@@ -1,0 +1,273 @@
+[
+  {
+    "text": "Buildings",
+    "childs": [
+      {
+        "text": "Apartments",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/buildings/Apartments.svg"
+      },
+      {
+        "text": "Building_Cluster",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/buildings/Building_Cluster.svg"
+      },
+      {
+        "text": "Large_Building",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/buildings/Large_Building.svg"
+      },
+      {
+        "text": "Long_Building",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/buildings/Long_Building.svg"
+      },
+      {
+        "text": "Medium_Business_Building",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/buildings/Medium_Business_Building.svg"
+      },
+      {
+        "text": "School_Building",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/buildings/School_Building.svg"
+      },
+      {
+        "text": "Secure_Building",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/buildings/Secure_Building.svg"
+      }
+    ]
+  },
+  {
+    "text": "ComputerAndTerminals",
+    "childs": [
+      {
+        "text": "IP_TV",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/IP_TV.svg"
+      },
+      {
+        "text": "Keypad",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Keypad.svg"
+      },
+      {
+        "text": "Laptop",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Laptop.svg"
+      },
+      {
+        "text": "POS_Printer",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/POS_Printer.svg"
+      },
+      {
+        "text": "POS_keypad",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/POS_keypad.svg"
+      },
+      {
+        "text": "Personal Computer Wireless",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Personal Computer Wireless.svg"
+      },
+      {
+        "text": "Personal_Computer",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Personal_Computer.svg"
+      },
+      {
+        "text": "Personal_Computer_Wireless",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Personal_Computer_Wireless.svg"
+      },
+      {
+        "text": "Personal_Computer_with_Server",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Personal_Computer_with_Server.svg"
+      },
+      {
+        "text": "Server_Desktop",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Server_Desktop.svg"
+      },
+      {
+        "text": "Smartphone",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Smartphone.svg"
+      },
+      {
+        "text": "Tablet",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Tablet.svg"
+      },
+      {
+        "text": "Tablet_Alternative",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Tablet_Alternative.svg"
+      },
+      {
+        "text": "VOIP_IP_phone",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/VOIP_IP_phone.svg"
+      },
+      {
+        "text": "Vdeo_Conference_Terminal",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Vdeo_Conference_Terminal.svg"
+      }
+    ]
+  },
+  {
+    "text": "MediaConverters",
+    "childs": [
+      {
+        "text": "Industrial_Media_Converter",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/media_converters/Industrial_Media_Converter.svg"
+      },
+      {
+        "text": "Industrial_Media_Converter_POE",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/media_converters/Industrial_Media_Converter_POE.svg"
+      },
+      {
+        "text": "Media_Converter_Modular",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/media_converters/Media_Converter_Modular.svg"
+      },
+      {
+        "text": "Media_Converter_Standalone",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/media_converters/Media_Converter_Standalone.svg"
+      },
+      {
+        "text": "Media_Converter_Standalone_POE",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/media_converters/Media_Converter_Standalone_POE.svg"
+      }
+    ]
+  },
+  {
+    "text": "Security",
+    "childs": [
+      {
+        "text": "DVS_Surveillance_Monitor",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/security/DVS_Surveillance_Monitor.svg"
+      },
+      {
+        "text": "EtherGRID",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/security/EtherGRID.svg"
+      },
+      {
+        "text": "POE_DVS_Camera",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/security/POE_DVS_Camera.svg"
+      },
+      {
+        "text": "POS",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/security/POS.svg"
+      },
+      {
+        "text": "Router_UTM",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/security/Router_UTM.svg"
+      },
+      {
+        "text": "Router_VPN",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/security/Router_VPN.svg"
+      },
+      {
+        "text": "Surveillance_Camera_Ceiling",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/security/Surveillance_Camera_Ceiling.svg"
+      }
+    ]
+  },
+  {
+    "text": "Storage",
+    "childs": [
+      {
+        "text": "Datacenter_Server_Half_Rack_ToR",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/storage/Datacenter_Server_Half_Rack_ToR.svg"
+      },
+      {
+        "text": "Datacenter_Server_Rack",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/storage/Datacenter_Server_Rack.svg"
+      },
+      {
+        "text": "Datacenter_Server_Rack_EoR",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/storage/Datacenter_Server_Rack_EoR.svg"
+      },
+      {
+        "text": "Datacenter_Server_Rack_Storage_Unit_Small",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/storage/Datacenter_Server_Rack_Storage_Unit_Small.svg"
+      },
+      {
+        "text": "Datacenter_Server_Rack_ToR",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/storage/Datacenter_Server_Rack_ToR.svg"
+      },
+      {
+        "text": "Datacenter_Server_Storage_Unit_Large",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/storage/Datacenter_Server_Storage_Unit_Large.svg"
+      }
+    ]
+  },
+  {
+    "text": "Switch",
+    "childs": [
+      {
+        "text": "Industrial_Ethernet_IE200",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Industrial_Ethernet_IE200.svg"
+      },
+      {
+        "text": "Industrial_Ethernet_IE200_POE",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Industrial_Ethernet_IE200_POE.svg"
+      },
+      {
+        "text": "Industrial_Ethernet_IE300",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Industrial_Ethernet_IE300.svg"
+      },
+      {
+        "text": "Modular_Switch_SBx8106",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Modular_Switch_SBx8106.svg"
+      },
+      {
+        "text": "Modular_Switch_SBx8112",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Modular_Switch_SBx8112.svg"
+      },
+      {
+        "text": "Modular_Switch_SXx908GEN2",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Modular_Switch_SXx908GEN2.svg"
+      },
+      {
+        "text": "Switch_24_port_L2",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_24_port_L2.svg"
+      },
+      {
+        "text": "Switch_24_port_L2_POE",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_24_port_L2_POE.svg"
+      },
+      {
+        "text": "Switch_24_port_L3",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_24_port_L3.svg"
+      },
+      {
+        "text": "Switch_24_port_L3_Alternative",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_24_port_L3_Alternative.svg"
+      },
+      {
+        "text": "Switch_24_port_L3_POE",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_24_port_L3_POE.svg"
+      },
+      {
+        "text": "Switch_48_port_L2",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_48_port_L2.svg"
+      },
+      {
+        "text": "Switch_48_port_L2_POE",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_48_port_L2_POE.svg"
+      },
+      {
+        "text": "Switch_48_port_L3",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_48_port_L3.svg"
+      },
+      {
+        "text": "Switch_48_port_L3_POE",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_48_port_L3_POE.svg"
+      },
+      {
+        "text": "Switch_52_port_L3",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_52_port_L3.svg"
+      }
+    ]
+  },
+  {
+    "text": "Wireless",
+    "childs": [
+      {
+        "text": "Access_Point_Indoor",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/wireless/Access_Point_Indoor.svg"
+      },
+      {
+        "text": "Access_Point_Outdoor",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/wireless/Access_Point_Outdoor.svg"
+      },
+      {
+        "text": "Laptop_Wireless",
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/wireless/Laptop_Wireless.svg"
+      }
+    ]
+  }
+]

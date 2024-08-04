@@ -1,6 +1,6 @@
 import { Matrix } from "../../common/matrix";
-import { Point } from "../../common/vector/point";
-import { Polygon } from "../../common/vector/polygon";
+import { Point, Rect, RectUtility } from "../../common/vector/point";
+import { Bezier } from "bezier-js";
 
 export class Segment {
     constructor(data?: Record<string, any>) {
@@ -81,12 +81,79 @@ export class Segment {
             return '';
         }
     }
-    static getSegmentsBound(segs: Segment[]) {
-        var ps = segs.toArray(se => {
-            if (se)
-                return [se.point, ...(se.handleIn ? [se.handleIn] : []), ...(se.handleOut ? [se.handleOut] : [])]
-        }).flat();
-        return new Polygon(...ps).bound;
+    static pointIsInSegment(point: Point, segs: Segment[], strokeWidth: number) {
+
+        for (let i = 0; i < segs.length - 1; i++) {
+            var current = segs[i];
+            var next = segs[i + 1];
+            if (current?.handleOut && next?.handleIn) {
+                const b = new Bezier(current.point, current.handleOut, next.handleIn, next.point);
+                /**
+                 * https://pomax.github.io/bezierjs/
+                 * 这里计算点在曲线上的投影点
+                 * 然后计算投影点到点的距离
+                 * 小于线宽则认为点在曲线上
+                 */
+                var cb = b.project(point);
+                if (point.dis(new Point(cb.x, cb.y)) < strokeWidth) return true;
+            }
+            else if (current?.handleOut && next && !next.handleIn) {
+                const b = new Bezier(current.point, current.handleOut, next.point);
+                var cb = b.project(point);
+                if (point.dis(new Point(cb.x, cb.y)) < strokeWidth) return true;
+            }
+            else if (!current.handleOut && next?.handleIn) {
+                const b = new Bezier(current.point, next.handleIn, next.point);
+                var cb = b.project(point);
+                if (point.dis(new Point(cb.x, cb.y)) < strokeWidth) return true;
+            }
+            else if (!current.handleOut && !next.handleIn) {
+                /**
+                 * 这里直接将控制点取两点的中心点
+                 * 这样相当于直线
+                 */
+                const b = new Bezier(current.point, { x: current.point.x / 2 + next.point.x / 2, y: current.point.y / 2 + next.point.y / 2 }, next.point);
+                var cb = b.project(point);
+                if (point.dis(new Point(cb.x, cb.y)) < strokeWidth) return true;
+            }
+        }
+        return false;
+    }
+    static getBound(segs: Segment[]) {
+        if (segs.length == 0) return null;
+        var rects: Rect[] = [];
+        for (let i = 0; i < segs.length - 1; i++) {
+            var current = segs[i];
+            var next = segs[i + 1];
+            if (current?.handleOut && next?.handleIn) {
+                const b = new Bezier(current.point, current.handleOut, next.handleIn, next.point);
+                /**
+                 * https://pomax.github.io/bezierjs/
+                 * 这里计算点在曲线上的投影点
+                 * 然后计算投影点到点的距离
+                 * 小于线宽则认为点在曲线上
+                 */
+                // var cb = b.project(point);
+                // if (point.dis(new Point(cb.x, cb.y)) < strokeWidth) return true;
+                var bbox = b.bbox();
+                rects.push(new Rect(bbox.x.min, bbox.y.min, bbox.x.size, bbox.y.size));
+            }
+            else if (current?.handleOut && next && !next.handleIn) {
+                const b = new Bezier(current.point, current.handleOut, next.point);
+                var bbox = b.bbox();
+                rects.push(new Rect(bbox.x.min, bbox.y.min, bbox.x.size, bbox.y.size));
+            }
+            else if (!current.handleOut && next?.handleIn) {
+                const b = new Bezier(current.point, next.handleIn, next.point);
+                var bbox = b.bbox();
+                rects.push(new Rect(bbox.x.min, bbox.y.min, bbox.x.size, bbox.y.size));
+            }
+            else if (!current.handleOut && !next.handleIn) {
+                rects.push(new Rect(current.point, next.point));
+            }
+        }
+        if (rects.length == 0) return null;
+        return RectUtility.getPointsBound(rects.map(r => r.points).flat());
     }
     static fromPoints(points: Point[]) {
         return points.map(p => {

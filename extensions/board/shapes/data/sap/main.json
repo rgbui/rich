@@ -1,0 +1,519 @@
+[
+  {
+    "text": "Main",
+    "childs": [
+      {
+        "text": "1",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/1.svg"
+      },
+      {
+        "text": "10",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/10.svg"
+      },
+      {
+        "text": "11",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/11.svg"
+      },
+      {
+        "text": "12",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/12.svg"
+      },
+      {
+        "text": "13",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/13.svg"
+      },
+      {
+        "text": "2",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/2.svg"
+      },
+      {
+        "text": "3",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/3.svg"
+      },
+      {
+        "text": "4",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/4.svg"
+      },
+      {
+        "text": "5",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/5.svg"
+      },
+      {
+        "text": "6",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/6.svg"
+      },
+      {
+        "text": "7",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/7.svg"
+      },
+      {
+        "text": "8",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/8.svg"
+      },
+      {
+        "text": "9",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/9.svg"
+      },
+      {
+        "text": "API",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/API.svg"
+      },
+      {
+        "text": "API_Business_Hub_Enterprise",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/API_Business_Hub_Enterprise.svg"
+      },
+      {
+        "text": "Adapter",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Adapter.svg"
+      },
+      {
+        "text": "Admin",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Admin.svg"
+      },
+      {
+        "text": "Alert",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Alert.svg"
+      },
+      {
+        "text": "App",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/App.svg"
+      },
+      {
+        "text": "Application_Autoscaler",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Application_Autoscaler.svg"
+      },
+      {
+        "text": "Building",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Building.svg"
+      },
+      {
+        "text": "Business_Application_Studio",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Business_Application_Studio.svg"
+      },
+      {
+        "text": "Cloud",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Cloud.svg"
+      },
+      {
+        "text": "Cloud_Connector",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Cloud_Connector.svg"
+      },
+      {
+        "text": "Cloud_Connector2",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Cloud_Connector2.svg"
+      },
+      {
+        "text": "Cloud_Integration_Automation",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Cloud_Integration_Automation.svg"
+      },
+      {
+        "text": "Cloud_Integration_Automation2",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Cloud_Integration_Automation2.svg"
+      },
+      {
+        "text": "Cloud_Transport_Management",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Cloud_Transport_Management.svg"
+      },
+      {
+        "text": "Data_Attribute_Recommendation",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Data_Attribute_Recommendation.svg"
+      },
+      {
+        "text": "Deploy",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Deploy.svg"
+      },
+      {
+        "text": "Desktop",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Desktop.svg"
+      },
+      {
+        "text": "Devices",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Devices.svg"
+      },
+      {
+        "text": "Document",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Document.svg"
+      },
+      {
+        "text": "Document_Information_Extraction",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Document_Information_Extraction.svg"
+      },
+      {
+        "text": "Documents",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Documents.svg"
+      },
+      {
+        "text": "Edge_Integration_Cell",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Edge_Integration_Cell.svg"
+      },
+      {
+        "text": "Event",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Event.svg"
+      },
+      {
+        "text": "Factory",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Factory.svg"
+      },
+      {
+        "text": "Feature",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Feature.svg"
+      },
+      {
+        "text": "HTML5_App_Repository",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/HTML5_App_Repository.svg"
+      },
+      {
+        "text": "Identity_Authentication",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Identity_Authentication.svg"
+      },
+      {
+        "text": "Identity_Authentication2",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Identity_Authentication2.svg"
+      },
+      {
+        "text": "Identity_Directory",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Identity_Directory.svg"
+      },
+      {
+        "text": "Identity_Directory2",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Identity_Directory2.svg"
+      },
+      {
+        "text": "Identity_Provisioning",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Identity_Provisioning.svg"
+      },
+      {
+        "text": "Identity_Provisioning2",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Identity_Provisioning2.svg"
+      },
+      {
+        "text": "Info",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Info.svg"
+      },
+      {
+        "text": "Invoice_Object_Recommendation",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Invoice_Object_Recommendation.svg"
+      },
+      {
+        "text": "Invoice_Object_Recommendation2",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Invoice_Object_Recommendation2.svg"
+      },
+      {
+        "text": "Key",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Key.svg"
+      },
+      {
+        "text": "Link",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Link.svg"
+      },
+      {
+        "text": "Locked",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Locked.svg"
+      },
+      {
+        "text": "Machine",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Machine.svg"
+      },
+      {
+        "text": "Message",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Message.svg"
+      },
+      {
+        "text": "Mobile",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Mobile.svg"
+      },
+      {
+        "text": "Object_Store_on_SAP_BTP",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Object_Store_on_SAP_BTP.svg"
+      },
+      {
+        "text": "On-Premise",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/On-Premise.svg"
+      },
+      {
+        "text": "Personalized_Recommendation",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Personalized_Recommendation.svg"
+      },
+      {
+        "text": "SAP_AI_Core",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_AI_Core.svg"
+      },
+      {
+        "text": "SAP_AI_Launchpad",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_AI_Launchpad.svg"
+      },
+      {
+        "text": "SAP_Alert_Notification_service_for_SAP_BTP",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Alert_Notification_service_for_SAP_BTP.svg"
+      },
+      {
+        "text": "SAP_Analytics_Cloud",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Analytics_Cloud.svg"
+      },
+      {
+        "text": "SAP_Analytics_Cloud_Embedded_Edition",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Analytics_Cloud_Embedded_Edition.svg"
+      },
+      {
+        "text": "SAP_Application_Logging_service_for_SAP_BTP",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Application_Logging_service_for_SAP_BTP.svg"
+      },
+      {
+        "text": "SAP_Audit_Log_Service",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Audit_Log_Service.svg"
+      },
+      {
+        "text": "SAP_Authorization_Management_Service",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Authorization_Management_Service.svg"
+      },
+      {
+        "text": "SAP_Authorization_and_Trust_Management_service",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Authorization_and_Trust_Management_service.svg"
+      },
+      {
+        "text": "SAP_Automation_Pilot",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Automation_Pilot.svg"
+      },
+      {
+        "text": "SAP_BTP,_ABAP_environment",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_BTP,_ABAP_environment.svg"
+      },
+      {
+        "text": "SAP_BTP,_Cloud_Foundry_runtime",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_BTP,_Cloud_Foundry_runtime.svg"
+      },
+      {
+        "text": "SAP_BTP,_Kyma_runtime",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_BTP,_Kyma_runtime.svg"
+      },
+      {
+        "text": "SAP_Build_Apps",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Build_Apps.svg"
+      },
+      {
+        "text": "SAP_Build_Apps_-_Copy",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Build_Apps_-_Copy.svg"
+      },
+      {
+        "text": "SAP_Build_Code",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Build_Code.svg"
+      },
+      {
+        "text": "SAP_Build_Process_Automation",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Build_Process_Automation.svg"
+      },
+      {
+        "text": "SAP_Build_Process_Automation_-_Copy",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Build_Process_Automation_-_Copy.svg"
+      },
+      {
+        "text": "SAP_Build_Work_Zone_-_Advanced_Edition",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Build_Work_Zone_-_Advanced_Edition.svg"
+      },
+      {
+        "text": "SAP_Build_Work_Zone_-_Standard_Edition",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Build_Work_Zone_-_Standard_Edition.svg"
+      },
+      {
+        "text": "SAP_Business_Accelerator_Hub",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Business_Accelerator_Hub.svg"
+      },
+      {
+        "text": "SAP_Cloud_Identity,_SAP_Malware_Scanning_Service",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Cloud_Identity,_SAP_Malware_Scanning_Service.svg"
+      },
+      {
+        "text": "SAP_Cloud_Identity_Service",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Cloud_Identity_Service.svg"
+      },
+      {
+        "text": "SAP_Cloud_Logging",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Cloud_Logging.svg"
+      },
+      {
+        "text": "SAP_Cloud_Transport_Management",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Cloud_Transport_Management.svg"
+      },
+      {
+        "text": "SAP_Connectivity_Service",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Connectivity_Service.svg"
+      },
+      {
+        "text": "SAP_Continuous_Integration_and_Delivery",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Continuous_Integration_and_Delivery.svg"
+      },
+      {
+        "text": "SAP_Credential_Store",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Credential_Store.svg"
+      },
+      {
+        "text": "SAP_Custom_Domain_service",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Custom_Domain_service.svg"
+      },
+      {
+        "text": "SAP_Datasphere",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Datasphere.svg"
+      },
+      {
+        "text": "SAP_Destination_service",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Destination_service.svg"
+      },
+      {
+        "text": "SAP_Digital_Assistant_Service",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Digital_Assistant_Service.svg"
+      },
+      {
+        "text": "SAP_Document_Grounding",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Document_Grounding.svg"
+      },
+      {
+        "text": "SAP_Event_Broker_for_SAP_Cloud_Applications",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Event_Broker_for_SAP_Cloud_Applications.svg"
+      },
+      {
+        "text": "SAP_HANA_Cloud",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_HANA_Cloud.svg"
+      },
+      {
+        "text": "SAP_HANA_Spatial_Services",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_HANA_Spatial_Services.svg"
+      },
+      {
+        "text": "SAP_Integration_Suite",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite.svg"
+      },
+      {
+        "text": "SAP_Integration_Suite_-_API_Managment",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_API_Managment.svg"
+      },
+      {
+        "text": "SAP_Integration_Suite_-_Advanced_Event_Mesh",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Advanced_Event_Mesh.svg"
+      },
+      {
+        "text": "SAP_Integration_Suite_-_Cloud_Integration",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Cloud_Integration.svg"
+      },
+      {
+        "text": "SAP_Integration_Suite_-_Data_Space_Integration",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Data_Space_Integration.svg"
+      },
+      {
+        "text": "SAP_Integration_Suite_-_Event_Mesh",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Event_Mesh.svg"
+      },
+      {
+        "text": "SAP_Integration_Suite_-_Integration_Advisor",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Integration_Advisor.svg"
+      },
+      {
+        "text": "SAP_Integration_Suite_-_Integration_Assessment",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Integration_Assessment.svg"
+      },
+      {
+        "text": "SAP_Integration_Suite_-_Migration_Assessment",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Migration_Assessment.svg"
+      },
+      {
+        "text": "SAP_Integration_Suite_-_Open_Connectors",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Open_Connectors.svg"
+      },
+      {
+        "text": "SAP_Integration_Suite_-_SAP_Graph",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_SAP_Graph.svg"
+      },
+      {
+        "text": "SAP_Integration_Suite_-_Trading_Partner_Management",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Trading_Partner_Management.svg"
+      },
+      {
+        "text": "SAP_Job_Scheduling_service",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Job_Scheduling_service.svg"
+      },
+      {
+        "text": "SAP_Keystore_Service",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Keystore_Service.svg"
+      },
+      {
+        "text": "SAP_Logo",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Logo.svg"
+      },
+      {
+        "text": "SAP_Master_Data_Governance",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Master_Data_Governance.svg"
+      },
+      {
+        "text": "SAP_Master_Data_Integration",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Master_Data_Integration.svg"
+      },
+      {
+        "text": "SAP_Mobile_Services",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Mobile_Services.svg"
+      },
+      {
+        "text": "SAP_Monitoring_service_for_SAP_BTP",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Monitoring_service_for_SAP_BTP.svg"
+      },
+      {
+        "text": "SAP_Persistence_Service_ASE",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Persistence_Service_ASE.svg"
+      },
+      {
+        "text": "SAP_Private_Link_service",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Private_Link_service.svg"
+      },
+      {
+        "text": "SAP_Secure_Login_Service_for_SAP_GUI",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Secure_Login_Service_for_SAP_GUI.svg"
+      },
+      {
+        "text": "SAP_Service_Manager",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Service_Manager.svg"
+      },
+      {
+        "text": "SAP_Task_Center",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Task_Center.svg"
+      },
+      {
+        "text": "SAP_Translation_Hub",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Translation_Hub.svg"
+      },
+      {
+        "text": "Service_Ticket_Intelligence",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Service_Ticket_Intelligence.svg"
+      },
+      {
+        "text": "Service_Ticket_Intelligence2",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Service_Ticket_Intelligence2.svg"
+      },
+      {
+        "text": "Settings",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Settings.svg"
+      },
+      {
+        "text": "Success",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Success.svg"
+      },
+      {
+        "text": "Third_Party",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Third_Party.svg"
+      },
+      {
+        "text": "UI5_flexibility_for_key_users",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/UI5_flexibility_for_key_users.svg"
+      },
+      {
+        "text": "UI_Theme_Designer",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/UI_Theme_Designer.svg"
+      },
+      {
+        "text": "User",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/User.svg"
+      },
+      {
+        "text": "Web",
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Web.svg"
+      }
+    ]
+  }
+]

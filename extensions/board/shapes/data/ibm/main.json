@@ -1,0 +1,1571 @@
+[
+  {
+    "text": "Analytics",
+    "childs": [
+      {
+        "text": "analytics",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/analytics.svg"
+      },
+      {
+        "text": "data_integration",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/data_integration.svg"
+      },
+      {
+        "text": "data_repositories",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/data_repositories.svg"
+      },
+      {
+        "text": "device_analytics",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/device_analytics.svg"
+      },
+      {
+        "text": "streaming_computing",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/streaming_computing.svg"
+      }
+    ]
+  },
+  {
+    "text": "Applications",
+    "childs": [
+      {
+        "text": "actionable_insight",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/actionable_insight.svg"
+      },
+      {
+        "text": "annotate",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/annotate.svg"
+      },
+      {
+        "text": "api_developer_portal",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/api_developer_portal.svg"
+      },
+      {
+        "text": "api_polyglot_runtimes",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/api_polyglot_runtimes.svg"
+      },
+      {
+        "text": "app_server",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/app_server.svg"
+      },
+      {
+        "text": "application_logic",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/application_logic.svg"
+      },
+      {
+        "text": "automation_tools",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/automation_tools.svg"
+      },
+      {
+        "text": "enterprise_applications",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/enterprise_applications.svg"
+      },
+      {
+        "text": "index",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/index.svg"
+      },
+      {
+        "text": "iot_application",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/iot_application.svg"
+      },
+      {
+        "text": "microservice",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/microservice.svg"
+      },
+      {
+        "text": "mobile_app",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/mobile_app.svg"
+      },
+      {
+        "text": "ontology",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/ontology.svg"
+      },
+      {
+        "text": "open_source_tools",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/open_source_tools.svg"
+      },
+      {
+        "text": "runtime_services",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/runtime_services.svg"
+      },
+      {
+        "text": "saas_applications",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/saas_applications.svg"
+      },
+      {
+        "text": "service_broker",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/service_broker.svg"
+      },
+      {
+        "text": "speech_to_text",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/speech_to_text.svg"
+      },
+      {
+        "text": "visual_recognition",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/visual_recognition.svg"
+      },
+      {
+        "text": "visualization",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/visualization.svg"
+      }
+    ]
+  },
+  {
+    "text": "Blockchain",
+    "childs": [
+      {
+        "text": "blockchain",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/blockchain.svg"
+      },
+      {
+        "text": "blockchain_developer",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/blockchain_developer.svg"
+      },
+      {
+        "text": "certificate_authority",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/certificate_authority.svg"
+      },
+      {
+        "text": "client_application",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/client_application.svg"
+      },
+      {
+        "text": "communication",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/communication.svg"
+      },
+      {
+        "text": "consensus",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/consensus.svg"
+      },
+      {
+        "text": "e_cert",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/e_cert.svg"
+      },
+      {
+        "text": "event",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/event.svg"
+      },
+      {
+        "text": "event_listener",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/event_listener.svg"
+      },
+      {
+        "text": "existing_enterprise_systems",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/existing_enterprise_systems.svg"
+      },
+      {
+        "text": "hyperledger_fabric",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/hyperledger_fabric.svg"
+      },
+      {
+        "text": "identity_access_manager",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/identity_access_manager.svg"
+      },
+      {
+        "text": "key_management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/key_management.svg"
+      },
+      {
+        "text": "ledger",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/ledger.svg"
+      },
+      {
+        "text": "membership",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/membership.svg"
+      },
+      {
+        "text": "membership_services_provider_api",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/membership_services_provider_api.svg"
+      },
+      {
+        "text": "message_bus",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/message_bus.svg"
+      },
+      {
+        "text": "node",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/node.svg"
+      },
+      {
+        "text": "services",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/services.svg"
+      },
+      {
+        "text": "smart_contract",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/smart_contract.svg"
+      },
+      {
+        "text": "transaction_manager",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/transaction_manager.svg"
+      },
+      {
+        "text": "wallet",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/wallet.svg"
+      }
+    ]
+  },
+  {
+    "text": "Data",
+    "childs": [
+      {
+        "text": "caches",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/caches.svg"
+      },
+      {
+        "text": "cloud",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/cloud.svg"
+      },
+      {
+        "text": "conversation_trained_deployed",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/conversation_trained_deployed.svg"
+      },
+      {
+        "text": "data_services",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/data_services.svg"
+      },
+      {
+        "text": "data_sources",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/data_sources.svg"
+      },
+      {
+        "text": "device_identity_service",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/device_identity_service.svg"
+      },
+      {
+        "text": "device_registry",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/device_registry.svg"
+      },
+      {
+        "text": "enterprise_data",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/enterprise_data.svg"
+      },
+      {
+        "text": "enterprise_user_directory",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/enterprise_user_directory.svg"
+      },
+      {
+        "text": "file_repository",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/file_repository.svg"
+      },
+      {
+        "text": "ground_truth",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/ground_truth.svg"
+      },
+      {
+        "text": "model",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/model.svg"
+      },
+      {
+        "text": "tms_data_interface",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/tms_data_interface.svg"
+      }
+    ]
+  },
+  {
+    "text": "Devops",
+    "childs": [
+      {
+        "text": "artifact_management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/artifact_management.svg"
+      },
+      {
+        "text": "build_test",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/build_test.svg"
+      },
+      {
+        "text": "code_editor",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/code_editor.svg"
+      },
+      {
+        "text": "collaborative_development",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/collaborative_development.svg"
+      },
+      {
+        "text": "configuration_management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/configuration_management.svg"
+      },
+      {
+        "text": "continuous_deploy",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/continuous_deploy.svg"
+      },
+      {
+        "text": "continuous_testing",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/continuous_testing.svg"
+      },
+      {
+        "text": "devops",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/devops.svg"
+      },
+      {
+        "text": "provision",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/provision.svg"
+      },
+      {
+        "text": "release_management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/release_management.svg"
+      }
+    ]
+  },
+  {
+    "text": "Infrastructure",
+    "childs": [
+      {
+        "text": "channels",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/channels.svg"
+      },
+      {
+        "text": "cloud_messaging",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/cloud_messaging.svg"
+      },
+      {
+        "text": "dashboard",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/dashboard.svg"
+      },
+      {
+        "text": "diagnostics",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/diagnostics.svg"
+      },
+      {
+        "text": "edge_services",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/edge_services.svg"
+      },
+      {
+        "text": "enterprise_messaging",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/enterprise_messaging.svg"
+      },
+      {
+        "text": "event_feed",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/event_feed.svg"
+      },
+      {
+        "text": "infrastructure_services",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/infrastructure_services.svg"
+      },
+      {
+        "text": "interservice_communication",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/interservice_communication.svg"
+      },
+      {
+        "text": "load_balancing_routing",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/load_balancing_routing.svg"
+      },
+      {
+        "text": "microservices_mesh",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/microservices_mesh.svg"
+      },
+      {
+        "text": "mobile_backend",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/mobile_backend.svg"
+      },
+      {
+        "text": "mobile_provider_network",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/mobile_provider_network.svg"
+      },
+      {
+        "text": "monitoring",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/monitoring.svg"
+      },
+      {
+        "text": "monitoring_logging",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/monitoring_logging.svg"
+      },
+      {
+        "text": "peer_services",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/peer_services.svg"
+      },
+      {
+        "text": "service_discovery_configuration",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/service_discovery_configuration.svg"
+      },
+      {
+        "text": "transformation_connectivity",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/transformation_connectivity.svg"
+      }
+    ]
+  },
+  {
+    "text": "Management",
+    "childs": [
+      {
+        "text": "alert_notification",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/alert_notification.svg"
+      },
+      {
+        "text": "api_management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/api_management.svg"
+      },
+      {
+        "text": "cloud_management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/cloud_management.svg"
+      },
+      {
+        "text": "cluster_management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/cluster_management.svg"
+      },
+      {
+        "text": "content_management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/content_management.svg"
+      },
+      {
+        "text": "data_services",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/data_services.svg"
+      },
+      {
+        "text": "device_management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/device_management.svg"
+      },
+      {
+        "text": "information_governance",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/information_governance.svg"
+      },
+      {
+        "text": "it_service_management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/it_service_management.svg"
+      },
+      {
+        "text": "management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/management.svg"
+      },
+      {
+        "text": "monitoring_metrics",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/monitoring_metrics.svg"
+      },
+      {
+        "text": "process_management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/process_management.svg"
+      },
+      {
+        "text": "provider_cloud_portal_service",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/provider_cloud_portal_service.svg"
+      },
+      {
+        "text": "push_notifications",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/push_notifications.svg"
+      },
+      {
+        "text": "service_management_tools",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/service_management_tools.svg"
+      }
+    ]
+  },
+  {
+    "text": "Miscellaneous",
+    "childs": [
+      {
+        "text": "bluemix",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/bluemix.svg"
+      },
+      {
+        "text": "cloudant",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/cloudant.svg"
+      },
+      {
+        "text": "cognitive_services",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/cognitive_services.svg"
+      },
+      {
+        "text": "ibm_containers",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/ibm_containers.svg"
+      },
+      {
+        "text": "ibm_public_cloud",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/ibm_public_cloud.svg"
+      },
+      {
+        "text": "iot_cloud",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/iot_cloud.svg"
+      },
+      {
+        "text": "microservices_application",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/microservices_application.svg"
+      },
+      {
+        "text": "object_storage",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/object_storage.svg"
+      },
+      {
+        "text": "offline_capabilities",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/offline_capabilities.svg"
+      },
+      {
+        "text": "openwhisk",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/openwhisk.svg"
+      },
+      {
+        "text": "peer_cloud",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/peer_cloud.svg"
+      },
+      {
+        "text": "retrieve_rank",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/retrieve_rank.svg"
+      },
+      {
+        "text": "scalable",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/scalable.svg"
+      },
+      {
+        "text": "text_to_speech",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/text_to_speech.svg"
+      }
+    ]
+  },
+  {
+    "text": "Security",
+    "childs": [
+      {
+        "text": "api_security",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/api_security.svg"
+      },
+      {
+        "text": "blockchain_security_service",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/blockchain_security_service.svg"
+      },
+      {
+        "text": "data_security",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/data_security.svg"
+      },
+      {
+        "text": "firewall",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/firewall.svg"
+      },
+      {
+        "text": "gateway",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/gateway.svg"
+      },
+      {
+        "text": "governance_risk_compliance",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/governance_risk_compliance.svg"
+      },
+      {
+        "text": "identity_access_management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/identity_access_management.svg"
+      },
+      {
+        "text": "identity_provider",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/identity_provider.svg"
+      },
+      {
+        "text": "infrastructure_security",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/infrastructure_security.svg"
+      },
+      {
+        "text": "physical_security",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/physical_security.svg"
+      },
+      {
+        "text": "security_monitoring_intelligence",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/security_monitoring_intelligence.svg"
+      },
+      {
+        "text": "security_services",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/security_services.svg"
+      },
+      {
+        "text": "trustend_computing",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/trustend_computing.svg"
+      },
+      {
+        "text": "vpn",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/vpn.svg"
+      }
+    ]
+  },
+  {
+    "text": "Social",
+    "childs": [
+      {
+        "text": "communities",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/communities.svg"
+      },
+      {
+        "text": "file_sync",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/file_sync.svg"
+      },
+      {
+        "text": "live_collaboration",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/live_collaboration.svg"
+      },
+      {
+        "text": "messaging",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/messaging.svg"
+      },
+      {
+        "text": "networking",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/networking.svg"
+      }
+    ]
+  },
+  {
+    "text": "Users",
+    "childs": [
+      {
+        "text": "browser",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/browser.svg"
+      },
+      {
+        "text": "device",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/device.svg"
+      },
+      {
+        "text": "integrated_digital_experiences",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/integrated_digital_experiences.svg"
+      },
+      {
+        "text": "physical_entity",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/physical_entity.svg"
+      },
+      {
+        "text": "sensor",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/sensor.svg"
+      },
+      {
+        "text": "user",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/user.svg"
+      }
+    ]
+  },
+  {
+    "text": "Vpc",
+    "childs": [
+      {
+        "text": "ACLRules",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ACLRules.svg"
+      },
+      {
+        "text": "BareMetalServer",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/BareMetalServer.svg"
+      },
+      {
+        "text": "BlockStorage",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/BlockStorage.svg"
+      },
+      {
+        "text": "Bridge",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Bridge.svg"
+      },
+      {
+        "text": "ClassicInfrastructure",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ClassicInfrastructure.svg"
+      },
+      {
+        "text": "ClassicInfrastructureTag",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ClassicInfrastructureTag.svg"
+      },
+      {
+        "text": "CloudServices",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/CloudServices.svg"
+      },
+      {
+        "text": "CloudTag",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/CloudTag.svg"
+      },
+      {
+        "text": "DirectLink",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/DirectLink.svg"
+      },
+      {
+        "text": "Enterprise",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Enterprise.svg"
+      },
+      {
+        "text": "Enterprise2",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Enterprise2.svg"
+      },
+      {
+        "text": "EnterpriseTag",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/EnterpriseTag.svg"
+      },
+      {
+        "text": "Firewall",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Firewall.svg"
+      },
+      {
+        "text": "FloatingIP",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/FloatingIP.svg"
+      },
+      {
+        "text": "GatewayAppliance",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/GatewayAppliance.svg"
+      },
+      {
+        "text": "IBMCloud",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/IBMCloud.svg"
+      },
+      {
+        "text": "Image",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Image.svg"
+      },
+      {
+        "text": "ImageService",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ImageService.svg"
+      },
+      {
+        "text": "Instance",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Instance.svg"
+      },
+      {
+        "text": "Internet",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Internet.svg"
+      },
+      {
+        "text": "InternetServices",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/InternetServices.svg"
+      },
+      {
+        "text": "InternetServices2",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/InternetServices2.svg"
+      },
+      {
+        "text": "Key",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Key.svg"
+      },
+      {
+        "text": "LoadBalancer",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/LoadBalancer.svg"
+      },
+      {
+        "text": "LoadBalancerListener",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/LoadBalancerListener.svg"
+      },
+      {
+        "text": "LoadBalancerPool",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/LoadBalancerPool.svg"
+      },
+      {
+        "text": "Marketplace",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Marketplace.svg"
+      },
+      {
+        "text": "ObjectStorage",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ObjectStorage.svg"
+      },
+      {
+        "text": "PowerInstance",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/PowerInstance.svg"
+      },
+      {
+        "text": "PublicGateway",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/PublicGateway.svg"
+      },
+      {
+        "text": "PublicTag",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/PublicTag.svg"
+      },
+      {
+        "text": "RegionTag",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/RegionTag.svg"
+      },
+      {
+        "text": "Router",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Router.svg"
+      },
+      {
+        "text": "Rules",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Rules.svg"
+      },
+      {
+        "text": "SecurityGroupRules",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/SecurityGroupRules.svg"
+      },
+      {
+        "text": "Subnet",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Subnet.svg"
+      },
+      {
+        "text": "SubnetTag",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/SubnetTag.svg"
+      },
+      {
+        "text": "SubnetTag2",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/SubnetTag2.svg"
+      },
+      {
+        "text": "TransitGateway",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/TransitGateway.svg"
+      },
+      {
+        "text": "VPCTag",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPCTag.svg"
+      },
+      {
+        "text": "VPN",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPN.svg"
+      },
+      {
+        "text": "VPNConnection",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPNConnection.svg"
+      },
+      {
+        "text": "VPNGateway",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPNGateway.svg"
+      },
+      {
+        "text": "VPNPolicy",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPNPolicy.svg"
+      },
+      {
+        "text": "VirtualPrivateCloud",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VirtualPrivateCloud.svg"
+      },
+      {
+        "text": "ZoneTag",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ZoneTag.svg"
+      }
+    ]
+  },
+  {
+    "text": "Main",
+    "childs": [
+      {
+        "text": "analytics",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/analytics.svg"
+      },
+      {
+        "text": "data_integration",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/data_integration.svg"
+      },
+      {
+        "text": "data_repositories",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/data_repositories.svg"
+      },
+      {
+        "text": "device_analytics",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/device_analytics.svg"
+      },
+      {
+        "text": "streaming_computing",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/streaming_computing.svg"
+      },
+      {
+        "text": "actionable_insight",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/actionable_insight.svg"
+      },
+      {
+        "text": "annotate",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/annotate.svg"
+      },
+      {
+        "text": "api_developer_portal",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/api_developer_portal.svg"
+      },
+      {
+        "text": "api_polyglot_runtimes",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/api_polyglot_runtimes.svg"
+      },
+      {
+        "text": "app_server",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/app_server.svg"
+      },
+      {
+        "text": "application_logic",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/application_logic.svg"
+      },
+      {
+        "text": "automation_tools",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/automation_tools.svg"
+      },
+      {
+        "text": "enterprise_applications",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/enterprise_applications.svg"
+      },
+      {
+        "text": "index",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/index.svg"
+      },
+      {
+        "text": "iot_application",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/iot_application.svg"
+      },
+      {
+        "text": "microservice",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/microservice.svg"
+      },
+      {
+        "text": "mobile_app",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/mobile_app.svg"
+      },
+      {
+        "text": "ontology",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/ontology.svg"
+      },
+      {
+        "text": "open_source_tools",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/open_source_tools.svg"
+      },
+      {
+        "text": "runtime_services",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/runtime_services.svg"
+      },
+      {
+        "text": "saas_applications",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/saas_applications.svg"
+      },
+      {
+        "text": "service_broker",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/service_broker.svg"
+      },
+      {
+        "text": "speech_to_text",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/speech_to_text.svg"
+      },
+      {
+        "text": "visual_recognition",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/visual_recognition.svg"
+      },
+      {
+        "text": "visualization",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/visualization.svg"
+      },
+      {
+        "text": "blockchain",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/blockchain.svg"
+      },
+      {
+        "text": "blockchain_developer",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/blockchain_developer.svg"
+      },
+      {
+        "text": "certificate_authority",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/certificate_authority.svg"
+      },
+      {
+        "text": "client_application",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/client_application.svg"
+      },
+      {
+        "text": "communication",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/communication.svg"
+      },
+      {
+        "text": "consensus",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/consensus.svg"
+      },
+      {
+        "text": "e_cert",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/e_cert.svg"
+      },
+      {
+        "text": "event",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/event.svg"
+      },
+      {
+        "text": "event_listener",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/event_listener.svg"
+      },
+      {
+        "text": "existing_enterprise_systems",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/existing_enterprise_systems.svg"
+      },
+      {
+        "text": "hyperledger_fabric",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/hyperledger_fabric.svg"
+      },
+      {
+        "text": "identity_access_manager",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/identity_access_manager.svg"
+      },
+      {
+        "text": "key_management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/key_management.svg"
+      },
+      {
+        "text": "ledger",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/ledger.svg"
+      },
+      {
+        "text": "membership",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/membership.svg"
+      },
+      {
+        "text": "membership_services_provider_api",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/membership_services_provider_api.svg"
+      },
+      {
+        "text": "message_bus",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/message_bus.svg"
+      },
+      {
+        "text": "node",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/node.svg"
+      },
+      {
+        "text": "services",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/services.svg"
+      },
+      {
+        "text": "smart_contract",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/smart_contract.svg"
+      },
+      {
+        "text": "transaction_manager",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/transaction_manager.svg"
+      },
+      {
+        "text": "wallet",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/wallet.svg"
+      },
+      {
+        "text": "caches",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/caches.svg"
+      },
+      {
+        "text": "cloud",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/cloud.svg"
+      },
+      {
+        "text": "conversation_trained_deployed",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/conversation_trained_deployed.svg"
+      },
+      {
+        "text": "data_services",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/data_services.svg"
+      },
+      {
+        "text": "data_sources",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/data_sources.svg"
+      },
+      {
+        "text": "device_identity_service",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/device_identity_service.svg"
+      },
+      {
+        "text": "device_registry",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/device_registry.svg"
+      },
+      {
+        "text": "enterprise_data",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/enterprise_data.svg"
+      },
+      {
+        "text": "enterprise_user_directory",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/enterprise_user_directory.svg"
+      },
+      {
+        "text": "file_repository",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/file_repository.svg"
+      },
+      {
+        "text": "ground_truth",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/ground_truth.svg"
+      },
+      {
+        "text": "model",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/model.svg"
+      },
+      {
+        "text": "tms_data_interface",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/tms_data_interface.svg"
+      },
+      {
+        "text": "artifact_management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/artifact_management.svg"
+      },
+      {
+        "text": "build_test",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/build_test.svg"
+      },
+      {
+        "text": "code_editor",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/code_editor.svg"
+      },
+      {
+        "text": "collaborative_development",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/collaborative_development.svg"
+      },
+      {
+        "text": "configuration_management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/configuration_management.svg"
+      },
+      {
+        "text": "continuous_deploy",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/continuous_deploy.svg"
+      },
+      {
+        "text": "continuous_testing",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/continuous_testing.svg"
+      },
+      {
+        "text": "devops",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/devops.svg"
+      },
+      {
+        "text": "provision",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/provision.svg"
+      },
+      {
+        "text": "release_management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/release_management.svg"
+      },
+      {
+        "text": "channels",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/channels.svg"
+      },
+      {
+        "text": "cloud_messaging",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/cloud_messaging.svg"
+      },
+      {
+        "text": "dashboard",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/dashboard.svg"
+      },
+      {
+        "text": "diagnostics",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/diagnostics.svg"
+      },
+      {
+        "text": "edge_services",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/edge_services.svg"
+      },
+      {
+        "text": "enterprise_messaging",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/enterprise_messaging.svg"
+      },
+      {
+        "text": "event_feed",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/event_feed.svg"
+      },
+      {
+        "text": "infrastructure_services",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/infrastructure_services.svg"
+      },
+      {
+        "text": "interservice_communication",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/interservice_communication.svg"
+      },
+      {
+        "text": "load_balancing_routing",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/load_balancing_routing.svg"
+      },
+      {
+        "text": "microservices_mesh",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/microservices_mesh.svg"
+      },
+      {
+        "text": "mobile_backend",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/mobile_backend.svg"
+      },
+      {
+        "text": "mobile_provider_network",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/mobile_provider_network.svg"
+      },
+      {
+        "text": "monitoring",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/monitoring.svg"
+      },
+      {
+        "text": "monitoring_logging",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/monitoring_logging.svg"
+      },
+      {
+        "text": "peer_services",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/peer_services.svg"
+      },
+      {
+        "text": "service_discovery_configuration",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/service_discovery_configuration.svg"
+      },
+      {
+        "text": "transformation_connectivity",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/transformation_connectivity.svg"
+      },
+      {
+        "text": "alert_notification",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/alert_notification.svg"
+      },
+      {
+        "text": "api_management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/api_management.svg"
+      },
+      {
+        "text": "cloud_management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/cloud_management.svg"
+      },
+      {
+        "text": "cluster_management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/cluster_management.svg"
+      },
+      {
+        "text": "content_management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/content_management.svg"
+      },
+      {
+        "text": "data_services",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/data_services.svg"
+      },
+      {
+        "text": "device_management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/device_management.svg"
+      },
+      {
+        "text": "information_governance",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/information_governance.svg"
+      },
+      {
+        "text": "it_service_management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/it_service_management.svg"
+      },
+      {
+        "text": "management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/management.svg"
+      },
+      {
+        "text": "monitoring_metrics",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/monitoring_metrics.svg"
+      },
+      {
+        "text": "process_management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/process_management.svg"
+      },
+      {
+        "text": "provider_cloud_portal_service",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/provider_cloud_portal_service.svg"
+      },
+      {
+        "text": "push_notifications",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/push_notifications.svg"
+      },
+      {
+        "text": "service_management_tools",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/service_management_tools.svg"
+      },
+      {
+        "text": "bluemix",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/bluemix.svg"
+      },
+      {
+        "text": "cloudant",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/cloudant.svg"
+      },
+      {
+        "text": "cognitive_services",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/cognitive_services.svg"
+      },
+      {
+        "text": "ibm_containers",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/ibm_containers.svg"
+      },
+      {
+        "text": "ibm_public_cloud",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/ibm_public_cloud.svg"
+      },
+      {
+        "text": "iot_cloud",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/iot_cloud.svg"
+      },
+      {
+        "text": "microservices_application",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/microservices_application.svg"
+      },
+      {
+        "text": "object_storage",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/object_storage.svg"
+      },
+      {
+        "text": "offline_capabilities",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/offline_capabilities.svg"
+      },
+      {
+        "text": "openwhisk",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/openwhisk.svg"
+      },
+      {
+        "text": "peer_cloud",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/peer_cloud.svg"
+      },
+      {
+        "text": "retrieve_rank",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/retrieve_rank.svg"
+      },
+      {
+        "text": "scalable",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/scalable.svg"
+      },
+      {
+        "text": "text_to_speech",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/text_to_speech.svg"
+      },
+      {
+        "text": "api_security",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/api_security.svg"
+      },
+      {
+        "text": "blockchain_security_service",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/blockchain_security_service.svg"
+      },
+      {
+        "text": "data_security",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/data_security.svg"
+      },
+      {
+        "text": "firewall",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/firewall.svg"
+      },
+      {
+        "text": "gateway",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/gateway.svg"
+      },
+      {
+        "text": "governance_risk_compliance",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/governance_risk_compliance.svg"
+      },
+      {
+        "text": "identity_access_management",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/identity_access_management.svg"
+      },
+      {
+        "text": "identity_provider",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/identity_provider.svg"
+      },
+      {
+        "text": "infrastructure_security",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/infrastructure_security.svg"
+      },
+      {
+        "text": "physical_security",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/physical_security.svg"
+      },
+      {
+        "text": "security_monitoring_intelligence",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/security_monitoring_intelligence.svg"
+      },
+      {
+        "text": "security_services",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/security_services.svg"
+      },
+      {
+        "text": "trustend_computing",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/trustend_computing.svg"
+      },
+      {
+        "text": "vpn",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/vpn.svg"
+      },
+      {
+        "text": "communities",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/communities.svg"
+      },
+      {
+        "text": "file_sync",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/file_sync.svg"
+      },
+      {
+        "text": "live_collaboration",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/live_collaboration.svg"
+      },
+      {
+        "text": "messaging",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/messaging.svg"
+      },
+      {
+        "text": "networking",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/networking.svg"
+      },
+      {
+        "text": "browser",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/browser.svg"
+      },
+      {
+        "text": "device",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/device.svg"
+      },
+      {
+        "text": "integrated_digital_experiences",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/integrated_digital_experiences.svg"
+      },
+      {
+        "text": "physical_entity",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/physical_entity.svg"
+      },
+      {
+        "text": "sensor",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/sensor.svg"
+      },
+      {
+        "text": "user",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/user.svg"
+      },
+      {
+        "text": "ACLRules",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ACLRules.svg"
+      },
+      {
+        "text": "BareMetalServer",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/BareMetalServer.svg"
+      },
+      {
+        "text": "BlockStorage",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/BlockStorage.svg"
+      },
+      {
+        "text": "Bridge",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Bridge.svg"
+      },
+      {
+        "text": "ClassicInfrastructure",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ClassicInfrastructure.svg"
+      },
+      {
+        "text": "ClassicInfrastructureTag",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ClassicInfrastructureTag.svg"
+      },
+      {
+        "text": "CloudServices",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/CloudServices.svg"
+      },
+      {
+        "text": "CloudTag",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/CloudTag.svg"
+      },
+      {
+        "text": "DirectLink",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/DirectLink.svg"
+      },
+      {
+        "text": "Enterprise",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Enterprise.svg"
+      },
+      {
+        "text": "Enterprise2",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Enterprise2.svg"
+      },
+      {
+        "text": "EnterpriseTag",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/EnterpriseTag.svg"
+      },
+      {
+        "text": "Firewall",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Firewall.svg"
+      },
+      {
+        "text": "FloatingIP",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/FloatingIP.svg"
+      },
+      {
+        "text": "GatewayAppliance",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/GatewayAppliance.svg"
+      },
+      {
+        "text": "IBMCloud",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/IBMCloud.svg"
+      },
+      {
+        "text": "Image",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Image.svg"
+      },
+      {
+        "text": "ImageService",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ImageService.svg"
+      },
+      {
+        "text": "Instance",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Instance.svg"
+      },
+      {
+        "text": "Internet",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Internet.svg"
+      },
+      {
+        "text": "InternetServices",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/InternetServices.svg"
+      },
+      {
+        "text": "InternetServices2",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/InternetServices2.svg"
+      },
+      {
+        "text": "Key",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Key.svg"
+      },
+      {
+        "text": "LoadBalancer",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/LoadBalancer.svg"
+      },
+      {
+        "text": "LoadBalancerListener",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/LoadBalancerListener.svg"
+      },
+      {
+        "text": "LoadBalancerPool",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/LoadBalancerPool.svg"
+      },
+      {
+        "text": "Marketplace",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Marketplace.svg"
+      },
+      {
+        "text": "ObjectStorage",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ObjectStorage.svg"
+      },
+      {
+        "text": "PowerInstance",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/PowerInstance.svg"
+      },
+      {
+        "text": "PublicGateway",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/PublicGateway.svg"
+      },
+      {
+        "text": "PublicTag",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/PublicTag.svg"
+      },
+      {
+        "text": "RegionTag",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/RegionTag.svg"
+      },
+      {
+        "text": "Router",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Router.svg"
+      },
+      {
+        "text": "Rules",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Rules.svg"
+      },
+      {
+        "text": "SecurityGroupRules",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/SecurityGroupRules.svg"
+      },
+      {
+        "text": "Subnet",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Subnet.svg"
+      },
+      {
+        "text": "SubnetTag",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/SubnetTag.svg"
+      },
+      {
+        "text": "SubnetTag2",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/SubnetTag2.svg"
+      },
+      {
+        "text": "TransitGateway",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/TransitGateway.svg"
+      },
+      {
+        "text": "VPCTag",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPCTag.svg"
+      },
+      {
+        "text": "VPN",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPN.svg"
+      },
+      {
+        "text": "VPNConnection",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPNConnection.svg"
+      },
+      {
+        "text": "VPNGateway",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPNGateway.svg"
+      },
+      {
+        "text": "VPNPolicy",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPNPolicy.svg"
+      },
+      {
+        "text": "VirtualPrivateCloud",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VirtualPrivateCloud.svg"
+      },
+      {
+        "text": "ZoneTag",
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ZoneTag.svg"
+      }
+    ]
+  }
+]

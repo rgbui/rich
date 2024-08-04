@@ -268,20 +268,53 @@ export class Rect {
         if (typeof height == 'number') this.height = height;
         return this;
     }
-    contain(point: Point) {
-        if (point.x >= this.left && point.x <= this.left + this.width) {
-            if (point.y >= this.top && point.y <= this.top + this.height) return true;
+    contain(point: Point, extend?: number) {
+        if (!extend) extend = 0;
+        if (point.x >= this.left - extend && point.x <= this.left + this.width + extend) {
+            if (point.y >= this.top - extend && point.y <= this.top + this.height + extend) return true;
         }
         return false;
     }
-    containX(x: number) {
-        if (x >= this.left && x <= this.left + this.width) {
+    isSide(arrow: 'top' | 'right' | 'bottom' | 'left', point: Point) {
+        if (arrow == 'top') {
+            return point.y <= this.top
+        }
+        else if (arrow == 'right') {
+            return point.x >= this.right
+        }
+        else if (arrow == 'bottom') {
+            return point.y >= this.bottom
+        }
+        else if (arrow == 'left') {
+            return point.x <= this.left
+        }
+        return false;
+    }
+    isForwardSide(arrow: 'top' | 'right' | 'bottom' | 'left', point: Point) {
+        if (arrow == 'top') {
+            return point.y < this.top && this.containX(point.x)
+        }
+        else if (arrow == 'right') {
+            return point.x > this.right && this.containY(point.y)
+        }
+        else if (arrow == 'bottom') {
+            return point.y > this.bottom && this.containX(point.x)
+        }
+        else if (arrow == 'left') {
+            return point.x < this.left && this.containY(point.y)
+        }
+        return false;
+    }
+    containX(x: number, extend?: number) {
+        if (!extend) extend = 0;
+        if (x >= this.left - extend && x <= this.left + this.width + extend) {
             return true;
         }
         return false;
     }
-    containY(y: number) {
-        if (y >= this.top && y <= this.top + this.height) return true;
+    containY(y: number, extend?: number) {
+        if (!extend) extend = 0;
+        if (y >= this.top - extend && y <= this.top + this.height + extend) return true;
         return false;
     }
     isContainRect(rect: Rect) {

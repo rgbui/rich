@@ -1,8 +1,8 @@
 import React, { CSSProperties } from "react";
 import { ReactNode } from "react";
 import { Kit } from "..";
-import { getImageSize, OpenFileDialoug, OpenMultipleFileDialoug } from "../../../component/file";
-import { ShyAlert } from "../../../component/lib/alert";
+import { OpenFileDialoug } from "../../../component/file";
+
 import {
     BoardToolTextSvg,
     BoardToolStickerSvg,
@@ -24,7 +24,14 @@ import {
     BoardFrameWebSvg,
     BoardFramePhoneSvg,
     UploadSvg,
-    DotsSvg
+    DotsSvg,
+    BrushPenSvg,
+    BrushSvg,
+    BrushPencilSvg,
+    BrushWaterSvg,
+    BrushPen1Svg,
+    BrushPen2Svg,
+    CloseSvg
 } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { closeNoteSelector, getNoteSelector } from "../../../extensions/board/note";
@@ -39,6 +46,9 @@ import { Page } from "../../page";
 import { Block } from "../../block";
 import { ToolTip } from "../../../component/view/tooltip";
 import { openMaterialView } from "../../../extensions/board/material";
+import { closeBoardEditTool } from "../../../extensions/board.edit.tool";
+// import { useColorSelector } from "../../../extensions/color";
+import { useColorPicker } from "../../../component/view/color/lazy";
 
 export class BoardSelector extends React.Component<{
     kit: Kit
@@ -115,15 +125,6 @@ export class BoardSelector extends React.Component<{
                 <Icon size={18} icon={{ name: 'byte', code: 'rectangle-one' }}></Icon>
             </div></Tip>
 
-            {/* <Tip overlay={<S>上传图片、视频、文件</S>} placement={'left'}><div
-                className={this.openSelector == BoardToolOperator.upload ? "item-hover-focus" : ""}
-                onMouseDown={e => {
-                    e.stopPropagation();
-                    this.selector(BoardToolOperator.upload, e)
-                }}>
-                <Icon size={18} icon={UploadSvg}></Icon>
-            </div></Tip> */}
-
             <Tip text='表格' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.table ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.table, e) }}>
@@ -192,7 +193,7 @@ export class BoardSelector extends React.Component<{
                 style.right = this.point.x + 60;
                 style.width = 3 * 55 + 5;
             }
-            return <div style={style} className="z-1000 pos  padding-h-5  round-4 border-light shadow bg-white   ">
+            return <div style={style} className="z-1000 pos  padding-h-5  round-4 border-light shadow-s bg-white   ">
                 <div>
                     <div className="gap-w-5 remark f-12"><S>画板</S></div>
                     <div className="flex flex-wrap f-12 r-w-50 r-gap-l-5  r-item-hover r-round-4 r-cursor r-flex-center r-flex-col">
@@ -275,7 +276,7 @@ export class BoardSelector extends React.Component<{
                 style.right = this.point.x + 60;
                 // style.width = 3 * 55 + 5;
             }
-            return <div style={style} className="z-1000 pos w-100 padding-h-5  round-4 border-light shadow bg-white   r-gap-5 r-padding-5  r-item-hover r-round-4 r-cursor r-flex-center r-flex-col ">
+            return <div style={style} className="z-1000 pos w-100 padding-h-5  round-4 border-light shadow-s bg-white   r-gap-5 r-padding-5  r-item-hover r-round-4 r-cursor r-flex-center r-flex-col ">
 
                 <ToolTip overlay={<S>上传文件</S>}><div onMouseDown={async e => {
                     e.stopPropagation();
@@ -329,9 +330,296 @@ export class BoardSelector extends React.Component<{
                 </div></ToolTip>
             </div>
         }
+        else if (this.openSelector == BoardToolOperator.pen) {
+            if (this.point) {
+                style.top = this.point.y;
+                style.right = this.point.x + 60;
+            }
+            style.overflowX = 'hidden';
+            return <div style={style} className="z-1000 pos w-100 padding-h-5  round-4 border-light shadow-s bg-white   r-gap-w-5    r-round r-cursor r-flex-center r-flex-col ">
+
+                <ToolTip overlay={<S>画笔</S>}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            transform: !this.currentSelector.data?.penType || this.currentSelector.data.penType == 'brush' ? undefined : 'translate(30px,0px)',
+                            width: 90,
+                            height: 40
+                        }}
+                        onMouseDown={e => {
+                            e.stopPropagation();
+                            if (!this.currentSelector.data) this.currentSelector.data = {};
+                            if (!this.currentSelector.other) this.currentSelector.other = {};
+                            this.currentSelector.other.select = 2;
+                            this.currentSelector.data.stroke = 'rgb(255, 179, 90)';
+                            this.currentSelector.data.strokeWidth = 9;
+                            this.currentSelector.data.penType = 'brush';
+                            this.forceUpdate();
+                        }}>
+                        <div className="flex" style={{ width: 40, height: 90, transform: 'rotate(-90deg)' }}>
+                            <BrushSvg></BrushSvg>
+                        </div>
+                    </div>
+                </ToolTip>
+
+                <ToolTip overlay={<S>钢笔</S>}>
+                    <div
+                        style={{
+                            overflow: 'hidden',
+                            transform: this.currentSelector.data?.penType == 'pen' ? undefined : 'translate(30px,0px)',
+                            width: 90,
+                            height: 40
+                        }}
+                        onMouseDown={e => {
+                            e.stopPropagation();
+                            if (!this.currentSelector.data) this.currentSelector.data = {};
+                            this.currentSelector.data.penType = 'pen';
+                            if (!this.currentSelector.other) this.currentSelector.other = {};
+                            this.currentSelector.other.select = 3;
+                            this.currentSelector.data.stroke = 'rgb(255, 116, 135)';
+                            this.currentSelector.data.strokeWidth = 16;
+                            this.forceUpdate();
+                        }}> <div className="flex" style={{ width: 40, height: 90, transform: 'rotate(-90deg)' }}>
+                            <BrushPenSvg></BrushPenSvg>
+                        </div>
+                    </div>
+                </ToolTip>
+
+                <ToolTip overlay={<S>墨笔</S>}>
+                    <div style={{
+                        overflow: 'hidden',
+                        transform: this.currentSelector.data?.penType == 'pencil' ? undefined : 'translate(30px,0px)',
+                        width: 90,
+                        height: 40
+                    }} onMouseDown={e => {
+                        e.stopPropagation();
+                        if (!this.currentSelector.data) this.currentSelector.data = {};
+                        this.currentSelector.data.penType = 'pencil';
+                        this.currentSelector.other.select = 4;
+                        this.currentSelector.data.stroke = '#000';
+                        this.currentSelector.data.strokeWidth = 8;
+                        this.forceUpdate();
+                    }}><div className="flex" style={{ width: 40, height: 90, transform: 'rotate(-90deg)' }}>
+                            <BrushPencilSvg></BrushPencilSvg></div>
+                    </div>
+                </ToolTip>
+
+                <ToolTip overlay={<S>线笔</S>}>
+                    <div style={{
+                        overflow: 'hidden',
+                        transform: this.currentSelector.data?.penType == 'water' ? undefined : 'translate(30px,0px)',
+                        width: 90,
+                        height: 40
+                    }} onMouseDown={e => {
+                        e.stopPropagation();
+                        if (!this.currentSelector.data) this.currentSelector.data = {};
+                        this.currentSelector.data.penType = 'water';
+                        if (!this.currentSelector.other) this.currentSelector.other = {};
+                        this.currentSelector.other.select = 1;
+                        this.currentSelector.data.stroke = '#000';
+                        this.currentSelector.data.strokeWidth = 4;
+                        this.forceUpdate();
+                    }}><div className="flex" style={{ width: 40, height: 90, transform: 'rotate(-90deg)' }}>
+                            <BrushWaterSvg></BrushWaterSvg>
+                        </div>
+                    </div>
+                </ToolTip>
+
+                <ToolTip overlay={<S>绿笔</S>}>
+                    <div style={{
+                        overflow: 'hidden',
+                        transform: this.currentSelector.data?.penType == 'pen-green' ? undefined : 'translate(30px,0px)',
+                        width: 90,
+                        height: 40
+                    }} onMouseDown={e => {
+                        e.stopPropagation();
+                        if (!this.currentSelector.data) this.currentSelector.data = {};
+                        this.currentSelector.data.penType = 'pen-green';
+                        if (!this.currentSelector.other) this.currentSelector.other = {};
+                        this.currentSelector.other.select = 5;
+                        this.currentSelector.data.stroke = 'rgb(25, 222, 166)';
+                        this.currentSelector.data.strokeOpacity = 0.5
+                        this.currentSelector.data.strokeWidth = 14;
+                        this.forceUpdate();
+                    }}><div className="flex" style={{ width: 40, height: 90, transform: 'rotate(-90deg)' }}>
+                            <BrushPen2Svg></BrushPen2Svg>
+                        </div>
+                    </div>
+                </ToolTip>
+
+                <ToolTip overlay={<S>黄笔</S>}>
+                    <div style={{
+                        overflow: 'hidden',
+                        transform: this.currentSelector.data?.penType == 'pen-area' ? undefined : 'translate(30px,0px)',
+                        width: 90,
+                        height: 40
+                    }} onMouseDown={e => {
+                        e.stopPropagation();
+                        if (!this.currentSelector.data) this.currentSelector.data = {};
+                        this.currentSelector.data.penType = 'pen-area';
+                        if (!this.currentSelector.other) this.currentSelector.other = {};
+                        this.currentSelector.other.select = 2;
+                        this.currentSelector.data.stroke = 'rgb(255, 179, 90)';
+                        this.currentSelector.data.strokeWidth = 9;
+                        this.forceUpdate();
+                    }}><div className="flex-center" style={{ width: 40, height: 90, transform: 'rotate(-90deg)' }}>
+                            <BrushPen1Svg></BrushPen1Svg>
+                        </div>
+                    </div>
+                </ToolTip>
+
+
+                {/* <ToolTip overlay={<S>水笔</S>}>
+                    <div style={{
+                        overflow: 'hidden',
+                        transform: this.currentSelector.data?.penType == 'water' ? undefined : 'translate(30px,0px)',
+                        width: 90,
+                        height: 40
+                    }} onMouseDown={e => {
+                        e.stopPropagation();
+                        if (!this.currentSelector.data) this.currentSelector.data = {};
+                        this.currentSelector.data.penType = 'water';
+                        if (!this.currentSelector.other) this.currentSelector.other = {};
+                        this.currentSelector.other.select = 1;
+                        this.currentSelector.data.stroke = '#000';
+                        this.currentSelector.data.strokeWidth = 4;
+                        this.forceUpdate();
+                    }}><div className="flex" style={{ width: 40, height: 90, transform: 'rotate(-90deg)' }}>
+                            <BrushPen3Svg></BrushPen3Svg>
+                        </div>
+                    </div>
+                </ToolTip> */}
+
+
+                <div className="flex h-30 gap-t-10 flex-wrap r-flex-center">
+
+
+                    <div onMouseDown={e => {
+                        e.stopPropagation();
+                        if (!this.currentSelector.data) this.currentSelector.data = {};
+                        if (!this.currentSelector.other) this.currentSelector.other = {};
+                        this.currentSelector.other.select = 1;
+                        this.currentSelector.data.stroke = '#000';
+                        this.currentSelector.data.strokeWidth = 4;
+                        this.forceUpdate();
+
+                    }} className={"circle size-24  border-box " + (this.currentSelector.other?.select == 1 ? "border-blue" : "border-light")}>
+                        <div className="circle" style={{
+                            width: 4,
+                            height: 4,
+                            background: '#000'
+                        }}></div>
+                    </div>
+
+                    <div onMouseDown={e => {
+                        e.stopPropagation();
+                        if (!this.currentSelector.data) this.currentSelector.data = {};
+                        if (!this.currentSelector.other) this.currentSelector.other = {};
+                        this.currentSelector.other.select = 2;
+                        this.currentSelector.data.stroke = 'rgb(255, 179, 90)';
+                        this.currentSelector.data.strokeWidth = 9;
+                        this.forceUpdate();
+
+                    }} className={"circle size-24  border-box " + (this.currentSelector.other?.select == 2 ? "border-blue" : "border-light")}>
+                        <div className="circle" style={{
+                            width: 9,
+                            height: 9,
+                            background: 'rgb(255, 179, 90)'
+                        }}></div>
+                    </div>
+
+                    <div onMouseDown={e => {
+                        e.stopPropagation();
+                        if (!this.currentSelector.data) this.currentSelector.data = {};
+                        if (!this.currentSelector.other) this.currentSelector.other = {};
+                        this.currentSelector.other.select = 3;
+                        this.currentSelector.data.stroke = 'rgb(255, 116, 135)';
+                        this.currentSelector.data.strokeWidth = 16;
+                        this.forceUpdate();
+
+                    }} className={"circle size-24  border-box " + (this.currentSelector.other?.select == 3 ? "border-blue" : "border-light")}>
+                        <div className="circle" style={{
+                            width: 16,
+                            height: 16,
+                            background: 'rgb(255, 116, 135)'
+                        }}></div>
+                    </div>
+                </div>
+
+                <div className="flex  h-30  flex-wrap r-flex-center">
+                    <div onMouseDown={e => {
+                        e.stopPropagation();
+                        if (!this.currentSelector.data) this.currentSelector.data = {};
+                        if (!this.currentSelector.other) this.currentSelector.other = {};
+                        this.currentSelector.other.select = 4;
+                        this.currentSelector.data.stroke = '#000';
+                        this.currentSelector.data.strokeWidth = 8;
+                        this.forceUpdate();
+
+                    }} className={"circle size-24  border-box " + (this.currentSelector.other?.select == 4 ? "border-blue" : "border-light")}>
+                        <div className="circle" style={{
+                            width: 8,
+                            height: 8,
+                            background: '#000'
+                        }}></div>
+                    </div>
+
+                    <div onMouseDown={e => {
+                        e.stopPropagation();
+                        if (!this.currentSelector.data) this.currentSelector.data = {};
+                        if (!this.currentSelector.other) this.currentSelector.other = {};
+                        this.currentSelector.other.select = 5;
+                        this.currentSelector.data.stroke = 'rgb(25, 222, 166)';
+                        this.currentSelector.data.strokeWidth = 14;
+                        this.forceUpdate();
+
+                    }} className={"circle size-24  border-box " + (this.currentSelector.other?.select == 5 ? "border-blue" : "border-light")}>
+                        <div className="circle" style={{
+                            width: 14,
+                            height: 14,
+                            background: 'rgb(25, 222, 166)'
+                        }}></div>
+                    </div>
+
+                    <div onMouseDown={async e => {
+                        e.stopPropagation();
+                        var color = await useColorPicker({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) }, {
+                            color: this.currentSelector.data?.stroke
+                        });
+                        if (color) {
+                            if (!this.currentSelector.data) this.currentSelector.data = {};
+                            if (!this.currentSelector.other) this.currentSelector.other = {};
+                            this.currentSelector.other.select = 5;
+                            this.currentSelector.other.selectColor = color;
+                            this.currentSelector.data.stroke = color;
+                            this.currentSelector.data.strokeWidth = 14;
+                            this.forceUpdate();
+                        }
+
+                    }} className={"circle   size-24   border-box " + (this.currentSelector.other?.select == 5 ? "border-blue" : "border-light")}>
+                        <div className="size-20 circle palette">
+                            {this.currentSelector.other.selectColor && <div className="circle" style={{
+                                width: 16,
+                                height: 16,
+                                background: this.currentSelector.other.selectColor
+                            }}>
+                            </div>}
+                        </div>
+                    </div>
+                </div>
+                <ToolTip overlay={<S>关闭</S>}>
+                    <div onMouseDown={e => {
+                        e.stopPropagation();
+                        closeBoardEditTool()
+                    }} className="flex h-20 flex-center item-hover-focus cursor remark">
+                        <Icon icon={CloseSvg} size={12}></Icon>
+                    </div>
+                </ToolTip>
+            </div >
+        }
         else return <></>
     }
-    currentSelector: { url: string, data?: Record<string, any>, event: React.MouseEvent }
+    currentSelector: { url: string, data?: Record<string, any>, other?: Record<string, any>, event: React.MouseEvent }
     openSelector: BoardToolOperator = null;
     get isSelector() {
         if (this.currentSelector) return true;
@@ -360,7 +648,17 @@ export class BoardSelector extends React.Component<{
                     var shapeSelector = await getShapeSelector();
                     shapeSelector.only('selector', async (data) => {
                         if (this.currentSelector && this.currentSelector.url == BlockUrlConstant.Shape) {
-                            this.currentSelector.data = { svg: data.svg, svgName: data.name };
+                            if (data.src) {
+                                this.currentSelector.url = BlockUrlConstant.BoardImage;
+                                this.currentSelector.data.initialData = { imageUrl: data.src };
+                            }
+                            else {
+                                this.currentSelector.data = {
+                                    svg: data.svg,
+                                    svgName: data.name
+                                };
+                            }
+
                         }
                         shapeSelector.close();
                     });
@@ -392,6 +690,11 @@ export class BoardSelector extends React.Component<{
                     break;
                 case BoardToolOperator.pen:
                     sel.url = BlockUrlConstant.Pen;
+                    if (!sel.other) sel.other = {};
+                    sel.other.select = 2;
+                    if (!sel.data) sel.data = {};
+                    sel.data.stroke = 'rgb(255, 179, 90)';
+                    sel.data.strokeWidth = 9;
                     break;
                 case BoardToolOperator.material:
                     var mv = await openMaterialView();
@@ -436,6 +739,9 @@ export class BoardSelector extends React.Component<{
         else if (this.currentSelector.url == BlockUrlConstant.Mind) {
             cursor = `-webkit-image-set(url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADQAAAAwCAYAAABe6Vn9AAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAtqSURBVHgBxVlpbBTJFa7uHnt8cBiDuDFjDhsBwTbHPyIMOIDClSBAIRFsspHCjygsCX9RGCPlJwSkiH/Z4Cj8AUFMElaGJNiAEhJWsCbhFsfgBXPKeAHbc/X0fl9N1dAMHrvHjNknlbq7uo7v1Xv16r1XhuiFamtrA4Zh/AGlGp8lKI2JROKXLS0tIfENUDZ4jPSKFStWBKLR6Beqo5s6fT7f3FOnTt0TH5D6wpOfn1/T1NQUclearnfDcRwjFovtY+fly5eL48ePi0OHDgm+s8627U/ZRnw4MsDMbzPhwb+DIk0o7g8TojVBMX6w49ixY+WP169fi7Vr17r7hSD+EJ4HweSZXKki5i+xLOsjvmLhqF4B/S8Dns6RI0eOOnLkiIP3BCt8rvGMBw8eWJMmTfoKYIcPGTIk9YMDpFEAEwY4MRZALFmyJHj69Ol68R6MYJxP8Lod45b01iYDnhIwY+EZF0nhOFLllBqZt2/fJoNXWHfgwAHx+PFj2bmhoUH2hjQ+A/DiSCSyAJ8fozSqgYNg6h43r8iemQCY4R4JEiCwtHDsnp6e6ZhrCDb/v/rCg4ePmoV+sk6qXDAYNFHy8OqfPXt2xejRo/+J92Fpc798+PDh0mfPnt0qLS2NgHmqZkJZoGaUAL5DALDYqwoqZppFUuIhlJ+gbwu+zWnTpuVhDn9lZWXFhAkT3sGDeV62t7fXPX/+/GZHR0dkw4YNcUjLNtPmsK5cudJ+9+7dNTAOp1XHV/F4/PO2trY1N2/ebEdnAxOlOhA8gNSgtBIYAVKFhAdyMdPKMRQzJL23Tc7JuTUetJN4QqHQ2lu3brUr7TLAjOyX6ohCCRWiFKMUoeSzDiQwWNzv9/dA1XpQ1x0IBMIYMMrxVZH7AFL6QkmqHuoS7IsZqOguPIJKMmSm082rC08R5i5EmwJYtTz1n3smjEI8XcSzYMGC2OHDhxNuleP+KVDM8FkAO+9TgG0MpgdgiaBIlXODrE2aSa56JyRbngbS3Y6SlOeZahdKa6IZ8hcXFxdirxSGw2G/SBoxYrYLCgrCJKh/F1VO40mp3Lx585xx48aRc658lB3ARIQFk4d1vVod29G70EVUGbWpabV+LDIQ/tXyibbHM+w3aYYnTpwYw2EeBW4CjkBSxMH3MDSBWCJgxgb21MJKsw3pJBTnmiGBQRJFRUXR7u5ugbMh4WLI5mQY0OkNLOppgniO1OK5r7c2+PcR2vH5Z5GZEsOGDbNxlMT0N3BYGiesoMQK4xG/ePFiggvMMQ3XJGLjxo0W7Tok5Xv06BE7myUlJUZnZ6etGLEV0wm1iqKurq4WKvE9DMaTLiAGRjQorVC/ei2xJD6DGkQcvlGjRlmwaBbwCOBJjBkzxsahGrt27RqxkKHEWwwpMtUKGOpdqyTNc4IapZlZuXLlCEhvFwb5ROSQAGz/8OHDg42NjZ1kCotsYpElFmx+A8ZI4hFKLcUbwyQXuDe/TBsKA0V/a/VyNDMQOTd/FTatWL9+vaiqqpJlIHTnzh1x9OhRcfLkSV3VWlhYuOTEiRMvXJgknqtXrxrK1dGMvR9x1RYvXrwfZtfZtGmTA9V0ckUci2Ny7KVLl+4XvS94n5RVBzKDPVOO5x1+ux3GXBHdm61bt0oXB3tzyZkzZ5qz6W96bUijUV9fb2Dj8kCULnyumSFxzHXr1iXBmeb3s8EosmlMiwMdtvCUG0VPOhhUXV2t51wj3hgqT+SJIVdQRxMqGYL9F4NFLuMyGZbNB8fTM1OeGDKSLp+lygclWFNLme3cMUQTPnPmTAN+kwVpfcm6y5cvi8Ei7c1jrqtPnjyx4Np47uuFIbkyOERN+E0WXPcmfre2torBomPHjsknrNxVPEy4NpY6E/slLww5lBAYMXCCk7G/60lpYnNNHFMfsAgo9VmUO6OgDIIDJ1FmhbBa/0Fc1MBzYseOHTllimNxTBLmOIiIlOqd8lyEB8a8cK79OhlwgeDtFI+ZNWvWn+D8zmADnkk04wO1fFRf7klKXR2oNxGN/hBO6FMYhS6EEWEsKMOGfl0dr6KkUciDa1L44sULBoBFMBCjZ8yY8XPETT8SOSRI5tD169d/h/36DJ9dKN2YOwwnNa7CnL6BCm/Edoyd/EgnFWIVZWiMkj958uRJWMGtkFYlgrEKMQCC9/EIjDS/fPmyGc7nf0Uy7pLhPsKEHlg6Soehi+MFaL/kcuOpdgVQuYKurq5ChOgM1X2Iai3kHph1NSC11UOHDg1CbS5eunTpZ3oMlZuQ+7GmpmYPmK999epV8MaNG39V/xIYj6BjjJIxRze+wzBEEeYLmNHxgtXnpZGKTiluDhoFMyaiWZPRLMJiJlN8ACRjFgBZxIMYK36c7RVYWdQCOnj/HPW1aLsK3434tgHeASMyCsXYYcwRHTFiRBRBnO0KF/qlrE5+ngVYVQcqwqjRASDp9sOkS4aRPxsLEAz6xNOnT3+Dti8SbKzyEKrEIb07APoDqGk5wP8bKtzGHAHqZZ4ADMocBlQwjn0rQ36vGLONN7Tp9KlCFcwDYz4ALAVDJwFsIhPsyO/tR15CwGgYeDp4Mk+RGmj+/PnbIZXteH2APOBymOwOqGoci0BR6tyFDvdThNsIevwCczhv0nhvA3yH+rqPUbG+NOV0HBESm3PmzClFrP8Z/n0L9W3nzp2bq8cGSDkmgOrhKU2jrKxsGAwKM65l+L6CQ/S7kFQHjgXmCmycd7bOE2TA8yvU30v3ILK6H3Ldx6QSlIhemeH5Pd4no9wH8BUA04ZEi4C6CP1MJ9aPHz++DAw36b4A+Z2zZ8/eFa48wbJly8qh0peIRznJQmXQiGcu8Lx1X5W+h0ys3Kd4VvOw3Lt3r1i9erXABmXcXwAdr4F6NJw/fz6A1V0LCe3FJL9G4WQhGIK6CxcuEFACqx1nYgWqp/ePNiryG/9tMNoxZcqUv+B7DYI5Jh9/ge+q8vJyPw9pzPUE86Tw7NmzR6xatSqFBwtQhTH+CIZ7lZBUI8Tz8m8/90Mpwmp1gpn9GHyfypQaqZuAZO5Nhx+99dUWVF7J4LFLZKBM90MLFy4cuXv3bkfn5XxuZrAqPtR7uR8KobSiXQsYaWhubnanfB03A5mYSf/HXDgkehCvtahnIpJqGFDYMt4PgRnyoDXAeevCC3GIhVP//xhsIe9jtmzZIgfS9zEAfwJS2CiSeWRK0vP54IVUkvEgLGIDLCLD/fxFixY1QRW/TTybN29Ox/M3kbS2XER58KbfPvgrKioqsVn/gUHeuY+Bvi7F9catbHyrgZC+r0K2NB8WrxIGhHiGp+H5CnjqiAfMRHCmxehtaKNgQN0sOIT58G7D+HEKK1HGg4/3QzAG/7t///7H2Ij30TaGSy8bqzkozJAwtjzrgCUP6d8I3KRTOIAnEQ/vh4DnMvD8VOGJwzjZ27Zts6GyTmpF8OB1BU31BJRpMImz8axWZRbrMOh4tgHzftUn60SgFwIDJla9oISJbFh4zo1CPFUKD887OsIT2IZt2Yd2wVQMabuvTSvvg+JgShZVF4fvJv9hr8mV6O1KJRe0c+dOMXXqVIdJeXgh2nVyu08xVWyoYoJt2Sd1I6JWm3uIt3elKJTEFDieXIXpKOWsw/VGqWrDtoMiHUXavWKIUgrNGAdDEVBYpuOdeKhJI114TN1RP+XVBTaiH3qbj5XJw/6xoMfyPgYnegxeAOMSfek1aHuIxLsg7BVaujzM7YejSq/egmvE1JaWUjQNj6NzClrdEmCGDcKQDuORbqGiRrr04o3TOOiE01/igTrFwQxv7LoQG3WDGWLqQeCnb/FSZ1D6GNqTpuWTJlyou1b1nqf+ZZVrfk8ykDWVeGiIXHhY8tS/fo2ToTI9ptpblteOg0TuCzidvTW/QTwflr4GPZjOW15KEW0AAAAASUVORK5CYII=) 2x) 11 10, auto`;
         }
+        // else if(this.currentSelector.url==BlockUrlConstant.Pen){
+
+        // }
         else {
             cursor = `-webkit-image-set(url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAOdJREFUSA3tVsENwyAMLBULZI7O1G+7QlZJv5mpc2QE6kMgAUosG1nNI1hCkbHx2Qc6xd2UFkJ40JEnrSkd3ei7Oue+yRd97qKsOqkERQQNYE9lPcBxUprwhZXQ8vRi8B5gcXEucQBz7JjGBtWmdHLFrke139FejqHDGNVZDoN1IGo7qG61t06z96K2u9xpobv2UEVFwvvAPe1xeQIH51PuBN1ILDOkPZdqb5h4pQXwf1l8XJ46x5/DLEXNb6LNpzrvdo/zT7vjAcxdi2lsUG1KJ1fselRDq7W2p+1qye2hutX2qL3a7n9u0DPnQ0lkSwAAAABJRU5ErkJggg==) 2x) 8 8, auto`;
         }

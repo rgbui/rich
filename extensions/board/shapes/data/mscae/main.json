@@ -1,0 +1,2000 @@
+[
+  {
+    "text": "Dep",
+    "childs": [
+      {
+        "text": "App_Service_Logic_App",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/App_Service_Logic_App.svg"
+      },
+      {
+        "text": "Application_Gateway",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Application_Gateway.svg"
+      },
+      {
+        "text": "Content_Delivery_Network",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Content_Delivery_Network.svg"
+      },
+      {
+        "text": "DataWarehouse",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/DataWarehouse.svg"
+      },
+      {
+        "text": "Data_Lake",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Data_Lake.svg"
+      },
+      {
+        "text": "Data_Lake_Analytics",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Data_Lake_Analytics.svg"
+      },
+      {
+        "text": "Data_Lake_Store",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Data_Lake_Store.svg"
+      },
+      {
+        "text": "SQL_Server_Stretch_DB",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/SQL_Server_Stretch_DB.svg"
+      }
+    ]
+  },
+  {
+    "text": "Main",
+    "childs": [
+      {
+        "text": "ADFS",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ADFS.svg"
+      },
+      {
+        "text": "API",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/API.svg"
+      },
+      {
+        "text": "APIDefinition",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/APIDefinition.svg"
+      },
+      {
+        "text": "API_Management",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/API_Management.svg"
+      },
+      {
+        "text": "ARMExplorer",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ARMExplorer.svg"
+      },
+      {
+        "text": "Access_Review",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Access_Review.svg"
+      },
+      {
+        "text": "ActiveDirectory",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ActiveDirectory.svg"
+      },
+      {
+        "text": "ActiveDirectoryDomain",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ActiveDirectoryDomain.svg"
+      },
+      {
+        "text": "Active_Directory",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Active_Directory.svg"
+      },
+      {
+        "text": "Active_Directory_Health_Monitoring",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Active_Directory_Health_Monitoring.svg"
+      },
+      {
+        "text": "AddTeamMember",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/AddTeamMember.svg"
+      },
+      {
+        "text": "Address_Space",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Address_Space.svg"
+      },
+      {
+        "text": "Advisor",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Advisor.svg"
+      },
+      {
+        "text": "Alien",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Alien.svg"
+      },
+      {
+        "text": "AlienSad",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/AlienSad.svg"
+      },
+      {
+        "text": "Analysis_Services",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Analysis_Services.svg"
+      },
+      {
+        "text": "AppServiceConnectivity",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/AppServiceConnectivity.svg"
+      },
+      {
+        "text": "AppServiceEnvironment",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/AppServiceEnvironment.svg"
+      },
+      {
+        "text": "App_Configuration",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Configuration.svg"
+      },
+      {
+        "text": "App_Registrations",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Registrations.svg"
+      },
+      {
+        "text": "App_Service",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Service.svg"
+      },
+      {
+        "text": "App_Service_API_Apps",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Service_API_Apps.svg"
+      },
+      {
+        "text": "App_Service_Frontend",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Service_Frontend.svg"
+      },
+      {
+        "text": "App_Service_IPAddress",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Service_IPAddress.svg"
+      },
+      {
+        "text": "App_Service_Mobile_App",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Service_Mobile_App.svg"
+      },
+      {
+        "text": "App_Service_Worker_Pools",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Service_Worker_Pools.svg"
+      },
+      {
+        "text": "App_Services",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Services.svg"
+      },
+      {
+        "text": "Application_Gateway",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Application_Gateway.svg"
+      },
+      {
+        "text": "Application_Insights",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Application_Insights.svg"
+      },
+      {
+        "text": "Application_Security_Groups",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Application_Security_Groups.svg"
+      },
+      {
+        "text": "Archive_Storage",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Archive_Storage.svg"
+      },
+      {
+        "text": "Auditing",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Auditing.svg"
+      },
+      {
+        "text": "AuditingServer",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/AuditingServer.svg"
+      },
+      {
+        "text": "AutoBackup",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/AutoBackup.svg"
+      },
+      {
+        "text": "Automation",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Automation.svg"
+      },
+      {
+        "text": "Avatar",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Avatar.svg"
+      },
+      {
+        "text": "AvatarDefault",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/AvatarDefault.svg"
+      },
+      {
+        "text": "AvatarUnknown",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/AvatarUnknown.svg"
+      },
+      {
+        "text": "Azure API for FHIR",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure API for FHIR.svg"
+      },
+      {
+        "text": "AzureFXTEdgeFiler",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/AzureFXTEdgeFiler.svg"
+      },
+      {
+        "text": "Azure_AD_B2C",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_AD_B2C.svg"
+      },
+      {
+        "text": "Azure_AD_Domain_Services",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_AD_Domain_Services.svg"
+      },
+      {
+        "text": "Azure_AD_Identity_Protection",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_AD_Identity_Protection.svg"
+      },
+      {
+        "text": "Azure_AD_Privileged_Identity_Management",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_AD_Privileged_Identity_Management.svg"
+      },
+      {
+        "text": "Azure_API_for_FHIR",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_API_for_FHIR.svg"
+      },
+      {
+        "text": "Azure_Artifacts",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Artifacts.svg"
+      },
+      {
+        "text": "Azure_Boards",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Boards.svg"
+      },
+      {
+        "text": "Azure_Cache_for_Redis",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Cache_for_Redis.svg"
+      },
+      {
+        "text": "Azure_Data_Explorer_Clusters",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Data_Explorer_Clusters.svg"
+      },
+      {
+        "text": "Azure_Database_Migration_Services",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Database_Migration_Services.svg"
+      },
+      {
+        "text": "Azure_Database_for_MariaDB_servers",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Database_for_MariaDB_servers.svg"
+      },
+      {
+        "text": "Azure_Database_for_MySQL_servers",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Database_for_MySQL_servers.svg"
+      },
+      {
+        "text": "Azure_Database_for_PostgreSQL_servers",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Database_for_PostgreSQL_servers.svg"
+      },
+      {
+        "text": "Azure_DevOps",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_DevOps.svg"
+      },
+      {
+        "text": "Azure_Digital_Twins",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Digital_Twins.svg"
+      },
+      {
+        "text": "Azure_Firewall",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Firewall.svg"
+      },
+      {
+        "text": "Azure_Home",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Home.svg"
+      },
+      {
+        "text": "Azure_IoT_Hub",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_IoT_Hub.svg"
+      },
+      {
+        "text": "Azure_IoT_Hub_Security",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_IoT_Hub_Security.svg"
+      },
+      {
+        "text": "Azure_Maps",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Maps.svg"
+      },
+      {
+        "text": "Azure_Media_Player",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Media_Player.svg"
+      },
+      {
+        "text": "Azure_NetApp_files",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_NetApp_files.svg"
+      },
+      {
+        "text": "Azure_Pipelines",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Pipelines.svg"
+      },
+      {
+        "text": "Azure_Repos",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Repos.svg"
+      },
+      {
+        "text": "Azure_Sentinel",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Sentinel.svg"
+      },
+      {
+        "text": "Azure_Sphere",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Sphere.svg"
+      },
+      {
+        "text": "Azure_Test_Plans",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Test_Plans.svg"
+      },
+      {
+        "text": "Backlog",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Backlog.svg"
+      },
+      {
+        "text": "Backup",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Backup.svg"
+      },
+      {
+        "text": "Batch",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Batch.svg"
+      },
+      {
+        "text": "Batch_AI",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Batch_AI.svg"
+      },
+      {
+        "text": "Batch_Accounts",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Batch_Accounts.svg"
+      },
+      {
+        "text": "Batch_Task",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Batch_Task.svg"
+      },
+      {
+        "text": "Batch_TaskVM",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Batch_TaskVM.svg"
+      },
+      {
+        "text": "BillingHub",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/BillingHub.svg"
+      },
+      {
+        "text": "BizTalk_Services",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/BizTalk_Services.svg"
+      },
+      {
+        "text": "BizTalk_Services_Hybrid_Connections",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/BizTalk_Services_Hybrid_Connections.svg"
+      },
+      {
+        "text": "BlobBlock",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/BlobBlock.svg"
+      },
+      {
+        "text": "BlobPage",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/BlobPage.svg"
+      },
+      {
+        "text": "Blockchain",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Blockchain.svg"
+      },
+      {
+        "text": "Blog_Storage",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Blog_Storage.svg"
+      },
+      {
+        "text": "Blueprints",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Blueprints.svg"
+      },
+      {
+        "text": "Book",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Book.svg"
+      },
+      {
+        "text": "Bot_Services",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Bot_Services.svg"
+      },
+      {
+        "text": "Branch",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Branch.svg"
+      },
+      {
+        "text": "Browser",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Browser.svg"
+      },
+      {
+        "text": "Bug",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Bug.svg"
+      },
+      {
+        "text": "Building_Blocks",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Building_Blocks.svg"
+      },
+      {
+        "text": "Builds",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Builds.svg"
+      },
+      {
+        "text": "CDNrocket",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/CDNrocket.svg"
+      },
+      {
+        "text": "Cache_Redis_Product",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cache_Redis_Product.svg"
+      },
+      {
+        "text": "Cache_including_Redis",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cache_including_Redis.svg"
+      },
+      {
+        "text": "Calendar",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Calendar.svg"
+      },
+      {
+        "text": "Certificate",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Certificate.svg"
+      },
+      {
+        "text": "Chart",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Chart.svg"
+      },
+      {
+        "text": "Check",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Check.svg"
+      },
+      {
+        "text": "Citrix_Virtual_Desktops_Essentials",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Citrix_Virtual_Desktops_Essentials.svg"
+      },
+      {
+        "text": "ClassicIPAddress",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ClassicIPAddress.svg"
+      },
+      {
+        "text": "ClassicStorage",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ClassicStorage.svg"
+      },
+      {
+        "text": "Client_Apps",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Client_Apps.svg"
+      },
+      {
+        "text": "Clock",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Clock.svg"
+      },
+      {
+        "text": "CloudSimple_Nodes",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/CloudSimple_Nodes.svg"
+      },
+      {
+        "text": "CloudSimple_Services",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/CloudSimple_Services.svg"
+      },
+      {
+        "text": "CloudSimple_Virtual_Machines",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/CloudSimple_Virtual_Machines.svg"
+      },
+      {
+        "text": "Cloud_Cycle",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cloud_Cycle.svg"
+      },
+      {
+        "text": "Cloud_Service",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cloud_Service.svg"
+      },
+      {
+        "text": "Cloud_Services_Classic",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cloud_Services_Classic.svg"
+      },
+      {
+        "text": "Code",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Code.svg"
+      },
+      {
+        "text": "Cognitive_Services",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services.svg"
+      },
+      {
+        "text": "Cognitive_Services_Computer_Vision",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services_Computer_Vision.svg"
+      },
+      {
+        "text": "Cognitive_Services_Speech",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services_Speech.svg"
+      },
+      {
+        "text": "Cognitive_Services_emotion",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services_emotion.svg"
+      },
+      {
+        "text": "Cognitive_Services_face",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services_face.svg"
+      },
+      {
+        "text": "Cognitive_Services_luis",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services_luis.svg"
+      },
+      {
+        "text": "Cognitive_Services_recommendations",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services_recommendations.svg"
+      },
+      {
+        "text": "Cognitive_Services_textanalytics",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services_textanalytics.svg"
+      },
+      {
+        "text": "Cognitive_Services_web_language_model",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services_web_language_model.svg"
+      },
+      {
+        "text": "Commits",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Commits.svg"
+      },
+      {
+        "text": "Connection",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Connection.svg"
+      },
+      {
+        "text": "Connections",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Connections.svg"
+      },
+      {
+        "text": "ContactInfo",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ContactInfo.svg"
+      },
+      {
+        "text": "Container_Instances",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Container_Instances.svg"
+      },
+      {
+        "text": "Container_Registries",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Container_Registries.svg"
+      },
+      {
+        "text": "Container_Service",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Container_Service.svg"
+      },
+      {
+        "text": "ContentManagementSystem",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ContentManagementSystem.svg"
+      },
+      {
+        "text": "Content_Delivery_Network",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Content_Delivery_Network.svg"
+      },
+      {
+        "text": "Content_Protection",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Content_Protection.svg"
+      },
+      {
+        "text": "ContinuousExport",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ContinuousExport.svg"
+      },
+      {
+        "text": "Controllers",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Controllers.svg"
+      },
+      {
+        "text": "Controls",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Controls.svg"
+      },
+      {
+        "text": "ControlsHorizontal",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ControlsHorizontal.svg"
+      },
+      {
+        "text": "CosmosDB",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/CosmosDB.svg"
+      },
+      {
+        "text": "Counter",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Counter.svg"
+      },
+      {
+        "text": "Cubes",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cubes.svg"
+      },
+      {
+        "text": "CustomDomain",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/CustomDomain.svg"
+      },
+      {
+        "text": "CustomerInsights",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/CustomerInsights.svg"
+      },
+      {
+        "text": "Customer_Lockbox",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Customer_Lockbox.svg"
+      },
+      {
+        "text": "DC_OS",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/DC_OS.svg"
+      },
+      {
+        "text": "DDOS_Protection_Plans",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/DDOS_Protection_Plans.svg"
+      },
+      {
+        "text": "DNS",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/DNS.svg"
+      },
+      {
+        "text": "DNS_Private_Zones",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/DNS_Private_Zones.svg"
+      },
+      {
+        "text": "DataServices_category_rollup",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/DataServices_category_rollup.svg"
+      },
+      {
+        "text": "Data_Box",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Box.svg"
+      },
+      {
+        "text": "Data_Box_Edge_Data_Box_Gateway",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Box_Edge_Data_Box_Gateway.svg"
+      },
+      {
+        "text": "Data_Catalog",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Catalog.svg"
+      },
+      {
+        "text": "Data_Factory",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Factory.svg"
+      },
+      {
+        "text": "Data_Lake",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Lake.svg"
+      },
+      {
+        "text": "Data_Lake_Analytics",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Lake_Analytics.svg"
+      },
+      {
+        "text": "Data_Lake_Storage",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Lake_Storage.svg"
+      },
+      {
+        "text": "Data_Lake_Store",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Lake_Store.svg"
+      },
+      {
+        "text": "Data_Warehouse",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Warehouse.svg"
+      },
+      {
+        "text": "DatabaseRestore",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/DatabaseRestore.svg"
+      },
+      {
+        "text": "Database_General",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Database_General.svg"
+      },
+      {
+        "text": "Databricks",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Databricks.svg"
+      },
+      {
+        "text": "Dedicated_Event_Hub",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Dedicated_Event_Hub.svg"
+      },
+      {
+        "text": "DevConsole",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/DevConsole.svg"
+      },
+      {
+        "text": "DevTest_Labs",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/DevTest_Labs.svg"
+      },
+      {
+        "text": "Developer_Tools",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Developer_Tools.svg"
+      },
+      {
+        "text": "Device_Compliance",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Device_Compliance.svg"
+      },
+      {
+        "text": "Device_Config",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Device_Config.svg"
+      },
+      {
+        "text": "Device_Provisioning_Services",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Device_Provisioning_Services.svg"
+      },
+      {
+        "text": "Devices_Groups",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Devices_Groups.svg"
+      },
+      {
+        "text": "DirectorySync",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/DirectorySync.svg"
+      },
+      {
+        "text": "Discard",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Discard.svg"
+      },
+      {
+        "text": "Discs",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Discs.svg"
+      },
+      {
+        "text": "Docker",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Docker.svg"
+      },
+      {
+        "text": "DocumentDB",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/DocumentDB.svg"
+      },
+      {
+        "text": "Download",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Download.svg"
+      },
+      {
+        "text": "Education",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Education.svg"
+      },
+      {
+        "text": "Elastic_Database_Pools",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Elastic_Database_Pools.svg"
+      },
+      {
+        "text": "Elastic_Job_Agents",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Elastic_Job_Agents.svg"
+      },
+      {
+        "text": "Enrollment",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Enrollment.svg"
+      },
+      {
+        "text": "Enterprise_Applications",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Enterprise_Applications.svg"
+      },
+      {
+        "text": "EventLog",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/EventLog.svg"
+      },
+      {
+        "text": "Event_Grid",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Event_Grid.svg"
+      },
+      {
+        "text": "Event_Grid_Topics",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Event_Grid_Topics.svg"
+      },
+      {
+        "text": "Event_Hub_Clusters",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Event_Hub_Clusters.svg"
+      },
+      {
+        "text": "Event_Hubs",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Event_Hubs.svg"
+      },
+      {
+        "text": "Exchange_On_premises_Access",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Exchange_On_premises_Access.svg"
+      },
+      {
+        "text": "Express_Route",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Express_Route.svg"
+      },
+      {
+        "text": "Extensions",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Extensions.svg"
+      },
+      {
+        "text": "Favorite",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Favorite.svg"
+      },
+      {
+        "text": "File",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/File.svg"
+      },
+      {
+        "text": "Files",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Files.svg"
+      },
+      {
+        "text": "Folder",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Folder.svg"
+      },
+      {
+        "text": "FolderBlank",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/FolderBlank.svg"
+      },
+      {
+        "text": "FolderCube",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/FolderCube.svg"
+      },
+      {
+        "text": "FolderWebsite",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/FolderWebsite.svg"
+      },
+      {
+        "text": "ForPlacementOnly",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ForPlacementOnly.svg"
+      },
+      {
+        "text": "Free_Services",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Free_Services.svg"
+      },
+      {
+        "text": "Front_Doors",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Front_Doors.svg"
+      },
+      {
+        "text": "Ftp",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Ftp.svg"
+      },
+      {
+        "text": "Functions",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Functions.svg"
+      },
+      {
+        "text": "GalleryManagement",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/GalleryManagement.svg"
+      },
+      {
+        "text": "Gateway",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Gateway.svg"
+      },
+      {
+        "text": "Gear",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Gear.svg"
+      },
+      {
+        "text": "GearAlternate",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/GearAlternate.svg"
+      },
+      {
+        "text": "GearAlternate_2",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/GearAlternate_2.svg"
+      },
+      {
+        "text": "Gear_2",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Gear_2.svg"
+      },
+      {
+        "text": "General_Storage",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/General_Storage.svg"
+      },
+      {
+        "text": "Genomics_Accounts",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Genomics_Accounts.svg"
+      },
+      {
+        "text": "GeoReplicationPremium",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/GeoReplicationPremium.svg"
+      },
+      {
+        "text": "GeoReplicationStandard",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/GeoReplicationStandard.svg"
+      },
+      {
+        "text": "GetMoreLicense",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/GetMoreLicense.svg"
+      },
+      {
+        "text": "GetStarted",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/GetStarted.svg"
+      },
+      {
+        "text": "Gift",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Gift.svg"
+      },
+      {
+        "text": "Globe",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Globe.svg"
+      },
+      {
+        "text": "GlobeError",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/GlobeError.svg"
+      },
+      {
+        "text": "GlobeSuccess",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/GlobeSuccess.svg"
+      },
+      {
+        "text": "GlobeWarning",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/GlobeWarning.svg"
+      },
+      {
+        "text": "Go",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Go.svg"
+      },
+      {
+        "text": "GreatScott",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/GreatScott.svg"
+      },
+      {
+        "text": "Grid",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Grid.svg"
+      },
+      {
+        "text": "Grid3x3",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Grid3x3.svg"
+      },
+      {
+        "text": "Guest_Assignments",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Guest_Assignments.svg"
+      },
+      {
+        "text": "Guide",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Guide.svg"
+      },
+      {
+        "text": "Guide_2",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Guide_2.svg"
+      },
+      {
+        "text": "HDInsight",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/HDInsight.svg"
+      },
+      {
+        "text": "HDInsightClusters",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/HDInsightClusters.svg"
+      },
+      {
+        "text": "Hammer",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Hammer.svg"
+      },
+      {
+        "text": "Heart",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Heart.svg"
+      },
+      {
+        "text": "HeartPulse",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/HeartPulse.svg"
+      },
+      {
+        "text": "Home",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Home.svg"
+      },
+      {
+        "text": "HybridConnectionEndpoint",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/HybridConnectionEndpoint.svg"
+      },
+      {
+        "text": "IOT_edge",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/IOT_edge.svg"
+      },
+      {
+        "text": "Identity_Governance",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Identity_Governance.svg"
+      },
+      {
+        "text": "Image",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Image.svg"
+      },
+      {
+        "text": "Image_Definitions",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Image_Definitions.svg"
+      },
+      {
+        "text": "Image_Versions",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Image_Versions.svg"
+      },
+      {
+        "text": "InboundNAT",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/InboundNAT.svg"
+      },
+      {
+        "text": "InboundRule",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/InboundRule.svg"
+      },
+      {
+        "text": "Info",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Info.svg"
+      },
+      {
+        "text": "Info_2",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Info_2.svg"
+      },
+      {
+        "text": "Input",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Input.svg"
+      },
+      {
+        "text": "InputOutput",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/InputOutput.svg"
+      },
+      {
+        "text": "InstallVisualStudio",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/InstallVisualStudio.svg"
+      },
+      {
+        "text": "Integration_Accounts",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Integration_Accounts.svg"
+      },
+      {
+        "text": "Integration_Service_Environments",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Integration_Service_Environments.svg"
+      },
+      {
+        "text": "Intune_App_Protection",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Intune_App_Protection.svg"
+      },
+      {
+        "text": "Job",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Job.svg"
+      },
+      {
+        "text": "JourneyHub",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/JourneyHub.svg"
+      },
+      {
+        "text": "Key",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Key.svg"
+      },
+      {
+        "text": "KeyVault",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/KeyVault.svg"
+      },
+      {
+        "text": "Key_Vaults",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Key_Vaults.svg"
+      },
+      {
+        "text": "KeyboardShortcuts",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/KeyboardShortcuts.svg"
+      },
+      {
+        "text": "Kubernetes",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Kubernetes.svg"
+      },
+      {
+        "text": "Kubernetes_Services",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Kubernetes_Services.svg"
+      },
+      {
+        "text": "KuduKnife",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/KuduKnife.svg"
+      },
+      {
+        "text": "LaunchPortal",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/LaunchPortal.svg"
+      },
+      {
+        "text": "LoadTest",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/LoadTest.svg"
+      },
+      {
+        "text": "Load_Balancer_feature",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Load_Balancer_feature.svg"
+      },
+      {
+        "text": "LocalNetwork",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/LocalNetwork.svg"
+      },
+      {
+        "text": "Local_Network_Gateways",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Local_Network_Gateways.svg"
+      },
+      {
+        "text": "Location",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Location.svg"
+      },
+      {
+        "text": "Log",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Log.svg"
+      },
+      {
+        "text": "LogDiagnostics",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/LogDiagnostics.svg"
+      },
+      {
+        "text": "LogStreaming",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/LogStreaming.svg"
+      },
+      {
+        "text": "Log_Analytics_Workspaces",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Log_Analytics_Workspaces.svg"
+      },
+      {
+        "text": "Logic_Apps",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Logic_Apps.svg"
+      },
+      {
+        "text": "Logic_Apps_Custom_Connector",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Logic_Apps_Custom_Connector.svg"
+      },
+      {
+        "text": "MD_snapshot",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/MD_snapshot.svg"
+      },
+      {
+        "text": "MachineLearningServicePlans",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/MachineLearningServicePlans.svg"
+      },
+      {
+        "text": "MachineLearningWebServices",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/MachineLearningWebServices.svg"
+      },
+      {
+        "text": "MachineLearningWorkspaces",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/MachineLearningWorkspaces.svg"
+      },
+      {
+        "text": "Machine_Learning",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Machine_Learning.svg"
+      },
+      {
+        "text": "Machine_Learning_Service_Workspaces",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Machine_Learning_Service_Workspaces.svg"
+      },
+      {
+        "text": "Machine_Learning_Studio_Web_Service_Plans",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Machine_Learning_Studio_Web_Service_Plans.svg"
+      },
+      {
+        "text": "Machine_Learning_Studio_Web_Services",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Machine_Learning_Studio_Web_Services.svg"
+      },
+      {
+        "text": "Machine_Learning_Studio_Workspaces",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Machine_Learning_Studio_Workspaces.svg"
+      },
+      {
+        "text": "ManagePortal",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ManagePortal.svg"
+      },
+      {
+        "text": "ManagedApplications",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ManagedApplications.svg"
+      },
+      {
+        "text": "Managed_Applications",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Managed_Applications.svg"
+      },
+      {
+        "text": "Managed_Databases",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Managed_Databases.svg"
+      },
+      {
+        "text": "Managed_Desktop",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Managed_Desktop.svg"
+      },
+      {
+        "text": "Managed_Identities",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Managed_Identities.svg"
+      },
+      {
+        "text": "Management_Groups",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Management_Groups.svg"
+      },
+      {
+        "text": "Management_Portal",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Management_Portal.svg"
+      },
+      {
+        "text": "MediaFile",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/MediaFile.svg"
+      },
+      {
+        "text": "Media_Encoding",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Media_Encoding.svg"
+      },
+      {
+        "text": "Media_On_Demand",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Media_On_Demand.svg"
+      },
+      {
+        "text": "Media_Services",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Media_Services.svg"
+      },
+      {
+        "text": "Migration_Projects",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Migration_Projects.svg"
+      },
+      {
+        "text": "Mobile_Engagement",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Mobile_Engagement.svg"
+      },
+      {
+        "text": "Module",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Module.svg"
+      },
+      {
+        "text": "Monitor",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Monitor.svg"
+      },
+      {
+        "text": "Monitoring",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Monitoring.svg"
+      },
+      {
+        "text": "Multi_Factor_Authentication",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Multi_Factor_Authentication.svg"
+      },
+      {
+        "text": "MySQL_ClearDB_database",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/MySQL_ClearDB_database.svg"
+      },
+      {
+        "text": "NSG",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/NSG.svg"
+      },
+      {
+        "text": "NetworkInterfaceCard",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/NetworkInterfaceCard.svg"
+      },
+      {
+        "text": "Network_Security_Groups_Classic",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Network_Security_Groups_Classic.svg"
+      },
+      {
+        "text": "Network_watcher",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Network_watcher.svg"
+      },
+      {
+        "text": "New",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/New.svg"
+      },
+      {
+        "text": "NextBill",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/NextBill.svg"
+      },
+      {
+        "text": "Non_Azure_Machine",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Non_Azure_Machine.svg"
+      },
+      {
+        "text": "Notification",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Notification.svg"
+      },
+      {
+        "text": "Notification_Hubs",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Notification_Hubs.svg"
+      },
+      {
+        "text": "OS_Images_Classic",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/OS_Images_Classic.svg"
+      },
+      {
+        "text": "Offer",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Offer.svg"
+      },
+      {
+        "text": "OnPremiseSetup",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/OnPremiseSetup.svg"
+      },
+      {
+        "text": "On_Premises_Data_Gateways",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/On_Premises_Data_Gateways.svg"
+      },
+      {
+        "text": "OpenShift",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/OpenShift.svg"
+      },
+      {
+        "text": "Operations_Management_Suite",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Operations_Management_Suite.svg"
+      },
+      {
+        "text": "OutboundNAT",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/OutboundNAT.svg"
+      },
+      {
+        "text": "OutboundRule",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/OutboundRule.svg"
+      },
+      {
+        "text": "Output",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Output.svg"
+      },
+      {
+        "text": "Paused",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Paused.svg"
+      },
+      {
+        "text": "Peerings",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Peerings.svg"
+      },
+      {
+        "text": "Pending",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Pending.svg"
+      },
+      {
+        "text": "Person",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Person.svg"
+      },
+      {
+        "text": "PersonWithFriend",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/PersonWithFriend.svg"
+      },
+      {
+        "text": "Phone",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Phone.svg"
+      },
+      {
+        "text": "PluralSight_mono",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/PluralSight_mono.svg"
+      },
+      {
+        "text": "Policy",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Policy.svg"
+      },
+      {
+        "text": "PortalCurrent",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/PortalCurrent.svg"
+      },
+      {
+        "text": "Postpone",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Postpone.svg"
+      },
+      {
+        "text": "Power",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Power.svg"
+      },
+      {
+        "text": "PowerUp",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/PowerUp.svg"
+      },
+      {
+        "text": "PowerUp_2",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/PowerUp_2.svg"
+      },
+      {
+        "text": "Powershell",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Powershell.svg"
+      },
+      {
+        "text": "PreviewRight",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/PreviewRight.svg"
+      },
+      {
+        "text": "Probe",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Probe.svg"
+      },
+      {
+        "text": "ProcessExplorer",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ProcessExplorer.svg"
+      },
+      {
+        "text": "ProductionReadyDB",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ProductionReadyDB.svg"
+      },
+      {
+        "text": "Publish",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Publish.svg"
+      },
+      {
+        "text": "PullRequest",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/PullRequest.svg"
+      },
+      {
+        "text": "QSDiagnostics",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/QSDiagnostics.svg"
+      },
+      {
+        "text": "QSFile",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/QSFile.svg"
+      },
+      {
+        "text": "QSMail",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/QSMail.svg"
+      },
+      {
+        "text": "QSWarning",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/QSWarning.svg"
+      },
+      {
+        "text": "Queued",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Queued.svg"
+      },
+      {
+        "text": "Queues_Storage",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Queues_Storage.svg"
+      },
+      {
+        "text": "Quick_Start_Center",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Quick_Start_Center.svg"
+      },
+      {
+        "text": "Quickstart",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Quickstart.svg"
+      },
+      {
+        "text": "Quota",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Quota.svg"
+      },
+      {
+        "text": "RDMA",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/RDMA.svg"
+      },
+      {
+        "text": "Rain",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Rain.svg"
+      },
+      {
+        "text": "Recommendation",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Recommendation.svg"
+      },
+      {
+        "text": "RemoteApp",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/RemoteApp.svg"
+      },
+      {
+        "text": "Reservations",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Reservations.svg"
+      },
+      {
+        "text": "ResourceDefault",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ResourceDefault.svg"
+      },
+      {
+        "text": "ResourceGroup",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ResourceGroup.svg"
+      },
+      {
+        "text": "ResourceLinked",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ResourceLinked.svg"
+      },
+      {
+        "text": "ResourceProvider",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ResourceProvider.svg"
+      },
+      {
+        "text": "ResourceRole",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ResourceRole.svg"
+      },
+      {
+        "text": "Resource_Explorer",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Resource_Explorer.svg"
+      },
+      {
+        "text": "Resource_Graph_Explorer",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Resource_Graph_Explorer.svg"
+      },
+      {
+        "text": "Resource_Groups",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Resource_Groups.svg"
+      },
+      {
+        "text": "Route_Filter",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Route_Filter.svg"
+      },
+      {
+        "text": "Rule",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Rule.svg"
+      },
+      {
+        "text": "RunbookSource",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/RunbookSource.svg"
+      },
+      {
+        "text": "Runbooks",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Runbooks.svg"
+      },
+      {
+        "text": "SAP_HANA_on_Azure",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SAP_HANA_on_Azure.svg"
+      },
+      {
+        "text": "SDK",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SDK.svg"
+      },
+      {
+        "text": "SQLQueryPerformanceCheck",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SQLQueryPerformanceCheck.svg"
+      },
+      {
+        "text": "SQL_DataWarehouse",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SQL_DataWarehouse.svg"
+      },
+      {
+        "text": "SQL_Database_generic",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SQL_Database_generic.svg"
+      },
+      {
+        "text": "SQL_Managed_Instances",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SQL_Managed_Instances.svg"
+      },
+      {
+        "text": "SQL_Servers",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SQL_Servers.svg"
+      },
+      {
+        "text": "SQL_Stretch_Database",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SQL_Stretch_Database.svg"
+      },
+      {
+        "text": "SSD",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SSD.svg"
+      },
+      {
+        "text": "Scale",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Scale.svg"
+      },
+      {
+        "text": "ScaleAlt",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ScaleAlt.svg"
+      },
+      {
+        "text": "SchedulerJob",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SchedulerJob.svg"
+      },
+      {
+        "text": "SchedulerJobCollection",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SchedulerJobCollection.svg"
+      },
+      {
+        "text": "Search",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Search.svg"
+      },
+      {
+        "text": "SearchGrid",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SearchGrid.svg"
+      },
+      {
+        "text": "Security_Baselines",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Security_Baselines.svg"
+      },
+      {
+        "text": "Security_Center",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Security_Center.svg"
+      },
+      {
+        "text": "SendGrid_Accounts",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SendGrid_Accounts.svg"
+      },
+      {
+        "text": "Server",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Server.svg"
+      },
+      {
+        "text": "ServerFarm",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ServerFarm.svg"
+      },
+      {
+        "text": "ServerProxy",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ServerProxy.svg"
+      },
+      {
+        "text": "ServiceHealth",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ServiceHealth.svg"
+      },
+      {
+        "text": "Service_Bus",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Service_Bus.svg"
+      },
+      {
+        "text": "Service_Bus_Queues",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Service_Bus_Queues.svg"
+      },
+      {
+        "text": "Service_Bus_Relay",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Service_Bus_Relay.svg"
+      },
+      {
+        "text": "Service_Bus_Topics",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Service_Bus_Topics.svg"
+      },
+      {
+        "text": "Service_Catalog_Managed_Application_Definitions",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Service_Catalog_Managed_Application_Definitions.svg"
+      },
+      {
+        "text": "Service_Endpoint_Policies",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Service_Endpoint_Policies.svg"
+      },
+      {
+        "text": "Service_Fabric",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Service_Fabric.svg"
+      },
+      {
+        "text": "Shared_Dashboard",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Shared_Dashboard.svg"
+      },
+      {
+        "text": "Shared_Image_Galleries",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Shared_Image_Galleries.svg"
+      },
+      {
+        "text": "ShieldFirewall",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ShieldFirewall.svg"
+      },
+      {
+        "text": "SignalR",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SignalR.svg"
+      },
+      {
+        "text": "Site_Recovery",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Site_Recovery.svg"
+      },
+      {
+        "text": "Software_Update",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Software_Update.svg"
+      },
+      {
+        "text": "Software_as_a_Service",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Software_as_a_Service.svg"
+      },
+      {
+        "text": "Solutions",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Solutions.svg"
+      },
+      {
+        "text": "Spatial_Anchor",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Spatial_Anchor.svg"
+      },
+      {
+        "text": "StackOverflow",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/StackOverflow.svg"
+      },
+      {
+        "text": "StorSimple",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/StorSimple.svg"
+      },
+      {
+        "text": "StorSimple_Data_Managers",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/StorSimple_Data_Managers.svg"
+      },
+      {
+        "text": "Storage",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Storage.svg"
+      },
+      {
+        "text": "StorageAzureFiles",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/StorageAzureFiles.svg"
+      },
+      {
+        "text": "StorageContainer",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/StorageContainer.svg"
+      },
+      {
+        "text": "StorageQueue",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/StorageQueue.svg"
+      },
+      {
+        "text": "StorageReplica",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/StorageReplica.svg"
+      },
+      {
+        "text": "Storage_Accounts",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Storage_Accounts.svg"
+      },
+      {
+        "text": "Storage_Explorer",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Storage_Explorer.svg"
+      },
+      {
+        "text": "Storage_sync_service",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Storage_sync_service.svg"
+      },
+      {
+        "text": "Store_Marketplace",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Store_Marketplace.svg"
+      },
+      {
+        "text": "Stream_Analytics",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Stream_Analytics.svg"
+      },
+      {
+        "text": "Subnet",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Subnet.svg"
+      },
+      {
+        "text": "Support",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Support.svg"
+      },
+      {
+        "text": "Support_2",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Support_2.svg"
+      },
+      {
+        "text": "Support_Requests",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Support_Requests.svg"
+      },
+      {
+        "text": "TFSVCRepository",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/TFSVCRepository.svg"
+      },
+      {
+        "text": "Table_Storage",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Table_Storage.svg"
+      },
+      {
+        "text": "Tag",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Tag.svg"
+      },
+      {
+        "text": "Tags",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Tags.svg"
+      },
+      {
+        "text": "Task",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Task.svg"
+      },
+      {
+        "text": "TaskVM",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/TaskVM.svg"
+      },
+      {
+        "text": "Tasks",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Tasks.svg"
+      },
+      {
+        "text": "TasksPolychromatic",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/TasksPolychromatic.svg"
+      },
+      {
+        "text": "Tax",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Tax.svg"
+      },
+      {
+        "text": "TeamProject",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/TeamProject.svg"
+      },
+      {
+        "text": "Templates",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Templates.svg"
+      },
+      {
+        "text": "Tenant_Status",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Tenant_Status.svg"
+      },
+      {
+        "text": "TimeSeriesInsights",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/TimeSeriesInsights.svg"
+      },
+      {
+        "text": "Time_Series_Insights_environments",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Time_Series_Insights_environments.svg"
+      },
+      {
+        "text": "Toolbox",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Toolbox.svg"
+      },
+      {
+        "text": "Tools",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Tools.svg"
+      },
+      {
+        "text": "TrafficManagerDisabled",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/TrafficManagerDisabled.svg"
+      },
+      {
+        "text": "TrafficManagerEnabled",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/TrafficManagerEnabled.svg"
+      },
+      {
+        "text": "Traffic_Manager",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Traffic_Manager.svg"
+      },
+      {
+        "text": "Two_User_Icon",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Two_User_Icon.svg"
+      },
+      {
+        "text": "Unidentified_Feature_Object",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Unidentified_Feature_Object.svg"
+      },
+      {
+        "text": "UserDefinedRoute",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/UserDefinedRoute.svg"
+      },
+      {
+        "text": "User_Health_Icon",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/User_Health_Icon.svg"
+      },
+      {
+        "text": "User_Privacy",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/User_Privacy.svg"
+      },
+      {
+        "text": "User_Resource",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/User_Resource.svg"
+      },
+      {
+        "text": "VMScale",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/VMScale.svg"
+      },
+      {
+        "text": "VM_Images",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/VM_Images.svg"
+      },
+      {
+        "text": "VM_Linux",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/VM_Linux.svg"
+      },
+      {
+        "text": "VM_Linux_Non_Azure",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/VM_Linux_Non_Azure.svg"
+      },
+      {
+        "text": "VM_Non_Azure",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/VM_Non_Azure.svg"
+      },
+      {
+        "text": "VM_Scale_Set",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/VM_Scale_Set.svg"
+      },
+      {
+        "text": "VM_Windows_Non_Azure",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/VM_Windows_Non_Azure.svg"
+      },
+      {
+        "text": "VPNPointToSite",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/VPNPointToSite.svg"
+      },
+      {
+        "text": "VPNSiteToSite",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/VPNSiteToSite.svg"
+      },
+      {
+        "text": "VPN_Gateway",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/VPN_Gateway.svg"
+      },
+      {
+        "text": "Variables",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Variables.svg"
+      },
+      {
+        "text": "Versions",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Versions.svg"
+      },
+      {
+        "text": "VirtualMachineLinux",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/VirtualMachineLinux.svg"
+      },
+      {
+        "text": "VirtualMachineWindows",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/VirtualMachineWindows.svg"
+      },
+      {
+        "text": "Virtual_Clusters",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_Clusters.svg"
+      },
+      {
+        "text": "Virtual_Datacenter",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_Datacenter.svg"
+      },
+      {
+        "text": "Virtual_Machine",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_Machine.svg"
+      },
+      {
+        "text": "Virtual_Machine_2",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_Machine_2.svg"
+      },
+      {
+        "text": "Virtual_Machines_Availability_Set",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_Machines_Availability_Set.svg"
+      },
+      {
+        "text": "Virtual_Machines_Linux",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_Machines_Linux.svg"
+      },
+      {
+        "text": "Virtual_Network",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_Network.svg"
+      },
+      {
+        "text": "Virtual_Network_Classic",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_Network_Classic.svg"
+      },
+      {
+        "text": "Virtual_WANs",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_WANs.svg"
+      },
+      {
+        "text": "Visual_Studio_Team_Services_CodePlex_source",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Visual_Studio_Team_Services_CodePlex_source.svg"
+      },
+      {
+        "text": "WebAppUmbraco",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebAppUmbraco.svg"
+      },
+      {
+        "text": "WebAppWordPress",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebAppWordPress.svg"
+      },
+      {
+        "text": "WebApp_WebJobs",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebApp_WebJobs.svg"
+      },
+      {
+        "text": "WebEnvironment",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebEnvironment.svg"
+      },
+      {
+        "text": "WebHosting",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebHosting.svg"
+      },
+      {
+        "text": "WebNetwork",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebNetwork.svg"
+      },
+      {
+        "text": "WebSlots",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebSlots.svg"
+      },
+      {
+        "text": "WebTest",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebTest.svg"
+      },
+      {
+        "text": "Web_App_Firewall",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Web_App_Firewall.svg"
+      },
+      {
+        "text": "Webhooks",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Webhooks.svg"
+      },
+      {
+        "text": "WebsitePower",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebsitePower.svg"
+      },
+      {
+        "text": "WebsiteReplicator",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebsiteReplicator.svg"
+      },
+      {
+        "text": "WebsiteSettings",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebsiteSettings.svg"
+      },
+      {
+        "text": "WebsiteStaging",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebsiteStaging.svg"
+      },
+      {
+        "text": "Windows_10_IoT_Core_Services",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Windows_10_IoT_Core_Services.svg"
+      },
+      {
+        "text": "Workflow",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Workflow.svg"
+      },
+      {
+        "text": "Wrench",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Wrench.svg"
+      },
+      {
+        "text": "XboxController",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/XboxController.svg"
+      },
+      {
+        "text": "dataExport",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dataExport.svg"
+      },
+      {
+        "text": "dataRetention",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dataRetention.svg"
+      },
+      {
+        "text": "App_Service_Logic_App",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/App_Service_Logic_App.svg"
+      },
+      {
+        "text": "Application_Gateway",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Application_Gateway.svg"
+      },
+      {
+        "text": "Content_Delivery_Network",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Content_Delivery_Network.svg"
+      },
+      {
+        "text": "DataWarehouse",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/DataWarehouse.svg"
+      },
+      {
+        "text": "Data_Lake",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Data_Lake.svg"
+      },
+      {
+        "text": "Data_Lake_Analytics",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Data_Lake_Analytics.svg"
+      },
+      {
+        "text": "Data_Lake_Store",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Data_Lake_Store.svg"
+      },
+      {
+        "text": "SQL_Server_Stretch_DB",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/SQL_Server_Stretch_DB.svg"
+      },
+      {
+        "text": "eBooks",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/eBooks.svg"
+      },
+      {
+        "text": "healthErrorBadge",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/healthErrorBadge.svg"
+      },
+      {
+        "text": "healthWarningBadge",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/healthWarningBadge.svg"
+      },
+      {
+        "text": "overageCosts",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/overageCosts.svg"
+      },
+      {
+        "text": "serversAndMobileDevices",
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/serversAndMobileDevices.svg"
+      }
+    ]
+  }
+]
