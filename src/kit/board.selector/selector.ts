@@ -6,11 +6,12 @@ import { BlockUrlConstant } from "../../block/constant";
 import { MouseDragger } from "../../common/dragger";
 import { Matrix } from "../../common/matrix";
 import { Point } from "../../common/vector/point";
-import { Polygon } from "../../common/vector/polygon";
+// import { Polygon } from "../../common/vector/polygon";
 import { ActionDirective } from "../../history/declare";
-import { loadPaper } from "../../paper";
+
 import { setBoardBlockCache } from "../../page/common/cache";
-import { BlockRenderRange } from "../../block/enum";
+// import { BlockRenderRange } from "../../block/enum";
+import { PenDraw } from "./pen";
 
 export function CheckBoardSelector(
     kit: Kit,
@@ -190,75 +191,9 @@ export function CheckBoardSelector(
             }
         })
     }
-    else if (url == BlockUrlConstant.Pen) {
-        var newBlock: Block;
-        var isMounted: boolean = false;
-        var path: paper.Path;
-        var points: { x: number, y: number }[] = [];
-        async function createNewPenBlock() {
-            await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
-                var paper = await loadPaper();
-                var data = kit.boardSelector.currentSelector.data || {};
-                newBlock = await kit.page.createBlock(kit.boardSelector.currentSelector.url, data, fra);
-                await setBoardBlockCache(newBlock);
-                points.push(re);
-                path = new paper.Path({ segments: [{ x: re.x, y: re.y }] });
-                newBlock.fixedWidth = 0;
-                newBlock.fixedHeight = 0;
-                newBlock.mounted(() => {
-                    isMounted = true;
-                })
-            });
-        }
-        MouseDragger({
-            event,
-            moveStart() {
-                createNewPenBlock();
-            },
-            move(ev, data) {
-                if (newBlock && path) {
-                    var tr = gm.inverseTransform(Point.from(ev));
-                    path.add([tr.x, tr.y]);
-                    var ma = new Matrix();
-                    points.push(tr);
-                    var poly = new Polygon(...points);
-                    var bound = poly.bound;
-                    var s = newBlock.pattern?.getSvgStyle()?.strokeWidth || 1;
-                    bound = bound.extend(fra.realPx(s));
-                    ma.translate(bound.x, bound.y);
-                    newBlock.matrix = ma;
-                    newBlock.fixedWidth = Math.abs(bound.width);
-                    newBlock.fixedHeight = Math.abs(bound.height);
-                    (newBlock as any).pathString = poly.relative(bound.leftTop).pathString(false);
-                    if (isMounted) newBlock.forceManualUpdate();
-                }
-            },
-            async moveEnd(ev, isMove, data) {
-                if (isMove && newBlock) {
-                    await kit.page.onAction('onBoardToolCreateBlockResize', async () => {
-                        path.simplify(100);
-                        var bound = path.bounds;
-                        path.translate(new paper.Point(0 - bound.left, 0 - bound.top))
-                        var ma = new Matrix();
-                        ma.translate(bound.left, bound.top);
-                        newBlock.matrix = ma;
-                        await newBlock.updateMatrix(newBlock.matrix, ma);
-                        await newBlock.updateProps({
-                            fixedWidth: bound.width,
-                            fixedHeight: bound.height,
-                            viewBox: `0 0 ${bound.width} ${bound.height}`,
-                            pathString: path.pathData
-                        }, BlockRenderRange.self)
-                        path.remove();
-                        if (isMounted) newBlock.forceManualUpdate();
-                        kit.page.addActionAfterEvent(async () => {
-                            kit.picker.onPicker([newBlock], { merge: true });
-                        })
-                    });
-                }
-                kit.boardSelector.clearSelector();
-            }
-        })
+    else if (url == BlockUrlConstant.Pen)
+    {
+        PenDraw(kit, fra, event);
     }
     else {
         if (kit.boardSelector.currentSelector.url) {
