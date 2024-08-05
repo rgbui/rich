@@ -9,7 +9,8 @@ import { S } from "../../i18n/view";
 import { Divider } from "../../component/view/grid";
 import { ToolTip } from "../../component/view/tooltip";
 import { UA } from "../../util/ua";
-import { MeasureText } from "./common/Measure";
+import { MeasureText } from "./common/measure";
+
 
 export function MindLineColor(props: {
     tool: BoardEditTool,
@@ -133,13 +134,19 @@ export function FontBgColor(props: {
 export function FontTextAlign(props: {
     tool: BoardEditTool,
     align: string,
-    change?(value: string): void
+    valign?: string,
+    change?(value: string, valign?: string): void
 }) {
     var aligns = [
         { text: lst('左对齐'), icon: { name: 'byte', code: 'align-text-left' }, value: 'left' },
         { text: lst('居中对齐'), icon: { name: 'byte', code: 'align-text-center' }, value: 'center' },
         { text: lst('右对齐'), icon: { name: 'byte', code: 'align-text-right' }, value: 'right' },
     ];
+    var valigns = [
+        { text: lst('顶部对齐'), icon: { name: 'byte', code: 'align-text-top' }, value: 'top' },
+        { text: lst('垂直居中对齐'), icon: { name: 'byte', code: 'align-text-middle' }, value: 'middle' },
+        { text: lst('底部对齐'), icon: { name: 'byte', code: 'align-text-bottom' }, value: 'bottom' }
+    ]
     var name = 'text-align';
     var al = aligns.find(g => g.value == props.align);
     return <div className="shy-board-edit-background-color">
@@ -147,7 +154,7 @@ export function FontTextAlign(props: {
             <Icon icon={(al?.icon || { name: 'byte', code: 'align-text-both' } as any)} size={16}></Icon>
         </div>
         {props.tool.isShowDrop(name) && <div style={{ position: 'absolute', top: 20, transform: 'translate(-50%, 0px)' }}> <div
-            style={{ marginTop: 15, height: 30, width: 'auto', minHeight: 'auto', padding: '5px 0px' }}
+            style={{ marginTop: 15, height: props.valign ? 60 : 30, width: 'auto', minHeight: 'auto', padding: '5px 0px' }}
             className=" bg-white shadow-s round">
             <div className="h-30 flex r-item-hover r-round r-cursor r-gap-w-5">
                 {aligns.map((g, i) => {
@@ -158,7 +165,20 @@ export function FontTextAlign(props: {
                     </span>
                     </ToolTip>
                 })}
-            </div></div>
+            </div>
+            {props.valign && <div className="h-30 flex r-item-hover r-round r-cursor r-gap-w-5">
+                {valigns.map((g, i) => {
+                    return <ToolTip key={i} overlay={g.text}><span onMouseDown={e => {
+                        props.change(undefined, g.value);
+                    }} className={"flex-center size-24 round" + (props.valign == g.value ? " item-hover-focus link" : "item-hover-light")}>
+                        <Icon icon={g.icon as any} size={16}></Icon>
+                    </span>
+                    </ToolTip>
+                })}
+            </div>
+            }
+
+        </div>
         </div>}
     </div>
 }

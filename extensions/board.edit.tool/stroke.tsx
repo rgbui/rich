@@ -8,7 +8,7 @@ import { lst } from "../../i18n/store";
 import { BoardTextFontColorList } from "../color/data";
 import { ColorListBox } from "../color/list";
 import { Icon } from "../../component/view/icon";
-import { MeasureText } from "./common/Measure";
+import { MeasureText } from "./common/measure";
 
 export function ShapeStroke(props: {
     tool: BoardEditTool,

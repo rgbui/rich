@@ -40,6 +40,7 @@ import { InputNumber } from "../../component/view/input/number";
 import { useIconPicker } from "../icon";
 import { useKatexInput } from "../katex";
 import { useOutSideUrlInput } from "../link/outsite.input";
+import { LoadShapeStore } from "../board/shapes/shapes";
 
 export class BoardEditTool extends EventsComponent {
     el: HTMLElement;
@@ -312,9 +313,13 @@ export class BoardEditTool extends EventsComponent {
                 }} className="shy-board-edit-tool-item">
                     <FontTextAlign
                         align={getValue('align')}
+                        valign={has('valign') ? getValue('valign') : undefined}
                         tool={this}
-                        change={e => {
-                            this.onChange('align', e)
+                        change={(e, v) => {
+                            if (e)
+                                this.onChange('align', e)
+                            if (v)
+                                this.onChange('valign', v)
                         }}
                     ></FontTextAlign>
                 </div>
@@ -342,12 +347,6 @@ export class BoardEditTool extends EventsComponent {
             </Tip>
         }
         else if (name == 'fillColor' || name == 'fillNoTransparentColor') {
-            var url = this.blocks.first().url
-            if (url == BlockUrlConstant.Line || url == BlockUrlConstant.Pen) {
-                return <Tip key={at} placement="top" forcePlacement={true} text={'线条颜色'}>
-                    <div className={'shy-board-edit-tool-item'}><FillColor name='fillColor' tool={this} value={getValue('fillColor')} change={e => { this.onChange('fillColor', e) }}></FillColor></div>
-                </Tip >
-            }
             return <Tip key={at} placement="top" forcePlacement={true} text={'填充色'}>
                 <div className={'shy-board-edit-tool-item'}><FillColor
                     name={has('fillColor') ? 'fillColor' : "fillNoTransparentColor"}
@@ -584,6 +583,8 @@ export class BoardEditTool extends EventsComponent {
                 "mindLineColor",
                 "divider",
                 "width",
+                "fontColor",
+                "backgroundColor",
                 "fillColor",
                 "fillOpacity",
                 "fillNoTransparentColor",
@@ -608,8 +609,7 @@ export class BoardEditTool extends EventsComponent {
                 "align",
                 // "itailc",
                 // "textDecoration",
-                "fontColor",
-                "backgroundColor",
+
                 "bgOpacity",
                 "backgroundNoTransparentColor",
                 ...(this.blocks.length > 1 ? ["divider", "nine-align", "merge"] : [])
@@ -642,6 +642,7 @@ export class BoardEditTool extends EventsComponent {
             "width",
             "divider",
             "fontWeight",
+            'valign',
             "align",
             // "itailc",
             // "textDecoration",
@@ -681,6 +682,7 @@ export class BoardEditTool extends EventsComponent {
         this.range = range;
         this.blocks = blocks;
         var pa = this.blocks.first();
+
         this.fvs.bind(pa.page.getScrollDiv());
         var poly = new Polygon(...this.blocks.map(b => b.getVisiblePolygon().points).flat());
         this.point = poly.bound.leftTop;
@@ -710,6 +712,10 @@ export class BoardEditTool extends EventsComponent {
         });
         this.commands = rs || [];
         if (this.commands.length > 0) {
+            var n = this.commands.find(g => g.name == 'turnShapes');
+            if (n) {
+                await LoadShapeStore(n.value?.name);
+            }
             this.visible = true;
             this.forceUpdate(() => {
                 var r = Rect.fromEle(this.el);

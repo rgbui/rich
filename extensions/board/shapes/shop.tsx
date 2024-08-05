@@ -4,8 +4,8 @@ import { PopoverSingleton } from "../../../component/popover/popover";
 import { ShySvg } from "../../../src/block/svg";
 import { CheckBox } from "../../../component/view/checkbox";
 import lodash from "lodash";
-import { util } from "../../../util/util";
 import { Spin } from "../../../component/view/spin";
+import { LoadShapeStore } from "./shapes";
 
 class ShapeShopView extends EventsComponent {
     render() {
@@ -187,15 +187,12 @@ class ShapeShopView extends EventsComponent {
         this.forceUpdate()
     }
     async getD(name: string) {
-        var url = STATIC_URL + 'static/board/shapes/data' + name;
-        var rd = await util.getJson(url);
-        if (Array.isArray(rd?.data))
-            return rd.data;
-        else return []
+        return await LoadShapeStore(name);
     }
     selectDs: { name: string, text: string }[] = [];
-    open(ds: { name: string, text: string }[]) {
+    async open(ds: { name: string, text: string }[]) {
         this.selectDs = ds;
+        await this.loadStore({ text: '通用', name: '/basic/common.json' });
         this.forceUpdate();
     }
 }

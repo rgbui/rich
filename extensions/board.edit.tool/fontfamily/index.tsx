@@ -6,6 +6,7 @@ import { FontFamilyStyle, GetFontStores, loadFontFamily } from "./store"
 import { lst } from "../../../i18n/store";
 import { Tip } from "../../../component/view/tooltip/tip";
 import { Loading2 } from "../../../component/view/spin";
+import { ToolTip } from "../../../component/view/tooltip";
 
 export class FontFamily extends React.Component<{
     tool: BoardEditTool,
@@ -33,14 +34,16 @@ export class FontFamily extends React.Component<{
             </div>
             {props.tool.isShowDrop('fontFamily') && <div style={{ top: 35 }} className="w-250 z-2 bg-white max-h-300 overflow-y pos shadow-s padding-h-10 round ">
                 {GetFontStores().map(c => {
-                    return <div className="flex h-30 padding-w-5 gap-w-5 item-hover round cursor"
+                    return <div className="flex h-30 padding-w-5 gap-w-5  round cursor"
                         onMouseDown={e => changeFont(c)}
                         key={c.name}
                     >
                         <span className="flex-fixed size-24">
                             {(c.name == props.value || c.name == '' && !props.value) && <span className="flex-center size-24"><Icon size={18} icon={CheckSvg}></Icon></span>}
                         </span>
-                        <span className="flex-auto text-overflow" style={{ fontFamily: c.name }}>{c.text}</span>
+                        <ToolTip overlay={<span>{c.text}</span>}>
+                            {c.imgUrl ? <span className="flex-auto "><img draggable={false} style={{ userSelect: 'none' }} src={c.imgUrl} className="h-20  " /></span> : <span className="flex-auto text-overflow" style={{ fontFamily: c.name }}>{c.text}</span>}
+                        </ToolTip>
                         {c.name != 'inherit' && <span className="flex-fixed flex">
                             {
                                 c.loaded && <span className="flex-center size-24 cursor"><Icon icon={{ name: 'bytedance-icon', code: 'local-pin' }} size={18}></Icon></span>

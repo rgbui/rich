@@ -2,31 +2,32 @@ import React from "react";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { PopoverSingleton } from "../../../component/popover/popover";
 import { PopoverPosition } from "../../../component/popover/position";
-import { ShapeType } from "./shapes";
+import { LoadShapeStore, ShapeType } from "./shapes";
 import { ShySvg } from "../../../src/block/svg";
 import { S } from "../../../i18n/view";
 import { useShapeShop } from "./shop";
 import { channel } from "../../../net/channel";
-import { util } from "../../../util/util";
 const SHAPE_STORE_LIST = '_shape_store_list_';
 import lodash from "lodash";
+import { Icon } from "../../../component/view/icon";
+import { TriangleSvg } from "../../../component/svgs";
 
 class ShapeStoreView extends EventsComponent {
-    renderChilds(childs) {
+    renderChilds(childs, group) {
         return childs.map((s, index) => {
 
             if (s.text && Array.isArray(s.childs) && s.childs.length > 0) {
                 return <div key={index}>
                     <div className="h-20 remark f-12 ">{s.text}</div>
-                    <div className="flex flex-wrap">{this.renderChilds(s.childs)}</div>
+                    <div className="flex flex-wrap">{this.renderChilds(s.childs, group)}</div>
                 </div>
             }
-            if (s.src) return <div onMouseDown={e => this.onMousedown({src:s.src}, e)} className="size-30 gap-r-10 gap-b-10" key={index}>
+            if (s.src) return <div onMouseDown={e => this.onMousedown({ src: s.src }, e)} className="size-30 gap-r-10 gap-b-10" key={index}>
                 <img src={s.src} draggable={false} className="obj-center w100 h100" />
             </div>
             var sb = new ShySvg();
             sb.load(s);
-            return <div onMouseDown={e => this.onMousedown({svg:s}, e)} className="size-30 gap-b-10 gap-r-10 item-hover-light flex-center round" key={index}>
+            return <div onMouseDown={e => this.onMousedown({ svg: s, value: s.id, name: group.name }, e)} className="size-30 gap-b-10 gap-r-10 item-hover-light flex-center round" key={index}>
                 {sb.render({
                     strokeWidth: 1,
                     attrs: {
@@ -44,11 +45,16 @@ class ShapeStoreView extends EventsComponent {
             <div >
                 {this.shapeList.map((si, i) => {
                     return <div key={i}>
-                        <div className="flex">
-                            <span className="flex-fixed"></span>
+                        <div className="flex cursor" onMouseDown={e => {
+                            si.spread = si.spread == false ? true : false;
+                            this.forceUpdate();
+                        }}>
+                            <span className={"flex-fixed size-20 flex-center item-hover round ts " + (si.spread === false ? "angle-90" : "angle-180")}>
+                                <Icon size={8} icon={TriangleSvg}></Icon>
+                            </span>
                             <span className="flex-auto">{si.text}</span>
                         </div>
-                        {si.spread !== false && <div className="flex flex-wrap">{this.renderChilds(si.childs)}</div>}
+                        {si.spread !== false && <div className="flex flex-wrap padding-w-5">{this.renderChilds(si.childs, si)}</div>}
                     </div>
                 })}
             </div>
@@ -106,10 +112,9 @@ class ShapeStoreView extends EventsComponent {
         }
         for (let i = 0; i < rs.length; i++) {
             if (!Array.isArray(rs[i].childs)) {
-                var url = STATIC_URL + 'static/board/shapes/data' + rs[i].name;
-                var rd = await util.getJson(url);
-                if (Array.isArray(rd?.data))
-                    rs[i].childs = rd.data;
+                var r = await LoadShapeStore(rs[i].name);
+                if (Array.isArray(r))
+                    rs[i].childs = r;
             }
         }
         this.shapeList = rs;
