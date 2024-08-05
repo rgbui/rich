@@ -4,35 +4,43 @@
     "childs": [
       {
         "text": "App_Service_Logic_App",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/App_Service_Logic_App.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/App_Service_Logic_App.svg",
+        "id": "4ac79df94ca145cc91ee3df68b5d8889"
       },
       {
         "text": "Application_Gateway",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Application_Gateway.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Application_Gateway.svg",
+        "id": "e34b1678b9d94abdacd2d34d6bdf92e8"
       },
       {
         "text": "Content_Delivery_Network",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Content_Delivery_Network.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Content_Delivery_Network.svg",
+        "id": "bf5e7448f4534e8b862df6a441726936"
       },
       {
         "text": "DataWarehouse",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/DataWarehouse.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/DataWarehouse.svg",
+        "id": "b06fa50e52864aa4b0d715e81a469d6e"
       },
       {
         "text": "Data_Lake",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Data_Lake.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Data_Lake.svg",
+        "id": "b9999cf98bb04587bcd91e23823f2f3f"
       },
       {
         "text": "Data_Lake_Analytics",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Data_Lake_Analytics.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Data_Lake_Analytics.svg",
+        "id": "b8be4fac479849a5883359171d4bf92f"
       },
       {
         "text": "Data_Lake_Store",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Data_Lake_Store.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Data_Lake_Store.svg",
+        "id": "e4a2cd133acd41269545ac3cd1f090d2"
       },
       {
         "text": "SQL_Server_Stretch_DB",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/SQL_Server_Stretch_DB.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/SQL_Server_Stretch_DB.svg",
+        "id": "713e80b548e146799cc4a341fdfd7bea"
       }
     ]
   },
@@ -41,1959 +49,2448 @@
     "childs": [
       {
         "text": "ADFS",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ADFS.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ADFS.svg",
+        "id": "3f0945ee49f842a097aeac314c41111e"
       },
       {
         "text": "API",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/API.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/API.svg",
+        "id": "0ddb874e6110490da58ec4fefd86aece"
       },
       {
         "text": "APIDefinition",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/APIDefinition.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/APIDefinition.svg",
+        "id": "3ae50bfc99bc42309021592e24ce5cf0"
       },
       {
         "text": "API_Management",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/API_Management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/API_Management.svg",
+        "id": "3a865dcc9c6c474fa733849982a3958e"
       },
       {
         "text": "ARMExplorer",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ARMExplorer.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ARMExplorer.svg",
+        "id": "b5229988dd2044dca3d539b6b3e111d2"
       },
       {
         "text": "Access_Review",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Access_Review.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Access_Review.svg",
+        "id": "a2ee6b26a3044823a3ada8413aabc876"
       },
       {
         "text": "ActiveDirectory",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ActiveDirectory.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ActiveDirectory.svg",
+        "id": "1172ebb1e5b84d1ab003e6df922dd562"
       },
       {
         "text": "ActiveDirectoryDomain",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ActiveDirectoryDomain.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ActiveDirectoryDomain.svg",
+        "id": "806d6696e6a54ba59b3ad58789524dfe"
       },
       {
         "text": "Active_Directory",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Active_Directory.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Active_Directory.svg",
+        "id": "96c28f4fa81c40059e22ebb71845ffe7"
       },
       {
         "text": "Active_Directory_Health_Monitoring",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Active_Directory_Health_Monitoring.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Active_Directory_Health_Monitoring.svg",
+        "id": "f4726cc1e714475fb9f201e8395cabe4"
       },
       {
         "text": "AddTeamMember",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/AddTeamMember.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/AddTeamMember.svg",
+        "id": "02128df5c8b24d4396ca652993e78af5"
       },
       {
         "text": "Address_Space",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Address_Space.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Address_Space.svg",
+        "id": "8cc55c2f011941ad8dd672b9a1d074fb"
       },
       {
         "text": "Advisor",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Advisor.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Advisor.svg",
+        "id": "b1c02539cde7444792815e3c371e1f95"
       },
       {
         "text": "Alien",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Alien.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Alien.svg",
+        "id": "dd3691e0143d4630b12067a09841d5de"
       },
       {
         "text": "AlienSad",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/AlienSad.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/AlienSad.svg",
+        "id": "9055ff4f195849658a72508c7d621731"
       },
       {
         "text": "Analysis_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Analysis_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Analysis_Services.svg",
+        "id": "4651efc9e1a54beaa4c918bef0dc97c0"
       },
       {
         "text": "AppServiceConnectivity",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/AppServiceConnectivity.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/AppServiceConnectivity.svg",
+        "id": "74859dd3db7b4c009bf55b6ef93341a2"
       },
       {
         "text": "AppServiceEnvironment",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/AppServiceEnvironment.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/AppServiceEnvironment.svg",
+        "id": "f24bd774f4a74ad6bbc8f75e36744d80"
       },
       {
         "text": "App_Configuration",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Configuration.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Configuration.svg",
+        "id": "b3d6df1d78e9496bbb5e9c0547a4dedb"
       },
       {
         "text": "App_Registrations",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Registrations.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Registrations.svg",
+        "id": "3f90192e88a54ee4875226e8c084c58a"
       },
       {
         "text": "App_Service",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Service.svg",
+        "id": "e1a31d3b7f004e0ba39b20c6f3984fdf"
       },
       {
         "text": "App_Service_API_Apps",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Service_API_Apps.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Service_API_Apps.svg",
+        "id": "a6320796fb1c422c8bd84a912fa55bf9"
       },
       {
         "text": "App_Service_Frontend",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Service_Frontend.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Service_Frontend.svg",
+        "id": "361ff27009be4ae884514256d18733eb"
       },
       {
         "text": "App_Service_IPAddress",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Service_IPAddress.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Service_IPAddress.svg",
+        "id": "66b525402b764cc188d02e1e06870c46"
       },
       {
         "text": "App_Service_Mobile_App",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Service_Mobile_App.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Service_Mobile_App.svg",
+        "id": "599f06eb118841818d32a42b86bea20d"
       },
       {
         "text": "App_Service_Worker_Pools",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Service_Worker_Pools.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Service_Worker_Pools.svg",
+        "id": "2c78b48223f64d0baa6d56c7b2a7ce1f"
       },
       {
         "text": "App_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/App_Services.svg",
+        "id": "42f16971fea445bbb946cb1a136636ec"
       },
       {
         "text": "Application_Gateway",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Application_Gateway.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Application_Gateway.svg",
+        "id": "1c9f856b11bf4aa8be6f6faa8658bd8d"
       },
       {
         "text": "Application_Insights",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Application_Insights.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Application_Insights.svg",
+        "id": "2fb7e488abb9415186b1bbd10d7a4d99"
       },
       {
         "text": "Application_Security_Groups",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Application_Security_Groups.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Application_Security_Groups.svg",
+        "id": "f2794ae29ca54e9a81179bd7bb472690"
       },
       {
         "text": "Archive_Storage",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Archive_Storage.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Archive_Storage.svg",
+        "id": "b2c8a52999aa49549e3bd891ec51ba65"
       },
       {
         "text": "Auditing",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Auditing.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Auditing.svg",
+        "id": "7d17fe3b92744b33ad2b940ed9b11bdb"
       },
       {
         "text": "AuditingServer",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/AuditingServer.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/AuditingServer.svg",
+        "id": "28563c568ae044db940da42e12ca2b93"
       },
       {
         "text": "AutoBackup",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/AutoBackup.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/AutoBackup.svg",
+        "id": "85417605369b498ba65dafe99848a550"
       },
       {
         "text": "Automation",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Automation.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Automation.svg",
+        "id": "359512c306ef45b49dc40e596895c3a5"
       },
       {
         "text": "Avatar",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Avatar.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Avatar.svg",
+        "id": "949d50306a874a93925914be5f91d975"
       },
       {
         "text": "AvatarDefault",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/AvatarDefault.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/AvatarDefault.svg",
+        "id": "06d1e689459a43b98ec2d3dc85c1c351"
       },
       {
         "text": "AvatarUnknown",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/AvatarUnknown.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/AvatarUnknown.svg",
+        "id": "938a913b015142a99ceb98b981feae24"
       },
       {
         "text": "Azure API for FHIR",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure API for FHIR.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure API for FHIR.svg",
+        "id": "037392150494488a98add51da1f0f6e3"
       },
       {
         "text": "AzureFXTEdgeFiler",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/AzureFXTEdgeFiler.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/AzureFXTEdgeFiler.svg",
+        "id": "352a1e30a0174b6ca6273df71583a385"
       },
       {
         "text": "Azure_AD_B2C",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_AD_B2C.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_AD_B2C.svg",
+        "id": "86c8816e096346b7884214e8177604b9"
       },
       {
         "text": "Azure_AD_Domain_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_AD_Domain_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_AD_Domain_Services.svg",
+        "id": "ddf474525b454b2da9035a493d46f1e6"
       },
       {
         "text": "Azure_AD_Identity_Protection",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_AD_Identity_Protection.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_AD_Identity_Protection.svg",
+        "id": "faeda6910c184385b24e9830ae8ba0a3"
       },
       {
         "text": "Azure_AD_Privileged_Identity_Management",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_AD_Privileged_Identity_Management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_AD_Privileged_Identity_Management.svg",
+        "id": "785e217ab98e482b88c527ca96f853f1"
       },
       {
         "text": "Azure_API_for_FHIR",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_API_for_FHIR.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_API_for_FHIR.svg",
+        "id": "b06704e1ab68439b82c77a4e616e1e7d"
       },
       {
         "text": "Azure_Artifacts",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Artifacts.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Artifacts.svg",
+        "id": "ff4a44a5e2f2429fa1e2e02c9ba53cbf"
       },
       {
         "text": "Azure_Boards",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Boards.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Boards.svg",
+        "id": "2a0d74b706fe473bb74b2ae9e39bce3c"
       },
       {
         "text": "Azure_Cache_for_Redis",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Cache_for_Redis.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Cache_for_Redis.svg",
+        "id": "4f28b03b767046b89616df6d95c89049"
       },
       {
         "text": "Azure_Data_Explorer_Clusters",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Data_Explorer_Clusters.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Data_Explorer_Clusters.svg",
+        "id": "ffb9e1def063416584a3b86bf2603c91"
       },
       {
         "text": "Azure_Database_Migration_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Database_Migration_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Database_Migration_Services.svg",
+        "id": "bddf0ad307874f68bd97e656d6cdf7b0"
       },
       {
         "text": "Azure_Database_for_MariaDB_servers",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Database_for_MariaDB_servers.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Database_for_MariaDB_servers.svg",
+        "id": "7d45fb5aea3342b4af513245824481bd"
       },
       {
         "text": "Azure_Database_for_MySQL_servers",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Database_for_MySQL_servers.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Database_for_MySQL_servers.svg",
+        "id": "cccfaae90d5f43adbd3975644267148d"
       },
       {
         "text": "Azure_Database_for_PostgreSQL_servers",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Database_for_PostgreSQL_servers.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Database_for_PostgreSQL_servers.svg",
+        "id": "6ff4d70d3d94438490972b4356babfd9"
       },
       {
         "text": "Azure_DevOps",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_DevOps.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_DevOps.svg",
+        "id": "e62b958ccba94c55becf7e9e5031161f"
       },
       {
         "text": "Azure_Digital_Twins",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Digital_Twins.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Digital_Twins.svg",
+        "id": "e6b9a415ca734cafb2cf1ee3cbac434a"
       },
       {
         "text": "Azure_Firewall",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Firewall.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Firewall.svg",
+        "id": "9d87492235dc4cc4b6c2c724b503f544"
       },
       {
         "text": "Azure_Home",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Home.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Home.svg",
+        "id": "9dffc8e147874db5821ce8f64c5573d6"
       },
       {
         "text": "Azure_IoT_Hub",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_IoT_Hub.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_IoT_Hub.svg",
+        "id": "29f46df9e6614e7d94cc380d329da5c2"
       },
       {
         "text": "Azure_IoT_Hub_Security",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_IoT_Hub_Security.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_IoT_Hub_Security.svg",
+        "id": "4ddd8bf8d4c04fce88de58db8ae45fd0"
       },
       {
         "text": "Azure_Maps",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Maps.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Maps.svg",
+        "id": "3c8cf63dc7de4811bcd3c17310dd798f"
       },
       {
         "text": "Azure_Media_Player",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Media_Player.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Media_Player.svg",
+        "id": "3407b584ff33425980d4a5e86e8aec4b"
       },
       {
         "text": "Azure_NetApp_files",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_NetApp_files.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_NetApp_files.svg",
+        "id": "1a88db0e901643ee9202cc85bd9bc01e"
       },
       {
         "text": "Azure_Pipelines",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Pipelines.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Pipelines.svg",
+        "id": "72f316963bdc4ca1a8f07bf9bb53e430"
       },
       {
         "text": "Azure_Repos",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Repos.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Repos.svg",
+        "id": "58a5f64b943449fdaa1b752f736bec93"
       },
       {
         "text": "Azure_Sentinel",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Sentinel.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Sentinel.svg",
+        "id": "70c9e405677d46f7aeeccfe12f01df04"
       },
       {
         "text": "Azure_Sphere",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Sphere.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Sphere.svg",
+        "id": "6d83d58651444dc1ad34877ef65e23cd"
       },
       {
         "text": "Azure_Test_Plans",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Test_Plans.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Azure_Test_Plans.svg",
+        "id": "541fe1c1c86849919e5267100f072c09"
       },
       {
         "text": "Backlog",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Backlog.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Backlog.svg",
+        "id": "4d5e0fc042414241a0bb90396e630f8e"
       },
       {
         "text": "Backup",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Backup.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Backup.svg",
+        "id": "588e24b0f22b4f8fa2f068d4ebffe534"
       },
       {
         "text": "Batch",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Batch.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Batch.svg",
+        "id": "9c813a86b96248ca8696b3f2b6395fa7"
       },
       {
         "text": "Batch_AI",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Batch_AI.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Batch_AI.svg",
+        "id": "2c1d5a0fa5d64601b4810de73ce1ef16"
       },
       {
         "text": "Batch_Accounts",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Batch_Accounts.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Batch_Accounts.svg",
+        "id": "d3510431de3b4815a8917b9274d03774"
       },
       {
         "text": "Batch_Task",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Batch_Task.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Batch_Task.svg",
+        "id": "10c106d1012244d0ba3f7070ae60db17"
       },
       {
         "text": "Batch_TaskVM",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Batch_TaskVM.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Batch_TaskVM.svg",
+        "id": "890790488ad541acb1b3247f875f61d8"
       },
       {
         "text": "BillingHub",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/BillingHub.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/BillingHub.svg",
+        "id": "b303b2dcf6154317bdd2e8f90dddefd8"
       },
       {
         "text": "BizTalk_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/BizTalk_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/BizTalk_Services.svg",
+        "id": "de4feb0a21a9406295ddfc4ab3cd60df"
       },
       {
         "text": "BizTalk_Services_Hybrid_Connections",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/BizTalk_Services_Hybrid_Connections.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/BizTalk_Services_Hybrid_Connections.svg",
+        "id": "0beb7e40347e43d4a68e3090337307d8"
       },
       {
         "text": "BlobBlock",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/BlobBlock.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/BlobBlock.svg",
+        "id": "003af2f38af74480a0532bcae250dbb6"
       },
       {
         "text": "BlobPage",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/BlobPage.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/BlobPage.svg",
+        "id": "6cfa84b8879d405b990c1f3a7c66354c"
       },
       {
         "text": "Blockchain",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Blockchain.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Blockchain.svg",
+        "id": "b52d744416b84cb78295a79a22d3eb6c"
       },
       {
         "text": "Blog_Storage",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Blog_Storage.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Blog_Storage.svg",
+        "id": "e9545aa256634034a24c95df4cfa954f"
       },
       {
         "text": "Blueprints",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Blueprints.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Blueprints.svg",
+        "id": "bec1e21e20af42ca86f5121e318d8408"
       },
       {
         "text": "Book",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Book.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Book.svg",
+        "id": "b35b4e419ade40fea1e31ab7c8d59f35"
       },
       {
         "text": "Bot_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Bot_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Bot_Services.svg",
+        "id": "e8bb2bce853c4b10a5f2159ea72cd0f1"
       },
       {
         "text": "Branch",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Branch.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Branch.svg",
+        "id": "0a79f6db7f604dbcaa45647d58653b10"
       },
       {
         "text": "Browser",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Browser.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Browser.svg",
+        "id": "ed8dba32a9334fab8e1a978bc0a3e28e"
       },
       {
         "text": "Bug",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Bug.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Bug.svg",
+        "id": "6b26b428cca54dcfb100d19548cca976"
       },
       {
         "text": "Building_Blocks",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Building_Blocks.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Building_Blocks.svg",
+        "id": "e7cc6bc38b7e44c48e1e8e4dd97104c1"
       },
       {
         "text": "Builds",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Builds.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Builds.svg",
+        "id": "d50a09cafa724e3ab409e00e2c69e3df"
       },
       {
         "text": "CDNrocket",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/CDNrocket.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/CDNrocket.svg",
+        "id": "6c5a416c817e40bcb7ade792880b914d"
       },
       {
         "text": "Cache_Redis_Product",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cache_Redis_Product.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cache_Redis_Product.svg",
+        "id": "898d1b25170e4c38ae8a576a37ce4063"
       },
       {
         "text": "Cache_including_Redis",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cache_including_Redis.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cache_including_Redis.svg",
+        "id": "ac9e5a9e26e74e78a2e2fb889a030ea8"
       },
       {
         "text": "Calendar",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Calendar.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Calendar.svg",
+        "id": "af99f4293da44781b9336bf9da43f468"
       },
       {
         "text": "Certificate",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Certificate.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Certificate.svg",
+        "id": "d5bac5ef54664cf5a06e8936466b0269"
       },
       {
         "text": "Chart",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Chart.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Chart.svg",
+        "id": "1a0dbacd52e940c5956a426899d4f377"
       },
       {
         "text": "Check",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Check.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Check.svg",
+        "id": "705d1a4285f94d55b20867773c5bf1b8"
       },
       {
         "text": "Citrix_Virtual_Desktops_Essentials",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Citrix_Virtual_Desktops_Essentials.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Citrix_Virtual_Desktops_Essentials.svg",
+        "id": "3d5db9476b1248e4be58ac2fa12399bc"
       },
       {
         "text": "ClassicIPAddress",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ClassicIPAddress.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ClassicIPAddress.svg",
+        "id": "39c9a373f10e4e61a5f1334da86d62e4"
       },
       {
         "text": "ClassicStorage",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ClassicStorage.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ClassicStorage.svg",
+        "id": "65e127c99e0b43f9a15bdae527b2d1d7"
       },
       {
         "text": "Client_Apps",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Client_Apps.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Client_Apps.svg",
+        "id": "da73d43b78f24dd38f7ba0a027263f55"
       },
       {
         "text": "Clock",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Clock.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Clock.svg",
+        "id": "afde60a23fdc429dac86c6029fa8b6ed"
       },
       {
         "text": "CloudSimple_Nodes",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/CloudSimple_Nodes.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/CloudSimple_Nodes.svg",
+        "id": "269e80a00715404bb483c8f48b324581"
       },
       {
         "text": "CloudSimple_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/CloudSimple_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/CloudSimple_Services.svg",
+        "id": "75e3e75750394507b2563e505c177a52"
       },
       {
         "text": "CloudSimple_Virtual_Machines",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/CloudSimple_Virtual_Machines.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/CloudSimple_Virtual_Machines.svg",
+        "id": "0843044a6c0840ac9c1f832a01e04eb2"
       },
       {
         "text": "Cloud_Cycle",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cloud_Cycle.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cloud_Cycle.svg",
+        "id": "e21514e7e2394dc3ae8df9abb4a88700"
       },
       {
         "text": "Cloud_Service",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cloud_Service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cloud_Service.svg",
+        "id": "d4a34e88b6dd4d658146266ce79fa877"
       },
       {
         "text": "Cloud_Services_Classic",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cloud_Services_Classic.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cloud_Services_Classic.svg",
+        "id": "16e95b432dbf4339a44dd0d892d80598"
       },
       {
         "text": "Code",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Code.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Code.svg",
+        "id": "2ea6fa6a9e96485a9a9c64502e79f516"
       },
       {
         "text": "Cognitive_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services.svg",
+        "id": "babf0721e0ae4e50ad055a4af7fde014"
       },
       {
         "text": "Cognitive_Services_Computer_Vision",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services_Computer_Vision.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services_Computer_Vision.svg",
+        "id": "c4d4d5241a3a4fcf9fd3031aeeb800c3"
       },
       {
         "text": "Cognitive_Services_Speech",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services_Speech.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services_Speech.svg",
+        "id": "0472bc113f2044e8a5241b422bbc6cca"
       },
       {
         "text": "Cognitive_Services_emotion",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services_emotion.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services_emotion.svg",
+        "id": "ef99ad92325b45349d7c42030badc79b"
       },
       {
         "text": "Cognitive_Services_face",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services_face.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services_face.svg",
+        "id": "ad3902a327f84bdc8a99fe87b16c71e3"
       },
       {
         "text": "Cognitive_Services_luis",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services_luis.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services_luis.svg",
+        "id": "0848a96224a044de9d484cb655f85b5d"
       },
       {
         "text": "Cognitive_Services_recommendations",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services_recommendations.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services_recommendations.svg",
+        "id": "9dd4f7c45cac4f6b81471dea13c01ee4"
       },
       {
         "text": "Cognitive_Services_textanalytics",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services_textanalytics.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services_textanalytics.svg",
+        "id": "a0f3eeb7861443e1be83d6c8eb2d3d06"
       },
       {
         "text": "Cognitive_Services_web_language_model",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services_web_language_model.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cognitive_Services_web_language_model.svg",
+        "id": "a27a188b8b264168a86ac4d2b96fa91a"
       },
       {
         "text": "Commits",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Commits.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Commits.svg",
+        "id": "c2f1511b03324b128b94768c0e4ebb65"
       },
       {
         "text": "Connection",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Connection.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Connection.svg",
+        "id": "0ca461abd94b4710965cd1e59f845ee4"
       },
       {
         "text": "Connections",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Connections.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Connections.svg",
+        "id": "21f87f3317de4764a590de0aaba8b49c"
       },
       {
         "text": "ContactInfo",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ContactInfo.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ContactInfo.svg",
+        "id": "1fb8c1ca4f014ea5bb684f983c547261"
       },
       {
         "text": "Container_Instances",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Container_Instances.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Container_Instances.svg",
+        "id": "aa2f1808d9094783a2aede57b55d56cd"
       },
       {
         "text": "Container_Registries",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Container_Registries.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Container_Registries.svg",
+        "id": "64b38ba5f5fc4808a2ff7a294d469fbd"
       },
       {
         "text": "Container_Service",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Container_Service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Container_Service.svg",
+        "id": "6c6a78cacbdd4ab591caa9f49d24cdf9"
       },
       {
         "text": "ContentManagementSystem",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ContentManagementSystem.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ContentManagementSystem.svg",
+        "id": "7527fddeccbe4b05bf002e8a16264458"
       },
       {
         "text": "Content_Delivery_Network",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Content_Delivery_Network.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Content_Delivery_Network.svg",
+        "id": "0ccbfcdd4569452b9328cac087e79843"
       },
       {
         "text": "Content_Protection",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Content_Protection.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Content_Protection.svg",
+        "id": "f8d07927dad44138b05d8902696f4deb"
       },
       {
         "text": "ContinuousExport",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ContinuousExport.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ContinuousExport.svg",
+        "id": "045330d261e04de787c12221c6af286f"
       },
       {
         "text": "Controllers",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Controllers.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Controllers.svg",
+        "id": "699f3a0a3ef34e8d9bb94def3fdc72e8"
       },
       {
         "text": "Controls",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Controls.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Controls.svg",
+        "id": "f7f8de9829be4404b57b7e33d51cee2e"
       },
       {
         "text": "ControlsHorizontal",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ControlsHorizontal.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ControlsHorizontal.svg",
+        "id": "9c87d72b8a43446b8eaacf9950509dce"
       },
       {
         "text": "CosmosDB",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/CosmosDB.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/CosmosDB.svg",
+        "id": "515de1d405cd4382b0ae5be6feca5d5d"
       },
       {
         "text": "Counter",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Counter.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Counter.svg",
+        "id": "7e6e95150b33491d9d939519f8df0f1d"
       },
       {
         "text": "Cubes",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cubes.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Cubes.svg",
+        "id": "8322ee67b2054f7aba05cfa4d2de1086"
       },
       {
         "text": "CustomDomain",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/CustomDomain.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/CustomDomain.svg",
+        "id": "87916544d0e847f6aaa002a65721859b"
       },
       {
         "text": "CustomerInsights",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/CustomerInsights.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/CustomerInsights.svg",
+        "id": "6b7505a0e8ad43329a0b955730e967c1"
       },
       {
         "text": "Customer_Lockbox",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Customer_Lockbox.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Customer_Lockbox.svg",
+        "id": "063e0bed6eeb4d46a6e116431e4408d2"
       },
       {
         "text": "DC_OS",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/DC_OS.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/DC_OS.svg",
+        "id": "942e2d428a8743268752eb453282e787"
       },
       {
         "text": "DDOS_Protection_Plans",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/DDOS_Protection_Plans.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/DDOS_Protection_Plans.svg",
+        "id": "bf7b12f76dce49768670b4ec6315db50"
       },
       {
         "text": "DNS",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/DNS.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/DNS.svg",
+        "id": "543d3df706f34abfb29f4dff95769dd3"
       },
       {
         "text": "DNS_Private_Zones",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/DNS_Private_Zones.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/DNS_Private_Zones.svg",
+        "id": "1960706567534ee29c3eb0b55f7ff2d1"
       },
       {
         "text": "DataServices_category_rollup",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/DataServices_category_rollup.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/DataServices_category_rollup.svg",
+        "id": "a2c7dc3980a049c883dedb1c84709c1c"
       },
       {
         "text": "Data_Box",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Box.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Box.svg",
+        "id": "1a21b0bd5ee34daea5d53a4d157f329b"
       },
       {
         "text": "Data_Box_Edge_Data_Box_Gateway",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Box_Edge_Data_Box_Gateway.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Box_Edge_Data_Box_Gateway.svg",
+        "id": "be75f85289244c64b0a949e59b955db0"
       },
       {
         "text": "Data_Catalog",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Catalog.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Catalog.svg",
+        "id": "5f42eb3a692c4f8a804a502f936ebee3"
       },
       {
         "text": "Data_Factory",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Factory.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Factory.svg",
+        "id": "c761d42351294553b970d119a125ecb1"
       },
       {
         "text": "Data_Lake",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Lake.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Lake.svg",
+        "id": "1894137df15d4c1c90a33b5cdb0a2e64"
       },
       {
         "text": "Data_Lake_Analytics",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Lake_Analytics.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Lake_Analytics.svg",
+        "id": "d85cba50cefd4afaabf01ef4f99c766a"
       },
       {
         "text": "Data_Lake_Storage",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Lake_Storage.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Lake_Storage.svg",
+        "id": "687cadeda63f48b5985b9b953c2aa536"
       },
       {
         "text": "Data_Lake_Store",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Lake_Store.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Lake_Store.svg",
+        "id": "918cea41afaf4150b902f1d19e8f16f7"
       },
       {
         "text": "Data_Warehouse",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Warehouse.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Data_Warehouse.svg",
+        "id": "974e4aa839b44218a6074851c3059059"
       },
       {
         "text": "DatabaseRestore",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/DatabaseRestore.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/DatabaseRestore.svg",
+        "id": "105b554b50ff44fe83827a4cdfc28f2e"
       },
       {
         "text": "Database_General",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Database_General.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Database_General.svg",
+        "id": "a6de2830a6184731b3c20b79b592fe7b"
       },
       {
         "text": "Databricks",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Databricks.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Databricks.svg",
+        "id": "c65ed72aa65d441fb1a91f38b94726fe"
       },
       {
         "text": "Dedicated_Event_Hub",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Dedicated_Event_Hub.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Dedicated_Event_Hub.svg",
+        "id": "7ffb440c9b9f404593a3469f9c3c4de6"
       },
       {
         "text": "DevConsole",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/DevConsole.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/DevConsole.svg",
+        "id": "6059b0f9a6aa48ca8b5e00100d75bfe0"
       },
       {
         "text": "DevTest_Labs",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/DevTest_Labs.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/DevTest_Labs.svg",
+        "id": "82c26f8827ab47d991c0889c32af5f76"
       },
       {
         "text": "Developer_Tools",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Developer_Tools.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Developer_Tools.svg",
+        "id": "23d3b11b3c1e49d7abb7d9e75b10d53f"
       },
       {
         "text": "Device_Compliance",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Device_Compliance.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Device_Compliance.svg",
+        "id": "8dcdb36c0a024f69b07dae27c3b6a4ac"
       },
       {
         "text": "Device_Config",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Device_Config.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Device_Config.svg",
+        "id": "dc4a9e18cc9b4aa8a5ec7cad65b8739e"
       },
       {
         "text": "Device_Provisioning_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Device_Provisioning_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Device_Provisioning_Services.svg",
+        "id": "1b9c02a7795a4b5f834d109440448bd7"
       },
       {
         "text": "Devices_Groups",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Devices_Groups.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Devices_Groups.svg",
+        "id": "7aaca24231934a5ca927af758157fbb4"
       },
       {
         "text": "DirectorySync",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/DirectorySync.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/DirectorySync.svg",
+        "id": "e77fa5b556434b4f93413a47e926583e"
       },
       {
         "text": "Discard",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Discard.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Discard.svg",
+        "id": "6e3baf22dfcb4945a70427bfafc8f958"
       },
       {
         "text": "Discs",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Discs.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Discs.svg",
+        "id": "a21329d642bf4adda4446b49451c8c9f"
       },
       {
         "text": "Docker",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Docker.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Docker.svg",
+        "id": "5cbb7d09a90c4672969976a42678d2c4"
       },
       {
         "text": "DocumentDB",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/DocumentDB.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/DocumentDB.svg",
+        "id": "9736675efa934c30bce9cee1ac1772b5"
       },
       {
         "text": "Download",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Download.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Download.svg",
+        "id": "a2536161333147a4b041cbfe40aba0cf"
       },
       {
         "text": "Education",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Education.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Education.svg",
+        "id": "e8c19ea0c1d34801aadfd0ebdd416c04"
       },
       {
         "text": "Elastic_Database_Pools",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Elastic_Database_Pools.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Elastic_Database_Pools.svg",
+        "id": "1dc7a94928bf49b19c962b8458c4c00e"
       },
       {
         "text": "Elastic_Job_Agents",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Elastic_Job_Agents.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Elastic_Job_Agents.svg",
+        "id": "80713b57241445f2bab3566a086ccc71"
       },
       {
         "text": "Enrollment",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Enrollment.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Enrollment.svg",
+        "id": "4b5217dd663045deae15932b1aad7336"
       },
       {
         "text": "Enterprise_Applications",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Enterprise_Applications.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Enterprise_Applications.svg",
+        "id": "f1eb6bba1c654df8814e8a85cd376b6d"
       },
       {
         "text": "EventLog",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/EventLog.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/EventLog.svg",
+        "id": "d0612d5d00c245a2889c11ade1750a60"
       },
       {
         "text": "Event_Grid",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Event_Grid.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Event_Grid.svg",
+        "id": "f482d75f59b54e1d9926478dbed95846"
       },
       {
         "text": "Event_Grid_Topics",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Event_Grid_Topics.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Event_Grid_Topics.svg",
+        "id": "35baad304c6e47ada98d2c09b09df17c"
       },
       {
         "text": "Event_Hub_Clusters",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Event_Hub_Clusters.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Event_Hub_Clusters.svg",
+        "id": "8bbc1a241b3745c590f7298eb296e1c9"
       },
       {
         "text": "Event_Hubs",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Event_Hubs.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Event_Hubs.svg",
+        "id": "b82e32b3baaf4677a910945fbf2a9f82"
       },
       {
         "text": "Exchange_On_premises_Access",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Exchange_On_premises_Access.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Exchange_On_premises_Access.svg",
+        "id": "c3339f92e52946878e00e7f74666928b"
       },
       {
         "text": "Express_Route",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Express_Route.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Express_Route.svg",
+        "id": "2afcd48ca44b49ddbdbd6a951258c5f8"
       },
       {
         "text": "Extensions",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Extensions.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Extensions.svg",
+        "id": "3faa0aefa0704f89b9bb05308c718476"
       },
       {
         "text": "Favorite",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Favorite.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Favorite.svg",
+        "id": "2d46e64c088842d9b191951c63000ebb"
       },
       {
         "text": "File",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/File.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/File.svg",
+        "id": "e18cbb348fc94d0eb6069f0dc13552e5"
       },
       {
         "text": "Files",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Files.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Files.svg",
+        "id": "788f10f7211a4143a4592d3882370a39"
       },
       {
         "text": "Folder",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Folder.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Folder.svg",
+        "id": "230e37c62cff4a2b8854795d0d9df454"
       },
       {
         "text": "FolderBlank",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/FolderBlank.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/FolderBlank.svg",
+        "id": "6f3a6d4801b7400bb484ea950e413f19"
       },
       {
         "text": "FolderCube",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/FolderCube.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/FolderCube.svg",
+        "id": "02279529c1944cefa5927f9ab6360b27"
       },
       {
         "text": "FolderWebsite",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/FolderWebsite.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/FolderWebsite.svg",
+        "id": "3234513f8d604554a2560c7c0a28b2c4"
       },
       {
         "text": "ForPlacementOnly",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ForPlacementOnly.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ForPlacementOnly.svg",
+        "id": "8655a6508ae84bcd8ec6a2e870b151a2"
       },
       {
         "text": "Free_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Free_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Free_Services.svg",
+        "id": "594fcdc44a6145f09e9a4428d4a34681"
       },
       {
         "text": "Front_Doors",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Front_Doors.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Front_Doors.svg",
+        "id": "a34674763eb54f88920e31a7588322fa"
       },
       {
         "text": "Ftp",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Ftp.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Ftp.svg",
+        "id": "16d78751d1c644bfa4237d127a43d33f"
       },
       {
         "text": "Functions",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Functions.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Functions.svg",
+        "id": "dfb0ccadd2a44742858be0f2768d9141"
       },
       {
         "text": "GalleryManagement",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/GalleryManagement.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/GalleryManagement.svg",
+        "id": "a90038b193574a0192f91d1990368e1e"
       },
       {
         "text": "Gateway",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Gateway.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Gateway.svg",
+        "id": "91b52eccf16043988c1361b8d162c83f"
       },
       {
         "text": "Gear",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Gear.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Gear.svg",
+        "id": "a05739f5b0e34bc0abd154158a61f49f"
       },
       {
         "text": "GearAlternate",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/GearAlternate.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/GearAlternate.svg",
+        "id": "fd0caa5263a049989809d3a2be62a59d"
       },
       {
         "text": "GearAlternate_2",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/GearAlternate_2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/GearAlternate_2.svg",
+        "id": "90c845b488ee44dd8008a20b1a0c062e"
       },
       {
         "text": "Gear_2",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Gear_2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Gear_2.svg",
+        "id": "05ad894de3124ee19db3928a1156799b"
       },
       {
         "text": "General_Storage",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/General_Storage.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/General_Storage.svg",
+        "id": "4f1c2a41bd8b4cd9be601e778f404998"
       },
       {
         "text": "Genomics_Accounts",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Genomics_Accounts.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Genomics_Accounts.svg",
+        "id": "1ad91bde5b224e7ab65fda1795404fe0"
       },
       {
         "text": "GeoReplicationPremium",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/GeoReplicationPremium.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/GeoReplicationPremium.svg",
+        "id": "0a0d521be1d2434da73c33a00aa1c14a"
       },
       {
         "text": "GeoReplicationStandard",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/GeoReplicationStandard.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/GeoReplicationStandard.svg",
+        "id": "23da8c7ad4094ce8adb827d1dc94611e"
       },
       {
         "text": "GetMoreLicense",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/GetMoreLicense.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/GetMoreLicense.svg",
+        "id": "04d694a944034602b56c4434993324d4"
       },
       {
         "text": "GetStarted",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/GetStarted.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/GetStarted.svg",
+        "id": "3c136ab7552d44e192f2dc066301461e"
       },
       {
         "text": "Gift",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Gift.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Gift.svg",
+        "id": "5ca007611cc54118a357204ac05f04bd"
       },
       {
         "text": "Globe",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Globe.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Globe.svg",
+        "id": "09b5eff807434ed9b9ac68ccd1dad437"
       },
       {
         "text": "GlobeError",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/GlobeError.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/GlobeError.svg",
+        "id": "4808964f683e4ad2818fd5f79236e47c"
       },
       {
         "text": "GlobeSuccess",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/GlobeSuccess.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/GlobeSuccess.svg",
+        "id": "73de80b99dba440daf4b699e4ec6a83c"
       },
       {
         "text": "GlobeWarning",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/GlobeWarning.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/GlobeWarning.svg",
+        "id": "eb872f5eb75b4252af5d4a4242b859d3"
       },
       {
         "text": "Go",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Go.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Go.svg",
+        "id": "b815a3d94537491da299702e38962466"
       },
       {
         "text": "GreatScott",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/GreatScott.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/GreatScott.svg",
+        "id": "87faa0dfeffe41d58ba1b2face218ec2"
       },
       {
         "text": "Grid",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Grid.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Grid.svg",
+        "id": "2dd39b6908b44b5b85749a918fc8aa66"
       },
       {
         "text": "Grid3x3",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Grid3x3.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Grid3x3.svg",
+        "id": "d6b739daa8f8473bbbb272df62494631"
       },
       {
         "text": "Guest_Assignments",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Guest_Assignments.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Guest_Assignments.svg",
+        "id": "cf20d48dacf74abba12286788c57b577"
       },
       {
         "text": "Guide",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Guide.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Guide.svg",
+        "id": "1cecf85d75cc4a00aca71e77bf86e5e8"
       },
       {
         "text": "Guide_2",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Guide_2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Guide_2.svg",
+        "id": "ed75a1a073f348bab0b6e4daf25821a3"
       },
       {
         "text": "HDInsight",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/HDInsight.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/HDInsight.svg",
+        "id": "c253086c6a8949a6a533624498650639"
       },
       {
         "text": "HDInsightClusters",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/HDInsightClusters.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/HDInsightClusters.svg",
+        "id": "ad5e8020e7b84036907df81f0a025259"
       },
       {
         "text": "Hammer",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Hammer.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Hammer.svg",
+        "id": "311d4eaffe0f402dab78ea637969cdab"
       },
       {
         "text": "Heart",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Heart.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Heart.svg",
+        "id": "c6a3347b7f4f42ce9af48045b0d5809c"
       },
       {
         "text": "HeartPulse",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/HeartPulse.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/HeartPulse.svg",
+        "id": "f174dff7543c40e1bb8fedb8efabe82d"
       },
       {
         "text": "Home",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Home.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Home.svg",
+        "id": "84cc0f207b1c46b6bee22c0bc5a755ed"
       },
       {
         "text": "HybridConnectionEndpoint",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/HybridConnectionEndpoint.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/HybridConnectionEndpoint.svg",
+        "id": "57849cf2d84447e293b168cadcca3bc3"
       },
       {
         "text": "IOT_edge",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/IOT_edge.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/IOT_edge.svg",
+        "id": "4c4e4d165fb04b93b21d711401ae00b6"
       },
       {
         "text": "Identity_Governance",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Identity_Governance.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Identity_Governance.svg",
+        "id": "c0b13433e3b6476c829b2cdd0e056b17"
       },
       {
         "text": "Image",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Image.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Image.svg",
+        "id": "59b2c4d78e9e43b7b27ad0734a6b6548"
       },
       {
         "text": "Image_Definitions",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Image_Definitions.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Image_Definitions.svg",
+        "id": "a1741f43dd2d4d2da64ced4b438c714e"
       },
       {
         "text": "Image_Versions",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Image_Versions.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Image_Versions.svg",
+        "id": "147f1566b5294ad684fbd70fb5d24f8a"
       },
       {
         "text": "InboundNAT",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/InboundNAT.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/InboundNAT.svg",
+        "id": "1f7fabb1fa57474e8cccddddd2e40761"
       },
       {
         "text": "InboundRule",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/InboundRule.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/InboundRule.svg",
+        "id": "5246767cdc1d4b1898e9e078db214853"
       },
       {
         "text": "Info",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Info.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Info.svg",
+        "id": "f2b5da3efa274ad7b05c89f1c7df98b0"
       },
       {
         "text": "Info_2",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Info_2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Info_2.svg",
+        "id": "c269492a897b46d9aacc90f038168348"
       },
       {
         "text": "Input",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Input.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Input.svg",
+        "id": "3636bd6fca7b4e7d8b5c70e6381e9300"
       },
       {
         "text": "InputOutput",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/InputOutput.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/InputOutput.svg",
+        "id": "9fdf877512704760a682458bf2494850"
       },
       {
         "text": "InstallVisualStudio",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/InstallVisualStudio.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/InstallVisualStudio.svg",
+        "id": "935fc977830d4c028a8615429b134da4"
       },
       {
         "text": "Integration_Accounts",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Integration_Accounts.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Integration_Accounts.svg",
+        "id": "99fbe4d9c0d04b499c8eb3358f1342ca"
       },
       {
         "text": "Integration_Service_Environments",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Integration_Service_Environments.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Integration_Service_Environments.svg",
+        "id": "c65b24b2a8ff409a940e401060fd0d47"
       },
       {
         "text": "Intune_App_Protection",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Intune_App_Protection.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Intune_App_Protection.svg",
+        "id": "5029e7a387f7482fb551776ae708a4ed"
       },
       {
         "text": "Job",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Job.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Job.svg",
+        "id": "3918e0c0129b41a9903490e269abc7e6"
       },
       {
         "text": "JourneyHub",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/JourneyHub.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/JourneyHub.svg",
+        "id": "486fa3a03ce1494c861b2f978b654ca4"
       },
       {
         "text": "Key",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Key.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Key.svg",
+        "id": "f116d6b720bd4bd3b2291265a2174246"
       },
       {
         "text": "KeyVault",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/KeyVault.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/KeyVault.svg",
+        "id": "f2b20f74d9704505b9ab83c2d2084c98"
       },
       {
         "text": "Key_Vaults",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Key_Vaults.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Key_Vaults.svg",
+        "id": "1aa367e8dd904c6bbadd599cd4bed178"
       },
       {
         "text": "KeyboardShortcuts",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/KeyboardShortcuts.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/KeyboardShortcuts.svg",
+        "id": "e2b5eadd100a42dcb4ecf787b9bacfca"
       },
       {
         "text": "Kubernetes",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Kubernetes.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Kubernetes.svg",
+        "id": "8e731a06fb9a4bd8a08f1b491b8f22cb"
       },
       {
         "text": "Kubernetes_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Kubernetes_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Kubernetes_Services.svg",
+        "id": "9445fd438f35472cb231f7aee1290381"
       },
       {
         "text": "KuduKnife",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/KuduKnife.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/KuduKnife.svg",
+        "id": "3798f067e57f489d8eac26219c579534"
       },
       {
         "text": "LaunchPortal",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/LaunchPortal.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/LaunchPortal.svg",
+        "id": "a39815bcac1244c7af0144208d1604b7"
       },
       {
         "text": "LoadTest",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/LoadTest.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/LoadTest.svg",
+        "id": "132bf611b2234de3bedab1911dd3d84c"
       },
       {
         "text": "Load_Balancer_feature",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Load_Balancer_feature.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Load_Balancer_feature.svg",
+        "id": "1a2a71cfcec540249b94c6b43bbc491c"
       },
       {
         "text": "LocalNetwork",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/LocalNetwork.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/LocalNetwork.svg",
+        "id": "322e38ce9dad4eac88410d7a5ad1fc28"
       },
       {
         "text": "Local_Network_Gateways",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Local_Network_Gateways.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Local_Network_Gateways.svg",
+        "id": "b779b42997f9439480e0184427331f46"
       },
       {
         "text": "Location",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Location.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Location.svg",
+        "id": "e804b87b171a429fac5b79a0e7657c74"
       },
       {
         "text": "Log",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Log.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Log.svg",
+        "id": "d983ec5411fd4f2ab05b7be0d916e896"
       },
       {
         "text": "LogDiagnostics",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/LogDiagnostics.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/LogDiagnostics.svg",
+        "id": "d7d01abebdf84be9a77addc062926d59"
       },
       {
         "text": "LogStreaming",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/LogStreaming.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/LogStreaming.svg",
+        "id": "110796918b0145c29a90ce8864b4d1d8"
       },
       {
         "text": "Log_Analytics_Workspaces",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Log_Analytics_Workspaces.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Log_Analytics_Workspaces.svg",
+        "id": "6d53602f077d4476aef2f927f0f10e6a"
       },
       {
         "text": "Logic_Apps",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Logic_Apps.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Logic_Apps.svg",
+        "id": "2d39eab395114f04a1f7ef4933698b43"
       },
       {
         "text": "Logic_Apps_Custom_Connector",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Logic_Apps_Custom_Connector.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Logic_Apps_Custom_Connector.svg",
+        "id": "180358a6b1ca4363beb8d896b3774e87"
       },
       {
         "text": "MD_snapshot",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/MD_snapshot.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/MD_snapshot.svg",
+        "id": "7c4435e49c32496787d6c488c4c1d68b"
       },
       {
         "text": "MachineLearningServicePlans",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/MachineLearningServicePlans.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/MachineLearningServicePlans.svg",
+        "id": "2bab7d7db5174b7aaf448b19c70544d4"
       },
       {
         "text": "MachineLearningWebServices",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/MachineLearningWebServices.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/MachineLearningWebServices.svg",
+        "id": "0bbb63de38524a6cb001f90fe8387c80"
       },
       {
         "text": "MachineLearningWorkspaces",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/MachineLearningWorkspaces.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/MachineLearningWorkspaces.svg",
+        "id": "b8abe1efdea443d29b11888d20c553eb"
       },
       {
         "text": "Machine_Learning",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Machine_Learning.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Machine_Learning.svg",
+        "id": "7b35d80df6584f168374eb6c3b3ac65a"
       },
       {
         "text": "Machine_Learning_Service_Workspaces",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Machine_Learning_Service_Workspaces.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Machine_Learning_Service_Workspaces.svg",
+        "id": "afc3efdbcedf44cbb8044035ba24bbc0"
       },
       {
         "text": "Machine_Learning_Studio_Web_Service_Plans",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Machine_Learning_Studio_Web_Service_Plans.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Machine_Learning_Studio_Web_Service_Plans.svg",
+        "id": "eca815a4c8f04c6cbc8f16ea926dff1e"
       },
       {
         "text": "Machine_Learning_Studio_Web_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Machine_Learning_Studio_Web_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Machine_Learning_Studio_Web_Services.svg",
+        "id": "9099f37c7e6a4140941eeb8c4ee09176"
       },
       {
         "text": "Machine_Learning_Studio_Workspaces",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Machine_Learning_Studio_Workspaces.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Machine_Learning_Studio_Workspaces.svg",
+        "id": "4e1ca4f784224cf2ae8ed137589cfa06"
       },
       {
         "text": "ManagePortal",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ManagePortal.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ManagePortal.svg",
+        "id": "8c8625b964b14da8ae42fef8ca053ce2"
       },
       {
         "text": "ManagedApplications",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ManagedApplications.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ManagedApplications.svg",
+        "id": "85993ff9b3fc448288e0485284c72e2c"
       },
       {
         "text": "Managed_Applications",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Managed_Applications.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Managed_Applications.svg",
+        "id": "d6cae489f3db43b99f0927a6717c768b"
       },
       {
         "text": "Managed_Databases",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Managed_Databases.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Managed_Databases.svg",
+        "id": "af71911ddef643fb826e67dc98eec267"
       },
       {
         "text": "Managed_Desktop",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Managed_Desktop.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Managed_Desktop.svg",
+        "id": "9991d67a619f4b6e815c243736749db5"
       },
       {
         "text": "Managed_Identities",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Managed_Identities.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Managed_Identities.svg",
+        "id": "51f5985291ad42319746f797fcf3fcdb"
       },
       {
         "text": "Management_Groups",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Management_Groups.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Management_Groups.svg",
+        "id": "f17a5eaa7048450d9f5e7aa63819e552"
       },
       {
         "text": "Management_Portal",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Management_Portal.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Management_Portal.svg",
+        "id": "d845b07c1f1547d38a0e50b5cc80d811"
       },
       {
         "text": "MediaFile",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/MediaFile.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/MediaFile.svg",
+        "id": "038007f8a14246bfa4449bf1ef91d41a"
       },
       {
         "text": "Media_Encoding",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Media_Encoding.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Media_Encoding.svg",
+        "id": "2dbce7548f48414190c91deb9f00548f"
       },
       {
         "text": "Media_On_Demand",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Media_On_Demand.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Media_On_Demand.svg",
+        "id": "f6868b449d0f48938193901f2e17c744"
       },
       {
         "text": "Media_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Media_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Media_Services.svg",
+        "id": "a830991d5c1f49c391fb049ef37ab357"
       },
       {
         "text": "Migration_Projects",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Migration_Projects.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Migration_Projects.svg",
+        "id": "e72dc61204074860894ec30d512bb373"
       },
       {
         "text": "Mobile_Engagement",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Mobile_Engagement.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Mobile_Engagement.svg",
+        "id": "83d54836ca6043e2a2f30aef121c6abb"
       },
       {
         "text": "Module",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Module.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Module.svg",
+        "id": "3dc6fa9d01184375b95d92e02059ac4a"
       },
       {
         "text": "Monitor",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Monitor.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Monitor.svg",
+        "id": "5688d45e8fc74e5c8ca8055bb3d07ad7"
       },
       {
         "text": "Monitoring",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Monitoring.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Monitoring.svg",
+        "id": "4ce0a787859c438d9037ddb95e825c4f"
       },
       {
         "text": "Multi_Factor_Authentication",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Multi_Factor_Authentication.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Multi_Factor_Authentication.svg",
+        "id": "c84b01b923aa4939a6a9bd2dcbe6908c"
       },
       {
         "text": "MySQL_ClearDB_database",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/MySQL_ClearDB_database.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/MySQL_ClearDB_database.svg",
+        "id": "189af34914fa4faf84b33a2b3bcbd9bf"
       },
       {
         "text": "NSG",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/NSG.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/NSG.svg",
+        "id": "7176f264d95b49728a2c8888557bb8a0"
       },
       {
         "text": "NetworkInterfaceCard",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/NetworkInterfaceCard.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/NetworkInterfaceCard.svg",
+        "id": "11a06c3dab974647989033527426f8cd"
       },
       {
         "text": "Network_Security_Groups_Classic",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Network_Security_Groups_Classic.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Network_Security_Groups_Classic.svg",
+        "id": "f05e8b63e24542c2bbc154dc7e314551"
       },
       {
         "text": "Network_watcher",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Network_watcher.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Network_watcher.svg",
+        "id": "c9248a0d45664645b951712e05751e1e"
       },
       {
         "text": "New",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/New.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/New.svg",
+        "id": "5b99e0390e9d487b98e2fad8c4541b92"
       },
       {
         "text": "NextBill",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/NextBill.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/NextBill.svg",
+        "id": "1c9dbad1c03c43649d1caed1f4433fd7"
       },
       {
         "text": "Non_Azure_Machine",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Non_Azure_Machine.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Non_Azure_Machine.svg",
+        "id": "ea4d4e613e0344c9b41189459b31a29a"
       },
       {
         "text": "Notification",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Notification.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Notification.svg",
+        "id": "d0fbb3d415c84e22b70e55e58c2dfe55"
       },
       {
         "text": "Notification_Hubs",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Notification_Hubs.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Notification_Hubs.svg",
+        "id": "630b0d3d1805455db1e33cf150d2afae"
       },
       {
         "text": "OS_Images_Classic",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/OS_Images_Classic.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/OS_Images_Classic.svg",
+        "id": "d870b1139a56474da2c8b521d8138a71"
       },
       {
         "text": "Offer",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Offer.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Offer.svg",
+        "id": "0c7aafad683e47a7a430069ed803b062"
       },
       {
         "text": "OnPremiseSetup",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/OnPremiseSetup.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/OnPremiseSetup.svg",
+        "id": "c1d0959a4afe4a2aa856c8bc7a2cbd43"
       },
       {
         "text": "On_Premises_Data_Gateways",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/On_Premises_Data_Gateways.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/On_Premises_Data_Gateways.svg",
+        "id": "486d7d97cf604f1596849bfb753e0e2d"
       },
       {
         "text": "OpenShift",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/OpenShift.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/OpenShift.svg",
+        "id": "2749f9f048c447b69dccd99ba5ab93eb"
       },
       {
         "text": "Operations_Management_Suite",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Operations_Management_Suite.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Operations_Management_Suite.svg",
+        "id": "6c15b7f7ff054f418eb384a2d8c257b8"
       },
       {
         "text": "OutboundNAT",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/OutboundNAT.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/OutboundNAT.svg",
+        "id": "84c94ed914b04d15abb005a4958dc563"
       },
       {
         "text": "OutboundRule",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/OutboundRule.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/OutboundRule.svg",
+        "id": "92f43e8b9b6547bc928d120ff578584f"
       },
       {
         "text": "Output",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Output.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Output.svg",
+        "id": "9f56231bf9394e768d0f8a667f9bdd54"
       },
       {
         "text": "Paused",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Paused.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Paused.svg",
+        "id": "f2fdeddfa07048f29d2d0cc5505491e0"
       },
       {
         "text": "Peerings",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Peerings.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Peerings.svg",
+        "id": "3c0b2882d76d4df8bafaf1459da1e0bc"
       },
       {
         "text": "Pending",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Pending.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Pending.svg",
+        "id": "0bd18e8bb3e344539c37c020bd955ef7"
       },
       {
         "text": "Person",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Person.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Person.svg",
+        "id": "56c3e4bdc9334aab8d26228e42105e0a"
       },
       {
         "text": "PersonWithFriend",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/PersonWithFriend.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/PersonWithFriend.svg",
+        "id": "d321eb68d4a54bbfb9920428d63c29a3"
       },
       {
         "text": "Phone",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Phone.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Phone.svg",
+        "id": "bc3ca6a6632b4b7cb56191350e1b8913"
       },
       {
         "text": "PluralSight_mono",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/PluralSight_mono.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/PluralSight_mono.svg",
+        "id": "4f9c94cc48b246d082d1979db558f392"
       },
       {
         "text": "Policy",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Policy.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Policy.svg",
+        "id": "f1cc0b41591f4e79a54201c19af4012e"
       },
       {
         "text": "PortalCurrent",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/PortalCurrent.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/PortalCurrent.svg",
+        "id": "47283c2796ee435db020ee6922af03c5"
       },
       {
         "text": "Postpone",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Postpone.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Postpone.svg",
+        "id": "0460a5630920448b856f670146e758aa"
       },
       {
         "text": "Power",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Power.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Power.svg",
+        "id": "6ee9396acd6a4cc3ae58ed4318362248"
       },
       {
         "text": "PowerUp",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/PowerUp.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/PowerUp.svg",
+        "id": "0ca2b7fd7a0c482389a3da068ae9f020"
       },
       {
         "text": "PowerUp_2",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/PowerUp_2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/PowerUp_2.svg",
+        "id": "c165818cefbe41e097142ffabe2a6240"
       },
       {
         "text": "Powershell",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Powershell.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Powershell.svg",
+        "id": "619577fbf2d74106a7f02613dc0c8175"
       },
       {
         "text": "PreviewRight",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/PreviewRight.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/PreviewRight.svg",
+        "id": "511dc79c913c497eb2fa9f45d49eb165"
       },
       {
         "text": "Probe",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Probe.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Probe.svg",
+        "id": "088619e29770408da6fd73b5e14ace3b"
       },
       {
         "text": "ProcessExplorer",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ProcessExplorer.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ProcessExplorer.svg",
+        "id": "c4e5c6388a554d678fb472d702a444d3"
       },
       {
         "text": "ProductionReadyDB",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ProductionReadyDB.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ProductionReadyDB.svg",
+        "id": "f1f74edd16854c86bbfd9af5cb210b9c"
       },
       {
         "text": "Publish",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Publish.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Publish.svg",
+        "id": "63e052351cac412098fc3b7831f1ab00"
       },
       {
         "text": "PullRequest",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/PullRequest.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/PullRequest.svg",
+        "id": "c1d002897b2a493da4c64664b11d7bac"
       },
       {
         "text": "QSDiagnostics",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/QSDiagnostics.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/QSDiagnostics.svg",
+        "id": "ce151fa98a2044fb87fbb215bef2ab04"
       },
       {
         "text": "QSFile",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/QSFile.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/QSFile.svg",
+        "id": "9806c9e3233c4a8ba6928829d11a303a"
       },
       {
         "text": "QSMail",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/QSMail.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/QSMail.svg",
+        "id": "be61f4bd100c45d2b7912890670ee8b4"
       },
       {
         "text": "QSWarning",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/QSWarning.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/QSWarning.svg",
+        "id": "77f6b129c4ae4a4fba832095edfff771"
       },
       {
         "text": "Queued",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Queued.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Queued.svg",
+        "id": "3beb66f18c96443680eba7c474f3a80f"
       },
       {
         "text": "Queues_Storage",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Queues_Storage.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Queues_Storage.svg",
+        "id": "7fb18b59c6364dc28a5ba848b89ef6e3"
       },
       {
         "text": "Quick_Start_Center",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Quick_Start_Center.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Quick_Start_Center.svg",
+        "id": "f1d11cd148224dd9a4595c8a288d8395"
       },
       {
         "text": "Quickstart",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Quickstart.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Quickstart.svg",
+        "id": "c4bf3f0d3f65414f9b3e2d1b8b4c5da6"
       },
       {
         "text": "Quota",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Quota.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Quota.svg",
+        "id": "cf8271963b924cdb8d38f9630f7b2402"
       },
       {
         "text": "RDMA",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/RDMA.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/RDMA.svg",
+        "id": "f53757256e9c4533a892148ba634a415"
       },
       {
         "text": "Rain",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Rain.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Rain.svg",
+        "id": "21464b2ca1bf4abe93e02aefa0e68a0d"
       },
       {
         "text": "Recommendation",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Recommendation.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Recommendation.svg",
+        "id": "5040ad1a543747fbbdbb7075f49bbb28"
       },
       {
         "text": "RemoteApp",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/RemoteApp.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/RemoteApp.svg",
+        "id": "935d06e3f9cd47f3909e1724345395d8"
       },
       {
         "text": "Reservations",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Reservations.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Reservations.svg",
+        "id": "8216ef56d8e14ff9aeec275da4ee44f4"
       },
       {
         "text": "ResourceDefault",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ResourceDefault.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ResourceDefault.svg",
+        "id": "a4f07807797d439d8c82240f042d579c"
       },
       {
         "text": "ResourceGroup",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ResourceGroup.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ResourceGroup.svg",
+        "id": "9a64b48e36e44548bd79545b2210bc07"
       },
       {
         "text": "ResourceLinked",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ResourceLinked.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ResourceLinked.svg",
+        "id": "5397b80cbfd04d09b659b7b3947b277c"
       },
       {
         "text": "ResourceProvider",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ResourceProvider.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ResourceProvider.svg",
+        "id": "18c1ee76dc8c40c4b5fe622c3de0b88d"
       },
       {
         "text": "ResourceRole",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ResourceRole.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ResourceRole.svg",
+        "id": "a56f63c48904462ca315518f9853f1f5"
       },
       {
         "text": "Resource_Explorer",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Resource_Explorer.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Resource_Explorer.svg",
+        "id": "89a4e4bfce954929b98210a48e8b4aeb"
       },
       {
         "text": "Resource_Graph_Explorer",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Resource_Graph_Explorer.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Resource_Graph_Explorer.svg",
+        "id": "c3e4230f6b094521a2b329eda1b9eec1"
       },
       {
         "text": "Resource_Groups",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Resource_Groups.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Resource_Groups.svg",
+        "id": "98d17c3a853440d79294ca3f46eb3666"
       },
       {
         "text": "Route_Filter",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Route_Filter.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Route_Filter.svg",
+        "id": "5c6d4396520f477984cf139137e6b607"
       },
       {
         "text": "Rule",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Rule.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Rule.svg",
+        "id": "57d9174203824a8c9c677bb5f6bbb9ac"
       },
       {
         "text": "RunbookSource",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/RunbookSource.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/RunbookSource.svg",
+        "id": "9d1978e564c64dd1a14d1957bb2617b3"
       },
       {
         "text": "Runbooks",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Runbooks.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Runbooks.svg",
+        "id": "5da7e697ac504435aee7e71f0e9f8071"
       },
       {
         "text": "SAP_HANA_on_Azure",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/SAP_HANA_on_Azure.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SAP_HANA_on_Azure.svg",
+        "id": "926bdaab00c04cfb80e4b881806adf68"
       },
       {
         "text": "SDK",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/SDK.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SDK.svg",
+        "id": "5652a6dc9f9744498e7058e162ecc9c4"
       },
       {
         "text": "SQLQueryPerformanceCheck",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/SQLQueryPerformanceCheck.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SQLQueryPerformanceCheck.svg",
+        "id": "6be599e2724d4c4da66d4cb93f6296e0"
       },
       {
         "text": "SQL_DataWarehouse",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/SQL_DataWarehouse.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SQL_DataWarehouse.svg",
+        "id": "fc4940e4c7194061906e15298321bb6d"
       },
       {
         "text": "SQL_Database_generic",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/SQL_Database_generic.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SQL_Database_generic.svg",
+        "id": "b9ff1a7ca1c84a8eaa54d405832aae7a"
       },
       {
         "text": "SQL_Managed_Instances",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/SQL_Managed_Instances.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SQL_Managed_Instances.svg",
+        "id": "4df3b7a109384928ab8419ab72875e9c"
       },
       {
         "text": "SQL_Servers",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/SQL_Servers.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SQL_Servers.svg",
+        "id": "13be42a2ae274992b3930b5ca924b275"
       },
       {
         "text": "SQL_Stretch_Database",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/SQL_Stretch_Database.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SQL_Stretch_Database.svg",
+        "id": "159b0081824e4c1d96a459c31ca34311"
       },
       {
         "text": "SSD",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/SSD.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SSD.svg",
+        "id": "21034aa3381d4af58ff79896082c794c"
       },
       {
         "text": "Scale",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Scale.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Scale.svg",
+        "id": "51f7fedee1e241589b3a913c6114c5e8"
       },
       {
         "text": "ScaleAlt",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ScaleAlt.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ScaleAlt.svg",
+        "id": "ef6501fe9d6044c590301b880a0d0793"
       },
       {
         "text": "SchedulerJob",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/SchedulerJob.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SchedulerJob.svg",
+        "id": "671c1452bc594efbaed8d0e266b25d5e"
       },
       {
         "text": "SchedulerJobCollection",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/SchedulerJobCollection.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SchedulerJobCollection.svg",
+        "id": "8da319a42bec4d1d9c0fd436b2ffe805"
       },
       {
         "text": "Search",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Search.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Search.svg",
+        "id": "8c94ef2a67c046919a83e89effe4b210"
       },
       {
         "text": "SearchGrid",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/SearchGrid.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SearchGrid.svg",
+        "id": "17ae951da4df4979ac57e053244d55ed"
       },
       {
         "text": "Security_Baselines",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Security_Baselines.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Security_Baselines.svg",
+        "id": "61f754c8963f44209ff771c0bad47d3e"
       },
       {
         "text": "Security_Center",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Security_Center.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Security_Center.svg",
+        "id": "1f18932391a940f6b4041f04f25580c5"
       },
       {
         "text": "SendGrid_Accounts",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/SendGrid_Accounts.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SendGrid_Accounts.svg",
+        "id": "4a8f26fc45b8491f872a6ea93940f25b"
       },
       {
         "text": "Server",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Server.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Server.svg",
+        "id": "f4e5dc2e2df94036b24e152696cb3599"
       },
       {
         "text": "ServerFarm",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ServerFarm.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ServerFarm.svg",
+        "id": "ed33607c34f5497e8b1dc130b0d2284c"
       },
       {
         "text": "ServerProxy",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ServerProxy.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ServerProxy.svg",
+        "id": "e1669956c5074858b72d54efa211d4d9"
       },
       {
         "text": "ServiceHealth",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ServiceHealth.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ServiceHealth.svg",
+        "id": "5f45171ea0874032aedf233db6414dd5"
       },
       {
         "text": "Service_Bus",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Service_Bus.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Service_Bus.svg",
+        "id": "6f85f4d745e94130902955a8d3f198e3"
       },
       {
         "text": "Service_Bus_Queues",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Service_Bus_Queues.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Service_Bus_Queues.svg",
+        "id": "638fa6eec0d64577a339a30bc1672255"
       },
       {
         "text": "Service_Bus_Relay",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Service_Bus_Relay.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Service_Bus_Relay.svg",
+        "id": "f51447700429459a832f855ea91aca5b"
       },
       {
         "text": "Service_Bus_Topics",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Service_Bus_Topics.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Service_Bus_Topics.svg",
+        "id": "0c05ba28f10a4ddda4eea6f97b2a11d3"
       },
       {
         "text": "Service_Catalog_Managed_Application_Definitions",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Service_Catalog_Managed_Application_Definitions.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Service_Catalog_Managed_Application_Definitions.svg",
+        "id": "9551520b57a44e05a97e055313f47796"
       },
       {
         "text": "Service_Endpoint_Policies",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Service_Endpoint_Policies.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Service_Endpoint_Policies.svg",
+        "id": "2b90ee3853164cf98962dacd130b594a"
       },
       {
         "text": "Service_Fabric",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Service_Fabric.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Service_Fabric.svg",
+        "id": "8901abe6f05645b69622997627b03efd"
       },
       {
         "text": "Shared_Dashboard",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Shared_Dashboard.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Shared_Dashboard.svg",
+        "id": "45be8ec709fb407195deffcf0b553ca3"
       },
       {
         "text": "Shared_Image_Galleries",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Shared_Image_Galleries.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Shared_Image_Galleries.svg",
+        "id": "2c44d027306641378440155f8bc3be91"
       },
       {
         "text": "ShieldFirewall",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/ShieldFirewall.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/ShieldFirewall.svg",
+        "id": "496da525579544f9905d72aae3457c17"
       },
       {
         "text": "SignalR",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/SignalR.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/SignalR.svg",
+        "id": "3fd8192f41df4268a0b37e4c6e33c802"
       },
       {
         "text": "Site_Recovery",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Site_Recovery.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Site_Recovery.svg",
+        "id": "e0c1db4c5358428299278f41c2882479"
       },
       {
         "text": "Software_Update",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Software_Update.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Software_Update.svg",
+        "id": "992039775c904a6dbed0a27b87cd1adf"
       },
       {
         "text": "Software_as_a_Service",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Software_as_a_Service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Software_as_a_Service.svg",
+        "id": "cedb9824d176411ebbbcdda2db169353"
       },
       {
         "text": "Solutions",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Solutions.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Solutions.svg",
+        "id": "d8f45d6cedd84f9ebb8386b004330fbf"
       },
       {
         "text": "Spatial_Anchor",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Spatial_Anchor.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Spatial_Anchor.svg",
+        "id": "d018c9816f9c49a78f46a978d3e6f8f9"
       },
       {
         "text": "StackOverflow",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/StackOverflow.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/StackOverflow.svg",
+        "id": "1412cbd283c34a79a989e102e65fa560"
       },
       {
         "text": "StorSimple",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/StorSimple.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/StorSimple.svg",
+        "id": "880a8925c1a5440998aa1d0d55f6f589"
       },
       {
         "text": "StorSimple_Data_Managers",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/StorSimple_Data_Managers.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/StorSimple_Data_Managers.svg",
+        "id": "ca9f98be1af648eb988b669cbbba7a1f"
       },
       {
         "text": "Storage",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Storage.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Storage.svg",
+        "id": "0d8da361efe84c7fa4c072a017804c35"
       },
       {
         "text": "StorageAzureFiles",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/StorageAzureFiles.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/StorageAzureFiles.svg",
+        "id": "7065a7c2626f43ddb754bbfac25f516b"
       },
       {
         "text": "StorageContainer",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/StorageContainer.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/StorageContainer.svg",
+        "id": "84b37ca3102a4eddb22b6651893d88c3"
       },
       {
         "text": "StorageQueue",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/StorageQueue.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/StorageQueue.svg",
+        "id": "5643ac03284f4eeeb423e241bae50e8e"
       },
       {
         "text": "StorageReplica",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/StorageReplica.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/StorageReplica.svg",
+        "id": "114844176ddd4814a4cb5ffa3e748f8a"
       },
       {
         "text": "Storage_Accounts",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Storage_Accounts.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Storage_Accounts.svg",
+        "id": "3da4808be4bd4f8fb67e64ea26bebf31"
       },
       {
         "text": "Storage_Explorer",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Storage_Explorer.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Storage_Explorer.svg",
+        "id": "379e7e4145f24556b7f37b01dd3dd0a2"
       },
       {
         "text": "Storage_sync_service",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Storage_sync_service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Storage_sync_service.svg",
+        "id": "5a252275e24d4e18aa5580bb8b799f32"
       },
       {
         "text": "Store_Marketplace",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Store_Marketplace.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Store_Marketplace.svg",
+        "id": "9f3058818cf5456fa94d268f12bf4608"
       },
       {
         "text": "Stream_Analytics",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Stream_Analytics.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Stream_Analytics.svg",
+        "id": "a38191b8f98340f2add24a520e079564"
       },
       {
         "text": "Subnet",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Subnet.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Subnet.svg",
+        "id": "63cc1d5cbee245fcb677923c15fe4b88"
       },
       {
         "text": "Support",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Support.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Support.svg",
+        "id": "ad94df9422c049478e2256f5379f7e2c"
       },
       {
         "text": "Support_2",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Support_2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Support_2.svg",
+        "id": "135c5d485cd04651a76beaf3bfdda706"
       },
       {
         "text": "Support_Requests",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Support_Requests.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Support_Requests.svg",
+        "id": "c6f1b69ba01d4da68f13342de44c15bc"
       },
       {
         "text": "TFSVCRepository",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/TFSVCRepository.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/TFSVCRepository.svg",
+        "id": "9705ff2a693249a3bc38afaf4a485498"
       },
       {
         "text": "Table_Storage",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Table_Storage.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Table_Storage.svg",
+        "id": "dbf3965f50784e2b9f06840b1e95577d"
       },
       {
         "text": "Tag",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Tag.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Tag.svg",
+        "id": "a6a7d3355bce444bab51f09bf05b59fb"
       },
       {
         "text": "Tags",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Tags.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Tags.svg",
+        "id": "81cd2cbe688d4871bbd3af3e6afc84b3"
       },
       {
         "text": "Task",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Task.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Task.svg",
+        "id": "f6cde58d0edb4f488e8f3cf70b05d522"
       },
       {
         "text": "TaskVM",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/TaskVM.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/TaskVM.svg",
+        "id": "665a4c313c4841f5ab3095cbbf1f4b86"
       },
       {
         "text": "Tasks",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Tasks.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Tasks.svg",
+        "id": "7eeac6c959e7400c8038fc75d43fee89"
       },
       {
         "text": "TasksPolychromatic",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/TasksPolychromatic.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/TasksPolychromatic.svg",
+        "id": "06ad54a6a6de44099e7333a923951fb5"
       },
       {
         "text": "Tax",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Tax.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Tax.svg",
+        "id": "8bcb6272af7b40519361724a11c6b33f"
       },
       {
         "text": "TeamProject",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/TeamProject.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/TeamProject.svg",
+        "id": "b8b931da498d4f5ba3c44da86f930847"
       },
       {
         "text": "Templates",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Templates.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Templates.svg",
+        "id": "fc4bdd049af24988ac2b5add6e2dd80c"
       },
       {
         "text": "Tenant_Status",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Tenant_Status.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Tenant_Status.svg",
+        "id": "7d1e1496717141a1971892e038133d47"
       },
       {
         "text": "TimeSeriesInsights",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/TimeSeriesInsights.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/TimeSeriesInsights.svg",
+        "id": "70ca9c78807447f68e71764041e70d32"
       },
       {
         "text": "Time_Series_Insights_environments",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Time_Series_Insights_environments.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Time_Series_Insights_environments.svg",
+        "id": "8fd4db9195fa453d8c03240a9f636524"
       },
       {
         "text": "Toolbox",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Toolbox.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Toolbox.svg",
+        "id": "43bbc9caa0364a0c8530b35306ee7b95"
       },
       {
         "text": "Tools",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Tools.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Tools.svg",
+        "id": "c6429dbfb6ee412282061e9ad93328a0"
       },
       {
         "text": "TrafficManagerDisabled",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/TrafficManagerDisabled.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/TrafficManagerDisabled.svg",
+        "id": "2725f483b3a14e0fa8902b25fc897a17"
       },
       {
         "text": "TrafficManagerEnabled",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/TrafficManagerEnabled.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/TrafficManagerEnabled.svg",
+        "id": "70643fe3805b4f2daa178baa0fc47372"
       },
       {
         "text": "Traffic_Manager",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Traffic_Manager.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Traffic_Manager.svg",
+        "id": "a1c6f20829a949778cb1e16510ceaf32"
       },
       {
         "text": "Two_User_Icon",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Two_User_Icon.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Two_User_Icon.svg",
+        "id": "11941a7c5fed4ff3ae62745e9ee49eb1"
       },
       {
         "text": "Unidentified_Feature_Object",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Unidentified_Feature_Object.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Unidentified_Feature_Object.svg",
+        "id": "2494e552cebb44f1be8864c609faf86b"
       },
       {
         "text": "UserDefinedRoute",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/UserDefinedRoute.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/UserDefinedRoute.svg",
+        "id": "f8448457f0a14ad6ad6662144b0a8d8c"
       },
       {
         "text": "User_Health_Icon",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/User_Health_Icon.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/User_Health_Icon.svg",
+        "id": "ae18edf6090a46afacb7eb56dfc1ad26"
       },
       {
         "text": "User_Privacy",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/User_Privacy.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/User_Privacy.svg",
+        "id": "5cfde85c770840f5ad07af76a9fc395a"
       },
       {
         "text": "User_Resource",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/User_Resource.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/User_Resource.svg",
+        "id": "214d6988ced7466ba39bf76b43f80d6c"
       },
       {
         "text": "VMScale",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/VMScale.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/VMScale.svg",
+        "id": "52ea59dd8d3d41989202d137d1e6284f"
       },
       {
         "text": "VM_Images",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/VM_Images.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/VM_Images.svg",
+        "id": "787c2b5cb83d4f399bef68a8bd97f89e"
       },
       {
         "text": "VM_Linux",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/VM_Linux.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/VM_Linux.svg",
+        "id": "ac7b49aa771a4d50be185f0eeffebf32"
       },
       {
         "text": "VM_Linux_Non_Azure",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/VM_Linux_Non_Azure.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/VM_Linux_Non_Azure.svg",
+        "id": "34029043654e43448480051cd224d4c4"
       },
       {
         "text": "VM_Non_Azure",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/VM_Non_Azure.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/VM_Non_Azure.svg",
+        "id": "bc760073bd55486e85f4a6b670f1e800"
       },
       {
         "text": "VM_Scale_Set",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/VM_Scale_Set.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/VM_Scale_Set.svg",
+        "id": "7a8f6989d52a4f55a882ece32a8af8e6"
       },
       {
         "text": "VM_Windows_Non_Azure",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/VM_Windows_Non_Azure.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/VM_Windows_Non_Azure.svg",
+        "id": "aa5340a9ce984dfcaf45dcf20ee7cb42"
       },
       {
         "text": "VPNPointToSite",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/VPNPointToSite.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/VPNPointToSite.svg",
+        "id": "795961f1a6c049bd87fdfef196685e43"
       },
       {
         "text": "VPNSiteToSite",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/VPNSiteToSite.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/VPNSiteToSite.svg",
+        "id": "ab604fcdd2f34697a2548bae1b7cc2b3"
       },
       {
         "text": "VPN_Gateway",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/VPN_Gateway.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/VPN_Gateway.svg",
+        "id": "36580788507d4fe7b1ee2a4d6561d5fd"
       },
       {
         "text": "Variables",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Variables.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Variables.svg",
+        "id": "19a69ef4e43845d3bea0ee5fac88583b"
       },
       {
         "text": "Versions",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Versions.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Versions.svg",
+        "id": "a2ef4471cc21489db75bf2c64da42a01"
       },
       {
         "text": "VirtualMachineLinux",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/VirtualMachineLinux.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/VirtualMachineLinux.svg",
+        "id": "44961ac1d4f64f5a919193b490a015cc"
       },
       {
         "text": "VirtualMachineWindows",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/VirtualMachineWindows.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/VirtualMachineWindows.svg",
+        "id": "5e90a999f2594535a03991617ea1238d"
       },
       {
         "text": "Virtual_Clusters",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_Clusters.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_Clusters.svg",
+        "id": "e3ea1faf173e4d249342d82484e7bfcf"
       },
       {
         "text": "Virtual_Datacenter",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_Datacenter.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_Datacenter.svg",
+        "id": "be1f56c71eb24fe2a22c0dc3bb285158"
       },
       {
         "text": "Virtual_Machine",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_Machine.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_Machine.svg",
+        "id": "c69800b5f9c248ab92d1a24880e9839a"
       },
       {
         "text": "Virtual_Machine_2",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_Machine_2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_Machine_2.svg",
+        "id": "9d36e7584c3b47b0bec1622723e70d52"
       },
       {
         "text": "Virtual_Machines_Availability_Set",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_Machines_Availability_Set.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_Machines_Availability_Set.svg",
+        "id": "772135d2a26e408eae3c496152583836"
       },
       {
         "text": "Virtual_Machines_Linux",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_Machines_Linux.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_Machines_Linux.svg",
+        "id": "58dd42591c9b45e2b13e90e656fe6ae5"
       },
       {
         "text": "Virtual_Network",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_Network.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_Network.svg",
+        "id": "4e60fcc8756b4f58814038ad80064f3b"
       },
       {
         "text": "Virtual_Network_Classic",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_Network_Classic.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_Network_Classic.svg",
+        "id": "c3506f9b8d7a4ea788354547042ac65c"
       },
       {
         "text": "Virtual_WANs",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_WANs.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Virtual_WANs.svg",
+        "id": "66ef64c803ea48c1a538a9c07e8da3c1"
       },
       {
         "text": "Visual_Studio_Team_Services_CodePlex_source",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Visual_Studio_Team_Services_CodePlex_source.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Visual_Studio_Team_Services_CodePlex_source.svg",
+        "id": "5117c24f0bdf43d394db423c1465664c"
       },
       {
         "text": "WebAppUmbraco",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebAppUmbraco.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebAppUmbraco.svg",
+        "id": "8e5437b88abd42e7b79868e27fa1be89"
       },
       {
         "text": "WebAppWordPress",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebAppWordPress.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebAppWordPress.svg",
+        "id": "aee7187e701e45779540390af0d2df39"
       },
       {
         "text": "WebApp_WebJobs",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebApp_WebJobs.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebApp_WebJobs.svg",
+        "id": "4a852981bbc2434193b78ca343682ad5"
       },
       {
         "text": "WebEnvironment",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebEnvironment.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebEnvironment.svg",
+        "id": "7b51f8f7b4214c05ac20133f4f172fce"
       },
       {
         "text": "WebHosting",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebHosting.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebHosting.svg",
+        "id": "2a0222e1e5974b0582e64264c6053bfd"
       },
       {
         "text": "WebNetwork",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebNetwork.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebNetwork.svg",
+        "id": "f98b8a61ed624501998fb0f18358aeb9"
       },
       {
         "text": "WebSlots",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebSlots.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebSlots.svg",
+        "id": "33fa637a0f5d4392866920ae2e04f316"
       },
       {
         "text": "WebTest",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebTest.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebTest.svg",
+        "id": "4a5fab838e6c47f6bf279ee41c4040b7"
       },
       {
         "text": "Web_App_Firewall",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Web_App_Firewall.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Web_App_Firewall.svg",
+        "id": "4d870a45a0c749d18bc67f9830fbe45c"
       },
       {
         "text": "Webhooks",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Webhooks.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Webhooks.svg",
+        "id": "1d0365da891b4796bc5109ea6dfa7d5a"
       },
       {
         "text": "WebsitePower",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebsitePower.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebsitePower.svg",
+        "id": "906b4bc771fa48c983510989f502902e"
       },
       {
         "text": "WebsiteReplicator",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebsiteReplicator.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebsiteReplicator.svg",
+        "id": "2e04db981aab46ca80fc5c33c9e469d5"
       },
       {
         "text": "WebsiteSettings",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebsiteSettings.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebsiteSettings.svg",
+        "id": "5a23285323c14ef0bb6a43e472f22cb2"
       },
       {
         "text": "WebsiteStaging",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebsiteStaging.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/WebsiteStaging.svg",
+        "id": "37b0c8affbee4840a36d9355daf54a17"
       },
       {
         "text": "Windows_10_IoT_Core_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Windows_10_IoT_Core_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Windows_10_IoT_Core_Services.svg",
+        "id": "1a45898a102143bc9d815669922fc559"
       },
       {
         "text": "Workflow",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Workflow.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Workflow.svg",
+        "id": "08800b58c9c0405282981d79ff540dcd"
       },
       {
         "text": "Wrench",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/Wrench.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/Wrench.svg",
+        "id": "6ac459466d7e4b0babd3cf06f3e565e2"
       },
       {
         "text": "XboxController",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/XboxController.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/XboxController.svg",
+        "id": "d5eed017518744509f9490a1872b4409"
       },
       {
         "text": "dataExport",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/dataExport.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dataExport.svg",
+        "id": "efe2a3f972d940028a848ff176c70407"
       },
       {
         "text": "dataRetention",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/dataRetention.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dataRetention.svg",
+        "id": "6f46cc3257d6418fa23aae0ce7e2bd18"
       },
       {
         "text": "App_Service_Logic_App",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/App_Service_Logic_App.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/App_Service_Logic_App.svg",
+        "id": "f5bf2b4035214e2f954f4d77dd1b1257"
       },
       {
         "text": "Application_Gateway",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Application_Gateway.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Application_Gateway.svg",
+        "id": "6b11a7fc2e8f41bea092069edc44ad2d"
       },
       {
         "text": "Content_Delivery_Network",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Content_Delivery_Network.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Content_Delivery_Network.svg",
+        "id": "9d422fc19dae475ebf8fb40ecc0d3f6b"
       },
       {
         "text": "DataWarehouse",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/DataWarehouse.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/DataWarehouse.svg",
+        "id": "45674910204044bcb5a8fdd4139abe42"
       },
       {
         "text": "Data_Lake",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Data_Lake.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Data_Lake.svg",
+        "id": "75d8b1a4725c4de08440866eba829c02"
       },
       {
         "text": "Data_Lake_Analytics",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Data_Lake_Analytics.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Data_Lake_Analytics.svg",
+        "id": "5d37f7848a3443519bec734d36f09701"
       },
       {
         "text": "Data_Lake_Store",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Data_Lake_Store.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/Data_Lake_Store.svg",
+        "id": "20c94e581d2342aa96735bfbddc2df56"
       },
       {
         "text": "SQL_Server_Stretch_DB",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/SQL_Server_Stretch_DB.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/dep/SQL_Server_Stretch_DB.svg",
+        "id": "9d0fe679c3614a88b79ed78b40c68000"
       },
       {
         "text": "eBooks",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/eBooks.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/eBooks.svg",
+        "id": "ad0b179613d9459f996f0372610554d1"
       },
       {
         "text": "healthErrorBadge",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/healthErrorBadge.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/healthErrorBadge.svg",
+        "id": "3500b310fe0b4db3a51c8494085f8895"
       },
       {
         "text": "healthWarningBadge",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/healthWarningBadge.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/healthWarningBadge.svg",
+        "id": "2a61dcfe63ea41e389a1d2f6a8ce303c"
       },
       {
         "text": "overageCosts",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/overageCosts.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/overageCosts.svg",
+        "id": "0e251b2b732c4863a6d45943893a1402"
       },
       {
         "text": "serversAndMobileDevices",
-        "src": "https://resources.shy.live/assert/shape/lib/mscae/serversAndMobileDevices.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/mscae/serversAndMobileDevices.svg",
+        "id": "a6039a813a0342438478ece61774b21a"
       }
     ]
   }

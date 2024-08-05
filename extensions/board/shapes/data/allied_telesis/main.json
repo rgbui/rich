@@ -4,31 +4,38 @@
     "childs": [
       {
         "text": "Apartments",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/buildings/Apartments.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/buildings/Apartments.svg",
+        "id": "e5be99df4dfb41e7b92c1ef03b37f185"
       },
       {
         "text": "Building_Cluster",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/buildings/Building_Cluster.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/buildings/Building_Cluster.svg",
+        "id": "29a5d9c2d5dd4687ae5531b376f0a631"
       },
       {
         "text": "Large_Building",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/buildings/Large_Building.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/buildings/Large_Building.svg",
+        "id": "af8b71f905e44f429505da35564279d7"
       },
       {
         "text": "Long_Building",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/buildings/Long_Building.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/buildings/Long_Building.svg",
+        "id": "b8adfb0c9275457b9a6b7499165304e2"
       },
       {
         "text": "Medium_Business_Building",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/buildings/Medium_Business_Building.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/buildings/Medium_Business_Building.svg",
+        "id": "92f3b7a369f04dd084343b8ae113d82b"
       },
       {
         "text": "School_Building",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/buildings/School_Building.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/buildings/School_Building.svg",
+        "id": "bc749a350ad042a18b4140c86ff3c8fc"
       },
       {
         "text": "Secure_Building",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/buildings/Secure_Building.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/buildings/Secure_Building.svg",
+        "id": "d9784ba91b9c45a49c27fbd4fdb85c1e"
       }
     ]
   },
@@ -37,63 +44,78 @@
     "childs": [
       {
         "text": "IP_TV",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/IP_TV.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/IP_TV.svg",
+        "id": "928cfda105374ac88a92e5594950bad9"
       },
       {
         "text": "Keypad",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Keypad.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Keypad.svg",
+        "id": "d87283fe8972447288d842be1bcfc06f"
       },
       {
         "text": "Laptop",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Laptop.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Laptop.svg",
+        "id": "b25412ba1c6e42c38038a5057c443638"
       },
       {
         "text": "POS_Printer",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/POS_Printer.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/POS_Printer.svg",
+        "id": "e563032a4c9d43e89f142827f9014bc3"
       },
       {
         "text": "POS_keypad",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/POS_keypad.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/POS_keypad.svg",
+        "id": "9f102f8a27da4e8bae1fee7567cadc04"
       },
       {
         "text": "Personal Computer Wireless",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Personal Computer Wireless.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Personal Computer Wireless.svg",
+        "id": "1080e53f9def421ea0547d20e0daced5"
       },
       {
         "text": "Personal_Computer",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Personal_Computer.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Personal_Computer.svg",
+        "id": "9a2d81e21eeb4dedae2fd6d40d5fdf9a"
       },
       {
         "text": "Personal_Computer_Wireless",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Personal_Computer_Wireless.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Personal_Computer_Wireless.svg",
+        "id": "4ee97d7ffd4e41bc8e9ba6359f8a4da3"
       },
       {
         "text": "Personal_Computer_with_Server",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Personal_Computer_with_Server.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Personal_Computer_with_Server.svg",
+        "id": "1159db2abbce4a93ba7da9be1c63b543"
       },
       {
         "text": "Server_Desktop",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Server_Desktop.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Server_Desktop.svg",
+        "id": "2fa8de6a5aee459d84492911559341ea"
       },
       {
         "text": "Smartphone",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Smartphone.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Smartphone.svg",
+        "id": "891b745606d940a8bc205388a28ebefb"
       },
       {
         "text": "Tablet",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Tablet.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Tablet.svg",
+        "id": "d3b5a06380fc48799107de7c6375c64f"
       },
       {
         "text": "Tablet_Alternative",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Tablet_Alternative.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Tablet_Alternative.svg",
+        "id": "229c51cfcb29401ebe14b0dfbad8afae"
       },
       {
         "text": "VOIP_IP_phone",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/VOIP_IP_phone.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/VOIP_IP_phone.svg",
+        "id": "3128c4e4aeac4f0b8eb33d9b3238d463"
       },
       {
         "text": "Vdeo_Conference_Terminal",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Vdeo_Conference_Terminal.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/computer_and_terminals/Vdeo_Conference_Terminal.svg",
+        "id": "36ffcb1ffcb3403b998fbd6961546967"
       }
     ]
   },
@@ -102,23 +124,28 @@
     "childs": [
       {
         "text": "Industrial_Media_Converter",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/media_converters/Industrial_Media_Converter.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/media_converters/Industrial_Media_Converter.svg",
+        "id": "e41a5eb0e3fe405ead1f7c272c2eea22"
       },
       {
         "text": "Industrial_Media_Converter_POE",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/media_converters/Industrial_Media_Converter_POE.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/media_converters/Industrial_Media_Converter_POE.svg",
+        "id": "8d7934241d20403593a86a9477e401de"
       },
       {
         "text": "Media_Converter_Modular",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/media_converters/Media_Converter_Modular.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/media_converters/Media_Converter_Modular.svg",
+        "id": "4925abe9d094484193b50446cd3aec54"
       },
       {
         "text": "Media_Converter_Standalone",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/media_converters/Media_Converter_Standalone.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/media_converters/Media_Converter_Standalone.svg",
+        "id": "7427443415c4405a8fe66a40cede20de"
       },
       {
         "text": "Media_Converter_Standalone_POE",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/media_converters/Media_Converter_Standalone_POE.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/media_converters/Media_Converter_Standalone_POE.svg",
+        "id": "30a9647a5cf64169b62a215240ec61f3"
       }
     ]
   },
@@ -127,31 +154,38 @@
     "childs": [
       {
         "text": "DVS_Surveillance_Monitor",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/security/DVS_Surveillance_Monitor.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/security/DVS_Surveillance_Monitor.svg",
+        "id": "20398d3c6aee453cb7c2cea43de7d687"
       },
       {
         "text": "EtherGRID",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/security/EtherGRID.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/security/EtherGRID.svg",
+        "id": "aaadc32aeb5d46e89b76ed90a2117b50"
       },
       {
         "text": "POE_DVS_Camera",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/security/POE_DVS_Camera.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/security/POE_DVS_Camera.svg",
+        "id": "429ddf1744044bea9b46ab41f291ab7d"
       },
       {
         "text": "POS",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/security/POS.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/security/POS.svg",
+        "id": "a882ceedb94447e8b41e8bc24112bf10"
       },
       {
         "text": "Router_UTM",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/security/Router_UTM.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/security/Router_UTM.svg",
+        "id": "22a42bad47ff4665ac6b93b056a9c7b5"
       },
       {
         "text": "Router_VPN",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/security/Router_VPN.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/security/Router_VPN.svg",
+        "id": "59e2a46b9f2c47389817de40b9d56f43"
       },
       {
         "text": "Surveillance_Camera_Ceiling",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/security/Surveillance_Camera_Ceiling.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/security/Surveillance_Camera_Ceiling.svg",
+        "id": "10f9455befb34820b1f00b182246c6bb"
       }
     ]
   },
@@ -160,27 +194,33 @@
     "childs": [
       {
         "text": "Datacenter_Server_Half_Rack_ToR",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/storage/Datacenter_Server_Half_Rack_ToR.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/storage/Datacenter_Server_Half_Rack_ToR.svg",
+        "id": "f473998fb86340bc95658f7ddab6247e"
       },
       {
         "text": "Datacenter_Server_Rack",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/storage/Datacenter_Server_Rack.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/storage/Datacenter_Server_Rack.svg",
+        "id": "6ed486febd1642f4aa9162603c0acf5a"
       },
       {
         "text": "Datacenter_Server_Rack_EoR",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/storage/Datacenter_Server_Rack_EoR.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/storage/Datacenter_Server_Rack_EoR.svg",
+        "id": "f24b510fbf1f44b1afa0267043c48e4d"
       },
       {
         "text": "Datacenter_Server_Rack_Storage_Unit_Small",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/storage/Datacenter_Server_Rack_Storage_Unit_Small.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/storage/Datacenter_Server_Rack_Storage_Unit_Small.svg",
+        "id": "ec4bef4a95c14cf89541d1fb4cf66c5e"
       },
       {
         "text": "Datacenter_Server_Rack_ToR",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/storage/Datacenter_Server_Rack_ToR.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/storage/Datacenter_Server_Rack_ToR.svg",
+        "id": "aacbb3f7fc5c41ed9b3bfee26d2f46c3"
       },
       {
         "text": "Datacenter_Server_Storage_Unit_Large",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/storage/Datacenter_Server_Storage_Unit_Large.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/storage/Datacenter_Server_Storage_Unit_Large.svg",
+        "id": "469c2164e5d64b7ea45ae399008b4b63"
       }
     ]
   },
@@ -189,67 +229,83 @@
     "childs": [
       {
         "text": "Industrial_Ethernet_IE200",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Industrial_Ethernet_IE200.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Industrial_Ethernet_IE200.svg",
+        "id": "a05bdd1a1c774b8e936a8dc46ec3c75a"
       },
       {
         "text": "Industrial_Ethernet_IE200_POE",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Industrial_Ethernet_IE200_POE.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Industrial_Ethernet_IE200_POE.svg",
+        "id": "edf06af7c33849709418e254bd3c1d4a"
       },
       {
         "text": "Industrial_Ethernet_IE300",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Industrial_Ethernet_IE300.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Industrial_Ethernet_IE300.svg",
+        "id": "814e28d97acf4094bbc7f8385e9ca019"
       },
       {
         "text": "Modular_Switch_SBx8106",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Modular_Switch_SBx8106.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Modular_Switch_SBx8106.svg",
+        "id": "ef4ada8f015f42f6956d45c6e45e9f87"
       },
       {
         "text": "Modular_Switch_SBx8112",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Modular_Switch_SBx8112.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Modular_Switch_SBx8112.svg",
+        "id": "29982017d65d468d816397f6aa9583b9"
       },
       {
         "text": "Modular_Switch_SXx908GEN2",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Modular_Switch_SXx908GEN2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Modular_Switch_SXx908GEN2.svg",
+        "id": "1eb7a8b0f06a411b802d060493ff902c"
       },
       {
         "text": "Switch_24_port_L2",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_24_port_L2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_24_port_L2.svg",
+        "id": "04cc69bb68e04768be669adc466aa38f"
       },
       {
         "text": "Switch_24_port_L2_POE",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_24_port_L2_POE.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_24_port_L2_POE.svg",
+        "id": "43c4e4315ebe464f8fbb877140e4c61d"
       },
       {
         "text": "Switch_24_port_L3",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_24_port_L3.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_24_port_L3.svg",
+        "id": "0c4c4d067e484eaf815704614bbb5064"
       },
       {
         "text": "Switch_24_port_L3_Alternative",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_24_port_L3_Alternative.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_24_port_L3_Alternative.svg",
+        "id": "d17f3e2e4c394cac9b3500d304025f90"
       },
       {
         "text": "Switch_24_port_L3_POE",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_24_port_L3_POE.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_24_port_L3_POE.svg",
+        "id": "bac499f41a0248f986c3cf3cbc515b11"
       },
       {
         "text": "Switch_48_port_L2",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_48_port_L2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_48_port_L2.svg",
+        "id": "2304db1d27c34927865b3c85f69a04ee"
       },
       {
         "text": "Switch_48_port_L2_POE",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_48_port_L2_POE.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_48_port_L2_POE.svg",
+        "id": "a07d26e384704a69b50815b6e6bdac67"
       },
       {
         "text": "Switch_48_port_L3",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_48_port_L3.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_48_port_L3.svg",
+        "id": "bc682f11f50645409cbebae1e445b8a4"
       },
       {
         "text": "Switch_48_port_L3_POE",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_48_port_L3_POE.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_48_port_L3_POE.svg",
+        "id": "7a86c74873e74487bd8b907bf0313cbf"
       },
       {
         "text": "Switch_52_port_L3",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_52_port_L3.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/switch/Switch_52_port_L3.svg",
+        "id": "3e7f6e7466024b2e9d3c15373250f1fb"
       }
     ]
   },
@@ -258,15 +314,18 @@
     "childs": [
       {
         "text": "Access_Point_Indoor",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/wireless/Access_Point_Indoor.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/wireless/Access_Point_Indoor.svg",
+        "id": "cc2281b47d204dc3934819b0c03a61e5"
       },
       {
         "text": "Access_Point_Outdoor",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/wireless/Access_Point_Outdoor.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/wireless/Access_Point_Outdoor.svg",
+        "id": "cf1cab48b913484eb9c2324ff28f89c5"
       },
       {
         "text": "Laptop_Wireless",
-        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/wireless/Laptop_Wireless.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/allied_telesis/wireless/Laptop_Wireless.svg",
+        "id": "dc447ac1ceaa41d0bfbb7db9d0c867ce"
       }
     ]
   }

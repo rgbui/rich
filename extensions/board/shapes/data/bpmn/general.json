@@ -1,1 +1,4537 @@
-[{"childs":[{"name":"path","closed":true,"segments":[{"point":[7,1.5]},{"point":[18.25,1.5]},{"point":[25,8.25]},{"point":[25,28.5]},{"point":[7,28.5]}]},{"name":"path","closed":false,"segments":[{"point":[18.25,1.5]},{"point":[18.25,8.25]},{"point":[25,8.25]}]}]},{"childs":[{"name":"path","closed":true,"segments":[{"point":[7,1.5]},{"point":[18.25,1.5]},{"point":[25,8.25]},{"point":[25,28.5]},{"point":[7,28.5]}]},{"name":"path","closed":false,"segments":[{"point":[18.25,1.5]},{"point":[18.25,8.25]},{"point":[25,8.25]}]},{"name":"path","closed":false,"segments":[{"point":[14.38,23.1]},{"point":[14.38,28.5]}]},{"name":"path","closed":false,"segments":[{"point":[16,23.1]},{"point":[16,28.5]}]},{"name":"path","closed":false,"segments":[{"point":[17.62,23.1]},{"point":[17.62,28.5]}]}]},{"childs":[{"name":"path","closed":true,"segments":[{"point":[7,1.5]},{"point":[18.25,1.5]},{"point":[25,8.25]},{"point":[25,28.5]},{"point":[7,28.5]}]},{"name":"path","closed":false,"segments":[{"point":[18.25,1.5]},{"point":[18.25,8.25]},{"point":[25,8.25]}]},{"name":"path","closed":true,"segments":[{"point":[8.35,4.47]},{"point":[11.82,4.47]},{"point":[11.82,2.85]},{"point":[14.65,5.55]},{"point":[11.82,8.25]},{"point":[11.82,6.63]},{"point":[8.35,6.63]}]}]},{"childs":[{"name":"path","closed":true,"segments":[{"point":[7,1.5]},{"point":[18.25,1.5]},{"point":[25,8.25]},{"point":[25,28.5]},{"point":[7,28.5]}]},{"name":"path","closed":false,"segments":[{"point":[18.25,1.5]},{"point":[18.25,8.25]},{"point":[25,8.25]}]},{"name":"path","closed":true,"segments":[{"point":[8.35,4.47]},{"point":[11.82,4.47]},{"point":[11.82,2.85]},{"point":[14.65,5.55]},{"point":[11.82,8.25]},{"point":[11.82,6.63]},{"point":[8.35,6.63]}]},{"name":"path","closed":false,"segments":[{"point":[14.38,23.1]},{"point":[14.38,28.5]}]},{"name":"path","closed":false,"segments":[{"point":[16,23.1]},{"point":[16,28.5]}]},{"name":"path","closed":false,"segments":[{"point":[17.62,23.1]},{"point":[17.62,28.5]}]}]},{"childs":[{"name":"path","closed":true,"segments":[{"point":[7,1.5]},{"point":[18.25,1.5]},{"point":[25,8.25]},{"point":[25,28.5]},{"point":[7,28.5]}]},{"name":"path","closed":false,"segments":[{"point":[18.25,1.5]},{"point":[18.25,8.25]},{"point":[25,8.25]}]},{"name":"path","closed":true,"segments":[{"point":[8.35,4.47]},{"point":[11.82,4.47]},{"point":[11.82,2.85]},{"point":[14.65,5.55]},{"point":[11.82,8.25]},{"point":[11.82,6.63]},{"point":[8.35,6.63]}]}]},{"childs":[{"name":"path","closed":true,"segments":[{"point":[7,1.5]},{"point":[18.25,1.5]},{"point":[25,8.25]},{"point":[25,28.5]},{"point":[7,28.5]}]},{"name":"path","closed":false,"segments":[{"point":[18.25,1.5]},{"point":[18.25,8.25]},{"point":[25,8.25]}]},{"name":"path","closed":true,"segments":[{"point":[8.35,4.47]},{"point":[11.82,4.47]},{"point":[11.82,2.85]},{"point":[14.65,5.55]},{"point":[11.82,8.25]},{"point":[11.82,6.63]},{"point":[8.35,6.63]}]},{"name":"path","closed":false,"segments":[{"point":[14.38,23.1]},{"point":[14.38,28.5]}]},{"name":"path","closed":false,"segments":[{"point":[16,23.1]},{"point":[16,28.5]}]},{"name":"path","closed":false,"segments":[{"point":[17.62,23.1]},{"point":[17.62,28.5]}]}]},{"childs":[{"name":"path","closed":true,"segments":[{"point":[2.5,5.01],"handleOut":[2.5,0.33000000000000007]},{"point":[29.5,5.01],"handleIn":[29.5,0.33000000000000007]},{"point":[29.5,24.99],"handleOut":[29.5,29.67]},{"point":[2.5,24.99],"handleIn":[2.5,29.67]}]},{"name":"path","closed":false,"segments":[{"point":[2.5,5.01],"handleOut":[2.5,8.52]},{"point":[29.5,5.01],"handleIn":[29.5,8.52]}]},{"name":"path","closed":false,"segments":[{"point":[2.5,6.76],"handleOut":[2.5,10.27]},{"point":[29.5,6.76],"handleIn":[29.5,10.27]}]},{"name":"path","closed":false,"segments":[{"point":[2.5,8.52],"handleOut":[2.5,12.03]},{"point":[29.5,8.52],"handleIn":[29.5,12.03]}]}]},{"childs":[{"name":"path","closed":true,"segments":[{"point":[1.3,23.4]},{"point":[1.3,6.6]},{"point":[30.7,6.6]},{"point":[30.7,23.4]}]}]},{"childs":[]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[4,12]},{"point":[2.8,12]},{"point":[2.8,18]},{"point":[4,18]}]},{"name":"path","closed":false,"segments":[{"point":[4,12]},{"point":[29.2,12]},{"point":[29.2,18]},{"point":[4,18]}]}]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[2.8,13.2]},{"point":[2.8,12]},{"point":[29.2,12]},{"point":[29.2,13.2]}]},{"name":"path","closed":false,"segments":[{"point":[2.8,13.2]},{"point":[2.8,18]},{"point":[29.2,18]},{"point":[29.2,13.2]}]}]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[4,12]},{"point":[2.8,12]},{"point":[2.8,18]},{"point":[4,18]}]},{"name":"path","closed":false,"fill":"#ffffff","segments":[{"point":[4,12]},{"point":[29.2,12]},{"point":[29.2,18]},{"point":[4,18]}]},{"name":"path","closed":false,"segments":[{"point":[4,12]},{"point":[4,18]}]}]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[4,12]},{"point":[2.8,12]},{"point":[2.8,18]},{"point":[4,18]}]},{"name":"path","closed":false,"fill":"#ffffff","segments":[{"point":[4,12]},{"point":[29.2,12]},{"point":[29.2,18]},{"point":[4,18]}]},{"name":"path","closed":false,"segments":[{"point":[4,12]},{"point":[4,18]}]},{"name":"path","closed":false,"segments":[{"point":[15.78,17.28]},{"point":[15.78,18]}]},{"name":"path","closed":false,"segments":[{"point":[16,17.28]},{"point":[16,18]}]},{"name":"path","closed":false,"segments":[{"point":[16.22,17.28]},{"point":[16.22,18]}]}]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[1.7,11.1]},{"point":[1.7,8.5]},{"point":[30.3,8.5]},{"point":[30.3,11.1]}]},{"name":"path","closed":false,"fill":"#ffffff","segments":[{"point":[1.7,11.1]},{"point":[1.7,21.5]},{"point":[30.3,21.5]},{"point":[30.3,11.1]}]},{"name":"path","closed":false,"segments":[{"point":[1.7,11.1]},{"point":[30.3,11.1]}]}]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[1.7,11.1]},{"point":[1.7,8.5]},{"point":[30.3,8.5]},{"point":[30.3,11.1]}]},{"name":"path","closed":false,"fill":"#ffffff","segments":[{"point":[1.7,11.1]},{"point":[1.7,21.5]},{"point":[30.3,21.5]},{"point":[30.3,11.1]}]},{"name":"path","closed":false,"segments":[{"point":[1.7,11.1]},{"point":[30.3,11.1]}]},{"name":"path","closed":false,"segments":[{"point":[15.53,19.94]},{"point":[15.53,21.5]}]},{"name":"path","closed":false,"segments":[{"point":[16,19.94]},{"point":[16,21.5]}]},{"name":"path","closed":false,"segments":[{"point":[16.47,19.94]},{"point":[16.47,21.5]}]}]},{"childs":[{"name":"path","closed":true,"segments":[{"point":[1.3,15]},{"point":[8.65,2.4]},{"point":[23.35,2.4]},{"point":[30.7,15]},{"point":[23.35,27.6]},{"point":[8.65,27.6]}]}]},{"childs":[{"name":"path","closed":true,"segments":[{"point":[1.3,15]},{"point":[8.65,2.4]},{"point":[23.35,2.4]},{"point":[30.7,15]},{"point":[23.35,27.6]},{"point":[8.65,27.6]}]},{"name":"path","closed":true,"segments":[{"point":[13.06,27.599999999999998]},{"point":[13.06,21.72]},{"point":[18.94,21.72]},{"point":[18.94,27.599999999999998]}]},{"name":"path","closed":false,"segments":[{"point":[14.74,24.66]},{"point":[17.26,24.66]}]},{"name":"path","closed":false,"segments":[{"point":[16,23.4]},{"point":[16,25.92]}]}]},{"childs":[{"name":"path","closed":true,"segments":[{"point":[1.3,15]},{"point":[8.65,2.4]},{"point":[23.35,2.4]},{"point":[30.7,15]},{"point":[23.35,27.6]},{"point":[8.65,27.6]}]}]},{"childs":[{"name":"path","closed":true,"segments":[{"point":[1.3,15]},{"point":[8.65,2.4]},{"point":[23.35,2.4]},{"point":[30.7,15]},{"point":[23.35,27.6]},{"point":[8.65,27.6]}]},{"name":"path","closed":true,"segments":[{"point":[13.06,27.599999999999998]},{"point":[13.06,21.72]},{"point":[18.94,21.72]},{"point":[18.94,27.599999999999998]}]},{"name":"path","closed":false,"segments":[{"point":[14.74,24.66]},{"point":[17.26,24.66]}]},{"name":"path","closed":false,"segments":[{"point":[16,23.4]},{"point":[16,25.92]}]}]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[22.75,1.5]},{"point":[16,1.5]},{"point":[16,28.5]},{"point":[22.75,28.5]}]},{"name":"path","closed":false,"segments":[{"point":[9.25,15]},{"point":[16,15]}]}]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[4,5.4]},{"point":[4,3]},{"point":[28,3]},{"point":[28,5.4]}]},{"name":"path","closed":false,"segments":[{"point":[4,5.4]},{"point":[4,27]},{"point":[28,27]},{"point":[28,5.4]}]},{"name":"path","closed":false,"segments":[{"point":[4,5.4]},{"point":[28,5.4]}]},{"name":"path","closed":false,"segments":[{"point":[4,12.6]},{"point":[13.6,12.6]},{"point":[20.8,12.6]},{"point":[28,12.6]}]},{"name":"path","closed":false,"segments":[{"point":[4,19.8]},{"point":[13.6,19.8]},{"point":[20.8,19.8]},{"point":[28,19.8]}]},{"name":"path","closed":false,"segments":[{"point":[13.6,5.4]},{"point":[13.6,12.6]},{"point":[13.6,19.8]},{"point":[13.6,27]}]},{"name":"path","closed":false,"segments":[{"point":[20.8,5.4]},{"point":[20.8,12.6]},{"point":[20.8,19.8]},{"point":[20.8,27]}]},{"name":"path","closed":false,"segments":[{"point":[6.4,5.4]},{"point":[6.4,12.6]}]},{"name":"path","closed":false,"segments":[{"point":[6.4,7.8]},{"point":[13.6,7.8]}]},{"name":"path","closed":false,"segments":[{"point":[13.6,7.8]},{"point":[20.8,7.8]}]},{"name":"path","closed":false,"segments":[{"point":[20.8,7.8]},{"point":[28,7.8]}]},{"name":"path","closed":false,"segments":[{"point":[6.4,12.6]},{"point":[6.4,19.8]}]},{"name":"path","closed":false,"segments":[{"point":[6.4,19.8]},{"point":[6.4,27]}]}]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[1.6,4.8]},{"point":[1.6,3.6]},{"point":[30.4,3.6]},{"point":[30.4,4.8]}]},{"name":"path","closed":false,"segments":[{"point":[1.6,4.8]},{"point":[1.6,26.4]},{"point":[30.4,26.4]},{"point":[30.4,4.8]}]},{"name":"path","closed":false,"segments":[{"point":[1.6,4.8]},{"point":[30.4,4.8]}]},{"name":"path","closed":false,"segments":[{"point":[2.8,4.8]},{"point":[1.6,4.8]},{"point":[1.6,12]},{"point":[2.8,12]}]},{"name":"path","closed":false,"segments":[{"point":[2.8,4.8]},{"point":[30.4,4.8]},{"point":[30.4,12]},{"point":[2.8,12]}]},{"name":"path","closed":false,"segments":[{"point":[2.8,4.8]},{"point":[2.8,12]}]},{"name":"path","closed":false,"segments":[{"point":[2.8,12]},{"point":[1.6,12]},{"point":[1.6,19.2]},{"point":[2.8,19.2]}]},{"name":"path","closed":false,"segments":[{"point":[2.8,12]},{"point":[30.4,12]},{"point":[30.4,19.2]},{"point":[2.8,19.2]}]},{"name":"path","closed":false,"segments":[{"point":[2.8,12]},{"point":[2.8,19.2]}]},{"name":"path","closed":false,"segments":[{"point":[2.8,19.2]},{"point":[1.6,19.2]},{"point":[1.6,26.4]},{"point":[2.8,26.4]}]},{"name":"path","closed":false,"segments":[{"point":[2.8,19.2]},{"point":[30.4,19.2]},{"point":[30.4,26.4]},{"point":[2.8,26.4]}]},{"name":"path","closed":false,"segments":[{"point":[2.8,19.2]},{"point":[2.8,26.4]}]}]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[2.8,4.2]},{"point":[1.6,4.2]},{"point":[1.6,25.8]},{"point":[2.8,25.8]}]},{"name":"path","closed":false,"segments":[{"point":[2.8,4.2]},{"point":[30.4,4.2]},{"point":[30.4,25.8]},{"point":[2.8,25.8]}]},{"name":"path","closed":false,"segments":[{"point":[2.8,4.2]},{"point":[2.8,25.8]}]},{"name":"path","closed":false,"segments":[{"point":[4,4.2]},{"point":[2.8,4.2]},{"point":[2.8,11.4]},{"point":[4,11.4]}]},{"name":"path","closed":false,"segments":[{"point":[4,4.2]},{"point":[30.4,4.2]},{"point":[30.4,11.4]},{"point":[4,11.4]}]},{"name":"path","closed":false,"segments":[{"point":[4,4.2]},{"point":[4,11.4]}]},{"name":"path","closed":false,"segments":[{"point":[4,11.4]},{"point":[2.8,11.4]},{"point":[2.8,18.6]},{"point":[4,18.6]}]},{"name":"path","closed":false,"segments":[{"point":[4,11.4]},{"point":[30.4,11.4]},{"point":[30.4,18.6]},{"point":[4,18.6]}]},{"name":"path","closed":false,"segments":[{"point":[4,11.4]},{"point":[4,18.6]}]},{"name":"path","closed":false,"segments":[{"point":[4,18.6]},{"point":[2.8,18.6]},{"point":[2.8,25.8]},{"point":[4,25.8]}]},{"name":"path","closed":false,"segments":[{"point":[4,18.6]},{"point":[30.4,18.6]},{"point":[30.4,25.8]},{"point":[4,25.8]}]},{"name":"path","closed":false,"segments":[{"point":[4,18.6]},{"point":[4,25.8]}]}]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[3.4,9.6]},{"point":[1.6,9.6]},{"point":[1.6,20.4]},{"point":[3.4,20.4]}]},{"name":"path","closed":false,"segments":[{"point":[3.4,9.6]},{"point":[30.4,9.6]},{"point":[30.4,20.4]},{"point":[3.4,20.4]}]},{"name":"path","closed":false,"segments":[{"point":[3.4,9.6]},{"point":[3.4,20.4]}]}]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[7,4]},{"point":[7,3]},{"point":[25,3]},{"point":[25,4]}]},{"name":"path","closed":false,"segments":[{"point":[7,4]},{"point":[7,27]},{"point":[25,27]},{"point":[25,4]}]},{"name":"path","closed":false,"segments":[{"point":[7,4]},{"point":[25,4]}]},{"name":"path","closed":false,"segments":[{"point":[7,5]},{"point":[7,4]},{"point":[13,4]},{"point":[13,5]}]},{"name":"path","closed":false,"segments":[{"point":[7,5]},{"point":[7,27]},{"point":[13,27]},{"point":[13,5]}]},{"name":"path","closed":false,"segments":[{"point":[7,5]},{"point":[13,5]}]},{"name":"path","closed":false,"segments":[{"point":[13,5]},{"point":[13,4]},{"point":[19,4]},{"point":[19,5]}]},{"name":"path","closed":false,"segments":[{"point":[13,5]},{"point":[13,27]},{"point":[19,27]},{"point":[19,5]}]},{"name":"path","closed":false,"segments":[{"point":[13,5]},{"point":[19,5]}]},{"name":"path","closed":false,"segments":[{"point":[19,5]},{"point":[19,4]},{"point":[25,4]},{"point":[25,5]}]},{"name":"path","closed":false,"segments":[{"point":[19,5]},{"point":[19,27]},{"point":[25,27]},{"point":[25,5]}]},{"name":"path","closed":false,"segments":[{"point":[19,5]},{"point":[25,5]}]}]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[7.5,3]},{"point":[6.5,3]},{"point":[6.5,27]},{"point":[7.5,27]}]},{"name":"path","closed":false,"segments":[{"point":[7.5,3]},{"point":[25.5,3]},{"point":[25.5,27]},{"point":[7.5,27]}]},{"name":"path","closed":false,"segments":[{"point":[7.5,3]},{"point":[7.5,27]}]},{"name":"path","closed":false,"segments":[{"point":[7.5,4]},{"point":[7.5,3]},{"point":[13.5,3]},{"point":[13.5,4]}]},{"name":"path","closed":false,"segments":[{"point":[7.5,4]},{"point":[7.5,27]},{"point":[13.5,27]},{"point":[13.5,4]}]},{"name":"path","closed":false,"segments":[{"point":[7.5,4]},{"point":[13.5,4]}]},{"name":"path","closed":false,"segments":[{"point":[13.5,4]},{"point":[13.5,3]},{"point":[19.5,3]},{"point":[19.5,4]}]},{"name":"path","closed":false,"segments":[{"point":[13.5,4]},{"point":[13.5,27]},{"point":[19.5,27]},{"point":[19.5,4]}]},{"name":"path","closed":false,"segments":[{"point":[13.5,4]},{"point":[19.5,4]}]},{"name":"path","closed":false,"segments":[{"point":[19.5,4]},{"point":[19.5,3]},{"point":[25.5,3]},{"point":[25.5,4]}]},{"name":"path","closed":false,"segments":[{"point":[19.5,4]},{"point":[19.5,27]},{"point":[25.5,27]},{"point":[25.5,4]}]},{"name":"path","closed":false,"segments":[{"point":[19.5,4]},{"point":[25.5,4]}]}]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[11.2,3.8]},{"point":[11.2,2.2]},{"point":[20.8,2.2]},{"point":[20.8,3.8]}]},{"name":"path","closed":false,"segments":[{"point":[11.2,3.8]},{"point":[11.2,27.8]},{"point":[20.8,27.8]},{"point":[20.8,3.8]}]},{"name":"path","closed":false,"segments":[{"point":[11.2,3.8]},{"point":[20.8,3.8]}]}]},{"childs":[{"name":"path","closed":true,"segments":[{"point":[3,28]},{"point":[3,2]},{"point":[29,2]},{"point":[29,28]}]}]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[1.51,14.91]},{"point":[16,14.91]},{"point":[30.31,14.91]}]}]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[2.31,14.92]},{"point":[16,14.92]},{"point":[29.13,14.92]}]},{"name":"path","closed":false,"segments":[{"point":[28.13,15.31]},{"point":[29.32,14.92]},{"point":[28.13,14.52]}]}]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[3.48,14.92]},{"point":[16,14.92]},{"point":[28.36,14.92]}]},{"name":"path","closed":false,"segments":[{"point":[4.42,14.55]},{"point":[3.3,14.92]},{"point":[4.42,15.29]}]},{"name":"path","closed":false,"segments":[{"point":[27.42,15.29]},{"point":[28.54,14.92]},{"point":[27.42,14.55]}]}]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[1.51,14.91]},{"point":[16,14.91]},{"point":[30.31,14.91]}]}]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[1.6,14.64]},{"point":[16,14.64]},{"point":[30.4,14.64]}]},{"name":"path","closed":false,"segments":[{"point":[30.4,15.36]},{"point":[16,15.36]},{"point":[1.6,15.36]}]},{"name":"path","closed":false,"segments":[{"point":[30.4,15.36]}]}]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[2.31,14.92]},{"point":[16,14.92]},{"point":[28.13,14.92]}]},{"name":"path","closed":true,"segments":[{"point":[29.32,14.92]},{"point":[28.13,15.31]},{"point":[28.13,14.52]}]}]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[5.04,14.92]},{"point":[16,14.92]},{"point":[27.42,14.92]}]},{"name":"path","closed":true,"segments":[{"point":[3.28,14.92]},{"point":[4.16,14.4]},{"point":[5.04,14.92]},{"point":[4.16,15.44]}]},{"name":"path","closed":true,"segments":[{"point":[28.54,14.92]},{"point":[27.42,15.29]},{"point":[27.42,14.55]}]}]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[3.12,14.92]},{"point":[16,14.92]},{"point":[27.42,14.92]}]},{"name":"path","closed":false,"segments":[{"point":[3.76,14.28]},{"point":[5.04,15.56]}]},{"name":"path","closed":true,"segments":[{"point":[28.54,14.92]},{"point":[27.42,15.29]},{"point":[27.42,14.55]}]}]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[2.65,14.92]},{"point":[28.13,14.92]}]},{"name":"path","closed":true,"segments":[{"point":[1.97,14.92],"handleIn":[1.97,15.10777681494247],"handleOut":[1.97,14.73222318505753]},{"point":[2.31,14.58],"handleIn":[2.12222318505753,14.58],"handleOut":[2.49777681494247,14.58]},{"point":[2.65,14.92],"handleIn":[2.65,14.73222318505753],"handleOut":[2.65,15.10777681494247]},{"point":[2.31,15.26],"handleIn":[2.49777681494247,15.26],"handleOut":[2.12222318505753,15.26]}]},{"name":"path","closed":true,"segments":[{"point":[29.32,14.92]},{"point":[28.13,15.31]},{"point":[28.13,14.52]}]}]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[2.65,15]},{"point":[28.13,15]}]},{"name":"path","closed":true,"segments":[{"point":[1.97,15],"handleIn":[1.97,15.18777681494247],"handleOut":[1.97,14.81222318505753]},{"point":[2.31,14.66],"handleIn":[2.12222318505753,14.66],"handleOut":[2.49777681494247,14.66]},{"point":[2.65,15],"handleIn":[2.65,14.81222318505753],"handleOut":[2.65,15.18777681494247]},{"point":[2.31,15.34],"handleIn":[2.49777681494247,15.34],"handleOut":[2.12222318505753,15.34]}]},{"name":"path","closed":true,"segments":[{"point":[29.32,15]},{"point":[28.13,15.4]},{"point":[28.13,14.6]}]},{"name":"path","closed":true,"segments":[{"point":[17.67,13.64]},{"point":[21.75,13.64]},{"point":[21.75,16.36]},{"point":[17.67,16.36]}]},{"name":"path","closed":false,"segments":[{"point":[17.67,13.64]},{"point":[19.71,15]},{"point":[21.75,13.64]}]}]},{"childs":[{"name":"path","closed":false,"segments":[{"point":[2.65,15]},{"point":[28.13,15]}]},{"name":"path","closed":true,"segments":[{"point":[1.97,15],"handleIn":[1.97,15.18777681494247],"handleOut":[1.97,14.81222318505753]},{"point":[2.31,14.66],"handleIn":[2.12222318505753,14.66],"handleOut":[2.49777681494247,14.66]},{"point":[2.65,15],"handleIn":[2.65,14.81222318505753],"handleOut":[2.65,15.18777681494247]},{"point":[2.31,15.34],"handleIn":[2.49777681494247,15.34],"handleOut":[2.12222318505753,15.34]}]},{"name":"path","closed":true,"segments":[{"point":[29.32,15]},{"point":[28.13,15.4]},{"point":[28.13,14.6]}]},{"name":"path","closed":true,"fill":"#c0c0c0","segments":[{"point":[17.67,13.64]},{"point":[21.75,13.64]},{"point":[21.75,16.36]},{"point":[17.67,16.36]}]},{"name":"path","closed":false,"segments":[{"point":[17.67,13.64]},{"point":[19.71,15]},{"point":[21.75,13.64]}]}]}]
+[
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              7,
+              1.5
+            ]
+          },
+          {
+            "point": [
+              18.25,
+              1.5
+            ]
+          },
+          {
+            "point": [
+              25,
+              8.25
+            ]
+          },
+          {
+            "point": [
+              25,
+              28.5
+            ]
+          },
+          {
+            "point": [
+              7,
+              28.5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              18.25,
+              1.5
+            ]
+          },
+          {
+            "point": [
+              18.25,
+              8.25
+            ]
+          },
+          {
+            "point": [
+              25,
+              8.25
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "6d53c705bc7640459a2dd7b5f1927fff"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              7,
+              1.5
+            ]
+          },
+          {
+            "point": [
+              18.25,
+              1.5
+            ]
+          },
+          {
+            "point": [
+              25,
+              8.25
+            ]
+          },
+          {
+            "point": [
+              25,
+              28.5
+            ]
+          },
+          {
+            "point": [
+              7,
+              28.5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              18.25,
+              1.5
+            ]
+          },
+          {
+            "point": [
+              18.25,
+              8.25
+            ]
+          },
+          {
+            "point": [
+              25,
+              8.25
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              14.38,
+              23.1
+            ]
+          },
+          {
+            "point": [
+              14.38,
+              28.5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              16,
+              23.1
+            ]
+          },
+          {
+            "point": [
+              16,
+              28.5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              17.62,
+              23.1
+            ]
+          },
+          {
+            "point": [
+              17.62,
+              28.5
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "76e915e502634a4596cb3d826b78ffba"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              7,
+              1.5
+            ]
+          },
+          {
+            "point": [
+              18.25,
+              1.5
+            ]
+          },
+          {
+            "point": [
+              25,
+              8.25
+            ]
+          },
+          {
+            "point": [
+              25,
+              28.5
+            ]
+          },
+          {
+            "point": [
+              7,
+              28.5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              18.25,
+              1.5
+            ]
+          },
+          {
+            "point": [
+              18.25,
+              8.25
+            ]
+          },
+          {
+            "point": [
+              25,
+              8.25
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              8.35,
+              4.47
+            ]
+          },
+          {
+            "point": [
+              11.82,
+              4.47
+            ]
+          },
+          {
+            "point": [
+              11.82,
+              2.85
+            ]
+          },
+          {
+            "point": [
+              14.65,
+              5.55
+            ]
+          },
+          {
+            "point": [
+              11.82,
+              8.25
+            ]
+          },
+          {
+            "point": [
+              11.82,
+              6.63
+            ]
+          },
+          {
+            "point": [
+              8.35,
+              6.63
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "88b6cfae05de46dcabb0d4667a9b2603"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              7,
+              1.5
+            ]
+          },
+          {
+            "point": [
+              18.25,
+              1.5
+            ]
+          },
+          {
+            "point": [
+              25,
+              8.25
+            ]
+          },
+          {
+            "point": [
+              25,
+              28.5
+            ]
+          },
+          {
+            "point": [
+              7,
+              28.5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              18.25,
+              1.5
+            ]
+          },
+          {
+            "point": [
+              18.25,
+              8.25
+            ]
+          },
+          {
+            "point": [
+              25,
+              8.25
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              8.35,
+              4.47
+            ]
+          },
+          {
+            "point": [
+              11.82,
+              4.47
+            ]
+          },
+          {
+            "point": [
+              11.82,
+              2.85
+            ]
+          },
+          {
+            "point": [
+              14.65,
+              5.55
+            ]
+          },
+          {
+            "point": [
+              11.82,
+              8.25
+            ]
+          },
+          {
+            "point": [
+              11.82,
+              6.63
+            ]
+          },
+          {
+            "point": [
+              8.35,
+              6.63
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              14.38,
+              23.1
+            ]
+          },
+          {
+            "point": [
+              14.38,
+              28.5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              16,
+              23.1
+            ]
+          },
+          {
+            "point": [
+              16,
+              28.5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              17.62,
+              23.1
+            ]
+          },
+          {
+            "point": [
+              17.62,
+              28.5
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "decedd95b5e84f49938345f86b9d75ed"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              7,
+              1.5
+            ]
+          },
+          {
+            "point": [
+              18.25,
+              1.5
+            ]
+          },
+          {
+            "point": [
+              25,
+              8.25
+            ]
+          },
+          {
+            "point": [
+              25,
+              28.5
+            ]
+          },
+          {
+            "point": [
+              7,
+              28.5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              18.25,
+              1.5
+            ]
+          },
+          {
+            "point": [
+              18.25,
+              8.25
+            ]
+          },
+          {
+            "point": [
+              25,
+              8.25
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              8.35,
+              4.47
+            ]
+          },
+          {
+            "point": [
+              11.82,
+              4.47
+            ]
+          },
+          {
+            "point": [
+              11.82,
+              2.85
+            ]
+          },
+          {
+            "point": [
+              14.65,
+              5.55
+            ]
+          },
+          {
+            "point": [
+              11.82,
+              8.25
+            ]
+          },
+          {
+            "point": [
+              11.82,
+              6.63
+            ]
+          },
+          {
+            "point": [
+              8.35,
+              6.63
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "b59904e503064cfea0a0954ac65d2bef"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              7,
+              1.5
+            ]
+          },
+          {
+            "point": [
+              18.25,
+              1.5
+            ]
+          },
+          {
+            "point": [
+              25,
+              8.25
+            ]
+          },
+          {
+            "point": [
+              25,
+              28.5
+            ]
+          },
+          {
+            "point": [
+              7,
+              28.5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              18.25,
+              1.5
+            ]
+          },
+          {
+            "point": [
+              18.25,
+              8.25
+            ]
+          },
+          {
+            "point": [
+              25,
+              8.25
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              8.35,
+              4.47
+            ]
+          },
+          {
+            "point": [
+              11.82,
+              4.47
+            ]
+          },
+          {
+            "point": [
+              11.82,
+              2.85
+            ]
+          },
+          {
+            "point": [
+              14.65,
+              5.55
+            ]
+          },
+          {
+            "point": [
+              11.82,
+              8.25
+            ]
+          },
+          {
+            "point": [
+              11.82,
+              6.63
+            ]
+          },
+          {
+            "point": [
+              8.35,
+              6.63
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              14.38,
+              23.1
+            ]
+          },
+          {
+            "point": [
+              14.38,
+              28.5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              16,
+              23.1
+            ]
+          },
+          {
+            "point": [
+              16,
+              28.5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              17.62,
+              23.1
+            ]
+          },
+          {
+            "point": [
+              17.62,
+              28.5
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "248e3833c17f465daedababb055c7119"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              2.5,
+              5.01
+            ],
+            "handleOut": [
+              2.5,
+              0.33000000000000007
+            ]
+          },
+          {
+            "point": [
+              29.5,
+              5.01
+            ],
+            "handleIn": [
+              29.5,
+              0.33000000000000007
+            ]
+          },
+          {
+            "point": [
+              29.5,
+              24.99
+            ],
+            "handleOut": [
+              29.5,
+              29.67
+            ]
+          },
+          {
+            "point": [
+              2.5,
+              24.99
+            ],
+            "handleIn": [
+              2.5,
+              29.67
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              2.5,
+              5.01
+            ],
+            "handleOut": [
+              2.5,
+              8.52
+            ]
+          },
+          {
+            "point": [
+              29.5,
+              5.01
+            ],
+            "handleIn": [
+              29.5,
+              8.52
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              2.5,
+              6.76
+            ],
+            "handleOut": [
+              2.5,
+              10.27
+            ]
+          },
+          {
+            "point": [
+              29.5,
+              6.76
+            ],
+            "handleIn": [
+              29.5,
+              10.27
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              2.5,
+              8.52
+            ],
+            "handleOut": [
+              2.5,
+              12.03
+            ]
+          },
+          {
+            "point": [
+              29.5,
+              8.52
+            ],
+            "handleIn": [
+              29.5,
+              12.03
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "6c6a1b78d6be47d28a4c8dfb6c4c67ec"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              1.3,
+              23.4
+            ]
+          },
+          {
+            "point": [
+              1.3,
+              6.6
+            ]
+          },
+          {
+            "point": [
+              30.7,
+              6.6
+            ]
+          },
+          {
+            "point": [
+              30.7,
+              23.4
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "169f9bdcfeb94fb8ac4da79470f52ceb"
+  },
+  {
+    "childs": [],
+    "id": "d6229547feeb4faba74e5b862e880a0f"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              4,
+              12
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              12
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              18
+            ]
+          },
+          {
+            "point": [
+              4,
+              18
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              4,
+              12
+            ]
+          },
+          {
+            "point": [
+              29.2,
+              12
+            ]
+          },
+          {
+            "point": [
+              29.2,
+              18
+            ]
+          },
+          {
+            "point": [
+              4,
+              18
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "a1ff496787b94b579e160beedc57f6a8"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              2.8,
+              13.2
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              12
+            ]
+          },
+          {
+            "point": [
+              29.2,
+              12
+            ]
+          },
+          {
+            "point": [
+              29.2,
+              13.2
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              2.8,
+              13.2
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              18
+            ]
+          },
+          {
+            "point": [
+              29.2,
+              18
+            ]
+          },
+          {
+            "point": [
+              29.2,
+              13.2
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "432d052a74284caf80d7527b6b37f943"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              4,
+              12
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              12
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              18
+            ]
+          },
+          {
+            "point": [
+              4,
+              18
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "fill": "#ffffff",
+        "segments": [
+          {
+            "point": [
+              4,
+              12
+            ]
+          },
+          {
+            "point": [
+              29.2,
+              12
+            ]
+          },
+          {
+            "point": [
+              29.2,
+              18
+            ]
+          },
+          {
+            "point": [
+              4,
+              18
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              4,
+              12
+            ]
+          },
+          {
+            "point": [
+              4,
+              18
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "40d55b56c45445b6ba4ee6c65c857d29"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              4,
+              12
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              12
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              18
+            ]
+          },
+          {
+            "point": [
+              4,
+              18
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "fill": "#ffffff",
+        "segments": [
+          {
+            "point": [
+              4,
+              12
+            ]
+          },
+          {
+            "point": [
+              29.2,
+              12
+            ]
+          },
+          {
+            "point": [
+              29.2,
+              18
+            ]
+          },
+          {
+            "point": [
+              4,
+              18
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              4,
+              12
+            ]
+          },
+          {
+            "point": [
+              4,
+              18
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              15.78,
+              17.28
+            ]
+          },
+          {
+            "point": [
+              15.78,
+              18
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              16,
+              17.28
+            ]
+          },
+          {
+            "point": [
+              16,
+              18
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              16.22,
+              17.28
+            ]
+          },
+          {
+            "point": [
+              16.22,
+              18
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "57aefa4f745c44c89ad7ece23da20750"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              1.7,
+              11.1
+            ]
+          },
+          {
+            "point": [
+              1.7,
+              8.5
+            ]
+          },
+          {
+            "point": [
+              30.3,
+              8.5
+            ]
+          },
+          {
+            "point": [
+              30.3,
+              11.1
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "fill": "#ffffff",
+        "segments": [
+          {
+            "point": [
+              1.7,
+              11.1
+            ]
+          },
+          {
+            "point": [
+              1.7,
+              21.5
+            ]
+          },
+          {
+            "point": [
+              30.3,
+              21.5
+            ]
+          },
+          {
+            "point": [
+              30.3,
+              11.1
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              1.7,
+              11.1
+            ]
+          },
+          {
+            "point": [
+              30.3,
+              11.1
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "1f892719644147a486b1eddf973998a2"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              1.7,
+              11.1
+            ]
+          },
+          {
+            "point": [
+              1.7,
+              8.5
+            ]
+          },
+          {
+            "point": [
+              30.3,
+              8.5
+            ]
+          },
+          {
+            "point": [
+              30.3,
+              11.1
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "fill": "#ffffff",
+        "segments": [
+          {
+            "point": [
+              1.7,
+              11.1
+            ]
+          },
+          {
+            "point": [
+              1.7,
+              21.5
+            ]
+          },
+          {
+            "point": [
+              30.3,
+              21.5
+            ]
+          },
+          {
+            "point": [
+              30.3,
+              11.1
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              1.7,
+              11.1
+            ]
+          },
+          {
+            "point": [
+              30.3,
+              11.1
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              15.53,
+              19.94
+            ]
+          },
+          {
+            "point": [
+              15.53,
+              21.5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              16,
+              19.94
+            ]
+          },
+          {
+            "point": [
+              16,
+              21.5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              16.47,
+              19.94
+            ]
+          },
+          {
+            "point": [
+              16.47,
+              21.5
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "b0be72e8168748cb8924370aa8d75c90"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              1.3,
+              15
+            ]
+          },
+          {
+            "point": [
+              8.65,
+              2.4
+            ]
+          },
+          {
+            "point": [
+              23.35,
+              2.4
+            ]
+          },
+          {
+            "point": [
+              30.7,
+              15
+            ]
+          },
+          {
+            "point": [
+              23.35,
+              27.6
+            ]
+          },
+          {
+            "point": [
+              8.65,
+              27.6
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "f2da6c2e539f41acb793a27fccd1bec1"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              1.3,
+              15
+            ]
+          },
+          {
+            "point": [
+              8.65,
+              2.4
+            ]
+          },
+          {
+            "point": [
+              23.35,
+              2.4
+            ]
+          },
+          {
+            "point": [
+              30.7,
+              15
+            ]
+          },
+          {
+            "point": [
+              23.35,
+              27.6
+            ]
+          },
+          {
+            "point": [
+              8.65,
+              27.6
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              13.06,
+              27.599999999999998
+            ]
+          },
+          {
+            "point": [
+              13.06,
+              21.72
+            ]
+          },
+          {
+            "point": [
+              18.94,
+              21.72
+            ]
+          },
+          {
+            "point": [
+              18.94,
+              27.599999999999998
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              14.74,
+              24.66
+            ]
+          },
+          {
+            "point": [
+              17.26,
+              24.66
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              16,
+              23.4
+            ]
+          },
+          {
+            "point": [
+              16,
+              25.92
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "50f9adb502614f91a6578972dae948a1"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              1.3,
+              15
+            ]
+          },
+          {
+            "point": [
+              8.65,
+              2.4
+            ]
+          },
+          {
+            "point": [
+              23.35,
+              2.4
+            ]
+          },
+          {
+            "point": [
+              30.7,
+              15
+            ]
+          },
+          {
+            "point": [
+              23.35,
+              27.6
+            ]
+          },
+          {
+            "point": [
+              8.65,
+              27.6
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "091b2dad12f14bd597fae4fce6e4702c"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              1.3,
+              15
+            ]
+          },
+          {
+            "point": [
+              8.65,
+              2.4
+            ]
+          },
+          {
+            "point": [
+              23.35,
+              2.4
+            ]
+          },
+          {
+            "point": [
+              30.7,
+              15
+            ]
+          },
+          {
+            "point": [
+              23.35,
+              27.6
+            ]
+          },
+          {
+            "point": [
+              8.65,
+              27.6
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              13.06,
+              27.599999999999998
+            ]
+          },
+          {
+            "point": [
+              13.06,
+              21.72
+            ]
+          },
+          {
+            "point": [
+              18.94,
+              21.72
+            ]
+          },
+          {
+            "point": [
+              18.94,
+              27.599999999999998
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              14.74,
+              24.66
+            ]
+          },
+          {
+            "point": [
+              17.26,
+              24.66
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              16,
+              23.4
+            ]
+          },
+          {
+            "point": [
+              16,
+              25.92
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "3e4e7a45cb0f4b75bcbd03a5652a4ee8"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              22.75,
+              1.5
+            ]
+          },
+          {
+            "point": [
+              16,
+              1.5
+            ]
+          },
+          {
+            "point": [
+              16,
+              28.5
+            ]
+          },
+          {
+            "point": [
+              22.75,
+              28.5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              9.25,
+              15
+            ]
+          },
+          {
+            "point": [
+              16,
+              15
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "c366aa153dfd4b0986a968bb16f7b190"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              4,
+              5.4
+            ]
+          },
+          {
+            "point": [
+              4,
+              3
+            ]
+          },
+          {
+            "point": [
+              28,
+              3
+            ]
+          },
+          {
+            "point": [
+              28,
+              5.4
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              4,
+              5.4
+            ]
+          },
+          {
+            "point": [
+              4,
+              27
+            ]
+          },
+          {
+            "point": [
+              28,
+              27
+            ]
+          },
+          {
+            "point": [
+              28,
+              5.4
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              4,
+              5.4
+            ]
+          },
+          {
+            "point": [
+              28,
+              5.4
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              4,
+              12.6
+            ]
+          },
+          {
+            "point": [
+              13.6,
+              12.6
+            ]
+          },
+          {
+            "point": [
+              20.8,
+              12.6
+            ]
+          },
+          {
+            "point": [
+              28,
+              12.6
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              4,
+              19.8
+            ]
+          },
+          {
+            "point": [
+              13.6,
+              19.8
+            ]
+          },
+          {
+            "point": [
+              20.8,
+              19.8
+            ]
+          },
+          {
+            "point": [
+              28,
+              19.8
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              13.6,
+              5.4
+            ]
+          },
+          {
+            "point": [
+              13.6,
+              12.6
+            ]
+          },
+          {
+            "point": [
+              13.6,
+              19.8
+            ]
+          },
+          {
+            "point": [
+              13.6,
+              27
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              20.8,
+              5.4
+            ]
+          },
+          {
+            "point": [
+              20.8,
+              12.6
+            ]
+          },
+          {
+            "point": [
+              20.8,
+              19.8
+            ]
+          },
+          {
+            "point": [
+              20.8,
+              27
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              6.4,
+              5.4
+            ]
+          },
+          {
+            "point": [
+              6.4,
+              12.6
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              6.4,
+              7.8
+            ]
+          },
+          {
+            "point": [
+              13.6,
+              7.8
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              13.6,
+              7.8
+            ]
+          },
+          {
+            "point": [
+              20.8,
+              7.8
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              20.8,
+              7.8
+            ]
+          },
+          {
+            "point": [
+              28,
+              7.8
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              6.4,
+              12.6
+            ]
+          },
+          {
+            "point": [
+              6.4,
+              19.8
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              6.4,
+              19.8
+            ]
+          },
+          {
+            "point": [
+              6.4,
+              27
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "3cbf0cee6ed247b68c6a3ffc3c5e1d69"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              1.6,
+              4.8
+            ]
+          },
+          {
+            "point": [
+              1.6,
+              3.6
+            ]
+          },
+          {
+            "point": [
+              30.4,
+              3.6
+            ]
+          },
+          {
+            "point": [
+              30.4,
+              4.8
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              1.6,
+              4.8
+            ]
+          },
+          {
+            "point": [
+              1.6,
+              26.4
+            ]
+          },
+          {
+            "point": [
+              30.4,
+              26.4
+            ]
+          },
+          {
+            "point": [
+              30.4,
+              4.8
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              1.6,
+              4.8
+            ]
+          },
+          {
+            "point": [
+              30.4,
+              4.8
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              2.8,
+              4.8
+            ]
+          },
+          {
+            "point": [
+              1.6,
+              4.8
+            ]
+          },
+          {
+            "point": [
+              1.6,
+              12
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              12
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              2.8,
+              4.8
+            ]
+          },
+          {
+            "point": [
+              30.4,
+              4.8
+            ]
+          },
+          {
+            "point": [
+              30.4,
+              12
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              12
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              2.8,
+              4.8
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              12
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              2.8,
+              12
+            ]
+          },
+          {
+            "point": [
+              1.6,
+              12
+            ]
+          },
+          {
+            "point": [
+              1.6,
+              19.2
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              19.2
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              2.8,
+              12
+            ]
+          },
+          {
+            "point": [
+              30.4,
+              12
+            ]
+          },
+          {
+            "point": [
+              30.4,
+              19.2
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              19.2
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              2.8,
+              12
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              19.2
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              2.8,
+              19.2
+            ]
+          },
+          {
+            "point": [
+              1.6,
+              19.2
+            ]
+          },
+          {
+            "point": [
+              1.6,
+              26.4
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              26.4
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              2.8,
+              19.2
+            ]
+          },
+          {
+            "point": [
+              30.4,
+              19.2
+            ]
+          },
+          {
+            "point": [
+              30.4,
+              26.4
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              26.4
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              2.8,
+              19.2
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              26.4
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "f2f001b3d6734d3c89fe3d972b4ce683"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              2.8,
+              4.2
+            ]
+          },
+          {
+            "point": [
+              1.6,
+              4.2
+            ]
+          },
+          {
+            "point": [
+              1.6,
+              25.8
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              25.8
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              2.8,
+              4.2
+            ]
+          },
+          {
+            "point": [
+              30.4,
+              4.2
+            ]
+          },
+          {
+            "point": [
+              30.4,
+              25.8
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              25.8
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              2.8,
+              4.2
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              25.8
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              4,
+              4.2
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              4.2
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              11.4
+            ]
+          },
+          {
+            "point": [
+              4,
+              11.4
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              4,
+              4.2
+            ]
+          },
+          {
+            "point": [
+              30.4,
+              4.2
+            ]
+          },
+          {
+            "point": [
+              30.4,
+              11.4
+            ]
+          },
+          {
+            "point": [
+              4,
+              11.4
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              4,
+              4.2
+            ]
+          },
+          {
+            "point": [
+              4,
+              11.4
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              4,
+              11.4
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              11.4
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              18.6
+            ]
+          },
+          {
+            "point": [
+              4,
+              18.6
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              4,
+              11.4
+            ]
+          },
+          {
+            "point": [
+              30.4,
+              11.4
+            ]
+          },
+          {
+            "point": [
+              30.4,
+              18.6
+            ]
+          },
+          {
+            "point": [
+              4,
+              18.6
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              4,
+              11.4
+            ]
+          },
+          {
+            "point": [
+              4,
+              18.6
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              4,
+              18.6
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              18.6
+            ]
+          },
+          {
+            "point": [
+              2.8,
+              25.8
+            ]
+          },
+          {
+            "point": [
+              4,
+              25.8
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              4,
+              18.6
+            ]
+          },
+          {
+            "point": [
+              30.4,
+              18.6
+            ]
+          },
+          {
+            "point": [
+              30.4,
+              25.8
+            ]
+          },
+          {
+            "point": [
+              4,
+              25.8
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              4,
+              18.6
+            ]
+          },
+          {
+            "point": [
+              4,
+              25.8
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "1858d98cc7094002b77c0532c11a408f"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              3.4,
+              9.6
+            ]
+          },
+          {
+            "point": [
+              1.6,
+              9.6
+            ]
+          },
+          {
+            "point": [
+              1.6,
+              20.4
+            ]
+          },
+          {
+            "point": [
+              3.4,
+              20.4
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              3.4,
+              9.6
+            ]
+          },
+          {
+            "point": [
+              30.4,
+              9.6
+            ]
+          },
+          {
+            "point": [
+              30.4,
+              20.4
+            ]
+          },
+          {
+            "point": [
+              3.4,
+              20.4
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              3.4,
+              9.6
+            ]
+          },
+          {
+            "point": [
+              3.4,
+              20.4
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "1c1d699af90a45b4b9e18b6741bde278"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              7,
+              4
+            ]
+          },
+          {
+            "point": [
+              7,
+              3
+            ]
+          },
+          {
+            "point": [
+              25,
+              3
+            ]
+          },
+          {
+            "point": [
+              25,
+              4
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              7,
+              4
+            ]
+          },
+          {
+            "point": [
+              7,
+              27
+            ]
+          },
+          {
+            "point": [
+              25,
+              27
+            ]
+          },
+          {
+            "point": [
+              25,
+              4
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              7,
+              4
+            ]
+          },
+          {
+            "point": [
+              25,
+              4
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              7,
+              5
+            ]
+          },
+          {
+            "point": [
+              7,
+              4
+            ]
+          },
+          {
+            "point": [
+              13,
+              4
+            ]
+          },
+          {
+            "point": [
+              13,
+              5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              7,
+              5
+            ]
+          },
+          {
+            "point": [
+              7,
+              27
+            ]
+          },
+          {
+            "point": [
+              13,
+              27
+            ]
+          },
+          {
+            "point": [
+              13,
+              5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              7,
+              5
+            ]
+          },
+          {
+            "point": [
+              13,
+              5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              13,
+              5
+            ]
+          },
+          {
+            "point": [
+              13,
+              4
+            ]
+          },
+          {
+            "point": [
+              19,
+              4
+            ]
+          },
+          {
+            "point": [
+              19,
+              5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              13,
+              5
+            ]
+          },
+          {
+            "point": [
+              13,
+              27
+            ]
+          },
+          {
+            "point": [
+              19,
+              27
+            ]
+          },
+          {
+            "point": [
+              19,
+              5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              13,
+              5
+            ]
+          },
+          {
+            "point": [
+              19,
+              5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              19,
+              5
+            ]
+          },
+          {
+            "point": [
+              19,
+              4
+            ]
+          },
+          {
+            "point": [
+              25,
+              4
+            ]
+          },
+          {
+            "point": [
+              25,
+              5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              19,
+              5
+            ]
+          },
+          {
+            "point": [
+              19,
+              27
+            ]
+          },
+          {
+            "point": [
+              25,
+              27
+            ]
+          },
+          {
+            "point": [
+              25,
+              5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              19,
+              5
+            ]
+          },
+          {
+            "point": [
+              25,
+              5
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "de2c082f842a44e994a979a0382a81be"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              7.5,
+              3
+            ]
+          },
+          {
+            "point": [
+              6.5,
+              3
+            ]
+          },
+          {
+            "point": [
+              6.5,
+              27
+            ]
+          },
+          {
+            "point": [
+              7.5,
+              27
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              7.5,
+              3
+            ]
+          },
+          {
+            "point": [
+              25.5,
+              3
+            ]
+          },
+          {
+            "point": [
+              25.5,
+              27
+            ]
+          },
+          {
+            "point": [
+              7.5,
+              27
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              7.5,
+              3
+            ]
+          },
+          {
+            "point": [
+              7.5,
+              27
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              7.5,
+              4
+            ]
+          },
+          {
+            "point": [
+              7.5,
+              3
+            ]
+          },
+          {
+            "point": [
+              13.5,
+              3
+            ]
+          },
+          {
+            "point": [
+              13.5,
+              4
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              7.5,
+              4
+            ]
+          },
+          {
+            "point": [
+              7.5,
+              27
+            ]
+          },
+          {
+            "point": [
+              13.5,
+              27
+            ]
+          },
+          {
+            "point": [
+              13.5,
+              4
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              7.5,
+              4
+            ]
+          },
+          {
+            "point": [
+              13.5,
+              4
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              13.5,
+              4
+            ]
+          },
+          {
+            "point": [
+              13.5,
+              3
+            ]
+          },
+          {
+            "point": [
+              19.5,
+              3
+            ]
+          },
+          {
+            "point": [
+              19.5,
+              4
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              13.5,
+              4
+            ]
+          },
+          {
+            "point": [
+              13.5,
+              27
+            ]
+          },
+          {
+            "point": [
+              19.5,
+              27
+            ]
+          },
+          {
+            "point": [
+              19.5,
+              4
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              13.5,
+              4
+            ]
+          },
+          {
+            "point": [
+              19.5,
+              4
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              19.5,
+              4
+            ]
+          },
+          {
+            "point": [
+              19.5,
+              3
+            ]
+          },
+          {
+            "point": [
+              25.5,
+              3
+            ]
+          },
+          {
+            "point": [
+              25.5,
+              4
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              19.5,
+              4
+            ]
+          },
+          {
+            "point": [
+              19.5,
+              27
+            ]
+          },
+          {
+            "point": [
+              25.5,
+              27
+            ]
+          },
+          {
+            "point": [
+              25.5,
+              4
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              19.5,
+              4
+            ]
+          },
+          {
+            "point": [
+              25.5,
+              4
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "b877bb94942b491eb04757bdf8a71a8d"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              11.2,
+              3.8
+            ]
+          },
+          {
+            "point": [
+              11.2,
+              2.2
+            ]
+          },
+          {
+            "point": [
+              20.8,
+              2.2
+            ]
+          },
+          {
+            "point": [
+              20.8,
+              3.8
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              11.2,
+              3.8
+            ]
+          },
+          {
+            "point": [
+              11.2,
+              27.8
+            ]
+          },
+          {
+            "point": [
+              20.8,
+              27.8
+            ]
+          },
+          {
+            "point": [
+              20.8,
+              3.8
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              11.2,
+              3.8
+            ]
+          },
+          {
+            "point": [
+              20.8,
+              3.8
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "8279ae459da84c4e95171ad4a2f00138"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              3,
+              28
+            ]
+          },
+          {
+            "point": [
+              3,
+              2
+            ]
+          },
+          {
+            "point": [
+              29,
+              2
+            ]
+          },
+          {
+            "point": [
+              29,
+              28
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "44b58e2f6fcb40a594e9438a55a8fd2a"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              1.51,
+              14.91
+            ]
+          },
+          {
+            "point": [
+              16,
+              14.91
+            ]
+          },
+          {
+            "point": [
+              30.31,
+              14.91
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "5ed13dcd71994365a2d00ed6c6cbbbc1"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              2.31,
+              14.92
+            ]
+          },
+          {
+            "point": [
+              16,
+              14.92
+            ]
+          },
+          {
+            "point": [
+              29.13,
+              14.92
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              28.13,
+              15.31
+            ]
+          },
+          {
+            "point": [
+              29.32,
+              14.92
+            ]
+          },
+          {
+            "point": [
+              28.13,
+              14.52
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "cb695521bbba4d118c7bb5bf4489bc84"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              3.48,
+              14.92
+            ]
+          },
+          {
+            "point": [
+              16,
+              14.92
+            ]
+          },
+          {
+            "point": [
+              28.36,
+              14.92
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              4.42,
+              14.55
+            ]
+          },
+          {
+            "point": [
+              3.3,
+              14.92
+            ]
+          },
+          {
+            "point": [
+              4.42,
+              15.29
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              27.42,
+              15.29
+            ]
+          },
+          {
+            "point": [
+              28.54,
+              14.92
+            ]
+          },
+          {
+            "point": [
+              27.42,
+              14.55
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "da89e898c1a34d0ca864b3a0ae0c003b"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              1.51,
+              14.91
+            ]
+          },
+          {
+            "point": [
+              16,
+              14.91
+            ]
+          },
+          {
+            "point": [
+              30.31,
+              14.91
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "206c041f13184b86951da32688672040"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              1.6,
+              14.64
+            ]
+          },
+          {
+            "point": [
+              16,
+              14.64
+            ]
+          },
+          {
+            "point": [
+              30.4,
+              14.64
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              30.4,
+              15.36
+            ]
+          },
+          {
+            "point": [
+              16,
+              15.36
+            ]
+          },
+          {
+            "point": [
+              1.6,
+              15.36
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              30.4,
+              15.36
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "6e1b1312cd364faf9a52208e225a3f01"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              2.31,
+              14.92
+            ]
+          },
+          {
+            "point": [
+              16,
+              14.92
+            ]
+          },
+          {
+            "point": [
+              28.13,
+              14.92
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              29.32,
+              14.92
+            ]
+          },
+          {
+            "point": [
+              28.13,
+              15.31
+            ]
+          },
+          {
+            "point": [
+              28.13,
+              14.52
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "9c947cbb1eee428b9759832507777bc6"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              5.04,
+              14.92
+            ]
+          },
+          {
+            "point": [
+              16,
+              14.92
+            ]
+          },
+          {
+            "point": [
+              27.42,
+              14.92
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              3.28,
+              14.92
+            ]
+          },
+          {
+            "point": [
+              4.16,
+              14.4
+            ]
+          },
+          {
+            "point": [
+              5.04,
+              14.92
+            ]
+          },
+          {
+            "point": [
+              4.16,
+              15.44
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              28.54,
+              14.92
+            ]
+          },
+          {
+            "point": [
+              27.42,
+              15.29
+            ]
+          },
+          {
+            "point": [
+              27.42,
+              14.55
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "09d9814d36144a81b655e858aa17c2ae"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              3.12,
+              14.92
+            ]
+          },
+          {
+            "point": [
+              16,
+              14.92
+            ]
+          },
+          {
+            "point": [
+              27.42,
+              14.92
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              3.76,
+              14.28
+            ]
+          },
+          {
+            "point": [
+              5.04,
+              15.56
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              28.54,
+              14.92
+            ]
+          },
+          {
+            "point": [
+              27.42,
+              15.29
+            ]
+          },
+          {
+            "point": [
+              27.42,
+              14.55
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "01e4b749ce274ef4b194ccd776714fef"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              2.65,
+              14.92
+            ]
+          },
+          {
+            "point": [
+              28.13,
+              14.92
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              1.97,
+              14.92
+            ],
+            "handleIn": [
+              1.97,
+              15.10777681494247
+            ],
+            "handleOut": [
+              1.97,
+              14.73222318505753
+            ]
+          },
+          {
+            "point": [
+              2.31,
+              14.58
+            ],
+            "handleIn": [
+              2.12222318505753,
+              14.58
+            ],
+            "handleOut": [
+              2.49777681494247,
+              14.58
+            ]
+          },
+          {
+            "point": [
+              2.65,
+              14.92
+            ],
+            "handleIn": [
+              2.65,
+              14.73222318505753
+            ],
+            "handleOut": [
+              2.65,
+              15.10777681494247
+            ]
+          },
+          {
+            "point": [
+              2.31,
+              15.26
+            ],
+            "handleIn": [
+              2.49777681494247,
+              15.26
+            ],
+            "handleOut": [
+              2.12222318505753,
+              15.26
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              29.32,
+              14.92
+            ]
+          },
+          {
+            "point": [
+              28.13,
+              15.31
+            ]
+          },
+          {
+            "point": [
+              28.13,
+              14.52
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "a946e3c479184f00be6589282add77b9"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              2.65,
+              15
+            ]
+          },
+          {
+            "point": [
+              28.13,
+              15
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              1.97,
+              15
+            ],
+            "handleIn": [
+              1.97,
+              15.18777681494247
+            ],
+            "handleOut": [
+              1.97,
+              14.81222318505753
+            ]
+          },
+          {
+            "point": [
+              2.31,
+              14.66
+            ],
+            "handleIn": [
+              2.12222318505753,
+              14.66
+            ],
+            "handleOut": [
+              2.49777681494247,
+              14.66
+            ]
+          },
+          {
+            "point": [
+              2.65,
+              15
+            ],
+            "handleIn": [
+              2.65,
+              14.81222318505753
+            ],
+            "handleOut": [
+              2.65,
+              15.18777681494247
+            ]
+          },
+          {
+            "point": [
+              2.31,
+              15.34
+            ],
+            "handleIn": [
+              2.49777681494247,
+              15.34
+            ],
+            "handleOut": [
+              2.12222318505753,
+              15.34
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              29.32,
+              15
+            ]
+          },
+          {
+            "point": [
+              28.13,
+              15.4
+            ]
+          },
+          {
+            "point": [
+              28.13,
+              14.6
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              17.67,
+              13.64
+            ]
+          },
+          {
+            "point": [
+              21.75,
+              13.64
+            ]
+          },
+          {
+            "point": [
+              21.75,
+              16.36
+            ]
+          },
+          {
+            "point": [
+              17.67,
+              16.36
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              17.67,
+              13.64
+            ]
+          },
+          {
+            "point": [
+              19.71,
+              15
+            ]
+          },
+          {
+            "point": [
+              21.75,
+              13.64
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "4490217ad50043fe890a549075c96377"
+  },
+  {
+    "childs": [
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              2.65,
+              15
+            ]
+          },
+          {
+            "point": [
+              28.13,
+              15
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              1.97,
+              15
+            ],
+            "handleIn": [
+              1.97,
+              15.18777681494247
+            ],
+            "handleOut": [
+              1.97,
+              14.81222318505753
+            ]
+          },
+          {
+            "point": [
+              2.31,
+              14.66
+            ],
+            "handleIn": [
+              2.12222318505753,
+              14.66
+            ],
+            "handleOut": [
+              2.49777681494247,
+              14.66
+            ]
+          },
+          {
+            "point": [
+              2.65,
+              15
+            ],
+            "handleIn": [
+              2.65,
+              14.81222318505753
+            ],
+            "handleOut": [
+              2.65,
+              15.18777681494247
+            ]
+          },
+          {
+            "point": [
+              2.31,
+              15.34
+            ],
+            "handleIn": [
+              2.49777681494247,
+              15.34
+            ],
+            "handleOut": [
+              2.12222318505753,
+              15.34
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": true,
+        "segments": [
+          {
+            "point": [
+              29.32,
+              15
+            ]
+          },
+          {
+            "point": [
+              28.13,
+              15.4
+            ]
+          },
+          {
+            "point": [
+              28.13,
+              14.6
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": true,
+        "fill": "#c0c0c0",
+        "segments": [
+          {
+            "point": [
+              17.67,
+              13.64
+            ]
+          },
+          {
+            "point": [
+              21.75,
+              13.64
+            ]
+          },
+          {
+            "point": [
+              21.75,
+              16.36
+            ]
+          },
+          {
+            "point": [
+              17.67,
+              16.36
+            ]
+          }
+        ]
+      },
+      {
+        "name": "path",
+        "closed": false,
+        "segments": [
+          {
+            "point": [
+              17.67,
+              13.64
+            ]
+          },
+          {
+            "point": [
+              19.71,
+              15
+            ]
+          },
+          {
+            "point": [
+              21.75,
+              13.64
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "09bb84a06e5e484dbb45cf0eec29805c"
+  }
+]

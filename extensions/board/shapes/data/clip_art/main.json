@@ -4,151 +4,188 @@
     "childs": [
       {
         "text": "Antivirus_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Antivirus_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Antivirus_128x128.png",
+        "id": "cf2024b7845244588e4eb98d143516c7"
       },
       {
         "text": "Data_Filtering_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Data_Filtering_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Data_Filtering_128x128.png",
+        "id": "9a70e04e7ba9467791589b6a00dfb6f9"
       },
       {
         "text": "Database_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Database_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Database_128x128.png",
+        "id": "12dbe915e3ec442ca7044fdde72e3be2"
       },
       {
         "text": "Database_Add_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Database_Add_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Database_Add_128x128.png",
+        "id": "59e9ec278f6142229c924bd2247cac1b"
       },
       {
         "text": "Database_Minus_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Database_Minus_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Database_Minus_128x128.png",
+        "id": "364aa7e66d174551b26a5bb07ab557e1"
       },
       {
         "text": "Database_Move_Stack_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Database_Move_Stack_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Database_Move_Stack_128x128.png",
+        "id": "1591fe0692b342d787cc2d58d77dec92"
       },
       {
         "text": "Database_Remove_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Database_Remove_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Database_Remove_128x128.png",
+        "id": "818af633865f421999c112b7c4b41f5f"
       },
       {
         "text": "Fujitsu_Tablet_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Fujitsu_Tablet_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Fujitsu_Tablet_128x128.png",
+        "id": "770c88df33774c4abce0a73725dad828"
       },
       {
         "text": "Harddrive_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Harddrive_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Harddrive_128x128.png",
+        "id": "43690bea5d9f43eaa06bd5033b479725"
       },
       {
         "text": "IBM_Tablet_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/IBM_Tablet_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/IBM_Tablet_128x128.png",
+        "id": "718a5559be2649d79aaa93eb5b8d75db"
       },
       {
         "text": "Laptop_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Laptop_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Laptop_128x128.png",
+        "id": "adb7185592f54f969b390e9fe5182332"
       },
       {
         "text": "MacBook_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/MacBook_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/MacBook_128x128.png",
+        "id": "c20111d8741f41509fd0fc91fc9cf41f"
       },
       {
         "text": "Mainframe_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Mainframe_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Mainframe_128x128.png",
+        "id": "b1d40e3428724905b3f9a0f529cceaa0"
       },
       {
         "text": "Monitor_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Monitor_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Monitor_128x128.png",
+        "id": "036c1f99e7034602ad32db9aa356e20b"
       },
       {
         "text": "Monitor_Tower_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Monitor_Tower_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Monitor_Tower_128x128.png",
+        "id": "ddfb3ffe48f34920a4ce5af388ac8f85"
       },
       {
         "text": "Monitor_Tower_Behind_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Monitor_Tower_Behind_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Monitor_Tower_Behind_128x128.png",
+        "id": "c495b1828302476489d87e2ce5dcade4"
       },
       {
         "text": "Netbook_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Netbook_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Netbook_128x128.png",
+        "id": "90eedbe57fa34a439262239b2795400b"
       },
       {
         "text": "Network_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Network_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Network_128x128.png",
+        "id": "bcb7f146347248f99262f025ee18abcf"
       },
       {
         "text": "Network_2_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Network_2_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Network_2_128x128.png",
+        "id": "33dff218209f473281c9190d816d909b"
       },
       {
         "text": "Printer_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Printer_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Printer_128x128.png",
+        "id": "c18841bb4f274ecfb264be6e300da52f"
       },
       {
         "text": "Printer_Commercial_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Printer_Commercial_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Printer_Commercial_128x128.png",
+        "id": "c401a9e6c2cd4e388b607bc15325dd89"
       },
       {
         "text": "Secure_System_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Secure_System_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Secure_System_128x128.png",
+        "id": "fbbc1ea455e4448cbdc044d5bb832c95"
       },
       {
         "text": "Server_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Server_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Server_128x128.png",
+        "id": "ee2b131f0e0c46d6a2fb5a0c8a630e3e"
       },
       {
         "text": "Server_Rack_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Server_Rack_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Server_Rack_128x128.png",
+        "id": "7a31eef116d14f069023f608bb2ed597"
       },
       {
         "text": "Server_Rack_Empty_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Server_Rack_Empty_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Server_Rack_Empty_128x128.png",
+        "id": "de42d960acba4f4797ddd39b33508344"
       },
       {
         "text": "Server_Rack_Partial_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Server_Rack_Partial_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Server_Rack_Partial_128x128.png",
+        "id": "42145dde963542e2b3800655efcf6cdf"
       },
       {
         "text": "Server_Tower_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Server_Tower_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Server_Tower_128x128.png",
+        "id": "6a5721383fe54296a0031a8b78179e01"
       },
       {
         "text": "Software_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Software_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Software_128x128.png",
+        "id": "855fdd6304cc4bb296a545945a055b4c"
       },
       {
         "text": "Stylus_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Stylus_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Stylus_128x128.png",
+        "id": "0b34c04af1d4492b8407d4e14ae9ae34"
       },
       {
         "text": "Touch_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Touch_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Touch_128x128.png",
+        "id": "0dc14739874a455091ce4c1783c4fc8a"
       },
       {
         "text": "USB_Hub_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/USB_Hub_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/USB_Hub_128x128.png",
+        "id": "bfbfa505d8604fd687514f583bc64db7"
       },
       {
         "text": "Virtual_Application_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Virtual_Application_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Virtual_Application_128x128.png",
+        "id": "5fd90b4015984518b9b26bd8a1d62587"
       },
       {
         "text": "Virtual_Machine_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Virtual_Machine_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Virtual_Machine_128x128.png",
+        "id": "4a2554ae31c841f79d16ebad7c22ed87"
       },
       {
         "text": "Virus_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Virus_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Virus_128x128.png",
+        "id": "d9ee46d1eaa240819f8524a20278bcb7"
       },
       {
         "text": "Workstation_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Workstation_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Workstation_128x128.png",
+        "id": "78214280f8514db1a1cf1adff622085e"
       },
       {
         "text": "iMac_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/iMac_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/iMac_128x128.png",
+        "id": "0f026cf02c9946078ce2d5ce04a29fcd"
       },
       {
         "text": "iPad_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/iPad_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/iPad_128x128.png",
+        "id": "8baf3ad9ef7d40169cd020a933cd8834"
       }
     ]
   },
@@ -157,51 +194,63 @@
     "childs": [
       {
         "text": "Arrow_Down_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Arrow_Down_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Arrow_Down_128x128.png",
+        "id": "295f205f890640cf873d039edb0c99a2"
       },
       {
         "text": "Arrow_Up_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Arrow_Up_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Arrow_Up_128x128.png",
+        "id": "26ecc2fd408441a0bb2a1ca369902e17"
       },
       {
         "text": "Coins_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Coins_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Coins_128x128.png",
+        "id": "c6a7f90325b34bc1adf598ab4e3bcaff"
       },
       {
         "text": "Credit_Card_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Credit_Card_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Credit_Card_128x128.png",
+        "id": "6a183f706fc14c198c1d63537179e6ee"
       },
       {
         "text": "Dollar_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Dollar_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Dollar_128x128.png",
+        "id": "b89df21399df45b5ae1a467b995c437d"
       },
       {
         "text": "Graph_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Graph_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Graph_128x128.png",
+        "id": "bb3e6b865dfa4441961815e3ad95f476"
       },
       {
         "text": "Pie_Chart_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Pie_Chart_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Pie_Chart_128x128.png",
+        "id": "d8d0561fd9304f288003823e8622c698"
       },
       {
         "text": "Piggy_Bank_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Piggy_Bank_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Piggy_Bank_128x128.png",
+        "id": "8d0ef108730a4f92987b67c4f69c1850"
       },
       {
         "text": "Safe_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Safe_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Safe_128x128.png",
+        "id": "03d7d26b664c4db6ab243aae5d92a068"
       },
       {
         "text": "Shopping_Cart_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Shopping_Cart_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Shopping_Cart_128x128.png",
+        "id": "1e106fd38fc04c059d62886ffdcd137f"
       },
       {
         "text": "Stock_Down_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Stock_Down_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Stock_Down_128x128.png",
+        "id": "88ed34c68a104e7fad97af67d938afbd"
       },
       {
         "text": "Stock_Up_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Stock_Up_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Stock_Up_128x128.png",
+        "id": "7f13880f896a44cfbe105fbc1006437d"
       }
     ]
   },
@@ -210,71 +259,88 @@
     "childs": [
       {
         "text": "Battery_0_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Battery_0_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Battery_0_128x128.png",
+        "id": "2a2ace6290434d9eb38b296bcd6ca320"
       },
       {
         "text": "Battery_100_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Battery_100_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Battery_100_128x128.png",
+        "id": "31dd4154be2849d58c3fb79305fc6c35"
       },
       {
         "text": "Battery_50_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Battery_50_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Battery_50_128x128.png",
+        "id": "d5465e4f88184ee284b5e75b282047c7"
       },
       {
         "text": "Battery_75_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Battery_75_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Battery_75_128x128.png",
+        "id": "0416de4934f845cead1779b9fa6f5fa6"
       },
       {
         "text": "Battery_allstates_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Battery_allstates_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Battery_allstates_128x128.png",
+        "id": "8941bc9693c244db81af4ba918ebe5e5"
       },
       {
         "text": "Bluetooth_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Bluetooth_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Bluetooth_128x128.png",
+        "id": "3ba2297d9e9d44209fa6224fb2f58985"
       },
       {
         "text": "Earth_globe_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Earth_globe_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Earth_globe_128x128.png",
+        "id": "6727abf09fb6421083a97e0aa10cf3ec"
       },
       {
         "text": "Empty_Folder_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Empty_Folder_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Empty_Folder_128x128.png",
+        "id": "aeb8219a39fe4195b9a7c2972041973f"
       },
       {
         "text": "Full_Folder_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Full_Folder_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Full_Folder_128x128.png",
+        "id": "7b947115d93542ffa1ba01f229379e0e"
       },
       {
         "text": "Gear_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Gear_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Gear_128x128.png",
+        "id": "c4b5240f466f4f3a98d674abf28f528b"
       },
       {
         "text": "Keys_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Keys_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Keys_128x128.png",
+        "id": "b071b38e68074f86a188515b529b96ae"
       },
       {
         "text": "Lock_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Lock_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Lock_128x128.png",
+        "id": "ed0446d564be4890b85b55fd91ac236f"
       },
       {
         "text": "Mouse_Pointer_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Mouse_Pointer_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Mouse_Pointer_128x128.png",
+        "id": "561d9568a6784a0fa219bcde50449316"
       },
       {
         "text": "Plug_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Plug_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Plug_128x128.png",
+        "id": "61ed43a7d47841d3b3189f1e7eba2a88"
       },
       {
         "text": "Ships_Wheel_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Ships_Wheel_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Ships_Wheel_128x128.png",
+        "id": "d5c61152182647209032cb1d8bc4912a"
       },
       {
         "text": "Star_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Star_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Star_128x128.png",
+        "id": "7eb4bb4e9b6e48559ad95304def6c622"
       },
       {
         "text": "Tire_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Tire_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Tire_128x128.png",
+        "id": "e21b759347d743729bb8baab7c59ac6a"
       }
     ]
   },
@@ -283,115 +349,143 @@
     "childs": [
       {
         "text": "Bridge_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Bridge_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Bridge_128x128.png",
+        "id": "16d4933731b34222b1b64ff32329b3e6"
       },
       {
         "text": "Certificate_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Certificate_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Certificate_128x128.png",
+        "id": "f96276326537429598b42406819bc256"
       },
       {
         "text": "Certificate_Off_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Certificate_Off_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Certificate_Off_128x128.png",
+        "id": "e3fc89ea048441519ed4a660492c6b08"
       },
       {
         "text": "Cloud_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_128x128.png",
+        "id": "3ed466d9b3094daaaf812fcc818d5986"
       },
       {
         "text": "Cloud_Computer_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Computer_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Computer_128x128.png",
+        "id": "ca6d11f71d4f4af7a6234a1577b7c6c0"
       },
       {
         "text": "Cloud_Computer_Private_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Computer_Private_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Computer_Private_128x128.png",
+        "id": "695020b21bf54e6aa70a80043e778cd8"
       },
       {
         "text": "Cloud_Rack_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Rack_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Rack_128x128.png",
+        "id": "fa3a3971b9544131b33cafecae969cae"
       },
       {
         "text": "Cloud_Rack_Private_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Rack_Private_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Rack_Private_128x128.png",
+        "id": "0dd5d01fc7be4fbab822e7078dfadeeb"
       },
       {
         "text": "Cloud_Server_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Server_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Server_128x128.png",
+        "id": "f05544ccfdf84770a07793c4890a968b"
       },
       {
         "text": "Cloud_Server_Private_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Server_Private_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Server_Private_128x128.png",
+        "id": "154dd7f45bbb4000bd93bbcda1d94d5c"
       },
       {
         "text": "Cloud_Storage_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Storage_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Storage_128x128.png",
+        "id": "d87f7dc0facc4183ad0d7006f276873b"
       },
       {
         "text": "Concentrator_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Concentrator_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Concentrator_128x128.png",
+        "id": "61157f78a4d64f299bdfec46c8255880"
       },
       {
         "text": "Email_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Email_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Email_128x128.png",
+        "id": "d4b8f59bfdb1432aa1c6911ae56b0c52"
       },
       {
         "text": "Firewall-page1_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Firewall-page1_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Firewall-page1_128x128.png",
+        "id": "e4d89dd20e2d47f4bbe1d4e041907a00"
       },
       {
         "text": "Firewall_02_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Firewall_02_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Firewall_02_128x128.png",
+        "id": "973eda7a14b54072b9f9ecd16d79dbfb"
       },
       {
         "text": "Firewall_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Firewall_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Firewall_128x128.png",
+        "id": "7a402456776749b6a4e41973edba914f"
       },
       {
         "text": "Ip_Camera_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Ip_Camera_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Ip_Camera_128x128.png",
+        "id": "693b423b63f74867b811f88465c8a25d"
       },
       {
         "text": "Modem_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Modem_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Modem_128x128.png",
+        "id": "581d96d0c87d49a98bda510b8e55729e"
       },
       {
         "text": "Print_Server_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Print_Server_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Print_Server_128x128.png",
+        "id": "96b06dd245604ccf8955ef5435755e76"
       },
       {
         "text": "Print_Server_Wireless_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Print_Server_Wireless_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Print_Server_Wireless_128x128.png",
+        "id": "f425a15fafb54b5a875b4bdb8095da8a"
       },
       {
         "text": "Repeater_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Repeater_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Repeater_128x128.png",
+        "id": "f39bdd1dd08d4bf3b4b8149c5639075d"
       },
       {
         "text": "Router_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Router_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Router_128x128.png",
+        "id": "47f3d9923df84066a82842800c9f492c"
       },
       {
         "text": "Router_Icon_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Router_Icon_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Router_Icon_128x128.png",
+        "id": "335432652e874939aee2d919b1dbcecd"
       },
       {
         "text": "Switch_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Switch_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Switch_128x128.png",
+        "id": "a909bca5c8094221a2e3594d11e13a1c"
       },
       {
         "text": "UPS_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/UPS_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/UPS_128x128.png",
+        "id": "707d8829cdfa47058a578c136d5cd1b7"
       },
       {
         "text": "Wireless_Router_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Wireless_Router_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Wireless_Router_128x128.png",
+        "id": "a09930d4673e49418dcb35e6a85eb257"
       },
       {
         "text": "Wireless_Router_N_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Wireless_Router_N_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Wireless_Router_N_128x128.png",
+        "id": "a7778fa3da1846edb24a8f9555d0d00c"
       },
       {
         "text": "power_distribution_unit_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/power_distribution_unit_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/power_distribution_unit_128x128.png",
+        "id": "c4d2c9e3c9894a6889f0960199248692"
       }
     ]
   },
@@ -400,251 +494,313 @@
     "childs": [
       {
         "text": "Construction_Worker_Man_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Construction_Worker_Man_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Construction_Worker_Man_128x128.png",
+        "id": "4ec3471c3576433e852b2a5a3397c60b"
       },
       {
         "text": "Construction_Worker_Man_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Construction_Worker_Man_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Construction_Worker_Man_Black_128x128.png",
+        "id": "40fe45aab09349acb6a6fc291d7ec737"
       },
       {
         "text": "Construction_Worker_Woman_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Construction_Worker_Woman_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Construction_Worker_Woman_128x128.png",
+        "id": "7a09803cc8d5429681d405550d2db6a9"
       },
       {
         "text": "Construction_Worker_Woman_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Construction_Worker_Woman_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Construction_Worker_Woman_Black_128x128.png",
+        "id": "522e5e00a3a14eb49f6be9676b8be9de"
       },
       {
         "text": "Doctor_Man_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Doctor_Man_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Doctor_Man_128x128.png",
+        "id": "10fffdb901aa4a639bb755b578aebe91"
       },
       {
         "text": "Doctor_Man_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Doctor_Man_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Doctor_Man_Black_128x128.png",
+        "id": "8cc0553b20b345e49cccfe3dffb7a089"
       },
       {
         "text": "Doctor_Woman_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Doctor_Woman_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Doctor_Woman_128x128.png",
+        "id": "b86c9c5124f844dbb3857a4ff9b64241"
       },
       {
         "text": "Doctor_Woman_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Doctor_Woman_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Doctor_Woman_Black_128x128.png",
+        "id": "e22791f4036e4a80b1567ffc6f1a0137"
       },
       {
         "text": "Farmer_Man_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Farmer_Man_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Farmer_Man_128x128.png",
+        "id": "8b132c2cb0a448a5aff3d9974fc494a9"
       },
       {
         "text": "Farmer_Man_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Farmer_Man_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Farmer_Man_Black_128x128.png",
+        "id": "63ce3893bc1f40259ad0991d841a3fd6"
       },
       {
         "text": "Farmer_Woman_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Farmer_Woman_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Farmer_Woman_128x128.png",
+        "id": "872da064a6294533b81cc7acc10fff0b"
       },
       {
         "text": "Farmer_Woman_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Farmer_Woman_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Farmer_Woman_Black_128x128.png",
+        "id": "a6d271547261467c85f261780a887401"
       },
       {
         "text": "Military_Officer_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Military_Officer_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Military_Officer_128x128.png",
+        "id": "f354f5a6602c41ce979a33b1c921ac8d"
       },
       {
         "text": "Military_Officer_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Military_Officer_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Military_Officer_Black_128x128.png",
+        "id": "79baa90856d74cf58aa5c246a6276556"
       },
       {
         "text": "Military_Officer_Woman_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Military_Officer_Woman_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Military_Officer_Woman_128x128.png",
+        "id": "06b1ace4dea840ea932d326ac9696551"
       },
       {
         "text": "Military_Officer_Woman_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Military_Officer_Woman_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Military_Officer_Woman_Black_128x128.png",
+        "id": "80c618b159484f9c9dff5659d75ebee2"
       },
       {
         "text": "Nurse_Man_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Man_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Man_128x128.png",
+        "id": "69d21b91e5834c2db7a3fd7f70264afd"
       },
       {
         "text": "Nurse_Man_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Man_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Man_Black_128x128.png",
+        "id": "e3974334f05741b8938e483093da1644"
       },
       {
         "text": "Nurse_Man_Green_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Man_Green_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Man_Green_128x128.png",
+        "id": "f7b0b70185ea41ca99fc3195683cae90"
       },
       {
         "text": "Nurse_Man_Red_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Man_Red_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Man_Red_128x128.png",
+        "id": "d516f30968174bbe85b3bcfcc3214562"
       },
       {
         "text": "Nurse_Woman_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Woman_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Woman_128x128.png",
+        "id": "65faa2c614de4912bb377be4e765c9ae"
       },
       {
         "text": "Nurse_Woman_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Woman_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Woman_Black_128x128.png",
+        "id": "4c00ba6338154b9dba7a002474d534b4"
       },
       {
         "text": "Nurse_Woman_Green_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Woman_Green_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Woman_Green_128x128.png",
+        "id": "21acbb0c15c8458ea2086b09ade2f39e"
       },
       {
         "text": "Nurse_Woman_Red_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Woman_Red_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Woman_Red_128x128.png",
+        "id": "a11713603c0544ea834445af73535a7f"
       },
       {
         "text": "Pilot_Man_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Pilot_Man_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Pilot_Man_128x128.png",
+        "id": "47338b644d9b4b099b891f6d5ef88804"
       },
       {
         "text": "Pilot_Man_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Pilot_Man_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Pilot_Man_Black_128x128.png",
+        "id": "4f4df155cbb84ababbb703839e151b84"
       },
       {
         "text": "Pilot_Woman_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Pilot_Woman_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Pilot_Woman_128x128.png",
+        "id": "e7c2776ae82e4deba937472ce0493751"
       },
       {
         "text": "Pilot_Woman_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Pilot_Woman_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Pilot_Woman_Black_128x128.png",
+        "id": "ac9f413b41204f4395594831e072cc0c"
       },
       {
         "text": "Scientist_Man_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Scientist_Man_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Scientist_Man_128x128.png",
+        "id": "a11096c127cc42df9621164932aa2701"
       },
       {
         "text": "Scientist_Man_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Scientist_Man_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Scientist_Man_Black_128x128.png",
+        "id": "69b7ade8e1424959bf1894e09c7156c8"
       },
       {
         "text": "Scientist_Woman_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Scientist_Woman_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Scientist_Woman_128x128.png",
+        "id": "deb40ee0b8ee44c2bc62ef939222b57a"
       },
       {
         "text": "Scientist_Woman_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Scientist_Woman_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Scientist_Woman_Black_128x128.png",
+        "id": "f88a2d2b0a444548bdb0d54539e2fffd"
       },
       {
         "text": "Security_Man_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Security_Man_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Security_Man_128x128.png",
+        "id": "8fb577ba756944029d68b5ef59a0c8e9"
       },
       {
         "text": "Security_Man_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Security_Man_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Security_Man_Black_128x128.png",
+        "id": "f025c3425eb544c2b352077fe1387aea"
       },
       {
         "text": "Security_Woman_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Security_Woman_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Security_Woman_128x128.png",
+        "id": "5506683e3d8c477fa57b103a7456eea6"
       },
       {
         "text": "Security_Woman_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Security_Woman_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Security_Woman_Black_128x128.png",
+        "id": "09e49df747ab4804a7baaf0039cd3804"
       },
       {
         "text": "Soldier_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Soldier_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Soldier_128x128.png",
+        "id": "4042ef6074d14fa6997b2e6b512b5149"
       },
       {
         "text": "Soldier_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Soldier_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Soldier_Black_128x128.png",
+        "id": "9d920705d3b54cb195b2254284435078"
       },
       {
         "text": "Suit_Man_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Man_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Man_128x128.png",
+        "id": "49f748d70bb9441daca350b022163e3b"
       },
       {
         "text": "Suit_Man_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Man_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Man_Black_128x128.png",
+        "id": "b01d731c5980446282ea9d94079115b7"
       },
       {
         "text": "Suit_Man_Blue_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Man_Blue_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Man_Blue_128x128.png",
+        "id": "ea0c1ba0db084842ae781ae4689ddde8"
       },
       {
         "text": "Suit_Man_Green_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Man_Green_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Man_Green_128x128.png",
+        "id": "94ea1a62ab9544a3a5544f6defee7a33"
       },
       {
         "text": "Suit_Man_Green_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Man_Green_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Man_Green_Black_128x128.png",
+        "id": "f34227c4f77f483ea85f522c0a6e04e7"
       },
       {
         "text": "Suit_Woman_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Woman_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Woman_128x128.png",
+        "id": "ac66c713b37140afa5931d6da07a63f0"
       },
       {
         "text": "Suit_Woman_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Woman_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Woman_Black_128x128.png",
+        "id": "192036b46d514ec48ca4e3c5cf60419d"
       },
       {
         "text": "Suit_Woman_Blue_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Woman_Blue_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Woman_Blue_128x128.png",
+        "id": "d60540757be34926a74956263840aaee"
       },
       {
         "text": "Suit_Woman_Green_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Woman_Green_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Woman_Green_128x128.png",
+        "id": "a289837d9ad0424eaa95595e20ae95ef"
       },
       {
         "text": "Suit_Woman_Green_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Woman_Green_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Woman_Green_Black_128x128.png",
+        "id": "7f23d15fff3e43b5880668e0dd945ba6"
       },
       {
         "text": "Tech_Man_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Tech_Man_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Tech_Man_128x128.png",
+        "id": "53144a49796b4dee8d55b8917c4e6055"
       },
       {
         "text": "Tech_Man_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Tech_Man_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Tech_Man_Black_128x128.png",
+        "id": "501e4824edc746c38fd7104ea257e654"
       },
       {
         "text": "Telesales_Man_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Telesales_Man_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Telesales_Man_128x128.png",
+        "id": "e03b748f3e3e46999a3b5d4b9eb3bb64"
       },
       {
         "text": "Telesales_Man_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Telesales_Man_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Telesales_Man_Black_128x128.png",
+        "id": "0f91adb63603490fa0bcb58d5d327603"
       },
       {
         "text": "Telesales_Woman_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Telesales_Woman_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Telesales_Woman_128x128.png",
+        "id": "0375b7a2d2984396a5d81ff7d406c052"
       },
       {
         "text": "Telesales_Woman_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Telesales_Woman_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Telesales_Woman_Black_128x128.png",
+        "id": "4cbf06c405da44bf932d982375bf4274"
       },
       {
         "text": "Waiter_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Waiter_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Waiter_128x128.png",
+        "id": "10b282e944ef4b30b9b750cee4549fe3"
       },
       {
         "text": "Waiter_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Waiter_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Waiter_Black_128x128.png",
+        "id": "e3733b178ae04db0993d48f38c6411ea"
       },
       {
         "text": "Waiter_Woman_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Waiter_Woman_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Waiter_Woman_128x128.png",
+        "id": "ba9ee8365bd34f4b99e74a3440230504"
       },
       {
         "text": "Waiter_Woman_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Waiter_Woman_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Waiter_Woman_Black_128x128.png",
+        "id": "4d3bb68bbda945d38937f3820d1f5d09"
       },
       {
         "text": "Worker_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Worker_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Worker_Black_128x128.png",
+        "id": "146cc6ea797b47d88a25c0e8a20315f8"
       },
       {
         "text": "Worker_Man_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Worker_Man_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Worker_Man_128x128.png",
+        "id": "f09af577572b49c19c27557691df51e1"
       },
       {
         "text": "Worker_Woman_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Worker_Woman_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Worker_Woman_128x128.png",
+        "id": "1d3c76208bda48adb6daf3a8fb1fd7e7"
       },
       {
         "text": "Worker_Woman_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Worker_Woman_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Worker_Woman_Black_128x128.png",
+        "id": "0ed5cf6c05b84ec0851d35791ddb0335"
       }
     ]
   },
@@ -653,35 +809,43 @@
     "childs": [
       {
         "text": "BlackBerry_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/BlackBerry_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/BlackBerry_128x128.png",
+        "id": "1c74cd8d6fba4af3b26daf12e88ff258"
       },
       {
         "text": "Cellphone_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/Cellphone_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/Cellphone_128x128.png",
+        "id": "a990a15f594b41008c571b38df281979"
       },
       {
         "text": "HTC_smartphone_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/HTC_smartphone_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/HTC_smartphone_128x128.png",
+        "id": "08b50fbeb85a45619fcdcc5ba342400f"
       },
       {
         "text": "Palm_Treo_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/Palm_Treo_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/Palm_Treo_128x128.png",
+        "id": "dc1f88cec4b7464cb770210bfb76150b"
       },
       {
         "text": "Signal_tower_off_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/Signal_tower_off_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/Signal_tower_off_128x128.png",
+        "id": "698b4079c3b74040ac9a8411cfcff56c"
       },
       {
         "text": "Signal_tower_on_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/Signal_tower_on_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/Signal_tower_on_128x128.png",
+        "id": "2f712d5f56d749adb782853d37ada213"
       },
       {
         "text": "Telephone_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/Telephone_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/Telephone_128x128.png",
+        "id": "643dc32cf038441193f82bb9750d8802"
       },
       {
         "text": "iPhone_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/iPhone_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/iPhone_128x128.png",
+        "id": "63dc97c3d32040aab2500a589788d311"
       }
     ]
   },
@@ -690,659 +854,823 @@
     "childs": [
       {
         "text": "Antivirus_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Antivirus_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Antivirus_128x128.png",
+        "id": "cc6a33a35552425985f713b254259c9c"
       },
       {
         "text": "Data_Filtering_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Data_Filtering_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Data_Filtering_128x128.png",
+        "id": "64596032f03d469cb11be94dfd31b5fb"
       },
       {
         "text": "Database_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Database_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Database_128x128.png",
+        "id": "01e73930e03b48bca3dabd4148d9ac52"
       },
       {
         "text": "Database_Add_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Database_Add_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Database_Add_128x128.png",
+        "id": "926868aab2f74819b5585d02bb35da14"
       },
       {
         "text": "Database_Minus_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Database_Minus_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Database_Minus_128x128.png",
+        "id": "345061fa9ef3472cb277d8b4a3dcd327"
       },
       {
         "text": "Database_Move_Stack_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Database_Move_Stack_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Database_Move_Stack_128x128.png",
+        "id": "87a1b8c178ec492783c6bb5482d64c8a"
       },
       {
         "text": "Database_Remove_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Database_Remove_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Database_Remove_128x128.png",
+        "id": "16b708103ab6443b871f6751d7e54007"
       },
       {
         "text": "Fujitsu_Tablet_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Fujitsu_Tablet_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Fujitsu_Tablet_128x128.png",
+        "id": "20566d7482414489bacf56eb6c4ef757"
       },
       {
         "text": "Harddrive_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Harddrive_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Harddrive_128x128.png",
+        "id": "7209723cba024a1099136c3767d87285"
       },
       {
         "text": "IBM_Tablet_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/IBM_Tablet_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/IBM_Tablet_128x128.png",
+        "id": "49dc2d308c1b43cfab611703e98d5a85"
       },
       {
         "text": "Laptop_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Laptop_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Laptop_128x128.png",
+        "id": "54ff5fc516ab4a1bb70f70b452b5b529"
       },
       {
         "text": "MacBook_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/MacBook_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/MacBook_128x128.png",
+        "id": "d4c6dd44492b48c193a219280b28a91f"
       },
       {
         "text": "Mainframe_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Mainframe_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Mainframe_128x128.png",
+        "id": "53b541de2c6a4f1a975b822309503e0b"
       },
       {
         "text": "Monitor_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Monitor_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Monitor_128x128.png",
+        "id": "d3e3945cb35d4ab5b4e1c469a5c35eaf"
       },
       {
         "text": "Monitor_Tower_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Monitor_Tower_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Monitor_Tower_128x128.png",
+        "id": "037429d699f14168b5f8444c47b44591"
       },
       {
         "text": "Monitor_Tower_Behind_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Monitor_Tower_Behind_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Monitor_Tower_Behind_128x128.png",
+        "id": "6fb389ef0c3449b5a89215d5b370041f"
       },
       {
         "text": "Netbook_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Netbook_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Netbook_128x128.png",
+        "id": "2afd1fbe6c4b4139a00c8c13f43042fc"
       },
       {
         "text": "Network_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Network_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Network_128x128.png",
+        "id": "59e408710db4442e80a81101072c8c4f"
       },
       {
         "text": "Network_2_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Network_2_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Network_2_128x128.png",
+        "id": "a6b309cfacce4fa3ac8fbc7a8c66dba2"
       },
       {
         "text": "Printer_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Printer_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Printer_128x128.png",
+        "id": "d4fcc8e29d594470890a2af6d5e28e27"
       },
       {
         "text": "Printer_Commercial_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Printer_Commercial_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Printer_Commercial_128x128.png",
+        "id": "930143d032634b4d8e85a6c38818bf45"
       },
       {
         "text": "Secure_System_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Secure_System_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Secure_System_128x128.png",
+        "id": "b1cb36d018014a0b9917856e044d771b"
       },
       {
         "text": "Server_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Server_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Server_128x128.png",
+        "id": "59ad57a52e30453d951e2f78a788fc46"
       },
       {
         "text": "Server_Rack_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Server_Rack_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Server_Rack_128x128.png",
+        "id": "6f6987718d414cf79bc0ef9e519c8bf9"
       },
       {
         "text": "Server_Rack_Empty_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Server_Rack_Empty_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Server_Rack_Empty_128x128.png",
+        "id": "6f36c0fbfbb04fcfb3b626fc8fa6f8d1"
       },
       {
         "text": "Server_Rack_Partial_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Server_Rack_Partial_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Server_Rack_Partial_128x128.png",
+        "id": "92edd257c4c74eb7a690232cdc23b8f7"
       },
       {
         "text": "Server_Tower_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Server_Tower_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Server_Tower_128x128.png",
+        "id": "6e5a6cff26ec476585ed651c0fb8a853"
       },
       {
         "text": "Software_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Software_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Software_128x128.png",
+        "id": "4a35ea87322b41c18a5f251be679dfa6"
       },
       {
         "text": "Stylus_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Stylus_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Stylus_128x128.png",
+        "id": "69738486f99740cc8ffc343727fe88cf"
       },
       {
         "text": "Touch_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Touch_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Touch_128x128.png",
+        "id": "a0ec1f8ea87642b48de94fb4d318231a"
       },
       {
         "text": "USB_Hub_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/USB_Hub_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/USB_Hub_128x128.png",
+        "id": "b41559fc90e845d6ac12999f702b244c"
       },
       {
         "text": "Virtual_Application_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Virtual_Application_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Virtual_Application_128x128.png",
+        "id": "7356696522ad4d9f85f720974b080ff7"
       },
       {
         "text": "Virtual_Machine_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Virtual_Machine_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Virtual_Machine_128x128.png",
+        "id": "65c04341119d476380d28883cb9f9807"
       },
       {
         "text": "Virus_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Virus_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Virus_128x128.png",
+        "id": "a63f3f3631384fd2b760808b5c593110"
       },
       {
         "text": "Workstation_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Workstation_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/Workstation_128x128.png",
+        "id": "cabbd00230454b15b59a8f783f6f325c"
       },
       {
         "text": "iMac_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/iMac_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/iMac_128x128.png",
+        "id": "395ec73f6fdd4560b046f2215e59aff1"
       },
       {
         "text": "iPad_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/iPad_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/computers/iPad_128x128.png",
+        "id": "1e69e1add6db4dbda62f7c5ddc8aa106"
       },
       {
         "text": "Arrow_Down_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Arrow_Down_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Arrow_Down_128x128.png",
+        "id": "32cddd0a1fdf493689ee461eb0d36282"
       },
       {
         "text": "Arrow_Up_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Arrow_Up_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Arrow_Up_128x128.png",
+        "id": "a6fb67649434429db138d5f6f8210060"
       },
       {
         "text": "Coins_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Coins_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Coins_128x128.png",
+        "id": "85e204d5839f4115b0340a309ffe7ad1"
       },
       {
         "text": "Credit_Card_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Credit_Card_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Credit_Card_128x128.png",
+        "id": "0b8bfcbe6b3744d2894fd56d38830778"
       },
       {
         "text": "Dollar_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Dollar_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Dollar_128x128.png",
+        "id": "15dc1d21c7dc408a9a06bdca48b0fc5a"
       },
       {
         "text": "Graph_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Graph_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Graph_128x128.png",
+        "id": "9df3548752e3494cb6741e5b9109dffc"
       },
       {
         "text": "Pie_Chart_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Pie_Chart_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Pie_Chart_128x128.png",
+        "id": "7687137d9b88456eb5951e430ccb8983"
       },
       {
         "text": "Piggy_Bank_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Piggy_Bank_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Piggy_Bank_128x128.png",
+        "id": "1a13b233b04d4a58851fd8a445878bb5"
       },
       {
         "text": "Safe_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Safe_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Safe_128x128.png",
+        "id": "c67c81993ef9433783a1dc4a95480964"
       },
       {
         "text": "Shopping_Cart_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Shopping_Cart_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Shopping_Cart_128x128.png",
+        "id": "8175e6b816f9447c93c607903f4187aa"
       },
       {
         "text": "Stock_Down_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Stock_Down_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Stock_Down_128x128.png",
+        "id": "a1012231092a4666b9f6697db77b98bc"
       },
       {
         "text": "Stock_Up_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Stock_Up_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/finance/Stock_Up_128x128.png",
+        "id": "da95414b83a7425086ff04aee6b1f77c"
       },
       {
         "text": "Battery_0_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Battery_0_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Battery_0_128x128.png",
+        "id": "a0a89b63e9a44c00890344a3cc2a6ce0"
       },
       {
         "text": "Battery_100_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Battery_100_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Battery_100_128x128.png",
+        "id": "c48862f5640a41dcaace20af5bc5bfd2"
       },
       {
         "text": "Battery_50_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Battery_50_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Battery_50_128x128.png",
+        "id": "42c9b3a8b67f41a69f7232cbff550737"
       },
       {
         "text": "Battery_75_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Battery_75_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Battery_75_128x128.png",
+        "id": "17a47d1e4140420f85df92f95536a2ac"
       },
       {
         "text": "Battery_allstates_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Battery_allstates_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Battery_allstates_128x128.png",
+        "id": "b9feabc4e4914d55869dd286096fec72"
       },
       {
         "text": "Bluetooth_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Bluetooth_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Bluetooth_128x128.png",
+        "id": "453a9ae63c9b46368336c53ceff0625e"
       },
       {
         "text": "Earth_globe_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Earth_globe_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Earth_globe_128x128.png",
+        "id": "c1ac6bda32174582b3ae983c17fe288f"
       },
       {
         "text": "Empty_Folder_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Empty_Folder_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Empty_Folder_128x128.png",
+        "id": "cf3629044d4a4648b4eb4de70b919bf8"
       },
       {
         "text": "Full_Folder_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Full_Folder_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Full_Folder_128x128.png",
+        "id": "16894f2db8f54a3280f98a94008eb2af"
       },
       {
         "text": "Gear_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Gear_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Gear_128x128.png",
+        "id": "eb706bad24294a009d9b2d54a0eb6347"
       },
       {
         "text": "Keys_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Keys_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Keys_128x128.png",
+        "id": "4bc36a16021a4df3a797416f97b464f4"
       },
       {
         "text": "Lock_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Lock_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Lock_128x128.png",
+        "id": "67ea0a82bd264c3da15e72ba3ea0bf76"
       },
       {
         "text": "Mouse_Pointer_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Mouse_Pointer_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Mouse_Pointer_128x128.png",
+        "id": "08ccc8d71fd3496ead67e52702c58f9c"
       },
       {
         "text": "Plug_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Plug_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Plug_128x128.png",
+        "id": "8222f72605fd44668ba4ea1e46ea8de1"
       },
       {
         "text": "Ships_Wheel_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Ships_Wheel_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Ships_Wheel_128x128.png",
+        "id": "185646bb4d4643328b57ef54674d7b0f"
       },
       {
         "text": "Star_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Star_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Star_128x128.png",
+        "id": "a9c05ac3f33c4685b0b7c71d35f90830"
       },
       {
         "text": "Tire_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Tire_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/general/Tire_128x128.png",
+        "id": "e8597861737642b49b7866d03c921c6e"
       },
       {
         "text": "Bridge_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Bridge_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Bridge_128x128.png",
+        "id": "ad54f53296ed4eebafadee3fd70fd163"
       },
       {
         "text": "Certificate_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Certificate_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Certificate_128x128.png",
+        "id": "5ea24f8237454531aef1b3fd3b6018cd"
       },
       {
         "text": "Certificate_Off_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Certificate_Off_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Certificate_Off_128x128.png",
+        "id": "4b48582931d84ea59f7f3525b842c8f2"
       },
       {
         "text": "Cloud_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_128x128.png",
+        "id": "29d138efeab8477387db1f44589f707b"
       },
       {
         "text": "Cloud_Computer_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Computer_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Computer_128x128.png",
+        "id": "5256aa9157a94bbfaafa23fe37854ccc"
       },
       {
         "text": "Cloud_Computer_Private_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Computer_Private_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Computer_Private_128x128.png",
+        "id": "56973ed104fc4b638364a7c53450e088"
       },
       {
         "text": "Cloud_Rack_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Rack_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Rack_128x128.png",
+        "id": "ad194cee98074419b2e4049eb0d5e509"
       },
       {
         "text": "Cloud_Rack_Private_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Rack_Private_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Rack_Private_128x128.png",
+        "id": "498c008772f245b5aaedf891f3aad021"
       },
       {
         "text": "Cloud_Server_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Server_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Server_128x128.png",
+        "id": "e5af784471e64bd7945fcf2508c3bf5a"
       },
       {
         "text": "Cloud_Server_Private_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Server_Private_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Server_Private_128x128.png",
+        "id": "aa8affdd421c4866ac54a47c9051c29a"
       },
       {
         "text": "Cloud_Storage_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Storage_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Cloud_Storage_128x128.png",
+        "id": "a90bf83044e041c092005af7bb06a959"
       },
       {
         "text": "Concentrator_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Concentrator_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Concentrator_128x128.png",
+        "id": "b742f49ef0804150a381296699a5e623"
       },
       {
         "text": "Email_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Email_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Email_128x128.png",
+        "id": "a1b8e4e39eef479dadcb96da306d9701"
       },
       {
         "text": "Firewall-page1_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Firewall-page1_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Firewall-page1_128x128.png",
+        "id": "3b054743d91e4790bfc12d10d411fbb8"
       },
       {
         "text": "Firewall_02_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Firewall_02_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Firewall_02_128x128.png",
+        "id": "fdbd7cd36c834273b1d7a3154f67d033"
       },
       {
         "text": "Firewall_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Firewall_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Firewall_128x128.png",
+        "id": "2cfec58efd1a4aea9820ea6dfb4ce942"
       },
       {
         "text": "Ip_Camera_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Ip_Camera_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Ip_Camera_128x128.png",
+        "id": "f9397d4617fe4caeaae8f245a69b25b4"
       },
       {
         "text": "Modem_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Modem_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Modem_128x128.png",
+        "id": "d29b9de301234b13a7a598106fd99d24"
       },
       {
         "text": "Print_Server_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Print_Server_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Print_Server_128x128.png",
+        "id": "70343c2703b04818ad051848c3b30528"
       },
       {
         "text": "Print_Server_Wireless_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Print_Server_Wireless_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Print_Server_Wireless_128x128.png",
+        "id": "01b1873344ca4b0a8e002152204ba41b"
       },
       {
         "text": "Repeater_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Repeater_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Repeater_128x128.png",
+        "id": "018207ddab1a4508b0aca1d3c043b574"
       },
       {
         "text": "Router_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Router_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Router_128x128.png",
+        "id": "d9324aaa920f46bab138e736e15d8079"
       },
       {
         "text": "Router_Icon_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Router_Icon_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Router_Icon_128x128.png",
+        "id": "20e4846985a44bbf99cee414ff612d3a"
       },
       {
         "text": "Switch_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Switch_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Switch_128x128.png",
+        "id": "3b8eb777292d455c98311d181be702c2"
       },
       {
         "text": "UPS_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/UPS_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/UPS_128x128.png",
+        "id": "158f34301590460d9cadb4b09300676e"
       },
       {
         "text": "Wireless_Router_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Wireless_Router_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Wireless_Router_128x128.png",
+        "id": "1031c881f35c4195801ad60aaa96e261"
       },
       {
         "text": "Wireless_Router_N_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Wireless_Router_N_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/Wireless_Router_N_128x128.png",
+        "id": "dff885313bd24bc88c570594b6e80e1c"
       },
       {
         "text": "power_distribution_unit_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/power_distribution_unit_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/networking/power_distribution_unit_128x128.png",
+        "id": "38e06c70ddae4238a42c0a61022cd819"
       },
       {
         "text": "Construction_Worker_Man_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Construction_Worker_Man_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Construction_Worker_Man_128x128.png",
+        "id": "9b20272dc2954fccb3354f85a5257102"
       },
       {
         "text": "Construction_Worker_Man_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Construction_Worker_Man_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Construction_Worker_Man_Black_128x128.png",
+        "id": "c615e7ca05e0497eb5105262eaca44ae"
       },
       {
         "text": "Construction_Worker_Woman_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Construction_Worker_Woman_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Construction_Worker_Woman_128x128.png",
+        "id": "db36dac91ad545b095dacb5acfc4ec62"
       },
       {
         "text": "Construction_Worker_Woman_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Construction_Worker_Woman_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Construction_Worker_Woman_Black_128x128.png",
+        "id": "dbe89e2ee53b4ecfac4d7d7910e2c97f"
       },
       {
         "text": "Doctor_Man_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Doctor_Man_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Doctor_Man_128x128.png",
+        "id": "40c344bace854ebe828e8a7b9defe44a"
       },
       {
         "text": "Doctor_Man_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Doctor_Man_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Doctor_Man_Black_128x128.png",
+        "id": "8daa9b8325024859a9f2a9424dfe0203"
       },
       {
         "text": "Doctor_Woman_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Doctor_Woman_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Doctor_Woman_128x128.png",
+        "id": "16b732912dd845b7b15891ab93083332"
       },
       {
         "text": "Doctor_Woman_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Doctor_Woman_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Doctor_Woman_Black_128x128.png",
+        "id": "444091a1e0844f1f89653e0609a859af"
       },
       {
         "text": "Farmer_Man_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Farmer_Man_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Farmer_Man_128x128.png",
+        "id": "4a5fd4b713d64106a17085a4f1e92632"
       },
       {
         "text": "Farmer_Man_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Farmer_Man_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Farmer_Man_Black_128x128.png",
+        "id": "e92486d7c5984bc28ec4c6ef183155ba"
       },
       {
         "text": "Farmer_Woman_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Farmer_Woman_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Farmer_Woman_128x128.png",
+        "id": "731cbb0a8815493ca5c155aa73636700"
       },
       {
         "text": "Farmer_Woman_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Farmer_Woman_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Farmer_Woman_Black_128x128.png",
+        "id": "3804a63ea158473c97d9ef9ae85e605d"
       },
       {
         "text": "Military_Officer_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Military_Officer_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Military_Officer_128x128.png",
+        "id": "bb5e57f5e8ac4815bed4c9ea323db351"
       },
       {
         "text": "Military_Officer_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Military_Officer_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Military_Officer_Black_128x128.png",
+        "id": "7eac065e5f5942db90e05e82cd4aff05"
       },
       {
         "text": "Military_Officer_Woman_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Military_Officer_Woman_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Military_Officer_Woman_128x128.png",
+        "id": "bb6912090429486f92b5f25406d333dd"
       },
       {
         "text": "Military_Officer_Woman_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Military_Officer_Woman_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Military_Officer_Woman_Black_128x128.png",
+        "id": "b3d1fc1271e64a82aaa3929a6ba4fd89"
       },
       {
         "text": "Nurse_Man_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Man_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Man_128x128.png",
+        "id": "fd0765f480394a1f8772f65452a59350"
       },
       {
         "text": "Nurse_Man_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Man_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Man_Black_128x128.png",
+        "id": "87f795ca6af04906ae3be91265fa5023"
       },
       {
         "text": "Nurse_Man_Green_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Man_Green_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Man_Green_128x128.png",
+        "id": "aedac00ce00a44db9c698b3f79ea4282"
       },
       {
         "text": "Nurse_Man_Red_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Man_Red_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Man_Red_128x128.png",
+        "id": "9b1472e0338a4cb59a59ba1b1e2d5da1"
       },
       {
         "text": "Nurse_Woman_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Woman_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Woman_128x128.png",
+        "id": "8e301b03b58d4ed6865478f2ca3d026a"
       },
       {
         "text": "Nurse_Woman_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Woman_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Woman_Black_128x128.png",
+        "id": "954e9956241f497f9242ebf548f55100"
       },
       {
         "text": "Nurse_Woman_Green_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Woman_Green_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Woman_Green_128x128.png",
+        "id": "63bc1271d0224a71915591fe735f18c8"
       },
       {
         "text": "Nurse_Woman_Red_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Woman_Red_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Nurse_Woman_Red_128x128.png",
+        "id": "ec6cfd46593f4284a9d65f2f86be1f1e"
       },
       {
         "text": "Pilot_Man_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Pilot_Man_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Pilot_Man_128x128.png",
+        "id": "c16b90c871154abb9b6942954b5395ba"
       },
       {
         "text": "Pilot_Man_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Pilot_Man_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Pilot_Man_Black_128x128.png",
+        "id": "ffbcb7bc25724079a14d6ba166779077"
       },
       {
         "text": "Pilot_Woman_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Pilot_Woman_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Pilot_Woman_128x128.png",
+        "id": "83e38e4c8b1d494ab7ff31f2cabea8db"
       },
       {
         "text": "Pilot_Woman_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Pilot_Woman_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Pilot_Woman_Black_128x128.png",
+        "id": "0e76bb209b8741b78abb5f9e3d630a10"
       },
       {
         "text": "Scientist_Man_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Scientist_Man_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Scientist_Man_128x128.png",
+        "id": "0598e6e865f74b41b872bba9184a42fc"
       },
       {
         "text": "Scientist_Man_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Scientist_Man_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Scientist_Man_Black_128x128.png",
+        "id": "642d0c9a2f9345a6b6bd95a71949bc14"
       },
       {
         "text": "Scientist_Woman_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Scientist_Woman_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Scientist_Woman_128x128.png",
+        "id": "2001f072d2684efda2387f3f289d7ca9"
       },
       {
         "text": "Scientist_Woman_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Scientist_Woman_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Scientist_Woman_Black_128x128.png",
+        "id": "9061a2a10c7840908cdc4d7585ab3034"
       },
       {
         "text": "Security_Man_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Security_Man_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Security_Man_128x128.png",
+        "id": "b80ea028b4f94aa689d7f83ef99ffd64"
       },
       {
         "text": "Security_Man_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Security_Man_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Security_Man_Black_128x128.png",
+        "id": "0931db4d94ba40c391d86aa51da23373"
       },
       {
         "text": "Security_Woman_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Security_Woman_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Security_Woman_128x128.png",
+        "id": "fec3bc81fb48400b9ce7b64df49f62a1"
       },
       {
         "text": "Security_Woman_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Security_Woman_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Security_Woman_Black_128x128.png",
+        "id": "731221d0d12a47b9ac6703bbc88369c1"
       },
       {
         "text": "Soldier_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Soldier_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Soldier_128x128.png",
+        "id": "72bcf418eb9f4266b2344009fce88b6d"
       },
       {
         "text": "Soldier_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Soldier_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Soldier_Black_128x128.png",
+        "id": "a8344afd328b45c3807646ecbb49b0a1"
       },
       {
         "text": "Suit_Man_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Man_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Man_128x128.png",
+        "id": "c176c1a225ff440c97f699f5d8a550f1"
       },
       {
         "text": "Suit_Man_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Man_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Man_Black_128x128.png",
+        "id": "45d850d3741345c59ae32a46a5383a36"
       },
       {
         "text": "Suit_Man_Blue_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Man_Blue_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Man_Blue_128x128.png",
+        "id": "527473973e854b2cb74119e8bd9187aa"
       },
       {
         "text": "Suit_Man_Green_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Man_Green_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Man_Green_128x128.png",
+        "id": "1bf673f4689942f5be1ed2f0fb67ee3a"
       },
       {
         "text": "Suit_Man_Green_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Man_Green_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Man_Green_Black_128x128.png",
+        "id": "2c81ce0fa4a84567bb67a0354be6b6e6"
       },
       {
         "text": "Suit_Woman_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Woman_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Woman_128x128.png",
+        "id": "9a4a1902e9614f9fbdef3c56b9265543"
       },
       {
         "text": "Suit_Woman_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Woman_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Woman_Black_128x128.png",
+        "id": "2a86f361ef8e480a9df1703e6adec5cb"
       },
       {
         "text": "Suit_Woman_Blue_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Woman_Blue_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Woman_Blue_128x128.png",
+        "id": "acf1d4debc654951995fa5427981677c"
       },
       {
         "text": "Suit_Woman_Green_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Woman_Green_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Woman_Green_128x128.png",
+        "id": "39c6a7e8dff747fb82c24a26ad1e401b"
       },
       {
         "text": "Suit_Woman_Green_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Woman_Green_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Suit_Woman_Green_Black_128x128.png",
+        "id": "fa5a66f7d5d94ce882df281350ffe8fc"
       },
       {
         "text": "Tech_Man_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Tech_Man_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Tech_Man_128x128.png",
+        "id": "aa0e5628cadd44cfaf743f9d63c2f2a8"
       },
       {
         "text": "Tech_Man_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Tech_Man_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Tech_Man_Black_128x128.png",
+        "id": "4d602ca06b784419be4a1f46051945c0"
       },
       {
         "text": "Telesales_Man_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Telesales_Man_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Telesales_Man_128x128.png",
+        "id": "1ce170dbdf304ea18669e07b0c660d87"
       },
       {
         "text": "Telesales_Man_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Telesales_Man_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Telesales_Man_Black_128x128.png",
+        "id": "c0786a3ff88b4f269fc15cf1396c0530"
       },
       {
         "text": "Telesales_Woman_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Telesales_Woman_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Telesales_Woman_128x128.png",
+        "id": "492e0378485d4b95a2bcccfa54722de2"
       },
       {
         "text": "Telesales_Woman_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Telesales_Woman_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Telesales_Woman_Black_128x128.png",
+        "id": "52990df96cd34004b0513ff77d4879ee"
       },
       {
         "text": "Waiter_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Waiter_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Waiter_128x128.png",
+        "id": "cb7efe6d4f8a43a4997fcc0f3a891d56"
       },
       {
         "text": "Waiter_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Waiter_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Waiter_Black_128x128.png",
+        "id": "df01baf61f2f47e3aa4697299f3738ac"
       },
       {
         "text": "Waiter_Woman_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Waiter_Woman_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Waiter_Woman_128x128.png",
+        "id": "0d10a3a3062a4969870840467cc44aa0"
       },
       {
         "text": "Waiter_Woman_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Waiter_Woman_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Waiter_Woman_Black_128x128.png",
+        "id": "63b627d33bae4bba8b71ccad9576b8b4"
       },
       {
         "text": "Worker_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Worker_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Worker_Black_128x128.png",
+        "id": "eef29f6c87bc4b3da76b92d1ed3798c4"
       },
       {
         "text": "Worker_Man_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Worker_Man_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Worker_Man_128x128.png",
+        "id": "6e095182bce2451d8b279ccd93910732"
       },
       {
         "text": "Worker_Woman_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Worker_Woman_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Worker_Woman_128x128.png",
+        "id": "5552a050be0942db9297d09bafdbbac2"
       },
       {
         "text": "Worker_Woman_Black_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Worker_Woman_Black_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/people/Worker_Woman_Black_128x128.png",
+        "id": "7f83ba7193c741a9af6691e7afd0e6b7"
       },
       {
         "text": "BlackBerry_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/BlackBerry_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/BlackBerry_128x128.png",
+        "id": "c8ea268d4b2a42bea6af6c4ec8816303"
       },
       {
         "text": "Cellphone_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/Cellphone_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/Cellphone_128x128.png",
+        "id": "3cca91a728cb474db20eaf5cf20b2900"
       },
       {
         "text": "HTC_smartphone_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/HTC_smartphone_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/HTC_smartphone_128x128.png",
+        "id": "97810830d7bf49cab9b0756d30afa440"
       },
       {
         "text": "Palm_Treo_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/Palm_Treo_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/Palm_Treo_128x128.png",
+        "id": "e8836c10dbf54b178f08d2a7edf32e99"
       },
       {
         "text": "Signal_tower_off_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/Signal_tower_off_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/Signal_tower_off_128x128.png",
+        "id": "5b87046e2adb4cde940943d70d288b14"
       },
       {
         "text": "Signal_tower_on_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/Signal_tower_on_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/Signal_tower_on_128x128.png",
+        "id": "44ffd17890b2469f9a644b9c0ba651aa"
       },
       {
         "text": "Telephone_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/Telephone_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/Telephone_128x128.png",
+        "id": "fe03fb0a6c7343a28b6a9bed59a20d7e"
       },
       {
         "text": "iPhone_128x128",
-        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/iPhone_128x128.png"
+        "src": "https://resources.shy.live/assert/shape/lib/clip_art/telecommunication/iPhone_128x128.png",
+        "id": "aec7e5a03c794e3c88569614f6979bdb"
       }
     ]
   }

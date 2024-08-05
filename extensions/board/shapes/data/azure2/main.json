@@ -4,103 +4,128 @@
     "childs": [
       {
         "text": "Anomaly_Detector",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Anomaly_Detector.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Anomaly_Detector.svg",
+        "id": "c50399b9189745c2a009641b5104d908"
       },
       {
         "text": "Azure_Applied_AI",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Azure_Applied_AI.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Azure_Applied_AI.svg",
+        "id": "fd22f5ceeaf943cfb4dea160ff352a5e"
       },
       {
         "text": "Azure_Experimentation_Studio",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Azure_Experimentation_Studio.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Azure_Experimentation_Studio.svg",
+        "id": "a4ec9a556f6545028332f5534d619e67"
       },
       {
         "text": "Azure_Object_Understanding",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Azure_Object_Understanding.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Azure_Object_Understanding.svg",
+        "id": "f01ca20df6614e9a8c8feacdbae467e5"
       },
       {
         "text": "Batch_AI",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Batch_AI.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Batch_AI.svg",
+        "id": "e3d3549489b84cf2bfd1d3fd083a64bf"
       },
       {
         "text": "Bonsai",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Bonsai.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Bonsai.svg",
+        "id": "e4c4be9a439e4beb9a8df4afeaa52cd1"
       },
       {
         "text": "Bot_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Bot_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Bot_Services.svg",
+        "id": "b18cb9b87fe545a3900459d43cc9d7d8"
       },
       {
         "text": "Cognitive_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Cognitive_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Cognitive_Services.svg",
+        "id": "2e2b6e629359445eaea9233843941a58"
       },
       {
         "text": "Computer_Vision",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Computer_Vision.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Computer_Vision.svg",
+        "id": "6f3aeea53dcb4593948601546d6e0cbf"
       },
       {
         "text": "Content_Moderators",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Content_Moderators.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Content_Moderators.svg",
+        "id": "07e4971df553405faa28a6a73bd51b19"
       },
       {
         "text": "Custom_Vision",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Custom_Vision.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Custom_Vision.svg",
+        "id": "175a9d721f1e4a92b84cb098b71f237a"
       },
       {
         "text": "Face_APIs",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Face_APIs.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Face_APIs.svg",
+        "id": "687e38c64fa949bfac230971d7701b66"
       },
       {
         "text": "Form_Recognizers",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Form_Recognizers.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Form_Recognizers.svg",
+        "id": "4d6a3d1e33a8412ba6dbd1687ee52e7c"
       },
       {
         "text": "Genomics",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Genomics.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Genomics.svg",
+        "id": "0f60f4c921954033a7baf052328af356"
       },
       {
         "text": "Immersive_Readers",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Immersive_Readers.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Immersive_Readers.svg",
+        "id": "f0583a6476744f34a47a1902a4219381"
       },
       {
         "text": "Language_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Language_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Language_Services.svg",
+        "id": "ff38823a92d8478aa6143a02345212d8"
       },
       {
         "text": "Language_Understanding",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Language_Understanding.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Language_Understanding.svg",
+        "id": "805a848db7a74c85b74f75768f0d048c"
       },
       {
         "text": "Machine_Learning",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Machine_Learning.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Machine_Learning.svg",
+        "id": "41d2865526634cfcb9f9f7070789e7b6"
       },
       {
         "text": "Machine_Learning_Studio_Classic_Web_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Machine_Learning_Studio_Classic_Web_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Machine_Learning_Studio_Classic_Web_Services.svg",
+        "id": "ad5a34129e2c410a87f8b42549a6f165"
       },
       {
         "text": "Machine_Learning_Studio_Web_Service_Plans",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Machine_Learning_Studio_Web_Service_Plans.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Machine_Learning_Studio_Web_Service_Plans.svg",
+        "id": "ad0fab19b58742a8ac9eaf9b6a9c877d"
       },
       {
         "text": "Machine_Learning_Studio_Workspaces",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Machine_Learning_Studio_Workspaces.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Machine_Learning_Studio_Workspaces.svg",
+        "id": "ad40051a5d9040d28121912528c9bcf7"
       },
       {
         "text": "Personalizers",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Personalizers.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Personalizers.svg",
+        "id": "3b8c76cabf564a0d8f199bc232f900d8"
       },
       {
         "text": "QnA_Makers",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/QnA_Makers.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/QnA_Makers.svg",
+        "id": "ac322cc4d98d46a9bb73a5dcb98361de"
       },
       {
         "text": "Speech_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Speech_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Speech_Services.svg",
+        "id": "ed0ecd76b98e47019852bd93f31ac121"
       },
       {
         "text": "Translator_Text",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Translator_Text.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/ai_machine_learning/Translator_Text.svg",
+        "id": "dfa8f564f4254f0a8e4631ca8994b69c"
       }
     ]
   },
@@ -109,59 +134,73 @@
     "childs": [
       {
         "text": "Analysis_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Analysis_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Analysis_Services.svg",
+        "id": "335dec26768c41fda942d35e4d373d34"
       },
       {
         "text": "Azure_Databricks",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Azure_Databricks.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Azure_Databricks.svg",
+        "id": "f3f42ae4ce39436aa7dd061626addd42"
       },
       {
         "text": "Azure_Synapse_Analytics",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Azure_Synapse_Analytics.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Azure_Synapse_Analytics.svg",
+        "id": "559da572c3234ba3acad1265a3dc3c70"
       },
       {
         "text": "Azure_Workbooks",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Azure_Workbooks.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Azure_Workbooks.svg",
+        "id": "ee3e36d2ac7e444cb1422452e8b38cc6"
       },
       {
         "text": "Data_Lake_Analytics",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Data_Lake_Analytics.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Data_Lake_Analytics.svg",
+        "id": "db02966deb18463295c2ddaa80c48f37"
       },
       {
         "text": "Data_Lake_Store_Gen1",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Data_Lake_Store_Gen1.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Data_Lake_Store_Gen1.svg",
+        "id": "a0a0766b0b0b4f1d84da7507a4aa9478"
       },
       {
         "text": "Endpoint_Analytics",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Endpoint_Analytics.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Endpoint_Analytics.svg",
+        "id": "6bacd2c9617042d58b073a02555520d9"
       },
       {
         "text": "Event_Hub_Clusters",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Event_Hub_Clusters.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Event_Hub_Clusters.svg",
+        "id": "70fcd2c470fa4875b7422102dba369bc"
       },
       {
         "text": "Event_Hubs",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Event_Hubs.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Event_Hubs.svg",
+        "id": "8e0a37712cc14adda7b9f20a82a64fa1"
       },
       {
         "text": "HD_Insight_Clusters",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/HD_Insight_Clusters.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/HD_Insight_Clusters.svg",
+        "id": "029e9d963ac440d8b6439c1c6312f4b8"
       },
       {
         "text": "Log_Analytics_Workspaces",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Log_Analytics_Workspaces.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Log_Analytics_Workspaces.svg",
+        "id": "2118046d9ff94fefa15cd87a8644ea50"
       },
       {
         "text": "Power_BI_Embedded",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Power_BI_Embedded.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Power_BI_Embedded.svg",
+        "id": "001f169d96614175ae66b94e443d174b"
       },
       {
         "text": "Power_Platform",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Power_Platform.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Power_Platform.svg",
+        "id": "195d479331f6490f809e99e387bb5299"
       },
       {
         "text": "Stream_Analytics_Jobs",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Stream_Analytics_Jobs.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/analytics/Stream_Analytics_Jobs.svg",
+        "id": "a2916ecb69124bc58073d301b68d6d61"
       }
     ]
   },
@@ -170,39 +209,48 @@
     "childs": [
       {
         "text": "API_Management_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/app_services/API_Management_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/app_services/API_Management_Services.svg",
+        "id": "ce28d569eb5041198cfa5fb3a8769c79"
       },
       {
         "text": "App_Service_Certificates",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/app_services/App_Service_Certificates.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/app_services/App_Service_Certificates.svg",
+        "id": "3f5b5763a2d34910a8e0053ad89af8cd"
       },
       {
         "text": "App_Service_Domains",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/app_services/App_Service_Domains.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/app_services/App_Service_Domains.svg",
+        "id": "e744e62d9df44bb6961e65ec80c0e4e2"
       },
       {
         "text": "App_Service_Environments",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/app_services/App_Service_Environments.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/app_services/App_Service_Environments.svg",
+        "id": "e6829b40bb49404ab2778e3f6ca4c98a"
       },
       {
         "text": "App_Service_Plans",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/app_services/App_Service_Plans.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/app_services/App_Service_Plans.svg",
+        "id": "7c3b85490f3e4eb9b5d5805e61346558"
       },
       {
         "text": "App_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/app_services/App_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/app_services/App_Services.svg",
+        "id": "96112587b73b41cc825cd66081625314"
       },
       {
         "text": "CDN_Profiles",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/app_services/CDN_Profiles.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/app_services/CDN_Profiles.svg",
+        "id": "457233a52280498ead59d8019d8176da"
       },
       {
         "text": "Notification_Hubs",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/app_services/Notification_Hubs.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/app_services/Notification_Hubs.svg",
+        "id": "916cdb3a96e148f1ba899ff8c8a46fe8"
       },
       {
         "text": "Search_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/app_services/Search_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/app_services/Search_Services.svg",
+        "id": "f89c4524e9d744f4ab2eeea1fb1ebacb"
       }
     ]
   },
@@ -211,15 +259,18 @@
     "childs": [
       {
         "text": "Applens",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/azure_ecosystem/Applens.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/azure_ecosystem/Applens.svg",
+        "id": "d5b2ee90f1374015852be1d9f9bb7ebe"
       },
       {
         "text": "Azure_Hybrid_Center",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/azure_ecosystem/Azure_Hybrid_Center.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/azure_ecosystem/Azure_Hybrid_Center.svg",
+        "id": "9d1ff9c92ece4fba8b92ffd92d906542"
       },
       {
         "text": "Collaborative_Service",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/azure_ecosystem/Collaborative_Service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/azure_ecosystem/Collaborative_Service.svg",
+        "id": "f58f639740b24d859f8d5dec34570d5b"
       }
     ]
   },
@@ -228,35 +279,43 @@
     "childs": [
       {
         "text": "Azure_Stack",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/azure_stack/Azure_Stack.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/azure_stack/Azure_Stack.svg",
+        "id": "42b87bfde000457bb77bd7e0e29d42ff"
       },
       {
         "text": "Capacity",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/azure_stack/Capacity.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/azure_stack/Capacity.svg",
+        "id": "2ff069696d73420abfc09a118f3c2729"
       },
       {
         "text": "Infrastructure_Backup",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/azure_stack/Infrastructure_Backup.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/azure_stack/Infrastructure_Backup.svg",
+        "id": "2f5ef7b6bc4d416a872df5e03d5eb642"
       },
       {
         "text": "Multi_Tenancy",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/azure_stack/Multi_Tenancy.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/azure_stack/Multi_Tenancy.svg",
+        "id": "2a75417a75544a8aad02ffa8f06c095e"
       },
       {
         "text": "Offers",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/azure_stack/Offers.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/azure_stack/Offers.svg",
+        "id": "549363cc244d4efdab2a5b9c0519dfea"
       },
       {
         "text": "Plans",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/azure_stack/Plans.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/azure_stack/Plans.svg",
+        "id": "dde0567fb05b4a12a309aee9651aa40a"
       },
       {
         "text": "Updates",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/azure_stack/Updates.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/azure_stack/Updates.svg",
+        "id": "4c054e41a2cd4f199d9e4912f7ca9205"
       },
       {
         "text": "User_Subscriptions",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/azure_stack/User_Subscriptions.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/azure_stack/User_Subscriptions.svg",
+        "id": "744690b9240a49f2bb987656297b56ce"
       }
     ]
   },
@@ -265,7 +324,8 @@
     "childs": [
       {
         "text": "AVS",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/azure_vmware_solution/AVS.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/azure_vmware_solution/AVS.svg",
+        "id": "5edc9657bbad4c5b90c31743eaa75d23"
       }
     ]
   },
@@ -274,27 +334,33 @@
     "childs": [
       {
         "text": "ABS_Member",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/blockchain/ABS_Member.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/blockchain/ABS_Member.svg",
+        "id": "68fdcf46ee094df1b5cbb31d6a7c9b02"
       },
       {
         "text": "Azure_Blockchain_Service",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/blockchain/Azure_Blockchain_Service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/blockchain/Azure_Blockchain_Service.svg",
+        "id": "03de0e96ce8140d89a2d9fcad26fcda0"
       },
       {
         "text": "Azure_Token_Service",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/blockchain/Azure_Token_Service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/blockchain/Azure_Token_Service.svg",
+        "id": "baae3c8c13b84145ac404f021b55107f"
       },
       {
         "text": "Blockchain_Applications",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/blockchain/Blockchain_Applications.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/blockchain/Blockchain_Applications.svg",
+        "id": "268d9d517d3a484f9079b0383af3fe90"
       },
       {
         "text": "Consortium",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/blockchain/Consortium.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/blockchain/Consortium.svg",
+        "id": "c9a4e876fa7742eeb936f6504f774396"
       },
       {
         "text": "Outbound_Connection",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/blockchain/Outbound_Connection.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/blockchain/Outbound_Connection.svg",
+        "id": "482537ddecce49d691737fad84130abe"
       }
     ]
   },
@@ -303,155 +369,193 @@
     "childs": [
       {
         "text": "App_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/App_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/App_Services.svg",
+        "id": "78aa779bcf9b4aac94abb8554406d2fa"
       },
       {
         "text": "Application_Group",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Application_Group.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Application_Group.svg",
+        "id": "100e5c9970bb48a4806b2b0bf33da112"
       },
       {
         "text": "Automanaged_VM",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Automanaged_VM.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Automanaged_VM.svg",
+        "id": "eb679589190541a8ad1a62d1ee4fea11"
       },
       {
         "text": "Availability_Sets",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Availability_Sets.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Availability_Sets.svg",
+        "id": "5c7051e6f9324ae6aaefb30621e5cbc8"
       },
       {
         "text": "Azure_Compute_Galleries",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Azure_Compute_Galleries.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Azure_Compute_Galleries.svg",
+        "id": "1f3a28a5644243cba975efe2b1443ee5"
       },
       {
         "text": "Azure_Spring_Cloud",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Azure_Spring_Cloud.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Azure_Spring_Cloud.svg",
+        "id": "9700c37278e543018e62a09c896c2f9a"
       },
       {
         "text": "Batch_Accounts",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Batch_Accounts.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Batch_Accounts.svg",
+        "id": "2f62809ddd6a4a63843383886dfe4019"
       },
       {
         "text": "Cloud_Services_Classic",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Cloud_Services_Classic.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Cloud_Services_Classic.svg",
+        "id": "ea134e31648846719e825dedf36ac567"
       },
       {
         "text": "Container_Instances",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Container_Instances.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Container_Instances.svg",
+        "id": "facd787b26714d46a3411034c925542f"
       },
       {
         "text": "Container_Services_Deprecated",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Container_Services_Deprecated.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Container_Services_Deprecated.svg",
+        "id": "11b3b17d16d740739bd486d536c341de"
       },
       {
         "text": "Disk_Encryption_Sets",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Disk_Encryption_Sets.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Disk_Encryption_Sets.svg",
+        "id": "a2acafc2806f48b5b7cea750360625de"
       },
       {
         "text": "Disks",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Disks.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Disks.svg",
+        "id": "abf1d4dc99b3468cb7dec48f13b096a5"
       },
       {
         "text": "Disks_Classic",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Disks_Classic.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Disks_Classic.svg",
+        "id": "7f7ff27aae1043e5beb3b84e9f2679bf"
       },
       {
         "text": "Disks_Snapshots",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Disks_Snapshots.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Disks_Snapshots.svg",
+        "id": "e3840e8d9c7a45a6a096dea486ff4a53"
       },
       {
         "text": "Function_Apps",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Function_Apps.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Function_Apps.svg",
+        "id": "315d1e6f0fff4ce88f8b5700dd715462"
       },
       {
         "text": "Host_Groups",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Host_Groups.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Host_Groups.svg",
+        "id": "6ad0d006ae42404ba881d71cb25a0cbd"
       },
       {
         "text": "Host_Pools",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Host_Pools.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Host_Pools.svg",
+        "id": "4b3c6210ccf245eb8a8a7c2580510186"
       },
       {
         "text": "Hosts",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Hosts.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Hosts.svg",
+        "id": "7a9813951e024da5af72a20bc6fa2b9a"
       },
       {
         "text": "Image_Definitions",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Image_Definitions.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Image_Definitions.svg",
+        "id": "13bb251214b749f4af44e7bd1022b634"
       },
       {
         "text": "Image_Templates",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Image_Templates.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Image_Templates.svg",
+        "id": "5b6befb3ea9b497f8969d4b994784ee3"
       },
       {
         "text": "Image_Versions",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Image_Versions.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Image_Versions.svg",
+        "id": "0f1df09f12fe41d2bd8d54818dd74af9"
       },
       {
         "text": "Images",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Images.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Images.svg",
+        "id": "6a7a7f5cfad04c2f8e8619f42e249ea1"
       },
       {
         "text": "Kubernetes_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Kubernetes_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Kubernetes_Services.svg",
+        "id": "a71b61ffd80d48d2a34d9f012a05c7c6"
       },
       {
         "text": "Maintenance_Configuration",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Maintenance_Configuration.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Maintenance_Configuration.svg",
+        "id": "510d285fdede4dc8a71654169697ee5e"
       },
       {
         "text": "Managed_Service_Fabric",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Managed_Service_Fabric.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Managed_Service_Fabric.svg",
+        "id": "8d808d5e56c54cc588bd8c33b2f2a2a7"
       },
       {
         "text": "Mesh_Applications",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Mesh_Applications.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Mesh_Applications.svg",
+        "id": "2abe6731d1254ff3bde4cbab28b3954c"
       },
       {
         "text": "Metrics_Advisor",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Metrics_Advisor.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Metrics_Advisor.svg",
+        "id": "fe374d0396ed43cd92dbf32e929b8950"
       },
       {
         "text": "OS_Images_Classic",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/OS_Images_Classic.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/OS_Images_Classic.svg",
+        "id": "7fdd6fb8f71045e1b37b8f2e2b5cea10"
       },
       {
         "text": "Restore_Points",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Restore_Points.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Restore_Points.svg",
+        "id": "b7a4a0378f264a16a87a4a2e9ebeff25"
       },
       {
         "text": "Restore_Points_Collections",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Restore_Points_Collections.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Restore_Points_Collections.svg",
+        "id": "ecc8e432c0d846f4a380611865081ac2"
       },
       {
         "text": "Service_Fabric_Clusters",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Service_Fabric_Clusters.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Service_Fabric_Clusters.svg",
+        "id": "d5aa46f3a2b34c79aaa932ef8d7118aa"
       },
       {
         "text": "Shared_Image_Galleries",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Shared_Image_Galleries.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Shared_Image_Galleries.svg",
+        "id": "76177aac13dd400498dc3f20de8aeafd"
       },
       {
         "text": "VM_Images_Classic",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/VM_Images_Classic.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/VM_Images_Classic.svg",
+        "id": "33b76f72fcb84e1684210b945ba89e9f"
       },
       {
         "text": "VM_Scale_Sets",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/VM_Scale_Sets.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/VM_Scale_Sets.svg",
+        "id": "4445c3d170a84978b66378512d0bac95"
       },
       {
         "text": "Virtual_Machine",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Virtual_Machine.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Virtual_Machine.svg",
+        "id": "b9f0de0df59241ea9813bfb60c8249f8"
       },
       {
         "text": "Virtual_Machines_Classic",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Virtual_Machines_Classic.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Virtual_Machines_Classic.svg",
+        "id": "1d660f61b5d24f19a33aeb93f87ab198"
       },
       {
         "text": "Workspaces",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Workspaces.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Workspaces.svg",
+        "id": "a66e2adc313040f88fba461d1bcc1bb4"
       },
       {
         "text": "Workspaces2",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Workspaces2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/compute/Workspaces2.svg",
+        "id": "9d7fe70bce8e45c486f6113f83f9d374"
       }
     ]
   },
@@ -460,31 +564,38 @@
     "childs": [
       {
         "text": "App_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/containers/App_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/containers/App_Services.svg",
+        "id": "490d9502f2524edaab61a559ffc0ad42"
       },
       {
         "text": "Azure_Red_Hat_OpenShift",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/containers/Azure_Red_Hat_OpenShift.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/containers/Azure_Red_Hat_OpenShift.svg",
+        "id": "13f2e2dcc4314ddaa124c0aa1f544952"
       },
       {
         "text": "Batch_Accounts",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/containers/Batch_Accounts.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/containers/Batch_Accounts.svg",
+        "id": "c11edf6bba40413fb56f51226ee92c88"
       },
       {
         "text": "Container_Instances",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/containers/Container_Instances.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/containers/Container_Instances.svg",
+        "id": "257084d3761c438983ca6e2530037583"
       },
       {
         "text": "Container_Registries",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/containers/Container_Registries.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/containers/Container_Registries.svg",
+        "id": "49c4779e4bc643ab8f8df850f0e71abf"
       },
       {
         "text": "Kubernetes_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/containers/Kubernetes_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/containers/Kubernetes_Services.svg",
+        "id": "264bdb6ef7e744a6925a2de623ef8293"
       },
       {
         "text": "Service_Fabric_Clusters",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/containers/Service_Fabric_Clusters.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/containers/Service_Fabric_Clusters.svg",
+        "id": "b7a81fccb4ce4c1e86589891c5c88352"
       }
     ]
   },
@@ -493,11 +604,13 @@
     "childs": [
       {
         "text": "Elixir",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/cxp/Elixir.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/cxp/Elixir.svg",
+        "id": "a974d17d7aa946de8153712582accafb"
       },
       {
         "text": "Elixir_Purple",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/cxp/Elixir_Purple.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/cxp/Elixir_Purple.svg",
+        "id": "0cf72e005c2c427baa03d360124a7e1b"
       }
     ]
   },
@@ -506,107 +619,133 @@
     "childs": [
       {
         "text": "Azure_Cosmos_DB",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_Cosmos_DB.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_Cosmos_DB.svg",
+        "id": "70e02324c91a487a871b6788b696a7cd"
       },
       {
         "text": "Azure_Data_Explorer_Clusters",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_Data_Explorer_Clusters.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_Data_Explorer_Clusters.svg",
+        "id": "6b6e07ef17f143518db142c283f47cfa"
       },
       {
         "text": "Azure_Database_MariaDB_Server",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_Database_MariaDB_Server.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_Database_MariaDB_Server.svg",
+        "id": "cbe5784aa0ad423e86105ac5c8c470b6"
       },
       {
         "text": "Azure_Database_Migration_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_Database_Migration_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_Database_Migration_Services.svg",
+        "id": "b05bd0c66cc547e49b676315fecc7715"
       },
       {
         "text": "Azure_Database_MySQL_Server",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_Database_MySQL_Server.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_Database_MySQL_Server.svg",
+        "id": "31565d9b250e4a569a74307ea432acdc"
       },
       {
         "text": "Azure_Database_PostgreSQL_Server",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_Database_PostgreSQL_Server.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_Database_PostgreSQL_Server.svg",
+        "id": "c3d279faa35747e7a2b1a71f4a0dfca1"
       },
       {
         "text": "Azure_Database_PostgreSQL_Server_Group",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_Database_PostgreSQL_Server_Group.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_Database_PostgreSQL_Server_Group.svg",
+        "id": "87837c80b4d2424694574672b3f4d9ac"
       },
       {
         "text": "Azure_Purview_Accounts",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_Purview_Accounts.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_Purview_Accounts.svg",
+        "id": "f5c01183be214e5da962decf7eb71937"
       },
       {
         "text": "Azure_SQL",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_SQL.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_SQL.svg",
+        "id": "b55a54b497d54a10b23f8d300dc8c50f"
       },
       {
         "text": "Azure_SQL_Edge",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_SQL_Edge.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_SQL_Edge.svg",
+        "id": "1c1cbbd8b8d2482fa86a1001aa615c90"
       },
       {
         "text": "Azure_SQL_Server_Stretch_Databases",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_SQL_Server_Stretch_Databases.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_SQL_Server_Stretch_Databases.svg",
+        "id": "c615a10eeda34249bee34a687433f9b4"
       },
       {
         "text": "Azure_SQL_VM",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_SQL_VM.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_SQL_VM.svg",
+        "id": "9bd8d6da6fde4b78a4245ec3254c09e9"
       },
       {
         "text": "Azure_Synapse_Analytics",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_Synapse_Analytics.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Azure_Synapse_Analytics.svg",
+        "id": "7979d21685214413bf7468fba893ae7f"
       },
       {
         "text": "Cache_Redis",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Cache_Redis.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Cache_Redis.svg",
+        "id": "8c90e5371eba4bfea9f31fc6203e5eb7"
       },
       {
         "text": "Data_Factory",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Data_Factory.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Data_Factory.svg",
+        "id": "966d71cae9f04ff5b9bd47f8632f3830"
       },
       {
         "text": "Elastic_Job_Agents",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Elastic_Job_Agents.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Elastic_Job_Agents.svg",
+        "id": "aea27a62573143f7b406d8e91d42387b"
       },
       {
         "text": "Instance_Pools",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Instance_Pools.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Instance_Pools.svg",
+        "id": "1982872b7e0747bcb7e7f05c5fe1aa37"
       },
       {
         "text": "Managed_Database",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Managed_Database.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Managed_Database.svg",
+        "id": "7d33df4bbec5437094192a35a97f8f85"
       },
       {
         "text": "SQL_Data_Warehouses",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/SQL_Data_Warehouses.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/SQL_Data_Warehouses.svg",
+        "id": "f67e6c063289413785a745365efc10f4"
       },
       {
         "text": "SQL_Database",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/SQL_Database.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/SQL_Database.svg",
+        "id": "3b67628192f44a3dae6e6296b4011044"
       },
       {
         "text": "SQL_Elastic_Pools",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/SQL_Elastic_Pools.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/SQL_Elastic_Pools.svg",
+        "id": "9a677dd8d06f496b8344c9c42e2b75a5"
       },
       {
         "text": "SQL_Managed_Instance",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/SQL_Managed_Instance.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/SQL_Managed_Instance.svg",
+        "id": "d29f662e65b84cec9239c0ffce49eda7"
       },
       {
         "text": "SQL_Server",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/SQL_Server.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/SQL_Server.svg",
+        "id": "a5502fc94a3740919c057d1f872fba43"
       },
       {
         "text": "SQL_Server_Registries",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/SQL_Server_Registries.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/SQL_Server_Registries.svg",
+        "id": "4bc7b4b1b4304d129b7f4719f8efdb6d"
       },
       {
         "text": "SSIS_Lift_And_Shift_IR",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/SSIS_Lift_And_Shift_IR.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/SSIS_Lift_And_Shift_IR.svg",
+        "id": "19f341dfed674860878cf865ddd17feb"
       },
       {
         "text": "Virtual_Clusters",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Virtual_Clusters.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/databases/Virtual_Clusters.svg",
+        "id": "f1c663430022455fb46e2f20e247e7f3"
       }
     ]
   },
@@ -615,39 +754,48 @@
     "childs": [
       {
         "text": "API_Connections",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/devops/API_Connections.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/devops/API_Connections.svg",
+        "id": "07ae5b2b52054ecf9bdcba12354435c6"
       },
       {
         "text": "Application_Insights",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/devops/Application_Insights.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/devops/Application_Insights.svg",
+        "id": "a19035da04684051b44999f4377956d9"
       },
       {
         "text": "Azure_DevOps",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/devops/Azure_DevOps.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/devops/Azure_DevOps.svg",
+        "id": "2c22b32ea58f4dbf8750cec4514786ba"
       },
       {
         "text": "Change_Analysis",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/devops/Change_Analysis.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/devops/Change_Analysis.svg",
+        "id": "7914d94c716344bf94846fd1d559c90f"
       },
       {
         "text": "CloudTest",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/devops/CloudTest.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/devops/CloudTest.svg",
+        "id": "05905be7576b4a4c9ac44c71c76969ae"
       },
       {
         "text": "DevOps_Starter",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/devops/DevOps_Starter.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/devops/DevOps_Starter.svg",
+        "id": "e225599464394901913ed16fa93709a8"
       },
       {
         "text": "DevTest_Labs",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/devops/DevTest_Labs.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/devops/DevTest_Labs.svg",
+        "id": "636b9dfca1284d9faf66efe88317918f"
       },
       {
         "text": "Lab_Accounts",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/devops/Lab_Accounts.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/devops/Lab_Accounts.svg",
+        "id": "53e642ad63304bb597dc2a49ad0cc0b0"
       },
       {
         "text": "Lab_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/devops/Lab_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/devops/Lab_Services.svg",
+        "id": "148bf3cd06b144949ef4ce9ac7b82786"
       }
     ]
   },
@@ -656,395 +804,493 @@
     "childs": [
       {
         "text": "All_Resources",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/All_Resources.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/All_Resources.svg",
+        "id": "f71ebcc660e7473e933cf2c91561fa19"
       },
       {
         "text": "Backlog",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Backlog.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Backlog.svg",
+        "id": "eb8dcb10c3fa409abc915f3ad6b3ecf9"
       },
       {
         "text": "Biz_Talk",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Biz_Talk.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Biz_Talk.svg",
+        "id": "f0af73b06ca14cc98423f51b0392096f"
       },
       {
         "text": "Blob_Block",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Blob_Block.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Blob_Block.svg",
+        "id": "085ad93e32964489b537dd531599fcaf"
       },
       {
         "text": "Blob_Page",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Blob_Page.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Blob_Page.svg",
+        "id": "733c9ff4ec9a42a7a3679f3e6f4388e8"
       },
       {
         "text": "Branch",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Branch.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Branch.svg",
+        "id": "be938d1333a2454dbae9213f2be3045c"
       },
       {
         "text": "Browser",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Browser.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Browser.svg",
+        "id": "533f2a5239084e08ba65038d8d219c33"
       },
       {
         "text": "Bug",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Bug.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Bug.svg",
+        "id": "24731fdf92734212af64e144bff8f5b6"
       },
       {
         "text": "Builds",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Builds.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Builds.svg",
+        "id": "6389a78d910d46478bfb356160691cfa"
       },
       {
         "text": "Cache",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Cache.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Cache.svg",
+        "id": "09cbec7c22f84be78011007134337d2f"
       },
       {
         "text": "Code",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Code.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Code.svg",
+        "id": "276be7bb002443449bdff0c9aba35fa3"
       },
       {
         "text": "Commit",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Commit.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Commit.svg",
+        "id": "54836f62361e49f6912cc84abc95d030"
       },
       {
         "text": "Controls",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Controls.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Controls.svg",
+        "id": "d25108dbdb964134b072db69fccde064"
       },
       {
         "text": "Controls_Horizontal",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Controls_Horizontal.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Controls_Horizontal.svg",
+        "id": "0eb1b3711e94437b914c62f60e196484"
       },
       {
         "text": "Cost_Alerts",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Cost_Alerts.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Cost_Alerts.svg",
+        "id": "c3c93de1ef2641d69e205ddb3e405198"
       },
       {
         "text": "Cost_Analysis",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Cost_Analysis.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Cost_Analysis.svg",
+        "id": "3473681a8e4a455486d1cda6e6a5701e"
       },
       {
         "text": "Cost_Budgets",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Cost_Budgets.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Cost_Budgets.svg",
+        "id": "aa1793ce7dc1487ba4684540a99f2c4a"
       },
       {
         "text": "Cost_Management",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Cost_Management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Cost_Management.svg",
+        "id": "8a65435b2faa415eb5f6a6fdcc2ab657"
       },
       {
         "text": "Cost_Management_and_Billing",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Cost_Management_and_Billing.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Cost_Management_and_Billing.svg",
+        "id": "916767adb8ba4875ac213bcbfcaea1da"
       },
       {
         "text": "Counter",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Counter.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Counter.svg",
+        "id": "f8e04607c0234b2b82041dd1754920df"
       },
       {
         "text": "Cubes",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Cubes.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Cubes.svg",
+        "id": "9d6151d981d04551aaf60419ca5c41be"
       },
       {
         "text": "Dashboard",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Dashboard.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Dashboard.svg",
+        "id": "96a217e423fd4fc7bd97ebf139309d7c"
       },
       {
         "text": "Dashboard2",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Dashboard2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Dashboard2.svg",
+        "id": "4833880dd064498aa220ce638e1f725f"
       },
       {
         "text": "Dev_Console",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Dev_Console.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Dev_Console.svg",
+        "id": "efa278b77abc439fb30ee87d08c97ff8"
       },
       {
         "text": "Download",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Download.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Download.svg",
+        "id": "e363aba186a84cfa848687faa0ddf8f6"
       },
       {
         "text": "Error",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Error.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Error.svg",
+        "id": "8390e057fdf1400cbd6cf33d92e296b7"
       },
       {
         "text": "Extensions",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Extensions.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Extensions.svg",
+        "id": "4babb709ec264cd7a1334777e29f7464"
       },
       {
         "text": "FTP",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/FTP.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/FTP.svg",
+        "id": "4af5703dfd434077af57173558dcfc5f"
       },
       {
         "text": "File",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/File.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/File.svg",
+        "id": "cd841e05394c45a082041aa30eb1209e"
       },
       {
         "text": "Files",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Files.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Files.svg",
+        "id": "2261c03fd930412e878bc76a3c8f7988"
       },
       {
         "text": "Folder_Blank",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Folder_Blank.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Folder_Blank.svg",
+        "id": "140a207dd5974d22addfac627acad43f"
       },
       {
         "text": "Folder_Website",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Folder_Website.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Folder_Website.svg",
+        "id": "aede7d1c283c42bb96e319fa7be90770"
       },
       {
         "text": "Free_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Free_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Free_Services.svg",
+        "id": "c98329b9f33b4e9ab84c1bae82c3e54a"
       },
       {
         "text": "Gear",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Gear.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Gear.svg",
+        "id": "eceb613ca0ca4c548b2be36b29e042f7"
       },
       {
         "text": "Globe",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Globe.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Globe.svg",
+        "id": "56b0186200ee4158b1aa8f9218a7552f"
       },
       {
         "text": "Globe_Error",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Globe_Error.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Globe_Error.svg",
+        "id": "0878cc550d2741748142a55efaa6d618"
       },
       {
         "text": "Globe_Success",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Globe_Success.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Globe_Success.svg",
+        "id": "9b643564553f44089a0bd5b916363693"
       },
       {
         "text": "Globe_Warning",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Globe_Warning.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Globe_Warning.svg",
+        "id": "6616f00e906f46c6b2e6929984434759"
       },
       {
         "text": "Guide",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Guide.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Guide.svg",
+        "id": "5adf81875af3417cacc38f7b6d7f1ca7"
       },
       {
         "text": "Heart",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Heart.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Heart.svg",
+        "id": "0c5736e1db8e4a8092548dc809da2db2"
       },
       {
         "text": "Help_and_Support",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Help_and_Support.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Help_and_Support.svg",
+        "id": "75051ef0ef4a4921a8be29d34ed845f5"
       },
       {
         "text": "Image",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Image.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Image.svg",
+        "id": "d79f655a445042d9bb57d6dc1f8d519a"
       },
       {
         "text": "Information",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Information.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Information.svg",
+        "id": "48addc067e524e3280625eae3f4eb72e"
       },
       {
         "text": "Input_Output",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Input_Output.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Input_Output.svg",
+        "id": "4b785e0ff41644e69965c2701c7b324c"
       },
       {
         "text": "Journey_Hub",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Journey_Hub.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Journey_Hub.svg",
+        "id": "494189035fea4e82a950bbfbb6ffe66f"
       },
       {
         "text": "Launch_Portal",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Launch_Portal.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Launch_Portal.svg",
+        "id": "81ba962cf7d6449e9543452cb7c5509f"
       },
       {
         "text": "Learn",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Learn.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Learn.svg",
+        "id": "2a9a0a7489174129bcf564e6d5c99e4e"
       },
       {
         "text": "Load_Test",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Load_Test.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Load_Test.svg",
+        "id": "2fcea1415b3d4a759e9382b923bea038"
       },
       {
         "text": "Location",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Location.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Location.svg",
+        "id": "0f06b9b3473e40b3a955a6793393df08"
       },
       {
         "text": "Log_Streaming",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Log_Streaming.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Log_Streaming.svg",
+        "id": "fec3e3c3c5b044818bd4fa0e3c6bea68"
       },
       {
         "text": "Management_Groups",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Management_Groups.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Management_Groups.svg",
+        "id": "d3a459800f6c4d3cbe250b00b8e48a17"
       },
       {
         "text": "Management_Portal",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Management_Portal.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Management_Portal.svg",
+        "id": "9f66f72cb8f14a18ac405e4ffd6812b9"
       },
       {
         "text": "Marketplace",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Marketplace.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Marketplace.svg",
+        "id": "b9f281106d9a490d9fa9c412ac83cb03"
       },
       {
         "text": "Media",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Media.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Media.svg",
+        "id": "24f8c3fd856849cbac527d8f4cf4d92a"
       },
       {
         "text": "Media_File",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Media_File.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Media_File.svg",
+        "id": "f5fdd10607474439b0daaaa57ab4901a"
       },
       {
         "text": "Mobile",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Mobile.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Mobile.svg",
+        "id": "e922b0d9eb6840f1a697327a7e6c53a5"
       },
       {
         "text": "Mobile_Engagement",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Mobile_Engagement.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Mobile_Engagement.svg",
+        "id": "c3721fd939ac4399a6eec82c0901795c"
       },
       {
         "text": "Module",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Module.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Module.svg",
+        "id": "368744a06841496093ff800ac13f4857"
       },
       {
         "text": "Power",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Power.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Power.svg",
+        "id": "3995e2651d9a4001aa45dc220942492a"
       },
       {
         "text": "Power_Up",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Power_Up.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Power_Up.svg",
+        "id": "484bb5c2e39848b3b54d01daff6ab8d8"
       },
       {
         "text": "Powershell",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Powershell.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Powershell.svg",
+        "id": "19a6a08f6aa14e30806a2e5fd36e3985"
       },
       {
         "text": "Preview",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Preview.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Preview.svg",
+        "id": "5a09d1f92ba34b49b125fcf6ef0bcaa7"
       },
       {
         "text": "Preview_Features",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Preview_Features.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Preview_Features.svg",
+        "id": "be709c8dcd1044a7b0b609d1da29e9ba"
       },
       {
         "text": "Process_Explorer",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Process_Explorer.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Process_Explorer.svg",
+        "id": "e542a9c864a440f5b076e45dabca6329"
       },
       {
         "text": "Production_Ready_Database",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Production_Ready_Database.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Production_Ready_Database.svg",
+        "id": "ba440f59c9f24189b0c124d595e68fe8"
       },
       {
         "text": "Quickstart_Center",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Quickstart_Center.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Quickstart_Center.svg",
+        "id": "3f6080738bd545eebc5da6b50ef317a9"
       },
       {
         "text": "Recent",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Recent.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Recent.svg",
+        "id": "13a8fa702b9d405db8c3544f5e1f02d2"
       },
       {
         "text": "Reservations",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Reservations.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Reservations.svg",
+        "id": "bdcdc34871924d7a87fa4530bcafc053"
       },
       {
         "text": "Resource_Explorer",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Resource_Explorer.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Resource_Explorer.svg",
+        "id": "c4244e5835e841a89e78a8af831096b2"
       },
       {
         "text": "Resource_Group_List",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Resource_Group_List.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Resource_Group_List.svg",
+        "id": "d7f48d194d4b4690b88353af53d2dc8f"
       },
       {
         "text": "Resource_Groups",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Resource_Groups.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Resource_Groups.svg",
+        "id": "027f0b6b3d32415287fe37f097814f93"
       },
       {
         "text": "Resource_Linked",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Resource_Linked.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Resource_Linked.svg",
+        "id": "587d718c7e1a4197b9a25e08a4f411d4"
       },
       {
         "text": "SSD",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/SSD.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/SSD.svg",
+        "id": "c2b8e98caf924b71b2a78d58f6332085"
       },
       {
         "text": "Scale",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Scale.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Scale.svg",
+        "id": "5296cfa8114a44df9789c6b5e02c1ef5"
       },
       {
         "text": "Scheduler",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Scheduler.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Scheduler.svg",
+        "id": "fdee5edc85b043efa6d267c3ef20eef1"
       },
       {
         "text": "Search",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Search.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Search.svg",
+        "id": "4cf4604b45244cf486a3ae1db4f31380"
       },
       {
         "text": "Search_Grid",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Search_Grid.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Search_Grid.svg",
+        "id": "a36c008f40db4a789b5e41652761896e"
       },
       {
         "text": "Server_Farm",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Server_Farm.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Server_Farm.svg",
+        "id": "d5a9050b2bfb415c8463257371d1f3fd"
       },
       {
         "text": "Service_Bus",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Service_Bus.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Service_Bus.svg",
+        "id": "e82cb11149b14ee4bfb4cfacfd1aa661"
       },
       {
         "text": "Service_Health",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Service_Health.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Service_Health.svg",
+        "id": "50217050e8914fb6a716986c4b3f4985"
       },
       {
         "text": "Storage_Azure_Files",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Storage_Azure_Files.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Storage_Azure_Files.svg",
+        "id": "e8f7731abb114396afc35623010e491d"
       },
       {
         "text": "Storage_Container",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Storage_Container.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Storage_Container.svg",
+        "id": "c81e982697dc4bfaa5830b40be6b01e1"
       },
       {
         "text": "Storage_Queue",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Storage_Queue.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Storage_Queue.svg",
+        "id": "1b7fa37e898349b2a7f695bb2e60e113"
       },
       {
         "text": "Subscriptions",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Subscriptions.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Subscriptions.svg",
+        "id": "13cfc2b265314a2a8ce0712915d93b41"
       },
       {
         "text": "TFS_VC_Repository",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/TFS_VC_Repository.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/TFS_VC_Repository.svg",
+        "id": "22bc000dee074ad3938beb0d7b3fdbed"
       },
       {
         "text": "Table",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Table.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Table.svg",
+        "id": "ab713166480e47898219e04f2f2e3563"
       },
       {
         "text": "Tag",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Tag.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Tag.svg",
+        "id": "0808392b465a4b25b3774015d130a5af"
       },
       {
         "text": "Tags",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Tags.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Tags.svg",
+        "id": "091dc5f042d047d98570748f4f657afc"
       },
       {
         "text": "Templates",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Templates.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Templates.svg",
+        "id": "70f999cd7ae3497f9e7663874ef93ae5"
       },
       {
         "text": "Toolbox",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Toolbox.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Toolbox.svg",
+        "id": "bedce161597446ed9748756858448252"
       },
       {
         "text": "Troubleshoot",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Troubleshoot.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Troubleshoot.svg",
+        "id": "8e9ad8e547444ed5811739947bb77511"
       },
       {
         "text": "Versions",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Versions.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Versions.svg",
+        "id": "8fbc526587164ecba8c59985b46ba268"
       },
       {
         "text": "Web_Slots",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Web_Slots.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Web_Slots.svg",
+        "id": "373791e7f5f14ff598ccad44c6ef1475"
       },
       {
         "text": "Web_Test",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Web_Test.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Web_Test.svg",
+        "id": "117847c2bcf741a080f0a7120ee91079"
       },
       {
         "text": "Website_Power",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Website_Power.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Website_Power.svg",
+        "id": "a20b899b6bff4564a9851b4732f0cd6d"
       },
       {
         "text": "Website_Staging",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Website_Staging.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Website_Staging.svg",
+        "id": "95bfcffb02684b4b989b42a69c7e5402"
       },
       {
         "text": "Workbooks",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Workbooks.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Workbooks.svg",
+        "id": "e157aeeeeda54a9babc816f916548d62"
       },
       {
         "text": "Workflow",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Workflow.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/general/Workflow.svg",
+        "id": "bb23f4a3900f4b5fb8c5640cc6f62bcb"
       }
     ]
   },
@@ -1053,91 +1299,113 @@
     "childs": [
       {
         "text": "AAD_Licenses",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/AAD_Licenses.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/AAD_Licenses.svg",
+        "id": "3884a891806e42a39025e257fa1a5a05"
       },
       {
         "text": "Active_Directory_Connect_Health",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Active_Directory_Connect_Health.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Active_Directory_Connect_Health.svg",
+        "id": "3dd8fff14e0d4c87addaae2a98ad922e"
       },
       {
         "text": "Administrative_Units",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Administrative_Units.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Administrative_Units.svg",
+        "id": "fc57adbc6587481da643463bb332a523"
       },
       {
         "text": "App_Registrations",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/App_Registrations.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/App_Registrations.svg",
+        "id": "fb2631c5e67d447eb821a29c38175f5e"
       },
       {
         "text": "Azure_AD_B2C",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Azure_AD_B2C.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Azure_AD_B2C.svg",
+        "id": "9084c10ec9c74fdbbd25ad311f401655"
       },
       {
         "text": "Azure_AD_Domain_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Azure_AD_Domain_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Azure_AD_Domain_Services.svg",
+        "id": "e7363a2699e94a379fa24e20ba36ac87"
       },
       {
         "text": "Azure_AD_Identity_Protection",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Azure_AD_Identity_Protection.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Azure_AD_Identity_Protection.svg",
+        "id": "0f4a3e280d904db49550023214ca859c"
       },
       {
         "text": "Azure_AD_Privilege_Identity_Management",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Azure_AD_Privilege_Identity_Management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Azure_AD_Privilege_Identity_Management.svg",
+        "id": "b2a018a902844f619e9daff93990cb53"
       },
       {
         "text": "Azure_Active_Directory",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Azure_Active_Directory.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Azure_Active_Directory.svg",
+        "id": "c722988c062c46a4bdc75c5a0fac855c"
       },
       {
         "text": "Azure_Information_Protection",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Azure_Information_Protection.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Azure_Information_Protection.svg",
+        "id": "e0b54bb382f74cedba2fecf1a73ee892"
       },
       {
         "text": "Custom_Azure_AD_Roles",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Custom_Azure_AD_Roles.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Custom_Azure_AD_Roles.svg",
+        "id": "1fe8e4c5c12945049512fd8019439e75"
       },
       {
         "text": "Enterprise_Applications",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Enterprise_Applications.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Enterprise_Applications.svg",
+        "id": "5808a6b8bbda49f2a3d738d45202d937"
       },
       {
         "text": "External_Identities",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/External_Identities.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/External_Identities.svg",
+        "id": "548a3e761abc4deb9e0cbb8d93fb07db"
       },
       {
         "text": "Groups",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Groups.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Groups.svg",
+        "id": "36ecb440a78e443fa438a5c537c2b0d4"
       },
       {
         "text": "Identity_Governance",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Identity_Governance.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Identity_Governance.svg",
+        "id": "a09a1feb242f4cec9e7748db36ba0291"
       },
       {
         "text": "Managed_Identities",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Managed_Identities.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Managed_Identities.svg",
+        "id": "d08ef2e45a16465ca0ad5c48b96e9fc5"
       },
       {
         "text": "PIM",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/PIM.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/PIM.svg",
+        "id": "7c83261599d44de180b451a819ff03f2"
       },
       {
         "text": "Security",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Security.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Security.svg",
+        "id": "813d25aa6ca04b58b54876a17f5e1f08"
       },
       {
         "text": "Tenant_Properties",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Tenant_Properties.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Tenant_Properties.svg",
+        "id": "613843980612415ba86eee581bc6aed7"
       },
       {
         "text": "User_Settings",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/User_Settings.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/User_Settings.svg",
+        "id": "65baeb6fef324085956734bb4481ef8b"
       },
       {
         "text": "Users",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Users.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Users.svg",
+        "id": "8e1a24798102430ea3c24e3388a7e452"
       },
       {
         "text": "Verifiable_Credentials",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Verifiable_Credentials.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/identity/Verifiable_Credentials.svg",
+        "id": "7812221430984a9ba9013c7ee077e863"
       }
     ]
   },
@@ -1146,83 +1414,103 @@
     "childs": [
       {
         "text": "API_Management_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/API_Management_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/API_Management_Services.svg",
+        "id": "e1f9175691c243e6a3c391445b15d0db"
       },
       {
         "text": "App_Configuration",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/App_Configuration.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/App_Configuration.svg",
+        "id": "b0c8b55d320248ed8631887f10eac6d1"
       },
       {
         "text": "Azure_API_for_FHIR",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Azure_API_for_FHIR.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Azure_API_for_FHIR.svg",
+        "id": "c6e63c5e7b224458870a05f108a437f8"
       },
       {
         "text": "Azure_Data_Catalog",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Azure_Data_Catalog.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Azure_Data_Catalog.svg",
+        "id": "c2d7b499ce6a42e3bc4e1ead88f1bf8c"
       },
       {
         "text": "Event_Grid_Domains",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Event_Grid_Domains.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Event_Grid_Domains.svg",
+        "id": "281bd539197342de8abc1796dbb38e5b"
       },
       {
         "text": "Event_Grid_Subscriptions",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Event_Grid_Subscriptions.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Event_Grid_Subscriptions.svg",
+        "id": "e7eb41a1bb36475c9807853748b31e87"
       },
       {
         "text": "Event_Grid_Topics",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Event_Grid_Topics.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Event_Grid_Topics.svg",
+        "id": "11176cb1845a466f9a6f9e77a468669c"
       },
       {
         "text": "Integration_Accounts",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Integration_Accounts.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Integration_Accounts.svg",
+        "id": "5fbdcfc4944240e19cee593951de9f85"
       },
       {
         "text": "Integration_Service_Environments",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Integration_Service_Environments.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Integration_Service_Environments.svg",
+        "id": "e6dff65656d54f2385590a50b219962b"
       },
       {
         "text": "Logic_Apps",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Logic_Apps.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Logic_Apps.svg",
+        "id": "135b9afce7fc44f893168f8d30ba61a4"
       },
       {
         "text": "Logic_Apps_Custom_Connector",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Logic_Apps_Custom_Connector.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Logic_Apps_Custom_Connector.svg",
+        "id": "c083b6acd80d46e19553768690e35ee2"
       },
       {
         "text": "Partner_Namespace",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Partner_Namespace.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Partner_Namespace.svg",
+        "id": "31c3b3dff11743f1bfada31b7bfb5e1e"
       },
       {
         "text": "Partner_Registration",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Partner_Registration.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Partner_Registration.svg",
+        "id": "359de2dfeb6d4aeda4fd1d3fb0284635"
       },
       {
         "text": "Partner_Topic",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Partner_Topic.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Partner_Topic.svg",
+        "id": "86350beeee5d4678be531a5d30a28df3"
       },
       {
         "text": "Relays",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Relays.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Relays.svg",
+        "id": "c242e9cc84634af082bab106a214f7a7"
       },
       {
         "text": "SQL_Data_Warehouses",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/SQL_Data_Warehouses.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/SQL_Data_Warehouses.svg",
+        "id": "ffbb3a0bdc184b54a5c607a5f98aef5b"
       },
       {
         "text": "SendGrid_Accounts",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/SendGrid_Accounts.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/SendGrid_Accounts.svg",
+        "id": "0aeaf15bd0f842b885de16450f96dbb4"
       },
       {
         "text": "Service_Bus",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Service_Bus.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Service_Bus.svg",
+        "id": "c73cfb49ec3b424ea8cfe1aed0078d51"
       },
       {
         "text": "Software_as_a_Service",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Software_as_a_Service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/Software_as_a_Service.svg",
+        "id": "9bd6850cac86491b9f089c18a4b06220"
       },
       {
         "text": "System_Topic",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/System_Topic.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/integration/System_Topic.svg",
+        "id": "f7d052b430774c0b9d7d00fc1dde6690"
       }
     ]
   },
@@ -1231,15 +1519,18 @@
     "childs": [
       {
         "text": "Digital_Twins",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/internet_of_things/Digital_Twins.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/internet_of_things/Digital_Twins.svg",
+        "id": "20ed03cd65eb4b0bbbbbc5c6d0fb5cb5"
       },
       {
         "text": "Logic_Apps",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/internet_of_things/Logic_Apps.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/internet_of_things/Logic_Apps.svg",
+        "id": "b55d8608308a4282b34822eeacf65909"
       },
       {
         "text": "Time_Series_Insights_Access_Policies",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/internet_of_things/Time_Series_Insights_Access_Policies.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/internet_of_things/Time_Series_Insights_Access_Policies.svg",
+        "id": "33e843de82ff4ac690afd4db51ba52c9"
       }
     ]
   },
@@ -1248,71 +1539,88 @@
     "childs": [
       {
         "text": "Azure_AD_Roles_and_Administrators",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Azure_AD_Roles_and_Administrators.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Azure_AD_Roles_and_Administrators.svg",
+        "id": "64e059d119c249748a33df4a9ce76315"
       },
       {
         "text": "Client_Apps",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Client_Apps.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Client_Apps.svg",
+        "id": "13c65b81db674c01ab05099127961703"
       },
       {
         "text": "Device_Compliance",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Device_Compliance.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Device_Compliance.svg",
+        "id": "6b103ddc79c0408ea12bae80ed721e75"
       },
       {
         "text": "Device_Configuration",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Device_Configuration.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Device_Configuration.svg",
+        "id": "74af687d2a464c98a7cf1642f683993c"
       },
       {
         "text": "Device_Enrollment",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Device_Enrollment.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Device_Enrollment.svg",
+        "id": "d6d1aa91696e432cbe7ec54fc6e67108"
       },
       {
         "text": "Device_Security_Apple",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Device_Security_Apple.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Device_Security_Apple.svg",
+        "id": "38ff3ca25eb14b199af8907d20ca4dcc"
       },
       {
         "text": "Device_Security_Google",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Device_Security_Google.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Device_Security_Google.svg",
+        "id": "1bc7c42ba9e64d72996af445365516ac"
       },
       {
         "text": "Device_Security_Windows",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Device_Security_Windows.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Device_Security_Windows.svg",
+        "id": "e6005958d0f44ae0b0c46e4e1140a972"
       },
       {
         "text": "Devices",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Devices.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Devices.svg",
+        "id": "f295c66f38624607b21681eab55be66d"
       },
       {
         "text": "Exchange_Access",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Exchange_Access.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Exchange_Access.svg",
+        "id": "e3aec1cbc99046e695e7a1618b6d8ec3"
       },
       {
         "text": "Intune",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Intune.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Intune.svg",
+        "id": "2a49841df91f40158fa4a458be786da1"
       },
       {
         "text": "Intune_For_Education",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Intune_For_Education.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Intune_For_Education.svg",
+        "id": "7f4c00f4b7db45b784138278f1c403c3"
       },
       {
         "text": "Mindaro",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Mindaro.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Mindaro.svg",
+        "id": "1ac658e7b9e749f49c401b908b789522"
       },
       {
         "text": "Security_Baselines",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Security_Baselines.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Security_Baselines.svg",
+        "id": "b49ca7145f414858a0563f329929964f"
       },
       {
         "text": "Software_Updates",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Software_Updates.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Software_Updates.svg",
+        "id": "3402656a2fd541dd959c61b6da227128"
       },
       {
         "text": "Tenant_Status",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Tenant_Status.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/Tenant_Status.svg",
+        "id": "e003a727b47b468e9239195bfa51c0b4"
       },
       {
         "text": "eBooks",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/eBooks.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/intune/eBooks.svg",
+        "id": "6167fcfd9a104edf8dac6b155a15be2a"
       }
     ]
   },
@@ -1321,67 +1629,83 @@
     "childs": [
       {
         "text": "Azure_Maps_Accounts",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Azure_Maps_Accounts.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Azure_Maps_Accounts.svg",
+        "id": "77ae3f0e5b984cdabee316258f0d41bb"
       },
       {
         "text": "Device_Provisioning_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Device_Provisioning_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Device_Provisioning_Services.svg",
+        "id": "6f4cbf076cab4200ad5543633303c548"
       },
       {
         "text": "Digital_Twins",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Digital_Twins.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Digital_Twins.svg",
+        "id": "886bbf7fef004831abd1193e5dda4ccb"
       },
       {
         "text": "Event_Hubs",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Event_Hubs.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Event_Hubs.svg",
+        "id": "50379794d89a4889b5afcd1a6b50b7d2"
       },
       {
         "text": "Function_Apps",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Function_Apps.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Function_Apps.svg",
+        "id": "dfc98bb6674c4ca889b693628364ac3c"
       },
       {
         "text": "Industrial_IoT",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Industrial_IoT.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Industrial_IoT.svg",
+        "id": "da197686721a4afc8b5bd40b09ed3d57"
       },
       {
         "text": "IoT_Central_Applications",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/IoT_Central_Applications.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/IoT_Central_Applications.svg",
+        "id": "2c4e65a781cc4d4297eb31c76c1e1dba"
       },
       {
         "text": "IoT_Edge",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/IoT_Edge.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/IoT_Edge.svg",
+        "id": "097eb129884244658e783cc29b9cc787"
       },
       {
         "text": "IoT_Hub",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/IoT_Hub.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/IoT_Hub.svg",
+        "id": "2b5e873fe9204bf2b3645b7e5e7dc30b"
       },
       {
         "text": "Logic_Apps",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Logic_Apps.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Logic_Apps.svg",
+        "id": "9b6793073f4f49669c0c234211a36aae"
       },
       {
         "text": "Notification_Hubs",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Notification_Hubs.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Notification_Hubs.svg",
+        "id": "5cb06bed4e314fd8b850a116c0fc349c"
       },
       {
         "text": "Stream_Analytics_Jobs",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Stream_Analytics_Jobs.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Stream_Analytics_Jobs.svg",
+        "id": "0ced5e59970c4821af819fd20dc472d9"
       },
       {
         "text": "Time_Series_Data_Sets",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Time_Series_Data_Sets.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Time_Series_Data_Sets.svg",
+        "id": "d3e3a470995e4c3fa23fafa004788b29"
       },
       {
         "text": "Time_Series_Insights_Environments",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Time_Series_Insights_Environments.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Time_Series_Insights_Environments.svg",
+        "id": "4983dc55a575407f9eb2be36a21b2347"
       },
       {
         "text": "Time_Series_Insights_Event_Sources",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Time_Series_Insights_Event_Sources.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Time_Series_Insights_Event_Sources.svg",
+        "id": "719fb3b3e95c45828d141d97e0c7cf6d"
       },
       {
         "text": "Windows10_Core_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Windows10_Core_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/iot/Windows10_Core_Services.svg",
+        "id": "779ceef928bc41feb58a0673ddbc590a"
       }
     ]
   },
@@ -1390,127 +1714,158 @@
     "childs": [
       {
         "text": "Activity_Log",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Activity_Log.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Activity_Log.svg",
+        "id": "ca1aea81dc2f498cbc6dd0cbdc947aa4"
       },
       {
         "text": "Advisor",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Advisor.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Advisor.svg",
+        "id": "d4224fcc46814ef5805784a3925e519b"
       },
       {
         "text": "Alerts",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Alerts.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Alerts.svg",
+        "id": "c4c3d921bb7d4aba9b7bee89db7b78f2"
       },
       {
         "text": "Application_Insights",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Application_Insights.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Application_Insights.svg",
+        "id": "5b4580c9564b46218d61c4de7a172900"
       },
       {
         "text": "Arc_Machines",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Arc_Machines.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Arc_Machines.svg",
+        "id": "7d7ff1784a004389b9ee760e70facbb0"
       },
       {
         "text": "Automation_Accounts",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Automation_Accounts.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Automation_Accounts.svg",
+        "id": "c6533490d83041e190b146b62c9f336f"
       },
       {
         "text": "Azure_Arc",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Azure_Arc.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Azure_Arc.svg",
+        "id": "e41fc97b5b92477d8ba401e326ca8b23"
       },
       {
         "text": "Azure_Lighthouse",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Azure_Lighthouse.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Azure_Lighthouse.svg",
+        "id": "48ef03fe9a6e4135b788049502dabf09"
       },
       {
         "text": "Blueprints",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Blueprints.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Blueprints.svg",
+        "id": "db4c2e68741d40feb8a4d1ba78f4923e"
       },
       {
         "text": "Compliance",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Compliance.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Compliance.svg",
+        "id": "5c186c46fbdb400593f79817d4ef5d14"
       },
       {
         "text": "Cost_Management_and_Billing",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Cost_Management_and_Billing.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Cost_Management_and_Billing.svg",
+        "id": "44a2e0ba370a4b569be16339f53bc7e0"
       },
       {
         "text": "Customer_Lockbox_for_MS_Azure",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Customer_Lockbox_for_MS_Azure.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Customer_Lockbox_for_MS_Azure.svg",
+        "id": "45993c7e2c4b4ec59b777ef35dea7494"
       },
       {
         "text": "Diagnostics_Settings",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Diagnostics_Settings.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Diagnostics_Settings.svg",
+        "id": "abdc6839ba724eb6983460c847d9bd9d"
       },
       {
         "text": "Education",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Education.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Education.svg",
+        "id": "af275f2b031f4e31aa9439482fb8acb3"
       },
       {
         "text": "Log_Analytics_Workspaces",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Log_Analytics_Workspaces.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Log_Analytics_Workspaces.svg",
+        "id": "8d186958428248b2b0778073c837d15d"
       },
       {
         "text": "MachinesAzureArc",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/MachinesAzureArc.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/MachinesAzureArc.svg",
+        "id": "dcf8cc7656e54c80acb9f995307ebd1f"
       },
       {
         "text": "Managed_Applications_Center",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Managed_Applications_Center.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Managed_Applications_Center.svg",
+        "id": "13ebcfcc060f4bff83bec71119c7071d"
       },
       {
         "text": "Managed_Desktop",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Managed_Desktop.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Managed_Desktop.svg",
+        "id": "1b8f8c6afeb04dcca1f8f149ec3afa10"
       },
       {
         "text": "Metrics",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Metrics.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Metrics.svg",
+        "id": "add9745c12fa426f8ef453cd0b707063"
       },
       {
         "text": "Monitor",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Monitor.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Monitor.svg",
+        "id": "ecf58d0beaca472f9e41e219d8dcf9ef"
       },
       {
         "text": "My_Customers",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/My_Customers.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/My_Customers.svg",
+        "id": "a14ecf1dbb7c418abeae044d1201b8b5"
       },
       {
         "text": "Operation_Log_Classic",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Operation_Log_Classic.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Operation_Log_Classic.svg",
+        "id": "83ebb8611c23490f93963d5cdb909824"
       },
       {
         "text": "Policy",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Policy.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Policy.svg",
+        "id": "858f122bfb8246f09f0a0bada3e90589"
       },
       {
         "text": "Recovery_Services_Vaults",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Recovery_Services_Vaults.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Recovery_Services_Vaults.svg",
+        "id": "eb7121cdbfe54dcf8225a060b6a806b3"
       },
       {
         "text": "Resource_Graph_Explorer",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Resource_Graph_Explorer.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Resource_Graph_Explorer.svg",
+        "id": "82335e6eeb6147af9d0e7cad90e2ab36"
       },
       {
         "text": "Scheduler_Job_Collections",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Scheduler_Job_Collections.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Scheduler_Job_Collections.svg",
+        "id": "0953657ec6424c5eb7c6a9ea24b7d44d"
       },
       {
         "text": "Service_Catalog_MAD",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Service_Catalog_MAD.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Service_Catalog_MAD.svg",
+        "id": "259fd1e51477497b95403da4a3306cbd"
       },
       {
         "text": "Service_Providers",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Service_Providers.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Service_Providers.svg",
+        "id": "a9a3b5b135a3422cb858dfc1cc225723"
       },
       {
         "text": "Solutions",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Solutions.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Solutions.svg",
+        "id": "398e1ded064145c9884dcee8cd4fba82"
       },
       {
         "text": "Universal_Print",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Universal_Print.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/Universal_Print.svg",
+        "id": "e6109124483f40b3b921bdedec2dd8b3"
       },
       {
         "text": "User_Privacy",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/User_Privacy.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/management_governance/User_Privacy.svg",
+        "id": "cd9baf675c604b46b6a3cbb8293bfebf"
       }
     ]
   },
@@ -1519,7 +1874,8 @@
     "childs": [
       {
         "text": "Keys",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/menu/Keys.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/menu/Keys.svg",
+        "id": "9867a64b070a40b2a4a9ae3f518a662a"
       }
     ]
   },
@@ -1528,23 +1884,28 @@
     "childs": [
       {
         "text": "Azure_Migrate",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/migrate/Azure_Migrate.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/migrate/Azure_Migrate.svg",
+        "id": "bd73f0eefb024fc2971cae9177f63dd6"
       },
       {
         "text": "Cost_Management_and_Billing",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/migrate/Cost_Management_and_Billing.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/migrate/Cost_Management_and_Billing.svg",
+        "id": "940c32302b004601b1bde0375225b366"
       },
       {
         "text": "Data_Box",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/migrate/Data_Box.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/migrate/Data_Box.svg",
+        "id": "e70af8f2d5d740ea8643d2d048aa87e8"
       },
       {
         "text": "Data_Box_Edge",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/migrate/Data_Box_Edge.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/migrate/Data_Box_Edge.svg",
+        "id": "4059778c913f45c49a4ddc893e80ad30"
       },
       {
         "text": "Recovery_Services_Vaults",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/migrate/Recovery_Services_Vaults.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/migrate/Recovery_Services_Vaults.svg",
+        "id": "eb65e296b41d40a4bae93aa70eb00446"
       }
     ]
   },
@@ -1553,11 +1914,13 @@
     "childs": [
       {
         "text": "Remote_Rendering",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/mixed_reality/Remote_Rendering.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/mixed_reality/Remote_Rendering.svg",
+        "id": "ac41878a603649498f61e72e5d24601a"
       },
       {
         "text": "Spatial_Anchor_Accounts",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/mixed_reality/Spatial_Anchor_Accounts.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/mixed_reality/Spatial_Anchor_Accounts.svg",
+        "id": "7aced9b2f6b14417a8022a14f2200e60"
       }
     ]
   },
@@ -1566,7 +1929,8 @@
     "childs": [
       {
         "text": "SAP_Azure_Monitor",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/monitor/SAP_Azure_Monitor.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/monitor/SAP_Azure_Monitor.svg",
+        "id": "775cf722625149c8a2522f062438dbe7"
       }
     ]
   },
@@ -1575,183 +1939,228 @@
     "childs": [
       {
         "text": "Application_Gateways",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Application_Gateways.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Application_Gateways.svg",
+        "id": "171317fc91274d5d835af41de4aa453f"
       },
       {
         "text": "Azure_Firewall_Manager",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Azure_Firewall_Manager.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Azure_Firewall_Manager.svg",
+        "id": "6cca44d7d1bd45f28301977d3cb4eaac"
       },
       {
         "text": "Azure_Firewall_Policy",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Azure_Firewall_Policy.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Azure_Firewall_Policy.svg",
+        "id": "a5cc1aed669b40c28ead18df88caf49d"
       },
       {
         "text": "Bastions",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Bastions.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Bastions.svg",
+        "id": "ddbed3eaddc74df1872daf6d622ceebf"
       },
       {
         "text": "CDN_Profiles",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/CDN_Profiles.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/CDN_Profiles.svg",
+        "id": "98e0efe27c204a7d9c8ec6996539409e"
       },
       {
         "text": "Connections",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Connections.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Connections.svg",
+        "id": "d38bd9a5a3ed4f6bbaaa32858937e8d7"
       },
       {
         "text": "DDoS_Protection_Plans",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/DDoS_Protection_Plans.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/DDoS_Protection_Plans.svg",
+        "id": "50669e496c764a2e9494424f1ab00691"
       },
       {
         "text": "DNS_Private_Resolver",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/DNS_Private_Resolver.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/DNS_Private_Resolver.svg",
+        "id": "341b18ff7ce64977b0fef888829ffc4e"
       },
       {
         "text": "DNS_Zones",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/DNS_Zones.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/DNS_Zones.svg",
+        "id": "c7afbca2dd1a4834b70e459778416dc4"
       },
       {
         "text": "ExpressRoute_Circuits",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/ExpressRoute_Circuits.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/ExpressRoute_Circuits.svg",
+        "id": "21bf1896539748ad9acb8320dca039bf"
       },
       {
         "text": "Firewalls",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Firewalls.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Firewalls.svg",
+        "id": "b6e87fc0024247a08f4ea5742e6e3317"
       },
       {
         "text": "Front_Doors",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Front_Doors.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Front_Doors.svg",
+        "id": "ce689ecd29a74ac6954f0bba12e31928"
       },
       {
         "text": "IP_Groups",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/IP_Groups.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/IP_Groups.svg",
+        "id": "48b64ba5b476496ca864538af7878e8a"
       },
       {
         "text": "Load_Balancer_Hub",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Load_Balancer_Hub.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Load_Balancer_Hub.svg",
+        "id": "31629ba9abe441ca9b83f423402329c4"
       },
       {
         "text": "Load_Balancers",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Load_Balancers.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Load_Balancers.svg",
+        "id": "632fb8b983954030941e46426bd38037"
       },
       {
         "text": "Local_Network_Gateways",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Local_Network_Gateways.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Local_Network_Gateways.svg",
+        "id": "6cd8cefaf1d7483fbb220e525a20ea1b"
       },
       {
         "text": "NAT",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/NAT.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/NAT.svg",
+        "id": "808fbcacf55f4484b327648f9708b615"
       },
       {
         "text": "Network_Interfaces",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Network_Interfaces.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Network_Interfaces.svg",
+        "id": "180d391999b64e9fba2417a4df14f0ce"
       },
       {
         "text": "Network_Security_Groups",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Network_Security_Groups.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Network_Security_Groups.svg",
+        "id": "3f05ebe32cc4409084e590595af5f710"
       },
       {
         "text": "Network_Watcher",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Network_Watcher.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Network_Watcher.svg",
+        "id": "c6478e1c3db34e31a35fd2fe2783234b"
       },
       {
         "text": "On_Premises_Data_Gateways",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/On_Premises_Data_Gateways.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/On_Premises_Data_Gateways.svg",
+        "id": "f65dd5483c2d4aeabc0ddbf4147b4c99"
       },
       {
         "text": "Private_Endpoint",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Private_Endpoint.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Private_Endpoint.svg",
+        "id": "0c96fe5a1b6f4df999ace55dedcbd338"
       },
       {
         "text": "Private_Link",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Private_Link.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Private_Link.svg",
+        "id": "76fe7465e0ba46ff8094179b72725791"
       },
       {
         "text": "Private_Link_Hub",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Private_Link_Hub.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Private_Link_Hub.svg",
+        "id": "19b19249437f46cd8575626f818f676f"
       },
       {
         "text": "Private_Link_Service",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Private_Link_Service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Private_Link_Service.svg",
+        "id": "bd8b0520d1344c6db59f475bc9dfbfba"
       },
       {
         "text": "Proximity_Placement_Groups",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Proximity_Placement_Groups.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Proximity_Placement_Groups.svg",
+        "id": "98f3ca793e7046c79f3e7dfb00e31026"
       },
       {
         "text": "Public_IP_Addresses",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Public_IP_Addresses.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Public_IP_Addresses.svg",
+        "id": "98f18a2c33764cbda363d2db9bdf0ff1"
       },
       {
         "text": "Public_IP_Addresses_Classic",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Public_IP_Addresses_Classic.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Public_IP_Addresses_Classic.svg",
+        "id": "32bcd78da20e4a7aab41b59af620365a"
       },
       {
         "text": "Public_IP_Prefixes",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Public_IP_Prefixes.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Public_IP_Prefixes.svg",
+        "id": "928d31546b6f46efa9c4e6fe60dba49b"
       },
       {
         "text": "Reserved_IP_Addresses_Classic",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Reserved_IP_Addresses_Classic.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Reserved_IP_Addresses_Classic.svg",
+        "id": "ebb1d1fee7f941b888d8545b0378e84a"
       },
       {
         "text": "Resource_Management_Private_Link",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Resource_Management_Private_Link.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Resource_Management_Private_Link.svg",
+        "id": "b58bcfad9ba343f39723f48c73ea648f"
       },
       {
         "text": "Route_Filters",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Route_Filters.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Route_Filters.svg",
+        "id": "7e319636e84a44ad934319ea02099e45"
       },
       {
         "text": "Route_Tables",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Route_Tables.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Route_Tables.svg",
+        "id": "891f1f66f55f42f8b4266642e9e744e3"
       },
       {
         "text": "Service_Endpoint_Policies",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Service_Endpoint_Policies.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Service_Endpoint_Policies.svg",
+        "id": "2fc9bc6444e24cc2810d5dafcad0de4e"
       },
       {
         "text": "Spot_VM",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Spot_VM.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Spot_VM.svg",
+        "id": "e1ad720b0e05443488a39b1e1a347632"
       },
       {
         "text": "Spot_VMSS",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Spot_VMSS.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Spot_VMSS.svg",
+        "id": "97f71fae5238485bac9a37ce0258190f"
       },
       {
         "text": "Subnet",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Subnet.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Subnet.svg",
+        "id": "d6948c13747b40219c19a28875aa39f9"
       },
       {
         "text": "Traffic_Manager_Profiles",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Traffic_Manager_Profiles.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Traffic_Manager_Profiles.svg",
+        "id": "73b08d6b5017453b865636633b3f1f1c"
       },
       {
         "text": "Virtual_Network_Gateways",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Virtual_Network_Gateways.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Virtual_Network_Gateways.svg",
+        "id": "4c99a92faf16412d8ee8be0bba3a0343"
       },
       {
         "text": "Virtual_Networks",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Virtual_Networks.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Virtual_Networks.svg",
+        "id": "8721b0e9913344738ba26dc057187a85"
       },
       {
         "text": "Virtual_Networks_Classic",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Virtual_Networks_Classic.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Virtual_Networks_Classic.svg",
+        "id": "edf5cd4d43c845578a67a2576dab2a6b"
       },
       {
         "text": "Virtual_Router",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Virtual_Router.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Virtual_Router.svg",
+        "id": "25eb48a1511e4a0593845339562531d6"
       },
       {
         "text": "Virtual_WAN_Hub",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Virtual_WAN_Hub.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Virtual_WAN_Hub.svg",
+        "id": "95736d0d4f004cd297b9df2b91bd0de0"
       },
       {
         "text": "Virtual_WANs",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Virtual_WANs.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Virtual_WANs.svg",
+        "id": "fc6121c6b2e64a6ebc1de5ed1479e229"
       },
       {
         "text": "Web_Application_Firewall_Policies_WAF",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Web_Application_Firewall_Policies_WAF.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/networking/Web_Application_Firewall_Policies_WAF.svg",
+        "id": "4822bbda879849a3865f9bb05ffa9008"
       }
     ]
   },
@@ -1760,519 +2169,648 @@
     "childs": [
       {
         "text": "ACS_Solutions_Builder",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/ACS_Solutions_Builder.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/ACS_Solutions_Builder.svg",
+        "id": "5356a5c806e140dd808ef0980cda10d4"
       },
       {
         "text": "API_Proxy",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/API_Proxy.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/API_Proxy.svg",
+        "id": "368bf4aa81df4b30a6aa9d5ffbcb1501"
       },
       {
         "text": "AVS_VM",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/AVS_VM.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/AVS_VM.svg",
+        "id": "7c63e49f2eab4c3eb341e3a4ff48b258"
       },
       {
         "text": "App_Compliance_Automation",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/App_Compliance_Automation.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/App_Compliance_Automation.svg",
+        "id": "080aa8a7c71246278a8bc90983f43071"
       },
       {
         "text": "Aquila",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Aquila.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Aquila.svg",
+        "id": "c3840b80f7064e92b09c7c8866dc3ab5"
       },
       {
         "text": "Arc_Data_services",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Arc_Data_services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Arc_Data_services.svg",
+        "id": "fe10549ff7e249c3baae67dee81f8a47"
       },
       {
         "text": "Arc_Kubernetes",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Arc_Kubernetes.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Arc_Kubernetes.svg",
+        "id": "cccab0f6f4364dc488f26ba89a7a5b2c"
       },
       {
         "text": "Arc_PostgreSQL",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Arc_PostgreSQL.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Arc_PostgreSQL.svg",
+        "id": "804ff5a7d732438e87e1910469941d1b"
       },
       {
         "text": "Arc_SQL_Managed_Instance",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Arc_SQL_Managed_Instance.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Arc_SQL_Managed_Instance.svg",
+        "id": "ca3b0b229d89463c94dd57ccba2989f5"
       },
       {
         "text": "Arc_SQL_Server",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Arc_SQL_Server.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Arc_SQL_Server.svg",
+        "id": "0dd24d58051f44838817376a25c1543a"
       },
       {
         "text": "AzureAttestation",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/AzureAttestation.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/AzureAttestation.svg",
+        "id": "3036b6b38f3a4008ac1076ec36b9c521"
       },
       {
         "text": "Azure_A",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_A.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_A.svg",
+        "id": "9428795aafb949aa989cc055b06a8945"
       },
       {
         "text": "Azure_Backup_Center",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Backup_Center.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Backup_Center.svg",
+        "id": "ad0177b3e18c4a669fac2faee69d178f"
       },
       {
         "text": "Azure_Center_for_SAP",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Center_for_SAP.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Center_for_SAP.svg",
+        "id": "6f42879acb044ee4b6e701564df33921"
       },
       {
         "text": "Azure_Chaos_Studio",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Chaos_Studio.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Chaos_Studio.svg",
+        "id": "ee8c1b75d32b4333964895e64967a780"
       },
       {
         "text": "Azure_Cloud_Shell",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Cloud_Shell.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Cloud_Shell.svg",
+        "id": "77aff6ffac8a40a699fc57e9083c4e4f"
       },
       {
         "text": "Azure_Communication_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Communication_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Communication_Services.svg",
+        "id": "358fe222c3fa4545b38368cff3ff29fb"
       },
       {
         "text": "Azure_Deployment_Environments",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Deployment_Environments.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Deployment_Environments.svg",
+        "id": "383ff763d70e4c75850f43bee3453ebc"
       },
       {
         "text": "Azure_Edge_Hardware_Center",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Edge_Hardware_Center.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Edge_Hardware_Center.svg",
+        "id": "d497d6a727c048b4a938fb0383e97731"
       },
       {
         "text": "Azure_HPC_Workbench",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_HPC_Workbench.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_HPC_Workbench.svg",
+        "id": "72dde845bad94029bdccb4f2583bb4a3"
       },
       {
         "text": "Azure_Load_Testing",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Load_Testing.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Load_Testing.svg",
+        "id": "ab3f803c13c2451a8a3ebbd979cb92e4"
       },
       {
         "text": "Azure_Monitor_Dashboard",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Monitor_Dashboard.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Monitor_Dashboard.svg",
+        "id": "88ec20c96b4e4f35a56b44d2c4a37339"
       },
       {
         "text": "Azure_Network_Function_Manager",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Network_Function_Manager.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Network_Function_Manager.svg",
+        "id": "8d1263a67f524c26a61b2ce08c7a5c04"
       },
       {
         "text": "Azure_Network_Function_Manager_Functions",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Network_Function_Manager_Functions.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Network_Function_Manager_Functions.svg",
+        "id": "8142de1f5705491e855ecbc42d6320ba"
       },
       {
         "text": "Azure_Network_Manager",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Network_Manager.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Network_Manager.svg",
+        "id": "80954e675110438b939c14a5fe9d800a"
       },
       {
         "text": "Azure_Orbital",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Orbital.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Orbital.svg",
+        "id": "8efe3cb07bd3448da4a90db488058433"
       },
       {
         "text": "Azure_Quotas",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Quotas.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Quotas.svg",
+        "id": "909d625412454874bfafc1a4d9c77dba"
       },
       {
         "text": "Azure_Sphere",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Sphere.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Sphere.svg",
+        "id": "bb09c756485c45eebf5be1ea0042e8b4"
       },
       {
         "text": "Azure_Storage_Mover",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Storage_Mover.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Storage_Mover.svg",
+        "id": "847e0caff90849ab897f693b2a75c24d"
       },
       {
         "text": "Azure_Support_Center_Blue",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Support_Center_Blue.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Support_Center_Blue.svg",
+        "id": "8f6a27a6315e45c9abc437fda52e8c12"
       },
       {
         "text": "Azure_Video_Indexer",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Video_Indexer.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azure_Video_Indexer.svg",
+        "id": "605dec52ecd4439e903c8ca8bef5b63b"
       },
       {
         "text": "Azurite",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azurite.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Azurite.svg",
+        "id": "770eb23c81b54a9d932ae126eb2503a8"
       },
       {
         "text": "Backup_Vault",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Backup_Vault.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Backup_Vault.svg",
+        "id": "ec7630f55a0c4bffa93337b8fbae5dd0"
       },
       {
         "text": "Bare_Metal_Infrastructure",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Bare_Metal_Infrastructure.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Bare_Metal_Infrastructure.svg",
+        "id": "73c7f7386d0d477b8fe6ec582036ba09"
       },
       {
         "text": "Central_Service_Instance_for_SAP",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Central_Service_Instance_for_SAP.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Central_Service_Instance_for_SAP.svg",
+        "id": "710bb3a19c96471581c4a3bb867f385f"
       },
       {
         "text": "Ceres",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Ceres.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Ceres.svg",
+        "id": "280df75fb72e45f3b37db927b710f2c9"
       },
       {
         "text": "Cloud_Services_(extended_support)",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Cloud_Services_(extended_support).svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Cloud_Services_(extended_support).svg",
+        "id": "a3dcfb391eb24468870b58e6d348c624"
       },
       {
         "text": "Compliance_Center",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Compliance_Center.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Compliance_Center.svg",
+        "id": "f3821da7d625446e88f2d82a2b49a00c"
       },
       {
         "text": "Confidential_Ledger",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Confidential_Ledger.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Confidential_Ledger.svg",
+        "id": "06ce17e05de542d1b92cf8c3cc471f65"
       },
       {
         "text": "Connected_Cache",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Connected_Cache.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Connected_Cache.svg",
+        "id": "d3134487f22441b2b9fdd4d51b0f369b"
       },
       {
         "text": "Connected_Vehicle_Platform",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Connected_Vehicle_Platform.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Connected_Vehicle_Platform.svg",
+        "id": "d687688b5e224134a4a2cedbec047e2d"
       },
       {
         "text": "Container_App_Environments",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Container_App_Environments.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Container_App_Environments.svg",
+        "id": "d46ea6ed8e814c28a9fffb77a604838c"
       },
       {
         "text": "Cost_Export",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Cost_Export.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Cost_Export.svg",
+        "id": "bff3730835ec42e79db9ab7f7f32bedb"
       },
       {
         "text": "Custom_IP_Prefix",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Custom_IP_Prefix.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Custom_IP_Prefix.svg",
+        "id": "96ef74d3d8ca4be2872826659be610ff"
       },
       {
         "text": "Dashboard_Hub",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Dashboard_Hub.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Dashboard_Hub.svg",
+        "id": "0151ada892af41299eca4af4ca2d7392"
       },
       {
         "text": "Data_Collection_Rules",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Data_Collection_Rules.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Data_Collection_Rules.svg",
+        "id": "f63e6826591b458885daf66d4463fbfc"
       },
       {
         "text": "Database_Instance_For_SAP",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Database_Instance_For_SAP.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Database_Instance_For_SAP.svg",
+        "id": "88a4ee36f7164beeaeeeca420831028d"
       },
       {
         "text": "Dedicated_HSM",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Dedicated_HSM.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Dedicated_HSM.svg",
+        "id": "2218f35ab17d4c739bf8ce9dcd128e07"
       },
       {
         "text": "Defender_CM_Local_Manager",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_CM_Local_Manager.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_CM_Local_Manager.svg",
+        "id": "2fcd53ee53544ff680527df8521e667d"
       },
       {
         "text": "Defender_DCS_Controller",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_DCS_Controller.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_DCS_Controller.svg",
+        "id": "edc352455cb045989883959afc6c0864"
       },
       {
         "text": "Defender_Distributer_Control_System",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Distributer_Control_System.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Distributer_Control_System.svg",
+        "id": "9aa628ec2fee4c67aae5744ddd8027a2"
       },
       {
         "text": "Defender_Engineering_Station",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Engineering_Station.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Engineering_Station.svg",
+        "id": "ca6ebba0b93d439cbca6695d1def81a8"
       },
       {
         "text": "Defender_External_Management",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_External_Management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_External_Management.svg",
+        "id": "a06980973fe9434e9dbde2634c7aa7c8"
       },
       {
         "text": "Defender_Freezer_Monitor",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Freezer_Monitor.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Freezer_Monitor.svg",
+        "id": "7e6130c04296415d91814609e0be7064"
       },
       {
         "text": "Defender_HMI",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_HMI.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_HMI.svg",
+        "id": "058eff4ec82540a8b4e85969b980ba26"
       },
       {
         "text": "Defender_Historian",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Historian.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Historian.svg",
+        "id": "2b0d29be965445d4a11faf23695715d8"
       },
       {
         "text": "Defender_Industrial_Packaging_System",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Industrial_Packaging_System.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Industrial_Packaging_System.svg",
+        "id": "4f36fc668f89425c89b513d558e313f3"
       },
       {
         "text": "Defender_Industrial_Printer",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Industrial_Printer.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Industrial_Printer.svg",
+        "id": "36bb17d90d2d4bd89c8452b7ca7ea135"
       },
       {
         "text": "Defender_Industrial_Robot",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Industrial_Robot.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Industrial_Robot.svg",
+        "id": "7208e3a65385417e8e07988be533ad98"
       },
       {
         "text": "Defender_Industrial_Scale_System",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Industrial_Scale_System.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Industrial_Scale_System.svg",
+        "id": "040a55d179ca4816ae81feebed6e21a1"
       },
       {
         "text": "Defender_Marquee",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Marquee.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Marquee.svg",
+        "id": "7273742ce9254ffb82c001d3b9ed0033"
       },
       {
         "text": "Defender_Meter",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Meter.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Meter.svg",
+        "id": "b7c796f4853f4a1ea78773c1d9609c7a"
       },
       {
         "text": "Defender_PLC",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_PLC.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_PLC.svg",
+        "id": "2314ba3387b845f4b040eaec7cc31813"
       },
       {
         "text": "Defender_Pneumatic_Device",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Pneumatic_Device.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Pneumatic_Device.svg",
+        "id": "26c8e67c9bd74294bc64550c89cb7aef"
       },
       {
         "text": "Defender_Programable_Board",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Programable_Board.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Programable_Board.svg",
+        "id": "68ccf983971d437482fe309e636d8b98"
       },
       {
         "text": "Defender_RTU",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_RTU.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_RTU.svg",
+        "id": "1b2b09049fcd47609d7fc7d62fbe2191"
       },
       {
         "text": "Defender_Relay",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Relay.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Relay.svg",
+        "id": "4be275ccff06494f9aa4f8507cf99b7e"
       },
       {
         "text": "Defender_Robot_Controller",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Robot_Controller.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Robot_Controller.svg",
+        "id": "3261c381f9614a01aa82e1f535b31248"
       },
       {
         "text": "Defender_Sensor",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Sensor.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Sensor.svg",
+        "id": "c559fb66a5d84301a85c631e0ae33615"
       },
       {
         "text": "Defender_Slot",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Slot.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Slot.svg",
+        "id": "86e2f5d5092342a1bdebc2eeed94606a"
       },
       {
         "text": "Defender_Web_Guiding_System",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Web_Guiding_System.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Defender_Web_Guiding_System.svg",
+        "id": "bb634b32212d4d699581a67e16f852d1"
       },
       {
         "text": "Detonation",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Detonation.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Detonation.svg",
+        "id": "c1aeb88181434823a8dc174fee0027b3"
       },
       {
         "text": "Device_Update_IoT_Hub",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Device_Update_IoT_Hub.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Device_Update_IoT_Hub.svg",
+        "id": "6739de99567f4502bc25448397544de5"
       },
       {
         "text": "Disk_Pool",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Disk_Pool.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Disk_Pool.svg",
+        "id": "02a1cda6160445508c7f4855f2dba458"
       },
       {
         "text": "Edge_Management",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Edge_Management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Edge_Management.svg",
+        "id": "8f5694f6399448babffa506ce8266837"
       },
       {
         "text": "Elastic_SAN",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Elastic_SAN.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Elastic_SAN.svg",
+        "id": "5aa94978559e46e49a73c0a90e149fa4"
       },
       {
         "text": "Entra_Identity",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Entra_Identity.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Entra_Identity.svg",
+        "id": "743bcb99d1ff4aa2bffca80222e393c1"
       },
       {
         "text": "Exchange_On_Premises_Access",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Exchange_On_Premises_Access.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Exchange_On_Premises_Access.svg",
+        "id": "6d94ed444e274c40b150e8811acdcb5b"
       },
       {
         "text": "ExpressRoute_Direct",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/ExpressRoute_Direct.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/ExpressRoute_Direct.svg",
+        "id": "9293410965ed46029f1978f927504c3f"
       },
       {
         "text": "Express_Route_Traffic_Collector",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Express_Route_Traffic_Collector.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Express_Route_Traffic_Collector.svg",
+        "id": "d5551c03e5f445f0aa1843a9e3e80d73"
       },
       {
         "text": "FHIR_Service",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/FHIR_Service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/FHIR_Service.svg",
+        "id": "e1f4be36c365473aa231434faf6a3e63"
       },
       {
         "text": "Fiji",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Fiji.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Fiji.svg",
+        "id": "612894d0300e48b7bfdd4774f784f3ee"
       },
       {
         "text": "Grafana",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Grafana.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Grafana.svg",
+        "id": "57aeada75479493c8d3aa41cd748fdca"
       },
       {
         "text": "Image_Definition",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Image_Definition.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Image_Definition.svg",
+        "id": "d21ce65b599749d0a1304f0ca5869336"
       },
       {
         "text": "Image_Version",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Image_Version.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Image_Version.svg",
+        "id": "ea495133b9154571bfb434bcbe4b555f"
       },
       {
         "text": "Instance_Pools",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Instance_Pools.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Instance_Pools.svg",
+        "id": "dbf09489a0124e5c9d8d04f7cf7ad1f3"
       },
       {
         "text": "Internet_Analyzer_Profiles",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Internet_Analyzer_Profiles.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Internet_Analyzer_Profiles.svg",
+        "id": "cc33952059b844b0ab09761d054355f2"
       },
       {
         "text": "Intune_Trends",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Intune_Trends.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Intune_Trends.svg",
+        "id": "3197da8a050f4c549a445fc7760bf147"
       },
       {
         "text": "Kubernetes_Fleet_Manager",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Kubernetes_Fleet_Manager.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Kubernetes_Fleet_Manager.svg",
+        "id": "f7c29cee3de9499e9e4f28cdad986020"
       },
       {
         "text": "Load_Testing",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Load_Testing.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Load_Testing.svg",
+        "id": "6cdfe2eb845f49309b3e2b8fad4b0479"
       },
       {
         "text": "Local_Network_Gateways",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Local_Network_Gateways.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Local_Network_Gateways.svg",
+        "id": "e496c0f9befb40189d24a08d7978f4fa"
       },
       {
         "text": "Log_Analytics_Query_Pack",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Log_Analytics_Query_Pack.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Log_Analytics_Query_Pack.svg",
+        "id": "6c4b0310ed784c3c801b72c20ef4ab01"
       },
       {
         "text": "MS_Dev_Box",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/MS_Dev_Box.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/MS_Dev_Box.svg",
+        "id": "31fb39ba1be24ad7929cd95b5042a73d"
       },
       {
         "text": "Managed_Instance_Apache_Cassandra",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Managed_Instance_Apache_Cassandra.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Managed_Instance_Apache_Cassandra.svg",
+        "id": "664965d4a4e54ff78537caf63b7bb6d5"
       },
       {
         "text": "Marketplace_Management",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Marketplace_Management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Marketplace_Management.svg",
+        "id": "6df74300aae740998ab50f8b80a40a1d"
       },
       {
         "text": "MedTech_Service",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/MedTech_Service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/MedTech_Service.svg",
+        "id": "aaea692f19354520b982aa7570d6e3d5"
       },
       {
         "text": "Mission_Landing_Zone",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Mission_Landing_Zone.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Mission_Landing_Zone.svg",
+        "id": "c01f0654c3464ec3aad8f47e7e74fc72"
       },
       {
         "text": "Modular_Data_Center",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Modular_Data_Center.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Modular_Data_Center.svg",
+        "id": "e63daa3a6f5647e6b217e98ab29aae79"
       },
       {
         "text": "Network_Security_Perimeters",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Network_Security_Perimeters.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Network_Security_Perimeters.svg",
+        "id": "887d170c0472445ea3799cadec0e02c3"
       },
       {
         "text": "Open_Supply_Chain_Platform",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Open_Supply_Chain_Platform.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Open_Supply_Chain_Platform.svg",
+        "id": "042dba5ca22f4a0ba867f4a07f51578e"
       },
       {
         "text": "Peering_Service",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Peering_Service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Peering_Service.svg",
+        "id": "7e48c32e71c9466d859b9cc83a5bc98b"
       },
       {
         "text": "Peerings",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Peerings.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Peerings.svg",
+        "id": "87ebd32c92fb476ba50a5e4b787b803f"
       },
       {
         "text": "Private_Endpoints",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Private_Endpoints.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Private_Endpoints.svg",
+        "id": "f3f0ef38232e4a3d94f335070bc800a3"
       },
       {
         "text": "Private_Mobile_Network",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Private_Mobile_Network.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Private_Mobile_Network.svg",
+        "id": "2f7d8d43d6a3480f943e60c1525776df"
       },
       {
         "text": "RTOS",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/RTOS.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/RTOS.svg",
+        "id": "9e3f3c7369c0478b92914ca8a4411c4e"
       },
       {
         "text": "Reserved_Capacity",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Reserved_Capacity.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Reserved_Capacity.svg",
+        "id": "9318215209d64130902e2c6a29c20068"
       },
       {
         "text": "Reserved_Capacity_Groups",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Reserved_Capacity_Groups.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Reserved_Capacity_Groups.svg",
+        "id": "224fee5383af4273942333071ea05871"
       },
       {
         "text": "Resource_Guard",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Resource_Guard.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Resource_Guard.svg",
+        "id": "5aab8725a51e425abce58f9458846bbb"
       },
       {
         "text": "Resource_Mover",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Resource_Mover.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Resource_Mover.svg",
+        "id": "162b64257571455b8dfa134337c39e67"
       },
       {
         "text": "SCVMM_Management_Servers",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/SCVMM_Management_Servers.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/SCVMM_Management_Servers.svg",
+        "id": "0861189c3dbb4ad39f188ef9ed05d64b"
       },
       {
         "text": "SSH_Keys",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/SSH_Keys.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/SSH_Keys.svg",
+        "id": "9b59a2ebb1c84c0fb710af1d0ad2dd9a"
       },
       {
         "text": "Savings_Plan",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Savings_Plan.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Savings_Plan.svg",
+        "id": "5f605a919af5417d83aeae735d482b53"
       },
       {
         "text": "Sonic_Dash",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Sonic_Dash.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Sonic_Dash.svg",
+        "id": "6f839e57546b4f95ac0c98b4144dc8a0"
       },
       {
         "text": "Storage_Tasks",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Storage_Tasks.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Storage_Tasks.svg",
+        "id": "3d1b2171f9234451a406a3c5b3c950b8"
       },
       {
         "text": "Targets_Management",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Targets_Management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Targets_Management.svg",
+        "id": "aa941c32873c4c7299d21de04e98095e"
       },
       {
         "text": "Template_Specs",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Template_Specs.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Template_Specs.svg",
+        "id": "b18dadda1ce24d64894013cffaa54e1c"
       },
       {
         "text": "Test_Base",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Test_Base.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Test_Base.svg",
+        "id": "0fa28a13e29e43a1b35b362c8dba1761"
       },
       {
         "text": "Universal_Print",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Universal_Print.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Universal_Print.svg",
+        "id": "85463036411a4da9ab9556a46073f2f0"
       },
       {
         "text": "Update_Center",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Update_Center.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Update_Center.svg",
+        "id": "6bb7eea590e042ed8291d85905317541"
       },
       {
         "text": "VM_Application_Definition",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/VM_Application_Definition.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/VM_Application_Definition.svg",
+        "id": "a796483784d748f4bbedd2e114de1dc0"
       },
       {
         "text": "VM_Application_Version",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/VM_Application_Version.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/VM_Application_Version.svg",
+        "id": "6c72ce1ebda54c7b8baed7f933ec3a7d"
       },
       {
         "text": "Video_Analyzers",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Video_Analyzers.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Video_Analyzers.svg",
+        "id": "8cafbdb35a344ad6927abe535aee5c00"
       },
       {
         "text": "Virtual_Instance_for_SAP",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Virtual_Instance_for_SAP.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Virtual_Instance_for_SAP.svg",
+        "id": "3c9bed2f8b9446f9863b32abfc11ab89"
       },
       {
         "text": "WAC",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/WAC.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/WAC.svg",
+        "id": "c62ed68b638b4c0f8f5b9e3d9d6a6140"
       },
       {
         "text": "Web_App_Database",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Web_App_Database.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Web_App_Database.svg",
+        "id": "5ddc0fde1fb34b569b10605523f0e743"
       },
       {
         "text": "Web_Jobs",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Web_Jobs.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Web_Jobs.svg",
+        "id": "e5df7ffd48d24b01beb852908494470f"
       },
       {
         "text": "Windows_Notification_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Windows_Notification_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Windows_Notification_Services.svg",
+        "id": "c0b152c57dd441ffaf8b6d2bbbc1b4a4"
       },
       {
         "text": "Windows_Virtual_Desktop",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Windows_Virtual_Desktop.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Windows_Virtual_Desktop.svg",
+        "id": "a10cecb4e5bc428c98dde26a5e5d99d7"
       },
       {
         "text": "Worker_Container_App",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Worker_Container_App.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/other/Worker_Container_App.svg",
+        "id": "d17a891681f64bf5954565f6b70950cf"
       }
     ]
   },
@@ -2281,39 +2819,48 @@
     "childs": [
       {
         "text": "Azure_Cloud_Shell",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/preview/Azure_Cloud_Shell.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/preview/Azure_Cloud_Shell.svg",
+        "id": "c18e762820f94f87a814512eacd50f35"
       },
       {
         "text": "Azure_Sphere",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/preview/Azure_Sphere.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/preview/Azure_Sphere.svg",
+        "id": "e67fdc7de609417abb13214d5fd2b66b"
       },
       {
         "text": "Azure_Workbooks",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/preview/Azure_Workbooks.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/preview/Azure_Workbooks.svg",
+        "id": "94d288032a65480b971f34253d40ed0e"
       },
       {
         "text": "IoT_Edge",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/preview/IoT_Edge.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/preview/IoT_Edge.svg",
+        "id": "04219bb05b9f4f349d8515a2c384e395"
       },
       {
         "text": "Private_Link_Hub",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/preview/Private_Link_Hub.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/preview/Private_Link_Hub.svg",
+        "id": "543d776792184c81a0599c877c69ff94"
       },
       {
         "text": "RTOS",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/preview/RTOS.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/preview/RTOS.svg",
+        "id": "23a5ff8de4904154b8993ce7785525c0"
       },
       {
         "text": "Static_Apps",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/preview/Static_Apps.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/preview/Static_Apps.svg",
+        "id": "81ba163d29db4a9dacbe9abdcf629cfb"
       },
       {
         "text": "Time_Series_Data_Sets",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/preview/Time_Series_Data_Sets.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/preview/Time_Series_Data_Sets.svg",
+        "id": "9d978eb4757144c58bd7b3157907cd08"
       },
       {
         "text": "Web_Environment",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/preview/Web_Environment.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/preview/Web_Environment.svg",
+        "id": "826554ac84bc491b9387c3317dc7f8ae"
       }
     ]
   },
@@ -2322,59 +2869,73 @@
     "childs": [
       {
         "text": "Application_Security_Groups",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/Application_Security_Groups.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/Application_Security_Groups.svg",
+        "id": "50c139e7bcca4027aed568b702b0073e"
       },
       {
         "text": "Azure_AD_Risky_Signins",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/Azure_AD_Risky_Signins.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/Azure_AD_Risky_Signins.svg",
+        "id": "166a6cb5170a483592648b39184eb7c3"
       },
       {
         "text": "Azure_AD_Risky_Users",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/Azure_AD_Risky_Users.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/Azure_AD_Risky_Users.svg",
+        "id": "791cbcbdf0074a17ba972feb04a874c5"
       },
       {
         "text": "Azure_Defender",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/Azure_Defender.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/Azure_Defender.svg",
+        "id": "6464ccff051240d4bdce5b336be62adf"
       },
       {
         "text": "Azure_Sentinel",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/Azure_Sentinel.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/Azure_Sentinel.svg",
+        "id": "da2cb374346f4150b8a09f45c432a90d"
       },
       {
         "text": "Conditional_Access",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/Conditional_Access.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/Conditional_Access.svg",
+        "id": "c0a177312c15480082871b0d99e77a1c"
       },
       {
         "text": "Detonation",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/Detonation.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/Detonation.svg",
+        "id": "e11f5c2328b9475bb09bec77a970dd20"
       },
       {
         "text": "ExtendedSecurityUpdates",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/ExtendedSecurityUpdates.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/ExtendedSecurityUpdates.svg",
+        "id": "e1d3b7c318974e958fda59552f6c1b0c"
       },
       {
         "text": "Identity_Secure_Score",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/Identity_Secure_Score.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/Identity_Secure_Score.svg",
+        "id": "2bf97c7171e14da8b5874d0bf6532cb5"
       },
       {
         "text": "Key_Vaults",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/Key_Vaults.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/Key_Vaults.svg",
+        "id": "75f748c9634242ab8c21a7451cd9ce6d"
       },
       {
         "text": "Keys",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/Keys.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/Keys.svg",
+        "id": "37737db34d294738adbbdacd428880e8"
       },
       {
         "text": "MS_Defender_EASM",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/MS_Defender_EASM.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/MS_Defender_EASM.svg",
+        "id": "e1c62e875f964a6dadcbe21b4f0a31da"
       },
       {
         "text": "Multifactor_Authentication",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/Multifactor_Authentication.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/Multifactor_Authentication.svg",
+        "id": "f69742b8725145fda61238188d98cb4d"
       },
       {
         "text": "Security_Center",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/Security_Center.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/security/Security_Center.svg",
+        "id": "3d0506a6a7e141e3b590e2b7fb89be01"
       }
     ]
   },
@@ -2383,71 +2944,88 @@
     "childs": [
       {
         "text": "Azure_Fileshare",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Azure_Fileshare.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Azure_Fileshare.svg",
+        "id": "0bba2e723ef9422e879e30084c9efbd7"
       },
       {
         "text": "Azure_HCP_Cache",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Azure_HCP_Cache.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Azure_HCP_Cache.svg",
+        "id": "d413aa3d956a4740bc8b2b232753ca22"
       },
       {
         "text": "Azure_NetApp_Files",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Azure_NetApp_Files.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Azure_NetApp_Files.svg",
+        "id": "503e34a1f8894adf8aaafa1dc18e4a63"
       },
       {
         "text": "Azure_Stack_Edge",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Azure_Stack_Edge.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Azure_Stack_Edge.svg",
+        "id": "eba53df7e16d44628eb8d26f476a0095"
       },
       {
         "text": "Data_Box",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Data_Box.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Data_Box.svg",
+        "id": "f2758f104239410ebd1c08266349ba60"
       },
       {
         "text": "Data_Box_Edge",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Data_Box_Edge.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Data_Box_Edge.svg",
+        "id": "571017a0e40848418fc5c3b8b868d4e9"
       },
       {
         "text": "Data_Lake_Storage_Gen1",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Data_Lake_Storage_Gen1.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Data_Lake_Storage_Gen1.svg",
+        "id": "f6c83d2efc2842e6a18fbf26e5059d80"
       },
       {
         "text": "Data_Share_Invitations",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Data_Share_Invitations.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Data_Share_Invitations.svg",
+        "id": "076dac5fc8b3476bbd567b361aa42c8a"
       },
       {
         "text": "Data_Shares",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Data_Shares.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Data_Shares.svg",
+        "id": "e2451650da4947f2900052a0992147c1"
       },
       {
         "text": "Import_Export_Jobs",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Import_Export_Jobs.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Import_Export_Jobs.svg",
+        "id": "5df2e40435964bb4acb3722778896809"
       },
       {
         "text": "Recovery_Services_Vaults",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Recovery_Services_Vaults.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Recovery_Services_Vaults.svg",
+        "id": "01910bc497ad482aac02efd6860e39dc"
       },
       {
         "text": "StorSimple_Data_Managers",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/StorSimple_Data_Managers.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/StorSimple_Data_Managers.svg",
+        "id": "5bb96c01089e4831b013191e1f5e4d8f"
       },
       {
         "text": "StorSimple_Device_Managers",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/StorSimple_Device_Managers.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/StorSimple_Device_Managers.svg",
+        "id": "37ff3ea568e442e79bd41e110a849721"
       },
       {
         "text": "Storage_Accounts",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Storage_Accounts.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Storage_Accounts.svg",
+        "id": "645cd97a27c84f8e86359222adba21bf"
       },
       {
         "text": "Storage_Accounts_Classic",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Storage_Accounts_Classic.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Storage_Accounts_Classic.svg",
+        "id": "f4337d61ca3541189d87039fa45f8da8"
       },
       {
         "text": "Storage_Explorer",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Storage_Explorer.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Storage_Explorer.svg",
+        "id": "39fe3e8918fd486897dbf4541a7037e2"
       },
       {
         "text": "Storage_Sync_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Storage_Sync_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/storage/Storage_Sync_Services.svg",
+        "id": "f5f36a501bd840ab972b454cf570c4da"
       }
     ]
   },
@@ -2456,15 +3034,18 @@
     "childs": [
       {
         "text": "Azure_Media_Service",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/web/Azure_Media_Service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/web/Azure_Media_Service.svg",
+        "id": "dae2bd9309094c88862fe3c992454004"
       },
       {
         "text": "Notification_Hub_Namespaces",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/web/Notification_Hub_Namespaces.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/web/Notification_Hub_Namespaces.svg",
+        "id": "8d1616936ae9490f80c24423df41a9da"
       },
       {
         "text": "SignalR",
-        "src": "https://resources.shy.live/assert/shape/lib/azure2/web/SignalR.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/azure2/web/SignalR.svg",
+        "id": "34e82e83ea2d4ba09cdde43dcdee383f"
       }
     ]
   }

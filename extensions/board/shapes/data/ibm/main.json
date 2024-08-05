@@ -4,23 +4,28 @@
     "childs": [
       {
         "text": "analytics",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/analytics.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/analytics.svg",
+        "id": "cf440b6a01c64a21ad01dc61d7c4741d"
       },
       {
         "text": "data_integration",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/data_integration.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/data_integration.svg",
+        "id": "05236a797573417ea0125a03b971bcec"
       },
       {
         "text": "data_repositories",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/data_repositories.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/data_repositories.svg",
+        "id": "8d35618bb1a14009908739d437674608"
       },
       {
         "text": "device_analytics",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/device_analytics.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/device_analytics.svg",
+        "id": "728a9340f4444c30b45db2b270fef18c"
       },
       {
         "text": "streaming_computing",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/streaming_computing.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/streaming_computing.svg",
+        "id": "e7ed8ca905be46ed8de638bb58b7e0c2"
       }
     ]
   },
@@ -29,83 +34,103 @@
     "childs": [
       {
         "text": "actionable_insight",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/actionable_insight.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/actionable_insight.svg",
+        "id": "2d999cbab9634460b7b74622fe4b1c45"
       },
       {
         "text": "annotate",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/annotate.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/annotate.svg",
+        "id": "1c53b2f9863144198c26ceb3c94591bc"
       },
       {
         "text": "api_developer_portal",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/api_developer_portal.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/api_developer_portal.svg",
+        "id": "b799ae947f2442678ad028e0077053c8"
       },
       {
         "text": "api_polyglot_runtimes",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/api_polyglot_runtimes.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/api_polyglot_runtimes.svg",
+        "id": "74bc7a059396409ebe387c5cc7c59e8b"
       },
       {
         "text": "app_server",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/app_server.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/app_server.svg",
+        "id": "1c80d1973b6c47b985445cb97793ad62"
       },
       {
         "text": "application_logic",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/application_logic.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/application_logic.svg",
+        "id": "ec8ba9e35c86438abd031baed377cda9"
       },
       {
         "text": "automation_tools",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/automation_tools.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/automation_tools.svg",
+        "id": "121f741893c24b79a6f26d5a83b2dea6"
       },
       {
         "text": "enterprise_applications",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/enterprise_applications.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/enterprise_applications.svg",
+        "id": "30181b5d343448db9f1f8ff00141876d"
       },
       {
         "text": "index",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/index.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/index.svg",
+        "id": "aab5c35b688b42d0aaea3106365ce4e9"
       },
       {
         "text": "iot_application",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/iot_application.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/iot_application.svg",
+        "id": "762986be6b8a49afa56da51d0707113f"
       },
       {
         "text": "microservice",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/microservice.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/microservice.svg",
+        "id": "6aece4e5fd914e658480c1aeaa3ac6e0"
       },
       {
         "text": "mobile_app",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/mobile_app.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/mobile_app.svg",
+        "id": "d73de13ec72a4dc392aa9a23db309b06"
       },
       {
         "text": "ontology",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/ontology.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/ontology.svg",
+        "id": "a7bd9d527a6c42e28c717de76285e7d8"
       },
       {
         "text": "open_source_tools",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/open_source_tools.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/open_source_tools.svg",
+        "id": "df72f5732a50479eb670af810c3432ab"
       },
       {
         "text": "runtime_services",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/runtime_services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/runtime_services.svg",
+        "id": "06d42f8419c74bc986c82a3586af71c4"
       },
       {
         "text": "saas_applications",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/saas_applications.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/saas_applications.svg",
+        "id": "b7b655d5097449b299ae509751d9759d"
       },
       {
         "text": "service_broker",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/service_broker.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/service_broker.svg",
+        "id": "08a91a11e2cd4510ba5aa215d9068e22"
       },
       {
         "text": "speech_to_text",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/speech_to_text.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/speech_to_text.svg",
+        "id": "e2026297e66f4ee0acf7a5d6fd5a2cd2"
       },
       {
         "text": "visual_recognition",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/visual_recognition.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/visual_recognition.svg",
+        "id": "f7993ee770064348b1fc245bc55e77a6"
       },
       {
         "text": "visualization",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/visualization.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/visualization.svg",
+        "id": "1c1383c99e5444f98cd0dd1edacd3c27"
       }
     ]
   },
@@ -114,91 +139,113 @@
     "childs": [
       {
         "text": "blockchain",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/blockchain.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/blockchain.svg",
+        "id": "46dbb6605d674fed82190b9e5381bb55"
       },
       {
         "text": "blockchain_developer",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/blockchain_developer.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/blockchain_developer.svg",
+        "id": "8fee280178774c9f9f5b66241b4a4401"
       },
       {
         "text": "certificate_authority",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/certificate_authority.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/certificate_authority.svg",
+        "id": "50c8283a4ff744aabef68c27ebae9bfe"
       },
       {
         "text": "client_application",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/client_application.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/client_application.svg",
+        "id": "c5999245553041df91bb0e57aa0cffe0"
       },
       {
         "text": "communication",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/communication.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/communication.svg",
+        "id": "91a6342dd1a34ba5b556d648b4e074e8"
       },
       {
         "text": "consensus",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/consensus.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/consensus.svg",
+        "id": "51b107439cc8432c87ad149fe15120a9"
       },
       {
         "text": "e_cert",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/e_cert.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/e_cert.svg",
+        "id": "7ba3cd9def994270865b844b29aa7a40"
       },
       {
         "text": "event",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/event.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/event.svg",
+        "id": "790d1557769f4d1ca3ea1f6ac2264c48"
       },
       {
         "text": "event_listener",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/event_listener.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/event_listener.svg",
+        "id": "08be068f113c41a79926a6d248e9b26b"
       },
       {
         "text": "existing_enterprise_systems",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/existing_enterprise_systems.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/existing_enterprise_systems.svg",
+        "id": "f0df9ffd6ab5438d95a21f092c9f4e23"
       },
       {
         "text": "hyperledger_fabric",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/hyperledger_fabric.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/hyperledger_fabric.svg",
+        "id": "2a3ad3b93a27474194a9c881186f99c3"
       },
       {
         "text": "identity_access_manager",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/identity_access_manager.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/identity_access_manager.svg",
+        "id": "769f7c3d4c2d4a5989565ec83956e4c5"
       },
       {
         "text": "key_management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/key_management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/key_management.svg",
+        "id": "de4406171bca426f86e9aced1e6de5de"
       },
       {
         "text": "ledger",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/ledger.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/ledger.svg",
+        "id": "bd94a38e971c4f0cae85c058416ae93f"
       },
       {
         "text": "membership",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/membership.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/membership.svg",
+        "id": "da2c998f0a0049b2a5b8aeb79da48168"
       },
       {
         "text": "membership_services_provider_api",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/membership_services_provider_api.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/membership_services_provider_api.svg",
+        "id": "1142ec57ac6948d9a7001acc15c312d2"
       },
       {
         "text": "message_bus",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/message_bus.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/message_bus.svg",
+        "id": "938812787a8b471da672e249170cd5e3"
       },
       {
         "text": "node",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/node.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/node.svg",
+        "id": "c3b0183b1d8145deb73617c8c6ddc74d"
       },
       {
         "text": "services",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/services.svg",
+        "id": "6907fe52a3e04c59a85e38c596d296ac"
       },
       {
         "text": "smart_contract",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/smart_contract.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/smart_contract.svg",
+        "id": "c942e9505b01465caf0111bf6e38a2d5"
       },
       {
         "text": "transaction_manager",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/transaction_manager.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/transaction_manager.svg",
+        "id": "b5243c5726ca41859fb7596ca0c91581"
       },
       {
         "text": "wallet",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/wallet.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/wallet.svg",
+        "id": "7772e9f3e21940c5bf344c5b8ba90255"
       }
     ]
   },
@@ -207,55 +254,68 @@
     "childs": [
       {
         "text": "caches",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/caches.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/caches.svg",
+        "id": "2f4ad6e669c7440d97b58faefe81644a"
       },
       {
         "text": "cloud",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/cloud.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/cloud.svg",
+        "id": "b9079f1ea3564a35a3c4abf93a7f2603"
       },
       {
         "text": "conversation_trained_deployed",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/conversation_trained_deployed.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/conversation_trained_deployed.svg",
+        "id": "7640653b019c4ae9a02d53eebaf45aac"
       },
       {
         "text": "data_services",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/data_services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/data_services.svg",
+        "id": "0654608e224545359ba14d366c801980"
       },
       {
         "text": "data_sources",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/data_sources.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/data_sources.svg",
+        "id": "ab0c9a5d242840ada1487900e2b11963"
       },
       {
         "text": "device_identity_service",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/device_identity_service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/device_identity_service.svg",
+        "id": "ab9c924c2ff5488cabff9f8d949ffb86"
       },
       {
         "text": "device_registry",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/device_registry.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/device_registry.svg",
+        "id": "105fa8cb6ca64731a218c23dc53c9742"
       },
       {
         "text": "enterprise_data",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/enterprise_data.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/enterprise_data.svg",
+        "id": "07791fc423714d7abb897648b3f571e8"
       },
       {
         "text": "enterprise_user_directory",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/enterprise_user_directory.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/enterprise_user_directory.svg",
+        "id": "38206008c86c4cebb90e00c6644df492"
       },
       {
         "text": "file_repository",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/file_repository.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/file_repository.svg",
+        "id": "2b844425fae241e1a4e049d28ef93e74"
       },
       {
         "text": "ground_truth",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/ground_truth.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/ground_truth.svg",
+        "id": "c68a423c062948418f47528cc23261fa"
       },
       {
         "text": "model",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/model.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/model.svg",
+        "id": "4bb730c13cc8453ea43bbd2bc25a57ef"
       },
       {
         "text": "tms_data_interface",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/tms_data_interface.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/tms_data_interface.svg",
+        "id": "69759da6cd1a435b9d3750a36fcd0bb9"
       }
     ]
   },
@@ -264,43 +324,53 @@
     "childs": [
       {
         "text": "artifact_management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/artifact_management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/artifact_management.svg",
+        "id": "5eaeb0f410d24ec4ba1e98931abae494"
       },
       {
         "text": "build_test",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/build_test.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/build_test.svg",
+        "id": "a4249afdfb574d19b7e1587885adc4a7"
       },
       {
         "text": "code_editor",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/code_editor.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/code_editor.svg",
+        "id": "d3801966758848799f05af5b59f55475"
       },
       {
         "text": "collaborative_development",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/collaborative_development.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/collaborative_development.svg",
+        "id": "ac4c17cf0b71411ca5bddb38407aedaa"
       },
       {
         "text": "configuration_management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/configuration_management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/configuration_management.svg",
+        "id": "33d2f3646a1c477c8b195c9b2e4b50fe"
       },
       {
         "text": "continuous_deploy",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/continuous_deploy.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/continuous_deploy.svg",
+        "id": "6f18d6aee58d4383b910a636768f4309"
       },
       {
         "text": "continuous_testing",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/continuous_testing.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/continuous_testing.svg",
+        "id": "36e736e92cae419fa27206082a731f24"
       },
       {
         "text": "devops",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/devops.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/devops.svg",
+        "id": "f6bad13863fa45539f5e74ddc337a0dc"
       },
       {
         "text": "provision",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/provision.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/provision.svg",
+        "id": "8f94b109e1ac4847a7e368b01592dd15"
       },
       {
         "text": "release_management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/release_management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/release_management.svg",
+        "id": "02dc690dbe6b4e2f9190885e4776eccd"
       }
     ]
   },
@@ -309,75 +379,93 @@
     "childs": [
       {
         "text": "channels",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/channels.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/channels.svg",
+        "id": "0893d472317a4fc58e6bf3c48a397157"
       },
       {
         "text": "cloud_messaging",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/cloud_messaging.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/cloud_messaging.svg",
+        "id": "b0b538d4fa0b47f2b4ff94c267048944"
       },
       {
         "text": "dashboard",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/dashboard.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/dashboard.svg",
+        "id": "ba53ea0029a8412896598bc2d229cf6f"
       },
       {
         "text": "diagnostics",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/diagnostics.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/diagnostics.svg",
+        "id": "24ca005a827e4bf78b01a0e9bfd3ba1e"
       },
       {
         "text": "edge_services",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/edge_services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/edge_services.svg",
+        "id": "2a5c97c1c0134c1587102e6ef3c3a525"
       },
       {
         "text": "enterprise_messaging",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/enterprise_messaging.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/enterprise_messaging.svg",
+        "id": "7010ffa068564fb08bdd6191ea2124fd"
       },
       {
         "text": "event_feed",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/event_feed.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/event_feed.svg",
+        "id": "69dfe253ac614961b0d00cbeaec3be2b"
       },
       {
         "text": "infrastructure_services",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/infrastructure_services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/infrastructure_services.svg",
+        "id": "a899d5201b994f83ad3cc775f51377b4"
       },
       {
         "text": "interservice_communication",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/interservice_communication.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/interservice_communication.svg",
+        "id": "24d29920716b4e4faf40660ac6779600"
       },
       {
         "text": "load_balancing_routing",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/load_balancing_routing.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/load_balancing_routing.svg",
+        "id": "8be2b9d6e2b14951abe26cf01b89002e"
       },
       {
         "text": "microservices_mesh",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/microservices_mesh.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/microservices_mesh.svg",
+        "id": "eae583e100c54853b8720fe928a1c4ab"
       },
       {
         "text": "mobile_backend",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/mobile_backend.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/mobile_backend.svg",
+        "id": "5e6bab27be7342f88ca45cd79e9d8806"
       },
       {
         "text": "mobile_provider_network",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/mobile_provider_network.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/mobile_provider_network.svg",
+        "id": "61fafe68f49e428fb9bc977268cf4af2"
       },
       {
         "text": "monitoring",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/monitoring.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/monitoring.svg",
+        "id": "64ca7d499c74435b81dd3151202b130f"
       },
       {
         "text": "monitoring_logging",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/monitoring_logging.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/monitoring_logging.svg",
+        "id": "db0d0312ddb749b1b86109978ecb9c36"
       },
       {
         "text": "peer_services",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/peer_services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/peer_services.svg",
+        "id": "e950d5861ea54d2490cf7dab620fb215"
       },
       {
         "text": "service_discovery_configuration",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/service_discovery_configuration.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/service_discovery_configuration.svg",
+        "id": "0f053acd78d04482b702ede14365621d"
       },
       {
         "text": "transformation_connectivity",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/transformation_connectivity.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/transformation_connectivity.svg",
+        "id": "764e4e6c8ff24d79b5582a1dfb85ca92"
       }
     ]
   },
@@ -386,63 +474,78 @@
     "childs": [
       {
         "text": "alert_notification",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/alert_notification.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/alert_notification.svg",
+        "id": "e4b1739d4ac949eb9eb4cbd2b5d6e9ea"
       },
       {
         "text": "api_management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/api_management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/api_management.svg",
+        "id": "153e5ea342444420a46e4851e305a269"
       },
       {
         "text": "cloud_management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/cloud_management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/cloud_management.svg",
+        "id": "436a696b16534bc78527323506847418"
       },
       {
         "text": "cluster_management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/cluster_management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/cluster_management.svg",
+        "id": "a742b62a3334487ab41fdd25f3220c2f"
       },
       {
         "text": "content_management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/content_management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/content_management.svg",
+        "id": "51f5223bd7dc44b9871369fb91e00364"
       },
       {
         "text": "data_services",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/data_services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/data_services.svg",
+        "id": "6d11c0d292ff4b6fb744495edf235d94"
       },
       {
         "text": "device_management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/device_management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/device_management.svg",
+        "id": "b34cf0ce58d1430e94d5c2ef308dfae6"
       },
       {
         "text": "information_governance",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/information_governance.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/information_governance.svg",
+        "id": "0c66834447874c848fe3eadd9d04241b"
       },
       {
         "text": "it_service_management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/it_service_management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/it_service_management.svg",
+        "id": "17204c45a323406797fd3b5ce1910268"
       },
       {
         "text": "management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/management.svg",
+        "id": "5d045d534dbe45f8b70e0d11137ebb7d"
       },
       {
         "text": "monitoring_metrics",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/monitoring_metrics.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/monitoring_metrics.svg",
+        "id": "c7dba0ba839545f58764a9333b894d49"
       },
       {
         "text": "process_management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/process_management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/process_management.svg",
+        "id": "fae562508daf44c38d80c1c48508c7b0"
       },
       {
         "text": "provider_cloud_portal_service",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/provider_cloud_portal_service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/provider_cloud_portal_service.svg",
+        "id": "10a13b77d05b4d668bb6cd30625be36e"
       },
       {
         "text": "push_notifications",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/push_notifications.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/push_notifications.svg",
+        "id": "07e48c0cf315459aaf51c90fc9a09b14"
       },
       {
         "text": "service_management_tools",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/service_management_tools.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/service_management_tools.svg",
+        "id": "d5e67a215bae43eb90db02ca6d9e9a55"
       }
     ]
   },
@@ -451,59 +554,73 @@
     "childs": [
       {
         "text": "bluemix",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/bluemix.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/bluemix.svg",
+        "id": "0ab92af519084640b28cbbd15ba923f6"
       },
       {
         "text": "cloudant",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/cloudant.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/cloudant.svg",
+        "id": "c8cba59866b944058f47b5e8f84c38bf"
       },
       {
         "text": "cognitive_services",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/cognitive_services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/cognitive_services.svg",
+        "id": "de7323d2d43b46d3a8a655b8776a2ae2"
       },
       {
         "text": "ibm_containers",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/ibm_containers.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/ibm_containers.svg",
+        "id": "913add3a25df435c8bd9b332178eaae7"
       },
       {
         "text": "ibm_public_cloud",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/ibm_public_cloud.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/ibm_public_cloud.svg",
+        "id": "9fec476c58424916934fd514d16d2553"
       },
       {
         "text": "iot_cloud",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/iot_cloud.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/iot_cloud.svg",
+        "id": "94931a77b9444d668da1690c1e64ae1a"
       },
       {
         "text": "microservices_application",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/microservices_application.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/microservices_application.svg",
+        "id": "d1c01766708c40559255cb0b2094eef6"
       },
       {
         "text": "object_storage",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/object_storage.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/object_storage.svg",
+        "id": "6162b10514de41d9b7126a1d70649e56"
       },
       {
         "text": "offline_capabilities",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/offline_capabilities.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/offline_capabilities.svg",
+        "id": "c8a1910ce781422d9d85459e589353a2"
       },
       {
         "text": "openwhisk",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/openwhisk.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/openwhisk.svg",
+        "id": "67dbce3145d54fd5bd46536ee9172cf4"
       },
       {
         "text": "peer_cloud",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/peer_cloud.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/peer_cloud.svg",
+        "id": "baad7f77fda2411299a1e8d7c5768180"
       },
       {
         "text": "retrieve_rank",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/retrieve_rank.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/retrieve_rank.svg",
+        "id": "5c929c1670a84836b381d2ac8f42e6db"
       },
       {
         "text": "scalable",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/scalable.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/scalable.svg",
+        "id": "0146236b31a04336b7885bebbbf8681d"
       },
       {
         "text": "text_to_speech",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/text_to_speech.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/text_to_speech.svg",
+        "id": "79aa525871a6464bbe14671d6bf38449"
       }
     ]
   },
@@ -512,59 +629,73 @@
     "childs": [
       {
         "text": "api_security",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/api_security.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/api_security.svg",
+        "id": "f99b03f1af1347b89c2c975c3919c6ff"
       },
       {
         "text": "blockchain_security_service",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/blockchain_security_service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/blockchain_security_service.svg",
+        "id": "fd38de2565ab4dac88d8391d6dd906c8"
       },
       {
         "text": "data_security",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/data_security.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/data_security.svg",
+        "id": "0b9873a3cf59473c9769e28929c65efe"
       },
       {
         "text": "firewall",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/firewall.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/firewall.svg",
+        "id": "c44d8ca882844d58a2ad7827bf923ab8"
       },
       {
         "text": "gateway",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/gateway.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/gateway.svg",
+        "id": "c82e94952c534caa875c44edb567dc45"
       },
       {
         "text": "governance_risk_compliance",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/governance_risk_compliance.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/governance_risk_compliance.svg",
+        "id": "053963b1df7d46d3a27a7bf3bdf04f2a"
       },
       {
         "text": "identity_access_management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/identity_access_management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/identity_access_management.svg",
+        "id": "c1c38a46d581447a99cffa57b7ae8639"
       },
       {
         "text": "identity_provider",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/identity_provider.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/identity_provider.svg",
+        "id": "882872e7d3144a2489277de2bba4b849"
       },
       {
         "text": "infrastructure_security",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/infrastructure_security.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/infrastructure_security.svg",
+        "id": "b1738f82e0f1441aa649033dd4457569"
       },
       {
         "text": "physical_security",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/physical_security.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/physical_security.svg",
+        "id": "7736fda90a474f94a160bcf196dd861a"
       },
       {
         "text": "security_monitoring_intelligence",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/security_monitoring_intelligence.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/security_monitoring_intelligence.svg",
+        "id": "79b8ef2b24104b6c8bc391d422594e63"
       },
       {
         "text": "security_services",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/security_services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/security_services.svg",
+        "id": "6e39c3349b0742d8be68d2858b819989"
       },
       {
         "text": "trustend_computing",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/trustend_computing.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/trustend_computing.svg",
+        "id": "90ec9da3d8464b889e20d8508a1dec1c"
       },
       {
         "text": "vpn",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/vpn.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/vpn.svg",
+        "id": "3ba887fe659e4ce49d900faa71291867"
       }
     ]
   },
@@ -573,23 +704,28 @@
     "childs": [
       {
         "text": "communities",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/communities.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/communities.svg",
+        "id": "2e36bbbaf6c8470ca15e7c9ee2e89496"
       },
       {
         "text": "file_sync",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/file_sync.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/file_sync.svg",
+        "id": "f5d3229852db477cb23b0c5bcee3d818"
       },
       {
         "text": "live_collaboration",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/live_collaboration.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/live_collaboration.svg",
+        "id": "2dfba27865b349c282da3b462c21e356"
       },
       {
         "text": "messaging",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/messaging.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/messaging.svg",
+        "id": "69ef94c5151a41969681f7a015bb0cb2"
       },
       {
         "text": "networking",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/networking.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/networking.svg",
+        "id": "0e3e7818ad0c4591ac6c34651fab751e"
       }
     ]
   },
@@ -598,27 +734,33 @@
     "childs": [
       {
         "text": "browser",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/browser.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/browser.svg",
+        "id": "a2c5ceeaf5e24648b315f9a8a7d06f28"
       },
       {
         "text": "device",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/device.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/device.svg",
+        "id": "13f382c14eed494eadcdf18f9fac9541"
       },
       {
         "text": "integrated_digital_experiences",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/integrated_digital_experiences.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/integrated_digital_experiences.svg",
+        "id": "e53e9f8c4f0541aba1486531508d0338"
       },
       {
         "text": "physical_entity",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/physical_entity.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/physical_entity.svg",
+        "id": "00ad17501ba24e348ab16d7c2b91940c"
       },
       {
         "text": "sensor",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/sensor.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/sensor.svg",
+        "id": "859ade7418f142e994b2dfe9d6f49f3f"
       },
       {
         "text": "user",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/user.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/user.svg",
+        "id": "3c2f84f69e8a4b04b5679f40746c77f2"
       }
     ]
   },
@@ -627,187 +769,233 @@
     "childs": [
       {
         "text": "ACLRules",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ACLRules.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ACLRules.svg",
+        "id": "967dc7e4a9eb4f3cb8e0fb1490758f87"
       },
       {
         "text": "BareMetalServer",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/BareMetalServer.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/BareMetalServer.svg",
+        "id": "3025d4b0e72547debf38b8a3245aa273"
       },
       {
         "text": "BlockStorage",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/BlockStorage.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/BlockStorage.svg",
+        "id": "5c29073254da418dbd9e7f69fd283bcf"
       },
       {
         "text": "Bridge",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Bridge.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Bridge.svg",
+        "id": "99cecab8d7cf420ba993e332955bc372"
       },
       {
         "text": "ClassicInfrastructure",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ClassicInfrastructure.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ClassicInfrastructure.svg",
+        "id": "5d14051940194672981f301418259f51"
       },
       {
         "text": "ClassicInfrastructureTag",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ClassicInfrastructureTag.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ClassicInfrastructureTag.svg",
+        "id": "c19f0ae726d64b67810077a6602aac2b"
       },
       {
         "text": "CloudServices",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/CloudServices.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/CloudServices.svg",
+        "id": "8b1a9e6a824f4848813d9d9855e6ea43"
       },
       {
         "text": "CloudTag",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/CloudTag.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/CloudTag.svg",
+        "id": "783f92384e1849e6b7e29ac33ce7bf05"
       },
       {
         "text": "DirectLink",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/DirectLink.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/DirectLink.svg",
+        "id": "b4963f1bd76740fe854adc54aacf55ee"
       },
       {
         "text": "Enterprise",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Enterprise.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Enterprise.svg",
+        "id": "acfd848cbe684f7c849c0d1522ca6aaf"
       },
       {
         "text": "Enterprise2",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Enterprise2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Enterprise2.svg",
+        "id": "a6a1be7fee394524908587be58c8ecae"
       },
       {
         "text": "EnterpriseTag",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/EnterpriseTag.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/EnterpriseTag.svg",
+        "id": "73131fd971c643dc993f466cd49f2dc7"
       },
       {
         "text": "Firewall",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Firewall.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Firewall.svg",
+        "id": "3b674d432fe24f74a14f8a509f99ef40"
       },
       {
         "text": "FloatingIP",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/FloatingIP.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/FloatingIP.svg",
+        "id": "13513deed93d42f780361a5cb44582d4"
       },
       {
         "text": "GatewayAppliance",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/GatewayAppliance.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/GatewayAppliance.svg",
+        "id": "5daa7c6567464542b4640a5e068bc137"
       },
       {
         "text": "IBMCloud",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/IBMCloud.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/IBMCloud.svg",
+        "id": "92f59f6f179f41d8ac81abd66e6fcb32"
       },
       {
         "text": "Image",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Image.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Image.svg",
+        "id": "aefba0e4baea449a92406dccd2db29f2"
       },
       {
         "text": "ImageService",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ImageService.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ImageService.svg",
+        "id": "42fa7ee2368842dd9d6be242f1ed361b"
       },
       {
         "text": "Instance",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Instance.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Instance.svg",
+        "id": "7c03e9e0051f452e9b94e351fea0bb20"
       },
       {
         "text": "Internet",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Internet.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Internet.svg",
+        "id": "892dcf01651c48edb206a907a00a0bb8"
       },
       {
         "text": "InternetServices",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/InternetServices.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/InternetServices.svg",
+        "id": "e350cb4f6671430293c4351ccec77df9"
       },
       {
         "text": "InternetServices2",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/InternetServices2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/InternetServices2.svg",
+        "id": "d99f4141a1454cd6aa8623b7baba7da7"
       },
       {
         "text": "Key",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Key.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Key.svg",
+        "id": "158cc984d99e4c9398ef7e2213bbb529"
       },
       {
         "text": "LoadBalancer",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/LoadBalancer.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/LoadBalancer.svg",
+        "id": "59ac14be490248e28e635850fb3d7be3"
       },
       {
         "text": "LoadBalancerListener",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/LoadBalancerListener.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/LoadBalancerListener.svg",
+        "id": "177e1ce8a1be495697fd5ad7d576e112"
       },
       {
         "text": "LoadBalancerPool",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/LoadBalancerPool.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/LoadBalancerPool.svg",
+        "id": "8d4c5950c39244dfa0dde9a43382d77d"
       },
       {
         "text": "Marketplace",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Marketplace.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Marketplace.svg",
+        "id": "32801d6ce318413d82fb7dc220b1436b"
       },
       {
         "text": "ObjectStorage",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ObjectStorage.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ObjectStorage.svg",
+        "id": "6a03d4a7a55f4ecc98d786b3ccdc8ea2"
       },
       {
         "text": "PowerInstance",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/PowerInstance.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/PowerInstance.svg",
+        "id": "dd846f28f83342efb5a9d176ddaf47fd"
       },
       {
         "text": "PublicGateway",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/PublicGateway.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/PublicGateway.svg",
+        "id": "f8caa9bc987e4727806eb5b7a932fa18"
       },
       {
         "text": "PublicTag",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/PublicTag.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/PublicTag.svg",
+        "id": "a543cd2a66704d8fb97d2996e346d335"
       },
       {
         "text": "RegionTag",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/RegionTag.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/RegionTag.svg",
+        "id": "72190591bb9d482ba24b873c57ef9287"
       },
       {
         "text": "Router",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Router.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Router.svg",
+        "id": "ba91857211e84ea086a5dba62627af8d"
       },
       {
         "text": "Rules",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Rules.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Rules.svg",
+        "id": "492f9ebc00ef44e5a6c579b58216ed8f"
       },
       {
         "text": "SecurityGroupRules",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/SecurityGroupRules.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/SecurityGroupRules.svg",
+        "id": "bf2ea1a4c17a48e9bf36b083437f3cb1"
       },
       {
         "text": "Subnet",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Subnet.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Subnet.svg",
+        "id": "65271e88c4e443828d220765be72b6cf"
       },
       {
         "text": "SubnetTag",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/SubnetTag.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/SubnetTag.svg",
+        "id": "8414fa2757b943cb9a15eac969503ce7"
       },
       {
         "text": "SubnetTag2",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/SubnetTag2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/SubnetTag2.svg",
+        "id": "2e518db4550f4aee9553845cf57f69a7"
       },
       {
         "text": "TransitGateway",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/TransitGateway.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/TransitGateway.svg",
+        "id": "9b4e2aaf3ced4c5b9d7d002b56463212"
       },
       {
         "text": "VPCTag",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPCTag.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPCTag.svg",
+        "id": "5f80597c75c74ba6b43269801c9a7ee5"
       },
       {
         "text": "VPN",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPN.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPN.svg",
+        "id": "073d39d46159485e929ce2fd3e3dde6d"
       },
       {
         "text": "VPNConnection",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPNConnection.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPNConnection.svg",
+        "id": "b1ca73797386472b93e620f6a00c99e6"
       },
       {
         "text": "VPNGateway",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPNGateway.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPNGateway.svg",
+        "id": "df71736767da4447b10b2b222f8bf648"
       },
       {
         "text": "VPNPolicy",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPNPolicy.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPNPolicy.svg",
+        "id": "e658db620b1142e1af0d0f06bee79536"
       },
       {
         "text": "VirtualPrivateCloud",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VirtualPrivateCloud.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VirtualPrivateCloud.svg",
+        "id": "0299fc7861674c02a64fca30a923113d"
       },
       {
         "text": "ZoneTag",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ZoneTag.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ZoneTag.svg",
+        "id": "c7d65abbda854e119bf9dc585fb19ca6"
       }
     ]
   },
@@ -816,755 +1004,943 @@
     "childs": [
       {
         "text": "analytics",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/analytics.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/analytics.svg",
+        "id": "2128a2af45184409848a5a2841c97bb4"
       },
       {
         "text": "data_integration",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/data_integration.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/data_integration.svg",
+        "id": "f5f533f0d3454574bc0439a9835b168c"
       },
       {
         "text": "data_repositories",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/data_repositories.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/data_repositories.svg",
+        "id": "5cde31f05f9841b1a897bbc6f4d61f61"
       },
       {
         "text": "device_analytics",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/device_analytics.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/device_analytics.svg",
+        "id": "80a865e766f04c14b8f4a5d76acf6bb0"
       },
       {
         "text": "streaming_computing",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/streaming_computing.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/analytics/streaming_computing.svg",
+        "id": "2605db01c7fc4e4683e6de3db96f3fb7"
       },
       {
         "text": "actionable_insight",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/actionable_insight.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/actionable_insight.svg",
+        "id": "16d6ad1d442b4156af772f92878a267f"
       },
       {
         "text": "annotate",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/annotate.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/annotate.svg",
+        "id": "ef95972aac704328bf45b7e33b8bbacf"
       },
       {
         "text": "api_developer_portal",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/api_developer_portal.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/api_developer_portal.svg",
+        "id": "a87963548ae74fae9ed8de4652f48f58"
       },
       {
         "text": "api_polyglot_runtimes",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/api_polyglot_runtimes.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/api_polyglot_runtimes.svg",
+        "id": "cd80c21f1b5948e08a24b7256b4654be"
       },
       {
         "text": "app_server",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/app_server.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/app_server.svg",
+        "id": "ebcd246b7f36473a8758f031c8e97b0e"
       },
       {
         "text": "application_logic",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/application_logic.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/application_logic.svg",
+        "id": "2673942d4aa44a11ba4e6b117770cb64"
       },
       {
         "text": "automation_tools",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/automation_tools.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/automation_tools.svg",
+        "id": "4c877ac368e64a3bab189e03e4cbe1b5"
       },
       {
         "text": "enterprise_applications",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/enterprise_applications.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/enterprise_applications.svg",
+        "id": "01aaa86d66da43549106f44004352149"
       },
       {
         "text": "index",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/index.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/index.svg",
+        "id": "ce59fe084eea413b803f5dc4fd56d528"
       },
       {
         "text": "iot_application",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/iot_application.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/iot_application.svg",
+        "id": "55b26d60b0b7407ab6a9f0c69bedfba1"
       },
       {
         "text": "microservice",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/microservice.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/microservice.svg",
+        "id": "cefdc2cc1b0e4da394b2c22c9ff2b295"
       },
       {
         "text": "mobile_app",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/mobile_app.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/mobile_app.svg",
+        "id": "f2f669af8e41400d915f8480f7e7eb12"
       },
       {
         "text": "ontology",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/ontology.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/ontology.svg",
+        "id": "9113d2281dce4b83a2713fbfdd532849"
       },
       {
         "text": "open_source_tools",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/open_source_tools.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/open_source_tools.svg",
+        "id": "6d86eafb196b464c8020e96d2881bafb"
       },
       {
         "text": "runtime_services",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/runtime_services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/runtime_services.svg",
+        "id": "9903e4d055c043f8b2cedf892e0ad64f"
       },
       {
         "text": "saas_applications",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/saas_applications.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/saas_applications.svg",
+        "id": "4c731edddde54c178a174bab2dd59c22"
       },
       {
         "text": "service_broker",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/service_broker.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/service_broker.svg",
+        "id": "ac32a634044347168780d1883d37df44"
       },
       {
         "text": "speech_to_text",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/speech_to_text.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/speech_to_text.svg",
+        "id": "87423bed1e074884894ff7934c53a956"
       },
       {
         "text": "visual_recognition",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/visual_recognition.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/visual_recognition.svg",
+        "id": "9f8c326918914a2fa4b2bb22c692000c"
       },
       {
         "text": "visualization",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/visualization.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/applications/visualization.svg",
+        "id": "4b653b6a115f4326b1bfb554b6bf6223"
       },
       {
         "text": "blockchain",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/blockchain.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/blockchain.svg",
+        "id": "159264a159a0469cbfcd1e80e341cc68"
       },
       {
         "text": "blockchain_developer",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/blockchain_developer.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/blockchain_developer.svg",
+        "id": "f4b649c7acb643c4bb2fb1b4b4a6f8e2"
       },
       {
         "text": "certificate_authority",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/certificate_authority.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/certificate_authority.svg",
+        "id": "496a6e6a25284b6aaf00aa6b97c291b0"
       },
       {
         "text": "client_application",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/client_application.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/client_application.svg",
+        "id": "704986cf9d8e437c992470f3287f1794"
       },
       {
         "text": "communication",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/communication.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/communication.svg",
+        "id": "173777cad8d64152ac9fa3dbb0673579"
       },
       {
         "text": "consensus",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/consensus.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/consensus.svg",
+        "id": "20914a7ae78a433fa1f775c03d1f24f2"
       },
       {
         "text": "e_cert",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/e_cert.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/e_cert.svg",
+        "id": "0ae83ee9771e4675a6bd88797a30413c"
       },
       {
         "text": "event",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/event.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/event.svg",
+        "id": "706dab6f4db94ed1bb69bcc7b6c35fb2"
       },
       {
         "text": "event_listener",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/event_listener.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/event_listener.svg",
+        "id": "dd673cf7d9da4424b09f674f62ff7000"
       },
       {
         "text": "existing_enterprise_systems",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/existing_enterprise_systems.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/existing_enterprise_systems.svg",
+        "id": "665980b5442e4a3bb7482a7a51298ab3"
       },
       {
         "text": "hyperledger_fabric",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/hyperledger_fabric.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/hyperledger_fabric.svg",
+        "id": "4a9e1efd5fe141c090dfc05f93b7ece4"
       },
       {
         "text": "identity_access_manager",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/identity_access_manager.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/identity_access_manager.svg",
+        "id": "126170e3122649529ecbc2b4a3a13bd6"
       },
       {
         "text": "key_management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/key_management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/key_management.svg",
+        "id": "5f48c1399ec5469ab60eae8b23cdf7fd"
       },
       {
         "text": "ledger",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/ledger.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/ledger.svg",
+        "id": "b6669afc1024423f8141db7494ee950e"
       },
       {
         "text": "membership",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/membership.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/membership.svg",
+        "id": "5f115b22f1594c5aac95f4ee924ae831"
       },
       {
         "text": "membership_services_provider_api",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/membership_services_provider_api.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/membership_services_provider_api.svg",
+        "id": "bee6bca5f71c436d957935a43f6ef5bb"
       },
       {
         "text": "message_bus",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/message_bus.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/message_bus.svg",
+        "id": "03f0ca72572449aab70f7ae91c7985be"
       },
       {
         "text": "node",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/node.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/node.svg",
+        "id": "2f10f401f0164e30b975190f6ee52b0b"
       },
       {
         "text": "services",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/services.svg",
+        "id": "dd09f672ce9a40ee9336944aafa95beb"
       },
       {
         "text": "smart_contract",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/smart_contract.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/smart_contract.svg",
+        "id": "c44c194bda32498f8677da9aa39bef39"
       },
       {
         "text": "transaction_manager",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/transaction_manager.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/transaction_manager.svg",
+        "id": "58217681e17646cc8678f18093228d61"
       },
       {
         "text": "wallet",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/wallet.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/blockchain/wallet.svg",
+        "id": "f7b2c483c62449d982a1b2a9fd602793"
       },
       {
         "text": "caches",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/caches.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/caches.svg",
+        "id": "820d9caaca0a4dd8986069fba38adeae"
       },
       {
         "text": "cloud",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/cloud.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/cloud.svg",
+        "id": "daf2276c371c43038ff13228b4378536"
       },
       {
         "text": "conversation_trained_deployed",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/conversation_trained_deployed.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/conversation_trained_deployed.svg",
+        "id": "4c443aa563de4cc99800e93168708c72"
       },
       {
         "text": "data_services",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/data_services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/data_services.svg",
+        "id": "56bce92b50e44fd694eacb3981a9c2c0"
       },
       {
         "text": "data_sources",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/data_sources.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/data_sources.svg",
+        "id": "28b0ea55196d429dbca9b46e64c820ab"
       },
       {
         "text": "device_identity_service",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/device_identity_service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/device_identity_service.svg",
+        "id": "8590e4b24b0747ae86e186c717e6cc67"
       },
       {
         "text": "device_registry",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/device_registry.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/device_registry.svg",
+        "id": "4afc5c32ddf346db9db59a1db7ab6e84"
       },
       {
         "text": "enterprise_data",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/enterprise_data.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/enterprise_data.svg",
+        "id": "b39eb83717f54355bc5781ee22f5dddc"
       },
       {
         "text": "enterprise_user_directory",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/enterprise_user_directory.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/enterprise_user_directory.svg",
+        "id": "fa5390320eff46c2acffd860a0473265"
       },
       {
         "text": "file_repository",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/file_repository.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/file_repository.svg",
+        "id": "f92fed6339a446c39408e3df26f51e30"
       },
       {
         "text": "ground_truth",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/ground_truth.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/ground_truth.svg",
+        "id": "e410c71419c44943a4eba1138ef0617c"
       },
       {
         "text": "model",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/model.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/model.svg",
+        "id": "5ca8743e3ffa487599f61667ebd708c0"
       },
       {
         "text": "tms_data_interface",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/tms_data_interface.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/data/tms_data_interface.svg",
+        "id": "1a4b2cfe21f64871a2359990bfbaeb66"
       },
       {
         "text": "artifact_management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/artifact_management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/artifact_management.svg",
+        "id": "b5e7ded9dcbc4e498ad2eea775d22c9f"
       },
       {
         "text": "build_test",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/build_test.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/build_test.svg",
+        "id": "26dd71b7bcf04cb5b55d39b2b8404c0c"
       },
       {
         "text": "code_editor",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/code_editor.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/code_editor.svg",
+        "id": "09b4ce07b05f4101af079a4c49a7cdd5"
       },
       {
         "text": "collaborative_development",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/collaborative_development.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/collaborative_development.svg",
+        "id": "e3b3010e05d14c6a9953a42fa7d54554"
       },
       {
         "text": "configuration_management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/configuration_management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/configuration_management.svg",
+        "id": "7cabcd08fbff40a4b3e4c17fb68cda3b"
       },
       {
         "text": "continuous_deploy",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/continuous_deploy.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/continuous_deploy.svg",
+        "id": "3a31e39ee18e450988f47e2dce349b48"
       },
       {
         "text": "continuous_testing",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/continuous_testing.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/continuous_testing.svg",
+        "id": "a1992ed058dd4a1eb10b6cc1b17b8262"
       },
       {
         "text": "devops",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/devops.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/devops.svg",
+        "id": "733e663debef4aecb5440434bb8f2f4d"
       },
       {
         "text": "provision",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/provision.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/provision.svg",
+        "id": "0f44734c4fbd4503813ddc896dc8f409"
       },
       {
         "text": "release_management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/release_management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/devops/release_management.svg",
+        "id": "1358392ad18345e2bd7231fa0f376232"
       },
       {
         "text": "channels",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/channels.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/channels.svg",
+        "id": "6e6e1878b69e4047a38a05a89e064ddc"
       },
       {
         "text": "cloud_messaging",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/cloud_messaging.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/cloud_messaging.svg",
+        "id": "ac5721736f59409dacd7533b6e0641ee"
       },
       {
         "text": "dashboard",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/dashboard.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/dashboard.svg",
+        "id": "67bba297a94e4cd48b3dade33e7f6ce4"
       },
       {
         "text": "diagnostics",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/diagnostics.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/diagnostics.svg",
+        "id": "b75bcf7662584b849a6f2a66f64585ad"
       },
       {
         "text": "edge_services",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/edge_services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/edge_services.svg",
+        "id": "5c6189238caf45b2bd70370862adaadc"
       },
       {
         "text": "enterprise_messaging",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/enterprise_messaging.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/enterprise_messaging.svg",
+        "id": "472928d25d814fd2a369f7b9a658f45f"
       },
       {
         "text": "event_feed",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/event_feed.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/event_feed.svg",
+        "id": "257647b13112461b8e2957d0ab13c62d"
       },
       {
         "text": "infrastructure_services",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/infrastructure_services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/infrastructure_services.svg",
+        "id": "90b2bc0d982a4922a4dd803e96f035ff"
       },
       {
         "text": "interservice_communication",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/interservice_communication.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/interservice_communication.svg",
+        "id": "0543921eb866437eb24207854d6b4cbd"
       },
       {
         "text": "load_balancing_routing",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/load_balancing_routing.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/load_balancing_routing.svg",
+        "id": "33d178aa7fc246efaf3fe8c24b893f3e"
       },
       {
         "text": "microservices_mesh",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/microservices_mesh.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/microservices_mesh.svg",
+        "id": "3a13ebb821e7446e89ae20a5bc0a5cdc"
       },
       {
         "text": "mobile_backend",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/mobile_backend.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/mobile_backend.svg",
+        "id": "a0dcc850d2f34be686f1321917046a20"
       },
       {
         "text": "mobile_provider_network",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/mobile_provider_network.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/mobile_provider_network.svg",
+        "id": "50bf8002334243e4a3e52a12e8a8bc65"
       },
       {
         "text": "monitoring",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/monitoring.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/monitoring.svg",
+        "id": "997a2964ea164e1e9e4a5fc0384fb680"
       },
       {
         "text": "monitoring_logging",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/monitoring_logging.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/monitoring_logging.svg",
+        "id": "7a823582a07343adb14aea38ed24f20a"
       },
       {
         "text": "peer_services",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/peer_services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/peer_services.svg",
+        "id": "b24d1270f3eb438e98f5f952feffbc4b"
       },
       {
         "text": "service_discovery_configuration",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/service_discovery_configuration.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/service_discovery_configuration.svg",
+        "id": "7f24920c5364487eaa45405be336fe4c"
       },
       {
         "text": "transformation_connectivity",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/transformation_connectivity.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/infrastructure/transformation_connectivity.svg",
+        "id": "e80bcfec46024597bb0bf00886991182"
       },
       {
         "text": "alert_notification",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/alert_notification.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/alert_notification.svg",
+        "id": "12ec04c8e6f24935b562b2b5e97fb5be"
       },
       {
         "text": "api_management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/api_management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/api_management.svg",
+        "id": "7667fc48e1544e82a650be0bca344006"
       },
       {
         "text": "cloud_management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/cloud_management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/cloud_management.svg",
+        "id": "f48cda38d0ac40a993cbffd69408b496"
       },
       {
         "text": "cluster_management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/cluster_management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/cluster_management.svg",
+        "id": "e1c9f902f3f040c29943df2ed02179b7"
       },
       {
         "text": "content_management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/content_management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/content_management.svg",
+        "id": "6b60677a38c84269b7d916662d2f8541"
       },
       {
         "text": "data_services",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/data_services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/data_services.svg",
+        "id": "dfbcb5fee2b140d490440dee68ec2ef5"
       },
       {
         "text": "device_management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/device_management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/device_management.svg",
+        "id": "756f9b0788f944b4a26b5f78d9e2cc44"
       },
       {
         "text": "information_governance",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/information_governance.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/information_governance.svg",
+        "id": "53a17523d62949cfa92a1123fcb2d162"
       },
       {
         "text": "it_service_management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/it_service_management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/it_service_management.svg",
+        "id": "24b443ac0a6646ada2a3391f3584a23f"
       },
       {
         "text": "management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/management.svg",
+        "id": "1b2b586b75644f57a2d3689c7baf3525"
       },
       {
         "text": "monitoring_metrics",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/monitoring_metrics.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/monitoring_metrics.svg",
+        "id": "2ecdd476f45e41eca85d1013b82023e3"
       },
       {
         "text": "process_management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/process_management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/process_management.svg",
+        "id": "fc1d28f76e724fd1be68f4a8c2b43636"
       },
       {
         "text": "provider_cloud_portal_service",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/provider_cloud_portal_service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/provider_cloud_portal_service.svg",
+        "id": "c1be4f64882649639a65928a07a09257"
       },
       {
         "text": "push_notifications",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/push_notifications.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/push_notifications.svg",
+        "id": "f121ba56d15b4fdcad5c85f93adaf456"
       },
       {
         "text": "service_management_tools",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/service_management_tools.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/management/service_management_tools.svg",
+        "id": "4ade03cb06b7461f802f6da02cf4204c"
       },
       {
         "text": "bluemix",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/bluemix.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/bluemix.svg",
+        "id": "fc8eea6f95894b9f84dcfd3685f26512"
       },
       {
         "text": "cloudant",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/cloudant.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/cloudant.svg",
+        "id": "4d62bd07bb7a4972bd71ef8296909d9f"
       },
       {
         "text": "cognitive_services",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/cognitive_services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/cognitive_services.svg",
+        "id": "80fdc67eb3a84eec82149208421a1531"
       },
       {
         "text": "ibm_containers",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/ibm_containers.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/ibm_containers.svg",
+        "id": "413823ee821744dc93043a24a644a123"
       },
       {
         "text": "ibm_public_cloud",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/ibm_public_cloud.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/ibm_public_cloud.svg",
+        "id": "3f7f17d2e5b542cc99fa45e3f112120d"
       },
       {
         "text": "iot_cloud",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/iot_cloud.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/iot_cloud.svg",
+        "id": "30258dbfcb9842ccaebff4b36f476f90"
       },
       {
         "text": "microservices_application",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/microservices_application.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/microservices_application.svg",
+        "id": "100102b187e84175a6821300529bd02d"
       },
       {
         "text": "object_storage",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/object_storage.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/object_storage.svg",
+        "id": "8c609d1085094d2ca5471f04c0804008"
       },
       {
         "text": "offline_capabilities",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/offline_capabilities.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/offline_capabilities.svg",
+        "id": "3e361f4d5b004cdba4081d0ce7f02439"
       },
       {
         "text": "openwhisk",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/openwhisk.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/openwhisk.svg",
+        "id": "cf9e7c6cc4fb4b5cbe897c2012aa5ac4"
       },
       {
         "text": "peer_cloud",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/peer_cloud.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/peer_cloud.svg",
+        "id": "cf437a006ba141d9bcaad366dae98bad"
       },
       {
         "text": "retrieve_rank",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/retrieve_rank.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/retrieve_rank.svg",
+        "id": "b7d3c5541d394fb490fadcd07a40ea83"
       },
       {
         "text": "scalable",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/scalable.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/scalable.svg",
+        "id": "20c4458117954ca6b710a41e2730d61a"
       },
       {
         "text": "text_to_speech",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/text_to_speech.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/miscellaneous/text_to_speech.svg",
+        "id": "7fedbb0896bb415ab95d42b76a1a0427"
       },
       {
         "text": "api_security",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/api_security.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/api_security.svg",
+        "id": "8f7a88e5bbd24d18b494fff2a2a93cd7"
       },
       {
         "text": "blockchain_security_service",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/blockchain_security_service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/blockchain_security_service.svg",
+        "id": "431a3af55c7d4c469829eeb25c6b507c"
       },
       {
         "text": "data_security",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/data_security.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/data_security.svg",
+        "id": "e31187c98fff492a890186f6553f53f8"
       },
       {
         "text": "firewall",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/firewall.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/firewall.svg",
+        "id": "4ee8c371b8674306ab8293c5128f2d71"
       },
       {
         "text": "gateway",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/gateway.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/gateway.svg",
+        "id": "c6be095d42c442e088e9716f10b240ea"
       },
       {
         "text": "governance_risk_compliance",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/governance_risk_compliance.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/governance_risk_compliance.svg",
+        "id": "dbc193cefb164bd5b6376ddd411beefc"
       },
       {
         "text": "identity_access_management",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/identity_access_management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/identity_access_management.svg",
+        "id": "986a9d7d4c344743acd7d03f923dac9d"
       },
       {
         "text": "identity_provider",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/identity_provider.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/identity_provider.svg",
+        "id": "e487df8f0e43403d9db86df06add632b"
       },
       {
         "text": "infrastructure_security",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/infrastructure_security.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/infrastructure_security.svg",
+        "id": "3dd21845ebb84e9a97b81a7b559015bc"
       },
       {
         "text": "physical_security",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/physical_security.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/physical_security.svg",
+        "id": "353b58bee4864d82bbdffc3671cd708f"
       },
       {
         "text": "security_monitoring_intelligence",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/security_monitoring_intelligence.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/security_monitoring_intelligence.svg",
+        "id": "370b7631e4b14563b29440042b23d244"
       },
       {
         "text": "security_services",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/security_services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/security_services.svg",
+        "id": "645862237be24551b600b3d644eb2362"
       },
       {
         "text": "trustend_computing",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/trustend_computing.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/trustend_computing.svg",
+        "id": "d2c42f2888f84307b413e819d0ebddac"
       },
       {
         "text": "vpn",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/vpn.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/security/vpn.svg",
+        "id": "f7ad9b824bdb4669b0eac3f379f2c7de"
       },
       {
         "text": "communities",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/communities.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/communities.svg",
+        "id": "60bbbadb16a5456bb442b6eb54f1a1f4"
       },
       {
         "text": "file_sync",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/file_sync.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/file_sync.svg",
+        "id": "45e52c1a2aa54d3b804f1321e50268dd"
       },
       {
         "text": "live_collaboration",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/live_collaboration.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/live_collaboration.svg",
+        "id": "aaead1cf8da34982aff14b768da629f0"
       },
       {
         "text": "messaging",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/messaging.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/messaging.svg",
+        "id": "b8eb169b9f5b410991fa9574d4bcff33"
       },
       {
         "text": "networking",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/networking.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/social/networking.svg",
+        "id": "8ccb92a4038c467ba2ac87f67a65e70e"
       },
       {
         "text": "browser",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/browser.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/browser.svg",
+        "id": "eaa82cf948d54db4ad37ba6ed192e761"
       },
       {
         "text": "device",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/device.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/device.svg",
+        "id": "70eee3dee50f4e70b32cd085d41c824a"
       },
       {
         "text": "integrated_digital_experiences",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/integrated_digital_experiences.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/integrated_digital_experiences.svg",
+        "id": "3dab42ec269649a39ce34f93e1f5dc0e"
       },
       {
         "text": "physical_entity",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/physical_entity.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/physical_entity.svg",
+        "id": "63c6541a9c8943209fcf720c059beb2e"
       },
       {
         "text": "sensor",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/sensor.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/sensor.svg",
+        "id": "4621433733dd4a30b53872034d4524df"
       },
       {
         "text": "user",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/user.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/users/user.svg",
+        "id": "57c4729025a84285b6158c12ec817d12"
       },
       {
         "text": "ACLRules",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ACLRules.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ACLRules.svg",
+        "id": "a0481224baf2418889054a2d134fdd8d"
       },
       {
         "text": "BareMetalServer",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/BareMetalServer.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/BareMetalServer.svg",
+        "id": "d69881995d7f49c38c9dfc7010e0fbb2"
       },
       {
         "text": "BlockStorage",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/BlockStorage.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/BlockStorage.svg",
+        "id": "eb924bd0fc3040ccaa8f7036c6c69a9e"
       },
       {
         "text": "Bridge",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Bridge.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Bridge.svg",
+        "id": "25fcd6648b63468f888407d6aa441849"
       },
       {
         "text": "ClassicInfrastructure",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ClassicInfrastructure.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ClassicInfrastructure.svg",
+        "id": "f2cf7916e7d84ddb95ac78e6c405f400"
       },
       {
         "text": "ClassicInfrastructureTag",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ClassicInfrastructureTag.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ClassicInfrastructureTag.svg",
+        "id": "941519818ba5444da89663f08e08b9ad"
       },
       {
         "text": "CloudServices",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/CloudServices.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/CloudServices.svg",
+        "id": "06cbb97c0c854e0ca10eb64bfbdd1693"
       },
       {
         "text": "CloudTag",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/CloudTag.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/CloudTag.svg",
+        "id": "b0f9a36cd2e841ad82b59e2ed0b3cbeb"
       },
       {
         "text": "DirectLink",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/DirectLink.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/DirectLink.svg",
+        "id": "03819124472c4709993c2681d3fa40f5"
       },
       {
         "text": "Enterprise",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Enterprise.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Enterprise.svg",
+        "id": "bd1b3605b1c4461d9ae333b477ceb5b6"
       },
       {
         "text": "Enterprise2",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Enterprise2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Enterprise2.svg",
+        "id": "8e9eac6a45ed4b4fafeca4576ed5310e"
       },
       {
         "text": "EnterpriseTag",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/EnterpriseTag.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/EnterpriseTag.svg",
+        "id": "d794052b37114315a7555e75fa66271a"
       },
       {
         "text": "Firewall",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Firewall.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Firewall.svg",
+        "id": "86290a44a8ea4b8cb145816fb48e1ae4"
       },
       {
         "text": "FloatingIP",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/FloatingIP.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/FloatingIP.svg",
+        "id": "eae4ad9505424833918bdd03c5c9b644"
       },
       {
         "text": "GatewayAppliance",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/GatewayAppliance.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/GatewayAppliance.svg",
+        "id": "582065c650474841839c3c4af40513bb"
       },
       {
         "text": "IBMCloud",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/IBMCloud.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/IBMCloud.svg",
+        "id": "4c50319880814cfeadada2f645bb2a66"
       },
       {
         "text": "Image",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Image.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Image.svg",
+        "id": "57786ee0a278427fb2cff15f3a26730f"
       },
       {
         "text": "ImageService",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ImageService.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ImageService.svg",
+        "id": "97a0b5d3b10a4bb6bdbe73e37ac2341a"
       },
       {
         "text": "Instance",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Instance.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Instance.svg",
+        "id": "7c7b6093106d447683ef10e4444fa46b"
       },
       {
         "text": "Internet",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Internet.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Internet.svg",
+        "id": "7b050d10ebf748a6b64d06a5810aafc8"
       },
       {
         "text": "InternetServices",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/InternetServices.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/InternetServices.svg",
+        "id": "c02d37286cfb47028744a4c3ec956704"
       },
       {
         "text": "InternetServices2",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/InternetServices2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/InternetServices2.svg",
+        "id": "f016e36f6a234131a1af33a91aa98042"
       },
       {
         "text": "Key",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Key.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Key.svg",
+        "id": "d7b59fbec5fb41b3934a65e66346774b"
       },
       {
         "text": "LoadBalancer",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/LoadBalancer.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/LoadBalancer.svg",
+        "id": "b6fc4ca9c572454894a2a1c9ebdf4c21"
       },
       {
         "text": "LoadBalancerListener",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/LoadBalancerListener.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/LoadBalancerListener.svg",
+        "id": "d1a8fd763af248c9998af33f7cdc8721"
       },
       {
         "text": "LoadBalancerPool",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/LoadBalancerPool.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/LoadBalancerPool.svg",
+        "id": "d8f46974197f467793d40d7f65b901c9"
       },
       {
         "text": "Marketplace",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Marketplace.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Marketplace.svg",
+        "id": "5d847b1cd7654d268e40985b7ff8b141"
       },
       {
         "text": "ObjectStorage",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ObjectStorage.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ObjectStorage.svg",
+        "id": "07d362f0285a45e1b54f93725c4c741a"
       },
       {
         "text": "PowerInstance",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/PowerInstance.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/PowerInstance.svg",
+        "id": "ea3c3c482c734e55ba11756ce7f868d9"
       },
       {
         "text": "PublicGateway",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/PublicGateway.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/PublicGateway.svg",
+        "id": "281701ccdf674743aec2b6695802664c"
       },
       {
         "text": "PublicTag",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/PublicTag.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/PublicTag.svg",
+        "id": "80be07a72b424d92ba0bbf31ef0055a2"
       },
       {
         "text": "RegionTag",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/RegionTag.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/RegionTag.svg",
+        "id": "866566c04a584bf4a058ee7a22f2fcb3"
       },
       {
         "text": "Router",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Router.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Router.svg",
+        "id": "f5512b5637d84fa7933c0b298e003c10"
       },
       {
         "text": "Rules",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Rules.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Rules.svg",
+        "id": "ece8b9d1d0be40ecbbc49a1f551b3922"
       },
       {
         "text": "SecurityGroupRules",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/SecurityGroupRules.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/SecurityGroupRules.svg",
+        "id": "887962f0315b4797a12d41309fd0c8ba"
       },
       {
         "text": "Subnet",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Subnet.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/Subnet.svg",
+        "id": "70272680e9c14fbbb614312059211052"
       },
       {
         "text": "SubnetTag",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/SubnetTag.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/SubnetTag.svg",
+        "id": "1466208b643347289182950d5ace80bb"
       },
       {
         "text": "SubnetTag2",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/SubnetTag2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/SubnetTag2.svg",
+        "id": "7da501b1234342a1b17d9acfc9780f2e"
       },
       {
         "text": "TransitGateway",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/TransitGateway.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/TransitGateway.svg",
+        "id": "9770e0ff4ae14dd6bac89360ffe912e8"
       },
       {
         "text": "VPCTag",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPCTag.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPCTag.svg",
+        "id": "d77c1c4b8f034f579363bcc7bae3579e"
       },
       {
         "text": "VPN",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPN.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPN.svg",
+        "id": "1731108e66bc4f3bac41f401b5004276"
       },
       {
         "text": "VPNConnection",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPNConnection.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPNConnection.svg",
+        "id": "09faefeed083469aa60dfd313fad190a"
       },
       {
         "text": "VPNGateway",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPNGateway.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPNGateway.svg",
+        "id": "0e1373620bee468cb72acc57691324ff"
       },
       {
         "text": "VPNPolicy",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPNPolicy.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VPNPolicy.svg",
+        "id": "3fd01a8ba8334c7b8d080afcf1bdea5d"
       },
       {
         "text": "VirtualPrivateCloud",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VirtualPrivateCloud.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/VirtualPrivateCloud.svg",
+        "id": "e60ccbc860a649c9a5b5260aef2126f6"
       },
       {
         "text": "ZoneTag",
-        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ZoneTag.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/ibm/vpc/ZoneTag.svg",
+        "id": "e27989f343a344619cb5b3732cc9bad8"
       }
     ]
   }
