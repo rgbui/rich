@@ -4,515 +4,643 @@
     "childs": [
       {
         "text": "1",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/1.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/1.svg",
+        "id": "b88f034eb0af4640a737947888b0fa40"
       },
       {
         "text": "10",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/10.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/10.svg",
+        "id": "20b20bf417a046a89acf7bf06dd63d4b"
       },
       {
         "text": "11",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/11.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/11.svg",
+        "id": "74e9939433ac40fbbbc035d937ad00ff"
       },
       {
         "text": "12",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/12.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/12.svg",
+        "id": "a604b984d7cc4f4f9a81c28408c94dde"
       },
       {
         "text": "13",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/13.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/13.svg",
+        "id": "3e6409275cf54121a0d931da07dcaecf"
       },
       {
         "text": "2",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/2.svg",
+        "id": "07915f54cea346ab8ef98a77cc8b0e58"
       },
       {
         "text": "3",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/3.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/3.svg",
+        "id": "b09201a6a1214561959fb4727c00465c"
       },
       {
         "text": "4",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/4.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/4.svg",
+        "id": "c73fb287117741a2b37a7615caf0c9db"
       },
       {
         "text": "5",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/5.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/5.svg",
+        "id": "9bc2916f2e1342deb02b76f196605f41"
       },
       {
         "text": "6",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/6.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/6.svg",
+        "id": "954a839581c542a1a542e955623442ea"
       },
       {
         "text": "7",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/7.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/7.svg",
+        "id": "f3e6f4efe8fb40bb9b6785c1df475ffa"
       },
       {
         "text": "8",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/8.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/8.svg",
+        "id": "e4805710bcfb4b028eba318b84a04532"
       },
       {
         "text": "9",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/9.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/9.svg",
+        "id": "605c13ce4d3846f0a58d5f25ca582091"
       },
       {
         "text": "API",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/API.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/API.svg",
+        "id": "c07c481580fa407bb6e3591fb914e8a6"
       },
       {
         "text": "API_Business_Hub_Enterprise",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/API_Business_Hub_Enterprise.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/API_Business_Hub_Enterprise.svg",
+        "id": "a13aade06e1f49b0be1f135a1c5e825c"
       },
       {
         "text": "Adapter",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Adapter.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Adapter.svg",
+        "id": "47eb24a390e34bd7ac82788d6383be74"
       },
       {
         "text": "Admin",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Admin.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Admin.svg",
+        "id": "72e4a461fde44665a262a83f75959fa6"
       },
       {
         "text": "Alert",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Alert.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Alert.svg",
+        "id": "8097eeced7434a9d936718ef3cd2fdb7"
       },
       {
         "text": "App",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/App.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/App.svg",
+        "id": "6357109115e84bc593f11c0056e369b8"
       },
       {
         "text": "Application_Autoscaler",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Application_Autoscaler.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Application_Autoscaler.svg",
+        "id": "3614bfa7603046ef99988827519c4817"
       },
       {
         "text": "Building",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Building.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Building.svg",
+        "id": "b14dc7e8c83c412cbb25594aada9e359"
       },
       {
         "text": "Business_Application_Studio",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Business_Application_Studio.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Business_Application_Studio.svg",
+        "id": "05844718e10a4d87bb498197373adbfa"
       },
       {
         "text": "Cloud",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Cloud.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Cloud.svg",
+        "id": "f2982cf510874f92b5d59552b41a3857"
       },
       {
         "text": "Cloud_Connector",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Cloud_Connector.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Cloud_Connector.svg",
+        "id": "d375aef3ffd842459d5beda1479ace2a"
       },
       {
         "text": "Cloud_Connector2",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Cloud_Connector2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Cloud_Connector2.svg",
+        "id": "8bca379dcc9040d188d4c133a5b069a9"
       },
       {
         "text": "Cloud_Integration_Automation",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Cloud_Integration_Automation.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Cloud_Integration_Automation.svg",
+        "id": "b97707ea52e14f7889f5b592e68eb0fe"
       },
       {
         "text": "Cloud_Integration_Automation2",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Cloud_Integration_Automation2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Cloud_Integration_Automation2.svg",
+        "id": "8ac0dde45cd8447c90057fe1455ad519"
       },
       {
         "text": "Cloud_Transport_Management",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Cloud_Transport_Management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Cloud_Transport_Management.svg",
+        "id": "28dfd60d60004f2aa76e82366d46fb1f"
       },
       {
         "text": "Data_Attribute_Recommendation",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Data_Attribute_Recommendation.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Data_Attribute_Recommendation.svg",
+        "id": "c2bd42742ae345f39c26506c09a79c7c"
       },
       {
         "text": "Deploy",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Deploy.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Deploy.svg",
+        "id": "a702644a0fd94f208f6beb405669f89d"
       },
       {
         "text": "Desktop",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Desktop.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Desktop.svg",
+        "id": "1a014805815847ae875ed597469279ea"
       },
       {
         "text": "Devices",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Devices.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Devices.svg",
+        "id": "4b980534d22a48dda5b0d907326781cd"
       },
       {
         "text": "Document",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Document.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Document.svg",
+        "id": "1459928e340348ab946166dc65e8ee2d"
       },
       {
         "text": "Document_Information_Extraction",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Document_Information_Extraction.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Document_Information_Extraction.svg",
+        "id": "64c2c2557e1f44a6b9d74b17da924053"
       },
       {
         "text": "Documents",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Documents.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Documents.svg",
+        "id": "9a7539d531984aa4bf92744328ec8e84"
       },
       {
         "text": "Edge_Integration_Cell",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Edge_Integration_Cell.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Edge_Integration_Cell.svg",
+        "id": "dc8eeaafd42746d09dcecc3399206182"
       },
       {
         "text": "Event",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Event.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Event.svg",
+        "id": "e3701b4820df4df49154880baccc9f8e"
       },
       {
         "text": "Factory",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Factory.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Factory.svg",
+        "id": "0157c63da3f34ec88dc86733e0eb206d"
       },
       {
         "text": "Feature",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Feature.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Feature.svg",
+        "id": "de9adeb818fb49a08d63ed1c4ed6e7cf"
       },
       {
         "text": "HTML5_App_Repository",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/HTML5_App_Repository.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/HTML5_App_Repository.svg",
+        "id": "acc3e73860dd4169a2f0236330466afd"
       },
       {
         "text": "Identity_Authentication",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Identity_Authentication.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Identity_Authentication.svg",
+        "id": "5ef3246754dc4c989d120cc0e687f41a"
       },
       {
         "text": "Identity_Authentication2",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Identity_Authentication2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Identity_Authentication2.svg",
+        "id": "de94280c02ad4f4abec48bf234d0432e"
       },
       {
         "text": "Identity_Directory",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Identity_Directory.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Identity_Directory.svg",
+        "id": "8780bfd26b86442b9cbf7748ee1575b7"
       },
       {
         "text": "Identity_Directory2",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Identity_Directory2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Identity_Directory2.svg",
+        "id": "94f2c0c466ae4934a074efb290fb20b1"
       },
       {
         "text": "Identity_Provisioning",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Identity_Provisioning.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Identity_Provisioning.svg",
+        "id": "9f6853dda48642a998f3ab95df90af4c"
       },
       {
         "text": "Identity_Provisioning2",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Identity_Provisioning2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Identity_Provisioning2.svg",
+        "id": "3295312dbfa54c11bf3d3fc76fff5e0d"
       },
       {
         "text": "Info",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Info.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Info.svg",
+        "id": "f066cdca2c784ecfad001ad77cfa7918"
       },
       {
         "text": "Invoice_Object_Recommendation",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Invoice_Object_Recommendation.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Invoice_Object_Recommendation.svg",
+        "id": "b7bee9db3f32464091c6f5c8c6eecdd8"
       },
       {
         "text": "Invoice_Object_Recommendation2",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Invoice_Object_Recommendation2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Invoice_Object_Recommendation2.svg",
+        "id": "3465963522624539956f6b735facd8a8"
       },
       {
         "text": "Key",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Key.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Key.svg",
+        "id": "0750bc5312ce4519b5c3e54877291287"
       },
       {
         "text": "Link",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Link.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Link.svg",
+        "id": "ef52a9a3b625438e85b2062abd64ae63"
       },
       {
         "text": "Locked",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Locked.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Locked.svg",
+        "id": "7b85ee21f7b54cc5b049f64c5899dbd8"
       },
       {
         "text": "Machine",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Machine.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Machine.svg",
+        "id": "0a7403e45e224ba38ed5310c78ab1a6a"
       },
       {
         "text": "Message",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Message.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Message.svg",
+        "id": "6703ac03821c491b81736f0ce3e558a1"
       },
       {
         "text": "Mobile",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Mobile.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Mobile.svg",
+        "id": "c52a9ce790434c2fa015f1b27adc3701"
       },
       {
         "text": "Object_Store_on_SAP_BTP",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Object_Store_on_SAP_BTP.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Object_Store_on_SAP_BTP.svg",
+        "id": "ecd8ecc442b846639686c4c969b226d4"
       },
       {
         "text": "On-Premise",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/On-Premise.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/On-Premise.svg",
+        "id": "645130f95ca74a7ba00d416e2abd4519"
       },
       {
         "text": "Personalized_Recommendation",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Personalized_Recommendation.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Personalized_Recommendation.svg",
+        "id": "075518230ef04eb39f98ac1e6516cb44"
       },
       {
         "text": "SAP_AI_Core",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_AI_Core.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_AI_Core.svg",
+        "id": "41f49b90b32148008bc3480de540215b"
       },
       {
         "text": "SAP_AI_Launchpad",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_AI_Launchpad.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_AI_Launchpad.svg",
+        "id": "8a7f6dfb66a1493da1f8dfd9e1f75a7b"
       },
       {
         "text": "SAP_Alert_Notification_service_for_SAP_BTP",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Alert_Notification_service_for_SAP_BTP.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Alert_Notification_service_for_SAP_BTP.svg",
+        "id": "c448b5787c184c8c832b3e6dc358877e"
       },
       {
         "text": "SAP_Analytics_Cloud",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Analytics_Cloud.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Analytics_Cloud.svg",
+        "id": "33ec4684b397461387e70ae709136eee"
       },
       {
         "text": "SAP_Analytics_Cloud_Embedded_Edition",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Analytics_Cloud_Embedded_Edition.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Analytics_Cloud_Embedded_Edition.svg",
+        "id": "aece9b17d310444b860c9fd1ebce77e8"
       },
       {
         "text": "SAP_Application_Logging_service_for_SAP_BTP",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Application_Logging_service_for_SAP_BTP.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Application_Logging_service_for_SAP_BTP.svg",
+        "id": "983aa145f68d4f2db1c9595c17d38f89"
       },
       {
         "text": "SAP_Audit_Log_Service",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Audit_Log_Service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Audit_Log_Service.svg",
+        "id": "9aec9bf017824b38acf23aaedb6a8d21"
       },
       {
         "text": "SAP_Authorization_Management_Service",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Authorization_Management_Service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Authorization_Management_Service.svg",
+        "id": "096c37f5a55c475b89297d8ebea36760"
       },
       {
         "text": "SAP_Authorization_and_Trust_Management_service",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Authorization_and_Trust_Management_service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Authorization_and_Trust_Management_service.svg",
+        "id": "cf82bbe4b79a4afc824fa5180ae9e3ad"
       },
       {
         "text": "SAP_Automation_Pilot",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Automation_Pilot.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Automation_Pilot.svg",
+        "id": "7164604183254b6abdf7a066473aea6b"
       },
       {
         "text": "SAP_BTP,_ABAP_environment",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_BTP,_ABAP_environment.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_BTP,_ABAP_environment.svg",
+        "id": "47592d1b3d30473a842bc91797a96b18"
       },
       {
         "text": "SAP_BTP,_Cloud_Foundry_runtime",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_BTP,_Cloud_Foundry_runtime.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_BTP,_Cloud_Foundry_runtime.svg",
+        "id": "84295995d9ca4fe78b8af7c9ad1500aa"
       },
       {
         "text": "SAP_BTP,_Kyma_runtime",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_BTP,_Kyma_runtime.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_BTP,_Kyma_runtime.svg",
+        "id": "2040945858eb45a4aede83964d21ca13"
       },
       {
         "text": "SAP_Build_Apps",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Build_Apps.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Build_Apps.svg",
+        "id": "f7e28c8dc7b04feba587aca341de8bf2"
       },
       {
         "text": "SAP_Build_Apps_-_Copy",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Build_Apps_-_Copy.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Build_Apps_-_Copy.svg",
+        "id": "db50a32ef80247628159e0cde4a65029"
       },
       {
         "text": "SAP_Build_Code",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Build_Code.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Build_Code.svg",
+        "id": "f228ac167f9e41dc8ea5024fc960754a"
       },
       {
         "text": "SAP_Build_Process_Automation",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Build_Process_Automation.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Build_Process_Automation.svg",
+        "id": "e7843d3705714403b8f651bcd4c9aef5"
       },
       {
         "text": "SAP_Build_Process_Automation_-_Copy",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Build_Process_Automation_-_Copy.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Build_Process_Automation_-_Copy.svg",
+        "id": "afd0cbd10c894e48aa096a0f317f899d"
       },
       {
         "text": "SAP_Build_Work_Zone_-_Advanced_Edition",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Build_Work_Zone_-_Advanced_Edition.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Build_Work_Zone_-_Advanced_Edition.svg",
+        "id": "e4071ad2a2fd41208abf1af6900ad594"
       },
       {
         "text": "SAP_Build_Work_Zone_-_Standard_Edition",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Build_Work_Zone_-_Standard_Edition.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Build_Work_Zone_-_Standard_Edition.svg",
+        "id": "d3e9d86ebbf2403e8dff166533107240"
       },
       {
         "text": "SAP_Business_Accelerator_Hub",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Business_Accelerator_Hub.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Business_Accelerator_Hub.svg",
+        "id": "eac1653b5e304e7b9a3b55fe8d8f8d40"
       },
       {
         "text": "SAP_Cloud_Identity,_SAP_Malware_Scanning_Service",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Cloud_Identity,_SAP_Malware_Scanning_Service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Cloud_Identity,_SAP_Malware_Scanning_Service.svg",
+        "id": "409457937170429ea1f309ba82cbbe2f"
       },
       {
         "text": "SAP_Cloud_Identity_Service",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Cloud_Identity_Service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Cloud_Identity_Service.svg",
+        "id": "78c75cfbe4b24c26810f3b78638d6733"
       },
       {
         "text": "SAP_Cloud_Logging",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Cloud_Logging.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Cloud_Logging.svg",
+        "id": "082df835605d4e78acdcdbb4937f4c48"
       },
       {
         "text": "SAP_Cloud_Transport_Management",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Cloud_Transport_Management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Cloud_Transport_Management.svg",
+        "id": "c9d5c5557e2142bc81992949bc4ca6e0"
       },
       {
         "text": "SAP_Connectivity_Service",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Connectivity_Service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Connectivity_Service.svg",
+        "id": "e52da75795af4618b8931f1dbb0763f3"
       },
       {
         "text": "SAP_Continuous_Integration_and_Delivery",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Continuous_Integration_and_Delivery.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Continuous_Integration_and_Delivery.svg",
+        "id": "54f7f7bb609f403ba915a5468276da9c"
       },
       {
         "text": "SAP_Credential_Store",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Credential_Store.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Credential_Store.svg",
+        "id": "b6870fe811504ffcafdb38d16d45df15"
       },
       {
         "text": "SAP_Custom_Domain_service",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Custom_Domain_service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Custom_Domain_service.svg",
+        "id": "4678ca6c28c4434a8d5079746743a900"
       },
       {
         "text": "SAP_Datasphere",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Datasphere.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Datasphere.svg",
+        "id": "36e90b4d32ea4d679dec725e3f53a560"
       },
       {
         "text": "SAP_Destination_service",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Destination_service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Destination_service.svg",
+        "id": "3f007be842514cfe94daeb54f90b9fa6"
       },
       {
         "text": "SAP_Digital_Assistant_Service",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Digital_Assistant_Service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Digital_Assistant_Service.svg",
+        "id": "8731fe741d13455396edfaf928e3d185"
       },
       {
         "text": "SAP_Document_Grounding",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Document_Grounding.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Document_Grounding.svg",
+        "id": "af9dee5200604d81b80ff5a58e736aa6"
       },
       {
         "text": "SAP_Event_Broker_for_SAP_Cloud_Applications",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Event_Broker_for_SAP_Cloud_Applications.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Event_Broker_for_SAP_Cloud_Applications.svg",
+        "id": "358487c07f0b41ef98c8abff18b42afd"
       },
       {
         "text": "SAP_HANA_Cloud",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_HANA_Cloud.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_HANA_Cloud.svg",
+        "id": "e82f09d68d14416982c94465efbe87ce"
       },
       {
         "text": "SAP_HANA_Spatial_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_HANA_Spatial_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_HANA_Spatial_Services.svg",
+        "id": "bb9e265821234694b049d988bf773c6e"
       },
       {
         "text": "SAP_Integration_Suite",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite.svg",
+        "id": "d0eadd94e2bc4cb2bbf72b85ae3ff669"
       },
       {
         "text": "SAP_Integration_Suite_-_API_Managment",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_API_Managment.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_API_Managment.svg",
+        "id": "ff97646dc60b42f08926a2e53dba7491"
       },
       {
         "text": "SAP_Integration_Suite_-_Advanced_Event_Mesh",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Advanced_Event_Mesh.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Advanced_Event_Mesh.svg",
+        "id": "dfc98284089442bfb63f3b20d72083a6"
       },
       {
         "text": "SAP_Integration_Suite_-_Cloud_Integration",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Cloud_Integration.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Cloud_Integration.svg",
+        "id": "1996346fe41343afa231d6cc434534b9"
       },
       {
         "text": "SAP_Integration_Suite_-_Data_Space_Integration",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Data_Space_Integration.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Data_Space_Integration.svg",
+        "id": "5bd08cdb50ef4b81999ee57407be4e8c"
       },
       {
         "text": "SAP_Integration_Suite_-_Event_Mesh",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Event_Mesh.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Event_Mesh.svg",
+        "id": "2d49816c7d8c4605a0e9a3d9d991e326"
       },
       {
         "text": "SAP_Integration_Suite_-_Integration_Advisor",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Integration_Advisor.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Integration_Advisor.svg",
+        "id": "8bc505dc60a84b54bbe5be7e30b6a23d"
       },
       {
         "text": "SAP_Integration_Suite_-_Integration_Assessment",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Integration_Assessment.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Integration_Assessment.svg",
+        "id": "ac4b65b8c584474b9a87bba823661413"
       },
       {
         "text": "SAP_Integration_Suite_-_Migration_Assessment",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Migration_Assessment.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Migration_Assessment.svg",
+        "id": "d5970c3d10c3480caf8f9106127da68f"
       },
       {
         "text": "SAP_Integration_Suite_-_Open_Connectors",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Open_Connectors.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Open_Connectors.svg",
+        "id": "ef40c8f83bc040bea07a0d96785a7668"
       },
       {
         "text": "SAP_Integration_Suite_-_SAP_Graph",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_SAP_Graph.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_SAP_Graph.svg",
+        "id": "6f983f4d0a9d4995bddd1ee039d38216"
       },
       {
         "text": "SAP_Integration_Suite_-_Trading_Partner_Management",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Trading_Partner_Management.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Integration_Suite_-_Trading_Partner_Management.svg",
+        "id": "38465bbf26904900b880e185b0b7a0de"
       },
       {
         "text": "SAP_Job_Scheduling_service",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Job_Scheduling_service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Job_Scheduling_service.svg",
+        "id": "87db5e7d4997474490570e9fd20f85d8"
       },
       {
         "text": "SAP_Keystore_Service",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Keystore_Service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Keystore_Service.svg",
+        "id": "0862ae763d054a62b2cebb8e42663252"
       },
       {
         "text": "SAP_Logo",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Logo.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Logo.svg",
+        "id": "630400b52c484c02ba448684a6c6019a"
       },
       {
         "text": "SAP_Master_Data_Governance",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Master_Data_Governance.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Master_Data_Governance.svg",
+        "id": "cc45c990920946eca9829aee9657b46a"
       },
       {
         "text": "SAP_Master_Data_Integration",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Master_Data_Integration.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Master_Data_Integration.svg",
+        "id": "257d30d7e24043959adb25fe136963a7"
       },
       {
         "text": "SAP_Mobile_Services",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Mobile_Services.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Mobile_Services.svg",
+        "id": "fc20a86c424c4eb299121a338d47ea80"
       },
       {
         "text": "SAP_Monitoring_service_for_SAP_BTP",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Monitoring_service_for_SAP_BTP.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Monitoring_service_for_SAP_BTP.svg",
+        "id": "2fdd8aba994f45a19e57076662a4c03a"
       },
       {
         "text": "SAP_Persistence_Service_ASE",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Persistence_Service_ASE.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Persistence_Service_ASE.svg",
+        "id": "f637ddbfb248465680b7224ad65bf0ed"
       },
       {
         "text": "SAP_Private_Link_service",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Private_Link_service.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Private_Link_service.svg",
+        "id": "ba41110acad04030b0f18b253b6bf485"
       },
       {
         "text": "SAP_Secure_Login_Service_for_SAP_GUI",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Secure_Login_Service_for_SAP_GUI.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Secure_Login_Service_for_SAP_GUI.svg",
+        "id": "7330d701fcbb45f0b755f1e43e32b30d"
       },
       {
         "text": "SAP_Service_Manager",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Service_Manager.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Service_Manager.svg",
+        "id": "55173d650fa24135a603687f9b6ef03a"
       },
       {
         "text": "SAP_Task_Center",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Task_Center.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Task_Center.svg",
+        "id": "58f90838c1f9466bbe7345e13d89e480"
       },
       {
         "text": "SAP_Translation_Hub",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Translation_Hub.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/SAP_Translation_Hub.svg",
+        "id": "328b6cc323c84c29bdd606729a4dc35b"
       },
       {
         "text": "Service_Ticket_Intelligence",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Service_Ticket_Intelligence.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Service_Ticket_Intelligence.svg",
+        "id": "d111e655b5314a62875306730342fa66"
       },
       {
         "text": "Service_Ticket_Intelligence2",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Service_Ticket_Intelligence2.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Service_Ticket_Intelligence2.svg",
+        "id": "3ee5d83920cc42f0a54608033d850d3f"
       },
       {
         "text": "Settings",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Settings.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Settings.svg",
+        "id": "ebe24462dfd94ea99e2b11172f6386a8"
       },
       {
         "text": "Success",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Success.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Success.svg",
+        "id": "aef3bdddb68f44468abe466e96bbfa5a"
       },
       {
         "text": "Third_Party",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Third_Party.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Third_Party.svg",
+        "id": "c6edf922202e4b378da84d1d04bfb724"
       },
       {
         "text": "UI5_flexibility_for_key_users",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/UI5_flexibility_for_key_users.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/UI5_flexibility_for_key_users.svg",
+        "id": "0aa49197cb1a4f0c8d612e4b61273301"
       },
       {
         "text": "UI_Theme_Designer",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/UI_Theme_Designer.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/UI_Theme_Designer.svg",
+        "id": "ef3aca3009d5449ba783840fd8c4766a"
       },
       {
         "text": "User",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/User.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/User.svg",
+        "id": "2318d66b359b408180d9d8df68aeec88"
       },
       {
         "text": "Web",
-        "src": "https://resources.shy.live/assert/shape/lib/sap/Web.svg"
+        "src": "https://resources.shy.live/assert/shape/lib/sap/Web.svg",
+        "id": "3531f5aff7664d98ab7b34339d6c5571"
       }
     ]
   }
