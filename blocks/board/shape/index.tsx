@@ -1,5 +1,4 @@
-import React from "react";
-import { ShapesList } from "../../../extensions/board/shapes/shapes";
+import React, { CSSProperties } from "react";
 import { Block } from "../../../src/block";
 import { BlockRenderRange } from "../../../src/block/enum";
 import { prop, url, view } from "../../../src/block/factory/observable";
@@ -10,6 +9,8 @@ import { TextSpanArea } from "../../../src/block/view/appear";
 import "./style.less";
 import { lst } from "../../../i18n/store";
 import { Rect } from "../../../src/common/vector/point";
+import { ShapesList } from "../../../extensions/board/shapes/shapes";
+import { BoardTurns } from "../turns";
 
 @url('/shape')
 export class Shape extends Block {
@@ -25,6 +26,11 @@ export class Shape extends Block {
             });
         }
     }
+    @prop()
+    align: 'left' | 'center' | 'right' = 'center';
+    @prop()
+    valign: 'top' | 'middle' | 'bottom' = 'middle';
+
     @prop()
     fixedWidth: number = 200;
     @prop()
@@ -53,11 +59,25 @@ export class Shape extends Block {
 
         cs.push({ name: 'fillColor', value: this.pattern.getSvgStyle()?.fill || '#000' });
         cs.push({ name: 'fillOpacity', value: fl });
-        cs.push({ name: 'turnShapes', value: this.svgName });
+        cs.push({ name: 'turnShapes', value: { name: this.svgName, value: this.svg.id, svg: this.svg.clone() } });
         cs.push({ name: 'width', value: this.fixedWidth });
         cs.push({ name: 'height', value: this.fixedHeight });
-        
+        cs.push({ name: 'align', value: this.align });
+        cs.push({ name: 'valign', value: this.valign });
+
         return cs;
+    }
+    async getBoardCopyStyle() {
+        var r = await super.getBoardCopyStyle();
+        r.data.fillColor = r.data.fillNoTransparentColor;
+        delete r.data.fillNoTransparentColor;
+        delete r.data.turnShapes;
+        delete r.data.width;
+        delete r.data.height;
+        return r;
+    }
+    async getWillTurnData(url: string) {
+        return await BoardTurns.turn(this, url);
     }
     get fixedSize(): { width: number; height: number; } {
         return {
@@ -74,14 +94,32 @@ export class Shape extends Block {
         else if (['width', 'height'].includes(name)) {
             await this.updateProps({ [name == 'width' ? "fixedWidth" : "fixedHeight"]: value }, BlockRenderRange.self)
         }
+        else if (name == 'align') {
+            await this.updateProps({ 'align': value }, BlockRenderRange.self);
+        }
+        else if (name == 'valign') {
+            await this.updateProps({ 'valign': value }, BlockRenderRange.self);
+        }
         else if ((await super.setBoardEditCommand(name, value))) {
 
         }
         else if (name == 'turnShapes') {
-            var r = ShapesList.find(g => g.name == value);
-            if (r) {
+            if (value.turnUrl) {
+                setTimeout(() => {
+                    this.page.onTurn(this, value.turnUrl, async (nb) => {
+                        this.page.kit.picker.onPicker([nb])
+                    })
+                }, 50);
+            }
+            else {
+                var svg = new ShySvg(value.svg);
+                if (!svg.viewBox) svg.viewBox = svg.getBound();
+                if (!svg.id && value.value) svg.id = value.value;
                 await this.updateProps(
-                    { svg: new ShySvg(r.svg), svgName: value },
+                    {
+                        svg: svg,
+                        svgName: value.name
+                    },
                     BlockRenderRange.self
                 )
             }
@@ -94,6 +132,7 @@ export class Shape extends Block {
     @prop()
     svg: ShySvg = new ShySvg(
         {
+            id: '5',
             "viewBox": [0, 0, 24, 24],
             "childs": [{
                 "paths": [{
@@ -140,31 +179,73 @@ export class Shape extends Block {
 export class ShapeView extends BlockView<Shape> {
     renderView() {
         var fs = this.block.fixedSize;
-        var sb = this.block.svg.clone();
+
         var w = this.block.pattern.getSvgStyle()?.strokeWidth || 1
-        sb.scaleTo(fs.width - w, fs.height - w);
-        sb.extend(w);
+
         var style = this.block.visibleStyle;
-        style.width = this.block.fixedWidth || 200;
-        style.height = this.block.fixedHeight || 200;
+        style.width = this.block.fixedSize.width;
+        style.height = this.block.fixedSize.height;
+        var pd = this.block.realPx(20);
+        var contentStyle: CSSProperties = {
+
+        }
+        if (this.block.align == 'left') {
+            contentStyle.justifyContent = 'flex-start';
+        }
+        else if (this.block.align == 'center') {
+            contentStyle.justifyContent = 'center';
+        }
+        else if (this.block.align == 'right') {
+
+            contentStyle.justifyContent = 'flex-end';
+        }
+        if (this.block.valign == 'top') {
+            contentStyle.alignItems = 'flex-start';
+        }
+        else if (this.block.valign == 'middle') {
+            contentStyle.alignItems = 'center';
+        }
+        else if (this.block.valign == 'bottom') {
+            contentStyle.alignItems = 'flex-end';
+        }
+
+
+        var getSvg = () => {
+            if (!this.block.svgName.endsWith('.json')) {
+                var sh = ShapesList.find(c => c.name == this.block.svgName);
+                if (!sh.svg)
+                    return <div
+                        className="r-w100 r-h100"
+                        style={{ width: this.block.fixedSize.width, height: this.block.fixedSize.height }}
+                        dangerouslySetInnerHTML={{ __html: sh.shape }}>
+                    </div>
+            }
+            var sb = this.block.svg.clone();
+            sb.scaleTo(fs.width - w, fs.height - w);
+            sb.extend(w);
+            var vb = sb.viewBox;
+            return sb.render({
+                style: {
+                    marginLeft: 0 - w / 2,
+                    marginTop: 0 - w / 2,
+                    width: vb.width,
+                    height: vb.height,
+                    position: "absolute"
+                }
+            })
+        }
         return <div className="sy-block-shape relative" style={style}>
-            {sb.render({
-                marginLeft: 0 - w / 2,
-                marginTop: 0 - w / 2,
-                width: sb.viewBox.width,
-                height: sb.viewBox.height,
-                position: "absolute"
-            })}
+            {getSvg()}
             <div className="pos flex-center border-box" style={
                 {
                     top: 0,
                     left: 0,
                     textDecoration: 'inherit',
-                    // padding: dx,
-                    // background: this.block.color,
+                    padding: pd,
                     width: this.block.fixedSize.width,
                     height: this.block.fixedSize.height,
-                    overflow: 'hidden'
+                    overflow: 'hidden',
+                    ...contentStyle
                 }}>
                 <TextSpanArea placeholder={this.block.isFreeBlock ? lst("键入文本") : undefined} block={this.block}></TextSpanArea>
             </div>

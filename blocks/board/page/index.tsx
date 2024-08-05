@@ -12,6 +12,7 @@ import lodash from "lodash";
 import { BlockUrlConstant } from "../../../src/block/constant";
 import { ActionDirective } from "../../../src/history/declare";
 import { Rect } from "../../../src/common/vector/point";
+import { BoardTurns } from "../turns";
 
 @url('/board/page/card')
 export class PageCard extends Block {
@@ -21,6 +22,9 @@ export class PageCard extends Block {
     fixedHeight: number = 500;
     init() {
         this.gridMap = new GridMap(this)
+    }
+    async getWillTurnData(url: string) {
+        return await BoardTurns.turn(this, url);
     }
     getBlockBoardSelector(this: Block, types?: BoardPointType[]): BoardBlockSelector[] {
         var pickers = super.getBlockBoardSelector(...arguments);
@@ -35,6 +39,9 @@ export class PageCard extends Block {
     }
     getVisibleContentBound() {
         return this.getVisibleBound()
+    }
+    async getBoardCopyStyle() {
+        return null;
     }
 }
 

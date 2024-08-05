@@ -8,13 +8,14 @@ import { TextSpanArea } from "../../../src/block/view/appear";
 import { Rect, PointArrow } from "../../../src/common/vector/point";
 import { lst } from "../../../i18n/store";
 import { BlockRenderRange } from "../../../src/block/enum";
+import { ShySvg } from "../../../src/block/svg";
+import { BlockUrlConstant } from "../../../src/block/constant";
+import { BoardTurns } from "../turns";
 
 @url('/note')
 export class Note extends Block {
     @prop()
     color: string = 'rgb(166,204,245)';
-    @prop()
-    isScale: boolean = true;
     @prop()
     fixedWidth: number = 200;
     @prop()
@@ -49,6 +50,9 @@ export class Note extends Block {
         }
         return pickers;
     }
+    async getWillTurnData(url: string) {
+        return await BoardTurns.turn(this, url);
+    }
     async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
         var bold = this.pattern.css(BlockCssName.font)?.fontWeight;
         var ft = this.pattern.css(BlockCssName.font);
@@ -72,13 +76,31 @@ export class Note extends Block {
         cs.push({ name: 'fillNoTransparentColor', value: this.color });
         cs.push({ name: 'width', value: this.fixedWidth });
         cs.push({ name: 'height', value: this.fixedHeight });
+        cs.push({ name: 'turnShapes', value: { turnUrl: this.url } });
         return cs;
     }
     async setBoardEditCommand(name: string, value: any) {
-        if (name == 'fillNoTransparentColor')
+        if (name == 'fillNoTransparentColor' || name == 'fillColor')
             await this.updateProps({ color: value }, BlockRenderRange.self)
         else if (['width', 'height'].includes(name)) {
             await this.updateProps({ [name == 'width' ? "fixedWidth" : "fixedHeight"]: value }, BlockRenderRange.self)
+        }
+        else if (name == 'turnShapes') {
+            if (value.turnUrl != this.url) {
+                setTimeout(() => {
+                    var turnUrl = value.turnUrl || BlockUrlConstant.Shape;
+                    var svg: ShySvg;
+                    if (value.svg) {
+                        var svg = new ShySvg(value.svg);
+                        if (!svg.viewBox) svg.viewBox = svg.getBound();
+                        if (!svg.id && value.value) svg.id = value.value;
+                    }
+                    this.page.onTurn(this, turnUrl, async (nb) => {
+                        if (svg) await nb.updateProps({ svg, svgName: value.name }, BlockRenderRange.self);
+                        this.page.kit.picker.onPicker([nb])
+                    })
+                }, 50);
+            }
         }
         else (await super.setBoardEditCommand(name, value) == false)
         {
@@ -88,6 +110,15 @@ export class Note extends Block {
                 else if (value == 'small') { await this.updateProps({ fixedWidth: 100, fixedHeight: 100 }), BlockRenderRange.self }
             }
         }
+    }
+    async getBoardCopyStyle() {
+        var r = await super.getBoardCopyStyle();
+        ['mindDirection', 'mindLineType'].forEach(c => {
+            delete r.data[c];
+        })
+        r.data.fillColor = r.data.fillNoTransparentColor;
+        delete r.data.fillNoTransparentColor;
+        return r;
     }
     get isEnterCreateNewLine(): boolean {
         return false;
@@ -117,7 +148,7 @@ export class NoteView extends BlockView<Note> {
             height: size,
             top: (bw - size) / 2,
             left: (bw - size) / 2
-        }} viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+        }} viewBox="0 0 48 48" fill="none" stroke="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <filter x="-18.8%" y="-120%" width="137.5%" height="340%" filterUnits="objectBoundingBox" id="aeqa">
                     <feGaussianBlur stdDeviation="2" in="SourceGraphic"></feGaussianBlur>

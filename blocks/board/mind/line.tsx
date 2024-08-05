@@ -2,7 +2,7 @@ import React from "react";
 import { FlowMind } from ".";
 import { Point, RectUtility, Rect } from "../../../src/common/vector/point";
 
-export class FlowMindLine extends React.Component<{ mind: FlowMind }>{
+export class FlowMindLine extends React.Component<{ mind: FlowMind }> {
     private leftOrigin: Point;
     private leftPoints: Point[] = [];
     private rightOrigin: Point;
@@ -27,7 +27,7 @@ export class FlowMindLine extends React.Component<{ mind: FlowMind }>{
             this.rightOrigin,
             ...this.rightPoints,
         ]).extend(20);
-      this.forceUpdate()
+        this.forceUpdate()
     }
     renderLines() {
         return <>
@@ -49,7 +49,7 @@ export class FlowMindLine extends React.Component<{ mind: FlowMind }>{
     }
     render() {
         if (!this.leftOrigin) return <></>;
-        var g: FlowMind = this.props.mind.closest(g => (g as FlowMind).lineColor ? true : false) as FlowMind;
+        var g: FlowMind = this.props.mind.closest(g => (g as FlowMind).lineColor && (g as FlowMind).lineColor != 'transparent' ? true : false) as FlowMind;
         if (!g) g = this.props.mind.mindRoot;
         return <svg
             className="sy-flow-mind-line"
@@ -58,7 +58,7 @@ export class FlowMindLine extends React.Component<{ mind: FlowMind }>{
                 left: this.range.left,
                 width: this.range.width,
                 height: this.range.height,
-                stroke: g.lineColor || 'black'
+                stroke: g.lineColor || 'rgb(0,198,145)'
             }}
             viewBox={`${this.range.left} ${this.range.top} ${this.range.width} ${this.range.height} `}>{this.renderLines()}</svg>
     }

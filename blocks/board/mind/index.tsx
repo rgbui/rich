@@ -19,8 +19,8 @@ import { VR } from "../../../src/common/render";
 import { Polygon } from "../../../src/common/vector/polygon";
 import { AppearAnchor } from "../../../src/block/appear";
 import { ColorUtil } from "../../../util/color";
-import './style.less';
 import { util } from "../../../util/util";
+import './style.less';
 
 @url('/flow/mind')
 export class FlowMind extends Block {
@@ -74,7 +74,7 @@ export class FlowMind extends Block {
     @prop()
     fixedHeight: number = 30;
     @prop()
-    lineColor: string = 'rgb(0,198,145)';
+    lineColor: string;
     @prop()
     lineWidth: number = 2;
     @prop()
@@ -265,6 +265,7 @@ export class FlowMind extends Block {
                 var keys = 'subChilds';
                 var pa: FlowMind = this;
                 var at: number;
+                var data: Record<string, any> = {};
                 if (selector.arrows.every(g => [PointArrow.top, PointArrow.center].includes(g))) {
                     if (this.isMindRoot) { await this.updateProps({ direction: 'y' }, BlockRenderRange.self); keys = 'subChilds'; }
                     else {
@@ -272,6 +273,9 @@ export class FlowMind extends Block {
                             pa = this.parent as FlowMind;
                             at = this.at;
                             keys = this.parentKey;
+                            data = await this.cloneData();
+                            data.blocks = {};
+                            data.content = '';
                         }
                         else if (this.mindDirection == 'y') {
                             keys = 'subChilds';
@@ -285,6 +289,9 @@ export class FlowMind extends Block {
                             pa = this.parent as FlowMind;
                             at = this.at + 1;
                             keys = this.parentKey;
+                            data = await this.cloneData();
+                            data.blocks = {};
+                            data.content = '';
                         }
                         else if (this.mindDirection == 'y') {
                             keys = 'otherChilds';
@@ -301,6 +308,9 @@ export class FlowMind extends Block {
                             pa = this.parent as FlowMind;
                             at = this.at + 1;
                             keys = this.parentKey;
+                            data = await this.cloneData();
+                            data.blocks = {};
+                            data.content = '';
                         }
                     }
                 }
@@ -317,11 +327,14 @@ export class FlowMind extends Block {
                             pa = this.parent as FlowMind;
                             at = this.at + 1;
                             keys = this.parentKey;
+                            data = await this.cloneData();
+                            data.blocks = {};
+                            data.content = '';
                         }
                     }
                 }
                 var newBlock = await self.page.createBlock('/flow/mind',
-                    {},
+                    data,
                     pa,
                     at,
                     keys
@@ -332,7 +345,6 @@ export class FlowMind extends Block {
                     await self.page.kit.picker.onPicker([newBlock], { merge: true, disabledOpenTool: true });
                     await util.delay(100);
                     await self.page.kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, last: true, merge: true })
-
                 })
             })
         }
@@ -497,15 +509,15 @@ export class FlowMind extends Block {
         });
         cs.push({ name: 'textDecoration', value: this.pattern.css(BlockCssName.font)?.textDecoration });
         cs.push({ name: 'fontColor', value: this.pattern.css(BlockCssName.font)?.color });
-        cs.push({ name: 'fillColor', value: this.pattern.getSvgStyle()?.fill });
-        cs.push({ name: 'fillOpacity', value: typeof svgStyle?.fillOpacity == 'number' ? svgStyle.fillOpacity : 1 });
+        cs.push({ name: 'backgroundColor', value: this.pattern.getSvgStyle()?.fill });
+        cs.push({ name: 'bgOpacity', value: typeof svgStyle?.fillOpacity == 'number' ? svgStyle.fillOpacity : 1 });
 
         cs.push({ name: 'borderWidth', value: this.minBoxStyle.width });
         cs.push({ name: 'borderType', value: this.minBoxStyle.type });
         cs.push({ name: 'borderColor', value: this.minBoxStyle.borderColor });
         cs.push({ name: 'borderRadius', value: this.minBoxStyle.radius });
         cs.push({ name: 'align', value: this.align });
-     
+
 
         return cs;
     }
@@ -519,14 +531,20 @@ export class FlowMind extends Block {
         }
         else if (name == 'mindLineType') {
             await this.updateProps({ lineType: value }, BlockRenderRange.self);
+            this.page.addActionCompletedEvent(async () => {
+                this.mindRoot.forceManualUpdate(undefined, true)
+            })
         }
         else if (name == 'mindLineColor') {
             await this.updateProps({ lineColor: value }, BlockRenderRange.self);
+            this.page.addActionCompletedEvent(async () => {
+                this.mindRoot.forceManualUpdate(undefined, true)
+            })
         }
-        else if (['fillColor', 'fillOpacity',].includes(name)) {
+        else if (['backgroundColor', 'bgOpacity',].includes(name)) {
             var key = name;
-            if (name == 'fillColor') key = 'fill';
-            else if (name == 'fillOpacity') key = 'fillOpacity';
+            if (name == 'backgroundColor') key = 'fill';
+            else if (name == 'bgOpacity') key = 'bgOpacity';
             await this.pattern.setSvgStyle({ [key]: value })
         }
         else if (name == 'borderWidth') {
@@ -545,6 +563,16 @@ export class FlowMind extends Block {
             await this.updateProps({ 'align': value }, BlockRenderRange.self);
         }
         await super.setBoardEditCommand(name, value)
+    }
+    async getBoardCopyStyle() {
+        var r = await super.getBoardCopyStyle();
+        ['mindDirection','mindLineType'].forEach(c => {
+            delete r.data[c];
+        })
+        return r;
+    }
+    async setBoardCopyStyle(this: Block, name: string, value) {
+        await this.setBoardEditCommand(name, value);
     }
     get contentStyle() {
         var style: CSSProperties = {
