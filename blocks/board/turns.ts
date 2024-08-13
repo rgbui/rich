@@ -2,7 +2,6 @@ import { Block } from "../../src/block";
 import { BlockCssName } from "../../src/block/pattern/css";
 import { Note } from "./note";
 
-
 export var BoardTurns = {
     async turn(block: Block, turnToUrl) {
         var data = await block.get();
@@ -12,13 +11,14 @@ export var BoardTurns = {
         var pattern = data.pattern;
         var style = pattern.styles[0]?.cssList;
         var fontStyle = style?.find(s => s.cssName == BlockCssName.font);
+        var fillStyle = style?.find(s => s.cssName == BlockCssName.fill);
         switch (turnToUrl) {
             case '/shape':
             case '/flow/mind':
             case '/note':
             case '/board/page/card':
             case '/textspan':
-                if (['/textspan', '/flow/mind'].includes(turnToUrl)) {
+                if (['/textspan','/flow/mind'].includes(turnToUrl)) {
                     delete data.fixedWidth;
                     delete data.fixedHeight
                 }
@@ -46,6 +46,22 @@ export var BoardTurns = {
                                 }]
                             }
                         ]
+                    }
+                }
+                if (block.url == '/shape') {
+                    var svgStyle = style?.find(s => s.cssName == BlockCssName.svg);
+                    if (svgStyle) {
+                        if (fillStyle) {
+                            fillStyle.color = svgStyle.fill;
+                            fillStyle.mode = 'color'
+                        }
+                        else {
+                            style.push({
+                                cssName: BlockCssName.fill,
+                                color: svgStyle.fill,
+                                mode: 'color'
+                            })
+                        }
                     }
                 }
                 if (block.url == '/note') {
@@ -78,6 +94,23 @@ export var BoardTurns = {
                     if (fontStyle) {
                         data.fontScale = fontStyle.fontSize / 14
                         fontStyle.fontSize = 14
+                    }
+                }
+                if (turnToUrl == '/note') {
+                    if (fillStyle) data.color = fillStyle.color
+                }
+                if (turnToUrl == '/shape') {
+                    if (fillStyle) {
+                        var svgStyle = style?.find(s => s.cssName == BlockCssName.svg);
+                        if (svgStyle) {
+                            svgStyle.fill = fillStyle.color
+                        }
+                        else {
+                            style.push({
+                                cssName: BlockCssName.svg,
+                                fill: fillStyle.color
+                            })
+                        }
                     }
                 }
                 if (block.url == '/flow/mind') {

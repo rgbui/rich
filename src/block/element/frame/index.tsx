@@ -93,11 +93,16 @@ export class Frame extends Block {
         var cs: { name: string; value?: any; }[] = [];
         cs.push({ name: 'fillColor', value: this.pattern.css(BlockCssName.fill)?.color || 'transparent' });
         cs.push({ name: 'frameFormat', value: this.frameFormat })
+        cs.push({ name: 'width', value: this.fixedWidth });
+        cs.push({ name: 'height', value: this.fixedHeight });
         return cs;
     }
     async setBoardEditCommand(this: Block, name: string, value: any) {
         if (name == 'fillColor')
             await this.pattern.setFillStyle({ color: value, mode: 'color' });
+        else if (['width', 'height'].includes(name)) {
+            await this.updateProps({ [name == 'width' ? "fixedWidth" : "fixedHeight"]: value }, BlockRenderRange.self)
+        }
         else if (name == 'frameFormat') {
             var props: Record<string, any> = {}
             if (value == '1:1') {
@@ -125,7 +130,7 @@ export class Frame extends Block {
             await this.updateProps({ frameFormat: value, ...props }, BlockRenderRange.self)
         }
     }
-    
+
 }
 
 @view('/frame')

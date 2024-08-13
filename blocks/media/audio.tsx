@@ -160,6 +160,9 @@ export class Audio extends Block {
         else
             await super.setBoardEditCommand(name, value)
     }
+    async getBoardCopyStyle() {
+        return null;
+    }
 }
 @view('/audio')
 export class AudioView extends BlockView<Audio> {

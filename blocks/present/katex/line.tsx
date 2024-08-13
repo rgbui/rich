@@ -55,7 +55,7 @@ export class KatexLine extends Block {
         }
     }
     async onCrash(event: React.MouseEvent) {
-        this.page.onTurn(this, BlockUrlConstant.Text, (nb, ob) => {
+        this.page.onTurn(this, BlockUrlConstant.Text, async (nb, ob) => {
             this.page.addActionAfterEvent(async () => {
                 this.page.kit.anchorCursor.onFocusBlockAnchor(nb, { render: true, merge: true })
             })

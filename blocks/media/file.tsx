@@ -170,6 +170,9 @@ export class File extends Block {
         else
             await super.setBoardEditCommand(name, value)
     }
+    async getBoardCopyStyle() {
+        return null;
+    }
 }
 
 @view('/file')

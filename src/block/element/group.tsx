@@ -7,6 +7,7 @@ import { url, view } from '../factory/observable';
 import { Point, PointArrow, Rect, RectUtility } from '../../common/vector/point';
 import lodash from 'lodash';
 import { Matrix } from '../../common/matrix';
+import { BlockUrlConstant } from '../constant';
 
 
 /**
@@ -70,11 +71,9 @@ export class Group extends Block {
             }
         })
         nr = nr.transformInverseToBound(this.matrix);
-        console.log('nnn', nr);
         var ma = new Matrix();
         ma.translate(nr.leftTop.x, nr.leftTop.y);
         var newMa = this.matrix.clone().append(ma);
-        console.log('updateGroupRange', ma, nr.width, nr.height, this.fixedWidth, this.fixedHeight);
         await this.updateProps({
             fixedWidth: nr.width,
             fixedHeight: nr.height
@@ -95,9 +94,39 @@ export class Group extends Block {
         var bs = this.blocks.childs.map(c => c);
         for (let i = 0; i < bs.length; i++) {
             var b = bs[i];
-            var ma = this.matrix.clone();
-            var nm = ma.append(b.matrix);
-            await b.updateMatrix(b.matrix, nm);
+            if ([BlockUrlConstant.BoardImage,
+            BlockUrlConstant.File,
+            BlockUrlConstant.Group,
+            BlockUrlConstant.Pen,
+            BlockUrlConstant.Katex,
+            ].includes(b.url as any)) {
+                var ma = this.matrix.clone();
+                var nm = ma.append(b.matrix);
+                await b.updateMatrix(b.matrix, nm);
+            }
+            else if (b.url == BlockUrlConstant.TextSpan) {
+                var ma = this.matrix.clone();
+                var nm = ma.append(b.matrix);
+                var r = nm.getScaling().x;
+                await b.updateProps({
+                    // fixedWidth: b.fixedWidth * r,
+                    fontScale: (b as any).fontScale * r
+                });
+                nm.scale(1 / r, 1 / r, { x: 0, y: 0 });
+                await b.updateMatrix(b.matrix, nm);
+            }
+            else {
+                var ma = this.matrix.clone();
+                var nm = ma.append(b.matrix);
+                var r = nm.getScaling().x;
+                console.log('rrr', r);
+                await b.updateProps({
+                    fixedWidth: b.fixedWidth * r,
+                    fixedHeight: b.fixedHeight * r
+                });
+                nm.scale(1 / r, 1 / r, { x: 0, y: 0 });
+                await b.updateMatrix(b.matrix, nm);
+            }
         }
         await this.parent.appendArray(bs, this.at, this.parentKey);
         await this.delete();

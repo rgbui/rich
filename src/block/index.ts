@@ -779,12 +779,12 @@ export abstract class Block extends Events {
      * @returns 返回最终渲染的值
      */
     realPx(visiblePx: number) {
-        if (!this.page.viewEl) return visiblePx;
-        return visiblePx / this.globalWindowMatrix.getScaling().x;
+        // if (!this.page.viewEl) return visiblePx;
+        return visiblePx / this.globalMatrix.getScaling().x;
     }
     visiblePx(realPx: number) {
-        if (!this.page.viewEl) return realPx;
-        return realPx * this.globalWindowMatrix.getScaling().x
+        // if (!this.page.viewEl) return realPx;
+        return realPx *  this.globalMatrix.getScaling().x
     }
     /**
      * 运行的move matrix

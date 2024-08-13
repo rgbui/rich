@@ -19,6 +19,9 @@ import { BlockChildKey, BlockUrlConstant } from '../constant';
 import { MenuItem, MenuItemType } from '../../../component/view/menu/declare';
 import { PageLayoutType } from '../../page/declare';
 import { util } from '../../../util/util';
+import { Group } from './group';
+import { ShySvg } from '../svg';
+import { BoardTurns } from '../../../blocks/board/turns';
 
 @url("/textspan")
 export class TextSpan extends Block {
@@ -60,6 +63,9 @@ export class TextSpan extends Block {
         return TextTurns.blockDatas();
     }
     async getWillTurnData(url: string) {
+        if (this.isFreeBlock) {
+            return await BoardTurns.turn(this, url);
+        }
         return await TextTurns.turn(this, url);
     }
     get isContentEmpty() {
@@ -192,6 +198,12 @@ export class TextSpan extends Block {
                         block.page.onAction(ActionDirective.onResizeBlock, async () => {
                             if (!matrix.equals(block.matrix)) await block.updateMatrix(matrix, block.matrix);
                             await block.manualUpdateProps({ fontScale: old_fs }, { fontScale: block.fontScale })
+                            var groups = block.groups;
+                            if (groups?.length > 0) {
+                                await groups.eachAsync(async g => {
+                                    await (g as Group).updateGroupRange();
+                                })
+                            }
                         })
                     }
                 }
@@ -205,6 +217,7 @@ export class TextSpan extends Block {
         var fontStyle = this.pattern.css(BlockCssName.font)
         var bold = fontStyle?.fontWeight || false;
         var cs: { name: string; value?: any; }[] = [];
+        cs.push({ name: 'turnShapes', value: { turnUrl: this.url } });
         cs.push({ name: 'fontFamily', value: fontStyle?.fontFamily });
         cs.push({ name: 'fontSize', value: Math.round(this.fontScale * 14) });
         cs.push({ name: 'fontWeight', value: bold == 'bold' || bold == 500 ? true : false });
@@ -212,7 +225,9 @@ export class TextSpan extends Block {
         cs.push({ name: 'textDecoration', value: fontStyle?.textDecoration || 'none' });
         cs.push({ name: 'fontColor', value: fontStyle?.color || '#000' });
         cs.push({ name: 'link' });
+        cs.push({ name: 'align', value: this.align });
         cs.push({ name: 'backgroundColor', value: this.pattern.css(BlockCssName.fill)?.color || 'transparent' });
+        cs.push({ name: "ai" });
         return cs;
     }
     async setBoardEditCommand(name: string, value: any) {
@@ -224,8 +239,28 @@ export class TextSpan extends Block {
             await this.updateProps({ fontScale: value / 14 }, BlockRenderRange.self)
             // this.pattern.setFontStyle({ fontSize: value, lineHeight: (value * 1.2) + 'px' });
         }
+        else if (name == 'turnShapes') {
+            if (value.turnUrl != this.url) {
+                setTimeout(() => {
+                    var turnUrl = value.turnUrl || BlockUrlConstant.Shape;
+                    var svg: ShySvg;
+                    if (value.svg) {
+                        var svg = new ShySvg(value.svg);
+                        if (!svg.viewBox) svg.viewBox = svg.getBound();
+                        if (!svg.id && value.value) svg.id = value.value;
+                    }
+                    this.page.onTurn(this, turnUrl, async (nb) => {
+                        if (svg) await nb.updateProps({ svg, svgName: value.name }, BlockRenderRange.self);
+                        this.page.kit.picker.onPicker([nb])
+                    })
+                }, 50);
+            }
+        }
         else if (name == 'fontFamily') {
             await this.pattern.setFontStyle({ fontFamily: value })
+        }
+        else if (name == 'align') {
+            await this.updateProps({ align: value }, BlockRenderRange.self)
         }
         else if (name == 'fontStyle') {
             await this.pattern.setFontStyle({ fontStyle: value === true || value == 'italic' ? 'italic' : 'normal' })
@@ -235,6 +270,30 @@ export class TextSpan extends Block {
         else if (name == 'textDecoration')
             await this.pattern.setFontStyle({ textDecoration: value });
     }
+    async autoWidth() {
+        if (this.content) {
+            var sp = this.el.querySelector('.shy-appear-text') as HTMLElement;
+            var width = sp.offsetWidth;
+            await this.updateProps({ fixedWidth: width }, BlockRenderRange.self);
+        }
+    }
+    async getBoardCopyStyle() {
+        var r = await super.getBoardCopyStyle();
+        ['link'].forEach(c => {
+            delete r.data[c];
+        })
+        return r;
+    }
+
+    async didMounted() {
+        if (this.initialData?.autoWidth == true) {
+            await this.page.onAction('autoWidth', async () => {
+                await this.autoWidth();
+            })
+            delete this.initialData?.autoWidth;
+        }
+    }
+
     async onInputed() {
         this.page.kit.picker.onRePicker();
     }

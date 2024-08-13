@@ -7,6 +7,7 @@ import { FieldView, OriginFormField } from "./origin.field";
 import { util } from "../../../../util/util";
 import { useUserPicker } from "../../../../extensions/at/picker";
 import { S } from "../../../../i18n/view";
+import { FieldType } from "../../schema/type";
 
 @url('/form/user')
 export class FieldUser extends OriginFormField {
@@ -39,6 +40,7 @@ export class FieldTextView extends BlockView<FieldUser> {
         return <FieldView block={this.block} className={'visible-hover'}>
             <div onMouseDown={async e => {
                 if (this.block.fromType == 'doc-detail') return;
+                if (this.block.field?.type == FieldType.creater || this.block.field?.type == FieldType.modifyer) return;
                 var ele = e.currentTarget as HTMLElement;
                 if (ele.classList.contains('item-hover-light')) {
                     ele.classList.add('item-hover-light-focus')
@@ -56,7 +58,7 @@ export class FieldTextView extends BlockView<FieldUser> {
             }} className={' ' + (this.block.fromType == 'doc' ? "item-hover-light padding-w-10 round" : (this.block.fromType == 'doc-add' ? " sy-form-field-input-value" : "  "))}>
                 <div className="min-h-30">
                     <UserAvatars size={24} users={vs}></UserAvatars>
-                    {this.block.fromType != 'doc-add' && <span className="f-14 remark" ><S>空内容</S></span>}
+                    {this.block.fromType != 'doc-add' && vs.length == 0 && <span className="f-14 remark" ><S>空内容</S></span>}
                 </div>
             </div>
         </FieldView>

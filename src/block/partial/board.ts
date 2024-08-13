@@ -8,8 +8,11 @@ import { Point, PointArrow, Rect, RectUtility } from "../../common/vector/point"
 import { Polygon } from "../../common/vector/polygon";
 import { ActionDirective } from "../../history/declare";
 import { openBoardEditTool } from "../../kit/operator/board/edit";
+import { CacBlockAlignLines } from "../../kit/picker/common";
+import { BlockUrlConstant } from "../constant";
 import { Group } from "../element/group";
 import { BlockRenderRange } from "../enum";
+import lodash from 'lodash';
 
 export enum BoardPointType {
     none,
@@ -68,7 +71,8 @@ export type BoardBlockSelector = {
     stroke?: string;
     strokeOpacity?: number;
     fillOpacity?: number;
-    data?: Record<string, any>
+    data?: Record<string, any>,
+    rect?: Rect;
 }
 
 export class Block$Board {
@@ -90,6 +94,7 @@ export class Block$Board {
          */
         var extendRect = rect.extend(this.realPx(15));
         var pathRects = RectUtility.getRectLineRects(rect, this.realPx(2));
+        var brect = rect.transformToRect(gm);
         if (types.includes(BoardPointType.path))
             pickers.push(...pathRects.map((pr, i) => {
                 var arrows: PointArrow[] = [];
@@ -115,7 +120,8 @@ export class Block$Board {
                     type: BoardPointType.pathConnectPort,
                     arrows,
                     point: gm.transform(pr),
-                    arrowPoint: gm.transform(arrowPoint)
+                    arrowPoint: gm.transform(arrowPoint),
+                    rect: brect
                 }
             }))
         if (types.includes(BoardPointType.resizePort)) pickers.push(...rect.points.map((p, i) => {
@@ -178,25 +184,22 @@ export class Block$Board {
         var downPoint = Point.from(event);
         var fp = gm.inverseTransform(downPoint);
         var s = gm.getScaling().x;
-        var minW = 20 / s;
-        var minH = 20 / s;
+        var minW = 10 / s;
+        var minH = 10 / s;
         var self = this;
         var picker = block.page.kit.picker;
         picker.view.showSize = false;
-        // picker.alighLines = [];
-        // picker.moveRect = block.getVisibleContentBound();
-        // var cloneMoveRect = picker.moveRect.clone();
-        // var w = block.fixedWidth;
-        // var h = block.fixedHeight;
-        // var gs: {
-        //     ox: number;
-        //     oy: number;
-        //     lines: {
-        //         arrow: 'x' | 'y';
-        //         start: Point;
-        //         end: Point;
-        //     }[];
-        // }
+        picker.alighLines = [];
+        picker.moveRect = block.getVisibleContentBound();
+        var gs: {
+            ox: number;
+            oy: number;
+            lines: {
+                arrow: 'x' | 'y';
+                start: Point;
+                end: Point;
+            }[];
+        }
         MouseDragger({
             event,
             moveStart() {
@@ -204,12 +207,12 @@ export class Block$Board {
             },
             moving(ev, data, isEnd) {
                 var to = Point.from(ev);
-                // gs = CacAlignLines(block, gmm, downPoint, to, picker.moveRect);
-                // if (typeof gs?.ox == 'number' || typeof gs?.oy == 'number') {
-                //     if (gs.ox) to.x = gs.ox + to.x;
-                //     if (gs.oy) to.y = gs.oy + to.y;
-                // }
-                var tp = gm.inverseTransform(Point.from(to));
+                gs = CacBlockAlignLines(block, gmm, downPoint, to, picker.moveRect, arrows);
+                if (typeof gs?.ox == 'number' || typeof gs?.oy == 'number') {
+                    if (gs.ox) to.x = gs.ox + to.x;
+                    if (gs.oy) to.y = gs.oy + to.y;
+                }
+                var tp = gm.inverseTransform(to);
                 var ma = new Matrix();
                 var [dx, dy] = tp.diff(fp);
                 var bw = w;
@@ -247,8 +250,6 @@ export class Block$Board {
                 block.matrix = matrix.appended(ma);
                 block.fixedHeight = bh;
                 block.fixedWidth = bw;
-                // picker.moveRect.width = cloneMoveRect.width + (bw - w);
-                // picker.moveRect.height = cloneMoveRect.height + (bh - h);
 
                 block.updateRenderLines();
                 block.forceManualUpdate();
@@ -256,21 +257,20 @@ export class Block$Board {
                     var cs = block.childs;
                     for (let i = 0; i < cs.length; i++) {
                         var b = cs[i];
-                        var oc = matrix.clone().append(b.matrix).transform(new Point(0, 0));
-                        var nc = block.matrix.clone().append(b.matrix).inverseTransform(oc);
+                        var oc = matrix.clone().append(b.currentMatrix).transform(new Point(0, 0));
+                        var nc = block.matrix.clone().append(b.currentMatrix).inverseTransform(oc);
                         var mb = new Matrix();
                         mb.translate(nc.x, nc.y);
                         b.moveMatrix = mb;
                         b.forceManualUpdate();
-                        // var nm = b.matrix.clone().append(mb);
-                        // await b.updateMatrix(b.matrix, nm);
                     }
                 }
-                // picker.alighLines = gs?.lines || [];
-                // picker.alighLines.forEach(ag => {
-                //     ag.start = block.page.windowMatrix.inverseTransform(ag.start);
-                //     ag.end = block.page.windowMatrix.inverseTransform(ag.end);
-                // })
+                picker.alighLines = gs?.lines || [];
+                if (isEnd) picker.alighLines = [];
+                picker.alighLines.forEach(ag => {
+                    ag.start = block.page.windowMatrix.inverseTransform(ag.start);
+                    ag.end = block.page.windowMatrix.inverseTransform(ag.end);
+                })
                 picker.view.showSize = isEnd ? false : true;
                 picker.view.forceUpdate();
                 if (isEnd) {
@@ -285,11 +285,12 @@ export class Block$Board {
                             for (let i = 0; i < cs.length; i++) {
                                 var b = cs[i];
                                 b.moveMatrix = new Matrix();
-                                var oc = matrix.clone().append(b.matrix).transform(new Point(0, 0));
-                                var nc = block.matrix.clone().append(b.matrix).inverseTransform(oc);
+                                var oc = matrix.clone().append(b.currentMatrix).transform(new Point(0, 0));
+                                var nc = block.matrix.clone().append(b.currentMatrix).inverseTransform(oc);
                                 var mb = new Matrix();
                                 mb.translate(nc.x, nc.y);
-                                var nm = b.matrix.clone().append(mb);
+                                var nm = b.currentMatrix.clone().append(mb);
+                                nm.append(b.selfMatrix.inverted());
                                 await b.updateMatrix(b.matrix, nm);
                             }
                         }
@@ -316,32 +317,82 @@ export class Block$Board {
      */
     onResizeScaleBoardSelector(this: Block, arrows: PointArrow[], event: React.MouseEvent) {
         var self = this;
+        var block = this;
         var { width, height } = this.fixedSize;
         var rect = new Rect(0, 0, width, height);
         var gm = this.globalMatrix;
-        var center = rect.middleCenter;
+        var wgm = this.globalWindowMatrix;
+        var gmm = block?.panelGridMap || block.page.gridMap
+        gmm.start();
         var point = gm.inverseTransform(Point.from(event));
         var ma = this.matrix.clone();
+        arrows = lodash.cloneDeep(arrows);
+        lodash.remove(arrows, s => s == PointArrow.center || s == PointArrow.middle);
+        var picker = this.page.kit.picker;
+        picker.view.showSize = false;
+        picker.alighLines = [];
+        picker.moveRect = this.getVisibleContentBound();
+        var block = this;
+        var gs: {
+            ox: number;
+            oy: number;
+            lines: {
+                arrow: 'x' | 'y';
+                start: Point;
+                end: Point;
+            }[];
+        }
+        function cacOffset(from: Point, to: Point) {
+            var ec = gm.inverseTransform(to);
+            var dx = ec.x - from.x;
+            var dy = ec.y - from.y;
+            if (arrows.some(s => s == PointArrow.left)) dx = -dx;
+            if (arrows.some(s => s == PointArrow.top)) dy = -dy;
+            var newWidth = width + dx;
+            var newHeight = height + dy;
+            var scaleX = newWidth / width;
+            var scaleY = newHeight / height;
+            var scale = (scaleX + scaleY) / 2;
+            var newMa = new Matrix();
+            if (lodash.isEqual(arrows, [PointArrow.top, PointArrow.left]) || lodash.isEqual(arrows, [PointArrow.top]) || lodash.isEqual(arrows, [PointArrow.left])) {
+                newMa.scale(scale, scale, { x: rect.width, y: rect.height });
+            }
+            else if (lodash.isEqual(arrows, [PointArrow.bottom, PointArrow.right]) || lodash.isEqual(arrows, [PointArrow.bottom]) || lodash.isEqual(arrows, [PointArrow.right])) {
+                newMa.scale(scale, scale, { x: 0, y: 0 });
+            }
+            else if (lodash.isEqual(arrows, [PointArrow.top, PointArrow.right]) || lodash.isEqual(arrows, [PointArrow.top]) || lodash.isEqual(arrows, [PointArrow.right])) {
+                newMa.scale(scale, scale, { x: 0, y: rect.height });
+            }
+            else if (lodash.isEqual(arrows, [PointArrow.bottom, PointArrow.left]) || lodash.isEqual(arrows, [PointArrow.bottom]) || lodash.isEqual(arrows, [PointArrow.left])) {
+                newMa.scale(scale, scale, { x: rect.width, y: 0 });
+            }
+            return newMa;
+        }
         MouseDragger({
             event,
             moveStart() {
                 closeBoardEditTool();
             },
             async moving(ev, data, isEnd, isMove) {
-                var ec = gm.inverseTransform(Point.from(ev));
-                var dx = ec.x - point.x;
-                var dy = ec.y - point.y;
-                if (arrows.some(s => s == PointArrow.left)) dx = -dx;
-                if (arrows.some(s => s == PointArrow.top)) dy = -dy;
-                var newWidth = width + dx;
-                var newHeight = height + dy;
-                var scaleX = newWidth / width;
-                var scaleY = newHeight / height;
-                var scale = (scaleX + scaleY) / 2;
-                var newMa = new Matrix();
-                newMa.scale(scale, scale, { x: center.x, y: center.y });
+                var to = Point.from(ev);
+                var newMa = cacOffset(point, to);
+                var newGm = wgm.clone().append(newMa);
+                var newRect = rect.clone().transformToRect(newGm);
+                gs = CacBlockAlignLines(block, gmm, point, to, newRect, []);
+                if (typeof gs?.ox == 'number' || typeof gs?.oy == 'number') {
+                    if (gs.ox) to.x = gs.ox + to.x;
+                    if (gs.oy) to.y = gs.oy + to.y;
+                }
+                newMa = cacOffset(point, to);
                 self.matrix = ma.appended(newMa);
+                self.updateRenderLines();
                 self.forceManualUpdate();
+                picker.alighLines = gs?.lines || [];
+                if (isEnd) picker.alighLines = [];
+                picker.alighLines.forEach(ag => {
+                    ag.start = block.page.windowMatrix.inverseTransform(ag.start);
+                    ag.end = block.page.windowMatrix.inverseTransform(ag.end);
+                })
                 self.page.kit.picker.view.showSize = isEnd ? false : true;
                 self.page.kit.picker.view.forceUpdate()
                 if (isEnd) {
@@ -423,10 +474,15 @@ export class Block$Board {
      * 重新渲染线条
      * @param this 
      */
-    updateRenderLines(this: Block, isSelfUpdate?: boolean, isAll?: boolean) {
+    updateRenderLines(this: Block, isSelfUpdate?: boolean) {
         if (this.isFrame) {
             this.childs.each(b => {
-                b.lines.each(line => { line.forceManualUpdate() })
+                b.updateRenderLines();
+            })
+        }
+        else if (this.url == BlockUrlConstant.Group) {
+            this.childs.each(b => {
+                b.updateRenderLines();
             })
         }
         else {
@@ -464,12 +520,17 @@ export class Block$Board {
             var rs = this.findFramesByIntersect();
             if (rs.length > 0 && !rs.some(s => s === this.parent)) {
                 var fra = rs[0];
-                await fra.append(this);
-                var r = this.getTranslation().relative(fra.getTranslation());
-                var nm = new Matrix();
-                nm.translate(r);
-                nm.rotate(this.matrix.getRotation(), { x: 0, y: 0 });
-                await this.updateMatrix(this.matrix, nm);
+                if (this.parent.isFrame) {
+                    var matrix = this.matrix.clone().append(this.parent.matrix);
+                    var nm: Matrix = fra.matrix.inverted().append(matrix);
+                    await this.updateMatrix(this.matrix, nm);
+                    await fra.append(this);
+                }
+                else {
+                    await fra.append(this);
+                    var nm: Matrix = fra.matrix.inverted().append(this.matrix);
+                    await this.updateMatrix(this.matrix, nm);
+                }
             }
             else if (rs.length == 0 && this.parent?.isFrame) {
                 var fra = this.parent;
@@ -480,7 +541,7 @@ export class Block$Board {
                         if (cg.from?.blockId && cg.to?.blockId) {
                             var fb = this.page.find(x => x.id == cg.from.blockId);
                             var tb = this.page.find(x => x.id == cg.to.blockId);
-                            if (fb.parent !== fra && tb.parent !== fra) {
+                            if (fb && tb && fb.parent !== fra && tb.parent !== fra) {
                                 return true;
                             }
                         }
@@ -490,11 +551,10 @@ export class Block$Board {
                 await lines.eachAsync(async l => {
                     await fra.parent.append(l);
                 })
-                var r = this.getTranslation().base(fra.getTranslation());
-                var nm = new Matrix();
-                nm.translate(r);
-                nm.rotate(this.matrix.getRotation(), { x: 0, y: 0 });
+
+                var nm: Matrix = this.matrix.clone().append(fra.matrix);
                 await this.updateMatrix(this.matrix, nm);
+
             }
         }
         var groups = this.groups;

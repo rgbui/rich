@@ -246,6 +246,9 @@ export class Embed extends Block {
             }
         }
     }
+    async getBoardCopyStyle() {
+        return null;
+    }
 }
 
 @view('/embed')

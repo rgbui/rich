@@ -8,6 +8,7 @@ export class InputNumber extends React.Component<{
     inputStyle?: CSSProperties,
     disabled?: boolean,
     value?: number,
+    showIcon?:boolean,
     placeholder?: string,
     readonly?: boolean,
     noborder?: boolean,
@@ -75,7 +76,7 @@ export class InputNumber extends React.Component<{
                     name={props.name}
                     style={props.inputStyle || {}}
                 ></input>
-                <div className="pos pos-center-right h-24 w-20 flex flex-col visible">
+                <div className={"pos pos-center-right h-24 w-20 flex flex-col "+(props.showIcon?" ":"visible")}>
                     <span className="size-12 flex-center item-hover round cursor" onMouseDown={e => { e.stopPropagation(); onDeep(1) }}><Icon size={12} icon={UpSvg}></Icon></span>
                     <span className="size-12 flex-center item-hover round cursor" onMouseDown={e => { e.stopPropagation(); onDeep(-1) }}><Icon size={12} icon={DownSvg}></Icon></span>
                 </div>
