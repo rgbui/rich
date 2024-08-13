@@ -16,6 +16,7 @@ import { Point } from "../../../src/common/vector/point";
 import { popoverLayer } from "../../../component/lib/zindex";
 import { MaterialImageView } from "./image";
 import { illustratorList, stickers } from "./data";
+import { assyDiv } from "../../../component/types";
 
 export class MaterialView extends EventsComponent {
     mode: string = '';
@@ -241,6 +242,7 @@ export class MaterialView extends EventsComponent {
                     this.onMouseDown({ data: e, mime: 'icon' })
                 }}></MaterialIconView>}
                 {this.mode == '表情' && <MaterialEmojiView change={e => {
+
                     this.onMouseDown({ data: e, mime: 'emoji' })
                 }}></MaterialEmojiView>}
                 {this.mode == '图片库' && <MaterialImageView onChange={e => {
@@ -257,7 +259,7 @@ export class MaterialView extends EventsComponent {
             zIndex: popoverLayer.zoom(this),
             maxHeight: '80vh'
         };
-        return <div style={style} className="pos w-300  h-500  bg-white shadow border  round-4 ">
+        return <div style={style} ref={e => this.el = e} className="pos w-300  h-500  bg-white shadow border  round-4 ">
             {this.renderDetail()}
             {this.renderGroups()}
         </div>
@@ -265,6 +267,7 @@ export class MaterialView extends EventsComponent {
     onMouseDown(data: Record<string, any>, e?: React.MouseEvent) {
         this.emit('save', data, e);
     }
+    el: HTMLElement;
     private point: Point;
     visible: boolean = false;
     open(point: Point) {
@@ -275,6 +278,29 @@ export class MaterialView extends EventsComponent {
     close(): void {
         this.visible = false;
         this.forceUpdate();
+    }
+    componentWillUnmount(): void {
+        document.removeEventListener('mousedown', this.onGlobalMousedown, true);
+        popoverLayer.clear(this);
+    }
+    componentDidMount() {
+        document.addEventListener('mousedown', this.onGlobalMousedown, true);
+    }
+    onGlobalMousedown = (event: MouseEvent) => {
+        // if (this.blocked == true) return;
+        if (this.visible == true && this.el) {
+            var target = event.target as HTMLElement;
+            if (this.el.contains(target)) return;
+            var ele = assyDiv();
+            if (ele && ele.contains(target)) return;
+            /**
+          * 这说明是在弹窗点开的菜单
+          */
+            if (target && target.closest('.shy-menu-panel')) return;
+            if (target && target.closest('.shy-popover-box')) return;
+            if (target && target.closest('.shy-page-view')) return;
+            this.close();
+        }
     }
 }
 

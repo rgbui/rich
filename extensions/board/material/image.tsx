@@ -23,7 +23,13 @@ export class MaterialImageView extends React.Component<{
                 </ToolTip>
 
                 <ToolTip overlay={<S>最近上传的图片</S>}>
-                    <div className={this.mode == 'LastUploadFiles' ? "text-p item-hover-focus round" : ""} onMouseDown={e => { this.mode = 'LastUploadFiles'; this.forceUpdate() }}>
+                    <div className={this.mode == 'LastUploadFiles' ? "text-p item-hover-focus round" : ""} onMouseDown={async e => {
+                        this.mode = 'LastUploadFiles';
+                        this.forceUpdate(async () => {
+                            if (this.lastUpdateFiles)
+                                await this.lastUpdateFiles.load()
+                        })
+                    }}>
                         <Icon icon={{ name: 'byte', code: 'history' }} size={18}></Icon>
                     </div>
                 </ToolTip>
@@ -49,12 +55,13 @@ export class MaterialImageView extends React.Component<{
                         </div>
                     })}
                 </div>}
-                {this.mode == 'LastUploadFiles' && <LastUploadFiles onChange={e => this.props.onChange({ url: e.url })}></LastUploadFiles>}
+                {this.mode == 'LastUploadFiles' && <LastUploadFiles ref={e => this.lastUpdateFiles = e} onChange={e => this.props.onChange({ url: e.url })}></LastUploadFiles>}
                 {this.mode == 'pexels' && <ThirdGallery type={GalleryType.pexels} onChange={e => { this.props.onChange(e as any) }}></ThirdGallery>}
                 {this.mode == 'unsplash' && <ThirdGallery type={GalleryType.unsplash} onChange={e => this.props.onChange(e as any)}></ThirdGallery>}
             </div>
         </div>
     }
+    lastUpdateFiles: LastUploadFiles;
     renderImages(pics) {
         return <div className='shy-gallery-pics'>{pics.map((pic, i) => {
             return <div className='shy-gallery-pic' key={i} onClick={e => this.props.onChange({ url: pic.url })}>
