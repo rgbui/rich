@@ -49,6 +49,7 @@ import { openMaterialView } from "../../../extensions/board/material";
 import { closeBoardEditTool } from "../../../extensions/board.edit.tool";
 // import { useColorSelector } from "../../../extensions/color";
 import { useColorPicker } from "../../../component/view/color/lazy";
+import { forceCloseTextTool } from "../../../extensions/text.tool";
 
 export class BoardSelector extends React.Component<{
     kit: Kit
@@ -64,12 +65,16 @@ export class BoardSelector extends React.Component<{
     el: HTMLElement;
     render(): ReactNode {
         if (this.visible == false) return <div className="shy-kit-board-selector"></div>;
-        var style: CSSProperties = {};
+        var style: CSSProperties = {
+            zIndex: 10001
+        };
         if (this.point) {
             style.top = this.point.y;
             style.right = this.point.x;
         }
-        return <div className="shy-kit-board-selector"><div className="z-1000 pos w-40 padding-h-5  round-4 border shadow-s bg-white r-size-30 r-gap-l-5 r-gap-t-5 r-gap-b-5 r-item-hover r-round-4 r-cursor r-flex-center  "
+        return <div className="shy-kit-board-selector"><div
+
+            className="z-1000 pos w-40 padding-h-5  round-4 border shadow-s bg-white r-size-30 r-gap-l-5 r-gap-t-5 r-gap-b-5 r-item-hover r-round-4 r-cursor r-flex-center  "
             ref={e => this.el = e}
             style={style}>
             <Tip text='文本' placement={'left'}><div
@@ -626,6 +631,8 @@ export class BoardSelector extends React.Component<{
         else return false;
     }
     async selector(operator: BoardToolOperator, event: React.MouseEvent) {
+        closeBoardEditTool();
+        forceCloseTextTool();
         if (operator == BoardToolOperator.arrow) {
             this.currentSelector = null;
             this.openSelector = null;
@@ -650,6 +657,7 @@ export class BoardSelector extends React.Component<{
                         if (this.currentSelector && this.currentSelector.url == BlockUrlConstant.Shape) {
                             if (data.src) {
                                 this.currentSelector.url = BlockUrlConstant.BoardImage;
+                                if (!this.currentSelector.data) this.currentSelector.data = {};
                                 this.currentSelector.data.initialData = { imageUrl: data.src };
                             }
                             else {
@@ -705,7 +713,7 @@ export class BoardSelector extends React.Component<{
                             this.currentSelector.url = BlockUrlConstant.BoardImage;
                             this.currentSelector.data.initialData = { imageUrl: data.url };
                         }
-                        else if (data.mime == 'icon' || data.mime == 'emoji') {
+                        else if (data.mime == 'icon' || data.mime == 'emoji') { 
                             this.currentSelector.url = BlockUrlConstant.Icon;
                             this.currentSelector.data.src = data.data as any;
                         }
@@ -715,6 +723,7 @@ export class BoardSelector extends React.Component<{
 
                     })
                     var rect = Rect.fromEle(this.el);
+
                     mv.open(rect.leftTop.move(-330, 0));
                     break;
                 case BoardToolOperator.mind:
@@ -723,8 +732,7 @@ export class BoardSelector extends React.Component<{
                 case BoardToolOperator.card:
                     sel.url = BlockUrlConstant.BoardPageCard;
             }
-            this.currentSelector = sel as any;
-            console.log(this.currentSelector, 'cs...');
+            this.currentSelector = sel as any; 
         }
         var cursor: string = '';
         if (this.currentSelector.url == BlockUrlConstant.TextSpan) {

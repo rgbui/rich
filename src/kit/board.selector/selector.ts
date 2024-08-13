@@ -6,11 +6,9 @@ import { BlockUrlConstant } from "../../block/constant";
 import { MouseDragger } from "../../common/dragger";
 import { Matrix } from "../../common/matrix";
 import { Point } from "../../common/vector/point";
-// import { Polygon } from "../../common/vector/polygon";
 import { ActionDirective } from "../../history/declare";
 
 import { setBoardBlockCache } from "../../page/common/cache";
-// import { BlockRenderRange } from "../../block/enum";
 import { PenDraw } from "./pen";
 
 export function CheckBoardSelector(
@@ -128,7 +126,6 @@ export function CheckBoardSelector(
                         childs: [{ url: BlockUrlConstant.TextSpan }]
                     }
                 }
-                console.log(kit.boardSelector.currentSelector.url, data);
                 newBlock = await kit.page.createBlock(kit.boardSelector.currentSelector.url, data, fra);
                 await setBoardBlockCache(newBlock);
                 fw = newBlock.fixedWidth;
@@ -154,8 +151,14 @@ export function CheckBoardSelector(
                     var ma = new Matrix();
                     ma.translate(Math.min(re.x, tr.x), Math.min(re.y, tr.y));
                     newBlock.matrix = ma;
-                    newBlock.fixedWidth = Math.abs(tr.x - re.x);
-                    newBlock.fixedHeight = Math.abs(tr.y - re.y);
+                    var dx = Math.abs(tr.x - re.x);
+                    var dy = Math.abs(tr.y - re.y);
+                    if (kit.page.keyboardPlate.isShift()) {
+                        if (dx > dy) dy = dx;
+                        else dx = dy;
+                    }
+                    newBlock.fixedWidth = dx;
+                    newBlock.fixedHeight = dy;
                     if (isMounted) newBlock.forceManualUpdate();
                 }
             },
@@ -167,9 +170,15 @@ export function CheckBoardSelector(
                         var ma = new Matrix();
                         ma.translate(Math.min(re.x, tr.x), Math.min(re.y, tr.y));
                         await newBlock.updateMatrix(initMatrix, ma);
+                        var dx = Math.abs(tr.x - re.x);
+                        var dy = Math.abs(tr.y - re.y);
+                        if (kit.page.keyboardPlate.isShift()) {
+                            if (dx > dy) dy = dx;
+                            else dx = dy;
+                        }
                         await newBlock.manualUpdateProps({ fixedWidth: fw, fixedHeight: fh }, {
-                            fixedWidth: Math.abs(tr.x - re.x),
-                            fixedHeight: Math.abs(tr.y - re.y)
+                            fixedWidth: dx,
+                            fixedHeight: dy
                         })
                         if (isMounted) newBlock.forceManualUpdate();
                         kit.page.addActionAfterEvent(async () => {
@@ -191,8 +200,7 @@ export function CheckBoardSelector(
             }
         })
     }
-    else if (url == BlockUrlConstant.Pen)
-    {
+    else if (url == BlockUrlConstant.Pen) {
         PenDraw(kit, fra, event);
     }
     else {
