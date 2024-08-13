@@ -1,13 +1,30 @@
 import lodash from "lodash";
 import { Block } from "../../block";
-import { Point, Rect } from "../../common/vector/point";
+import { Point, PointArrow, Rect } from "../../common/vector/point";
 import { GridMap } from "../../page/grid";
 import { BlockUrlConstant } from "../../block/constant";
 import { FlowMind } from "../../../blocks/board/mind";
 
-export function CacAlignLines(block: Block, gm: GridMap, from: Point, to: Point, rect: Rect) {
+export function CacBlockAlignLines(block: Block, gm: GridMap, from: Point, to: Point, rect: Rect, arrows: PointArrow[]) {
     rect = rect.clone();
-    rect.move(to.x - from.x, to.y - from.y);
+    if (arrows.includes(PointArrow.top)) {
+        rect.height = rect.height + from.y - to.y;
+        rect.top = rect.top + to.y - from.y;
+    }
+    else if (arrows.includes(PointArrow.bottom)) {
+        rect.height = rect.height + to.y - from.y;
+    }
+    if (arrows.includes(PointArrow.left)) {
+        rect.width = rect.width + from.x - to.x;
+        rect.left = rect.left + to.x - from.x;
+    }
+    else if (arrows.includes(PointArrow.right)) {
+        rect.width = rect.width + to.x - from.x;
+    }
+    if (arrows.includes(PointArrow.middle) || arrows.includes(PointArrow.center)) {
+        rect.move(to.x - from.x, to.y - from.y);
+    }
+
     var re = 10;
     var d = rect.extend(re);
     var wr = block.page.bound;
@@ -193,3 +210,5 @@ export function CacAlignLines(block: Block, gm: GridMap, from: Point, to: Point,
         lines: vs.map(g => g.lines).flat(2)
     }
 }
+
+

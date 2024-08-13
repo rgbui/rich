@@ -18,7 +18,7 @@ import { openBoardEditTool } from "../operator/board/edit";
 import { BlockPickerView } from "./view";
 import { setBoardBlockCache } from "../../page/common/cache";
 import { GridMap } from "../../page/grid";
-import { CacAlignLines } from "./common";
+import { CacBlockAlignLines } from "./common";
 import lodash from "lodash";
 import { Segment } from "../../block/svg/segment";
 import { BoardDrag } from "../operator/board";
@@ -148,7 +148,7 @@ export class BlockPicker {
         }
         if (gm && this.blocks.length == 1 && this.moveRect) {
             if (this.blocks[0].isBoardCanMove())
-                gs = CacAlignLines(this.blocks[0], gm, from, to, this.moveRect);
+                gs = CacBlockAlignLines(this.blocks[0], gm, from, to, this.moveRect, [PointArrow.center]);
         }
         if (typeof gs?.ox == 'number' || typeof gs?.oy == 'number') {
             if (gs.ox) to.x = gs.ox + to.x;
@@ -177,7 +177,7 @@ export class BlockPicker {
         }
         if (gm && this.blocks.length == 1 && this.moveRect) {
             if (this.blocks[0].isBoardCanMove())
-                gs = CacAlignLines(this.blocks[0], gm, from, to, this.moveRect);
+                gs = CacBlockAlignLines(this.blocks[0], gm, from, to, this.moveRect, [PointArrow.center]);
         }
         if (typeof gs?.ox == 'number' || typeof gs?.oy == 'number') {
             if (gs.ox) to.x = gs.ox + to.x;
@@ -264,7 +264,8 @@ export class BlockPicker {
                                 var ma = new Matrix();
                                 re = gm.inverseTransform(Point.from(ev));
                                 ma.translate(re.x, re.y);
-                                var cd = await block.cloneData();
+                                var cd = {} as Record<string, any>;
+                                if (block.content) cd.content = block.content;
                                 cd.matrix = ma.getValues();
                                 cd.svg = s.svg;
                                 cd.svgName = s.name;
