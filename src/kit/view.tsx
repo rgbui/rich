@@ -8,6 +8,7 @@ import { BoardScale } from "./scale";
 import { SelectorView } from "./anchor/selector/view";
 import { BoardSelector } from "./board.selector";
 import { BoardMap } from "./scale/map";
+import { BoardGrid } from "./scale/grid";
 
 export class KitView extends React.Component<{ kit: Kit }> {
     constructor(props) {
@@ -29,6 +30,7 @@ export class KitView extends React.Component<{ kit: Kit }> {
             <BoardBlockHover ref={e => this.kit.boardBlockHover = e} kit={this.kit}></BoardBlockHover>
             <BoardSelector ref={e => this.kit.boardSelector = e} kit={this.kit}></BoardSelector>
             <BoardMap kit={this.props.kit} ref={e => this.kit.boardMap = e}></BoardMap>
+            <BoardGrid kit={this.props.kit} ref={e => this.kit.borardGrid = e}></BoardGrid>
         </div>
     }
     get toolEl() {

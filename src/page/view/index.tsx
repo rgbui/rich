@@ -89,6 +89,9 @@ export class PageView extends Component<{ page: Page }> {
         this.loadWxShare();
         if (this.page.viewEl) {
             this.page.viewEl.focus();
+            if (this.props.page.pageLayout?.type == PageLayoutType.board) {
+                this.page.kit.borardGrid.draw(true);
+            }
         }
     }
     observeOutsideDrop() {
@@ -272,6 +275,7 @@ export class PageView extends Component<{ page: Page }> {
             pageStyle.overflowY = 'hidden';
             pageStyle.overflowX = 'hidden';
             pageStyle.overflow = 'hidden';
+            pageStyle.backgroundColor = '#fff';
             // pageStyle.overflowY = 'visible';
             // pageStyle.overflowX = 'visible';
             // pageStyle.overflow = 'visible';
@@ -301,7 +305,7 @@ export class PageView extends Component<{ page: Page }> {
                 onMouseDownCapture={e => this.page.onMouseDownCapture(e)}
                 onContextMenu={e => this.page.onContextMenu(e)}
                 onMouseDown={e => this.page.onMousedown(e)}
-                onDoubleClick={e=>this.page.onDoubleClick(e)}
+                onDoubleClick={e => this.page.onDoubleClick(e)}
                 onScroll={e => {
                     if (this.page.pageLayout?.type == PageLayoutType.board) {
                         e.preventDefault();

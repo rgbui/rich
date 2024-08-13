@@ -65,27 +65,28 @@ export class PageLayoutView extends React.Component<{
             style.backgroundColor = 'transparent';
             var layoutStyle: CSSProperties = {};
             var cs = this.props.page?.pageTheme?.contentStyle;
-            layoutStyle.backgroundColor = '#fff';
-            if (cs?.transparency) {
-                if (cs.transparency == 'frosted') {
-                    layoutStyle.backdropFilter = 'blur(20px) saturate(170%)';
-                    //'rgba(255, 252, 248, 0.75)';
-                    if (cs.color == 'light') layoutStyle.backgroundColor = 'rgba(255,255,255, 0.75)';
-                    else layoutStyle.backgroundColor = 'rgba(12, 12, 12, 0.75)';
-                }
-                else if (cs.transparency == 'faded') {
-                    if (cs.color == 'light') layoutStyle.backgroundColor = 'rgba(255,255,255, 0.75)';
-                    else layoutStyle.backgroundColor = 'rgba(12, 12, 12, 0.75)';
-                }
-                else if (cs.transparency == 'solid') {
-                    if (cs.color == 'light') layoutStyle.backgroundColor = '#fff'
-                    else layoutStyle.backgroundColor = 'rgba(12, 12, 12, 0.75)';
-                }
-                else if (cs.transparency == 'noborder') {
-                    if (cs.color == 'light') layoutStyle.backgroundColor = 'transparent'
-                    else layoutStyle.backgroundColor = 'transparent';
-                }
-            }
+            layoutStyle.backgroundColor = 'transparent';
+            pageContentStyle.backgroundColor = 'transparent';
+            // if (cs?.transparency) {
+            //     if (cs.transparency == 'frosted') {
+            //         layoutStyle.backdropFilter = 'blur(20px) saturate(170%)';
+            //         //'rgba(255, 252, 248, 0.75)';
+            //         if (cs.color == 'light') layoutStyle.backgroundColor = 'rgba(255,255,255, 0.75)';
+            //         else layoutStyle.backgroundColor = 'rgba(12, 12, 12, 0.75)';
+            //     }
+            //     else if (cs.transparency == 'faded') {
+            //         if (cs.color == 'light') layoutStyle.backgroundColor = 'rgba(255,255,255, 0.75)';
+            //         else layoutStyle.backgroundColor = 'rgba(12, 12, 12, 0.75)';
+            //     }
+            //     else if (cs.transparency == 'solid') {
+            //         if (cs.color == 'light') layoutStyle.backgroundColor = '#fff'
+            //         else layoutStyle.backgroundColor = 'rgba(12, 12, 12, 0.75)';
+            //     }
+            //     else if (cs.transparency == 'noborder') {
+            //         if (cs.color == 'light') layoutStyle.backgroundColor = 'transparent'
+            //         else layoutStyle.backgroundColor = 'transparent';
+            //     }
+            // }
             return <div className={"shy-page-layout shy-page-layout-board"} style={{ width: '100%', height: mh, ...pageContentStyle }}>
                 <div style={{ width: '100%', height: '100%', ...layoutStyle }}>
                     <div className='shy-page-layout-wrapper' style={style}>

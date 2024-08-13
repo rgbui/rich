@@ -13,6 +13,7 @@ import { Collaboration } from "./collaboration";
 import { AnchorCursor } from "./anchor/cursor";
 import { BoardSelector } from "./board.selector";
 import { BoardMap } from "./scale/map";
+import { BoardGrid } from "./scale/grid";
 
 export class Kit extends Events {
     page: Page;
@@ -39,5 +40,6 @@ export class Kit extends Events {
     boardBlockHover: BoardBlockHover;
     collaboration: Collaboration;
     boardSelector: BoardSelector;
-    boardMap: BoardMap
+    boardMap: BoardMap;
+    borardGrid:BoardGrid ;
 }
