@@ -3,11 +3,8 @@ import React from "react";
 import { ShyPath } from "../../../src/block/svg/path";
 import { Segment } from "../../../src/block/svg/segment";
 import { Matrix } from "../../../src/common/matrix";
-import { Point, PointArrow, Rect } from "../../../src/common/vector/point";
+import { Point } from "../../../src/common/vector/point";
 import { Line } from "./line";
-import { Block } from "../../../src/block";
-import { BoardBlockSelector } from "../../../src/block/partial/board";
-import { LineSegment } from "../../../src/common/vector/line";
 
 export function renderLine(line: Line) {
     if (!line.page.viewEl) return <></>
@@ -24,28 +21,23 @@ export function renderLine(line: Line) {
         <path className="visible" strokeLinecap={sdd == 'dash-circle' ? "round" : undefined} strokeLinejoin="round" d={sd}></path>
         {s && <>{s.el}{s.te}</>}
         {e && <>{e.el}{e.te}</>}
-        <path className="transparent" onMouseDown={e => {
-            // var ele = e.currentTarget as SVGPathElement;
-            // var is = isPointInStroke(ele, Point.from(e))
-            // console.log(e, is);
+        <path className="main-line transparent" onMouseDown={e => {
+            var point = Point.from(e);
+            point = line.globalWindowMatrix.inverseTransform(point);
+            var r = Segment.pointIsInSegment(point, segs, strokeWidth);
+            if (r) {
+                //说明点击到了线段上
+                console.log('点击到了线段上')
+            }
+            else {
+                //说明点在线段外
+                console.log('点击到了线段   外')
+            }
         }} strokeLinecap={sdd == 'dash-circle' ? "round" : undefined} strokeLinejoin="round" d={sd} stroke="transparent" strokeWidth={strokeWidth}></path>
     </>
 }
 
-function isPointInStroke(ele: SVGPathElement, point: Point) {
-    try {
-        const pointObj = new DOMPoint(point.x, point.y);
-        return ele.isPointInStroke(pointObj);
-    } catch (e) {
-        // Fallback for browsers that don't support DOMPoint as an argument
-        var svg = ele.ownerSVGElement;
-        const pointObj = svg.createSVGPoint();
-        pointObj.x = point.x;
-        pointObj.y = point.y;
-        console.log(point, pointObj, ele, svg);
-        return ele.isPointInStroke(pointObj);
-    }
-}
+
 
 function getArrowMatrix(start: Point, arrowPoint: Point, toStart: Point, toArrowPoint: Point) {
     var matrix = new Matrix();
@@ -58,7 +50,6 @@ function getArrowMatrix(start: Point, arrowPoint: Point, toStart: Point, toArrow
     else if (ca > 0) ca = ca;
     matrix.rotate(ca + r, { x: 0, y: 0 });
     return matrix;
-
 }
 
 function getArrow(color, arrowType, toStart: Point, toArrowPoint: Point, strokeWidth: number) {

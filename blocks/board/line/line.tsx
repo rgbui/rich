@@ -11,12 +11,13 @@ import { Point, PointArrow, Rect } from "../../../src/common/vector/point";
 import { Polygon } from "../../../src/common/vector/polygon";
 import { util } from "../../../util/util";
 import { renderLine } from "./render";
-import { cachBrokeLinePoints } from "./util";
+import { cacBrokeLinePoints } from "./util";
 import "./style.less";
 
 export type PortLocation = {
     x: number | PointArrow,
     y: number | PointArrow,
+    blockPoint?: Point;
     blockId?: string
 }
 
@@ -46,28 +47,41 @@ export class Line extends Block {
                     point: gm.transform(segs.first().point),
                     data: { at: 0 }
                 });
-                for (let i = 1; i < segs.length - 1; i++) {
-                    var current = segs[i];
-                    var next = segs[i + 1];
-                    if (current && next)
-                        pickers.push({
-                            type: (i == 0 || i == segs.length - 2) ? BoardPointType.brokenLineSplitPort : BoardPointType.brokenLinePort,
-                            arrows: [PointArrow.point],
-                            point: gm.transform(CurveUtil.cacCurvePoint(
-                                {
-                                    start: current.point,
-                                    end: next.point,
-                                    control1: current.handleOut,
-                                    control2: next.handleIn
-                                }, .5)),
-                            data: { at: i }
-                        });
-                }
+                // for (let i = 1; i < segs.length - 1; i++) {
+                //     var current = segs[i];
+                //     var next = segs[i + 1];
+                //     if (current && next) {
+                //         if (i == 1 || i == segs.length - 2)
+                //             pickers.push({
+                //                 type: BoardPointType.brokenLineSplitPort,
+                //                 arrows: [PointArrow.point],
+                //                 point: gm.transform(CurveUtil.cacCurvePoint(
+                //                     {
+                //                         start: current.point,
+                //                         end: next.point,
+                //                         control1: current.handleOut,
+                //                         control2: next.handleIn
+                //                     }, .5)),
+                //                 data: { at: i }
+                //             });
+                //         else {
+                //             var p = this.points.find(c => c.x == current.point.x && c.y == current.point.y);
+                //             if (p) {
+                //                 pickers.push({
+                //                     type: BoardPointType.brokenLinePort,
+                //                     arrows: [PointArrow.point],
+                //                     point: gm.transform(current.point),
+                //                     data: { at: this.points.findIndex(g => g === p) }
+                //                 });
+                //             }
+                //         }
+                //     }
+                // }
                 pickers.push({
                     type: BoardPointType.lineMovePort,
                     arrows: [PointArrow.point],
                     point: gm.transform(segs.last().point),
-                    data: { at: segs.length - 1 }
+                    data: { at: this.points.length + 1 }
                 });
             }
             else {
@@ -120,12 +134,20 @@ export class Line extends Block {
                     var pi = ps.find(g => g.arrows.every(s => [pl.x, pl.y].includes(s)));
                     if (pi) {
                         var point = this.globalMatrix.inverseTransform(pi.point);
+                        pl.blockPoint = { x: point.x, y: point.y } as any;
                         return { point, pi, block };
                     }
                 }
             }
+            else {
+                if (typeof pl.x != 'number' && pl.blockPoint) {
+                    return {
+                        point: new Point(pl.blockPoint.x as number, pl.blockPoint.y as number)
+                    }
+                }
+            }
+            return { point: new Point(pl.x as number, pl.y as number) }
         }
-        return { point: new Point(pl.x as number, pl.y as number) }
     }
     cacPointSegment(pl: PortLocation, options?: { isOnlyPointSegment?: boolean }) {
         try {
@@ -147,6 +169,11 @@ export class Line extends Block {
                                 var isFrom = pl == this.from;
                                 seg = Segment.create(new Point(point), !isFrom ? handleOut : undefined, isFrom ? handleOut : undefined)
                             }
+                        }
+                    }
+                    else {
+                        if (typeof pl.x != 'number' && pl.blockPoint) {
+                            seg = Segment.create(new Point(pl.blockPoint.x as number, pl.blockPoint.y as number))
                         }
                     }
                 }
@@ -213,31 +240,26 @@ export class Line extends Block {
     get segments() {
         try {
             var segs: Segment[] = [];
+            var fp = this.getPi(this.from);
+            var tp = this.getPi(this.to);
             if (this.lineType == 'line') {
-                var fp = this.getPi(this.from);
-                var tp = this.getPi(this.to);
-                var ps: Point[] = [
-                    fp.point,
-                    ...this.points.map(p => new Point(p.x as number, p.y as number)),
-                    tp.point
-                ];
-                var isCorrectLine = true;
-                for (let j = 0; j < ps.length - 1; j++) {
-                    var p1 = ps[j];
-                    var p2 = ps[j + 1];
-                    if (!(Math.abs(p1.x - p2.x) < 10 || Math.abs(p1.y - p2.y) < 10)) {
-                        isCorrectLine = false;
-                        break;
+                if (this.points.length == 0)
+                    segs.push(...cacBrokeLinePoints(this, fp, tp));
+                else if (this.points.length > 0) {
+                    for (let i = 0; i < this.points.length; i++) {
+                        if (i == 0) {
+                            segs.push(...cacBrokeLinePoints(this, fp, { point: new Point(this.points[i].x as number, this.points[i].y as number) }));
+                        }
+                        else if (i == this.points.length - 1) {
+                            segs.push(...cacBrokeLinePoints(this, { point: new Point(this.points[i].x as number, this.points[i].y as number) }, tp));
+                        }
+                        else {
+                            segs.push(...cacBrokeLinePoints(this,
+                                { point: new Point(this.points[i].x as number, this.points[i].y as number) },
+                                { point: new Point(this.points[i + 1].x as number, this.points[i + 1].y as number) })
+                            );
+                        }
                     }
-                }
-                if (isCorrectLine) {
-                    for (let i = 0; i < ps.length; i++) {
-                        var one = ps[i];
-                        segs.push(Segment.create(one, undefined, undefined));
-                    }
-                }
-                else {
-                    segs.push(...cachBrokeLinePoints(this, fp, tp));
                 }
             }
             else {
@@ -316,7 +338,10 @@ export class Line extends Block {
             await this.pattern.setSvgStyle({ strokeOpacity: value })
         }
         else if (name == 'lineType') {
-            await this.updateProps({ [name]: value }, BlockRenderRange.self);
+            var props = { [name]: value } as Record<string, any>;
+            if (this.lineType != 'line' && value == 'line')
+                props.points = [];
+            await this.updateProps(props, BlockRenderRange.self);
         }
         else if (['lineStart', 'lineEnd'].includes(name)) {
             await this.updateProps({ [name]: value }, BlockRenderRange.self);
@@ -324,7 +349,7 @@ export class Line extends Block {
         else if (['strokeWidth', 'strokeDasharray'].includes(name)) {
             await this.pattern.setSvgStyle({ [name]: value });
         }
-    }
+    } 
     getVisiblePolygon() {
         var gm = this.globalWindowMatrix;
         var poly = new Polygon(...(this.segments.toArray(seg => seg ? gm.transform(seg.point) : undefined)));
@@ -346,25 +371,23 @@ export class Line extends Block {
         if (!(segs?.length > 0)) return null;
         return await super.get(args, options)
     }
-    checkSafe() {
-        if (this.from && this.from.blockId) {
-            var block = this.page.find(g => g.id == this.from.blockId);
-            if (!block) return false;
-        }
-        if (this.to && this.to.blockId) {
-            var block = this.page.find(g => g.id == this.to.blockId);
-            if (!block) return false;
-        }
-        return true;
+    checkPointIn(point: Point) {
+        point = this.globalWindowMatrix.inverseTransform(point);
+        var segs = this.segments;
+        var strokeWidth = this.realPx(10);
+        var r = Segment.pointIsInSegment(point, segs, strokeWidth);
+        return r;
     }
 }
+
 @view('/line')
 export class LineView extends BlockView<Line> {
     renderView() {
         var w = this.block.pattern.getSvgStyle()?.strokeWidth || 1;
-        var segs = this.block.segments
-        if (!(segs?.length > 0) || this.block.checkSafe() === false) return <div style={this.block.visibleStyle}></div>
-        var rect = Segment.getSegmentsBound(segs);
+        var segs = this.block.segments;
+        if (segs?.length == 0 || !segs) return <div style={this.block.visibleStyle}></div>
+        var rect = Segment.getBound(segs);
+        if(!rect) return <div style={this.block.visibleStyle}></div>
         var re = rect.extend(Math.max(30, w * 6, 100));
         var style = this.block.visibleStyle;
         style.padding = 0;
