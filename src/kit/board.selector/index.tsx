@@ -47,7 +47,6 @@ import { Block } from "../../block";
 import { ToolTip } from "../../../component/view/tooltip";
 import { openMaterialView } from "../../../extensions/board/material";
 import { closeBoardEditTool } from "../../../extensions/board.edit.tool";
-// import { useColorSelector } from "../../../extensions/color";
 import { useColorPicker } from "../../../component/view/color/lazy";
 import { forceCloseTextTool } from "../../../extensions/text.tool";
 
@@ -616,6 +615,7 @@ export class BoardSelector extends React.Component<{
                     <div onMouseDown={e => {
                         e.stopPropagation();
                         closeBoardEditTool()
+                        this.clearSelector()
                     }} className="flex h-20 flex-center item-hover-focus cursor remark">
                         <Icon icon={CloseSvg} size={12}></Icon>
                     </div>
