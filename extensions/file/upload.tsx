@@ -80,6 +80,7 @@ export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audi
     }
     onPaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
         e.preventDefault();
+        e.stopPropagation();
         var file = e.clipboardData.files[0];
         if (file) {
             this.onUpload(file);
