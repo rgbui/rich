@@ -60,11 +60,24 @@ export class Image extends Block {
         return this.getVisibleBound()
     }
     async onSaveImageSize(d: { url?: string }, merge: boolean) {
+        await this.page.onAction('onSaveImageSize', async () => {
+            await this.saveImageSize(d);
+        }, { merge });
+    }
+    async saveImageSize(d: { url?: string }) {
         var imgSize = await getImageSize(d?.url);
-        await this.onUpdateProps({
+        await this.updateProps({
             originSize: imgSize,
             src: { ...d }
-        }, { range: BlockRenderRange.self, merge });
+        }, BlockRenderRange.self);
+        if (imgSize.width > 400 || imgSize.height > 400) {
+            var rw = imgSize.width / 400;
+            var rh = imgSize.height / 400;
+            var r = Math.max(rw, rh);
+            var ma = this.matrix.clone();
+            ma.scale(1 / r, 1 / r, { x: 0, y: 0 });
+            await this.updateMatrix(this.matrix, ma);
+        }
     }
     async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
         if (this.isCrop) return [{ name: 'croping' }, { name: 'resetCrop' }];
@@ -76,7 +89,10 @@ export class Image extends Block {
         cs.push({ name: 'download' });
         return cs;
     }
-   
+    async getBoardCopyStyle() {
+        return null;
+    }
+
     async setBoardEditCommand(name: string, value: any) {
 
         if (name == 'crop') {
@@ -181,6 +197,9 @@ export class Image extends Block {
                 if (this.initialData && this.initialData.imageUrl) {
                     await this.onSaveImageSize({ url: this.initialData.imageUrl }, true);
                 }
+
+                this.page.kit.picker.onPicker([this]);
+
             })
         }
         catch (ex) {
