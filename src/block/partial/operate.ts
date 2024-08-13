@@ -616,6 +616,15 @@ export class Block$Operator {
         var textBlock = await this.page.createBlock(BlockUrlConstant.Text, { content }, this, 0, 'childs');
         return textBlock;
     }
+    async replaceTextContent(this: Block, text: string) {
+        if (this.childs.length > 0) {
+            await this.childs.map(c => c).eachAsync(async c => await c.delete())
+            await this.updateProps({ content: text }, BlockRenderRange.self);
+        }
+        else {
+            await this.updateProps({ content: text }, BlockRenderRange.self);
+        }
+    }
     async updateMatrix(this: Block, oldMatrix: Matrix, newMatrix: Matrix) {
         this.syncUpdate(BlockRenderRange.self);
         this.matrix = newMatrix;

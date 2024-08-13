@@ -31,6 +31,7 @@ export enum KeyboardCode {
     N = 'N',
     T = 'T',
     V='V',
+    G='G',
     Esc = 'Escape',
     K0 = '0',
     K1 = '1',

@@ -1876,6 +1876,9 @@ each(@ops, {
 .border-p {
     border: 0.1rem solid rgb(225, 98, 89);
 }
+.border-blue,.border-b{
+    border:0.1rem solid var(--text-p1-color)
+}
 
 .border-bottom,
 .border-b {
@@ -2491,4 +2494,8 @@ each(@zs, {
         border-color    : var(--text-p-color);
         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e")
     }
+}
+
+.palette{
+    background: conic-gradient(from 180deg at 50% 50%, #ff4b88, #ff4b4b 48.3deg, #fbff4a 88.69deg, #4aff5c 136.64deg, #49deff 181.09deg, #4a67ff 222.49deg, #644aff 271.23deg, #ff4bd7 313.81deg, #ff4b88 360deg);
 }

@@ -10,7 +10,8 @@ export class PageOnEvent {
     onPageSave(this: Page) {
         this.emit(PageDirective.save);
     }
-    onPageClose(this: Page) {
+    async onPageClose(this: Page, isSave?: boolean) {
+        if (isSave) await await this.onSubmitForm();
         this.emit(PageDirective.close);
     }
     async onPrev(this: Page) {

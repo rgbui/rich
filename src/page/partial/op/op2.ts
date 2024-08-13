@@ -117,11 +117,12 @@ export class Page$Operator2 {
                 });
             })
     }
-    async onTurn(this: Page, block: Block, url: string, callback: (newBlock: Block, oldBlock: Block) => void) {
+    async onTurn(this: Page, block: Block, url: string,  callback?: (newBlock: Block, oldBlock: Block) => Promise<void>) {
         await this.onAction(ActionDirective.onTurn, async () => {
             var oldBlock = block;
             var newBlock = await block.turn(url);
-            callback(newBlock, oldBlock);
+            if(typeof callback=='function')
+           await callback(newBlock, oldBlock);
         });
     }
     async replace(this: Page, block: Block, blockData: (Record<string, any> | Block) | ((Record<string, any> | Block)[]), action?: (block: Block) => Promise<void>) {

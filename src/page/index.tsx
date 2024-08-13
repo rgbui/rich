@@ -41,6 +41,7 @@ import { PageOnEvent } from './partial/on.event';
 import { Page$Operator2 } from './partial/op/op2';
 import { Page$Schema } from './partial/schema';
 import { TableSchema } from '../../blocks/data-grid/schema/meta';
+import { closeMaterialView } from '../../extensions/board/material';
 
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
@@ -171,6 +172,7 @@ export class Page extends Events<PageDirective> {
             this.isPageOff = true;
             this.kit.picker.onCancel();
             closeBoardEditTool();
+            closeMaterialView();
         }
         catch (ex) {
             console.error(ex);
@@ -183,6 +185,7 @@ export class Page extends Events<PageDirective> {
             }
             this.kit.picker.onCancel();
             closeBoardEditTool();
+            closeMaterialView();
             if (this.root instanceof HTMLElement) {
                 ReactDOM.unmountComponentAtNode(this.root);
                 this.root.remove();
@@ -203,6 +206,8 @@ export class Page extends Events<PageDirective> {
                 this.render(panel, options);
                 return;
             }
+            closeBoardEditTool();
+            closeMaterialView();
             panel.appendChild(this.root);
             this.view.observeScroll();
             await this.AutomaticHandle();

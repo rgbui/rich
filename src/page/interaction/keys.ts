@@ -7,6 +7,7 @@ import { UA } from "../../../util/ua";
 import { Block } from "../../block";
 import { findBlockAppear } from "../../block/appear/visible.seek";
 import { BlockUrlConstant } from "../../block/constant";
+import { Group } from "../../block/element/group";
 import { KeyboardCode, KeyboardPlate } from "../../common/keys";
 import { Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
@@ -19,9 +20,11 @@ export function PageKeys(
     keyboardPlate.listener(kt => kt.isMetaOrCtrl(KeyboardCode.Z), (event, kt) => {
         page.onUndo();
     }, undefined, 'undo', true);
+
     keyboardPlate.listener(kt => kt.isMetaOrCtrl(KeyboardCode.Y), (event, kt) => {
         page.onRedo();
     }, undefined, 'redo', true);
+
     keyboardPlate.listener(kt => kt.is(KeyboardCode.ArrowDown), (event, kt) => {
         if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
             MoveSelectBlocks(page.kit.writer, page.kit.anchorCursor.currentSelectHandleBlocks, event, {
@@ -49,12 +52,13 @@ export function PageKeys(
             var b = findBlockAppear(event.target as HTMLElement);
             var cursorNode = window.getSelection().focusNode;
             if (!(b && cursorNode && b.el.contains(cursorNode))) {
-                page.onAction('onBoardArrowMove', async ()=>{
+                page.onAction('onBoardArrowMove', async () => {
                     await page.kit.picker.blocks.eachAsync(async (block) => {
                         var ma = block.matrix;
                         var s = block.globalMatrix.getScaling().x;
                         var na = ma.clone();
-                        na.translate(0, 10 / s);
+                        var r = keyboardPlate.isShift() ? 10 : 4;
+                        na.translate(0, r / s);
                         await block.updateMatrix(ma, na);
                     });
                     page.kit.picker.onRePicker(true);
@@ -62,6 +66,7 @@ export function PageKeys(
             }
         }
     });
+
     keyboardPlate.listener(kt => kt.is(KeyboardCode.ArrowUp), (event, kt) => {
         if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
             MoveSelectBlocks(page.kit.writer, page.kit.anchorCursor.currentSelectHandleBlocks, event, {
@@ -95,7 +100,8 @@ export function PageKeys(
                         var ma = block.matrix;
                         var s = block.globalMatrix.getScaling().x;
                         var na = ma.clone();
-                        na.translate(0, 0 - 10 / s);
+                        var r = keyboardPlate.isShift() ? 10 : 4;
+                        na.translate(0, 0 - r / s);
                         await block.updateMatrix(ma, na);
                     });
                     page.kit.picker.onRePicker(true);
@@ -103,6 +109,7 @@ export function PageKeys(
             }
         }
     });
+
     keyboardPlate.listener(kt => kt.is(KeyboardCode.ArrowLeft), (event, kt) => {
         if (page.kit.picker.blocks.length > 0) {
             var b = findBlockAppear(event.target as HTMLElement);
@@ -114,7 +121,8 @@ export function PageKeys(
                         var ma = block.matrix;
                         var s = block.globalMatrix.getScaling().x;
                         var na = ma.clone();
-                        na.translate(0 - 10 / s, 0);
+                        var r = keyboardPlate.isShift() ? 10 : 4;
+                        na.translate(0 - r / s, 0);
                         await block.updateMatrix(ma, na);
                     });
                     page.kit.picker.onRePicker(true);
@@ -122,6 +130,7 @@ export function PageKeys(
             }
         }
     });
+
     keyboardPlate.listener(kt => kt.is(KeyboardCode.ArrowRight), (event, kt) => {
         if (page.kit.picker.blocks.length > 0) {
             var b = findBlockAppear(event.target as HTMLElement);
@@ -133,7 +142,8 @@ export function PageKeys(
                         var ma = block.matrix;
                         var s = block.globalMatrix.getScaling().x;
                         var na = ma.clone();
-                        na.translate(10 / s, 0);
+                        var r = keyboardPlate.isShift() ? 10 : 4;
+                        na.translate(r / s, 0);
                         await block.updateMatrix(ma, na);
                     });
                     page.kit.picker.onRePicker(true);
@@ -171,6 +181,7 @@ export function PageKeys(
             }
         }
     });
+    
     keyboardPlate.listener(kt => kt.isMetaOrCtrl(KeyboardCode.V), async (event, kt) => {
 
     });
@@ -178,7 +189,7 @@ export function PageKeys(
         var r = UA.isMacOs && kt.is(KeyboardCode.Backspace, KeyboardCode.Delete) || !UA.isMacOs && kt.is(KeyboardCode.Delete);
         return r;
     }, (event, kt) => {
-        console.log(event.target);
+
 
         var b = findBlockAppear(event.target as HTMLElement);
         var cursorNode = window.getSelection().focusNode;
@@ -261,10 +272,6 @@ export function PageKeys(
         ||
         kt.isMetaOrCtrlAndShift(KeyboardCode.S)
         ||
-        kt.isMetaOrCtrlAndAlt(KeyboardCode['['])
-        ||
-        kt.isMetaOrCtrlAndAlt(KeyboardCode[']'])
-        ||
         kt.isMetaOrCtrlAndAlt(KeyboardCode.M)
         ||
         kt.isMetaOrCtrl(KeyboardCode.L)
@@ -329,6 +336,8 @@ export function PageKeys(
                 else if (ev.key.toLowerCase() == KeyboardCode.L.toLowerCase()) {
                     await page.onAction(ActionDirective.onBoardEditProp, async () => {
                         await page.kit.picker.blocks.eachAsync(async (block) => {
+
+
                             await block.unlock(block?.locker?.lock ? false : true);
                         })
                     });
@@ -337,20 +346,20 @@ export function PageKeys(
                 else if (ev.key.toLowerCase() == KeyboardCode.D.toLowerCase()) {
                     await page.onCopyBlocks(page.kit.picker.blocks);
                 }
-                else if (ev.key.toLowerCase() == KeyboardCode['['].toLowerCase()) {
-                    await page.onAction(ActionDirective.onBoardEditProp, async () => {
-                        await page.kit.picker.blocks.eachAsync(async (block) => {
-                            await block.posZIndex('top');
-                        })
-                    });
-                }
-                else if (ev.key.toLowerCase() == KeyboardCode[']'].toLowerCase()) {
-                    await page.onAction(ActionDirective.onBoardEditProp, async () => {
-                        await page.kit.picker.blocks.eachAsync(async (block) => {
-                            await block.posZIndex('bottom');
-                        })
-                    });
-                }
+                // else if (ev.key.toLowerCase() == KeyboardCode['['].toLowerCase()) {
+                //     await page.onAction(ActionDirective.onBoardEditProp, async () => {
+                //         await page.kit.picker.blocks.eachAsync(async (block) => {
+                //             await block.posZIndex('top');
+                //         })
+                //     });
+                // }
+                // else if (ev.key.toLowerCase() == KeyboardCode[']'].toLowerCase()) {
+                //     await page.onAction(ActionDirective.onBoardEditProp, async () => {
+                //         await page.kit.picker.blocks.eachAsync(async (block) => {
+                //             await block.posZIndex('bottom');
+                //         })
+                //     });
+                // }
                 else if (ev.key.toLowerCase() == KeyboardCode.M.toLowerCase()) {
                     if (page.kit.picker.blocks.length == 1) {
                         page.kit.picker.blocks[0].onInputComment()
@@ -430,12 +439,77 @@ export function PageKeys(
                 page.onBlocksSolidInput([pic])
             }
         }
-    })
+    });
     keyboardPlate.listener(kt => kt.isMetaOrCtrlAndAlt(KeyboardCode.T), async (ev, kt) => {
         if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
 
             await page.onBlocksToggle(page.kit.anchorCursor.currentSelectHandleBlocks);
 
         }
-    })
+    });
+
+    keyboardPlate.listener(kt => kt.isMetaOrCtrl(KeyboardCode.G), async (ev, kt) => {
+        if (page.kit.picker.blocks.length > 1) {
+            ev.preventDefault();
+            page.onMergeBlocks(page.kit.picker.blocks)
+        }
+        else if (page.kit.picker.blocks.length == 1 && page.kit.picker.blocks[0].url == BlockUrlConstant.Group) {
+            ev.preventDefault();
+            page.onAction('onBoardUnmerge', async () => {
+                (page.kit.picker.blocks[0] as Group).unmerge()
+            })
+        }
+    });
+
+    keyboardPlate.listener(kt => kt.isMetaOrCtrlAndShift(KeyboardCode.G), async (ev, kt) => {
+        if (page.kit.picker.blocks.length == 1 && page.kit.picker.blocks[0].url == BlockUrlConstant.Group) {
+            ev.preventDefault();
+            page.onAction('onBoardUnmerge', async () => {
+                (page.kit.picker.blocks[0] as Group).unmerge()
+            })
+        }
+    });
+
+    keyboardPlate.listener(kt => kt.isAlt(KeyboardCode['[']), async (ev, kt) => {
+        if (page.kit.picker.blocks.length > 0) {
+            ev.preventDefault();
+            page.onAction('onBoardArrowMove', async () => {
+                await page.kit.picker.blocks.eachAsync(async b => {
+                    await b.posZIndex('bottom');
+                })
+            });
+        }
+    });
+    keyboardPlate.listener(kt => kt.isAlt(KeyboardCode[']']), async (ev, kt) => {
+        if (page.kit.picker.blocks.length > 0) {
+            ev.preventDefault();
+            page.onAction('onBoardArrowMove', async () => {
+                await page.kit.picker.blocks.eachAsync(async b => {
+                    await b.posZIndex('top');
+                })
+            });
+        }
+    });
+
+    keyboardPlate.listener(kt => kt.isAltAndShift(KeyboardCode['[']), async (ev, kt) => {
+        if (page.kit.picker.blocks.length > 0) {
+            ev.preventDefault();
+            page.onAction('onBoardArrowMove', async () => {
+                await page.kit.picker.blocks.eachAsync(async b => {
+                    await b.inOrDeIndex('down')
+                })
+            });
+        }
+    });
+
+    keyboardPlate.listener(kt => kt.isAltAndShift(KeyboardCode[']']), async (ev, kt) => {
+        if (page.kit.picker.blocks.length > 0) {
+            ev.preventDefault();
+            page.onAction('onBoardArrowMove', async () => {
+                await page.kit.picker.blocks.eachAsync(async b => {
+                    await b.inOrDeIndex('up')
+                })
+            });
+        }
+    });
 }

@@ -304,7 +304,7 @@ export async function onEnterInsertNewLine(write: PageWrite, aa: AppearAnchor, e
     var sel = window.getSelection();
     var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
     // console.log(offset, sel.focusOffset);
-    var tc = aa.textContent;
+    var tc = aa.textContent||'';
     aa.setContent(tc.slice(0, offset) + '\n' + tc.slice(offset));
     // console.log(aa.el);
     var page = write.kit.page;

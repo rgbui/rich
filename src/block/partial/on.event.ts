@@ -29,6 +29,11 @@ import { channel } from "../../../net/channel";
 import { UA } from "../../../util/ua";
 import { PageOutLine } from "../../../blocks/navigation/outline";
 import { useCommentListView } from "../../../extensions/comment/dialoug";
+import { IconValueType } from "../../../component/view/icon";
+import { memoryCopyData, memoryReadData } from "../../page/common/copy";
+import { domToPng } from "../../common/png";
+
+const BOARD_BLOCK_STYLE = 'boardBlockStyle';
 
 export class Block$Event {
     /**
@@ -252,25 +257,25 @@ export class Block$Event {
             name: 'arrow-up-layer',
             text: lst('上移一层'),
             icon: { name: 'byte', code: 'up-two' },
-            label: UA.isMacOs ? "⌘+]" : "Ctrl+]"
+            label: UA.isMacOs ? "Opt+]" : "Alt+]"
         });
         items.push({
             name: 'arrow-down-layer',
             text: lst('下移一层'),
             icon: { name: 'byte', code: 'down-two' },
-            label: UA.isMacOs ? "⌘+[" : "Ctr+["
+            label: UA.isMacOs ? "Opt+[" : "Alt+["
         });
         items.push({
             name: BlockDirective.bringToFront,
             text: lst('移到最前面'),
             icon: BoardMoveTopSvg,
-            label: UA.isMacOs ? "⌘+Opt+]" : "Ctrl+Alt+]"
+            label: UA.isMacOs ? "Opt+Shift+]" : "Alt+Shift+]"
         });
         items.push({
             name: BlockDirective.sendToBack,
             text: lst('移到最下面'),
             icon: BoardMoveBottomSvg,
-            label: UA.isMacOs ? "⌘+Opt+[" : "Ctrl+Alt+["
+            label: UA.isMacOs ? "Opt+Shift+[" : "Alt+Shift+["
         });
         items.push({
             type: MenuItemType.divide
@@ -279,7 +284,7 @@ export class Block$Event {
             name: this.locker?.lock == false ? BlockDirective.lock : BlockDirective.unlock,
             text: this.locker?.lock == false ? lst('锁住') : lst('解锁'),
             icon: this.locker?.lock == false ? LockSvg : UnlockSvg,
-            label: UA.isMacOs ? "⌘+L" : "Ctrl+L"
+            label: (UA.isMacOs ? "⌘+L" : "Ctrl+L")
         });
         items.push({
             type: MenuItemType.divide
@@ -296,6 +301,35 @@ export class Block$Event {
             label: UA.isMacOs ? "⌘+D" : "Ctrl+D",
             icon: DuplicateSvg
         });
+        items.push({
+            type: MenuItemType.divide
+        });
+        var style = await this.getBoardCopyStyle();
+        items.push({
+            name: 'copyStyle',
+            text: lst('复制样式'),
+            disabled: style ? false : true,
+            icon: { name: 'byte', code: 'format-brush' } as IconValueType,
+        });
+
+        var d = memoryReadData(BOARD_BLOCK_STYLE);
+        items.push({
+            name: 'pasteStyle',
+            text: lst('粘贴样式'),
+            icon: { name: 'byte', code: 'magic-wand' } as IconValueType,
+            value: d,
+            disabled: d && style ? false : true
+        });
+        // items.push({
+        //     type: MenuItemType.divide
+        // });
+        // items.push({
+        //     text: lst('导出'),
+        //     icon: { name: 'byte', code: 'export' },
+        //     childs: [
+        //         { text: lst('导出为图片'), name: "exportImage" },
+        //     ]
+        // })
         items.push({
             type: MenuItemType.divide
         });
@@ -455,6 +489,16 @@ export class Block$Event {
             case 'arrow-down-layer':
                 this.onInOrDeIndex('down');
                 break;
+            case 'copyStyle':
+                await this.onCopyStyle();
+                break;
+            case 'pasteStyle':
+                var v = item.value;
+                await this.onSetBoardCopyStyle(v);
+                break;
+            case 'exportImage':
+                domToPng(this.el)
+                break;
         }
     }
     async onInputText(this: Block, options: {
@@ -596,29 +640,32 @@ export class Block$Event {
         else zindex = this.parent.childs.min(g => g.zindex) - 1;
         await this.updateProps({ zindex }, BlockRenderRange.self);
     }
-    async onInOrDeIndex(this: Block, layer: 'down' | 'up') {
+    async inOrDeIndex(this: Block, layer: 'down' | 'up') {
         var gm = this.panelGridMap || this.page.gridMap;
         gm.start();
         var bs = gm.findBlocksByRect(this.getVisibleBound());
         lodash.sortBy(bs, g => g.zindex);
         var index = bs.findIndex(g => g == this);
-        await this.page.onAction('onInOrDeIndex', async () => {
-            if (layer == 'up') {
-                var bn = bs[index + 1];
-                if (bn) {
-                    var gz = this.zindex;
-                    await this.updateProps({ zindex: gz == bn.zindex ? bn.zindex + 1 : bn.zindex }, BlockRenderRange.self);
-                    await bn.updateProps({ zindex: gz }, BlockRenderRange.self);
-                }
+        if (layer == 'up') {
+            var bn = bs[index + 1];
+            if (bn) {
+                var gz = this.zindex;
+                await this.updateProps({ zindex: gz == bn.zindex ? bn.zindex + 1 : bn.zindex }, BlockRenderRange.self);
+                await bn.updateProps({ zindex: gz }, BlockRenderRange.self);
             }
-            else if (layer == 'down') {
-                var pre = bs[index - 1];
-                if (pre) {
-                    var gz = this.zindex;
-                    await this.updateProps({ zindex: gz == pre.zindex ? pre.zindex - 1 : pre.zindex }, BlockRenderRange.self);
-                    await pre.updateProps({ zindex: gz }, BlockRenderRange.self);
-                }
+        }
+        else if (layer == 'down') {
+            var pre = bs[index - 1];
+            if (pre) {
+                var gz = this.zindex;
+                await this.updateProps({ zindex: gz == pre.zindex ? pre.zindex - 1 : pre.zindex }, BlockRenderRange.self);
+                await pre.updateProps({ zindex: gz }, BlockRenderRange.self);
             }
+        }
+    }
+    async onInOrDeIndex(this: Block, layer: 'down' | 'up') {
+        await this.page.onAction(ActionDirective.onZIndex, async () => {
+            await this.inOrDeIndex(layer);
         })
     }
     /**
@@ -866,6 +913,37 @@ export class Block$Event {
                 })
             }
         })
+    }
+    /**
+     * 获取白板元素的可复制样式
+     * 主要是复制字体、填充色、透明度、边框样式
+     */
+    async getBoardCopyStyle(this: Block) {
+        var data: Record<string, any> = {};
+        var cs = await this.getBoardEditCommand();
+        cs.forEach(c => {
+            data[c.name] = c.value;
+        })
+        return {
+            url: this.url,
+            data
+        }
+    }
+    async onSetBoardCopyStyle(this: Block, data: any) {
+        await this.page.onAction('onSetBoardCopyStyle', async () => {
+            for (let name in data) {
+                var value = data[name];
+                await this.setBoardEditCommand(name, value);
+            }
+        })
+    }
+    async onCopyStyle(this: Block) {
+        var style = await this.getBoardCopyStyle();
+        if (style) {
+            memoryCopyData(BOARD_BLOCK_STYLE, lodash.cloneDeep(style))
+            ShyAlert(lst('样式已复制'))
+        }
+
     }
 }
 

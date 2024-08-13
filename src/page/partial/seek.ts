@@ -77,6 +77,7 @@ export class Page$Seek {
             for (let i = 0; i < els.length; i++) {
                 var b = this.getEleBlock(els[i] as HTMLElement);
                 if (b) {
+                    if(!bs.some(x=>x==b))
                     bs.push(b);
                 }
             }

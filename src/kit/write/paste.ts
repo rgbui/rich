@@ -1,10 +1,8 @@
 import { marked } from "marked";
 import { Kit } from "..";
 import { TextCode } from "../../../blocks/media/code/code";
-import { getImageSize } from "../../../component/file";
 import { InputTextPopSelectorType } from "../../../extensions/common/input.pop";
 import { useInputUrlSelector } from "../../../extensions/link/url";
-import { channel } from "../../../net/channel";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
 import { BlockUrlConstant } from "../../block/constant";
@@ -19,7 +17,6 @@ import { inputBackspaceDeleteContent } from "./input";
 import { InputForceStore } from "./store";
 import { util } from "../../../util/util";
 import { onEnterInput } from "./keydown";
-import { BlockRenderRange } from "../../block/enum";
 
 export async function onPastePage(kit: Kit, event: ClipboardEvent) {
     if (kit.page.pageLayout?.type == PageLayoutType.board) {
@@ -160,7 +157,7 @@ export async function onPasteAppear(kit: Kit, aa: AppearAnchor, event: Clipboard
             var isEmpty = block.isContentEmpty;
             await onPasteInsertPlainText(kit, aa, text, async () => {
                 if (isEmpty) {
-                    await block.updateProps({ fixedWidth: 200 }, BlockRenderRange.self);
+                    // await block.updateProps({ fixedWidth: 200 }, BlockRenderRange.self);
                 }
             });
         }
@@ -328,62 +325,6 @@ async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
     else {
         await inputBackspaceDeleteContent(kit.writer, aa, null, { insertBlocks: blocks })
     }
-    // await InputForceStore(aa, async () => {
-    //     /**
-    //      * 这说明只有一行，那么在当前的位置插入它
-    //      */
-    //     if (blocks.length == 1 && blocks[0].url == BlockUrlConstant.TextSpan) {
-    //         var content = aa.textContent;
-    //         var offset = sel.focusOffset;
-    //         var rowBlock = aa.block.closest(x => x.isContentBlock);
-    //         var beforeText = content.slice(0, offset);
-    //         var lastText = content.slice(offset);
-    //         if (rowBlock.childs.length == 0) {
-    //             await rowBlock.updateProps({ content: '' }, BlockRenderRange.self);
-    //             if (beforeText) await rowBlock.appendBlock({ url: BlockUrlConstant.Text, content: beforeText });
-    //             var bs = blocks[0].blocks.childs;
-    //             var rs = await rowBlock.appendArrayBlockData(bs, undefined, BlockChildKey.childs);
-    //             if (lastText) await rowBlock.appendBlock({ url: BlockUrlConstant.Text, content: lastText });
-    //             kit.page.addActionAfterEvent(async () => {
-    //                 kit.anchorCursor.onFocusBlockAnchor(rs.last(), { last: true, render: true, merge: true });
-    //             })
-    //         }
-    //         else {
-    //             await aa.block.updateProps({ content: beforeText }, BlockRenderRange.self);
-    //             var bs = blocks[0].blocks.childs;
-    //             var rs = await aa.block.parent.appendArrayBlockData(bs, aa.block.at, BlockChildKey.childs);
-    //             if (lastText) await aa.block.parent.appendBlock({
-    //                 url: BlockUrlConstant.Text,
-    //                 pattern: await aa.block.pattern.cloneData(),
-    //                 content: lastText
-    //             });
-    //             if (aa.block.isContentEmpty) await aa.block.delete();
-    //             kit.page.addActionAfterEvent(async () => {
-    //                 kit.anchorCursor.onFocusBlockAnchor(rs.last(), { last: true, render: true, merge: true });
-    //             })
-    //         }
-    //     }
-    //     else {
-    //         var rowBlock = aa.block.closest(x => x.isContentBlock);
-    //         var firstBlock = rowBlock;
-    //         if (firstBlock.isContentEmpty) {
-    //             blocks[0].url = firstBlock.url;
-    //         }
-    //         var rs: Block[] = [];
-    //         for (let i = 0; i < blocks.length; i++) {
-    //             var bd = blocks[i];
-    //             rowBlock = await rowBlock.visibleDownCreateBlock(bd.url, bd);
-    //             rs.push(rowBlock);
-    //         }
-    //         if (firstBlock.isContentEmpty) {
-    //             await firstBlock.delete();
-    //         }
-    //         kit.page.addActionAfterEvent(async () => {
-    //             kit.anchorCursor.onSelectBlocks(rs, { render: true, merge: true });
-    //             // kit.anchorCursor.onFocusBlockAnchor(rowBlock, { last: true, render: true, merge: true });
-    //         })
-    //     }
-    // })
 }
 async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
     if (aa.isSolid) {
@@ -444,6 +385,7 @@ async function onPasteInsertPlainText(kit: Kit, aa: AppearAnchor, text: string, 
         })
     }
 }
+
 async function onPasteUrl(kit: Kit, aa: AppearAnchor, url: string) {
     if (aa.isSolid) {
         await kit.page.onAction(ActionDirective.onSolidBlockInputTextContent, async () => {
@@ -506,6 +448,7 @@ async function onPasterToBoard(options: { kit: Kit, fra: Block, text?: string, f
             data.content = text;
             data.matrix = mat.getValues();
             data.fixedWidth = 200;
+            data.initialData = { autoWidth: true };
             var newBlock = await kit.page.createBlock(BlockUrlConstant.TextSpan, data, fra);
             newBlock.mounted(async () => {
                 await kit.picker.onPicker([newBlock], { merge: true });
@@ -514,48 +457,88 @@ async function onPasterToBoard(options: { kit: Kit, fra: Block, text?: string, f
         })
     }
     else if (files.length > 0) {
+        var rs: any[] = [];
         for (let i = 0; i < files.length; i++) {
             var file = files[i];
+            var data: Record<string, any> = {};
             if (file.type.startsWith('image/')) {
-                //图片
-                var r = await channel.post('/ws/upload/file', {
-                    file,
-                    uploadProgress: (event) => {
-                        // console.log(event, 'ev');
-                        if (event.lengthComputable) {
-                            // this.progress = `${util.byteToString(event.total)}${(100 * event.loaded / event.total).toFixed(2)}%`;
-                            // this.forceUpdate();
-                        }
-                    }
-                })
-                if (r.ok) {
-                    if (r.data?.file?.url) {
-                        var size = await getImageSize(r.data.file.url);
-                        var url = BlockUrlConstant.BoardImage;
-                        var width = Math.min(size.width, 300);
-                        var height = (width / size.width) * size.height;
-                        var data = {
-                            originSize: size,
-                            fixedWidth: width,
-                            fixedHeight: height,
-                            src: { name: 'upload', ...r.data.file }
-                        } as any
-                        await kit.page.onAction('onClipboardImage', async () => {
-                            var mat = new Matrix();
-                            mat.translate(re.x, re.y);
-                            data.matrix = mat.getValues();
-                            var newBlock = await kit.page.createBlock(url, data, fra);
-                            kit.boardSelector.clearSelector();
-                            newBlock.mounted(async () => {
-                                await kit.picker.onPicker([newBlock], { merge: true });
-                                // await kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
-                            })
-                        });
-                        // this.props.change(r.data?.file as any);
-                    }
-                }
+                data.url = BlockUrlConstant.BoardImage;
             }
+            else if (file.type.startsWith('video/')) {
+                data.url = BlockUrlConstant.Video;
+            }
+            else if (file.type.startsWith('audio/')) {
+                data.url = BlockUrlConstant.Audio;
+            }
+            else
+                data.url = BlockUrlConstant.File;
+            // if (!this.currentSelector.data) data.data = {};
+            data.initialData = { file };
+            rs.push(data);
+            // if (file.type.startsWith('image/')) {
+            //     //图片
+            //     var r = await channel.post('/ws/upload/file', {
+            //         file,
+            //         uploadProgress: (event) => {
+            //             // console.log(event, 'ev');
+            //             if (event.lengthComputable) {
+            //                 // this.progress = `${util.byteToString(event.total)}${(100 * event.loaded / event.total).toFixed(2)}%`;
+            //                 // this.forceUpdate();
+            //             }
+            //         }
+            //     })
+            //     if (r.ok) {
+            //         if (r.data?.file?.url) {
+            //             var size = await getImageSize(r.data.file.url);
+            //             var url = BlockUrlConstant.BoardImage;
+            //             var width = Math.min(size.width, 300);
+            //             var height = (width / size.width) * size.height;
+            //             var data = {
+            //                 originSize: size,
+            //                 fixedWidth: width,
+            //                 fixedHeight: height,
+            //                 src: { name: 'upload', ...r.data.file }
+            //             } as any
+            //             await kit.page.onAction('onClipboardImage', async () => {
+            //                 var mat = new Matrix();
+            //                 mat.translate(re.x, re.y);
+            //                 data.matrix = mat.getValues();
+            //                 var newBlock = await kit.page.createBlock(url, data, fra);
+            //                 kit.boardSelector.clearSelector();
+            //                 newBlock.mounted(async () => {
+            //                     await kit.picker.onPicker([newBlock], { merge: true });
+            //                     // await kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
+            //                 })
+            //             });
+            //             // this.props.change(r.data?.file as any);
+            //         }
+            //     }
+            // }
         }
+        await kit.page.onAction('onClipboardImage', async () => {
+            var mat = new Matrix();
+            mat.translate(re.x, re.y);
+            kit.boardSelector.clearSelector();
+            var nbs: Block[] = []
+            for (let j = 0; j < rs.length; j++) {
+                var url = rs[j].url;
+                var data = rs[j];
+                mat.translate(0, j * 50);
+                data.matrix = mat.getValues();
+                var newBlock = await kit.page.createBlock(url, data, fra);
+                nbs.push(newBlock);
+            }
+            if (nbs.length == 1) {
+                nbs[0].mounted(async () => {
+                    await kit.picker.onPicker(nbs, { merge: true });
+                })
+            }
+            else {
+                kit.page.addActionCompletedEvent(async () => {
+                    await kit.picker.onPicker(nbs, { merge: true });
+                })
+            }
+        });
     }
 }
 

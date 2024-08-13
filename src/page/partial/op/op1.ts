@@ -29,6 +29,7 @@ import { RobotInfo } from "../../../../types/user";
 import { Head } from "../../../../blocks/general/head";
 import { BlockRenderRange } from "../../../block/enum";
 import { onceAutoScroll } from "../../../common/scroll";
+import { getTemplateInstance } from "../../../../extensions/ai/prompt";
 
 
 
@@ -266,6 +267,9 @@ export class Page$Operator {
         }
     }
     async onGridAlign(this: Page, blocks: Block[], value: string) {
+        if (value == 'y' || value == 'x') {
+            if (blocks.length <= 2) return;
+        }
         await this.onAction('onGridAlign', async () => {
             if (['left', 'center', 'right'].includes(value)) {
                 var b = blocks.first().getVisibleBound();
@@ -327,31 +331,31 @@ export class Page$Operator {
             }
             else if (['x', 'y'].includes(value)) {
                 if (value == 'y') {
+
+                    blocks = blocks.sort((x, y) => {
+                        var xb = x.getVisibleBound();
+                        var yb = y.getVisibleBound();
+                        if (xb.top < yb.top) return -1;
+                        else return 1;
+                    })
+
                     var first = blocks.first().getVisibleBound();
                     var second = blocks[1].getVisibleBound();
                     var d: number;
-                    var isArrowDown = true;
-                    if (second.top > first.top) {
-                        if (second.top < first.bottom) d = second.top - first.bottom;
-                        else d = second.top - first.top;
-                    }
-                    else {
-                        isArrowDown = false;
-                        if (second.bottom < first.top) d = second.bottom - first.top;
-                        else d = second.top - first.top;
-                        d = Math.abs(d);
-                    }
-                    var h = first.height;
-                    if (!isArrowDown) h = 0;
-                    for (let i = 1; i < blocks.length; i++) {
+
+                    if (second.top < first.bottom) d = 40;
+                    else d = second.top - first.bottom;
+
+                    var top = second.bottom;
+                    for (let i = 2; i < blocks.length; i++) {
                         var block = blocks[i];
                         var cb = block.getVisibleBound();
                         var gm = block.globalWindowMatrix;
                         var from: Point;
                         var to: Point;
                         from = gm.inverseTransform(cb.leftTop);
-                        if (isArrowDown) to = gm.inverseTransform(cb.leftTop.setY(first.top + h + d));
-                        else to = gm.inverseTransform(cb.leftTop.setY(first.top - (h + d + cb.height)));
+                        to = gm.inverseTransform(cb.leftTop.setY(top + d));
+
                         var moveMatrix = new Matrix();
                         moveMatrix.translateMove(from, to)
                         var newMatrix = block.currentMatrix.clone();
@@ -359,76 +363,270 @@ export class Page$Operator {
                         newMatrix.append(block.selfMatrix.inverted());
                         await block.updateMatrix(block.matrix, newMatrix);
                         block.moveMatrix = new Matrix();
-                        h += d;
-                        h += cb.height;
+                        top += d;
+                        top += cb.height;
                     }
                 }
                 else if (value == 'x') {
 
+                    blocks = blocks.sort((x, y) => {
+                        var xb = x.getVisibleBound();
+                        var yb = y.getVisibleBound();
+                        if (xb.left < yb.left) return -1;
+                        else return 1;
+                    })
                     var first = blocks.first().getVisibleBound();
                     var second = blocks[1].getVisibleBound();
                     var d: number;
-                    var isArrowRight = true;
-                    if (second.left > first.left) {
-                        if (second.left < first.right) d = second.left - first.right;
-                        else d = second.left - first.left;
-                    }
-                    else {
-                        isArrowRight = false;
-                        if (second.right < first.left) d = second.right - first.left;
-                        else d = second.left - first.left;
-                        d = Math.abs(d);
-                    }
 
-                    var w = first.width;
-                    if (isArrowRight) w = 0;
-                    for (let i = 1; i < blocks.length; i++) {
+                    if (second.left < first.right) d = 40;
+                    else d = second.left - first.right;
+
+                    var left = second.right;
+                    for (let i = 2; i < blocks.length; i++) {
                         var block = blocks[i];
                         var cb = block.getVisibleBound();
                         var gm = block.globalWindowMatrix;
                         var from: Point;
                         var to: Point;
                         from = gm.inverseTransform(cb.leftTop);
-                        if (isArrowRight) to = gm.inverseTransform(cb.leftTop.setX(first.x + w + d));
-                        else to = gm.inverseTransform(cb.leftTop.setX(first.x - (w + d + cb.width)));
+                        to = gm.inverseTransform(cb.leftTop.setX(left + d));
                         var moveMatrix = new Matrix();
                         moveMatrix.translateMove(from, to)
                         var newMatrix = block.currentMatrix.clone();
                         newMatrix.append(moveMatrix);
                         newMatrix.append(block.selfMatrix.inverted());
                         await block.updateMatrix(block.matrix, newMatrix);
-                        block.moveMatrix = new Matrix();
-                        w += d;
-                        w += cb.width;
+                        left += d;
+                        left += cb.width;
                     }
-
-                    // var first = blocks.first().getVisibleBound();
-                    // var second = blocks[1].getVisibleBound();
-                    // var d = second.left - first.left;
-                    // var h = first.width + d + second.width;
-                    // for (let i = 2; i < blocks.length; i++) {
-                    //     var block = blocks[i];
-                    //     var cb = block.getVisibleBound();
-                    //     var gm = block.globalWindowMatrix;
-                    //     var cb = block.getVisibleBound();
-                    //     var gm = block.globalWindowMatrix;
-                    //     var from: Point;
-                    //     var to: Point;
-                    //     from = gm.inverseTransform(cb.leftTop);
-                    //     to = gm.inverseTransform(cb.leftTop.setX(h + d));
-                    //     var moveMatrix = new Matrix();
-                    //     moveMatrix.translateMove(from, to)
-                    //     var newMatrix = block.currentMatrix.clone();
-                    //     newMatrix.append(moveMatrix);
-                    //     newMatrix.append(block.selfMatrix.inverted());
-                    //     await block.updateMatrix(block.matrix, newMatrix);
-                    //     block.moveMatrix = new Matrix();
-                    //     h += d;
-                    //     h += cb.width;
-                    // }
                 }
             }
         });
+    }
+    async onGridRank(this: Page, blocks: Block[], value: string) {
+        if (blocks.length <= 1) return;
+
+        await this.onAction('onGridRank', async () => {
+            var gap = 40;
+            if (value == 'x') {
+                blocks = blocks.sort((x, y) => {
+                    var xb = x.getVisibleBound();
+                    var yb = y.getVisibleBound();
+                    if (xb.left < yb.left) return -1;
+                    else return 1;
+                })
+
+                var first = blocks.first().getVisibleBound();
+                var left = first.right;
+                for (let i = 1; i < blocks.length; i++) {
+                    var block = blocks[i];
+                    var cb = block.getVisibleBound();
+                    var gm = block.globalWindowMatrix;
+                    var from: Point;
+                    var to: Point;
+                    from = gm.inverseTransform(cb.leftTop);
+                    var toPoint = cb.leftTop;
+                    toPoint.setX(left + gap);
+                    toPoint.setY(first.top);
+                    to = gm.inverseTransform(toPoint);
+                    var moveMatrix = new Matrix();
+                    moveMatrix.translateMove(from, to)
+                    var newMatrix = block.currentMatrix.clone();
+                    newMatrix.append(moveMatrix);
+                    newMatrix.append(block.selfMatrix.inverted());
+                    await block.updateMatrix(block.matrix, newMatrix);
+                    left += gap;
+                    left += cb.width;
+                }
+
+            }
+            else if (value == 'y') {
+
+                blocks = blocks.sort((x, y) => {
+                    var xb = x.getVisibleBound();
+                    var yb = y.getVisibleBound();
+                    if (xb.top < yb.top) return -1;
+                    else return 1;
+                })
+
+                var first = blocks.first().getVisibleBound();
+                var top = first.bottom;
+                for (let i = 1; i < blocks.length; i++) {
+                    var block = blocks[i];
+                    var cb = block.getVisibleBound();
+                    var gm = block.globalWindowMatrix;
+                    var from: Point;
+                    var to: Point;
+                    from = gm.inverseTransform(cb.leftTop);
+                    var toPoint = cb.leftTop;
+                    toPoint.setX(first.left)
+                    toPoint.setY(top + gap);
+                    to = gm.inverseTransform(toPoint);
+
+                    var moveMatrix = new Matrix();
+                    moveMatrix.translateMove(from, to)
+                    var newMatrix = block.currentMatrix.clone();
+                    newMatrix.append(moveMatrix);
+                    newMatrix.append(block.selfMatrix.inverted());
+                    await block.updateMatrix(block.matrix, newMatrix);
+                    block.moveMatrix = new Matrix();
+                    top += gap;
+                    top += cb.height;
+                }
+            }
+            else if (value == 'type') {
+                blocks = blocks.sort((x, y) => {
+                    var xb = x.getVisibleBound();
+                    var yb = y.getVisibleBound();
+                    if (xb.left < yb.left) return -1;
+                    else return 1;
+                })
+                var types = blocks.distinct(x => x.url);
+                var first = blocks.first().getVisibleBound();
+                var left = first.left;
+                var top = first.top;
+                var maxHeight = -1;
+
+                for (let i = 0; i < types.length; i++) {
+                    var typeBlocks = blocks.filter(g => g.url == types[i]);
+                    for (let j = 0; j < typeBlocks.length; j++) {
+                        var block = typeBlocks[j];
+                        var cb = block.getVisibleBound();
+                        var gm = block.globalWindowMatrix;
+                        var from: Point;
+                        var to: Point;
+                        from = gm.inverseTransform(cb.leftTop);
+                        var toPoint = cb.leftTop;
+                        toPoint.setY(top);
+                        toPoint.setX(left);
+
+                        to = gm.inverseTransform(toPoint);
+                        var moveMatrix = new Matrix();
+                        moveMatrix.translateMove(from, to)
+                        var newMatrix = block.currentMatrix.clone();
+                        newMatrix.append(moveMatrix);
+                        newMatrix.append(block.selfMatrix.inverted());
+                        await block.updateMatrix(block.matrix, newMatrix);
+                        maxHeight = Math.max(cb.height, maxHeight);
+                        left += gap;
+                        left += cb.width;
+                    }
+                    left = first.left;
+                    top += gap;
+                    top += maxHeight;
+                    maxHeight = -1;
+                }
+
+            }
+            else if (value == 'grid') {
+
+                blocks = blocks.sort((x, y) => {
+                    var xb = x.getVisibleBound();
+                    var yb = y.getVisibleBound();
+                    if (xb.left < yb.left) return -1;
+                    else return 1;
+                })
+                var max = 4;
+                var first = blocks.first().getVisibleBound();
+                var col = 0;
+                var left = first.right + gap;
+                var top = first.top;
+                var maxHeight = -1;
+                for (let i = 1; i < blocks.length; i++) {
+                    if (i == 1) col = 1;
+                    var block = blocks[i];
+                    var cb = block.getVisibleBound();
+                    var gm = block.globalWindowMatrix;
+                    var from: Point;
+                    var to: Point;
+                    from = gm.inverseTransform(cb.leftTop);
+                    var toPoint = cb.leftTop;
+                    toPoint.setY(top);
+                    toPoint.setX(left);
+
+                    to = gm.inverseTransform(toPoint);
+                    var moveMatrix = new Matrix();
+                    moveMatrix.translateMove(from, to)
+                    var newMatrix = block.currentMatrix.clone();
+                    newMatrix.append(moveMatrix);
+                    newMatrix.append(block.selfMatrix.inverted());
+                    await block.updateMatrix(block.matrix, newMatrix);
+                    maxHeight = Math.max(cb.height, maxHeight);
+
+                    if (col == max - 1) {
+                        left = first.left;
+                        top += gap;
+                        top += maxHeight;
+                        col = 0;
+                        maxHeight = -1;
+                    }
+                    else {
+
+                        left += gap;
+                        left += cb.width;
+                        col += 1;
+                    }
+
+                }
+
+
+
+            }
+        });
+    }
+    async onAIText(this: Page, blocks: Block[], command: string) {
+
+        await this.onAction('onAiText', async () => {
+            for (let i = 0; i < blocks.length; i++) {
+                var block = blocks[i];
+                var content = block.getBlockContent();
+                if (content) {
+                    var text = await new Promise((resolve: (r: string) => void, reject) => {
+                        var prompt = getTemplateInstance(command, { content: content });
+                        var anwser = '';
+                        var appears = block.findAll(c => c.appearAnchors.length > 0, true).map(c => c.appearAnchors).flat();
+                        if (appears.length > 0) {
+                            for (let i = 1; i < appears.length; i++)
+                                appears[i].setContent('')
+                            channel.post('/text/ai/stream', {
+                                question: prompt,
+                                model: getAiDefaultModel(this?.ws?.aiConfig?.text),
+                                async callback(str, done, contoller) {
+                                    if (typeof str == 'string') {
+                                        anwser += str;
+                                    }
+                                    appears[0].setContent(anwser);
+                                    if (block.page.kit.picker.blocks.some(s => s == block)) {
+                                        block.page.kit.picker.onRePicker()
+                                    }
+                                    if (done) {
+                                        resolve(anwser)
+                                    }
+                                }
+                            });
+                        }
+                    })
+                    await block.replaceTextContent(text);
+                }
+            }
+        })  
+    }
+    async onAIMind(this: Page, blocks: Block[], command: string) {
+        await this.onAction('onAiText', async () => {
+            for (let i = 0; i < blocks.length; i++) {
+                var block = blocks[i];
+                var content = block.getBlockContent();
+                if (content) {
+                    await (block as any).mindAI(command, content);
+                }
+                else {
+                    if (blocks.length == 1) {
+                        ShyAlert(lst('请先输入思维导图主题'), 'warn', 1000 * 4);
+                    }
+                }
+            }
+        })
     }
     onSpreadMenu(this: Page,) {
         this.emit(PageDirective.spreadSln)

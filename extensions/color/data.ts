@@ -90,17 +90,17 @@ export var OptionBackgroundColorList = () => {
 
 
         // { color: 'rgba(255,255,255,0)', text: lst('默认') },
-        { fill: 'rgba(237,233,235,1)',color:'var(--text-color)', text: lst('白灰') },
-        { fill: 'rgba(217,211,215,1)',color:'var(--text-color)', text: lst('暗银') },
-        { fill: 'rgba(247,214,183,1)',color:'var(--text-color)', text: lst('幼杏') },
-        { fill: 'rgba(255,193,153,1)',color:'var(--text-color)', text: lst('鲜橘') },
-        { fill: 'rgba(252,246,189,1)',color:'var(--text-color)', text: lst('淡黄') },
-        { fill: 'rgba(205,243,220,1)',color:'var(--text-color)', text: lst('浅绿') },
-        { fill: 'rgba(169,222,249,1)',color:'var(--text-color)', text: lst('天蓝') },
-        { fill: 'rgba(189,201,255,1)',color:'var(--text-color)', text: lst('雾蓝') },
-        { fill: 'rgba(239,218,251,1)',color:'var(--text-color)', text: lst('轻紫') },
-        { fill: 'rgba(234,202,220,1)',color:'var(--text-color)', text: lst('熏粉') },
-        { fill: 'rgba(253,198,200,1)',color:'var(--text-color)', text: lst('将红') },
+        { fill: 'rgba(237,233,235,1)', color: 'var(--text-color)', text: lst('白灰') },
+        { fill: 'rgba(217,211,215,1)', color: 'var(--text-color)', text: lst('暗银') },
+        { fill: 'rgba(247,214,183,1)', color: 'var(--text-color)', text: lst('幼杏') },
+        { fill: 'rgba(255,193,153,1)', color: 'var(--text-color)', text: lst('鲜橘') },
+        { fill: 'rgba(252,246,189,1)', color: 'var(--text-color)', text: lst('淡黄') },
+        { fill: 'rgba(205,243,220,1)', color: 'var(--text-color)', text: lst('浅绿') },
+        { fill: 'rgba(169,222,249,1)', color: 'var(--text-color)', text: lst('天蓝') },
+        { fill: 'rgba(189,201,255,1)', color: 'var(--text-color)', text: lst('雾蓝') },
+        { fill: 'rgba(239,218,251,1)', color: 'var(--text-color)', text: lst('轻紫') },
+        { fill: 'rgba(234,202,220,1)', color: 'var(--text-color)', text: lst('熏粉') },
+        { fill: 'rgba(253,198,200,1)', color: 'var(--text-color)', text: lst('将红') },
     ]
     // .map(c => {
     //     return {
@@ -140,6 +140,20 @@ export var BoardBackgroundColorList = () => {
         { "color": "rgb(224,235,255)" },
         { "color": "rgb(230,230,255)" },
         { "color": "rgb(251,223,244)" },
+        { "color": "rgb(255,116,135)" },
+        { "color": "rgb(255,123,100)" },
+        { "color": "rgb(255,179,90)" },
+        { "color": "rgb(255,214,53)" },
+        { "color": "rgb(25,222,166)" },
+        { "color": "rgb(0,219,218)" },
+        { "color": "rgb(131,198,255)" },
+        { "color": "rgb(135,176,251)" },
+        { "color": "rgb(162,155,249)" },
+        { "color": "rgb(250,153,231)" }
+    ] as ColorType[]
+}
+export var BoardMindLinghtColorList = () => {
+    return [
         { "color": "rgb(255,116,135)" },
         { "color": "rgb(255,123,100)" },
         { "color": "rgb(255,179,90)" },

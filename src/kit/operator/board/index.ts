@@ -7,6 +7,9 @@ import { onTimeAuto, onTimeAutoScrollStop } from "../../../common/scroll";
 import { Point, Rect } from "../../../common/vector/point";
 import { openBoardEditTool } from "./edit";
 import { CheckBoardSelector } from "../../board.selector/selector";
+import { BlockUrlConstant } from "../../../block/constant";
+import { Line } from "../../../../blocks/board/line/line";
+import lodash from "lodash";
 
 export function BoardDrag(
     kit: Kit,
@@ -53,8 +56,28 @@ export function BoardDrag(
     if (block?.isBoardBlock) emptyIsSelection = false;
     if (block?.isFrame && kit.picker.blocks.some(s => s == block)) emptyIsSelection = true;
 
+    if (block?.url == BlockUrlConstant.Line) {
+        var ele = event.target as HTMLElement;
+        /**
+         * 这里主要判断是否在点在线段上，因为浏览器认为点在线段围成的区域 是点在线段上
+         * 所以这里需要判断是否在线段上
+         * main-line 是主线段，除了主线段外，还有两个方向的线段（箭头线段 比较小，不考虑）
+         */
+        if (ele.classList.contains('main-line')) {
+            var line = (block as Line);
+            if (!line.checkPointIn(Point.from(event))) {
+                var bs = kit.page.getBlocksFromPoint(Point.from(event));
+                lodash.remove(bs, b => b == line);
+                if (bs.length > 0) {
+                    block = bs[0]
+                }
+                else block = undefined;
+            }
+        }
+    }
     var isCopy: boolean = false;
-    console.log('board drag:', block, block?.isFreeBlock);
+    if (window.shyConfig.isDev)
+        console.log('board drag:', block, block?.isFreeBlock);
     if (kit.page.keyboardPlate.isShift() && block?.isFreeBlock) {
         //连选
         kit.picker.onShiftPicker([block]);
@@ -213,6 +236,7 @@ export function BoardDrag(
                     else if (kit.picker.blocks.length == 1) {
                         var bl = kit.picker.blocks[0];
                         if (bl.appearAnchors.length > 0) {
+                            if (bl.url == BlockUrlConstant.Frame) return;
                             kit.anchorCursor.onFocusBlockAnchor(bl, { last: true })
                         }
                     }

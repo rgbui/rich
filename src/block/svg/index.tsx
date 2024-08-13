@@ -2,15 +2,19 @@ import React, { CSSProperties, SVGAttributes } from "react";
 import { Matrix } from "../../common/matrix";
 import { Rect, RectUtility } from "../../common/vector/point";
 import { ShyPath, ShyCompoundPath } from "./path";
+import lodash from "lodash";
 
 export class ShySvg {
+    id:string;
     viewBox: Rect;
     childs: (ShyGroup | ShyPath | ShyCompoundPath)[] = [];
     constructor(data?: Record<string, any>) {
         if (data) this.load(data);
     }
     applyMatrix(matrix: Matrix) {
-        var points = this.viewBox.points;
+        var vb = this.viewBox;
+        if (!vb) vb = this.getBound();
+        var points = vb.points;
         points = points.map(p => matrix.transform(p));
         this.viewBox = RectUtility.getPointsBound(points);
         this.childs.each(c => c.applyMatrix(matrix));
@@ -28,12 +32,16 @@ export class ShySvg {
                         return new ShyGroup(d);
                     })
                 }
+                else {
+                    this[n] =  lodash.cloneDeep(data[n]);
+                }
             }
     }
     get() {
         return {
             viewBox: this.viewBox ? [this.viewBox.x, this.viewBox.y, this.viewBox.width, this.viewBox.height] : undefined,
-            childs: this.childs.map(c => c.get())
+            childs: this.childs.map(c => c.get()),
+            id:this.id
         }
     }
     clone() {
@@ -42,7 +50,7 @@ export class ShySvg {
         svg.load(d);
         return svg;
     }
-    render(options?: {  strokeWidth?: number, style?: CSSProperties, attrs?: SVGAttributes<SVGSVGElement> }) {
+    render(options?: { strokeWidth?: number, style?: CSSProperties, attrs?: SVGAttributes<SVGSVGElement> }) {
         if (this.childs.length == 0) return <svg></svg>
         var vb = this.viewBox;
         if (!vb) {
@@ -69,13 +77,17 @@ export class ShySvg {
     }
     scaleTo(width: number, height: number) {
         var matrix = new Matrix();
-        var s = width / this.viewBox.width;
-        var h = height / this.viewBox.height;
-        matrix.scale(s, h, this.viewBox.leftTop);
+        var vb = this.viewBox;
+        if (!vb) vb = this.getBound();
+        var s = width / vb.width;
+        var h = height / vb.height;
+        matrix.scale(s, h, vb.leftTop);
         this.applyMatrix(matrix);
     }
     extend(d: number) {
-        this.viewBox = this.viewBox.extend(d);
+        var vb = this.viewBox;
+        if (!vb) vb = this.getBound();
+        this.viewBox = vb.extend(d);
     }
     getBound() {
         var bs: Rect[] = [];

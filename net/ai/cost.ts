@@ -252,7 +252,7 @@ export function getAiEmbeddingsOptions() {
 }
 
 export function getAiDefaultModel(model: WsConsumeType, type?: 'text' | 'image' | 'embedding') {
-    if (typeof model != 'undefined') return model;
+    if (typeof model == 'number') return model;
     if (!type) type = 'text'
     if (window.shyConfig.isUS) {
         switch (type) {
