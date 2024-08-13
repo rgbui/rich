@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?><svg fill="none" viewBox="4 4 24 24" id="icon-icon_arrange_type">
+            <g fill="currentColor">
+                <path
+                    d="M9.576 8.678a.5.5 0 0 1 .848 0l1.598 2.557a.5.5 0 0 1-.424.765H8.402a.5.5 0 0 1-.424-.765l1.598-2.557ZM15.576 8.678a.5.5 0 0 1 .848 0l1.598 2.557a.5.5 0 0 1-.424.765h-3.196a.5.5 0 0 1-.424-.765l1.598-2.557ZM21.576 8.678a.5.5 0 0 1 .848 0l1.598 2.557a.5.5 0 0 1-.424.765h-3.196a.5.5 0 0 1-.424-.765l1.598-2.557Z">
+                </path>
+                <rect x="8" y="14" width="4" height="4" rx="2"></rect>
+                <rect x="14" y="14" width="4" height="4" rx="2"></rect>
+                <rect x="20" y="14" width="4" height="4" rx="2"></rect>
+                <rect x="8" y="20" width="4" height="4" rx="1"></rect>
+                <rect x="14" y="20" width="4" height="4" rx="1"></rect>
+                <rect x="20" y="20" width="4" height="4" rx="1"></rect>
+            </g>
+        </svg>

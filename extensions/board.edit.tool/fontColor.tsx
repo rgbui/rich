@@ -46,7 +46,8 @@ export function FillColor(props: {
     change?(value: string, fillOpacity?: number): void
 }) {
     var colors = BoardBackgroundColorList();
-    var cs = props.noTransparent ? colors.filter(g => g.color != 'transparent') : colors;
+    colors.splice(0, 0, { color: 'transparent', text: lst('透明') });
+    colors = props.noTransparent ? colors.filter(g => g.color != 'transparent') : colors;
     return <div className="shy-board-edit-font-color" >
         <div className="shy-board-edit-font-color-current  size-20 flex-center"
             onMouseDown={e => props.tool.showDrop(props.name)}>

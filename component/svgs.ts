@@ -32,6 +32,11 @@ import BoardIconSvg from "../src/assert/svg/board.icon.svg";
 import BoardIconTextStylesSvg from "../src/assert/svg/board.icon.text.styles.svg";
 import BoardMoveBottomSvg from "../src/assert/svg/board.move.bottom.svg";
 import BoardMoveTopSvg from "../src/assert/svg/board.move.top.svg";
+import BoardRankGridSvg from "../src/assert/svg/board.rank.grid.svg";
+import BoardRankSvg from "../src/assert/svg/board.rank.svg";
+import BoardRankTypeSvg from "../src/assert/svg/board.rank.type.svg";
+import BoardRankXSvg from "../src/assert/svg/board.rank.x.svg";
+import BoardRankYSvg from "../src/assert/svg/board.rank.y.svg";
 import BoardRefreshSvg from "../src/assert/svg/board.refresh.svg";
 import BoardToolArrowSvg from "../src/assert/svg/board.tool.arrow.svg";
 import BoardToolFrameSvg from "../src/assert/svg/board.tool.frame.svg";
@@ -47,6 +52,7 @@ import BrushPenSvg from "../src/assert/svg/brush.pen.svg";
 import BrushPen1Svg from "../src/assert/svg/brush.pen1.svg";
 import BrushPen2Svg from "../src/assert/svg/brush.pen2.svg";
 import BrushPen3Svg from "../src/assert/svg/brush.pen3.svg";
+import BrushPen4Svg from "../src/assert/svg/brush.pen4.svg";
 import BrushPencilSvg from "../src/assert/svg/brush.pencil.svg";
 import BrushSvg from "../src/assert/svg/brush.svg";
 import BrushWaterSvg from "../src/assert/svg/brush.water.svg";
@@ -289,6 +295,11 @@ BoardIconSvg,
 BoardIconTextStylesSvg,
 BoardMoveBottomSvg,
 BoardMoveTopSvg,
+BoardRankGridSvg,
+BoardRankSvg,
+BoardRankTypeSvg,
+BoardRankXSvg,
+BoardRankYSvg,
 BoardRefreshSvg,
 BoardToolArrowSvg,
 BoardToolFrameSvg,
@@ -304,6 +315,7 @@ BrushPenSvg,
 BrushPen1Svg,
 BrushPen2Svg,
 BrushPen3Svg,
+BrushPen4Svg,
 BrushPencilSvg,
 BrushSvg,
 BrushWaterSvg,

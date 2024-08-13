@@ -34,18 +34,11 @@ export function ShapeStroke(props: {
                 <MeasureText value={props.strokeOpacity} onChange={e => {
                     props.change('strokeOpacity', e)
                 }}></MeasureText>
-                {/* <div ><label className="remark f-12"><S>透明度</S></label><span className="f-12" style={{ float: 'right' }}>{props.strokeOpacity}</span></div>
-                <MeasureView theme="light" ratio={0.1} min={0} max={1} showValue={false} inputting={false} value={props.strokeOpacity} onChange={e => {
-                    console.log('ssso','ggg');
-                    props.change('strokeOpacity', e)
-                }}></MeasureView> */}
             </div>
             <div className="gap-h-10">
                 <MeasureText min={0} max={30} label={lst('边框')} value={props.strokeWidth} onChange={e => {
                     props.change('strokeWidth', e)
                 }}></MeasureText>
-                {/* <div ><label className="remark f-12"><S>边框</S></label><span className="f-12" style={{ float: 'right' }}>{Math.round(props.strokeWidth)}</span></div>
-                <MeasureView theme="light" min={0} max={30} showValue={false} inputting={false} value={props.strokeWidth} onChange={e => { props.change('strokeWidth', e) }}></MeasureView> */}
             </div>
             <div className="gap-h-10">
                 <div className="remark f-12"><S>边框样式</S></div>

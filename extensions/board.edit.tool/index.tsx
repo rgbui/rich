@@ -30,7 +30,7 @@ import { SelectBox } from "../../component/view/select/box";
 import { BlockUrlConstant } from "../../src/block/constant";
 import { canvasOptions } from "./util";
 import { FixedViewScroll } from "../../src/common/scroll";
-import { AlignNineGridView } from "./align";
+import { AlignNineGridView, RankGridView } from "./align";
 import "./style.less";
 import { S } from "../../i18n/view";
 import { closeSelectMenutItem, useSelectMenuItem } from "../../component/view/menu";
@@ -41,6 +41,8 @@ import { useIconPicker } from "../icon";
 import { useKatexInput } from "../katex";
 import { useOutSideUrlInput } from "../link/outsite.input";
 import { LoadShapeStore } from "../board/shapes/shapes";
+import { AIView } from "./ai";
+import { assyDiv } from "../../component/types";
 
 export class BoardEditTool extends EventsComponent {
     el: HTMLElement;
@@ -244,7 +246,7 @@ export class BoardEditTool extends EventsComponent {
                             this.onChange('fontSize', r.item.value)
                         }
                     }}
-                ><InputNumber style={{ width: 60 }} inputStyle={{ height: 24 }}
+                ><InputNumber style={{ width: 50 }} showIcon inputStyle={{ height: 24 }}
                     noborder
                     value={getValue('fontSize')}
                     onDeep={e => {
@@ -406,6 +408,23 @@ export class BoardEditTool extends EventsComponent {
                 </div>
             </Tip>
         }
+        else if (name == 'rank') {
+            return <Tip key={at} placement="top" forcePlacement={true} text='元素排列'>
+                <div onMouseEnter={e => {
+                    this.showDrop('rank');
+                }} onMouseLeave={e => {
+                    this.showDrop('');
+                }} className="shy-board-edit-tool-item">
+                    <RankGridView
+                        name='rank'
+                        tool={this}
+                        change={e => {
+                            this.onChange('rank', e)
+                        }}
+                    ></RankGridView>
+                </div>
+            </Tip>
+        }
         else if (name == 'merge') {
             return <Tip key={at} placement="top" forcePlacement={true} text='合并'>
                 <div onMouseDown={e => this.onMergeBlocks()} className={'shy-board-edit-tool-item'}>
@@ -534,6 +553,20 @@ export class BoardEditTool extends EventsComponent {
                 </div>
             </Tip>
         }
+        else if (name == 'ai') {
+            return <Tip key={at} placement="top" forcePlacement={true} text='AI'>
+                <div onMouseEnter={e => {
+                    this.showDrop('ai');
+                }} onMouseLeave={e => {
+                    // this.showDrop('');
+                }} className="shy-board-edit-tool-item">
+                    <AIView name='ai' tool={this} change={e => {
+                        this.showDrop('')
+                        this.onChange('ai', e)
+                    }}></AIView>
+                </div>
+            </Tip>
+        }
     }
     getItems() {
         if (this.blocks.first().url == BlockUrlConstant.Frame) {
@@ -545,8 +578,8 @@ export class BoardEditTool extends EventsComponent {
                     "fillNoTransparentColor",
                     "width",
                     "divider",
-                    'nine-align',
-                    "merge"
+                    "rank",
+                    'nine-align'
                 ]
             }
             return [
@@ -554,7 +587,8 @@ export class BoardEditTool extends EventsComponent {
                 "fillColor",
                 "fillOpacity",
                 "fillNoTransparentColor",
-                "width",
+                "width", ,
+                ...(this.blocks.length > 1 ? ["divider", "rank", "nine-align"] : [])
             ]
         }
         if (this.blocks.first().url == BlockUrlConstant.BoardImage) {
@@ -569,11 +603,18 @@ export class BoardEditTool extends EventsComponent {
                 'download',
                 'croping',
                 "divider",
-                'resetCrop'
+                'resetCrop',
+                ...(this.blocks.length > 1 ? ["divider", "rank", "nine-align", "merge"] : [])
             ]
         }
         if (this.blocks.first().url == BlockUrlConstant.Group) {
-            return ['ungroup']
+            return [
+                'ungroup',
+                ...(this.blocks.length > 1 ? [
+                    "divider",
+                    "rank",
+                    "nine-align"
+                ] : [])]
         }
         if (this.blocks.first().url == BlockUrlConstant.Mind) {
             return [
@@ -609,10 +650,10 @@ export class BoardEditTool extends EventsComponent {
                 "align",
                 // "itailc",
                 // "textDecoration",
-
                 "bgOpacity",
                 "backgroundNoTransparentColor",
-                ...(this.blocks.length > 1 ? ["divider", "nine-align", "merge"] : [])
+                "ai",
+                ...(this.blocks.length > 1 ? ["divider", "rank", "nine-align", "merge"] : [])
             ]
         }
         return [
@@ -656,12 +697,13 @@ export class BoardEditTool extends EventsComponent {
             "divider",
             "borderWidth",
             "stroke",
-            ...(this.blocks.length > 1 ? ["divider", "nine-align", "merge"] : [])
+            "ai",
+            ...(this.blocks.length > 1 ? ["divider", "rank", "nine-align", "merge"] : [])
         ]
     }
     renderItems() {
         var items = this.getItems();
-        lodash.remove(items, g => (g != 'divider' && !['nine-align', "merge"].includes(g)) && !this.commands.some(s => s.name == g));
+        lodash.remove(items, g => (g != 'divider' && !['nine-align', "rank", "merge"].includes(g)) && !this.commands.some(s => s.name == g));
         lodash.remove(items, (g, i) => g == 'divider' && items[i - 1] == 'divider');
         if (items.indexOf('divider') == 0) {
             items = items.slice(1);
@@ -813,7 +855,27 @@ export class BoardEditTool extends EventsComponent {
         }
     }
     componentWillUnmount(): void {
+        document.removeEventListener('mousedown', this.onGlobalMousedown, true);
         popoverLayer.clear(this);
+    }
+    componentDidMount() {
+        document.addEventListener('mousedown', this.onGlobalMousedown, true);
+    }
+    onGlobalMousedown = (event: MouseEvent) => {
+        // if (this.blocked == true) return;
+        if (this.visible == true && this.el) {
+            var target = event.target as HTMLElement;
+            if (this.el.contains(target)) return;
+            var ele = assyDiv();
+            if (ele && ele.contains(target)) return;
+            /**
+          * 这说明是在弹窗点开的菜单
+          */
+            if (target && target.closest('.shy-menu-panel')) return;
+            if (target && target.closest('.shy-popover-box')) return;
+            if (target && target.closest('.shy-page-view')) return;
+            this.close();
+        }
     }
 }
 
