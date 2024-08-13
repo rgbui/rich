@@ -4,10 +4,14 @@ import lodash from 'lodash';
 import { channel } from '../net/channel';
 import { lst } from '../i18n/store';
 import axios from 'axios';
+import shortUUID from 'short-uuid';
 
 export var util = {
     guid() {
         return channel.query('/guid');
+    },
+    shortGuid() {
+        return shortUUID.generate();
     },
     clone<T>(json: T): T {
         return lodash.cloneDeep(json);

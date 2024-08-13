@@ -565,6 +565,12 @@ if (typeof Array.prototype.eachAsync == 'undefined') {
                     arr.append(item[key]);
                 }
             }
+            else if (typeof key == 'function') {
+                var r = key(item);
+                if (!arr.includes(r)) {
+                    arr.push(r);
+                }
+            }
         });
         return arr;
     }
