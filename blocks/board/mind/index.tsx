@@ -21,6 +21,12 @@ import { AppearAnchor } from "../../../src/block/appear";
 import { ColorUtil } from "../../../util/color";
 import { util } from "../../../util/util";
 import './style.less';
+import { getTemplateInstance } from "../../../extensions/ai/prompt";
+import { getAiDefaultModel } from "../../../net/ai/cost";
+import { channel } from "../../../net/channel";
+import lodash from 'lodash';
+import { onBlockPickLine } from "../../../extensions/ai/util";
+import { BoardMindLinghtColorList } from "../../../extensions/color/data";
 
 @url('/flow/mind')
 export class FlowMind extends Block {
@@ -76,7 +82,7 @@ export class FlowMind extends Block {
     @prop()
     lineColor: string;
     @prop()
-    lineWidth: number = 2;
+    lineWidth: number = 3;
     @prop()
     isEditedMindBoxStyle: boolean = false;
     @prop()
@@ -322,6 +328,7 @@ export class FlowMind extends Block {
                     else {
                         if (this.mindDirection == 'x') {
                             keys = 'otherChilds';
+                            keys = 'subChilds';
                         }
                         else if (this.mindDirection == 'y') {
                             pa = this.parent as FlowMind;
@@ -333,6 +340,10 @@ export class FlowMind extends Block {
                         }
                     }
                 }
+                if ((pa as FlowMind).isMindRoot) {
+                    data.lineColor = BoardMindLinghtColorList().randomOf().color
+                }
+                console.log('data', data);
                 var newBlock = await self.page.createBlock('/flow/mind',
                     data,
                     pa,
@@ -517,8 +528,7 @@ export class FlowMind extends Block {
         cs.push({ name: 'borderColor', value: this.minBoxStyle.borderColor });
         cs.push({ name: 'borderRadius', value: this.minBoxStyle.radius });
         cs.push({ name: 'align', value: this.align });
-
-
+        cs.push({ name: "ai" });
         return cs;
     }
     async setBoardEditCommand(name: string, value: any) {
@@ -566,7 +576,7 @@ export class FlowMind extends Block {
     }
     async getBoardCopyStyle() {
         var r = await super.getBoardCopyStyle();
-        ['mindDirection','mindLineType'].forEach(c => {
+        ['mindDirection', 'mindLineType'].forEach(c => {
             delete r.data[c];
         })
         return r;
@@ -1023,6 +1033,207 @@ export class FlowMind extends Block {
     blurAnchor(this: Block, anchor: AppearAnchor) {
         this.page.kit.picker.onRePicker();
     }
+    async mindAI(command, content) {
+
+        if (this.isMindRoot && this.direction == 'none') {
+            this.updateProps({
+                direction: 'x'
+            }, BlockRenderRange.self)
+        }
+        var text = await new Promise((resolve: (r: string) => void, reject) => {
+            var prompt = getTemplateInstance(command, { content: content });
+            var anwser = '';
+            var mindText = '';
+
+            var current: FlowMind = this;
+            var currentDeep: string = '';
+            var willCreateSubMind: boolean = false;
+
+            var keys = this.parentKey;
+            if (this.isMindRoot) {
+                keys = BlockChildKey.otherChilds;
+                if (this.otherChilds.length == 0 && this.subChilds.length > 0) keys = BlockChildKey.subChilds;
+            }
+            var isGetRoot = false;
+            var sus: { n: number, text: string }[] = [{ n: this.deep, text: currentDeep }];
+            var createSubMind = async (ts: { deep: string, text: string }[]) => {
+                if (willCreateSubMind) return;
+                willCreateSubMind = true;
+
+                try {
+                    for (let i = 0; i < ts.length; i++) {
+                        var t = ts[i];
+
+                        if (t?.text.startsWith('``') || t?.text == '' || t.deep == '') continue;
+                        if (t.deep == '#' || t.deep == '' || isGetRoot == false && t.deep.length == 1 && (t.text == content || `*${content}*` == t.text || `**${content}**` == t.text)) {
+                            isGetRoot = true;
+                            continue;
+                        }
+                        var pos: 'next' | 'parent' | 'sub' = 'next';
+                        if (t.deep.indexOf('#') > -1) {
+                            if (currentDeep.indexOf('#') == -1) {
+                                if (!currentDeep) pos = 'sub'
+                                else pos = 'parent'
+                            }
+                            else {
+                                if (t.deep.length < currentDeep.length) {
+                                    pos = 'parent'
+                                }
+                                else if (t.deep.length > currentDeep.length) {
+                                    pos = 'sub'
+                                }
+                            }
+                        }
+                        else {
+                            if (currentDeep.indexOf('#') > -1 || !currentDeep) {
+                                pos = 'sub'
+                            }
+                            else {
+                                if (t.deep.length < currentDeep.length) {
+                                    pos = 'parent'
+                                }
+                                else if (t.deep.length > currentDeep.length) {
+                                    pos = 'sub'
+                                }
+                            }
+                        }
+                        var newBlock: Block
+
+
+                        if (pos == 'next') {
+                            newBlock = await this.page.createBlock('/flow/mind', {
+                                content: t.text,
+                                lineColor: (current.parent as FlowMind)?.isMindRoot ? BoardMindLinghtColorList().randomOf().color : undefined,
+
+                            }, current.parent, current.at + 1, current.parentKey);
+                        }
+                        else if (pos == 'parent') {
+                            var su;
+                            for (let i = 1; i < sus.length; i++) {
+                                if (sus[i].text.indexOf('#') > -1) {
+                                    if (t.deep.indexOf('#') > -1 && t.deep.length == sus[i].text.length) {
+                                        su = sus[i];
+                                        break;
+                                    }
+                                }
+                                else {
+                                    if (t.deep.length == sus[i].text.length) {
+                                        su = sus[i];
+                                        break;
+                                    }
+                                }
+                            }
+                            var pa = current.parent as FlowMind;
+                            if (su) {
+                                var n = pa.deep - su.n;
+                                for (let m = 0; m < n; m++) {
+                                    pa = pa.parent as FlowMind;
+                                }
+                            }
+                            newBlock = await this.page.createBlock('/flow/mind', {
+                                content: t.text,
+
+                                lineColor: (pa.parent as FlowMind)?.isMindRoot ? BoardMindLinghtColorList().randomOf().color : undefined,
+
+                            }, pa.parent, pa.at + 1, pa.parentKey);
+                        }
+                        else if (pos == 'sub') {
+                            var nd = current.deep + 1;
+                            if (!sus.find(g => g.n == nd)) {
+                                sus.push({
+                                    n: nd,
+                                    text: t.deep
+                                })
+                            }
+                            newBlock = await this.page.createBlock('/flow/mind', {
+                                content: t.text,
+                                lineColor: (current as FlowMind)?.isMindRoot ? BoardMindLinghtColorList().randomOf().color : undefined,
+                            }, current, current.blocks[keys].length, keys);
+                        }
+                        await onBlockPickLine(this.page, newBlock, false);
+                        newBlock.mounted(async () => {
+                            this.renderAllMinds();
+                            await this.forceManualUpdate();
+                        })
+                        newBlock.parent.forceManualUpdate();
+                        current = newBlock as FlowMind;
+                        currentDeep = t.deep;
+                    }
+                }
+                catch (ex) {
+                    console.error(ex);
+                }
+                finally {
+                    willCreateSubMind = false;
+                }
+            }
+
+            var getTs = (text) => {
+                var ts = text.split(/\n/g).map((t, i) => {
+                    t = t.trimEnd();
+                    if (!t.trim()) return null;
+                    var at = -1;
+                    ["+", "-", '*', ".", '•'].forEach(c => {
+                        if (t.indexOf(c) > -1 && at == -1) {
+                            at = t.indexOf(c) + 1
+                        }
+                    })
+                    if (at == -1) {
+                        if (t.indexOf('#') > -1) {
+                            var n = t.replace(/^[\s]*#+/g, '');
+                            at = t.indexOf(n);
+                        }
+                    }
+                    if (at == -1) return {
+                        deep: '',
+                        text: t.trim()
+                    }
+                    return {
+                        deep: t.slice(0, at),
+                        text: t.slice(at).trim(),
+                    }
+                })
+                lodash.remove(ts, g => g ? false : true);
+                return ts;
+            }
+            channel.post('/text/ai/stream', {
+                question: prompt,
+                model: getAiDefaultModel(this?.page.ws?.aiConfig?.text),
+                async callback(str, done, contoller) {
+                    if (typeof str == 'string') {
+                        anwser += str;
+                        mindText += str;
+                    }
+                    if (willCreateSubMind == false) {
+                        if (anwser.indexOf('\n') > -1) {
+                            var text = anwser.slice(0, anwser.lastIndexOf('\n'));
+                            anwser = anwser.slice(anwser.lastIndexOf('\n') + 1);
+                            createSubMind(getTs(text));
+                        }
+                    }
+                    if (done) {
+                        if (anwser) {
+                            for (let i = 0; i < 1000; i++) {
+                                if (willCreateSubMind == false) {
+                                    await createSubMind(getTs(anwser));
+                                    break;
+                                }
+                                await util.delay(3);
+                            }
+                        }
+                        resolve(mindText)
+                    }
+                }
+            });
+
+        })
+        this.page.addActionAfterEvent(async () => {
+            await util.delay(10);
+            this.renderAllMinds();
+            await this.forceManualUpdate();
+        })
+
+    }
 }
 
 @view('/flow/mind')
@@ -1035,14 +1246,14 @@ export class FlowMindView extends BlockView<FlowMind> {
             var leftPoints = this.block.blocks.subChilds.map((sub: FlowMind) => {
                 var s = sub.fixedSize;
                 var subRect = new Rect(0, 0, s.width, s.height);
-                return sub.matrix.appended(sub.moveMatrix).transform(this.block.mindDirection != 'y' ? subRect.rightMiddle : subRect.bottomCenter);
+                return { mind: sub, point: sub.matrix.appended(sub.moveMatrix).transform(this.block.mindDirection != 'y' ? subRect.rightMiddle : subRect.bottomCenter) };
             });
             if (this.block.subMindSpread === false) leftPoints = [];
             var rightOrigin = this.block.mindDirection != 'y' ? rect.rightMiddle : rect.bottomCenter;
             var rightPoints = this.block.blocks.otherChilds.map((sub: FlowMind) => {
                 var s = sub.fixedSize;
                 var subRect = new Rect(0, 0, s.width, s.height);
-                return sub.matrix.appended(sub.moveMatrix).transform(this.block.mindDirection != 'y' ? subRect.leftMiddle : subRect.topCenter);
+                return { mind: sub, point: sub.matrix.appended(sub.moveMatrix).transform(this.block.mindDirection != 'y' ? subRect.leftMiddle : subRect.topCenter) };
             });
             if (this.block.otherMindSpread === false) rightPoints = [];
             this.flowMindLine.updateView(

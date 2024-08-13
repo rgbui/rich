@@ -4,17 +4,17 @@ import { Point, RectUtility, Rect } from "../../../src/common/vector/point";
 
 export class FlowMindLine extends React.Component<{ mind: FlowMind }> {
     private leftOrigin: Point;
-    private leftPoints: Point[] = [];
+    private leftPoints: { point: Point, mind: FlowMind }[] = [];
     private rightOrigin: Point;
-    private rightPoints: Point[] = [];
+    private rightPoints: { point: Point, mind: FlowMind }[] = [];
     private range: Rect;
     direction: 'x' | 'y' | 'none';
     updateView(
         direction: 'x' | 'y' | 'none',
         leftOrigin: Point,
-        leftPoints: Point[],
+        leftPoints: { point: Point, mind: FlowMind }[],
         rightOrigin: Point,
-        rightPoints: Point[]
+        rightPoints: { point: Point, mind: FlowMind }[]
     ) {
         this.direction = direction;
         this.leftOrigin = leftOrigin;
@@ -23,27 +23,39 @@ export class FlowMindLine extends React.Component<{ mind: FlowMind }> {
         this.rightPoints = rightPoints;
         this.range = RectUtility.getPointsBound([
             this.leftOrigin,
-            ...this.leftPoints,
+            ...this.leftPoints.map(c => c.point),
             this.rightOrigin,
-            ...this.rightPoints,
+            ...this.rightPoints.map(c => c.point),
         ]).extend(20);
         this.forceUpdate()
     }
     renderLines() {
         return <>
-            {this.leftPoints.map((point, index) => {
+            {this.leftPoints.map((po, index) => {
+                var point = po.point;
                 var dString = GetLineSvg(this.props.mind.mindRoot.lineType, this.direction as any, this.leftOrigin, point, 0.4, {
                     isEnd: index == this.leftPoints.length - 1,
                     isStart: index == 0
                 })
-                return <path key={index} d={dString}  ></path>
+                return <path key={index} d={dString}
+                    strokeWidth={po.mind.lineWidth || undefined}
+                    stroke={
+                        po.mind.lineColor && po.mind.lineColor != 'transparent' ? po.mind.lineColor : undefined
+                    }
+                ></path>
             })}
-            {this.rightPoints.map((point, index) => {
+            {this.rightPoints.map((po, index) => {
+                var point = po.point;
                 var dString = GetLineSvg(this.props.mind.mindRoot.lineType, this.direction as any, this.rightOrigin, point, 0.4, {
                     isEnd: index == this.rightPoints.length - 1,
                     isStart: index == 0
                 })
-                return <path key={'right' + index} d={dString}  ></path>
+                return <path
+                    strokeWidth={po.mind.lineWidth || undefined}
+                    stroke={
+                        po.mind.lineColor && po.mind.lineColor != 'transparent' ? po.mind.lineColor : undefined
+                    }
+                    key={'right' + index} d={dString}  ></path>
             })}
         </>
     }
