@@ -595,7 +595,7 @@ export async function inputBackspaceDeleteContent(write: PageWrite,
                     insertSelection.anchor = write.kit.anchorCursor.startAnchor;
                 }
                 await write.kit.anchorCursor.startAnchor.block.updateAppear(write.kit.anchorCursor.startAnchor, write.kit.anchorCursor.startAnchor.textContent, BlockRenderRange.self);
-                if (sb.isContentEmpty && sb.url != BlockUrlConstant.Title) {
+                if (sb.isContentEmpty && sb.url != BlockUrlConstant.Title && !sb.isFreeBlock) {
                     await sb.delete();
                     isStartDelete = true;
                 }
@@ -607,7 +607,7 @@ export async function inputBackspaceDeleteContent(write: PageWrite,
             if (write.kit.anchorCursor.startAnchor.isText) {
                 write.kit.anchorCursor.startAnchor.setContent(write.kit.anchorCursor.startAnchor.textContent.slice(0, write.kit.anchorCursor.startOffset));
                 await sb.updateAppear(write.kit.anchorCursor.startAnchor, write.kit.anchorCursor.startAnchor.textContent, BlockRenderRange.self);
-                if (sb.isContentEmpty && sb.url != BlockUrlConstant.Title) {
+                if (sb.isContentEmpty && sb.url != BlockUrlConstant.Title && !sb.isFreeBlock) {
                     var isLine = sb.isLine;
                     if (startBlock == sb) { startBlock = undefined }
                     await sb.delete();
@@ -625,7 +625,7 @@ export async function inputBackspaceDeleteContent(write: PageWrite,
                     insertSelection.anchor = write.kit.anchorCursor.endAnchor;
                 }
                 await eb.updateAppear(write.kit.anchorCursor.endAnchor, write.kit.anchorCursor.endAnchor.textContent, BlockRenderRange.self);
-                if (eb.isContentEmpty && eb.url != BlockUrlConstant.Title) {
+                if (eb.isContentEmpty && eb.url != BlockUrlConstant.Title && !eb.isFreeBlock) {
                     var isLine = eb.isLine;
                     if (endBlock == eb) { endBlock = undefined }
                     await eb.delete()
@@ -639,7 +639,7 @@ export async function inputBackspaceDeleteContent(write: PageWrite,
             }
         }
         await rowBlocks.eachAsync(async (b) => {
-            if (b.isContentEmpty && b.url != BlockUrlConstant.Title) await b.delete()
+            if (b.isContentEmpty && b.url != BlockUrlConstant.Title && !b.isFreeBlock) await b.delete()
         })
         if (options?.cut) {
             if (deleteText)
