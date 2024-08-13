@@ -34,7 +34,7 @@ export class FontFamily extends React.Component<{
             </div>
             {props.tool.isShowDrop('fontFamily') && <div style={{ top: 35 }} className="w-250 z-2 bg-white max-h-300 overflow-y pos shadow-s padding-h-10 round ">
                 {GetFontStores().map(c => {
-                    return <div className="flex h-30 padding-w-5 gap-w-5  round cursor"
+                    return <div className="flex h-30 padding-w-5 gap-w-5 item-hover-light round cursor"
                         onMouseDown={e => changeFont(c)}
                         key={c.name}
                     >
