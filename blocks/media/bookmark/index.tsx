@@ -5,7 +5,7 @@ import { Block } from "../../../src/block";
 import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
 import { ResourceArguments } from "../../../extensions/icon/declare";
 import { useOutSideUrlInput } from "../../../extensions/link/outsite.input";
-import { PointArrow, Rect } from "../../../src/common/vector/point";
+import { Rect } from "../../../src/common/vector/point";
 import { BookSvg, DotsSvg, RefreshSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { channel } from "../../../net/channel";
@@ -24,7 +24,7 @@ import "./style.less";
 export class Bookmark extends Block {
     display = BlockDisplay.block;
     @prop()
-    fixedWidth =500;
+    fixedWidth = 500;
     @prop()
     fixedHeight = 120;
     @prop()
@@ -87,6 +87,8 @@ export class Bookmark extends Block {
         finally {
             this.loading = false;
         }
+        var rect = Rect.fromEle(this.el);
+        this.imageWidth = rect.width * 0.2;
         this.forceManualUpdate();
     }
     async openInputBookmark() {
