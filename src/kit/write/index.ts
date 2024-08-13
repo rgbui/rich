@@ -87,7 +87,9 @@ export class PageWrite {
         var sel = window.getSelection();
         var rowBlock = aa.block.closest(x => x.isContentBlock);
         if (rowBlock?.isFreeBlock) {
-            if (!sel.focusNode || sel.focusNode && !rowBlock.el.contains(sel.focusNode)) {
+            var fb = sel.focusNode ? rowBlock.page.getEleBlock(sel.focusNode as HTMLElement) : undefined;
+            if (fb && fb.isLine) fb = fb.closest(x => x.isContentBlock);
+            if (!sel.focusNode || sel.focusNode && !rowBlock.el.contains(sel.focusNode) || fb && fb !== rowBlock) {
                 this.kit.picker.onMousedownAppear(aa, event);
                 return;
             }
