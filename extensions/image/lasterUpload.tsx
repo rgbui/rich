@@ -59,7 +59,7 @@ export class LastUploadFiles extends React.Component<{
     }
     renderItem(item: ResourceArguments, index: number) {
         return <div style={{ width: 'calc(25% - 15px)' }} onMouseDown={e => this.props.onChange(item)} className="gap-l-5 padding-5 gap-b-5 item-hover  round cursor" key={index}>
-            <ToolTip overlay={<div className="f-12 l-20 text-1">
+            <ToolTip overlay={<div className="f-12 l-20 text-white">
                 <div><S>创建人</S>:<Avatar userid={item.creater} size={24}></Avatar></div>
                 <div><S>文件名</S>:{item.filename}</div>
                 <div><S>大小</S>:{util.byteToString(item.size)}</div>
