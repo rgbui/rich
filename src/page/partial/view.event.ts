@@ -87,8 +87,8 @@ export class Page$ViewEvent {
      */
     private lastTriggerTime;
     onWheel(this: Page, event: React.WheelEvent) {
-        if (this.readonly) return;
-        if (this.isDeny) return;
+        // if (this.readonly) return;
+        // if (this.isDeny) return;
         this.kit.handle.onCloseBlockHandle();
         if (this.isBoard) {
 
@@ -158,8 +158,6 @@ export class Page$ViewEvent {
                 var mc = ma.clone();
                 mc.translate(dx, dy);
                 self.onSetMatrix(mc);
-
-
             },
         })
     }
@@ -170,6 +168,7 @@ export class Page$ViewEvent {
      */
     onKeydown(this: Page, event: KeyboardEvent) {
         if (this.isPageOff == true) return;
+        if (this.readonly) return;
         if (this.isDeny) return;
         var ele = event.target as HTMLElement;
         if (ele && (ele === document.body || this.view.el === ele || this.view.el.contains(ele))) {
@@ -177,6 +176,7 @@ export class Page$ViewEvent {
         }
     }
     onKeyup(this: Page, event: KeyboardEvent) {
+        if (this.readonly) return;
         if (this.isDeny) return;
         // console.log(event,event.key,event.code,this.keyboardPlate.keys,'keyup');
         this.keyboardPlate.keyup(event);
@@ -185,6 +185,7 @@ export class Page$ViewEvent {
 
     }
     async onUndo(this: Page) {
+        if (this.readonly) return;
         if (this.isDeny) return;
         forceCloseTextTool()
         closeBoardEditTool();
@@ -197,6 +198,7 @@ export class Page$ViewEvent {
         else ShyAlert(lst('没有可撤销的操作'))
     }
     async onRedo(this: Page) {
+        if (this.readonly) return;
         if (this.isDeny) return;
         forceCloseTextTool()
         closeBoardEditTool();
@@ -318,10 +320,15 @@ export class Page$ViewEvent {
         this.view.forceUpdate();
         if (this.kit.boardMap.visible == true)
             this.kit.boardMap.forceUpdate();
+        if (this.kit.borardGrid) {
+            this.kit.borardGrid.draw(true);
+        }
         closeBoardEditTool();
+        forceCloseTextTool();
     }
     onFitZoom(this: Page) {
         closeBoardEditTool();
+        forceCloseTextTool();
         var cs = this.views.first().childs;
         var bs = cs.map(c => {
             var size = c.fixedSize;
@@ -566,6 +573,7 @@ export class Page$ViewEvent {
         }
     }
     async loadPageParents(this: Page) {
+
         var c = await channel.get('/page/query/parents',
             {
                 ws: this.ws,
