@@ -22,7 +22,10 @@ export class MaterialEmojiView extends React.Component<{
             </div>
             <div>
                 {this.mode == 'emoji' && <EmojiView onChange={(d) => {
-                    this.props.change(d)
+                    this.props.change({
+                        name: 'emoji',
+                        code: d.code
+                    } as any)
                 }}></EmojiView>}
             </div>
         </div>
