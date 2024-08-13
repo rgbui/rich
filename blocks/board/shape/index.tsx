@@ -30,7 +30,6 @@ export class Shape extends Block {
     align: 'left' | 'center' | 'right' = 'center';
     @prop()
     valign: 'top' | 'middle' | 'bottom' = 'middle';
-
     @prop()
     fixedWidth: number = 200;
     @prop()
@@ -64,6 +63,7 @@ export class Shape extends Block {
         cs.push({ name: 'height', value: this.fixedHeight });
         cs.push({ name: 'align', value: this.align });
         cs.push({ name: 'valign', value: this.valign });
+        cs.push({ name: 'ai' })
 
         return cs;
     }
@@ -175,40 +175,48 @@ export class Shape extends Block {
         return this.getVisibleBound()
     }
 }
+
 @view('/shape')
 export class ShapeView extends BlockView<Shape> {
     renderView() {
         var fs = this.block.fixedSize;
-
-        var w = this.block.pattern.getSvgStyle()?.strokeWidth || 1
-
+        var w = this.block.pattern.getSvgStyle()?.strokeWidth || 1;
         var style = this.block.visibleStyle;
         style.width = this.block.fixedSize.width;
         style.height = this.block.fixedSize.height;
-        var pd = this.block.realPx(20);
+        var pd = 20;
         var contentStyle: CSSProperties = {
 
         }
         if (this.block.align == 'left') {
             contentStyle.justifyContent = 'flex-start';
+            contentStyle.paddingLeft = pd;
+            contentStyle.paddingRight = pd;
         }
         else if (this.block.align == 'center') {
             contentStyle.justifyContent = 'center';
+            contentStyle.paddingLeft = pd;
+            contentStyle.paddingRight = pd;
         }
         else if (this.block.align == 'right') {
-
             contentStyle.justifyContent = 'flex-end';
+            contentStyle.paddingLeft = pd;
+            contentStyle.paddingRight = pd;
         }
+
         if (this.block.valign == 'top') {
             contentStyle.alignItems = 'flex-start';
+            contentStyle.paddingTop = pd;
+            contentStyle.paddingBottom = pd;
         }
         else if (this.block.valign == 'middle') {
             contentStyle.alignItems = 'center';
         }
         else if (this.block.valign == 'bottom') {
             contentStyle.alignItems = 'flex-end';
+            contentStyle.paddingTop = pd;
+            contentStyle.paddingBottom = pd;
         }
-
 
         var getSvg = () => {
             if (!this.block.svgName.endsWith('.json')) {
@@ -225,6 +233,9 @@ export class ShapeView extends BlockView<Shape> {
             sb.extend(w);
             var vb = sb.viewBox;
             return sb.render({
+                attrs: {
+                    shapeRendering: 'geometricPrecision'
+                },
                 style: {
                     marginLeft: 0 - w / 2,
                     marginTop: 0 - w / 2,
@@ -241,7 +252,7 @@ export class ShapeView extends BlockView<Shape> {
                     top: 0,
                     left: 0,
                     textDecoration: 'inherit',
-                    padding: pd,
+                    // padding: pd,
                     width: this.block.fixedSize.width,
                     height: this.block.fixedSize.height,
                     overflow: 'hidden',

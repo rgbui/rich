@@ -77,6 +77,7 @@ export class Note extends Block {
         cs.push({ name: 'width', value: this.fixedWidth });
         cs.push({ name: 'height', value: this.fixedHeight });
         cs.push({ name: 'turnShapes', value: { turnUrl: this.url } });
+        cs.push({name:'ai'})
         return cs;
     }
     async setBoardEditCommand(name: string, value: any) {

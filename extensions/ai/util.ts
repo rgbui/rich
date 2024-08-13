@@ -69,7 +69,7 @@ export async function onBlockPickLine(page: Page, block: Block, isAction?: boole
     if (block.childs.length > 0) return
     if (block['__pick_line'] == true) return;
     block['__pick_line'] = true;
-    if ([BlockUrlConstant.TextSpan, BlockUrlConstant.List, BlockUrlConstant.Head].includes(block.url as any)) {
+    if ([BlockUrlConstant.TextSpan,BlockUrlConstant.Mind, BlockUrlConstant.List, BlockUrlConstant.Head].includes(block.url as any)) {
         var cs = block.content;
         var ts: { name: 'bold' | 'italic' | 'line-through' | 'code' | 'text' | 'url', content: string }[] = [];
         for (let i = 0; i < cs.length; i++) {
