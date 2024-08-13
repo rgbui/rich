@@ -83,7 +83,12 @@ export class BoardMap extends React.Component<{ kit: Kit }> {
         });
         lodash.remove(bs, g => g ? false : true);
         var points = bs.map(b => b.points).flat();
-        return RectUtility.getPointsBound(points)
+        if (points.length > 0)
+            return RectUtility.getPointsBound(points)
+
+        var size = this.props.kit.page.bound;
+        var rect = new Rect(0, 0, size.width, size.height);
+        return rect;
     }
     scale: number = 1;
     render() {
@@ -95,7 +100,7 @@ export class BoardMap extends React.Component<{ kit: Kit }> {
             right: 30,
             width: winRect.width,
             height: winRect.height,
-            zIndex: 2000,
+            zIndex:10003,
             overflow: 'hidden',
             userSelect: 'none'
         }
