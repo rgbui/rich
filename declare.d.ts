@@ -79,3 +79,7 @@ interface Window {
   },
   shyLog: (...args: any[]) => void
 }
+
+interface Console{
+  dev(...args: any[]): void;
+}

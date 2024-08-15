@@ -9,6 +9,9 @@ import "./src/block/declare";
 import "./extensions/declare";
 import "./src/page/index";
 
+import  "./test";
+
 
 // import { testExpressIsCorrect } from "./extensions/data-grid/formula/express/test";
 // testExpressIsCorrect()
+

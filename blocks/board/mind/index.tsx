@@ -40,7 +40,10 @@ export class FlowMind extends Block {
                 });
             }
             else {
-                this.minBoxStyle.type = 'none'
+                this.minBoxStyle.type = 'none';
+                await this.pattern.setFontStyle({
+                    fontSize: 16,
+                });
                 await this.pattern.setFillStyle({ color: 'rgb(122,122,122)' });
             }
         }
@@ -582,6 +585,7 @@ export class FlowMind extends Block {
         return r;
     }
     async setBoardCopyStyle(this: Block, name: string, value) {
+        //console.log('setBoardCopyStyle', name, value);
         await this.setBoardEditCommand(name, value);
     }
     get contentStyle() {

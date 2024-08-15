@@ -34,7 +34,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
     var gm = block ? block.panelGridMap : kit.page.gridMap;
     var currentBlocks: Block[];
     var scrollDiv = block?.panel ? block.panel.getScrollDiv() : kit.page.getScrollDiv();
-    if(!scrollDiv) scrollDiv = kit.page.getScrollDiv();
+    if (!scrollDiv) scrollDiv = kit.page.getScrollDiv();
     /**
      * 当元素处于拖动点击时，不在允许拖选元素
      * 一般元素是通过手柄触发的，但还有直接手动触发的如数据表中的看板元素就是手动触发的
@@ -91,7 +91,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
             }
             else {
                 if (block) {
-                    //console.log('block', block);
+                    if (window.shyConfig?.isDev) console.log('block', block);
                     if (!block.isLayout) {
                         var a = findBlockNearAppearByPoint(block, Point.from(ev));
                         if (a) {
@@ -102,7 +102,8 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                         }
                     }
                     else {
-                        //console.log('block panel', block, block.url);
+                        if (window.shyConfig?.isDev)
+                            console.log('block panel', block, block.url);
                         if (block.url == BlockUrlConstant.Col || block.url == BlockUrlConstant.Row) {
                             if (block.url == BlockUrlConstant.Row) {
                                 var c = block.childs.find(g => g.getVisibleBound().containX(ev.clientX));
@@ -166,8 +167,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                             kit.page.onCreateTailTextSpan(undefined);
                         else if ([PageLayoutType.ppt].includes(kit.page.pageLayout.type)) {
                             var lb = kit.page.views.first().findAll(c => c.url == BlockUrlConstant.CardBox).last()
-                            if (lb)
-                                kit.page.onCreateTailTextSpan(lb);
+                            if (lb) kit.page.onCreateTailTextSpan(lb);
                         }
                     }
                 }

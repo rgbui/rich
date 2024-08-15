@@ -179,14 +179,17 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
             width: '100vw',
             height: '100vh'
         }
+        console.dev('picker blocks render', this.picker.blocks);
+
         if (!this.picker.kit.page.isCanEdit) {
+            console.dev('page is not can edit');
             return <></>
         }
         var viewBox
         var b = this.picker.blocks[0];
         if (b?.page && !b.page.isBoard) {
             var bb = this.picker.kit.boardSelector.boardBlock;
-            // console.log('bbb',bb);
+            if (!bb) bb = b.closest(x => x.isBoardBlock && !x.isFrame);
             if (bb) {
                 var fb = bb.getVisibleContentBound();
                 delete style.bottom;

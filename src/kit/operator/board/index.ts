@@ -76,8 +76,8 @@ export function BoardDrag(
         }
     }
     var isCopy: boolean = false;
-    if (window.shyConfig.isDev)
-        console.log('board drag:', block, block?.isFreeBlock);
+
+    console.dev('board drag:', block, block?.isFreeBlock);
     if (kit.page.keyboardPlate.isShift() && block?.isFreeBlock) {
         //连选
         kit.picker.onShiftPicker([block]);
@@ -243,6 +243,13 @@ export function BoardDrag(
                     closeBoardEditTool()
                 }
                 else if (kit.picker.blocks.length > 0) await openBoardEditTool(kit);
+                else if (block) {
+                    var appear = block.findReverse(g => g.appearAnchors.length > 0, true)?.appearAnchors.last();
+                    console.log(block, appear)
+                    if (appear) {
+                        kit.anchorCursor.onFocusAppearAnchor(appear, { last: true })
+                    }
+                }
                 else {
                     if (kit.anchorCursor.currentSelectHandleBlocks.length > 0)
                         kit.anchorCursor.onClearSelectBlocks();

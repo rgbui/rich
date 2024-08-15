@@ -7,7 +7,7 @@ import { UserAction } from "../src/history/action";
 import { RobotInfo, UserBasic, UserStatus, WorkspaceMember } from "../types/user";
 import { ResourceArguments } from "../extensions/icon/declare";
 import { PayFeatureCheck } from "../component/pay";
-import { PageSourcePermission } from "../src/page/permission";
+import { AtomPermission, PageSourcePermission } from "../src/page/permission";
 import { WsConsumeType } from "./ai/cost";
 export type SockResponse<T, U = string> = {
         /**
@@ -146,6 +146,7 @@ export interface ChannelDelMapUrls {
 	"/ws/role/delete":{args:{roleId:string},returnType:Promise<SockResponse<void>>},
 	"/ws/user/delete/role":{args:{userid:string,roleId:string},returnType:Promise<SockResponse<void>>},
 	"/ws/comment/del":{args:{id?:string,elementUrl?: string},returnType:Promise<SockResponse<void>>},
+	"/ws/clear/all":{args:{wsId?:string},returnType:Promise<SockResponse<void>>},
 	"/del/workspace/template":{args:{id:string},returnType:Promise<SockResponse<void>>},
 	"/page/deleted/clean":{args:{ws?:LinkWs,wsId?:string,pageId:string},returnType:Promise<SockResponse<void>>},
 	"/view/snap/del":{args:{id:string},returnType:Promise<SockResponse<void>>},

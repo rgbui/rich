@@ -7,6 +7,7 @@ import { MenuItem } from "./declare";
 import { MenuItemView } from "./item";
 import { MenuView } from "./menu";
 import { S } from "../../../i18n/view";
+import { util } from "../../../util/util";
 
 export class MenuBox extends React.Component<{
     parent: MenuPanel<any> | MenuView,
@@ -23,7 +24,7 @@ export class MenuBox extends React.Component<{
         return <div className='shy-menu-box' ref={e => this.el = e} style={{
             top: this.point.y,
             left: this.point.x,
-            zIndex:this.zindex,
+            zIndex: this.zindex,
             ...(this.props.style || {}),
             overflowY: isVisible ? "visible" : "auto",
             maxHeight: isVisible ? '100vh' : undefined,
@@ -48,6 +49,7 @@ export class MenuBox extends React.Component<{
             this.zindex = tipLayer.zoom(this);
         else this.zindex = popoverLayer.zoom(this);
         this.style = style || {};
+        this.style = util.clearObjectUndefined(this.style);
         if (pos.fixPoint) this.point = pos.fixPoint;
         else this.point = pos.roundArea ? pos.roundArea.leftTop : pos.roundPoint;
         if (pos.fixPoint) this.forceUpdate()

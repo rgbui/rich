@@ -32,6 +32,7 @@ import { useCommentListView } from "../../../extensions/comment/dialoug";
 import { IconValueType } from "../../../component/view/icon";
 import { memoryCopyData, memoryReadData } from "../../page/common/copy";
 import { domToPng } from "../../common/png";
+import { TextEle } from "../../common/text.ele";
 
 const BOARD_BLOCK_STYLE = 'boardBlockStyle';
 
@@ -384,6 +385,7 @@ export class Block$Event {
             },
             ms,
             {
+                height: 500,
                 async input(item) {
                     await self.onContextMenuInput(item);
                 },
@@ -508,6 +510,9 @@ export class Block$Event {
         action?: () => Promise<void>
     }) {
         var { appear, oldValue, newValue, action } = options;
+        if (appear.prop == 'content')
+            newValue = TextEle.getTextHtml(newValue);
+     
 
         await this.page.onAction(ActionDirective.onInputText, async () => {
             await this.manualUpdateProps({ [appear.prop]: oldValue }, { [appear.prop]: newValue }, BlockRenderRange.none, { isOnlyRecord: true });
@@ -930,12 +935,16 @@ export class Block$Event {
         }
     }
     async onSetBoardCopyStyle(this: Block, data: any) {
+        if (data.data) data = data.data;
         await this.page.onAction('onSetBoardCopyStyle', async () => {
             for (let name in data) {
                 var value = data[name];
                 await this.setBoardEditCommand(name, value);
             }
-        })
+        });
+        if (this.page.kit.picker.blocks.some(s => s == this)) {
+            this.page.kit.picker.onRePicker()
+        }
     }
     async onCopyStyle(this: Block) {
         var style = await this.getBoardCopyStyle();

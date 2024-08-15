@@ -1,6 +1,5 @@
 import { PageSvg, TopicSvg, DocCardsSvg } from "../../component/svgs";
 import { IconValueType } from "../../component/view/icon";
-import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { IconArguments, ResourceArguments } from "../../extensions/icon/declare";
 import { lst } from "../../i18n/store";
 import { WsConsumeType } from "../../net/ai/cost";

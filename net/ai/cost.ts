@@ -76,7 +76,13 @@ export enum WsConsumeType {
     glm_4_air = 104,
     glm_4_flash = 105,
     cogview_3 = 110,
-    glm_embedding_2 = 111
+    glm_embedding_2 = 111,
+
+    /**
+    * deepseek
+    */
+    deepseek_chat = 120,
+    deepseek_coder = 121,
 }
 
 export function getConstValue(type: WsConsumeType, cost) {
@@ -182,6 +188,10 @@ export function getWsConsumeType(type: WsConsumeType) {
             return 'charglm-3';
         case WsConsumeType.glm_embedding_2:
             return 'embedding-2'
+        case WsConsumeType.deepseek_chat:
+            return 'deepseek-chat';
+        case WsConsumeType.deepseek_coder:
+            return 'deepseek-coder';
         case WsConsumeType.diskSpace:
             return lst('空间')
         case WsConsumeType.docCount:
@@ -199,24 +209,22 @@ export function getAiModelOptions() {
         { text: 'OpenAI', type: MenuItemType.text },
         { text: 'GPT-3.5', value: WsConsumeType.gpt_35_turbo },
         { text: 'GPT-4', value: WsConsumeType.gpt_4 },
-        { text: 'GPT-4V', value: WsConsumeType.gpt_4_vision },
         { type: MenuItemType.divide },
         { type: MenuItemType.help, helpInline: true, text: 'Learn about GPT supported by Shy', url: 'https://help.shy.red/page/62#9MZQerw5daPi4YuNpAK39u' }
     ] : [
+        { text: 'DeepSeek', value: WsConsumeType.deepseek_chat },
         { text: lst('智谱'), type: MenuItemType.text },
-        { text: 'Glm-4-flash', value: WsConsumeType.glm_4_flash },
-        { text: 'Glm-4-air', value: WsConsumeType.glm_4_air },
+        { text: 'Glm-4-Flash', value: WsConsumeType.glm_4_flash },
+        { text: 'Glm-4-Air', value: WsConsumeType.glm_4_air },
         { text: 'Glm-4', value: WsConsumeType.glm_4 },
-        { text: 'Glm-3-turbo', value: WsConsumeType.glm_3_turbo },
-        // { text: 'Glm-4V', value: WsConsumeType.glm_4v },
+        { text: 'Glm-3-Turbo', value: WsConsumeType.glm_3_turbo },
         { text: lst('百度千帆'), type: MenuItemType.text, label: '文言一心' },
-        { text: 'ERNIE-Bot-turbo', value: WsConsumeType.ERNIE_Bot_turbo },
+        { text: 'ERNIE-Bot-Turbo', value: WsConsumeType.ERNIE_Bot_turbo },
         { text: 'ERNIE-Bot', value: WsConsumeType.ERNIE_Bot },
         { text: 'ERNIE-Bot-4', value: WsConsumeType.ERNIE_Bot_4 },
         { text: 'OpenAI', type: MenuItemType.text, label: '仅限体验' },
         { text: 'GPT-3.5', value: WsConsumeType.gpt_35_turbo },
         { text: 'GPT-4', value: WsConsumeType.gpt_4 },
-        { text: 'GPT-4V', value: WsConsumeType.gpt_4_vision },
         { type: MenuItemType.divide },
         { type: MenuItemType.help, helpInline: true, text: '了解诗云支持的语言大模型', url: 'https://help.shy.live/page/1554#msZje9gVt73jYtWbWMLScn' }
     ]
@@ -231,11 +239,7 @@ export function getAiImageModelOptions() {
         { type: MenuItemType.help, helpInline: true, text: 'Learn about the image generation model supported by Shy', url: 'https://help.shy.red/page/62#ujoyjqu7jFUorT6Y6qJvhZ' }
     ] : [
         { text: '智谱CogView-3', value: WsConsumeType.cogview_3 },
-        { text: 'Stable Diffusion XL', value: WsConsumeType.badiu_Stable_Diffusion_XL },
-        { text: '6pen', value: WsConsumeType.pen_6 },
-        { text: 'Stability', value: WsConsumeType.stability, label: '仅限体验' },
         { text: 'DALLE-3', value: WsConsumeType.dall_3, label: '仅限体验' },
-        { text: 'DALLE-2', value: WsConsumeType.dall_2, label: '仅限体验' },
         { type: MenuItemType.divide },
         { type: MenuItemType.help, helpInline: true, text: '了解诗云支持的图像生成模型', url: 'https://help.shy.live/page/1554#b5gBWSCWnLf9QRG7izYAsq' }
     ]
@@ -245,9 +249,8 @@ export function getAiEmbeddingsOptions() {
     return window.shyConfig.isUS ? [
         { text: 'DALLE-3', value: WsConsumeType.gpt_embedding },
     ] : [
-        { text: '智谱 Embedding(向量)', value: WsConsumeType.glm_embedding_2 },
+        // { text: '智谱 Embedding(向量)', value: WsConsumeType.glm_embedding_2 },
         { text: '文言一心 Embedding(向量', value: WsConsumeType.baidu_embedding },
-
     ]
 }
 
@@ -267,6 +270,7 @@ export function getAiDefaultModel(model: WsConsumeType, type?: 'text' | 'image' 
     else {
         switch (type) {
             case 'text':
+                return WsConsumeType.deepseek_chat;
                 return WsConsumeType.glm_4_flash
             case 'image':
                 return WsConsumeType.cogview_3

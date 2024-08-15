@@ -51,6 +51,7 @@ export class BoardBlockHover extends React.Component<{ kit: Kit }> {
         var b = this.block;
         if (b?.page && !b.page.isBoard) {
             var bb = this.props.kit.boardSelector.boardBlock;
+            if(!bb)bb=b.closest(x=>x.isBoardBlock && !x.isFrame);
             if (bb) {
                 var fb = bb.getVisibleContentBound();
                 delete style.bottom;

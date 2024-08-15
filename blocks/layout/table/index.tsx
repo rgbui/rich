@@ -613,6 +613,9 @@ export class Table extends Block {
             })
         })
         var dat = rs.findIndex(c => c.name == BlockDirective.comment);
+        if (this.isFreeBlock) {
+            dat = rs.findIndex(c => c.name == BlockDirective.lock);
+        }
         rs.splice(dat - 1, 0, { type: MenuItemType.divide }, {
             text: lst('表格操作'),
             icon: { name: 'byte', code: 'write' },
@@ -781,7 +784,7 @@ export class TableView extends BlockView<Table> {
             w += colRect.width;
             var bw = tableLeft + w;
             if (i == 0) {
-                if (event.clientX < tableLeft + colRect.width+9) {
+                if (event.clientX < tableLeft + colRect.width + 9) {
                     firstWidth = colRect.width;
                 }
             }

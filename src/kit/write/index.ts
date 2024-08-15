@@ -90,6 +90,7 @@ export class PageWrite {
             var fb = sel.focusNode ? rowBlock.page.getEleBlock(sel.focusNode as HTMLElement) : undefined;
             if (fb && fb.isLine) fb = fb.closest(x => x.isContentBlock);
             if (!sel.focusNode || sel.focusNode && !rowBlock.el.contains(sel.focusNode) || fb && fb !== rowBlock) {
+
                 this.kit.picker.onMousedownAppear(aa, event);
                 return;
             }
@@ -486,8 +487,6 @@ export class PageWrite {
             return;
         }
         if (aa.isText && inputEvent.data && aa.block.isLine && !(aa.block.isTextContent && aa.block.asTextContent.isBlankPlain) && !aa.block.next) {
-
-
             var isTextEnd = true;
             /**
              * 这里判断输入的光标是否处于输入点的尾部，
@@ -522,7 +521,6 @@ export class PageWrite {
          * https://developer.mozilla.org/zh-CN/docs/Web/API/InputEvent/inputType
          */
         else if (inputEvent.inputType == 'deleteContentBackward' && await inputBackSpaceTextContent(this, aa, event)) { return; }
-
         await InputStore(aa);
     }
     /**
@@ -532,8 +530,24 @@ export class PageWrite {
     async onSelectionAll(aa: AppearAnchor) {
         var block = aa.block;
         if (block.isLine) block = block.closest(x => x.isContentBlock);
-        var firstAppear = block.find(g => g.appearAnchors.length > 0, true)?.appearAnchors.find(g => true);
-        var lastAppear = block.findReverse(g => g.appearAnchors.length > 0, true)?.appearAnchors.findLast(g => true);
+        var firstAppear: AppearAnchor;
+        if (block.appearAnchors.length > 0) {
+            firstAppear = block.appearAnchors.find(g => true);
+        }
+        else if (block.childs.length > 0) {
+            var child = block.childs.find(g => g.appearAnchors.length > 0);
+            if (child) firstAppear = child.appearAnchors.find(g => true);
+        }
+
+        var lastAppear: AppearAnchor;
+        if (block.appearAnchors.length > 0) {
+            lastAppear = block.appearAnchors.findLast(g => true);
+        }
+        else if (block.childs.length > 0) {
+            var child = block.childs.findLast(g => g.appearAnchors.length > 0);
+            if (child) lastAppear = child.appearAnchors.findLast(g => true);
+        }
+
         if (firstAppear && lastAppear) {
             var sel = window.getSelection();
             sel.setBaseAndExtent(firstAppear.firstTextNode, 0, lastAppear.lastTextNode, lastAppear.lastTextNode.textContent.length)

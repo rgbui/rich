@@ -4,7 +4,7 @@ import { Singleton, SingletonGet } from "../../lib/Singleton";
 import { EventsComponent } from "../../lib/events.component";
 import { MenuBox } from "./box";
 import { MenuItem, MenuItemType } from "./declare";
-import { LayerType, popoverLayer,tipLayer } from "../../lib/zindex";
+import { LayerType, popoverLayer, tipLayer } from "../../lib/zindex";
 import { S } from "../../../i18n/view";
 import "./style.less";
 
@@ -36,7 +36,6 @@ export class MenuPanel<T> extends EventsComponent {
         if (pos.layer == LayerType.tip)
             this.zindex = tipLayer.zoom(this);
         else this.zindex = popoverLayer.zoom(this);
-      
         this.forceUpdate(() => {
             if (this.mb) this.mb.open(pos);
         })
