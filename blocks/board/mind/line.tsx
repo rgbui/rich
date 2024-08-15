@@ -64,6 +64,7 @@ export class FlowMindLine extends React.Component<{ mind: FlowMind }> {
         var g: FlowMind = this.props.mind.closest(g => (g as FlowMind).lineColor && (g as FlowMind).lineColor != 'transparent' ? true : false) as FlowMind;
         if (!g) g = this.props.mind.mindRoot;
         return <svg
+            shapeRendering="geometricPrecision"
             className="sy-flow-mind-line"
             style={{
                 top: this.range.top,
