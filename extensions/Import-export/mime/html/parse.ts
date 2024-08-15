@@ -3,6 +3,9 @@ import lodash from "lodash";
 import { ListType } from "../../../../blocks/present/list/list";
 import { BlockCssName } from "../../../../src/block/pattern/css";
 import { dom } from "../../../../src/common/dom";
+import { util } from "../../../../util/util";
+import { BlockUrlConstant } from "../../../../src/block/constant";
+import { TextEle } from "../../../../src/common/text.ele";
 
 /**
  * 
@@ -21,7 +24,7 @@ function parseTextBlock(element: HTMLElement[] | HTMLElement) {
         if (node instanceof Text) {
             var text = node.textContent;
             // if (text && text != '\n')
-            blocks.push({ url: '/text', content: node.textContent, ...(style || {}) })
+            blocks.push({ url: '/text', content: TextEle.getTextHtml(text), ...(style || {}) })
         }
         else if (name == 'a' && node.getAttribute('href')) {
             var href = node.getAttribute('href');
@@ -41,7 +44,7 @@ function parseTextBlock(element: HTMLElement[] | HTMLElement) {
                 textDecoration: textDecoration ? textDecoration : undefined,
                 fontWeight: isBold(bold) ? "bold" : undefined,
                 fontStyle: fontStyle ? fontStyle : undefined,
-                color: dm.style('color'),
+                color: dm.style('color') ?? undefined,
             }
             if (style && style.pattern) {
                 var pa = lodash.cloneDeep(style?.pattern?.styles[0]?.cssList[0] || {});
@@ -56,7 +59,8 @@ function parseTextBlock(element: HTMLElement[] | HTMLElement) {
             if (name == 'del' || name == 's') font.textDecoration = 'line-through';
             if (name == 'u') font.textDecoration = 'underline';
             var pattern: any;
-            if (font) {
+            if (font) util.clearObjectUndefined(font)
+            if (font && Object.keys(font).length > 0) {
                 pattern = {
                     styles: [{
                         name: 'default',
@@ -70,17 +74,16 @@ function parseTextBlock(element: HTMLElement[] | HTMLElement) {
                     }]
                 }
             }
-
             if (cs.length > 0) {
                 for (let i = 0; i < cs.length; i++) {
                     var ele = cs[i] as HTMLElement;
-                    fr(ele, lodash.assign(style || { code: isCode }, pattern ? { pattern } : {}));
+                    fr(ele, lodash.assign(style || {}, { code: isCode }, pattern ? { pattern } : {}));
                 }
             }
             else {
                 var text = node.textContent;
                 if (text)
-                    blocks.push({ url: '/text', content: node.textContent, ...(style || {}) })
+                    blocks.push({ url: '/text', content: TextEle.getTextHtml(text), ...(style || {}) })
                 else if (name == 'br') {
                     blocks.push({ url: '/text', content: '\n', ...(style || {}) })
                 }
@@ -158,6 +161,7 @@ function parseTable(element: HTMLElement) {
 }
 
 function parseOl(element: HTMLElement) {
+    var ename = element.tagName.toLowerCase();
     var cs = element.childNodes;
     var blocks: Record<string, any>[] = [];
     for (let i = 0; i < cs.length; i++) {
@@ -167,6 +171,7 @@ function parseOl(element: HTMLElement) {
             var listType = ele.style.listStyle;
             var lt = ListType.circle;
             if (listType == 'decimal') { lt = ListType.number };
+            if (ename == 'ol') lt = ListType.number;
             var eleChilds: HTMLElement[] = Array.from(ele.childNodes) as any;
             if (eleChilds.some(s => s?.tagName?.toLowerCase() == 'ol' || s?.tagName?.toLowerCase() == 'ul')) {
                 var panel = eleChilds.find(s => s?.tagName?.toLowerCase() == 'ol' || s?.tagName?.toLowerCase() == 'ul');
@@ -223,12 +228,13 @@ function getTextBlock(element: HTMLElement) {
     var url = '';
     if (element instanceof Text) return '/textspan';
     var name = element?.tagName?.toLowerCase();
-    if (name == 'p' || ['span', 'font', 'label', 'code', 'pre', 'em', 'i', 'del', 's', 'strong', 'b'].includes(name)) url = '/textspan';
+    if (name == 'p' || ['span', 'font', 'label', 'code', 'em', 'i', 'del', 's', 'strong', 'b'].includes(name)) url = '/textspan';
     else if (name == 'h1') url = '/head';
     else if (name == 'h2') url = '/head?{level:"h2"}';
     else if (name == 'h3') url = '/head?{level:"h3"}';
     else if (name == 'h4' || name == 'h5' || name == 'h6') url = '/head?{level:"h4"}';
     else if (name == 'blockquote') url = '/quote';
+    else if (name == 'pre') url = '/code';
     return url;
 }
 
@@ -241,7 +247,14 @@ function isLineElement(element: HTMLElement) {
     }
     return false;
 }
-
+function parsePreCode(element: HTMLElement) {
+    var code = element.querySelector('code');
+    if (code) {
+        var text = code.innerText;
+        return { url: '/code', content: text }
+    }
+    return null;
+}
 function parseBlock(element: HTMLElement) {
     var name = element?.tagName?.toLowerCase();
     var textBlockUrl = getTextBlock(element);
@@ -254,6 +267,7 @@ function parseBlock(element: HTMLElement) {
         textBlockUrl = undefined;
     }
     if (name == 'meta') return null;
+    if (name == 'pre') return parsePreCode(element);
     // console.log(name,textBlockUrl,'name-textBlockUrl');
     if (textBlockUrl) {
         var texts = parseTextBlock(element);
@@ -331,9 +345,21 @@ export function parseHtml(html: string) {
     }
     iframe.contentWindow.document.body.innerHTML = html;
     var rs = parseDom(iframe.contentWindow.document)
-    if (Array.isArray(rs)) return rs;
-    else if (rs) return [rs]
-    else return []
+    var cs = util.covertToArray(rs);
+    for (let i = 0; i < cs.length; i++) {
+        var c = cs[i];
+        if (c.url == BlockUrlConstant.TextSpan || c.url == BlockUrlConstant.List || c.url == BlockUrlConstant.Head || c.url == BlockUrlConstant.Quote) {
+            if (c.content == '\n') c.content = '';
+            else if (c.blocks.childs.length == 1) {
+                var bc = c.blocks.childs[0];
+                if (bc.content == '\n') {
+                    c.blocks.childs = [];
+                    c.content = '';
+                }
+            }
+        }
+    }
+    return cs;
 }
 
 

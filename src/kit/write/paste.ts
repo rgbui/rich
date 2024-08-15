@@ -17,6 +17,7 @@ import { inputBackspaceDeleteContent } from "./input";
 import { InputForceStore } from "./store";
 import { util } from "../../../util/util";
 import { onEnterInput } from "./keydown";
+import { TextEle } from "../../common/text.ele";
 
 export async function onPastePage(kit: Kit, event: ClipboardEvent) {
     if (kit.page.pageLayout?.type == PageLayoutType.board) {
@@ -164,6 +165,7 @@ export async function onPasteAppear(kit: Kit, aa: AppearAnchor, event: Clipboard
         else {
             var files: File[] = Array.from(event.clipboardData.files);
             var html = event.clipboardData.getData('text/html');
+
             kit.operator.onClearPage();
             if (window.shyConfig?.isDev) {
                 console.log('paste', text, html, files)
@@ -219,7 +221,8 @@ export async function onPasteAppear(kit: Kit, aa: AppearAnchor, event: Clipboard
                     }
                 }
                 try {
-                    console.log('like html...');
+                    if (window.shyConfig?.isDev)
+                        console.log('like html...', html);
                     event.preventDefault();
                     if (aa.block.url == BlockUrlConstant.Code) {
                         await onPasteInsertText(kit, aa, text);
@@ -327,6 +330,7 @@ async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
     }
 }
 async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
+    text=TextEle.getTextHtml(text);
     if (aa.isSolid) {
         kit.writer.onSolidInputCreateTextBlock(aa, undefined, text);
     }
@@ -355,6 +359,7 @@ async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
     }
 }
 async function onPasteInsertPlainText(kit: Kit, aa: AppearAnchor, text: string, cb?: () => Promise<void>) {
+    text=TextEle.getTextHtml(text);
     var content = aa.textContent;
     var sel = window.getSelection();
     if (aa.block.url == BlockUrlConstant.Title) {
@@ -441,6 +446,7 @@ async function onPasterToBoard(options: { kit: Kit, fra: Block, text?: string, f
     var gm = fra.globalWindowMatrix;
     var re = gm.inverseTransform(Point.from(kit.operator.moveEvent));
     if (text) {
+        text=TextEle.getTextHtml(text);
         await kit.page.onAction('onClipboardText', async () => {
             var mat = new Matrix();
             mat.translate(re.x, re.y);

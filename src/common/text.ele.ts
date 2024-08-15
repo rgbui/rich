@@ -323,11 +323,9 @@ export class TextEle {
         if (!c) c = '';
         if (typeof c == 'number') c = (c as any).toString();
         if (typeof c != 'string') console.trace(content);
-        c = c.replace(/ /g, "&nbsp;");
-        c = c.replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
-        c = c.replace(/</, "&lt;");
-        c = c.replace(/>/, "&gt;");
-        c = c.replace(/\r\n?|\n/g, '<br/>');
+        c = c.replace(/\t/g, "    ");
+        c = c.replace(/</g, "&lt;");
+        c = c.replace(/>/g, "&gt;");
         return c;
     }
     static filterHtml(content: string) {

@@ -283,7 +283,9 @@ export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: Re
             }
             else
                 rs = await newBlock.parent.appendArrayBlockData(options.insertBlocks, newBlock.at + 1, newBlock.parentKey);
-            if (rowBlock.isContentEmpty) await rowBlock.delete()
+            if (rowBlock.isContentEmpty) {
+                if (rowBlock.url == BlockUrlConstant.TextSpan) { await rowBlock.delete() }
+            }
         }
         page.addActionAfterEvent(async () => {
             if (rs && rs.length > 0)
@@ -304,7 +306,7 @@ export async function onEnterInsertNewLine(write: PageWrite, aa: AppearAnchor, e
     var sel = window.getSelection();
     var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
     // console.log(offset, sel.focusOffset);
-    var tc = aa.textContent||'';
+    var tc = aa.textContent || '';
     aa.setContent(tc.slice(0, offset) + '\n' + tc.slice(offset));
     // console.log(aa.el);
     var page = write.kit.page;
