@@ -85,7 +85,7 @@ export enum WsConsumeType {
     deepseek_coder = 121,
 }
 
-export function getConstValue(type: WsConsumeType, cost) {
+export function getConstValue(cost: number, type: WsConsumeType) {
     if (type == WsConsumeType.diskSpace || type == WsConsumeType.downloadFile || type == WsConsumeType.uploadFile) {
         return util.byteToString(cost);
     }
@@ -102,7 +102,7 @@ export function getConstValue(type: WsConsumeType, cost) {
         return cost + '张'
     }
     else {
-        return cost + 'tokens'
+        return cost
     }
 }
 
