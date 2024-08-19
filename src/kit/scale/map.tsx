@@ -78,7 +78,9 @@ export class BoardMap extends React.Component<{ kit: Kit }> {
         var bs = cs.map(c => {
             var size = c.fixedSize;
             var rect = new Rect(0, 0, size.width, size.height);
-            rect = rect.transformToBound(c.currentMatrix);
+            var cm = c.currentMatrix.clone();
+            cm = cm.append(c.contentMatrix);
+            rect = rect.transformToBound(cm);
             return rect;
         });
         lodash.remove(bs, g => g ? false : true);
@@ -100,7 +102,7 @@ export class BoardMap extends React.Component<{ kit: Kit }> {
             right: 30,
             width: winRect.width,
             height: winRect.height,
-            zIndex:10003,
+            zIndex: 10003,
             overflow: 'hidden',
             userSelect: 'none'
         }
