@@ -661,12 +661,14 @@ export class BoardSelector extends React.Component<{
                                 this.currentSelector.data.initialData = { imageUrl: data.src };
                             }
                             else {
+                                if (!data.svg?.id) {
+                                    data.svg.id = data.name;
+                                }
                                 this.currentSelector.data = {
                                     svg: data.svg,
                                     svgName: data.name
                                 };
                             }
-
                         }
                         shapeSelector.close();
                     });
@@ -713,7 +715,7 @@ export class BoardSelector extends React.Component<{
                             this.currentSelector.url = BlockUrlConstant.BoardImage;
                             this.currentSelector.data.initialData = { imageUrl: data.url };
                         }
-                        else if (data.mime == 'icon' || data.mime == 'emoji') { 
+                        else if (data.mime == 'icon' || data.mime == 'emoji') {
                             this.currentSelector.url = BlockUrlConstant.Icon;
                             this.currentSelector.data.src = data.data as any;
                         }
@@ -732,7 +734,7 @@ export class BoardSelector extends React.Component<{
                 case BoardToolOperator.card:
                     sel.url = BlockUrlConstant.BoardPageCard;
             }
-            this.currentSelector = sel as any; 
+            this.currentSelector = sel as any;
         }
         var cursor: string = '';
         if (this.currentSelector.url == BlockUrlConstant.TextSpan) {

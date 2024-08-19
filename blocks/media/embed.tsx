@@ -198,7 +198,7 @@ export class Embed extends Block {
         if (this.embedType == 'music.163') {
             return {
                 width: this.fixedWidth,
-                height: 90
+                height:120
             }
         }
         return {

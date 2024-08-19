@@ -25,7 +25,7 @@ export function TurnShapes(props: {
             }
             if (s.shape) {
                 return <span
-                    className={"r-size-24 item-hover-light gap-b-10 gap-r-10 " + (s.id == props.turnShapes.value ? " item-hover-focus" : "")}
+                    className={"r-size-24 item-hover-light gap-b-10 gap-r-10  round  " + (s.id == props.turnShapes.value ? " item-hover-focus" : "")}
                     onMouseDown={e => {
                         e.stopPropagation();
                         props.tool.showDrop('');

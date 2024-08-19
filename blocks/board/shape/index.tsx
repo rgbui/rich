@@ -115,6 +115,7 @@ export class Shape extends Block {
                 var svg = new ShySvg(value.svg);
                 if (!svg.viewBox) svg.viewBox = svg.getBound();
                 if (!svg.id && value.value) svg.id = value.value;
+              
                 await this.updateProps(
                     {
                         svg: svg,
@@ -185,37 +186,44 @@ export class ShapeView extends BlockView<Shape> {
         style.width = this.block.fixedSize.width;
         style.height = this.block.fixedSize.height;
         var pd = 20;
-        var contentStyle: CSSProperties = {
-
-        }
+        var contentStyle: CSSProperties = {}
         if (this.block.align == 'left') {
             contentStyle.justifyContent = 'flex-start';
-            contentStyle.paddingLeft = pd;
-            contentStyle.paddingRight = pd;
+            if (this.block.fixedSize.width > 80) {
+                contentStyle.paddingLeft = pd;
+                contentStyle.paddingRight = pd;
+            }
         }
         else if (this.block.align == 'center') {
             contentStyle.justifyContent = 'center';
-            contentStyle.paddingLeft = pd;
-            contentStyle.paddingRight = pd;
+            if (this.block.fixedSize.width > 80) {
+                contentStyle.paddingLeft = pd;
+                contentStyle.paddingRight = pd;
+            }
         }
         else if (this.block.align == 'right') {
             contentStyle.justifyContent = 'flex-end';
-            contentStyle.paddingLeft = pd;
-            contentStyle.paddingRight = pd;
+            if (this.block.fixedSize.width > 80) {
+                contentStyle.paddingLeft = pd;
+                contentStyle.paddingRight = pd;
+            }
         }
-
         if (this.block.valign == 'top') {
             contentStyle.alignItems = 'flex-start';
-            contentStyle.paddingTop = pd;
-            contentStyle.paddingBottom = pd;
+            if (this.block.fixedSize.height > 80) {
+                contentStyle.paddingTop = pd;
+                contentStyle.paddingBottom = pd;
+            }
         }
         else if (this.block.valign == 'middle') {
             contentStyle.alignItems = 'center';
         }
         else if (this.block.valign == 'bottom') {
             contentStyle.alignItems = 'flex-end';
-            contentStyle.paddingTop = pd;
-            contentStyle.paddingBottom = pd;
+            if (this.block.fixedSize.height > 80) {
+                contentStyle.paddingTop = pd;
+                contentStyle.paddingBottom = pd;
+            }
         }
 
         var getSvg = () => {

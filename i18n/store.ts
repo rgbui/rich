@@ -69,7 +69,7 @@ export class LangStore {
         if (typeof d == 'undefined') {
             if (typeof content == 'string') uns[key] = content || '';
             else uns[key] = key;
-            console.log(key, content);
+            console.dev(key, content);
             this.lazyStoreUns()
         }
         if (typeof d != 'undefined') {
