@@ -37,6 +37,10 @@ export var BoardTurns = {
                                 fontSize: Math.round((block as any).fontScale * 14)
                             })
                         }
+                        if (turnToUrl == '/shape') {
+                            data.fixedWidth = block.fixedSize.width;
+                            data.fixedHeight = block.fixedSize.height;
+                        }
                         else data.pattern = {
                             styles: [
                                 {
@@ -116,13 +120,17 @@ export var BoardTurns = {
                     }
                     if (block.url == '/flow/mind') {
                         data = { blocks: {}, matrix: data.matrix, content: data.content, pattern: data.pattern };
+                        if (turnToUrl == '/textspan') {
+                            data.fixedWidth = block.fixedSize.width;
+                            data.fixedHeight = block.fixedSize.height;
+                        }
                     }
                     if (block.url == '/board/page/card') {
                         var row = await block.childs.first().getPlain()
                         data = { blocks: {}, matrix: data.matrix, content: row, pattern: data.pattern };
                     }
             }
-        } 
+        }
         return { url: turnToUrl, ...data }
     }
 }
