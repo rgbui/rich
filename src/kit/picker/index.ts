@@ -24,6 +24,7 @@ import { Segment } from "../../block/svg/segment";
 import { BoardDrag } from "../operator/board";
 import { Group } from "../../block/element/group";
 
+
 export class BlockPicker {
     kit: Kit;
     view: BlockPickerView;
@@ -364,7 +365,17 @@ export class BlockPicker {
             async moveEnd(ev, isMove, data) {
                 if (isMove) {
                     var ps = block.points.find(g => g != po);
-                    block.onManualUpdateProps({ points: ps }, { points: block.points }, { range: BlockRenderRange.self });
+                    block.onManualUpdateProps({ points: ps }, { points: block.points }, {
+                        range: BlockRenderRange.self,
+                        callback: async () => {
+                            var groups = block.groups;
+                            if (groups?.length > 0) {
+                                await groups.eachAsync(async g => {
+                                    await (g as Group).updateGroupRange();
+                                })
+                            }
+                        }
+                    });
                     self.onRePicker();
                     block.forceManualUpdate();
                     await openBoardEditTool(self.kit);
@@ -556,7 +567,7 @@ export class BlockPicker {
         event.stopPropagation();
         var gm = block.globalWindowMatrix;
         var self = this;
-        if (selector.data.at == 0 || selector.data.at == block.points.length + 1) {
+        if (selector.data.at == 0 || block.lineType == 'line' && selector.type == BoardPointType.lineMovePort || selector.data.at == block.points.length + 1) {
             var oldData = {
                 from: util.clone(block.from),
                 to: util.clone(block.to)
@@ -579,7 +590,14 @@ export class BlockPicker {
                                 y: self.kit.boardLine.over.selector.arrows[0]
                             };
                         }
-                        await block.onUpdateLine(block.from, block.to, oldData);
+                        await block.onUpdateLine(block.from, block.to, oldData, async () => {
+                            var groups = block.groups;
+                            if (groups?.length > 0) {
+                                await groups.eachAsync(async g => {
+                                    await (g as Group).updateGroupRange();
+                                })
+                            }
+                        });
                         self.kit.boardLine.onEndConnectOther();
                         await openBoardEditTool(self.kit);
                         self.onRePicker();
@@ -612,7 +630,17 @@ export class BlockPicker {
                         if (next && new Point(next.x as number, next.y as number).nearBy(new Point(point.x as number, point.y as number), r)) {
                             block.points.remove(g => g === next);
                         }
-                        await block.onManualUpdateProps(oldProps, { points: block.points }, { range: BlockRenderRange.self });
+                        await block.onManualUpdateProps(oldProps, { points: block.points }, {
+                            range: BlockRenderRange.self,
+                            callback: async () => {
+                                var groups = block.groups;
+                                if (groups?.length > 0) {
+                                    await groups.eachAsync(async g => {
+                                        await (g as Group).updateGroupRange();
+                                    })
+                                }
+                            }
+                        });
                         await openBoardEditTool(self.kit);
                         self.onRePicker();
                         return;

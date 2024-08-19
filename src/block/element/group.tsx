@@ -8,6 +8,7 @@ import { Point, PointArrow, Rect, RectUtility } from '../../common/vector/point'
 import lodash from 'lodash';
 import { Matrix } from '../../common/matrix';
 import { BlockUrlConstant } from '../constant';
+import { Line } from '../../../blocks/board/line/line';
 
 
 /**
@@ -28,11 +29,6 @@ export class Group extends Block {
         }
     }
     get fixedSize() {
-        // var b = this.getBounds();
-        // return {
-        //     width: b.width,
-        //     height: b.height
-        // }
         return {
             width: this.fixedWidth,
             height: this.fixedHeight
@@ -60,7 +56,9 @@ export class Group extends Block {
             var { width, height } = c.fixedSize;
             var rect = new Rect(0, 0, width, height);
             var ma = this.matrix.clone();
-            var gm = ma.append(c.currentMatrix);
+            var cm = c.currentMatrix.clone();
+            cm = cm.append(c.contentMatrix);
+            var gm = ma.append(cm);
             var nb = rect.transformToBound(gm);
             bs.push(nb);
         });
@@ -109,17 +107,55 @@ export class Group extends Block {
                 var nm = ma.append(b.matrix);
                 var r = nm.getScaling().x;
                 await b.updateProps({
-                    // fixedWidth: b.fixedWidth * r,
                     fontScale: (b as any).fontScale * r
                 });
                 nm.scale(1 / r, 1 / r, { x: 0, y: 0 });
                 await b.updateMatrix(b.matrix, nm);
             }
+            else if (b.url == BlockUrlConstant.Line) {
+                var lineBlock = b as Line;
+                var ma = this.matrix.clone();
+                var nm = ma.append(b.matrix);
+                var r = nm.getScaling().x;
+                nm.scale(1 / r, 1 / r, { x: 0, y: 0 });
+                await b.updateMatrix(b.matrix, nm);
+                if (lineBlock.from && !lineBlock.from?.blockId) {
+                    var point = new Point(lineBlock.from.x as number, lineBlock.from.y as number);
+                    // var np = ma.transform(point);
+                    await lineBlock.updateProps({
+                        from: {
+                            x: point.x * r,
+                            y: point.y * r
+                        }
+                    })
+                }
+                if (lineBlock.to && !lineBlock.to?.blockId) {
+                    var point = new Point(lineBlock.to.x as number, lineBlock.to.y as number);
+                    var np = ma.transform(point);
+                    await lineBlock.updateProps({
+                        to: {
+                            x: point.x * r,
+                            y: point.y * r
+                        }
+                    })
+                }
+                if (lineBlock.points.length > 0) {
+                    var points = lineBlock.points.map(p => {
+                        var point = new Point(p.x as number, p.y as number);
+                        return {
+                            x: point.x * r,
+                            y: point.y * r
+                        }
+                    });
+                    await lineBlock.updateProps({
+                        points: points
+                    })
+                }
+            }
             else {
                 var ma = this.matrix.clone();
                 var nm = ma.append(b.matrix);
                 var r = nm.getScaling().x;
-                console.log('rrr', r);
                 await b.updateProps({
                     fixedWidth: b.fixedWidth * r,
                     fixedHeight: b.fixedHeight * r
@@ -138,10 +174,13 @@ export class Group extends Block {
         var bs: Rect[] = [];
         blocks.forEach(c => {
             var { width, height } = c.fixedSize;
-            var rect = new Rect(0, 0, width, height);
-            var gm = c.currentMatrix.clone();
-            var nb = rect.transformToBound(gm);
-            bs.push(nb);
+            if (typeof width == 'number' && typeof height == 'number') {
+                var rect = new Rect(0, 0, width, height);
+                var gm = c.currentMatrix.clone();
+                gm = gm.append(c.contentMatrix);
+                var nb = rect.transformToBound(gm);
+                bs.push(nb);
+            }
         });
         var nr = bs.first();
         bs.forEach((b, i) => {
