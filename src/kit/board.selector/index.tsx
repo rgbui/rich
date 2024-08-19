@@ -33,6 +33,7 @@ import {
     BrushPen2Svg,
     CloseSvg
 } from "../../../component/svgs";
+// import BrushSvg from "../../assert/svg/brush.svg";
 import { Icon } from "../../../component/view/icon";
 import { closeNoteSelector, getNoteSelector } from "../../../extensions/board/note";
 import { closeShapeSelector, getShapeSelector } from "../../../extensions/board/shapes";
@@ -72,8 +73,7 @@ export class BoardSelector extends React.Component<{
             style.right = this.point.x;
         }
         return <div className="shy-kit-board-selector"><div
-
-            className="z-1000 pos w-40 padding-h-5  round-4 border shadow-s bg-white r-size-30 r-gap-l-5 r-gap-t-5 r-gap-b-5 r-item-hover r-round-4 r-cursor r-flex-center  "
+            className="z-1000 pos w-40   round-4 border shadow-s bg-white text-1 r-size-40 r-item-hover r-round-4 r-cursor r-flex-center  "
             ref={e => this.el = e}
             style={style}>
             <Tip text='文本' placement={'left'}><div
@@ -82,7 +82,7 @@ export class BoardSelector extends React.Component<{
                     e.stopPropagation();
                     this.selector(BoardToolOperator.text, e);
                 }}>
-                <Icon size={18} icon={BoardToolTextSvg} />
+                <Icon size={24} icon={BoardToolTextSvg} />
             </div></Tip>
 
             <Tip text='便签' placement={'left'}><div
@@ -91,7 +91,7 @@ export class BoardSelector extends React.Component<{
                     e.stopPropagation();
                     this.selector(BoardToolOperator.note, e);
                 }}>
-                <Icon size={18} icon={BoardToolStickerSvg} />
+                <Icon size={24} icon={BoardToolStickerSvg} />
             </div></Tip>
 
             <Tip text='文档' placement={'left'}>
@@ -101,56 +101,56 @@ export class BoardSelector extends React.Component<{
                         e.stopPropagation();
                         this.selector(BoardToolOperator.card, e)
                     }}>
-                    <Icon size={18} icon={BoardCardSvg} />
+                    <Icon size={24} icon={BoardCardSvg} />
                 </div>
             </Tip>
 
             <Tip text='形状' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.shape ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.shape, e) }}>
-                <Icon size={18} icon={BoardToolSharpSvg}></Icon>
+                <Icon size={24} icon={BoardToolSharpSvg}></Icon>
             </div></Tip>
 
             <Tip text='连线' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.connect ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.connect, e) }}>
-                <Icon size={18} icon={ConnetLineSvg}></Icon>
+                <Icon size={24} icon={ConnetLineSvg}></Icon>
             </div></Tip>
 
             <Tip text='画笔' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.pen ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.pen, e) }}>
-                <Icon size={18} icon={{ name: 'bytedance-icon', code: 'writing-fluently' }}></Icon>
+                <Icon size={24} icon={{ name: 'bytedance-icon', code: 'writing-fluently' }}></Icon>
             </div></Tip>
 
             <Tip text='容器' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.frame ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.frame, e) }}>
-                <Icon size={18} icon={{ name: 'byte', code: 'rectangle-one' }}></Icon>
+                <Icon size={24} icon={{ name: 'byte', code: 'rectangle-one' }}></Icon>
             </div></Tip>
 
             <Tip text='表格' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.table ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.table, e) }}>
-                <Icon size={18} icon={{ name: 'byte', code: 'insert-table' }}></Icon>
+                <Icon size={24} icon={{ name: 'byte', code: 'insert-table' }}></Icon>
             </div></Tip>
 
             <Tip text='思维导图' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.mind ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.mind, e) }}>
-                <Icon size={18} icon={MindSvg}></Icon>
+                <Icon size={24} icon={MindSvg}></Icon>
             </div></Tip>
 
             <Tip text='更多创作工具' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.more ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.more, e) }}>
-                <Icon size={22} icon={DotsSvg}></Icon>
+                <Icon size={24} icon={DotsSvg}></Icon>
             </div></Tip>
             <div className="border-top" style={{ margin: 5, height: 1, }}></div>
             <Tip text='素材库' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.material ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.material, e) }}>
-                <Icon size={18} icon={{ name: 'byte', code: 'material' }}></Icon>
+                <Icon size={24} icon={{ name: 'byte', code: 'material' }}></Icon>
             </div></Tip>
         </div>
             {this.renderSelectProps()}
@@ -276,7 +276,7 @@ export class BoardSelector extends React.Component<{
         }
         else if (this.openSelector == BoardToolOperator.more) {
             if (this.point) {
-                style.top = this.point.y + 100;
+                style.top = this.point.y + 50;
                 style.right = this.point.x + 60;
                 // style.width = 3 * 55 + 5;
             }
@@ -318,6 +318,37 @@ export class BoardSelector extends React.Component<{
                 }}><Icon size={24} icon={{ name: 'byte', code: 'browser' }}></Icon>
                     <div className="flex-center remark f-14"><S>内嵌网页</S></div>
                 </div></ToolTip>
+
+                <ToolTip overlay={<S>表情</S>}><div onMouseDown={e => {
+                    e.stopPropagation();
+                    this.currentSelector.url = '/icon'
+                    this.currentSelector.data = {
+                        src: {
+                            name: 'emoji',
+                            code: '😀'
+                        }
+                    }
+                }}><Icon size={24} icon={{
+                    name: 'emoji',
+                    code: '😀'
+                }}></Icon>
+                    <div className="flex-center remark f-14"><S>表情</S></div>
+                </div></ToolTip>
+
+                <ToolTip overlay={<S>图标</S>}><div onMouseDown={e => {
+                    e.stopPropagation();
+                    this.currentSelector.url = '/icon';
+                    this.currentSelector.data = {
+                        src: {
+                            name: 'byte',
+                            code: 'send'
+                        }
+                    }
+                }}><Icon size={24} icon={{ name: 'byte', code: 'oval-love-two' }}></Icon>
+                    <div className="flex-center remark f-14"><S>图标</S></div>
+                </div></ToolTip>
+
+
 
                 {/* <ToolTip overlay={<S>代码块</S>}><div onMouseDown={e => {
                     this.currentSelector.url = BlockUrlConstant.Code;
@@ -362,6 +393,7 @@ export class BoardSelector extends React.Component<{
                         }}>
                         <div className="flex" style={{ width: 40, height: 90, transform: 'rotate(-90deg)' }}>
                             <BrushSvg></BrushSvg>
+                            {/* <img src={BrushSvg as any} alt="" /> */}
                         </div>
                     </div>
                 </ToolTip>

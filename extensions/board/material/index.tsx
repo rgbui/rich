@@ -239,6 +239,7 @@ export class MaterialView extends EventsComponent {
                     this.onMouseDown({ url: p.url, mime: 'image' }, e)
                 }}></IllustrationView>}
                 {this.mode == '图标' && <MaterialIconView change={e => {
+                    console.log('eeee',e);
                     this.onMouseDown({ data: e, mime: 'icon' })
                 }}></MaterialIconView>}
                 {this.mode == '表情' && <MaterialEmojiView change={e => {

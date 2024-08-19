@@ -27,8 +27,8 @@ export class MaterialIconView extends React.Component<{
 
             </div>
             <div className="flex-auto ">
-                {this.mode == 'byte' && <ByteDanceIconView height={'100%'} onChange={(d) => {this.props.change(d) }}></ByteDanceIconView>}
-                {this.mode == 'fontAwesome' && <FontAwesomeView  height={'100%'}  onChange={(d) => {this.props.change(d)}}></FontAwesomeView>}
+                {this.mode == 'byte' && <ByteDanceIconView height={'100%'} onChange={(d) => { this.props.change({ name: "byte", ...d } as any) }}></ByteDanceIconView>}
+                {this.mode == 'fontAwesome' && <FontAwesomeView height={'100%'} onChange={(d) => { this.props.change({ name: 'font-awesome', ...d } as any) }}></FontAwesomeView>}
             </div>
         </div>
     }

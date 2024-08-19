@@ -215,7 +215,7 @@ export function CheckBoardSelector(
                 await setBoardBlockCache(newBlock);
                 newBlock.mounted(async () => {
                     await kit.picker.onPicker([newBlock], { merge: true });
-                    await kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
+                    //await kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
                 })
             });
             return;
