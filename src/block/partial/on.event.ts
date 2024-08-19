@@ -512,7 +512,7 @@ export class Block$Event {
         var { appear, oldValue, newValue, action } = options;
         if (appear.prop == 'content')
             newValue = TextEle.getTextHtml(newValue);
-     
+
 
         await this.page.onAction(ActionDirective.onInputText, async () => {
             await this.manualUpdateProps({ [appear.prop]: oldValue }, { [appear.prop]: newValue }, BlockRenderRange.none, { isOnlyRecord: true });
@@ -557,10 +557,8 @@ export class Block$Event {
     }
     async clone(this: Block) {
         var d = await this.cloneData();
-        console.log('ddd clone d', d);
         var pa = this.parent;
         var nb = await pa.appendBlock(d, this.at + 1, this.parentKey);
-        console.log('ggg nb', nb, await nb.get());
         return nb;
     }
     async onCopyLink(this: Block) {
@@ -602,6 +600,7 @@ export class Block$Event {
             range?: BlockRenderRange,
             isOnlyRecord?: boolean,
             isOnlyStore?: boolean;
+            callback?: () => Promise<void>
         }
     ) {
         await this.page.onAction(ActionDirective.onUpdateProps, async () => {
@@ -612,6 +611,7 @@ export class Block$Event {
                     isOnlyRecord: options?.isOnlyRecord,
                     isOnlyStore: options?.isOnlyStore
                 });
+            if (options?.callback) await options.callback();
         })
     }
     async onLock(this: Block, locked: boolean) {
@@ -643,6 +643,7 @@ export class Block$Event {
         var zindex = this.zindex;
         if (layer == 'top') zindex = this.parent.childs.max(g => g.zindex) + 1;
         else zindex = this.parent.childs.min(g => g.zindex) - 1;
+        if (zindex <= 0) zindex = 1;
         await this.updateProps({ zindex }, BlockRenderRange.self);
     }
     async inOrDeIndex(this: Block, layer: 'down' | 'up') {
@@ -655,16 +656,16 @@ export class Block$Event {
             var bn = bs[index + 1];
             if (bn) {
                 var gz = this.zindex;
-                await this.updateProps({ zindex: gz == bn.zindex ? bn.zindex + 1 : bn.zindex }, BlockRenderRange.self);
-                await bn.updateProps({ zindex: gz }, BlockRenderRange.self);
+                await this.updateProps({ zindex: Math.max(1, gz == bn.zindex ? bn.zindex + 1 : bn.zindex) }, BlockRenderRange.self);
+                await bn.updateProps({ zindex: Math.max(1, gz) }, BlockRenderRange.self);
             }
         }
         else if (layer == 'down') {
             var pre = bs[index - 1];
             if (pre) {
                 var gz = this.zindex;
-                await this.updateProps({ zindex: gz == pre.zindex ? pre.zindex - 1 : pre.zindex }, BlockRenderRange.self);
-                await pre.updateProps({ zindex: gz }, BlockRenderRange.self);
+                await this.updateProps({ zindex: Math.max(1, gz == pre.zindex ? pre.zindex - 1 : pre.zindex) }, BlockRenderRange.self);
+                await pre.updateProps({ zindex: Math.max(1, gz) }, BlockRenderRange.self);
             }
         }
     }
@@ -952,7 +953,6 @@ export class Block$Event {
             memoryCopyData(BOARD_BLOCK_STYLE, lodash.cloneDeep(style))
             ShyAlert(lst('样式已复制'))
         }
-
     }
 }
 

@@ -656,7 +656,7 @@ export class BoardEditTool extends EventsComponent {
                 ...(this.blocks.length > 1 ? ["divider", "rank", "nine-align", "merge"] : [])
             ]
         }
-        return [
+        var items = [
             "mindDirection",
             "icon",
             "katex",
@@ -700,6 +700,7 @@ export class BoardEditTool extends EventsComponent {
             "ai",
             ...(this.blocks.length > 1 ? ["divider", "rank", "nine-align", "merge"] : [])
         ]
+        return items;
     }
     renderItems() {
         var items = this.getItems();
@@ -888,6 +889,7 @@ export interface BoardEditTool {
 
 var editTool: BoardEditTool;
 export async function useBoardEditTool(blocks: Block[], range: Rect) {
+
     editTool = await Singleton(BoardEditTool);
     await editTool.open(blocks, range);
     return new Promise((resolve: (result: { name: string, value: any, props?: Record<string, any> } | Record<string, any>) => void, reject) => {

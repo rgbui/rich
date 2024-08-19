@@ -762,6 +762,9 @@ export abstract class Block extends Events {
     get selfMatrix(): Matrix {
         return new Matrix()
     }
+    get contentMatrix() {
+        return new Matrix()
+    }
     get currentMatrix(): Matrix {
         return this.matrix.appended(this.selfMatrix)
     }
@@ -784,7 +787,7 @@ export abstract class Block extends Events {
     }
     visiblePx(realPx: number) {
         // if (!this.page.viewEl) return realPx;
-        return realPx *  this.globalMatrix.getScaling().x
+        return realPx * this.globalMatrix.getScaling().x
     }
     /**
      * 运行的move matrix
@@ -795,7 +798,7 @@ export abstract class Block extends Events {
     @prop()
     fixedHeight: number = 100;
     @prop()
-    zindex: number = 1;
+    zindex: number = 1000;
     get fixedSize() {
         return {
             width: this.fixedWidth,

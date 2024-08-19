@@ -11,7 +11,7 @@ class ShapeShopView extends EventsComponent {
     render() {
         return <div className="relative w-600 min-h-160  bg-white shadow border  round-4  padding-5 ">
             <div className="flex flex-full">
-                <div className="flex-fixed w-150 h-500 overflow-y "
+                <div className="flex-fixed w-150 h-500 overflow-y border-right"
                     style={{ paddingBottom: 50 }}
                 >{this.renderSlides()}</div>
                 <div className="flex-auto  h-500 overflow-y">
@@ -151,7 +151,7 @@ class ShapeShopView extends EventsComponent {
         return <div>
             {items.map((item, index) => {
                 return <div key={index}>
-                    <div>{item.text}</div>
+                    <div className="f-12 remark">{item.text}</div>
                     <div>
                         {item.childs.map((child, at) => {
                             return <div onMouseDown={e => {
