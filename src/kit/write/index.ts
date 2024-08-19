@@ -75,9 +75,9 @@ import { GetTextCacheFontColor } from "../../../extensions/color/data";
  * 7. 输入ctrl+1可能是触发文档的事件，但输入的1有可能会被输入到当前的块中。
  * keydown事件触发
  * keydown会触发多次（如果手不松，会一直触发，所以整个过程前不是完整的keydown-keyup
-     * 可能会是keydown-keydown-keydown-keyup
-     * keydown-input keydown-input keydown-input-keyup
-     * 注意keydown是要输入，input是输入完成，keyup不一定会触发
+    * 可能会是keydown-keydown-keydown-keyup
+    * keydown-input keydown-input keydown-input-keyup
+    * 注意keydown是要输入，input是输入完成，keyup不一定会触发
  */
 
 export class PageWrite {

@@ -330,7 +330,7 @@ async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
     }
 }
 async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
-    text=TextEle.getTextHtml(text);
+    text = TextEle.getTextHtml(text);
     if (aa.isSolid) {
         kit.writer.onSolidInputCreateTextBlock(aa, undefined, text);
     }
@@ -359,7 +359,7 @@ async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
     }
 }
 async function onPasteInsertPlainText(kit: Kit, aa: AppearAnchor, text: string, cb?: () => Promise<void>) {
-    text=TextEle.getTextHtml(text);
+    text = TextEle.getTextHtml(text);
     var content = aa.textContent;
     var sel = window.getSelection();
     if (aa.block.url == BlockUrlConstant.Title) {
@@ -446,7 +446,7 @@ async function onPasterToBoard(options: { kit: Kit, fra: Block, text?: string, f
     var gm = fra.globalWindowMatrix;
     var re = gm.inverseTransform(Point.from(kit.operator.moveEvent));
     if (text) {
-        text=TextEle.getTextHtml(text);
+        text = TextEle.getTextHtml(text);
         await kit.page.onAction('onClipboardText', async () => {
             var mat = new Matrix();
             mat.translate(re.x, re.y);
@@ -478,48 +478,8 @@ async function onPasterToBoard(options: { kit: Kit, fra: Block, text?: string, f
             }
             else
                 data.url = BlockUrlConstant.File;
-            // if (!this.currentSelector.data) data.data = {};
             data.initialData = { file };
             rs.push(data);
-            // if (file.type.startsWith('image/')) {
-            //     //图片
-            //     var r = await channel.post('/ws/upload/file', {
-            //         file,
-            //         uploadProgress: (event) => {
-            //             // console.log(event, 'ev');
-            //             if (event.lengthComputable) {
-            //                 // this.progress = `${util.byteToString(event.total)}${(100 * event.loaded / event.total).toFixed(2)}%`;
-            //                 // this.forceUpdate();
-            //             }
-            //         }
-            //     })
-            //     if (r.ok) {
-            //         if (r.data?.file?.url) {
-            //             var size = await getImageSize(r.data.file.url);
-            //             var url = BlockUrlConstant.BoardImage;
-            //             var width = Math.min(size.width, 300);
-            //             var height = (width / size.width) * size.height;
-            //             var data = {
-            //                 originSize: size,
-            //                 fixedWidth: width,
-            //                 fixedHeight: height,
-            //                 src: { name: 'upload', ...r.data.file }
-            //             } as any
-            //             await kit.page.onAction('onClipboardImage', async () => {
-            //                 var mat = new Matrix();
-            //                 mat.translate(re.x, re.y);
-            //                 data.matrix = mat.getValues();
-            //                 var newBlock = await kit.page.createBlock(url, data, fra);
-            //                 kit.boardSelector.clearSelector();
-            //                 newBlock.mounted(async () => {
-            //                     await kit.picker.onPicker([newBlock], { merge: true });
-            //                     // await kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
-            //                 })
-            //             });
-            //             // this.props.change(r.data?.file as any);
-            //         }
-            //     }
-            // }
         }
         await kit.page.onAction('onClipboardImage', async () => {
             var mat = new Matrix();

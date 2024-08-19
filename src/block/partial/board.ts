@@ -48,6 +48,7 @@ export enum BoardPointType {
      * 折线的分割点
      */
     brokenLineSplitPort,
+    linePort,
     /**
      * 旋转
      */
@@ -428,9 +429,10 @@ export class Block$Board {
     async onUpdateLine(this: Block, from: any, to: any, oldData?: {
         from: PortLocation;
         to: PortLocation;
-    }) {
+    }, callback?: () => Promise<void>) {
         await this.page.onAction(ActionDirective.onUpdateProps, async () => {
             this.updateLine(from, to, oldData);
+            if (callback) await callback();
         })
     }
     async updateLine(this: Block, from: any, to: any, oldData?: {
@@ -521,7 +523,7 @@ export class Block$Board {
             if (rs.length > 0 && !rs.some(s => s === this.parent)) {
                 var fra = rs[0];
                 if (this.parent.isFrame) {
-                    var matrix = this.matrix.clone().append(this.parent.matrix);
+                    var matrix = this.parent.matrix.clone().append(this.matrix);
                     var nm: Matrix = fra.matrix.inverted().append(matrix);
                     await this.updateMatrix(this.matrix, nm);
                     await fra.append(this);
@@ -551,10 +553,8 @@ export class Block$Board {
                 await lines.eachAsync(async l => {
                     await fra.parent.append(l);
                 })
-
-                var nm: Matrix = this.matrix.clone().append(fra.matrix);
+                var nm = fra.matrix.clone().append(this.matrix);
                 await this.updateMatrix(this.matrix, nm);
-
             }
         }
         var groups = this.groups;
