@@ -60,14 +60,14 @@ export async function setBoardBlockCache(block: Block, defaultData?: Record<stri
             var ps = await BlockCache.getJSON(url, 'lineStart', 'lineEnd', 'lineType');
             removeDefault(ps);
             await block.updateProps(ps, BlockRenderRange.self);
-            var svg = await BlockCache.getJSON(url, 'strokeWidth', 'strokeDasharray');
+            var svg = await BlockCache.getJSON(url, 'stroke', 'strokeOpacity', 'strokeWidth', 'strokeDasharray');
             removeDefault(svg);
             await block.pattern.setSvgStyle(svg);
             break;
         case BlockUrlConstant.Shape:
             var svg = await BlockCache.getJSON(url, 'stroke', 'strokeDasharray', 'strokeOpacity', 'strokeWidth', 'fillOpacity');
             removeDefault(svg);
-            await  block.pattern.setSvgStyle(svg);
+            await block.pattern.setSvgStyle(svg);
             var g = await BlockCache.get(url, 'fillColor');
             if (!lodash.isUndefined(g)) {
                 await block.pattern.setSvgStyle({ fill: g })
@@ -87,7 +87,7 @@ export async function setBoardBlockCache(block: Block, defaultData?: Record<stri
         case BlockUrlConstant.Note:
             var g = await BlockCache.get(url, 'backgroundNoTransparentColor');
             if (!lodash.isUndefined(g)) {
-                await block.updateProps({ color: g },BlockRenderRange.self)
+                await block.updateProps({ color: g }, BlockRenderRange.self)
             }
             var c = await BlockCache.get(url, 'stickerSize');
             if (!lodash.isUndefined(c)) {
@@ -109,7 +109,7 @@ export async function setBoardBlockCache(block: Block, defaultData?: Record<stri
         case BlockUrlConstant.TextSpan:
             var bg = await BlockCache.get(url, 'backgroundColor');
             if (!lodash.isUndefined(bg)) {
-                await  block.pattern.setFillStyle({ color: bg, mode: 'color' });
+                await block.pattern.setFillStyle({ color: bg, mode: 'color' });
             }
             var ps = await BlockCache.getJSON(url, 'fontWeight', 'fontFamily', 'textDecoration');
             removeDefault(ps);
@@ -124,7 +124,7 @@ export async function setBoardBlockCache(block: Block, defaultData?: Record<stri
             }
             var fss = await BlockCache.get(url, 'fontSize');
             if (typeof fss != 'undefined') {
-                await block.updateProps({ fontScale: fss / 14 },BlockRenderRange.self)
+                await block.updateProps({ fontScale: fss / 14 }, BlockRenderRange.self)
             }
             break;
 
