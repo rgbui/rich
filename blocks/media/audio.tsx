@@ -50,6 +50,7 @@ export class Audio extends Block {
                     if (r) {
                         await this.onUpdateProps({ src: r }, { range: BlockRenderRange.self, merge: true });
                     }
+                     delete this.createSource;
                 }
                 if (this.initialData && this.initialData.file) {
                     var d = await channel.post('/ws/upload/file', {
@@ -63,12 +64,14 @@ export class Audio extends Block {
                     if (d.ok && d.data?.file?.url) {
                         await this.onUpdateProps({ src: { ...d.data?.file } }, { range: BlockRenderRange.self, merge: true });
                     }
+                    this.initialData={};
                 }
                 if (this.initialData && this.initialData.url) {
                     var d = await channel.post('/ws/download/url', { url: this.initialData.url });
                     if (d.ok && d.data?.file?.url) {
                         await this.onUpdateProps({ src: { ...d.data?.file, source: this.initialData.url } }, { range: BlockRenderRange.self, merge: true });
                     }
+                    this.initialData={};
                 }
             }
             catch (ex) {

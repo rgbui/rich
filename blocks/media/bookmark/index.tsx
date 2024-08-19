@@ -37,6 +37,7 @@ export class Bookmark extends Block {
             await this.onBlockReloadData(async () => {
                 if (this.initialData && this.initialData.url) {
                     await this.onLoadBookmarkByUrl(this.initialData.url, true);
+                    this.initialData={};
                 }
                 else if (this.createSource == 'InputBlockSelector') {
                     if (this.bookmarkUrl) {
@@ -48,6 +49,7 @@ export class Bookmark extends Block {
                             await this.onLoadBookmarkByUrl(r.url, true);
                         }
                     }
+                    delete this.createSource;
                 }
             });
         }

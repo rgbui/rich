@@ -46,6 +46,7 @@ export class File extends Block {
                     if (r) {
                         await this.onUpdateProps({ src: r }, { range: BlockRenderRange.self, merge: true });
                     }
+                    delete this.createSource;
                 }
                 if (this.initialData && this.initialData.file) {
                     var d = await channel.post('/ws/upload/file', {
@@ -64,6 +65,7 @@ export class File extends Block {
                             }
                         }, { range: BlockRenderRange.self, merge: true });
                     }
+                    this.initialData = {};
                 }
                 if (this.initialData && this.initialData.url) {
                     var d = await channel.post('/ws/download/url', { url: this.initialData.url });
@@ -75,6 +77,7 @@ export class File extends Block {
                             }
                         }, { range: BlockRenderRange.self, merge: true });
                     }
+                    this.initialData = {};
                 }
             })
         }

@@ -84,6 +84,7 @@ export class Embed extends Block {
         await this.onBlockReloadData(async () => {
             if (this.createSource == 'InputBlockSelector' && !(this.src && this.src.url)) {
                 await this.addEmbed({ roundArea: Rect.fromEle(this.el) })
+                delete this.createSource;
             }
         });
     }

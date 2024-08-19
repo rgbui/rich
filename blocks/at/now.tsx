@@ -17,7 +17,7 @@ export class ShyNowDate extends Block {
     time: number;
     async didMounted(): Promise<void> {
         await this.onBlockReloadData(async () => {
-        this.loadTime()
+            this.loadTime()
         });
     }
     async didUnmounted() {
@@ -34,7 +34,7 @@ export class ShyNowDate extends Block {
     }
 }
 @view('/now/date')
-export class ShyNowDateView extends BlockView<ShyNowDate>{
+export class ShyNowDateView extends BlockView<ShyNowDate> {
     renderView() {
         return <span >{dayjs().format('YYYY-MM-DDTHH:ss:ss')}</span>
     }

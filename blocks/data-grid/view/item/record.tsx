@@ -50,8 +50,8 @@ export class DataGridItemRecord extends Block {
     async didMounted() {
         await this.onBlockReloadData(async () => {
             await this.loadSchema();
-            if (this.schema) {
-
+            if (this.schema)
+            {
                 await this.loadViewFields();
                 await this.loadData();
                 await this.loadRelationSchemas();

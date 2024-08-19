@@ -88,6 +88,7 @@ export class Image extends Block {
                     if (r) {
                         await this.onSaveImageSize(r, true);
                     }
+                    delete this.createSource;
                 }
                 if (this.initialData && this.initialData.file) {
                     this.speed = '0%';
@@ -104,12 +105,14 @@ export class Image extends Block {
                     if (d.ok && d.data?.file?.url) {
                         await this.onSaveImageSize(d.data?.file, true);
                     }
+                    this.initialData={};
                 }
                 if (this.initialData && this.initialData.url) {
                     var d = await channel.post('/ws/download/url', { url: this.initialData.url });
                     if (d.ok && d.data?.file?.url) {
                         await this.onSaveImageSize(d.data?.file, true);
                     }
+                    this.initialData={};
                 }
             })
         }

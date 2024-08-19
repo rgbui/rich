@@ -166,11 +166,14 @@ export class Image extends Block {
     async didMounted() {
         try {
             await this.onBlockReloadData(async () => {
+                var willSave = false;
                 if (this.createSource == 'InputBlockSelector' && !this.src) {
                     var r = await useImagePicker({ roundArea: Rect.fromEle(this.el) });
                     if (r) {
                         await this.onSaveImageSize(r, true);
                     }
+                    delete this.createSource;
+                    willSave = true;
                 }
                 if (this.initialData && this.initialData.file) {
                     this.speed = '0%';
@@ -187,19 +190,24 @@ export class Image extends Block {
                     if (d.ok && d.data?.file?.url) {
                         await this.onSaveImageSize(d.data?.file, true);
                     }
+                    this.initialData = {};
+                    willSave = true;
                 }
                 if (this.initialData && this.initialData.url) {
                     var d = await channel.post('/ws/download/url', { url: this.initialData.url });
                     if (d.ok && d.data?.file?.url) {
                         await this.onSaveImageSize(d.data?.file, true);
                     }
+                    this.initialData = {};
+                    willSave = true;
                 }
                 if (this.initialData && this.initialData.imageUrl) {
                     await this.onSaveImageSize({ url: this.initialData.imageUrl }, true);
+                    this.initialData = {};
+                    willSave = true;
                 }
-
-                this.page.kit.picker.onPicker([this]);
-
+                if (willSave)
+                    this.page.kit.picker.onPicker([this]);
             })
         }
         catch (ex) {

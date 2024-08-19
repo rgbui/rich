@@ -46,13 +46,15 @@ export class Video extends Block {
         try {
             await this.onBlockReloadData(async () => {
                 if (this.createSource == 'InputBlockSelector' && !this.src?.url) {
+
                     var r = await useVideoPicker({ roundArea: Rect.fromEle(this.el) });
                     if (r) {
                         await this.onSaveSize(r, true);
-                        return;
                     }
+                    delete this.createSource;
                 }
                 if (this.initialData && this.initialData.file) {
+
                     var d = await channel.post('/ws/upload/file', {
                         file: this.initialData.file,
                         uploadProgress: (event) => {
@@ -65,15 +67,19 @@ export class Video extends Block {
                     this.speed = '';
                     if (d.ok && d.data?.file?.url) {
                         await this.onSaveSize(d.data.file, true);
-                        return;
+
                     }
+                    this.initialData = {};
                 }
                 if (this.initialData && this.initialData.url) {
+
                     var d = await channel.post('/ws/download/url', { url: this.initialData.url });
                     if (d.ok && d.data?.file?.url) {
                         await this.onSaveSize(d.data.file, true);
-                        return;
+
+
                     }
+                    this.initialData = {};
                 }
             })
             // await (this.view as any).loadPlayer();

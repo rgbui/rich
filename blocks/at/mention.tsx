@@ -43,6 +43,7 @@ export class ShyMention extends Block {
                 if (!(Array.isArray(this.refLinks) && this.refLinks.length > 0)) {
                     (this.view as any).openUser({ roundArea: Rect.fromEle(this.el) })
                 }
+                delete this.createSource
             }
         })
     }
