@@ -11,8 +11,9 @@ import { Point, PointArrow, Rect } from "../../../src/common/vector/point";
 import { Polygon } from "../../../src/common/vector/polygon";
 import { util } from "../../../util/util";
 import { renderLine } from "./render";
-import { cacBrokeLinePoints } from "./util";
+import { cacBrokeLinePoints, cacBrokeSimpleLinePoints } from "./util";
 import "./style.less";
+import { Matrix } from "../../../src/common/matrix";
 
 export type PortLocation = {
     x: number | PointArrow,
@@ -47,41 +48,20 @@ export class Line extends Block {
                     point: gm.transform(segs.first().point),
                     data: { at: 0 }
                 });
-                // for (let i = 1; i < segs.length - 1; i++) {
-                //     var current = segs[i];
-                //     var next = segs[i + 1];
-                //     if (current && next) {
-                //         if (i == 1 || i == segs.length - 2)
-                //             pickers.push({
-                //                 type: BoardPointType.brokenLineSplitPort,
-                //                 arrows: [PointArrow.point],
-                //                 point: gm.transform(CurveUtil.cacCurvePoint(
-                //                     {
-                //                         start: current.point,
-                //                         end: next.point,
-                //                         control1: current.handleOut,
-                //                         control2: next.handleIn
-                //                     }, .5)),
-                //                 data: { at: i }
-                //             });
-                //         else {
-                //             var p = this.points.find(c => c.x == current.point.x && c.y == current.point.y);
-                //             if (p) {
-                //                 pickers.push({
-                //                     type: BoardPointType.brokenLinePort,
-                //                     arrows: [PointArrow.point],
-                //                     point: gm.transform(current.point),
-                //                     data: { at: this.points.findIndex(g => g === p) }
-                //                 });
-                //             }
-                //         }
-                //     }
-                // }
+                for (let i = 1; i < segs.length - 1; i++) {
+                    var current = segs[i];
+                    pickers.push({
+                        type: BoardPointType.linePort,
+                        arrows: [PointArrow.point],
+                        point: gm.transform(current.point),
+                        data: { at: i }
+                    });
+                }
                 pickers.push({
                     type: BoardPointType.lineMovePort,
                     arrows: [PointArrow.point],
                     point: gm.transform(segs.last().point),
-                    data: { at: this.points.length + 1 }
+                    data: { at: segs.length - 1 }
                 });
             }
             else {
@@ -146,8 +126,8 @@ export class Line extends Block {
                     }
                 }
             }
-            return { point: new Point(pl.x as number, pl.y as number) }
         }
+        return { point: new Point(pl.x as number, pl.y as number) }
     }
     cacPointSegment(pl: PortLocation, options?: { isOnlyPointSegment?: boolean }) {
         try {
@@ -243,24 +223,7 @@ export class Line extends Block {
             var fp = this.getPi(this.from);
             var tp = this.getPi(this.to);
             if (this.lineType == 'line') {
-                if (this.points.length == 0)
-                    segs.push(...cacBrokeLinePoints(this, fp, tp));
-                else if (this.points.length > 0) {
-                    for (let i = 0; i < this.points.length; i++) {
-                        if (i == 0) {
-                            segs.push(...cacBrokeLinePoints(this, fp, { point: new Point(this.points[i].x as number, this.points[i].y as number) }));
-                        }
-                        else if (i == this.points.length - 1) {
-                            segs.push(...cacBrokeLinePoints(this, { point: new Point(this.points[i].x as number, this.points[i].y as number) }, tp));
-                        }
-                        else {
-                            segs.push(...cacBrokeLinePoints(this,
-                                { point: new Point(this.points[i].x as number, this.points[i].y as number) },
-                                { point: new Point(this.points[i + 1].x as number, this.points[i + 1].y as number) })
-                            );
-                        }
-                    }
-                }
+                segs.push(...cacBrokeSimpleLinePoints(this, fp, tp));
             }
             else {
                 segs = [
@@ -317,6 +280,12 @@ export class Line extends Block {
     lineStart: string | number = 'none';
     @prop()
     lineEnd: string | number = 'none';
+    /**
+     *  lineType: 'straight' 直线
+     *  'curve 
+     * line 折线
+     * 
+     */
     @prop()
     lineType: 'straight' | 'curve' | 'line' = 'curve';
     async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
@@ -349,7 +318,7 @@ export class Line extends Block {
         else if (['strokeWidth', 'strokeDasharray'].includes(name)) {
             await this.pattern.setSvgStyle({ [name]: value });
         }
-    } 
+    }
     getVisiblePolygon() {
         var gm = this.globalWindowMatrix;
         var poly = new Polygon(...(this.segments.toArray(seg => seg ? gm.transform(seg.point) : undefined)));
@@ -357,8 +326,8 @@ export class Line extends Block {
     }
     getVisibleBound(): Rect {
         if (this.el) {
-            var v = this.el.querySelector('.visible')
-            if (v) return Rect.fromEle(this.el.querySelector('.visible') as HTMLElement)
+            var v = this.el.querySelector('svg') as any;
+            if (v) return Rect.fromEle(v)
             else Rect.fromEle(this.el);
         }
     }
@@ -378,6 +347,24 @@ export class Line extends Block {
         var r = Segment.pointIsInSegment(point, segs, strokeWidth);
         return r;
     }
+    get fixedSize() {
+        var w = this.pattern.getSvgStyle()?.strokeWidth || 1;
+        var segs = this.segments;
+        var rect = Segment.getBound(segs);
+        var re = rect.extend(Math.max(30, w * 6, 100));
+        return {
+            width: re.width,
+            height: re.height
+        }
+    }
+    get contentMatrix() {
+        var segs = this.segments;
+        if (segs?.length == 0 || !segs) return new Matrix();
+        var rect = Segment.getBound(segs);
+        var ma = new Matrix();
+        ma.translate(rect.x, rect.y);
+        return ma;
+    }
 }
 
 @view('/line')
@@ -387,7 +374,7 @@ export class LineView extends BlockView<Line> {
         var segs = this.block.segments;
         if (segs?.length == 0 || !segs) return <div style={this.block.visibleStyle}></div>
         var rect = Segment.getBound(segs);
-        if(!rect) return <div style={this.block.visibleStyle}></div>
+        if (!rect) return <div style={this.block.visibleStyle}></div>
         var re = rect.extend(Math.max(30, w * 6, 100));
         var style = this.block.visibleStyle;
         style.padding = 0;
