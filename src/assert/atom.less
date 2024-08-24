@@ -413,9 +413,7 @@ each(@cols, {
         }
     }
 
-)
-
-.col-full {
+) .col-full {
     align-items: stretch;
     flex-wrap  : nowrap;
 }
@@ -595,10 +593,15 @@ item-selected:选中的效果
 .item-bg-hover-light,
 .r-bg-hover-light>*,
 .r-item-bg-hover-light>* {
-    background-color: #fff;
-
+    background-color: #fff; 
     &:hover {
         background-color: #fefefe;
+    }
+}
+
+.bg-hover-define {
+    &:hover {
+        background-color: var(--define-color) !important;
     }
 }
 
@@ -1538,26 +1541,10 @@ each(@ops, {
         padding   : 10px;
         text-align: center;
         word-break: break-all;
-
-
-        // .shy-icon {
-        //     color: #1DC63A;
-        //     fill : currentColor;
-        // }
     }
 
     td {
         font-size                  : 14px;
-        // a {
-        //     display: inline-block;
-        //     border-radius: 4px;
-        //     width        : 24px;
-        //     height       : 24px;
-        //     cursor: pointer;
-        //     &:hover {
-        //         background-color: rgba(43, 47, 53, .06);
-        //     }
-        // }
     }
 
 }
@@ -1876,8 +1863,10 @@ each(@ops, {
 .border-p {
     border: 0.1rem solid rgb(225, 98, 89);
 }
-.border-blue,.border-b{
-    border:0.1rem solid var(--text-p1-color)
+
+.border-blue,
+.border-b {
+    border: 0.1rem solid var(--text-p1-color)
 }
 
 .border-bottom,
@@ -2496,6 +2485,32 @@ each(@zs, {
     }
 }
 
-.palette{
+.palette {
     background: conic-gradient(from 180deg at 50% 50%, #ff4b88, #ff4b4b 48.3deg, #fbff4a 88.69deg, #4aff5c 136.64deg, #49deff 181.09deg, #4a67ff 222.49deg, #644aff 271.23deg, #ff4bd7 313.81deg, #ff4b88 360deg);
+}
+
+
+.scale-hover {
+    transition      : transform 0.3s ease;
+    /* 动画效果，持续时间为0.3秒，动画曲线为ease */
+    transform-origin: center;
+
+    /* 缩放中心为图片中心 */
+    &:hover {
+        transform: scale(1.1);
+        /* 放大图片到原来的1.1倍 */
+    }
+}
+
+.rotate-hover {
+
+    transition      : transform 1s ease;
+    /* 动画效果，持续时间为0.3秒，动画曲线为ease */
+    transform-origin: center;
+
+    /* 旋转中心为图片中心 */
+    &:hover {
+        transform: rotate(360deg);
+        /* 旋转图片360度 */
+    }
 }

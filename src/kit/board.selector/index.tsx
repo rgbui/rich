@@ -120,7 +120,7 @@ export class BoardSelector extends React.Component<{
             <Tip text='画笔' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.pen ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.pen, e) }}>
-                <Icon size={24} icon={{ name: 'bytedance-icon', code: 'writing-fluently' }}></Icon>
+                <Icon size={24} icon={{ name: 'bytedance-icon', code: 'high-light' }}></Icon>
             </div></Tip>
 
             <Tip text='容器' placement={'left'}><div
@@ -138,7 +138,7 @@ export class BoardSelector extends React.Component<{
             <Tip text='思维导图' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.mind ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.mind, e) }}>
-                <Icon size={24} icon={MindSvg}></Icon>
+                <Icon size={24} icon={{name:'byte',code:'mindmap-map'}}></Icon>
             </div></Tip>
 
             <Tip text='更多创作工具' placement={'left'}><div
