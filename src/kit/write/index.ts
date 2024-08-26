@@ -562,7 +562,6 @@ export class PageWrite {
         if (range) {
             var rs = TextEle.getWindowCusorBounds();
             var rect = Rect.getRectFromRects(rs);
-
             var list = this.kit.anchorCursor.getAppears();
             if (list.length == 0) {
                 forceCloseTextTool()
@@ -842,11 +841,18 @@ export class PageWrite {
         await this.kit.page.onAction(ActionDirective.onUpdateEquation, async () => {
             this.kit.anchorCursor.adjustAnchorSorts();
             var code: string = '';
+            var endText: string = '';
             await appears.eachAsync(async appear => {
                 var block = appear.block;
                 if (appear == this.kit.anchorCursor.startAnchor) {
                     var pre = this.kit.anchorCursor.startAnchor.textContent.slice(0, this.kit.anchorCursor.startOffset);
-                    var next = this.kit.anchorCursor.startAnchor.textContent.slice(this.kit.anchorCursor.startOffset);
+                    var next: string;
+                    if (appear == this.kit.anchorCursor.endAnchor) {
+                        next = this.kit.anchorCursor.endAnchor.textContent.slice(this.kit.anchorCursor.startOffset, this.kit.anchorCursor.endOffset);
+                        endText = this.kit.anchorCursor.endAnchor.textContent.slice(this.kit.anchorCursor.endOffset);
+                    }
+                    else
+                        next = this.kit.anchorCursor.startAnchor.textContent.slice(this.kit.anchorCursor.startOffset);
                     if (pre != this.kit.anchorCursor.startAnchor.textContent) {
                         await this.kit.anchorCursor.startAnchor.block.updateProps({ content: pre }, BlockRenderRange.self)
                     }
@@ -868,20 +874,45 @@ export class PageWrite {
                 }
             });
             if (code) {
-                var ab = this.kit.anchorCursor.startAnchor.block
-                var newBlock = await ab.parent.appendBlock({
-                    url: BlockUrlConstant.KatexLine,
-                    content: code
-                },
-                    ab.at + 1,
-                    ab.parentKey
-                );
-                if (ab.isContentEmpty) {
-                    await ab.delete();
+                var ab = this.kit.anchorCursor.startAnchor.block;
+                var newBlock: Block;
+                if (ab.isLine) {
+                    newBlock = await ab.parent.appendBlock({
+                        url: BlockUrlConstant.KatexLine,
+                        content: code
+                    },
+                        ab.at + 1,
+                        ab.parentKey
+                    );
+                    if (endText) {
+                        await newBlock.parent.appendBlock({
+                            url: BlockUrlConstant.Text,
+                            content: endText
+                        }, newBlock.at + 1, newBlock.parentKey)
+                    }
+                    if (ab.isContentEmpty) {
+                        await ab.delete();
+                    }
+                    var eb = this.kit.anchorCursor.endAnchor.block;
+                    if (eb != ab && eb.isContentEmpty) {
+                        await eb.delete();
+                    }
                 }
-                var eb = this.kit.anchorCursor.endAnchor.block;
-                if (eb != ab && eb.isContentEmpty) {
-                    await eb.delete();
+                else {
+                    ab = await ab.wrapTextContent()
+                    newBlock = await ab.parent.appendBlock({
+                        url: BlockUrlConstant.KatexLine,
+                        content: code
+                    },
+                        ab.at + 1,
+                        ab.parentKey
+                    );
+                    if (endText) {
+                        await newBlock.parent.appendBlock({
+                            url: BlockUrlConstant.Text,
+                            content: endText
+                        }, newBlock.at + 1, newBlock.parentKey)
+                    }
                 }
                 this.kit.page.addActionAfterEvent(async () => {
                     this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, merge: true, render: true });
