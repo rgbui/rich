@@ -38,11 +38,10 @@ export class CardBox extends Block {
     }
     get childsOffsetMatrix() {
         var matrix = new Matrix();
-        if (this.el) {
+        if (this.el&&this.board==true) {
             var p = this.page.getDocRelativePoint(this, this.getVisibleContentBound().leftTop);
             matrix.translate(p.x, p.y);
         }
-        // matrix.append(this.boardOffsetMatrix);
         return matrix;
     }
     async onAddCardBox(event: React.MouseEvent) {
