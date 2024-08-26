@@ -8,7 +8,7 @@ export class InputNumber extends React.Component<{
     inputStyle?: CSSProperties,
     disabled?: boolean,
     value?: number,
-    showIcon?:boolean,
+    showIcon?: boolean,
     placeholder?: string,
     readonly?: boolean,
     noborder?: boolean,
@@ -38,7 +38,7 @@ export class InputNumber extends React.Component<{
         function onDeep(increase: number) {
             var v = filterValue(self.inputEl.value || '0');
             if (typeof v == 'number') {
-                if (props.onDeep) props.onDeep(v +increase);
+                if (props.onDeep) props.onDeep(v + increase);
                 else props.onChange(v + increase);
                 self.inputEl.value = (v + increase).toString();
             }
@@ -53,6 +53,12 @@ export class InputNumber extends React.Component<{
                 if (typeof v == 'number') props.onEnter(v, e);
                 else if (lodash.isUndefined(v)) { props.onChange(null); }
             }
+        }
+        function paste(e: React.ClipboardEvent<HTMLInputElement>) {
+            e.stopPropagation();
+            var v = filterValue(e.clipboardData.getData('text/plain'));
+            if (typeof v == 'number') { self.inputEl.value = v.toString(); props.onChange(v); }
+            else if (lodash.isUndefined(v)) { self.inputEl.value = ''; props.onChange(null); }
         }
         var classList: string[] = ['shy-input', 'relative', 'visible-hover'];
         if (Array.isArray(this.props.className)) this.props.className.each(c => { classList.push(c) })
@@ -73,10 +79,11 @@ export class InputNumber extends React.Component<{
                     onInput={e => onInput(e)}
                     onKeyDown={e => keydown(e)}
                     readOnly={props.readonly}
+                    onPaste={e => paste(e)}
                     name={props.name}
                     style={props.inputStyle || {}}
                 ></input>
-                <div className={"pos pos-center-right h-24 w-20 flex flex-col "+(props.showIcon?" ":"visible")}>
+                <div className={"pos pos-center-right h-24 w-20 flex flex-col " + (props.showIcon ? " " : "visible")}>
                     <span className="size-12 flex-center item-hover round cursor" onMouseDown={e => { e.stopPropagation(); onDeep(1) }}><Icon size={12} icon={UpSvg}></Icon></span>
                     <span className="size-12 flex-center item-hover round cursor" onMouseDown={e => { e.stopPropagation(); onDeep(-1) }}><Icon size={12} icon={DownSvg}></Icon></span>
                 </div>
