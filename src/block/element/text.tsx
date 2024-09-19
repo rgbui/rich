@@ -20,6 +20,8 @@ import { S } from "../../../i18n/view";
 import { Tip } from "../../../component/view/tooltip/tip";
 import { lst } from "../../../i18n/store";
 import { useLinkEditor } from "../../../extensions/link/link";
+import { getPageIcon, LinkPageItem } from "../../page/declare";
+import { parseElementUrl } from "../../../net/element.type";
 
 
 /***
@@ -148,8 +150,37 @@ export class TextContentView extends BlockView<TextContent> {
             channel.act('/page/open', { item: r.pageId });
         }
     }
+    pageInfo: LinkPageItem;
     copyLink(url: string) {
         CopyAlert(url, lst('复制成功'))
+    }
+    async loadPageInfo() {
+        var link = this.block.getPageLink();
+        if (link && link.pageId) {
+            var r = await channel.get('/page/query/info', { ws: this.block.page.ws, id: link.pageId });
+            if (r?.ok) {
+                this.pageInfo = lodash.cloneDeep(r.data);
+                this.block.forceManualUpdate();
+            }
+        }
+    }
+    async didMount() {
+        channel.sync('/page/update/info', this.syncPageInfo);
+        await this.loadPageInfo();
+    }
+    syncPageInfo = async (e: {
+        id: string,
+        elementUrl?: string;
+        pageInfo: LinkPageItem
+    }) => {
+        var link = this.block.getPageLink();
+        var id = link?.pageId;
+        if (e.id && e.id == id || e.elementUrl && parseElementUrl(e.elementUrl).id == id) {
+            var isUpdate = false;
+            if (typeof e.pageInfo.icon != 'undefined') { this.pageInfo.icon = e.pageInfo.icon; isUpdate = true }
+            if (typeof e.pageInfo.text != 'undefined') { this.pageInfo.text = e.pageInfo.text; isUpdate = true }
+            if (isUpdate) this.block.forceManualUpdate();
+        }
     }
     async openCreatePage(e: React.MouseEvent) {
         e.stopPropagation();
@@ -189,7 +220,11 @@ export class TextContentView extends BlockView<TextContent> {
                 else {
                     rf.pageId = pageLink.pageId;
                 }
-                this.block.onUpdateProps({
+                this.pageInfo = {
+                    icon: pageLink.icon,
+                    text: pageLink.text
+                }
+                await this.block.onUpdateProps({
                     content: pageLink.text && pageLink.text != this.block.content ? pageLink.text : undefined,
                     link: null,
                     refLinks: [rf]
@@ -225,6 +260,20 @@ export class TextContentView extends BlockView<TextContent> {
             else if (this.block.link?.pageId || this.block.refLinks?.length > 0) {
                 var pageId = this.block.link?.pageId || this.block.refLinks[0].pageId;
                 var url = (this.block.page.ws?.url || "") + "/page/" + pageId;
+                if (this.pageInfo) {
+                    ta = <SolidArea block={this.block}>
+                        <span className="flex flex-inline  round item-hover padding-w-3" style={{
+                            color: 'var(--remark)',
+                            height: '1.6em',
+                        }}><Icon className={'gap-r-5'} icon={getPageIcon(this.pageInfo)} size={16}></Icon>
+                            <span style={{
+                                color: 'var(--text)',
+                                borderBottom: '0.05em solid rgba(55,53,47,.25)',
+                                fontWeight: 500
+                            }}> {this.pageInfo.text}</span>
+                        </span>
+                    </SolidArea>;
+                }
                 ta = <BoxTip ref={e => this.boxTip = e} placement="bottom" align="left" overlay={<div className="flex-center  padding-5 r-flex-center r-size-24 r-round  r-cursor remark">
                     {this.block.isCanEdit() && <Tip text={'拖动'}><span className="item-hover" onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></Tip>}
                     <Tip overlay={url}><span className="max-w-160 padding-w-3 text-overflow " style={{ width: 'auto', justifyContent: 'flex-start' }}>{url}</span></Tip>
@@ -259,7 +308,7 @@ export class TextContentView extends BlockView<TextContent> {
         delete style.lineHeight;
         style.padding = '2px 0px';
         style.borderRadius = '2px';
-        
+
         return <span className={classList.join(" ")} style={style}>{ta}</span>
     }
 }

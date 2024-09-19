@@ -1,30 +1,30 @@
 import React from "react";
-import { Avatar } from "../../../../../../component/view/avator/face";
-import { UserBox } from "../../../../../../component/view/avator/user";
-import { ResourceArguments } from "../../../../../../extensions/icon/declare";
-import { autoImageUrl } from "../../../../../../net/element.type";
-import * as Card1 from "../../../../../../src/assert/img/card/card8.jpg"
-import { BlockUrlConstant } from "../../../../../../src/block/constant";
-import { util } from "../../../../../../util/util";
-import { FieldType } from "../../../../schema/type";
-import { CardModel, CardViewCom } from "../../factory/observable";
-import { CardView } from "../../view";
-import { LikeSvg, CommentSvg, DotsSvg, Edit1Svg, TrashSvg } from "../../../../../../component/svgs";
-import { Icon } from "../../../../../../component/view/icon";
-import { buildPageData } from "../../../../../../src/page/common/create";
-import { lst } from "../../../../../../i18n/store";
-import { Sp } from "../../../../../../i18n/view";
-import { UserAvatars } from "../../../../../../component/view/avator/users";
-import { CommentListView } from "../../../../../../extensions/comment/list";
-import { Rect } from "../../../../../../src/common/vector/point";
-import { MenuItemType } from "../../../../../../component/view/menu/declare";
-import { useSelectMenuItem } from "../../../../../../component/view/menu";
-import { BlockRenderRange } from "../../../../../../src/block/enum";
-import { useImageViewer } from "../../../../../../component/view/image.preview";
+import { Avatar } from "../../../../../component/view/avator/face";
+import { UserBox, UserBoxs } from "../../../../../component/view/avator/user";
+import { ResourceArguments } from "../../../../../extensions/icon/declare";
+import { autoImageUrl } from "../../../../../net/element.type";
+import * as Card1 from "../../../../../src/assert/img/card/card8.png"
+import { BlockUrlConstant } from "../../../../../src/block/constant";
+import { util } from "../../../../../util/util";
+import { FieldType } from "../../../schema/type";
+import { CardModel, CardViewCom } from "../factory/observable";
+import { CardView } from "../view";
+import { LikeSvg, DotsSvg, Edit1Svg, TrashSvg } from "../../../../../component/svgs";
+import { Icon } from "../../../../../component/view/icon";
+import { buildPageData } from "../../../../../src/page/common/create";
+import { lst } from "../../../../../i18n/store";
+import { S } from "../../../../../i18n/view";
+import { UserAvatars } from "../../../../../component/view/avator/users";
+import { CommentListView } from "../../../../../extensions/comment/list";
+import { Rect } from "../../../../../src/common/vector/point";
+import { MenuItemType } from "../../../../../component/view/menu/declare";
+import { useSelectMenuItem } from "../../../../../component/view/menu";
+import { BlockRenderRange } from "../../../../../src/block/enum";
+import { useImageViewer } from "../../../../../component/view/image.preview";
 
 CardModel('/list/tizhi', () => ({
     url: '/list/tizhi',
-    title: lst('帖子'),
+    title: '讨论',
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridList],
     props: [
@@ -97,7 +97,6 @@ export class CardTiZhi extends CardView {
                     },
                 });
                 if (r) {
-
                     if (r.item.name == 'remove') {
                         await self.deleteItem();
                     }
@@ -125,55 +124,66 @@ export class CardTiZhi extends CardView {
         var createDate = this.getValue<Date>('createDate');
         var like = this.getValue<{ count: number, users: string[] }>('like', FieldType.like);
         var isLike = this.isEmoji('like')
+        var title = this.getValue<string>('title');
         var comment = this.getValue<{ count: number, users: string[] }>('comment', FieldType.comment);
-        return <div className="w100 round padding-10 border-light gap-b-20 visible-hover" onMouseDown={e => self.openEdit(e)}>
+        console.log('like', like);
+
+        return <div className="w100 round padding-10 card-border gap-b-20 visible-hover" onMouseDown={e => self.openEdit(e)}>
+
             <UserBox userid={author}>{(user) => {
-                return <div className="flex flex-top">
-                    <div className="flex-fixed"><Avatar size={50} user={user}></Avatar></div>
-                    <div className="flex-auto gap-l-10">
-                        <div className="bold">{user.name}</div>
-                        <div className="remark f-12">{util.showTime(createDate)}&nbsp;</div>
+                return <div className="flex flex">
+                    <div className="flex-fixed"><Avatar size={30} user={user}></Avatar></div>
+                    <div className="flex-auto gap-l-5">
+                        <div className="bold f-14 l-16">{user.name}</div>
+                        <div className="remark f-12 l-16">{util.showTime(createDate)}&nbsp;</div>
                     </div>
                     <div className="flex-fixed">
-                        <span className="size-24 round item-hover visile" onMouseDown={e => this.openMenu(e)}><Icon icon={DotsSvg}></Icon></span>
+                        <span className="size-24 cursor flex-center round item-hover visile" onMouseDown={e => this.openMenu(e)}><Icon icon={DotsSvg}></Icon></span>
                     </div>
                 </div>
             }}</UserBox>
 
-            {remark && <div className="gap-h-10  text">
+            {title && <div>
+                <div className="h-20 gap-t-10 text f-16 bold">{title}</div>
+            </div>}
+
+            {remark && <div className="gap-h-10 f-14  text-1">
                 {remark}
             </div>}
 
-            <div className="flex flex-wrap">
-                {pics.slice(0, 9).map(pic => {
+            <div className="flex flex-wrap gap-h-20">
+                {pics.slice(0, 1).map(pic => {
                     return <div onMouseDown={e => {
                         e.stopPropagation();
                         useImageViewer(pic, pics);
-                    }} key={pic.url} className="w-120 h-120 gap-r-10">
-                        <img className="w100 h100 obj-center round-8" src={autoImageUrl(pic.url, 250)} />
+                    }} key={pic.url} className="h-120 gap-r-10">
+                        <img className="h100 obj-center round-8" src={autoImageUrl(pic.url, 500)} />
                     </div>
                 })}
             </div>
-            <div className="flex r-flex-fixed gap-t-10 r-gap-r-10 r-padding-w-5 remark     r-cursor r-flex">
+
+            <div className="flex r-flex-fixed gap-t-10 r-gap-r-10 r-padding-w-10 remark     r-cursor r-flex">
                 <span
                     onMouseDown={e => self.onUpdateCellInteractive(e, 'like')}
-                    className={"h-20 item-hover round " + (isLike ? "fill-p" : " text-hover")}>
+                    className={"h-30 border-light item-hover round-8 " + (isLike ? "fill-p" : " text-hover")}>
                     <Icon size={16} icon={LikeSvg}></Icon>
                     <span className="gap-l-5 f-14">{like.count}</span>
                 </span>
                 <span
-                    className="h-20 flex flex-center text-hover cursor item-hover round"
+                    className="h-30 flex border-light flex-center text-hover cursor item-hover round-8"
                     onMouseDown={e => {
                         e.stopPropagation()
                         this.commentSpread = this.commentSpread ? false : true;
                         this.forceUpdate();
-                    }}><Icon size={16} icon={CommentSvg}></Icon>
+                    }}><Icon size={16} icon={{ name: 'byte', code: 'message' }}></Icon>
                     <span className="gap-l-5 f-14">{comment.count}</span>
                 </span>
             </div>
-            {like.users.length > 0 && <div className="gap-h-5 flex">
-                <UserAvatars users={like.users}></UserAvatars>
-                <span className="remark f-12 gap-l-10"><Sp text="{name}等{total}人都觉得的很赞" data={{ name: '', total: like.count }}>等觉得的很赞</Sp></span>
+            {like.users?.length > 0 && <div className="gap-h-5 flex">
+                <UserAvatars size={20} users={like.users}></UserAvatars>
+                <UserBoxs userids={like.users}>{(users) => {
+                    return <span className="remark f-12 gap-l-10"><S text="{name}等{total}人都觉得的很赞" data={{ name: users.map(c => c.name).join(","), total: like.count || like.users.length }}></S></span>
+                }}</UserBoxs>
             </div>}
             {this.commentSpread && <div className="gap-h-5" onMouseDown={e => {
                 e.stopPropagation();

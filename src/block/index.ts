@@ -61,6 +61,11 @@ export abstract class Block extends Events {
         if (c) return c.gridMap;
         else return this.page.gridMap;
     }
+    get panelGridMapNotSelf() {
+        var c = this.closest(x => x.gridMap ? true : false, true);
+        if (c) return c.gridMap;
+        else return this.page.gridMap;
+    }
     get panel() {
         return this.closest(x => x.isPanel);
     }

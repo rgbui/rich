@@ -56,7 +56,7 @@ export class FieldTextView extends BlockView<FieldUser> {
                     ele.classList.remove('item-hover-light-focus')
                 }
             }} className={' ' + (this.block.fromType == 'doc' ? "item-hover-light padding-w-10 round" : (this.block.fromType == 'doc-add' ? " sy-form-field-input-value" : "  "))}>
-                <div className="min-h-30">
+                <div className="min-h-30 flex">
                     <UserAvatars size={24} users={vs}></UserAvatars>
                     {this.block.fromType != 'doc-add' && vs.length == 0 && <span className="f-14 remark" ><S>空内容</S></span>}
                 </div>

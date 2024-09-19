@@ -18,8 +18,6 @@ import "./style.less";
 export class Board extends Block {
     @prop()
     viewHeight: number = 300;
-    @prop()
-    // boardOffsetMatrix: Matrix = new Matrix();
     isAutoCreateMind: boolean = false;
     get childsOffsetMatrix() {
         var matrix = new Matrix();
@@ -27,7 +25,6 @@ export class Board extends Block {
             var p = this.page.getDocRelativePoint(this, this.getVisibleContentBound().leftTop);
             matrix.translate(p.x, p.y);
         }
-        // matrix.append(this.boardOffsetMatrix);
         return matrix;
     }
     init() {

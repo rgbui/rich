@@ -5,8 +5,13 @@ import { GridMap } from "../../page/grid";
 import { BlockUrlConstant } from "../../block/constant";
 import { FlowMind } from "../../../blocks/board/mind";
 
-export function CacBlockAlignLines(block: Block, gm: GridMap, from: Point, to: Point, rect: Rect, arrows: PointArrow[]) {
-    rect = rect.clone();
+export function CacBlockAlignLines(block: Block,
+    gm: GridMap,
+    from: Point,
+    to: Point,
+    rrect: Rect,
+    arrows: PointArrow[]) {
+    var rect = rrect.clone();
     if (arrows.includes(PointArrow.top)) {
         rect.height = rect.height + from.y - to.y;
         rect.top = rect.top + to.y - from.y;
@@ -114,10 +119,9 @@ export function CacBlockAlignLines(block: Block, gm: GridMap, from: Point, to: P
                 start: new Point(otherRect.right, rect.top),
                 end: otherRect.rightBottom
             })
-            ls.dx = otherRect.leftMiddle.dis(rect.leftMiddle)
+            ls.dx = otherRect.rightMiddle.dis(rect.rightMiddle)
             ls.nx = otherRect.right - rect.right;
         }
-
         // 检查顶部和底部对齐
         if (Math.abs(rect.top - otherRect.top) < re) {
             if (otherRect.left < rect.left)
@@ -189,6 +193,46 @@ export function CacBlockAlignLines(block: Block, gm: GridMap, from: Point, to: P
             })
             ls.dy = otherRect.topCenter.dis(rect.topCenter);
             ls.ny = otherRect.bottom - rect.bottom;
+        }
+        
+        // 检测水平左右是否靠近
+        if (Math.abs(rect.top - otherRect.bottom) < re) {
+            ls.lines.push({
+                arrow: 'x',
+                start: new Point(Math.min(rect.left, otherRect.left), otherRect.bottom),
+                end: new Point(Math.max(rect.right, otherRect.right), otherRect.bottom)
+            })
+            ls.dy = otherRect.bottomCenter.dis(rect.topCenter);
+            ls.ny = otherRect.bottom - rect.top;
+        }
+        else if (Math.abs(rect.bottom - otherRect.top) < re) {
+            ls.lines.push({
+                arrow: 'x',
+                start: new Point(Math.min(rect.left, otherRect.left), otherRect.top),
+                end: new Point(Math.max(rect.right, otherRect.right), otherRect.top)
+            })
+            ls.dy = otherRect.topCenter.dis(rect.bottomCenter);
+            ls.ny = otherRect.top - rect.bottom;
+        }
+
+        //检测上下是否靠近
+        if (Math.abs(rect.left - otherRect.right) < re) {
+            ls.lines.push({
+                arrow: 'y',
+                start: new Point(otherRect.right, Math.min(rect.top, otherRect.top)),
+                end: new Point(otherRect.right, Math.max(rect.bottom, otherRect.bottom)),
+            })
+            ls.dx = otherRect.rightMiddle.dis(rect.leftMiddle)
+            ls.nx = otherRect.right - rect.left;
+        }
+        else if (Math.abs(rect.right - otherRect.left) < re) {
+            ls.lines.push({
+                arrow: 'y',
+                start: new Point(otherRect.left, Math.min(rect.top, otherRect.top)),
+                end: new Point(otherRect.left, Math.max(rect.bottom, otherRect.bottom)),
+            })
+            ls.dx = otherRect.leftMiddle.dis(rect.rightMiddle)
+            ls.nx = otherRect.left - rect.right;
         }
 
         if (typeof ls.dy == 'number' || typeof ls.dx == 'number') vs.push(ls);

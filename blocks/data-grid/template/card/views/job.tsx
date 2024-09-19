@@ -8,7 +8,7 @@ import { FieldType } from "../../../schema/type";
 import { CardModel, CardViewCom } from "../factory/observable";
 import { CardView } from "../view";
 import { Icon } from "../../../../../component/view/icon";
-import { BackgroundColorList, OptionColorRandom } from "../../../../../extensions/color/data";
+import { OptionColorRandom } from "../../../../../extensions/color/data";
 import * as Card9 from "../../../../../src/assert/img/card/card9.png";
 import lodash from "lodash";
 
@@ -32,12 +32,12 @@ CardModel('/job', () => ({
             types: [FieldType.options, FieldType.option],
             config: {
                 options: [
-                    { text: lst('五险一金'), value: '1',...OptionColorRandom() },
+                    { text: lst('五险一金'), value: '1', ...OptionColorRandom() },
                     { text: lst('定期体检'), value: '2', ...OptionColorRandom() },
                     { text: lst('加班补助'), value: '3', ...OptionColorRandom() },
                     { text: lst('年终奖'), value: '4', ...OptionColorRandom() },
                     { text: lst('带薪年假'), value: '5', ...OptionColorRandom() },
-                    { text: lst('员工旅游'), value: '6', ...OptionColorRandom()},
+                    { text: lst('员工旅游'), value: '6', ...OptionColorRandom() },
                     { text: lst('通讯补贴'), value: '7', ...OptionColorRandom() },
                     { text: lst('节日福利'), value: '8', ...OptionColorRandom() },
                     { text: lst('零食下午茶'), value: '9', ...OptionColorRandom() }
@@ -173,11 +173,11 @@ export class CardJob extends CardView {
         lodash.remove(ts, (v) => !v);
         return <div
             onMouseDown={e => self.openEdit(e)}
-            className="relative visible-hover  padding-t-10 round bg-white border-light">
+            className="relative visible-hover  padding-t-10 round card-border">
             <div className="flex gap-h-5 padding-w-10">
                 <div className="flex-auto bold text-overflow text-p-hover gap-r-10">{jobTitle}</div>
                 <div className="flex-fixed">
-                    <span className="text-p" style={{ fontSize: '24px' }}>{salary[0]?.text}</span>
+                    <span className="text-p bold" style={{ fontSize: '20px' }}>{salary[0]?.text}</span>
                 </div>
             </div>
 

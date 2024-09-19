@@ -1,15 +1,11 @@
 .sy-board {
-    // display: block;
-    // margin : 10px 0px;
-    // border : 1px solid #ddd;
-    // position        : relative;
     overscroll-behavior: contain;
-    
+
     &-content {
         position        : relative;
         transform-origin: 0% 0%;
-        // overflow        : hidden;
     }
+
     &-resize {
         position        : absolute;
         left            : 0px;
@@ -18,5 +14,6 @@
         height          : 10px;
         background-color: transparent;
         cursor          : row-resize;
+        z-index         : 10000;
     }
 }

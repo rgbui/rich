@@ -176,7 +176,8 @@ export class Page$Schema {
             }
         })
 
-        if (!this.isSchemaRecordViewTemplate && [ElementType.SchemaRecordView].includes(this.pe.type)) {
+        var isAddView = !this.isSchemaRecordViewTemplate && [ElementType.SchemaRecordView].includes(this.pe.type)
+        if (isAddView) {
             var title = this.find(c => c.url == BlockUrlConstant.Title) as Title;
             if (title) row.title = title.pageInfo.text;
             row.icon = this.formRowData.icon;
@@ -187,10 +188,11 @@ export class Page$Schema {
         util.clearObjectUndefined(row);
         util.clearObjectUndefined(this.formRowData);
 
+
         /**
          * 比较初始值，如果一样，说明没有任何修改，返回null
          */
-        if (lodash.isEqual(this.formRowData, row)) {
+        if (lodash.isEqual(this.formRowData, row) && !(isAddView && row.title)) {
             return null;
         }
 
@@ -216,6 +218,7 @@ export class Page$Schema {
             }
             else if (this.pe.type == ElementType.SchemaRecordView) {
                 var newRow = await this.getSchemaRow();
+                console.log('newRow', newRow);
                 if (this.dataSubmitId) {
                     if (newRow && Object.keys(newRow).length > 0) {
                         await this.schema.rowUpdate({ dataId: this.dataSubmitId, data: newRow }, 'Page.onSubmitForm')

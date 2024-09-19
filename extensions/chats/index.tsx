@@ -11,6 +11,7 @@ import {
     CheckSvg,
     EmojiSvg, DuplicateSvg
 } from "../../component/svgs";
+
 import { Avatar } from "../../component/view/avator/face";
 import { UserBox } from "../../component/view/avator/user";
 import { Icon } from "../../component/view/icon";
@@ -138,7 +139,9 @@ export class ViewChats extends React.Component<{
             <span className="text">{dateStr}</span>
         </div>
     }
-    renderItem(d: ChannelTextType, noUser: boolean) {
+    renderItem(
+        d: ChannelTextType,
+        noUser: boolean) {
         if (d.isDeleted) {
             if (d.userid == this.currentUser.id) {
                 return <div key={d.id} className="sy-channel-text-item-deleted remark f-12"><S>你撤回了一条消息</S><a onClick={e => this.redit(d)}><S>重新编辑</S></a></div>

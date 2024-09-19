@@ -1,9 +1,11 @@
+import { IconArguments } from "../icon/declare"
 
 
 export type PageLink = {
     name?: 'outside' | 'page' | 'create' | 'none',
     url?: string,
     text?: string,
+    icon?:IconArguments,
     pageId?: string,
     blockId?: string,
     target?: "_blank" | "_self"

@@ -9,14 +9,13 @@ import { autoImageUrl } from "../../../../../net/element.type";
 import { Icon } from "../../../../../component/view/icon";
 import { util } from "../../../../../util/util";
 import { Sp } from "../../../../../i18n/view";
-import { BackgroundColorList,OptionColorRandom } from "../../../../../extensions/color/data";
+import { OptionColorRandom } from "../../../../../extensions/color/data";
 import { DotsSvg, UploadSvg } from "../../../../../component/svgs";
 import { MenuItem, MenuItemType } from "../../../../../component/view/menu/declare";
 import { BlockDirective, BlockRenderRange } from "../../../../../src/block/enum";
 import { Rect } from "../../../../../src/common/vector/point";
 import { Avatar } from "../../../../../component/view/avator/face";
 import { UserBox } from "../../../../../component/view/avator/user";
-import { channel } from "../../../../../net/channel";
 import * as Card1 from "../../../../../src/assert/img/card/card4.png"
 
 CardModel('/goods', () => ({
@@ -38,7 +37,7 @@ CardModel('/goods', () => ({
             types: [FieldType.options, FieldType.option],
             config: {
                 options: [
-                    { text: lst('包邮'), value: '1',...OptionColorRandom() },
+                    { text: lst('包邮'), value: '1', ...OptionColorRandom() },
                     { text: lst('新品'), value: '2', ...OptionColorRandom() },
                     { text: lst('赚送险费'), value: '3', ...OptionColorRandom() }
                 ]
@@ -89,11 +88,25 @@ export class CardPin extends CardView {
     async onGetMenus() {
         var rs = await super.onGetMenus();
         var at = rs.findIndex(x => x.name == 'openSlide');
-        var cs = this.cardSettings<{ autoSize: boolean }>({ autoSize: true });
+        var cs = this.cardSettings<{ autoSize: boolean, cardDisplay: string }>({ autoSize: true, cardDisplay: 'card-1' });
         if (at > -1) {
-            rs.splice(at + 1, 0,
+            rs.splice(at + 1,
+                0,
+                {
+                    icon: { name: 'byte', code: 'rectangle-one' },
+                    text: lst('展示'),
+                    childs: [
+                        { name: 'cardDisplay', text: '卡片1', checkLabel: cs.cardDisplay == 'card-1' ? true : false, value: 'card-1' },
+                        { name: 'cardDisplay', text: '卡片2', checkLabel: cs.cardDisplay == 'card-2' ? true : false, value: 'card-2' },
+                        { name: 'cardDisplay', text: '卡片3', checkLabel: cs.cardDisplay == 'card-3' ? true : false, value: 'card-3' },
+                        { name: 'cardDisplay', text: '卡片4', checkLabel: cs.cardDisplay == 'card-4' ? true : false, value: 'card-4' }
+                    ]
+                },
                 { type: MenuItemType.divide },
-                { name: 'autoSize', checked: cs.autoSize, type: MenuItemType.switch, icon: { name: 'byte', code: 'auto-height-one' }, text: lst('自适应高度') },
+            );
+            rs.splice(at + 2, 0,
+                { type: MenuItemType.divide },
+                // { name: 'autoSize', checked: cs.autoSize, type: MenuItemType.switch, icon: { name: 'byte', code: 'auto-height-one' }, text: lst('自适应高度') },
                 { name: 'replace', icon: UploadSvg, text: lst('上传商品图片') },
                 { type: MenuItemType.divide }
             )
@@ -111,6 +124,10 @@ export class CardPin extends CardView {
             var rect = Rect.fromEvent(event);
             await self.uploadImage('pic', rect, 'title')
         }
+        else if (item.name == 'cardDisplay') {
+            await self.dataGrid.onUpdateProps({ 'cardSettings.cardDisplay': item.value }, { range: BlockRenderRange.self })
+            self.dataGrid.forceUpdateAllViews();
+        }
         else await super.onClickContextMenu(item, event, options);
     }
     render() {
@@ -124,40 +141,116 @@ export class CardPin extends CardView {
         var tags = this.getValue<{ text: string, color: string }[]>('tags', FieldType.option);
         var hasPic = Array.isArray(pics) && pics.length > 0;
         var author = this.getValue<string[]>('author', FieldType.user)[0];
-        var cs = this.cardSettings<{ autoSize: boolean }>({ autoSize: true });
-        return <div onMouseDown={e => self.openEdit(e)} className="relative visible-hover">
-            <div className="pos-top pos-right  flex-end z-2  gap-t-5 r-size-24 r-gap-r-5 r-round r-cursor">
-                {this.isCanEdit && <span onMouseDown={e => self.openMenu(e)} className="bg-dark-1 visible text-white   flex-center">
-                    <Icon size={18} icon={DotsSvg}></Icon>
-                </span>}
-            </div>
-            {hasPic && <div className="flex-fixed flex-center" >
-                <img className={"w100 block round  object-center" + (cs.autoSize ? " max-h-600 overflow-hidden" : " h-200 ")} src={autoImageUrl(pics[0].url || (pics[0] as any).src, 250)} />
-            </div>}
-            <div className="text-1 rows-2 padding-w-10  gap-h-5 bold break-all">{title}</div>
-            <div className="flex padding-w-10 gap-h-10 ">
-                <span className="flex-auto text-p">￥<em style={{ fontSize: '30px' }}>{util.showPrice(price)}</em></span>
-                <span className="flex-fixed f-14 remark gap-w-10"><Sp text="{count}人付款" data={{ count: soldCount }}>{soldCount}人付款</Sp></span>
-                <span className="flex-fixed f-14 remark">{address}</span>
-            </div>
-            {tags.length > 0 && <div className="padding-w-10 gap-h-10 flex flex-wrap">
-                {tags.map((t, i) => {
-                    return <span className="round-16 padding-w-5 border-p h-20 text-p flex-center f-12 gap-r-10" key={i}>{t.text}</span>
-                })}
-            </div>}
-            {author && <UserBox userid={author}>{(user) => {
-                return <div className="flex-fixed flex gap-w-10">
-                    <span className="flex-auto flex">
-                        <Avatar showName showCard size={20} userid={author}></Avatar>
-                    </span>
-                    <span onMouseDown={async e => {
-                        e.stopPropagation();
-                        await channel.act('/open/user/private/channel', { userid: user.id });
-                    }} className="flex-fixed flex-center cursor  size-24 item-hover round remark">
-                        <Icon size={16} icon={{ name: 'byte', code: 'message' }}></Icon>
-                    </span>
+        var cs = this.cardSettings<{ autoSize: boolean, cardDisplay: string }>({ autoSize: true, cardDisplay: 'card-1' });
+        if (cs.cardDisplay == 'card-1') {
+            return <div onMouseDown={e => self.openEdit(e)} className="relative visible-hover">
+                <div className="pos-top pos-right  flex-end z-2  gap-t-5 r-size-24 r-gap-r-5 r-round r-cursor">
+                    {this.isCanEdit && <span onMouseDown={e => self.openMenu(e)} className="bg-dark-1 visible text-white   flex-center">
+                        <Icon size={18} icon={DotsSvg}></Icon>
+                    </span>}
                 </div>
-            }}</UserBox>}
-        </div>
+                {pics && pics[0] && <div style={{
+                    width: '100%',/* 宽度自适应 */
+                    height: 0, /* 高度为0 */
+                    paddingBottom: '100%', /* 通过padding控制高度，这里设置为与宽度相同，实现正方形 */
+                    position: 'relative'/* 相对定位 */
+                }}><img className="round" src={autoImageUrl(pics[0].url, 500)} style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',/* 根据需要选择fill, contain, cover等 */
+                    backgroundColor: 'var(--bg-1)'
+                }} />
+                </div>}
+                <div className="f-16 bold rows-1   gap-h-5 f-14 break-all">{title}</div>
+                <div className="f-16 bold gap-h-10 ">
+                    ￥<em>{util.showPrice(price)}</em>
+                </div>
+            </div>
+        }
+        else if (cs.cardDisplay == 'card-2') {
+            return <div onMouseDown={e => self.openEdit(e)} className="relative visible-hover">
+                <div className="pos-top pos-right  flex-end z-2  gap-t-5 r-size-24 r-gap-r-5 r-round r-cursor">
+                    {this.isCanEdit && <span onMouseDown={e => self.openMenu(e)} className="bg-dark-1 visible text-white   flex-center">
+                        <Icon size={18} icon={DotsSvg}></Icon>
+                    </span>}
+                </div>
+                {pics && pics[0] && <div style={{
+                    width: '100%',/* 宽度自适应 */
+                    height: 0, /* 高度为0 */
+                    paddingBottom: '100%', /* 通过padding控制高度，这里设置为与宽度相同，实现正方形 */
+                    position: 'relative'/* 相对定位 */
+                }}><img className="round" src={autoImageUrl(pics[0].url, 500)} style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',/* 根据需要选择fill, contain, cover等 */
+                    backgroundColor: 'var(--bg-1)'
+                }} />
+                </div>}
+                <div className="flex gap-h-10">
+                    <div className="flex-auto f-16  remark     text-overflow">{title}</div>
+                    <div className="flex-fixed f-16 gap-l-10  text ">
+                        ￥<em>{util.showPrice(price)}</em>
+                    </div>
+                </div>
+            </div>
+        }
+        else if (cs.cardDisplay == 'card-3') {
+            return <div onMouseDown={e => self.openEdit(e)} className="relative visible-hover">
+                <div className="pos-top pos-right  flex-end z-2  gap-t-5 r-size-24 r-gap-r-5 r-round r-cursor">
+                    {this.isCanEdit && <span onMouseDown={e => self.openMenu(e)} className="bg-dark-1 visible text-white   flex-center">
+                        <Icon size={18} icon={DotsSvg}></Icon>
+                    </span>}
+                </div>
+                {hasPic && <div className="flex-center" >
+                    <img className={"w100 block round  object-center " + (" max-h-600 overflow-hidden")} src={autoImageUrl(pics[0].url || (pics[0] as any).src, 250)} />
+                </div>}
+                <div className="f-16 flex-center bold rows-1   gap-h-5 f-14 break-all">{title}</div>
+                <div className="f-16 flex-center bold gap-h-10 ">
+                    ￥<em>{util.showPrice(price)}</em>
+                </div>
+            </div>
+        }
+        else {
+            return <div onMouseDown={e => self.openEdit(e)} className="relative visible-hover">
+                <div className="pos-top pos-right  flex-end z-2  gap-t-5 r-size-24 r-gap-r-5 r-round r-cursor">
+                    {this.isCanEdit && <span onMouseDown={e => self.openMenu(e)} className="bg-dark-1 visible text-white   flex-center">
+                        <Icon size={18} icon={DotsSvg}></Icon>
+                    </span>}
+                </div>
+                {hasPic && <div className="flex-fixed flex-center" >
+                    <img className={"w100 block round  object-center" + (cs.autoSize ? " max-h-600 overflow-hidden" : " h-200 ")} src={autoImageUrl(pics[0].url || (pics[0] as any).src, 250)} />
+                </div>}
+                <div className="text-1 rows-2 padding-w-10  gap-h-5 bold break-all">{title}</div>
+                <div className="flex padding-w-10 gap-h-10 ">
+                    <span className="flex-auto text-p">￥<em style={{ fontSize: '30px' }}>{util.showPrice(price)}</em></span>
+                    <span className="flex-fixed f-14 remark gap-w-10"><Sp text="{count}人付款" data={{ count: soldCount }}>{soldCount}人付款</Sp></span>
+                    <span className="flex-fixed f-14 remark">{address}</span>
+                </div>
+                {tags.length > 0 && <div className="padding-w-10 gap-h-10 flex flex-wrap">
+                    {tags.map((t, i) => {
+                        return <span className="round-16 padding-w-5 border-p h-20 text-p flex-center f-12 gap-r-10" key={i}>{t.text}</span>
+                    })}
+                </div>}
+                {author && <UserBox userid={author}>{(user) => {
+                    return <div className="flex-fixed flex gap-w-10">
+                        <span className="flex-auto flex">
+                            <Avatar showName showCard size={20} userid={author}></Avatar>
+                        </span>
+                        {/* <span onMouseDown={async e => {
+                            e.stopPropagation();
+                            await channel.act('/open/user/private/channel', { userid: user.id });
+                        }} className="flex-fixed flex-center cursor  size-24 item-hover round remark">
+                            <Icon size={16} icon={{ name: 'byte', code: 'message' }}></Icon>
+                        </span> */}
+                    </div>
+                }}</UserBox>}
+            </div>
+        }
     }
 } 

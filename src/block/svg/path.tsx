@@ -124,8 +124,7 @@ export class ShyPath {
         return ds.join("");
     }
     render(index: number) {
-        var ds = this.getPathStringBySegments();
-        console.log('strokeOpacity', this.strokeOpacity);
+        var ds = this.getPathStringBySegments(); 
         if (this.linearGradient && this.linearGradient.length > 1) {
             var id = 'g' + util.shortGuid()
             var stroke = `url(#${id})`;

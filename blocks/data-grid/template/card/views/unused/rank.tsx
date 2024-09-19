@@ -1,20 +1,20 @@
 
 import React from "react";
-import { DotsSvg } from "../../../../../component/svgs";
-import { UserBox } from "../../../../../component/view/avator/user";
-import { MenuItem, MenuItemType } from "../../../../../component/view/menu/declare";
-import { ResourceArguments } from "../../../../../extensions/icon/declare";
-import { lst } from "../../../../../i18n/store";
-import { autoImageUrl } from "../../../../../net/element.type";
-import { BlockUrlConstant } from "../../../../../src/block/constant";
-import { BlockDirective, BlockRenderRange } from "../../../../../src/block/enum";
-import { buildPageData } from "../../../../../src/page/common/create";
-import { FieldType } from "../../../schema/type";
-import { CardModel, CardViewCom } from "../factory/observable";
-import { CardView } from "../view";
-import { Icon } from "../../../../../component/view/icon";
-import { util } from "../../../../../util/util";
-import * as Card1 from "../../../../../src/assert/img/card/card10.png";
+import { DotsSvg } from "../../../../../../component/svgs";
+import { UserBox } from "../../../../../../component/view/avator/user";
+import { MenuItem, MenuItemType } from "../../../../../../component/view/menu/declare";
+import { ResourceArguments } from "../../../../../../extensions/icon/declare";
+import { lst } from "../../../../../../i18n/store";
+import { autoImageUrl } from "../../../../../../net/element.type";
+import { BlockUrlConstant } from "../../../../../../src/block/constant";
+import { BlockDirective, BlockRenderRange } from "../../../../../../src/block/enum";
+import { buildPageData } from "../../../../../../src/page/common/create";
+import { FieldType } from "../../../../schema/type";
+import { CardModel, CardViewCom } from "../../factory/observable";
+import { CardView } from "../../view";
+import { Icon } from "../../../../../../component/view/icon";
+import { util } from "../../../../../../util/util";
+import * as Card1 from "../../../../../../src/assert/img/card/card10.png";
 
 CardModel('/rank', () => ({
     url: '/rank',

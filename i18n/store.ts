@@ -58,6 +58,8 @@ export class LangStore {
         for (let sp of this.sps) sp.forceUpdate()
     }
     t(key: string, content?: string | Record<string, any>, checkExists?: boolean) {
+        console.log(key,content,'key content');
+
         var d;
         if (typeof window.shyConfig.isUS) {
             var rg = this.dicts.get('us.' + key);
@@ -72,6 +74,9 @@ export class LangStore {
             console.dev(key, content);
             this.lazyStoreUns()
         }
+
+       
+
         if (typeof d != 'undefined') {
             if (lodash.isObject(content) && !lodash.isNull(content)) return this.format(d, content)
             return d;

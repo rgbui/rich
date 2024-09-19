@@ -138,7 +138,7 @@ export class BoardSelector extends React.Component<{
             <Tip text='思维导图' placement={'left'}><div
                 className={this.openSelector == BoardToolOperator.mind ? "item-hover-focus" : ""}
                 onMouseDown={e => { e.stopPropagation(); this.selector(BoardToolOperator.mind, e) }}>
-                <Icon size={24} icon={{name:'byte',code:'mindmap-map'}}></Icon>
+                <Icon size={24} icon={{ name: 'byte', code: 'mindmap-map' }}></Icon>
             </div></Tip>
 
             <Tip text='更多创作工具' placement={'left'}><div
@@ -712,6 +712,7 @@ export class BoardSelector extends React.Component<{
                     var noteSelector = await getNoteSelector();
                     noteSelector.only('selector', (data) => {
                         if (this.currentSelector && this.currentSelector.url == BlockUrlConstant.Note) {
+                            if (!this.currentSelector.data) this.currentSelector.data = {};
                             this.currentSelector.data = { color: data.color };
                         }
                         noteSelector.close();

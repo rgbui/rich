@@ -188,7 +188,9 @@ export class CardView extends React.Component<{
         }
     }
     async openEdit(event?: React.MouseEvent, forceUrl?: '/page/open' | '/page/dialog' | '/page/slide') {
+        if (event) event.stopPropagation()
         if (this.dataGrid) {
+            console.log('openEdit', this.props.item.dataRow.id, forceUrl)
             this.dataGrid.onOpenEditForm(this.props.item.dataRow.id, forceUrl)
         }
     }
@@ -279,6 +281,7 @@ export class CardView extends React.Component<{
         var self = this;
         if (item.name == 'align') {
             await self.dataGrid.onUpdateProps({ 'cardSettings.align': item.value }, { range: BlockRenderRange.self })
+            self.dataGrid.forceUpdateAllViews();
         }
         else if (item.name == 'remove') {
             await self.deleteItem();

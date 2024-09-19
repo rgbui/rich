@@ -13,17 +13,25 @@ import { LinkPageItem, LinkWs, getPageIcon, getPageText } from "../../src/page/d
 import { Icon } from "../../component/view/icon";
 import { AiStartSvg, DuplicateSvg, PublishSvg, RefreshSvg } from "../../component/svgs";
 import { S } from "../../i18n/view";
-import { getWsContext } from "../../net/ai/robot";
+import { getUserQuestions, getWsContext, identifyUserProblems } from "../../net/ai/robot";
 import { CopyAlert } from "../../component/copy";
 import { getAiDefaultModel } from "../../net/ai/cost";
 import { ToolTip } from "../../component/view/tooltip";
 import { DivInput } from "../../component/view/input/div";
-import { Button } from "../../component/view/button";
 const AI_SEARCH_MESSAGES = 'AI_SEARCH_MESSAGES';
 import "./style.less";
+import { TextEle } from "../../src/common/text.ele";
 
 export class AISearchBox extends EventsComponent {
-    messages: { id: string, userid?: string, asking?: boolean, prompt?: string, date: Date, content: string, refs?: { blockIds: string[], page: LinkPageItem, elementUrl: string }[] }[] = [];
+    messages: {
+        id: string,
+        userid?: string,
+        asking?: boolean,
+        prompt?: string,
+        date: number,
+        content: string,
+        refs?: { blockIds: string[], page: LinkPageItem, elementUrl: string }[]
+    }[] = [];
     renderMessages() {
         return this.messages.map(msg => {
             return <div data-ai-message={msg.id} key={msg.id}>
@@ -34,31 +42,39 @@ export class AISearchBox extends EventsComponent {
                     </div>
                 </div>}
 
-                {!msg.userid && msg.content && <div style={{ maxWidth: '80%' }} className="gap-h-10 padding-10 border-light shadow-s  round-16" >
-                    <div className="break-all gap-b-10 md" dangerouslySetInnerHTML={{ __html: msg.content }}>
+                {!msg.userid && msg.content && <div className="visible-hover">
+                    <div style={{ maxWidth: '80%' }} className="gap-h-10 card" >
+                        <div className="break-all  md" dangerouslySetInnerHTML={{ __html: msg.content }}>
+                        </div>
+                        {msg.asking == false && (msg as any).noAnswer != true && <div className="gap-b-10"> {msg.refs && msg.refs.length > 0 && <div className="f-12 remark gap-b-3"><S>引用页面</S></div>}
+                            {msg.refs?.map(rf => {
+                                return <div className="flex gap-b-5" key={rf.page?.id}>
+                                    <span onMouseDown={e => this.openPage(rf)} className="flex item-hover round gap-r-5 padding-w-3 l-20 cursor "><Icon size={18} icon={getPageIcon(rf.page)}></Icon><span className="gap-l-5">{getPageText(rf.page)}</span></span>
+                                    {rf.blockIds.length > 1 && <span className="flex flex-fixed ">{rf.blockIds.map((b, i) => {
+                                        return <em onMouseDown={e => this.openPage(rf, b)} className="bg-hover bg-p-light text-p  padding-w-3 round gap-w-5 cursor" key={i}>{i}</em>
+                                    })}</span>}
+                                </div>
+                            })}
+                        </div>
+                        }
                     </div>
-                    {msg.asking == false && <div> {msg.refs && msg.refs.length > 0 && <div className="f-12 remark gap-b-3"><S>引用页面</S></div>}
-                        {msg.refs?.map(rf => {
-                            return <div className="flex gap-b-5" key={rf.page?.id}>
-                                <span onMouseDown={e => this.openPage(rf)} className="flex item-hover round gap-r-5 padding-w-3 l-20 cursor "><Icon size={18} icon={getPageIcon(rf.page)}></Icon><span className="gap-l-5">{getPageText(rf.page)}</span></span>
-                                {rf.blockIds.length > 1 && <span className="flex flex-fixed ">{rf.blockIds.map((b, i) => {
-                                    return <em onMouseDown={e => this.openPage(rf, b)} className="bg-hover bg-p-light text-p  padding-w-3 round gap-w-5 cursor" key={i}>{i}</em>
-                                })}</span>}
-                            </div>
-                        })}
-                        <div className="flex r-gap-r-20 gap-t-20">
-                            <Button size="small" onMouseDown={e => {
+                    <div className="flex visible r-gap-r-20  r-size-24 r-flex-center remark r-cursor r-item-hover r-round">
+                        <ToolTip overlay={<S>复制</S>}>
+                            <span onMouseDown={e => {
                                 var ele = (e.currentTarget as HTMLElement).closest('[data-ai-message]');
-                                console.log(ele, ele.children[0])
                                 var md = ele.querySelector('.md') as HTMLElement;
                                 var c = md.innerText;
-                                console.log('cccc', c);
                                 CopyAlert(c, lst('已复制'))
-
-                            }} ghost icon={DuplicateSvg}><S>复制</S></Button>
-                            <Button size="small" onMouseDown={e => { this.tryAgain(msg) }} ghost icon={RefreshSvg} ><S>重新尝试</S></Button>
-                        </div></div>}
+                            }}> <Icon icon={DuplicateSvg} size={18}></Icon></span>
+                        </ToolTip>
+                        <ToolTip overlay={<S>重新尝试</S>}>
+                            <span onMouseDown={e => { this.tryAgain(msg) }}>
+                                <Icon size={18} icon={RefreshSvg}></Icon>
+                            </span>
+                        </ToolTip>
+                    </div>
                 </div>}
+
             </div>
         })
     }
@@ -68,7 +84,7 @@ export class AISearchBox extends EventsComponent {
         elementUrl: string;
     }, blockId?: string) {
         if (!blockId) blockId = page.blockIds[0];
-        if(!blockId)blockId=undefined;
+        if (!blockId) blockId = undefined;
         console.log(page.elementUrl);
         channel.act('/page/open', { elementUrl: page.elementUrl, config: { force: true, blockId: blockId } })
         this.emit('close');
@@ -96,12 +112,22 @@ export class AISearchBox extends EventsComponent {
             <Divider></Divider>
             <div style={{ paddingBottom: 50 }} className="padding-w-30  min-h-300 max-h-400 overflow-y" ref={e => this.scrollEl = e}>
                 {this.renderMessages()}
+                {this.tips.length > 0 && <div className="gap-h-5">
+                    {this.tips.map((t, i) => {
+                        return <div onMouseDown={e => {
+                            this.prompt = t;
+                            this.send();
+                        }} key={i}>
+                            <span className="item-hover round padding-h-3 cursor">   {t}</span>
+                        </div>
+                    })}
+                </div>}
             </div>
-            <div className="flex gap-w-30 padding-w-10   border-light shadow-s round-16 gap-h-10 " style={{ minHeight: 36 }}>
+            <div className="flex gap-w-30 padding-w-10  card-border round-16 gap-h-10 " style={{ minHeight: 36 }}>
                 <div className="flex-auto ">
                     <DivInput
                         value={this.prompt}
-                        rf={e => this.textarea = e}
+                        ref={e => this.textarea = e}
                         onInput={e => { this.prompt = e }}
                         onEnter={e => this.send()}
                         className='min-h-20 l-20 max-h-100  overflow-y'
@@ -120,9 +146,10 @@ export class AISearchBox extends EventsComponent {
             </div>
         </div>
     }
-    textarea: HTMLElement;
+    textarea: DivInput;
     scrollEl: HTMLElement;
     prompt: string = '';
+    tips: string[] = [];
     async tryAgain(message: any) {
         this.prompt = message.prompt;
         await this.send(true);
@@ -130,23 +157,28 @@ export class AISearchBox extends EventsComponent {
     async send(isTry?: boolean) {
         if (!this.prompt) return;
         try {
+            this.tips = [];
             var self = this;
             var prompt = this.prompt;
             this.prompt = '';
-            this.textarea.innerHTML = '';
+            this.textarea.setValue('');
             var u = channel.query('/query/current/user');
-            var sender = { id: util.guid(), userid: u.id, date: new Date(), content: prompt }
-            // if (isTry !== true)
+            var sender = { id: util.guid(), userid: u.id, date: Date.now(), content: prompt }
             this.messages.push(sender)
             this.forceUpdate(() => {
                 if (this.scrollEl) {
                     this.scrollEl.scrollTop = this.scrollEl.scrollHeight;
                 }
             });
-            var cb = { id: util.guid(), prompt, date: new Date(), asking: true, content: '', noAnswer: false, refs: [] };
+            var cb = { id: util.guid(), prompt, date: Date.now(), asking: true, content: '', noAnswer: false, refs: [] };
             this.messages.push(cb);
+            var ms = this.messages.filter(m => m.userid ? true : false);
+            ms = ms.slice(0, -1);
+            ms = util.getLatestDataWithMinInterval(ms, 1000 * 60 * 30);
+            var userProblem = await identifyUserProblems(prompt, ms.map(c => c.content))
+            console.log(prompt, userProblem);
             this.forceUpdate();
-            var r = await getWsContext(prompt);
+            var r = await getWsContext(userProblem);
             if (r.context) {
                 cb.refs = r.refs;
                 var text = '';
@@ -164,8 +196,6 @@ export class AISearchBox extends EventsComponent {
                             if (typeof str == 'string') text += str;
                             cb.content = marked.parse(text + (done ? "" : "<span class='typed-print'></span>"));
                             self.forceUpdate(() => {
-                                // var el = self.scrollEl.querySelector('.typed-print');
-                                // if (el) el.scrollIntoView({ behavior: 'smooth', block: 'end' });
                                 self.scrollEl.scrollTop = self.scrollEl.scrollHeight;
                             });
                             if (done) {
@@ -176,9 +206,16 @@ export class AISearchBox extends EventsComponent {
                         }
                     });
                 })
+                var tc = TextEle.filterHtml(cb.content);
+                console.log(cb.content, tc);
+                if (tc == '不知道') {
+                    cb.content = lst('没有检索到关联的答案');
+                    cb.noAnswer = true;
+                    cb.asking = false;
+                }
             }
             else {
-                cb.content = lst('没有搜到关联的答案');
+                cb.content = lst('没有检索到关联的答案');
                 cb.noAnswer = true;
                 cb.asking = false;
             }
@@ -194,6 +231,18 @@ export class AISearchBox extends EventsComponent {
             });
             await channel.act('/cache/set', { key: this.getCacheKey(), value: this.messages })
             this.emit('update')
+            if (cb.noAnswer !== true) {
+                var rc = await getUserQuestions(cb.content);
+                if (Array.isArray(rc)) {
+                    this.tips = rc;
+                    this.forceUpdate(() => {
+                        if (this.scrollEl) {
+                            this.scrollEl.scrollTop = this.scrollEl.scrollHeight;
+                        }
+                        this.emit('update')
+                    })
+                }
+            }
         }
     }
     getCacheKey() {
@@ -205,10 +254,12 @@ export class AISearchBox extends EventsComponent {
         var rs = await channel.query('/cache/get', { key: this.getCacheKey() });
         if (Array.isArray(rs)) this.messages = rs;
         if (options?.word) this.prompt = options.word;
-        if (this.scrollEl) {
-            this.scrollEl.scrollTop = this.scrollEl.scrollHeight;
-        }
-        this.forceUpdate();
+        this.forceUpdate(() => {
+            if (this.scrollEl) {
+                this.scrollEl.scrollTop = this.scrollEl.scrollHeight;
+                this.textarea.focus()
+            }
+        });
     }
 }
 

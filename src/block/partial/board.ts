@@ -201,6 +201,8 @@ export class Block$Board {
                 end: Point;
             }[];
         }
+        var moveArrows = lodash.cloneDeep(arrows);
+        lodash.remove(moveArrows, g => g == PointArrow.center || g == PointArrow.middle);
         MouseDragger({
             event,
             moveStart() {
@@ -208,10 +210,13 @@ export class Block$Board {
             },
             moving(ev, data, isEnd) {
                 var to = Point.from(ev);
-                gs = CacBlockAlignLines(block, gmm, downPoint, to, picker.moveRect, arrows);
+                gs = CacBlockAlignLines(block, gmm, downPoint, to, picker.moveRect, moveArrows);
                 if (typeof gs?.ox == 'number' || typeof gs?.oy == 'number') {
+                    var d = lodash.cloneDeep(to);
+                    //  console.log('gggssss', gs,lodash.cloneDeep(to));
                     if (gs.ox) to.x = gs.ox + to.x;
                     if (gs.oy) to.y = gs.oy + to.y;
+                    console.log('gggxxssss', d, gs, lodash.cloneDeep(to));
                 }
                 var tp = gm.inverseTransform(to);
                 var ma = new Matrix();

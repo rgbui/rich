@@ -127,7 +127,7 @@ export function CheckBoardSelector(
                     }
                 }
                 newBlock = await kit.page.createBlock(kit.boardSelector.currentSelector.url, data, fra);
-                await setBoardBlockCache(newBlock);
+                await setBoardBlockCache(newBlock, undefined, data);
                 fw = newBlock.fixedWidth;
                 fh = newBlock.fixedHeight;
                 kit.boardSelector.clearSelector();

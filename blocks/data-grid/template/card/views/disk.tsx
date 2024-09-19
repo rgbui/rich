@@ -13,6 +13,8 @@ import { lst } from "../../../../../i18n/store";
 import { Avatar } from "../../../../../component/view/avator/face";
 import dayjs from "dayjs";
 import { BlockDirective } from "../../../../../src/block/enum";
+import { ToolTip } from "../../../../../component/view/tooltip";
+import { S } from "../../../../../i18n/view";
 
 CardModel('/list/disk', () => ({
     url: '/list/disk',
@@ -92,7 +94,7 @@ export class CardPin extends CardView {
             <div className="flex-auto flex">
                 <div className="flex-fixed flex">
                     <span className="gap-r-5 flex-center text-1">{getExtElement(pics[0]?.ext)}</span>
-                    <span >{title || pics[0]?.filename}</span>
+                    <span className="f-14">{title || pics[0]?.filename}</span>
                 </div>
                 <div className="flex-fixed gap-l-20 flex">
                     {tags.length > 0 && tags.map((tag, i) => {
@@ -100,17 +102,19 @@ export class CardPin extends CardView {
                     })}
                 </div>
             </div>
+            <div className="flex-fixed gap-w-10 text-1 f-14">{util.showTime(createDate)}</div>
+            <div className="flex-fixed gap-w-10 text-1 f-14">{util.byteToString(pics[0]?.size)}</div>
+            <ToolTip overlay={<S>下载</S>}>
+                <div onMouseDown={e => (this.download(e, pics[0]?.url, title || pics[0]?.filename))} className="flex-fixed remark text-over item-hover size-24 round cursor gap-w-5 flex-center">
+                    <Icon size={16} icon={DownloadSvg}></Icon>
+                </div>
+            </ToolTip>
+            <div onMouseDown={e => (this.openMenu(e))} className="flex-fixed text-1 text-over  item-hover size-24 round cursor gap-w-5 flex-center">
+                <Icon size={16} icon={DotsSvg}></Icon>
+            </div>
             {author && <div className="flex-fixed gap-w-10">
                 <Avatar size={20} userid={author}></Avatar>
             </div>}
-            <div onMouseDown={e => (this.download(e, pics[0]?.url, title || pics[0]?.filename))} className="flex-fixed remark text-over item-hover size-24 round cursor gap-w-5 flex-center">
-                <Icon size={16} icon={DownloadSvg}></Icon>
-            </div>
-            <div onMouseDown={e => (this.openMenu(e))} className="flex-fixed remark text-over  item-hover size-24 round cursor gap-w-5 flex-center">
-                <Icon size={16} icon={DotsSvg}></Icon>
-            </div>
-            <div className="flex-fixed gap-w-10 remark f-12">{util.byteToString(pics[0]?.size)}</div>
-            <div className="flex-fixed gap-w-10 remark f-12">{dayjs(createDate).format('YYYY-MM-HH')}</div>
         </div>
     }
 } 

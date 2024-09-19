@@ -18,7 +18,6 @@ import { BlockUrlConstant } from "../../../../src/block/constant";
 import { MenuItemType } from "../../../../component/view/menu/declare";
 import { FieldType, SysHiddenFieldTypes } from "../../../../blocks/data-grid/schema/type";
 import { TableStoreGallery } from "../../../../blocks/data-grid/view/gallery";
-import { BlockRenderRange } from "../../../../src/block/enum";
 import { SelectBox } from "../../../../component/view/select/box";
 import { Field } from "../../../../blocks/data-grid/schema/field";
 import { ViewField } from "../../../../blocks/data-grid/schema/view";
@@ -233,6 +232,7 @@ export class DataGridFields extends EventsComponent {
                 data,
                 update,
             });
+            await self.block.forceUpdateAllViews();
             self.forceUpdate()
         }
         return <div className="max-h-200 overflow-y">
@@ -279,7 +279,7 @@ export class DataGridFields extends EventsComponent {
                 })}
             </div>
             <Divider></Divider>
-            <div className="flex  padding-w-14 " >
+            <div className="flex padding-w-14 " >
                 <span className="remark flex-auto f-12 "><S>所有字段</S></span>
             </div>
             <div className="shy-table-field-view-items">{fs.map(f => {

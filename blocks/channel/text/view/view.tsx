@@ -48,7 +48,7 @@ export class ChannelTextView extends BlockView<ChannelText> {
                     text: f.description
                 }
             }
-          
+
             await this.props.block.page.onUpdatePageData({ ...props });
         }
     }
@@ -86,8 +86,11 @@ export class ChannelTextView extends BlockView<ChannelText> {
         var gr;
         var loadding = false;
         return new Promise(async (resolve, reject) => {
+            var cs = this.block.chats.slice(-10).map(c => c.content);
+            lodash.remove(cs, g => g ? false : true);
             await AgentRequest(data.robot, data.args.ask, {
                 isAt: options.isAt,
+                historyMessages: cs
             }, async (result) => {
                 if (!gr && !loadding) {
                     loadding = true;
@@ -140,7 +143,10 @@ export class ChannelTextView extends BlockView<ChannelText> {
                         this.forceUpdate(() => this.updateScroll());
                     }
                 }
-            })
+            });
+            if (this.inputChatBox?.cp) {
+                this.inputChatBox.cp.onFocus();
+            }
         })
     }
     async onInput(data: ChatInputType) {

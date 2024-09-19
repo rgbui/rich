@@ -91,6 +91,10 @@ export class PageView extends Component<{ page: Page }> {
             this.page.viewEl.focus();
             if (this.props.page.pageLayout?.type == PageLayoutType.board) {
                 this.page.kit.borardGrid.draw(true);
+                var url = window.location.href;
+                if (url.split('?')[0]?.startsWith('/pc')) {
+                    this.page.onFitZoom();
+                }
             }
         }
     }

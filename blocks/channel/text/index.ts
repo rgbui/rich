@@ -102,7 +102,6 @@ export class ChannelText extends Block {
             this.loading = false;
             await this.forceManualUpdate();
             (this.view as any).updateScroll()
-
             channel.sync('/ws/channel/notify', this.channelNotify);
             channel.sync('/ws/channel/patch/notify', this.patchNotify);
             channel.sync('/ws/channel/emoji/notify', this.emojiNotify);

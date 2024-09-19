@@ -2,9 +2,9 @@ import React from "react";
 import { ls, lst } from "./store";
 import lodash from "lodash";
 
-export class S extends React.Component<{ text?: string, data?: Record<string, any>, children: React.ReactText }> {
+export class S extends React.Component<{ text?: string, data?: Record<string, any>, children?: React.ReactText }> {
     render() {
-        var text = this.props.children.toString().trim();
+        var text = this.props.children?.toString()?.trim();
         if (this.props.text) {
             text = lst(this.props.text, this.props.data || text || undefined);
             if (text) return text;
@@ -54,6 +54,8 @@ export class Sp extends React.Component<{
     }
     render() {
         var text = lst(this.props.text, this.props.data || undefined, true);
+        console.log('text', text);
+
         if (!text && lodash.isObject(this.props.view)) text = this.props.text;
         var classList: string[] = [];
         if (this.props.className) {

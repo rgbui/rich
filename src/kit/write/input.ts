@@ -449,34 +449,34 @@ export async function inputBackSpaceTextContent(write: PageWrite, aa: AppearAnch
  * @param write 
  * @param rowBlock 
  */
-async function combindSubBlock(write: PageWrite, rowBlock: Block) {
-    var pa = rowBlock.parent;
-    var lastPreBlock = pa.childs.last();
-    if (pa.childs.length == 0) {
-        var content = pa.content;
-        await pa.updateProps({ content: '' }, BlockRenderRange.self);
-        var pattern = await pa.pattern.cloneData();
-        lastPreBlock = await pa.appendBlock({ url: BlockUrlConstant.Text, content, pattern }, undefined, BlockChildKey.childs);
-    }
-    if (rowBlock.childs.length > 0) {
-        await pa.appendArray(rowBlock.childs, undefined, BlockChildKey.childs);
-    }
-    else {
-        await pa.appendBlock({
-            url: BlockUrlConstant.Text,
-            content: rowBlock.content,
-            pattern: await rowBlock.pattern.cloneData()
-        }, undefined, BlockChildKey.childs);
-    }
-    if (rowBlock.hasSubChilds && rowBlock.subChilds.length > 0) {
-        await pa.appendArray(rowBlock.subChilds, 0, pa.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
-    }
-    if (!rowBlock.isPart)
-        await rowBlock.delete();
-    write.kit.page.addActionAfterEvent(async () => {
-        write.kit.anchorCursor.onFocusBlockAnchor(lastPreBlock, { last: true, render: true, merge: true });
-    });
-}
+// async function combindSubBlock(write: PageWrite, rowBlock: Block) {
+//     var pa = rowBlock.parent;
+//     var lastPreBlock = pa.childs.last();
+//     if (pa.childs.length == 0) {
+//         var content = pa.content;
+//         await pa.updateProps({ content: '' }, BlockRenderRange.self);
+//         var pattern = await pa.pattern.cloneData();
+//         lastPreBlock = await pa.appendBlock({ url: BlockUrlConstant.Text, content, pattern }, undefined, BlockChildKey.childs);
+//     }
+//     if (rowBlock.childs.length > 0) {
+//         await pa.appendArray(rowBlock.childs, undefined, BlockChildKey.childs);
+//     }
+//     else {
+//         await pa.appendBlock({
+//             url: BlockUrlConstant.Text,
+//             content: rowBlock.content,
+//             pattern: await rowBlock.pattern.cloneData()
+//         }, undefined, BlockChildKey.childs);
+//     }
+//     if (rowBlock.hasSubChilds && rowBlock.subChilds.length > 0) {
+//         await pa.appendArray(rowBlock.subChilds, 0, pa.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
+//     }
+//     if (!rowBlock.isPart)
+//         await rowBlock.delete();
+//     write.kit.page.addActionAfterEvent(async () => {
+//         write.kit.anchorCursor.onFocusBlockAnchor(lastPreBlock, { last: true, render: true, merge: true });
+//     });
+// }
 
 /**
  * 合并两行rowBlocks

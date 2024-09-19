@@ -498,5 +498,32 @@ export var util = {
             if (lodash.isUndefined(obj[n])) delete obj[n];
         }
         return obj;
+    },
+    /**
+     * 获取最新的数据
+     * @param array 
+     * @param intervalThreshold 
+     * @param maxCount 
+     * @returns 
+     */
+    getLatestDataWithMinInterval(array: { date: number, content: string }[], intervalThreshold: number = 60 * 1000, maxCount: number = 10) {
+        // 定义最多查询的数据条数
+        //const maxCount = 10;
+        // 定义时间间隔阈值（1分钟）
+        //const intervalThreshold = 60 * 1000; // 1分钟 = 60秒 = 60 * 1000毫秒
+        // 存储符合条件的数据
+        const result = []; 
+        for (let i = array.length - 1; i >= 0; i--) {
+            const currentData = array[i];
+            if (typeof array[i - 1]?.date != 'number') break;
+            if (typeof currentData.date != 'number') break;
+            if (currentData.date - array[i - 1].date >= intervalThreshold) {
+                break
+            }
+            else result.push(currentData);
+            if (result.length >= maxCount) break;
+        }
+        // 由于我们从后向前添加数据，可能需要反转数组以按时间顺序排列
+        return result.reverse();
     }
 }

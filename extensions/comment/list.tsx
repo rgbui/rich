@@ -29,8 +29,8 @@ export class CommentListView extends React.Component<{
     ws?: LinkWs,
     onChange?: (props: Record<string, any>) => void,
     contentHeight?: number,
-    autoFocus?:boolean,
-    onSend?:()=>void
+    autoFocus?: boolean,
+    onSend?: () => void
 }> {
     list: WsCommentType[] = [];
     total = 0;
@@ -148,8 +148,8 @@ export class CommentListView extends React.Component<{
                     this.list.push(r.data.data);
                     this.total += 1;
                 }
-                this.forceUpdate(()=>{
-                    if(typeof this.props.onSend == 'function') this.props.onSend()
+                this.forceUpdate(() => {
+                    if (typeof this.props.onSend == 'function') this.props.onSend()
                 })
             }
         }
@@ -232,7 +232,7 @@ export class CommentListView extends React.Component<{
                             <div className="flex">
                                 <span className="flex-auto  flex" >
                                     <span className="f-14 text-1 bold">{user.name}</span>
-                                    <span className="flex-fixed f-12 remark  gap-l-10 ">{util.showTime(l.createDate)}</span>
+                                    <span className="flex-fixed f-12 remark  gap-l-5 ">{util.showTime(l.createDate)}</span>
                                     <span onMouseDown={e => this.onProperty(l, e)} className="visible size-20 flex-fixed gap-l-5 flex-center  item-hover cursor round remark"><Icon size={18} icon={DotsSvg}></Icon></span>
                                 </span>
                                 <span className="flex flex-fixed">
@@ -319,7 +319,7 @@ export class CommentListView extends React.Component<{
         if (typeof this.props.userid == 'string') this.userid = this.props.userid;
         if (typeof this.props.elementUrl == 'string') this.elementUrl = this.props.elementUrl;
         this.loadComment();
-        if(this.props.autoFocus){
+        if (this.props.autoFocus) {
             this.onFocusInput()
         }
     }

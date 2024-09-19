@@ -289,6 +289,7 @@ export class Page extends Events<PageDirective> {
     getDocRelativePoint(block: Block, point?: Point) {
         var ps: (Block | Page)[] = block.parents(c => (c.isPanel && !c.isBoardBlock ? true : false));
         ps = ps.reverse();
+        lodash.remove(ps, g => (g as any).url == BlockUrlConstant.CardBox && (g as any).board == false)
         ps.splice(0, 0, this);
         var p = point ? point : block.getVisibleBound().leftTop;
         var x = 0;
@@ -449,6 +450,9 @@ export class Page extends Events<PageDirective> {
         if (Array.isArray(g.permissions)) return g.permissions.some(s => ps.includes(s));
     }
     get isDeny() {
+        var url = location.href;
+        var path = url.split('?')[0];
+        if (path.endsWith('/pc')) return false;
         return this.isAllow(AtomPermission.dbDeny, AtomPermission.pageDeny);
     }
     /**

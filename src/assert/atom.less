@@ -440,12 +440,39 @@ each(@cols, {
 卡片
 ***/
 .card {
-    box-sizing   : border-box;
-    padding      : 1.5rem;
-    border-radius: 1.6rem;
-    background   : white;
-    box-shadow   : rgba(15, 15, 15, 0.05) 0rem 0rem 0rem 1px, rgba(15, 15, 15, 0.1) 0rem 3px 6px, rgba(15, 15, 15, 0.2) 0rem 9px 24px;
+    box-sizing     : border-box;
+    padding        : 1.5rem;
+    border-radius  : 1.6rem;
+    background     : white;
+    //box-shadow   : rgba(15, 15, 15, 0.05) 0rem 0rem 0rem 1px, rgba(15, 15, 15, 0.1) 0rem 3px 6px, rgba(15, 15, 15, 0.2) 0rem 9px 24px;
+
+    -webkit-backdrop-filter: blur(2rem);
+    backdrop-filter        : blur(2rem);
+    background-color       : rgba(255, 255, 255, 0.8);
+    border                 : 0.1rem solid rgba(0, 0, 0, 0.12);
+    box-shadow             : 0 1.8rem 3.6rem -0.6rem rgba(0, 0, 0, 0.06), 0 0.6rem 1.2rem -0.6rem rgba(0, 0, 0, 0.06);
 }
+
+.card-border {
+    -webkit-backdrop-filter: blur(2rem);
+    backdrop-filter        : blur(2rem);
+    background-color       : rgba(255, 255, 255, 0.8);
+    border                 : 0.1rem solid rgba(0, 0, 0, 0.12);
+    box-shadow             : 0 1.8rem 3.6rem -0.6rem rgba(0, 0, 0, 0.06), 0 0.6rem 1.2rem -0.6rem rgba(0, 0, 0, 0.06);
+}
+
+.card-border-hover {
+    -webkit-backdrop-filter: blur(2rem);
+    backdrop-filter        : blur(2rem);
+    background-color       : rgba(255, 255, 255, 0.8);
+    border                 : 0.1rem solid transparent; 
+    box-shadow: 0 1.8rem 3.6rem -0.6rem rgba(0, 0, 0, 0.06), 0 0.6rem 1.2rem -0.6rem rgba(0, 0, 0, 0.06);
+    &:hover {
+        border    : 0.1rem solid rgba(0, 0, 0, 0.12);
+        box-shadow: 0 1.8rem 3.6rem -0.6rem rgba(0, 0, 0, 0.06), 0 0.6rem 1.2rem -0.6rem rgba(0, 0, 0, 0.06);
+    }
+}
+
 
 .card-menu {
     width              : 22rem;
@@ -593,7 +620,8 @@ item-selected:选中的效果
 .item-bg-hover-light,
 .r-bg-hover-light>*,
 .r-item-bg-hover-light>* {
-    background-color: #fff; 
+    background-color: #fff;
+
     &:hover {
         background-color: #fefefe;
     }
@@ -812,6 +840,7 @@ body {
     --bg-1: var(--white-1);
     --bg-2: rgb(246, 245, 244);
     --bg-3: rgb(235, 237, 239);
+    --bg-4: rgb(229, 231, 233);
 
     --shadow       : rgba(15, 15, 15, 0.05) 0rem 0rem 0rem 1px, rgba(15, 15, 15, 0.1) 0rem 3px 6px, rgba(15, 15, 15, 0.2) 0rem 9px 24px;
     --shadow-light : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
@@ -1388,7 +1417,8 @@ each(@ops, {
 
 .box-border,
 .border-box,
-.r-border-box>* {
+.r-border-box>*,
+.r-box-border>* {
     box-sizing: border-box;
 }
 
@@ -1544,7 +1574,7 @@ each(@ops, {
     }
 
     td {
-        font-size                  : 14px;
+        font-size: 14px;
     }
 
 }
@@ -1676,6 +1706,9 @@ each(@ops, {
 
 .bg-3 {
     background-color: var(--bg-3);
+}
+.bg-4{
+    background-color: var(--bg-4);
 }
 
 .bg-white,

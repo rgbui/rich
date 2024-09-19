@@ -24,6 +24,7 @@ export class Avatar extends React.Component<{
     hideStatus?: boolean,
     middle?: boolean,
     ws?: LinkWs,
+    bg?: string | boolean,
     onMousedown?: (event: React.MouseEvent) => void
 }> {
     private user: UserBasic;
@@ -137,7 +138,10 @@ export class Avatar extends React.Component<{
                 </div>
             </div>
         }
-        else return <div className={'shy-avatar' + " " + (this.props.className || "")} style={{ width: size, height: size }} onMouseDown={e => this.mousedown(e)}>
+        else return <div className={'shy-avatar' + " " + (this.props.className || "")} style={{
+            backgroundColor: this.props.bg && typeof this.props.bg == 'string' ? this.props.bg : undefined,
+            width: size, height: size
+        }} onMouseDown={e => this.mousedown(e)}>
             {renderIcon()}
             {size > 24 && this.props.hideStatus !== true && renderStatus()}
         </div>

@@ -15,17 +15,23 @@ export class PageOnEvent {
         this.emit(PageDirective.close);
     }
     async onPrev(this: Page) {
+        console.log('openPageData', this.openPageData)
         if (this.openPageData?.pre) {
             var openSource = this.openPageData.pre.openSource;
             var elementUrl = this.openPageData.pre.elementUrl;
             var url: '/page/open' | '/page/dialog' | '/page/slide' = '/page/dialog'
             if (openSource == 'page') url = '/page/open'
             else if (openSource == 'slide') url = '/page/slide'
-            await channel.act(url, {
-                elementUrl: elementUrl,
-                config: { wait: false, force: true }
-            })
+            if (elementUrl)
+                await channel.act(url, {
+                    elementUrl: elementUrl,
+                    config: { wait: false, force: true }
+                })
+            else this.onPageBack()
         }
+    }
+    async onPageBack(this: Page) {
+        this.emit(PageDirective.back);
     }
 
     onUnmount(this: Page) {

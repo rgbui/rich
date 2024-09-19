@@ -10,8 +10,11 @@ import "./views/disk";
 import "./views/user.card";
 import "./views/goods";
 import "./views/job";
-import "./views/rank";
-import "./views/things";
+// import "./views/unused/rank";
+// import "./views/unused/things";
+import "./views/diss";
+import "./views/questions";
+import "./views/events";
 
 import { Block } from "../../../../src/block";
 import { FieldConfig } from "../../schema/field";

@@ -334,7 +334,7 @@ export class TextEle {
         if (typeof c == 'number') c = (c as any).toString();
         if (typeof c != 'string') console.trace(content);
         c = c.replace(/(<([^>]+)>)/ig, '');
-        return c;
+        return c.trim();
     }
     /**
      * 计算坐标于bounds的距离，这里分水平和垂直

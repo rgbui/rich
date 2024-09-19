@@ -19,7 +19,6 @@ import { Button } from "../../component/view/button";
 import "./style.less";
 import { DivInput } from "../../component/view/input/div";
 import { IconArguments } from "../icon/declare";
-import { TextEle } from "../../src/common/text.ele";
 
 /**
  * 
@@ -151,8 +150,7 @@ class LinkEditor extends EventsComponent {
                 </div>}
                 <div className="flex-auto">
                     <DivInput
-                        rf={e => this.divInput = e}
-
+                        ref={e => this.divInput = e}
                         onKeyDown={this.keydown}
                         placeholder={lst('搜索网址或页面...')}
                         onInput={e => this.onInput(e)}
@@ -210,7 +208,7 @@ class LinkEditor extends EventsComponent {
             </div>
         </div>
     }
-    divInput: HTMLElement;
+    divInput: DivInput;
     onSelect(link: LinkPageItem) {
         this.pageId = link.id;
         this.url = link.text;
@@ -219,7 +217,8 @@ class LinkEditor extends EventsComponent {
         this.spread = false;
         this.forceUpdate(() => {
             if (this.divInput) {
-                TextEle.setElCursor(this.divInput, { end: true })
+                this.divInput.focus()
+
             }
         });
     }
@@ -235,19 +234,21 @@ class LinkEditor extends EventsComponent {
                 this.selectIndex = this.links.findIndex(g => g.id == link.pageId);
                 this.url = this.links[this.selectIndex]?.text || '';
                 this.pageIcon = this.links[this.selectIndex]?.icon;
-                this.forceUpdate()
             }
             else if (link.url) {
                 this.url = link.url;
                 this.name = 'outside';
                 this.text = link.text;
-                this.forceUpdate()
             }
             else if (link.text) {
                 this.url = '';
                 this.text = link.text;
-                this.forceUpdate()
             }
+            this.forceUpdate(() => {
+                if (this.divInput) {
+                    this.divInput.focus()
+                }
+            })
         }
     }
     onClear() {
@@ -258,14 +259,16 @@ class LinkEditor extends EventsComponent {
             this.emit('change', {
                 text: this.text,
                 pageId: this.pageId,
-                name: this.name
+                name: this.name,
+                icon: this.pageIcon,
             })
         }
         else {
             this.emit('change', {
                 url: this.url,
                 name: this.name,
-                text: this.text
+                text: this.text,
+
             })
         }
     }

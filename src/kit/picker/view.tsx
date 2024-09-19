@@ -179,7 +179,7 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
             width: '100vw',
             height: '100vh'
         }
-        console.dev('picker blocks render', this.picker.blocks);
+
 
         if (!this.picker.kit.page.isCanEdit) {
             console.dev('page is not can edit');
@@ -190,8 +190,11 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
         if (b?.page && !b.page.isBoard) {
             var bb = this.picker.kit.boardSelector.boardBlock;
             if (!bb) bb = b.closest(x => x.isBoardBlock && !x.isFrame);
+            if (window.shyConfig?.isDev)
+                console.log('bb', bb);
             if (bb) {
                 var fb = bb.getVisibleContentBound();
+                // console.log('gggfb', fb);
                 delete style.bottom;
                 delete style.right;
                 var rc = Rect.fromEle(b.page.contentEl);
@@ -200,6 +203,7 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
                 style.top = fb.top - rc.top + 'px';
                 style.left = fb.left - rc.left + 'px';
                 viewBox = `${fb.left - rc.left} ${fb.top - rc.top} ${fb.width} ${fb.height}`;
+                // console.log('visble', viewBox);
             }
         }
         return <div className='shy-kit-picker'>

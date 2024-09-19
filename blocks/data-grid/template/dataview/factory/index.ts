@@ -1,7 +1,8 @@
-import { DataStoreView } from "../view";
+import { CardView } from "../../card/view";
+
 export class DataStoreViewFactory {
-    static DataStoreViews = new Map<string, typeof DataStoreView>();
-    static registerDataStoreView(url: string, view: typeof DataStoreView) {
+    static DataStoreViews = new Map<string, typeof CardView>();
+    static registerDataStoreView(url: string, view: typeof CardView) {
         this.DataStoreViews.set(url, view);
     }
     static getDataStoreView(url: string) {

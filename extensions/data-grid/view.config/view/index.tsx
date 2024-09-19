@@ -195,7 +195,13 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
         var cardItems: MenuItem[] = [];
         if (this.block.url == BlockUrlConstant.DataGridBoard || this.block.url == BlockUrlConstant.DataGridGallery) {
             if ((this.block as TableStoreGallery)?.cardConfig?.showMode == 'define') {
-                cardItems = [];
+                cardItems = [{
+                    name: 'cardConfig.auto',
+                    text: lst("卡片高度自适应"),
+                    type: MenuItemType.switch,
+                    visible: (this.block.url == BlockUrlConstant.DataGridGallery),
+                    checked: (this.block as TableStoreGallery).cardConfig?.auto,
+                }];
             }
             else {
                 var imgFields = this.block.schema.fields.filter(g => {
@@ -262,7 +268,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                     {
                         name: 'cardConfig.coverAuto',
                         text: lst("封面高度自适应"),
-                        visible:(items)=>{
+                        visible: (items) => {
                             if (self.block.url == BlockUrlConstant.DataGridGallery) {
                                 var cAuto = items.find(g => g.name == 'cardConfig.auto');
                                 if (cAuto.checked == false) return false;
@@ -444,7 +450,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
             }
             else if (['cardConfig.auto', 'cardConfig.showCover', 'cardConfig.coverAuto'].includes(item.name)) {
                 await self.block.onUpdateProps({ [item.name]: item.checked }, { range: BlockRenderRange.self }, undefined, async () => {
-                    self.block.forceUpdateAllViews()
+                    self.block.forceUpdateAllViews() 
                 });
                 self.forceUpdate()
             }

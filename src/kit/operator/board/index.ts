@@ -49,7 +49,7 @@ export function BoardDrag(
         return;
     }
     var downPoint = Point.from(event);
-    var gm = block?.panelGridMap || kit.page.gridMap;
+    var gm = block?.panelGridMapNotSelf || kit.page.gridMap;
     if (block?.isLine) block = block.closest(x => x.isContentBlock);
     var beforeIsPicked = kit.picker.blocks.some(s => s == block);
     var emptyIsSelection: boolean = block ? true : false;
@@ -77,7 +77,8 @@ export function BoardDrag(
     }
     var isCopy: boolean = false;
 
-    console.dev('board drag:', block, block?.isFreeBlock);
+    if (window.shyConfig.isDev)
+        console.log('board drag:', block, block?.isFreeBlock);
     if (kit.page.keyboardPlate.isShift() && block?.isFreeBlock) {
         //连选
         kit.picker.onShiftPicker([block]);
@@ -217,6 +218,7 @@ export function BoardDrag(
                     await openBoardEditTool(kit);
             }
             else {
+                console.log('uss', beforeIsPicked, kit.picker.blocks.length, block);
                 if (gm) gm.over();
                 /**
                  * 这里说明是点击选择board块，那么判断是否有shift连选操作
@@ -236,17 +238,28 @@ export function BoardDrag(
                     else if (kit.picker.blocks.length == 1) {
                         var bl = kit.picker.blocks[0];
                         if (bl.appearAnchors.length > 0) {
-                            if (bl.url == BlockUrlConstant.Frame) return;
+                            if (bl.url == BlockUrlConstant.Frame) {
+                                kit.anchorCursor.onClearCursor();
+                                return;
+                            }
                             kit.anchorCursor.onFocusBlockAnchor(bl, { last: true })
                         }
                     }
                     closeBoardEditTool()
                 }
-                else if (kit.picker.blocks.length > 0) await openBoardEditTool(kit);
+                else if (kit.picker.blocks.length > 0) {
+                    if (kit.picker.blocks.length == 1 && kit.picker.blocks[0].url == BlockUrlConstant.Frame) {
+                        kit.anchorCursor.onClearCursor();
+                    }
+                    await openBoardEditTool(kit);
+
+                }
                 else if (block) {
                     var appear = block.findReverse(g => g.appearAnchors.length > 0, true)?.appearAnchors.last();
-                    console.log(block, appear)
-                    if (appear) {
+                    if (block.url == BlockUrlConstant.CardBox || block.url == BlockUrlConstant.Frame || block.url == BlockUrlConstant.Board) {
+                        kit.anchorCursor.onClearCursor()
+                    }
+                    else if (appear) {
                         kit.anchorCursor.onFocusAppearAnchor(appear, { last: true })
                     }
                 }

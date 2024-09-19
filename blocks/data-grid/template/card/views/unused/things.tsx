@@ -2,17 +2,17 @@
 
 
 import React from "react";
-import { CommentSvg, DotsSvg, LikeSvg, } from "../../../../../component/svgs";
-import { Avatar } from "../../../../../component/view/avator/face";
-import { UserBox } from "../../../../../component/view/avator/user";
-import { Icon } from "../../../../../component/view/icon";
-import { util } from "../../../../../util/util";
-import { FieldType } from "../../../schema/type";
-import { CardModel, CardViewCom } from "../factory/observable";
-import { CardView } from "../view";
+import { CommentSvg, DotsSvg, LikeSvg, } from "../../../../../../component/svgs";
+import { Avatar } from "../../../../../../component/view/avator/face";
+import { UserBox } from "../../../../../../component/view/avator/user";
+import { Icon } from "../../../../../../component/view/icon";
+import { util } from "../../../../../../util/util";
+import { FieldType } from "../../../../schema/type";
+import { CardModel, CardViewCom } from "../../factory/observable";
+import { CardView } from "../../view";
 import * as Card1 from "../../../../../src/assert/img/card/card5.png"
-import { BlockUrlConstant } from "../../../../../src/block/constant";
-import { lst } from "../../../../../i18n/store";
+import { BlockUrlConstant } from "../../../../../../src/block/constant";
+import { lst } from "../../../../../../i18n/store";
 
 /**
  * 

@@ -10,8 +10,7 @@ import { S } from "../../../i18n/view";
 import { HelpText } from "../../../component/view/text";
 
 export default class ExportFile extends EventsComponent {
-    render()
-    {
+    render() {
         return <div className="w-300 round padding-14">
             <div className="flex">
                 <span className="flex-auto remark f-12 "><S>仅支持单文件导出</S></span>
@@ -30,7 +29,7 @@ export default class ExportFile extends EventsComponent {
     page: Page;
     type: string = 'markdown';
     getOptions() {
-        if (this.page.ws.datasource == 'private-local') {
+        if (this.page?.ws?.datasource == 'private-local') {
             return [
                 { text: 'Markdown', value: "markdown" },
                 { text: 'JSON', value: 'json' }
@@ -64,14 +63,14 @@ export default class ExportFile extends EventsComponent {
                 var ws = this.page.ws
                 var r = await channel.post('/screenshot/png', { url: ws.url + "/pc?url=" + encodeURIComponent(this.page.elementUrl) + "&wsId=" + ws.id });
                 if (r?.data) {
-                    await util.downloadFile(r.data.file.url, this.page.getPageDataInfo()?.text)
+                    await util.downloadFile(r.data.file.url, (this.page.getPageDataInfo()?.text || lst('图片')) + ".png")
                 }
             }
             else if (this.type == 'pdf') {
                 var ws = this.page.ws
                 var r = await channel.post('/screenshot/pdf', { url: ws.url + "/pc?url=" + encodeURIComponent(this.page.elementUrl) + "&wsId=" + ws.id });
                 if (r?.data) {
-                    await util.downloadFile(r.data.file.url, this.page.getPageDataInfo()?.text)
+                    await util.downloadFile(r.data.file.url, (this.page.getPageDataInfo()?.text || lst('页面')) + ".pdf")
                 }
             }
         }

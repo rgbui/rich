@@ -10,6 +10,8 @@ import { Avatar } from "../../../../../component/view/avator/face";
 import { lst } from "../../../../../i18n/store";
 import { Icon } from "../../../../../component/view/icon";
 import { DotsSvg } from "../../../../../component/svgs";
+import { MenuItem, MenuItemType } from "../../../../../component/view/menu/declare";
+import { BlockDirective, BlockRenderRange } from "../../../../../src/block/enum";
 
 /**
  * https://segmentfault.com/events
@@ -59,6 +61,37 @@ CardModel('/user/story', () => ({
 
 @CardViewCom('/user/story')
 export class CardPin extends CardView {
+    async onGetMenus() {
+        var rs = await super.onGetMenus();
+        var at = rs.findIndex(x => x.name == 'openSlide');
+        if (at > -1) {
+            var cs = this.cardSettings<{ cardDisplay: string, size: number }>({ cardDisplay: 'card-1', size: 40 });
+            rs.splice(at + 1,
+                0,
+                { type: MenuItemType.divide },
+                {
+                    icon: { name: 'byte', code: 'rectangle-one' },
+                    text: lst('展示'),
+                    childs: [
+                        { name: 'cardDisplay', text: '卡片1', checkLabel: cs.cardDisplay == 'card-1' ? true : false, value: 'card-1' },
+                        { name: 'cardDisplay', text: '卡片2', checkLabel: cs.cardDisplay == 'card-2' ? true : false, value: 'card-2' },
+                        { name: 'cardDisplay', text: '卡片3', checkLabel: cs.cardDisplay == 'card-3' ? true : false, value: 'card-3' },
+                        { name: 'cardDisplay', text: '卡片4', checkLabel: cs.cardDisplay == 'card-4' ? true : false, value: 'card-4' }
+                    ]
+                },
+                { type: MenuItemType.divide }
+            )
+        }
+        return rs;
+    }
+    async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent, options?: { merge?: boolean; }): Promise<void> {
+        var self = this;
+        if (item.name == 'cardDisplay') {
+            await self.dataGrid.onUpdateProps({ 'cardSettings.cardDisplay': item.value }, { range: BlockRenderRange.self })
+            self.dataGrid.forceUpdateAllViews();
+        }
+        else await super.onClickContextMenu(item, event, options);
+    }
     render() {
         var self = this;
         var users = this.getValue<string[]>('user', FieldType.user);
@@ -68,33 +101,123 @@ export class CardPin extends CardView {
         var indr = this.getValue<string>('indr');
         var profession = this.getValue<string>('profession');
         var address = this.getValue<string>('address');
-        return <div
-            onMouseDown={e => self.openEdit(e)}
-            className="relative flex flex-col flex-full">
-            <UserBox userid={userid}>
-                {user => {
-                    return <div
-                        className="padding-20 bg-white  shadow-s round border"
-                    >
-                        <div className="flex flex-top">
-                            <div className="flex-fixed"><Avatar user={user} size={40}></Avatar></div>
-                            <div className="flex-auto gap-l-10">
-                                <div className="f-18 flex">
-                                    <span>{title || user.name}</span>
-                                    <div className="remark f-14 gap-l-10">{address}</div>
+        var cs = this.cardSettings<{ cardDisplay: string }>({ cardDisplay: 'card-1' });
+        if (cs.cardDisplay == 'card-1') {
+            return <div
+                onMouseDown={e => self.openEdit(e)}
+                className="relative visible-hover flex flex-col flex-full">
+                <UserBox userid={userid}>
+                    {user => {
+                        return <div
+                            className="padding-10 bg-white  card-border round"
+                        >
+                            <div className="flex flex-top">
+                                <div className="flex-fixed"><Avatar user={user} size={40}></Avatar></div>
+                                <div className="flex-auto gap-l-10">
+                                    <div className="f-18 flex">
+                                        <span>{title || user.name}</span>
+                                        <div className="remark f-14 gap-l-10">{address}</div>
+                                    </div>
+                                    <div className="remark f-14 rows-2">{profession}</div>
                                 </div>
-                                <div className="remark f-14 rows-2">{profession}</div>
+                            </div>
+                            <div className="f-14 gap-t-10">{indr}</div>
+                        </div>
+                    }}
+                </UserBox>
+                <div className="pos-top pos-right flex-end z-2  gap-t-5 r-size-24 r-gap-r-5 r-round r-cursor">
+                    {this.isCanEdit && <span onMouseDown={e => self.openMenu(e)} className="item-hover remark visible    flex-center">
+                        <Icon size={18} icon={DotsSvg}></Icon>
+                    </span>}
+                </div>
+            </div>
+        }
+        else if (cs.cardDisplay == 'card-2') {
+            return <div
+                onMouseDown={e => self.openEdit(e)}
+                className=" flex flex-col flex-full relative visible-hover">
+                <div style={{ marginTop: 50 }} className="relative padding-10  round ">
+                    <div>
+                        <UserBox userid={userid}>
+                            {user => {
+                                return <div>
+                                    <div className="h-50" >
+                                        <div style={{ top: -50 }} className="pos flex-center w100">
+                                            <Avatar user={user} hideStatus size={100}></Avatar>
+                                        </div>
+                                    </div>
+                                    <div className="flex-center">
+                                        <span className="bold f-16">{title || user.name}</span>
+                                    </div>
+                                    {profession && <div className="remark flex-center ">{profession}</div>}
+                                </div>
+                            }}
+                        </UserBox>
+                    </div>
+                    <div className="f-14 gap-t-10">{indr}</div>
+                </div>
+
+                <div className="pos-top pos-right flex-end z-2  gap-t-5 r-size-24 r-gap-r-5 r-round r-cursor">
+                    {this.isCanEdit && <span onMouseDown={e => self.openMenu(e)} className="item-hover remark visible    flex-center">
+                        <Icon size={18} icon={DotsSvg}></Icon>
+                    </span>}
+                </div>
+            </div>
+        }
+        else if (cs.cardDisplay == 'card-3') {
+            return <div
+                onMouseDown={e => self.openEdit(e)}
+                className="relative flex flex-col flex-full visible-hover">
+                <UserBox userid={userid}>
+                    {user => {
+                        return <div
+                            className="padding-10 bg-white  card-border round "
+                        >
+                            <div className="flex">
+                                <div className="flex-fixed"><Avatar user={user} size={40}></Avatar></div>
+                                <div className="flex-auto gap-l-10">
+                                    <div className="flex flex-top">
+                                        <span className="f-16 bold flex-fixed">{title || user.name}</span>
+                                        <div className="remark f-14 gap-l-10 flex-auto overflow">{profession}</div>
+                                    </div>
+                                    <div className="remark f-14 rows-2">{indr}</div>
+                                </div>
                             </div>
                         </div>
-                        <div className="f-14 gap-t-10">{indr}</div>
-                    </div>
-                }}
-            </UserBox>
-            <div className="pos-top pos-right flex-end z-2  gap-t-5 r-size-24 r-gap-r-5 r-round r-cursor">
-                {this.isCanEdit && <span onMouseDown={e => self.openMenu(e)} className="item-hover remark visible    flex-center">
-                    <Icon size={18} icon={DotsSvg}></Icon>
-                </span>}
+                    }}
+                </UserBox>
+                <div className="pos-top pos-right flex-end z-2  gap-t-5 r-size-24 r-gap-r-5 r-round r-cursor">
+                    {this.isCanEdit && <span onMouseDown={e => self.openMenu(e)} className="item-hover remark visible    flex-center">
+                        <Icon size={18} icon={DotsSvg}></Icon>
+                    </span>}
+                </div>
             </div>
-        </div>
+        }
+        else if (cs.cardDisplay == 'card-4') {
+            return <div
+                onMouseDown={e => self.openEdit(e)}
+                className=" flex flex-col flex-full relative visible-hover">
+                <div>
+                    <UserBox userid={userid}>
+                        {user => {
+                            return <div>
+                                <div className=" flex-center w100">
+                                    <Avatar user={user} hideStatus size={100}></Avatar>
+                                </div>
+                                <div className="flex-center">
+                                    <span className="bold f-14">{title || user.name}</span>
+                                </div>
+                                {profession && <div className="f-14 remark flex-center ">{profession}</div>}
+                            </div>
+                        }}
+                    </UserBox>
+                </div>
+                <div className="pos-top pos-right flex-end z-2  gap-t-5 r-size-24 r-gap-r-5 r-round r-cursor">
+                    {this.isCanEdit && <span onMouseDown={e => self.openMenu(e)} className="item-hover remark visible    flex-center">
+                        <Icon size={18} icon={DotsSvg}></Icon>
+                    </span>}
+                </div>
+            </div>
+        }
     }
 } 

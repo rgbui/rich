@@ -9,6 +9,13 @@ import lodash from "lodash";
 import { LinkPageItem } from "../../src/page/declare";
 import { getAiDefaultModel } from "./cost";
 
+import {
+    AskTemplate,
+    getTemplateInstance,
+    getUserHistoryQuestion,
+    IQuestion
+} from "../../extensions/ai/prompt";
+
 /**
  *  获取robot wikit基于ask的相关上下文参考资料
  * @param robot 
@@ -20,9 +27,19 @@ import { getAiDefaultModel } from "./cost";
  * }|null
  * 
  */
-export async function getRobotWikiContext(robot: RobotInfo,
-    ask: string, minRank?: number) {
+export async function getRobotWikiContext(
+    robot: RobotInfo,
+    ask: string,
+    minRank?: number) {
     if (typeof minRank == 'undefined') minRank = 0.45;
+    console.log({
+        model: getAiDefaultModel(robot.embeddingModel, 'embedding'),
+        robotId: robot.robotId,
+        ask,
+        contextSize: robot.wikiConfig?.fragmentContextSize || 10,
+        size: robot.wikiConfig?.fragmentSize || 5,
+        minRank
+    })
     var g = await channel.get('/query/wiki/answer', {
         model: getAiDefaultModel(robot.embeddingModel, 'embedding'),
         robotId: robot.robotId,
@@ -68,7 +85,6 @@ export async function getWsContext(prompt: string, minRank?: number) {
         }).join('\n\n\n\n')
         var ids = ms.map(m => m.pe.id);
         lodash.uniqBy(ids, s => s);
-
         var pageItems = await channel.get('/page/items', { ids });
         var refs: { elementUrl: string, page: LinkPageItem, blockIds: string[] }[] = [];
         ms.forEach(m => {
@@ -88,7 +104,6 @@ export async function getWsContext(prompt: string, minRank?: number) {
         }
     }
     else {
-
         return {
             notFound: true
         }
@@ -96,10 +111,43 @@ export async function getWsContext(prompt: string, minRank?: number) {
 }
 
 
+export async function identifyUserProblems(prompt: string, contextPrompts: string[]) {
+    var content = getTemplateInstance(getUserHistoryQuestion, {
+        prompt: prompt,
+        context: contextPrompts.map(c => '对话：' + c + "\n")
+    });
+    var result = await channel.post('/text/ai', {
+        input: content,
+        model: getAiDefaultModel(),
+    });
+    return result.data?.message || prompt;
+}
+
+export async function getUserQuestions(content: string) {
+    var content = getTemplateInstance(IQuestion, {
+        content: content
+    });
+    var result = await channel.post('/text/ai', {
+        input: content,
+        model: getAiDefaultModel(),
+    });
+    var ms = [];
+    var r = result.data?.message;
+    if (r) {
+        ms = r.split('\n').map(m => m.trim()).filter(m => m);
+        ms = ms.map(m => {
+            if (/^[0-9]+/.test(m)) {
+                return m.replace(/^[0-9]+\.?/, '').trim();
+            }
+        })
+    }
+    return ms;
+}
+
 
 export async function AgentRequest(robot: RobotInfo,
     message: string,
-    options: { isAt?: boolean },
+    options: { isAt?: boolean, historyMessages?: string[] },
     callback: (options: {
         msg: string,
         done?: boolean,
@@ -111,6 +159,9 @@ export async function AgentRequest(robot: RobotInfo,
     var text = message + `<a class='at-user' data-userid='${user.id}'>@${user.name}</a><br/>`;
     if (options?.isAt == true) text = '';
     await callback({ msg: text + "<span class='typed-print'></span>", done: false, content: text });
+    if (options?.historyMessages && options.historyMessages.length > 0) {
+        message = await identifyUserProblems(message, options.historyMessages)
+    }
     var content = '';
     if (robot.disabledWiki !== true) {
         var context = await getRobotWikiContext(robot, message);
@@ -121,6 +172,7 @@ export async function AgentRequest(robot: RobotInfo,
             content = context?.context;
         }
     }
+    console.log('robot content', content);
     var refs: {
         elementUrl: string;
         page: LinkPageItem<{}>;
@@ -138,8 +190,12 @@ export async function AgentRequest(robot: RobotInfo,
     }
     if (content) {
         await new Promise(async (resolve, reject) => {
+            var ptext = getTemplateInstance(AskTemplate, {
+                prompt: message,
+                context: content
+            });
             await channel.post('/text/ai/stream', {
-                question: content,
+                question: ptext,
                 role: robot.instructions || undefined,
                 model: getAiDefaultModel(robot.model),
                 callback(str, done) {
@@ -158,6 +214,4 @@ export async function AgentRequest(robot: RobotInfo,
     else {
         callback({ msg: marked.parse(text + lst('没有搜到相关资料')), done: true, content: marked.parse(text + lst('没有搜到相关资料')) })
     }
-
-
 }

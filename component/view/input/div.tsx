@@ -125,6 +125,9 @@ export class DivInput extends React.Component<{
             TextEle.setElCursor(this.el, { end: true })
         }
     }
+    setValue(value) {
+        this.el.innerText = value;
+    }
     shouldComponentUpdate(nextProps: Readonly<{ placeholder?: string; onInput?: (value: string) => void; onChange?: (value: string) => void; onEnter?: (value) => void; onKeyDown?: (event: React.KeyboardEvent) => void; onMouseDown?: (event: React.MouseEvent) => void; value?: string; style?: CSSProperties; ignoreFilterWhitespace?: boolean; className?: string | string[]; line?: boolean; rf?: (e: HTMLElement) => void; }>, nextState: Readonly<{}>, nextContext: any): boolean {
         var self = this; var text = self.el?.innerText;
         if (this.props.ignoreFilterWhitespace !== true) {

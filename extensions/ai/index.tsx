@@ -16,6 +16,7 @@ import { MenuView } from "../../component/view/menu/menu";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { AiWrite } from "./write";
 import { Divider } from "../../component/view/grid";
+
 import {
     AbstractTemplate,
     ArticleContinue,
@@ -604,6 +605,7 @@ export class AIWriteAssistant extends EventsComponent {
         if (options.block) this.status = AIWriteStatus.willAsk;
         else this.status = AIWriteStatus.selectionWillAsk;
         this.visible = true;
+        this.error = '';
         this.ask = options.ask || '';
         this.anwser = '';
         this.options = options;
@@ -626,6 +628,7 @@ export class AIWriteAssistant extends EventsComponent {
         var self = this;
         this.status = AIWriteStatus.asking;
         self.anwser = '';
+        this.error = '';
         this.updateView()
         var scope = '';
 
@@ -676,6 +679,7 @@ export class AIWriteAssistant extends EventsComponent {
         var self = this;
         this.status = AIWriteStatus.selectionAsking;
         self.anwser = '';
+        this.error = '';
         this.updateView()
         if (options?.isNotFound) {
             self.anwser = lst('未找到匹配的答案')
@@ -715,6 +719,7 @@ export class AIWriteAssistant extends EventsComponent {
         var ask = options?.prompt;
         if (!ask) return;
         var self = this;
+        this.error = '';
         if (this.options.block) this.status = AIWriteStatus.asking;
         else this.status = AIWriteStatus.selectionAsking;
         this.updateView()

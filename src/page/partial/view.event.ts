@@ -155,6 +155,8 @@ export class Page$ViewEvent {
             moving(ev, data, isEnd, isMove) {
                 var dx = ev.clientX - event.clientX;
                 var dy = ev.clientY - event.clientY;
+                dx = dx / self.scale;
+                dy = dy / self.scale;
                 var mc = ma.clone();
                 mc.translate(dx, dy);
                 self.onSetMatrix(mc);

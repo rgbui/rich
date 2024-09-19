@@ -65,10 +65,11 @@ export enum WsConsumeType {
     badiu_Stable_Diffusion_XL = 90,//badiu_Stable_Diffusion_XL
     pen_6 = 91,//6pen
 
+
     /**
-     * 智谱AI模型
-     * https://open.bigmodel.cn/dev/api#characterglm
-    */
+   * 智谱AI模型
+   * https://open.bigmodel.cn/dev/api#characterglm
+  */
     glm_3_turbo = 100,
     glm_4 = 101,
     glm_4v = 102,
@@ -77,6 +78,9 @@ export enum WsConsumeType {
     glm_4_flash = 105,
     cogview_3 = 110,
     glm_embedding_2 = 111,
+    glm_embedding = 113,
+
+    cogvideox = 114,
 
     /**
     * deepseek
@@ -95,7 +99,7 @@ export function getConstValue(cost: number, type: WsConsumeType) {
     else if (type == WsConsumeType.dauCount) {
         return '日活' + cost;
     }
-    else if (type == WsConsumeType.glm_embedding_2 || type == WsConsumeType.baidu_embedding) {
+    else if (type == WsConsumeType.glm_embedding_2 || type == WsConsumeType.glm_embedding || type == WsConsumeType.baidu_embedding) {
         return cost + "向量tokens"
     }
     else if (type == WsConsumeType.pen_6 || type == WsConsumeType.stability || type == WsConsumeType.badiu_Stable_Diffusion_XL || type == WsConsumeType.cogview_3 || type == WsConsumeType.dall_2 || type == WsConsumeType.dall_3) {
@@ -183,7 +187,9 @@ export function getWsConsumeType(type: WsConsumeType) {
         case WsConsumeType.glm_4_flash:
             return 'glm-4-flash';
         case WsConsumeType.cogview_3:
-            return 'cogview-3';
+            return 'cogview-3-plus';
+        case WsConsumeType.cogvideox:
+            return 'cogvideox';
         case WsConsumeType.charglm_3:
             return 'charglm-3';
         case WsConsumeType.glm_embedding_2:
@@ -217,7 +223,6 @@ export function getAiModelOptions() {
         { text: 'Glm-4-Flash', value: WsConsumeType.glm_4_flash },
         { text: 'Glm-4-Air', value: WsConsumeType.glm_4_air },
         { text: 'Glm-4', value: WsConsumeType.glm_4 },
-        { text: 'Glm-3-Turbo', value: WsConsumeType.glm_3_turbo },
         { text: lst('百度千帆'), type: MenuItemType.text, label: '文言一心' },
         { text: 'ERNIE-Bot-Turbo', value: WsConsumeType.ERNIE_Bot_turbo },
         { text: 'ERNIE-Bot', value: WsConsumeType.ERNIE_Bot },
@@ -233,12 +238,11 @@ export function getAiModelOptions() {
 export function getAiImageModelOptions() {
     return window.shyConfig.isUS ? [
         { text: 'DALLE-3', value: WsConsumeType.dall_3 },
-        { text: 'DALLE-2', value: WsConsumeType.dall_2 },
         { text: 'Stability', value: WsConsumeType.stability },
         { type: MenuItemType.divide },
         { type: MenuItemType.help, helpInline: true, text: 'Learn about the image generation model supported by Shy', url: 'https://help.shy.red/page/62#ujoyjqu7jFUorT6Y6qJvhZ' }
     ] : [
-        { text: '智谱CogView-3', value: WsConsumeType.cogview_3 },
+        { text: '智谱CogView-3-plus', value: WsConsumeType.cogview_3 },
         { text: 'DALLE-3', value: WsConsumeType.dall_3, label: '仅限体验' },
         { type: MenuItemType.divide },
         { type: MenuItemType.help, helpInline: true, text: '了解诗云支持的图像生成模型', url: 'https://help.shy.live/page/1554#b5gBWSCWnLf9QRG7izYAsq' }
@@ -249,12 +253,12 @@ export function getAiEmbeddingsOptions() {
     return window.shyConfig.isUS ? [
         { text: 'DALLE-3', value: WsConsumeType.gpt_embedding },
     ] : [
-        // { text: '智谱 Embedding(向量)', value: WsConsumeType.glm_embedding_2 },
+        { text: '智谱 Embedding(向量)', value: WsConsumeType.glm_embedding },
         { text: '文言一心 Embedding(向量', value: WsConsumeType.baidu_embedding },
     ]
 }
 
-export function getAiDefaultModel(model: WsConsumeType, type?: 'text' | 'image' | 'embedding') {
+export function getAiDefaultModel(model?: WsConsumeType, type?: 'text' | 'image' | 'embedding') {
     if (typeof model == 'number') return model;
     if (!type) type = 'text'
     if (window.shyConfig.isUS) {
@@ -271,7 +275,7 @@ export function getAiDefaultModel(model: WsConsumeType, type?: 'text' | 'image' 
         switch (type) {
             case 'text':
                 return WsConsumeType.deepseek_chat;
-                return WsConsumeType.glm_4_flash
+                // return WsConsumeType.glm_4_flash
             case 'image':
                 return WsConsumeType.cogview_3
             case 'embedding':

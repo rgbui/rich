@@ -6,7 +6,6 @@ import { CardFactory } from "./card/factory/factory";
 import { util } from "../../../util/util";
 import { BlockRenderRange } from "../../../src/block/enum";
 
-
 export async function onCreateDataGridTemplate(
     text: string,
     block: DataGridView,
@@ -76,7 +75,6 @@ export async function onCreateDataGridTemplate(
                 await (newBlock as DataGridView).dataGridTab.updateTabItems((newBlock as DataGridView))
             }
         })
-        // }
         return view;
     }
 }

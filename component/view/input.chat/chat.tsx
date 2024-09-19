@@ -18,14 +18,16 @@ export class ChatInput extends React.Component<{ box?: InputChatBox, }> {
     keydown = (event: React.KeyboardEvent<HTMLDivElement>) => {
         event.stopPropagation();
         var key = event.key.toLowerCase();
-        var isShift = event.shiftKey;
+        var isShift = event.shiftKey; 
         if (this.currentCommand) {
             //回车提交
             //左右移动
             //回退移动或回退删除command
-            if (!isShift && key == 'enter') {
-                if (typeof this.box.props.onEnter == 'function') {
-                    this.props.box.onEnter();
+            if (!isShift && key == 'enter')
+            {
+              
+                if (typeof this.box.onEnter == 'function') {
+                    this.box.onEnter();
                 }
                 event.preventDefault();
                 return;
@@ -273,7 +275,7 @@ export class ChatInput extends React.Component<{ box?: InputChatBox, }> {
         else {
             style.minHeight = 24;
         }
-        if(this.box.props.fontSize) style.fontSize = this.box.props.fontSize;
+        if (this.box.props.fontSize) style.fontSize = this.box.props.fontSize;
         var v = this.box.props.value;
         return <div>
             <div className={"text shy-rich-view" + (this.isQuote ? " shy-rich-view-quote" : "")}
@@ -305,7 +307,7 @@ export class ChatInput extends React.Component<{ box?: InputChatBox, }> {
     }
     userPop: ChatInputPop;
     selectUser = (user: UserBasic) => {
-      
+
         var sel = window.getSelection();
         var node = sel.focusNode as Node;
         var offset = sel.focusOffset;
