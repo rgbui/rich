@@ -21,6 +21,9 @@ import { DivInput } from "../../component/view/input/div";
 const AI_SEARCH_MESSAGES = 'AI_SEARCH_MESSAGES';
 import "./style.less";
 import { TextEle } from "../../src/common/text.ele";
+import { useSelectMenuItem } from "../../component/view/menu";
+import { Rect } from "../../src/common/vector/point";
+import { MenuItemType } from "../../component/view/menu/declare";
 
 export class AISearchBox extends EventsComponent {
     messages: {
@@ -29,12 +32,15 @@ export class AISearchBox extends EventsComponent {
         asking?: boolean,
         prompt?: string,
         date: number,
+        net?: boolean,
+        abort?: boolean,
         content: string,
         refs?: { blockIds: string[], page: LinkPageItem, elementUrl: string }[]
     }[] = [];
+    isNet: boolean = false;
     renderMessages() {
-        return this.messages.map(msg => {
-            return <div data-ai-message={msg.id} key={msg.id}>
+        return this.messages.map((msg, i) => {
+            return <div className="visible-hover" data-ai-message={msg.id} key={msg.id}>
 
                 {msg.userid && <div className="flex-end">
                     <div style={{ maxWidth: '80%' }} className="gap-h-10   padding-10 item-hover-focus  round-16">
@@ -42,11 +48,17 @@ export class AISearchBox extends EventsComponent {
                     </div>
                 </div>}
 
-                {!msg.userid && msg.content && <div className="visible-hover">
-                    <div style={{ maxWidth: '80%' }} className="gap-h-10 card" >
-                        <div className="break-all  md" dangerouslySetInnerHTML={{ __html: msg.content }}>
+                {!msg.userid && msg.content && <div>
+                    <div style={{ maxWidth: '80%' }} className="gap-h-10  shadow-s border-light round-8 padding-w-10" >
+                        <div className="break-all  md gap-h-10" dangerouslySetInnerHTML={{ __html: msg.content }}>
                         </div>
-                        {msg.asking == false && (msg as any).noAnswer != true && <div className="gap-b-10"> {msg.refs && msg.refs.length > 0 && <div className="f-12 remark gap-b-3"><S>引用页面</S></div>}
+                        {msg.abort && <div>
+                            <div className="f-12 remark gap-b-3"><S>已终止回答</S></div>
+                        </div>}
+                        {msg.asking == false && msg.net == true && <div className="gap-b-10">
+                            <div className="f-12 remark gap-b-3"><S>来源于网络</S></div>
+                        </div>}
+                        {msg.asking == false && msg.net !== true && (msg as any).noAnswer != true && <div className="gap-b-10"> {msg.refs && msg.refs.length > 0 && <div className="f-12 remark gap-b-3"><S>引用页面</S></div>}
                             {msg.refs?.map(rf => {
                                 return <div className="flex gap-b-5" key={rf.page?.id}>
                                     <span onMouseDown={e => this.openPage(rf)} className="flex item-hover round gap-r-5 padding-w-3 l-20 cursor "><Icon size={18} icon={getPageIcon(rf.page)}></Icon><span className="gap-l-5">{getPageText(rf.page)}</span></span>
@@ -75,6 +87,16 @@ export class AISearchBox extends EventsComponent {
                     </div>
                 </div>}
 
+                {i == this.messages.length - 1 && this.tips.length > 0 && this.messages.length > 0 && <div className="gap-h-5">
+                    {this.tips.map((t, i) => {
+                        return <div className="  h-22 " onMouseDown={e => {
+                            this.prompt = t;
+                            this.send();
+                        }} key={i}>
+                            <span className="item-hover padding-w-5 round padding-h-3 cursor" > {t}</span>
+                        </div>
+                    })}
+                </div>}
             </div>
         })
     }
@@ -92,7 +114,7 @@ export class AISearchBox extends EventsComponent {
     async openProperty(event: React.MouseEvent) {
         this.messages = [];
         this.forceUpdate();
-        await channel.act('/cache/set', { key: this.getCacheKey(), value: this.messages })
+        await channel.act('/cache/set', { key: this.getCacheKey(), value: { isNet: this.isNet, messages: this.messages } })
     }
     render() {
         return <div className={"bg-white  round flex flex-col flex-full" + (isMobileOnly ? " vw100-20" : " w-800 ")}>
@@ -108,21 +130,18 @@ export class AISearchBox extends EventsComponent {
                         <Icon icon={{ name: 'byte', code: 'clear' }} size={16}></Icon>
                     </span></ToolTip>
                 </span>
+                <span className="flex-fixed flex">
+                    <ToolTip overlay={<S>设置</S>}><span onMouseDown={e => this.openConfig(e)} className="flex-center remark size-24 item-hover round cursor">
+                        <Icon icon={{ name: 'byte', code: 'setting-one' }} size={16}></Icon>
+                    </span></ToolTip>
+                </span>
             </div>
             <Divider></Divider>
+
             <div style={{ paddingBottom: 50 }} className="padding-w-30  min-h-300 max-h-400 overflow-y" ref={e => this.scrollEl = e}>
                 {this.renderMessages()}
-                {this.tips.length > 0 && <div className="gap-h-5">
-                    {this.tips.map((t, i) => {
-                        return <div onMouseDown={e => {
-                            this.prompt = t;
-                            this.send();
-                        }} key={i}>
-                            <span className="item-hover round padding-h-3 cursor">   {t}</span>
-                        </div>
-                    })}
-                </div>}
             </div>
+
             <div className="flex gap-w-30 padding-w-10  card-border round-16 gap-h-10 " style={{ minHeight: 36 }}>
                 <div className="flex-auto ">
                     <DivInput
@@ -130,20 +149,24 @@ export class AISearchBox extends EventsComponent {
                         ref={e => this.textarea = e}
                         onInput={e => { this.prompt = e }}
                         onEnter={e => this.send()}
-                        className='min-h-20 l-20 max-h-100  overflow-y'
+                        className='min-h-20 padding-h-10 l-20 max-h-100  overflow-y'
                         onPaster={e => {
                             this.emit('update')
                         }}
                         placeholder={lst("告诉AI你想问什么...")} ></DivInput>
                 </div>
                 <ToolTip overlay={<div>
-                    <div className="flex"><span style={{ color: '#bbb' }}>Enter</span><span className="gap-l-5"><S>发送</S></span></div>
-                    <div className="flex"><span style={{ color: '#bbb' }}>Shift+Enter</span><span className="gap-l-5"><S>换行</S></span></div>
-                </div>}><div onMouseDown={e => this.send()} className="flex-fixed text-1 size-24 flex-center item-hover round">
-                        <Icon size={16} icon={PublishSvg}></Icon>
+                    {this.controller && <div><span style={{ color: '#bbb' }}>正在处理中...</span></div>}
+                    {!this.controller && <> <div className="flex"><span style={{ color: '#bbb' }}>Enter</span><span className="gap-l-5"><S>发送</S></span></div>
+                        <div className="flex"><span style={{ color: '#bbb' }}>Shift+Enter</span><span className="gap-l-5"><S>换行</S></span></div>
+                    </>}
+
+                </div>}><div onMouseDown={e => { this.controller ? this.stop() : this.send() }} className="flex-fixed cursor text-1 size-24 flex-center item-hover round">
+                        <Icon size={16} icon={this.controller ? { name: 'byte', code: "pause-one" } : PublishSvg}></Icon>
                     </div>
                 </ToolTip>
             </div>
+
         </div>
     }
     textarea: DivInput;
@@ -154,6 +177,27 @@ export class AISearchBox extends EventsComponent {
         this.prompt = message.prompt;
         await this.send(true);
     }
+    async openConfig(e: React.MouseEvent) {
+        var self = this;
+        var r = await useSelectMenuItem({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) }, [
+            {
+                text: '允许网络搜索',
+                icon: { name: 'byte', code: 'earth' },
+                name: 'net',
+                value: this.isNet,
+                type: MenuItemType.switch
+            },
+        ], {
+            input(item, mp) {
+                console.log(item);
+                if (item.name == 'net') {
+                    self.isNet = item.checked;
+                    console.log('net...', self.isNet);
+                }
+            },
+        })
+    }
+    controller?: AbortController;
     async send(isTry?: boolean) {
         if (!this.prompt) return;
         try {
@@ -161,6 +205,7 @@ export class AISearchBox extends EventsComponent {
             var self = this;
             var prompt = this.prompt;
             this.prompt = '';
+            this.controller = null;
             this.textarea.setValue('');
             var u = channel.query('/query/current/user');
             var sender = { id: util.guid(), userid: u.id, date: Date.now(), content: prompt }
@@ -170,7 +215,7 @@ export class AISearchBox extends EventsComponent {
                     this.scrollEl.scrollTop = this.scrollEl.scrollHeight;
                 }
             });
-            var cb = { id: util.guid(), prompt, date: Date.now(), asking: true, content: '', noAnswer: false, refs: [] };
+            var cb = { net: false, id: util.guid(), abort: false, prompt, date: Date.now(), asking: true, content: '', noAnswer: false, refs: [] };
             this.messages.push(cb);
             var ms = this.messages.filter(m => m.userid ? true : false);
             ms = ms.slice(0, -1);
@@ -192,13 +237,16 @@ export class AISearchBox extends EventsComponent {
                     await channel.post('/text/ai/stream', {
                         question: content,
                         model: getAiDefaultModel(this.ws.aiConfig.text),
-                        callback(str, done) {
+                        callback(str, done, c, abort) {
+                            if (!self.controller && c) { self.controller = c; self.forceUpdate() }
                             if (typeof str == 'string') text += str;
                             cb.content = marked.parse(text + (done ? "" : "<span class='typed-print'></span>"));
                             self.forceUpdate(() => {
                                 self.scrollEl.scrollTop = self.scrollEl.scrollHeight;
                             });
+                            if (abort) cb.abort = true;
                             if (done) {
+                                self.controller = null;
                                 self.scrollEl.scrollTop = self.scrollEl.scrollHeight;
                                 cb.asking = false;
                                 resolve(true)
@@ -219,17 +267,56 @@ export class AISearchBox extends EventsComponent {
                 cb.noAnswer = true;
                 cb.asking = false;
             }
+
+            if (this.isNet && cb.noAnswer == true) {
+                cb.content = '';
+                cb.noAnswer = false;
+                cb.refs = [];
+                cb.net = true;
+                text = '';
+                await new Promise(async (resolve, reject) => {
+                    await channel.post('/text/ai/stream', {
+                        question: userProblem,
+                        model: getAiDefaultModel(this.ws.aiConfig.text),
+                        callback(str, done, c, abort) {
+                            if (!self.controller) {
+                                self.controller = c;
+                                self.forceUpdate();
+                            }
+                            if (typeof str == 'string') text += str;
+                            cb.content = marked.parse(text + (done ? "" : "<span class='typed-print'></span>"));
+                            self.forceUpdate(() => {
+                                self.scrollEl.scrollTop = self.scrollEl.scrollHeight;
+                            });
+                            if (abort) cb.abort = true;
+                            if (done) {
+                                self.controller = null;
+                                self.scrollEl.scrollTop = self.scrollEl.scrollHeight;
+                                cb.asking = false;
+                                resolve(true)
+                            }
+                        }
+                    });
+                })
+            }
         }
         catch (ex) {
             console.error(ex);
         }
         finally {
+            this.controller = null;
             this.forceUpdate(() => {
                 if (this.scrollEl) {
                     this.scrollEl.scrollTop = this.scrollEl.scrollHeight;
                 }
+                this.textarea.focus()
             });
-            await channel.act('/cache/set', { key: this.getCacheKey(), value: this.messages })
+            await channel.act('/cache/set', {
+                key: this.getCacheKey(), value: {
+                    isNet: this.isNet,
+                    messages: this.messages
+                }
+            })
             this.emit('update')
             if (cb.noAnswer !== true) {
                 var rc = await getUserQuestions(cb.content);
@@ -245,6 +332,18 @@ export class AISearchBox extends EventsComponent {
             }
         }
     }
+    stop() {
+        if (this.controller) {
+            try {
+                this.controller.abort();
+
+            }
+            catch (ex) {
+
+            }
+            this.controller = null;
+        }
+    }
     getCacheKey() {
         return AI_SEARCH_MESSAGES + this.ws.id;
     }
@@ -252,7 +351,9 @@ export class AISearchBox extends EventsComponent {
     async open(options: { ws: any, word?: string }) {
         this.ws = options.ws;
         var rs = await channel.query('/cache/get', { key: this.getCacheKey() });
-        if (Array.isArray(rs)) this.messages = rs;
+        if (Array.isArray(rs?.messages)) this.messages = rs.messages;
+        if (typeof rs?.isNet == 'boolean') this.isNet = rs.isNet;
+        else this.isNet = false;
         if (options?.word) this.prompt = options.word;
         this.forceUpdate(() => {
             if (this.scrollEl) {
