@@ -7,7 +7,13 @@ import { util } from "../../util/util";
 import { lst } from "../../i18n/store";
 import { OpenFileDialoug } from "../../component/file";
 
-export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audio' | 'video', fileClassify?: 'cover', warn?: boolean, change: (file: ResourceArguments) => void }> {
+export class UploadView extends React.Component<{
+    mine: 'image' | 'file' | 'audio' | 'video',
+    fileClassify?: 'cover',
+    warn?: boolean,
+    change: (file: ResourceArguments) => void,
+    button?: boolean
+}> {
     async onUpload(file: File) {
         if (!file) return;
         if (this.button) this.button.loading = true;
@@ -102,13 +108,13 @@ export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audi
         else if (this.props.mine == 'video') { text = lst('上传视频'); mineText = mineText = lst('拖放视频或粘贴视频或粘贴视频网址'); }
         else if (this.props.mine == 'audio') { text = lst('上传音频'); mineText = mineText = lst('拖放音频或粘贴音频或粘贴音频网址'); }
         return <div className='shy-upload'>
-            <div className="dashed gap-h-10 round flex-center min-h-80  padding-10" tabIndex={1} onPaste={this.onPaste} onDragOverCapture={e => { e.preventDefault() }} onDrop={this.onDrop}>
+            <div className="dashed gap-h-10 cursor round flex-center min-h-80  padding-10" onClick={e => this.onOpenFile()} tabIndex={1} onPaste={this.onPaste} onDragOverCapture={e => { e.preventDefault() }} onDrop={this.onDrop}>
                 <span className="remark">
                     {mineText}
                 </span>
             </div>
-            <Button onClick={e => this.onOpenFile()} ref={e => this.button = e} block>{text}</Button>
-            {this.progress && <span className="remark">{this.progress}</span>}
+            {this.props.button !== false && <Button onClick={e => this.onOpenFile()} ref={e => this.button = e} block>{text}</Button>}
+            {this.progress && <div className="remark">{this.progress}</div>}
             {this.error && <div className='error bold'>{this.error}</div>}
             {this.props.warn !== false && <div className='shy-upload-remark remark f-12 gap-h-10'>
                 <Sp text={'请勿上传色情'}>请勿上传色情、涉政涉恐涉暴、侵权内容或<a target='_blank' className="link-red" href='https://shy.live/service_protocol'>服务条款</a>

@@ -14,6 +14,8 @@ import { useFilePicker } from "../../../../extensions/file/file.picker";
 import { S } from "../../../../i18n/view";
 import { Rect } from "../../../../src/common/vector/point";
 import { ToolTip } from "../../../../component/view/tooltip";
+import { ResourceArguments } from "../../../../extensions/icon/declare";
+import { UploadView } from "../../../../extensions/file/upload";
 
 @url('/form/file')
 class FormFieldFile extends OriginFormField {
@@ -25,18 +27,22 @@ class FormFieldFile extends OriginFormField {
         else if (this.field?.type == FieldType.audio) mime = 'audio';
         var r = await useFilePicker(pos, mime);
         if (r) {
-            var vs = util.covertToArray(this.value);
-            if (img) {
-                var at = vs.indexOf(img);
-                vs[at] = r;
-            }
-            else {
-                if (this.field?.config?.isMultiple !== true) vs = [];
-                vs.push(r);
-            }
-            this.onChange(vs);
-            this.forceManualUpdate();
+            await this.saveFile(r, img);
         }
+
+    }
+    async saveFile(r: ResourceArguments, img?: any) {
+        var vs = util.covertToArray(this.value);
+        if (img) {
+            var at = vs.indexOf(img);
+            vs[at] = r;
+        }
+        else {
+            if (this.field?.config?.isMultiple !== true) vs = [];
+            vs.push(r);
+        }
+        this.onChange(vs);
+        this.forceManualUpdate();
     }
 }
 
@@ -69,15 +75,22 @@ class FormFieldFileView extends BlockView<FormFieldFile> {
                                 onClick={e => this.block.uploadFile({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) }, img)}
                                 className="flex-fixed visible size-20 round cursor flex-center border shadow-s bg-hover  "><Icon size={16} icon={PlusSvg}></Icon>
                             </span></ToolTip>
-                        </>
-                        }
+                        </>}
                     </div>
                 })}
             </div>}
-            {files.length == 0 && <div
+            {files.length == 0 && this.block.fromType != 'doc-add' && <div
                 onMouseDown={e => this.block.uploadFile({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) })}
-                className={"f-14 min-h-30 cursor f-14 flex  remark" + (this.block.fromType == 'doc' ? " item-hover-light padding-w-10" : (this.block.fromType == 'doc-add' ? " round item-hover inline-flex padding-w-5 cursor" : ""))}>{this.block.fromType == 'doc-add' ? text : <S>空内容</S>}</div>}
-
+                className={"f-14 min-h-30 cursor f-14 flex  remark" + (this.block.fromType == 'doc' ? " item-hover-light padding-w-10" : (""))}>{<S>空内容</S>}</div>}
+            {files.length == 0 && this.block.fromType == 'doc-add' && <div>{this.renderUpload()}</div>}
+        </div>
+    }
+    renderUpload() {
+        var mime: "image" | "file" | "audio" | "video" = 'file';
+        if (this.block.field?.type == FieldType.video) mime = 'video'
+        else if (this.block?.field?.type == FieldType.audio) mime = 'audio';
+        return <div style={{ maxWidth: 300 }}>
+            <UploadView button={false} warn={false} mine={mime} change={e => this.block.saveFile({ name: 'upload', ...e })}></UploadView>
         </div>
     }
     isCanPlus() {
