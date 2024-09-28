@@ -4,6 +4,8 @@ import { Matrix } from "../../common/matrix";
 import lodash from 'lodash';
 import { Point, Rect, RectUtility } from "../../common/vector/point";
 import { MouseDragger } from "../../common/dragger";
+import { CloseSvg } from "../../../component/svgs";
+import { Icon } from "../../../component/view/icon";
 
 export class BoardMap extends React.Component<{ kit: Kit }> {
     open() {
@@ -20,7 +22,7 @@ export class BoardMap extends React.Component<{ kit: Kit }> {
         var cs = view.childs;
         return cs.map(c => {
             var size = c.fixedSize;
-            // var na = this.props.kit.page.matrix.clone().append(c.matrix);
+            if (!size) return <div key={c.id}></div>
             var blockStyle: CSSProperties = {
                 width: size.width,
                 height: size.height,
@@ -75,13 +77,15 @@ export class BoardMap extends React.Component<{ kit: Kit }> {
     getBounds() {
         var view = this.props.kit.page.views[0];
         var cs = view.childs;
-        var bs = cs.map(c => {
+        var bs = cs.toArray(c => {
             var size = c.fixedSize;
-            var rect = new Rect(0, 0, size.width, size.height);
-            var cm = c.currentMatrix.clone();
-            cm = cm.append(c.contentMatrix);
-            rect = rect.transformToBound(cm);
-            return rect;
+            if (size) {
+                var rect = new Rect(0, 0, size.width, size.height);
+                var cm = c.currentMatrix.clone();
+                cm = cm.append(c.contentMatrix);
+                rect = rect.transformToBound(cm);
+                return rect;
+            }
         });
         lodash.remove(bs, g => g ? false : true);
         var points = bs.map(b => b.points).flat();
@@ -115,7 +119,7 @@ export class BoardMap extends React.Component<{ kit: Kit }> {
         matrix.translate(-rect.x, -rect.y);
         return <div ref={e => this.el = e} onMouseDown={e => {
             this.onTo(matrix, e);
-        }} data-wheel='disabled' className="border-light shadow-s bg-white round" style={style}>
+        }} data-wheel='disabled' className="card-border bg-white round" style={style}>
             <div style={{
                 position: 'absolute',
                 top: 0,
@@ -127,6 +131,10 @@ export class BoardMap extends React.Component<{ kit: Kit }> {
                 </div>
                 {this.renderWin()}
             </div>
+            <div
+                style={{ top: 5, left: 5 }}
+                onMouseDown={e => { e.stopPropagation(); this.close() }}
+                className="pos size-20 round item-hover cursor remark flex-center"><Icon size={12} icon={CloseSvg}></Icon></div>
         </div>
     }
     el: HTMLElement;

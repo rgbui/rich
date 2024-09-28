@@ -392,8 +392,8 @@ export class BoardSelector extends React.Component<{
                             this.forceUpdate();
                         }}>
                         <div className="flex" style={{ width: 40, height: 90, transform: 'rotate(-90deg)' }}>
-                            <BrushSvg></BrushSvg>
-                            {/* <img src={BrushSvg as any} alt="" /> */}
+                            {/* <BrushSvg></BrushSvg> */}
+                            <img src={STATIC_URL + 'static/rich-assets/brush.pen.svg'} />
                         </div>
                     </div>
                 </ToolTip>
@@ -416,7 +416,8 @@ export class BoardSelector extends React.Component<{
                             this.currentSelector.data.strokeWidth = 16;
                             this.forceUpdate();
                         }}> <div className="flex" style={{ width: 40, height: 90, transform: 'rotate(-90deg)' }}>
-                            <BrushPenSvg></BrushPenSvg>
+                            {/* <BrushPenSvg></BrushPenSvg> */}
+                            <img src={STATIC_URL + 'static/rich-assets/brush.pen.svg'} />
                         </div>
                     </div>
                 </ToolTip>
@@ -436,7 +437,9 @@ export class BoardSelector extends React.Component<{
                         this.currentSelector.data.strokeWidth = 8;
                         this.forceUpdate();
                     }}><div className="flex" style={{ width: 40, height: 90, transform: 'rotate(-90deg)' }}>
-                            <BrushPencilSvg></BrushPencilSvg></div>
+                            {/* <BrushPencilSvg></BrushPencilSvg></div> */}
+                            <img src={STATIC_URL + 'static/rich-assets/brush.pencil.svg'} />
+                        </div>
                     </div>
                 </ToolTip>
 
@@ -456,7 +459,8 @@ export class BoardSelector extends React.Component<{
                         this.currentSelector.data.strokeWidth = 4;
                         this.forceUpdate();
                     }}><div className="flex" style={{ width: 40, height: 90, transform: 'rotate(-90deg)' }}>
-                            <BrushWaterSvg></BrushWaterSvg>
+                            {/* <BrushWaterSvg></BrushWaterSvg> */}
+                            <img src={STATIC_URL + 'static/rich-assets/brush.water.svg'} />
                         </div>
                     </div>
                 </ToolTip>
@@ -478,7 +482,8 @@ export class BoardSelector extends React.Component<{
                         this.currentSelector.data.strokeWidth = 14;
                         this.forceUpdate();
                     }}><div className="flex" style={{ width: 40, height: 90, transform: 'rotate(-90deg)' }}>
-                            <BrushPen2Svg></BrushPen2Svg>
+                            {/* <BrushPen2Svg></BrushPen2Svg> */}
+                            <img src={STATIC_URL + 'static/rich-assets/brush.pen2.svg'} />
                         </div>
                     </div>
                 </ToolTip>
@@ -499,7 +504,8 @@ export class BoardSelector extends React.Component<{
                         this.currentSelector.data.strokeWidth = 9;
                         this.forceUpdate();
                     }}><div className="flex-center" style={{ width: 40, height: 90, transform: 'rotate(-90deg)' }}>
-                            <BrushPen1Svg></BrushPen1Svg>
+                            {/* <BrushPen1Svg></BrushPen1Svg> */}
+                            <img src={STATIC_URL + 'static/rich-assets/brush.pen1.svg'} />
                         </div>
                     </div>
                 </ToolTip>
@@ -521,7 +527,7 @@ export class BoardSelector extends React.Component<{
                         this.currentSelector.data.strokeWidth = 4;
                         this.forceUpdate();
                     }}><div className="flex" style={{ width: 40, height: 90, transform: 'rotate(-90deg)' }}>
-                            <BrushPen3Svg></BrushPen3Svg>
+                            <img src={STATIC_URL + 'static/rich-assets/brush.pen3.svg'} />
                         </div>
                     </div>
                 </ToolTip> */}
