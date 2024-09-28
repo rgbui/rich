@@ -8,6 +8,10 @@ import { util } from "../../../../util/util";
 import { useUserPicker } from "../../../../extensions/at/picker";
 import { S } from "../../../../i18n/view";
 import { FieldType } from "../../schema/type";
+import { PlusSvg } from "../../../../component/svgs";
+import { Icon } from "../../../../component/view/icon";
+import { ToolTip } from "../../../../component/view/tooltip";
+
 
 @url('/form/user')
 export class FieldUser extends OriginFormField {
@@ -55,9 +59,12 @@ export class FieldTextView extends BlockView<FieldUser> {
                 finally {
                     ele.classList.remove('item-hover-light-focus')
                 }
-            }} className={' ' + (this.block.fromType == 'doc' ? "item-hover-light padding-w-10 round" : (this.block.fromType == 'doc-add' ? " sy-form-field-input-value" : "  "))}>
+            }} className={' ' + (this.block.fromType == 'doc' ? "item-hover-light padding-w-10 round" : (this.block.fromType == 'doc-add' ? " " : "  "))}>
                 <div className="min-h-30 flex">
                     <UserAvatars size={24} users={vs}></UserAvatars>
+                    {this.block.fromType == 'doc-add' && vs.length == 0 && <ToolTip overlay={<S>添加用户</S>}><span className="circle size-24 border-light item-hover box-border cursor flex-center">
+                        <Icon icon={PlusSvg} size={16}></Icon>
+                    </span></ToolTip>}
                     {this.block.fromType != 'doc-add' && vs.length == 0 && <span className="f-14 remark" ><S>空内容</S></span>}
                 </div>
             </div>

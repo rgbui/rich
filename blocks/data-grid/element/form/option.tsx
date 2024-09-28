@@ -49,7 +49,7 @@ class FieldText extends OriginFormField {
 }
 
 @view('/form/option')
-class FieldTextView extends BlockView<FieldText>{
+class FieldTextView extends BlockView<FieldText> {
     async mousedown(event: React.MouseEvent) {
         if (this.block.checkEdit() === false) return;
         var hover = this.block.el.querySelector('.item-hover-light');
@@ -67,7 +67,6 @@ class FieldTextView extends BlockView<FieldText>{
                     options: fc?.options || [],
                     isEdit: this.block.isCanEdit(),
                     changeOptions: (ops) => {
-                        console.log('ssss', ops);
                         this.block.schema.fieldUpdate({
                             fieldId: this.block.field.id,
                             data: {
@@ -108,7 +107,9 @@ class FieldTextView extends BlockView<FieldText>{
         var self = this;
         function renderSelectOptions() {
             if (self.block.optionType == 'select') {
-                return <SelectBox className={self.block.fromType == 'doc-add' ? "sy-form-field-input-value" : "  padding-h-5 round item-hover-light padding-w-10 "} border dropAlign="full" value={fc?.isMultiple ? ops.map(o => o.value) : ops?.first()?.value} multiple={fc?.isMultiple ? true : false} options={options} onChange={e => {
+                return <SelectBox style={{
+                    height: self.block.fromType == 'doc-add' ? 32 : undefined
+                }} className={self.block.fromType == 'doc-add' ? " f-14" : "  padding-h-5 round item-hover-light padding-w-10 "} border dropAlign="full" value={fc?.isMultiple ? ops.map(o => o.value) : ops?.first()?.value} multiple={fc?.isMultiple ? true : false} options={options} onChange={e => {
                     self.block.onChange(e);
                 }}></SelectBox>
             }
@@ -144,7 +145,7 @@ class FieldTextView extends BlockView<FieldText>{
             }
             return <div className={"flex " + (self.block.fromType == 'doc-add' ? "sy-form-field-input-value" : "   round item-hover-light padding-w-10 " + (ops.length == 0 ? " min-h-30" : "min-h-30"))} onMouseDown={e => self.mousedown(e)}>
                 {ops.map(op => {
-                    return <span key={op.value} className="gap-r-10 padding-w-5 f-14 padding-h-2  l-16 round cursor" style={{ background: op?.fill||op?.color,color:op.textColor }}>{op.text}</span>
+                    return <span key={op.value} className="gap-r-10 padding-w-5 f-14 padding-h-2  l-16 round cursor" style={{ background: op?.fill || op?.color, color: op.textColor }}>{op.text}</span>
                 })}
             </div>
         }
@@ -152,7 +153,7 @@ class FieldTextView extends BlockView<FieldText>{
             {this.block.fromType != 'doc-detail' && renderSelectOptions()}
             {this.block.fromType == 'doc-detail' && <div className="flex">
                 {ops.map(op => {
-                    return <span key={op.value} className="gap-r-10 padding-w-5 f-14 padding-h-2  l-16  round cursor" style={{ background: op?.fill||op?.color,color:op.textColor }}>{op.text}</span>
+                    return <span key={op.value} className="gap-r-10 padding-w-5 f-14 padding-h-2  l-16  round cursor" style={{ background: op?.fill || op?.color, color: op.textColor }}>{op.text}</span>
                 })}
                 {ops.length == 0 && <span className="f-14 remark min-h-30 flex "><S>空内容</S></span>}
             </div>}

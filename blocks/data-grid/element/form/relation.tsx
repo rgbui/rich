@@ -14,7 +14,6 @@ import { S } from "../../../../i18n/view";
 import { Tip } from "../../../../component/view/tooltip/tip";
 import { ToolTip } from "../../../../component/view/tooltip";
 
-
 @url('/form/relation')
 class FormFieldRelation extends OriginFormField {
     relationSchema: TableSchema;
@@ -76,14 +75,15 @@ class FormFieldRelationView extends BlockView<FormFieldRelation> {
         return <div>
             {this.block.relationList?.length > 0 && <div className="gap-b-5 ">
                 {this.block.relationList?.map(r => {
-                    return <div className={"h-30  round  cursor flex  visible-hover " + (this.block.fromType != 'doc-add' && this.block.fromType != 'doc-detail' ? " padding-w-10 item-hover-light" : "")}
+                    return <div className={"h-30  round  cursor flex  visible-hover " + (this.block.fromType != 'doc-add' && this.block.fromType != 'doc-detail' ? " padding-w-10 item-hover-light" : " item-hover-light")}
                         onClick={e => e.preventDefault()}
                         key={r.id}
                     >
-                        <span className="flex-fixed size-20  flex-center flex-inline cursor">
-                            <Icon size={16} icon={getPageIcon({ icon: r[icon.name] })}></Icon>
+                        <span className="flex-fixed size-20  text-1 flex-center flex-inline cursor">
+                            <Icon size={18} icon={getPageIcon({ icon: r[icon.name] })}></Icon>
                         </span>
-                        <span className={"f-14 text-overflow " + (this.block.fromType == 'doc-add' ? " gap-r-10" : "flex-auto ")}>
+                        
+                        <span className={"f-14 gap-l-3 text-overflow " + (this.block.fromType == 'doc-add' ? " gap-r-10 flex-auto" : "flex-auto ")}>
                             <span className="b-500" style={textStyle}>{getPageText({ text: r[f?.name] })}</span>
                         </span>
                         {this.block.fromType != 'doc-detail' && <Tip text='移除记录'><span onClick={e => this.block.onDeleteData(e, r.id)} className="flex-fixed visible size-20 round cursor flex-center border shadow-s bg-hover gap-r-5">

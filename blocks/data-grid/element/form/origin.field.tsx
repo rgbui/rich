@@ -184,7 +184,7 @@ export class OriginFormField extends Block {
             point = point.move(0, 3);
         }
         else if (this.fromType == 'doc-add') {
-            point = point.move(0, 8);
+            point = point.move(0, 20);
         }
         else {
             point = point.move(0, 3);
@@ -219,8 +219,10 @@ export function FieldView(props: { block: OriginFormField, className?: string | 
             {block.view.renderComment()}
         </div>
     }
-    return <div style={block.visibleStyle} className={'sy-form-field ' + classList.join(' ')} onMouseDown={e => e.stopPropagation()}>
-        <div className="gap-t-10 gap-b-20">
+    return <div style={block.visibleStyle} className={'sy-form-field ' + classList.join(' ')} onMouseDown={e => {
+
+    }}>
+        <div className="gap-t-20">
             {block.field && <div className="sy-form-field-box">
                 <div className="flex gap-t-5">
                     {props.block.hidePropTitle !== true && <label className="b-500 f-16">{block.field.text}</label>}
